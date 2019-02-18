@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:felles="http://nav.no/foreldrepenger/integrasjon/dokument/felles"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           targetNamespace="http://nav.no/foreldrepenger/integrasjon/dokument/klage/avvist"
+           xmlns="http://nav.no/foreldrepenger/integrasjon/dokument/klage/avvist">
+    <xs:import namespace="http://nav.no/foreldrepenger/integrasjon/dokument/felles"
+               schemaLocation="foreldrepenger_felles.xsd"/>
+    <xs:element name="brevdata" type="brevdataType"/>
+    <xs:complexType name="brevdataType">
+        <xs:sequence>
+            <xs:element type="felles:fellesType" name="felles"/>
+            <xs:element type="fagType" name="fag"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="fagType">
+        <xs:all>
+            <xs:element type="ytelseTypeKode" name="ytelseType"/>
+            <xs:element type="avvistGrunnKode" name="avvistGrunn" minOccurs="0"/>
+            <xs:element type="avvistGrunnListeType" name="avvistGrunnListe" minOccurs="0"/>
+            <xs:element type="xs:integer" name="antallAvvistGrunn" minOccurs="0"/>
+            <xs:element type="felles:nonEmptyStringType" name="lovhjemler" minOccurs="0"/>
+            <xs:element type="xs:integer" name="klageFristUker"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="avvistGrunnListeType">
+        <xs:sequence>
+            <xs:element type="avvistGrunnType" name="avvistGrunn" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="avvistGrunnType">
+        <xs:all>
+            <xs:element type="avvistGrunnKode" name="avvistGrunnKode"/>
+        </xs:all>
+    </xs:complexType>
+    <xs:simpleType name="ytelseTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ES">
+                <xs:annotation>
+                    <xs:documentation>Engangsstønad</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FP">
+                <xs:annotation>
+                    <xs:documentation>Foreldrepenger</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="avvistGrunnKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ETTER6UKER">
+                <xs:annotation>
+                    <xs:documentation>Bruker har klaget etter 6 uker</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="KLAGEUGYLDIG">
+                <xs:annotation>
+                    <xs:documentation>Når klagen anses som ugyldig</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="KLAGEIKKEVEDTAK">
+                <xs:annotation>
+                    <xs:documentation>bruker har klaget på et beslutningsvedtak eller annet brev</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="KLAGEIKKEPART">
+                <xs:annotation>
+                    <xs:documentation>bruker ikke er part i saken</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="KLAGEIKKEKONKRET">
+                <xs:annotation>
+                    <xs:documentation>ikke er gitt en begrunnelse for hva bruker klager på.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

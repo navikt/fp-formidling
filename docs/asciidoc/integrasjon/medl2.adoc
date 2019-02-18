@@ -1,0 +1,14 @@
+= Medl2 integrasjon
+
+MEDL2 er NAVs medlemskapsregister. Det gir informasjon om perioder med eller uten medlemskap i Folketrygden, og hvilken dekninsgrad et medlem har. Integrasjonen går fra Vedtaksløsningen til https://confluence.adeo.no/display/FEL/MEDL2+-+Tjeneste+Webservice+MedlemskapV2[Medlemskap V2 grensesnittet].
+
+== Hensikt
+Medlemskapsperiodene er sentrale når Vedtaksløsningen skal vurdere https://confluence.adeo.no/pages/viewpage.action?pageId=231980999[Medlemskapsvilkåret].
+
+== Hvordan
+Kommunikasjonen med MEDL2 foregår mot den synkrone web servicen Medlemskap_v2:HentPeriodeListe, men utføres som en del av steget som innhenter registeropplysninger. Integrasjonen er synkron og vil avbryte gjeldende prosess hvis den feiler.
+VL kaller MEDL2 for søkers fødselsnummer og lagrer alle treff i perioden fra 1 år før skjæringstidspunktet (termindato, fødselsdato eller dato for omsorgsovertakelse), til et halvt år etter skjæringstidspunktet. Dersom saksbehandler endrer skjæringstidspunktet (fødsel, termin eller dato for omsorg), vil VL på nytt sjekke om denne datoen er innenfor de allerede innhentede periodene, og hente inn registeropplysninger på nytt hvis ikke.
+Det gjøres også sjekk etter endringer i Medlemskapsperiodene når registeropplysninger oppdateres.
+
+== Lagring
+Medlemskapsperiodene lagres i tabellen MEDLEMSKAP_PERIODER i VL-databasen. Tabellens innhold kan brukes for å vurdere https://confluence.adeo.no/pages/viewpage.action?pageId=231980999[Medlemskapsvilkåret] både automatisk (regelvurdering) og skjønnsmessig (saksbehandler).

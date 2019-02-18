@@ -1,0 +1,118 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  labels:
+    team: teamforeldrepenger
+  name: fpformidling
+  namespace: NAMESPACE_VAL
+spec:
+  image: docker.adeo.no:5000/fpformidling:RELEASE_VERSION # Required. Docker image.
+  port: 8080 # Required. The port number which is exposed by the container and should receive HTTP traffic.
+  team: teamforeldrepenger # Required. Set to the team that owns this application.
+  liveness: # HTTP endpoint that signals 200 OK when the application is running.
+    path: /fpformidling/internal/isAlive
+    initialDelay: 30
+    timeout: 5
+    periodSeconds: 10     # How often (in seconds) to perform the probe. Default to 10 seconds
+    failureThreshold: 27 # when a Pod starts and the probe fails,
+    # nais will try failureThreshold times before giving up and restarting the Pod
+    # Defaults to 3
+  readiness: # HTTP endpoint that signals 200 OK when it is okay to start routing traffic to the application.
+    path: /fpformidling/internal/isReady
+    initialDelay: 30
+    timeout: 5
+    periodSeconds: 10
+    failureThreshold: 27
+  replicas: # Optional. Set min = max to disable autoscaling.
+    min: 3 # minimum number of replicas.
+    max: 3 # maximum number of replicas.
+    cpuThresholdPercentage: 80 # total cpu percentage threshold on deployment, at which point it will increase number of pods if current < max
+  leaderElection: false # Optional. If true, a http endpoint will be available at $ELECTOR_PATH that return the current leader
+  # Compare this value with the $HOSTNAME to see if the current instance is the leader
+  preStopHookPath: /fpformidling/internal/preStop # Optional. A HTTP GET will be issued to this endpoint at least once before the pod is terminated.
+  # See https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
+  #prometheus: # Optional.
+  #  enabled: false # if true the pod will be scraped for metrics by prometheus
+  #  path: /fpsak/prometheus # Path to prometheus-metrics
+  istio: # Optional.
+    enabled: false # Optional. When true, envoy-proxy sidecar will be injected into pod and https urls envvars will be rewritten
+  resources: # Optional. See: http://kubernetes.io/docs/user-guide/compute-resources/
+    limits:
+      cpu: 1000m # app will have its cpu usage throttled if exceeding this limit
+      memory: "2048Mi"  # app will be killed if exceeding these limits
+    requests: # App is guaranteed the requested resources and  will be scheduled on nodes with at least this amount of resources available
+      cpu: 500m
+      memory: "1024Mi"
+  ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
+    - "INGRESS_URL"
+  logformat: accesslog # Optional. The format of the logs from the container if the logs should be handled differently than plain text or json
+  logtransform: dns_loglevel # Optional. The transformation of the logs, if they should be handled differently than plain text or json
+  webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
+  secrets: true # Optional. If set to true fetch secrets from Secret Service and inject into the pods. todo link to doc.
+  env:
+    - name: APP_VERSION
+      value: RELEASE_VERSION
+    - name: APP_NAME
+      value: fpformidling
+    - name: APP_ENVIRONMENT
+      value: MILJO_VAL
+    - name: LOADBALANCER_FQDN
+      value: loadbalancer.url
+    - name: ABAC_PDP_ENDPOINT_URL
+      value: abac.pdp.endpoint.url
+    - name: SECURITYTOKENSERVICE_URL
+      value: securityTokenService.url
+    - name: OIDC_STS_ISSUERURL
+      value: oidc_sts.issuerUrl
+    - name: OIDC_STS_JWKSURL
+      value: oidc_sts.jwksUrl
+    - name: DOKUMENTPRODUKSJON_V2_URL
+      value: Dokumentproduksjon_v2.url
+    - name: KODEVERK_V2_URL
+      value: Kodeverk_v2.url
+    - name: SYSTEMBRUKER_USERNAME
+      value: systembruker.username
+    - name: OPENIDCONNECT_ISSOHOST
+      value: OpenIdConnect.issoHost
+    - name: OPENIDCONNECT_ISSOHOST
+      value: OpenIdConnect.issoHost
+    - name: OPENIDCONNECT_ISSOISSUER
+      value: OpenIdConnect.issoIssuer
+    - name: OPENIDCONNECT_ISSOJWKS
+      value: OpenIdConnect.issoJwks
+    - name: OPENIDCONNECT_USERNAME
+      value: OpenIdConnect.username
+    - name: OIDC_AAD_B2C_AGENTNAME
+      value: oidc_aad_b2c.agentName
+    - name: OIDC_AAD_B2C_PASSWORD
+      value: oidc_aad_b2c.password
+    - name: OIDC_AAD_B2C_HOSTURL
+      value: oidc_aad_b2c.hostUrl
+    - name: OIDC_AAD_B2C_ISSUERURL
+      value: oidc_aad_b2c.issuerUrl
+    - name: OIDC_AAD_B2C_JWKSURL
+      value: oidc_aad_b2c.jwksUrl
+    - name: KAFKA_DOKUMENTHENDELSE_SCHEMA_REGISTRY_URL
+      value: kafka.dokumenthendelse.schema.registry.url
+    - name: KAFKA_DOKUMENTHENDELSE_SCHEMA_REGISTRY_URL
+      value: kafka.dokumenthendelse.schema.registry.url
+    - name: KAFKA_CLIENT_ID_CONFIG
+      value: kafka.client.id.config
+    - name: KAFKA_DOKUMENTHENDELSE_GROUP_ID_CONFIG
+      value: kafka.dokumenthendelse.group.id.config
+    - name: KAFKA_DOKUMENTHENDELSE_TOPIC
+      value: kafka.dokumenthendelse.topic
+    - name: BOOTSTRAP_SERVERS
+      value: bootstrap.servers
+    - name: KAFKA_ENABLE_AUTO_COMMIT_CONFIG
+      value: kafka.enable.auto.commit.config
+    - name: KAFKA_AUTO_COMMIT_INTERNAL_MS_CONFIG
+      value: kafka.auto.commit.internal.ms.config
+    - name: KAFKA_AUTO_OFFSET_RESET_CONFIG
+      value: kafka.auto.offset.reset.config
+    - name: KAFKA_USERNAME
+      value: kafka.username
+    - name: DEFAULTDS_USERNAME
+      value: defaultDS.username
+    - name: DEFAULTDS_URL
+      value: defaultDS.url

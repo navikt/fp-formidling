@@ -1,0 +1,12 @@
+[
+  {
+    "datasource": "defaultDS",
+    "user": "vl_dba",
+    "password": "vl_dba",
+    "schema": "fpformidling",
+    "url": "jdbc:postgresql://localhost:5432/postgres",
+    "vaultEnable": false,
+    "vaultRoleprefix": "eksempeldatabase-q1",
+    "vaultMountpath": "database/integrationtest"
+  }
+]

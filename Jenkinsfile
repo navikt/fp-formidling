@@ -23,9 +23,9 @@ node('DOCKER') {
        configFileProvider(
            [configFile(fileId: 'navMavenSettingsUtenProxy', variable: 'MAVEN_SETTINGS')]) {
                 
-                environ = new environment()
+                buildEnvironment = new buildEnvironment()
                 if(maven.javaVersion() != null) {
-                    environ.overrideJDK(maven.javaVersion())
+                    buildEnvironment.overrideJDK(maven.javaVersion())
                 }
                 
                 sh "mvn -U -B -s $MAVEN_SETTINGS -Dfile.encoding=UTF-8 -DinstallAtEnd=true -DdeployAtEnd=true -Dsha1= -Dchangelist= -Drevision=$tagName clean deploy"

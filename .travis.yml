@@ -1,0 +1,24 @@
+language: java
+jdk:
+- openjdk11
+services:
+- postgresql
+addons:
+- postgresql: "11.2"
+install: true # skips the Travis dependency install step
+before_script:
+- sudo apt-get update
+- sudo apt-get install language-pack-nb
+- sudo /etc/init.d/postgresql stop
+- sudo /etc/init.d/postgresql start 11.2
+- psql -c "CREATE USER vl_dba PASSWORD 'vl_dba';" -U postgres
+- psql -c "GRANT ALL PRIVILEGES ON DATABASE postgres TO vl_dba;" -U postgres
+before_script: 
+script:
+- mvn install
+cache:
+  directories:
+  - "$HOME/.m2"
+env:
+  global:
+  - APP_NAME=fp-formidling

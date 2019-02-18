@@ -1,4 +1,4 @@
-FROM navikt/java:10-appdynamics
+FROM navikt/java:11-appdynamics
 
 RUN mkdir /app/lib
 RUN mkdir /app/webapp

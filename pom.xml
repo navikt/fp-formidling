@@ -415,6 +415,14 @@
         </dependencies>
     </dependencyManagement>
 
+	<repositories>
+        <repository>
+            <id>repo.adeo.no</id>
+            <name>Maven repo i iApp-sonen</name>
+            <url>https://repo.adeo.no/repository</url>
+        </repository>
+    </repositories>
+	
     <build>
         <pluginManagement>
             <plugins>

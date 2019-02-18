@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="foreldrepenger_felles.xsd"/>
+
+    <xs:element name="brevdata" type="brevdataType"/>
+
+    <xs:complexType name="brevdataType">
+        <xs:sequence>
+            <xs:element type="fellesType" name="felles"/>
+            <xs:element type="fagType" name="fag"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="fagType">
+        <xs:all>
+            <xs:element type="xs:date" name="terminDato" minOccurs="0"/>
+            <xs:element type="xs:date" name="fristDato"/>
+            <xs:element type="nonEmptyStringType" name="fritekst" minOccurs="0"/>
+            <xs:element type="ytelseTypeKode" name="ytelseType"/>
+            <xs:element type="xs:integer" name="antallBarn"/>
+            <xs:element type="advarselKodeKode" name="advarselKode" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:simpleType name="ytelseTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ES">
+                <xs:annotation>
+                    <xs:documentation>Engangsstønad</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FP">
+                <xs:annotation>
+                    <xs:documentation>Foreldrepenger</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="advarselKodeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="JOBBFULLTID">
+                <xs:annotation>
+                    <xs:documentation>Skal komme når bruker har begynt å jobbe mens det utbetales foreldrepenger.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IKKEOPPTJENT">
+                <xs:annotation>
+                    <xs:documentation>Skal komme når bruker ikke har tjent ½ G.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="UTVANDRET">
+                <xs:annotation>
+                    <xs:documentation>Skal komme når bruker står som utvandret i Folkeregisteret.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="JOBBUTLAND">
+                <xs:annotation>
+                    <xs:documentation>Skal komme når vi får opplysninger om at bruker jobber i et annet land.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="IKKEOPPHOLD">
+                <xs:annotation>
+                    <xs:documentation>Skal komme når bruker ikke lenger har oppholdstillatelse i Norge.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="JOBB6MND">
+                <xs:annotation>
+                    <xs:documentation>Skal komme når vi får opplysninger om at bruker har jobbet mindre enn seks måneder
+                        før perioden med foreldrepenger startet.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="AKTIVITET">
+                <xs:annotation>
+                    <xs:documentation>Skal komme når aktivitetskravet til mor ikke er oppfylt.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="YTELSEUTLAND">
+                <xs:annotation>
+                    <xs:documentation>Skal komme når vi mottar opplysninger om at bruker mottar ytelse fra et annet
+                        land.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="BARNIKKEREG">
+                <xs:annotation>
+                    <xs:documentation>Skal komme når barn ikke er registrert i folkeregisteret.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ANNET">
+                <xs:annotation>
+                    <xs:documentation>Annet</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

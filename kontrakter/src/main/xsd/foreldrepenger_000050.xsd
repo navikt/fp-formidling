@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:felles="http://nav.no/foreldrepenger/integrasjon/dokument/felles"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           targetNamespace="http://nav.no/foreldrepenger/integrasjon/dokument/avbruttbehandling"
+           xmlns="http://nav.no/foreldrepenger/integrasjon/dokument/avbruttbehandling">
+
+    <xs:import namespace="http://nav.no/foreldrepenger/integrasjon/dokument/felles"
+               schemaLocation="foreldrepenger_felles.xsd"/>
+
+    <xs:element name="brevdata" type="brevdataType"/>
+
+    <xs:complexType name="brevdataType">
+        <xs:sequence>
+            <xs:element type="felles:fellesType" name="felles"/>
+            <xs:element type="fagType" name="fag"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="fagType">
+        <xs:all>
+            <xs:element type="ytelseTypeKode" name="ytelseType"/>
+            <xs:element type="behandlingsTypeKode" name="behandlingsType" minOccurs="0"/>
+            <xs:element type="opphavTypeKode" name="opphavType" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:simpleType name="ytelseTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ES">
+                <xs:annotation>
+                    <xs:documentation>Engangsstønad</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FP">
+                <xs:annotation>
+                    <xs:documentation>Foreldrepenger</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="behandlingsTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ENDRINGSSØKNAD">
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FØRSTEGANGSSØKNAD">
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="KLAGE">
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="REVURDERING">
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="INNSYN">
+                <xs:annotation>
+                    <xs:documentation></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="opphavTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="KLAGE">
+                <xs:annotation>
+                    <xs:documentation>NAV Klageinstans</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FAMPEN">
+                <xs:annotation>
+                    <xs:documentation>NAV Familie- og pensjonsytelser</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

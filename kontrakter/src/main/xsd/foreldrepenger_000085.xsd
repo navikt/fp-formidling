@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:felles="http://nav.no/foreldrepenger/integrasjon/dokument/felles"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           targetNamespace="http://nav.no/foreldrepenger/integrasjon/dokument/opphor"
+           xmlns="http://nav.no/foreldrepenger/integrasjon/dokument/opphor">
+
+    <xs:import namespace="http://nav.no/foreldrepenger/integrasjon/dokument/felles"
+               schemaLocation="foreldrepenger_felles.xsd"/>
+
+    <xs:element name="brevdata" type="brevdataType"/>
+
+    <xs:complexType name="brevdataType">
+        <xs:sequence>
+            <xs:element type="felles:fellesType" name="felles"/>
+            <xs:element type="fagType" name="fag"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="fagType">
+        <xs:all>
+            <xs:element type="behandlingsTypeKode" name="behandlingsType" minOccurs="0"/>
+            <xs:element type="felles:nonEmptyStringType" name="sokersNavn"/>
+            <xs:element type="personstatusKode" name="personstatus"/>
+            <xs:element type="relasjonskodeKode" name="relasjonskode"/>
+            <xs:element type="xs:date" name="fomStonadsdato" minOccurs="0"/>
+            <xs:element type="xs:date" name="tomStonadsdato" minOccurs="0"/>
+            <xs:element type="xs:date" name="opphorDato" minOccurs="0"/>
+            <xs:element type="xs:date" name="dodsdato" minOccurs="0"/>
+            <xs:element type="xs:boolean" name="gjelderFoedsel"/>
+            <xs:element type="xs:integer" name="antallBarn"/>
+            <xs:element type="xs:long" name="halvG"/>
+            <xs:element type="xs:integer" name="antallAarsaker"/>
+            <xs:element type="aarsakListeType" name="aarsakListe"/>
+            <xs:element type="xs:integer" name="klageFristUker"/>
+            <xs:element type="felles:nonEmptyStringType" name="lovhjemmelForAvslag"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:complexType name="aarsakListeType">
+        <xs:sequence>
+            <xs:element type="avslagsAarsakType" name="avslagsAarsak" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="avslagsAarsakType">
+        <xs:all>
+            <xs:element type="avslagsAarsakKode" name="avslagsAarsakKode"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:simpleType name="avslagsAarsakKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="1001">
+                <xs:annotation>
+                    <xs:documentation>Fødselsvilkåret - Søkt for tidlig</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1004">
+                <xs:annotation>
+                    <xs:documentation>Adopsjonsvilkåret - Barn over 15 år</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1013">
+                <xs:annotation>
+                    <xs:documentation>Foreldreansvarsvilkåret, 2.ledd - Barn over 15 år</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1014">
+                <xs:annotation>
+                    <xs:documentation>Foreldreansvarsvilkåret, 2.ledd - Søker har ikke foreldreansvar</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1015">
+                <xs:annotation>
+                    <xs:documentation>Foreldreansvarsvilkåret, 2.ledd - For mye samvær</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1019">
+                <xs:annotation>
+                    <xs:documentation>Opplyse saken/Generelt avslag (§§ 21-3, 21-7) - Mangler dokumentasjon
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1020">
+                <xs:annotation>
+                    <xs:documentation>Medlemskapsvilkåret -</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1021">
+                <xs:annotation>
+                    <xs:documentation>Medlemskapsvilkåret - Unntak medlemskap</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1023">
+                <xs:annotation>
+                    <xs:documentation>Medlemskapsvilkåret - Ikke lovlig opphold</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1024">
+                <xs:annotation>
+                    <xs:documentation>Medlemskapsvilkåret - Ikke oppholdsrett</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1025">
+                <xs:annotation>
+                    <xs:documentation>Medlemskapsvilkåret - Ikke bosatt</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1026">
+                <xs:annotation>
+                    <xs:documentation>Fødselsdato mangler - 23c. LB - OMR-13 SF9 Revurdering - Behandling og
+                        vilkårsvurdering av revurdering (PK-42383 og PK-45160)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1027">
+                <xs:annotation>
+                    <xs:documentation>Ingen barn dokumentert på far/medmor</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1028">
+                <xs:annotation>
+                    <xs:documentation>Mor fyller ikke vilkåret for sykdom</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1029">
+                <xs:annotation>
+                    <xs:documentation>Bruker er ikke registrert som far/medmor til barnet</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1031">
+                <xs:annotation>
+                    <xs:documentation>Adopsjonsvilkåret (§ 14-17 første ledd) - Engangsstønad er allerede utbetalt til
+                        mor
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1032">
+                <xs:annotation>
+                    <xs:documentation>Foreldrepenger er allerede utbetalt til mor</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1033">
+                <xs:annotation>
+                    <xs:documentation>Adopsjonsvilkåret (§ 14-17 første ledd) - Engangsstønad er allerede utbetalt til
+                        far/medmor
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1035">
+                <xs:annotation>
+                    <xs:documentation>Adopsjonsvilkåret (§ 14-17 første ledd) - Engangsstønad er allerede utbetalt til
+                        mor
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1041">
+                <xs:annotation>
+                    <xs:documentation>Foreldreansvarsvilkåret (§ 14-17 fjerde ledd) - Engangsstønad er allerede utbetalt
+                        til far/medmor
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="1051">
+                <xs:annotation>
+                    <xs:documentation>Stebarnsadopsjon ikke flere dager igjen</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4002">
+                <xs:annotation>
+                    <xs:documentation>Ikke flere dager igjen</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4003">
+                <xs:annotation>
+                    <xs:documentation>Ikke omsorg - hele perioden Mor</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4005">
+                <xs:annotation>
+                    <xs:documentation>Ikke sammenhengende periode</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4007">
+                <xs:annotation>
+                    <xs:documentation>Den andre forelderen er ikke syk nok</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4008">
+                <xs:annotation>
+                    <xs:documentation>Den andre forelderen er ikke innlagt</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4012">
+                <xs:annotation>
+                    <xs:documentation>Ikke omsorg - hele perioden Far</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4020">
+                <xs:annotation>
+                    <xs:documentation>Adopsjonsvilkåret - Barn over 15 år</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4035">
+                <xs:annotation>
+                    <xs:documentation>§14-11 Bare far rett, mor ikke i aktivitet under utsettelse</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4050">
+                <xs:annotation>
+                    <xs:documentation>Aktivitetskravet arbeid</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4051">
+                <xs:annotation>
+                    <xs:documentation>Aktivitetskravet (offentlig godkjent utdanning)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4052">
+                <xs:annotation>
+                    <xs:documentation>Aktivitetskravet (offentlig godkjent utdanning i kombinasjon med arbeid)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4053">
+                <xs:annotation>
+                    <xs:documentation>Aktivitetskravet (mors sykdom/skade)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4054">
+                <xs:annotation>
+                    <xs:documentation>Aktivitetskravet (mors innleggelse)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4055">
+                <xs:annotation>
+                    <xs:documentation>Aktivitetskravet (mors deltakelse på Introduksjonssprogram)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4056">
+                <xs:annotation>
+                    <xs:documentation>Aktivitetskravet (mors deltakelse på kvalifiseringsprogram)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4057">
+                <xs:annotation>
+                    <xs:documentation>Unntak for aktivitetskravet (mors mottak av uføretrygd)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4071">
+                <xs:annotation>
+                    <xs:documentation>Bruker dør</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4072">
+                <xs:annotation>
+                    <xs:documentation>Barnet er død</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4073">
+                <xs:annotation>
+                    <xs:documentation>Ikke rett til kvote fordi mor ikke har rett til foreldrepenger</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4084">
+                <xs:annotation>
+                    <xs:documentation>brukes ikke i malen men er med for å ikke krasje brevet.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4087">
+                <xs:annotation>
+                    <xs:documentation>§14-2: Opphør medlemskap</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4095">
+                <xs:annotation>
+                    <xs:documentation>brukes ikke i malen men er med for å ikke krasje brevet.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4096">
+                <xs:annotation>
+                    <xs:documentation>brukes ikke i malen men er med for å ikke krasje brevet.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4097">
+                <xs:annotation>
+                    <xs:documentation>brukes ikke i malen men er med for å ikke krasje brevet.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4098">
+                <xs:annotation>
+                    <xs:documentation>brukes ikke i malen men er med for å ikke krasje brevet.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4099">
+                <xs:annotation>
+                    <xs:documentation>brukes ikke i malen men er med for å ikke krasje brevet.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4100">
+                <xs:annotation>
+                    <xs:documentation>brukes ikke i malen men er med for å ikke krasje brevet.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="behandlingsTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="SØKNAD">
+                <xs:annotation>
+                    <xs:documentation>SØKNAD</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="REVURDERING">
+                <xs:annotation>
+                    <xs:documentation>REVURDERING</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FOERSTEGANGSBEHANDLING">
+                <xs:annotation>
+                    <xs:documentation>FOERSTEGANGSBEHANDLING</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="personstatusKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="DOD">
+                <xs:annotation>
+                    <xs:documentation>Bruker som har søkt er død og brevet sendes til dødsboet</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ANNET">
+                <xs:annotation>
+                    <xs:documentation>Annet</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="relasjonskodeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="MOR">
+                <xs:annotation>
+                    <xs:documentation>Mor</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FAR">
+                <xs:annotation>
+                    <xs:documentation>Far</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="MEDMOR">
+                <xs:annotation>
+                    <xs:documentation>Medmor</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ANNET">
+                <xs:annotation>
+                    <xs:documentation>Annet</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

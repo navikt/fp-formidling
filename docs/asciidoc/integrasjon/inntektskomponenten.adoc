@@ -1,0 +1,25 @@
+= Inntektskomponenten integrasjon
+
+Inntektskomponenten inneholder inntektsinformasjon. Den tilbyr https://confluence.adeo.no/pages/viewpage.action?pageId=223071886[Inntekt v3 grensesnittet], som er en NAV-tjeneste som gjør kall videre til Skattedirektoratet.
+
+== Hensikt
+Når Vedtaksløsningen skal vurdere om https://confluence.adeo.no/pages/viewpage.action?pageId=231980999[Medlemskapsvilkåret] skal brukes som inngangsvilkår, er inntekt et av kriteriene som sjekkes.
+
+== Hvordan
+Kommunikasjonen med Inntektskomponenten foregår mot den synkrone web servicen tjeneste_v3:virksomhet:Inntekt_v3:HentInntektListeBolk, men utføres som en del av steget som innhenter registeropplysninger. Integrasjonen er synkron og vil avbryte gjeldende prosess hvis den feiler. Det gjøres oppslag for både søker og annen forelder som er oppgitt i søknaden.
+
+Det gjøres også sjekk etter endringer i inntektsinformasjonen når registeropplysninger oppdateres.
+
+== Lagring
+Inntektskomponenten returnerer månedsinntekter pr utbetaler. Disse aggregeres opp til én Inntekt pr utbetaler over en periode, før de lagres i INNTEKT-tabellen i VL-databasen.
+
+Feltspesifikke kommentarer:
+
+* YTELSE
+** Settes til true hvis Inntekt er YtelseFraOffentlige eller PensjonEllerTrygd.
+* UTBETALER
+** Ved ytelse blir det lagret fra beskrivelsen på YtelseFraOffentlige eller PensjonEllerTrygd.
+** Ved ikke-ytelse vil Aktoer/Virksomhet benyttes, og den kan være AktoerId, Organisasjon (orgnummer), eller PersonIdent.
+
+== Annet
+Det er et krav at alle Saksbehandlere har rettighetene 0000-GA-INNTK og 0000-GA-INNTK_FORELDRE. Dette for at oppdatering av registeropplysninger ikke skal feile når det trigges av at Saksbehandler åpner en eksisterende sak.

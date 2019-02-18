@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="foreldrepenger_felles.xsd"/>
+
+    <xs:element name="brevdata" type="brevdataType"/>
+
+    <xs:complexType name="brevdataType">
+        <xs:sequence>
+            <xs:element type="fellesType" name="felles"/>
+            <xs:element type="fagType" name="fag"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="fagType">
+        <xs:all>
+            <xs:element type="behandlingsTypeKode" name="behandlingsType"/>
+            <xs:element type="nonEmptyStringType" name="arbeidsgiverNavn"/>
+            <xs:element type="xs:date" name="mottattDato"/>
+            <xs:element type="periodeListeType" name="periodeListe"/>
+            <xs:element type="xs:integer" name="sokAntallUkerFor"/>
+        </xs:all>
+    </xs:complexType>
+
+
+    <xs:complexType name="periodeListeType">
+        <xs:sequence>
+            <xs:element type="periodeType" name="periode" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="periodeType">
+        <xs:all>
+            <xs:element type="xs:date" name="periodeFom"/>
+            <xs:element type="xs:date" name="periodeTom"/>
+        </xs:all>
+    </xs:complexType>
+
+
+    <xs:simpleType name="behandlingsTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="FOERSTEGANGSBEHANDLING">
+                <xs:annotation>
+                    <xs:documentation>Førstegangsbehandling</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="REVURDERING">
+                <xs:annotation>
+                    <xs:documentation>Revurdering</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

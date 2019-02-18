@@ -1,0 +1,5 @@
+= Produsenttjenester
+
+Tjenester som eksponeres med SOAP-grensesnitt.
+
+include::{generated}/eksponerteTjenester.adoc[]

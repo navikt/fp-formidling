@@ -14,7 +14,7 @@ node('DOCKER') {
         checkout([$class: 'GitSCM', branches: [[name: '*/tags/*']],
         doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [],
         userRemoteConfigs: [[refspec: '+refs/tags/*:refs/remotes/origin/tags/*',
-        url: 'https://github.com/navikt/fpsak-frontend.git']]])
+        url: 'https://github.com/navikt/fp-formidling.git']]])
         tagName=sh(returnStdout: true, script: 'git describe --abbrev=0 --tags').toString().trim()
         echo "Tag to be deployed $tagName"
     }

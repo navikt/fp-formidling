@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<jaspi xmlns="http://geronimo.apache.org/xml/ns/geronimo-jaspi">
+    <configProvider>
+        <messageLayer>HTTP</messageLayer>
+        <appContext>server /fpformidling</appContext>
+        <description>description</description>
+        <serverAuthConfig>
+            <authenticationContextID>authenticationContextID2</authenticationContextID>
+            <protected>true</protected>
+            <serverAuthContext>
+                <serverAuthModule>
+                    <className>no.nav.foreldrepenger.melding.web.server.jetty.sikkerhet.JettyOidcAuthModule</className>
+                </serverAuthModule>
+            </serverAuthContext>
+        </serverAuthConfig>
+        <persistent>true</persistent>
+    </configProvider>
+
+</jaspi>

@@ -1,0 +1,16 @@
+= Melding mottak
+
+
+.Oversikt
+|===
+|JNDI_QUEUE |QUEUE_PREFIX |Consumer-Class
+
+|jms/QueueMottak
+|fpsak_mottak_queue
+|MottakAsyncJmsConsumer
+
+|jms/QueueFpsakOkonomiOppdragMotta
+|fpsak_okonomi_oppdrag_mottak
+|ØkonomioppdragAsyncJmsConsumer
+|===
+

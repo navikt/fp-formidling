@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified">
+
+    <xs:include schemaLocation="foreldrepenger_felles.xsd"/>
+
+    <xs:element name="brevdata" type="brevdataType"/>
+
+    <xs:complexType name="brevdataType">
+        <xs:sequence>
+            <xs:element type="fellesType" name="felles"/>
+            <xs:element type="fagType" name="fag"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="fagType">
+        <xs:all>
+            <xs:element type="ytelseTypeKode" name="ytelseType"/>
+            <xs:element type="opphavTypeKode" name="opphavType"/>
+            <xs:element type="nonEmptyStringType" name="fritekst" minOccurs="0"/>
+            <xs:element type="xs:integer" name="klageFristUker" minOccurs="0"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:simpleType name="ytelseTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ES">
+                <xs:annotation>
+                    <xs:documentation>Engangsstønad</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FP">
+                <xs:annotation>
+                    <xs:documentation>Foreldrepenger</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="opphavTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="KLAGE">
+                <xs:annotation>
+                    <xs:documentation>NAV Klageinstans</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FAMPEN">
+                <xs:annotation>
+                    <xs:documentation>NAV Familie- og pensjonsytelser</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

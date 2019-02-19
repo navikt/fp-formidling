@@ -22,7 +22,7 @@
 
     <properties>
         <revision>1.0</revision>
-        <sha1></sha1>
+        <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <java.version>10</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -58,7 +58,7 @@
         <swagger.version>1.5.17</swagger.version>
         <swagger.spec-parser.version>1.0.28</swagger.spec-parser.version>
         <swagger2markup.version>1.1.2</swagger2markup.version>
-        <cxf.version>3.2.5</cxf.version>
+        <cxf.version>3.2.6</cxf.version>
         <prometheus.version>0.0.23</prometheus.version>
     </properties>
 
@@ -549,7 +549,7 @@
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
-                                        <ignore></ignore>
+                                        <ignore/>
                                     </action>
                                 </pluginExecution>
                             </pluginExecutions>

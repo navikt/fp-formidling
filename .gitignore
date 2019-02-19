@@ -26,4 +26,5 @@ dep.txt
 .mvn/jvm.config
 .flattened*
 *.patch
+truststore.jts
 /.mvn/

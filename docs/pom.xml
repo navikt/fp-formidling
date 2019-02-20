@@ -47,6 +47,10 @@
                     <groupId>org.ow2.asm</groupId>
                     <artifactId>asm-analysis</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>nl.jworks.markdown_to_asciidoc</groupId>
+                    <artifactId>markdown_to_asciidoc</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>

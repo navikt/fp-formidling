@@ -84,11 +84,11 @@ abstract class AbstractJettyServer {
         Security.setProperty(AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY, AuthConfigFactoryImpl.class.getCanonicalName());
         System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, JettySubjectHandler.class.getName());
 
-        String confDir = System.getProperty("conf", "./conf");
-        setFileProperty("org.apache.geronimo.jaspic.configurationFile", confDir + "/jaspi-conf.xml");
-
-        // REMAP fra NAIS til SKYA format på prop
-//        System.setProperty("securityTokenService.url", System.getProperty("securityTokenService.url", System.getenv("SECURITYTOKENSERVICE_URL")));
+        File jaspiConf = new File(System.getProperty("conf", "./conf") + "/jaspi-conf.xml");
+        if (!jaspiConf.exists()) {
+            throw new IllegalStateException("Missing required file: " + jaspiConf.getAbsolutePath());
+        }
+        System.setProperty("org.apache.geronimo.jaspic.configurationFile", jaspiConf.getAbsolutePath());
 
         konfigurerSwaggerHash();
     }

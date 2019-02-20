@@ -11,10 +11,10 @@ import org.junit.Test;
 
 import com.codahale.metrics.health.HealthCheck;
 
+import no.nav.foreldrepenger.melding.sikkerhet.LogSniffer;
 import no.nav.foreldrepenger.melding.web.app.selftest.SelftestResultat;
 import no.nav.foreldrepenger.melding.web.app.selftest.Selftests;
 import no.nav.foreldrepenger.melding.web.app.selftest.checks.ExtHealthCheck;
-import no.nav.modig.core.test.LogSniffer;
 
 public class AppStartupInfoLoggerTest {
     @Rule

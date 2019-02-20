@@ -18,6 +18,7 @@
         <module>kodeverk</module>
         <module>domenetjenester</module>
         <module>kontrakter</module>
+        <module>test-sikkerhet</module>
     </modules>
 
     <properties>
@@ -94,6 +95,12 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>test-sikkerhet</artifactId>
+                <type>test-jar</type>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>kafkatjenester</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -164,13 +171,6 @@
                 <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
                 <artifactId>felles-integrasjon-bom</artifactId>
                 <version>${felles.version}</version>
-            </dependency>
-
-            <!-- Eksterne -->
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-testcertificates</artifactId>
-                <version>1.2.5</version>
             </dependency>
 
             <dependency>

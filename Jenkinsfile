@@ -18,7 +18,7 @@ node('DOCKER') {
    
     stage('Build') {
        configFileProvider(
-           [configFile(fileId: 'navMavenSettingsUtenProxy', variable: 'MAVEN_SETTINGS')]) {
+           [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
                 
                 buildEnvironment = new buildEnvironment()
                 if(maven.javaVersion() != null) {

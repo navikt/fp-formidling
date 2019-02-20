@@ -4,18 +4,15 @@ import no.nav.jenkins.*
 
 node('DOCKER') {
     Date date= new Date()
-    GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%h'", returnStdout: true)
-    def revision = "5.0"
-    def changelist = "_" + date.format("YYYYMMDDHHmmss") + "_" + GIT_COMMIT_HASH
-    def tagName=revision + changelist
+    def tagName
     
     maven = new maven()
     stage('Checkout Tags') { // checkout only tags.
-        checkout([$class: 'GitSCM', branches: [[name: '*/tags/*']],
-        doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [],
-        userRemoteConfigs: [[refspec: '+refs/tags/*:refs/remotes/origin/tags/*',
-        url: 'https://github.com/navikt/fp-formidling.git']]])
-        tagName=sh(returnStdout: true, script: 'git describe --abbrev=0 --tags').toString().trim()
+        checkout scm
+        GIT_COMMIT_HASH = sh (script: "git log -n 1 --pretty=format:'%h'", returnStdout: true)
+        changelist = "_" + date.format("YYYYMMDDHHmmss") + "_" + GIT_COMMIT_HASH
+        mRevision = maven.revision()
+        tagName = mRevision + changelist
         echo "Tag to be deployed $tagName"
     }
    

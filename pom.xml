@@ -140,6 +140,11 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>fpsak</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>webapp</artifactId>
                 <version>${project.version}</version>
                 <type>jar</type>
@@ -164,12 +169,23 @@
             <!-- Prosjektinterne -->
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+                <artifactId>felles-integrasjon-bom</artifactId>
+                <version>${felles.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
                 <artifactId>kafka-klient</artifactId>
                 <version>${felles.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-                <artifactId>felles-integrasjon-bom</artifactId>
+                <artifactId>felles-integrasjon-jms</artifactId>
+                <version>${felles.version}</version>
+                <type>test-jar</type>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+                <artifactId>felles-integrasjon-rest-klient</artifactId>
                 <version>${felles.version}</version>
             </dependency>
 

@@ -19,7 +19,7 @@ import no.nav.vedtak.konfig.KonfigVerdi;
 public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     private static final Logger LOGGER = LoggerFactory.getLogger(BehandlingRestKlientImpl.class);
     private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
-    private static final String HENT_BEHANLDING_ENDPOINT = "/behandlinger";
+    private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/behandlinger";
 
     private OidcRestClient oidcRestClient;
     private String endpointFpsakRestBase;

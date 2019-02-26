@@ -14,6 +14,7 @@
     <name>fpformidling :: Web :: Applikasjon</name>
 
     <dependencies>
+
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>felles</artifactId>
@@ -40,7 +41,10 @@
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>brevbestiller</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>fpsak</artifactId>
+        </dependency>
         <!-- Foreldrepengeprosjektet -->
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>

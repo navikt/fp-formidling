@@ -3,15 +3,15 @@ package no.nav.foreldrepenger.fpsak.dto.kodeverk;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Kode {
+public class KodeDto {
     public String kodeverk;
     public String kode;
     public String navn;
 
-    public Kode() {
+    public KodeDto() {
     }
 
-    public Kode(String kodeverk, String kode, String navn) {
+    public KodeDto(String kodeverk, String kode, String navn) {
         this.kodeverk = kodeverk;
         this.kode = kode;
         this.navn = navn;

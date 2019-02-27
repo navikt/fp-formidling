@@ -10,6 +10,10 @@ public class BehandlingIdDto {
     @Max(Long.MAX_VALUE)
     private Long behandlingId;
 
+    @Min(0)
+    @Max(Long.MAX_VALUE)
+    private Long saksnummer;
+
     public BehandlingIdDto() {//For Jackson
     }
 
@@ -19,5 +23,17 @@ public class BehandlingIdDto {
 
     public Long getBehandlingId() {
         return behandlingId;
+    }
+
+    public void setBehandlingId(Long behandlingId) {
+        this.behandlingId = behandlingId;
+    }
+
+    public Long getSaksnummer() {
+        return saksnummer;
+    }
+
+    public void setSaksnummer(Long saksnummer) {
+        this.saksnummer = saksnummer;
     }
 }

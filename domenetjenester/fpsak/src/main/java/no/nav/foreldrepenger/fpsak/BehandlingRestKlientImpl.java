@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpsak;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
 
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
+import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 import no.nav.vedtak.konfig.KonfigVerdi;
 
@@ -38,13 +41,31 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     public Optional<BehandlingDto> hentBehandling(BehandlingIdDto behandlingIdDto) {
         Optional<BehandlingDto> behandling = Optional.empty();
         try {
-            URIBuilder uriBuilder = new URIBuilder(endpointFpsakRestBase + HENT_BEHANLDING_ENDPOINT);
-            uriBuilder.setParameter("behandlingId", String.valueOf(behandlingIdDto.getBehandlingId()));
+            URIBuilder behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + HENT_BEHANLDING_ENDPOINT);
+            behandlingUriBuilder.setParameter("behandlingId", String.valueOf(behandlingIdDto.getBehandlingId()));
 
-            behandling = oidcRestClient.getReturnsOptional(uriBuilder.build(), BehandlingDto.class);
+            behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
+            if (behandling.isPresent()) {
+                final BehandlingDto behandlingDto = behandling.get();
+                for (BehandlingResourceLinkDto resourceLinkDto : behandlingDto.getLinks()) {
+                    final Optional<PersonopplysningDto> personopplysningDto = hentPersonopplysninger(behandlingIdDto, resourceLinkDto);
+                    personopplysningDto.ifPresent(behandlingDto::setPersonopplysningDto);
+                }
+            }
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);
         }
         return behandling;
+    }
+
+    private Optional<PersonopplysningDto> hentPersonopplysninger(BehandlingIdDto behandlingIdDto, BehandlingResourceLinkDto resourceLinkDto) {
+        if (resourceLinkDto.getRel().equals("soeker-personopplysninger")) {
+            URI personopplysningUri = URI.create(endpointFpsakRestBase + resourceLinkDto.getHref());
+
+            behandlingIdDto.setSaksnummer(resourceLinkDto.getRequestPayload().getSaksnummer());
+
+            return oidcRestClient.postReturnsOptional(personopplysningUri, behandlingIdDto, PersonopplysningDto.class);
+        }
+        return Optional.empty();
     }
 }

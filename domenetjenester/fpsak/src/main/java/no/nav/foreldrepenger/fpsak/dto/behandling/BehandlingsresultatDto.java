@@ -5,16 +5,16 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.Kode;
+import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingsresultatDto {
     private Integer id;
-    private Kode type;
-    private Kode avslagsarsak;
-    private Kode rettenTil;
-    private List<Kode> konsekvenserForYtelsen;
-    private Kode vedtaksbrev;
+    private KodeDto type;
+    private KodeDto avslagsarsak;
+    private KodeDto rettenTil;
+    private List<KodeDto> konsekvenserForYtelsen;
+    private KodeDto vedtaksbrev;
     private String avslagsarsakFritekst;
     private String overskrift;
     private String fritekstbrev;
@@ -28,35 +28,35 @@ public class BehandlingsresultatDto {
         this.id = id;
     }
 
-    public Kode getType() {
+    public KodeDto getType() {
         return type;
     }
 
-    public void setType(Kode type) {
+    public void setType(KodeDto type) {
         this.type = type;
     }
 
-    public Kode getAvslagsarsak() {
+    public KodeDto getAvslagsarsak() {
         return avslagsarsak;
     }
 
-    public void setAvslagsarsak(Kode avslagsarsak) {
+    public void setAvslagsarsak(KodeDto avslagsarsak) {
         this.avslagsarsak = avslagsarsak;
     }
 
-    public Kode getRettenTil() {
+    public KodeDto getRettenTil() {
         return rettenTil;
     }
 
-    public void setRettenTil(Kode rettenTil) {
+    public void setRettenTil(KodeDto rettenTil) {
         this.rettenTil = rettenTil;
     }
 
-    public List<Kode> getKonsekvenserForYtelsen() {
+    public List<KodeDto> getKonsekvenserForYtelsen() {
         return konsekvenserForYtelsen;
     }
 
-    public void setKonsekvenserForYtelsen(List<Kode> konsekvenserForYtelsen) {
+    public void setKonsekvenserForYtelsen(List<KodeDto> konsekvenserForYtelsen) {
         this.konsekvenserForYtelsen = konsekvenserForYtelsen;
     }
 
@@ -92,11 +92,11 @@ public class BehandlingsresultatDto {
         this.skjaeringstidspunktForeldrepenger = skjaeringstidspunktForeldrepenger;
     }
 
-    public Kode getVedtaksbrev() {
+    public KodeDto getVedtaksbrev() {
         return vedtaksbrev;
     }
 
-    public void setVedtaksbrev(Kode vedtaksbrev) {
+    public void setVedtaksbrev(KodeDto vedtaksbrev) {
         this.vedtaksbrev = vedtaksbrev;
     }
 

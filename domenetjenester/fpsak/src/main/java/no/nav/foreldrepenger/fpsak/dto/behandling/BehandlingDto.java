@@ -2,18 +2,20 @@ package no.nav.foreldrepenger.fpsak.dto.behandling;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.Kode;
+import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingDto {
     private Long id;
     private Integer versjon;
-    private Kode type;
-    private Kode status;
+    private KodeDto type;
+    private KodeDto status;
     private Long fagsakId;
     private LocalDateTime opprettet;
     private LocalDateTime avsluttet;
@@ -28,13 +30,16 @@ public class BehandlingDto {
     private LocalDate fristBehandlingPaaVent;
     private Boolean behandlingHenlagt;
     private BehandlingsresultatDto behandlingsresultat;
-    private Kode sprakkode;
+    private KodeDto sprakkode;
     private Boolean toTrinnsBehandling;
     private Long originalBehandlingId;
-    private List<BehandlingResourceLinkDto> links;
+    private List<BehandlingResourceLinkDto> links = new ArrayList<>();
     private String taskStatus;
     private String venteArsakKode;
-    private List<BehandlingÅrsakDto> behandlingArsaker;
+    private List<BehandlingÅrsakDto> behandlingArsaker = new ArrayList<>();
+
+    //Andre aggregater
+    private PersonopplysningDto personopplysningDto;
 
     public Long getId() {
         return id;
@@ -68,19 +73,19 @@ public class BehandlingDto {
         this.originalBehandlingId = originalBehandlingId;
     }
 
-    public Kode getType() {
+    public KodeDto getType() {
         return type;
     }
 
-    public void setType(Kode type) {
+    public void setType(KodeDto type) {
         this.type = type;
     }
 
-    public Kode getStatus() {
+    public KodeDto getStatus() {
         return status;
     }
 
-    public void setStatus(Kode status) {
+    public void setStatus(KodeDto status) {
         this.status = status;
     }
 
@@ -148,11 +153,11 @@ public class BehandlingDto {
         this.behandlingsresultat = behandlingsresultat;
     }
 
-    public Kode getSprakkode() {
+    public KodeDto getSprakkode() {
         return sprakkode;
     }
 
-    public void setSprakkode(Kode sprakkode) {
+    public void setSprakkode(KodeDto sprakkode) {
         this.sprakkode = sprakkode;
     }
 
@@ -228,30 +233,50 @@ public class BehandlingDto {
         this.behandlingArsaker = behandlingArsaker;
     }
 
+    public Boolean getErAktivPapirsoknad() {
+        return erAktivPapirsoknad;
+    }
+
+    public void setErAktivPapirsoknad(Boolean erAktivPapirsoknad) {
+        this.erAktivPapirsoknad = erAktivPapirsoknad;
+    }
+
+    public PersonopplysningDto getPersonopplysningDto() {
+        return personopplysningDto;
+    }
+
+    public void setPersonopplysningDto(PersonopplysningDto personopplysningDto) {
+        this.personopplysningDto = personopplysningDto;
+    }
+
     @Override
     public String toString() {
         return "BehandlingDto{" +
                 "id=" + id +
                 ", versjon=" + versjon +
-                ", type=" + (type != null ? type.toString() : null) +
-                ", status=" + (status != null ? status.toString() : null) +
+                ", type=" + type +
+                ", status=" + status +
                 ", fagsakId=" + fagsakId +
+                ", opprettet=" + opprettet +
+                ", avsluttet=" + avsluttet +
+                ", endret=" + endret +
                 ", behandlendeEnhetId='" + behandlendeEnhetId + '\'' +
                 ", behandlendeEnhetNavn='" + behandlendeEnhetNavn + '\'' +
+                ", erAktivPapirsoknad=" + erAktivPapirsoknad +
                 ", behandlingPaaVent=" + behandlingPaaVent +
+                ", behandlingKoet=" + behandlingKoet +
                 ", ansvarligSaksbehandler='" + ansvarligSaksbehandler + '\'' +
                 ", fristBehandlingPaaVent=" + fristBehandlingPaaVent +
-                ", avsluttet=" + avsluttet +
                 ", behandlingHenlagt=" + behandlingHenlagt +
-                ", behandlingsresultat=" + (behandlingsresultat != null ? behandlingsresultat.toString() : null) +
-                ", sprakkode=" + (sprakkode != null ? sprakkode.toString() : null) +
+                ", behandlingsresultat=" + behandlingsresultat +
+                ", sprakkode=" + sprakkode +
                 ", toTrinnsBehandling=" + toTrinnsBehandling +
                 ", originalBehandlingId=" + originalBehandlingId +
-                ", links=" + (links != null ? links.toString() : null) +
+                ", links=" + links +
                 ", taskStatus='" + taskStatus + '\'' +
-                ", behandlingKoet='" + behandlingKoet + '\'' +
                 ", venteArsakKode='" + venteArsakKode + '\'' +
-                ", behandlingArsaker='" + (behandlingArsaker != null ? behandlingArsaker.toString() : null) + '\'' +
+                ", behandlingArsaker=" + behandlingArsaker +
+                ", personopplysningDto=" + personopplysningDto +
                 '}';
     }
 }

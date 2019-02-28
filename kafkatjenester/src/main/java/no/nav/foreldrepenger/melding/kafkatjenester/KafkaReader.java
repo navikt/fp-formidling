@@ -24,7 +24,7 @@ public class KafkaReader {
 
 
     @Inject
-    public KafkaReader(MeldingConsumer meldingConsumer,
+    public KafkaReader(DokumentMel meldingConsumer,
                        JsonHendelseHandler jsonOppgaveHandler) {
         this.meldingConsumer = meldingConsumer;
         this.jsonHendelseHandler = jsonOppgaveHandler;

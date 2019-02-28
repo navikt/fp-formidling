@@ -11,15 +11,15 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.IOUtils;
 
-public final class FileUtils {
+final class FileUtils {
     private FileUtils() {
     }
 
-    public static File putInTempFile(InputStream data) {
+    static File putInTempFile(InputStream data) {
         return putInTempFile(data, "test");
     }
 
-    public static File putInTempFile(InputStream data, String navnPrefix) {
+    static File putInTempFile(InputStream data, String navnPrefix) {
         if (data == null) {
             throw new IllegalArgumentException("InputStream==null. Nothing to write to temporary file");
         }

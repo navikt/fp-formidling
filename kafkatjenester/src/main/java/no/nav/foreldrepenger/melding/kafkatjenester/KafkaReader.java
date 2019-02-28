@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.meldinger.kafkatjenester;
+package no.nav.foreldrepenger.melding.kafkatjenester;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import no.nav.foreldrepenger.meldinger.kafkatjenester.jsondokumenthendelse.JsonDokumentHendelse;
+import no.nav.foreldrepenger.melding.kafkatjenester.jsondokumenthendelse.JsonDokumentHendelse;
 
 @ApplicationScoped
 public class KafkaReader {

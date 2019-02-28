@@ -7,14 +7,14 @@ import javax.validation.constraints.NotNull;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
-public class HendelseDto implements AbacDto {
+public class DokumentHendelseDto implements AbacDto {
     @NotNull
     @Min(0)
     @Max(Long.MAX_VALUE)
     private Long behandlingId;
     private String behandlingType;
     private String ytelseType;
-    private String hendelseType;
+    private String dokumentMal;
 
     public Long getBehandlingId() {
         return behandlingId;
@@ -40,12 +40,12 @@ public class HendelseDto implements AbacDto {
         this.ytelseType = ytelseType;
     }
 
-    public String getHendelseType() {
-        return hendelseType;
+    public String getDokumentMal() {
+        return dokumentMal;
     }
 
-    public void setHendelseType(String hendelseType) {
-        this.hendelseType = hendelseType;
+    public void setDokumentMal(String dokumentMal) {
+        this.dokumentMal = dokumentMal;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class HendelseDto implements AbacDto {
                 "behandlingId=" + behandlingId +
                 ", behandlingType='" + behandlingType + '\'' +
                 ", ytelseType='" + ytelseType + '\'' +
-                ", hendelseType='" + hendelseType + '\'' +
+                ", dokumentMal='" + dokumentMal + '\'' +
                 '}';
     }
 }

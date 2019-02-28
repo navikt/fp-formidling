@@ -16,7 +16,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import no.nav.foreldrepenger.melding.web.app.tjenester.dto.HendelseDto;
+import no.nav.foreldrepenger.melding.web.app.tjenester.dto.DokumentHendelseDto;
 import no.nav.vedtak.felles.jpa.Transaction;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
@@ -38,7 +38,7 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response hentForhåndsvisningDokument(
-            @ApiParam("Inneholder type av hendelse og data som skal flettes inn i brevet") @Valid HendelseDto hendelseDto) { // NOSONAR
+            @ApiParam("Inneholder type av hendelse og data som skal flettes inn i brevet") @Valid DokumentHendelseDto dokumentHendelseDto) { // NOSONAR
 
         byte[] dokument = new byte[0];
         Response.ResponseBuilder responseBuilder = Response.ok(dokument);

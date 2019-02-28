@@ -17,6 +17,7 @@
     <modules>
         <module>feed</module>
         <module>felles</module>
+        <module>dokumentdata</module>
     </modules>
 
 </project>

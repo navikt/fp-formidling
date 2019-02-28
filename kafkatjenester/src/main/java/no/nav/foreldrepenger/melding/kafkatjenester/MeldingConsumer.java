@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.meldinger.kafkatjenester;
+package no.nav.foreldrepenger.melding.kafkatjenester;
 
 import java.util.List;
 

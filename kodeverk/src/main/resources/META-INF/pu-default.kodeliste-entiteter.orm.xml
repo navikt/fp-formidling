@@ -32,5 +32,6 @@
     <entity class="no.nav.foreldrepenger.melding.kodeverk.VariantFormat"/>
     <entity class="no.nav.foreldrepenger.melding.kodeverk.Venteårsak"/>
     <entity class="no.nav.foreldrepenger.melding.kodeverk.VurderÅrsak"/>
+    <entity class="no.nav.foreldrepenger.melding.kodeverk.FagsakYtelseType"/>
 
 </entity-mappings>

@@ -42,7 +42,7 @@ public class KodeverkRepositoryImpl implements KodeverkRepository {
     LRUCache<String, Kodeliste> kodelisteCache = new LRUCache<>(1000, CACHE_ELEMENT_LIVE_TIME);
     private EntityManager entityManager;
 
-    KodeverkRepositoryImpl() {
+    public KodeverkRepositoryImpl() {
         // for CDI proxy
     }
 

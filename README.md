@@ -11,4 +11,4 @@ Spørsmål knyttet til koden eller prosjektet kan rettes til:
 
 ### For NAV-ansatte
 
-Interne henvendelser kan sendes via Slack i kanalen #bris.
+Interne henvendelser kan sendes via Slack i kanalen #fp-fomidling.

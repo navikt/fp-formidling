@@ -2,9 +2,9 @@ package no.nav.foreldrepenger.melding.sikkerhet;
 
 import java.util.Properties;
 
-class TrustStore extends PropertySetter{
+class TrustStore extends PropertySetter {
 
-    public TrustStore(String truststoreFilePath, String truststorePassword) {
+    TrustStore(String truststoreFilePath, String truststorePassword) {
         super(createTrustStoreProperties(truststoreFilePath, truststorePassword));
     }
 

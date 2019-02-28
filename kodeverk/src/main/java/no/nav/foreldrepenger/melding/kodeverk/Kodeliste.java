@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javax.persistence.Column;
@@ -21,6 +20,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,13 +39,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @DiscriminatorColumn(name = "kodeverk")
 public abstract class Kodeliste extends KodeverkBaseEntitet implements Comparable<Kodeliste> {
     public static final Comparator<Kodeliste> NULLSAFE_KODELISTE_COMPARATOR = Comparator.nullsFirst(Kodeliste::compareTo);
-    private static final String I18N_MELDINGER_KEY = "i18n.Meldinger"; //$NON-NLS-1$
-    /**
-     * Default fil er samme som property key navn.
-     */
-    private static final String I18N_MELDINGER = System.getProperty(I18N_MELDINGER_KEY, I18N_MELDINGER_KEY);
-    private static final String I18N_KEYFORMAT = "Kodeverk.%s.%s";//$NON-NLS-1$
-    private static final ResourceBundle BUNDLE = ResourceBundle.getBundle(I18N_MELDINGER); // $NON-NLS-1$
+    private static final Logger LOG = LoggerFactory.getLogger(Kodeliste.class);
+
     @Id
     @Column(name = "kodeverk", nullable = false)
     private String kodeverk;
@@ -117,10 +114,6 @@ public abstract class Kodeliste extends KodeverkBaseEntitet implements Comparabl
         this.gyldigTilOgMed = tom;
     }
 
-    public static String getI18nMeldingerKey() {
-        return I18N_MELDINGER_KEY;
-    }
-
     public static List<String> kodeVerdier(Kodeliste... entries) {
         return kodeVerdier(Arrays.asList(entries));
     }
@@ -153,20 +146,6 @@ public abstract class Kodeliste extends KodeverkBaseEntitet implements Comparabl
      */
     public String getSpråk() {
         return språk;
-    }
-
-    public String getNavn() {
-        if (displayNavn == null) {
-            String key = String.format(I18N_KEYFORMAT, getClass().getSimpleName(), getKode());
-            if (BUNDLE.containsKey(key)) {
-                this.displayNavn = BUNDLE.getString(key);
-            } else {
-                // FIXME (FC): må her bytte ut med brukers lang fra HTTP Accept-Language header når får på plass full
-                // i18n
-                this.displayNavn = navn;
-            }
-        }
-        return displayNavn;
     }
 
     public LocalDate getGyldigFraOgMed() {

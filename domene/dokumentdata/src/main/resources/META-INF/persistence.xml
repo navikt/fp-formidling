@@ -8,9 +8,8 @@
     <persistence-unit name="pu-default" transaction-type="RESOURCE_LOCAL">
         <provider>no.nav.vedtak.felles.jpa.VLPersistenceUnitProvider</provider>
         <non-jta-data-source>jdbc/defaultDS</non-jta-data-source>
-
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
             <property name="hibernate.connection.autocommit" value="false"/>
             <property name="hibernate.jdbc.use_get_generated_keys" value="true"/>
             <property name="org.hibernate.flushMode" value="COMMIT"/>

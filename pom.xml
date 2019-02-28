@@ -170,8 +170,6 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
-
-            <!-- Prosjektinterne -->
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
                 <artifactId>felles-integrasjon-bom</artifactId>
@@ -179,7 +177,7 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles.kafka</groupId>
-                <artifactId>consum</artifactId>
+                <artifactId>consumer</artifactId>
                 <version>${felles.version}</version>
             </dependency>
             <dependency>

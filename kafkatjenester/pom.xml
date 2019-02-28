@@ -22,6 +22,10 @@
             <artifactId>kafka-klient</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>dokumentdata</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-testutilities</artifactId>
             <scope>test</scope>

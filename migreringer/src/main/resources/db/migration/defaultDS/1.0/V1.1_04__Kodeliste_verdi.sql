@@ -92,7 +92,7 @@ values (nextval('seq_kodeliste'), 'BEHANDLING_STEG_STATUS', 'STARTET', null,
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'BEHANDLING_STEG_STATUS', 'VENTER', null,
-        'Steget er satt på vent i påvente at at en ekstern hendelse eller tidspunkt skal passere.',
+        'Steget er satt på vent i påvente at at en ekstern dokumentMal eller tidspunkt skal passere.',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'BEHANDLING_STEG_STATUS', 'UTGANG', null,

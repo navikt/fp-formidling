@@ -27,7 +27,7 @@ import io.swagger.annotations.ApiParam;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
-import no.nav.foreldrepenger.melding.web.app.tjenester.dto.HendelseDto;
+import no.nav.foreldrepenger.melding.web.app.tjenester.dto.DokumentHendelseDto;
 import no.nav.vedtak.felles.jpa.Transaction;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
@@ -57,9 +57,9 @@ public class HendelseRestTjeneste {
     @ApiOperation(value = "Proseserer hendelse og sender ")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response prossesereHendelse(@NotNull @ApiParam("hendelseDto") @Valid HendelseDto hendelseDto) {
-        LOGGER.info("hendelse = " + hendelseDto);
-        final Optional<BehandlingDto> behandlingInfo = behandlingRestKlient.hentBehandling(new BehandlingIdDto(hendelseDto.getBehandlingId()));
+    public Response prossesereHendelse(@NotNull @ApiParam("DokumentHendelseDto") @Valid DokumentHendelseDto dokumentHendelseDto) {
+        LOGGER.info("hendelse = " + dokumentHendelseDto);
+        final Optional<BehandlingDto> behandlingInfo = behandlingRestKlient.hentBehandling(new BehandlingIdDto(dokumentHendelseDto.getBehandlingId()));
         Response.ResponseBuilder responseBuilder;
         if (behandlingInfo.isPresent()) {
             responseBuilder = Response.ok().entity(behandlingInfo.get());

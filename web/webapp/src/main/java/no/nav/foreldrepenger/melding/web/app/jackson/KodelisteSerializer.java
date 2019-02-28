@@ -24,7 +24,6 @@ public class KodelisteSerializer extends StdSerializer<Kodeliste> {
         jgen.writeStartObject();
 
         jgen.writeStringField("kode", value.getKode());
-        jgen.writeStringField("navn", value.getNavn());
         jgen.writeStringField("kodeverk", value.getKodeverk());
 
         jgen.writeEndObject();

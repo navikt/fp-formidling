@@ -4,7 +4,7 @@ import java.util.Properties;
 
 class KeyStore extends PropertySetter {
 
-    public KeyStore(String filePath, String password) {
+    KeyStore(String filePath, String password) {
         super(createKeyStoreProperties(filePath, password));
     }
 

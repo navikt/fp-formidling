@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import com.codahale.metrics.annotation.Timed;
 
 import no.nav.foreldrepenger.melding.feed.poller.FeedPoller;
-import no.nav.foreldrepenger.meldinger.kafkatjenester.KafkaReader;
+import no.nav.foreldrepenger.melding.kafkatjenester.KafkaReader;
 
 @ApplicationScoped
 public class KafkaFeedPoller implements FeedPoller {

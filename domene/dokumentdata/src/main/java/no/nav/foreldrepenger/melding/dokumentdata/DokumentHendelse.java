@@ -45,7 +45,7 @@ public class DokumentHendelse extends BaseEntitet {
     private FagsakYtelseType ytelseType;
 
     @Column(name = "gjelder_vedtak")
-    private boolean gjelderVedtak;
+    private Boolean gjelderVedtak;
 
     @Column
     private String tittel;
@@ -99,11 +99,11 @@ public class DokumentHendelse extends BaseEntitet {
         this.behandlingType = behandlingType;
     }
 
-    public boolean isGjelderVedtak() {
+    public Boolean isGjelderVedtak() {
         return gjelderVedtak;
     }
 
-    private void setGjelderVedtak(boolean gjelderVedtak) {
+    private void setGjelderVedtak(Boolean gjelderVedtak) {
         this.gjelderVedtak = gjelderVedtak;
     }
 
@@ -164,7 +164,7 @@ public class DokumentHendelse extends BaseEntitet {
         private BehandlingType behandlingType;
         private String tittel;
         private String fritekst;
-        private boolean gjelderVedtak;
+        private Boolean gjelderVedtak;
 
         public DokumentHendelse.Builder medDokumentMalType(DokumentMalType dokumentMalType) {
             this.dokumentMalType = dokumentMalType;
@@ -196,7 +196,7 @@ public class DokumentHendelse extends BaseEntitet {
             return this;
         }
 
-        public DokumentHendelse.Builder medGjelderVedtak(boolean gjelderVedtak) {
+        public DokumentHendelse.Builder medGjelderVedtak(Boolean gjelderVedtak) {
             this.gjelderVedtak = gjelderVedtak;
             return this;
         }

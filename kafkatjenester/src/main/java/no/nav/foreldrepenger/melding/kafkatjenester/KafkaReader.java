@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import no.nav.foreldrepenger.melding.kafkatjenester.jsondokumenthendelse.JsonDokumentHendelse;
+import no.vedtak.felles.kafka.DokumentMeldingConsumer;
+import no.vedtak.felles.kafka.MeldingConsumer;
 
 @ApplicationScoped
 public class KafkaReader {
@@ -24,7 +26,7 @@ public class KafkaReader {
 
 
     @Inject
-    public KafkaReader(MeldingConsumer meldingConsumer,
+    public KafkaReader(DokumentMeldingConsumer meldingConsumer,
                        JsonHendelseHandler jsonOppgaveHandler) {
         this.meldingConsumer = meldingConsumer;
         this.jsonHendelseHandler = jsonOppgaveHandler;

@@ -31,7 +31,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <felles.version>1.0.0_20190239143310_3c02037</felles.version>
+        <felles.version>1.0.0_20190259100910_15b5f0b</felles.version>
         <metrics.version>3.2.5</metrics.version>
 
         <abac-attribute-constants.version>2.0.0</abac-attribute-constants.version>
@@ -170,16 +170,14 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
-
-            <!-- Prosjektinterne -->
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
                 <artifactId>felles-integrasjon-bom</artifactId>
                 <version>${felles.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-                <artifactId>kafka-klient</artifactId>
+                <groupId>no.nav.foreldrepenger.felles.kafka</groupId>
+                <artifactId>consumer</artifactId>
                 <version>${felles.version}</version>
             </dependency>
             <dependency>

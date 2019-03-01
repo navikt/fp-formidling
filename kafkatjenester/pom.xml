@@ -18,8 +18,8 @@
             <artifactId>kodeverk</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-            <artifactId>kafka-klient</artifactId>
+            <groupId>no.nav.foreldrepenger.felles.kafka</groupId>
+            <artifactId>consumer</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>

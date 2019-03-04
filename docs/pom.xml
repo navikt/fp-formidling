@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>felles</artifactId>
+            <artifactId>domene</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>

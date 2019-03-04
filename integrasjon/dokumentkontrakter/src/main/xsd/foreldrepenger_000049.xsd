@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:felles="http://nav.no/foreldrepenger/melding/integrasjon/dokument/felles"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           targetNamespace="http://nav.no/foreldrepenger/melding/integrasjon/dokument/innhentopplysninger"
+           xmlns="http://nav.no/foreldrepenger/melding/integrasjon/dokument/innhentopplysninger">
+
+    <xs:import namespace="http://nav.no/foreldrepenger/melding/integrasjon/dokument/felles"
+               schemaLocation="foreldrepenger_felles.xsd"/>
+
+    <xs:element name="brevdata" type="brevdataType"/>
+
+    <xs:complexType name="brevdataType">
+        <xs:sequence>
+            <xs:element type="felles:fellesType" name="felles"/>
+            <xs:element type="fagType" name="fag"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="fagType">
+        <xs:all>
+            <xs:element type="xs:date" name="soknadDato"/>
+            <xs:element type="xs:date" name="fristDato"/>
+            <xs:element type="felles:nonEmptyStringType" name="fritekst"/>
+            <xs:element type="felles:nonEmptyStringType" name="sokersNavn"/>
+            <xs:element type="ytelseTypeKode" name="ytelseType"/>
+            <xs:element type="behandlingsTypeKode" name="behandlingsType"/>
+            <xs:element type="personstatusKode" name="personstatus"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:simpleType name="ytelseTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ES">
+                <xs:annotation>
+                    <xs:documentation>Engangsstønad</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FP">
+                <xs:annotation>
+                    <xs:documentation>Foreldrepenger</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="behandlingsTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="FOERSTEGANGSBEHANDLING">
+                <xs:annotation>
+                    <xs:documentation>Førstegangsbehandling</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="REVURDERING">
+                <xs:annotation>
+                    <xs:documentation>Revurdering</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="KLAGE">
+                <xs:annotation>
+                    <xs:documentation>Klage</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ENDRINGSSØKNAD">
+                <xs:annotation>
+                    <xs:documentation>Endringssøknad</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="personstatusKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="DOD">
+                <xs:annotation>
+                    <xs:documentation>Bruker som har søkt er død og brevet sendes til dødsboet</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ANNET">
+                <xs:annotation>
+                    <xs:documentation>Annet</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

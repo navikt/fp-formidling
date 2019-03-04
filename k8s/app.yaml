@@ -56,24 +56,23 @@ spec:
       value: fpformidling
     - name: APP_ENVIRONMENT
       value: MILJO_VAL
+      #Webtjenester
     - name: LOADBALANCER_FQDN
       value: loadbalancer.url
     - name: ABAC_PDP_ENDPOINT_URL
       value: abac.pdp.endpoint.url
     - name: SECURITYTOKENSERVICE_URL
       value: securityTokenService.url
-    - name: OIDC_STS_ISSUERURL
-      value: oidc_sts.issuerUrl
-    - name: OIDC_STS_JWKSURL
-      value: oidc_sts.jwksUrl
     - name: DOKUMENTPRODUKSJON_V2_URL
       value: Dokumentproduksjon_v2.url
     - name: FPSAK_REST_BASE_URL
       value: fpsak_rest_base.url
     - name: KODEVERK_V2_URL
       value: Kodeverk_v2.url
+      #Systembruker
     - name: SYSTEMBRUKER_USERNAME
       value: systembruker.username
+    #OpenID
     - name: OPENIDCONNECT_ISSOHOST
       value: OpenIdConnect.issoHost
     - name: OPENIDCONNECT_ISSOHOST
@@ -84,6 +83,7 @@ spec:
       value: OpenIdConnect.issoJwks
     - name: OPENIDCONNECT_USERNAME
       value: OpenIdConnect.username
+      #OIDC
     - name: OIDC_AAD_B2C_AGENTNAME
       value: oidc_aad_b2c.agentName
     - name: OIDC_AAD_B2C_PASSWORD
@@ -94,16 +94,27 @@ spec:
       value: oidc_aad_b2c.issuerUrl
     - name: OIDC_AAD_B2C_JWKSURL
       value: oidc_aad_b2c.jwksUrl
+    - name: OIDC_STS_ISSUERURL
+      value: oidc_sts.issuerUrl
+    - name: OIDC_STS_JWKSURL
+      value: oidc_sts.jwksUrl
+      #Dokumenthendelse
     - name: KAFKA_DOKUMENTHENDELSE_SCHEMA_REGISTRY_URL
       value: kafka.dokumenthendelse.schema.registry.url
-    - name: KAFKA_DOKUMENTHENDELSE_SCHEMA_REGISTRY_URL
-      value: kafka.dokumenthendelse.schema.registry.url
-    - name: KAFKA_CLIENT_ID_CONFIG
-      value: kafka.client.id.config
     - name: KAFKA_DOKUMENTHENDELSE_GROUP_ID_CONFIG
       value: kafka.dokumenthendelse.group.id.config
     - name: KAFKA_DOKUMENTHENDELSE_TOPIC
       value: kafka.dokumenthendelse.topic
+    #DokumentHistorikk
+    - name: KAFKA_DOKUMENTHISTORIKK_SCHEMA_REGISTRY_URL
+      value: kafka.dokumenthistorikk.schema.registry.url
+    - name: KAFKA_DOKUMENTHISTORIKK_CLIENT_ID
+      value: kafka.dokumenthistorikk.client.id
+    - name: KAFKA_DOKUMENTHISTORIKK_TOPIC
+      value: kafka.dokumenthistorikk.topic
+    #Generell Kafka
+    - name: KAFKA_CLIENT_ID_CONFIG
+      value: kafka.client.id.config
     - name: BOOTSTRAP_SERVERS
       value: bootstrap.servers
     - name: KAFKA_ENABLE_AUTO_COMMIT_CONFIG
@@ -114,6 +125,7 @@ spec:
       value: kafka.auto.offset.reset.config
     - name: KAFKA_USERNAME
       value: kafka.username
+      #Database
     - name: DEFAULTDS_USERNAME
       value: defaultDS.username
     - name: DEFAULTDS_URL

@@ -14,16 +14,16 @@
     <dependencies>
 
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>kodeverk</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.foreldrepenger.felles.kafka</groupId>
             <artifactId>consumer</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav.foreldrepenger.felles.kafka</groupId>
+            <artifactId>producer</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>dokumentdata</artifactId>
+            <artifactId>domene</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
@@ -72,6 +72,16 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>hendelsekontrakter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>test-sikkerhet</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

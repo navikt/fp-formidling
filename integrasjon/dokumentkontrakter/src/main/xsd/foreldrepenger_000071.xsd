@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:felles="http://nav.no/foreldrepenger/melding/integrasjon/dokument/felles"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           targetNamespace="http://nav.no/foreldrepenger/melding/integrasjon/dokument/innsyn"
+           xmlns="http://nav.no/foreldrepenger/melding/integrasjon/dokument/innsyn">
+
+    <xs:import namespace="http://nav.no/foreldrepenger/melding/integrasjon/dokument/felles"
+               schemaLocation="foreldrepenger_felles.xsd"/>
+
+    <xs:element name="brevdata" type="brevdataType"/>
+
+    <xs:complexType name="brevdataType">
+        <xs:sequence>
+            <xs:element type="felles:fellesType" name="felles"/>
+            <xs:element type="fagType" name="fag"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="fagType">
+        <xs:all>
+            <xs:element type="ytelseTypeKode" name="ytelseType"/>
+            <xs:element type="innsynResultatTypeKode" name="innsynResultatType"/>
+            <xs:element type="felles:nonEmptyStringType" name="fritekst"/>
+            <xs:element type="xs:integer" name="klageFristUker"/>
+        </xs:all>
+    </xs:complexType>
+
+    <xs:simpleType name="ytelseTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="ES">
+                <xs:annotation>
+                    <xs:documentation>Engangsstønad</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="FP">
+                <xs:annotation>
+                    <xs:documentation>Foreldrepenger</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="innsynResultatTypeKode">
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="AVVIST">
+                <xs:annotation>
+                    <xs:documentation>NAV avslår innsyn i saken</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="DELVISINNVILGET">
+                <xs:annotation>
+                    <xs:documentation>Bruker har delvis innsyn i saken</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="INNVILGET">
+                <xs:annotation>
+                    <xs:documentation>Bruker har fullt innsyn</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

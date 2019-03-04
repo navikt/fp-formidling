@@ -24,8 +24,7 @@
         <!-- Kontrakter -->
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>kontrakter</artifactId>
-            <classifier>jaxb</classifier>
+            <artifactId>dokumentkontrakter</artifactId>
         </dependency>
     </dependencies>
 </project>

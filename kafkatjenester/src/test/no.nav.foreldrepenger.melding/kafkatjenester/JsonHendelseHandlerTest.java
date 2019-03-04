@@ -8,12 +8,15 @@ import javax.persistence.EntityManager;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
-import no.nav.foreldrepenger.melding.kafkatjenester.jsondokumenthendelse.JsonDokumentHendelse;
-import no.nav.foreldrepenger.melding.kodeverk.BehandlingType;
+import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
+import no.nav.foreldrepenger.melding.kafkatjenester.dokumenthendelse.JsonHendelseHandler;
+import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkTjeneste;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepositoryImpl;
 
@@ -24,10 +27,11 @@ public class JsonHendelseHandlerTest {
 
     private DokumentRepository dokumentRepository;
     private KodeverkRepository kodeverkRepository;
+    private DokumentHistorikkTjeneste dokumentHistorikkTjeneste;
 
     private JsonHendelseHandler jsonHendelseHandler;
 
-    private JsonDokumentHendelse dokumentHendelse;
+    private DokumentHendelseDto dokumentHendelse;
 
     private long behandlingId = 123l;
 
@@ -37,8 +41,9 @@ public class JsonHendelseHandlerTest {
         EntityManager em = repositoryRule.getEntityManager();
         dokumentRepository = new DokumentRepositoryImpl(em);
         kodeverkRepository = new KodeverkRepositoryImpl(em);
-        jsonHendelseHandler = new JsonHendelseHandler(dokumentRepository, kodeverkRepository);
-        dokumentHendelse = new JsonDokumentHendelse();
+        dokumentHistorikkTjeneste = Mockito.mock(DokumentHistorikkTjeneste.class);
+        jsonHendelseHandler = new JsonHendelseHandler(dokumentRepository, kodeverkRepository, dokumentHistorikkTjeneste);
+        dokumentHendelse = new DokumentHendelseDto();
     }
 
     @Test

@@ -13,11 +13,10 @@
         <module>docs</module>
         <module>migreringer</module>
         <module>kafkatjenester</module>
+        <module>integrasjon</module>
         <module>web</module>
-        <module>domene</module>
-        <module>kodeverk</module>
+        <module>dokumentlager</module>
         <module>domenetjenester</module>
-        <module>kontrakter</module>
         <module>test-sikkerhet</module>
     </modules>
 
@@ -74,22 +73,17 @@
         <dependencies>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>dokumentlager</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>domene</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>kodeverk</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>dokumentdata</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>kodeverk</artifactId>
+                <artifactId>domene</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>
             </dependency>
@@ -111,16 +105,13 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>felles</artifactId>
-                <type>jar</type>
+                <artifactId>hendelsekontrakter</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>kontrakter</artifactId>
-                <type>jar</type>
+                <artifactId>dokumentkontrakter</artifactId>
                 <version>${project.version}</version>
-                <classifier>jaxb</classifier>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>

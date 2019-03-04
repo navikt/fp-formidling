@@ -21,12 +21,9 @@ import no.vedtak.felles.kafka.MeldingProducer;
 @ApplicationScoped
 public class DokumentHistorikkTjeneste {
 
-    private static final Logger logger = LoggerFactory.getLogger(DokumentHistorikkTjeneste.class);
-
     private static final Logger log = LoggerFactory.getLogger(DokumentHistorikkTjeneste.class);
 
     private static final ObjectMapper mapper = getObjectMapper();
-
 
     private MeldingProducer meldingProducer;
 

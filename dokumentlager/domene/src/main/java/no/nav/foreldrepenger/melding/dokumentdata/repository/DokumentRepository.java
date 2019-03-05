@@ -5,10 +5,13 @@ import java.util.Optional;
 
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentHendelse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
+import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 
 public interface DokumentRepository {
 
     void lagre(DokumentHendelse dokumentHendelse);
+
+    void lagre(EventmottakFeillogg eventmottakFeillogg);
 
     Optional<DokumentHendelse> hentDokumentHendelseMedId(long id);
 

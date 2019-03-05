@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentHendelse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
+import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
 import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
 
@@ -32,7 +33,17 @@ public class DokumentRepositoryImpl implements DokumentRepository {
 
     @Override
     public void lagre(DokumentHendelse dokumentHendelse) {
-        entityManager.persist(dokumentHendelse);
+        lagreOgFlush(dokumentHendelse);
+    }
+
+    @Override
+    public void lagre(EventmottakFeillogg eventmottakFeillogg) {
+        entityManager.persist(eventmottakFeillogg);
+        entityManager.flush();
+    }
+
+    private void lagreOgFlush(Object objektTilLagring) {
+        entityManager.persist(objektTilLagring);
         entityManager.flush();
     }
 

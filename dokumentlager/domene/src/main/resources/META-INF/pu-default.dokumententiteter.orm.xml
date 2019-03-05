@@ -5,11 +5,12 @@
       http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"
                  version="2.1">
 
-
     <sequence-generator name="SEQ_DOKUMENT_HENDELSE" allocation-size="50" sequence-name="SEQ_DOKUMENT_HENDELSE"/>
+    <sequence-generator name="SEQ_EVENTMOTTAK_FEILLOGG" allocation-size="50" sequence-name="SEQ_EVENTMOTTAK_FEILLOGG"/>
 
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType"/>
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentHendelse"/>
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentMalRestriksjon"/>
+    <entity class="no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg"/>
 
 </entity-mappings>

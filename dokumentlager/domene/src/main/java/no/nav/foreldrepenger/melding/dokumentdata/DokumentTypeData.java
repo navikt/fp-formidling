@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -30,11 +29,10 @@ public class DokumentTypeData extends BaseEntitet implements IndexKey {
     @Column(name = "doksys_id", nullable = false)
     private String doksysId;
 
-    @Column(name = "verdi", nullable = true)
+    @Column(name = "verdi")
     private String verdi;
 
-    @Lob
-    @Column(name = "strukturert_verdi")
+    @Column(name = "strukturert_verdi", columnDefinition = "text")
     private String strukturertVerdi;
 
     @ManyToOne(optional = false)

@@ -17,6 +17,10 @@
     <dependencies>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>domene</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>fpsak</artifactId>
         </dependency>
 

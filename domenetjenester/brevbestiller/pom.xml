@@ -15,6 +15,11 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>fpsak</artifactId>
+        </dependency>
+
         <!-- Integrasjon avhengigheter -->
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>

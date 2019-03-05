@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.melding.kafkatjenester;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
@@ -12,6 +14,7 @@ import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentHendelse;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
@@ -63,9 +66,12 @@ public class JsonHendelseHandlerTest {
     @Test
     public void hendelseMedBareBehandlingId_skalLagres() {
         dokumentHendelse.setBehandlingId(behandlingId);
+        dokumentHendelse.setFritekst("fritekst");
         jsonHendelseHandler.prosesser(dokumentHendelse);
 
-        assertThat(dokumentRepository.hentDokumentHendelserForBehandling(behandlingId)).hasSize(1);
+        List<DokumentHendelse> hendelser = dokumentRepository.hentDokumentHendelserForBehandling(behandlingId);
+        assertThat(hendelser).hasSize(1);
+        assertThat(hendelser.get(0).getFritekst()).isEqualToIgnoringCase("fritekst");
     }
 
 }

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.kafkatjenester.dokumenthendelse;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -12,6 +13,9 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
+import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
+import no.nav.foreldrepenger.melding.eventmottak.EventmottakStatus;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.vedtak.felles.kafka.DokumentMeldingConsumer;
 import no.vedtak.felles.kafka.MeldingConsumer;
@@ -23,13 +27,16 @@ public class KafkaReader {
     private JsonHendelseHandler jsonHendelseHandler;
     private MeldingConsumer meldingConsumer;
     private StringBuilder feilmelding;
+    private DokumentRepository dokumentRepository;
 
 
     @Inject
     public KafkaReader(DokumentMeldingConsumer meldingConsumer,
-                       JsonHendelseHandler jsonOppgaveHandler) {
+                       JsonHendelseHandler jsonOppgaveHandler,
+                       DokumentRepository dokumentRepository) {
         this.meldingConsumer = meldingConsumer;
         this.jsonHendelseHandler = jsonOppgaveHandler;
+        this.dokumentRepository = dokumentRepository;
     }
 
     public KafkaReader() {
@@ -79,7 +86,7 @@ public class KafkaReader {
     }
 
     private void loggFeiletDeserialisering(String melding) {
-        log.error("Klarte ikke deserialisere: {}", melding);
+        dokumentRepository.lagre(new EventmottakFeillogg(melding, EventmottakStatus.FEILET, LocalDateTime.now(), feilmelding.toString()));
     }
 
 }

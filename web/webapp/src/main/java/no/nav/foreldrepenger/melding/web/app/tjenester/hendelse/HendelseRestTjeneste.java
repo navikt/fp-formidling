@@ -27,6 +27,7 @@ import io.swagger.annotations.ApiParam;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
+import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.vedtak.felles.jpa.Transaction;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
@@ -39,14 +40,16 @@ public class HendelseRestTjeneste {
     private static final Logger LOGGER = LoggerFactory.getLogger(HendelseRestTjeneste.class);
 
     private BehandlingRestKlient behandlingRestKlient;
+    private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
 
     public HendelseRestTjeneste() {
         //For Rest-CDI
     }
 
     @Inject
-    public HendelseRestTjeneste(BehandlingRestKlient behandlingRestKlient) {
+    public HendelseRestTjeneste(BehandlingRestKlient behandlingRestKlient, BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste) {
         this.behandlingRestKlient = behandlingRestKlient;
+        this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
     }
 
     @POST
@@ -62,6 +65,9 @@ public class HendelseRestTjeneste {
         final Optional<BehandlingDto> behandlingInfo = behandlingRestKlient.hentBehandling(new BehandlingIdDto(dokumentHendelseDto.getBehandlingId()));
         Response.ResponseBuilder responseBuilder;
         if (behandlingInfo.isPresent()) {
+            final byte[] brevPdfVersjon = brevBestillerApplikasjonTjeneste.forhandsvisBrev(behandlingInfo.get());
+            LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
+
             responseBuilder = Response.ok().entity(behandlingInfo.get());
         } else {
             responseBuilder = Response.noContent();

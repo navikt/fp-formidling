@@ -35,5 +35,9 @@
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>dokumentkontrakter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>hendelsekontrakter</artifactId>
+        </dependency>
     </dependencies>
 </project>

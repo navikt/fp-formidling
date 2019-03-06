@@ -58,8 +58,9 @@ public class DokumentHendelse extends BaseEntitet {
     @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + HistorikkAktør.DISCRIMINATOR + "'"))
     private HistorikkAktør historikkAktør;
 
-    DokumentHendelse(Long behandlingId) {
+    DokumentHendelse(Long behandlingId, FagsakYtelseType ytelseType) {
         this.behandlingId = behandlingId;
+        this.ytelseType = ytelseType;
     }
 
     public static DokumentHendelse.Builder builder() {
@@ -226,9 +227,8 @@ public class DokumentHendelse extends BaseEntitet {
 
         public DokumentHendelse build() {
             verifyStateForBuild();
-            DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingId);
+            DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingId, ytelseType);
             dokumentHendelse.behandlingType = behandlingType;
-            dokumentHendelse.ytelseType = ytelseType;
             dokumentHendelse.gjelderVedtak = gjelderVedtak;
             dokumentHendelse.fritekst = fritekst;
             dokumentHendelse.tittel = tittel;
@@ -239,6 +239,7 @@ public class DokumentHendelse extends BaseEntitet {
 
         private void verifyStateForBuild() {
             Objects.requireNonNull(behandlingId, "behandlingId");
+            Objects.requireNonNull(ytelseType, "ytelseType");
         }
 
     }

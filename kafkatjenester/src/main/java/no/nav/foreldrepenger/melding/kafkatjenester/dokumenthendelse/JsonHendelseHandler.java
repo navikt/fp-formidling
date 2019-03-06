@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentHendelse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
@@ -24,6 +25,7 @@ public class JsonHendelseHandler {
     private DokumentRepository dokumentRepository;
     private KodeverkRepository kodeverkRepository;
     private DokumentHistorikkTjeneste dokumentHistorikkTjeneste;
+    private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
 
     public JsonHendelseHandler() {
         //CDI
@@ -32,25 +34,33 @@ public class JsonHendelseHandler {
     @Inject
     public JsonHendelseHandler(DokumentRepository dokumentRepository,
                                KodeverkRepository kodeverkRepository,
-                               DokumentHistorikkTjeneste dokumentHistorikkTjeneste) {
+                               DokumentHistorikkTjeneste dokumentHistorikkTjeneste,
+                               BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste) {
         this.dokumentRepository = dokumentRepository;
         this.kodeverkRepository = kodeverkRepository;
         this.dokumentHistorikkTjeneste = dokumentHistorikkTjeneste;
+        this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
 
     }
 
     public void prosesser(DokumentHendelseDto jsonHendelse) {
-        DokumentHendelse hendelse = new DokumentHendelse.Builder()
+        DokumentHendelse hendelse = hendelseFraDto(jsonHendelse);
+
+        dokumentRepository.lagre(hendelse);
+        log.info("Prossessert og lagret hendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
+        brevBestillerApplikasjonTjeneste.bestillBrev(hendelse);
+        //TODO ta output fra bestillbrev og push det til historikk
+        lagHistorikk(hendelse);
+    }
+
+    private DokumentHendelse hendelseFraDto(DokumentHendelseDto jsonHendelse) {
+        return new DokumentHendelse.Builder()
                 .medBehandlingId(jsonHendelse.getBehandlingId())
                 .medBehandlingType(utledBehandlingType(jsonHendelse.getBehandlingType()))
                 .medFritekst(jsonHendelse.getFritekst())
                 .medTittel(jsonHendelse.getTittel())
                 .medDokumentMalType(utleddokumentMalType(jsonHendelse.getDokumentMal()))
                 .build();
-
-        dokumentRepository.lagre(hendelse);
-        log.info("Prossessert og lagret hendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
-        lagHistorikk(hendelse);
     }
 
     private void lagHistorikk(DokumentHendelse hendelse) {

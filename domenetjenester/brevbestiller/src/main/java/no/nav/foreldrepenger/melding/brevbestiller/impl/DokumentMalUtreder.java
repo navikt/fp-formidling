@@ -4,11 +4,10 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentHendelse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepository;
-import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 class DokumentMalUtreder {
@@ -24,31 +23,33 @@ class DokumentMalUtreder {
         this.kodeverkTabellRepository = kodeverkTabellRepository;
     }
 
-    private static DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandlingDto, DokumentHendelseDto dto) {
+    private static DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandlingDto, DokumentHendelse hendelse) {
+        //TODO
         return null;
     }
 
-    private static DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling, DokumentHendelseDto dto) {
+    private static DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
+        //TODO
         return null;
     }
 
-    DokumentMalType utredDokumentmal(Behandling behandling, DokumentHendelseDto dto) {
-        if (dto.isGjelderVedtak()) {
-            return utledVedtaksbrev(behandling, dto);
+    DokumentMalType utredDokumentmal(Behandling behandling, DokumentHendelse hendelse) {
+        if (hendelse.getDokumentMalType() != null) {
+            return hendelse.getDokumentMalType();
         }
-        if (!StringUtils.nullOrEmpty(dto.getDokumentMal())) {
-            return kodeverkTabellRepository.finnDokumentMalType(dto.getDokumentMal());
+        if (hendelse.isGjelderVedtak()) {
+            return utledVedtaksbrev(behandling, hendelse);
         }
-        return null;
+        throw new IllegalStateException("Klarer ikke utlede dokumentmal");
     }
 
-    private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelseDto dto) {
-        if (FagsakYtelseType.FORELDREPENGER.getKode().equals(dto.getYtelseType())) {
-            return mapForeldrepengerVedtaksbrev(behandling, dto);
-        } else if (FagsakYtelseType.ENGANGSTØNAD.getKode().equals(dto.getYtelseType())) {
-            return mapEngangstønadVedtaksbrev(behandling, dto);
+    private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
+        if (FagsakYtelseType.FORELDREPENGER.equals(hendelse.getYtelseType())) {
+            return mapForeldrepengerVedtaksbrev(behandling, hendelse);
+        } else if (FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType())) {
+            return mapEngangstønadVedtaksbrev(behandling, hendelse);
         }
-        throw new IllegalStateException("Finner ikke ytelse: " + dto.getYtelseType());
+        throw new IllegalStateException("Finner ikke ytelse: " + hendelse.getYtelseType());
     }
 
 }

@@ -35,8 +35,7 @@ public class HendelseRepositoryImpl implements HendelseRepository {
 
     @Override
     public void lagre(EventmottakFeillogg eventmottakFeillogg) {
-        entityManager.persist(eventmottakFeillogg);
-        entityManager.flush();
+        lagreOgFlush(eventmottakFeillogg);
     }
 
     @Override

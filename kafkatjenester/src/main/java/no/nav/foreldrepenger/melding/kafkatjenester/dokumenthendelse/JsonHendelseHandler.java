@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHistorikkDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -58,8 +59,10 @@ public class JsonHendelseHandler {
     }
 
     private DokumentHendelse hendelseFraDto(DokumentHendelseDto jsonHendelse) {
+        //TODO HISTORIKKAKTØR OG FLERE FELTER
         return new DokumentHendelse.Builder()
                 .medBehandlingId(jsonHendelse.getBehandlingId())
+                .medYtelseType(utledYtelseType(jsonHendelse.getYtelseType()))
                 .medBehandlingType(utledBehandlingType(jsonHendelse.getBehandlingType()))
                 .medFritekst(jsonHendelse.getFritekst())
                 .medTittel(jsonHendelse.getTittel())
@@ -78,6 +81,13 @@ public class JsonHendelseHandler {
             return null;
         }
         return kodeverkRepository.finn(BehandlingType.class, behandlingType);
+    }
+
+    private FagsakYtelseType utledYtelseType(String ytelseType) {
+        if (StringUtils.nullOrEmpty(ytelseType)) {
+            return null;
+        }
+        return kodeverkRepository.finn(FagsakYtelseType.class, ytelseType);
     }
 
     private DokumentMalType utleddokumentMalType(String dokumentmal) {

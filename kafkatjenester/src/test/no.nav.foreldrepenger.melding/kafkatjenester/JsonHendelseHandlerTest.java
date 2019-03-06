@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonT
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
@@ -76,14 +77,14 @@ public class JsonHendelseHandlerTest {
     }
 
     @Test
-    public void hendelseMedBareBehandlingId_skalLagres() {
+    public void hendelseMedBareBehandlingIdOgYtelseType_skalLagres() {
         dokumentHendelse.setBehandlingId(behandlingId);
-        dokumentHendelse.setFritekst("fritekst");
+        dokumentHendelse.setYtelseType("FP");
         jsonHendelseHandler.prosesser(dokumentHendelse);
 
         List<DokumentHendelse> hendelser = hendelseRepository.hentDokumentHendelserForBehandling(behandlingId);
         assertThat(hendelser).hasSize(1);
-        assertThat(hendelser.get(0).getFritekst()).isEqualToIgnoringCase("fritekst");
+        assertThat(hendelser.get(0).getYtelseType()).isEqualTo(FagsakYtelseType.FORELDREPENGER);
     }
 
 }

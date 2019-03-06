@@ -1,4 +1,4 @@
-package java.no.nav.foreldrepenger.melding.dokumentdata.repository;
+package no.nav.foreldrepenger.melding.dokumentdata.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,8 +8,6 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
 
 public class DokumentRepositoryImplTest {
 

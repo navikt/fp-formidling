@@ -9,7 +9,7 @@
     <sequence-generator name="SEQ_EVENTMOTTAK_FEILLOGG" allocation-size="50" sequence-name="SEQ_EVENTMOTTAK_FEILLOGG"/>
 
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType"/>
-    <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentHendelse"/>
+    <entity class="no.nav.foreldrepenger.melding.hendelser.DokumentHendelse"/>
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentMalRestriksjon"/>
     <entity class="no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg"/>
 

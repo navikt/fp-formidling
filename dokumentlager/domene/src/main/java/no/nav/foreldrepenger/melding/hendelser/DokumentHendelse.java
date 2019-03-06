@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.dokumentdata;
+package no.nav.foreldrepenger.melding.hendelser;
 
 import java.util.Objects;
 
@@ -15,6 +15,7 @@ import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.vedtak.felles.jpa.BaseEntitet;

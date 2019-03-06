@@ -4,9 +4,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentHendelse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepository;
 
 @ApplicationScoped

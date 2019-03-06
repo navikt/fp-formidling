@@ -23,6 +23,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     private static final Logger LOGGER = LoggerFactory.getLogger(BrevBestillerApplikasjonTjenesteImpl.class);
     private DokumentproduksjonConsumer dokumentproduksjonProxyService;
     private DokumentXmlDataMapper dokumentXmlDataMapper;
+    private DokumentMalUtreder dokumentMalUtreder;
 
     public BrevBestillerApplikasjonTjenesteImpl() {
         // for cdi proxy
@@ -30,9 +31,17 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
     @Inject
     public BrevBestillerApplikasjonTjenesteImpl(DokumentproduksjonConsumer dokumentproduksjonProxyService,
-                                                DokumentXmlDataMapper dokumentXmlDataMapper) {
+                                                DokumentXmlDataMapper dokumentXmlDataMapper,
+                                                DokumentMalUtreder dokumentMalUtreder) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
         this.dokumentXmlDataMapper = dokumentXmlDataMapper;
+        this.dokumentMalUtreder = dokumentMalUtreder;
+    }
+
+    @Override
+    public void bestillBrev(BehandlingDto behandlingDto, DokumentHendelseDto hendelseDto) {
+        Behandling behandling = new Behandling(behandlingDto);
+        dokumentMalUtreder.utredDokumentmal(behandling, hendelseDto);
     }
 
     @Override

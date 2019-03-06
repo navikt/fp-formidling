@@ -5,4 +5,6 @@ import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendels
 
 public interface BrevBestillerApplikasjonTjeneste {
     byte[] forhandsvisBrev(BehandlingDto behandlingDto, DokumentHendelseDto hendelseDto);
+
+    void bestillBrev(BehandlingDto behandlingDto, DokumentHendelseDto hendelseDto);
 }

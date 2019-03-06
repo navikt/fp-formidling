@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.dokumentdata;
+package no.nav.foreldrepenger.melding.hendelser;
 
 import java.util.Objects;
 
@@ -15,6 +15,7 @@ import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.vedtak.felles.jpa.BaseEntitet;
@@ -58,8 +59,9 @@ public class DokumentHendelse extends BaseEntitet {
     @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + HistorikkAktør.DISCRIMINATOR + "'"))
     private HistorikkAktør historikkAktør;
 
-    DokumentHendelse(Long behandlingId) {
+    DokumentHendelse(Long behandlingId, FagsakYtelseType ytelseType) {
         this.behandlingId = behandlingId;
+        this.ytelseType = ytelseType;
     }
 
     public static DokumentHendelse.Builder builder() {
@@ -226,9 +228,8 @@ public class DokumentHendelse extends BaseEntitet {
 
         public DokumentHendelse build() {
             verifyStateForBuild();
-            DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingId);
+            DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingId, ytelseType);
             dokumentHendelse.behandlingType = behandlingType;
-            dokumentHendelse.ytelseType = ytelseType;
             dokumentHendelse.gjelderVedtak = gjelderVedtak;
             dokumentHendelse.fritekst = fritekst;
             dokumentHendelse.tittel = tittel;
@@ -239,6 +240,7 @@ public class DokumentHendelse extends BaseEntitet {
 
         private void verifyStateForBuild() {
             Objects.requireNonNull(behandlingId, "behandlingId");
+            Objects.requireNonNull(ytelseType, "ytelseType");
         }
 
     }

@@ -65,7 +65,7 @@ public class HendelseRestTjeneste {
         final Optional<BehandlingDto> behandlingInfo = behandlingRestKlient.hentBehandling(new BehandlingIdDto(dokumentHendelseDto.getBehandlingId()));
         Response.ResponseBuilder responseBuilder;
         if (behandlingInfo.isPresent()) {
-            final byte[] brevPdfVersjon = brevBestillerApplikasjonTjeneste.forhandsvisBrev(behandlingInfo.get());
+            final byte[] brevPdfVersjon = brevBestillerApplikasjonTjeneste.forhandsvisBrev(behandlingInfo.get(), dokumentHendelseDto);
             LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
 
             responseBuilder = Response.ok().entity(behandlingInfo.get());

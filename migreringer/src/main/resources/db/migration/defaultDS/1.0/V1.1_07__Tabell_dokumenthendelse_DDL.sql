@@ -7,7 +7,7 @@ CREATE TABLE DOKUMENT_HENDELSE
   ID                 bigint,
   BEHANDLING_ID      bigint                                 NOT NULL,
   BEHANDLING_TYPE    VARCHAR(100),
-  YTELSE_TYPE        VARCHAR(100),
+  YTELSE_TYPE        VARCHAR(100)                           NOT NULL,
   DOKUMENT_MAL_NAVN  VARCHAR(7),
   GJELDER_VEDTAK     BOOLEAN      DEFAULT FALSE,
   FRITEKST           TEXT,

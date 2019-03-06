@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoRule;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
@@ -21,6 +22,8 @@ import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryI
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
+import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
+import no.nav.foreldrepenger.melding.hendelser.HendelseRepositoryImpl;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkTjeneste;
 import no.nav.foreldrepenger.melding.kafkatjenester.util.Serialiseringsverktøy;
@@ -34,7 +37,10 @@ public class KafkaReaderTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
     @Mock
     DokumentHistorikkTjeneste dokumentHistorikkTjeneste;
+    @Mock
+    private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
     private EntityManager entityManager = repoRule.getEntityManager();
+    private HendelseRepository hendelseRepository;
     private DokumentRepository dokumentRepository;
     private JsonHendelseHandler jsonHendelseHandler;
 
@@ -44,9 +50,10 @@ public class KafkaReaderTest {
 
     @Before
     public void setup() {
+        hendelseRepository = new HendelseRepositoryImpl(entityManager);
         dokumentRepository = new DokumentRepositoryImpl(entityManager);
-        jsonHendelseHandler = new JsonHendelseHandler(dokumentRepository, new KodeverkRepositoryImpl(entityManager), dokumentHistorikkTjeneste);
-        this.kafkaReader = new KafkaReader(null, jsonHendelseHandler, dokumentRepository);
+        jsonHendelseHandler = new JsonHendelseHandler(hendelseRepository, dokumentRepository, new KodeverkRepositoryImpl(entityManager), dokumentHistorikkTjeneste, brevBestillerApplikasjonTjeneste);
+        this.kafkaReader = new KafkaReader(null, jsonHendelseHandler, hendelseRepository);
     }
 
     @Test

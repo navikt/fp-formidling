@@ -67,6 +67,7 @@ public class KafkaReader {
             loggFeiletDeserialisering(melding);
             log.error("Klarte ikke å deserialisere meldingen");
         } catch (Exception tekniskException) {
+            feilmelding.append(tekniskException.getClass().getSimpleName()).append(": ");
             feilmelding.append(tekniskException.getMessage());
             log.warn("Feil ved deserialisering lagt til i logg", tekniskException);
             loggFeiletDeserialisering(melding);

@@ -12,7 +12,6 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
-import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHistorikkDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkTjeneste;
@@ -52,10 +51,12 @@ public class JsonHendelseHandler {
         DokumentHendelse hendelse = hendelseFraDto(jsonHendelse);
 
         hendelseRepository.lagre(hendelse);
-        log.info("Prossessert og lagret hendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
+        log.info("lagret hendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
         brevBestillerApplikasjonTjeneste.bestillBrev(hendelse);
+        log.info("Prossesert hendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
         //TODO ta output fra bestillbrev og push det til historikk
-        lagHistorikk(hendelse);
+        dokumentHistorikkTjeneste.lagreOgPubliserHistorikk(hendelse);
+        log.info("Publishert historikkhendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
     }
 
     private DokumentHendelse hendelseFraDto(DokumentHendelseDto jsonHendelse) {
@@ -68,12 +69,6 @@ public class JsonHendelseHandler {
                 .medTittel(jsonHendelse.getTittel())
                 .medDokumentMalType(utleddokumentMalType(jsonHendelse.getDokumentMal()))
                 .build();
-    }
-
-    private void lagHistorikk(DokumentHendelse hendelse) {
-        DokumentHistorikkDto historikk = new DokumentHistorikkDto();
-        historikk.setBehandlingId(hendelse.getBehandlingId());
-        dokumentHistorikkTjeneste.publiserHistorikk(historikk);
     }
 
     private BehandlingType utledBehandlingType(String behandlingType) {

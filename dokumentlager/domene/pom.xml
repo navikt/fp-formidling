@@ -59,10 +59,6 @@
             <artifactId>fast-classpath-scanner</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>hendelsekontrakter</artifactId>
-        </dependency>
 
     </dependencies>
 

@@ -11,5 +11,11 @@
 
     <artifactId>hendelsekontrakter</artifactId>
     <name>fpformidling :: Hendelsekontrakter</name>
+    <dependencies>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>domene</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

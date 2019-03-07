@@ -7,10 +7,12 @@
 
     <sequence-generator name="SEQ_DOKUMENT_HENDELSE" allocation-size="50" sequence-name="SEQ_DOKUMENT_HENDELSE"/>
     <sequence-generator name="SEQ_EVENTMOTTAK_FEILLOGG" allocation-size="50" sequence-name="SEQ_EVENTMOTTAK_FEILLOGG"/>
+    <sequence-generator name="SEQ_DOKUMENT_HISTORIKK" allocation-size="50" sequence-name="SEQ_DOKUMENT_HISTORIKK"/>
 
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType"/>
     <entity class="no.nav.foreldrepenger.melding.hendelser.DokumentHendelse"/>
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentMalRestriksjon"/>
     <entity class="no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg"/>
+    <entity class="no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag"/>
 
 </entity-mappings>

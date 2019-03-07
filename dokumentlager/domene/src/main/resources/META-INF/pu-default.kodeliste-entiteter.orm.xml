@@ -30,5 +30,6 @@
     <entity class="no.nav.foreldrepenger.melding.behandling.aksjonspunkt.Venteårsak"/>
     <entity class="no.nav.foreldrepenger.melding.behandling.aksjonspunkt.VurderÅrsak"/>
     <entity class="no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType"/>
+    <entity class="no.nav.foreldrepenger.melding.historikk.HistorikkAktør"/>
 
 </entity-mappings>

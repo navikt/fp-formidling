@@ -9,6 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 
 public class HendelseRepositoryImplTest {
 
@@ -29,6 +30,7 @@ public class HendelseRepositoryImplTest {
         DokumentHendelse dokumentHendelse = DokumentHendelse
                 .builder()
                 .medBehandlingId(behandlingId)
+                .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .build();
         hendelseRepository.lagre(dokumentHendelse);
 

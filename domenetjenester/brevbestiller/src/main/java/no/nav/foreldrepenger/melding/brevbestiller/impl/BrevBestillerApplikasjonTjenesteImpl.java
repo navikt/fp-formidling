@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
@@ -91,15 +92,25 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     }
 
     private DokumentHendelse fraDto(DokumentHendelseDto hendelseDto) {
+        //TODO putt bare ett sted!
+        //TODO ha alle feltene..
+        //Ny modul under domenetjenester? :) Hva skal den hete..?
         return new DokumentHendelse.Builder()
                 .medBehandlingId(hendelseDto.getBehandlingId())
                 .medBehandlingType(utledBehandlingType(hendelseDto.getBehandlingType()))
+                .medYtelseType(utledYtelseType(hendelseDto.getYtelseType()))
                 .medFritekst(hendelseDto.getFritekst())
                 .medTittel(hendelseDto.getTittel())
                 .medDokumentMalType(utleddokumentMalType(hendelseDto.getDokumentMal()))
                 .build();
     }
 
+    private FagsakYtelseType utledYtelseType(String ytelseType) {
+        if (StringUtils.nullOrEmpty(ytelseType)) {
+            return null;
+        }
+        return kodeverkRepository.finn(FagsakYtelseType.class, ytelseType);
+    }
 
     private BehandlingType utledBehandlingType(String behandlingType) {
         if (StringUtils.nullOrEmpty(behandlingType)) {

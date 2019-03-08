@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.geografisk.Landkoder;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -121,7 +122,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     private DokumentAdresse lagDokumentAdresse() {
         return new DokumentAdresse.Builder()
                 .medAdresselinje1("testadresse 12A")
-                .medLand("Norge")
+                .medLand(Landkoder.NOR.getKode())
                 .medMottakerNavn("Testmottaker")
                 .medPostNummer("1990")
                 .medPoststed("oLsO")

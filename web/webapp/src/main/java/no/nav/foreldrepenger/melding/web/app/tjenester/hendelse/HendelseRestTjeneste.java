@@ -66,9 +66,10 @@ public class HendelseRestTjeneste {
         Response.ResponseBuilder responseBuilder;
         if (behandlingInfo.isPresent()) {
             final byte[] brevPdfVersjon = brevBestillerApplikasjonTjeneste.forhandsvisBrev(behandlingInfo.get(), dokumentHendelseDto);
+            responseBuilder = Response.ok(brevPdfVersjon);
+            responseBuilder.type("application/pdf");
+            responseBuilder.header("Content-Disposition", "filename=dokument.pdf");
             LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
-
-            responseBuilder = Response.ok().entity(behandlingInfo.get());
         } else {
             responseBuilder = Response.noContent();
         }

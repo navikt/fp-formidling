@@ -141,6 +141,10 @@ public abstract class Kodeliste extends KodeverkBaseEntitet implements Comparabl
         return offisiellKode.equals(annenOffisiellKode);
     }
 
+    public String getNavn() {
+        return navn;
+    }
+
     /**
      * Returnerer språk i standard ISO 639-1-alpha2 lower case.
      */

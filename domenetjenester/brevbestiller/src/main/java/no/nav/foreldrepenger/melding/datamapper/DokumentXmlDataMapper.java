@@ -20,6 +20,7 @@ import org.xml.sax.SAXException;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
+import no.nav.foreldrepenger.melding.geografisk.Landkoder;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.IdKodeType;
@@ -100,10 +101,8 @@ public class DokumentXmlDataMapper {
         mottakerAdresseType.setAdresselinje3(mottakerAdresse.getAdresselinje3());
         mottakerAdresseType.setPostNr(mottakerAdresse.getPostnummer());
         mottakerAdresseType.setPoststed(mottakerAdresse.getPoststed());
-        //Landkoder land = mottakerAdresse.getLand() == null ? kodeverkRepository.finn(Landkoder.class, Landkoder.NOR) : kodeverkRepository.finn(Landkoder.class, mottakerAdresse.getLand());
-        //TODO (aleksander) - legg til navn i kodelisten igjen??
-        //        mottakerAdresseType.setLand(land.getNavn());
-        mottakerAdresseType.setLand("Norge");
+        Landkoder land = mottakerAdresse.getLand() == null ? kodeverkRepository.finn(Landkoder.class, Landkoder.NOR) : kodeverkRepository.finn(Landkoder.class, mottakerAdresse.getLand());
+        mottakerAdresseType.setLand(land.getNavn());
         mottakerType.setMottakerAdresse(mottakerAdresseType);
         return mottakerType;
     }

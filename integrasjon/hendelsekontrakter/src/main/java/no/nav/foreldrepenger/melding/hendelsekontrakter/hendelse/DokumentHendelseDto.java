@@ -14,8 +14,8 @@ public class DokumentHendelseDto implements AbacDto {
     @Max(Long.MAX_VALUE)
     private Long behandlingId;
     private String dokumentMal;
-    @NotNull
     private String behandlingType;
+    @NotNull
     private String ytelseType;
     private String tittel;
     private String historikkAktør;

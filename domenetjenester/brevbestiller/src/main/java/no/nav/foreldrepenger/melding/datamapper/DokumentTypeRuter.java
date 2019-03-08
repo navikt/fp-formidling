@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.melding.datamapper;
 import java.util.HashMap;
 import java.util.Map;
 
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.vedtak.feil.FeilFactory;
 
@@ -39,8 +38,8 @@ public class DokumentTypeRuter {
         // Skal ikke instansieres
     }
 
-    public static DokumentTypeMapper dokumentTypeMapper(DokumentData dokumentData) throws InstantiationException, IllegalAccessException {
-        String kode = dokumentData.getDokumentMalType().getKode();
+    public static DokumentTypeMapper dokumentTypeMapper(DokumentMalType dokumentMalType) throws InstantiationException, IllegalAccessException {
+        String kode = dokumentMalType.getKode();
         if (mappere.containsKey(kode)) {
             return mappere.get(kode).newInstance();
         }

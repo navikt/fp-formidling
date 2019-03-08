@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.brevbestiller.api.dto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 
 public class Behandling {
+    private long id;
     private String ansvarligSaksbehandler;
     private String ansvarligBeslutter;
     private Boolean toTrinnsBehandling;
@@ -12,7 +13,10 @@ public class Behandling {
         this.ansvarligSaksbehandler = dto.getAnsvarligSaksbehandler();
 //        this.ansvarligBeslutter = ansvarligBeslutter;
         this.toTrinnsBehandling = dto.getToTrinnsBehandling();
-        this.behandlingsresultat = new Behandlingsresultat(dto.getBehandlingsresultat());
+        this.id = dto.getId();
+        if (dto.getBehandlingsresultat() != null) {
+            this.behandlingsresultat = new Behandlingsresultat(dto.getBehandlingsresultat());
+        }
     }
 
     public Behandlingsresultat getBehandlingsresultat() {
@@ -29,5 +33,9 @@ public class Behandling {
 
     public Boolean getToTrinnsBehandling() {
         return toTrinnsBehandling;
+    }
+
+    public long getId() {
+        return id;
     }
 }

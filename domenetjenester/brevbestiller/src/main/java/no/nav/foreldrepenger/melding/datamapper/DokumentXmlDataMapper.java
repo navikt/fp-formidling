@@ -18,9 +18,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.geografisk.Landkoder;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.IdKodeType;
@@ -45,11 +44,11 @@ public class DokumentXmlDataMapper {
         this.kodeverkRepository = kodeverkRepository;
     }
 
-    public Element mapTilBrevXml(DokumentData dokumentData, DokumentFelles dokumentFelles, DokumentHendelseDto hendelseDto) {
+    public Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelseDto hendelseDto) {
         Element brevXmlElement;
         try {
             FellesType fellesType = mapFellesType(dokumentFelles);
-            String brevXml = DokumentTypeRuter.dokumentTypeMapper(dokumentData).mapTilBrevXML(fellesType, dokumentFelles, hendelseDto);
+            String brevXml = DokumentTypeRuter.dokumentTypeMapper(dokumentMalType).mapTilBrevXML(fellesType, dokumentFelles, hendelseDto);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -58,9 +57,11 @@ public class DokumentXmlDataMapper {
             Document doc = db.parse(is);
             brevXmlElement = doc.getDocumentElement();
         } catch (SAXException | XMLStreamException | ParserConfigurationException | IOException | JAXBException e) {
-            throw FeilFactory.create(DokumentBestillerFeil.class).xmlgenereringsfeil(dokumentData.getId(), e).toException();
+            //TODO feilmelding dokumentID
+            throw FeilFactory.create(DokumentBestillerFeil.class).xmlgenereringsfeil(1l, e).toException();
         } catch (InstantiationException | IllegalAccessException e) {
-            throw FeilFactory.create(DokumentBestillerFeil.class).annentekniskfeil(dokumentData.getId(), e).toException();
+            //TODO feilmelding dokumentID
+            throw FeilFactory.create(DokumentBestillerFeil.class).annentekniskfeil(1l, e).toException();
         }
         return brevXmlElement;
     }
@@ -99,7 +100,7 @@ public class DokumentXmlDataMapper {
         mottakerAdresseType.setAdresselinje3(mottakerAdresse.getAdresselinje3());
         mottakerAdresseType.setPostNr(mottakerAdresse.getPostnummer());
         mottakerAdresseType.setPoststed(mottakerAdresse.getPoststed());
-        Landkoder land = mottakerAdresse.getLand() == null ? kodeverkRepository.finn(Landkoder.class, Landkoder.NOR) : kodeverkRepository.finn(Landkoder.class, mottakerAdresse.getLand());
+        //Landkoder land = mottakerAdresse.getLand() == null ? kodeverkRepository.finn(Landkoder.class, Landkoder.NOR) : kodeverkRepository.finn(Landkoder.class, mottakerAdresse.getLand());
         //TODO (aleksander) - legg til navn i kodelisten igjen??
         //        mottakerAdresseType.setLand(land.getNavn());
         mottakerAdresseType.setLand("Norge");

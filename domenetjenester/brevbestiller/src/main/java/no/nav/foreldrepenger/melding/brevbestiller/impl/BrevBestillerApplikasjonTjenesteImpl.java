@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import java.time.LocalDate;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -13,13 +15,17 @@ import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonT
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Address;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.vedtak.felles.integrasjon.dokument.produksjon.DokumentproduksjonConsumer;
@@ -47,6 +53,8 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
         this.dokumentXmlDataMapper = dokumentXmlDataMapper;
         this.dokumentMalUtreder = dokumentMalUtreder;
+        this.kodeverkRepository = kodeverkRepository;
+        this.dokumentRepository = dokumentRepository;
     }
 
     @Override
@@ -69,26 +77,55 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         Behandling behandling = new Behandling(behandlingDto);
 
         //TODO: Sjekk hvis mulighet for flere addresser
-        Address address = new Address(behandlingDto.getPersonopplysningDto().getAdresser().get(0));
-
-
-        DokumentData dokumentData = null;
-        if (dokumentData == null) {
-            return null;
+        if (behandlingDto.getPersonopplysningDto() != null) {
+            Address address = new Address(behandlingDto.getPersonopplysningDto().getAdresser().get(0));
         }
+        DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, hendelse);
+
+
+        DokumentFelles dokumentFelles = lagDokumentFelles(dokumentMal, behandling.getId());
         //TODO: Map formidling data to xml elements
-        Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentData, dokumentData.getFørsteDokumentFelles(), hendelseDto);
+        //TODO Bruk likegjerne hendelseobjektet
+        Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, hendelseDto);
 
         ProduserDokumentutkastRequest produserDokumentutkastRequest = new ProduserDokumentutkastRequest();
-        produserDokumentutkastRequest.setDokumenttypeId(dokumentData.getDokumentMalType().getDoksysKode());
+        produserDokumentutkastRequest.setDokumenttypeId(dokumentMal.getDoksysKode());
         produserDokumentutkastRequest.setBrevdata(brevXmlElement);
 
         ProduserDokumentutkastResponse produserDokumentutkastResponse = dokumentproduksjonProxyService.produserDokumentutkast(produserDokumentutkastRequest);
         if (produserDokumentutkastResponse != null && produserDokumentutkastResponse.getDokumentutkast() != null) {
             dokument = produserDokumentutkastResponse.getDokumentutkast();
-            LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentData.getDokumentMalType().getKode(), behandlingDto.getId()); //$NON-NLS-1$
+            LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandlingDto.getId()); //$NON-NLS-1$
         }
         return dokument;
+    }
+
+    private DokumentFelles lagDokumentFelles(DokumentMalType dokumentMalType, Long behandlingId) {
+        return DokumentFelles.builder(new DokumentData(dokumentMalType, behandlingId))
+                .medMottakerId("123")
+                .medSaksnummer(Saksnummer.arena("123"))
+                .medAutomatiskBehandlet(false)
+                .medSakspartId("123")
+                .medSakspartNavn("test")
+                .medNavnAvsenderEnhet("test")
+                .medKontaktTelefonNummer("123")
+                .medReturadresse(lagDokumentAdresse())
+                .medPostadresse(lagDokumentAdresse())
+                .medDokumentDato(LocalDate.now())
+                .medMottakerAdresse(lagDokumentAdresse())
+                .medMottakerNavn("test")
+                .medSpråkkode(Språkkode.nb)
+                .build();
+    }
+
+    private DokumentAdresse lagDokumentAdresse() {
+        return new DokumentAdresse.Builder()
+                .medAdresselinje1("testadresse 12A")
+                .medLand("Norge")
+                .medMottakerNavn("Testmottaker")
+                .medPostNummer("1990")
+                .medPoststed("oLsO")
+                .build();
     }
 
     private DokumentHendelse fraDto(DokumentHendelseDto hendelseDto) {

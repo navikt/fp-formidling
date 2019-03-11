@@ -20,7 +20,24 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 public class HenleggBehandlingBrevMapper implements DokumentTypeMapper {
-    private static final String FAMPEN = "NAV Familie- og pensjonsytelser";
+    static final String FAMPEN = "NAV Familie- og pensjonsytelser";
+
+    @Override
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelseDto hendelseDto, Behandling behandling) throws JAXBException {
+        FagType fagType = mapFagType(hendelseDto, behandling);
+        JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
+        String brevXmlMedNamespace = JaxbHelper.marshalJaxb(AvbruttbehandlingConstants.JAXB_CLASS, brevdataTypeJAXBElement);
+        return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
+    }
+
+    FagType mapFagType(DokumentHendelseDto hendelseDto, Behandling behandling) {
+        FagType fagType = new FagType();
+        fagType.setYtelseType(YtelseTypeKode.fromValue(hendelseDto.getYtelseType()));
+        fagType.setBehandlingsType(mapToXmlBehandlingsType(behandling.getType()));
+        fagType.setOpphavType(mapToXmlOpphavType(behandling.getBehandlendeEnhetNavn()));
+        return fagType;
+    }
+
 
     private static BehandlingsTypeKode mapToXmlBehandlingsType(String vlKode) {
         if (Objects.equals(vlKode, DokumentMapperKonstanter.ENDRINGSSØKNAD)) {
@@ -35,22 +52,6 @@ public class HenleggBehandlingBrevMapper implements DokumentTypeMapper {
             return BehandlingsTypeKode.INNSYN;
         }
         throw DokumentMapperFeil.FACTORY.HenleggBehandlingBrevKreverGyldigBehandlingstype(vlKode).toException();
-    }
-
-    @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelseDto hendelseDto, Behandling behandling) throws JAXBException {
-        FagType fagType = mapFagType(hendelseDto, behandling);
-        JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
-        String brevXmlMedNamespace = JaxbHelper.marshalJaxb(AvbruttbehandlingConstants.JAXB_CLASS, brevdataTypeJAXBElement);
-        return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
-    }
-
-    private FagType mapFagType(DokumentHendelseDto hendelseDto, Behandling behandling) {
-        FagType fagType = new FagType();
-        fagType.setYtelseType(YtelseTypeKode.fromValue(hendelseDto.getYtelseType()));
-        fagType.setBehandlingsType(BehandlingsTypeKode.fromValue(hendelseDto.getYtelseType()));
-        fagType.setOpphavType(mapToXmlOpphavType(behandling.getBehandlendeEnhetNavn()));
-        return fagType;
     }
 
     private OpphavTypeKode mapToXmlOpphavType(String behandlendeEnhetNavn) {

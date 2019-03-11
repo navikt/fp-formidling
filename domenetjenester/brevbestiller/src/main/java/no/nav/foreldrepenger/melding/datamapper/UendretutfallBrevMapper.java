@@ -24,7 +24,7 @@ public class UendretutfallBrevMapper implements DokumentTypeMapper {
         return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
     }
 
-    private FagType mapFagType(DokumentHendelseDto hendelseDto) {
+    FagType mapFagType(DokumentHendelseDto hendelseDto) {
         FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelseDto.getYtelseType()));
         return fagType;

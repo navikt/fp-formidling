@@ -64,6 +64,7 @@ public class DataSourceKonfig {
         config.setConnectionTimeout(1000);
         config.setMinimumIdle(1);
         config.setMaximumPoolSize(3);
+        config.setMaxLifetime(60 * 1000 * 5); //5 minutter max TTL
         config.setConnectionTestQuery("select 1");
         config.setDriverClassName("org.postgresql.Driver");
 

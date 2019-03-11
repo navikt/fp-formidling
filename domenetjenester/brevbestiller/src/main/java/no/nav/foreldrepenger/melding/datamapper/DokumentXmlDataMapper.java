@@ -17,6 +17,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -45,11 +46,11 @@ public class DokumentXmlDataMapper {
         this.kodeverkRepository = kodeverkRepository;
     }
 
-    public Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelseDto hendelseDto) {
+    public Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelseDto hendelseDto, Behandling behandling) {
         Element brevXmlElement;
         try {
             FellesType fellesType = mapFellesType(dokumentFelles);
-            String brevXml = DokumentTypeRuter.dokumentTypeMapper(dokumentMalType).mapTilBrevXML(fellesType, dokumentFelles, hendelseDto);
+            String brevXml = DokumentTypeRuter.dokumentTypeMapper(dokumentMalType).mapTilBrevXML(fellesType, dokumentFelles, hendelseDto, behandling);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);

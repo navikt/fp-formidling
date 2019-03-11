@@ -72,7 +72,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         //TODO duplisert kode, vurder å lage tjeneste
         DokumentHendelse hendelse = fraDto(hendelseDto);
 
-
         //TODO: Map fpsak data til formidling format
 //        final DokumentData dokumentData = dokumentDataTjeneste.hentDokumentData(dokumentDataId);
         Behandling behandling = new Behandling(behandlingDto);
@@ -87,7 +86,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         DokumentFelles dokumentFelles = lagDokumentFelles(dokumentMal, behandling.getId());
         //TODO: Map formidling data to xml elements
         //TODO Bruk likegjerne hendelseobjektet
-        Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, hendelseDto);
+        Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, hendelseDto, behandling);
 
         ProduserDokumentutkastRequest produserDokumentutkastRequest = new ProduserDokumentutkastRequest();
         produserDokumentutkastRequest.setDokumenttypeId(dokumentMal.getDoksysKode());

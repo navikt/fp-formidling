@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.datamapper;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
+import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
@@ -16,7 +17,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class UendretutfallBrevMapper implements DokumentTypeMapper {
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelseDto hendelseDto) throws JAXBException {
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelseDto hendelseDto, Behandling behandling) throws JAXBException {
         FagType fagType = mapFagType(hendelseDto);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         String brevXmlMedNamespace = JaxbHelper.marshalJaxb(UendretutfallConstants.JAXB_CLASS, brevdataTypeJAXBElement);

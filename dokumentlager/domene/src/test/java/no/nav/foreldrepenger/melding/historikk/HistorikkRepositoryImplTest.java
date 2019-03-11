@@ -39,6 +39,7 @@ public class HistorikkRepositoryImplTest {
                 .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
                 .medDokumentMalType(dokumentRepository.hentDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK))
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)
+                .medXml("<test/>")
                 .build();
         historikkRepository.lagre(historikkInnslag);
 

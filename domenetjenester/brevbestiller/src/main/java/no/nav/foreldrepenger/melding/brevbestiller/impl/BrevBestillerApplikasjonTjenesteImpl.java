@@ -14,7 +14,6 @@ import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
@@ -60,7 +59,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     private KodeverkRepository kodeverkRepository;
     private DokumentRepository dokumentRepository;
     private BehandlingRestKlient behandlingRestKlient;
-    private BehandlingRestKlient behandlingRestKlient;
     private DokumentbestillingMapper dokumentbestillingMapper;
 
     public BrevBestillerApplikasjonTjenesteImpl() {
@@ -89,7 +87,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     public DokumentHistorikkinnslag bestillBrev(DokumentHendelse dokumentHendelse) {
         //hent behandling her
         try {
-            BehandlingDto behandlingDto = hentBehandlingFraFpsak(dokumentHendelse.getBehandlingId());
+            BehandlingDto behandlingDto = hentBehandlingFraFpsak(dokumentHendelse.getBehandlingId(), true);
             Behandling behandling = new Behandling(behandlingDto);
             DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, dokumentHendelse);
             DokumentFelles dokumentFelles = lagDokumentFelles(dokumentMal, behandling.getId());
@@ -130,7 +128,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
         //TODO duplisert kode, vurder å lage tjeneste
         DokumentHendelse hendelse = fraDto(hendelseDto);
-        BehandlingDto behandlingDto = hentBehandlingFraFpsak(hendelse.getBehandlingId());
+        BehandlingDto behandlingDto = hentBehandlingFraFpsak(hendelse.getBehandlingId(), false);
         Behandling behandling = new Behandling(behandlingDto);
 
         //TODO: Map fpsak data til formidling format
@@ -141,20 +139,21 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
             Personopplysning personopplysning = new Personopplysning(behandlingDto.getPersonopplysningDto());
 
             Address address = new Address(behandlingDto.getPersonopplysningDto().getAdresser().get(0));
+        }
 
-            final Optional<VergeDto> vergeDto = behandlingRestKlient.hentVerge(behandlingIdDto, behandlingDto.getLinks());
-            Verge verge = new Verge(vergeDto.get());
+        final Optional<VergeDto> vergeDto = behandlingRestKlient.hentVerge(new BehandlingIdDto(hendelse.getBehandlingId()), behandlingDto.getLinks());
+        Verge verge = new Verge(vergeDto.get());
 
-            DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, hendelse);
+        DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, hendelse);
 
-            //Map data til DokumentFelles
+        //Map data til DokumentFelles
 //            opprettDokumentFellesData(behandling, personopplysning, address, verge);
-            DokumentFelles dokumentFelles = lagDokumentFelles(dokumentMal, behandling.getId());
+        DokumentFelles dokumentFelles = lagDokumentFelles(dokumentMal, behandling.getId());
 
-            //TODO: Map formidling data to xml elements
-            Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, hendelse, behandling);
+        //TODO: Map formidling data to xml elements
+        Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, hendelse, behandling);
 
-            dokument = forhåndsvis(dokumentMal, brevXmlElement);
+        dokument = forhåndsvis(dokumentMal, brevXmlElement);
         if (dokument == null) {
             LOGGER.error("Klarte ikke hente behandling: {}", behandling.getId());
             throw BrevbestillerFeil.FACTORY.klarteIkkeForhåndvise(dokumentMal.getKode(), behandling.getId()).toException();
@@ -176,8 +175,8 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         return null;
     }
 
-    private BehandlingDto hentBehandlingFraFpsak(long behandlingId) {
-        final Optional<BehandlingDto> behandlingInfo = behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId));
+    private BehandlingDto hentBehandlingFraFpsak(long behandlingId, boolean systembruker) {
+        final Optional<BehandlingDto> behandlingInfo = behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId), systembruker);
         if (behandlingInfo.isPresent()) {
             return behandlingInfo.get();
         }

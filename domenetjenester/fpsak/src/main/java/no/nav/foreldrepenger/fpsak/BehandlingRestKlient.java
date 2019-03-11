@@ -10,7 +10,7 @@ import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 
 public interface BehandlingRestKlient {
-    Optional<BehandlingDto> hentBehandling(BehandlingIdDto behandlingIdDto);
+    Optional<BehandlingDto> hentBehandling(BehandlingIdDto behandlingIdDto, boolean systembruker);
 
     Optional<PersonopplysningDto> hentPersonopplysninger(BehandlingIdDto behandlingIdDto, List<BehandlingResourceLinkDto> resourceLinkDtos);
 

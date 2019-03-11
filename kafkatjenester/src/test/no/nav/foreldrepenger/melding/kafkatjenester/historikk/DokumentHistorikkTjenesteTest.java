@@ -55,6 +55,7 @@ public class DokumentHistorikkTjenesteTest {
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)
                 .medDokumentId("123")
                 .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
+                .medXml("<test/>")
                 .build();
         historikkTjeneste.lagreOgPubliserHistorikk(historikk);
         assertThat(historikkRepository.hentInnslagForBehandling(1l).size()).isEqualTo(1);

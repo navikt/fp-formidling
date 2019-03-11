@@ -22,7 +22,6 @@ import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.vedtak.felles.jpa.Transaction;
@@ -34,8 +33,6 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @Transaction
 public class HendelseRestTjeneste {
     private static final Logger LOGGER = LoggerFactory.getLogger(HendelseRestTjeneste.class);
-
-    private BehandlingRestKlient behandlingRestKlient;
     private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
 
     public HendelseRestTjeneste() {
@@ -43,8 +40,7 @@ public class HendelseRestTjeneste {
     }
 
     @Inject
-    public HendelseRestTjeneste(BehandlingRestKlient behandlingRestKlient, BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste) {
-        this.behandlingRestKlient = behandlingRestKlient;
+    public HendelseRestTjeneste(BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste) {
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
     }
 
@@ -61,8 +57,11 @@ public class HendelseRestTjeneste {
         Response.ResponseBuilder responseBuilder;
         final byte[] brevPdfVersjon = brevBestillerApplikasjonTjeneste.forhandsvisBrev(dokumentHendelseDto);
         if (brevPdfVersjon != null && brevPdfVersjon.length != 0) {
-        LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
+            LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
             responseBuilder = Response.ok().entity(brevPdfVersjon);
+            return responseBuilder.build();
+        }
+        responseBuilder = Response.serverError();
         return responseBuilder.build();
     }
 }

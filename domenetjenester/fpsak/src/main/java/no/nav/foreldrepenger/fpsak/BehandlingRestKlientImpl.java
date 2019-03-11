@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
+import no.nav.vedtak.felles.integrasjon.rest.SystemUserOidcRestClient;
 import no.nav.vedtak.konfig.KonfigVerdi;
 
 @ApplicationScoped
@@ -27,6 +28,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/behandlinger";
 
     private OidcRestClient oidcRestClient;
+    private SystemUserOidcRestClient systemUserOidcRestClient;
     private String endpointFpsakRestBase;
 
     public BehandlingRestKlientImpl() {//For CDI
@@ -34,19 +36,24 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
 
     @Inject
     public BehandlingRestKlientImpl(OidcRestClient oidcRestClient,
+                                    SystemUserOidcRestClient systemUserOidcRestClient,
                                     @KonfigVerdi(FPSAK_REST_BASE_URL) String endpointFpsakRestBase) {
         this.oidcRestClient = oidcRestClient;
+        this.systemUserOidcRestClient = systemUserOidcRestClient;
         this.endpointFpsakRestBase = endpointFpsakRestBase;
     }
 
     @Override
-    public Optional<BehandlingDto> hentBehandling(BehandlingIdDto behandlingIdDto) {
+    public Optional<BehandlingDto> hentBehandling(BehandlingIdDto behandlingIdDto, boolean systembruker) {
         Optional<BehandlingDto> behandling = Optional.empty();
         try {
             URIBuilder behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + HENT_BEHANLDING_ENDPOINT);
             behandlingUriBuilder.setParameter("behandlingId", String.valueOf(behandlingIdDto.getBehandlingId()));
-
-            behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
+            if (systembruker) {
+                behandling = systemUserOidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
+            } else {
+                behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
+            }
             if (behandling.isPresent()) {
                 final BehandlingDto behandlingDto = behandling.get();
                 final Optional<PersonopplysningDto> personopplysningDto = hentPersonopplysninger(behandlingIdDto, behandlingDto.getLinks());

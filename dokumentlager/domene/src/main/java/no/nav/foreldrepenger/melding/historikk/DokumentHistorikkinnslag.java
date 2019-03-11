@@ -52,16 +52,20 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
     @JoinColumn(name = "dokument_mal_navn", nullable = false)
     private DokumentMalType dokumentMalType;
 
+    @Column
+    private String xml;
+
     private DokumentHistorikkinnslag() {
     }
 
-    DokumentHistorikkinnslag(long behandlingId, String dokumentId, JournalpostId journalpostId, DokumentMalType dokumentMalType, HistorikkinnslagType historikkinnslagType) {
+    DokumentHistorikkinnslag(long behandlingId, String dokumentId, JournalpostId journalpostId, DokumentMalType dokumentMalType, HistorikkinnslagType historikkinnslagType, String xml) {
         this.behandlingId = behandlingId;
         this.dokumentId = dokumentId;
         this.journalpostId = journalpostId;
         this.dokumentMalType = dokumentMalType;
         this.historikkinnslagType = historikkinnslagType;
         this.dokumentMalType = dokumentMalType;
+        this.xml = xml;
     }
 
     public static Builder builder() {
@@ -100,14 +104,15 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
         return behandlingId.equals(that.behandlingId) &&
                 dokumentId.equals(that.dokumentId) &&
                 journalpostId.equals(that.journalpostId) &&
-                Objects.equals(historikkAktør, that.historikkAktør) &&
-                Objects.equals(historikkinnslagType, that.historikkinnslagType) &&
-                dokumentMalType.equals(that.dokumentMalType);
+                historikkAktør.equals(that.historikkAktør) &&
+                historikkinnslagType.equals(that.historikkinnslagType) &&
+                dokumentMalType.equals(that.dokumentMalType) &&
+                xml.equals(that.xml);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(behandlingId, dokumentId, journalpostId, historikkAktør, historikkinnslagType, dokumentMalType);
+        return Objects.hash(behandlingId, dokumentId, journalpostId, historikkAktør, historikkinnslagType, dokumentMalType, xml);
     }
 
     @Override
@@ -130,6 +135,7 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
         private HistorikkAktør historikkAktør;
         private HistorikkinnslagType historikkinnslagType;
         private DokumentMalType dokumentMalType;
+        private String xml;
 
         public DokumentHistorikkinnslag.Builder medBehandlingId(long behandlingId) {
             this.behandlingId = behandlingId;
@@ -161,9 +167,14 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
             return this;
         }
 
+        public DokumentHistorikkinnslag.Builder medXml(String xml) {
+            this.xml = xml;
+            return this;
+        }
+
         public DokumentHistorikkinnslag build() {
             verifyStateForBuild();
-            DokumentHistorikkinnslag dokumentHistorikkinnslag = new DokumentHistorikkinnslag(behandlingId, dokumentId, journalpostId, dokumentMalType, historikkinnslagType);
+            DokumentHistorikkinnslag dokumentHistorikkinnslag = new DokumentHistorikkinnslag(behandlingId, dokumentId, journalpostId, dokumentMalType, historikkinnslagType, xml);
             dokumentHistorikkinnslag.historikkAktør = historikkAktør;
             return dokumentHistorikkinnslag;
         }
@@ -174,7 +185,7 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
             Objects.requireNonNull(behandlingId, "behandlingId");
             Objects.requireNonNull(dokumentMalType, "dokumentMalType");
             Objects.requireNonNull(historikkinnslagType, "historikkinnslagType");
-
+            Objects.requireNonNull(xml, "xml");
         }
 
     }

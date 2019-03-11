@@ -103,7 +103,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
             ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = dokumentproduksjonProxyService
                     .produserIkkeredigerbartDokument(produserIkkeredigerbartDokumentRequest);
             JournalpostId journalpostId = new JournalpostId(produserIkkeredigerbartDokumentResponse.getJournalpostId());
-            return lagHistorikkinnslag(dokumentHendelse, journalpostId, produserIkkeredigerbartDokumentResponse.getDokumentId(), dokumentMal);
+            return lagHistorikkinnslag(dokumentHendelse, journalpostId, produserIkkeredigerbartDokumentResponse.getDokumentId(), dokumentMal, brevXmlElement.toString());
         } catch (
                 ProduserIkkeredigerbartDokumentDokumentErRedigerbart | ProduserIkkeredigerbartDokumentDokumentErVedlegg funksjonellFeil) {
             throw BrevbestillerFeil.FACTORY.feilFraDokumentProduksjon(funksjonellFeil).toException();
@@ -111,7 +111,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     }
 
 
-    private DokumentHistorikkinnslag lagHistorikkinnslag(DokumentHendelse dokumentHendelse, JournalpostId journalpostId, String dokumentId, DokumentMalType dokumentMal) {
+    private DokumentHistorikkinnslag lagHistorikkinnslag(DokumentHendelse dokumentHendelse, JournalpostId journalpostId, String dokumentId, DokumentMalType dokumentMal, String xml) {
         //TODO
         return DokumentHistorikkinnslag.builder()
                 .medBehandlingId(dokumentHendelse.getBehandlingId())
@@ -120,6 +120,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
                 .medHistorikkAktør(dokumentHendelse.getHistorikkAktør() != null ? dokumentHendelse.getHistorikkAktør() : HistorikkAktør.VEDTAKSLØSNINGEN)
                 .medDokumentMalType(dokumentMal)
                 .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
+                .medXml(xml)
                 .build();
     }
 

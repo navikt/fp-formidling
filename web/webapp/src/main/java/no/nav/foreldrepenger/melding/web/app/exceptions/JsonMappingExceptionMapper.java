@@ -35,7 +35,7 @@ public class JsonMappingExceptionMapper implements ExceptionMapper<JsonMappingEx
 
         JsonMappingFeil FACTORY = FeilFactory.create(JsonMappingFeil.class);
 
-        @TekniskFeil(feilkode = "FP-252294", feilmelding = "JSON-mapping feil", logLevel = LogLevel.WARN)
+        @TekniskFeil(feilkode = "FPFORMIDLING-252294", feilmelding = "JSON-mapping feil", logLevel = LogLevel.WARN)
         Feil jsonMappingFeil(JsonMappingException cause);
     }
 

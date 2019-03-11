@@ -17,11 +17,12 @@ import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.historikk.HistorikkRepositoryImpl;
+import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
+import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
 public class DokumentHistorikkTjenesteTest {
 
@@ -47,13 +48,15 @@ public class DokumentHistorikkTjenesteTest {
 
     @Test
     public void publiserHistorikk() {
-        DokumentHendelse hendelse = DokumentHendelse.builder()
+        DokumentHistorikkinnslag historikk = DokumentHistorikkinnslag.builder()
                 .medBehandlingId(1l)
                 .medDokumentMalType(dokumentRepository.hentDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK))
-                .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+                .medJournalpostId(new JournalpostId("ID"))
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)
+                .medDokumentId("123")
+                .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
                 .build();
-        historikkTjeneste.lagreOgPubliserHistorikk(hendelse);
+        historikkTjeneste.lagreOgPubliserHistorikk(historikk);
         assertThat(historikkRepository.hentInnslagForBehandling(1l).size()).isEqualTo(1);
         verify(historikkMeldingProducer, times(1)).sendJson(Mockito.anyString());
     }

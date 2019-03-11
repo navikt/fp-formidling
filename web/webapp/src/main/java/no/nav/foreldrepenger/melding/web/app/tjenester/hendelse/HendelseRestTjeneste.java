@@ -61,11 +61,8 @@ public class HendelseRestTjeneste {
         Response.ResponseBuilder responseBuilder;
         final byte[] brevPdfVersjon = brevBestillerApplikasjonTjeneste.forhandsvisBrev(dokumentHendelseDto);
         if (brevPdfVersjon != null && brevPdfVersjon.length != 0) {
-            LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
+        LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
             responseBuilder = Response.ok().entity(brevPdfVersjon);
-        } else {
-            responseBuilder = Response.noContent();
-        }
         return responseBuilder.build();
     }
 }

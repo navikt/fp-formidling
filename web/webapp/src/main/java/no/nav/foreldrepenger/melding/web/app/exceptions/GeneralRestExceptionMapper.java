@@ -27,9 +27,9 @@ import no.nav.vedtak.log.util.LoggerUtils;
 public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationException> {
 
     //FIXME Humle, ikke bruk feilkoder her, håndter som valideringsfeil, eller legg til egen samtidig-oppdatering-feil Feil-rammeverket
-    static final String BEHANDLING_ENDRET_FEIL = "FP-837578";
+    static final String BEHANDLING_ENDRET_FEIL = "FPFORMIDLING-837578";
     //FIXME Humle, dette er Valideringsfeil, bruk valideringsfeil.
-    static final String FRITEKST_TOM_FEIL = "FP-290952";
+    static final String FRITEKST_TOM_FEIL = "FPFORMIDLING-290952";
     private static final Logger LOGGER = LoggerFactory.getLogger(GeneralRestExceptionMapper.class);
 
     @Override

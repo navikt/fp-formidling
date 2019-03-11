@@ -4,6 +4,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 
 public class Behandling {
     private long id;
+    private Long saksnummer;
     private String type;
     private String ansvarligSaksbehandler;
     private String ansvarligBeslutter;
@@ -21,6 +22,7 @@ public class Behandling {
         if (dto.getBehandlingsresultat() != null) {
             this.behandlingsresultat = new Behandlingsresultat(dto.getBehandlingsresultat());
         }
+        this.behandlendeEnhetNavn = dto.getBehandlendeEnhetNavn();
     }
 
     public String getType() {
@@ -43,8 +45,16 @@ public class Behandling {
         return ansvarligBeslutter;
     }
 
-    public Boolean getToTrinnsBehandling() {
+    public Boolean isToTrinnsBehandling() {
         return toTrinnsBehandling;
+    }
+
+    public Long getSaksnummer() {
+        return saksnummer;
+    }
+
+    public void setSaksnummer(Long saksnummer) {
+        this.saksnummer = saksnummer;
     }
 
     public long getId() {

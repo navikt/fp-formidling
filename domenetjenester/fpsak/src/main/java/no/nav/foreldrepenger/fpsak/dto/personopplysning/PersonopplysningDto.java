@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PersonopplysningDto extends PersonIdentDto {
+
     private Integer nummer;
     private KodeDto navBrukerKjonn;
     private KodeDto statsborgerskap;

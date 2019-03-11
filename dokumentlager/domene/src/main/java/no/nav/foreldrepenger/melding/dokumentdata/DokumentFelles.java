@@ -143,6 +143,10 @@ public class DokumentFelles extends BaseEntitet {
         return new DokumentFelles.Builder(dokumentData);
     }
 
+    public static DokumentFelles.Builder builder() {
+        return new DokumentFelles.Builder();
+    }
+
     public Long getId() {
         return id;
     }
@@ -289,6 +293,10 @@ public class DokumentFelles extends BaseEntitet {
     public static class Builder {
 
         private DokumentFelles dokumentFelles;
+
+        public Builder() {
+            this.dokumentFelles = new DokumentFelles();
+        }
 
         public Builder(DokumentData dokumentData) {
             this.dokumentFelles = new DokumentFelles(dokumentData);

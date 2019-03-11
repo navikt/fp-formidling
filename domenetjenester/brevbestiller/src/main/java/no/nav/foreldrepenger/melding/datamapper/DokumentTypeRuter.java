@@ -15,7 +15,7 @@ public class DokumentTypeRuter {
 //        mappere.put(DokumentMalType.POSITIVT_VEDTAK_DOK, VedtaksbrevMapper.class);
 //        mappere.put(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK, InnvilgelseForeldrepengerMapper.class);
 //        mappere.put(DokumentMalType.INNHENT_DOK, InnhentopplysningerBrevMapper.class);
-//        mappere.put(DokumentMalType.HENLEGG_BEHANDLING_DOK, HenleggBehandlingBrevMapper.class);
+        mappere.put(DokumentMalType.HENLEGG_BEHANDLING_DOK, HenleggBehandlingBrevMapper.class);
 //        mappere.put(DokumentMalType.AVSLAGSVEDTAK_DOK, AvslagsbrevMapper.class);
         mappere.put(DokumentMalType.UENDRETUTFALL_DOK, UendretutfallBrevMapper.class);
 //        mappere.put(DokumentMalType.REVURDERING_DOK, RevurderingBrevMapper.class);

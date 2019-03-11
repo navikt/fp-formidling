@@ -52,10 +52,8 @@ public class JsonHendelseHandler {
 
         hendelseRepository.lagre(hendelse);
         log.info("lagret hendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
-        brevBestillerApplikasjonTjeneste.bestillBrev(hendelse);
-        log.info("Prossesert hendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
         //TODO ta output fra bestillbrev og push det til historikk
-        dokumentHistorikkTjeneste.lagreOgPubliserHistorikk(hendelse);
+        dokumentHistorikkTjeneste.lagreOgPubliserHistorikk(brevBestillerApplikasjonTjeneste.bestillBrev(hendelse));
         log.info("Publishert historikkhendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
     }
 

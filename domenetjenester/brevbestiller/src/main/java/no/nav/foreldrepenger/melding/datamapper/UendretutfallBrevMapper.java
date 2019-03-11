@@ -5,7 +5,7 @@ import javax.xml.bind.JAXBException;
 
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.BrevdataType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.FagType;
@@ -17,16 +17,16 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class UendretutfallBrevMapper implements DokumentTypeMapper {
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelseDto hendelseDto, Behandling behandling) throws JAXBException {
-        FagType fagType = mapFagType(hendelseDto);
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException {
+        FagType fagType = mapFagType(hendelse);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         String brevXmlMedNamespace = JaxbHelper.marshalJaxb(UendretutfallConstants.JAXB_CLASS, brevdataTypeJAXBElement);
         return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
     }
 
-    FagType mapFagType(DokumentHendelseDto hendelseDto) {
+    FagType mapFagType(DokumentHendelse hendelse) {
         FagType fagType = new FagType();
-        fagType.setYtelseType(YtelseTypeKode.fromValue(hendelseDto.getYtelseType()));
+        fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
         return fagType;
     }
 

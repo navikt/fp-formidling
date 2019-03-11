@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.YtelseTypeKode;
 
 public class UendretutfallBrevMapperTest {
@@ -14,12 +14,13 @@ public class UendretutfallBrevMapperTest {
 
     @Test
     public void skal_mappe_korrekt() {
-        assertThat(mapper.mapFagType(lagDto()).getYtelseType()).isEqualTo(YtelseTypeKode.FP);
+        assertThat(mapper.mapFagType(lagHendelse()).getYtelseType()).isEqualTo(YtelseTypeKode.ES);
     }
 
-    private DokumentHendelseDto lagDto() {
-        DokumentHendelseDto dto = new DokumentHendelseDto();
-        dto.setYtelseType(FagsakYtelseType.FORELDREPENGER.getKode());
-        return dto;
+    private DokumentHendelse lagHendelse() {
+        return DokumentHendelse.builder()
+                .medBehandlingId(123l)
+                .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
+                .build();
     }
 }

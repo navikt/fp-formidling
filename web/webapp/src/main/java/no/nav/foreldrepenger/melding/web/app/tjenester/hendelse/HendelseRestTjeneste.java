@@ -3,8 +3,6 @@ package no.nav.foreldrepenger.melding.web.app.tjenester.hendelse;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.FAGSAK;
 
-import java.util.Optional;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -25,8 +23,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.vedtak.felles.jpa.Transaction;
@@ -62,17 +58,12 @@ public class HendelseRestTjeneste {
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response prossesereHendelse(@NotNull @ApiParam("DokumentHendelseDto") @Valid DokumentHendelseDto dokumentHendelseDto) {
         LOGGER.info("hendelse = " + dokumentHendelseDto);
-        final Optional<BehandlingDto> behandlingInfo = behandlingRestKlient.hentBehandling(new BehandlingIdDto(dokumentHendelseDto.getBehandlingId()));
         Response.ResponseBuilder responseBuilder;
-        if (behandlingInfo.isPresent()) {
-            final byte[] brevPdfVersjon = brevBestillerApplikasjonTjeneste.forhandsvisBrev(behandlingInfo.get(), dokumentHendelseDto);
-            responseBuilder = Response.ok(brevPdfVersjon);
-            responseBuilder.type("application/pdf");
-            responseBuilder.header("Content-Disposition", "filename=dokument.pdf");
-            LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
-        } else {
-            responseBuilder = Response.noContent();
-        }
+        final byte[] brevPdfVersjon = brevBestillerApplikasjonTjeneste.forhandsvisBrev(dokumentHendelseDto);
+        responseBuilder = Response.ok(brevPdfVersjon);
+        responseBuilder.type("application/pdf");
+        responseBuilder.header("Content-Disposition", "filename=dokument.pdf");
+        LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
         return responseBuilder.build();
     }
 }

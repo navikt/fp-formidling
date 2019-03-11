@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.melding.brevbestiller.api;
 
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 
 public interface BrevBestillerApplikasjonTjeneste {
-    byte[] forhandsvisBrev(BehandlingDto behandlingDto, DokumentHendelseDto hendelseDto);
+    byte[] forhandsvisBrev(DokumentHendelseDto hendelseDto);
 
-    void bestillBrev(DokumentHendelse dokumentHendelse);
+    DokumentHistorikkinnslag bestillBrev(DokumentHendelse dokumentHendelse);
 }

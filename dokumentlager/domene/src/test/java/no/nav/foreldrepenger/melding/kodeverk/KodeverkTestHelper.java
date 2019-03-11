@@ -150,5 +150,10 @@ public class KodeverkTestHelper {
         public <V extends Kodeliste, K extends Kodeliste> Map<V, Set<K>> hentKodeRelasjonForKodeverk(Class<V> cls, Class<K> cls2) {
             throw new UnsupportedOperationException();
         }
+
+        @Override
+        public Map<String, String> hentLandkodeISO2TilLandkoderMap() {
+            throw new UnsupportedOperationException();
+        }
     }
 }

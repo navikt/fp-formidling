@@ -12,13 +12,13 @@ interface KodeverkFeil extends DeklarerteFeil {
 
     KodeverkFeil FEILFACTORY = FeilFactory.create(KodeverkFeil.class);
 
-    @TekniskFeil(feilkode = "FP-314678", feilmelding = "Kan ikke finne kodeverk for type '%s', kode '%s'", logLevel = LogLevel.WARN)
+    @TekniskFeil(feilkode = "FPFORMIDLING-314678", feilmelding = "Kan ikke finne kodeverk for type '%s', kode '%s'", logLevel = LogLevel.WARN)
     Feil kanIkkeFinneKodeverk(String klassetype, String kode, NoResultException e);
 
-    @TekniskFeil(feilkode = "FP-314679", feilmelding = "Kan ikke finne kodeverk for type '%s', kode '%s'", logLevel = LogLevel.WARN)
+    @TekniskFeil(feilkode = "FPFORMIDLING-314679", feilmelding = "Kan ikke finne kodeverk for type '%s', kode '%s'", logLevel = LogLevel.WARN)
     Feil kanIkkeFinneKodeverkForOffisiellKode(String klassetype, String kode, NoResultException e);
 
-    @TekniskFeil(feilkode = "FP-314680", feilmelding = "Kan ikke finne kodeverk for type '%s', kode '%s'", logLevel = LogLevel.WARN)
+    @TekniskFeil(feilkode = "FPFORMIDLING-314680", feilmelding = "Kan ikke finne kodeverk for type '%s', kode '%s'", logLevel = LogLevel.WARN)
     Feil kanIkkeFinneKodeverkForKoder(String klassetype, String kode, NoResultException e);
 
 }

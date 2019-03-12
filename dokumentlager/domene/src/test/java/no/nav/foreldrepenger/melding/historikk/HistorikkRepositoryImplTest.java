@@ -34,6 +34,7 @@ public class HistorikkRepositoryImplTest {
     public void skalLagreOgHenteOppIgjen() {
         DokumentHistorikkinnslag historikkInnslag = DokumentHistorikkinnslag.builder()
                 .medBehandlingId(behandlingId)
+                .medHendelseId(123l)
                 .medJournalpostId(new JournalpostId(123l))
                 .medDokumentId("123")
                 .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)

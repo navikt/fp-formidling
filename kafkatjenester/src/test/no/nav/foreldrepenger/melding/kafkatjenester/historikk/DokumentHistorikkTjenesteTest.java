@@ -50,6 +50,7 @@ public class DokumentHistorikkTjenesteTest {
     public void publiserHistorikk() {
         DokumentHistorikkinnslag historikk = DokumentHistorikkinnslag.builder()
                 .medBehandlingId(1l)
+                .medHendelseId(1l)
                 .medDokumentMalType(dokumentRepository.hentDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK))
                 .medJournalpostId(new JournalpostId("ID"))
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)

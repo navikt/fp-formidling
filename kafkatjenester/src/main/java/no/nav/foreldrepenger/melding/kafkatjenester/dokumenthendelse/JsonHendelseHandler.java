@@ -16,6 +16,8 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkTjeneste;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.vedtak.log.mdc.MDCOperations;
+import no.nav.vedtak.sikkerhet.loginmodule.ContainerLogin;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
@@ -48,13 +50,15 @@ public class JsonHendelseHandler {
     }
 
     public void prosesser(DokumentHendelseDto jsonHendelse) {
+        ContainerLogin containerLogin = new ContainerLogin();
+        containerLogin.login();
+        MDCOperations.putCallId();
         DokumentHendelse hendelse = hendelseFraDto(jsonHendelse);
 
         hendelseRepository.lagre(hendelse);
-        log.info("lagret hendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
-        //TODO ta output fra bestillbrev og push det til historikk
+        log.info("lagret hendelse:{} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingId());
         dokumentHistorikkTjeneste.lagreOgPubliserHistorikk(brevBestillerApplikasjonTjeneste.bestillBrev(hendelse));
-        log.info("Publishert historikkhendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
+        containerLogin.logout();
     }
 
     private DokumentHendelse hendelseFraDto(DokumentHendelseDto jsonHendelse) {

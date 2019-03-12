@@ -42,13 +42,13 @@ public class DokumentHistorikkTjeneste {
     public void lagreOgPubliserHistorikk(DokumentHistorikkinnslag historikkInnslag) {
         historikkRepository.lagre(historikkInnslag);
         DokumentHistorikkDto historikk = new DokumentHistorikkDto(historikkInnslag);
-        publiserHistorikk(historikk);
+        publiserHistorikk(historikk, historikkInnslag.getHendelseId());
     }
 
-    void publiserHistorikk(DokumentHistorikkDto jsonHistorikk) {
+    void publiserHistorikk(DokumentHistorikkDto jsonHistorikk, long hendelseId) {
         String serialisertJson = serialiser(jsonHistorikk);
         meldingProducer.sendJson(serialisertJson);
-        log.info("Publisert historikk: {}", serialisertJson);
+        log.info("Publisert historikk for hendelse: {} : {}", hendelseId, serialisertJson);
     }
 
     private String serialiser(DokumentHistorikkDto historikk) {

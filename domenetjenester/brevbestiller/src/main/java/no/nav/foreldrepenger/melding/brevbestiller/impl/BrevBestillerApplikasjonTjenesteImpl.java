@@ -9,6 +9,8 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
@@ -101,11 +103,18 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
             ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = dokumentproduksjonProxyService
                     .produserIkkeredigerbartDokument(produserIkkeredigerbartDokumentRequest);
             JournalpostId journalpostId = new JournalpostId(produserIkkeredigerbartDokumentResponse.getJournalpostId());
-            return lagHistorikkinnslag(dokumentHendelse, journalpostId, produserIkkeredigerbartDokumentResponse.getDokumentId(), dokumentMal, brevXmlElement.toString());
+            return lagHistorikkinnslag(dokumentHendelse, journalpostId, produserIkkeredigerbartDokumentResponse.getDokumentId(), dokumentMal, elementTilString(brevXmlElement));
         } catch (
                 ProduserIkkeredigerbartDokumentDokumentErRedigerbart | ProduserIkkeredigerbartDokumentDokumentErVedlegg funksjonellFeil) {
             throw BrevbestillerFeil.FACTORY.feilFraDokumentProduksjon(funksjonellFeil).toException();
         }
+    }
+
+    private String elementTilString(Element element) {
+        DOMImplementationLS lsImpl = (DOMImplementationLS) element.getOwnerDocument().getImplementation().getFeature("LS", "3.0");
+        LSSerializer serializer = lsImpl.createLSSerializer();
+        serializer.getDomConfig().setParameter("xml-declaration", false); //by default its true, so set it to false to get String without xml-declaration
+        return serializer.writeToString(element);
     }
 
 
@@ -113,6 +122,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         //TODO
         return DokumentHistorikkinnslag.builder()
                 .medBehandlingId(dokumentHendelse.getBehandlingId())
+                .medHendelseId(dokumentHendelse.getId())
                 .medJournalpostId(journalpostId)
                 .medDokumentId(dokumentId)
                 .medHistorikkAktør(dokumentHendelse.getHistorikkAktør() != null ? dokumentHendelse.getHistorikkAktør() : HistorikkAktør.VEDTAKSLØSNINGEN)
@@ -141,7 +151,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
             Address address = new Address(behandlingDto.getPersonopplysningDto().getAdresser().get(0));
         }
 
-        final Optional<VergeDto> vergeDto = behandlingRestKlient.hentVerge(new BehandlingIdDto(hendelse.getBehandlingId()), behandlingDto.getLinks());
+        final Optional<VergeDto> vergeDto = behandlingRestKlient.hentVerge(new BehandlingIdDto(hendelse.getBehandlingId()), behandlingDto.getLinks(), false);
         Verge verge = new Verge(vergeDto.get());
 
         DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, hendelse);

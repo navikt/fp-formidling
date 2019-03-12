@@ -27,6 +27,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
     private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/behandlinger";
 
+    //TODO bruk bare en restklient, avklar først
     private OidcRestClient oidcRestClient;
     private SystemUserOidcRestClient systemUserOidcRestClient;
     private String endpointFpsakRestBase;
@@ -56,7 +57,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
             }
             if (behandling.isPresent()) {
                 final BehandlingDto behandlingDto = behandling.get();
-                final Optional<PersonopplysningDto> personopplysningDto = hentPersonopplysninger(behandlingIdDto, behandlingDto.getLinks());
+                final Optional<PersonopplysningDto> personopplysningDto = hentPersonopplysninger(behandlingIdDto, behandlingDto.getLinks(), systembruker);
                 personopplysningDto.ifPresent(behandlingDto::setPersonopplysningDto);
             }
         } catch (URISyntaxException e) {
@@ -66,22 +67,25 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    public Optional<PersonopplysningDto> hentPersonopplysninger(BehandlingIdDto behandlingIdDto, List<BehandlingResourceLinkDto> resourceLinkDtos) {
+    public Optional<PersonopplysningDto> hentPersonopplysninger(BehandlingIdDto behandlingIdDto, List<BehandlingResourceLinkDto> resourceLinkDtos, boolean systembruker) {
         Optional<PersonopplysningDto> personopplysningDto = Optional.empty();
         for (BehandlingResourceLinkDto resourceLinkDto : resourceLinkDtos) {
             if (resourceLinkDto.getRel().equals("soeker-personopplysninger")) {
                 URI personopplysningUri = URI.create(endpointFpsakRestBase + resourceLinkDto.getHref());
 
                 behandlingIdDto.setSaksnummer(resourceLinkDto.getRequestPayload().getSaksnummer());
-
-                personopplysningDto = oidcRestClient.postReturnsOptional(personopplysningUri, behandlingIdDto, PersonopplysningDto.class);
+                if (systembruker) {
+                    personopplysningDto = systemUserOidcRestClient.postReturnsOptional(personopplysningUri, behandlingIdDto, PersonopplysningDto.class);
+                } else {
+                    personopplysningDto = oidcRestClient.postReturnsOptional(personopplysningUri, behandlingIdDto, PersonopplysningDto.class);
+                }
             }
         }
         return personopplysningDto;
     }
 
     @Override
-    public Optional<VergeDto> hentVerge(BehandlingIdDto behandlingIdDto, List<BehandlingResourceLinkDto> resourceLinkDtos) {
+    public Optional<VergeDto> hentVerge(BehandlingIdDto behandlingIdDto, List<BehandlingResourceLinkDto> resourceLinkDtos, boolean systembruker) {
         Optional<VergeDto> vergeDto = Optional.empty();
         for (BehandlingResourceLinkDto resourceLinkDto : resourceLinkDtos) {
             if (resourceLinkDto.getRel().equals("soeker-verge")) {
@@ -89,7 +93,11 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
 
                 behandlingIdDto.setSaksnummer(resourceLinkDto.getRequestPayload().getSaksnummer());
 
-                vergeDto = oidcRestClient.postReturnsOptional(personopplysningUri, behandlingIdDto, VergeDto.class);
+                if (systembruker) {
+                    vergeDto = systemUserOidcRestClient.postReturnsOptional(personopplysningUri, behandlingIdDto, VergeDto.class);
+                } else {
+                    vergeDto = oidcRestClient.postReturnsOptional(personopplysningUri, behandlingIdDto, VergeDto.class);
+                }
             }
         }
         return vergeDto;

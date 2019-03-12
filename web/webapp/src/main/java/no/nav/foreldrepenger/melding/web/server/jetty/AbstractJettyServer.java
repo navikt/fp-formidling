@@ -28,8 +28,6 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
 
-import no.nav.foreldrepenger.melding.web.server.jetty.sikkerhet.JettySubjectHandler;
-import no.nav.vedtak.sikkerhet.context.SubjectHandler;
 import no.nav.vedtak.sikkerhetsfilter.SecurityFilter;
 
 abstract class AbstractJettyServer {
@@ -82,8 +80,6 @@ abstract class AbstractJettyServer {
 
     protected void konfigurerSikkerhet() throws IOException {
         Security.setProperty(AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY, AuthConfigFactoryImpl.class.getCanonicalName());
-        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, JettySubjectHandler.class.getName());
-
         File jaspiConf = new File(System.getProperty("conf", "./conf") + "/jaspi-conf.xml");
         if (!jaspiConf.exists()) {
             throw new IllegalStateException("Missing required file: " + jaspiConf.getAbsolutePath());

@@ -13,12 +13,8 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHistorikkDto;
-import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
-import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
-import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
-import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.vedtak.felles.kafka.MeldingProducer;
 
 @ApplicationScoped
@@ -43,33 +39,16 @@ public class DokumentHistorikkTjeneste {
     }
 
 
-    public void lagreOgPubliserHistorikk(DokumentHendelse hendelse) {
-        DokumentHistorikkinnslag historikkInnslag = lagHistorikkinnslag(hendelse);
+    public void lagreOgPubliserHistorikk(DokumentHistorikkinnslag historikkInnslag) {
         historikkRepository.lagre(historikkInnslag);
         DokumentHistorikkDto historikk = new DokumentHistorikkDto(historikkInnslag);
-        publiserHistorikk(historikk);
+        publiserHistorikk(historikk, historikkInnslag.getHendelseId());
     }
 
-    private DokumentHistorikkinnslag lagHistorikkinnslag(DokumentHendelse dokumentHendelse) {
-        //TODO
-        return DokumentHistorikkinnslag.builder()
-                .medBehandlingId(dokumentHendelse.getBehandlingId())
-                .medJournalpostId(lagJournalpost())
-                .medDokumentId("123")
-                .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)
-                .medDokumentMalType(dokumentHendelse.getDokumentMalType())
-                .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
-                .build();
-    }
-
-    private JournalpostId lagJournalpost() {
-        return new JournalpostId("TODO");
-    }
-
-    void publiserHistorikk(DokumentHistorikkDto jsonHistorikk) {
+    void publiserHistorikk(DokumentHistorikkDto jsonHistorikk, long hendelseId) {
         String serialisertJson = serialiser(jsonHistorikk);
         meldingProducer.sendJson(serialisertJson);
-        log.info("Publisert historikk: {}", serialisertJson);
+        log.info("Publisert historikk for hendelse: {} : {}", hendelseId, serialisertJson);
     }
 
     private String serialiser(DokumentHistorikkDto historikk) {

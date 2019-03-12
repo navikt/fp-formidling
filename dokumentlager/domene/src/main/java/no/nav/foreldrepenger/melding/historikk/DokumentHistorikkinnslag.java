@@ -31,6 +31,9 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
     @Column(name = "behandling_id")
     private Long behandlingId;
 
+    @Column(name = "hendelse_id")
+    private Long hendelseId;
+
     @Column(name = "dokument_id")
     private String dokumentId;
 
@@ -52,24 +55,73 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
     @JoinColumn(name = "dokument_mal_navn", nullable = false)
     private DokumentMalType dokumentMalType;
 
+    @Column
+    private String xml;
+
     private DokumentHistorikkinnslag() {
     }
 
-    DokumentHistorikkinnslag(long behandlingId, String dokumentId, JournalpostId journalpostId, DokumentMalType dokumentMalType, HistorikkinnslagType historikkinnslagType) {
+    DokumentHistorikkinnslag(long behandlingId, long hendelseId, String dokumentId, JournalpostId journalpostId, DokumentMalType dokumentMalType, HistorikkinnslagType historikkinnslagType, String xml) {
         this.behandlingId = behandlingId;
+        this.hendelseId = hendelseId;
         this.dokumentId = dokumentId;
         this.journalpostId = journalpostId;
         this.dokumentMalType = dokumentMalType;
         this.historikkinnslagType = historikkinnslagType;
         this.dokumentMalType = dokumentMalType;
+        this.xml = xml;
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DokumentHistorikkinnslag that = (DokumentHistorikkinnslag) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(behandlingId, that.behandlingId) &&
+                Objects.equals(hendelseId, that.hendelseId) &&
+                Objects.equals(dokumentId, that.dokumentId) &&
+                Objects.equals(journalpostId, that.journalpostId) &&
+                Objects.equals(historikkAktør, that.historikkAktør) &&
+                Objects.equals(historikkinnslagType, that.historikkinnslagType) &&
+                Objects.equals(dokumentMalType, that.dokumentMalType) &&
+                Objects.equals(xml, that.xml);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, behandlingId, hendelseId, dokumentId, journalpostId, historikkAktør, historikkinnslagType, dokumentMalType, xml);
+    }
+
+    @Override
+    public String toString() {
+        return "DokumentHistorikkinnslag{" +
+                "id=" + id +
+                ", behandlingId=" + behandlingId +
+                ", hendelseId=" + hendelseId +
+                ", dokumentId='" + dokumentId + '\'' +
+                ", journalpostId=" + journalpostId +
+                ", historikkAktør=" + historikkAktør +
+                ", historikkinnslagType=" + historikkinnslagType +
+                ", dokumentMalType=" + dokumentMalType +
+                ", xml='" + xml + '\'' +
+                '}';
+    }
+
     public Long getBehandlingId() {
         return behandlingId;
+    }
+
+    public Long getHendelseId() {
+        return hendelseId;
+    }
+
+    public String getXml() {
+        return xml;
     }
 
     public String getDokumentId() {
@@ -92,47 +144,23 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
         return dokumentMalType;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        DokumentHistorikkinnslag that = (DokumentHistorikkinnslag) o;
-        return behandlingId.equals(that.behandlingId) &&
-                dokumentId.equals(that.dokumentId) &&
-                journalpostId.equals(that.journalpostId) &&
-                Objects.equals(historikkAktør, that.historikkAktør) &&
-                Objects.equals(historikkinnslagType, that.historikkinnslagType) &&
-                dokumentMalType.equals(that.dokumentMalType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(behandlingId, dokumentId, journalpostId, historikkAktør, historikkinnslagType, dokumentMalType);
-    }
-
-    @Override
-    public String toString() {
-        return "DokumentHistorikkinnslag{" +
-                "id=" + id +
-                ", behandlingId=" + behandlingId +
-                ", dokumentId='" + dokumentId + '\'' +
-                ", journalpostId=" + journalpostId +
-                ", historikkAktør=" + historikkAktør +
-                ", historikkinnslagType=" + historikkinnslagType +
-                ", dokumentMalType=" + dokumentMalType +
-                '}';
-    }
-
     public static class Builder {
         private Long behandlingId;
+        private Long hendelseId;
         private String dokumentId;
         private JournalpostId journalpostId;
         private HistorikkAktør historikkAktør;
         private HistorikkinnslagType historikkinnslagType;
         private DokumentMalType dokumentMalType;
+        private String xml;
 
         public DokumentHistorikkinnslag.Builder medBehandlingId(long behandlingId) {
             this.behandlingId = behandlingId;
+            return this;
+        }
+
+        public DokumentHistorikkinnslag.Builder medHendelseId(long hendelseId) {
+            this.hendelseId = hendelseId;
             return this;
         }
 
@@ -161,20 +189,27 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
             return this;
         }
 
+        public DokumentHistorikkinnslag.Builder medXml(String xml) {
+            this.xml = xml;
+            return this;
+        }
+
         public DokumentHistorikkinnslag build() {
             verifyStateForBuild();
-            DokumentHistorikkinnslag dokumentHistorikkinnslag = new DokumentHistorikkinnslag(behandlingId, dokumentId, journalpostId, dokumentMalType, historikkinnslagType);
+            DokumentHistorikkinnslag dokumentHistorikkinnslag = new DokumentHistorikkinnslag(behandlingId, hendelseId, dokumentId, journalpostId, dokumentMalType, historikkinnslagType, xml);
             dokumentHistorikkinnslag.historikkAktør = historikkAktør;
             return dokumentHistorikkinnslag;
         }
 
         private void verifyStateForBuild() {
+            Objects.requireNonNull(behandlingId, "behandlingId");
+            Objects.requireNonNull(hendelseId, "hendelseId");
             Objects.requireNonNull(dokumentId, "dokumentId");
             Objects.requireNonNull(journalpostId, "journalpostId");
             Objects.requireNonNull(behandlingId, "behandlingId");
             Objects.requireNonNull(dokumentMalType, "dokumentMalType");
             Objects.requireNonNull(historikkinnslagType, "historikkinnslagType");
-
+            Objects.requireNonNull(xml, "xml");
         }
 
     }

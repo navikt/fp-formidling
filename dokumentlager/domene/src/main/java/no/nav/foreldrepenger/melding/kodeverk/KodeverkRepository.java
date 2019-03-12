@@ -46,6 +46,8 @@ public interface KodeverkRepository {
      */
     <V extends Kodeliste> List<V> hentAlle(Class<V> cls);
 
+    Map<String, String> hentLandkodeISO2TilLandkoderMap();
+
     /**
      * Henter et map med kobling mellom kodeverk, NB! benytter refleksjon for å utlede DISCRIMINATOR til hvilket kodeverk den skal slå opp.
      * Det må ligge innslag i KODELISTE_RELASJON for å få treff, støtter bare mapping fra kodeliste1 til kodeliste2.

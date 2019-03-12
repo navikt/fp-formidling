@@ -153,6 +153,36 @@ public class KodeverkRepositoryImpl implements KodeverkRepository {
                 .getResultList();
     }
 
+    private Query getLandkodeMappingQuery() {
+        return entityManager.createNativeQuery(
+                "SELECT k3.kode AS land_3bokstav, " +
+                        "(SELECT k2.kode FROM kodeliste k2 " +
+                        "WHERE k2.kodeverk = 'LANDKODE_ISO2' " +
+                        "AND k2.navn = k3.navn ) AS land_2bokstav " +
+                        "FROM kodeliste k3 " +
+                        "WHERE k3.kodeverk = 'LANDKODER' " +
+                        "AND EXISTS (SELECT k2.kl_kode " +
+                        "FROM kodeliste k2 " +
+                        "WHERE k2.kodeverk = 'LANDKODE_ISO2' " +
+                        "AND k2.navn = k3.navn)");
+    }
+
+    @Override
+    public Map<String, String> hentLandkodeISO2TilLandkoderMap() {
+        Query query = getLandkodeMappingQuery();
+
+        int land3BokstavNr = 0;
+        int land2BokstavNr = 1;
+
+        HashMap<String, String> retval = new HashMap<>();
+        @SuppressWarnings("unchecked")
+        List<Object[]> koder = query.getResultList();
+        for (Object[] k : koder) {
+            retval.put((String) k[land2BokstavNr], (String) k[land3BokstavNr]);
+        }
+        return retval;
+    }
+
     private <V extends Kodeliste> List<V> finnListeFraEm(Class<V> cls, List<String> koder) {
         CriteriaQuery<V> criteria = createCriteria(cls, koder);
         return entityManager.createQuery(criteria)

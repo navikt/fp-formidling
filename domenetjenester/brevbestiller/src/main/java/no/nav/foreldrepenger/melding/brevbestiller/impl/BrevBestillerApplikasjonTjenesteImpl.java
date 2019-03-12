@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -15,6 +17,8 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
+import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Address;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
@@ -31,11 +35,22 @@ import no.nav.foreldrepenger.melding.geografisk.Landkoder;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
+import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
+import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.binding.ProduserIkkeredigerbartDokumentDokumentErRedigerbart;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.binding.ProduserIkkeredigerbartDokumentDokumentErVedlegg;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Dokumentbestillingsinformasjon;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
 import no.nav.vedtak.felles.integrasjon.dokument.produksjon.DokumentproduksjonConsumer;
+import no.nav.vedtak.log.mdc.MDCOperations;
+import no.nav.vedtak.sikkerhet.loginmodule.ContainerLogin;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
@@ -48,6 +63,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     private KodeverkRepository kodeverkRepository;
     private DokumentRepository dokumentRepository;
     private BehandlingRestKlient behandlingRestKlient;
+    private DokumentbestillingMapper dokumentbestillingMapper;
 
     public BrevBestillerApplikasjonTjenesteImpl() {
         // for cdi proxy
@@ -59,20 +75,66 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
                                                 DokumentMalUtreder dokumentMalUtreder,
                                                 KodeverkRepository kodeverkRepository,
                                                 DokumentRepository dokumentRepository,
-                                                BehandlingRestKlient behandlingRestKlient) {
+                                                BehandlingRestKlient behandlingRestKlient,
+                                                DokumentbestillingMapper dokumentbestillingMapper) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
         this.dokumentXmlDataMapper = dokumentXmlDataMapper;
         this.dokumentMalUtreder = dokumentMalUtreder;
         this.kodeverkRepository = kodeverkRepository;
         this.dokumentRepository = dokumentRepository;
         this.behandlingRestKlient = behandlingRestKlient;
+        this.behandlingRestKlient = behandlingRestKlient;
+        this.dokumentbestillingMapper = dokumentbestillingMapper;
     }
 
     @Override
-    public void bestillBrev(DokumentHendelse dokumentHendelse) {
-        //hent behandling her
-        Behandling behandling = new Behandling(null);
-        dokumentMalUtreder.utredDokumentmal(behandling, dokumentHendelse);
+    public DokumentHistorikkinnslag bestillBrev(DokumentHendelse dokumentHendelse) {
+        BehandlingDto behandlingDto = hentBehandlingFraFpsak(dokumentHendelse.getBehandlingId(), true);
+        Behandling behandling = new Behandling(behandlingDto);
+        DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, dokumentHendelse);
+        DokumentFelles dokumentFelles = lagDokumentFelles(dokumentMal, behandling.getId());
+        Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling);
+        final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
+                dokumentFelles, false);
+
+        ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = produserIkkeredigerbartDokument(brevXmlElement, dokumentbestillingsinformasjon);
+        return lagHistorikkinnslag(dokumentHendelse, produserIkkeredigerbartDokumentResponse, dokumentMal, elementTilString(brevXmlElement));
+    }
+
+    private ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokument(Element
+                                                                                            brevXmlElement, Dokumentbestillingsinformasjon dokumentbestillingsinformasjon) {
+        ProduserIkkeredigerbartDokumentRequest produserIkkeredigerbartDokumentRequest = new ProduserIkkeredigerbartDokumentRequest();
+        produserIkkeredigerbartDokumentRequest.setBrevdata(brevXmlElement);
+        produserIkkeredigerbartDokumentRequest.setDokumentbestillingsinformasjon(dokumentbestillingsinformasjon);
+        ContainerLogin containerLogin = new ContainerLogin();
+        containerLogin.login();
+        MDCOperations.putCallId();
+        try {
+            return dokumentproduksjonProxyService
+                    .produserIkkeredigerbartDokument(produserIkkeredigerbartDokumentRequest);
+        } catch (ProduserIkkeredigerbartDokumentDokumentErRedigerbart | ProduserIkkeredigerbartDokumentDokumentErVedlegg funksjonellFeil) {
+            throw BrevbestillerFeil.FACTORY.feilFraDokumentProduksjon(funksjonellFeil).toException();
+        } finally {
+            containerLogin.logout();
+            MDCOperations.removeCallId();
+        }
+    }
+
+
+    private DokumentHistorikkinnslag lagHistorikkinnslag(DokumentHendelse dokumentHendelse,
+                                                         ProduserIkkeredigerbartDokumentResponse response,
+                                                         DokumentMalType dokumentMal,
+                                                         String xml) {
+        return DokumentHistorikkinnslag.builder()
+                .medBehandlingId(dokumentHendelse.getBehandlingId())
+                .medHendelseId(dokumentHendelse.getId())
+                .medJournalpostId(new JournalpostId(response.getJournalpostId()))
+                .medDokumentId(response.getDokumentId())
+                .medHistorikkAktør(dokumentHendelse.getHistorikkAktør() != null ? dokumentHendelse.getHistorikkAktør() : HistorikkAktør.VEDTAKSLØSNINGEN)
+                .medDokumentMalType(dokumentMal)
+                .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
+                .medXml(xml)
+                .build();
     }
 
     @Override
@@ -81,52 +143,67 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
         //TODO duplisert kode, vurder å lage tjeneste
         DokumentHendelse hendelse = fraDto(hendelseDto);
+        BehandlingDto behandlingDto = hentBehandlingFraFpsak(hendelse.getBehandlingId(), false);
+        Behandling behandling = new Behandling(behandlingDto);
 
         //TODO: Map fpsak data til formidling format
 //        final DokumentData dokumentData = dokumentDataTjeneste.hentDokumentData(dokumentDataId);
-        final BehandlingIdDto behandlingIdDto = new BehandlingIdDto(hendelse.getBehandlingId());
-        final Optional<BehandlingDto> behandlingDtoOptional = behandlingRestKlient.hentBehandling(behandlingIdDto);
-        if (behandlingDtoOptional.isPresent()) {
-            final BehandlingDto behandlingDto = behandlingDtoOptional.get();
 
-            //Data for mapping
-            Behandling behandling = new Behandling(behandlingDto);
+        //TODO: Sjekk hvis mulighet for flere addresser
+        if (behandlingDto.getPersonopplysningDto() != null) {
             Personopplysning personopplysning = new Personopplysning(behandlingDto.getPersonopplysningDto());
-            //TODO: Sjekk hvis mulighet for felere addresser
+
             Address address = new Address(behandlingDto.getPersonopplysningDto().getAdresser().get(0));
-
-            final Optional<VergeDto> vergeDto = behandlingRestKlient.hentVerge(behandlingIdDto, behandlingDto.getLinks());
-            Verge verge = new Verge(vergeDto.get());
-
-            DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, hendelse);
-
-            //Map data til DokumentFelles
-//            opprettDokumentFellesData(behandling, personopplysning, address, verge);
-            DokumentFelles dokumentFelles = lagDokumentFelles(dokumentMal, behandling.getId());
-
-            //TODO: Map formidling data to xml elements
-            //TODO Bruk likegjerne hendelseobjektet
-            Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, hendelseDto, behandling);
-
-            ProduserDokumentutkastRequest produserDokumentutkastRequest = new ProduserDokumentutkastRequest();
-            produserDokumentutkastRequest.setDokumenttypeId(dokumentMal.getDoksysKode());
-            produserDokumentutkastRequest.setBrevdata(brevXmlElement);
-
-            ProduserDokumentutkastResponse produserDokumentutkastResponse = dokumentproduksjonProxyService.produserDokumentutkast(produserDokumentutkastRequest);
-            if (produserDokumentutkastResponse != null && produserDokumentutkastResponse.getDokumentutkast() != null) {
-                dokument = produserDokumentutkastResponse.getDokumentutkast();
-                LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getId()); //$NON-NLS-1$
-            }
         }
+
+        final Optional<VergeDto> vergeDto = behandlingRestKlient.hentVerge(new BehandlingIdDto(hendelse.getBehandlingId()), behandlingDto.getLinks(), false);
+        Verge verge = new Verge(vergeDto.get());
+
+        DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, hendelse);
+
+        //Map data til DokumentFelles
+//            opprettDokumentFellesData(behandling, personopplysning, address, verge);
+        DokumentFelles dokumentFelles = lagDokumentFelles(dokumentMal, behandling.getId());
+
+        //TODO: Map formidling data to xml elements
+        Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, hendelse, behandling);
+
+        dokument = forhåndsvis(dokumentMal, brevXmlElement);
+        if (dokument == null) {
+            LOGGER.error("Klarte ikke hente behandling: {}", behandling.getId());
+            throw BrevbestillerFeil.FACTORY.klarteIkkeForhåndvise(dokumentMal.getKode(), behandling.getId()).toException();
+        }
+        LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandlingDto.getId());
         return dokument;
+    }
+
+    private byte[] forhåndsvis(DokumentMalType dokumentMal, Element brevXmlElement) {
+        ProduserDokumentutkastRequest produserDokumentutkastRequest = new ProduserDokumentutkastRequest();
+        produserDokumentutkastRequest.setDokumenttypeId(dokumentMal.getDoksysKode());
+        produserDokumentutkastRequest.setBrevdata(brevXmlElement);
+
+        ProduserDokumentutkastResponse produserDokumentutkastResponse = dokumentproduksjonProxyService.produserDokumentutkast(produserDokumentutkastRequest);
+        if (produserDokumentutkastResponse != null && produserDokumentutkastResponse.getDokumentutkast() != null) {
+            return produserDokumentutkastResponse.getDokumentutkast();//$NON-NLS-1$
+        }
+        return null;
+    }
+
+    private BehandlingDto hentBehandlingFraFpsak(long behandlingId, boolean systembruker) {
+        final Optional<BehandlingDto> behandlingInfo = behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId), systembruker);
+        if (behandlingInfo.isPresent()) {
+            return behandlingInfo.get();
+        }
+        LOGGER.error("Klarte ikke hente behandling: {}", behandlingId);
+        throw BrevbestillerFeil.FACTORY.klarteIkkeHenteBehandling(behandlingId).toException();
     }
 
     private DokumentFelles lagDokumentFelles(DokumentMalType dokumentMalType, Long behandlingId) {
         return DokumentFelles.builder(new DokumentData(dokumentMalType, behandlingId))
-                .medMottakerId("123")
+                .medMottakerId("z991414")
                 .medSaksnummer(Saksnummer.arena("123"))
                 .medAutomatiskBehandlet(false)
-                .medSakspartId("123")
+                .medSakspartId("z991416")
                 .medSakspartNavn("test")
                 .medNavnAvsenderEnhet("test")
                 .medKontaktTelefonNummer("123")

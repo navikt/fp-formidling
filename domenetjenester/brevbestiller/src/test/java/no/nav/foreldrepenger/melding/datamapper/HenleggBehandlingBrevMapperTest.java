@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.OpphavTypeKode;
@@ -19,18 +19,20 @@ public class HenleggBehandlingBrevMapperTest {
 
     HenleggBehandlingBrevMapper mapper = new HenleggBehandlingBrevMapper();
     Behandling behandling;
-    DokumentHendelseDto dokumentHendelseDto;
+    DokumentHendelse dokumentHendelse;
 
     @Before
     public void setup() {
         behandling = new Behandling(opprettBehandlingDto());
-        dokumentHendelseDto = new DokumentHendelseDto();
-        dokumentHendelseDto.setYtelseType(FagsakYtelseType.FORELDREPENGER.getKode());
+        dokumentHendelse = DokumentHendelse.builder()
+                .medBehandlingId(123l)
+                .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+                .build();
     }
 
     @Test
     public void test_map_fagtype() {
-        FagType fagType = mapper.mapFagType(dokumentHendelseDto, behandling);
+        FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
         assertThat(fagType.getBehandlingsType()).isEqualTo(BehandlingsTypeKode.FØRSTEGANGSSØKNAD);
         assertThat(fagType.getYtelseType()).isEqualTo(YtelseTypeKode.FP);
         assertThat(fagType.getOpphavType()).isEqualTo(OpphavTypeKode.FAMPEN);

@@ -51,12 +51,8 @@ public class JsonHendelseHandler {
         DokumentHendelse hendelse = hendelseFraDto(jsonHendelse);
 
         hendelseRepository.lagre(hendelse);
-        log.info("lagret hendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
-        brevBestillerApplikasjonTjeneste.bestillBrev(hendelse);
-        log.info("Prossesert hendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
-        //TODO ta output fra bestillbrev og push det til historikk
-        dokumentHistorikkTjeneste.lagreOgPubliserHistorikk(hendelse);
-        log.info("Publishert historikkhendelse: behandling: {} OK", jsonHendelse.getBehandlingId());
+        log.info("lagret hendelse:{} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingId());
+        dokumentHistorikkTjeneste.lagreOgPubliserHistorikk(brevBestillerApplikasjonTjeneste.bestillBrev(hendelse));
     }
 
     private DokumentHendelse hendelseFraDto(DokumentHendelseDto jsonHendelse) {

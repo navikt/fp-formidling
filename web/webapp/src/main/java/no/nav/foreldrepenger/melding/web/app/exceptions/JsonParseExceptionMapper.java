@@ -35,7 +35,7 @@ public class JsonParseExceptionMapper implements ExceptionMapper<JsonParseExcept
 
         JsonMappingFeil FACTORY = FeilFactory.create(JsonMappingFeil.class);
 
-        @TekniskFeil(feilkode = "FP-299955", feilmelding = "JSON-parsing feil: %s", logLevel = LogLevel.WARN)
+        @TekniskFeil(feilkode = "FPFORMIDLING-299955", feilmelding = "JSON-parsing feil: %s", logLevel = LogLevel.WARN)
         Feil jsonParseFeil(String feilmelding, JsonParseException e);
     }
 

@@ -12,9 +12,9 @@ interface OppstartFeil extends DeklarerteFeil {
 
     OppstartFeil FACTORY = FeilFactory.create(OppstartFeil.class);
 
-    @TekniskFeil(feilkode = "FP-753407", feilmelding = "Uventet exception ved oppstart", logLevel = ERROR)
+    @TekniskFeil(feilkode = "FPFORMIDLING-753407", feilmelding = "Uventet exception ved oppstart", logLevel = ERROR)
     Feil uventetExceptionVedOppstart(Exception e);
 
-    @TekniskFeil(feilkode = "FP-753409", feilmelding = "Selftest %s: %s. Endpoint: %s. Responstid: %s. Feilmelding: %s.", logLevel = INFO)
+    @TekniskFeil(feilkode = "FPFORMIDLING-753409", feilmelding = "Selftest %s: %s. Endpoint: %s. Responstid: %s. Feilmelding: %s.", logLevel = INFO)
     Feil selftestStatus(String status, String description, String endpoint, String responstid, String feilmelding);
 }

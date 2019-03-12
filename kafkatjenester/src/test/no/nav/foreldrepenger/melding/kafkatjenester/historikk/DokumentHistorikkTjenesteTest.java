@@ -17,6 +17,10 @@ import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
+import no.nav.foreldrepenger.melding.hendelser.HendelseRepositoryImpl;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
@@ -35,11 +39,13 @@ public class DokumentHistorikkTjenesteTest {
     private DokumentHistorikkMeldingProducer historikkMeldingProducer;
     private HistorikkRepository historikkRepository;
     private DokumentRepository dokumentRepository;
+    private HendelseRepository hendelseRepository;
 
     @Before
     public void setup() {
         historikkRepository = new HistorikkRepositoryImpl(repositoryRule.getEntityManager());
         dokumentRepository = new DokumentRepositoryImpl(repositoryRule.getEntityManager());
+        hendelseRepository = new HendelseRepositoryImpl(repositoryRule.getEntityManager());
         historikkTjeneste = new DokumentHistorikkTjeneste(historikkMeldingProducer, historikkRepository);
         doAnswer((i) -> {
             return null;
@@ -48,9 +54,14 @@ public class DokumentHistorikkTjenesteTest {
 
     @Test
     public void publiserHistorikk() {
+        DokumentHendelse hendelse = DokumentHendelse.builder()
+                .medBehandlingId(123l)
+                .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+                .build();
+        hendelseRepository.lagre(hendelse);
         DokumentHistorikkinnslag historikk = DokumentHistorikkinnslag.builder()
                 .medBehandlingId(1l)
-                .medHendelseId(1l)
+                .medHendelseId(hendelse.getId())
                 .medDokumentMalType(dokumentRepository.hentDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK))
                 .medJournalpostId(new JournalpostId("ID"))
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)

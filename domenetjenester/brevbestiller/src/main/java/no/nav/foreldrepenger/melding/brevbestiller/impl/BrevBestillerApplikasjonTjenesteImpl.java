@@ -49,8 +49,6 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
 import no.nav.vedtak.felles.integrasjon.dokument.produksjon.DokumentproduksjonConsumer;
-import no.nav.vedtak.log.mdc.MDCOperations;
-import no.nav.vedtak.sikkerhet.loginmodule.ContainerLogin;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
@@ -89,7 +87,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
     @Override
     public DokumentHistorikkinnslag bestillBrev(DokumentHendelse dokumentHendelse) {
-        BehandlingDto behandlingDto = hentBehandlingFraFpsak(dokumentHendelse.getBehandlingId(), true);
+        BehandlingDto behandlingDto = hentBehandlingFraFpsak(dokumentHendelse.getBehandlingId());
         Behandling behandling = new Behandling(behandlingDto);
         DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, dokumentHendelse);
         DokumentFelles dokumentFelles = lagDokumentFelles(dokumentMal, behandling.getId());
@@ -106,17 +104,11 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         ProduserIkkeredigerbartDokumentRequest produserIkkeredigerbartDokumentRequest = new ProduserIkkeredigerbartDokumentRequest();
         produserIkkeredigerbartDokumentRequest.setBrevdata(brevXmlElement);
         produserIkkeredigerbartDokumentRequest.setDokumentbestillingsinformasjon(dokumentbestillingsinformasjon);
-        ContainerLogin containerLogin = new ContainerLogin();
-        containerLogin.login();
-        MDCOperations.putCallId();
         try {
             return dokumentproduksjonProxyService
                     .produserIkkeredigerbartDokument(produserIkkeredigerbartDokumentRequest);
         } catch (ProduserIkkeredigerbartDokumentDokumentErRedigerbart | ProduserIkkeredigerbartDokumentDokumentErVedlegg funksjonellFeil) {
             throw BrevbestillerFeil.FACTORY.feilFraDokumentProduksjon(funksjonellFeil).toException();
-        } finally {
-            containerLogin.logout();
-            MDCOperations.removeCallId();
         }
     }
 
@@ -143,7 +135,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
         //TODO duplisert kode, vurder å lage tjeneste
         DokumentHendelse hendelse = fraDto(hendelseDto);
-        BehandlingDto behandlingDto = hentBehandlingFraFpsak(hendelse.getBehandlingId(), false);
+        BehandlingDto behandlingDto = hentBehandlingFraFpsak(hendelse.getBehandlingId());
         Behandling behandling = new Behandling(behandlingDto);
 
         //TODO: Map fpsak data til formidling format
@@ -156,7 +148,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
             Address address = new Address(behandlingDto.getPersonopplysningDto().getAdresser().get(0));
         }
 
-        final Optional<VergeDto> vergeDto = behandlingRestKlient.hentVerge(new BehandlingIdDto(hendelse.getBehandlingId()), behandlingDto.getLinks(), false);
+        final Optional<VergeDto> vergeDto = behandlingRestKlient.hentVerge(new BehandlingIdDto(hendelse.getBehandlingId()), behandlingDto.getLinks());
         Verge verge = new Verge(vergeDto.get());
 
         DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, hendelse);
@@ -189,8 +181,8 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         return null;
     }
 
-    private BehandlingDto hentBehandlingFraFpsak(long behandlingId, boolean systembruker) {
-        final Optional<BehandlingDto> behandlingInfo = behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId), systembruker);
+    private BehandlingDto hentBehandlingFraFpsak(long behandlingId) {
+        final Optional<BehandlingDto> behandlingInfo = behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId));
         if (behandlingInfo.isPresent()) {
             return behandlingInfo.get();
         }
@@ -249,7 +241,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
     private BehandlingType utledBehandlingType(String behandlingType) {
         if (StringUtils.nullOrEmpty(behandlingType)) {
-            return null;
+            return BehandlingType.UDEFINERT;
         }
         return kodeverkRepository.finn(BehandlingType.class, behandlingType);
     }

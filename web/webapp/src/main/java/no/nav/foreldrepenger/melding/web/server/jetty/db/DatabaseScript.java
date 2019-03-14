@@ -31,6 +31,7 @@ public class DatabaseScript {
         try {
             flyway.migrate();
         } catch (FlywayException fwe) {
+            //TODO ikke drep hele databasen hver gang
             if (true) {
                 flyway.clean();
                 flyway.migrate();

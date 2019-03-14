@@ -4,6 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 
 import com.codahale.metrics.MetricRegistry;
 
@@ -12,6 +13,7 @@ import io.prometheus.client.dropwizard.DropwizardExports;
 import io.prometheus.client.exporter.MetricsServlet;
 
 @ApplicationScoped
+@WebServlet("internal/prometheus")
 public class PrometheusServlet extends MetricsServlet {
 
     private transient MetricRegistry registry; // NOSONAR

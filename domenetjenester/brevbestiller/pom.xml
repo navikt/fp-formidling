@@ -27,7 +27,10 @@
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>fpsak</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>tps</artifactId>
+        </dependency>
         <!-- Integrasjon avhengigheter -->
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>

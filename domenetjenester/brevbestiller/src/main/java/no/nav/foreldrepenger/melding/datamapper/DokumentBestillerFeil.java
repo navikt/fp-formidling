@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
+import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.vedtak.feil.Feil;
 import no.nav.vedtak.feil.FeilFactory;
 import no.nav.vedtak.feil.LogLevel;
@@ -29,4 +30,10 @@ public interface DokumentBestillerFeil extends DeklarerteFeil {
 
     @TekniskFeil(feilkode = "FPFORMIDLING-210631", feilmelding = "Feilmelding fra DokProd for dokumentdata_id %s.", logLevel = LogLevel.ERROR)
     Feil feilFraDokumentProduksjon(Long dokumentDataId, Exception exception);
+
+    @TekniskFeil(feilkode = "FPFORMIDLING-109013", feilmelding = "Fant ikke personinfo for aktørId: %s. Kan ikke bestille dokument", logLevel = LogLevel.WARN)
+    Feil fantIkkeFnrForAktørId(AktørId aktørId);
+
+    @TekniskFeil(feilkode = "FPFORMIDLING-119013", feilmelding = "Fant ikke personinfo for aktørId: %s. Kan ikke bestille dokument", logLevel = LogLevel.WARN)
+    Feil fantIkkeAdresse(AktørId aktørId);
 }

@@ -89,6 +89,7 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "mottaker_navn", nullable = false)
     private String mottakerNavn;
 
+    //TODO: Cascade
     @ManyToOne
     @JoinColumn(name = "mottaker_adresse_id", nullable = false)
     private DokumentAdresse mottakerAdresse;
@@ -102,10 +103,12 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "kontakt_tlf", nullable = false)
     private String kontaktTlf;
 
+    //TODO: returadresse kan fjernes
     @ManyToOne(optional = false)
     @JoinColumn(name = "retur_adresse_id", nullable = false)
     private DokumentAdresse returadresse;
 
+    //TODO: postadresse kan fjernes
     @ManyToOne(optional = false)
     @JoinColumn(name = "post_adresse_id", nullable = false)
     private DokumentAdresse postadresse;

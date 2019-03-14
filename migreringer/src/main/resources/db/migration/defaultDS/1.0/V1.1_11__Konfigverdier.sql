@@ -13,10 +13,10 @@ VALUES (nextval('SEQ_KONFIG_VERDI'), 'norg2.kontakt.klageinstans.telefonnummer',
         to_date('05.12.2017', 'dd.mm.yyyy'));
 
 insert into KONFIG_VERDI_KODE (kode, navn, konfig_gruppe, konfig_type, beskrivelse)
-values ('brev.returadresse.enhet.navn', 'NAV enhetsnavn i returadresse', 'INGEN', 'STRING',
-        'NAV enhetsnavn i returadresse');
+values ('brev.avsender.enhet.navn', 'NAV avsender enhetsnavn', 'INGEN', 'STRING',
+        'NAV avsender enhetsnavn');
 insert into KONFIG_VERDI (id, konfig_kode, konfig_gruppe, konfig_verdi, gyldig_fom)
-values (nextval('SEQ_KONFIG_VERDI'), 'brev.returadresse.enhet.navn', 'INGEN', 'NAV Familie- og pensjonsytelser',
+values (nextval('SEQ_KONFIG_VERDI'), 'brev.avsender.enhet.navn', 'INGEN', 'NAV Familie- og pensjonsytelser',
         to_date('01.01.2016', 'dd.mm.yyyy'));
 
 insert into KONFIG_VERDI_KODE (kode, navn, konfig_gruppe, konfig_type, beskrivelse)
@@ -29,9 +29,18 @@ values (nextval('SEQ_KONFIG_VERDI'), 'brev.returadresse.adresselinje1', 'INGEN',
 insert into KONFIG_VERDI_KODE (kode, navn, konfig_gruppe, konfig_type, beskrivelse)
 values ('brev.returadresse.postnummer', 'Postnummer i returadresse', 'INGEN', 'STRING', 'Postnummer i returadresse');
 insert into KONFIG_VERDI (id, konfig_kode, konfig_gruppe, konfig_verdi, gyldig_fom)
-values (nextval('SEQ_KONFIG_VERDI'), 'brev.returadresse.postnummer', 'INGEN', '0607', to_date('01.01.2016', 'dd.mm.yyyy'));
+values (nextval('SEQ_KONFIG_VERDI'), 'brev.returadresse.postnummer', 'INGEN', '0607',
+        to_date('01.01.2016', 'dd.mm.yyyy'));
 
 insert into KONFIG_VERDI_KODE (kode, navn, konfig_gruppe, konfig_type, beskrivelse)
 values ('brev.returadresse.poststed', 'Poststed i returadresse', 'INGEN', 'STRING', 'Poststed i returadresse');
 insert into KONFIG_VERDI (id, konfig_kode, konfig_gruppe, konfig_verdi, gyldig_fom)
-values (nextval('SEQ_KONFIG_VERDI'), 'brev.returadresse.poststed', 'INGEN', 'OSLO', to_date('01.01.2016', 'dd.mm.yyyy'));
+values (nextval('SEQ_KONFIG_VERDI'), 'brev.returadresse.poststed', 'INGEN', 'OSLO',
+        to_date('01.01.2016', 'dd.mm.yyyy'));
+
+insert into KONFIG_VERDI_KODE (kode, navn, konfig_gruppe, konfig_type, beskrivelse)
+values ('brev.avsender.klage.enhet.navn', 'NAV Klageinstans avsender enhetsnavn', 'INGEN', 'STRING',
+        'NAV Klageinstans avsender enhetsnavn');
+insert into KONFIG_VERDI (id, konfig_kode, konfig_gruppe, konfig_verdi, gyldig_fom)
+values (nextval('SEQ_KONFIG_VERDI'), 'brev.avsender.klage.enhet.navn', 'INGEN', 'NAV Klageinstans',
+        to_date('01.01.2016', 'dd.mm.yyyy'));

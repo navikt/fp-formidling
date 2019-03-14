@@ -22,7 +22,7 @@
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-transports-http-jetty</artifactId>
-                <version>3.31</version>
+                <version>3.3.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

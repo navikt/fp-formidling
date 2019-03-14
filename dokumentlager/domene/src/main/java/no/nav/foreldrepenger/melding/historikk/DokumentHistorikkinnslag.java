@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.melding.historikk;
 
 import java.util.Objects;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -17,9 +15,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
-import no.nav.foreldrepenger.melding.dokumentdata.BaseEntitet;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import no.nav.vedtak.felles.jpa.BaseEntitet;
 
 @Entity(name = "DokumentHistorikkinnslag")
 @Table(name = "DOKUMENT_HISTORIKKINNSLAG")
@@ -38,7 +36,6 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
     private String dokumentId;
 
     @Embedded
-    @AttributeOverrides(@AttributeOverride(name = "journalpostId", column = @Column(name = "journalpost_id")))
     private JournalpostId journalpostId;
 
     @ManyToOne
@@ -47,18 +44,19 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
     private HistorikkAktør historikkAktør;
 
     @ManyToOne
-    @JoinColumnOrFormula(column = @JoinColumn(name = "historikk_type", referencedColumnName = "kode", nullable = false))
+    @JoinColumnOrFormula(column = @JoinColumn(name = "historikkinnslag_type", referencedColumnName = "kode", nullable = false))
     @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + HistorikkinnslagType.DISCRIMINATOR + "'"))
     private HistorikkinnslagType historikkinnslagType;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "dokument_mal_navn", nullable = false)
     private DokumentMalType dokumentMalType;
 
     @Column
     private String xml;
 
-    private DokumentHistorikkinnslag() {
+    public DokumentHistorikkinnslag() {
+        //Hibernate
     }
 
     DokumentHistorikkinnslag(long behandlingId, long hendelseId, String dokumentId, JournalpostId journalpostId, DokumentMalType dokumentMalType, HistorikkinnslagType historikkinnslagType, String xml) {
@@ -110,6 +108,10 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
                 ", dokumentMalType=" + dokumentMalType +
                 ", xml='" + xml + '\'' +
                 '}';
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getBehandlingId() {
@@ -211,7 +213,5 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
             Objects.requireNonNull(historikkinnslagType, "historikkinnslagType");
             Objects.requireNonNull(xml, "xml");
         }
-
     }
-
 }

@@ -8,4 +8,6 @@ public interface HistorikkRepository {
 
     List<DokumentHistorikkinnslag> hentInnslagForBehandling(long behandlingId);
 
+    DokumentHistorikkinnslag hentInnslagMedId(long historikkinnslagId);
+
 }

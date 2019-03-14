@@ -100,7 +100,12 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>kafkatjenester</artifactId>
+                <artifactId>dokumenthendelse</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>dokumenthistorikk</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -155,6 +160,13 @@
                 <type>pom</type>
             </dependency>
             <dependency>
+                <groupId>no.nav.foreldrepenger.felles</groupId>
+                <artifactId>felles-prosesstask</artifactId>
+                <version>${felles.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
                 <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
                 <artifactId>felles-integrasjon-pom</artifactId>
                 <version>${felles.version}</version>
@@ -169,6 +181,11 @@
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles.kafka</groupId>
                 <artifactId>consumer</artifactId>
+                <version>${felles.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.felles</groupId>
+                <artifactId>felles-prosesstask</artifactId>
                 <version>${felles.version}</version>
             </dependency>
             <dependency>

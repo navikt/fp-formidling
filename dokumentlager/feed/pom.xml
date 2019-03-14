@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>kafkatjenester</artifactId>
+            <artifactId>dokumenthendelse</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>

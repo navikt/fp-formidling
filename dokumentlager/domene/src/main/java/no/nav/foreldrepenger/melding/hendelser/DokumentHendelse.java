@@ -35,10 +35,10 @@ public class DokumentHendelse extends BaseEntitet {
     @JoinColumn(name = "dokument_mal_navn")
     private DokumentMalType dokumentMalType;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumnOrFormula(column = @JoinColumn(name = "behandling_type", referencedColumnName = "kode", nullable = false))
     @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + BehandlingType.DISCRIMINATOR + "'"))
-    private BehandlingType behandlingType;
+    private BehandlingType behandlingType = BehandlingType.UDEFINERT;
 
     @ManyToOne
     @JoinColumnOrFormula(column = @JoinColumn(name = "ytelse_type", referencedColumnName = "kode", nullable = false))
@@ -57,7 +57,11 @@ public class DokumentHendelse extends BaseEntitet {
     @ManyToOne
     @JoinColumnOrFormula(column = @JoinColumn(name = "historikk_aktoer", referencedColumnName = "kode", nullable = false))
     @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + HistorikkAktør.DISCRIMINATOR + "'"))
-    private HistorikkAktør historikkAktør;
+    private HistorikkAktør historikkAktør = HistorikkAktør.UDEFINERT;
+
+    public DokumentHendelse() {
+        //For Hibernate
+    }
 
     DokumentHendelse(Long behandlingId, FagsakYtelseType ytelseType) {
         this.behandlingId = behandlingId;
@@ -180,7 +184,7 @@ public class DokumentHendelse extends BaseEntitet {
         private DokumentMalType dokumentMalType;
         private Long behandlingId;
         private FagsakYtelseType ytelseType;
-        private BehandlingType behandlingType;
+        private BehandlingType behandlingType = BehandlingType.UDEFINERT;
         private String tittel;
         private String fritekst;
         private Boolean gjelderVedtak;

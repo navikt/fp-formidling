@@ -14,7 +14,10 @@
     <name>fpformidling :: Web :: Applikasjon</name>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-servlet-initializer</artifactId>
+        </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>hendelsekontrakter</artifactId>
@@ -119,12 +122,6 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-annotations</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.ow2.asm</groupId>
-                    <artifactId>asm-analysis</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>

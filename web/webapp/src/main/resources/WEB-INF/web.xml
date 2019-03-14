@@ -17,41 +17,9 @@
 
     <!-- Listeners her slik at vi kan styre rekkefølgen de kjøres i: -->
     <listener>
-        <listener-class>no.nav.foreldrepenger.melding.web.app.selftest.HealthCheckServletContextListener
-        </listener-class>
-    </listener>
-    <listener>
-        <listener-class>no.nav.foreldrepenger.melding.web.app.metrics.MetricsServletContextListener</listener-class>
-    </listener>
-    <listener>
-        <listener-class>no.nav.foreldrepenger.melding.web.app.startupinfo.AppStartupServletContextListener
-        </listener-class>
-    </listener>
-    <listener>
-        <listener-class>no.nav.vedtak.sikkerhet.jaspic.SamAutoRegistration</listener-class>
-    </listener>
-    <listener>
         <!-- Ønsker denne _sist_. -->
         <listener-class>no.nav.foreldrepenger.melding.web.app.tjenester.ApplicationContextListener</listener-class>
     </listener>
-
-    <servlet>
-        <servlet-name>metrics</servlet-name>
-        <servlet-class>no.nav.foreldrepenger.melding.web.app.metrics.AppMetricsServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>metrics</servlet-name>
-        <url-pattern>internal/metrics</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>prometheus</servlet-name>
-        <servlet-class>no.nav.foreldrepenger.melding.web.app.metrics.PrometheusServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>prometheus</servlet-name>
-        <url-pattern>internal/prometheus</url-pattern>
-    </servlet-mapping>
 
     <security-constraint>
         <web-resource-collection>

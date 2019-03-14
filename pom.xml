@@ -56,7 +56,7 @@
         <swagger.version>1.5.17</swagger.version>
         <swagger.spec-parser.version>1.0.28</swagger.spec-parser.version>
         <swagger2markup.version>1.1.2</swagger2markup.version>
-        <cxf.version>3.31</cxf.version>
+        <cxf.version>3.3.1</cxf.version>
         <prometheus.version>0.6.0</prometheus.version>
     </properties>
 

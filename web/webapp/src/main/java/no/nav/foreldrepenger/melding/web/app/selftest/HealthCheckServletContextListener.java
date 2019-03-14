@@ -1,10 +1,12 @@
 package no.nav.foreldrepenger.melding.web.app.selftest;
 
 import javax.inject.Inject;
+import javax.servlet.annotation.WebListener;
 
 import com.codahale.metrics.health.HealthCheckRegistry;
 import com.codahale.metrics.servlets.HealthCheckServlet;
 
+@WebListener
 public class HealthCheckServletContextListener extends HealthCheckServlet.ContextListener {
 
     private HealthCheckRegistry healthCheckRegistry;

@@ -9,6 +9,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,6 +21,7 @@ import com.codahale.metrics.servlets.MetricsServlet;
  * Implementasjon som automatisk setter UTF-8 encoding for JSON resultat.
  */
 @ApplicationScoped
+@WebServlet("internal/metrics")
 public class AppMetricsServlet extends MetricsServlet {
 
     private static final String KEY_PROSESSTASK = "prosesstask";

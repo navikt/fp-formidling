@@ -40,7 +40,6 @@
         <flyway.version>6.0.0-beta</flyway.version>
         <postgres.version>42.2.5</postgres.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <jetty.version>9.4.11.v20180605</jetty.version>
         <junit.version>4.12</junit.version>
         <mockito.version>2.20.1</mockito.version>
         <geronimo.jaspi.version>2.0.0</geronimo.jaspi.version>
@@ -51,15 +50,14 @@
         <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence).  Skal ikke benyttes direkte av vår egen kode. -->
         <apache.ws.xmlschema.version>2.2.2</apache.ws.xmlschema.version>
         <joda-time.version>2.9.9</joda-time.version>
-        <ow2.asm.version>6.2</ow2.asm.version>
         <owaspencoder.version>1.2.1</owaspencoder.version>
         <sysdoc.version>1.0.8</sysdoc.version>
         <javaslang.version>2.0.6</javaslang.version>
         <swagger.version>1.5.17</swagger.version>
         <swagger.spec-parser.version>1.0.28</swagger.spec-parser.version>
         <swagger2markup.version>1.1.2</swagger2markup.version>
-        <cxf.version>3.2.6</cxf.version>
-        <prometheus.version>0.0.23</prometheus.version>
+        <cxf.version>3.31</cxf.version>
+        <prometheus.version>0.6.0</prometheus.version>
     </properties>
 
     <prerequisites>
@@ -177,6 +175,22 @@
                 <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
                 <artifactId>felles-integrasjon-bom</artifactId>
                 <version>${felles.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+                        <artifactId>felles-integrasjon-jms</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-tree</artifactId>
+                <version>7.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-analysis</artifactId>
+                <version>7.0</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles.kafka</groupId>
@@ -231,38 +245,6 @@
                 <artifactId>assertj-core</artifactId>
                 <version>${assertj.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-annotations</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jaas</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jaspi</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-plus</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-security</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-servlets</artifactId>
-                <version>${jetty.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -297,61 +279,11 @@
                 <version>${geronimo.osgi.version}</version>
             </dependency>
 
-            <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence).  Skal ikke benyttes direkte av vår egen kode. -->
-            <!--            <dependency>
-                            <groupId>org.apache.cxf</groupId>
-                            <artifactId>cxf-core</artifactId>
-                            <version>${cxf.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.cxf</groupId>
-                            <artifactId>cxf-rt-frontend-simple</artifactId>
-                            <version>${cxf.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.cxf</groupId>
-                            <artifactId>cxf-rt-ws-security</artifactId>
-                            <version>${cxf.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.cxf</groupId>
-                            <artifactId>cxf-rt-ws-policy</artifactId>
-                            <version>${cxf.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.cxf</groupId>
-                            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                            <version>${cxf.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.cxf</groupId>
-                            <artifactId>cxf-rt-transports-http</artifactId>
-                            <version>${cxf.version}</version>
-                        </dependency>-->
-            <dependency>
-                <!-- bør ha samme versjon som CXF ellers -->
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-transports-http-jetty</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
             <dependency>
                 <!-- Transitive avhengighet resolution for å sikre bestemt versjon -->
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>${joda-time.version}</version>
-            </dependency>
-            <dependency>
-                <!-- Transitive avhengighet resolution for å sikre bestemt versjon -->
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm</artifactId>
-                <version>${ow2.asm.version}</version>
-            </dependency>
-            <dependency>
-                <!-- Transitive avhengighet resolution for å sikre bestemt versjon -->
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-tree</artifactId>
-                <version>${ow2.asm.version}</version>
             </dependency>
             <dependency>
                 <!-- Transitive avhengighet resolution for å sikre bestemt versjon -->
@@ -389,29 +321,6 @@
                 <artifactId>simpleclient_servlet</artifactId>
                 <version>${prometheus.version}</version>
             </dependency>
-
-            <!-- Generelle clashes -->
-            <dependency>
-                <!-- clasher med javax.annotations-api -->
-                <groupId>org.jboss.spec.javax.annotation</groupId>
-                <artifactId>jboss-annotations-api_1.2_spec</artifactId>
-                <version>1.0.1.Final</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <!-- clasher med javax.interceptor-api -->
-                <groupId>org.jboss.spec.javax.interceptor</groupId>
-                <artifactId>jboss-interceptors-api_1.2_spec</artifactId>
-                <version>1.0.0.Final</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.spec.javax.ws.rs</groupId>
-                <artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
-                <version>1.0.1.Beta1</version>
-                <scope>provided</scope>
-            </dependency>
-
             <!-- Java10 -->
             <dependency>
                 <groupId>org.jboss.classfilewriter</groupId>

@@ -91,17 +91,10 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
             //Data for mapping
             Behandling behandling = new Behandling(behandlingDto);
-            Personopplysning personopplysning = new Personopplysning(behandlingDto.getPersonopplysningDto());
-            //TODO: Sjekk hvis mulighet for felere addresser
-            Address address = new Address(behandlingDto.getPersonopplysningDto().getAdresser().get(0));
-
-            final Optional<VergeDto> vergeDto = behandlingRestKlient.hentVerge(behandlingIdDto, behandlingDto.getLinks());
-            Verge verge = new Verge(vergeDto.get());
 
             DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, hendelse);
 
             //Map data til DokumentFelles
-//            opprettDokumentFellesData(behandling, personopplysning, address, verge);
             DokumentFelles dokumentFelles = lagDokumentFelles(dokumentMal, behandling.getId());
 
             //TODO: Map formidling data to xml elements
@@ -182,66 +175,5 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
             return null;
         }
         return dokumentRepository.hentDokumentMalType(dokumentmal);
-    }
-
-//    private DokumentFelles opprettDokumentFellesData(Behandling behandling, Personopplysning personopplysning, Address address, Verge verge) {
-//        //Address
-//        DokumentAdresse adresse = fra(address);
-//
-//        AktørId aktørIdBruker = new AktørId(personopplysning.getAktoerId());
-//        PersonIdent fnrBruker;
-//        String navnBruker;
-//        PersonstatusType personstatusBruker;
-//
-////        String avsenderEnhet = behandling.getBehandlendeOrganisasjonsEnhet().getEnhetNavn();
-//        String avsenderEnhet = "";
-//
-//        if (Objects.equals(aktørId, aktørIdBruker)) {
-//            fnrBruker = new PersonIdent(personopplysning.getFnr());
-//            navnBruker = personopplysning.getMottakerNavn();
-//            personstatusBruker = adresseinfo.getPersonstatus();
-//        } else {
-//            Personinfo personinfo = tpsTjeneste.hentBrukerForAktør(aktørIdBruker)
-//                    .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeFnrForAktørId(aktørIdBruker).toException());
-//            fnrBruker = personinfo.getPersonIdent();
-//            navnBruker = personinfo.getNavn();
-//            personstatusBruker = personinfo.getPersonstatus();
-//        }
-//        DokumentFelles.Builder builder = DokumentFelles.builder()
-//                .medAutomatiskBehandlet(Boolean.TRUE)
-//                .medDokumentDato(FPDateUtil.iDag())
-//                .medKontaktTelefonNummer(norg2KontaktTelefonnummer(avsenderEnhet))
-//                .medMottakerAdresse(adresse)
-//                .medMottakerId(personopplysning.getFnr())
-//                .medMottakerNavn(personopplysning.getNavn())
-//                .medNavnAvsenderEnhet(norg2NavnAvsenderEnhet(avsenderEnhet))
-//                .medPostadresse(norg2Postadresse())
-//                .medReturadresse(norg2Returadresse())
-////                .medSaksnummer(fagsak.getSaksnummer())
-//                .medSaksnummer(new Saksnummer("135700745"))
-//                .medSakspartId(fnrBruker)
-//                .medSakspartNavn(navnBruker)
-//                .medSpråkkode(fagsak.getNavBruker().getSpråkkode())
-//                .medSakspartPersonStatus(dokumentType.getPersonstatusVerdi(personstatusBruker));
-//
-//        if (behandling.isToTrinnsBehandling()) {
-//            builder
-//                    .medAutomatiskBehandlet(Boolean.FALSE)
-//                    .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
-//                    .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter())
-//                    .medSignerendeBeslutterGeografiskEnhet("N/A");  // FIXME SOMMERFUGL Denne skal vel ikke hardkodes?
-//        }
-//        return builder.build();
-//    }
-
-    private DokumentAdresse fra(Address adresseinfo) {
-        return new DokumentAdresse.Builder()
-                .medAdresselinje1(adresseinfo.getAdresselinje1())
-                .medAdresselinje2(adresseinfo.getAdresselinje2())
-                .medAdresselinje3(adresseinfo.getAdresselinje3())
-                .medLand(adresseinfo.getLand())
-                .medPostNummer(adresseinfo.getPostnummer())
-                .medPoststed(adresseinfo.getPoststed())
-                .build();
     }
 }

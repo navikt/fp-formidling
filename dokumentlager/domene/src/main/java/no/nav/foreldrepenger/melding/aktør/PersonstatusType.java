@@ -14,6 +14,7 @@ public class PersonstatusType extends Kodeliste {
     public static final PersonstatusType ADNR = new PersonstatusType("ADNR"); //$NON-NLS-1$
     public static final PersonstatusType BOSA = new PersonstatusType("BOSA"); //$NON-NLS-1$
     public static final PersonstatusType DØD = new PersonstatusType("DØD"); //$NON-NLS-1$
+    public static final PersonstatusType DØDD = new PersonstatusType("DØDD"); //$NON-NLS-1$
     public static final PersonstatusType FOSV = new PersonstatusType("FOSV"); //$NON-NLS-1$
     public static final PersonstatusType FØDR = new PersonstatusType("FØDR"); //$NON-NLS-1$
     public static final PersonstatusType UFUL = new PersonstatusType("UFUL"); //$NON-NLS-1$
@@ -28,8 +29,11 @@ public class PersonstatusType extends Kodeliste {
         // Hibernate trenger en
     }
 
+    public static boolean erDød(PersonstatusType personstatus) {
+        return DØD.equals(personstatus) || DØDD.equals(personstatus);
+    }
+
     private PersonstatusType(String kode) {
         super(kode, DISCRIMINATOR);
     }
-
 }

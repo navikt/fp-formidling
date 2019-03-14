@@ -11,7 +11,7 @@
             <pattern>%m%n%xEx</pattern>
         </layout>
 
-        <syslogConfig class="org.productivity.java.syslog4j.impl.net.tcp.TCPNetSyslogConfig">
+        <syslogConfig class="org.productivity.java.syslog4j.no.nav.foreldrepenger.tps.impl.net.tcp.TCPNetSyslogConfig">
             <!-- remote system to log to -->
             <host>audit.nais</host>
             <!-- remote port to log to -->

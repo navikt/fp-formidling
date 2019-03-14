@@ -65,6 +65,10 @@ spec:
       value: securityTokenService.url
     - name: DOKUMENTPRODUKSJON_V2_URL
       value: Dokumentproduksjon_v2.url
+    - name: PERSON_V3_URL
+      value: Person_v3.url
+    - name: AKTOER_V2_URL
+      value: Aktoer_v2.url
     - name: FPSAK_REST_BASE_URL
       value: fpsak_rest_base.url
     - name: KODEVERK_V2_URL

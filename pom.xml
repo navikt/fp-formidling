@@ -144,6 +144,11 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>tps</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>webapp</artifactId>
                 <version>${project.version}</version>
                 <type>jar</type>

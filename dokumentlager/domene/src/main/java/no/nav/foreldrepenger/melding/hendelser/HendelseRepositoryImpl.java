@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.hendelser;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -39,10 +38,10 @@ public class HendelseRepositoryImpl implements HendelseRepository {
     }
 
     @Override
-    public Optional<DokumentHendelse> hentDokumentHendelseMedId(long hendelseId) {
+    public DokumentHendelse hentDokumentHendelseMedId(long hendelseId) {
         TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where id=:hendelseId", DokumentHendelse.class);
         query.setParameter("hendelseId", hendelseId);
-        return HibernateVerktøy.hentUniktResultat(query);
+        return HibernateVerktøy.hentEksaktResultat(query);
     }
 
     @Override

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 import javax.xml.XMLConstants;
@@ -55,9 +54,11 @@ public class DokumentXmlDataMapper {
 
     public Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
         Element brevXmlElement;
+        DokumentTypeMapper dokumentTypeMapper = null;
         try {
             FellesType fellesType = mapFellesType(dokumentFelles);
-            String brevXml = velgDokumentMapper(dokumentMalType).mapTilBrevXML(fellesType, dokumentFelles, hendelse, behandling);
+            dokumentTypeMapper = velgDokumentMapper(dokumentMalType);
+            String brevXml = dokumentTypeMapper.mapTilBrevXML(fellesType, dokumentFelles, hendelse, behandling);
 //            String brevXml = DokumentTypeRuter.dokumentTypeMapper(dokumentMalType).mapTilBrevXML(fellesType, dokumentFelles, hendelse, behandling);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -69,15 +70,14 @@ public class DokumentXmlDataMapper {
         } catch (SAXException | XMLStreamException | ParserConfigurationException | IOException | JAXBException e) {
             //TODO feilmelding dokumentID
             throw FeilFactory.create(DokumentBestillerFeil.class).xmlgenereringsfeil(1l, e).toException();
+        } finally {
+            CDI.current().destroy(dokumentTypeMapper);
         }
         return brevXmlElement;
     }
 
     private DokumentTypeMapper velgDokumentMapper(DokumentMalType dokumentMalType) {
-        Instance<DokumentTypeMapper> instance = CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(dokumentMalType.getKode()));
-        DokumentTypeMapper dokumentTypeMapper = instance.get();
-        CDI.current().destroy(instance);
-        return dokumentTypeMapper;
+        return CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(dokumentMalType.getKode())).get();
     }
 
     public FellesType mapFellesType(final DokumentFelles dokumentFelles) {

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
@@ -18,6 +19,7 @@ import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Klage;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.BrevdataType;
@@ -29,6 +31,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.YtelseTy
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
+@Named(DokumentMalType.VEDTAK_MEDHOLD)
 public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
 
     private KlageRestKlient klageRestKlient;

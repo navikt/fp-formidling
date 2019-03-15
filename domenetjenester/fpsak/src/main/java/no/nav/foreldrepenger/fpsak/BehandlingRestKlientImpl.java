@@ -26,7 +26,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
     private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/behandlinger";
 
-    //TODO bruk bare en restklient, avklar først
     private OidcRestClient oidcRestClient;
     private String endpointFpsakRestBase;
 

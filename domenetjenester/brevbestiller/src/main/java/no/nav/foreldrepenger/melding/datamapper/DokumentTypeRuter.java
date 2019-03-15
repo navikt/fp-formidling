@@ -31,7 +31,7 @@ public class DokumentTypeRuter {
 //        mappere.put(DokumentMalType.INNTEKTSMELDING_FOR_TIDLIG_DOK, InntektsmeldingForTidligMapper.class);
 //        mappere.put(DokumentMalType.AVSLAG_FORELDREPENGER_DOK, AvslagForeldrepengerMapper.class);
 //        mappere.put(DokumentMalType.FRITEKST_DOK, FritekstbrevMapper.class);
-//        mappere.put(DokumentMalType.VEDTAK_MEDHOLD, VedtakMedholdBrevMapper.class);
+        mappere.put(DokumentMalType.VEDTAK_MEDHOLD, VedtakMedholdBrevMapper.class);
     }
 
     private DokumentTypeRuter() {

@@ -18,6 +18,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
+import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -36,14 +37,17 @@ import no.nav.vedtak.util.FPDateUtil;
 public class DokumentXmlDataMapper {
 
     private KodeverkRepository kodeverkRepository;
+    private BrevParametere brevParametere;
 
     public DokumentXmlDataMapper() {
         //CDI
     }
 
     @Inject
-    public DokumentXmlDataMapper(KodeverkRepository kodeverkRepository) {
+    public DokumentXmlDataMapper(KodeverkRepository kodeverkRepository,
+                                 BrevParametere brevParametere) {
         this.kodeverkRepository = kodeverkRepository;
+        this.brevParametere = brevParametere;
     }
 
     public Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {

@@ -4,9 +4,11 @@ import java.time.LocalDate;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
-
+@JsonTypeName(value = "AvklartDataOmsorgDto")
 public class AvklartDataOmsorgDto extends FamiliehendelseDto {
 
     private LocalDate omsorgsovertakelseDato;

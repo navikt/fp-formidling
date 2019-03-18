@@ -3,8 +3,9 @@ package no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
-
+@JsonTypeName(value = "AvklartDataFodselDto")
 public class AvklartDataFodselDto extends FamiliehendelseDto {
     private LocalDate fodselsdato;
     private Integer antallBarnFødt;

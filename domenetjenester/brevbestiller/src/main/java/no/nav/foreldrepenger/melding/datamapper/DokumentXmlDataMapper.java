@@ -70,8 +70,6 @@ public class DokumentXmlDataMapper {
         } catch (SAXException | XMLStreamException | ParserConfigurationException | IOException | JAXBException e) {
             //TODO feilmelding dokumentID
             throw FeilFactory.create(DokumentBestillerFeil.class).xmlgenereringsfeil(1l, e).toException();
-        } finally {
-            CDI.current().destroy(dokumentTypeMapper);
         }
         return brevXmlElement;
     }

@@ -21,6 +21,10 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 @Named(DokumentMalType.UENDRETUTFALL_DOK)
 public class UendretutfallBrevMapper implements DokumentTypeMapper {
 
+    public UendretutfallBrevMapper() {
+        //CDI
+    }
+
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException {
         FagType fagType = mapFagType(hendelse);

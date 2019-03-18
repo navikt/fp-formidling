@@ -18538,6 +18538,9 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'REVURDERING_VARSLING_AARSAK', 'ANNET', null, 'Annet',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
+values (nextval('seq_kodeliste'), 'REVURDERING_VARSLING_AARSAK', '-', null, 'Udefinert',
+        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
+Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'BEHANDLING_RESULTAT_TYPE', 'OPPHØR', null, 'Opphør',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)

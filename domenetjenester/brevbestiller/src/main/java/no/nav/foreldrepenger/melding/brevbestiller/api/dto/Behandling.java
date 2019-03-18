@@ -1,6 +1,9 @@
 package no.nav.foreldrepenger.melding.brevbestiller.api.dto;
 
+import java.util.List;
+
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 
 public class Behandling {
     private long id;
@@ -11,6 +14,7 @@ public class Behandling {
     private String behandlendeEnhetNavn;
     private Boolean toTrinnsBehandling;
     private Behandlingsresultat behandlingsresultat;
+    private List<BehandlingResourceLinkDto> resourceLinkDtos;
 
     public Behandling(BehandlingDto dto) {
         this.ansvarligSaksbehandler = dto.getAnsvarligSaksbehandler();
@@ -23,6 +27,7 @@ public class Behandling {
             this.behandlingsresultat = new Behandlingsresultat(dto.getBehandlingsresultat());
         }
         this.behandlendeEnhetNavn = dto.getBehandlendeEnhetNavn();
+        this.resourceLinkDtos = dto.getLinks();
     }
 
     public String getType() {
@@ -59,5 +64,9 @@ public class Behandling {
 
     public long getId() {
         return id;
+    }
+
+    public List<BehandlingResourceLinkDto> getResourceLinkDtos() {
+        return resourceLinkDtos;
     }
 }

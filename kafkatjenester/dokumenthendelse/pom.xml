@@ -72,6 +72,10 @@
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>brevbestiller</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>dtomapper</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

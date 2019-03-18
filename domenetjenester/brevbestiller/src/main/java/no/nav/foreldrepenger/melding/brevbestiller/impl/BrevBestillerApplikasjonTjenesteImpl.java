@@ -15,7 +15,6 @@ import org.w3c.dom.Element;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
@@ -25,8 +24,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.dtomapper.DtoTilDomeneobjektMapper;
 import no.nav.foreldrepenger.melding.geografisk.Landkoder;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
@@ -34,7 +32,6 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.binding.ProduserIkkeredigerbartDokumentDokumentErRedigerbart;
@@ -45,7 +42,6 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
 import no.nav.vedtak.felles.integrasjon.dokument.produksjon.DokumentproduksjonConsumer;
-import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplikasjonTjeneste {
@@ -54,10 +50,9 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     private DokumentproduksjonConsumer dokumentproduksjonProxyService;
     private DokumentXmlDataMapper dokumentXmlDataMapper;
     private DokumentMalUtreder dokumentMalUtreder;
-    private KodeverkRepository kodeverkRepository;
-    private DokumentRepository dokumentRepository;
     private BehandlingRestKlient behandlingRestKlient;
     private DokumentbestillingMapper dokumentbestillingMapper;
+    private DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper;
 
     public BrevBestillerApplikasjonTjenesteImpl() {
         // for cdi proxy
@@ -67,18 +62,15 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     public BrevBestillerApplikasjonTjenesteImpl(DokumentproduksjonConsumer dokumentproduksjonProxyService,
                                                 DokumentXmlDataMapper dokumentXmlDataMapper,
                                                 DokumentMalUtreder dokumentMalUtreder,
-                                                KodeverkRepository kodeverkRepository,
-                                                DokumentRepository dokumentRepository,
                                                 BehandlingRestKlient behandlingRestKlient,
-                                                DokumentbestillingMapper dokumentbestillingMapper) {
+                                                DokumentbestillingMapper dokumentbestillingMapper,
+                                                DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
         this.dokumentXmlDataMapper = dokumentXmlDataMapper;
         this.dokumentMalUtreder = dokumentMalUtreder;
-        this.kodeverkRepository = kodeverkRepository;
-        this.dokumentRepository = dokumentRepository;
-        this.behandlingRestKlient = behandlingRestKlient;
         this.behandlingRestKlient = behandlingRestKlient;
         this.dokumentbestillingMapper = dokumentbestillingMapper;
+        this.dtoTilDomeneobjektMapper = dtoTilDomeneobjektMapper;
     }
 
     @Override
@@ -130,7 +122,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         byte[] dokument = null;
 
         //TODO duplisert kode, vurder å lage tjeneste
-        DokumentHendelse hendelse = fraDto(hendelseDto);
+        DokumentHendelse hendelse = dtoTilDomeneobjektMapper.fraDto(hendelseDto);
         BehandlingDto behandlingDto = hentBehandlingFraFpsak(hendelse.getBehandlingId());
         Behandling behandling = new Behandling(behandlingDto);
 
@@ -199,40 +191,5 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
                 .medPostNummer("1990")
                 .medPoststed("oLsO")
                 .build();
-    }
-
-    private DokumentHendelse fraDto(DokumentHendelseDto hendelseDto) {
-        //TODO putt bare ett sted!
-        //TODO ha alle feltene..
-        //Ny modul under domenetjenester? :) Hva skal den hete..?
-        return new DokumentHendelse.Builder()
-                .medBehandlingId(hendelseDto.getBehandlingId())
-                .medBehandlingType(utledBehandlingType(hendelseDto.getBehandlingType()))
-                .medYtelseType(utledYtelseType(hendelseDto.getYtelseType()))
-                .medFritekst(hendelseDto.getFritekst())
-                .medTittel(hendelseDto.getTittel())
-                .medDokumentMalType(utleddokumentMalType(hendelseDto.getDokumentMal()))
-                .build();
-    }
-
-    private FagsakYtelseType utledYtelseType(String ytelseType) {
-        if (StringUtils.nullOrEmpty(ytelseType)) {
-            return null;
-        }
-        return kodeverkRepository.finn(FagsakYtelseType.class, ytelseType);
-    }
-
-    private BehandlingType utledBehandlingType(String behandlingType) {
-        if (StringUtils.nullOrEmpty(behandlingType)) {
-            return BehandlingType.UDEFINERT;
-        }
-        return kodeverkRepository.finn(BehandlingType.class, behandlingType);
-    }
-
-    private DokumentMalType utleddokumentMalType(String dokumentmal) {
-        if (StringUtils.nullOrEmpty(dokumentmal)) {
-            return null;
-        }
-        return dokumentRepository.hentDokumentMalType(dokumentmal);
     }
 }

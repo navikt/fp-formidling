@@ -25,8 +25,14 @@ node('DOCKER') {
                     buildEnvironment.overrideJDK(maven.javaVersion())
                 }
                 
-                sh "mvn -U -B -s $MAVEN_SETTINGS -Dfile.encoding=UTF-8 -DinstallAtEnd=true -DdeployAtEnd=true -Dsha1= -Dchangelist= -Drevision=$tagName clean deploy"
-                
+                sh "mvn -U -B -s $MAVEN_SETTINGS -Dfile.encoding=UTF-8 -DinstallAtEnd=true -DdeployAtEnd=true -Dsha1= -Dchangelist= -Drevision=$version clean install"
+                sh "docker build --pull -t $dockerRegistryIapp/$artifactId:$version ."
+                withCredentials([[$class    : 'UsernamePasswordMultiBinding',
+                        credentialsId       : 'nexusUser',
+                        usernameVariable    : 'NEXUS_USERNAME',
+                        passwordVariable    : 'NEXUS_PASSWORD']]) {
+                            sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRegistryIapp} && docker push ${dockerRegistryIapp}/${artifactId}:${version}"
+                        }
            }   
                 
     }

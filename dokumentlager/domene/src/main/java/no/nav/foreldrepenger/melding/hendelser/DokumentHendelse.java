@@ -15,6 +15,7 @@ import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.dokumentdata.BaseEntitet;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
@@ -58,6 +59,11 @@ public class DokumentHendelse extends BaseEntitet {
     @JoinColumnOrFormula(column = @JoinColumn(name = "historikk_aktoer", referencedColumnName = "kode", nullable = false))
     @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + HistorikkAktør.DISCRIMINATOR + "'"))
     private HistorikkAktør historikkAktør = HistorikkAktør.UDEFINERT;
+
+    @ManyToOne
+    @JoinColumnOrFormula(column = @JoinColumn(name = "revurdering_varsling_arsak", referencedColumnName = "kode"))
+    @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + RevurderingVarslingÅrsak.DISCRIMINATOR + "'"))
+    private RevurderingVarslingÅrsak revurderingVarslingÅrsak;
 
     public DokumentHendelse() {
         //For Hibernate
@@ -144,6 +150,14 @@ public class DokumentHendelse extends BaseEntitet {
         this.historikkAktør = historikkAktør;
     }
 
+    public RevurderingVarslingÅrsak getRevurderingVarslingÅrsak() {
+        return revurderingVarslingÅrsak;
+    }
+
+    private void setRevurderingVarslingÅrsak(RevurderingVarslingÅrsak revurderingVarslingÅrsak) {
+        this.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -189,6 +203,7 @@ public class DokumentHendelse extends BaseEntitet {
         private String fritekst;
         private Boolean gjelderVedtak;
         private HistorikkAktør historikkAktør;
+        private RevurderingVarslingÅrsak revurderingVarslingÅrsak;
 
         public DokumentHendelse.Builder medDokumentMalType(DokumentMalType dokumentMalType) {
             this.dokumentMalType = dokumentMalType;
@@ -230,6 +245,11 @@ public class DokumentHendelse extends BaseEntitet {
             return this;
         }
 
+        public DokumentHendelse.Builder medRevurderingVarslingÅrsak(RevurderingVarslingÅrsak revurderingVarslingÅrsak) {
+            this.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
+            return this;
+        }
+
         public DokumentHendelse build() {
             verifyStateForBuild();
             DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingId, ytelseType);
@@ -239,6 +259,7 @@ public class DokumentHendelse extends BaseEntitet {
             dokumentHendelse.tittel = tittel;
             dokumentHendelse.dokumentMalType = dokumentMalType;
             dokumentHendelse.historikkAktør = historikkAktør;
+            dokumentHendelse.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
             return dokumentHendelse;
         }
 

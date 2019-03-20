@@ -27,6 +27,10 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class HenleggBehandlingBrevMapper implements DokumentTypeMapper {
     static final String FAMPEN = "NAV Familie- og pensjonsytelser";
 
+    public HenleggBehandlingBrevMapper() {
+        //CDI
+    }
+
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException {
         FagType fagType = mapFagType(hendelse, behandling);

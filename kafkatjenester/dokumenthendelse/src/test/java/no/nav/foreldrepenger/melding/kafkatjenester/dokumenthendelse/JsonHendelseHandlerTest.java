@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
+import no.nav.foreldrepenger.melding.dtomapper.DtoTilDomeneobjektMapper;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -41,6 +42,7 @@ public class JsonHendelseHandlerTest {
     private KodeverkRepository kodeverkRepository;
     private ProsessTaskRepository prosessTaskRepository;
     private JsonHendelseHandler jsonHendelseHandler;
+    private DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper;
 
     private DokumentHendelseDto dokumentHendelse;
 
@@ -53,8 +55,9 @@ public class JsonHendelseHandlerTest {
         dokumentRepository = new DokumentRepositoryImpl(em);
         kodeverkRepository = new KodeverkRepositoryImpl(em);
         hendelseRepository = new HendelseRepositoryImpl(em);
+        dtoTilDomeneobjektMapper = new DtoTilDomeneobjektMapper(kodeverkRepository, dokumentRepository);
         prosessTaskRepository = new ProsessTaskRepositoryImpl(em, null);
-        jsonHendelseHandler = new JsonHendelseHandler(hendelseRepository, dokumentRepository, kodeverkRepository, prosessTaskRepository);
+        jsonHendelseHandler = new JsonHendelseHandler(hendelseRepository, prosessTaskRepository, dtoTilDomeneobjektMapper);
         dokumentHendelse = new DokumentHendelseDto();
     }
 

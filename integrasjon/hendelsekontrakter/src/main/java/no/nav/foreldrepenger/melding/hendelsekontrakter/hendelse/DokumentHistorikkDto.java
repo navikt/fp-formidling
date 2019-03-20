@@ -10,6 +10,7 @@ public class DokumentHistorikkDto {
     private String historikkinnslagType;
     private String historikkAktør;
     private String dokumentBegrunnelse;
+    private String dokumentId;
 
     public DokumentHistorikkDto() {
     }
@@ -20,6 +21,11 @@ public class DokumentHistorikkDto {
         journalpostId = historikkInnslag.getJournalpostId().getVerdi();
         historikkAktør = historikkInnslag.getHistorikkAktør().getKode();
         historikkinnslagType = historikkInnslag.getHistorikkinnslagType().getMal();
+        dokumentId = historikkInnslag.getDokumentId();
+    }
+
+    public String getDokumentId() {
+        return dokumentId;
     }
 
     public String getHistorikkinnslagType() {

@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
+import no.nav.foreldrepenger.melding.dtomapper.DtoTilDomeneobjektMapper;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
@@ -25,6 +26,7 @@ import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepositoryImpl;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.kafkatjenester.felles.util.Serialiseringsverktøy;
+import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepositoryImpl;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 
@@ -36,10 +38,12 @@ public class KafkaReaderTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
     private EntityManager entityManager = repoRule.getEntityManager();
     private HendelseRepository hendelseRepository;
-    private DokumentRepository dokumentRepository;
     @Mock
     private ProsessTaskRepository prosessTaskRepository;
+    private KodeverkRepository kodeverkRepository;
+    private DokumentRepository dokumentRepository;
     private JsonHendelseHandler jsonHendelseHandler;
+    private DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper;
 
 
     private KafkaReader kafkaReader;
@@ -48,8 +52,10 @@ public class KafkaReaderTest {
     @Before
     public void setup() {
         hendelseRepository = new HendelseRepositoryImpl(entityManager);
+        kodeverkRepository = new KodeverkRepositoryImpl(entityManager);
         dokumentRepository = new DokumentRepositoryImpl(entityManager);
-        jsonHendelseHandler = new JsonHendelseHandler(hendelseRepository, dokumentRepository, new KodeverkRepositoryImpl(entityManager), prosessTaskRepository);
+        dtoTilDomeneobjektMapper = new DtoTilDomeneobjektMapper(kodeverkRepository, dokumentRepository);
+        jsonHendelseHandler = new JsonHendelseHandler(hendelseRepository, prosessTaskRepository, dtoTilDomeneobjektMapper);
         this.kafkaReader = new KafkaReader(null, jsonHendelseHandler, hendelseRepository);
     }
 

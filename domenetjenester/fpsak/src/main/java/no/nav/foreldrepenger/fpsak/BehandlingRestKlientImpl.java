@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
@@ -26,7 +27,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
     private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/behandlinger";
 
-    //TODO bruk bare en restklient, avklar først
     private OidcRestClient oidcRestClient;
     private String endpointFpsakRestBase;
 
@@ -78,12 +78,26 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
         for (BehandlingResourceLinkDto resourceLinkDto : resourceLinkDtos) {
             if (resourceLinkDto.getRel().equals("soeker-verge")) {
                 URI personopplysningUri = URI.create(endpointFpsakRestBase + resourceLinkDto.getHref());
-
                 behandlingIdDto.setSaksnummer(resourceLinkDto.getRequestPayload().getSaksnummer());
-
                 vergeDto = oidcRestClient.postReturnsOptional(personopplysningUri, behandlingIdDto, VergeDto.class);
             }
         }
         return vergeDto;
     }
+
+    @Override
+    public Optional<FamiliehendelseDto> hentFamiliehendelse(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+        return resourceLinkDtos.stream()
+                .filter(dto -> "familiehendelse".equals(dto.getRel()))
+                .findFirst().flatMap(this::hentFamiliehendelseFraLink);
+    }
+
+    private Optional<FamiliehendelseDto> hentFamiliehendelseFraLink(BehandlingResourceLinkDto link) {
+        URI familiehendelseUri = URI.create(endpointFpsakRestBase + link.getHref());
+        BehandlingIdDto behandlingIdDto = new BehandlingIdDto();
+        behandlingIdDto.setBehandlingId(link.getRequestPayload().getBehandlingId());
+        behandlingIdDto.setSaksnummer(link.getRequestPayload().getSaksnummer());
+        return oidcRestClient.postReturnsOptional(familiehendelseUri, behandlingIdDto, FamiliehendelseDto.class);
+    }
 }
+

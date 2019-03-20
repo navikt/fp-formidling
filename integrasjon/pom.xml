@@ -17,6 +17,7 @@
     <modules>
         <module>hendelsekontrakter</module>
         <module>dokumentkontrakter</module>
+        <module>dtomapper</module>
     </modules>
 
     <dependencies>

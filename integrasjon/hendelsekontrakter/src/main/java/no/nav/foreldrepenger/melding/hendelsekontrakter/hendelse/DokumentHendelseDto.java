@@ -21,6 +21,7 @@ public class DokumentHendelseDto implements AbacDto {
     private String historikkAktør;
     private String fritekst;
     private boolean gjelderVedtak;
+    private String arsakskode;
 
     public String getHistorikkAktør() {
         return historikkAktør;
@@ -86,6 +87,9 @@ public class DokumentHendelseDto implements AbacDto {
         this.dokumentMal = dokumentMal;
     }
 
+    public String getArsakskode() {
+        return arsakskode;
+    }
 
     @Override
     public AbacDataAttributter abacAttributter() {
@@ -103,6 +107,7 @@ public class DokumentHendelseDto implements AbacDto {
                 ", historikkAktør='" + historikkAktør + '\'' +
                 ", fritekst='" + fritekst + '\'' +
                 ", gjelderVedtak=" + gjelderVedtak +
+                ", arsakskode='" + arsakskode + '\'' +
                 '}';
     }
 }

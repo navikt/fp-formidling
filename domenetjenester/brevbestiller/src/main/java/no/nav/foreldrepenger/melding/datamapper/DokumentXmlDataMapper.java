@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBException;
@@ -12,12 +13,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 
+import org.jboss.weld.literal.NamedLiteral;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
+import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -36,21 +39,27 @@ import no.nav.vedtak.util.FPDateUtil;
 public class DokumentXmlDataMapper {
 
     private KodeverkRepository kodeverkRepository;
+    private BrevParametere brevParametere;
 
     public DokumentXmlDataMapper() {
         //CDI
     }
 
     @Inject
-    public DokumentXmlDataMapper(KodeverkRepository kodeverkRepository) {
+    public DokumentXmlDataMapper(KodeverkRepository kodeverkRepository,
+                                 BrevParametere brevParametere) {
         this.kodeverkRepository = kodeverkRepository;
+        this.brevParametere = brevParametere;
     }
 
     public Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
         Element brevXmlElement;
+        DokumentTypeMapper dokumentTypeMapper = null;
         try {
             FellesType fellesType = mapFellesType(dokumentFelles);
-            String brevXml = DokumentTypeRuter.dokumentTypeMapper(dokumentMalType).mapTilBrevXML(fellesType, dokumentFelles, hendelse, behandling);
+            dokumentTypeMapper = velgDokumentMapper(dokumentMalType);
+            String brevXml = dokumentTypeMapper.mapTilBrevXML(fellesType, dokumentFelles, hendelse, behandling);
+//            String brevXml = DokumentTypeRuter.dokumentTypeMapper(dokumentMalType).mapTilBrevXML(fellesType, dokumentFelles, hendelse, behandling);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -61,11 +70,12 @@ public class DokumentXmlDataMapper {
         } catch (SAXException | XMLStreamException | ParserConfigurationException | IOException | JAXBException e) {
             //TODO feilmelding dokumentID
             throw FeilFactory.create(DokumentBestillerFeil.class).xmlgenereringsfeil(1l, e).toException();
-        } catch (InstantiationException | IllegalAccessException e) {
-            //TODO feilmelding dokumentID
-            throw FeilFactory.create(DokumentBestillerFeil.class).annentekniskfeil(1l, e).toException();
         }
         return brevXmlElement;
+    }
+
+    private DokumentTypeMapper velgDokumentMapper(DokumentMalType dokumentMalType) {
+        return CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(dokumentMalType.getKode())).get();
     }
 
     public FellesType mapFellesType(final DokumentFelles dokumentFelles) {

@@ -2,12 +2,15 @@ package no.nav.foreldrepenger.melding.datamapper;
 
 import java.util.Objects;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.AvbruttbehandlingConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.BehandlingsTypeKode;
@@ -19,6 +22,8 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.Ytel
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
+@ApplicationScoped
+@Named(DokumentMalType.HENLEGG_BEHANDLING_DOK)
 public class HenleggBehandlingBrevMapper implements DokumentTypeMapper {
     static final String FAMPEN = "NAV Familie- og pensjonsytelser";
 

@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>no.nav.foreldrepenger.melding</groupId>
     <artifactId>dokumenthendelse</artifactId>
+    <name>fpformidling :: Dokumenthendelse</name>
 
     <dependencies>
         <dependency>

@@ -1,10 +1,13 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.BrevdataType;
@@ -14,6 +17,8 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.Uendretu
 import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.YtelseTypeKode;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
+@ApplicationScoped
+@Named(DokumentMalType.UENDRETUTFALL_DOK)
 public class UendretutfallBrevMapper implements DokumentTypeMapper {
 
     @Override

@@ -9,13 +9,11 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
-import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataAdopsjonDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataFodselDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataOmsorgDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
+import no.nav.foreldrepenger.melding.datamapper.domene.FamiliehendelseMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -87,33 +85,9 @@ public class RevurderingBrevMapper implements DokumentTypeMapper {
 
     private void mapFamiliehendelse(FagType fagType, Behandling behandling) {
         FamiliehendelseDto dto = behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinkDtos()).orElseThrow(IllegalStateException::new);
-        fagType.setAntallBarn(BigInteger.valueOf(utledAntallBarnFraDto(dto)));
-        if (dto instanceof AvklartDataFodselDto) {
-            if (((AvklartDataFodselDto) dto).getTermindato() != null) {
-                fagType.setTerminDato(XmlUtil.finnDatoVerdiAvUtenTidSone(((AvklartDataFodselDto) dto).getTermindato()));
-            }
-        }
+        fagType.setAntallBarn(BigInteger.valueOf(FamiliehendelseMapper.utledAntallBarnFraDto(dto)));
+        FamiliehendelseMapper.finnTermindato(dto).ifPresent(fagType::setTerminDato);
     }
 
-    private int utledAntallBarnFraDto(FamiliehendelseDto familiehendelseDto) {
-        if (familiehendelseDto instanceof AvklartDataAdopsjonDto) {
-            return ((AvklartDataAdopsjonDto) familiehendelseDto).getAdopsjonFodelsedatoer().size();
-        } else if (familiehendelseDto instanceof AvklartDataFodselDto) {
-            return utledAntallBarnFødsel((AvklartDataFodselDto) familiehendelseDto);
-        } else if (familiehendelseDto instanceof AvklartDataOmsorgDto) {
-            return ((AvklartDataOmsorgDto) familiehendelseDto).getAntallBarnTilBeregning();
-        }
-        throw new IllegalStateException("Familihendelse er av ukjent type");
-    }
 
-    private int utledAntallBarnFødsel(AvklartDataFodselDto familiehendelseDto) {
-        int sum = 0;
-        if (familiehendelseDto.getAntallBarnTermin() != null) {
-            sum += familiehendelseDto.getAntallBarnTermin();
-        }
-        if (familiehendelseDto.getAntallBarnFødt() != null) {
-            sum += familiehendelseDto.getAntallBarnFødt();
-        }
-        return sum;
-    }
 }

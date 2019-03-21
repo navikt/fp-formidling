@@ -6,17 +6,19 @@ import no.nav.foreldrepenger.melding.typer.PersonIdent;
 
 public class Adresseinfo {
 
+    private PersonstatusType personstatus;
     private AdresseType gjeldendePostadresseType;
-    private String mottakerNavn;
+
+    //For mapping
     private PersonIdent personIdent;
+    private String mottakerNavn;
     private String adresselinje1;
     private String adresselinje2;
     private String adresselinje3;
     private String adresselinje4;
+    private String land;
     private String postNr;
     private String poststed;
-    private String land;
-    private PersonstatusType personstatus;
 
     private Adresseinfo() {
     }

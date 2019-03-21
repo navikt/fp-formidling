@@ -18,15 +18,10 @@ import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.vedtak.util.FPDateUtil;
 
 public class Personinfo {
-
     private AktørId aktørId;
-    private String navn;
-    private PersonIdent personIdent;
     private String adresse;
     private LocalDate fødselsdato;
     private LocalDate dødsdato;
-    private PersonstatusType personstatus;
-    private NavBrukerKjønn kjønn;
     private Set<Familierelasjon> familierelasjoner = Collections.emptySet();
     private Statsborgerskap statsborgerskap;
     private Region region;
@@ -36,9 +31,15 @@ public class Personinfo {
     private Språkkode foretrukketSpråk;
     private String adresseLandkode;
     private Landkoder landkode;
-
     private List<Adresseinfo> adresseInfoList = new ArrayList<>();
     private SivilstandType sivilstand;
+
+    //Brukt for mapping
+    private String navn;
+    private PersonstatusType personstatus;
+    private String PersonstatusType; //Kodeliste.PersonstatusType
+    private PersonIdent personIdent;
+    private NavBrukerKjønn kjønn;
 
     private Personinfo() {
     }

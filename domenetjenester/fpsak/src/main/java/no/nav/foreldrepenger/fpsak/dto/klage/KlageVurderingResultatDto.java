@@ -16,7 +16,7 @@ public class KlageVurderingResultatDto {
         return klageVurdering;
     }
 
-    void setKlageVurdering(String klageVurdering) {
+    public void setKlageVurdering(String klageVurdering) {
         this.klageVurdering = klageVurdering;
     }
 
@@ -24,7 +24,7 @@ public class KlageVurderingResultatDto {
         return begrunnelse;
     }
 
-    void setBegrunnelse(String begrunnelse) {
+    public void setBegrunnelse(String begrunnelse) {
         this.begrunnelse = begrunnelse;
     }
 
@@ -40,7 +40,7 @@ public class KlageVurderingResultatDto {
         return klageMedholdArsak;
     }
 
-    void setKlageMedholdArsak(String klageMedholdArsak) {
+    public void setKlageMedholdArsak(String klageMedholdArsak) {
         this.klageMedholdArsak = klageMedholdArsak;
     }
 
@@ -48,7 +48,7 @@ public class KlageVurderingResultatDto {
         return klageVurdertAv;
     }
 
-    void setKlageVurdertAv(String klageVurdertAv) {
+    public void setKlageVurdertAv(String klageVurdertAv) {
         this.klageVurdertAv = klageVurdertAv;
     }
 
@@ -56,7 +56,7 @@ public class KlageVurderingResultatDto {
         return klageMedholdArsakNavn;
     }
 
-    void setKlageMedholdArsakNavn(String klageMedholdArsakNavn) {
+    public void setKlageMedholdArsakNavn(String klageMedholdArsakNavn) {
         this.klageMedholdArsakNavn = klageMedholdArsakNavn;
     }
 

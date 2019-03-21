@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.brevbestiller.api.dto;
+package no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage;
 
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
 

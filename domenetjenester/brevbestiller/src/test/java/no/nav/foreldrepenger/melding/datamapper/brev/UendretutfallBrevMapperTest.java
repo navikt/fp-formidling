@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.datamapper;
+package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

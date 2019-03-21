@@ -24,8 +24,7 @@ import javax.persistence.Transient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.foreldrepenger.melding.kodeverk.diff.JsonObjectMapper;
 
 /**
  * Et innslag i en liste av koder tilgjengelig for et Kodeverk.
@@ -164,17 +163,25 @@ public abstract class Kodeliste extends KodeverkBaseEntitet implements Comparabl
         return ekstraData;
     }
 
-    protected String getJsonField(String key) {
+    protected String getJsonField(String... keys) {
         if (getEkstraData() == null) {
             return null;
         }
-        ObjectMapper om = new ObjectMapper();
+        JsonObjectMapper jsonObjectMapper = new JsonObjectMapper();
         try {
-            JsonNode jsonNode = om.readTree(getEkstraData()).get(key);
-            return jsonNode == null ? null : jsonNode.asText();
+            return jsonObjectMapper.readKey(getEkstraData(), keys);
         } catch (IOException e) {
+            StringBuilder allkeys = new StringBuilder();
+            try {
+                for (String key : keys) {
+                    allkeys.append(key);
+                    allkeys.append(':');
+                }
+            } catch (Exception stringException) { //$NON-NLS-1$ //NOSONAR
+                allkeys.append("Klarer ikke å hente nøklene som feiler."); //$NON-NLS-1$ //NOSONAR
+            }
             throw new IllegalStateException("Ugyldig format (forventet JSON) for kodeverk=" + getKodeverk() + ", kode=" + getKode() //$NON-NLS-1$ //$NON-NLS-2$
-                    + ", jsonKey=" + key + ": " + getEkstraData(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                    + ", jsonKey=" + allkeys.toString() + " " + getEkstraData(), e); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 

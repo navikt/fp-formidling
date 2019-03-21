@@ -52,7 +52,7 @@ public class AvklartDataOmsorgDto extends FamiliehendelseDto {
         return antallBarnTilBeregning;
     }
 
-    void setAntallBarnTilBeregning(Integer antallBarnTilBeregning) {
+    public void setAntallBarnTilBeregning(Integer antallBarnTilBeregning) {
         this.antallBarnTilBeregning = antallBarnTilBeregning;
     }
 }

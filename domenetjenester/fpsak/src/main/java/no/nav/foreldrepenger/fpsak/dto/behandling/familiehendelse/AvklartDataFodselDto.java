@@ -31,7 +31,7 @@ public class AvklartDataFodselDto extends FamiliehendelseDto {
         return antallBarnFødt;
     }
 
-    void setAntallBarnFødt(Integer antallBarnFødt) {
+    public void setAntallBarnFødt(Integer antallBarnFødt) {
         this.antallBarnFødt = antallBarnFødt;
     }
 
@@ -51,7 +51,7 @@ public class AvklartDataFodselDto extends FamiliehendelseDto {
         return termindato;
     }
 
-    void setTermindato(LocalDate termindato) {
+    public void setTermindato(LocalDate termindato) {
         this.termindato = termindato;
     }
 
@@ -60,7 +60,7 @@ public class AvklartDataFodselDto extends FamiliehendelseDto {
         return antallBarnTermin;
     }
 
-    void setAntallBarnTermin(Integer antallBarnTermin) {
+    public void setAntallBarnTermin(Integer antallBarnTermin) {
         this.antallBarnTermin = antallBarnTermin;
     }
 

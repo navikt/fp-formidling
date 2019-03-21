@@ -32,5 +32,5 @@
     <entity class="no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType"/>
     <entity class="no.nav.foreldrepenger.melding.historikk.HistorikkAktør"/>
     <entity class="no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak"/>
-
+    <entity class="no.nav.foreldrepenger.melding.behandling.klage.KlageVurdering"/>
 </entity-mappings>

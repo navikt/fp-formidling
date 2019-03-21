@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
 
 @Entity(name = "BehandlingType")
 @DiscriminatorValue(BehandlingType.DISCRIMINATOR)
@@ -20,8 +21,6 @@ public class BehandlingType extends Kodeliste {
     public static final BehandlingType KLAGE = new BehandlingType("BT-003"); //$NON-NLS-1$
     public static final BehandlingType REVURDERING = new BehandlingType("BT-004"); //$NON-NLS-1$
     public static final BehandlingType INNSYN = new BehandlingType("BT-006"); //$NON-NLS-1$
-    public static final BehandlingType TILBAKEKREVING = new BehandlingType("BT-007"); //$NON-NLS-1$
-    public static final BehandlingType INNTREKK = new BehandlingType("BT-008"); //$NON-NLS-1$
 
     /**
      * Alle kodeverk må ha en verdi, det kan ikke være null i databasen. Denne koden gjør samme nytten.
@@ -35,6 +34,26 @@ public class BehandlingType extends Kodeliste {
 
     protected BehandlingType() {
         // Hibernate trenger den
+    }
+
+    public int getBehandlingstidFristUker() {
+        if (behandlingstidFristUker == null) {
+            String behandlingstidFristUkerStr = getJsonField("behandlingstidFristUker");
+            behandlingstidFristUker = Integer.parseInt(behandlingstidFristUkerStr);
+        }
+        return behandlingstidFristUker;
+    }
+
+
+    public boolean isBehandlingstidVarselbrev() {
+        if (behandlingstidVarselbrev == null) {
+            behandlingstidVarselbrev = false;
+            String behandlingstidVarselbrevStr = getJsonField("behandlingstidVarselbrev");
+            if (behandlingstidVarselbrevStr != null) {
+                this.behandlingstidVarselbrev = new BooleanToStringConverter().convertToEntityAttribute(behandlingstidVarselbrevStr);
+            }
+        }
+        return behandlingstidVarselbrev;
     }
 
     protected BehandlingType(String kode) {

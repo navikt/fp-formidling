@@ -32,7 +32,7 @@ public class AvklartDataAdopsjonDto extends FamiliehendelseDto {
         return adopsjonFodelsedatoer;
     }
 
-    void setAdopsjonFodelsedatoer(Map<Integer, LocalDate> adopsjonFodelsedatoer) {
+    public void setAdopsjonFodelsedatoer(Map<Integer, LocalDate> adopsjonFodelsedatoer) {
         this.adopsjonFodelsedatoer = adopsjonFodelsedatoer;
     }
 

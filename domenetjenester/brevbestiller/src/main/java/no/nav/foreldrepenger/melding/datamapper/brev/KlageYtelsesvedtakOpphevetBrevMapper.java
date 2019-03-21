@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.datamapper;
+package no.nav.foreldrepenger.melding.datamapper.brev;
 
 
 import java.math.BigInteger;
@@ -18,6 +18,9 @@ import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
+import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
+import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
+import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;

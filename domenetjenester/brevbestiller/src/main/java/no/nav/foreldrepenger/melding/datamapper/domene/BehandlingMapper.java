@@ -21,7 +21,7 @@ public class BehandlingMapper {
     }
 
     public int finnAntallUkerBehandlingsfrist(Behandling behandling) {
-        BehandlingType behandlingType = kodeverkRepository.finn(BehandlingType.class, behandling.getType());
+        BehandlingType behandlingType = kodeverkRepository.finn(BehandlingType.class, behandling.getBehandlingType());
         return behandlingType.getBehandlingstidFristUker();
     }
 }

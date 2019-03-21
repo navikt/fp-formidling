@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 
 import java.math.BigInteger;
-import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -13,8 +12,6 @@ import javax.xml.bind.JAXBException;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.fpsak.KlageRestKlient;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
-import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
@@ -60,21 +57,13 @@ public class KlageYtelsesvedtakOpphevetBrevMapper implements DokumentTypeMapper 
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException {
-        Klage klage = hentKlagebehandling(behandling);
+        Klage klage = klageMapper.hentKlagebehandling(behandling);
         FagType fagType = mapFagType(dokumentHendelse, behandling, klage);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         String brevXmlMedNamespace = JaxbHelper.marshalJaxb(KlageYtelsesvedtakOpphevetConstants.JAXB_CLASS, brevdataTypeJAXBElement);
         return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
     }
 
-
-    private Klage hentKlagebehandling(Behandling behandling) {
-        Optional<KlagebehandlingDto> klagebehandlingDto = klageRestKlient.hentKlagebehandling(new BehandlingIdDto(behandling.getId()));
-        if (!klagebehandlingDto.isPresent()) {
-            throw new IllegalStateException("Finner ikke klagebehandling");
-        }
-        return Klage.fraDto(klagebehandlingDto.get());
-    }
 
     private FagType mapFagType(DokumentHendelse hendelse, Behandling behandling, Klage klage) {
         final FagType fagType = new FagType();

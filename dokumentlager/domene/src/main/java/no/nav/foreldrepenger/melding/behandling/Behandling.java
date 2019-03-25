@@ -1,34 +1,34 @@
-package no.nav.foreldrepenger.melding.brevbestiller.api.dto;
-
-import java.util.List;
+package no.nav.foreldrepenger.melding.behandling;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
 
 public class Behandling {
-    private long id;
     private Long saksnummer;
     private String behandlendeEnhetNavn;
     private Behandlingsresultat behandlingsresultat;
     private List<BehandlingResourceLinkDto> resourceLinkDtos;
 
     //Felter brukt i brev
+    private long id;
     private String behandlingType;
     private Integer behandlingstidFristUker;
     private LocalDate opprettetDato;
-    private List<String> behandlingÅrsaker;
+    private List<BehandlingÅrsak> behandlingÅrsaker = new ArrayList<>();
     private String ansvarligSaksbehandler;
     private Boolean toTrinnsBehandling;
     private String ansvarligBeslutter;
 
     public Behandling(BehandlingDto dto) {
+        this.id = dto.getId();
         this.ansvarligSaksbehandler = dto.getAnsvarligSaksbehandler();
 //        this.ansvarligBeslutter = ansvarligBeslutter;
         this.toTrinnsBehandling = dto.getToTrinnsBehandling();
-        this.id = dto.getId();
         this.behandlingType = dto.getType().kode;
         this.behandlendeEnhetNavn = dto.getBehandlendeEnhetNavn();
         if (dto.getBehandlingsresultat() != null) {
@@ -36,6 +36,10 @@ public class Behandling {
         }
         this.behandlendeEnhetNavn = dto.getBehandlendeEnhetNavn();
         this.resourceLinkDtos = dto.getLinks();
+
+        for (BehandlingÅrsakDto årsakDto : dto.getBehandlingArsaker()) {
+            behandlingÅrsaker.add(new BehandlingÅrsak(årsakDto));
+        }
     }
 
     public String getBehandlingType() {

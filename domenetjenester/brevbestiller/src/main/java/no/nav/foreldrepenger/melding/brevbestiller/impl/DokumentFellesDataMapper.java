@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.aktør.PersonstatusType;
 import no.nav.foreldrepenger.melding.behandling.verge.BrevMottaker;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Address;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Personopplysning;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Verge;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;

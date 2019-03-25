@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.behandling.beregningsgrunnlag;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import no.nav.foreldrepenger.behandlingslager.kodeverk.Kodeliste;
+import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
 
 @Entity(name = "PeriodeÅrsak")
 @DiscriminatorValue(PeriodeÅrsak.DISCRIMINATOR)

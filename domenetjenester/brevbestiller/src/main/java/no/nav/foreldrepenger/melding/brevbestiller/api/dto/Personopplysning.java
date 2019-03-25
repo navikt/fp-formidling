@@ -8,12 +8,14 @@ public class Personopplysning {
     private Long aktoerId;
     private KodeDto navBrukerKjonn;
     private String navn;
+    private Boolean harVerge;
 
     public Personopplysning(PersonopplysningDto dto) {
         this.fnr = dto.getFnr();
         this.aktoerId = dto.getAktoerId();
         this.navBrukerKjonn = dto.getNavBrukerKjonn();
         this.navn = dto.getNavn();
+        this.harVerge = dto.getHarVerge();
     }
 
     public String getFnr() {
@@ -30,5 +32,9 @@ public class Personopplysning {
 
     public String getNavn() {
         return navn;
+    }
+
+    public Boolean getHarVerge() {
+        return harVerge;
     }
 }

@@ -20,10 +20,14 @@ public class Behandlingsresultat {
     private String Periode; //Uttaksperiodegrense
 
     public Behandlingsresultat(BehandlingsresultatDto dto) {
-        this.avslagsårsak = dto.getAvslagsarsak().kode;
+        if (dto.getAvslagsarsak() != null) {
+            this.avslagsårsak = dto.getAvslagsarsak().kode;
+        }
+        if (dto.getType() != null) {
+            this.behandligResultatType = dto.getType().kode;
+        }
         this.fritekstbrev = dto.getFritekstbrev();
         this.overskrift = dto.getOverskrift();
-        this.behandligResultatType = dto.getType().kode;
         this.avslagarsakFritekst = dto.getAvslagsarsakFritekst();
         for (KodeDto kodeDto : dto.getKonsekvenserForYtelsen()) {
             konsekvensForYtelsen.add(kodeDto.kode);

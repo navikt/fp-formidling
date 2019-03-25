@@ -13,7 +13,6 @@
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeId"/>
     <entity class="no.nav.foreldrepenger.melding.fagsak.FagsakStatus"/>
     <entity class="no.nav.foreldrepenger.melding.fagsak.Fagsystem"/>
-    <entity class="no.nav.foreldrepenger.melding.kodeverk.KodelisteRelasjon"/>
     <entity class="no.nav.foreldrepenger.melding.konfig.KonfigVerdiGruppe"/>
     <entity class="no.nav.foreldrepenger.melding.konfig.KonfigVerdiType"/>
     <entity class="no.nav.foreldrepenger.melding.geografisk.Landkoder"/>

@@ -3,6 +3,9 @@ package no.nav.foreldrepenger.melding.brevbestiller.impl;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
@@ -10,13 +13,10 @@ import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.aktør.PersonstatusType;
-import no.nav.foreldrepenger.melding.behandling.verge.BrevMottaker;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Address;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Personopplysning;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Verge;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
-import no.nav.foreldrepenger.melding.datamapper.mal.DokumentType;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -29,44 +29,58 @@ import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.tps.TpsTjeneste;
 import no.nav.vedtak.util.FPDateUtil;
 
+@ApplicationScoped
 public class DokumentFellesDataMapper {
+
+    private final String DOD_PERSON_STATUS = "DOD";
+    private final String DEFAULT_PERSON_STATUS = "ANNET";
+
     private DokumentRepository dokumentRepository;
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private BehandlingRestKlient behandlingRestKlient;
     private TpsTjeneste tpsTjeneste;
 
-    DokumentData opprettDokumentDataForBehandling(BehandlingDto behandlingDto,
-                                                  DokumentType dokumentType) {
-        //Hent dokumentmal type
-//        DokumentMalType dokumentMalType = dokumentRepository.hentDokumentMalType(dokumentType.getDokumentMalType());
-        DokumentMalType dokumentMalType = dokumentRepository.hentDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK);
+    public DokumentFellesDataMapper() {
+        //CDI
+    }
 
+    @Inject
+    public DokumentFellesDataMapper(TpsTjeneste tpsTjeneste,
+                                    DokumentRepository dokumentRepository,
+                                    BehandlingRestKlient behandlingRestKlient,
+                                    NavKontaktKonfigurasjon navKontaktKonfigurasjon) {
+        this.tpsTjeneste = tpsTjeneste;
+        this.dokumentRepository = dokumentRepository;
+        this.behandlingRestKlient = behandlingRestKlient;
+        this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
+    }
+
+    DokumentData opprettDokumentDataForBehandling(BehandlingDto behandlingDto, DokumentMalType dokumentMalType) {
         //Data for mapping
         Behandling behandling = new Behandling(behandlingDto);
         Personopplysning personopplysning = new Personopplysning(behandlingDto.getPersonopplysningDto());
-        //TODO: Sjekk hvis mulighet for felere addresser
-        Address address = new Address(behandlingDto.getPersonopplysningDto().getAdresser().get(0));
+        DokumentData dokumentData = DokumentData.opprettNy(dokumentMalType, behandling.getId());
+        final AktørId søkersAktørId = new AktørId(personopplysning.getAktoerId());
+
+        if (Boolean.FALSE.equals(personopplysning.getHarVerge())) {
+            opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
+            return dokumentData;
+        }
 
         final Optional<VergeDto> vergeDto = behandlingRestKlient.hentVerge(new BehandlingIdDto(behandlingDto.getId()), behandlingDto.getLinks());
-        Verge verge = new Verge(vergeDto.get());
-
-        final AktørId aktørId = new AktørId(personopplysning.getAktoerId());
-        DokumentData dokumentData = DokumentData.opprettNy(dokumentMalType, behandling.getId());
 
         if (!vergeDto.isPresent()) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, aktørId, dokumentType);
+            throw new IllegalStateException("Finner ikke verge for en behandling som angir at den har verge");
         } else {
-//            Verge aggregat = verge.get();
-            //TODO: REST tjeneste VergeDto mangler brevmottaker
-//            BrevMottaker brevMottaker = aggregat.getBrevMottaker();
-            BrevMottaker brevMottaker = BrevMottaker.SØKER;
-            if (BrevMottaker.SØKER.equals(brevMottaker)) {
-                opprettDokumentDataForMottaker(behandling, dokumentData, aktørId, dokumentType);
-            } else if (BrevMottaker.VERGE.equals(brevMottaker)) {
-//                opprettDokumentDataForMottaker(behandling, dokumentData, aggregat.getAktørId(), dokumentType);
-            } else if (BrevMottaker.BEGGE.equals(brevMottaker)) {
-                opprettDokumentDataForMottaker(behandling, dokumentData, aktørId, dokumentType);
-//                opprettDokumentDataForMottaker(behandling, dokumentData, aggregat.getAktørId(), dokumentType);
+            Verge verge = new Verge(vergeDto.get());
+            AktørId vergesAktørId = tpsTjeneste.hentAktørForFnr(PersonIdent.fra(verge.getFnr())).orElseThrow(IllegalStateException::new);
+            if (verge.brevTilBegge()) {
+                opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
+                opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId);
+            } else if (verge.isBrevTilSøker()) {
+                opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
+            } else if (verge.isBrevTilVerge()) {
+                opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId);
             }
         }
         return dokumentData;
@@ -75,20 +89,16 @@ public class DokumentFellesDataMapper {
     private void opprettDokumentDataForMottaker(Behandling behandling,
                                                 DokumentData dokumentData,
                                                 AktørId aktørId,
-                                                DokumentType dokumentType) {
+                                                AktørId aktørIdBruker) {
 
         Adresseinfo adresseinfo = innhentAdresseopplysningerForDokumentsending(aktørId)
                 .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeAdresse(aktørId).toException());
 
-        final Personopplysning personopplysning = hentPersonopplysning();
-
         DokumentAdresse adresse = fra(adresseinfo);
-        AktørId aktørIdBruker = new AktørId(personopplysning.getAktoerId());
         PersonIdent fnrBruker;
         String navnBruker;
         PersonstatusType personstatusBruker;
 
-        //TODO: Hvis bruker aktørid erstattet med Verge
         if (Objects.equals(aktørId, aktørIdBruker)) {
             fnrBruker = adresseinfo.getPersonIdent();
             navnBruker = adresseinfo.getMottakerNavn();
@@ -103,7 +113,6 @@ public class DokumentFellesDataMapper {
 
         buildDokumentFelles(behandling,
                 dokumentData,
-                dokumentType,
                 adresse,
                 fnrBruker,
                 navnBruker,
@@ -113,7 +122,6 @@ public class DokumentFellesDataMapper {
 
     private void buildDokumentFelles(Behandling behandling,
                                      DokumentData dokumentData,
-                                     DokumentType dokumentType,
                                      DokumentAdresse adresse,
                                      PersonIdent fnrBruker,
                                      String navnBruker,
@@ -138,7 +146,7 @@ public class DokumentFellesDataMapper {
                 //TODO: Hent språk preferanse fra selvbetjeningløsning
 //                .medSpråkkode(fagsak.getNavBruker().getSpråkkode())
                 .medSpråkkode(Språkkode.nb)
-                .medSakspartPersonStatus(dokumentType.getPersonstatusVerdi(personstatusBruker));
+                .medSakspartPersonStatus(getPersonstatusVerdi(personstatusBruker));
 
         if (behandling.isToTrinnsBehandling()) {
             builder
@@ -148,6 +156,10 @@ public class DokumentFellesDataMapper {
                     .medSignerendeBeslutterGeografiskEnhet("N/A");  // FIXME SOMMERFUGL Denne skal vel ikke hardkodes?
         }
         builder.build();
+    }
+
+    private String getPersonstatusVerdi(PersonstatusType personstatus) {
+        return PersonstatusType.erDød(personstatus) ? DOD_PERSON_STATUS : DEFAULT_PERSON_STATUS;
     }
 
     private Optional<Adresseinfo> innhentAdresseopplysningerForDokumentsending(AktørId aktørId) {

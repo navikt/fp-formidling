@@ -26,13 +26,13 @@ public class KlageMapperTest {
 
     @Test
     public void skal_identifisere_opphevet_klage() {
-        klageMapper = new KlageMapper(new KodeverkRepositoryImpl(repositoryRule.getEntityManager()));
+        klageMapper = new KlageMapper(new KodeverkRepositoryImpl(repositoryRule.getEntityManager()),null);
         assertThat(klageMapper.erOpphevet(lagKlage(true))).isTrue();
     }
 
     @Test
     public void skal_identifisere_ikke_opphevet_klage() {
-        klageMapper = new KlageMapper(new KodeverkRepositoryImpl(repositoryRule.getEntityManager()));
+        klageMapper = new KlageMapper(new KodeverkRepositoryImpl(repositoryRule.getEntityManager()),null);
         assertThat(klageMapper.erOpphevet(lagKlage(false))).isFalse();
     }
 

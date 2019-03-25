@@ -13,7 +13,7 @@ import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.fpsak.KlageRestKlient;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;

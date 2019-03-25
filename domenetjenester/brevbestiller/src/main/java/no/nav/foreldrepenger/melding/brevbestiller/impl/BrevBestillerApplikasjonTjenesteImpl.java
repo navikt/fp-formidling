@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;

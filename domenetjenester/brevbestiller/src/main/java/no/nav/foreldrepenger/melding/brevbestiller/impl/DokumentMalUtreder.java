@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.brevbestiller.impl;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;

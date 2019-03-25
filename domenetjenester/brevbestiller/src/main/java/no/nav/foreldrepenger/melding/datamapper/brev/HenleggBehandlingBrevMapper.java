@@ -8,7 +8,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperKonstanter;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;

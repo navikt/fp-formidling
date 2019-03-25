@@ -5,7 +5,7 @@ import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;

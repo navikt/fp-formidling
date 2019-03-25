@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Behandling;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;

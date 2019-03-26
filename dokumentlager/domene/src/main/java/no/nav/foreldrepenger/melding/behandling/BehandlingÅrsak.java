@@ -10,4 +10,12 @@ public class BehandlingÅrsak {
         this.behandlingArsakType = dto.getBehandlingArsakType().kode;
         this.manueltOpprettet = dto.getManueltOpprettet();
     }
+
+    public String getBehandlingArsakType() {
+        return behandlingArsakType;
+    }
+
+    public Boolean getManueltOpprettet() {
+        return manueltOpprettet;
+    }
 }

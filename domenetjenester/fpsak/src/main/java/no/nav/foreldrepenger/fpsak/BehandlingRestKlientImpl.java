@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingRelLinkPayloadDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
+import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
@@ -41,7 +43,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    public Optional<BehandlingDto> hentBehandling(BehandlingIdDto behandlingIdDto) {
+    public BehandlingDto hentBehandling(BehandlingIdDto behandlingIdDto) {
         Optional<BehandlingDto> behandling = Optional.empty();
         try {
             URIBuilder behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + HENT_BEHANLDING_ENDPOINT);
@@ -49,55 +51,70 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
             behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
             if (behandling.isPresent()) {
                 final BehandlingDto behandlingDto = behandling.get();
-                final Optional<PersonopplysningDto> personopplysningDto = hentPersonopplysninger(behandlingIdDto, behandlingDto.getLinks());
+                final Optional<PersonopplysningDto> personopplysningDto = hentPersonopplysninger(behandlingDto.getLinks());
                 personopplysningDto.ifPresent(behandlingDto::setPersonopplysningDto);
             }
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);
         }
-        return behandling;
+        return behandling.orElseThrow(() -> {
+            throw new IllegalStateException("Klarte ikke hente behandling: " + behandlingIdDto.getBehandlingId());
+        });
+    }
+
+    //TODO ramesh/aleksander - er det egentlig greit at denne er optional?
+    @Override
+    public Optional<PersonopplysningDto> hentPersonopplysninger(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+        return resourceLinkDtos.stream()
+                .filter(dto -> "soeker-personopplysninger".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, PersonopplysningDto.class));
     }
 
     @Override
-    public Optional<PersonopplysningDto> hentPersonopplysninger(BehandlingIdDto behandlingIdDto, List<BehandlingResourceLinkDto> resourceLinkDtos) {
-        Optional<PersonopplysningDto> personopplysningDto = Optional.empty();
-        for (BehandlingResourceLinkDto resourceLinkDto : resourceLinkDtos) {
-            if (resourceLinkDto.getRel().equals("soeker-personopplysninger")) {
-                URI personopplysningUri = URI.create(endpointFpsakRestBase + resourceLinkDto.getHref());
-
-                behandlingIdDto.setSaksnummer(resourceLinkDto.getRequestPayload().getSaksnummer());
-                personopplysningDto = oidcRestClient.postReturnsOptional(personopplysningUri, behandlingIdDto, PersonopplysningDto.class);
-            }
-        }
-        return personopplysningDto;
+    public VergeDto hentVerge(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+        return resourceLinkDtos.stream()
+                .filter(dto -> "soeker-verge".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, VergeDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente Verge for behandling: " + hentBehandlingId(resourceLinkDtos));
+                });
     }
 
     @Override
-    public Optional<VergeDto> hentVerge(BehandlingIdDto behandlingIdDto, List<BehandlingResourceLinkDto> resourceLinkDtos) {
-        Optional<VergeDto> vergeDto = Optional.empty();
-        for (BehandlingResourceLinkDto resourceLinkDto : resourceLinkDtos) {
-            if (resourceLinkDto.getRel().equals("soeker-verge")) {
-                URI personopplysningUri = URI.create(endpointFpsakRestBase + resourceLinkDto.getHref());
-                behandlingIdDto.setSaksnummer(resourceLinkDto.getRequestPayload().getSaksnummer());
-                vergeDto = oidcRestClient.postReturnsOptional(personopplysningUri, behandlingIdDto, VergeDto.class);
-            }
-        }
-        return vergeDto;
-    }
-
-    @Override
-    public Optional<FamiliehendelseDto> hentFamiliehendelse(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+    public FamiliehendelseDto hentFamiliehendelse(List<BehandlingResourceLinkDto> resourceLinkDtos) {
         return resourceLinkDtos.stream()
                 .filter(dto -> "familiehendelse".equals(dto.getRel()))
-                .findFirst().flatMap(this::hentFamiliehendelseFraLink);
+                .findFirst().flatMap(link -> hentDtoFraLink(link, FamiliehendelseDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente Familiehendelse for behandling: " + hentBehandlingId(resourceLinkDtos));
+                });
     }
 
-    private Optional<FamiliehendelseDto> hentFamiliehendelseFraLink(BehandlingResourceLinkDto link) {
+    @Override
+    public BeregningsresultatEngangsstønadDto hentBeregningsresultatEngangsstønad(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+        return resourceLinkDtos.stream()
+                .filter(dto -> "beregningsresultat-engangsstonad".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsresultatEngangsstønadDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente Beregningsresultat engangsstønad for behandling: " + hentBehandlingId(resourceLinkDtos));
+                });
+    }
+
+    private <T> Optional<T> hentDtoFraLink(BehandlingResourceLinkDto link, Class<T> clazz) {
         URI familiehendelseUri = URI.create(endpointFpsakRestBase + link.getHref());
         BehandlingIdDto behandlingIdDto = new BehandlingIdDto();
         behandlingIdDto.setBehandlingId(link.getRequestPayload().getBehandlingId());
         behandlingIdDto.setSaksnummer(link.getRequestPayload().getSaksnummer());
-        return oidcRestClient.postReturnsOptional(familiehendelseUri, behandlingIdDto, FamiliehendelseDto.class);
+        return oidcRestClient.postReturnsOptional(familiehendelseUri, behandlingIdDto, clazz);
     }
+
+    private Long hentBehandlingId(List<BehandlingResourceLinkDto> linkListe) {
+        return linkListe.stream()
+                .map(BehandlingResourceLinkDto::getRequestPayload)
+                .map(BehandlingRelLinkPayloadDto::getBehandlingId)
+                .findFirst()
+                .orElse(null);
+    }
+
 }
 

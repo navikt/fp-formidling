@@ -10,9 +10,9 @@ import javax.xml.bind.JAXBException;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
-import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
@@ -87,7 +87,7 @@ public class RevurderingBrevMapper implements DokumentTypeMapper {
     }
 
     private void mapFamiliehendelse(FagType fagType, Behandling behandling) {
-        FamiliehendelseDto dto = behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinkDtos()).orElseThrow(IllegalStateException::new);
+        FamiliehendelseDto dto = behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinkDtos());
         fagType.setAntallBarn(BigInteger.valueOf(FamiliehendelseMapper.utledAntallBarnFraDto(dto)));
         FamiliehendelseMapper.finnTermindato(dto).ifPresent(fagType::setTerminDato);
     }

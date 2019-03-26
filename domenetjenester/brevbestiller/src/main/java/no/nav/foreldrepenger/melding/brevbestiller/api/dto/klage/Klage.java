@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage;
 
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
+import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 
 public class Klage {
 
@@ -12,13 +13,13 @@ public class Klage {
     private Klage() {
     }
 
-    public static Klage fraDto(KlagebehandlingDto dto) {
+    public static Klage fraDto(KlagebehandlingDto dto, KodeverkRepository kodeverkRepository) {
         Klage klage = new Klage();
         if (dto.getKlageFormkravResultatNFP() != null) {
-            klage.formkravNFP = KlageFormkravResultat.fraDto(dto.getKlageFormkravResultatNFP());
+            klage.formkravNFP = KlageFormkravResultat.fraDto(dto.getKlageFormkravResultatNFP(), kodeverkRepository);
         }
         if (dto.getKlageFormkravResultatKA() != null) {
-            klage.formkravKA = KlageFormkravResultat.fraDto(dto.getKlageFormkravResultatKA());
+            klage.formkravKA = KlageFormkravResultat.fraDto(dto.getKlageFormkravResultatKA(), kodeverkRepository);
         }
         if (dto.getKlageVurderingResultatNFP() != null) {
             klage.klageVurderingResultatNFP = KlageVurderingResultat.fraDto(dto.getKlageVurderingResultatNFP());

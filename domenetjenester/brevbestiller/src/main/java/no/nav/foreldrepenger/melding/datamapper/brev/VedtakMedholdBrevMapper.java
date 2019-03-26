@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import java.math.BigInteger;
-import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -12,13 +11,11 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
-import no.nav.foreldrepenger.fpsak.KlageRestKlient;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
-import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -30,42 +27,34 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.ObjectFa
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.OpphavTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.VedtakMedholdConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.VEDTAK_MEDHOLD)
 public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
 
-    private KlageRestKlient klageRestKlient;
     private BrevParametere brevParametere;
+    private KlageMapper klageMapper;
 
     public VedtakMedholdBrevMapper() {
         //CDI
     }
 
     @Inject
-    public VedtakMedholdBrevMapper(KlageRestKlient klageRestKlient,
+    public VedtakMedholdBrevMapper(KlageMapper klageMapper,
                                    BrevParametere brevParametere) {
-        this.klageRestKlient = klageRestKlient;
+        this.klageMapper = klageMapper;
         this.brevParametere = brevParametere;
     }
 
-
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        Klage klage = hentKlagebehandling(behandling);
+        Klage klage = klageMapper.hentKlagebehandling(behandling);
         FagType fagType = mapFagType(dokumentHendelse, klage);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapTilBrevDataType(fellesType, fagType);
         String brevXmlMedNamespace = JaxbHelper.marshalJaxb(VedtakMedholdConstants.JAXB_CLASS, brevdataTypeJAXBElement);
         return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
-    }
-
-    private Klage hentKlagebehandling(Behandling behandling) {
-        Optional<KlagebehandlingDto> klagebehandlingDto = klageRestKlient.hentKlagebehandling(new BehandlingIdDto(behandling.getId()));
-        if (!klagebehandlingDto.isPresent()) {
-            throw new IllegalStateException("Finner ikke klagebehandling");
-        }
-        return Klage.fraDto(klagebehandlingDto.get());
     }
 
     private FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage) {

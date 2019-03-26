@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
-import java.util.Optional;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -151,12 +149,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     }
 
     private BehandlingDto hentBehandlingFraFpsak(long behandlingId) {
-        final Optional<BehandlingDto> behandlingInfo = behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId));
-        if (behandlingInfo.isPresent()) {
-            return behandlingInfo.get();
-        }
-        LOGGER.error("Klarte ikke hente behandling: {}", behandlingId);
-        throw BrevbestillerFeil.FACTORY.klarteIkkeHenteBehandling(behandlingId).toException();
+        return behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId));
     }
 
     private DokumentFelles lagDokumentFelles(BehandlingDto behandlingDto, DokumentMalType dokumentMalType) {

@@ -16,6 +16,7 @@ public class Behandling {
 
     //Felter brukt i brev
     private long id;
+    private Long originalBehandlingId;
     private String behandlingType;
     private Integer behandlingstidFristUker;
     private LocalDate opprettetDato;
@@ -26,6 +27,7 @@ public class Behandling {
 
     public Behandling(BehandlingDto dto) {
         this.id = dto.getId();
+        this.originalBehandlingId = dto.getOriginalBehandlingId();
         this.ansvarligSaksbehandler = dto.getAnsvarligSaksbehandler();
 //        this.ansvarligBeslutter = ansvarligBeslutter;
         this.toTrinnsBehandling = dto.getToTrinnsBehandling();
@@ -40,6 +42,10 @@ public class Behandling {
         for (BehandlingÅrsakDto årsakDto : dto.getBehandlingArsaker()) {
             behandlingÅrsaker.add(new BehandlingÅrsak(årsakDto));
         }
+    }
+
+    public List<BehandlingÅrsak> getBehandlingÅrsaker() {
+        return behandlingÅrsaker;
     }
 
     public String getBehandlingType() {
@@ -80,5 +86,13 @@ public class Behandling {
 
     public List<BehandlingResourceLinkDto> getResourceLinkDtos() {
         return resourceLinkDtos;
+    }
+
+    public Long getOriginalBehandlingId() {
+        return originalBehandlingId;
+    }
+
+    public void setOriginalBehandlingId(Long originalBehandlingId) {
+        this.originalBehandlingId = originalBehandlingId;
     }
 }

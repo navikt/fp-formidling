@@ -2,11 +2,10 @@
   "schemas": [
     {
       "datasource": "defaultDS",
-      "user": "vl_dba",
-      "password": "vl_dba",
-      "defaultSchema": "fpformidling_unit",
-      "schema": "fpformidling_unit",
-      "url": "jdbc:postgresql://localhost:5432/postgres?currentSchema=fpformidling_unit",
+      "user": "fpformidling_unit",
+      "password": "fpformidling_unit",
+      "schema": "public",
+      "url": "jdbc:postgresql://localhost:5432/fpformidling_unit",
       "default": true,
       "migrationScriptsFilesystemRoot": "migreringer/src/main/resources/db/migration/"
     }

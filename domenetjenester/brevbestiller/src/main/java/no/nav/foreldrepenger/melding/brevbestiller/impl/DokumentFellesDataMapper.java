@@ -8,7 +8,6 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
@@ -67,21 +66,17 @@ public class DokumentFellesDataMapper {
             return dokumentData;
         }
 
-        final Optional<VergeDto> vergeDto = behandlingRestKlient.hentVerge(new BehandlingIdDto(behandlingDto.getId()), behandlingDto.getLinks());
+        final VergeDto vergeDto = behandlingRestKlient.hentVerge(behandlingDto.getLinks());
 
-        if (!vergeDto.isPresent()) {
-            throw new IllegalStateException("Finner ikke verge for en behandling som angir at den har verge");
-        } else {
-            Verge verge = new Verge(vergeDto.get());
-            AktørId vergesAktørId = tpsTjeneste.hentAktørForFnr(PersonIdent.fra(verge.getFnr())).orElseThrow(IllegalStateException::new);
-            if (verge.brevTilBegge()) {
-                opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
-                opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId);
-            } else if (verge.isBrevTilSøker()) {
-                opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
-            } else if (verge.isBrevTilVerge()) {
-                opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId);
-            }
+        Verge verge = new Verge(vergeDto);
+        AktørId vergesAktørId = tpsTjeneste.hentAktørForFnr(PersonIdent.fra(verge.getFnr())).orElseThrow(IllegalStateException::new);
+        if (verge.brevTilBegge()) {
+            opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
+            opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId);
+        } else if (verge.isBrevTilSøker()) {
+            opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
+        } else if (verge.isBrevTilVerge()) {
+            opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId);
         }
         return dokumentData;
     }

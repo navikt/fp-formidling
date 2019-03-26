@@ -48,7 +48,6 @@ public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
         this.brevParametere = brevParametere;
     }
 
-
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         Klage klage = klageMapper.hentKlagebehandling(behandling);

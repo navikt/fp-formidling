@@ -12,8 +12,10 @@ import javax.xml.stream.XMLStreamException;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Innsyn;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.InnsynMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -31,10 +33,13 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class InnsynskravSvarBrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
+    private InnsynMapper innsynMapper;
 
     @Inject
-    public InnsynskravSvarBrevMapper(BrevParametere brevParametere) {
+    public InnsynskravSvarBrevMapper(BrevParametere brevParametere,
+                                     InnsynMapper innsynMapper) {
         this.brevParametere = brevParametere;
+        this.innsynMapper = innsynMapper;
     }
 
     @Override
@@ -48,11 +53,13 @@ public class InnsynskravSvarBrevMapper implements DokumentTypeMapper {
     private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling) {
         FagType fagType = new FagType();
         fagType.setFritekst(dokumentHendelse.getFritekst());
-        //fagType.setInnsynResultatType();
+        Innsyn innsyn = innsynMapper.hentInnsyn(behandling.getId());
+        fagType.setInnsynResultatType(InnsynMapper.mapInnsynResultatKode(innsyn.getInnsynResultatType()));
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUkerInnsyn()));
         return fagType;
     }
+
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {
         ObjectFactory of = new ObjectFactory();

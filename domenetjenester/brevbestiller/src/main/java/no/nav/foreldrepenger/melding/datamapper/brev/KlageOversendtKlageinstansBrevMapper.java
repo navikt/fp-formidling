@@ -31,18 +31,18 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_OVERSENDT_KLAGEINSTANS_DOK)
-public class KlageOversendtKlageinstans implements DokumentTypeMapper {
+public class KlageOversendtKlageinstansBrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
     private BehandlingMapper behandlingMapper;
 
-    public KlageOversendtKlageinstans() {
+    public KlageOversendtKlageinstansBrevMapper() {
         //CDI
     }
 
     @Inject
-    public KlageOversendtKlageinstans(BehandlingMapper behandlingMapper,
-                                      BrevParametere brevParametere) {
+    public KlageOversendtKlageinstansBrevMapper(BehandlingMapper behandlingMapper,
+                                                BrevParametere brevParametere) {
         this.behandlingMapper = behandlingMapper;
         this.brevParametere = brevParametere;
     }

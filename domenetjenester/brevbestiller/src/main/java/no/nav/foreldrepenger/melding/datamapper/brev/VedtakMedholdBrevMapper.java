@@ -30,6 +30,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.ObjectFa
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.OpphavTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.VedtakMedholdConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -37,6 +38,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
 
     private KlageRestKlient klageRestKlient;
+    private KodeverkRepository kodeverkRepository;
     private BrevParametere brevParametere;
 
     public VedtakMedholdBrevMapper() {
@@ -65,7 +67,7 @@ public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
         if (!klagebehandlingDto.isPresent()) {
             throw new IllegalStateException("Finner ikke klagebehandling");
         }
-        return Klage.fraDto(klagebehandlingDto.get());
+        return Klage.fraDto(klagebehandlingDto.get(), kodeverkRepository);
     }
 
     private FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage) {

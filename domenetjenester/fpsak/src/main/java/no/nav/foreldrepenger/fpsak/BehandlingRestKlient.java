@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.Familiehendels
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
+import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
 
 public interface BehandlingRestKlient {
 
@@ -20,6 +21,8 @@ public interface BehandlingRestKlient {
     VergeDto hentVerge(List<BehandlingResourceLinkDto> resourceLinkDtos);
 
     FamiliehendelseDto hentFamiliehendelse(List<BehandlingResourceLinkDto> resourceLinkDtos);
+
+    SoknadDto hentSoknad(List<BehandlingResourceLinkDto> resourceLinkDtos);
 
     BeregningsresultatEngangsstønadDto hentBeregningsresultatEngangsstønad(List<BehandlingResourceLinkDto> resourceLinkDtos);
 }

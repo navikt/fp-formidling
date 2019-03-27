@@ -7,5 +7,5 @@ import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 
 public interface KlageRestKlient {
 
-    Optional<KlagebehandlingDto> hentKlagebehandling(BehandlingIdDto behandlingIdDto);
+    KlagebehandlingDto hentKlagebehandling(BehandlingIdDto behandlingIdDto);
 }

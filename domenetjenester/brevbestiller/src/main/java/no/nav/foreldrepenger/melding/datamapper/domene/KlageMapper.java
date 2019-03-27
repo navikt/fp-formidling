@@ -35,6 +35,7 @@ public class KlageMapper {
 
 
     public static Map<String, AvvistGrunnKode> avvistGrunnMap;
+
     static {
         avvistGrunnMap = new HashMap<>();
         avvistGrunnMap.put(KLAGET_FOR_SENT.getKode(), AvvistGrunnKode.ETTER_6_UKER);
@@ -61,11 +62,8 @@ public class KlageMapper {
 
 
     public Klage hentKlagebehandling(Behandling behandling) {
-        Optional<KlagebehandlingDto> klagebehandlingDto = klageRestKlient.hentKlagebehandling(new BehandlingIdDto(behandling.getId()));
-        if (!klagebehandlingDto.isPresent()) {
-            throw new IllegalStateException("Finner ikke klagebehandling");
-        }
-        return Klage.fraDto(klagebehandlingDto.get(), kodeverkRepository);
+        KlagebehandlingDto klagebehandlingDto = klageRestKlient.hentKlagebehandling(new BehandlingIdDto(behandling.getId()));
+        return Klage.fraDto(klagebehandlingDto, kodeverkRepository);
     }
 
     public List<KlageAvvistÅrsak> listeAvAvvisteÅrsaker(Klage klage) {

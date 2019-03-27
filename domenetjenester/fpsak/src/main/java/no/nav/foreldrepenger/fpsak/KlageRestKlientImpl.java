@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.fpsak;
 import static org.terracotta.modules.ehcache.ToolkitInstanceFactoryImpl.LOGGER;
 
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -35,15 +34,17 @@ public class KlageRestKlientImpl implements KlageRestKlient {
     }
 
     @Override
-    public Optional<KlagebehandlingDto> hentKlagebehandling(BehandlingIdDto behandlingIdDto) {
-        Optional<KlagebehandlingDto> klagebehandlingDto = Optional.empty();
+    public KlagebehandlingDto hentKlagebehandling(BehandlingIdDto behandlingIdDto) {
         try {
             URIBuilder klageUriBuilder = new URIBuilder(endpointFpsakRestBase + HENT_KLAGE_ENDPOINT);
             klageUriBuilder.setParameter("behandlingId", String.valueOf(behandlingIdDto.getBehandlingId()));
-            klagebehandlingDto = oidcRestClient.getReturnsOptional(klageUriBuilder.build(), KlagebehandlingDto.class);
+            return oidcRestClient.getReturnsOptional(klageUriBuilder.build(), KlagebehandlingDto.class)
+                    .orElseThrow(() -> {
+                        throw new IllegalStateException("Klarer ikke hente klage: " + behandlingIdDto.getBehandlingId());
+                    });
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);
         }
-        return klagebehandlingDto;
+        throw new IllegalStateException("Klarer ikke hente klage: " + behandlingIdDto.getBehandlingId());
     }
 }

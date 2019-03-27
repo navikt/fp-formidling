@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.brevbestiller.api.dto;
+package no.nav.foreldrepenger.melding.behandling.beregningsgrunnlag;
 
 public class BeregningsgrunnlagPeriode {
     private int dagsats;

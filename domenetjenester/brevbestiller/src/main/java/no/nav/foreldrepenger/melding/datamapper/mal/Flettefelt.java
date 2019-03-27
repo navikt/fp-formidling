@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.mal;
 
+import no.nav.foreldrepenger.melding.datamapper.util.FlettefeltJsonObjectMapper;
+
 public class Flettefelt {
     private String feltnavn;
     private String feltverdi;

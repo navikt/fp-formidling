@@ -3,16 +3,16 @@ package no.nav.foreldrepenger.melding.behandling;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
 
 public class BehandlingÅrsak {
-    private String behandlingArsakType;
+    private String BehandlingÅrsakType;
     private Boolean manueltOpprettet;
 
     public BehandlingÅrsak(BehandlingÅrsakDto dto) {
-        this.behandlingArsakType = dto.getBehandlingArsakType().kode;
+        this.BehandlingÅrsakType = dto.getBehandlingArsakType().kode;
         this.manueltOpprettet = dto.getManueltOpprettet();
     }
 
-    public String getBehandlingArsakType() {
-        return behandlingArsakType;
+    public String getBehandlingÅrsakType() {
+        return BehandlingÅrsakType;
     }
 
     public Boolean getManueltOpprettet() {

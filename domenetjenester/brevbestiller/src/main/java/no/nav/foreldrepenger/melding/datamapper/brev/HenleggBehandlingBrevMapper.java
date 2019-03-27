@@ -7,12 +7,12 @@ import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
-import no.nav.foreldrepenger.melding.datamapper.DokumentMapperKonstanter;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -53,7 +53,7 @@ public class HenleggBehandlingBrevMapper implements DokumentTypeMapper {
 
 
     private static BehandlingsTypeKode mapToXmlBehandlingsType(String vlKode) {
-        if (Objects.equals(vlKode, DokumentMapperKonstanter.ENDRINGSSØKNAD)) {
+        if (Objects.equals(vlKode, BehandlingTypeKonstanter.ENDRINGSSØKNAD)) {
             return BehandlingsTypeKode.ENDRINGSSØKNAD;
         } else if (Objects.equals(vlKode, BehandlingType.FØRSTEGANGSSØKNAD.getKode())) {
             return BehandlingsTypeKode.FØRSTEGANGSSØKNAD;

@@ -44,14 +44,6 @@ public class Behandling {
         }
     }
 
-    public List<BehandlingÅrsak> getBehandlingÅrsaker() {
-        return behandlingÅrsaker;
-    }
-
-    public String getBehandlingType() {
-        return behandlingType;
-    }
-
     public String getBehandlendeEnhetNavn() {
         return behandlendeEnhetNavn;
     }
@@ -60,8 +52,28 @@ public class Behandling {
         return behandlingsresultat;
     }
 
+    public String getBehandlingType() {
+        return behandlingType;
+    }
+
+    public Integer getBehandlingstidFristUker() {
+        return behandlingstidFristUker;
+    }
+
+    public LocalDate getOpprettetDato() {
+        return opprettetDato;
+    }
+
+    public List<BehandlingÅrsak> getBehandlingÅrsaker() {
+        return behandlingÅrsaker;
+    }
+
     public String getAnsvarligSaksbehandler() {
         return ansvarligSaksbehandler;
+    }
+
+    public Boolean getToTrinnsBehandling() {
+        return toTrinnsBehandling;
     }
 
     public String getAnsvarligBeslutter() {

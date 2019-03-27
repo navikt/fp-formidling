@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
-import static no.nav.foreldrepenger.melding.datamapper.DokumentMapperKonstanter.FØRSTEGANGSSØKNAD;
-import static no.nav.foreldrepenger.melding.datamapper.DokumentMapperKonstanter.MEDHOLD;
-import static no.nav.foreldrepenger.melding.datamapper.DokumentMapperKonstanter.REVURDERING;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.FØRSTEGANGSSØKNAD;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.MEDHOLD;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 
 import java.util.stream.Stream;
 
@@ -28,15 +28,18 @@ public class BehandlingMapper {
         this.kodeverkRepository = kodeverkRepository;
     }
 
-    public int finnAntallUkerBehandlingsfrist(Behandling behandling) {
-        BehandlingType behandlingType = kodeverkRepository.finn(BehandlingType.class, behandling.getBehandlingType());
-        return behandlingType.getBehandlingstidFristUker();
+    public BehandlingType finnBehandlingType(String behandlingType) {
+        return kodeverkRepository.finn(BehandlingType.class, behandlingType);
+    }
+
+    public int finnAntallUkerBehandlingsfrist(String behandlingType) {
+        return finnBehandlingType(behandlingType).getBehandlingstidFristUker();
     }
 
     public String utledBehandlingsTypeForPositivtVedtak(Behandling behandling) {
         String behandlingsType;
         Stream<BehandlingÅrsakType> årsaker = behandling.getBehandlingÅrsaker().stream()
-                .map(BehandlingÅrsak::getBehandlingArsakType).map(kode -> kodeverkRepository.finn(BehandlingÅrsakType.class, kode));
+                .map(BehandlingÅrsak::getBehandlingÅrsakType).map(kode -> kodeverkRepository.finn(BehandlingÅrsakType.class, kode));
         boolean etterKlage = årsaker.anyMatch(BehandlingÅrsakType.årsakerEtterKlageBehandling()::contains);
         if (etterKlage) {
             behandlingsType = MEDHOLD;

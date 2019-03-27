@@ -61,7 +61,7 @@ public class KlageOversendtKlageinstansBrevMapper implements DokumentTypeMapper 
         //TODO må eksponeres fra fpsak
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(LocalDate.now()));
         fagType.setFritekst(hendelse.getFritekst());
-        fagType.setAntallUker(BigInteger.valueOf(behandlingMapper.finnAntallUkerBehandlingsfrist(behandling)));
+        fagType.setAntallUker(BigInteger.valueOf(behandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
         return fagType;
     }

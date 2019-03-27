@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
+import static no.nav.foreldrepenger.melding.datamapper.DokumentMapperKonstanter.ENDRINGSSØKNAD;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.FØRSTEGANGSSØKNAD;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.MEDHOLD;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
@@ -34,6 +35,18 @@ public class BehandlingMapper {
 
     public int finnAntallUkerBehandlingsfrist(String behandlingType) {
         return finnBehandlingType(behandlingType).getBehandlingstidFristUker();
+    }
+
+    public String finnBehandlingTypeForDokument(Behandling behandling) {
+        return gjelderEndringsøknad(behandling) ?
+                ENDRINGSSØKNAD :
+                behandling.getBehandlingType();
+    }
+
+    private boolean gjelderEndringsøknad(Behandling behandling) {
+        return behandling.getBehandlingÅrsaker().stream()
+                .map(BehandlingÅrsak::getBehandlingArsakType)
+                .anyMatch(type -> BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode().equals(type));
     }
 
     public String utledBehandlingsTypeForPositivtVedtak(Behandling behandling) {

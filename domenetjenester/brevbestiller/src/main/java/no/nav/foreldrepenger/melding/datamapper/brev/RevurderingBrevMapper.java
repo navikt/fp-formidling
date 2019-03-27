@@ -92,5 +92,4 @@ public class RevurderingBrevMapper implements DokumentTypeMapper {
         FamiliehendelseMapper.finnTermindato(dto).ifPresent(fagType::setTerminDato);
     }
 
-
 }

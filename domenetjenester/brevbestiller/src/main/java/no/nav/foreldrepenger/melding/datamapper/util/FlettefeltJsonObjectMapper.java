@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.datamapper.mal;
+package no.nav.foreldrepenger.melding.datamapper.util;
 
 import java.io.IOException;
 

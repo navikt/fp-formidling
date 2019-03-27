@@ -71,7 +71,7 @@ public class KlageYtelsesvedtakOpphevetBrevMapper implements DokumentTypeMapper 
         fagType.setFritekst(hendelse.getFritekst());
         //TODO denne må kanskje legges til i dto for forhåndvisning.. dessverre
         fagType.setOpphevet(klageMapper.erOpphevet(klage));
-        fagType.setAntallUker(BigInteger.valueOf(behandlingMapper.finnAntallUkerBehandlingsfrist(behandling)));
+        fagType.setAntallUker(BigInteger.valueOf(behandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
         return fagType;
     }

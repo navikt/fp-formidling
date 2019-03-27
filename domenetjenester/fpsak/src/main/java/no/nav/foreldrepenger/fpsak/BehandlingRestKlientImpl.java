@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.Familiehendels
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
+import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 import no.nav.vedtak.konfig.KonfigVerdi;
 
@@ -97,6 +98,16 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsresultatEngangsstønadDto.class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente Beregningsresultat engangsstønad for behandling: " + hentBehandlingId(resourceLinkDtos));
+                });
+    }
+
+    @Override
+    public SoknadDto hentSoknad(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+        return resourceLinkDtos.stream()
+                .filter(dto -> "soknad".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, SoknadDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente Søknad for behandling: " + hentBehandlingId(resourceLinkDtos));
                 });
     }
 

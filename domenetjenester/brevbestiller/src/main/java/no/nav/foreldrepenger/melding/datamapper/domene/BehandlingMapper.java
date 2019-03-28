@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
-import static no.nav.foreldrepenger.melding.datamapper.DokumentMapperKonstanter.ENDRINGSSØKNAD;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.ENDRINGSSØKNAD;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.FØRSTEGANGSSØKNAD;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.MEDHOLD;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
@@ -45,7 +45,7 @@ public class BehandlingMapper {
 
     private boolean gjelderEndringsøknad(Behandling behandling) {
         return behandling.getBehandlingÅrsaker().stream()
-                .map(BehandlingÅrsak::getBehandlingArsakType)
+                .map(BehandlingÅrsak::getBehandlingÅrsakType)
                 .anyMatch(type -> BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode().equals(type));
     }
 

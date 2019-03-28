@@ -18,12 +18,12 @@ import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Søknad;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
-import no.nav.foreldrepenger.melding.datamapper.DokumentMapperKonstanter;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.InnhentingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.SøknadMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -45,7 +45,7 @@ public class InnhentOpplysningerBrevMapper implements DokumentTypeMapper {
             BehandlingType.REVURDERING.getKode(),
             BehandlingType.KLAGE.getKode(),
             BehandlingType.FØRSTEGANGSSØKNAD.getKode(),
-            DokumentMapperKonstanter.ENDRINGSSØKNAD
+            BehandlingTypeKonstanter.ENDRINGSSØKNAD
     ));
 
     private BrevParametere brevParametere;

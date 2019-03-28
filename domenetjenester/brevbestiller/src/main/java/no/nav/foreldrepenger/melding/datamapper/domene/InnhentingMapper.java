@@ -4,7 +4,7 @@ import java.util.Objects;
 
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
-import no.nav.foreldrepenger.melding.datamapper.DokumentMapperKonstanter;
+import no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.BehandlingsTypeKode;
 
 public class InnhentingMapper {
@@ -19,7 +19,7 @@ public class InnhentingMapper {
             return BehandlingsTypeKode.KLAGE;
         } else if (Objects.equals(vlKode, BehandlingType.REVURDERING.getKode())) {
             return BehandlingsTypeKode.REVURDERING;
-        } else if (Objects.equals(vlKode, DokumentMapperKonstanter.ENDRINGSSØKNAD)) {
+        } else if (Objects.equals(vlKode, BehandlingTypeKonstanter.ENDRINGSSØKNAD)) {
             return BehandlingsTypeKode.ENDRINGSSØKNAD;
         }
         throw DokumentMapperFeil.FACTORY.innhentDokumentasjonKreverGyldigBehandlingstype(vlKode).toException();

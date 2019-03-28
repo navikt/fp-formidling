@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.fpsak.InnsynRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.melding.behandling.InnsynResultatType;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Innsyn;
+import no.nav.foreldrepenger.melding.behandling.Innsyn;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.InnsynResultatTypeKode;
 

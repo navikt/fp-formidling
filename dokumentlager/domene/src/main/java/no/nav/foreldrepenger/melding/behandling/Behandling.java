@@ -107,4 +107,8 @@ public class Behandling {
     public void setOriginalBehandlingId(Long originalBehandlingId) {
         this.originalBehandlingId = originalBehandlingId;
     }
+
+    public boolean erRevurdering() {
+        return BehandlingType.REVURDERING.equals(getBehandlingType());
+    }
 }

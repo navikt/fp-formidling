@@ -5,7 +5,7 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.Søknad;
+import no.nav.foreldrepenger.melding.søknad.Søknad;
 
 @ApplicationScoped
 public class SøknadMapper {

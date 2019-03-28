@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
-import static no.nav.foreldrepenger.melding.behandling.klage.KlageAvvistÅrsak.IKKE_KONKRET;
-import static no.nav.foreldrepenger.melding.behandling.klage.KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK;
-import static no.nav.foreldrepenger.melding.behandling.klage.KlageAvvistÅrsak.IKKE_SIGNERT;
-import static no.nav.foreldrepenger.melding.behandling.klage.KlageAvvistÅrsak.KLAGER_IKKE_PART;
-import static no.nav.foreldrepenger.melding.behandling.klage.KlageAvvistÅrsak.KLAGET_FOR_SENT;
-import static no.nav.foreldrepenger.melding.behandling.klage.KlageAvvistÅrsak.KLAGE_UGYLDIG;
 import static no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper.formaterLovhjemler;
+import static no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak.IKKE_KONKRET;
+import static no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK;
+import static no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak.IKKE_SIGNERT;
+import static no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak.KLAGER_IKKE_PART;
+import static no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak.KLAGET_FOR_SENT;
+import static no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak.KLAGE_UGYLDIG;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,17 +23,15 @@ import no.nav.foreldrepenger.fpsak.KlageRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.klage.KlageAvvistÅrsak;
-import no.nav.foreldrepenger.melding.behandling.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.AvvistGrunnKode;
+import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
+import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 public class KlageMapper {
-
-
     public static Map<String, AvvistGrunnKode> avvistGrunnMap;
 
     static {
@@ -59,7 +57,6 @@ public class KlageMapper {
         this.kodeverkRepository = kodeverkRepository;
         this.klageRestKlient = klageRestKlient;
     }
-
 
     public Klage hentKlagebehandling(Behandling behandling) {
         KlagebehandlingDto klagebehandlingDto = klageRestKlient.hentKlagebehandling(new BehandlingIdDto(behandling.getId()));
@@ -112,5 +109,4 @@ public class KlageMapper {
         }
         return kodeverkRepository.finn(KlageVurdering.class, klageVurdering).equals(KlageVurdering.OPPHEVE_YTELSESVEDTAK);
     }
-
 }

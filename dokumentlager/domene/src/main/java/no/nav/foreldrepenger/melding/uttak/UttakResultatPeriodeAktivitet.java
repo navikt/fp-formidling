@@ -1,21 +1,23 @@
 package no.nav.foreldrepenger.melding.uttak;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class UttakResultatPeriodeAktivitet {
     private String trekkonto;
-    private String trekkdager;
+    private int trekkdager;
     private String tidsperiode;
     private String utbetalingsprosent;
     private String graderingInnvilget;
     private String arbeidsprosent;
-    private Object UttakResultatPeriode;
+    private UttakResultatPeriode uttakResultatPeriode;
+    private UttakAktivitet uttakAktivitet;
 
     public String getTrekkonto() {
         return trekkonto;
     }
 
-    public String getTrekkdager() {
+    public int getTrekkdager() {
         return trekkdager;
     }
 
@@ -35,7 +37,23 @@ public class UttakResultatPeriodeAktivitet {
         return arbeidsprosent;
     }
 
-    public Object getUttakResultatPeriode() {
-        return UttakResultatPeriode;
+    public UttakArbeidType getUttakArbeidType() {
+        return uttakAktivitet.getUttakArbeidType();
+    }
+
+    public String getArbeidsgiverIdentifikator() {
+        return uttakAktivitet.getArbeidsgiver().isPresent() ? uttakAktivitet.getArbeidsgiver().get().getIdentifikator() : null;
+    }
+
+    public String getArbeidsforholdId() {
+        return uttakAktivitet.getArbeidsforholdRef().isPresent() ? uttakAktivitet.getArbeidsforholdRef().get().getReferanse() : null;
+    }
+
+    public LocalDate getFom() {
+        return this.uttakResultatPeriode.getFom();
+    }
+
+    public LocalDate getTom() {
+        return this.uttakResultatPeriode.getTom();
     }
 }

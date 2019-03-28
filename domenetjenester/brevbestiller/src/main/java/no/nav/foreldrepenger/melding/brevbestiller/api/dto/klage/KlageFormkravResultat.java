@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
-import no.nav.foreldrepenger.melding.behandling.klage.KlageAvvistÅrsak;
+import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 
 public class KlageFormkravResultat {

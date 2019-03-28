@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.melding.aktør;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.melding.behandling.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 
 public class Familierelasjon {

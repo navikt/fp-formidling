@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.melding.behandling.klage.KlageAvvistÅrsak;
+import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.AvvistGrunnKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.AvvistGrunnType;
 

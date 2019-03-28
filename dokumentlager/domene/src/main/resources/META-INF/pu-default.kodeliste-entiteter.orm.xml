@@ -20,16 +20,16 @@
     <entity class="no.nav.foreldrepenger.melding.aktør.NavBrukerKjønn"/>
     <entity class="no.nav.foreldrepenger.melding.aktør.PersonstatusType"/>
     <entity class="no.nav.foreldrepenger.melding.geografisk.Poststed"/>
-    <entity class="no.nav.foreldrepenger.melding.behandling.aksjonspunkt.ReaktiveringStatus"/>
+    <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.ReaktiveringStatus"/>
     <entity class="no.nav.foreldrepenger.melding.geografisk.Region"/>
-    <entity class="no.nav.foreldrepenger.melding.behandling.personopplysning.SivilstandType"/>
-    <entity class="no.nav.foreldrepenger.melding.behandling.skjermlenke.SkjermlenkeType"/>
+    <entity class="no.nav.foreldrepenger.melding.personopplysning.SivilstandType"/>
+    <entity class="no.nav.foreldrepenger.melding.skjermlenke.SkjermlenkeType"/>
     <entity class="no.nav.foreldrepenger.melding.geografisk.Språkkode"/>
     <entity class="no.nav.foreldrepenger.melding.behandling.VariantFormat"/>
-    <entity class="no.nav.foreldrepenger.melding.behandling.aksjonspunkt.Venteårsak"/>
-    <entity class="no.nav.foreldrepenger.melding.behandling.aksjonspunkt.VurderÅrsak"/>
+    <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.Venteårsak"/>
+    <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.VurderÅrsak"/>
     <entity class="no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType"/>
     <entity class="no.nav.foreldrepenger.melding.historikk.HistorikkAktør"/>
     <entity class="no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak"/>
-    <entity class="no.nav.foreldrepenger.melding.behandling.klage.KlageVurdering"/>
+    <entity class="no.nav.foreldrepenger.melding.klage.KlageVurdering"/>
 </entity-mappings>

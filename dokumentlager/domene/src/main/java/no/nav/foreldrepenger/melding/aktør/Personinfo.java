@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.foreldrepenger.melding.behandling.personopplysning.SivilstandType;
+import no.nav.foreldrepenger.melding.personopplysning.SivilstandType;
 import no.nav.foreldrepenger.melding.geografisk.Landkoder;
 import no.nav.foreldrepenger.melding.geografisk.Region;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;

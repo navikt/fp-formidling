@@ -2,15 +2,33 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import java.util.Optional;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataAdopsjonDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataFodselDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataOmsorgDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 
+@ApplicationScoped
 public class FamiliehendelseMapper {
+
+    private BehandlingRestKlient behandlingRestKlient;
+
+    public FamiliehendelseMapper() {
+        //CDI
+    }
+
+    public FamiliehendelseMapper(BehandlingRestKlient behandlingRestKlient) {
+        this.behandlingRestKlient = behandlingRestKlient;
+    }
+
+    public FamiliehendelseDto hentFamiliehendelse(Behandling behandling) {
+        return behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinkDtos());
+    }
 
     public static int utledAntallBarnFraDto(FamiliehendelseDto familiehendelseDto) {
         if (familiehendelseDto instanceof AvklartDataAdopsjonDto) {

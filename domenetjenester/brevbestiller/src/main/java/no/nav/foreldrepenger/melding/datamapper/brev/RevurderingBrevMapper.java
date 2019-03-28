@@ -8,7 +8,6 @@ import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
@@ -35,7 +34,7 @@ import no.nav.vedtak.util.StringUtils;
 @Named(DokumentMalType.REVURDERING_DOK)
 public class RevurderingBrevMapper implements DokumentTypeMapper {
 
-    private BehandlingRestKlient behandlingRestKlient;
+    private FamiliehendelseMapper familiehendelseMapper;
     private BrevParametere brevParametere;
 
     public RevurderingBrevMapper() {
@@ -43,9 +42,9 @@ public class RevurderingBrevMapper implements DokumentTypeMapper {
     }
 
     @Inject
-    public RevurderingBrevMapper(BehandlingRestKlient behandlingRestKlient,
+    public RevurderingBrevMapper(FamiliehendelseMapper familiehendelseMapper,
                                  BrevParametere brevParametere) {
-        this.behandlingRestKlient = behandlingRestKlient;
+        this.familiehendelseMapper = familiehendelseMapper;
         this.brevParametere = brevParametere;
     }
 
@@ -87,7 +86,7 @@ public class RevurderingBrevMapper implements DokumentTypeMapper {
     }
 
     private void mapFamiliehendelse(FagType fagType, Behandling behandling) {
-        FamiliehendelseDto dto = behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinkDtos());
+        FamiliehendelseDto dto = familiehendelseMapper.hentFamiliehendelse(behandling);
         fagType.setAntallBarn(BigInteger.valueOf(FamiliehendelseMapper.utledAntallBarnFraDto(dto)));
         FamiliehendelseMapper.finnTermindato(dto).ifPresent(fagType::setTerminDato);
     }

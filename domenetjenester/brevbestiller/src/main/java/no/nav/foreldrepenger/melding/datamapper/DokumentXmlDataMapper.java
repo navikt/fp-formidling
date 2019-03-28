@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.datamapper;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.CDI;
@@ -41,6 +42,11 @@ public class DokumentXmlDataMapper {
     private KodeverkRepository kodeverkRepository;
     private BrevParametere brevParametere;
 
+    private Set<String> forlengetBrevMaler = Set.of(DokumentMalType.FORLENGET_MEDL_DOK,
+            DokumentMalType.FORLENGET_TIDLIG_SOK,
+            DokumentMalType.FORLENGET_OPPTJENING,
+            DokumentMalType.FORLENGET_DOK);
+
     public DokumentXmlDataMapper() {
         //CDI
     }
@@ -75,7 +81,11 @@ public class DokumentXmlDataMapper {
     }
 
     private DokumentTypeMapper velgDokumentMapper(DokumentMalType dokumentMalType) {
-        return CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(dokumentMalType.getKode())).get();
+        String faktiskDokumentmal = dokumentMalType.getKode();
+        if (forlengetBrevMaler.contains(dokumentMalType.getKode())) {
+            faktiskDokumentmal = DokumentMalType.FORLENGET_DOK;
+        }
+        return CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(faktiskDokumentmal)).get();
     }
 
     public FellesType mapFellesType(final DokumentFelles dokumentFelles) {

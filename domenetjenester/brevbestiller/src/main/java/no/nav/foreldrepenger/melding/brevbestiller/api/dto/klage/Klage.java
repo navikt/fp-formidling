@@ -4,7 +4,6 @@ import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 
 public class Klage {
-
     private KlageVurderingResultat klageVurderingResultatNFP;
     private KlageVurderingResultat klageVurderingResultatNK;
     private KlageFormkravResultat formkravKA;

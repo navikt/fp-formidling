@@ -12,7 +12,6 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
-import no.nav.foreldrepenger.fpsak.KlageRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
@@ -38,7 +37,6 @@ public class KlageYtelsesvedtakOpphevetBrevMapper implements DokumentTypeMapper 
 
     private BrevParametere brevParametere;
     private BehandlingMapper behandlingMapper;
-    private KlageRestKlient klageRestKlient;
     private KlageMapper klageMapper;
 
     public KlageYtelsesvedtakOpphevetBrevMapper() {
@@ -47,11 +45,9 @@ public class KlageYtelsesvedtakOpphevetBrevMapper implements DokumentTypeMapper 
     @Inject
     public KlageYtelsesvedtakOpphevetBrevMapper(BrevParametere brevParametere,
                                                 BehandlingMapper behandlingMapper,
-                                                KlageRestKlient klageRestKlient,
                                                 KlageMapper klageMapper) {
         this.brevParametere = brevParametere;
         this.behandlingMapper = behandlingMapper;
-        this.klageRestKlient = klageRestKlient;
         this.klageMapper = klageMapper;
     }
 

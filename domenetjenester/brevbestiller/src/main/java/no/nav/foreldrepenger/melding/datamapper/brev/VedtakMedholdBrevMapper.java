@@ -13,7 +13,6 @@ import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
-import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -27,7 +26,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.ObjectFa
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.OpphavTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.VedtakMedholdConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.YtelseTypeKode;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -53,8 +51,7 @@ public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
         Klage klage = klageMapper.hentKlagebehandling(behandling);
         FagType fagType = mapFagType(dokumentHendelse, klage);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapTilBrevDataType(fellesType, fagType);
-        String brevXmlMedNamespace = JaxbHelper.marshalJaxb(VedtakMedholdConstants.JAXB_CLASS, brevdataTypeJAXBElement);
-        return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
+        return JaxbHelper.marshalNoNamespaceXML(VedtakMedholdConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
     private FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage) {

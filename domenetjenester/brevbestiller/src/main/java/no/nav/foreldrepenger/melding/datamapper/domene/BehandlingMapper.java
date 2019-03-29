@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
+import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
@@ -20,13 +22,20 @@ import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 public class BehandlingMapper {
 
     private KodeverkRepository kodeverkRepository;
+    private BehandlingRestKlient behandlingRestKlient;
 
     public BehandlingMapper() {
     }
 
     @Inject
-    public BehandlingMapper(KodeverkRepository kodeverkRepository) {
+    public BehandlingMapper(KodeverkRepository kodeverkRepository,
+                            BehandlingRestKlient behandlingRestKlient) {
         this.kodeverkRepository = kodeverkRepository;
+        this.behandlingRestKlient = behandlingRestKlient;
+    }
+
+    public Behandling hentBehandling(long behandlingId) {
+        return new Behandling(behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId)));
     }
 
     public BehandlingType finnBehandlingType(String behandlingType) {

@@ -17,8 +17,10 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingRelLinkPayloadDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDto;
+import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
@@ -119,6 +121,26 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 .findFirst().flatMap(link -> hentDtoFraLink(link, InntektArbeidYtelseDto.class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente IAY dto for behandling: " + hentBehandlingId(resourceLinkDtos));
+                });
+    }
+
+    @Override
+    public KlagebehandlingDto hentKlagebehandling(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+        return resourceLinkDtos.stream()
+                .filter(dto -> "klage-vurdering".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, KlagebehandlingDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente klage for behandling: " + hentBehandlingId(resourceLinkDtos));
+                });
+    }
+
+    @Override
+    public InnsynsbehandlingDto hentInnsynsbehandling(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+        return resourceLinkDtos.stream()
+                .filter(dto -> "innsyn".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, InnsynsbehandlingDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente innsyn for behandling: " + hentBehandlingId(resourceLinkDtos));
                 });
     }
 

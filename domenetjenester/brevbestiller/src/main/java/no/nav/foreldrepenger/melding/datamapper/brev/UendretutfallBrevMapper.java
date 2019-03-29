@@ -4,6 +4,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
@@ -28,11 +31,10 @@ public class UendretutfallBrevMapper implements DokumentTypeMapper {
     }
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException {
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException, XMLStreamException, SAXException {
         FagType fagType = mapFagType(hendelse);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
-        String brevXmlMedNamespace = JaxbHelper.marshalJaxb(UendretutfallConstants.JAXB_CLASS, brevdataTypeJAXBElement);
-        return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
+        return JaxbHelper.marshalNoNamespaceXML(UendretutfallConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
     FagType mapFagType(DokumentHendelse hendelse) {

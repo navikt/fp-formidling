@@ -13,7 +13,6 @@ import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Innsyn;
-import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.InnsynMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -44,16 +43,15 @@ public class InnsynskravSvarBrevMapper implements DokumentTypeMapper {
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        FagType fagType = mapFagType(dokumentHendelse, behandling);
+        Innsyn innsyn = innsynMapper.hentInnsyn(behandling);
+        FagType fagType = mapFagType(dokumentHendelse, behandling, innsyn);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
-        String brevXmlMedNamespace = JaxbHelper.marshalJaxb(InnsynConstants.JAXB_CLASS, brevdataTypeJAXBElement);
-        return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
+        return JaxbHelper.marshalNoNamespaceXML(InnsynConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling) {
+    private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, Innsyn innsyn) {
         FagType fagType = new FagType();
         fagType.setFritekst(dokumentHendelse.getFritekst());
-        Innsyn innsyn = innsynMapper.hentInnsyn(behandling.getId());
         fagType.setInnsynResultatType(InnsynMapper.mapInnsynResultatKode(innsyn.getInnsynResultatType()));
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUkerInnsyn()));

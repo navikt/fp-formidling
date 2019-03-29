@@ -47,8 +47,7 @@ public class InnsynskravSvarBrevMapper implements DokumentTypeMapper {
         Innsyn innsyn = innsynMapper.hentInnsyn(behandling.getId());
         FagType fagType = mapFagType(dokumentHendelse, behandling, innsyn);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
-        String brevXmlMedNamespace = JaxbHelper.marshalJaxb(InnsynConstants.JAXB_CLASS, brevdataTypeJAXBElement);
-        return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
+        return JaxbHelper.marshalNoNamespaceXML(InnsynConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
     private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, Innsyn innsyn) {

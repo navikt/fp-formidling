@@ -7,12 +7,14 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
-import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.FamiliehendelseMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -49,12 +51,11 @@ public class RevurderingBrevMapper implements DokumentTypeMapper {
     }
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException {
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException, XMLStreamException, SAXException {
         FamilieHendelse familieHendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
         FagType fagType = mapFagType(fellesType, hendelse, behandling, familieHendelse);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
-        String brevXmlMedNamespace = JaxbHelper.marshalJaxb(RevurderingConstants.JAXB_CLASS, brevdataTypeJAXBElement);
-        return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
+        return JaxbHelper.marshalNoNamespaceXML(RevurderingConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
     private FagType mapFagType(FellesType fellesType, DokumentHendelse hendelse, Behandling behandling, FamilieHendelse familieHendelse) {

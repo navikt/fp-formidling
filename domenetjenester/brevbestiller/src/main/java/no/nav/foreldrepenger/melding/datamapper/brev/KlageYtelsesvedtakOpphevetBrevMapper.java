@@ -8,15 +8,15 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.fpsak.KlageRestKlient;
-import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
-import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
@@ -56,12 +56,11 @@ public class KlageYtelsesvedtakOpphevetBrevMapper implements DokumentTypeMapper 
     }
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException {
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         Klage klage = klageMapper.hentKlagebehandling(behandling);
         FagType fagType = mapFagType(dokumentHendelse, behandling, klage);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
-        String brevXmlMedNamespace = JaxbHelper.marshalJaxb(KlageYtelsesvedtakOpphevetConstants.JAXB_CLASS, brevdataTypeJAXBElement);
-        return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
+        return JaxbHelper.marshalNoNamespaceXML(KlageYtelsesvedtakOpphevetConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
 

@@ -11,10 +11,13 @@ import java.util.Optional;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
+import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
@@ -38,7 +41,20 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 
 @ApplicationScoped
 public class BeregningsresultatMapper {
+
+    private BehandlingRestKlient behandlingRestKlient;
+
     public BeregningsresultatMapper() {
+        //CDI
+    }
+
+    @Inject
+    public BeregningsresultatMapper(BehandlingRestKlient behandlingRestKlient) {
+        this.behandlingRestKlient = behandlingRestKlient;
+    }
+
+    public BeregningsresultatES hentBeregningsresultatES(Behandling behandling) {
+        return new BeregningsresultatES(behandlingRestKlient.hentBeregningsresultatEngangsstønad(behandling.getResourceLinkDtos()));
     }
 
     void mapDataRelatertTilBeregningsresultat(Behandling behandling, BeregningsresultatFP beregningsresultat, DokumentTypeMedPerioderDto dto) {

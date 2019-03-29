@@ -57,15 +57,15 @@ public class InntektsmeldingFørSøknadBrevMapper implements DokumentTypeMapper 
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        FagType fagType = mapFagType(behandling);
+        InntektArbeidYtelse iay = iayMapper.hentInntektArbeidYtelse(behandling);
+        FagType fagType = mapFagType(behandling, iay);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InntektsmeldingForTidligConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(Behandling behandling) {
+    private FagType mapFagType(Behandling behandling, InntektArbeidYtelse iay) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(mapToXmlBehandlingsType(behandling.getBehandlingType()));
-        InntektArbeidYtelse iay = iayMapper.hentInntektArbeidYtelse(behandling);
         Inntektsmelding inntektsmelding = IAYMapper.hentVillkårligInntektsmelding(iay);
         fagType.setSokAntallUkerFor(BigInteger.valueOf(brevParametere.getSøkAntallUker()));
         fagType.setArbeidsgiverNavn(inntektsmelding.getArbeidsgiver());

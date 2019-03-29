@@ -44,16 +44,16 @@ public class InnsynskravSvarBrevMapper implements DokumentTypeMapper {
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        FagType fagType = mapFagType(dokumentHendelse, behandling);
+        Innsyn innsyn = innsynMapper.hentInnsyn(behandling.getId());
+        FagType fagType = mapFagType(dokumentHendelse, behandling, innsyn);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         String brevXmlMedNamespace = JaxbHelper.marshalJaxb(InnsynConstants.JAXB_CLASS, brevdataTypeJAXBElement);
         return DokumentTypeFelles.fjernNamespaceFra(brevXmlMedNamespace);
     }
 
-    private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling) {
+    private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, Innsyn innsyn) {
         FagType fagType = new FagType();
         fagType.setFritekst(dokumentHendelse.getFritekst());
-        Innsyn innsyn = innsynMapper.hentInnsyn(behandling.getId());
         fagType.setInnsynResultatType(InnsynMapper.mapInnsynResultatKode(innsyn.getInnsynResultatType()));
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUkerInnsyn()));

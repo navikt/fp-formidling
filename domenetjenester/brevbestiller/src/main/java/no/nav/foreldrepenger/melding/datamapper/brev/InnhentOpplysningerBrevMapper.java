@@ -66,26 +66,22 @@ public class InnhentOpplysningerBrevMapper implements DokumentTypeMapper {
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        FagType fagType = mapFagType(dokumentFelles, dokumentHendelse, behandling);
+        Søknad søknad = søknadMapper.hentSøknad(behandling);
+        FagType fagType = mapFagType(dokumentFelles, dokumentHendelse, behandling, søknad);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnhentopplysningerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) {
+    private FagType mapFagType(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling, Søknad søknad) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(mapBehandlingType(behandling));
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
-        mapSøknad(fagType, behandling);
+        fagType.setSoknadDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknad.getSøknadsdato()));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
         fagType.setFritekst(dokumentHendelse.getFritekst());
         return fagType;
-    }
-
-    private void mapSøknad(FagType fagType, Behandling behandling) {
-        Søknad søknad = søknadMapper.hentSøknad(behandling);
-        fagType.setSoknadDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknad.getSøknadsdato()));
     }
 
     private BehandlingsTypeKode mapBehandlingType(Behandling behandling) {

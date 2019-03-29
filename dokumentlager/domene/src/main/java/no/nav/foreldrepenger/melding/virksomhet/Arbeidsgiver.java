@@ -20,4 +20,16 @@ public class Arbeidsgiver {
         }
         return virksomhet.getOrgnr();
     }
+
+    public boolean erAktørId() {
+        return this.arbeidsgiverAktørId != null;
+    }
+
+    public AktørId getAktørId() {
+        return arbeidsgiverAktørId;
+    }
+
+    public boolean getErVirksomhet() {
+        return this.virksomhet != null;
+    }
 }

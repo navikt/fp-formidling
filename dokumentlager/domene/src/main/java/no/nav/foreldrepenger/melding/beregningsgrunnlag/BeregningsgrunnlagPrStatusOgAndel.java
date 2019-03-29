@@ -1,36 +1,40 @@
 package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 
-import java.util.Collections;
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
+import no.nav.foreldrepenger.melding.inntektarbeidytelse.RelatertYtelseType;
+import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public class BeregningsgrunnlagPrStatusOgAndel {
-    private int dagsatsArbeidsgiver;
-    private int dagsatsBruker;
+    private Long dagsatsArbeidsgiver;
+    private Long dagsatsBruker;
     private String aktivitetStatus; // Kodeliste.AktivitetStatus
     private String orginalDagsatsFraTilstøtendeYtelse;
-    private int bruttoPrÅr;
-    private int besteberegningPrÅr;
-    private int overstyrtPrÅr;
-    private int pgiSnitt;
-    private int pgi1;
-    private int pgi2;
-    private int pgi3;
+    private BigDecimal bruttoPrÅr;
+    private BigDecimal besteberegningPrÅr;
+    private BigDecimal overstyrtPrÅr;
+    private BigDecimal pgiSnitt;
+    private BigDecimal pgi1;
+    private BigDecimal pgi2;
+    private BigDecimal pgi3;
+    private Boolean nyIArbeidslivet;
     private String opptjeningAktivitetType; // Kodeliste.OpptjeningAktivitetType
+    private RelatertYtelseType ytelse;
+    private OpptjeningAktivitetType arbeidsforholdType;
+    private DatoIntervall beregningsperiode;
     private BGAndelArbeidsforhold bgAndelArbeidsforhold;
 
-    private DatoIntervall beregningsperiode;
-
-    public int getDagsatsArbeidsgiver() {
+    public Long getDagsatsArbeidsgiver() {
         return dagsatsArbeidsgiver;
     }
 
-    public int getDagsatsBruker() {
+    public Long getDagsatsBruker() {
         return dagsatsBruker;
     }
 
@@ -42,36 +46,44 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         return orginalDagsatsFraTilstøtendeYtelse;
     }
 
-    public int getBruttoPrÅr() {
+    public BigDecimal getBruttoPrÅr() {
         return bruttoPrÅr;
     }
 
-    public int getBesteberegningPrÅr() {
+    public BigDecimal getBesteberegningPrÅr() {
         return besteberegningPrÅr;
     }
 
-    public int getOverstyrtPrÅr() {
+    public BigDecimal getOverstyrtPrÅr() {
         return overstyrtPrÅr;
     }
 
-    public int getPgiSnitt() {
+    public BigDecimal getPgiSnitt() {
         return pgiSnitt;
     }
 
-    public int getPgi1() {
+    public BigDecimal getPgi1() {
         return pgi1;
     }
 
-    public int getPgi2() {
+    public BigDecimal getPgi2() {
         return pgi2;
     }
 
-    public int getPgi3() {
+    public BigDecimal getPgi3() {
         return pgi3;
     }
 
     public String getOpptjeningAktivitetType() {
         return opptjeningAktivitetType;
+    }
+
+    public RelatertYtelseType getYtelse() {
+        return ytelse;
+    }
+
+    public OpptjeningAktivitetType getArbeidsforholdType() {
+        return arbeidsforholdType;
     }
 
     public Optional<BGAndelArbeidsforhold> getBgAndelArbeidsforhold() {
@@ -90,5 +102,27 @@ public class BeregningsgrunnlagPrStatusOgAndel {
             return Objects.equals(this.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver), arbeidsgiver);
         }
         return Objects.equals(this.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsforholdRef), arbeidsforholdRef);
+    }
+
+    public Long getDagsats() {
+        if (dagsatsBruker == null) {
+            return dagsatsArbeidsgiver;
+        }
+        if (dagsatsArbeidsgiver == null) {
+            return dagsatsBruker;
+        }
+        return dagsatsBruker + dagsatsArbeidsgiver;
+    }
+
+    public LocalDate getBeregningsperiodeFom() {
+        return beregningsperiode != null ? beregningsperiode.getFomDato() : null;
+    }
+
+    public LocalDate getBeregningsperiodeTom() {
+        return beregningsperiode != null ? beregningsperiode.getTomDato() : null;
+    }
+
+    public Boolean getNyIArbeidslivet() {
+        return nyIArbeidslivet;
     }
 }

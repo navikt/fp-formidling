@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import java.util.Optional;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -53,13 +51,13 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         BeregningsresultatES beregningsresultat = beregningsresultatMapper.hentBeregningsresultatES(behandling);
-        Optional<BeregningsresultatES> originaltBeregningsresultat = originaltBeregningsresultat(behandling);
+        BeregningsresultatES originaltBeregningsresultat = originaltBeregningsresultat(behandling);
         FagType fagType = mapFagType(behandling, dokumentFelles, beregningsresultat, originaltBeregningsresultat);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnvilgetConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(Behandling behandling, DokumentFelles dokumentFelles, BeregningsresultatES beregningsresultat, Optional<BeregningsresultatES> originaltBeregningsresultat) {
+    private FagType mapFagType(Behandling behandling, DokumentFelles dokumentFelles, BeregningsresultatES beregningsresultat, BeregningsresultatES originaltBeregningsresultat) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(fra(behandlingMapper.utledBehandlingsTypeForPositivtVedtak(behandling)));
         fagType.setBehandlingsresultat(lagBehandlingResultatType(beregningsresultat, originaltBeregningsresultat));
@@ -69,20 +67,20 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
         return fagType;
     }
 
-    private Optional<BeregningsresultatES> originaltBeregningsresultat(Behandling behandling) {
+    private BeregningsresultatES originaltBeregningsresultat(Behandling behandling) {
         if (behandling.getOriginalBehandlingId() != null && behandling.getOriginalBehandlingId() != behandling.getId()) {
             Behandling originalBehandling = behandlingMapper.hentBehandling(behandling.getOriginalBehandlingId());
-            return Optional.of(beregningsresultatMapper.hentBeregningsresultatES(originalBehandling));
+            return beregningsresultatMapper.hentBeregningsresultatES(originalBehandling);
         }
-        return Optional.empty();
+        return null;
     }
 
-    private BehandlingsresultatType lagBehandlingResultatType(BeregningsresultatES beregningsresultat, Optional<BeregningsresultatES> originaltBeregningsresultat) {
+    private BehandlingsresultatType lagBehandlingResultatType(BeregningsresultatES beregningsresultat, BeregningsresultatES originaltBeregningsresultat) {
         BehandlingsresultatType behandlingsresultatType = new BehandlingsresultatType();
         behandlingsresultatType.setBelop(beregningsresultat.getBeløp());
-        originaltBeregningsresultat.ifPresent(orginalt -> {
-            behandlingsresultatType.setDifferanse((float) Math.abs(beregningsresultat.getBeløp() - originaltBeregningsresultat.get().getBeløp()));
-        });
+        if (originaltBeregningsresultat != null) {
+            behandlingsresultatType.setDifferanse((float) Math.abs(beregningsresultat.getBeløp() - originaltBeregningsresultat.getBeløp()));
+        }
         return behandlingsresultatType;
     }
 

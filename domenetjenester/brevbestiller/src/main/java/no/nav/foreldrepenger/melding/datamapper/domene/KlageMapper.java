@@ -19,8 +19,7 @@ import java.util.TreeSet;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpsak.KlageRestKlient;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
+import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
@@ -45,7 +44,7 @@ public class KlageMapper {
     }
 
     private KodeverkRepository kodeverkRepository;
-    private KlageRestKlient klageRestKlient;
+    private BehandlingRestKlient behandlingRestKlient;
 
     public KlageMapper() {
         //CDO
@@ -53,13 +52,13 @@ public class KlageMapper {
 
     @Inject
     public KlageMapper(KodeverkRepository kodeverkRepository,
-                       KlageRestKlient klageRestKlient) {
+                       BehandlingRestKlient behandlingRestKlient) {
         this.kodeverkRepository = kodeverkRepository;
-        this.klageRestKlient = klageRestKlient;
+        this.behandlingRestKlient = behandlingRestKlient;
     }
 
     public Klage hentKlagebehandling(Behandling behandling) {
-        KlagebehandlingDto klagebehandlingDto = klageRestKlient.hentKlagebehandling(new BehandlingIdDto(behandling.getId()));
+        KlagebehandlingDto klagebehandlingDto = behandlingRestKlient.hentKlagebehandling(behandling.getResourceLinkDtos());
         return Klage.fraDto(klagebehandlingDto, kodeverkRepository);
     }
 

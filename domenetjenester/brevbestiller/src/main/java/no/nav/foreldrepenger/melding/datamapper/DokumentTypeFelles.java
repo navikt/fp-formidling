@@ -92,16 +92,4 @@ public class DokumentTypeFelles {
             throw FeilFactory.create(DokumentBestillerFeil.class).datokonverteringsfeil(datoString, e).toException();
         }
     }
-
-    public static String fjernNamespaceFra(String xml) {
-        return xml.replaceAll("(<\\?[^<]*\\?>)?", ""). /* remove preamble */
-                replaceAll(" xmlns.*?(\"|\').*?(\"|\')", "") /* remove xmlns declaration */
-                .replaceAll("(<)(\\w+:)(.*?>)", "$1$3") /* remove opening tag prefix */
-                .replaceAll("(</)(\\w+:)(.*?>)", "$1$3"); /* remove closing tags prefix */
-    }
-
-    // For å få riktig formateing på teksten som ble lagret som JSON i databasen
-    public static String formaterStrukturertVerdiEtterLagringSomJson(String strukturertVerdi) {
-        return strukturertVerdi.replaceAll("(\\\\r)?\\\\n", "\n").replaceAll("^\"|\"$", "");
-    }
 }

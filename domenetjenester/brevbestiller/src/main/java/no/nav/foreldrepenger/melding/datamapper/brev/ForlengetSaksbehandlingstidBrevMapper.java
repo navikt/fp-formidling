@@ -12,7 +12,6 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
-import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
@@ -20,6 +19,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.FamiliehendelseMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.BrevdataType;
@@ -55,16 +55,16 @@ public class ForlengetSaksbehandlingstidBrevMapper implements DokumentTypeMapper
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        FagType fagType = mapFagType(dokumentHendelse, behandling, dokumentFelles);
+        FamilieHendelse familieHendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
+        FagType fagType = mapFagType(dokumentHendelse, behandling, dokumentFelles, familieHendelse);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(ForlengetConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
 
     }
 
-    private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentFelles dokumentFelles) {
+    private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentFelles dokumentFelles, FamilieHendelse familieHendelse) {
         FagType fagType = new FagType();
-        FamiliehendelseDto familiehendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
-        fagType.setAntallBarn(BigInteger.valueOf(FamiliehendelseMapper.utledAntallBarnFraDto(familiehendelse)));
+        fagType.setAntallBarn(BigInteger.valueOf(familieHendelse.getAntallBarn()));
         fagType.setBehandlingsfristUker(BigInteger.valueOf(behandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setVariant(mapVariant(dokumentHendelse, behandling));

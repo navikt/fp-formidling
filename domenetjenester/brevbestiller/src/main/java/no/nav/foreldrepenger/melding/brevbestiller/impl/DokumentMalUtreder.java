@@ -38,9 +38,10 @@ class DokumentMalUtreder {
             return hendelse.getDokumentMalType();
         }
         if (hendelse.isGjelderVedtak()) {
+            //TODO     public Long lagDokumentData(Behandlingsresultat behandlingsresultat, i FPSAK, LagDokumentData.java:35
             return utledVedtaksbrev(behandling, hendelse);
         }
-        throw new IllegalStateException("Klarer ikke utlede dokumentmal");
+        throw new IllegalStateException("Klarer ikke utlede dokumentmal for behandling: " + behandling.getId());
     }
 
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {

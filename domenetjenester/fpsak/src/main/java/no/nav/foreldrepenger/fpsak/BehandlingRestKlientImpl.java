@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingRelLinkPayloadDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
+import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
@@ -108,6 +109,16 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 .findFirst().flatMap(link -> hentDtoFraLink(link, SoknadDto.class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente Søknad for behandling: " + hentBehandlingId(resourceLinkDtos));
+                });
+    }
+
+    @Override
+    public InntektArbeidYtelseDto hentInntektArbeidYtelseDto(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+        return resourceLinkDtos.stream()
+                .filter(dto -> "inntekt-arbeid-ytelse".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, InntektArbeidYtelseDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente IAY dto for behandling: " + hentBehandlingId(resourceLinkDtos));
                 });
     }
 

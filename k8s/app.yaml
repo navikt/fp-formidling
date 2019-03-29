@@ -105,8 +105,8 @@ spec:
       #Dokumenthendelse
     - name: KAFKA_DOKUMENTHENDELSE_SCHEMA_REGISTRY_URL
       value: kafka.dokumenthendelse.schema.registry.url
-    - name: KAFKA_DOKUMENTHENDELSE_GROUP_ID_CONFIG
-      value: kafka.dokumenthendelse.group.id.config
+    - name: KAFKA_DOKUMENTHENDELSE_GROUP_ID
+      value: kafka.dokumenthendelse.group.id
     - name: KAFKA_DOKUMENTHENDELSE_TOPIC
       value: kafka.dokumenthendelse.topic
     #DokumentHistorikk

@@ -6,7 +6,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
@@ -37,40 +36,32 @@ class DokumentMalUtreder {
         this.klageMapper = klageMapper;
     }
 
+    private static boolean erKunEndringIFordelingAvYtelsen(Behandlingsresultat behandlingsresultat) {
+        return behandlingsresultat.getKonsekvenserForYtelsen().contains(KonsekvensForYtelsen.ENDRING_I_FORDELING_AV_YTELSEN.getKode())
+                && behandlingsresultat.getKonsekvenserForYtelsen().size() == 1;
+    }
+
     private DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
-        if (erInnvilget(behandling)) {
+        if (behandling.getBehandlingsresultat().erInnvilget()) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.POSITIVT_VEDTAK_DOK);
         }
         return null;
     }
 
     private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
-        if (innvilgetForeldrepenger(behandling)) {
+        if (innvilgetForeldrepenger(behandling.getBehandlingsresultat())) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK);
         }
         //TODO
         return null;
     }
 
-    private boolean innvilgetForeldrepenger(Behandling behandling) {
-        return erInnvilget(behandling) || skalBenytteInnvilgelsesbrev(behandling);
+    private boolean innvilgetForeldrepenger(Behandlingsresultat behandlingsresultat) {
+        return behandlingsresultat.erInnvilget() || skalBenytteInnvilgelsesbrev(behandlingsresultat);
     }
 
-    private boolean erInnvilget(Behandling behandling) {
-        return BehandlingResultatType.INNVILGET.getKode().equals(behandling.getBehandlingsresultat().getBehandligResultatType());
-    }
-
-    private boolean skalBenytteInnvilgelsesbrev(Behandling behandling) {
-        return foreldrepengerEndret(behandling) && !erKunEndringIFordelingAvYtelsen(behandling.getBehandlingsresultat());
-    }
-
-    private boolean erKunEndringIFordelingAvYtelsen(Behandlingsresultat behandlingsresultat) {
-        return behandlingsresultat.getKonsekvenserForYtelsen().contains(KonsekvensForYtelsen.ENDRING_I_FORDELING_AV_YTELSEN.getKode())
-                && behandlingsresultat.getKonsekvenserForYtelsen().size() == 1;
-    }
-
-    private boolean foreldrepengerEndret(Behandling behandling) {
-        return BehandlingResultatType.FORELDREPENGER_ENDRET.getKode().equals(behandling.getBehandlingsresultat().getBehandligResultatType());
+    private boolean skalBenytteInnvilgelsesbrev(Behandlingsresultat behandlingsresultat) {
+        return behandlingsresultat.erEndretForeldrepenger() && !erKunEndringIFordelingAvYtelsen(behandlingsresultat);
     }
 
     DokumentMalType utredDokumentmal(Behandling behandling, DokumentHendelse hendelse) {
@@ -86,6 +77,7 @@ class DokumentMalUtreder {
 
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
         //TODO aleksander - Fpsak kan sannsynligvis selv utlede hvilket vedtadsbrev som bestilles
+        //TODO aleksander - mange revurdering uendret utfall
         if (behandling.getBehandlingsresultat().getVedtaksbrev().equals(Vedtaksbrev.FRITEKST.getKode())) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.FRITEKST_DOK);
         }

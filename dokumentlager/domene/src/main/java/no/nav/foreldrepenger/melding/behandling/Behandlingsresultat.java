@@ -55,4 +55,14 @@ public class Behandlingsresultat {
     public List<String> getKonsekvenserForYtelsen() {
         return konsekvenserForYtelsen;
     }
+
+
+    public boolean erInnvilget() {
+        return BehandlingResultatType.INNVILGET.getKode().equals(behandligResultatType);
+    }
+
+    public boolean erEndretForeldrepenger() {
+        return BehandlingResultatType.FORELDREPENGER_ENDRET.getKode().equals(behandligResultatType);
+    }
+
 }

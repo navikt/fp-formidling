@@ -49,11 +49,15 @@ class DokumentMalUtreder {
     }
 
     private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
-        if (innvilgetForeldrepenger(behandling.getBehandlingsresultat())) {
+        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        if (innvilgetForeldrepenger(behandlingsresultat)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK);
+        } else if (behandlingsresultat.erAvslått()) {
+            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.AVSLAG_FORELDREPENGER_DOK);
+        } else if (behandlingsresultat.erOpphørt()) {
+            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.OPPHØR_DOK);
         }
-        //TODO
-        return null;
+        throw new IllegalStateException();
     }
 
     private boolean innvilgetForeldrepenger(Behandlingsresultat behandlingsresultat) {

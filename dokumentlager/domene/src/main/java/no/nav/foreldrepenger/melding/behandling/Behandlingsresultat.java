@@ -11,7 +11,7 @@ public class Behandlingsresultat {
     private String fritekstbrev;
     private String overskrift;
     private String vedtaksbrev;
-    private String behandligResultatType;
+    private String behandlingResultatType;
     private String avslagarsakFritekst;
     private List<String> konsekvenserForYtelsen = new ArrayList<>(); //Kode BehandlingsresultatKonsekvensForYtelsen
 
@@ -25,7 +25,7 @@ public class Behandlingsresultat {
             this.avslagsårsak = dto.getAvslagsarsak().kode;
         }
         if (dto.getType() != null) {
-            this.behandligResultatType = dto.getType().kode;
+            this.behandlingResultatType = dto.getType().kode;
         }
         this.fritekstbrev = dto.getFritekstbrev();
         this.overskrift = dto.getOverskrift();
@@ -36,8 +36,8 @@ public class Behandlingsresultat {
         }
     }
 
-    public String getBehandligResultatType() {
-        return behandligResultatType;
+    public String getBehandlingResultatType() {
+        return behandlingResultatType;
     }
 
     public String getVedtaksbrev() {
@@ -58,11 +58,19 @@ public class Behandlingsresultat {
 
 
     public boolean erInnvilget() {
-        return BehandlingResultatType.INNVILGET.getKode().equals(behandligResultatType);
+        return BehandlingResultatType.INNVILGET.getKode().equals(behandlingResultatType);
     }
 
     public boolean erEndretForeldrepenger() {
-        return BehandlingResultatType.FORELDREPENGER_ENDRET.getKode().equals(behandligResultatType);
+        return BehandlingResultatType.FORELDREPENGER_ENDRET.getKode().equals(behandlingResultatType);
+    }
+
+    public boolean erAvslått() {
+        return BehandlingResultatType.AVSLÅTT.getKode().equals(behandlingResultatType);
+    }
+
+    public boolean erOpphørt() {
+        return BehandlingResultatType.OPPHØR.getKode().equals(behandlingResultatType);
     }
 
 }

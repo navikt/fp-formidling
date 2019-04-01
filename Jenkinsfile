@@ -12,7 +12,7 @@ pipeline {
 
     stages {
 
-        stage('Checkout scm') { // checkout only tags.
+        stage('Checkout scm') {
             steps {
                 script {
                     Date date = new Date()

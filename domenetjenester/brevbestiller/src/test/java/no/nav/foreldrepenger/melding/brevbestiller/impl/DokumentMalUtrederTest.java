@@ -31,9 +31,9 @@ public class DokumentMalUtrederTest {
     @Before
     public void setup() {
         dokumentRepository = new DokumentRepositoryImpl(repositoryRule.getEntityManager());
-        dokumentMalUtreder = new DokumentMalUtreder(kodeverkTabellRepository);
+        dokumentMalUtreder = new DokumentMalUtreder(kodeverkTabellRepository, null);
         hendelse = DokumentHendelse.builder()
-                .medBehandlingId(123l)
+                .medBehandlingId(123L)
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .medDokumentMalType(dokumentRepository.hentDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK))
                 .build();

@@ -10,9 +10,10 @@ public class Behandlingsresultat {
     private String avslagsårsak; //Kode
     private String fritekstbrev;
     private String overskrift;
+    private String vedtaksbrev;
     private String behandligResultatType;
     private String avslagarsakFritekst;
-    private List<String> konsekvensForYtelsen = new ArrayList<>(); //Kode BehandlingsresultatKonsekvensForYtelsen
+    private List<String> konsekvenserForYtelsen = new ArrayList<>(); //Kode BehandlingsresultatKonsekvensForYtelsen
 
     //Objekter
     private String beregning; //BeregningResultat
@@ -28,15 +29,30 @@ public class Behandlingsresultat {
         }
         this.fritekstbrev = dto.getFritekstbrev();
         this.overskrift = dto.getOverskrift();
+        this.vedtaksbrev = dto.getVedtaksbrev().kode;
         this.avslagarsakFritekst = dto.getAvslagsarsakFritekst();
         for (KodeDto kodeDto : dto.getKonsekvenserForYtelsen()) {
-            konsekvensForYtelsen.add(kodeDto.kode);
+            konsekvenserForYtelsen.add(kodeDto.kode);
         }
-
-
     }
 
     public String getBehandligResultatType() {
         return behandligResultatType;
+    }
+
+    public String getVedtaksbrev() {
+        return vedtaksbrev;
+    }
+
+    public String getFritekstbrev() {
+        return fritekstbrev;
+    }
+
+    public String getOverskrift() {
+        return overskrift;
+    }
+
+    public List<String> getKonsekvenserForYtelsen() {
+        return konsekvenserForYtelsen;
     }
 }

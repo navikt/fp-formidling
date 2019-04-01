@@ -77,7 +77,7 @@ pipeline {
         }
         failure {
             script {
-                fpgithub.updateBuildStatus("fp-fpformidling", "failure", GIT_COMMIT_HASH_FULL)
+                fpgithub.updateBuildStatus("fp-formidling", "failure", GIT_COMMIT_HASH_FULL)
             }
         }
     }

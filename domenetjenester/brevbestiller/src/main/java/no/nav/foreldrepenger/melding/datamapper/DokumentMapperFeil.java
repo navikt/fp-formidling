@@ -34,9 +34,6 @@ public interface DokumentMapperFeil extends DeklarerteFeil {
     @TekniskFeil(feilkode = "FPFORMIDLING-875835", feilmelding = "Ugyldig behandlingstype %s for brev med malkode HENLEG", logLevel = LogLevel.ERROR)
     Feil HenleggBehandlingBrevKreverGyldigBehandlingstype(String behandlingstype);
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-666915", feilmelding = "Ingen brevmal konfigurert for denne type behandlingen %d.", logLevel = LogLevel.ERROR)
-    Feil ingenBrevmalKonfigurert(Long behandlingId);
-
     @TekniskFeil(feilkode = "FPFORMIDLING-672326", feilmelding = "Ingen brev avslagsårsak kode konfigurert for denne avslagsårsak kode %s.", logLevel = LogLevel.ERROR)
     Feil ingenBrevAvslagsårsakKodeKonfigurert(String avslagsårsakKode);
 

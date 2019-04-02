@@ -55,4 +55,12 @@ public interface DokumentBestillerFeil extends DeklarerteFeil {
 
     @TekniskFeil(feilkode = "FPFORMIDLING-119013", feilmelding = "Fant ikke personinfo for aktørId: %s. Kan ikke bestille dokument", logLevel = LogLevel.WARN)
     Feil fantIkkeAdresse(AktørId aktørId);
+
+    @TekniskFeil(feilkode = "FPFORMIDLING-666915", feilmelding = "Ingen brevmal konfigurert for denne type behandlingen %d.", logLevel = LogLevel.ERROR)
+    Feil ingenBrevmalKonfigurert(Long behandlingId);
+
+
+    @TekniskFeil(feilkode = "FPFORMIDLING-666915", feilmelding = "Kjenner ikke igjen ytelse %s for behandling %d.", logLevel = LogLevel.ERROR)
+    Feil kjennerIkkeYtelse(String ytelseType, Long behandlingId);
+
 }

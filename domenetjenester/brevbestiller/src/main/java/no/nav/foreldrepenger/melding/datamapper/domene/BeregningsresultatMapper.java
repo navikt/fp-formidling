@@ -228,7 +228,7 @@ public class BeregningsresultatMapper {
     private List<UttakResultatPeriode> finnUttaksPerioder(Behandling behandling) {
         //Optional<UttakResultat> uttakResultat = uttakRepository.hentUttakResultatHvisEksisterer(behandling);
         //TODO: hent Uttakresultat fra FPSAK
-        return new UttakResultat().getGjeldendePerioder();
+        return new UttakResultat().getGjeldendePerioder().getPerioder();
     }
 
     private List<BeregningsgrunnlagPeriode> finnBeregninsgrunnlagperioder(Behandling behandling) {

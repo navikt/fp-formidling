@@ -11,6 +11,7 @@ import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
 import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.KlageVurderingResultat;
+import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
@@ -41,14 +42,17 @@ class DokumentMalUtreder {
                 && behandlingsresultat.getKonsekvenserForYtelsen().size() == 1;
     }
 
-    private DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
-        if (behandling.getBehandlingsresultat().erInnvilget()) {
+    private DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandling) {
+        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        if (behandlingsresultat.erInnvilget()) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.POSITIVT_VEDTAK_DOK);
+        } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
+            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.AVSLAGSVEDTAK_DOK);
         }
-        return null;
+        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getId()).toException();
     }
 
-    private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
+    private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (innvilgetForeldrepenger(behandlingsresultat)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK);
@@ -57,7 +61,7 @@ class DokumentMalUtreder {
         } else if (behandlingsresultat.erOpphørt()) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.OPPHØR_DOK);
         }
-        throw new IllegalStateException();
+        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getId()).toException();
     }
 
     private boolean innvilgetForeldrepenger(Behandlingsresultat behandlingsresultat) {
@@ -73,10 +77,9 @@ class DokumentMalUtreder {
             return hendelse.getDokumentMalType();
         }
         if (hendelse.isGjelderVedtak()) {
-            //TODO     public Long lagDokumentData(Behandlingsresultat behandlingsresultat, i FPSAK, LagDokumentData.java:35
             return utledVedtaksbrev(behandling, hendelse);
         }
-        throw new IllegalStateException("Klarer ikke utlede dokumentmal for behandling: " + behandling.getId());
+        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getId()).toException();
     }
 
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
@@ -88,11 +91,11 @@ class DokumentMalUtreder {
         if (erKlagebehandling(BehandlingType.KLAGE.getKode(), behandling.getBehandlingType())) {
             return mapKlageBrev(behandling);
         } else if (FagsakYtelseType.FORELDREPENGER.equals(hendelse.getYtelseType())) {
-            return mapForeldrepengerVedtaksbrev(behandling, hendelse);
+            return mapForeldrepengerVedtaksbrev(behandling);
         } else if (FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType())) {
-            return mapEngangstønadVedtaksbrev(behandling, hendelse);
+            return mapEngangstønadVedtaksbrev(behandling);
         }
-        throw new IllegalStateException("Finner ikke ytelse: " + hendelse.getYtelseType());
+        throw DokumentBestillerFeil.FACTORY.kjennerIkkeYtelse(hendelse.getYtelseType().getKode(), behandling.getId()).toException();
     }
 
     private boolean erKlagebehandling(String kode, String behandlingType) {
@@ -103,8 +106,7 @@ class DokumentMalUtreder {
         Klage klage = klageMapper.hentKlagebehandling(behandling);
         KlageVurderingResultat klageVurderingResultat = klage.getGjeldendeKlageVurderingsresultat();
         if (klageVurderingResultat == null) {
-            //TODO aleksander
-            throw new IllegalStateException();
+            throw DokumentBestillerFeil.FACTORY.behandlingManglerKlageVurderingResultat(behandling.getId()).toException();
         }
         String klagevurdering = klageVurderingResultat.getKlageVurdering();
         if (KlageVurdering.AVVIS_KLAGE.getKode().equals(klagevurdering)) {
@@ -117,7 +119,7 @@ class DokumentMalUtreder {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_YTELSESVEDTAK_STADFESTET_DOK);
         }
         //TODO aleksander
-        throw new IllegalStateException();
+        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getId()).toException();
     }
 
 }

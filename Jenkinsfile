@@ -3,68 +3,83 @@
 import no.nav.jenkins.*
 
 def maven = new maven()
+def fpgithub = new fpgithub()
 def version
-
+def GIT_COMMIT_HASH
+def GIT_COMMIT_HASH_FULL
 pipeline {
-    agent {
-        node {
-            label 'DOCKER2'
-        }
-    }
-
-    options {
-        timestamps()
-    }
-
-    environment {
-        DOCKERREGISTRY = "docker.adeo.no:5000"
-        ARTIFACTID = readMavenPom().getArtifactId()
-    }
+    agent any
 
     stages {
-        stage('Checkout') {
+
+        stage('Checkout scm') {
             steps {
                 script {
-                    checkout scm
-                    gitCommitHash = sh(script: "git log -n 1 --pretty=format:'%h'", returnStdout: true)
-
-                    mRevision = maven.revision()
                     Date date = new Date()
-                    changelist = "_" + date.format("YYYYMMddHHmmss") + "_" + gitCommitHash
+                    dockerRegistryIapp = "repo.adeo.no:5443"
 
+                    checkout scm
+                    GIT_COMMIT_HASH = sh(script: "git log -n 1 --pretty=format:'%h'", returnStdout: true)
+                    GIT_COMMIT_HASH_FULL = sh(script: "git log -n 1 --pretty=format:'%H'", returnStdout: true)
+                    changelist = "_" + date.format("YYYYMMDDHHmmss") + "_" + GIT_COMMIT_HASH
+                    mRevision = maven.revision()
                     version = mRevision + changelist
-                    echo "Tag to be deployed $version"
-                }
-            }
 
-        }
-        stage('Maven version') {
-            steps {
-                sh "mvn --version"
+                    currentBuild.displayName = version
+
+                    echo "Building $version"
+                }
             }
         }
 
         stage('Build') {
             steps {
                 script {
+                    configFileProvider(
+                            [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
+                        artifactId = maven.artifactId()
+                        buildEnvironment = new buildEnvironment()
+                        if (maven.javaVersion() != null) {
+                            buildEnvironment.overrideJDK(maven.javaVersion())
+                        }
 
-                    withMaven(globalMavenSettingsConfig: 'navMavenSettings', jdk: "${maven.javaVersion()}") {
-                        try {
-                            sh "mvn -B -Dfile.encoding=UTF-8 -DinstallAtEnd=true -DdeployAtEnd=true -Dsha1= -Dchangelist= -Drevision=$version clean install"
-                            sh "docker build --pull -t $DOCKERREGISTRY/$ARTIFACTID:$version ."
-                            withCredentials([[$class          : 'UsernamePasswordMultiBinding',
-                                              credentialsId   : 'nexusUser',
-                                              usernameVariable: 'NEXUS_USERNAME',
-                                              passwordVariable: 'NEXUS_PASSWORD']]) {
-                                sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${DOCKERREGISTRY} && docker push ${DOCKERREGISTRY}/${ARTIFACTID}:${version}"
-                            }
-                        } catch (Exception err) {
-                            echo "Maven clean install feilet!"
-                            currentBuild.result = 'FAILURE'
+                        sh "mvn -U -B -s $MAVEN_SETTINGS -Dfile.encoding=UTF-8 -DinstallAtEnd=true -DdeployAtEnd=true -Dsha1= -Dchangelist= -Drevision=$version clean install"
+                        sh "docker build --pull -t $dockerRegistryIapp/$artifactId:$version ."
+                        withCredentials([[$class          : 'UsernamePasswordMultiBinding',
+                                          credentialsId   : 'nexusUser',
+                                          usernameVariable: 'NEXUS_USERNAME',
+                                          passwordVariable: 'NEXUS_PASSWORD']]) {
+                            sh "docker login -u ${env.NEXUS_USERNAME} -p ${env.NEXUS_PASSWORD} ${dockerRegistryIapp} && docker push ${dockerRegistryIapp}/${artifactId}:${version}"
                         }
                     }
                 }
             }
         }
+
+        stage('Tag master') {
+            when {
+                branch 'master'
+            }
+            steps {
+                sh "git tag $version -m $version"
+                sh "git push origin --tag"
+            }
+        }
+
+
     }
+
+    post {
+        success {
+            script {
+                fpgithub.updateBuildStatus("fp-formidling", "success", GIT_COMMIT_HASH_FULL)
+            }
+        }
+        failure {
+            script {
+                fpgithub.updateBuildStatus("fp-formidling", "failure", GIT_COMMIT_HASH_FULL)
+            }
+        }
+    }
+
 }

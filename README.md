@@ -3,7 +3,7 @@ Bestilling og produksjon av Brev og Dokumenter for foreldrepenger
 
 Applikasjonen bestiller brev basert på hendelser fra en kafka-kø, eller via et REST-grensesnitt for forhåndsvisning.
 
-##Henvendelser
+## Henvendelser
 
 Spørsmål knyttet til koden eller prosjektet kan rettes til:
 * Ramesh Shiraddi (ramesh.shiraddi@nav.no)
@@ -15,13 +15,13 @@ Interne henvendelser kan sendes via Slack i kanalen #fp-fomidling.
 
 
 
-###Oppsett
-####Konfigfiler
+### Oppsett
+#### Konfigfiler
 For å kjøre lokalt trenger du 
 app.properties & app-local.properties med riktige verdier i web\webapp
 man trenger også (foreløpig) app-dev.properties i web/webapp/src/test/resources/
 
-####Sertifikater
+#### Sertifikater
 For å kunne kjøre mot miljø fra lokalt, må man oppgi testsertfikater i 
 test-sikkerhet/src/test/resources
 

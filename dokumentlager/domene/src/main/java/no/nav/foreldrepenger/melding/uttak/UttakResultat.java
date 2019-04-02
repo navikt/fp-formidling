@@ -5,9 +5,13 @@ import java.util.List;
 
 public class UttakResultat {
     private List<UttakResultatPeriode> perioder = new ArrayList<>();
+    private UttakResultatPerioder overstyrtPerioder;
+    private UttakResultatPerioder opprinneligPerioder;
 
-    public List<UttakResultatPeriode> getGjeldendePerioder() {
-        //TODO: legg inn logikk
-        return perioder;
+    public UttakResultatPerioder getGjeldendePerioder() {
+        if (overstyrtPerioder == null && opprinneligPerioder == null) {
+            throw new IllegalStateException("Ingen uttaksperioder er satt");
+        }
+        return overstyrtPerioder != null ? overstyrtPerioder : opprinneligPerioder;
     }
 }

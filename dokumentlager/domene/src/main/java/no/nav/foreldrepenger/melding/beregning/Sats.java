@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.melding.beregning;
 
 public class Sats {
-    private String verdi;
+    private Long verdi;
 
-    public String getVerdi() {
+    public Long getVerdi() {
         return verdi;
     }
 }

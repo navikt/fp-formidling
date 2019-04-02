@@ -3,10 +3,15 @@ package no.nav.foreldrepenger.melding.behandling;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
+import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 
 public class Behandling {
     private Long saksnummer;
@@ -24,6 +29,7 @@ public class Behandling {
     private String ansvarligSaksbehandler;
     private Boolean toTrinnsBehandling;
     private String ansvarligBeslutter;
+    private Fagsak fagsak;
 
     public Behandling(BehandlingDto dto) {
         this.id = dto.getId();
@@ -110,5 +116,26 @@ public class Behandling {
 
     public boolean erRevurdering() {
         return BehandlingType.REVURDERING.equals(getBehandlingType());
+    }
+
+    public Fagsak getFagsak() {
+        return fagsak;
+    }
+
+    public String getFagsakYtelseType() {
+        return getFagsak().getYtelseType();
+    }
+
+    public Optional<Behandling> getOriginalBehandling() {
+        return getBehandlingÅrsaker().stream()
+                .filter(Objects::nonNull)
+                .map(BehandlingÅrsak::getOriginalBehandling)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst();
+    }
+
+    public String getRelasjonsRolleType() {
+        return getFagsak().getRelasjonsRolleType();
     }
 }

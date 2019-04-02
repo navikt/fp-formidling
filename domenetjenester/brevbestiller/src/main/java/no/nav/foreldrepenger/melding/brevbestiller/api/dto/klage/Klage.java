@@ -44,4 +44,14 @@ public class Klage {
     public KlageVurderingResultat getKlageVurderingResultatNK() {
         return klageVurderingResultatNK;
     }
+
+    public KlageVurderingResultat getGjeldendeKlageVurderingsresultat() {
+        if (klageVurderingResultatNFP != null) {
+            return klageVurderingResultatNFP;
+        } else if (klageVurderingResultatNK != null) {
+            return klageVurderingResultatNK;
+        }
+        return null;
+    }
+
 }

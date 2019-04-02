@@ -24,20 +24,20 @@
         <revision>1.0</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
-        <java.version>10</java.version>
+        <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <felles.version>1.0.0_20190259100910_15b5f0b</felles.version>
+        <felles.version>1.1.0_20190374082109_418f6d5</felles.version>
         <metrics.version>3.2.5</metrics.version>
 
         <abac-attribute-constants.version>2.0.0</abac-attribute-constants.version>
 
         <!-- Eksterne -->
         <assertj.version>3.7.0</assertj.version>
-        <flyway.version>6.0.0-beta</flyway.version>
+        <flyway.version>5.2.4</flyway.version>
         <postgres.version>42.2.5</postgres.version>
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>4.12</junit.version>
@@ -357,6 +357,11 @@
                 <groupId>javax.xml.soap</groupId>
                 <artifactId>javax.xml.soap-api</artifactId>
                 <version>1.4.0</version>
+            </dependency>
+            <dependency>
+                <groupId>net.sf.ehcache</groupId>
+                <artifactId>ehcache</artifactId>
+                <version>2.10.6</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

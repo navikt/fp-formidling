@@ -44,6 +44,9 @@ public class AktivitetStatus extends Kodeliste {
     private static final Set<AktivitetStatus> FL_STATUSER = new HashSet<>(Arrays.asList(FRILANSER,
             KOMBINERT_AT_FL_SN, KOMBINERT_AT_FL, KOMBINERT_FL_SN));
 
+    public static final Set<AktivitetStatus> KOMBINERTE_STATUSER =
+            Set.of(KOMBINERT_AT_FL_SN, KOMBINERT_AT_FL, KOMBINERT_AT_SN, KOMBINERT_FL_SN);
+
     public AktivitetStatus() {
         // for hibernate
     }

@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.virksomhet;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 
 public class Arbeidsgiver {
+    private String navn;
     private Virksomhet virksomhet;
     private AktørId arbeidsgiverAktørId;
 
@@ -31,5 +32,9 @@ public class Arbeidsgiver {
 
     public boolean getErVirksomhet() {
         return this.virksomhet != null;
+    }
+
+    public String getNavn() {
+        return navn;
     }
 }

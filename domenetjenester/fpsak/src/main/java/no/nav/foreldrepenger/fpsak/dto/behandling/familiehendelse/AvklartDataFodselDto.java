@@ -1,14 +1,14 @@
 package no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName(value = "AvklartDataFodselDto")
 public class AvklartDataFodselDto extends FamiliehendelseDto {
-    private LocalDate fodselsdato;
-    private Integer antallBarnFødt;
+    private List<AvklartBarnDto> avklartBarn;
     private Boolean brukAntallBarnFraTps;
     private Boolean erOverstyrt;
     private LocalDate termindato;
@@ -17,22 +17,10 @@ public class AvklartDataFodselDto extends FamiliehendelseDto {
     private Boolean morForSykVedFodsel;
     private Long vedtaksDatoSomSvangerskapsuke;
 
-    @JsonProperty("fodselsdato")
-    public LocalDate getFodselsdato() {
-        return fodselsdato;
-    }
 
-    void setFodselsdato(LocalDate fodselsdato) {
-        this.fodselsdato = fodselsdato;
-    }
-
-    @JsonProperty("antallBarnFodsel")
-    public Integer getAntallBarnFødt() {
-        return antallBarnFødt;
-    }
-
-    public void setAntallBarnFødt(Integer antallBarnFødt) {
-        this.antallBarnFødt = antallBarnFødt;
+    @JsonProperty("avklartBarn")
+    public List<AvklartBarnDto> getAvklartBarn() {
+        return avklartBarn;
     }
 
     @JsonProperty("brukAntallBarnFraTps")

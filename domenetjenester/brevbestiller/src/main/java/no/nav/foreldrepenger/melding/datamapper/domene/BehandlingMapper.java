@@ -1,10 +1,9 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.ENDRINGSSØKNAD;
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.FØRSTEGANGSSØKNAD;
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.MEDHOLD;
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,6 +15,8 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 
 @ApplicationScoped
@@ -52,22 +53,32 @@ public class BehandlingMapper {
                 behandling.getBehandlingType();
     }
 
-    private boolean gjelderEndringsøknad(Behandling behandling) {
-        return behandling.getBehandlingÅrsaker().stream()
-                .map(BehandlingÅrsak::getBehandlingÅrsakType)
-                .anyMatch(type -> BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode().equals(type));
+    static boolean gjelderEndringsøknad(Behandling behandling) {
+        return getBehandlingÅrsakStringListe(behandling)
+                .contains(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode());
     }
 
-    public String utledBehandlingsTypeForPositivtVedtak(Behandling behandling) {
-        String behandlingsType;
+    public static boolean erRevurderingPgaFødselshendelse(Behandling behandling) {
+        return getBehandlingÅrsakStringListe(behandling)
+                .contains(BehandlingÅrsakType.RE_HENDELSE_FØDSEL.getKode());
+    }
+
+    static List<String> getBehandlingÅrsakStringListe(Behandling behandling) {
+        return behandling.getBehandlingÅrsaker().stream().map(BehandlingÅrsak::getBehandlingÅrsakType).collect(Collectors.toList());
+    }
+
+    public BehandlingsTypeKode utledBehandlingsTypeInnvilgetFP(Behandling behandling) {
+        return BehandlingType.REVURDERING.getKode().equals(behandling.getBehandlingType()) ?
+                BehandlingsTypeKode.REVURDERING : BehandlingsTypeKode.FOERSTEGANGSBEHANDLING;
+    }
+
+    public BehandlingsTypeType utledBehandlingsTypeInnvilgetES(Behandling behandling) {
         Stream<BehandlingÅrsakType> årsaker = behandling.getBehandlingÅrsaker().stream()
                 .map(BehandlingÅrsak::getBehandlingÅrsakType).map(kode -> kodeverkRepository.finn(BehandlingÅrsakType.class, kode));
         boolean etterKlage = årsaker.anyMatch(BehandlingÅrsakType.årsakerEtterKlageBehandling()::contains);
         if (etterKlage) {
-            behandlingsType = MEDHOLD;
-        } else {
-            behandlingsType = (BehandlingType.REVURDERING.getKode().equals(behandling.getBehandlingType())) ? REVURDERING : FØRSTEGANGSSØKNAD;
+            return BehandlingsTypeType.MEDHOLD;
         }
-        return behandlingsType;
+        return BehandlingType.REVURDERING.getKode().equals(behandling.getBehandlingType()) ? BehandlingsTypeType.REVURDERING : BehandlingsTypeType.FOERSTEGANGSBEHANDLING;
     }
 }

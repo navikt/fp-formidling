@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartBarnDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataAdopsjonDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataFodselDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataOmsorgDto;
@@ -55,7 +56,7 @@ public class FamilieHendelseTest {
         if (termin) {
             dto.setAntallBarnTermin(antallBarn);
         } else {
-            dto.setAntallBarnFødt(antallBarn);
+            dto.getAvklartBarn().add(new AvklartBarnDto(LocalDate.now(), null));
         }
         return dto;
     }

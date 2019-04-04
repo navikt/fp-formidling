@@ -56,7 +56,7 @@ public class DokumentFellesDataMapper {
 
     DokumentData opprettDokumentDataForBehandling(BehandlingDto behandlingDto, DokumentMalType dokumentMalType) {
         //Data for mapping
-        Behandling behandling = new Behandling(behandlingDto);
+        Behandling behandling = Behandling.fraDto(behandlingDto);
         Personopplysning personopplysning = new Personopplysning(behandlingDto.getPersonopplysningDto());
         DokumentData dokumentData = DokumentData.opprettNy(dokumentMalType, behandling.getId());
         final AktørId søkersAktørId = new AktørId(personopplysning.getAktoerId());
@@ -190,10 +190,6 @@ public class DokumentFellesDataMapper {
         }
         return behandlendeEnhetNavn.contains(navKontaktKonfigurasjon.getBrevAvsenderKlageEnhet())
                 ? navKontaktKonfigurasjon.getBrevAvsenderKlageEnhet() : navKontaktKonfigurasjon.getBrevAvsenderEnhetNavn();
-    }
-
-    private Behandling hentBehandling(Long behandlingId) {
-        return new Behandling(null);
     }
 
     private Optional<Verge> hentVerge() {

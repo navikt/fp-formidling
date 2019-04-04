@@ -15,7 +15,9 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
@@ -42,9 +44,33 @@ import no.nav.foreldrepenger.tps.TpsTjeneste;
 public class BeregningsgrunnlagMapper {
     private TpsTjeneste tpsTjeneste;
     private KodeverkRepository kodeverkRepository;
+    private BehandlingRestKlient behandlingRestKlient;
 
     BeregningsgrunnlagMapper() {
         // CDI Proxy
+    }
+
+    @Inject
+    public BeregningsgrunnlagMapper(TpsTjeneste tpsTjeneste, KodeverkRepository kodeverkRepository, BehandlingRestKlient behandlingRestKlient) {
+        this.tpsTjeneste = tpsTjeneste;
+        this.kodeverkRepository = kodeverkRepository;
+        this.behandlingRestKlient = behandlingRestKlient;
+    }
+
+    public static BeregningsgrunnlagRegelListeType mapRegelListe(Beregningsgrunnlag beregningsgrunnlag) {
+        ObjectFactory objectFactory = new ObjectFactory();
+        BeregningsgrunnlagRegelListeType regelListe = objectFactory.createBeregningsgrunnlagRegelListeType();
+        List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
+        for (BeregningsgrunnlagAktivitetStatus bgAktivitetStatus : beregningsgrunnlag.getAktivitetStatuser()) {
+            BeregningsgrunnlagRegelType beregningsgrunnlagRegel = objectFactory.createBeregningsgrunnlagRegelType();
+            List<BeregningsgrunnlagPrStatusOgAndel> filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe);
+            beregningsgrunnlagRegel.setRegelStatus(tilStatusTypeKode(bgAktivitetStatus.getAktivitetStatus()));
+            beregningsgrunnlagRegel.setAndelListe(mapAndelListe(filtrertListe));
+            beregningsgrunnlagRegel.setAntallArbeidsgivereIBeregning(tellAntallArbeidsforholdIBeregning(filtrertListe));
+            beregningsgrunnlagRegel.setBesteBeregning(harNoenAvAndeleneBesteberegning(filtrertListe));
+            beregningsgrunnlagRegel.setSNNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
+        }
+        return regelListe;
     }
 
     private static Map<String, StatusTypeKode> aktivitetStatusKodeStatusTypeKodeMap = new HashMap<>();
@@ -100,29 +126,36 @@ public class BeregningsgrunnlagMapper {
         return sum.get();
     }
 
-    public static BeregningsgrunnlagRegelListeType mapRegelListe(Beregningsgrunnlag beregningsgrunnlag) {
-        ObjectFactory objectFactory = new ObjectFactory();
-        BeregningsgrunnlagRegelListeType regelListe = objectFactory.createBeregningsgrunnlagRegelListeType();
-        //TODO vi må plukke ut statusene og matchene de med andelene
-        List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
-        for (BeregningsgrunnlagAktivitetStatus bgAktivitetStatus : beregningsgrunnlag.getAktivitetStatuser()) {
-            BeregningsgrunnlagRegelType beregningsgrunnlagRegel = objectFactory.createBeregningsgrunnlagRegelType();
-            List<BeregningsgrunnlagPrStatusOgAndel> filtrertListe = finnAktivitetStatuserForAktivitet(bgAktivitetStatus, bgpsaListe);
-            beregningsgrunnlagRegel.setRegelStatus(tilStatusTypeKode(bgAktivitetStatus.getAktivitetStatus()));
-            beregningsgrunnlagRegel.setAndelListe(mapAndelListe(filtrertListe));
-            beregningsgrunnlagRegel.setAntallArbeidsgivereIBeregning(tellAntallArbeidsforholdIBeregning(filtrertListe));
-            beregningsgrunnlagRegel.setBesteBeregning(harNoenAvAndeleneBesteberegning(filtrertListe));
-            beregningsgrunnlagRegel.setSNNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
-        }
-        return regelListe;
-    }
-
-    static List<BeregningsgrunnlagPrStatusOgAndel> finnAktivitetStatuserForAktivitet(BeregningsgrunnlagAktivitetStatus bgAktivitetStatus, List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+    static List<BeregningsgrunnlagPrStatusOgAndel> finnAktivitetStatuserForAndeler(BeregningsgrunnlagAktivitetStatus bgAktivitetStatus, List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         if (kombinerteStatuser.contains(bgAktivitetStatus.getAktivitetStatus())) {
             List<String> relevanteStatuser = kombinerteRegelStatuserMap.get(bgAktivitetStatus.getAktivitetStatus());
             return bgpsaListe.stream().filter(andel -> relevanteStatuser.contains(andel.getAktivitetStatus())).collect(Collectors.toList());
         }
         return bgpsaListe.stream().filter(andel -> bgAktivitetStatus.getAktivitetStatus().equals(andel.getAktivitetStatus())).collect(Collectors.toList());
+    }
+
+    static AndelType lagAndelType(BeregningsgrunnlagPrStatusOgAndel andel) {
+        ObjectFactory objectFactory = new ObjectFactory();
+        AndelType andelType = objectFactory.createAndelType();
+        andelType.setStatus(tilStatusTypeKode(andel.getAktivitetStatus()));
+        andelType.setDagsats(andel.getOriginalDagsatsFraTilstøtendeYtelse() == null ? andel.getDagsats() : andel.getOriginalDagsatsFraTilstøtendeYtelse());
+        BigDecimal bgBruttoPrÅr = andel.getAvkortetPrÅr() != null ? andel.getAvkortetPrÅr() : andel.getBruttoPrÅr();
+        if (bgBruttoPrÅr != null) {
+            andelType.setMånedsinntekt(andel.getBruttoPrÅr().divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
+            andelType.setÅrsinntekt(andel.getBruttoPrÅr().longValue());
+        }
+        if (AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.getKode().equals(andel.getAktivitetStatus())) {
+            andelType.setPensjonsgivendeInntekt(andel.getPgiSnitt() == null ? null : andel.getPgiSnitt().longValue());
+            andelType.setSisteLignedeÅr(andel.getBeregningsperiodeTom() == null ? null : (long) andel.getBeregningsperiodeTom().getYear());
+        }
+        if (AktivitetStatus.ARBEIDSTAKER.getKode().equals(andel.getAktivitetStatus())) {
+            andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::getNavn).ifPresent(andelType::setArbeidsgiverNavn);
+            if (OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.getKode().equals(andel.getOpptjeningAktivitetType())) {
+                andelType.setEtterlønnSluttpakke(true);
+            }
+        }
+
+        return andelType;
     }
 
     static BigInteger tellAntallArbeidsforholdIBeregning(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
@@ -153,28 +186,10 @@ public class BeregningsgrunnlagMapper {
         return andelListeType;
     }
 
-    private static AndelType lagAndelType(BeregningsgrunnlagPrStatusOgAndel andel) {
-        ObjectFactory objectFactory = new ObjectFactory();
-        AndelType andelType = objectFactory.createAndelType();
-        andelType.setStatus(tilStatusTypeKode(andel.getAktivitetStatus()));
-        andelType.setDagsats(andel.getOriginalDagsatsFraTilstøtendeYtelse() == null ? andel.getDagsats() : andel.getOriginalDagsatsFraTilstøtendeYtelse());
-        BigDecimal bgBruttoPrÅr = andel.getAvkortetPrÅr() != null ? andel.getAvkortetPrÅr() : andel.getBruttoPrÅr();
-        if (bgBruttoPrÅr != null) {
-            andelType.setMånedsinntekt(andel.getBruttoPrÅr().divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
-            andelType.setÅrsinntekt(andel.getBruttoPrÅr().longValue());
-        }
-        if (AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.getKode().equals(andel.getAktivitetStatus())) {
-            andelType.setPensjonsgivendeInntekt(andel.getPgiSnitt() == null ? null : andel.getPgiSnitt().longValue());
-            andelType.setSisteLignedeÅr(andel.getBeregningsperiodeTom() == null ? null : (long) andel.getBeregningsperiodeTom().getYear());
-        }
-        if (AktivitetStatus.ARBEIDSTAKER.getKode().equals(andel.getAktivitetStatus())) {
-            andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::getNavn).ifPresent(andelType::setArbeidsgiverNavn);
-            if (OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.getKode().equals(andel.getOpptjeningAktivitetType())) {
-                andelType.setEtterlønnSluttpakke(true);
-            }
-        }
-
-        return andelType;
+    private Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
+        behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinkDtos());
+        //TODO Aleksander
+        return null;
     }
 
     static StatusTypeKode tilStatusTypeKode(String statuskode) {

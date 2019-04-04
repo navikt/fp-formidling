@@ -26,6 +26,7 @@ public class BehandlingMapper {
     private BehandlingRestKlient behandlingRestKlient;
 
     public BehandlingMapper() {
+        //CDI
     }
 
     @Inject
@@ -36,7 +37,7 @@ public class BehandlingMapper {
     }
 
     public Behandling hentBehandling(long behandlingId) {
-        return new Behandling(behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId)));
+        return Behandling.fraDto(behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId)));
     }
 
     public BehandlingType finnBehandlingType(String behandlingType) {

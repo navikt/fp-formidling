@@ -72,7 +72,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     @Override
     public DokumentHistorikkinnslag bestillBrev(DokumentHendelse dokumentHendelse) {
         BehandlingDto behandlingDto = hentBehandlingFraFpsak(dokumentHendelse.getBehandlingId());
-        Behandling behandling = new Behandling(behandlingDto);
+        Behandling behandling = Behandling.fraDto(behandlingDto);
         DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, dokumentHendelse);
         DokumentFelles dokumentFelles = lagDokumentFelles(behandlingDto, dokumentMal);
         Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling);
@@ -120,7 +120,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         DokumentHendelse hendelse = dtoTilDomeneobjektMapper.fraDto(hendelseDto);
         BehandlingDto behandlingDto = hentBehandlingFraFpsak(hendelse.getBehandlingId());
 
-        Behandling behandling = new Behandling(behandlingDto);
+        Behandling behandling = Behandling.fraDto(behandlingDto);
 
         DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, hendelse);
         DokumentFelles dokumentFelles = lagDokumentFelles(behandlingDto, dokumentMal);

@@ -18,12 +18,20 @@ public class FamilieHendelse {
     private Optional<LocalDate> termindato;
     private boolean barnErFødt;
 
-    public FamilieHendelse(FamiliehendelseDto dto) {
-        this.antallBarn = utledAntallBarnFraDto(dto);
-        this.termindato = finnTermindato(dto);
+    public FamilieHendelse(BigInteger antallBarn, Optional<LocalDate> termindato, boolean barnErFødt) {
+        this.antallBarn = antallBarn;
+        this.termindato = termindato;
+        this.barnErFødt = barnErFødt;
+    }
+
+    public static FamilieHendelse fraDto(FamiliehendelseDto dto) {
+        BigInteger antallBarnFraDto = utledAntallBarnFraDto(dto);
+        Optional<LocalDate> termindatoFraDto = finnTermindato(dto);
+        boolean barnErFødtFraDto = false;
         if (dto instanceof AvklartDataFodselDto) {
-            barnErFødt = !((AvklartDataFodselDto) dto).getAvklartBarn().isEmpty();
+            barnErFødtFraDto = !((AvklartDataFodselDto) dto).getAvklartBarn().isEmpty();
         }
+        return new FamilieHendelse(antallBarnFraDto, termindatoFraDto, barnErFødtFraDto);
     }
 
     static Optional<LocalDate> finnTermindato(FamiliehendelseDto dto) {

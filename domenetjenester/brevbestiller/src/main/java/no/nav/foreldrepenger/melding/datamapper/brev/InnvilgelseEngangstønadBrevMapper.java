@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsresultatType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BrevdataType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.FagType;
@@ -59,7 +58,7 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
 
     private FagType mapFagType(Behandling behandling, DokumentFelles dokumentFelles, BeregningsresultatES beregningsresultat, BeregningsresultatES originaltBeregningsresultat) {
         FagType fagType = new FagType();
-        fagType.setBehandlingsType(fra(behandlingMapper.utledBehandlingsTypeForPositivtVedtak(behandling)));
+        fagType.setBehandlingsType(behandlingMapper.utledBehandlingsTypeInnvilgetES(behandling));
         fagType.setBehandlingsresultat(lagBehandlingResultatType(beregningsresultat, originaltBeregningsresultat));
         fagType.setKlageFristUker(brevParametere.getKlagefristUker());
         fagType.setPersonstatus(PersonstatusKodeType.fromValue(dokumentFelles.getSakspartPersonStatus()));
@@ -83,17 +82,6 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
         }
         return behandlingsresultatType;
     }
-
-    private BehandlingsTypeType fra(String behandlingsType) {
-        if ("REVURDERING".equals(behandlingsType)) {
-            return BehandlingsTypeType.REVURDERING;
-        }
-        if ("MEDHOLD".equals(behandlingsType)) {
-            return BehandlingsTypeType.MEDHOLD;
-        }
-        return BehandlingsTypeType.FOERSTEGANGSBEHANDLING;
-    }
-
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {
         ObjectFactory of = new ObjectFactory();

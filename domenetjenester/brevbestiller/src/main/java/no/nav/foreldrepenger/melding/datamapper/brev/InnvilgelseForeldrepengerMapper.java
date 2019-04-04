@@ -4,14 +4,15 @@ import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnDa
 import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnOptionalDatoVerdiAvUtenTidSone;
 import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnOptionalVerdiAv;
 import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnVerdiAv;
-import static no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsTypeKode.KLAGE;
-import static no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsTypeKode.REVURDERING;
 
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
@@ -22,16 +23,20 @@ import no.nav.foreldrepenger.melding.aktør.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.FamiliehendelseMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeData;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsResultatKode;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BeregningsgrunnlagRegelListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BrevdataType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.FagType;
@@ -42,19 +47,35 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.RelasjonskodeKode;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.StatusTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.VurderingsstatusKode;
+import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
+@ApplicationScoped
+@Named(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK)
 public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
     public static final String ENDRING_BEREGNING_OG_UTTAK = "ENDRING_BEREGNING_OG_UTTAK";
 
     private ObjectFactory objectFactory;
     private BehandlingMapper behandlingMapper;
+    BeregningsresultatMapper beregningsresultatMapper;
+    private FamiliehendelseMapper familiehendelseMapper;
+    private BeregningsgrunnlagMapper beregningsgrunnlagMapper;
 
     public InnvilgelseForeldrepengerMapper() {
-        this.objectFactory = new ObjectFactory();
+        //CDI
+    }
+
+    @Inject
+    public InnvilgelseForeldrepengerMapper(BehandlingMapper behandlingMapper,
+                                           BeregningsresultatMapper beregningsresultatMapper,
+                                           BeregningsgrunnlagMapper beregningsgrunnlagMapper,
+                                           FamiliehendelseMapper familiehendelseMapper) {
+        this.behandlingMapper = behandlingMapper;
+        this.beregningsresultatMapper = beregningsresultatMapper;
+        this.familiehendelseMapper = familiehendelseMapper;
+        this.beregningsgrunnlagMapper = beregningsgrunnlagMapper;
     }
 
     @Override
@@ -62,37 +83,46 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                 DokumentFelles dokumentFelles,
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        FagType fagType = mapFagType(dokumentFelles.getDokumentTypeDataListe(), behandling);
+        //TODO - Burde vi lage et wrapper objekt for inputobjektene når det er så mange??
+        BeregningsresultatFP beregningsresultatFP = null;
+        Beregningsgrunnlag beregningsgrunnlag = null;
+        Beregningsgrunnlag originaltBeregningsgrunnlag = null;
+        FamilieHendelse familieHendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
+        FagType fagType = mapFagType(dokumentFelles.getDokumentTypeDataListe(), behandling, beregningsresultatFP, familieHendelse, beregningsgrunnlag, originaltBeregningsgrunnlag);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnvilgetForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, InnvilgetForeldrepengerConstants.XSD_LOCATION);
     }
 
-    private FagType mapFagType(List<DokumentTypeData> dokumentTypeDataListe, Behandling behandling) {
+    private FagType mapFagType(List<DokumentTypeData> dokumentTypeDataListe, Behandling behandling, BeregningsresultatFP beregningsresultatFP, FamilieHendelse familieHendelse, Beregningsgrunnlag beregningsgrunnlag, Beregningsgrunnlag originaltBeregningsgrunnlag) {
         final FagType fagType = objectFactory.createFagType();
 
         //Obligatoriske felter
-        fagType.setBehandlingsType(fra(behandlingMapper.utledBehandlingsTypeForPositivtVedtak(behandling)));
+        //Faktisk mappet
+        fagType.setBehandlingsType(behandlingMapper.utledBehandlingsTypeInnvilgetFP(behandling));
+        fagType.setAntallArbeidsgivere(beregningsresultatMapper.antallArbeidsgivere(beregningsresultatFP));
+        fagType.setAntallBarn(familieHendelse.getAntallBarn());
+        fagType.setBarnErFødt(familieHendelse.isBarnErFødt());
+        fagType.setFødselsHendelse(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling));
+        fagType.setOverbetaling(BeregningsgrunnlagMapper.erOverbetalt(beregningsgrunnlag, originaltBeregningsgrunnlag));
+        fagType.setBruttoBeregningsgrunnlag(BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag));
+        BeregningsgrunnlagRegelListeType beregningsgrunnlagRegelListe = BeregningsgrunnlagMapper.mapRegelListe(beregningsgrunnlag);
+        fagType.setBeregningsgrunnlagRegelListe(beregningsgrunnlagRegelListe);
+        fagType.setAntallBeregningsgrunnlagRegeler(BigInteger.valueOf(beregningsgrunnlagRegelListe.getBeregningsgrunnlagRegel().size()));
+
+        //Periodelister
+        fagType.setIkkeOmsorg(Boolean.parseBoolean((finnVerdiAv(InnvilgelseForeldrepengerDokument.IKKE_OMSORG, dokumentTypeDataListe))));
+        //Settes basert på Perioder, eventuelt søknad
+        fagType.setAnnenForelderHarRett(Boolean.parseBoolean(finnVerdiAv(InnvilgelseForeldrepengerDokument.ANNENFORELDERHARRETT, dokumentTypeDataListe)));
+        fagType.setGjelderFoedsel(Boolean.parseBoolean(finnVerdiAv(InnvilgelseForeldrepengerDokument.GJELDER_FØDSEL, dokumentTypeDataListe)));
 
         //Kan ikke mappes
         fagType.setAleneomsorg(VurderingsstatusKode.fromValue("IKKE_VURDERT"));
 
-        fagType.setIkkeOmsorg(Boolean.parseBoolean((finnVerdiAv(InnvilgelseForeldrepengerDokument.IKKE_OMSORG, dokumentTypeDataListe))));
-        fagType.setAnnenForelderHarRett(Boolean.parseBoolean(finnVerdiAv(InnvilgelseForeldrepengerDokument.ANNENFORELDERHARRETT, dokumentTypeDataListe)));
-        fagType.setAntallArbeidsgivere(BigInteger.valueOf(Integer.parseInt(finnVerdiAv(InnvilgelseForeldrepengerDokument.ANTALLARBEIDSGIVERE, dokumentTypeDataListe))));
-        fagType.setAntallBarn(BigInteger.valueOf(Integer.parseInt(finnVerdiAv(InnvilgelseForeldrepengerDokument.ANTALL_BARN, dokumentTypeDataListe))));
-        fagType.setBarnErFødt(Boolean.parseBoolean(finnVerdiAv(InnvilgelseForeldrepengerDokument.BARNERFØDT, dokumentTypeDataListe)));
-        fagType.setOverbetaling(Boolean.parseBoolean(finnVerdiAv(InnvilgelseForeldrepengerDokument.OVERBETALING, dokumentTypeDataListe)));
-        fagType.setFødselsHendelse(Boolean.parseBoolean(finnVerdiAv(InnvilgelseForeldrepengerDokument.RE_FØDSELSHENDELSE, dokumentTypeDataListe)));
-        fagType.setBruttoBeregningsgrunnlag(Long.parseLong(finnVerdiAv(InnvilgelseForeldrepengerDokument.BRUTTOBEREGNINGSGRUNNLAG, dokumentTypeDataListe)));
-        BeregningsgrunnlagRegelListeType beregningsgrunnlagRegelListe = konverterBeregningsgrunnlagRegelListe(dokumentTypeDataListe);
-        fagType.setBeregningsgrunnlagRegelListe(beregningsgrunnlagRegelListe);
-        fagType.setAntallBeregningsgrunnlagRegeler(BigInteger.valueOf(beregningsgrunnlagRegelListe.getBeregningsgrunnlagRegel().size()));
         fagType.setDagerTaptFørTermin(BigInteger.valueOf(Integer.parseInt(finnVerdiAv(InnvilgelseForeldrepengerDokument.DAGERTAPTFØRTERMIN, dokumentTypeDataListe))));
         fagType.setDagsats(Long.parseLong(finnVerdiAv(InnvilgelseForeldrepengerDokument.DAGSATS, dokumentTypeDataListe)));
         fagType.setDekningsgrad(BigInteger.valueOf(Integer.parseInt(finnVerdiAv(InnvilgelseForeldrepengerDokument.DEKNINGSGRAD, dokumentTypeDataListe))));
         fagType.setDisponibleDager(BigInteger.valueOf(Integer.parseInt(finnVerdiAv(InnvilgelseForeldrepengerDokument.DISPONIBLEDAGER, dokumentTypeDataListe))));
         fagType.setDisponibleFellesDager(BigInteger.valueOf(Integer.parseInt(finnVerdiAv(InnvilgelseForeldrepengerDokument.DISPONIBLEFELLESDAGER, dokumentTypeDataListe))));
-        fagType.setGjelderFoedsel(Boolean.parseBoolean(finnVerdiAv(InnvilgelseForeldrepengerDokument.GJELDER_FØDSEL, dokumentTypeDataListe)));
         fagType.setInntektOverSeksG(Boolean.parseBoolean(finnVerdiAv(InnvilgelseForeldrepengerDokument.INNTEKTOVERSEKSG, dokumentTypeDataListe)));
         fagType.setAntallInnvilget(BigInteger.valueOf(Integer.parseInt(finnVerdiAv(InnvilgelseForeldrepengerDokument.ANTALLINNVILGET, dokumentTypeDataListe))));
         fagType.setAntallAvslag(BigInteger.valueOf(Integer.parseInt(finnVerdiAv(InnvilgelseForeldrepengerDokument.ANTALLAVSLAG, dokumentTypeDataListe))));
@@ -257,43 +287,11 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
     }
 */
 
-    private BehandlingsTypeKode fra(String behandlingsType) {
-        if (REVURDERING.equals(behandlingsType)) {
-            return REVURDERING;
-        }
-        if (KLAGE.equals(behandlingsType)) {
-            return KLAGE;
-        }
-        return BehandlingsTypeKode.FOERSTEGANGSBEHANDLING;
-    }
-
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {
         BrevdataType brevdataType = objectFactory.createBrevdataType();
         brevdataType.setFag(fagType);
         brevdataType.setFelles(fellesType);
         return objectFactory.createBrevdata(brevdataType);
-    }
-
-    private StatusTypeKode tilStatusTypeKode(String statuskode) {
-        Map<String, StatusTypeKode> aktivitetStatusKodeStatusTypeKodeMap = new HashMap<>();
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.ARBEIDSTAKER.getKode(), StatusTypeKode.ARBEIDSTAKER);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.FRILANSER.getKode(), StatusTypeKode.FRILANSER);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.getKode(), StatusTypeKode.SELVSTENDIG_NÆRINGSDRIVENDE);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KOMBINERT_AT_FL.getKode(), StatusTypeKode.KOMBINERT_AT_FL);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KOMBINERT_AT_FL_SN.getKode(), StatusTypeKode.KOMBINERT_AT_FL_SN);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KOMBINERT_AT_SN.getKode(), StatusTypeKode.KOMBINERT_AT_SN);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KOMBINERT_FL_SN.getKode(), StatusTypeKode.KOMBINERT_FL_SN);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.DAGPENGER.getKode(), StatusTypeKode.DAGPENGER);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.ARBEIDSAVKLARINGSPENGER.getKode(), StatusTypeKode.ARBEIDSAVKLARINGSPENGER);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.MILITÆR_ELLER_SIVIL.getKode(), StatusTypeKode.MILITÆR_ELLER_SIVIL);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.TILSTØTENDE_YTELSE.getKode(), StatusTypeKode.TILSTØTENDE_YTELSE);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.BRUKERS_ANDEL.getKode(), StatusTypeKode.BRUKERSANDEL);
-        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KUN_YTELSE.getKode(), StatusTypeKode.KUN_YTELSE);
-
-        if (aktivitetStatusKodeStatusTypeKodeMap.containsKey(statuskode)) {
-            return aktivitetStatusKodeStatusTypeKodeMap.get(statuskode);
-        }
-        throw new IllegalArgumentException("Utviklerfeil: Fant ikke riktig aktivitetstatus " + statuskode);
     }
 
     private KonsekvensForYtelseKode tilKonsekvensForYtelseKode(String konsekvens) {

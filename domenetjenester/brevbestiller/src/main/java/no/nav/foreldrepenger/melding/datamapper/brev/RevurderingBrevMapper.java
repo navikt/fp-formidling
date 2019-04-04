@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import java.math.BigInteger;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -64,7 +62,7 @@ public class RevurderingBrevMapper implements DokumentTypeMapper {
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
         fagType.setAdvarselKode(utledAdvarselkode(hendelse));
         fagType.setFritekst(hendelse.getFritekst());
-        fagType.setAntallBarn(BigInteger.valueOf(familieHendelse.getAntallBarn()));
+        fagType.setAntallBarn(familieHendelse.getAntallBarn());
         familieHendelse.getTermindato().map(XmlUtil::finnDatoVerdiAvUtenTidSone).ifPresent(fagType::setTerminDato);
         fellesType.setAutomatiskBehandlet(StringUtils.nullOrEmpty(hendelse.getFritekst()));
         return fagType;

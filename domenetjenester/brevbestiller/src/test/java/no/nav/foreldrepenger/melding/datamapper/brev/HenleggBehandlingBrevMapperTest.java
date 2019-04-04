@@ -5,9 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Before;
 import org.junit.Test;
 
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.BehandlingsTypeKode;
@@ -17,13 +16,16 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.Ytel
 
 public class HenleggBehandlingBrevMapperTest {
 
-    HenleggBehandlingBrevMapper mapper = new HenleggBehandlingBrevMapper();
-    Behandling behandling;
-    DokumentHendelse dokumentHendelse;
+    private HenleggBehandlingBrevMapper mapper = new HenleggBehandlingBrevMapper();
+    private Behandling behandling;
+    private DokumentHendelse dokumentHendelse;
 
     @Before
     public void setup() {
-        behandling = new Behandling(opprettBehandlingDto());
+        behandling = Behandling.builder().medId(123l)
+                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD.getKode())
+                .medBehandlendeEnhetNavn(HenleggBehandlingBrevMapper.FAMPEN)
+                .build();
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingId(123l)
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
@@ -37,13 +39,4 @@ public class HenleggBehandlingBrevMapperTest {
         assertThat(fagType.getYtelseType()).isEqualTo(YtelseTypeKode.FP);
         assertThat(fagType.getOpphavType()).isEqualTo(OpphavTypeKode.FAMPEN);
     }
-
-    private BehandlingDto opprettBehandlingDto() {
-        BehandlingDto dto = new BehandlingDto();
-        dto.setId(123l);
-        dto.setType(new KodeDto("BEHANDLING_TYPE", "BT-002", "Førstegangsbehandling"));
-        dto.setBehandlendeEnhetNavn(HenleggBehandlingBrevMapper.FAMPEN);
-        return dto;
-    }
-
 }

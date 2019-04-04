@@ -20,7 +20,7 @@ public class FamiliehendelseMapper {
     }
 
     public FamilieHendelse hentFamiliehendelse(Behandling behandling) {
-        return new FamilieHendelse(behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinkDtos()));
+        return FamilieHendelse.fraDto(behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinkDtos()));
     }
 
 

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.familiehendelse;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -10,15 +11,27 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.Familiehendels
 
 public class FamilieHendelse {
     private String familieHendelseType; //Kodeliste.FamilieHendelseType
-    private int antallBarn;
+    private BigInteger antallBarn;
     private String barna;
     private String UidentifisertBarn;
     private String terminbekreftelse;
     private Optional<LocalDate> termindato;
+    private boolean barnErFødt;
 
-    public FamilieHendelse(FamiliehendelseDto dto) {
-        this.antallBarn = utledAntallBarnFraDto(dto);
-        this.termindato = finnTermindato(dto);
+    public FamilieHendelse(BigInteger antallBarn, Optional<LocalDate> termindato, boolean barnErFødt) {
+        this.antallBarn = antallBarn;
+        this.termindato = termindato;
+        this.barnErFødt = barnErFødt;
+    }
+
+    public static FamilieHendelse fraDto(FamiliehendelseDto dto) {
+        BigInteger antallBarnFraDto = utledAntallBarnFraDto(dto);
+        Optional<LocalDate> termindatoFraDto = finnTermindato(dto);
+        boolean barnErFødtFraDto = false;
+        if (dto instanceof AvklartDataFodselDto) {
+            barnErFødtFraDto = !((AvklartDataFodselDto) dto).getAvklartBarn().isEmpty();
+        }
+        return new FamilieHendelse(antallBarnFraDto, termindatoFraDto, barnErFødtFraDto);
     }
 
     static Optional<LocalDate> finnTermindato(FamiliehendelseDto dto) {
@@ -30,13 +43,13 @@ public class FamilieHendelse {
         return Optional.empty();
     }
 
-    static int utledAntallBarnFraDto(FamiliehendelseDto familiehendelseDto) {
+    static BigInteger utledAntallBarnFraDto(FamiliehendelseDto familiehendelseDto) {
         if (familiehendelseDto instanceof AvklartDataAdopsjonDto) {
-            return ((AvklartDataAdopsjonDto) familiehendelseDto).getAdopsjonFodelsedatoer().size();
+            return BigInteger.valueOf(((AvklartDataAdopsjonDto) familiehendelseDto).getAdopsjonFodelsedatoer().size());
         } else if (familiehendelseDto instanceof AvklartDataFodselDto) {
-            return utledAntallBarnFødsel((AvklartDataFodselDto) familiehendelseDto);
+            return BigInteger.valueOf(utledAntallBarnFødsel((AvklartDataFodselDto) familiehendelseDto));
         } else if (familiehendelseDto instanceof AvklartDataOmsorgDto) {
-            return ((AvklartDataOmsorgDto) familiehendelseDto).getAntallBarnTilBeregning();
+            return BigInteger.valueOf(((AvklartDataOmsorgDto) familiehendelseDto).getAntallBarnTilBeregning());
         }
         throw new IllegalStateException("Familihendelse er av ukjent type");
     }
@@ -46,10 +59,12 @@ public class FamilieHendelse {
         if (familiehendelseDto.getAntallBarnTermin() != null) {
             sum += familiehendelseDto.getAntallBarnTermin();
         }
-        if (familiehendelseDto.getAntallBarnFødt() != null) {
-            sum += familiehendelseDto.getAntallBarnFødt();
-        }
+        sum += familiehendelseDto.getAvklartBarn().size();
         return sum;
+    }
+
+    public boolean isBarnErFødt() {
+        return barnErFødt;
     }
 
     public Optional<LocalDate> getTermindato() {
@@ -60,7 +75,7 @@ public class FamilieHendelse {
         return familieHendelseType;
     }
 
-    public int getAntallBarn() {
+    public BigInteger getAntallBarn() {
         return antallBarn;
     }
 

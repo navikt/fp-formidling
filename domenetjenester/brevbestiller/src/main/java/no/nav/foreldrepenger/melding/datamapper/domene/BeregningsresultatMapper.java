@@ -3,8 +3,10 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.DuplikatVerktøy.slåSammenLikeArbeidsforhold;
 import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -55,6 +57,17 @@ public class BeregningsresultatMapper {
 
     public BeregningsresultatES hentBeregningsresultatES(Behandling behandling) {
         return new BeregningsresultatES(behandlingRestKlient.hentBeregningsresultatEngangsstønad(behandling.getResourceLinkDtos()));
+    }
+
+    public BigInteger antallArbeidsgivere(BeregningsresultatFP beregningsresultat) {
+        return BigInteger.valueOf(beregningsresultat.getBeregningsresultatPerioder().stream()
+                .map(BeregningsresultatPeriode::getBeregningsresultatAndelList)
+                .flatMap(Collection::stream)
+                .filter(andel -> AktivitetStatus.ARBEIDSTAKER.getKode().equals(andel.getAktivitetStatus()))
+                .map(BeregningsresultatAndel::getArbeidsgiver)
+                .distinct()
+                .count());
+
     }
 
     void mapDataRelatertTilBeregningsresultat(Behandling behandling, BeregningsresultatFP beregningsresultat, DokumentTypeMedPerioderDto dto) {
@@ -237,4 +250,5 @@ public class BeregningsresultatMapper {
         Optional<Beregningsgrunnlag> bg = Optional.empty();
         return (bg.map(Beregningsgrunnlag::getBeregningsgrunnlagPerioder).orElse(Collections.emptyList()));
     }
+
 }

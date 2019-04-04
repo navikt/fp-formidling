@@ -15,8 +15,9 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     private Long dagsatsArbeidsgiver;
     private Long dagsatsBruker;
     private String aktivitetStatus; // Kodeliste.AktivitetStatus
-    private String orginalDagsatsFraTilstøtendeYtelse;
+    private Long originalDagsatsFraTilstøtendeYtelse;
     private BigDecimal bruttoPrÅr;
+    private BigDecimal avkortetPrÅr;
     private BigDecimal besteberegningPrÅr;
     private BigDecimal overstyrtPrÅr;
     private BigDecimal pgiSnitt;
@@ -42,12 +43,16 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         return aktivitetStatus;
     }
 
-    public String getOrginalDagsatsFraTilstøtendeYtelse() {
-        return orginalDagsatsFraTilstøtendeYtelse;
+    public Long getOriginalDagsatsFraTilstøtendeYtelse() {
+        return originalDagsatsFraTilstøtendeYtelse;
     }
 
     public BigDecimal getBruttoPrÅr() {
         return bruttoPrÅr;
+    }
+
+    public BigDecimal getAvkortetPrÅr() {
+        return avkortetPrÅr;
     }
 
     public BigDecimal getBesteberegningPrÅr() {

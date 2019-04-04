@@ -64,7 +64,7 @@ public class ForlengetSaksbehandlingstidBrevMapper implements DokumentTypeMapper
 
     private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentFelles dokumentFelles, FamilieHendelse familieHendelse) {
         FagType fagType = new FagType();
-        fagType.setAntallBarn(BigInteger.valueOf(familieHendelse.getAntallBarn()));
+        fagType.setAntallBarn(familieHendelse.getAntallBarn());
         fagType.setBehandlingsfristUker(BigInteger.valueOf(behandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setVariant(mapVariant(dokumentHendelse, behandling));

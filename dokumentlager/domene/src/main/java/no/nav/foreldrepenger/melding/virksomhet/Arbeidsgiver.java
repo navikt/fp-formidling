@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.virksomhet;
 
+import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagArbeidsforholdDto;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 
 public class Arbeidsgiver {
@@ -9,6 +10,23 @@ public class Arbeidsgiver {
 
     public Virksomhet getVirksomhet() {
         return virksomhet;
+    }
+
+    public Arbeidsgiver(String navn, Virksomhet virksomhet, AktørId arbeidsgiverAktørId) {
+        this.navn = navn;
+        this.virksomhet = virksomhet;
+        this.arbeidsgiverAktørId = arbeidsgiverAktørId;
+    }
+
+    public static Arbeidsgiver fraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
+        AktørId aktørId = null;
+        Virksomhet virksomhet = null;
+        if (dto.getAktørId() != null) {
+            virksomhet = new Virksomhet(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverId());
+        } else {
+            aktørId = new AktørId(dto.getAktørId());
+        }
+        return new Arbeidsgiver(dto.getArbeidsgiverNavn(), virksomhet, aktørId);
     }
 
     /**

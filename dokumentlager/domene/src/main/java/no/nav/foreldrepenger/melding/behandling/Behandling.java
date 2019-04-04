@@ -28,8 +28,21 @@ public class Behandling {
     private String ansvarligBeslutter;
     private Fagsak fagsak;
 
-    private Behandling(long id) {
-        this.id = id;
+    private Behandling(Builder builder) {
+        id = builder.id;
+        saksnummer = builder.saksnummer;
+        behandlendeEnhetNavn = builder.behandlendeEnhetNavn;
+        behandlingsresultat = builder.behandlingsresultat;
+        resourceLinkDtos = builder.resourceLinkDtos;
+        originalBehandlingId = builder.originalBehandlingId;
+        behandlingType = builder.behandlingType;
+        behandlingstidFristUker = builder.behandlingstidFristUker;
+        opprettetDato = builder.opprettetDato;
+        behandlingÅrsaker = builder.behandlingÅrsaker;
+        ansvarligSaksbehandler = builder.ansvarligSaksbehandler;
+        toTrinnsBehandling = builder.toTrinnsBehandling;
+        ansvarligBeslutter = builder.ansvarligBeslutter;
+        fagsak = builder.fagsak;
     }
 
     public static Behandling fraDto(BehandlingDto dto) {
@@ -224,21 +237,7 @@ public class Behandling {
         }
 
         public Behandling build() {
-            Behandling behandling = new Behandling(id);
-            behandling.saksnummer = saksnummer;
-            behandling.behandlendeEnhetNavn = behandlendeEnhetNavn;
-            behandling.behandlingsresultat = behandlingsresultat;
-            behandling.resourceLinkDtos = resourceLinkDtos;
-            behandling.originalBehandlingId = originalBehandlingId;
-            behandling.behandlingType = behandlingType;
-            behandling.behandlingstidFristUker = behandlingstidFristUker;
-            behandling.opprettetDato = opprettetDato;
-            behandling.behandlingÅrsaker = behandlingÅrsaker;
-            behandling.ansvarligSaksbehandler = ansvarligSaksbehandler;
-            behandling.toTrinnsBehandling = toTrinnsBehandling;
-            behandling.ansvarligBeslutter = ansvarligBeslutter;
-            behandling.fagsak = fagsak;
-            return behandling;
+            return new Behandling(this);
         }
 
     }

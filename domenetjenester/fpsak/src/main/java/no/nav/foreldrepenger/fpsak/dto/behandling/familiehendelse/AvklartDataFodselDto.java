@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName(value = "AvklartDataFodselDto")
 public class AvklartDataFodselDto extends FamiliehendelseDto {
-    private List<AvklartBarnDto> avklartBarn;
+    private List<AvklartBarnDto> avklartBarn = new ArrayList<>();
     private Boolean brukAntallBarnFraTps;
     private Boolean erOverstyrt;
     private LocalDate termindato;

@@ -46,7 +46,7 @@ public class BeregningsgrunnlagMapper {
     private KodeverkRepository kodeverkRepository;
     private BehandlingRestKlient behandlingRestKlient;
 
-    BeregningsgrunnlagMapper() {
+    public BeregningsgrunnlagMapper() {
         // CDI Proxy
     }
 
@@ -97,12 +97,6 @@ public class BeregningsgrunnlagMapper {
         aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.MILITÆR_ELLER_SIVIL.getKode(), StatusTypeKode.MILITÆR_ELLER_SIVIL);
         aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.BRUKERS_ANDEL.getKode(), StatusTypeKode.BRUKERSANDEL);
         aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KUN_YTELSE.getKode(), StatusTypeKode.KUN_YTELSE);
-    }
-
-    @Inject
-    public BeregningsgrunnlagMapper(TpsTjeneste tpsTjeneste, KodeverkRepository kodeverkRepository) {
-        this.tpsTjeneste = tpsTjeneste;
-        this.kodeverkRepository = kodeverkRepository;
     }
 
     public static boolean erOverbetalt(Beregningsgrunnlag beregningsgrunnlag, Beregningsgrunnlag originaltBeregningsgrunnlag) {

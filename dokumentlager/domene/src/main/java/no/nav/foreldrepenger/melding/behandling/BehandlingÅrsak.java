@@ -2,19 +2,22 @@ package no.nav.foreldrepenger.melding.behandling;
 
 import java.util.Optional;
 
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
-
 public class BehandlingÅrsak {
-    private String behandlingÅrsakType;
+    private BehandlingÅrsakType behandlingÅrsakType;
     private Boolean manueltOpprettet;
     private Behandling originalBehandling;
 
-    public BehandlingÅrsak(BehandlingÅrsakDto dto) {
-        this.behandlingÅrsakType = dto.getBehandlingArsakType().kode;
-        this.manueltOpprettet = dto.getManueltOpprettet();
+    private BehandlingÅrsak(Builder builder) {
+        behandlingÅrsakType = builder.behandlingÅrsakType;
+        manueltOpprettet = builder.manueltOpprettet;
+        originalBehandling = builder.originalBehandling;
     }
 
-    public String getBehandlingÅrsakType() {
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public BehandlingÅrsakType getBehandlingÅrsakType() {
         return behandlingÅrsakType;
     }
 
@@ -24,5 +27,33 @@ public class BehandlingÅrsak {
 
     public Optional<Behandling> getOriginalBehandling() {
         return Optional.ofNullable(originalBehandling);
+    }
+
+    public static class Builder {
+        private BehandlingÅrsakType behandlingÅrsakType;
+        private Boolean manueltOpprettet;
+        private Behandling originalBehandling;
+
+        private Builder() {
+        }
+
+        public Builder medBehandlingÅrsakType(BehandlingÅrsakType behandlingÅrsakType) {
+            this.behandlingÅrsakType = behandlingÅrsakType;
+            return this;
+        }
+
+        public Builder medManueltOpprettet(Boolean manueltOpprettet) {
+            this.manueltOpprettet = manueltOpprettet;
+            return this;
+        }
+
+        public Builder medOriginalBehandling(Behandling originalBehandling) {
+            this.originalBehandling = originalBehandling;
+            return this;
+        }
+
+        public BehandlingÅrsak build() {
+            return new BehandlingÅrsak(this);
+        }
     }
 }

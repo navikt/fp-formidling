@@ -1,11 +1,16 @@
 package no.nav.foreldrepenger.melding.fagsak;
 
 public class Fagsak {
+    private Long id;
     private String brukerRolle; //Kode
     private String ytelseType; //Kode
     private String saksnummer;
 
     private Object navBruker;
+
+    public Long getId() {
+        return id;
+    }
 
     public String getBrukerRolle() {
         return brukerRolle;

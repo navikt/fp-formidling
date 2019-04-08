@@ -6,16 +6,38 @@ public class KlageVurderingResultat {
 
     private String KlageVurdering;
 
-    private KlageVurderingResultat() {
+    private KlageVurderingResultat(Builder builder) {
+        KlageVurdering = builder.KlageVurdering;
     }
 
     public static KlageVurderingResultat fraDto(KlageVurderingResultatDto dto) {
-        KlageVurderingResultat klageVurderingResultat = new KlageVurderingResultat();
-        klageVurderingResultat.KlageVurdering = dto.getKlageVurdering();
-        return klageVurderingResultat;
+        Builder builder = ny();
+        builder.medKlageVurdering(dto.getKlageVurdering());
+        return builder.build();
+    }
+
+    public static Builder ny() {
+        return new Builder();
     }
 
     public String getKlageVurdering() {
         return KlageVurdering;
+    }
+
+
+    public static final class Builder {
+        private String KlageVurdering;
+
+        private Builder() {
+        }
+
+        public Builder medKlageVurdering(String val) {
+            KlageVurdering = val;
+            return this;
+        }
+
+        public KlageVurderingResultat build() {
+            return new KlageVurderingResultat(this);
+        }
     }
 }

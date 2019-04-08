@@ -16,11 +16,24 @@ public class KlageFormkravResultat {
 
     }
 
+    private KlageFormkravResultat(Builder builder) {
+        begrunnelse = builder.begrunnelse;
+        avvistÅrsaker = builder.avvistÅrsaker;
+    }
+
     public static KlageFormkravResultat fraDto(KlageFormkravResultatDto dto, KodeverkRepository kodeverkRepository) {
-        KlageFormkravResultat klageFormkravResultat = new KlageFormkravResultat();
-        klageFormkravResultat.begrunnelse = dto.getBegrunnelse();
-        dto.getAvvistArsaker().forEach(årsak -> klageFormkravResultat.avvistÅrsaker.add(kodeverkRepository.finn(KlageAvvistÅrsak.class, årsak.kode)));
-        return klageFormkravResultat;
+        Builder builder = ny();
+        builder.medBegrunnelse(dto.getBegrunnelse());
+        List<KlageAvvistÅrsak> avvistÅrsaker = new ArrayList<>();
+        dto.getAvvistArsaker().forEach(årsak -> {
+            avvistÅrsaker.add(kodeverkRepository.finn(KlageAvvistÅrsak.class, årsak.kode));
+        });
+        builder.medAvvistÅrsaker(avvistÅrsaker);
+        return builder.build();
+    }
+
+    public static Builder ny() {
+        return new Builder();
     }
 
     public String getBegrunnelse() {
@@ -29,5 +42,28 @@ public class KlageFormkravResultat {
 
     public List<KlageAvvistÅrsak> getAvvistÅrsaker() {
         return avvistÅrsaker;
+    }
+
+
+    public static final class Builder {
+        private String begrunnelse;
+        private List<KlageAvvistÅrsak> avvistÅrsaker;
+
+        private Builder() {
+        }
+
+        public Builder medBegrunnelse(String val) {
+            begrunnelse = val;
+            return this;
+        }
+
+        public Builder medAvvistÅrsaker(List<KlageAvvistÅrsak> val) {
+            avvistÅrsaker = val;
+            return this;
+        }
+
+        public KlageFormkravResultat build() {
+            return new KlageFormkravResultat(this);
+        }
     }
 }

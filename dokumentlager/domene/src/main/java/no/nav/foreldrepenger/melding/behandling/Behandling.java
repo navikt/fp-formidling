@@ -58,7 +58,7 @@ public class Behandling {
         dto.getBehandlingArsaker().stream().map(BehandlingÅrsak::new).forEach(builder::leggTilBehandlingÅrsak);
 
         if (dto.getBehandlingsresultat() != null) {
-            builder.medBehandlingsresultat(new Behandlingsresultat(dto.getBehandlingsresultat()));
+            builder.medBehandlingsresultat(Behandlingsresultat.fraDto(dto.getBehandlingsresultat()));
         }
 
         return builder.build();

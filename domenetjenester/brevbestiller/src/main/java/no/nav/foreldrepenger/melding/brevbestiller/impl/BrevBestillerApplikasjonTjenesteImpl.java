@@ -43,7 +43,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DokumentproduksjonConsumer dokumentproduksjonProxyService;
     private DokumentXmlDataMapper dokumentXmlDataMapper;
-    private DokumentMalUtreder dokumentMalUtreder;
+    private DokumentMalUtleder dokumentMalUtleder;
     private BehandlingRestKlient behandlingRestKlient;
     private DokumentbestillingMapper dokumentbestillingMapper;
     private DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper;
@@ -55,14 +55,14 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     @Inject
     public BrevBestillerApplikasjonTjenesteImpl(DokumentproduksjonConsumer dokumentproduksjonProxyService,
                                                 DokumentXmlDataMapper dokumentXmlDataMapper,
-                                                DokumentMalUtreder dokumentMalUtreder,
+                                                DokumentMalUtleder dokumentMalUtleder,
                                                 BehandlingRestKlient behandlingRestKlient,
                                                 DokumentbestillingMapper dokumentbestillingMapper,
                                                 DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper,
                                                 DokumentFellesDataMapper dokumentFellesDataMapper) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
         this.dokumentXmlDataMapper = dokumentXmlDataMapper;
-        this.dokumentMalUtreder = dokumentMalUtreder;
+        this.dokumentMalUtleder = dokumentMalUtleder;
         this.behandlingRestKlient = behandlingRestKlient;
         this.dokumentbestillingMapper = dokumentbestillingMapper;
         this.dtoTilDomeneobjektMapper = dtoTilDomeneobjektMapper;
@@ -73,7 +73,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     public DokumentHistorikkinnslag bestillBrev(DokumentHendelse dokumentHendelse) {
         BehandlingDto behandlingDto = hentBehandlingFraFpsak(dokumentHendelse.getBehandlingId());
         Behandling behandling = Behandling.fraDto(behandlingDto);
-        DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, dokumentHendelse);
+        DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
         DokumentFelles dokumentFelles = lagDokumentFelles(behandlingDto, dokumentMal);
         Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling);
 
@@ -122,7 +122,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
         Behandling behandling = Behandling.fraDto(behandlingDto);
 
-        DokumentMalType dokumentMal = dokumentMalUtreder.utredDokumentmal(behandling, hendelse);
+        DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, hendelse);
         DokumentFelles dokumentFelles = lagDokumentFelles(behandlingDto, dokumentMal);
 
         Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, hendelse, behandling);

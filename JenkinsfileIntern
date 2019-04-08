@@ -41,6 +41,11 @@ pipeline {
         }
         stage('Maven version') {
             steps {
+                buildEnvironment = new buildEnvironment()
+                if (maven.javaVersion() != null) {
+                    buildEnvironment.overrideJDK(maven.javaVersion())
+                } 
+                
                 sh "mvn --version"
             }
         }
@@ -50,12 +55,6 @@ pipeline {
                 script {
                         configFileProvider(
                                 [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
-
-                            buildEnvironment = new buildEnvironment()
-
-                            if (maven.javaVersion() != null) {
-                                buildEnvironment.overrideJDK(maven.javaVersion())
-                            }
 
                             sh "mvn -B -s $MAVEN_SETTINGS -Dfile.encoding=UTF-8 -DinstallAtEnd=true -DdeployAtEnd=true -Dsha1= -Dchangelist= -Drevision=$version clean install"
                             sh "docker build --pull -t $DOCKERREGISTRY/$ARTIFACTID:$version ."

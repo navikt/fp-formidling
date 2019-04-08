@@ -1,0 +1,88 @@
+
+pipeline {
+    agent {
+        node {
+            label 'DOCKER2'
+        }
+    }
+
+    options {
+        timestamps()
+    }
+
+    parameters {
+        string(defaultValue: "t10", description: 'Fra Miljø*', name: 'fra')
+        string(defaultValue: '', description: 'Til Miljø*', name: 'til')
+    }
+
+    stages {
+        stage('Promoter Til Miljø') {
+            steps {
+                script {
+                    dir ('k8s') {
+						String msgColor = "#077040"
+						artifactid = 'fpformidling'
+						def version = getDeployetVersion(artifactid, fra)
+						
+                        def props = readProperties  interpolate: true, file: "application.${MILJO}.variabler.properties"
+                        def value = "s/RELEASE_VERSION/${version}/g"
+                        props.each{ k,v -> value=value+";s%$k%$v%g" }
+                        sh "k config use-context $props.CONTEXT_NAME"
+                        sh "sed \'$value\' app.yaml | k apply -f -"
+
+                        def naisNamespace = til
+                        if (MILJO == "p") {
+                            naisNamespace = "default"
+                        } 
+						//slackInfo("Deploy av *fp-formidling*:" + version + " til *" + til + '*')
+                        def exitCode=sh returnStatus: true, script: "k rollout status -n${naisNamespace} deployment/${artifactid}"
+                        echo "exit code is $exitCode"
+
+                        if(exitCode == 0) {
+                            def veraPayload = "{\"environment\": \"${MILJO}\",\"application\": \"${artifactid}\",\"version\": \"${version}\",\"deployedBy\": \"Jenkins\"}"
+                            def response = httpRequest([
+                                    url                   : "https://vera.adeo.no/api/v1/deploylog",
+                                    consoleLogResponseBody: true,
+                                    contentType           : "APPLICATION_JSON",
+                                    httpMode              : "POST",
+                                    requestBody           : veraPayload,
+                                    ignoreSslErrors       : true
+                            ])
+                        }
+                        addBadge icon: '', id: '', link: '', text: "${MILJO}-${version}"
+                    }
+                }
+            }
+        }
+    }
+}
+
+def getDeployetVersion(String application, String miljo) {
+    echo("starter med å hente versjon")
+    def response = httpRequest "https://vera.adeo.no/api/v1/deploylog?onlyLatest=true&filterUndeployed=true&application=$application&environment=$miljo"
+    def deployVersion = ""
+    if (response.status != 200) {
+        throw new RuntimeException("Response Code is: ${response.status}")
+    }
+
+    def data = readJSON text: response.content
+    data.each {
+        String app = it.application
+        String env = it.environment
+        deployVersion = it.version
+        println("$app $deployVersion $env")
+    }
+    return deployVersion
+}
+
+def slackError(String tilleggsinfo) {
+    slackSend color: "danger", message: "${env.JOB_NAME} [${env.BUILD_NUMBER}] feilet: ${env.BUILD_URL} ${tilleggsinfo}"
+}
+
+def slackInfo(String msg) {
+    slackInfo("#595959", msg)
+}
+
+def slackInfo(String color, String msg) {
+    slackSend color: color, message: msg
+}

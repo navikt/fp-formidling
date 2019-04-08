@@ -27,26 +27,26 @@ import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendels
 import no.nav.vedtak.felles.jpa.Transaction;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
-@Api(tags = "hendelse")
-@Path("/hendelse")
+@Api(tags = "dokumenthendelse")
+@Path("/dokumenthendelse")
 @ApplicationScoped
 @Transaction
-public class HendelseRestTjeneste {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HendelseRestTjeneste.class);
+public class DokumenthendelseRestTjeneste {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DokumenthendelseRestTjeneste.class);
     private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
 
-    public HendelseRestTjeneste() {
+    public DokumenthendelseRestTjeneste() {
         //For Rest-CDI
     }
 
     @Inject
-    public HendelseRestTjeneste(BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste) {
+    public DokumenthendelseRestTjeneste(BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste) {
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
     }
 
     @POST
     @Timed
-    @Path("/prossesere-hendelse")
+    @Path("/forhandsvis-dokument")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Proseserer hendelse og sender ")
@@ -59,6 +59,8 @@ public class HendelseRestTjeneste {
         if (brevPdfVersjon != null && brevPdfVersjon.length != 0) {
             LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
             responseBuilder = Response.ok().entity(brevPdfVersjon);
+            responseBuilder.type("application/pdf");
+            responseBuilder.header("Content-Disposition", "filename=dokument.pdf");
             return responseBuilder.build();
         }
         responseBuilder = Response.serverError();

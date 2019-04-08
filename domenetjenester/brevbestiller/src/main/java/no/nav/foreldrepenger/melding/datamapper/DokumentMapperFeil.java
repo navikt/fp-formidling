@@ -22,6 +22,9 @@ public interface DokumentMapperFeil extends DeklarerteFeil {
     @TekniskFeil(feilkode = "FPFORMIDLING-729430", feilmelding = "Ugyldig innsynsresultattype %s", logLevel = LogLevel.ERROR)
     Feil innsynskravSvarHarUkjentResultatType(String type);
 
+    @TekniskFeil(feilkode = "FPFORMIDLING-782631", feilmelding = "Ugyldig vilkårtype %s", logLevel = LogLevel.ERROR)
+    Feil behandlingHarUkjentVilkårType(String type);
+
     @TekniskFeil(feilkode = "FPFORMIDLING-316712", feilmelding = "Feil i ferdigstilling av dokument med journalpostId %s", logLevel = LogLevel.ERROR)
     Feil ferdigstillingAvDokumentFeil(JournalpostId journalpostId, Exception cause);
 

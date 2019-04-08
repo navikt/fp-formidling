@@ -10,6 +10,9 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataOms
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 
 public class FamilieHendelse {
+    public static final String typeFødsel = "FODSL";
+    public static final String typeTermin = "TERM";
+
     private String familieHendelseType; //Kodeliste.FamilieHendelseType
     private BigInteger antallBarn;
     private String barna;

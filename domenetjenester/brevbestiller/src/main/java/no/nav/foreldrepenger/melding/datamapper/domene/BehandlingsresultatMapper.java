@@ -244,7 +244,7 @@ public class BehandlingsresultatMapper {
                 .filter(v -> vilkårTyper.contains(v.getVilkårType()))
                 .findFirst().orElseThrow(() -> new IllegalStateException("Fant ingen vilkår"));
 
-        return vilkår.getVilkårType().getKode();
+        return vilkår.getVilkårType();
     }
 
     private List<VilkårType> finnVilkårTypeListe(Avslagsårsak avslagsårsak) {

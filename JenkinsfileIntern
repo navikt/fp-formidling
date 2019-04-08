@@ -41,12 +41,14 @@ pipeline {
         }
         stage('Maven version') {
             steps {
-                buildEnvironment = new buildEnvironment()
-                if (maven.javaVersion() != null) {
-                    buildEnvironment.overrideJDK(maven.javaVersion())
-                } 
-                
-                sh "mvn --version"
+                script {
+                    buildEnvironment = new buildEnvironment()
+                    if (maven.javaVersion() != null) {
+                        buildEnvironment.overrideJDK(maven.javaVersion())
+                    } 
+
+                    sh "mvn --version"
+                }
             }
         }
 

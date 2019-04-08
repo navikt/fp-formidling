@@ -3,8 +3,6 @@ package no.nav.foreldrepenger.melding.behandling;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
@@ -130,15 +128,6 @@ public class Behandling {
 
     public String getFagsakYtelseType() {
         return getFagsak().getYtelseType();
-    }
-
-    public Optional<Behandling> getOriginalBehandling() {
-        return getBehandlingÅrsaker().stream()
-                .filter(Objects::nonNull)
-                .map(BehandlingÅrsak::getOriginalBehandling)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .findFirst();
     }
 
     public String getRelasjonsRolleType() {

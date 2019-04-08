@@ -93,7 +93,7 @@ public class BeregningsgrunnlagMapper {
         if (originaltBeregningsgrunnlag == null) {
             return false;
         }
-        return originaltBeregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getDagsats() < beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getDagsats();
+        return beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getDagsats() < originaltBeregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getDagsats();
     }
 
     public static long finnBrutto(Beregningsgrunnlag beregningsgrunnlag) {
@@ -153,13 +153,13 @@ public class BeregningsgrunnlagMapper {
                 .anyMatch(andel -> andel.getBesteberegningPrÅr() != null);
     }
 
-    static Boolean nyoppstartetSelvstendingNæringsdrivende(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+    static boolean nyoppstartetSelvstendingNæringsdrivende(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         return bgpsaListe.stream()
                 .filter(andel -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.getKode().equals(andel.getAktivitetStatus()))
                 .filter(andel -> andel.getNyIArbeidslivet() != null)
                 .map(BeregningsgrunnlagPrStatusOgAndel::getNyIArbeidslivet)
                 .findFirst()
-                .orElse(null);
+                .orElse(false);
     }
 
     static AndelListeType mapAndelListe(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
@@ -170,10 +170,8 @@ public class BeregningsgrunnlagMapper {
         return andelListeType;
     }
 
-    private Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinkDtos());
-        //TODO Aleksander
-        return null;
+    public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
+        return Beregningsgrunnlag.fraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinkDtos()));
     }
 
     static StatusTypeKode tilStatusTypeKode(String statuskode) {

@@ -45,11 +45,12 @@ public class BehandlingMapper {
     }
 
 
-    public static Optional<String> avklartFritekst(DokumentHendelse dokumentHendelse, Behandling behandling) {
+    public static Optional<String> avklarFritekst(DokumentHendelse dokumentHendelse, Behandling behandling) {
         if (!StringUtils.nullOrEmpty(dokumentHendelse.getFritekst())) {
             return Optional.of(dokumentHendelse.getFritekst());
-        } else if (!StringUtils.nullOrEmpty(behandling.getBehandlingsresultat().getAvslagarsakFritekst())) {
-            return Optional.of(dokumentHendelse.getFritekst());
+        } else if (behandling.getBehandlingsresultat() != null &&
+                !StringUtils.nullOrEmpty(behandling.getBehandlingsresultat().getAvslagarsakFritekst())) {
+            return Optional.of(behandling.getBehandlingsresultat().getAvslagarsakFritekst());
         }
         return Optional.empty();
     }

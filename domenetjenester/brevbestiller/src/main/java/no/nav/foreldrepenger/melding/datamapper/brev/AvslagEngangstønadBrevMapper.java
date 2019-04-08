@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklartFritekst;
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
 import static no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse.typeFødsel;
 import static no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse.typeTermin;
 
@@ -99,7 +99,7 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
         fagType.setGjelderFoedsel(fra(familiehendelse));
         fagType.setAntallBarn(familiehendelse.getAntallBarn().intValue());
         fagType.setAvslagsAarsak(behandling.getBehandlingsresultat().getAvslagsårsak());
-        avklartFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
+        avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
         fagType.setKlageFristUker(brevParametere.getKlagefristUker());
         fagType.setVilkaarType(fra(vilkår.getVilkårType()));
         return fagType;

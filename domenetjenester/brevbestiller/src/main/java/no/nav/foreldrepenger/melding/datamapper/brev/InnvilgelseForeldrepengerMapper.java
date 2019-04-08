@@ -4,7 +4,7 @@ import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnDa
 import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnOptionalDatoVerdiAvUtenTidSone;
 import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnOptionalVerdiAv;
 import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnVerdiAv;
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklartFritekst;
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
 
 import java.math.BigInteger;
 import java.util.Collections;
@@ -117,7 +117,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setAntallBeregningsgrunnlagRegeler(BigInteger.valueOf(beregningsgrunnlagRegelListe.getBeregningsgrunnlagRegel().size()));
 
         //Optional
-        avklartFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
+        avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
 
         finnOptionalVerdiAv("PLACEHOLDER", dokumentTypeDataListe).ifPresent(fagType::setFritekst);
         //Periodelister

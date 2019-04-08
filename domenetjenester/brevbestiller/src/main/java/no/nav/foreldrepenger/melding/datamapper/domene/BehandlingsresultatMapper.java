@@ -12,8 +12,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.beregning.Beregning;
@@ -41,51 +39,13 @@ import no.nav.vedtak.feil.Feil;
 public class BehandlingsresultatMapper {
     private KodeverkRepository kodeverkRepository;
 
-    @Inject
-    public BehandlingsresultatMapper(KodeverkRepository kodeverkRepository) {
-        this.kodeverkRepository = kodeverkRepository;
-    }
-
     public BehandlingsresultatMapper() {
         //For CDI
     }
 
-    void mapDataRelatertTilBehandlingsResultat(final Behandling behandling, final DokumentTypeDto dto) {
-
-        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
-        // Fritekstbrev
-        dto.getDokumentBehandlingsresultatDto().setBrødtekst(behandlingsresultat.getFritekstbrev());
-        dto.getDokumentBehandlingsresultatDto().setOverskrift(behandlingsresultat.getOverskrift());
-
-        // Alle andre brevene.
-        mapDataRelatertTilAvslag(behandling, dto);
-        dto.getDokumentBehandlingsresultatDto().setFritekst(behandlingsresultat.getAvslagarsakFritekst());
-
-        List<String> konsekvenserForYtelsen = behandlingsresultat.getKonsekvenserForYtelsen();
-        dto.getDokumentBehandlingsresultatDto().setKonsekvensForYtelse(kodeFra(konsekvenserForYtelsen));
-
-        if (behandlingsresultat.getBehandlingResultatType() != null) {
-            dto.getDokumentBehandlingsresultatDto().setBehandlingsResultat(kodeverkRepository.finn(BehandlingResultatType.class, behandlingsresultat.getBehandlingResultatType()).getKode());
-        }
-        if (behandlingsresultat.getBeregningResultat() != null) {
-            final Optional<Beregning> sisteBeregning = behandlingsresultat.getBeregningResultat().getSisteBeregning();
-            if (sisteBeregning.isPresent()) {
-                Beregning beregning = sisteBeregning.get();
-                dto.getDokumentBehandlingsresultatDto().setBeløp(beregning.getBeregnetTilkjentYtelse());
-                if (BehandlingType.REVURDERING.equals(behandling.getBehandlingType())) {
-                    setDifferanseFraTidligereBeløp(behandling, dto, beregning);
-                }
-            }
-        }
-    }
-
-    private void setDifferanseFraTidligereBeløp(Behandling behandling, DokumentTypeDto dto, Beregning beregning) {
-        behandling.getOriginalBehandling()
-                .ifPresent(originalBehandling -> hentSisteBeregning(originalBehandling)
-                        .ifPresent(forrigeBeregning -> {
-                            Long differanse = Math.abs(beregning.getBeregnetTilkjentYtelse() - forrigeBeregning.getBeregnetTilkjentYtelse());
-                            dto.getDokumentBehandlingsresultatDto().setDifferanse(differanse);
-                        }));
+    @Inject
+    public BehandlingsresultatMapper(KodeverkRepository kodeverkRepository) {
+        this.kodeverkRepository = kodeverkRepository;
     }
 
     private Optional<Beregning> hentSisteBeregning(Behandling originalBehandling) {

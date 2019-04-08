@@ -85,8 +85,13 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         //TODO - Burde vi lage et wrapper objekt for inputobjektene når det er så mange??
         BeregningsresultatFP beregningsresultatFP = null;
-        Beregningsgrunnlag beregningsgrunnlag = null;
+        Beregningsgrunnlag beregningsgrunnlag = beregningsgrunnlagMapper.hentBeregningsgrunnlag(behandling);
+        Behandling originalBehandling;
         Beregningsgrunnlag originaltBeregningsgrunnlag = null;
+        if (behandling.getOriginalBehandlingId() != null) {
+            originalBehandling = behandlingMapper.hentBehandling(behandling.getOriginalBehandlingId());
+            originaltBeregningsgrunnlag = beregningsgrunnlagMapper.hentBeregningsgrunnlag(originalBehandling);
+        }
         FamilieHendelse familieHendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
         FagType fagType = mapFagType(dokumentFelles.getDokumentTypeDataListe(), behandling, beregningsresultatFP, familieHendelse, beregningsgrunnlag, originaltBeregningsgrunnlag);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);

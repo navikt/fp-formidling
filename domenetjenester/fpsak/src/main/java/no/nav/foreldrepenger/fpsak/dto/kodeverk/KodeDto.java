@@ -17,6 +17,10 @@ public class KodeDto {
         this.navn = navn;
     }
 
+    public String getKode() {
+        return kode;
+    }
+
     @Override
     public String toString() {
         return "Kode{" +

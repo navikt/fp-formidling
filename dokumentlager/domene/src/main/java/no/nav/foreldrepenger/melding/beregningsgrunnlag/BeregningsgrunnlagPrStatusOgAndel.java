@@ -54,27 +54,27 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     public static BeregningsgrunnlagPrStatusOgAndel fraDto(BeregningsgrunnlagPrStatusOgAndelDto dto) {
         Builder builder = BeregningsgrunnlagPrStatusOgAndel.ny();
         BGAndelArbeidsforhold bgAndelArbeidsforhold = BGAndelArbeidsforhold.fraDto(dto.getArbeidsforhold());
-        builder.aktivitetStatus(dto.getAktivitetStatus().kode)
-                .bruttoPrÅr(dto.getBruttoPrAar())
-                .avkortetPrÅr(dto.getAvkortetPrAar())
-                .besteberegningPrÅr(dto.getBesteberegningPrAar())
-                .overstyrtPrÅr(dto.getOverstyrtPrAar())
-                .nyIArbeidslivet(dto.getErNyIArbeidslivet())
+        builder.medAktivitetStatus(dto.getAktivitetStatus().kode)
+                .medBruttoPrÅr(dto.getBruttoPrAar())
+                .medAvkortetPrÅr(dto.getAvkortetPrAar())
+                .medBesteberegningPrÅr(dto.getBesteberegningPrAar())
+                .medOverstyrtPrÅr(dto.getOverstyrtPrAar())
+                .medNyIArbeidslivet(dto.getErNyIArbeidslivet())
                 //TODO - mangler verdi
-                .originalDagsatsFraTilstøtendeYtelse(null)
+                .medOriginalDagsatsFraTilstøtendeYtelse(null)
                 //TODO - mangler verdi
-                .dagsatsArbeidsgiver(null)
+                .medDagsatsArbeidsgiver(null)
                 //TODO - mangler verdi
-                .dagsatsBruker(null)
-                .beregningsperiode(avklarBeregningsperiode(dto))
-                .bgAndelArbeidsforhold(bgAndelArbeidsforhold)
-                .arbeidsforholdType(bgAndelArbeidsforhold.getArbeidsforholdType());
+                .medDagsatsBruker(null)
+                .medBeregningsperiode(avklarBeregningsperiode(dto))
+                .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
+                .medArbeidsforholdType(bgAndelArbeidsforhold.getArbeidsforholdType());
         if (dto instanceof BeregningsgrunnlagPrStatusOgAndelSNDto) {
             BeregningsgrunnlagPrStatusOgAndelSNDto snDto = (BeregningsgrunnlagPrStatusOgAndelSNDto) dto;
-            builder.pgi1(snDto.getPgi1())
-                    .pgi2(snDto.getPgi2())
-                    .pgi3(snDto.getPgi3())
-                    .pgiSnitt(snDto.getPgiSnitt());
+            builder.medPgi1(snDto.getPgi1())
+                    .medPgi2(snDto.getPgi2())
+                    .medPgi3(snDto.getPgi3())
+                    .medPgiSnitt(snDto.getPgiSnitt());
         }
         return builder.build();
     }
@@ -188,7 +188,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     }
 
 
-    //Generert builder
+    //Generert ny
     public static final class Builder {
         private Long dagsatsArbeidsgiver;
         private Long dagsatsBruker;
@@ -211,87 +211,87 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         private Builder() {
         }
 
-        public Builder dagsatsArbeidsgiver(Long val) {
+        public Builder medDagsatsArbeidsgiver(Long val) {
             dagsatsArbeidsgiver = val;
             return this;
         }
 
-        public Builder dagsatsBruker(Long val) {
+        public Builder medDagsatsBruker(Long val) {
             dagsatsBruker = val;
             return this;
         }
 
-        public Builder aktivitetStatus(String val) {
+        public Builder medAktivitetStatus(String val) {
             aktivitetStatus = val;
             return this;
         }
 
-        public Builder originalDagsatsFraTilstøtendeYtelse(Long val) {
+        public Builder medOriginalDagsatsFraTilstøtendeYtelse(Long val) {
             originalDagsatsFraTilstøtendeYtelse = val;
             return this;
         }
 
-        public Builder bruttoPrÅr(BigDecimal val) {
+        public Builder medBruttoPrÅr(BigDecimal val) {
             bruttoPrÅr = val;
             return this;
         }
 
-        public Builder avkortetPrÅr(BigDecimal val) {
+        public Builder medAvkortetPrÅr(BigDecimal val) {
             avkortetPrÅr = val;
             return this;
         }
 
-        public Builder besteberegningPrÅr(BigDecimal val) {
+        public Builder medBesteberegningPrÅr(BigDecimal val) {
             besteberegningPrÅr = val;
             return this;
         }
 
-        public Builder overstyrtPrÅr(BigDecimal val) {
+        public Builder medOverstyrtPrÅr(BigDecimal val) {
             overstyrtPrÅr = val;
             return this;
         }
 
-        public Builder pgiSnitt(BigDecimal val) {
+        public Builder medPgiSnitt(BigDecimal val) {
             pgiSnitt = val;
             return this;
         }
 
-        public Builder pgi1(BigDecimal val) {
+        public Builder medPgi1(BigDecimal val) {
             pgi1 = val;
             return this;
         }
 
-        public Builder pgi2(BigDecimal val) {
+        public Builder medPgi2(BigDecimal val) {
             pgi2 = val;
             return this;
         }
 
-        public Builder pgi3(BigDecimal val) {
+        public Builder medPgi3(BigDecimal val) {
             pgi3 = val;
             return this;
         }
 
-        public Builder nyIArbeidslivet(Boolean val) {
+        public Builder medNyIArbeidslivet(Boolean val) {
             nyIArbeidslivet = val;
             return this;
         }
 
-        public Builder ytelse(RelatertYtelseType val) {
+        public Builder medYtelse(RelatertYtelseType val) {
             ytelse = val;
             return this;
         }
 
-        public Builder arbeidsforholdType(String val) {
+        public Builder medArbeidsforholdType(String val) {
             arbeidsforholdType = val;
             return this;
         }
 
-        public Builder beregningsperiode(DatoIntervall val) {
+        public Builder medBeregningsperiode(DatoIntervall val) {
             beregningsperiode = val;
             return this;
         }
 
-        public Builder bgAndelArbeidsforhold(BGAndelArbeidsforhold val) {
+        public Builder medBgAndelArbeidsforhold(BGAndelArbeidsforhold val) {
             bgAndelArbeidsforhold = val;
             return this;
         }

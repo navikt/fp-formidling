@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import java.util.Arrays;
+import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -22,6 +23,8 @@ import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 
 @ApplicationScoped
 class DokumentMalUtreder {
+
+    private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingId: ";
 
     private KodeverkTabellRepository kodeverkTabellRepository;
     private KlageMapper klageMapper;
@@ -90,12 +93,27 @@ class DokumentMalUtreder {
         }
         if (erKlagebehandling(BehandlingType.KLAGE.getKode(), behandling.getBehandlingType())) {
             return mapKlageBrev(behandling);
+        } else if (erRevurderingMedUendretUtfall(behandling)) {
+            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK);
         } else if (FagsakYtelseType.FORELDREPENGER.equals(hendelse.getYtelseType())) {
             return mapForeldrepengerVedtaksbrev(behandling);
         } else if (FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType())) {
             return mapEngangstønadVedtaksbrev(behandling);
         }
         throw DokumentBestillerFeil.FACTORY.kjennerIkkeYtelse(hendelse.getYtelseType().getKode(), behandling.getId()).toException();
+    }
+
+    boolean erRevurderingMedUendretUtfall(Behandling behandling) {
+        if (!BehandlingType.REVURDERING.getKode().equals(behandling.getBehandlingType())) {
+            return false;
+        }
+        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        List<String> konsekvenserForYtelsen = behandlingsresultat.getKonsekvenserForYtelsen();
+        boolean ingenKonsekvensForYtelsen = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.INGEN_ENDRING.getKode());
+        if (ingenKonsekvensForYtelsen && konsekvenserForYtelsen.size() > 1) {
+            throw new IllegalStateException(UTVIKLERFEIL_INGEN_ENDRING_SAMMEN + behandling.getId());
+        }
+        return ingenKonsekvensForYtelsen;
     }
 
     private boolean erKlagebehandling(String kode, String behandlingType) {

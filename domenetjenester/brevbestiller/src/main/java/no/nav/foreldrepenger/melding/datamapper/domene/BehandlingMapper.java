@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.ENDRINGSSØKNAD;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -15,10 +16,12 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.BehandlingstypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 public class BehandlingMapper {
@@ -39,6 +42,17 @@ public class BehandlingMapper {
 
     public Behandling hentBehandling(long behandlingId) {
         return Behandling.fraDto(behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId)));
+    }
+
+
+    public static Optional<String> avklarFritekst(DokumentHendelse dokumentHendelse, Behandling behandling) {
+        if (!StringUtils.nullOrEmpty(dokumentHendelse.getFritekst())) {
+            return Optional.of(dokumentHendelse.getFritekst());
+        } else if (behandling.getBehandlingsresultat() != null &&
+                !StringUtils.nullOrEmpty(behandling.getBehandlingsresultat().getAvslagarsakFritekst())) {
+            return Optional.of(behandling.getBehandlingsresultat().getAvslagarsakFritekst());
+        }
+        return Optional.empty();
     }
 
     public BehandlingType finnBehandlingType(String behandlingType) {

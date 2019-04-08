@@ -11,7 +11,7 @@ pipeline {
     }
 
     parameters {
-        string(defaultValue: "t10", description: 'Fra Miljø*', name: 'fra')
+        string(defaultValue: "t4", description: 'Fra Miljø*', name: 'fra')
         string(defaultValue: '', description: 'Til Miljø*', name: 'til')
     }
 
@@ -24,14 +24,14 @@ pipeline {
 						artifactid = 'fpformidling'
 						def version = getDeployetVersion(artifactid, fra)
 						
-                        def props = readProperties  interpolate: true, file: "application.${MILJO}.variabler.properties"
+                        def props = readProperties  interpolate: true, file: "application.${til}.variabler.properties"
                         def value = "s/RELEASE_VERSION/${version}/g"
                         props.each{ k,v -> value=value+";s%$k%$v%g" }
                         sh "k config use-context $props.CONTEXT_NAME"
                         sh "sed \'$value\' app.yaml | k apply -f -"
 
                         def naisNamespace = til
-                        if (MILJO == "p") {
+                        if (til == "p") {
                             naisNamespace = "default"
                         } 
 						//slackInfo("Deploy av *fp-formidling*:" + version + " til *" + til + '*')
@@ -39,7 +39,7 @@ pipeline {
                         echo "exit code is $exitCode"
 
                         if(exitCode == 0) {
-                            def veraPayload = "{\"environment\": \"${MILJO}\",\"application\": \"${artifactid}\",\"version\": \"${version}\",\"deployedBy\": \"Jenkins\"}"
+                            def veraPayload = "{\"environment\": \"${til}\",\"application\": \"${artifactid}\",\"version\": \"${version}\",\"deployedBy\": \"Jenkins\"}"
                             def response = httpRequest([
                                     url                   : "https://vera.adeo.no/api/v1/deploylog",
                                     consoleLogResponseBody: true,
@@ -49,7 +49,7 @@ pipeline {
                                     ignoreSslErrors       : true
                             ])
                         }
-                        addBadge icon: '', id: '', link: '', text: "${MILJO}-${version}"
+                        addBadge icon: '', id: '', link: '', text: "${til}-${version}"
                     }
                 }
             }

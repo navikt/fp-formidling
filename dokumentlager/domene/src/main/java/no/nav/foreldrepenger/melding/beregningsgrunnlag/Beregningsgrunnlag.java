@@ -19,14 +19,15 @@ public class Beregningsgrunnlag {
     }
 
     public static Beregningsgrunnlag fraDto(BeregningsgrunnlagDto dto) {
-        Builder builder = Beregningsgrunnlag.builder();
+        Builder builder = Beregningsgrunnlag.ny();
         //TODO - vi burde ikke trenge å gange
         builder.medGrunnbeløp(new Beløp(BigDecimal.valueOf(dto.getHalvG()).multiply(BigDecimal.valueOf(2))));
         dto.getAktivitetStatus().stream().map(BeregningsgrunnlagAktivitetStatus::fraDto).forEach(builder::leggTilBeregningsgrunnlagAktivitetStatus);
-        return null;
+        dto.getBeregningsgrunnlagPeriode().stream().map(BeregningsgrunnlagPeriode::fraDto).forEach(builder::leggTilBeregningsgrunnlagPeriode);
+        return builder.build();
     }
 
-    public static Beregningsgrunnlag.Builder builder() {
+    public static Beregningsgrunnlag.Builder ny() {
         return new Beregningsgrunnlag.Builder();
     }
 

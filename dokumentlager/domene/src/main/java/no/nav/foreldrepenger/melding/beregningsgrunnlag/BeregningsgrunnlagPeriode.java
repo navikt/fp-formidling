@@ -5,17 +5,45 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
+import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 
 public class BeregningsgrunnlagPeriode {
     private Long dagsats;
     private BigDecimal bruttoPrÅr;
-    private String periodeÅrsak; //Kode beregningsgrunnlagPeriodeÅrsaker.periodeÅrsak
+    private List<String> periodeÅrsaker; //Kode beregningsgrunnlagperiodeÅrsakerer.periodeÅrsaker
     private DatoIntervall periode;
     private List<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagPrStatusOgAndelList = new ArrayList<>();
 
     private BeregningsgrunnlagPeriode() {
+    }
+
+    private BeregningsgrunnlagPeriode(Builder builder) {
+        dagsats = builder.dagsats;
+        bruttoPrÅr = builder.bruttoPrÅr;
+        periodeÅrsaker = builder.periodeÅrsaker;
+        periode = builder.periode;
+        beregningsgrunnlagPrStatusOgAndelList = builder.beregningsgrunnlagPrStatusOgAndelList;
+    }
+
+    public static BeregningsgrunnlagPeriode fraDto(BeregningsgrunnlagPeriodeDto dto) {
+        DatoIntervall intervall = dto.getBeregningsgrunnlagPeriodeTom() != null ?
+                DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagPeriodeFom(), dto.getBeregningsgrunnlagPeriodeTom()) :
+                DatoIntervall.fraOgMed(dto.getBeregningsgrunnlagPeriodeFom());
+        return ny()
+                .medBruttoPrÅr(dto.getBruttoPrAar())
+                .medDagsats(dto.getDagsats())
+                .medPeriode(intervall)
+                .medperiodeÅrsaker(dto.getPeriodeAarsaker().stream().map(KodeDto::getKode).collect(Collectors.toList()))
+                .medBeregningsgrunnlagPrStatusOgAndelList(dto.getBeregningsgrunnlagPrStatusOgAndel().stream().map(BeregningsgrunnlagPrStatusOgAndel::fraDto).collect(Collectors.toList()))
+                .build();
+    }
+
+    public static Builder ny() {
+        return new Builder();
     }
 
     public Long getDagsats() {
@@ -26,8 +54,8 @@ public class BeregningsgrunnlagPeriode {
         return bruttoPrÅr;
     }
 
-    public String getPeriodeÅrsak() {
-        return periodeÅrsak;
+    public List<String> getperiodeÅrsaker() {
+        return periodeÅrsaker;
     }
 
     public LocalDate getBeregningsgrunnlagPeriodeFom() {
@@ -42,46 +70,43 @@ public class BeregningsgrunnlagPeriode {
         return Collections.unmodifiableList(beregningsgrunnlagPrStatusOgAndelList);
     }
 
-    public static class Builder {
+    public static final class Builder {
         private Long dagsats;
         private BigDecimal bruttoPrÅr;
-        private String periodeÅrsak; //Kode beregningsgrunnlagPeriodeÅrsaker.periodeÅrsak
+        private List<String> periodeÅrsaker;
         private DatoIntervall periode;
-        private List<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagPrStatusOgAndelList = new ArrayList<>();
+        private List<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagPrStatusOgAndelList;
 
-        public Builder medDagsats(Long dagsats) {
-            this.dagsats = dagsats;
+        private Builder() {
+        }
+
+        public Builder medDagsats(Long val) {
+            dagsats = val;
             return this;
         }
 
-        public Builder medBruttoPrÅr(BigDecimal bruttoPrÅr) {
-            this.bruttoPrÅr = bruttoPrÅr;
+        public Builder medBruttoPrÅr(BigDecimal val) {
+            bruttoPrÅr = val;
             return this;
         }
 
-        public Builder medPeriodeÅrsak(String periodeÅrsak) {
-            this.periodeÅrsak = periodeÅrsak;
+        public Builder medperiodeÅrsaker(List<String> val) {
+            periodeÅrsaker = val;
             return this;
         }
 
-        public Builder medPeriode(DatoIntervall periode) {
-            this.periode = periode;
+        public Builder medPeriode(DatoIntervall val) {
+            periode = val;
             return this;
         }
 
-        public Builder leggTilAndel(BeregningsgrunnlagPrStatusOgAndel andel) {
-            this.beregningsgrunnlagPrStatusOgAndelList.add(andel);
+        public Builder medBeregningsgrunnlagPrStatusOgAndelList(List<BeregningsgrunnlagPrStatusOgAndel> val) {
+            beregningsgrunnlagPrStatusOgAndelList = val;
             return this;
         }
 
         public BeregningsgrunnlagPeriode build() {
-            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = new BeregningsgrunnlagPeriode();
-            beregningsgrunnlagPeriode.dagsats = this.dagsats;
-            beregningsgrunnlagPeriode.bruttoPrÅr = this.bruttoPrÅr;
-            beregningsgrunnlagPeriode.periodeÅrsak = this.periodeÅrsak;
-            beregningsgrunnlagPeriode.periode = this.periode;
-            beregningsgrunnlagPeriode.beregningsgrunnlagPrStatusOgAndelList = this.beregningsgrunnlagPrStatusOgAndelList;
-            return beregningsgrunnlagPeriode;
+            return new BeregningsgrunnlagPeriode(this);
         }
     }
 }

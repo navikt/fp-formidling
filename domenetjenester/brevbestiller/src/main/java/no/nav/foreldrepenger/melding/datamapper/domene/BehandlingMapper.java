@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.BehandlingstypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
@@ -82,4 +83,10 @@ public class BehandlingMapper {
         }
         return BehandlingType.REVURDERING.getKode().equals(behandling.getBehandlingType()) ? BehandlingsTypeType.REVURDERING : BehandlingsTypeType.FOERSTEGANGSBEHANDLING;
     }
+
+    public BehandlingstypeType utledBehandlingsTypeAvslagES(Behandling behandling) {
+        boolean erRevurdering = BehandlingType.REVURDERING.getKode().equals(behandling.getBehandlingType());
+        return erRevurdering ? BehandlingstypeType.REVURDERING : BehandlingstypeType.SØKNAD;
+    }
+
 }

@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingRelLinkPayloadDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDto;
@@ -152,6 +153,16 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDto.class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente beregningsgrunnlag for behandling: " + hentBehandlingId(resourceLinkDtos));
+                });
+    }
+
+    @Override
+    public VilkårDto hentVilkår(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+        return resourceLinkDtos.stream()
+                .filter(dto -> "vilkar".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, VilkårDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente vilkår for behandling: " + hentBehandlingId(resourceLinkDtos));
                 });
     }
 

@@ -5,23 +5,23 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 
 @ApplicationScoped
-public class FamiliehendelseMapper {
+public class VilkårMapper {
 
     private BehandlingRestKlient behandlingRestKlient;
 
-    public FamiliehendelseMapper() {
+    public VilkårMapper() {
         //CDI
     }
 
     @Inject
-    public FamiliehendelseMapper(BehandlingRestKlient behandlingRestKlient) {
+    public VilkårMapper(BehandlingRestKlient behandlingRestKlient) {
         this.behandlingRestKlient = behandlingRestKlient;
     }
 
-    public FamilieHendelse hentFamiliehendelse(Behandling behandling) {
-        return FamilieHendelse.fraDto(behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinkDtos()));
+    public Vilkår hentVilkår(Behandling behandling) {
+        return new Vilkår(behandlingRestKlient.hentVilkår(behandling.getResourceLinkDtos()));
     }
 }

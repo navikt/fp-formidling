@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklartFritekst;
 import static no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse.typeFødsel;
 import static no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse.typeTermin;
 
@@ -28,12 +29,12 @@ import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.AvslagConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.BehandlingstypeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.RelasjonskodeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.VilkaartypeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.BrevdataType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.ObjectFactory;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.RelasjonskodeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.VilkaartypeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
@@ -43,6 +44,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
     private static final Map<String, RelasjonskodeType> relasjonskodeTypeMap = new HashMap<>();
     private static final Map<String, VilkaartypeType> vilkaartypeMap = new HashMap<>();
+
     static {
         relasjonskodeTypeMap.put("MORA", RelasjonskodeType.MOR);
         relasjonskodeTypeMap.put("FARA", RelasjonskodeType.FAR);
@@ -85,23 +87,24 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
         FamilieHendelse familiehendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
         Vilkår vilkår = vilkårMapper.hentVilkår(behandling);
         BehandlingstypeType value = behandlingMapper.utledBehandlingsTypeAvslagES(behandling);
-        FagType fagType = mapFagType(behandling, familiehendelse, vilkår, value);
+        FagType fagType = mapFagType(behandling, dokumentHendelse, familiehendelse, vilkår, value);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(AvslagConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(Behandling behandling, FamilieHendelse familiehendelse, Vilkår vilkår, BehandlingstypeType value) {
+    private FagType mapFagType(Behandling behandling, DokumentHendelse dokumentHendelse, FamilieHendelse familiehendelse, Vilkår vilkår, BehandlingstypeType value) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(value);
         fagType.setRelasjonsKode(relasjonskodeTypeMap.get(behandling.getFagsak().getRelasjonsRolleType()));
         fagType.setGjelderFoedsel(fra(familiehendelse));
         fagType.setAntallBarn(familiehendelse.getAntallBarn().intValue());
         fagType.setAvslagsAarsak(behandling.getBehandlingsresultat().getAvslagsårsak());
-        fagType.setFritekst(behandling.getBehandlingsresultat().getAvslagarsakFritekst());
+        avklartFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
         fagType.setKlageFristUker(brevParametere.getKlagefristUker());
         fagType.setVilkaarType(fra(vilkår.getVilkårType()));
         return fagType;
     }
+
 
     private boolean fra(FamilieHendelse familiehendelse) {
         String familieHendelseType = familiehendelse.getFamilieHendelseType();

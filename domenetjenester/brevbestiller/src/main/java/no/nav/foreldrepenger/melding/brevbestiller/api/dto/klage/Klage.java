@@ -9,24 +9,32 @@ public class Klage {
     private KlageFormkravResultat formkravKA;
     private KlageFormkravResultat formkravNFP;
 
-    private Klage() {
+    private Klage(Builder builder) {
+        klageVurderingResultatNFP = builder.klageVurderingResultatNFP;
+        klageVurderingResultatNK = builder.klageVurderingResultatNK;
+        formkravKA = builder.formkravKA;
+        formkravNFP = builder.formkravNFP;
     }
 
     public static Klage fraDto(KlagebehandlingDto dto, KodeverkRepository kodeverkRepository) {
-        Klage klage = new Klage();
+        Builder builder = ny();
         if (dto.getKlageFormkravResultatNFP() != null) {
-            klage.formkravNFP = KlageFormkravResultat.fraDto(dto.getKlageFormkravResultatNFP(), kodeverkRepository);
+            builder.medFormkravNFP(KlageFormkravResultat.fraDto(dto.getKlageFormkravResultatNFP(), kodeverkRepository));
         }
         if (dto.getKlageFormkravResultatKA() != null) {
-            klage.formkravKA = KlageFormkravResultat.fraDto(dto.getKlageFormkravResultatKA(), kodeverkRepository);
+            builder.medFormkravKA(KlageFormkravResultat.fraDto(dto.getKlageFormkravResultatKA(), kodeverkRepository));
         }
         if (dto.getKlageVurderingResultatNFP() != null) {
-            klage.klageVurderingResultatNFP = KlageVurderingResultat.fraDto(dto.getKlageVurderingResultatNFP());
+            builder.medKlageVurderingResultatNFP(KlageVurderingResultat.fraDto(dto.getKlageVurderingResultatNFP()));
         }
         if (dto.getKlageVurderingResultatNK() != null) {
-            klage.klageVurderingResultatNK = KlageVurderingResultat.fraDto(dto.getKlageVurderingResultatNK());
+            builder.medKlageVurderingResultatNK(KlageVurderingResultat.fraDto(dto.getKlageVurderingResultatNK()));
         }
-        return klage;
+        return builder.build();
+    }
+
+    public static Builder ny() {
+        return new Builder();
     }
 
     public KlageFormkravResultat getFormkravKA() {
@@ -54,4 +62,37 @@ public class Klage {
         return null;
     }
 
+    public static final class Builder {
+        private KlageVurderingResultat klageVurderingResultatNFP;
+        private KlageVurderingResultat klageVurderingResultatNK;
+        private KlageFormkravResultat formkravKA;
+        private KlageFormkravResultat formkravNFP;
+
+        private Builder() {
+        }
+
+        public Builder medKlageVurderingResultatNFP(KlageVurderingResultat val) {
+            klageVurderingResultatNFP = val;
+            return this;
+        }
+
+        public Builder medKlageVurderingResultatNK(KlageVurderingResultat val) {
+            klageVurderingResultatNK = val;
+            return this;
+        }
+
+        public Builder medFormkravKA(KlageFormkravResultat val) {
+            formkravKA = val;
+            return this;
+        }
+
+        public Builder medFormkravNFP(KlageFormkravResultat val) {
+            formkravNFP = val;
+            return this;
+        }
+
+        public Klage build() {
+            return new Klage(this);
+        }
+    }
 }

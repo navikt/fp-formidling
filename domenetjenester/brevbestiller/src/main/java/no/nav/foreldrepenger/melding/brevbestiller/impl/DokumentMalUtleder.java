@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -21,17 +23,19 @@ import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepository;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 
 @ApplicationScoped
-class DokumentMalUtreder {
+class DokumentMalUtleder {
+
+    private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingId: ";
 
     private KodeverkTabellRepository kodeverkTabellRepository;
     private KlageMapper klageMapper;
 
-    public DokumentMalUtreder() {
+    public DokumentMalUtleder() {
         //CDI
     }
 
     @Inject
-    public DokumentMalUtreder(KodeverkTabellRepository kodeverkTabellRepository,
+    public DokumentMalUtleder(KodeverkTabellRepository kodeverkTabellRepository,
                               KlageMapper klageMapper) {
         this.kodeverkTabellRepository = kodeverkTabellRepository;
         this.klageMapper = klageMapper;
@@ -72,11 +76,11 @@ class DokumentMalUtreder {
         return behandlingsresultat.erEndretForeldrepenger() && !erKunEndringIFordelingAvYtelsen(behandlingsresultat);
     }
 
-    DokumentMalType utredDokumentmal(Behandling behandling, DokumentHendelse hendelse) {
+    DokumentMalType utledDokumentmal(Behandling behandling, DokumentHendelse hendelse) {
         if (hendelse.getDokumentMalType() != null) {
             return hendelse.getDokumentMalType();
         }
-        if (hendelse.isGjelderVedtak()) {
+        if (Boolean.TRUE.equals(hendelse.isGjelderVedtak())) {
             return utledVedtaksbrev(behandling, hendelse);
         }
         throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getId()).toException();
@@ -84,18 +88,32 @@ class DokumentMalUtreder {
 
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
         //TODO aleksander - Fpsak kan sannsynligvis selv utlede hvilket vedtadsbrev som bestilles
-        //TODO aleksander - mange revurdering uendret utfall
-        if (behandling.getBehandlingsresultat().getVedtaksbrev().equals(Vedtaksbrev.FRITEKST.getKode())) {
+        if (Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST.getKode())) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.FRITEKST_DOK);
         }
         if (erKlagebehandling(BehandlingType.KLAGE.getKode(), behandling.getBehandlingType())) {
             return mapKlageBrev(behandling);
+        } else if (erRevurderingMedUendretUtfall(behandling)) {
+            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK);
         } else if (FagsakYtelseType.FORELDREPENGER.equals(hendelse.getYtelseType())) {
             return mapForeldrepengerVedtaksbrev(behandling);
         } else if (FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType())) {
             return mapEngangstønadVedtaksbrev(behandling);
         }
         throw DokumentBestillerFeil.FACTORY.kjennerIkkeYtelse(hendelse.getYtelseType().getKode(), behandling.getId()).toException();
+    }
+
+    private boolean erRevurderingMedUendretUtfall(Behandling behandling) {
+        if (!BehandlingType.REVURDERING.getKode().equals(behandling.getBehandlingType())) {
+            return false;
+        }
+        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        List<String> konsekvenserForYtelsen = behandlingsresultat.getKonsekvenserForYtelsen();
+        boolean ingenKonsekvensForYtelsen = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.INGEN_ENDRING.getKode());
+        if (ingenKonsekvensForYtelsen && konsekvenserForYtelsen.size() > 1) {
+            throw new IllegalStateException(UTVIKLERFEIL_INGEN_ENDRING_SAMMEN + behandling.getId());
+        }
+        return ingenKonsekvensForYtelsen;
     }
 
     private boolean erKlagebehandling(String kode, String behandlingType) {

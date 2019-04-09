@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 public class BeregningsgrunnlagPeriode {
     private Long dagsats;
     private BigDecimal bruttoPrÅr;
+    private BigDecimal redusertPrÅr;
     private List<String> periodeÅrsaker; //Kode beregningsgrunnlagperiodeÅrsakerer.periodeÅrsaker
     private DatoIntervall periode;
     private List<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagPrStatusOgAndelList = new ArrayList<>();
@@ -24,6 +25,7 @@ public class BeregningsgrunnlagPeriode {
     private BeregningsgrunnlagPeriode(Builder builder) {
         dagsats = builder.dagsats;
         bruttoPrÅr = builder.bruttoPrÅr;
+        redusertPrÅr = builder.redusertPrÅr;
         periodeÅrsaker = builder.periodeÅrsaker;
         periode = builder.periode;
         beregningsgrunnlagPrStatusOgAndelList = builder.beregningsgrunnlagPrStatusOgAndelList;
@@ -35,6 +37,7 @@ public class BeregningsgrunnlagPeriode {
                 DatoIntervall.fraOgMed(dto.getBeregningsgrunnlagPeriodeFom());
         return ny()
                 .medBruttoPrÅr(dto.getBruttoPrAar())
+                .medRedusertPrÅr(dto.getRedusertPrAar())
                 .medDagsats(dto.getDagsats())
                 .medPeriode(intervall)
                 .medperiodeÅrsaker(dto.getPeriodeAarsaker().stream().map(KodeDto::getKode).collect(Collectors.toList()))
@@ -58,6 +61,10 @@ public class BeregningsgrunnlagPeriode {
         return periodeÅrsaker;
     }
 
+    public BigDecimal getRedusertPrÅr() {
+        return redusertPrÅr;
+    }
+
     public LocalDate getBeregningsgrunnlagPeriodeFom() {
         return periode.getFomDato();
     }
@@ -73,6 +80,7 @@ public class BeregningsgrunnlagPeriode {
     public static final class Builder {
         private Long dagsats;
         private BigDecimal bruttoPrÅr;
+        private BigDecimal redusertPrÅr;
         private List<String> periodeÅrsaker;
         private DatoIntervall periode;
         private List<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagPrStatusOgAndelList;
@@ -87,6 +95,11 @@ public class BeregningsgrunnlagPeriode {
 
         public Builder medBruttoPrÅr(BigDecimal val) {
             bruttoPrÅr = val;
+            return this;
+        }
+
+        public Builder medRedusertPrÅr(BigDecimal val) {
+            redusertPrÅr = val;
             return this;
         }
 

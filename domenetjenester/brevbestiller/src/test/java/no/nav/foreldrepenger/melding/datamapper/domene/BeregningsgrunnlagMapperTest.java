@@ -13,13 +13,16 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.typer.Beløp;
 
 public class BeregningsgrunnlagMapperTest {
 
     private Beregningsgrunnlag beregningsgrunnlag;
-    private BigDecimal avkortetPrÅr = BigDecimal.ONE;
-    private BigDecimal bruttoPrÅr = BigDecimal.TEN;
-    private long standardPeriodeDagsats = 100L;
+    private static final BigDecimal AVKORTET_PR_ÅR = BigDecimal.valueOf(60);
+    private static final BigDecimal BRUTTO_PR_ÅR = BigDecimal.valueOf(120);
+    private static final BigDecimal REDUSERT_PR_ÅR = BigDecimal.valueOf(12);
+    private static final BigDecimal GRUNNBELØP = BigDecimal.valueOf(50_000);
+    private static final long STANDARD_PERIODE_DAGSATS = 100L;
 
     @Before
     public void standard_setup() {
@@ -30,7 +33,8 @@ public class BeregningsgrunnlagMapperTest {
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode() {
         return BeregningsgrunnlagPeriode.ny()
-                .medDagsats(standardPeriodeDagsats)
+                .medDagsats(STANDARD_PERIODE_DAGSATS)
+                .medBruttoPrÅr(BRUTTO_PR_ÅR)
                 .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListe())
                 .build();
     }
@@ -41,7 +45,7 @@ public class BeregningsgrunnlagMapperTest {
 
     private BeregningsgrunnlagPrStatusOgAndel lagBgpsaBruttoFrilanser() {
         return BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medBruttoPrÅr(bruttoPrÅr)
+                .medBruttoPrÅr(BRUTTO_PR_ÅR)
                 .medAktivitetStatus(AktivitetStatus.FRILANSER.getKode())
                 .build();
     }
@@ -49,14 +53,14 @@ public class BeregningsgrunnlagMapperTest {
 
     private BeregningsgrunnlagPrStatusOgAndel lagBgpsaAvkortetArbeidstaker() {
         return BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medAvkortetPrÅr(avkortetPrÅr)
+                .medAvkortetPrÅr(AVKORTET_PR_ÅR)
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.getKode())
                 .build();
     }
 
     @Test
     public void skal_finne_brutto() {
-        assertThat(BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag)).isEqualTo(bruttoPrÅr.add(avkortetPrÅr).longValue());
+        assertThat(BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag)).isEqualTo(BRUTTO_PR_ÅR.add(AVKORTET_PR_ÅR).longValue());
     }
 
     @Test
@@ -64,7 +68,7 @@ public class BeregningsgrunnlagMapperTest {
         Beregningsgrunnlag originaltBeregninsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagPeriode(
                         BeregningsgrunnlagPeriode.ny()
-                                .medDagsats(standardPeriodeDagsats + 5)
+                                .medDagsats(STANDARD_PERIODE_DAGSATS + 5)
                                 .build()
                 )
                 .build();
@@ -76,7 +80,7 @@ public class BeregningsgrunnlagMapperTest {
         Beregningsgrunnlag originaltBeregninsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagPeriode(
                         BeregningsgrunnlagPeriode.ny()
-                                .medDagsats(standardPeriodeDagsats - 5)
+                                .medDagsats(STANDARD_PERIODE_DAGSATS - 5)
                                 .build()
                 )
                 .build();
@@ -170,4 +174,56 @@ public class BeregningsgrunnlagMapperTest {
                 beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()))
                 .isEqualTo(1);
     }
+
+    @Test
+    public void skal_finne_dagsats() {
+        assertThat(BeregningsgrunnlagMapper.finnDagsats(beregningsgrunnlag)).isEqualTo(STANDARD_PERIODE_DAGSATS);
+    }
+
+    @Test
+    public void skal_finne_månedsbeløp() {
+        assertThat(BeregningsgrunnlagMapper.finnMånedsbeløp(beregningsgrunnlag)).isEqualTo(10L);
+    }
+
+    @Test
+    public void skal_finne_månedsbeløp_redusert() {
+
+        beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .leggTilBeregningsgrunnlagPeriode(
+                        BeregningsgrunnlagPeriode.ny()
+                                .medDagsats(STANDARD_PERIODE_DAGSATS)
+                                .medBruttoPrÅr(BRUTTO_PR_ÅR)
+                                .medRedusertPrÅr(REDUSERT_PR_ÅR)
+                                .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListe())
+                                .build())
+                .build();
+        assertThat(BeregningsgrunnlagMapper.finnMånedsbeløp(beregningsgrunnlag)).isEqualTo(1L);
+    }
+
+    @Test
+    public void skal_identifisere_brutto_over_6g() {
+
+        beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .medGrunnbeløp(new Beløp(GRUNNBELØP))
+                .leggTilBeregningsgrunnlagPeriode(
+                        BeregningsgrunnlagPeriode.ny()
+                                .medBruttoPrÅr(GRUNNBELØP.multiply(BigDecimal.valueOf(6)).add(BigDecimal.ONE))
+                                .build())
+                .build();
+        assertThat(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag)).isTrue();
+    }
+
+    @Test
+    public void skal_identifisere_ikke_brutto_over_6g() {
+
+        beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .medGrunnbeløp(new Beløp(GRUNNBELØP))
+                .leggTilBeregningsgrunnlagPeriode(
+                        BeregningsgrunnlagPeriode.ny()
+                                .medBruttoPrÅr(GRUNNBELØP.multiply(BigDecimal.valueOf(6)))
+                                .build())
+                .build();
+        assertThat(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag)).isFalse();
+    }
+
 }

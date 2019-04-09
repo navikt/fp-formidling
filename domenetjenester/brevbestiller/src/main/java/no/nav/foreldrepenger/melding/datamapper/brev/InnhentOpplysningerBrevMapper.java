@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -56,6 +57,7 @@ public class InnhentOpplysningerBrevMapper implements DokumentTypeMapper {
         //CDI
     }
 
+    @Inject
     public InnhentOpplysningerBrevMapper(BrevParametere brevParametere,
                                          BehandlingMapper behandlingMapper,
                                          SøknadMapper søknadMapper) {

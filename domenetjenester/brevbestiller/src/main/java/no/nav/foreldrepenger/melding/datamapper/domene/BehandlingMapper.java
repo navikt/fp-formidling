@@ -14,6 +14,8 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingRelLinkPayloadDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -49,6 +51,10 @@ public class BehandlingMapper {
         return mapBehandlingFraDto(behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId)));
     }
 
+    private static Long finnSaksnummer(BehandlingDto dto) {
+        return dto.getLinks().stream().map(BehandlingResourceLinkDto::getRequestPayload).map(BehandlingRelLinkPayloadDto::getSaksnummer).findFirst().orElse(null);
+    }
+
     public Behandling mapBehandlingFraDto(BehandlingDto dto) {
         Behandling.Builder builder = Behandling.builder();
         builder.medId(dto.getId())
@@ -58,7 +64,7 @@ public class BehandlingMapper {
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
-                .medSaksnummer(dto.getFagsakId())
+                .medSaksnummer(finnSaksnummer(dto))
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()));
 
         dto.getLinks().forEach(builder::leggTilResourceLink);

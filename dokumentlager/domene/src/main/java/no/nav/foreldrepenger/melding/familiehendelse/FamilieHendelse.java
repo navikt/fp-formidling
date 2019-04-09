@@ -20,21 +20,25 @@ public class FamilieHendelse {
     private String terminbekreftelse;
     private Optional<LocalDate> termindato;
     private boolean barnErFødt;
+    private boolean gjelderFødsel;
 
-    public FamilieHendelse(BigInteger antallBarn, Optional<LocalDate> termindato, boolean barnErFødt) {
+    public FamilieHendelse(BigInteger antallBarn, Optional<LocalDate> termindato, boolean barnErFødt, boolean gjelderFødsel) {
         this.antallBarn = antallBarn;
         this.termindato = termindato;
         this.barnErFødt = barnErFødt;
+        this.gjelderFødsel = gjelderFødsel;
     }
 
     public static FamilieHendelse fraDto(FamiliehendelseDto dto) {
         BigInteger antallBarnFraDto = utledAntallBarnFraDto(dto);
         Optional<LocalDate> termindatoFraDto = finnTermindato(dto);
         boolean barnErFødtFraDto = false;
+        boolean gjelderFødsel = false;
         if (dto instanceof AvklartDataFodselDto) {
             barnErFødtFraDto = !((AvklartDataFodselDto) dto).getAvklartBarn().isEmpty();
+            gjelderFødsel = true;
         }
-        return new FamilieHendelse(antallBarnFraDto, termindatoFraDto, barnErFødtFraDto);
+        return new FamilieHendelse(antallBarnFraDto, termindatoFraDto, barnErFødtFraDto, gjelderFødsel);
     }
 
     static Optional<LocalDate> finnTermindato(FamiliehendelseDto dto) {
@@ -64,6 +68,10 @@ public class FamilieHendelse {
         }
         sum += familiehendelseDto.getAvklartBarn().size();
         return sum;
+    }
+
+    public boolean isGjelderFødsel() {
+        return gjelderFødsel;
     }
 
     public boolean isBarnErFødt() {

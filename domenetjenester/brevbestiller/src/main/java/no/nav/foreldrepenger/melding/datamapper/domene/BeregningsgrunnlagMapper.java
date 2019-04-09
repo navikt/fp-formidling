@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AndelListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AndelType;
@@ -50,7 +51,7 @@ public class BeregningsgrunnlagMapper {
     public static BeregningsgrunnlagRegelListeType mapRegelListe(Beregningsgrunnlag beregningsgrunnlag) {
         ObjectFactory objectFactory = new ObjectFactory();
         BeregningsgrunnlagRegelListeType regelListe = objectFactory.createBeregningsgrunnlagRegelListeType();
-        List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
+        List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe = finnFørstePeriode(beregningsgrunnlag).getBeregningsgrunnlagPrStatusOgAndelList();
         for (BeregningsgrunnlagAktivitetStatus bgAktivitetStatus : beregningsgrunnlag.getAktivitetStatuser()) {
             BeregningsgrunnlagRegelType beregningsgrunnlagRegel = objectFactory.createBeregningsgrunnlagRegelType();
             List<BeregningsgrunnlagPrStatusOgAndel> filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe);
@@ -93,12 +94,12 @@ public class BeregningsgrunnlagMapper {
         if (originaltBeregningsgrunnlag == null) {
             return false;
         }
-        return beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getDagsats() < originaltBeregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getDagsats();
+        return finnFørstePeriode(beregningsgrunnlag).getDagsats() < finnFørstePeriode(originaltBeregningsgrunnlag).getDagsats();
     }
 
     public static long finnBrutto(Beregningsgrunnlag beregningsgrunnlag) {
         AtomicLong sum = new AtomicLong();
-        beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
+        finnFørstePeriode(beregningsgrunnlag)
                 .getBeregningsgrunnlagPrStatusOgAndelList()
                 .forEach(andel -> {
                     if (andel.getAvkortetPrÅr() != null) {
@@ -108,6 +109,10 @@ public class BeregningsgrunnlagMapper {
                     }
                 });
         return sum.get();
+    }
+
+    public static long finnDagsats(Beregningsgrunnlag beregningsgrunnlag) {
+        return finnFørstePeriode(beregningsgrunnlag).getDagsats();
     }
 
     static List<BeregningsgrunnlagPrStatusOgAndel> finnAktivitetStatuserForAndeler(BeregningsgrunnlagAktivitetStatus bgAktivitetStatus, List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
@@ -170,12 +175,33 @@ public class BeregningsgrunnlagMapper {
         return andelListeType;
     }
 
+    public static long finnMånedsbeløp(Beregningsgrunnlag beregningsgrunnlag) {
+        return getMånedsbeløp(finnFørstePeriode(beregningsgrunnlag));
+    }
+
+    private static BeregningsgrunnlagPeriode finnFørstePeriode(Beregningsgrunnlag beregningsgrunnlag) {
+        return beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+    }
+
+    private static long getMånedsbeløp(BeregningsgrunnlagPeriode førstePeriode) {
+        BigDecimal redusertPrÅr = førstePeriode.getRedusertPrÅr();
+        BigDecimal årsbeløp = redusertPrÅr != null ? redusertPrÅr : førstePeriode.getBruttoPrÅr();
+        return årsbeløp.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue();
+    }
+
+    public static BigDecimal finnSeksG(Beregningsgrunnlag beregningsgrunnlag) {
+        return beregningsgrunnlag.getGrunnbeløp().getVerdi().multiply(BigDecimal.valueOf(6));
+    }
+
+    public static boolean inntektOverSeksG(Beregningsgrunnlag beregningsgrunnlag) {
+        return finnFørstePeriode(beregningsgrunnlag).getBruttoPrÅr().compareTo(finnSeksG(beregningsgrunnlag)) > 0;
+    }
+
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
         return Beregningsgrunnlag.fraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinkDtos()));
     }
 
     static StatusTypeKode tilStatusTypeKode(String statuskode) {
-        //TODO - Hvor mye koster det å bygge denne mappen hver gang? Virker unødvendig
         if (aktivitetStatusKodeStatusTypeKodeMap.containsKey(statuskode)) {
             return aktivitetStatusKodeStatusTypeKodeMap.get(statuskode);
         }

@@ -58,6 +58,7 @@ public class BehandlingMapper {
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
+                .medSaksnummer(dto.getFagsakId())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()));
 
         dto.getLinks().forEach(builder::leggTilResourceLink);

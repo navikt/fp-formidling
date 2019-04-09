@@ -4,6 +4,7 @@ import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstan
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -52,7 +53,13 @@ public class BehandlingMapper {
     }
 
     private static Long finnSaksnummer(BehandlingDto dto) {
-        return dto.getLinks().stream().map(BehandlingResourceLinkDto::getRequestPayload).map(BehandlingRelLinkPayloadDto::getSaksnummer).findFirst().orElse(null);
+        return dto.getLinks().stream()
+                .filter(Objects::nonNull)
+                .map(BehandlingResourceLinkDto::getRequestPayload)
+                .filter(Objects::nonNull)
+                .map(BehandlingRelLinkPayloadDto::getSaksnummer)
+                .filter(Objects::nonNull)
+                .findFirst().orElse(null);
     }
 
     public Behandling mapBehandlingFraDto(BehandlingDto dto) {

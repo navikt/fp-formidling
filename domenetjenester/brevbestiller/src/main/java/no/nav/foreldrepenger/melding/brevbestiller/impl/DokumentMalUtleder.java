@@ -91,7 +91,7 @@ class DokumentMalUtleder {
         if (Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST.getKode())) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.FRITEKST_DOK);
         }
-        if (erKlagebehandling(BehandlingType.KLAGE.getKode(), behandling.getBehandlingType().getKode())) {
+        if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {
             return mapKlageBrev(behandling);
         } else if (erRevurderingMedUendretUtfall(behandling)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK);
@@ -114,10 +114,6 @@ class DokumentMalUtleder {
             throw new IllegalStateException(UTVIKLERFEIL_INGEN_ENDRING_SAMMEN + behandling.getId());
         }
         return ingenKonsekvensForYtelsen;
-    }
-
-    private boolean erKlagebehandling(String kode, String behandlingType) {
-        return kode.equals(behandlingType);
     }
 
     private DokumentMalType mapKlageBrev(Behandling behandling) {

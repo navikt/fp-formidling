@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -31,7 +30,6 @@ import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepository;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepositoryImpl;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.VLException;
-@Ignore
 public class DokumentMalUtlederTest {
 
     @Rule

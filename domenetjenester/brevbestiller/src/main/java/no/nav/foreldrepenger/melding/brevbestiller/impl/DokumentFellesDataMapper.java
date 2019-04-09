@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.aktør.PersonstatusType;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
+import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -38,6 +39,7 @@ public class DokumentFellesDataMapper {
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private BehandlingRestKlient behandlingRestKlient;
     private TpsTjeneste tpsTjeneste;
+    private BehandlingMapper behandlingMapper;
 
     public DokumentFellesDataMapper() {
         //CDI
@@ -47,16 +49,18 @@ public class DokumentFellesDataMapper {
     public DokumentFellesDataMapper(TpsTjeneste tpsTjeneste,
                                     DokumentRepository dokumentRepository,
                                     BehandlingRestKlient behandlingRestKlient,
+                                    BehandlingMapper behandlingMapper,
                                     NavKontaktKonfigurasjon navKontaktKonfigurasjon) {
         this.tpsTjeneste = tpsTjeneste;
         this.dokumentRepository = dokumentRepository;
         this.behandlingRestKlient = behandlingRestKlient;
+        this.behandlingMapper = behandlingMapper;
         this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
     }
 
     DokumentData opprettDokumentDataForBehandling(BehandlingDto behandlingDto, DokumentMalType dokumentMalType) {
         //Data for mapping
-        Behandling behandling = Behandling.fraDto(behandlingDto);
+        Behandling behandling = behandlingMapper.mapBehandlingFraDto(behandlingDto);
         Personopplysning personopplysning = new Personopplysning(behandlingDto.getPersonopplysningDto());
         DokumentData dokumentData = DokumentData.opprettNy(dokumentMalType, behandling.getId());
         final AktørId søkersAktørId = new AktørId(personopplysning.getAktoerId());

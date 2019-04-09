@@ -75,13 +75,13 @@ public class InntektsmeldingFørSøknadBrevMapper implements DokumentTypeMapper 
         return fagType;
     }
 
-    static BehandlingsTypeKode mapToXmlBehandlingsType(String vlKode) {
-        if (Objects.equals(vlKode, BehandlingType.FØRSTEGANGSSØKNAD.getKode())) {
+    static BehandlingsTypeKode mapToXmlBehandlingsType(BehandlingType behandlingType) {
+        if (Objects.equals(behandlingType, BehandlingType.FØRSTEGANGSSØKNAD)) {
             return BehandlingsTypeKode.FOERSTEGANGSBEHANDLING;
-        } else if (Objects.equals(vlKode, BehandlingType.REVURDERING.getKode())) {
+        } else if (Objects.equals(behandlingType, BehandlingType.REVURDERING)) {
             return BehandlingsTypeKode.REVURDERING;
         }
-        throw DokumentMapperFeil.FACTORY.innhentDokumentasjonKreverGyldigBehandlingstype(vlKode).toException();
+        throw DokumentMapperFeil.FACTORY.innhentDokumentasjonKreverGyldigBehandlingstype(behandlingType.getKode()).toException();
     }
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {

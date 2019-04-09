@@ -91,7 +91,7 @@ class DokumentMalUtleder {
         if (Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST.getKode())) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.FRITEKST_DOK);
         }
-        if (erKlagebehandling(BehandlingType.KLAGE.getKode(), behandling.getBehandlingType())) {
+        if (erKlagebehandling(BehandlingType.KLAGE.getKode(), behandling.getBehandlingType().getKode())) {
             return mapKlageBrev(behandling);
         } else if (erRevurderingMedUendretUtfall(behandling)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK);
@@ -104,7 +104,7 @@ class DokumentMalUtleder {
     }
 
     private boolean erRevurderingMedUendretUtfall(Behandling behandling) {
-        if (!BehandlingType.REVURDERING.getKode().equals(behandling.getBehandlingType())) {
+        if (!BehandlingType.REVURDERING.equals(behandling.getBehandlingType())) {
             return false;
         }
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();

@@ -3,17 +3,16 @@ package no.nav.foreldrepenger.melding.behandling;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingsresultatDto;
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.melding.beregning.BeregningResultat;
+import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.melding.vilkår.VilkårResultat;
 
 public class Behandlingsresultat {
-    private String avslagsårsak; //Kode
+    private Avslagsårsak avslagsårsak; //Kode
     private String fritekstbrev;
     private String overskrift;
     private String vedtaksbrev;
-    private String behandlingResultatType;
+    private BehandlingResultatType behandlingResultatType;
     private String avslagarsakFritekst;
     private List<String> konsekvenserForYtelsen = new ArrayList<>(); //Kode BehandlingsresultatKonsekvensForYtelsen
 
@@ -39,27 +38,7 @@ public class Behandlingsresultat {
         behandling = builder.behandling;
     }
 
-    public static Behandlingsresultat fraDto(BehandlingsresultatDto dto) {
-        Builder builder = ny();
-        if (dto.getAvslagsarsak() != null) {
-            builder.medAvslagsårsak(dto.getAvslagsarsak().kode);
-        }
-        if (dto.getType() != null) {
-            builder.medBehandlingResultatType(dto.getType().kode);
-        }
-        builder.medFritekstbrev(dto.getFritekstbrev())
-                .medOverskrift(dto.getOverskrift())
-                .medVedtaksbrev(dto.getVedtaksbrev().kode)
-                .medAvslagarsakFritekst(dto.getAvslagsarsakFritekst());
-        List<String> konsekvenserForYtelsen = new ArrayList<>();
-        for (KodeDto kodeDto : dto.getKonsekvenserForYtelsen()) {
-            konsekvenserForYtelsen.add(kodeDto.kode);
-        }
-        builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);
-        return builder.build();
-    }
-
-    public static Builder ny() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -68,14 +47,14 @@ public class Behandlingsresultat {
     }
 
     public boolean erInnvilget() {
-        return BehandlingResultatType.INNVILGET.getKode().equals(behandlingResultatType);
+        return BehandlingResultatType.INNVILGET.equals(behandlingResultatType);
     }
 
-    public String getBehandlingResultatType() {
+    public BehandlingResultatType getBehandlingResultatType() {
         return behandlingResultatType;
     }
 
-    public String getAvslagsårsak() {
+    public Avslagsårsak getAvslagsårsak() {
         return avslagsårsak;
     }
 
@@ -117,7 +96,7 @@ public class Behandlingsresultat {
     }
 
     public boolean erEndretForeldrepenger() {
-        return BehandlingResultatType.FORELDREPENGER_ENDRET.getKode().equals(behandlingResultatType);
+        return BehandlingResultatType.FORELDREPENGER_ENDRET.equals(behandlingResultatType);
     }
 
     public boolean isBehandlingsresultatOpphørt() {
@@ -125,7 +104,7 @@ public class Behandlingsresultat {
     }
 
     public boolean erAvslått() {
-        return BehandlingResultatType.AVSLÅTT.getKode().equals(behandlingResultatType);
+        return BehandlingResultatType.AVSLÅTT.equals(behandlingResultatType);
     }
 
     public boolean isBehandlingsresultatInnvilget() {
@@ -133,7 +112,7 @@ public class Behandlingsresultat {
     }
 
     public boolean erOpphørt() {
-        return BehandlingResultatType.OPPHØR.getKode().equals(behandlingResultatType);
+        return BehandlingResultatType.OPPHØR.equals(behandlingResultatType);
     }
 
     public boolean isBehandlingsresultatForeldrepengerEndret() {
@@ -150,11 +129,11 @@ public class Behandlingsresultat {
 
 
     public static final class Builder {
-        private String avslagsårsak;
+        private Avslagsårsak avslagsårsak;
         private String fritekstbrev;
         private String overskrift;
         private String vedtaksbrev;
-        private String behandlingResultatType;
+        private BehandlingResultatType behandlingResultatType;
         private String avslagarsakFritekst;
         private List<String> konsekvenserForYtelsen = new ArrayList<>();
         private String beregning;
@@ -166,63 +145,63 @@ public class Behandlingsresultat {
         private Builder() {
         }
 
-        public Builder medAvslagsårsak(String val) {
-            avslagsårsak = val;
+        public Builder medAvslagsårsak(Avslagsårsak avslagsårsak) {
+            this.avslagsårsak = avslagsårsak;
             return this;
         }
 
-        public Builder medFritekstbrev(String val) {
-            fritekstbrev = val;
+        public Builder medFritekstbrev(String fritekstbrev) {
+            this.fritekstbrev = fritekstbrev;
             return this;
         }
 
-        public Builder medOverskrift(String val) {
-            overskrift = val;
+        public Builder medOverskrift(String overskrift) {
+            this.overskrift = overskrift;
             return this;
         }
 
-        public Builder medVedtaksbrev(String val) {
-            vedtaksbrev = val;
+        public Builder medVedtaksbrev(String vedtaksbrev) {
+            this.vedtaksbrev = vedtaksbrev;
             return this;
         }
 
-        public Builder medBehandlingResultatType(String val) {
-            behandlingResultatType = val;
+        public Builder medBehandlingResultatType(BehandlingResultatType behandlingResultatType) {
+            this.behandlingResultatType = behandlingResultatType;
             return this;
         }
 
-        public Builder medAvslagarsakFritekst(String val) {
-            avslagarsakFritekst = val;
+        public Builder medAvslagarsakFritekst(String avslagarsakFritekst) {
+            this.avslagarsakFritekst = avslagarsakFritekst;
             return this;
         }
 
-        public Builder medKonsekvenserForYtelsen(List<String> val) {
-            konsekvenserForYtelsen = val;
+        public Builder medKonsekvenserForYtelsen(List<String> konsekvenserForYtelsen) {
+            this.konsekvenserForYtelsen = konsekvenserForYtelsen;
             return this;
         }
 
-        public Builder medBeregning(String val) {
-            beregning = val;
+        public Builder beregning(String beregning) {
+            this.beregning = beregning;
             return this;
         }
 
-        public Builder medVilkårResultat(VilkårResultat val) {
-            vilkårResultat = val;
+        public Builder vilkårResultat(VilkårResultat vilkårResultat) {
+            this.vilkårResultat = vilkårResultat;
             return this;
         }
 
-        public Builder medPeriode(String val) {
-            Periode = val;
+        public Builder Periode(String Periode) {
+            this.Periode = Periode;
             return this;
         }
 
-        public Builder medBeregningResultat(BeregningResultat val) {
-            beregningResultat = val;
+        public Builder beregningResultat(BeregningResultat beregningResultat) {
+            this.beregningResultat = beregningResultat;
             return this;
         }
 
-        public Builder medBehandling(Behandling val) {
-            behandling = val;
+        public Builder behandling(Behandling behandling) {
+            this.behandling = behandling;
             return this;
         }
 

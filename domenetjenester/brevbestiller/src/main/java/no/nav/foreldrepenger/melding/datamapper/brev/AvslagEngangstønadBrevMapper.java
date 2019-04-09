@@ -98,7 +98,7 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
         fagType.setRelasjonsKode(relasjonskodeTypeMap.get(behandling.getFagsak().getRelasjonsRolleType()));
         fagType.setGjelderFoedsel(fra(familiehendelse));
         fagType.setAntallBarn(familiehendelse.getAntallBarn().intValue());
-        fagType.setAvslagsAarsak(behandling.getBehandlingsresultat().getAvslagsårsak());
+        fagType.setAvslagsAarsak(behandling.getBehandlingsresultat().getAvslagsårsak().getKode());
         avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
         fagType.setKlageFristUker(brevParametere.getKlagefristUker());
         fagType.setVilkaarType(fra(vilkår.getVilkårType()));

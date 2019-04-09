@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
+import static no.nav.foreldrepenger.melding.behandling.Behandlingsresultat.builder;
 import static no.nav.foreldrepenger.melding.datamapper.brev.InnvilgelseForeldrepengerMapper.ENDRING_BEREGNING_OG_UTTAK;
 
 import java.time.LocalDate;
@@ -11,7 +12,10 @@ import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingsresultatDto;
+import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.beregning.Beregning;
@@ -46,6 +50,26 @@ public class BehandlingsresultatMapper {
     @Inject
     public BehandlingsresultatMapper(KodeverkRepository kodeverkRepository) {
         this.kodeverkRepository = kodeverkRepository;
+    }
+
+    public Behandlingsresultat mapBehandlingsresultatFraDto(BehandlingsresultatDto dto) {
+        Behandlingsresultat.Builder builder = builder();
+        if (dto.getAvslagsarsak() != null) {
+            builder.medAvslagsårsak(kodeverkRepository.finn(Avslagsårsak.class, dto.getAvslagsarsak().kode));
+        }
+        if (dto.getType() != null) {
+            builder.medBehandlingResultatType(kodeverkRepository.finn(BehandlingResultatType.class, dto.getType().kode));
+        }
+        builder.medFritekstbrev(dto.getFritekstbrev())
+                .medOverskrift(dto.getOverskrift())
+                .medVedtaksbrev(dto.getVedtaksbrev().kode)
+                .medAvslagarsakFritekst(dto.getAvslagsarsakFritekst());
+        List<String> konsekvenserForYtelsen = new ArrayList<>();
+        for (KodeDto kodeDto : dto.getKonsekvenserForYtelsen()) {
+            konsekvenserForYtelsen.add(kodeDto.kode);
+        }
+        builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);
+        return builder.build();
     }
 
     private Optional<Beregning> hentSisteBeregning(Behandling originalBehandling) {
@@ -234,4 +258,5 @@ public class BehandlingsresultatMapper {
         return new ArrayList<>();
 //        return familiehendelseTjeneste.finnBarnSøktStønadFor(behandling);
     }
+
 }

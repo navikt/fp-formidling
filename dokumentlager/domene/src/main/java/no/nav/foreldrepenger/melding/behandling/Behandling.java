@@ -1,28 +1,27 @@
 package no.nav.foreldrepenger.melding.behandling;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 
 public class Behandling {
     private Long saksnummer;
-    private String behandlendeEnhetNavn;
     private Behandlingsresultat behandlingsresultat;
     private List<BehandlingResourceLinkDto> resourceLinkDtos;
 
     //Felter brukt i brev
     private long id;
     private Long originalBehandlingId;
-    private String behandlingType;
+    private BehandlingType behandlingType;
     private Integer behandlingstidFristUker;
-    private LocalDate opprettetDato;
+    private LocalDateTime opprettetDato;
     private List<BehandlingÅrsak> behandlingÅrsaker = new ArrayList<>();
     private String ansvarligSaksbehandler;
     private Boolean toTrinnsBehandling;
+    private String behandlendeEnhetNavn;
     private String ansvarligBeslutter;
     private Fagsak fagsak;
 
@@ -43,25 +42,6 @@ public class Behandling {
         fagsak = builder.fagsak;
     }
 
-    public static Behandling fraDto(BehandlingDto dto) {
-        Behandling.Builder builder = Behandling.builder();
-        builder.medId(dto.getId())
-                .medOriginalBehandling(dto.getOriginalBehandlingId())
-                .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
-                .medToTrinnsBehandling(dto.getToTrinnsBehandling())
-                .medBehandlingType(dto.getType().kode)
-                .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn());
-
-        dto.getLinks().forEach(builder::leggTilResourceLink);
-        dto.getBehandlingArsaker().stream().map(BehandlingÅrsak::new).forEach(builder::leggTilBehandlingÅrsak);
-
-        if (dto.getBehandlingsresultat() != null) {
-            builder.medBehandlingsresultat(Behandlingsresultat.fraDto(dto.getBehandlingsresultat()));
-        }
-
-        return builder.build();
-    }
-
     public String getBehandlendeEnhetNavn() {
         return behandlendeEnhetNavn;
     }
@@ -70,7 +50,7 @@ public class Behandling {
         return behandlingsresultat;
     }
 
-    public String getBehandlingType() {
+    public BehandlingType getBehandlingType() {
         return behandlingType;
     }
 
@@ -78,7 +58,7 @@ public class Behandling {
         return behandlingstidFristUker;
     }
 
-    public LocalDate getOpprettetDato() {
+    public LocalDateTime getOpprettetDato() {
         return opprettetDato;
     }
 
@@ -146,9 +126,9 @@ public class Behandling {
 
         private long id;
         private Long originalBehandlingId;
-        private String behandlingType;
+        private BehandlingType behandlingType;
         private Integer behandlingstidFristUker;
-        private LocalDate opprettetDato;
+        private LocalDateTime opprettetDato;
         private List<BehandlingÅrsak> behandlingÅrsaker = new ArrayList<>();
         private String ansvarligSaksbehandler;
         private Boolean toTrinnsBehandling;
@@ -180,7 +160,7 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder medBehandlingType(String behandlingType) {
+        public Behandling.Builder medBehandlingType(BehandlingType behandlingType) {
             this.behandlingType = behandlingType;
             return this;
         }
@@ -195,13 +175,13 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder medOpprettetDato(LocalDate opprettetDato) {
+        public Behandling.Builder medOpprettetDato(LocalDateTime opprettetDato) {
             this.opprettetDato = opprettetDato;
             return this;
         }
 
-        public Behandling.Builder leggTilBehandlingÅrsak(BehandlingÅrsak behandlingÅrsak) {
-            this.behandlingÅrsaker.add(behandlingÅrsak);
+        public Behandling.Builder medBehandlingÅrsaker(List<BehandlingÅrsak> behandlingÅrsaker) {
+            this.behandlingÅrsaker.addAll(behandlingÅrsaker);
             return this;
         }
 
@@ -228,8 +208,5 @@ public class Behandling {
         public Behandling build() {
             return new Behandling(this);
         }
-
     }
-
-
 }

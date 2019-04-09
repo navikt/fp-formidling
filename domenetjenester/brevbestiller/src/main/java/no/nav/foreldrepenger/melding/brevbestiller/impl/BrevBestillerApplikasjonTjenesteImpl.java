@@ -17,6 +17,7 @@ import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -47,6 +48,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     private BehandlingRestKlient behandlingRestKlient;
     private DokumentbestillingMapper dokumentbestillingMapper;
     private DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper;
+    private BehandlingMapper behandlingMapper;
 
     public BrevBestillerApplikasjonTjenesteImpl() {
         // for cdi proxy
@@ -59,7 +61,8 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
                                                 BehandlingRestKlient behandlingRestKlient,
                                                 DokumentbestillingMapper dokumentbestillingMapper,
                                                 DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper,
-                                                DokumentFellesDataMapper dokumentFellesDataMapper) {
+                                                DokumentFellesDataMapper dokumentFellesDataMapper,
+                                                BehandlingMapper behandlingMapper) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
         this.dokumentXmlDataMapper = dokumentXmlDataMapper;
         this.dokumentMalUtleder = dokumentMalUtleder;
@@ -67,12 +70,13 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         this.dokumentbestillingMapper = dokumentbestillingMapper;
         this.dtoTilDomeneobjektMapper = dtoTilDomeneobjektMapper;
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
+        this.behandlingMapper = behandlingMapper;
     }
 
     @Override
     public DokumentHistorikkinnslag bestillBrev(DokumentHendelse dokumentHendelse) {
         BehandlingDto behandlingDto = hentBehandlingFraFpsak(dokumentHendelse.getBehandlingId());
-        Behandling behandling = Behandling.fraDto(behandlingDto);
+        Behandling behandling = behandlingMapper.mapBehandlingFraDto(behandlingDto);
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
         DokumentFelles dokumentFelles = lagDokumentFelles(behandlingDto, dokumentMal);
         Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling);
@@ -120,7 +124,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         DokumentHendelse hendelse = dtoTilDomeneobjektMapper.fraDto(hendelseDto);
         BehandlingDto behandlingDto = hentBehandlingFraFpsak(hendelse.getBehandlingId());
 
-        Behandling behandling = Behandling.fraDto(behandlingDto);
+        Behandling behandling = behandlingMapper.mapBehandlingFraDto(behandlingDto);
 
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, hendelse);
         DokumentFelles dokumentFelles = lagDokumentFelles(behandlingDto, dokumentMal);

@@ -47,7 +47,7 @@ public class HenleggBehandlingBrevMapper implements DokumentTypeMapper {
     FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
         FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
-        fagType.setBehandlingsType(mapToXmlBehandlingsType(behandling.getBehandlingType()));
+        fagType.setBehandlingsType(mapToXmlBehandlingsType(behandling.getBehandlingType().getKode()));
         fagType.setOpphavType(mapToXmlOpphavType(behandling.getBehandlendeEnhetNavn()));
         return fagType;
     }

@@ -28,7 +28,7 @@ public class BehandlingMapperTest {
     @Test
     public void skal_prioritere_hendelse() {
         behandling = standardBehandlingBuilder()
-                .medBehandlingsresultat(Behandlingsresultat.ny()
+                .medBehandlingsresultat(Behandlingsresultat.builder()
                         .medAvslagarsakFritekst(BEHANDLING_FRITEKST)
                         .build())
                 .build();
@@ -42,7 +42,7 @@ public class BehandlingMapperTest {
     @Test
     public void skal_ta_fritekst_fra_behandling_når_mangler_i_hendelse() {
         behandling = standardBehandlingBuilder()
-                .medBehandlingsresultat(Behandlingsresultat.ny()
+                .medBehandlingsresultat(Behandlingsresultat.builder()
                         .medAvslagarsakFritekst(BEHANDLING_FRITEKST)
                         .build())
                 .build();

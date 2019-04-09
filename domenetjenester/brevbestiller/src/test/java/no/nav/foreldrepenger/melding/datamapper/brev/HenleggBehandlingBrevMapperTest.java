@@ -15,19 +15,19 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.Opph
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.YtelseTypeKode;
 
 public class HenleggBehandlingBrevMapperTest {
-
+    private static final long ID = 123L;
     private HenleggBehandlingBrevMapper mapper = new HenleggBehandlingBrevMapper();
     private Behandling behandling;
     private DokumentHendelse dokumentHendelse;
 
     @Before
     public void setup() {
-        behandling = Behandling.builder().medId(123l)
-                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD.getKode())
+        behandling = Behandling.builder().medId(ID)
+                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medBehandlendeEnhetNavn(HenleggBehandlingBrevMapper.FAMPEN)
                 .build();
         dokumentHendelse = DokumentHendelse.builder()
-                .medBehandlingId(123l)
+                .medBehandlingId(ID)
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .build();
     }

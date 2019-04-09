@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -16,8 +15,6 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -25,13 +22,15 @@ import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
+import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepository;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepositoryImpl;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.VLException;
 public class DokumentMalUtlederTest {
-
+    private final long BEHANDLING_ID = 123L;
     @Rule
     public UnittestRepositoryRule repositoryRule = new UnittestRepositoryRule();
 
@@ -90,7 +89,7 @@ public class DokumentMalUtlederTest {
     @Test
     public void utled_innvilget_es() {
         hendelse = DokumentHendelse.builder()
-                .medBehandlingId(123l)
+                .medBehandlingId(BEHANDLING_ID)
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
@@ -103,7 +102,7 @@ public class DokumentMalUtlederTest {
     @Test
     public void utled_avslått_es() {
         hendelse = DokumentHendelse.builder()
-                .medBehandlingId(123l)
+                .medBehandlingId(BEHANDLING_ID)
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
@@ -116,7 +115,7 @@ public class DokumentMalUtlederTest {
     @Test
     public void utled_avslått_opphør_es() {
         hendelse = DokumentHendelse.builder()
-                .medBehandlingId(123l)
+                .medBehandlingId(BEHANDLING_ID)
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
@@ -129,7 +128,7 @@ public class DokumentMalUtlederTest {
     @Test
     public void kast_exception_hvis_ugyldig_es() {
         hendelse = DokumentHendelse.builder()
-                .medBehandlingId(123l)
+                .medBehandlingId(BEHANDLING_ID)
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
@@ -231,17 +230,15 @@ public class DokumentMalUtlederTest {
                 .build();
 
         Klage klage = Klage.ny()
-                .medKlageVurderingResultatNK(KlageVurderingResultat.ny().medKlageVurdering(klageVurdering.getKode()).build())
+                .medKlageVurderingResultatNK(KlageVurderingResultat.ny().medKlageVurdering(klageVurdering).build())
                 .build();
         Mockito.doReturn(klage).when(klageMapper).hentKlagebehandling(behandling);
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(dokumentmal);
     }
-
 
     private DokumentHendelse.Builder standardBuilder() {
         return DokumentHendelse.builder()
                 .medBehandlingId(123L)
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER);
     }
-
 }

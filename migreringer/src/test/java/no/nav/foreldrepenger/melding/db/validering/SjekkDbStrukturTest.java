@@ -46,7 +46,10 @@ public class SjekkDbStrukturTest {
         String sql = "select t.table_name from information_schema.tables t\n" +
                 "join pg_class c on t.table_name = c.relname\n" +
                 "where t.table_schema = current_schema\n" +
-                "and t.table_name not like 'schema_%' AND t.table_name not like 'flyway_%' and t.table_name not like 'mock_%' \n" +
+                "and t.table_name not like 'schema_%' AND t.table_name not like 'flyway_%' " +
+                "AND t.table_name not like 'prosess_task_partition_%' " +
+                "AND t.table_name not like 'prosess_task' " +
+                "and t.table_name not like 'mock_%' \n" +
                 "and obj_description(c.oid) is null";
         List<String> avvik = new ArrayList<>();
         try (Connection conn = ds.getConnection();
@@ -75,6 +78,8 @@ public class SjekkDbStrukturTest {
                 "AND upper(c.column_name) NOT IN ('OPPRETTET_TID','ENDRET_TID','OPPRETTET_AV','ENDRET_AV','VERSJON','BESKRIVELSE','NAVN','FOM', 'TOM','LAND', 'LANDKODE', 'KL_LANDKODE', 'KL_LANDKODER', 'AKTIV')\n" +
                 "AND c.table_name not like 'schema_%'\n" +
                 "AND c.table_name not like 'flyway_%'\n" +
+                "AND c.table_name not like 'prosess_task_partition_%'\n" +
+                "AND c.table_name not like 'prosess_task'\n" +
                 "AND c.table_name not like 'mock_%' \n" +
                 "AND pgd.description is null\n" +
                 "AND not exists (\n" +
@@ -314,6 +319,7 @@ public class SjekkDbStrukturTest {
     public void skal_ha_primary_key_i_hver_tabell_som_begynner_med_PK() throws Exception {
         String sql = "SELECT t.table_name FROM information_schema.tables t where t.table_schema = current_schema\n" +
                 "and t.table_name not like 'schema_%' AND t.table_name not like 'flyway_%'\n" +
+                "AND t.table_name not like 'prosess_task_partition_%'\n" +
                 "and t.table_name not in\n" +
                 "    (select c.table_name from information_schema.table_constraints c where c.constraint_type = 'PRIMARY KEY' and constraint_name like 'pk_%')";
 
@@ -391,7 +397,7 @@ public class SjekkDbStrukturTest {
                 "  and t.relkind = 'r'\n" +
                 "  and t.relname = it.table_name\n" +
                 "  and it.table_schema = current_schema\n" +
-                "  and it.table_name not like 'schema_%' AND it.table_name not like 'flyway_%' and it.table_name not like 'mock_%'\n" +
+                "  and it.table_name not like 'schema_%' AND it.table_name not like 'flyway_%' and it.table_name not like 'mock_%' AND it.table_name not like 'prosess_task_partition_%' " +
                 "  --and t.relname like 'test%'\n" +
                 "  and i.relname not like 'pk_%' and i.relname not like 'idx_%' and i.relname not like 'uidx_%' and i.relname not like 'chk_%'\n" +
                 "order by\n" +
@@ -434,6 +440,8 @@ public class SjekkDbStrukturTest {
                 "  and confkeypos = cs2.ordinal_position\n" +
                 "  and cs1.table_schema = current_schema\n" +
                 "  and cs2.table_schema = current_schema\n" +
+                "  AND cs1.table_name not like 'prosess_task_partition_%' " +
+                "  AND cs2.table_name not like 'prosess_task_partition_%' " +
                 "\n" +
                 "  and ((cs1.data_type != cs2.data_type)\n" +
                 "         OR (cs1.character_maximum_length != cs2.character_maximum_length)\n" +
@@ -496,4 +504,3 @@ public class SjekkDbStrukturTest {
     }
 
 }
-

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.klage;
 
-
 import java.util.HashMap;
 import java.util.Map;
 

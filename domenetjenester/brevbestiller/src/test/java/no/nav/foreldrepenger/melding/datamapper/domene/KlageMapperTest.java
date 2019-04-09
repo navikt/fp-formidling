@@ -16,10 +16,10 @@ import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
+import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
-import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepositoryImpl;
@@ -59,7 +59,7 @@ public class KlageMapperTest {
     }
 
     private Klage lagKlageNFP(boolean opphevet, List<KlageAvvistÅrsak> avvistÅrsaker) {
-        return Klage.fraDto(lagKlageDto(opphevet, avvistÅrsaker), kodeverkRepository);
+        return klageMapper.mapKlagefraDto(lagKlageDto(opphevet, avvistÅrsaker));
     }
 
     private KlagebehandlingDto lagKlageDto(boolean opphevet, List<KlageAvvistÅrsak> avvistÅrsaker) {
@@ -95,5 +95,4 @@ public class KlageMapperTest {
         String lovhjemler = KlageMapper.formaterLovhjemlerForAvvistKlage(input, klagetEtterKlagefrist).get();
         assertThat(lovhjemler).isEqualTo(forventetOutput);
     }
-
 }

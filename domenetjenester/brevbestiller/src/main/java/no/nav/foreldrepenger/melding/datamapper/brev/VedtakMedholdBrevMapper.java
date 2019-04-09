@@ -12,7 +12,7 @@ import javax.xml.stream.XMLStreamException;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
+import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;

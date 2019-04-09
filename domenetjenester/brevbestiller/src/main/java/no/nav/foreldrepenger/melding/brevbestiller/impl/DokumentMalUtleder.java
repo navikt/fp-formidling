@@ -11,14 +11,14 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.Klage;
-import no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
+import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepository;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 
@@ -122,18 +122,17 @@ class DokumentMalUtleder {
         if (klageVurderingResultat == null) {
             throw DokumentBestillerFeil.FACTORY.behandlingManglerKlageVurderingResultat(behandling.getId()).toException();
         }
-        String klagevurdering = klageVurderingResultat.getKlageVurdering();
-        if (KlageVurdering.AVVIS_KLAGE.getKode().equals(klagevurdering)) {
+        KlageVurdering klagevurdering = klageVurderingResultat.getKlageVurdering();
+        if (KlageVurdering.AVVIS_KLAGE.equals(klagevurdering)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_AVVIST_DOK);
-        } else if (Arrays.asList(KlageVurdering.OPPHEVE_YTELSESVEDTAK.getKode(), KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE.getKode()).contains(klagevurdering)) {
+        } else if (Arrays.asList(KlageVurdering.OPPHEVE_YTELSESVEDTAK, KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE).contains(klagevurdering)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_YTELSESVEDTAK_OPPHEVET_DOK);
-        } else if (KlageVurdering.MEDHOLD_I_KLAGE.getKode().equals(klagevurdering)) {
+        } else if (KlageVurdering.MEDHOLD_I_KLAGE.equals(klagevurdering)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.VEDTAK_MEDHOLD);
-        } else if (KlageVurdering.STADFESTE_YTELSESVEDTAK.getKode().equals(klagevurdering)) {
+        } else if (KlageVurdering.STADFESTE_YTELSESVEDTAK.equals(klagevurdering)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_YTELSESVEDTAK_STADFESTET_DOK);
         }
         //TODO aleksander
         throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getId()).toException();
     }
-
 }

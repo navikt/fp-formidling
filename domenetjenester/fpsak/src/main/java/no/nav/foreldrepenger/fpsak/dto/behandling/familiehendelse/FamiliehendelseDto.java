@@ -6,12 +6,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
-        property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = AvklartDataFodselDto.class, name = "AvklartDataFodselDto"),
-        @JsonSubTypes.Type(value = AvklartDataAdopsjonDto.class, name = "AvklartDataAdopsjonDto"),
-        @JsonSubTypes.Type(value = AvklartDataOmsorgDto.class, name = "AvklartDataOmsorgDto")
+        @JsonSubTypes.Type(value = AvklartDataFodselDto.class),
+        @JsonSubTypes.Type(value = AvklartDataAdopsjonDto.class),
+        @JsonSubTypes.Type(value = AvklartDataOmsorgDto.class)
 })
 public abstract class FamiliehendelseDto {
 

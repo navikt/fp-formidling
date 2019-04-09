@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 
 import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
 
-
 @Entity(name = "KlageVurdering")
 @DiscriminatorValue(KlageVurdering.DISCRIMINATOR)
 public class KlageVurdering extends Kodeliste {

@@ -1,7 +1,4 @@
-package no.nav.foreldrepenger.melding.brevbestiller.api.dto.klage;
-
-import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+package no.nav.foreldrepenger.melding.klage;
 
 public class Klage {
     private KlageVurderingResultat klageVurderingResultatNFP;
@@ -14,23 +11,6 @@ public class Klage {
         klageVurderingResultatNK = builder.klageVurderingResultatNK;
         formkravKA = builder.formkravKA;
         formkravNFP = builder.formkravNFP;
-    }
-
-    public static Klage fraDto(KlagebehandlingDto dto, KodeverkRepository kodeverkRepository) {
-        Builder builder = ny();
-        if (dto.getKlageFormkravResultatNFP() != null) {
-            builder.medFormkravNFP(KlageFormkravResultat.fraDto(dto.getKlageFormkravResultatNFP(), kodeverkRepository));
-        }
-        if (dto.getKlageFormkravResultatKA() != null) {
-            builder.medFormkravKA(KlageFormkravResultat.fraDto(dto.getKlageFormkravResultatKA(), kodeverkRepository));
-        }
-        if (dto.getKlageVurderingResultatNFP() != null) {
-            builder.medKlageVurderingResultatNFP(KlageVurderingResultat.fraDto(dto.getKlageVurderingResultatNFP()));
-        }
-        if (dto.getKlageVurderingResultatNK() != null) {
-            builder.medKlageVurderingResultatNK(KlageVurderingResultat.fraDto(dto.getKlageVurderingResultatNK()));
-        }
-        return builder.build();
     }
 
     public static Builder ny() {

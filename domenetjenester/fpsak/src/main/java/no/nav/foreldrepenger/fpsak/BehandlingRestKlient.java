@@ -11,6 +11,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
+import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatMedUttaksplanDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
@@ -43,4 +44,6 @@ public interface BehandlingRestKlient {
     BeregningsgrunnlagDto hentBeregningsgrunnlag(List<BehandlingResourceLinkDto> resourceLinkDtos);
 
     VilkårDto hentVilkår(List<BehandlingResourceLinkDto> resourceLinkDtos);
+
+    FagsakDto hentFagsak(List<BehandlingResourceLinkDto> resourceLinkDtos);
 }

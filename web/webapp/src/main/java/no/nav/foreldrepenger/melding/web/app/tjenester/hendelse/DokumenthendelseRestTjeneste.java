@@ -58,9 +58,10 @@ public class DokumenthendelseRestTjeneste {
         final byte[] brevPdfVersjon = brevBestillerApplikasjonTjeneste.forhandsvisBrev(dokumentHendelseDto);
         if (brevPdfVersjon != null && brevPdfVersjon.length != 0) {
             LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
-            responseBuilder = Response.ok().entity(brevPdfVersjon);
+            responseBuilder = Response.ok().entity(java.util.Base64.getEncoder().encode(brevPdfVersjon));
             responseBuilder.type("application/pdf");
             responseBuilder.header("Content-Disposition", "filename=dokument.pdf");
+            LOGGER.info("bytearray: " + brevPdfVersjon);
             return responseBuilder.build();
         }
         responseBuilder = Response.serverError();

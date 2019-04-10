@@ -6,9 +6,12 @@ import java.util.List;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.personopplysning.Personopplysning;
+import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 public class Behandling {
-    private Long saksnummer;
     private Behandlingsresultat behandlingsresultat;
     private List<BehandlingResourceLinkDto> resourceLinkDtos;
 
@@ -24,10 +27,10 @@ public class Behandling {
     private String behandlendeEnhetNavn;
     private String ansvarligBeslutter;
     private Fagsak fagsak;
+    private Personopplysning personopplysning;
 
     private Behandling(Builder builder) {
         id = builder.id;
-        saksnummer = builder.saksnummer;
         behandlendeEnhetNavn = builder.behandlendeEnhetNavn;
         behandlingsresultat = builder.behandlingsresultat;
         resourceLinkDtos = builder.resourceLinkDtos;
@@ -40,6 +43,7 @@ public class Behandling {
         toTrinnsBehandling = builder.toTrinnsBehandling;
         ansvarligBeslutter = builder.ansvarligBeslutter;
         fagsak = builder.fagsak;
+        personopplysning = builder.personopplysning;
     }
 
     public String getBehandlendeEnhetNavn() {
@@ -82,8 +86,8 @@ public class Behandling {
         return toTrinnsBehandling;
     }
 
-    public Long getSaksnummer() {
-        return saksnummer;
+    public Personopplysning getPersonopplysning() {
+        return personopplysning;
     }
 
     public long getId() {
@@ -106,11 +110,16 @@ public class Behandling {
         return fagsak;
     }
 
-    public String getFagsakYtelseType() {
+    @Deprecated
+    public FagsakYtelseType getFagsakYtelseType() {
         return getFagsak().getYtelseType();
     }
 
-    public String getRelasjonsRolleType() {
+    public Saksnummer getSaksnummer() {
+        return getFagsak().getSaksnummer();
+    }
+
+    public RelasjonsRolleType getRelasjonsRolleType() {
         return getFagsak().getRelasjonsRolleType();
     }
 
@@ -119,7 +128,6 @@ public class Behandling {
     }
 
     public static class Builder {
-        private Long saksnummer;
         private String behandlendeEnhetNavn;
         private Behandlingsresultat behandlingsresultat;
         private List<BehandlingResourceLinkDto> resourceLinkDtos = new ArrayList<>();
@@ -134,11 +142,7 @@ public class Behandling {
         private Boolean toTrinnsBehandling;
         private String ansvarligBeslutter;
         private Fagsak fagsak;
-
-        public Behandling.Builder medSaksnummer(Long saksnummer) {
-            this.saksnummer = saksnummer;
-            return this;
-        }
+        private Personopplysning personopplysning;
 
         public Behandling.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {
             this.behandlendeEnhetNavn = behandlendeEnhetNavn;
@@ -152,6 +156,11 @@ public class Behandling {
 
         public Behandling.Builder leggTilResourceLink(BehandlingResourceLinkDto resourceLinkDto) {
             this.resourceLinkDtos.add(resourceLinkDto);
+            return this;
+        }
+
+        public Behandling.Builder medPersonopplysning(Personopplysning personopplysning) {
+            this.personopplysning = personopplysning;
             return this;
         }
 

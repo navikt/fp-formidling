@@ -105,12 +105,20 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         }
         FamilieHendelse familieHendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
         Søknad søknad = søknadMapper.hentSøknad(behandling);
-        FagType fagType = mapFagType(dokumentHendelse, behandling, beregningsresultatFP, familieHendelse, beregningsgrunnlag, originaltBeregningsgrunnlag, Collections.emptyList(), søknad);
+        FagType fagType = mapFagType(dokumentHendelse, behandling, beregningsresultatFP, familieHendelse, beregningsgrunnlag, originaltBeregningsgrunnlag, Collections.emptyList(), søknad, dokumentFelles);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnvilgetForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, InnvilgetForeldrepengerConstants.XSD_LOCATION);
     }
 
-    private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, BeregningsresultatFP beregningsresultatFP, FamilieHendelse familieHendelse, Beregningsgrunnlag beregningsgrunnlag, Beregningsgrunnlag originaltBeregningsgrunnlag, List<DokumentTypeData> dokumentTypeDataListe, Søknad søknad) {
+    private FagType mapFagType(DokumentHendelse dokumentHendelse,
+                               Behandling behandling,
+                               BeregningsresultatFP beregningsresultatFP,
+                               FamilieHendelse familieHendelse,
+                               Beregningsgrunnlag beregningsgrunnlag,
+                               Beregningsgrunnlag originaltBeregningsgrunnlag,
+                               List<DokumentTypeData> dokumentTypeDataListe,
+                               Søknad søknad,
+                               DokumentFelles dokumentFelles) {
         final FagType fagType = objectFactory.createFagType();
 
         //Obligatoriske felter
@@ -128,6 +136,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
 
         //Optional
         avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
+        fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
 
         //
         //Settes basert på Perioder, eventuelt søknad
@@ -147,7 +156,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setLovhjemmel(lovhjemmelType);
         fagType.setMottattDato(finnDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe));
 
-        fagType.setPersonstatus(PersonstatusKode.fromValue(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
         fagType.setRelasjonskode(tilRelasjonskode(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe), finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
         fagType.setSeksG(Long.parseLong(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
         fagType.setSisteDagAvSistePeriode(finnDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe));

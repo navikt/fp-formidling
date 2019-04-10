@@ -75,10 +75,9 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
     @Override
     public DokumentHistorikkinnslag bestillBrev(DokumentHendelse dokumentHendelse) {
-        BehandlingDto behandlingDto = hentBehandlingFraFpsak(dokumentHendelse.getBehandlingId());
-        Behandling behandling = behandlingMapper.mapBehandlingFraDto(behandlingDto);
+        Behandling behandling = behandlingMapper.hentBehandling(dokumentHendelse.getBehandlingId());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
-        DokumentFelles dokumentFelles = lagDokumentFelles(behandlingDto, dokumentMal);
+        DokumentFelles dokumentFelles = lagDokumentFelles(behandling, dokumentMal);
         Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling);
 
         final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
@@ -122,12 +121,10 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     public byte[] forhandsvisBrev(DokumentHendelseDto hendelseDto) {
         byte[] dokument = null;
         DokumentHendelse hendelse = dtoTilDomeneobjektMapper.fraDto(hendelseDto);
-        BehandlingDto behandlingDto = hentBehandlingFraFpsak(hendelse.getBehandlingId());
-
-        Behandling behandling = behandlingMapper.mapBehandlingFraDto(behandlingDto);
+        Behandling behandling = behandlingMapper.hentBehandling(hendelse.getBehandlingId());
 
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, hendelse);
-        DokumentFelles dokumentFelles = lagDokumentFelles(behandlingDto, dokumentMal);
+        DokumentFelles dokumentFelles = lagDokumentFelles(behandling, dokumentMal);
 
         Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, hendelse, behandling);
 
@@ -136,7 +133,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
             LOGGER.error("Klarte ikke hente behandling: {}", behandling.getId());
             throw BrevbestillerFeil.FACTORY.klarteIkkeForhåndvise(dokumentMal.getKode(), behandling.getId()).toException();
         }
-        LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandlingDto.getId());
+        LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getId());
         return dokument;
     }
 
@@ -156,8 +153,8 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         return behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId));
     }
 
-    private DokumentFelles lagDokumentFelles(BehandlingDto behandlingDto, DokumentMalType dokumentMalType) {
-        DokumentData dokumentData = dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandlingDto, dokumentMalType);
+    private DokumentFelles lagDokumentFelles(Behandling behandling, DokumentMalType dokumentMalType) {
+        DokumentData dokumentData = dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentMalType);
         return dokumentData.getFørsteDokumentFelles();
     }
 }

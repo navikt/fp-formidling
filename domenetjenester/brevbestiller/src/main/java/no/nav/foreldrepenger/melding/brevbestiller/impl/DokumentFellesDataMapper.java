@@ -7,7 +7,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
@@ -58,10 +57,9 @@ public class DokumentFellesDataMapper {
         this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
     }
 
-    DokumentData opprettDokumentDataForBehandling(BehandlingDto behandlingDto, DokumentMalType dokumentMalType) {
+    DokumentData opprettDokumentDataForBehandling(Behandling behandling, DokumentMalType dokumentMalType) {
         //Data for mapping
-        Behandling behandling = behandlingMapper.mapBehandlingFraDto(behandlingDto);
-        Personopplysning personopplysning = new Personopplysning(behandlingDto.getPersonopplysningDto());
+        Personopplysning personopplysning = behandling.getPersonopplysning();
         DokumentData dokumentData = DokumentData.opprettNy(dokumentMalType, behandling.getId());
         final AktørId søkersAktørId = new AktørId(personopplysning.getAktoerId());
 
@@ -70,7 +68,7 @@ public class DokumentFellesDataMapper {
             return dokumentData;
         }
 
-        final VergeDto vergeDto = behandlingRestKlient.hentVerge(behandlingDto.getLinks());
+        final VergeDto vergeDto = behandlingRestKlient.hentVerge(behandling.getResourceLinkDtos());
 
         Verge verge = new Verge(vergeDto);
         AktørId vergesAktørId = tpsTjeneste.hentAktørForFnr(PersonIdent.fra(verge.getFnr())).orElseThrow(IllegalStateException::new);
@@ -139,7 +137,7 @@ public class DokumentFellesDataMapper {
                 .medNavnAvsenderEnhet(norg2NavnAvsenderEnhet(avsenderEnhet))
                 .medPostadresse(norg2Postadresse())
                 .medReturadresse(norg2Returadresse())
-                .medSaksnummer(new Saksnummer(String.valueOf(behandling.getSaksnummer())))
+                .medSaksnummer(new Saksnummer(behandling.getSaksnummer().getVerdi()))
                 .medSakspartId(fnrBruker)
                 .medSakspartNavn(navnBruker)
                 //TODO: Hent språk preferanse fra selvbetjeningløsning

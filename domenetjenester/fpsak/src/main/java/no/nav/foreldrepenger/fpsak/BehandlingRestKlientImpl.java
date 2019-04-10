@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
+import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatMedUttaksplanDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
@@ -35,6 +36,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     private static final Logger LOGGER = LoggerFactory.getLogger(BehandlingRestKlientImpl.class);
     private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
     private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/behandlinger";
+    private static final String SAKSNUMMER = "saksnummer";
 
     private OidcRestClient oidcRestClient;
     private String endpointFpsakRestBase;
@@ -177,12 +179,38 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 });
     }
 
+    @Override
+    public FagsakDto hentFagsak(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+        return resourceLinkDtos.stream()
+                .filter(dto -> "fagsak".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, FagsakDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente fagsak for behandling: " + hentBehandlingId(resourceLinkDtos));
+                });
+    }
+
     private <T> Optional<T> hentDtoFraLink(BehandlingResourceLinkDto link, Class<T> clazz) {
-        URI familiehendelseUri = URI.create(endpointFpsakRestBase + link.getHref());
+
         BehandlingIdDto behandlingIdDto = new BehandlingIdDto();
         behandlingIdDto.setBehandlingId(link.getRequestPayload().getBehandlingId());
         behandlingIdDto.setSaksnummer(link.getRequestPayload().getSaksnummer());
-        return oidcRestClient.postReturnsOptional(familiehendelseUri, behandlingIdDto, clazz);
+        if ("POST".equals(link.getType())) {
+            URI uri = URI.create(endpointFpsakRestBase + link.getHref());
+            return oidcRestClient.postReturnsOptional(uri, link.getRequestPayload(), clazz);
+        } else {
+            URI uri = saksnummerRequest(endpointFpsakRestBase + link.getHref(), String.valueOf(link.getRequestPayload().getSaksnummer()));
+            return oidcRestClient.getReturnsOptional(uri, clazz);
+        }
+    }
+
+    private URI saksnummerRequest(String endpoint, String saksnummer) {
+        try {
+            return new URIBuilder(endpoint)
+                    .addParameter(SAKSNUMMER, saksnummer)
+                    .build();
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     private Long hentBehandlingId(List<BehandlingResourceLinkDto> linkListe) {

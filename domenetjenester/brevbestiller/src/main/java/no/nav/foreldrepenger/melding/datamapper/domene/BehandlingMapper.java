@@ -22,15 +22,18 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
+import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.BehandlingstypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.personopplysning.Personopplysning;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 public class BehandlingMapper {
+    private FagsakMapper fagsakMapper;
     private KodeverkRepository kodeverkRepository;
     private BehandlingRestKlient behandlingRestKlient;
     private BehandlingsresultatMapper behandlingsresultatMapper;
@@ -42,7 +45,9 @@ public class BehandlingMapper {
     @Inject
     public BehandlingMapper(KodeverkRepository kodeverkRepository,
                             BehandlingRestKlient behandlingRestKlient,
-                            BehandlingsresultatMapper behandlingsresultatMapper) {
+                            BehandlingsresultatMapper behandlingsresultatMapper,
+                            FagsakMapper fagsakMapper) {
+        this.fagsakMapper = fagsakMapper;
         this.kodeverkRepository = kodeverkRepository;
         this.behandlingRestKlient = behandlingRestKlient;
         this.behandlingsresultatMapper = behandlingsresultatMapper;
@@ -63,6 +68,7 @@ public class BehandlingMapper {
     }
 
     public Behandling mapBehandlingFraDto(BehandlingDto dto) {
+        Fagsak fagsak = fagsakMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(dto.getLinks()));
         Behandling.Builder builder = Behandling.builder();
         builder.medId(dto.getId())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
@@ -71,8 +77,9 @@ public class BehandlingMapper {
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
-                .medSaksnummer(finnSaksnummer(dto))
-                .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()));
+                .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()))
+                .medPersonopplysning(new Personopplysning(dto.getPersonopplysningDto()))
+                .medFagsak(fagsak);
 
         dto.getLinks().forEach(builder::leggTilResourceLink);
 

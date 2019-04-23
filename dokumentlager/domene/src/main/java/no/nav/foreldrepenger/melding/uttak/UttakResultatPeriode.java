@@ -7,20 +7,28 @@ import java.util.List;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 
 public class UttakResultatPeriode {
-    private String periodeResultatÅrsak; //Kodeliste.PeriodeResultatÅrsak
-    private String overstyrtPerioder;
+    private PeriodeResultatÅrsak periodeResultatÅrsak; //Kodeliste.PeriodeResultatÅrsak
     private DatoIntervall tidsperiode;
-    private String graderingAvslagÅrsak; //Kodeliste.GraderingAvslagÅrsak
-    private String uttakUtsettelseType; //Kodeliste.UttakUtsettelseType
-    private String periodeResultatType; //Kodeliste.PeriodeResultatType
+    private GraderingAvslagÅrsak graderingAvslagÅrsak; //Kodeliste.GraderingAvslagÅrsak
+    private UttakUtsettelseType uttakUtsettelseType; //Kodeliste.UttakUtsettelseType
+    private PeriodeResultatType periodeResultatType; //Kodeliste.PeriodeResultatType
     private List<UttakResultatPeriodeAktivitet> aktiviteter = new ArrayList<>();
 
-    public String getPeriodeResultatÅrsak() {
-        return periodeResultatÅrsak;
+    private UttakResultatPeriode(Builder builder) {
+        periodeResultatÅrsak = builder.periodeResultatÅrsak;
+        tidsperiode = builder.tidsperiode;
+        graderingAvslagÅrsak = builder.graderingAvslagÅrsak;
+        uttakUtsettelseType = builder.uttakUtsettelseType;
+        periodeResultatType = builder.periodeResultatType;
+        aktiviteter = builder.aktiviteter;
     }
 
-    public String getOverstyrtPerioder() {
-        return overstyrtPerioder;
+    public static Builder ny() {
+        return new Builder();
+    }
+
+    public PeriodeResultatÅrsak getPeriodeResultatÅrsak() {
+        return periodeResultatÅrsak;
     }
 
     public LocalDate getFom() {
@@ -31,19 +39,66 @@ public class UttakResultatPeriode {
         return tidsperiode.getTomDato();
     }
 
-    public String getGraderingAvslagÅrsak() {
+    public GraderingAvslagÅrsak getGraderingAvslagÅrsak() {
         return graderingAvslagÅrsak;
     }
 
-    public String getUttakUtsettelseType() {
+    public UttakUtsettelseType getUttakUtsettelseType() {
         return uttakUtsettelseType;
     }
 
-    public String getPeriodeResultatType() {
+    public PeriodeResultatType getPeriodeResultatType() {
         return periodeResultatType;
     }
 
     public List<UttakResultatPeriodeAktivitet> getAktiviteter() {
         return aktiviteter;
+    }
+
+
+    public static final class Builder {
+        private PeriodeResultatÅrsak periodeResultatÅrsak;
+        private DatoIntervall tidsperiode;
+        private GraderingAvslagÅrsak graderingAvslagÅrsak;
+        private UttakUtsettelseType uttakUtsettelseType;
+        private PeriodeResultatType periodeResultatType;
+        private List<UttakResultatPeriodeAktivitet> aktiviteter;
+
+        private Builder() {
+        }
+
+        public Builder medPeriodeResultatÅrsak(PeriodeResultatÅrsak periodeResultatÅrsak) {
+            this.periodeResultatÅrsak = periodeResultatÅrsak;
+            return this;
+        }
+
+        public Builder medTidsperiode(DatoIntervall tidsperiode) {
+            this.tidsperiode = tidsperiode;
+            return this;
+        }
+
+        public Builder medGraderingAvslagÅrsak(GraderingAvslagÅrsak graderingAvslagÅrsak) {
+            this.graderingAvslagÅrsak = graderingAvslagÅrsak;
+            return this;
+        }
+
+        public Builder medUttakUtsettelseType(UttakUtsettelseType uttakUtsettelseType) {
+            this.uttakUtsettelseType = uttakUtsettelseType;
+            return this;
+        }
+
+        public Builder medPeriodeResultatType(PeriodeResultatType periodeResultatType) {
+            this.periodeResultatType = periodeResultatType;
+            return this;
+        }
+
+        public Builder medAktiviteter(List<UttakResultatPeriodeAktivitet> aktiviteter) {
+            this.aktiviteter = aktiviteter;
+            return this;
+        }
+
+        public UttakResultatPeriode build() {
+            return new UttakResultatPeriode(this);
+        }
     }
 }

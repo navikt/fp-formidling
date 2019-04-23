@@ -17,6 +17,8 @@ import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
@@ -31,21 +33,33 @@ public class KlageMapperTest {
 
     private KlageMapper klageMapper;
     private KodeverkRepository kodeverkRepository;
+    private DokumentHendelse dokumentHendelse;
 
     @Before
     public void setup() {
         kodeverkRepository = new KodeverkRepositoryImpl(repositoryRule.getEntityManager());
         klageMapper = new KlageMapper(kodeverkRepository, null);
+        dokumentHendelse = new DokumentHendelse();
     }
 
     @Test
     public void skal_identifisere_opphevet_klage() {
-        assertThat(klageMapper.erOpphevet(lagKlageNFP(true, Collections.emptyList()))).isTrue();
+        assertThat(klageMapper.erOpphevet(lagKlageNFP(true, Collections.emptyList()), dokumentHendelse)).isTrue();
+    }
+
+    @Test
+    public void skal_identifisere_opphevet_klage_basert_på_hendelse() {
+        dokumentHendelse = DokumentHendelse.builder()
+                .medBehandlingId(123l)
+                .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+                .medErOpphevetKlage(true)
+                .build();
+        assertThat(klageMapper.erOpphevet(lagKlageNFP(false, Collections.emptyList()), dokumentHendelse)).isTrue();
     }
 
     @Test
     public void skal_identifisere_ikke_opphevet_klage() {
-        assertThat(klageMapper.erOpphevet(lagKlageNFP(false, Collections.emptyList()))).isFalse();
+        assertThat(klageMapper.erOpphevet(lagKlageNFP(false, Collections.emptyList()), dokumentHendelse)).isFalse();
     }
 
     @Test

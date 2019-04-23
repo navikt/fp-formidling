@@ -22,6 +22,7 @@ public class DokumentHendelseDto implements AbacDto {
     private String fritekst;
     private boolean gjelderVedtak;
     private String arsakskode;
+    private boolean erOpphevetKlage;
 
     public String getHistorikkAktør() {
         return historikkAktør;
@@ -91,6 +92,10 @@ public class DokumentHendelseDto implements AbacDto {
         return arsakskode;
     }
 
+    public boolean getErOpphevetKlage() {
+        return erOpphevetKlage;
+    }
+
     @Override
     public AbacDataAttributter abacAttributter() {
         return AbacDataAttributter.opprett().leggTilBehandlingsId(getBehandlingId());
@@ -108,6 +113,7 @@ public class DokumentHendelseDto implements AbacDto {
                 ", fritekst='" + fritekst + '\'' +
                 ", gjelderVedtak=" + gjelderVedtak +
                 ", arsakskode='" + arsakskode + '\'' +
+                ", erOpphevetKlage=" + erOpphevetKlage +
                 '}';
     }
 }

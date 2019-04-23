@@ -46,6 +46,7 @@ public class DtoTilDomeneobjektMapper {
                 .medDokumentMalType(utleddokumentMalType(hendelseDto.getDokumentMal()))
                 .medGjelderVedtak(hendelseDto.isGjelderVedtak())
                 .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(hendelseDto.getArsakskode()))
+                .medErOpphevetKlage(hendelseDto.getErOpphevetKlage())
                 .build();
     }
 

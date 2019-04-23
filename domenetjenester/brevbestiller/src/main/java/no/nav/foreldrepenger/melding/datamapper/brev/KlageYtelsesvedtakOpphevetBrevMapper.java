@@ -14,7 +14,6 @@ import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
-import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
@@ -29,6 +28,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.ytelsesvedtak.op
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.ytelsesvedtak.opphevet.KlageYtelsesvedtakOpphevetConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.ytelsesvedtak.opphevet.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.ytelsesvedtak.opphevet.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -64,8 +64,7 @@ public class KlageYtelsesvedtakOpphevetBrevMapper implements DokumentTypeMapper 
         final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
         fagType.setFritekst(hendelse.getFritekst());
-        //TODO denne må kanskje legges til i dto for forhåndvisning.. dessverre
-        fagType.setOpphevet(klageMapper.erOpphevet(klage));
+        fagType.setOpphevet(klageMapper.erOpphevet(klage, hendelse));
         fagType.setAntallUker(BigInteger.valueOf(behandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
         return fagType;

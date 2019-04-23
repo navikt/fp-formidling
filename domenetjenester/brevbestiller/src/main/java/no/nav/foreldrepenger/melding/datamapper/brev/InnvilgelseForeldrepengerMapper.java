@@ -95,7 +95,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         //TODO - Burde vi lage et wrapper objekt for inputobjektene når det er så mange??
-        BeregningsresultatFP beregningsresultatFP = null;
+        BeregningsresultatFP beregningsresultatFP = beregningsresultatMapper.hentBeregningsresultatFP(behandling);
         Beregningsgrunnlag beregningsgrunnlag = beregningsgrunnlagMapper.hentBeregningsgrunnlag(behandling);
         Behandling originalBehandling;
         Beregningsgrunnlag originaltBeregningsgrunnlag = null;

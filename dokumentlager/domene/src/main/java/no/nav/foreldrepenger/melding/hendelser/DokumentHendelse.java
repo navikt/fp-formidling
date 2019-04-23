@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
@@ -64,6 +65,10 @@ public class DokumentHendelse extends BaseEntitet {
     @JoinColumnOrFormula(column = @JoinColumn(name = "revurdering_varsling_arsak", referencedColumnName = "kode"))
     @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + RevurderingVarslingÅrsak.DISCRIMINATOR + "'"))
     private RevurderingVarslingÅrsak revurderingVarslingÅrsak;
+
+    //Brukes KUN til forhåndsvisning
+    @Transient
+    private boolean erOpphevetKlage;
 
     public DokumentHendelse() {
         //For Hibernate
@@ -158,6 +163,10 @@ public class DokumentHendelse extends BaseEntitet {
         this.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
     }
 
+    public boolean getErOpphevetKlage() {
+        return erOpphevetKlage;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -204,6 +213,12 @@ public class DokumentHendelse extends BaseEntitet {
         private Boolean gjelderVedtak;
         private HistorikkAktør historikkAktør;
         private RevurderingVarslingÅrsak revurderingVarslingÅrsak;
+        private boolean erOpphevetKlage;
+
+        public DokumentHendelse.Builder medErOpphevetKlage(boolean erOpphevetKlage) {
+            this.erOpphevetKlage = erOpphevetKlage;
+            return this;
+        }
 
         public DokumentHendelse.Builder medDokumentMalType(DokumentMalType dokumentMalType) {
             this.dokumentMalType = dokumentMalType;
@@ -253,6 +268,7 @@ public class DokumentHendelse extends BaseEntitet {
         public DokumentHendelse build() {
             verifyStateForBuild();
             DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingId, ytelseType);
+            dokumentHendelse.erOpphevetKlage = erOpphevetKlage;
             dokumentHendelse.behandlingType = behandlingType;
             dokumentHendelse.gjelderVedtak = gjelderVedtak;
             dokumentHendelse.fritekst = fritekst;

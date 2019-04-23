@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.AvvistGrunnKode;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
@@ -134,7 +135,10 @@ public class KlageMapper {
         return Optional.of(lovhjemmelBuiloer.toString());
     }
 
-    public boolean erOpphevet(Klage klage) {
+    public boolean erOpphevet(Klage klage, DokumentHendelse hendelse) {
+        if (hendelse.getErOpphevetKlage()) {
+            return true;
+        }
         KlageVurdering klageVurdering = null;
         if (klage.getKlageVurderingResultatNFP() != null) {
             klageVurdering = klage.getKlageVurderingResultatNFP().getKlageVurdering();

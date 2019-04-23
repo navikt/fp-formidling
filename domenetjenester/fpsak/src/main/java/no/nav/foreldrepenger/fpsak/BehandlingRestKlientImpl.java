@@ -21,13 +21,14 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
-import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatMedUttaksplanDto;
+import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
+import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 import no.nav.vedtak.konfig.KonfigVerdi;
 
@@ -176,6 +177,16 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 .findFirst().flatMap(link -> hentDtoFraLink(link, VilkårDto.class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente vilkår for behandling: " + hentBehandlingId(resourceLinkDtos));
+                });
+    }
+
+    @Override
+    public UttakResultatPerioderDto hentUttaksresultat(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+        return resourceLinkDtos.stream()
+                .filter(dto -> "uttaksresultat-perioder".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, UttakResultatPerioderDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente uttaksperioder for behandling: " + hentBehandlingId(resourceLinkDtos));
                 });
     }
 

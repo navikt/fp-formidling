@@ -38,9 +38,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.PeriodeDto;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMerger;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.inntektarbeidytelse.OrganisasjonsNummerValidator;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
-import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak;
@@ -50,8 +48,6 @@ import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.UttakResultat;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-import no.nav.foreldrepenger.melding.virksomhet.Virksomhet;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
@@ -111,21 +107,10 @@ public class BeregningsresultatMapper {
         return BeregningsresultatAndel.ny()
                 .medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().getKode()))
                 .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
-                .medArbeidsgiver(finnArbeidsgiver(dto))
+                .medArbeidsgiver(ArbeidsgiverMapper.finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr()))
                 .medStillingsprosent(null/*TODO*/)
                 .medBrukerErMottaker(brukerErMottaker)
                 .build();
-    }
-
-    Arbeidsgiver finnArbeidsgiver(BeregningsresultatPeriodeAndelDto dto) {
-        Virksomhet virksomhet = null;
-        AktørId aktørId = null;
-        if (OrganisasjonsNummerValidator.erGyldig(dto.getArbeidsgiverOrgnr())) {
-            virksomhet = new Virksomhet(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr());
-        } else {
-            aktørId = new AktørId(dto.getArbeidsgiverOrgnr());
-        }
-        return new Arbeidsgiver(dto.getArbeidsgiverNavn(), virksomhet, aktørId);
     }
 
     public BigInteger antallArbeidsgivere(BeregningsresultatFP beregningsresultat) {

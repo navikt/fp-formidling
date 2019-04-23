@@ -33,6 +33,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.FamiliehendelseMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.SøknadMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -55,6 +56,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.VurderingsstatusKode;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -68,6 +70,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
     private SøknadMapper søknadMapper;
     private FamiliehendelseMapper familiehendelseMapper;
     private BeregningsgrunnlagMapper beregningsgrunnlagMapper;
+    private UttakMapper uttakMapper;
     private BrevParametere brevParametere;
 
     public InnvilgelseForeldrepengerMapper() {
@@ -79,14 +82,16 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                            BeregningsresultatMapper beregningsresultatMapper,
                                            BeregningsgrunnlagMapper beregningsgrunnlagMapper,
                                            FamiliehendelseMapper familiehendelseMapper,
-                                           BrevParametere brevParametere,
-                                           SøknadMapper søknadMapper) {
+                                           SøknadMapper søknadMapper,
+                                           UttakMapper uttakMapper,
+                                           BrevParametere brevParametere) {
         this.behandlingMapper = behandlingMapper;
         this.beregningsresultatMapper = beregningsresultatMapper;
         this.familiehendelseMapper = familiehendelseMapper;
         this.beregningsgrunnlagMapper = beregningsgrunnlagMapper;
         this.brevParametere = brevParametere;
         this.søknadMapper = søknadMapper;
+        this.uttakMapper = uttakMapper;
     }
 
     @Override
@@ -95,6 +100,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         //TODO - Burde vi lage et wrapper objekt for inputobjektene når det er så mange??
+        UttakResultatPerioder uttakResultatPerioder = uttakMapper.hentUttaksresultat(behandling);
         BeregningsresultatFP beregningsresultatFP = beregningsresultatMapper.hentBeregningsresultatFP(behandling);
         Beregningsgrunnlag beregningsgrunnlag = beregningsgrunnlagMapper.hentBeregningsgrunnlag(behandling);
         Behandling originalBehandling;
@@ -105,7 +111,16 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         }
         FamilieHendelse familieHendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
         Søknad søknad = søknadMapper.hentSøknad(behandling);
-        FagType fagType = mapFagType(dokumentHendelse, behandling, beregningsresultatFP, familieHendelse, beregningsgrunnlag, originaltBeregningsgrunnlag, Collections.emptyList(), søknad, dokumentFelles);
+        FagType fagType = mapFagType(dokumentHendelse,
+                behandling,
+                beregningsresultatFP,
+                familieHendelse,
+                beregningsgrunnlag,
+                originaltBeregningsgrunnlag,
+                Collections.emptyList(),
+                søknad,
+                dokumentFelles,
+                uttakResultatPerioder);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnvilgetForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, InnvilgetForeldrepengerConstants.XSD_LOCATION);
     }
@@ -118,14 +133,15 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                Beregningsgrunnlag originaltBeregningsgrunnlag,
                                List<DokumentTypeData> dokumentTypeDataListe,
                                Søknad søknad,
-                               DokumentFelles dokumentFelles) {
+                               DokumentFelles dokumentFelles,
+                               UttakResultatPerioder uttakResultatPerioder) {
         final FagType fagType = objectFactory.createFagType();
 
         //Obligatoriske felter
         //Faktisk mappet
         mapFelterRelatertTilBehandling(behandling, fagType);
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, originaltBeregningsgrunnlag, fagType);
-        mapFelterRelatertTilBeregningsresultat(beregningsresultatFP, fagType);
+        mapFelterRelatertTilBeregningsresultatOgUttak(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType);
         mapFelterRelatertTilFamiliehendelse(familieHendelse, fagType);
         mapFelterRelatertTilSøknad(søknad, fagType);
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
@@ -187,7 +203,8 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setAleneomsorg(VurderingsstatusKode.fromValue("IKKE_VURDERT"));
     }
 
-    private void mapFelterRelatertTilBeregningsresultat(BeregningsresultatFP beregningsresultatFP, FagType fagType) {
+    private void mapFelterRelatertTilBeregningsresultatOgUttak(BeregningsresultatFP beregningsresultatFP, Beregningsgrunnlag beregningsgrunnlag, UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
+        //Match, Map, merge - Blæh
         fagType.setAntallArbeidsgivere(beregningsresultatMapper.antallArbeidsgivere(beregningsresultatFP));
     }
 

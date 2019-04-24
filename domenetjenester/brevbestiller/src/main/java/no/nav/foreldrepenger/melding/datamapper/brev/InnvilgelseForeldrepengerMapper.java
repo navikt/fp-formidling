@@ -145,7 +145,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         //Faktisk mappet
         mapFelterRelatertTilBehandling(behandling, fagType);
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, originaltBeregningsgrunnlag, fagType);
-        mapFelterRelatertTilBeregningsresultatOgUttak(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType);
+        mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType);
         mapFelterRelatertTilFamiliehendelse(familieHendelse, fagType);
         mapFelterRelatertTilSøknad(søknad, fagType);
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
@@ -207,10 +207,10 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setAleneomsorg(VurderingsstatusKode.fromValue("IKKE_VURDERT"));
     }
 
-    private void mapFelterRelatertTilBeregningsresultatOgUttak(BeregningsresultatFP beregningsresultatFP, Beregningsgrunnlag beregningsgrunnlag, UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
+    private void mapFelterRelatertTilPerioder(BeregningsresultatFP beregningsresultatFP, Beregningsgrunnlag beregningsgrunnlag, UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
         //Match, Map, merge - Blæh
-        fagType.setAntallArbeidsgivere(beregningsresultatMapper.antallArbeidsgivere(beregningsresultatFP));
-        fagType.setPeriodeListe(beregningsresultatMapper.mapPeriodeListe(beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder));
+        fagType.setAntallArbeidsgivere(BeregningsresultatMapper.antallArbeidsgivere(beregningsresultatFP));
+        fagType.setPeriodeListe(BeregningsresultatMapper.mapPeriodeListe(beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder, beregningsgrunnlag.getBeregningsgrunnlagPerioder()));
     }
 
     private void mapFelterRelatertTilBehandling(Behandling behandling, FagType fagType) {

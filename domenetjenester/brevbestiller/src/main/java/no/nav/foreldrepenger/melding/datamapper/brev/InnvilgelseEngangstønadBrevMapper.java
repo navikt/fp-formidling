@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatESMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -33,7 +33,7 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
     private BehandlingMapper behandlingMapper;
-    private BeregningsresultatMapper beregningsresultatMapper;
+    private BeregningsresultatESMapper beregningsresultatESMapper;
 
     public InnvilgelseEngangstønadBrevMapper() {
     }
@@ -41,15 +41,15 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
     @Inject
     public InnvilgelseEngangstønadBrevMapper(BrevParametere brevParametere,
                                              BehandlingMapper behandlingMapper,
-                                             BeregningsresultatMapper beregningsresultatMapper) {
+                                             BeregningsresultatESMapper beregningsresultatESMapper) {
         this.brevParametere = brevParametere;
         this.behandlingMapper = behandlingMapper;
-        this.beregningsresultatMapper = beregningsresultatMapper;
+        this.beregningsresultatESMapper = beregningsresultatESMapper;
     }
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        BeregningsresultatES beregningsresultat = beregningsresultatMapper.hentBeregningsresultatES(behandling);
+        BeregningsresultatES beregningsresultat = beregningsresultatESMapper.hentBeregningsresultatES(behandling);
         BeregningsresultatES originaltBeregningsresultat = originaltBeregningsresultat(behandling);
         FagType fagType = mapFagType(behandling, dokumentFelles, beregningsresultat, originaltBeregningsresultat);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
@@ -69,7 +69,7 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
     private BeregningsresultatES originaltBeregningsresultat(Behandling behandling) {
         if (behandling.getOriginalBehandlingId() != null && behandling.getOriginalBehandlingId() != behandling.getId()) {
             Behandling originalBehandling = behandlingMapper.hentBehandling(behandling.getOriginalBehandlingId());
-            return beregningsresultatMapper.hentBeregningsresultatES(originalBehandling);
+            return beregningsresultatESMapper.hentBeregningsresultatES(originalBehandling);
         }
         return null;
     }
@@ -90,5 +90,4 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
         brevdataType.setFelles(fellesType);
         return of.createBrevdata(brevdataType);
     }
-
 }

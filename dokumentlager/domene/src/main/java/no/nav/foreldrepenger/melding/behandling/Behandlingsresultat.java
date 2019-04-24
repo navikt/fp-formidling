@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.nav.foreldrepenger.melding.beregning.BeregningResultat;
+import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.melding.vilkår.VilkårResultat;
 
@@ -11,10 +12,10 @@ public class Behandlingsresultat {
     private Avslagsårsak avslagsårsak; //Kode
     private String fritekstbrev;
     private String overskrift;
-    private String vedtaksbrev;
+    private Vedtaksbrev vedtaksbrev;
     private BehandlingResultatType behandlingResultatType;
     private String avslagarsakFritekst;
-    private List<String> konsekvenserForYtelsen = new ArrayList<>(); //Kode BehandlingsresultatKonsekvensForYtelsen
+    private List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>(); //Kode BehandlingsresultatKonsekvensForYtelsen
 
     //Objekter
     private String beregning; //BeregningResultat
@@ -42,7 +43,7 @@ public class Behandlingsresultat {
         return new Builder();
     }
 
-    public String getVedtaksbrev() {
+    public Vedtaksbrev getVedtaksbrev() {
         return vedtaksbrev;
     }
 
@@ -82,7 +83,7 @@ public class Behandlingsresultat {
         return Periode;
     }
 
-    public List<String> getKonsekvenserForYtelsen() {
+    public List<KonsekvensForYtelsen> getKonsekvenserForYtelsen() {
         return konsekvenserForYtelsen;
     }
 
@@ -132,10 +133,10 @@ public class Behandlingsresultat {
         private Avslagsårsak avslagsårsak;
         private String fritekstbrev;
         private String overskrift;
-        private String vedtaksbrev;
+        private Vedtaksbrev vedtaksbrev;
         private BehandlingResultatType behandlingResultatType;
         private String avslagarsakFritekst;
-        private List<String> konsekvenserForYtelsen = new ArrayList<>();
+        private List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>();
         private String beregning;
         private VilkårResultat vilkårResultat;
         private String Periode;
@@ -160,7 +161,7 @@ public class Behandlingsresultat {
             return this;
         }
 
-        public Builder medVedtaksbrev(String vedtaksbrev) {
+        public Builder medVedtaksbrev(Vedtaksbrev vedtaksbrev) {
             this.vedtaksbrev = vedtaksbrev;
             return this;
         }
@@ -175,7 +176,7 @@ public class Behandlingsresultat {
             return this;
         }
 
-        public Builder medKonsekvenserForYtelsen(List<String> konsekvenserForYtelsen) {
+        public Builder medKonsekvenserForYtelsen(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {
             this.konsekvenserForYtelsen = konsekvenserForYtelsen;
             return this;
         }

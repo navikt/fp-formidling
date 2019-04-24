@@ -42,7 +42,7 @@ class DokumentMalUtleder {
     }
 
     private static boolean erKunEndringIFordelingAvYtelsen(Behandlingsresultat behandlingsresultat) {
-        return behandlingsresultat.getKonsekvenserForYtelsen().contains(KonsekvensForYtelsen.ENDRING_I_FORDELING_AV_YTELSEN.getKode())
+        return behandlingsresultat.getKonsekvenserForYtelsen().contains(KonsekvensForYtelsen.ENDRING_I_FORDELING_AV_YTELSEN)
                 && behandlingsresultat.getKonsekvenserForYtelsen().size() == 1;
     }
 
@@ -108,8 +108,8 @@ class DokumentMalUtleder {
             return false;
         }
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
-        List<String> konsekvenserForYtelsen = behandlingsresultat.getKonsekvenserForYtelsen();
-        boolean ingenKonsekvensForYtelsen = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.INGEN_ENDRING.getKode());
+        List<KonsekvensForYtelsen> konsekvenserForYtelsen = behandlingsresultat.getKonsekvenserForYtelsen();
+        boolean ingenKonsekvensForYtelsen = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.INGEN_ENDRING);
         if (ingenKonsekvensForYtelsen && konsekvenserForYtelsen.size() > 1) {
             throw new IllegalStateException(UTVIKLERFEIL_INGEN_ENDRING_SAMMEN + behandling.getId());
         }

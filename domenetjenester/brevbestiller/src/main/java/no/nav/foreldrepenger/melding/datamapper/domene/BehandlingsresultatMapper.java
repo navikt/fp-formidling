@@ -34,6 +34,7 @@ import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultat;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
@@ -62,11 +63,11 @@ public class BehandlingsresultatMapper {
         }
         builder.medFritekstbrev(dto.getFritekstbrev())
                 .medOverskrift(dto.getOverskrift())
-                .medVedtaksbrev(dto.getVedtaksbrev().kode)
+                .medVedtaksbrev(kodeverkRepository.finn(Vedtaksbrev.class, dto.getVedtaksbrev().kode))
                 .medAvslagarsakFritekst(dto.getAvslagsarsakFritekst());
-        List<String> konsekvenserForYtelsen = new ArrayList<>();
+        List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>();
         for (KodeDto kodeDto : dto.getKonsekvenserForYtelsen()) {
-            konsekvenserForYtelsen.add(kodeDto.kode);
+            konsekvenserForYtelsen.add(kodeverkRepository.finn(KonsekvensForYtelsen.class, kodeDto.kode));
         }
         builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);
         return builder.build();
@@ -77,7 +78,7 @@ public class BehandlingsresultatMapper {
 //        return beregningsRepository.getSisteBeregning(originalBehandling.getId());
     }
 
-    private String kodeFra(List<String> konsekvenserForYtelsen) {
+    private String kodeFra(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {
         if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING)) { // viktigst å få med endring i beregning
             return konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_UTTAK) ?
                     ENDRING_BEREGNING_OG_UTTAK : KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode();

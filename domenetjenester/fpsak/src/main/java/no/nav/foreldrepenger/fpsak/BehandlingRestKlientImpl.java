@@ -93,7 +93,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     @Override
     public FamiliehendelseDto hentFamiliehendelse(List<BehandlingResourceLinkDto> resourceLinkDtos) {
         return resourceLinkDtos.stream()
-                .filter(dto -> "familiehendelse".equals(dto.getRel()))
+                .filter(dto -> "familiehendelse-v2".equals(dto.getRel()))
                 .findFirst().flatMap(link -> hentDtoFraLink(link, FamiliehendelseDto.class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente Familiehendelse for behandling: " + hentBehandlingId(resourceLinkDtos));

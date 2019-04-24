@@ -8,9 +8,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -23,6 +28,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.ArbeidsforholdDto;
 import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.DokumentBeregningsresultatDto;
 import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.DokumentTypeMedPerioderDto;
@@ -30,30 +36,244 @@ import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.PeriodeDto;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMerger;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetListeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdListeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringListeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.StatusTypeKode;
+import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak;
 import no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultat;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+import no.nav.vedtak.util.StringUtils;
+import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 public class BeregningsresultatMapper {
 
+    private static Map<AktivitetStatus, StatusTypeKode> aktivitetStatusKodeStatusTypeKodeMap = new HashMap<>();
+    private static Map<AktivitetStatus, UttakArbeidType> uttakAktivitetStatusMap = new HashMap<>();
+
+    private BehandlingRestKlient behandlingRestKlient;
+    private KodeverkRepository kodeverkRepository;
+
+    static {
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.ARBEIDSTAKER, StatusTypeKode.ARBEIDSTAKER);
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.FRILANSER, StatusTypeKode.FRILANSER);
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, StatusTypeKode.SELVSTENDIG_NÆRINGSDRIVENDE);
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KOMBINERT_AT_FL, StatusTypeKode.KOMBINERT_AT_FL);
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KOMBINERT_AT_FL_SN, StatusTypeKode.KOMBINERT_AT_FL_SN);
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KOMBINERT_AT_SN, StatusTypeKode.KOMBINERT_AT_SN);
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KOMBINERT_FL_SN, StatusTypeKode.KOMBINERT_FL_SN);
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.DAGPENGER, StatusTypeKode.DAGPENGER);
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.ARBEIDSAVKLARINGSPENGER, StatusTypeKode.ARBEIDSAVKLARINGSPENGER);
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.MILITÆR_ELLER_SIVIL, StatusTypeKode.MILITÆR_ELLER_SIVIL);
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.BRUKERS_ANDEL, StatusTypeKode.BRUKERSANDEL);
+        aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KUN_YTELSE, StatusTypeKode.KUN_YTELSE);
+
+        uttakAktivitetStatusMap.put(AktivitetStatus.ARBEIDSTAKER, UttakArbeidType.ORDINÆRT_ARBEID);
+        uttakAktivitetStatusMap.put(AktivitetStatus.FRILANSER, UttakArbeidType.FRILANS);
+        uttakAktivitetStatusMap.put(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE);
+    }
+
+
     public BeregningsresultatMapper() {
         //CDI
+    }
+
+    private ObjectFactory objectFactory;
+
+    @Inject
+    public BeregningsresultatMapper(BehandlingRestKlient behandlingRestKlient,
+                                    KodeverkRepository kodeverkRepository) {
+        this.behandlingRestKlient = behandlingRestKlient;
+        this.kodeverkRepository = kodeverkRepository;
+        this.objectFactory = new ObjectFactory();
+    }
+
+    public BeregningsresultatES hentBeregningsresultatES(Behandling behandling) {
+        return new BeregningsresultatES(behandlingRestKlient.hentBeregningsresultatEngangsstønad(behandling.getResourceLinkDtos()));
+    }
+
+    public BeregningsresultatFP hentBeregningsresultatFP(Behandling behandling) {
+        return mapBeregningsresultatFPFraDto(behandlingRestKlient.hentBeregningsresultatForeldrepenger(behandling.getResourceLinkDtos()));
+    }
+
+    BeregningsresultatFP mapBeregningsresultatFPFraDto(BeregningsresultatMedUttaksplanDto dto) {
+        return BeregningsresultatFP.ny()
+                .medBeregningsresultatPerioder(Arrays.stream(dto.getPerioder()).map(this::mapPeriodeFraDto).collect(Collectors.toList()))
+                .build();
+    }
+
+    BeregningsresultatPeriode mapPeriodeFraDto(BeregningsresultatPeriodeDto dto) {
+        BeregningsresultatPeriode beregningsresultatPeriode = BeregningsresultatPeriode.ny()
+                .medDagsats((long) dto.getDagsats())
+                .medPeriode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
+                .medBeregningsresultatAndel(Arrays.stream(dto.getAndeler()).map(this::mapAndelerFraDto)
+                        .flatMap(List::stream).collect(Collectors.toList()))
+                .build();
+        return beregningsresultatPeriode;
+    }
+
+    //Fpsak slår sammen andeler i dto, så vi må eventuelt splitte dem opp igjen
+    List<BeregningsresultatAndel> mapAndelerFraDto(BeregningsresultatPeriodeAndelDto dto) {
+        List<BeregningsresultatAndel> andeler = new ArrayList<>();
+        if (dto.getRefusjon() != null && dto.getRefusjon() != 0) {
+            andeler.add(lagEnkelAndel(dto, false, dto.getRefusjon()));
+        }
+        if (dto.getTilSoker() != null && dto.getTilSoker() != 0) {
+            andeler.add(lagEnkelAndel(dto, true, dto.getTilSoker()));
+        }
+        return andeler;
+    }
+
+    static Optional<UttakResultatPeriodeAktivitet> finnUttaksaktivtetForAndelHvisFinnes(List<UttakResultatPeriodeAktivitet> uttakAktiviteter,
+                                                                                        BeregningsresultatAndel andel) {
+        Optional<Arbeidsgiver> arbeidsgiver = andel.getArbeidsgiver();
+        ArbeidsforholdRef arbeidsforholdRef = andel.getArbeidsforholdRef();
+
+        for (UttakResultatPeriodeAktivitet aktivitet : uttakAktiviteter) {
+            if (uttakAktivitetStatusMap.getOrDefault(andel.getAktivitetStatus(), UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType())) {
+                if (arbeidsgiver.isEmpty() || arbeidsgiver.get().getIdentifikator().equals(aktivitet.getArbeidsgiverIdentifikator())) {
+                    if (arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold() && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId()))) {
+                        return Optional.of(aktivitet);
+                    }
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    private BeregningsresultatAndel lagEnkelAndel(BeregningsresultatPeriodeAndelDto dto, boolean brukerErMottaker, int dagsats) {
+        return BeregningsresultatAndel.ny()
+                .medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().getKode()))
+                .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
+                .medArbeidsgiver(ArbeidsgiverMapper.finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr()))
+                .medStillingsprosent(dto.getStillingsprosent())
+                .medBrukerErMottaker(brukerErMottaker)
+                .build();
     }
 
     public BigInteger antallArbeidsgivere(BeregningsresultatFP beregningsresultat) {
         return BigInteger.valueOf(beregningsresultat.getBeregningsresultatPerioder().stream()
                 .map(BeregningsresultatPeriode::getBeregningsresultatAndelList)
                 .flatMap(Collection::stream)
-                .filter(andel -> AktivitetStatus.ARBEIDSTAKER.getKode().equals(andel.getAktivitetStatus()))
+                .filter(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus()))
                 .map(BeregningsresultatAndel::getArbeidsgiver)
                 .distinct()
                 .count());
 
+    }
+
+    public PeriodeListeType mapPeriodeListe(List<BeregningsresultatPeriode> beregningsresultatPerioder, UttakResultatPerioder uttakResultatPerioder) {
+        PeriodeListeType periodeListe = objectFactory.createPeriodeListeType();
+        for (BeregningsresultatPeriode beregningsresultatPeriode : beregningsresultatPerioder) {
+            //TODO Må nok ignorere "ukjente" perioder
+            //periodeListe.getPeriode().add(mapEnkelPeriode(beregningsresultatPeriode, PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttakResultatPerioder)));
+        }
+        return periodeListe;
+    }
+
+    PeriodeType mapEnkelPeriode(BeregningsresultatPeriode beregningsresultatPeriode,
+                                UttakResultatPeriode uttakResultatPeriode,
+                                BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        //TODO Avslåtte perioder må mappes seperat da de ikke har tilkjent ytelse
+        PeriodeType periode = objectFactory.createPeriodeType();
+        periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter())));
+        periode.setInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode));
+        periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
+        periode.setPeriodeTom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeTom()));
+        ÅrsakskodeMedLovreferanse årsakskodeMedLovreferanse = utledÅrsakskode(uttakResultatPeriode);
+        periode.setÅrsak(årsakskodeMedLovreferanse.getKode());
+        periode.setPeriodeDagsats(beregningsresultatPeriode.getDagsats());
+
+        periode.setArbeidsforholdListe(mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
+        periode.setNæringListe(mapNæringsliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
+        periode.setAnnenAktivitetListe(mapAnnenAktivtetListe(beregningsresultatPeriode, uttakResultatPeriode));
+        return periode;
+    }
+
+    private ArbeidsforholdListeType mapArbeidsforholdliste(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        ArbeidsforholdListeType arbeidsforholdListe = objectFactory.createArbeidsforholdListeType();
+        for (BeregningsresultatAndel andel : finnArbeidsandeler(beregningsresultatPeriode)) {
+            arbeidsforholdListe.getArbeidsforhold().add(mapArbeidsforrholdAndel(andel, beregningsgrunnlagPeriode, uttakResultatPeriode));
+        }
+        return arbeidsforholdListe;
+    }
+
+    private ArbeidsforholdType mapArbeidsforrholdAndel(BeregningsresultatAndel andel, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, UttakResultatPeriode uttakResultatPeriode) {
+        return null;
+    }
+
+    private NæringListeType mapNæringsliste(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        return null;
+        //Optional<UttakResultatPeriodeAktivitet>;
+    }
+
+    AnnenAktivitetListeType mapAnnenAktivtetListe(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakPeriode) {
+        AnnenAktivitetListeType annenAktivitetListe = objectFactory.createAnnenAktivitetListeType();
+        finnAndelerOgUttakAnnenAktivitet(beregningsresultatPeriode, uttakPeriode).map(this::mapAnnenAktivitet).forEach(aktivitet -> annenAktivitetListe.getAnnenAktivitet().add(aktivitet));
+        return annenAktivitetListe;
+    }
+
+    AnnenAktivitetType mapAnnenAktivitet(Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> tilkjentYtelseAndelMedTilhørendeUttaksaktivitet) {
+        BeregningsresultatAndel beregningsresultatAndel = tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement1();
+        AnnenAktivitetType annenAktivitet = objectFactory.createAnnenAktivitetType();
+        annenAktivitet.setAktivitetDagsats((long) beregningsresultatAndel.getDagsats());
+        annenAktivitet.setAktivitetType(tilStatusTypeKode(beregningsresultatAndel.getAktivitetStatus()));
+        annenAktivitet.setProsentArbeid(beregningsresultatAndel.getStillingsprosent().toBigInteger());
+        tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement2().ifPresent(
+                uttakAktivitet -> {
+                    annenAktivitet.setGradering(uttakAktivitet.getGraderingInnvilget());
+                    annenAktivitet.setUttaksgrad(uttakAktivitet.getUtbetalingsprosent().toBigInteger());
+                });
+        return annenAktivitet;
+    }
+
+    private List<BeregningsresultatAndel> finnArbeidsandeler(BeregningsresultatPeriode beregningsresultatPeriode) {
+        return beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
+                .filter(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus()))
+                .collect(Collectors.toList());
+    }
+
+    private Stream<Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>>> finnAndelerOgUttakAnnenAktivitet(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakPeriode) {
+        return beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
+                .filter(Predicate.not(andel -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus())))
+                .filter(Predicate.not(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())))
+                .map(andel -> matchBeregningsresultatAndelMedUttaksaktivitet(andel, uttakPeriode));
+    }
+
+    private int mapAntallTapteDagerFra(List<UttakResultatPeriodeAktivitet> uttakAktiviteter) {
+        return alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ?
+                uttakAktiviteter.stream()
+                        .mapToInt(UttakResultatPeriodeAktivitet::getTrekkdager)
+                        .max()
+                        .orElse(0) : 0;
+    }
+
+    private StatusTypeKode tilStatusTypeKode(AktivitetStatus statuskode) {
+
+        if (aktivitetStatusKodeStatusTypeKodeMap.containsKey(statuskode)) {
+            return aktivitetStatusKodeStatusTypeKodeMap.get(statuskode);
+        }
+        throw new IllegalArgumentException("Utviklerfeil: Fant ikke riktig aktivitetstatus " + statuskode.getKode());
+    }
+
+    private Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> matchBeregningsresultatAndelMedUttaksaktivitet(BeregningsresultatAndel andel, UttakResultatPeriode uttakPeriode) {
+        return new Tuple<>(andel, finnUttaksaktivtetForAndelHvisFinnes(uttakPeriode.getAktiviteter(), andel));
     }
 
     void mapDataRelatertTilBeregningsresultat(Behandling behandling, BeregningsresultatFP beregningsresultat, DokumentTypeMedPerioderDto dto) {
@@ -171,11 +391,11 @@ public class BeregningsresultatMapper {
     }
 
     private ÅrsakskodeMedLovreferanse utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
-//        if (erGraderingAvslått(uttakPeriode) && erInnvilget(uttakPeriode)) {
-//            return uttakPeriode.getGraderingAvslagÅrsak();
-//        } else if (uttakPeriode.getPeriodeResultatÅrsak() != null) {
-//            return uttakPeriode.getPeriodeResultatÅrsak();
-//        }
+        if (erGraderingAvslått(uttakPeriode) && erInnvilget(uttakPeriode)) {
+            return uttakPeriode.getGraderingAvslagÅrsak();
+        } else if (uttakPeriode.getPeriodeResultatÅrsak() != null) {
+            return uttakPeriode.getPeriodeResultatÅrsak();
+        }
         return PeriodeResultatÅrsak.UKJENT;
     }
 
@@ -203,17 +423,8 @@ public class BeregningsresultatMapper {
         return PeriodeResultatType.INNVILGET.equals(uttakPeriode.getPeriodeResultatType());
     }
 
-    private int mapAntallTapteDagerFra(List<UttakResultatPeriodeAktivitet> uttakAktiviteter) {
-        return alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ?
-                uttakAktiviteter.stream()
-                        .mapToInt(UttakResultatPeriodeAktivitet::getTrekkdager)
-                        .max()
-                        .orElse(0) : 0;
-    }
-
     private boolean erGraderingAvslått(UttakResultatPeriode uttakPeriode) {
-        return true;
-//        return !uttakPeriode.isGraderingInnvilget() && erGraderingÅrsakKjent(uttakPeriode.getGraderingAvslagÅrsak());
+        return !uttakPeriode.erGraderingInnvilget() && erGraderingÅrsakKjent(uttakPeriode.getGraderingAvslagÅrsak());
     }
 
     private boolean erGraderingÅrsakKjent(GraderingAvslagÅrsak årsak) {

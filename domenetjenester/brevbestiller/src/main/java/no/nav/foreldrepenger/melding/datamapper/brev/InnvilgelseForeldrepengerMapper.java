@@ -210,6 +210,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
     private void mapFelterRelatertTilBeregningsresultatOgUttak(BeregningsresultatFP beregningsresultatFP, Beregningsgrunnlag beregningsgrunnlag, UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
         //Match, Map, merge - Blæh
         fagType.setAntallArbeidsgivere(beregningsresultatMapper.antallArbeidsgivere(beregningsresultatFP));
+        fagType.setPeriodeListe(beregningsresultatMapper.mapPeriodeListe(beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder));
     }
 
     private void mapFelterRelatertTilBehandling(Behandling behandling, FagType fagType) {

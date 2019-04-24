@@ -6,25 +6,17 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatMedUttaksplanDto;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatPeriodeAndelDto;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatPeriodeDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
@@ -38,9 +30,6 @@ import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.PeriodeDto;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMerger;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
-import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
-import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak;
 import no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
@@ -48,69 +37,12 @@ import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.UttakResultat;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 public class BeregningsresultatMapper {
 
-    private BehandlingRestKlient behandlingRestKlient;
-    private KodeverkRepository kodeverkRepository;
-
     public BeregningsresultatMapper() {
         //CDI
-    }
-
-    @Inject
-    public BeregningsresultatMapper(BehandlingRestKlient behandlingRestKlient,
-                                    KodeverkRepository kodeverkRepository) {
-        this.behandlingRestKlient = behandlingRestKlient;
-        this.kodeverkRepository = kodeverkRepository;
-    }
-
-    public BeregningsresultatES hentBeregningsresultatES(Behandling behandling) {
-        return new BeregningsresultatES(behandlingRestKlient.hentBeregningsresultatEngangsstønad(behandling.getResourceLinkDtos()));
-    }
-
-    public BeregningsresultatFP hentBeregningsresultatFP(Behandling behandling) {
-        return mapBeregningsresultatFPFraDto(behandlingRestKlient.hentBeregningsresultatForeldrepenger(behandling.getResourceLinkDtos()));
-    }
-
-    BeregningsresultatFP mapBeregningsresultatFPFraDto(BeregningsresultatMedUttaksplanDto dto) {
-        return BeregningsresultatFP.ny()
-                .medBeregningsresultatPerioder(Arrays.stream(dto.getPerioder()).map(this::mapPeriodeFraDto).collect(Collectors.toList()))
-                .build();
-    }
-
-    BeregningsresultatPeriode mapPeriodeFraDto(BeregningsresultatPeriodeDto dto) {
-        BeregningsresultatPeriode beregningsresultatPeriode = BeregningsresultatPeriode.ny()
-                .medDagsats((long) dto.getDagsats())
-                .medPeriode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
-                .medBeregningsresultatAndel(Arrays.stream(dto.getAndeler()).map(this::mapAndelerFraDto)
-                        .flatMap(List::stream).collect(Collectors.toList()))
-                .build();
-        return beregningsresultatPeriode;
-    }
-
-    //Fpsak slår sammen andeler i dto, så vi må eventuelt splitte dem opp igjen
-    List<BeregningsresultatAndel> mapAndelerFraDto(BeregningsresultatPeriodeAndelDto dto) {
-        List<BeregningsresultatAndel> andeler = new ArrayList<>();
-        if (dto.getRefusjon() != null && dto.getRefusjon() != 0) {
-            andeler.add(lagEnkelAndel(dto, false, dto.getRefusjon()));
-        }
-        if (dto.getTilSoker() != null && dto.getTilSoker() != 0) {
-            andeler.add(lagEnkelAndel(dto, true, dto.getTilSoker()));
-        }
-        return andeler;
-    }
-
-    private BeregningsresultatAndel lagEnkelAndel(BeregningsresultatPeriodeAndelDto dto, boolean brukerErMottaker, int dagsats) {
-        return BeregningsresultatAndel.ny()
-                .medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().getKode()))
-                .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
-                .medArbeidsgiver(ArbeidsgiverMapper.finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr()))
-                .medStillingsprosent(null/*TODO*/)
-                .medBrukerErMottaker(brukerErMottaker)
-                .build();
     }
 
     public BigInteger antallArbeidsgivere(BeregningsresultatFP beregningsresultat) {

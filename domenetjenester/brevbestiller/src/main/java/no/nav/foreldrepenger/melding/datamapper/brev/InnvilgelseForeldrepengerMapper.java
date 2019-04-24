@@ -30,6 +30,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatFPMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.FamiliehendelseMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.SøknadMapper;
@@ -67,6 +68,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
     private ObjectFactory objectFactory = new ObjectFactory();
     private BehandlingMapper behandlingMapper;
     private BeregningsresultatMapper beregningsresultatMapper;
+    private BeregningsresultatFPMapper beregningsresultatFPMapper;
     private SøknadMapper søknadMapper;
     private FamiliehendelseMapper familiehendelseMapper;
     private BeregningsgrunnlagMapper beregningsgrunnlagMapper;
@@ -80,6 +82,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
     @Inject
     public InnvilgelseForeldrepengerMapper(BehandlingMapper behandlingMapper,
                                            BeregningsresultatMapper beregningsresultatMapper,
+                                           BeregningsresultatFPMapper beregningsresultatFPMapper,
                                            BeregningsgrunnlagMapper beregningsgrunnlagMapper,
                                            FamiliehendelseMapper familiehendelseMapper,
                                            SøknadMapper søknadMapper,
@@ -87,6 +90,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                            BrevParametere brevParametere) {
         this.behandlingMapper = behandlingMapper;
         this.beregningsresultatMapper = beregningsresultatMapper;
+        this.beregningsresultatFPMapper = beregningsresultatFPMapper;
         this.familiehendelseMapper = familiehendelseMapper;
         this.beregningsgrunnlagMapper = beregningsgrunnlagMapper;
         this.brevParametere = brevParametere;
@@ -101,7 +105,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         //TODO - Burde vi lage et wrapper objekt for inputobjektene når det er så mange??
         UttakResultatPerioder uttakResultatPerioder = uttakMapper.hentUttaksresultat(behandling);
-        BeregningsresultatFP beregningsresultatFP = beregningsresultatMapper.hentBeregningsresultatFP(behandling);
+        BeregningsresultatFP beregningsresultatFP = beregningsresultatFPMapper.hentBeregningsresultat(behandling);
         Beregningsgrunnlag beregningsgrunnlag = beregningsgrunnlagMapper.hentBeregningsgrunnlag(behandling);
         Behandling originalBehandling;
         Beregningsgrunnlag originaltBeregningsgrunnlag = null;

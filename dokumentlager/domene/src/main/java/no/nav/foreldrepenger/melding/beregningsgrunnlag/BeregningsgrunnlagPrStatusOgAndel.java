@@ -51,6 +51,8 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         this.bgAndelArbeidsforhold = builder.bgAndelArbeidsforhold;
     }
 
+    //TODO - Flytt mappingen ut og bruk kodeliste istedenfor string
+
     public static BeregningsgrunnlagPrStatusOgAndel fraDto(BeregningsgrunnlagPrStatusOgAndelDto dto) {
         Builder builder = BeregningsgrunnlagPrStatusOgAndel.ny();
         BGAndelArbeidsforhold bgAndelArbeidsforhold = BGAndelArbeidsforhold.fraDto(dto.getArbeidsforhold());

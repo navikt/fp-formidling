@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.fpsak.dto.uttak;
 
 import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
 public class UttakResultatPeriodeAktivitetDto {
@@ -50,8 +48,7 @@ public class UttakResultatPeriodeAktivitetDto {
         return arbeidsgiver;
     }
 
-    @JsonIgnore
-    boolean isGradering() {
+    public boolean isGradering() {
         return gradering;
     }
 }

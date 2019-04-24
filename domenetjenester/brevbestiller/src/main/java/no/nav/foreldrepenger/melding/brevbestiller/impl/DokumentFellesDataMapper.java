@@ -13,7 +13,6 @@ import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.aktør.PersonstatusType;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
-import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -30,15 +29,12 @@ import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
 public class DokumentFellesDataMapper {
-
     private final String DOD_PERSON_STATUS = "DOD";
     private final String DEFAULT_PERSON_STATUS = "ANNET";
-
     private DokumentRepository dokumentRepository;
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private BehandlingRestKlient behandlingRestKlient;
     private TpsTjeneste tpsTjeneste;
-    private BehandlingMapper behandlingMapper;
 
     public DokumentFellesDataMapper() {
         //CDI
@@ -48,12 +44,10 @@ public class DokumentFellesDataMapper {
     public DokumentFellesDataMapper(TpsTjeneste tpsTjeneste,
                                     DokumentRepository dokumentRepository,
                                     BehandlingRestKlient behandlingRestKlient,
-                                    BehandlingMapper behandlingMapper,
                                     NavKontaktKonfigurasjon navKontaktKonfigurasjon) {
         this.tpsTjeneste = tpsTjeneste;
         this.dokumentRepository = dokumentRepository;
         this.behandlingRestKlient = behandlingRestKlient;
-        this.behandlingMapper = behandlingMapper;
         this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
     }
 
@@ -192,14 +186,6 @@ public class DokumentFellesDataMapper {
         }
         return behandlendeEnhetNavn.contains(navKontaktKonfigurasjon.getBrevAvsenderKlageEnhet())
                 ? navKontaktKonfigurasjon.getBrevAvsenderKlageEnhet() : navKontaktKonfigurasjon.getBrevAvsenderEnhetNavn();
-    }
-
-    private Optional<Verge> hentVerge() {
-        return Optional.empty();
-    }
-
-    private Personopplysning hentPersonopplysning() {
-        return null;
     }
 
     private DokumentAdresse norg2Returadresse() {

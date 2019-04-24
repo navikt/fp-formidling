@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.uttak;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 
@@ -53,6 +54,14 @@ public class UttakResultatPeriode {
 
     public List<UttakResultatPeriodeAktivitet> getAktiviteter() {
         return aktiviteter;
+    }
+
+    public boolean isInnvilget() {
+        return Objects.equals(getPeriodeResultatType(), PeriodeResultatType.INNVILGET);
+    }
+
+    public boolean erGraderingInnvilget() {
+        return aktiviteter.stream().anyMatch(UttakResultatPeriodeAktivitet::getGraderingInnvilget);
     }
 
 

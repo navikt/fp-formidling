@@ -51,6 +51,15 @@ public class PeriodeBeregner {
             UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID.getKode(),
             UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode());
 
+    private static Map<AktivitetStatus, UttakArbeidType> uttakAktivitetStatusMap = new HashMap<>();
+
+    static {
+        uttakAktivitetStatusMap.put(AktivitetStatus.ARBEIDSTAKER, UttakArbeidType.ORDINÆRT_ARBEID);
+        uttakAktivitetStatusMap.put(AktivitetStatus.FRILANSER, UttakArbeidType.FRILANS);
+        uttakAktivitetStatusMap.put(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE);
+    }
+
+
     private PeriodeBeregner() {
         //for sonar
     }
@@ -84,17 +93,17 @@ public class PeriodeBeregner {
         throw FeilFactory.create(DokumentBestillerFeil.class).kanIkkeMatchePerioder("uttaksperiode").toException();
     }
 
-    public static Optional<BeregningsgrunnlagPrStatusOgAndel> finnBgPerStatusOgAndelHvisFinnes(AktivitetStatus status,
-                                                                                               List<BeregningsgrunnlagPrStatusOgAndel> bgPerStatusOgAndelListe,
+    public static Optional<BeregningsgrunnlagPrStatusOgAndel> finnBgPerStatusOgAndelHvisFinnes(List<BeregningsgrunnlagPrStatusOgAndel> bgPerStatusOgAndelListe,
                                                                                                BeregningsresultatAndel andel) {
         Optional<Arbeidsgiver> arbeidsgiver = andel.getArbeidsgiver();
-        if (!arbeidsgiver.isPresent()) {
+        if (arbeidsgiver.isEmpty()) {
             return Optional.empty();
         }
         ArbeidsforholdRef arbeidsforholdRef = andel.getArbeidsforholdRef();
 
         for (BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel : bgPerStatusOgAndelListe) {
-            if (status.equals(bgPerStatusOgAndel.getAktivitetStatus())) {
+            //TODO -- det er feil datatype her
+            if (andel.getAktivitetStatus().equals(bgPerStatusOgAndel.getAktivitetStatus())) {
                 if (bgPerStatusOgAndel.gjelderSammeArbeidsforhold(arbeidsgiver.get(), arbeidsforholdRef)) {
                     return Optional.of(bgPerStatusOgAndel);
                 }
@@ -108,21 +117,15 @@ public class PeriodeBeregner {
         return uttakAktiviteter.stream().allMatch(aktivitet -> aktivitet.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) == 0);
     }
 
-    public static Optional<UttakResultatPeriodeAktivitet> finnAktivitetMedStatusHvisFinnes(AktivitetStatus status,
-                                                                                           List<UttakResultatPeriodeAktivitet> uttakAktiviteter,
+    public static Optional<UttakResultatPeriodeAktivitet> finnAktivitetMedStatusHvisFinnes(List<UttakResultatPeriodeAktivitet> uttakAktiviteter,
                                                                                            BeregningsresultatAndel andel) {
         Optional<Arbeidsgiver> arbeidsgiver = andel.getArbeidsgiver();
         ArbeidsforholdRef arbeidsforholdRef = andel.getArbeidsforholdRef();
 
-        Map<AktivitetStatus, UttakArbeidType> uttakAktivitetStatusMap = new HashMap<>();
-        uttakAktivitetStatusMap.put(AktivitetStatus.ARBEIDSTAKER, UttakArbeidType.ORDINÆRT_ARBEID);
-        uttakAktivitetStatusMap.put(AktivitetStatus.FRILANSER, UttakArbeidType.FRILANS);
-        uttakAktivitetStatusMap.put(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE);
-
         for (UttakResultatPeriodeAktivitet aktivitet : uttakAktiviteter) {
-            if (uttakAktivitetStatusMap.getOrDefault(status, UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType())) {
-                if (!arbeidsgiver.isPresent() || arbeidsgiver.get().getIdentifikator().equals(aktivitet.getArbeidsgiverIdentifikator())) {
-                    if (arbeidsforholdRef == null || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold() && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId()))) {
+            if (uttakAktivitetStatusMap.getOrDefault(andel.getAktivitetStatus(), UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType())) {
+                if (arbeidsgiver.isEmpty() || arbeidsgiver.get().getIdentifikator().equals(aktivitet.getArbeidsgiverIdentifikator())) {
+                    if (arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold() && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId()))) {
                         return Optional.of(aktivitet);
                     }
                 }

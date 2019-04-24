@@ -8,7 +8,7 @@ public class UttakResultatPeriodeAktivitet {
     private int trekkdager;
     private String tidsperiode;
     private BigDecimal utbetalingsprosent;
-    private String graderingInnvilget;
+    private boolean graderingInnvilget;
     private BigDecimal arbeidsprosent;
     private UttakResultatPeriode uttakResultatPeriode;
     private UttakAktivitet uttakAktivitet;
@@ -44,7 +44,7 @@ public class UttakResultatPeriodeAktivitet {
         return utbetalingsprosent;
     }
 
-    public String getGraderingInnvilget() {
+    public boolean getGraderingInnvilget() {
         return graderingInnvilget;
     }
 
@@ -78,7 +78,7 @@ public class UttakResultatPeriodeAktivitet {
         private int trekkdager;
         private String tidsperiode;
         private BigDecimal utbetalingsprosent;
-        private String graderingInnvilget;
+        private boolean graderingInnvilget;
         private BigDecimal arbeidsprosent;
         private UttakResultatPeriode uttakResultatPeriode;
         private UttakAktivitet uttakAktivitet;
@@ -106,7 +106,7 @@ public class UttakResultatPeriodeAktivitet {
             return this;
         }
 
-        public Builder medGraderingInnvilget(String graderingInnvilget) {
+        public Builder medGraderingInnvilget(boolean graderingInnvilget) {
             this.graderingInnvilget = graderingInnvilget;
             return this;
         }

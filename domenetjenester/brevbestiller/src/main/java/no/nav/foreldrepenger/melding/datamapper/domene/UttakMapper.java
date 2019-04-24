@@ -65,6 +65,7 @@ public class UttakMapper {
                 .medArbeidsprosent(dto.getProsentArbeid())
                 .medTrekkdager(dto.getTrekkdager())
                 .medUtbetalingsprosent(dto.getUtbetalingsgrad())
+                .medGraderingInnvilget(dto.isGradering())
                 .medUttakAktivitet(UttakAktivitet.ny()
                         .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                         .medArbeidsgiver(ArbeidsgiverMapper.finnArbeidsgiver(dto.getArbeidsgiver().getNavn(),

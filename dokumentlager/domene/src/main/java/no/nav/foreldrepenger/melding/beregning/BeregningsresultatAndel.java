@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.beregning;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
@@ -8,7 +9,7 @@ import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public class BeregningsresultatAndel {
     private int dagsats;
-    private String stillingsprosent;
+    private BigDecimal stillingsprosent;
     private AktivitetStatus aktivitetStatus;
     private Arbeidsgiver arbeidsgiver;
     private ArbeidsforholdRef arbeidsforholdRef;
@@ -31,7 +32,7 @@ public class BeregningsresultatAndel {
         return dagsats;
     }
 
-    public String getStillingsprosent() {
+    public BigDecimal getStillingsprosent() {
         return stillingsprosent;
     }
 
@@ -54,7 +55,7 @@ public class BeregningsresultatAndel {
 
     public static final class Builder {
         private int dagsats;
-        private String stillingsprosent;
+        private BigDecimal stillingsprosent;
         private AktivitetStatus aktivitetStatus;
         private Arbeidsgiver arbeidsgiver;
         private ArbeidsforholdRef arbeidsforholdRef;
@@ -68,7 +69,7 @@ public class BeregningsresultatAndel {
             return this;
         }
 
-        public Builder medStillingsprosent(String stillingsprosent) {
+        public Builder medStillingsprosent(BigDecimal stillingsprosent) {
             this.stillingsprosent = stillingsprosent;
             return this;
         }

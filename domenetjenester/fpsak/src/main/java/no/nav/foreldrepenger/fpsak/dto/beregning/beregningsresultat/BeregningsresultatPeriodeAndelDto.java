@@ -16,6 +16,7 @@ public class BeregningsresultatPeriodeAndelDto {
     private KodeDto aktivitetStatus;
     private String arbeidsforholdId;
     private KodeDto arbeidsforholdType;
+    private BigDecimal stillingsprosent;
 
     public String getArbeidsgiverNavn() {
         return arbeidsgiverNavn;
@@ -57,43 +58,7 @@ public class BeregningsresultatPeriodeAndelDto {
         return arbeidsforholdType;
     }
 
-    public void setArbeidsgiverNavn(String arbeidsgiverNavn) {
-        this.arbeidsgiverNavn = arbeidsgiverNavn;
-    }
-
-    public void setArbeidsgiverOrgnr(String arbeidsgiverOrgnr) {
-        this.arbeidsgiverOrgnr = arbeidsgiverOrgnr;
-    }
-
-    public void setRefusjon(Integer refusjon) {
-        this.refusjon = refusjon;
-    }
-
-    public void setTilSoker(Integer tilSoker) {
-        this.tilSoker = tilSoker;
-    }
-
-    public void setUttak(UttakDto uttak) {
-        this.uttak = uttak;
-    }
-
-    public void setUtbetalingsgrad(BigDecimal utbetalingsgrad) {
-        this.utbetalingsgrad = utbetalingsgrad;
-    }
-
-    public void setSisteUtbetalingsdato(LocalDate sisteUtbetalingsdato) {
-        this.sisteUtbetalingsdato = sisteUtbetalingsdato;
-    }
-
-    public void setAktivitetStatus(KodeDto aktivitetStatus) {
-        this.aktivitetStatus = aktivitetStatus;
-    }
-
-    public void setArbeidsforholdId(String arbeidsforholdId) {
-        this.arbeidsforholdId = arbeidsforholdId;
-    }
-
-    public void setArbeidsforholdType(KodeDto arbeidsforholdType) {
-        this.arbeidsforholdType = arbeidsforholdType;
+    public BigDecimal getStillingsprosent() {
+        return stillingsprosent;
     }
 }

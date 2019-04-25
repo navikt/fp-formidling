@@ -64,7 +64,7 @@ public class BehandlingDtoMapper {
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()))
-                .medPersonopplysning(new Personopplysning(dto.getPersonopplysningDto()))
+                .medPersonopplysning(new Personopplysning(dto.getPersonopplysningDto(), kodeverkRepository))
                 .medFagsak(fagsak);
 
         dto.getLinks().forEach(builder::leggTilResourceLink);

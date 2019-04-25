@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class UttakResultatPeriodeAktivitet {
-    private String trekkonto;
+    private StønadskontoType trekkonto;
     private int trekkdager;
     private String tidsperiode;
     private BigDecimal utbetalingsprosent;
@@ -28,7 +28,7 @@ public class UttakResultatPeriodeAktivitet {
         return new Builder();
     }
 
-    public String getTrekkonto() {
+    public StønadskontoType getTrekkonto() {
         return trekkonto;
     }
 
@@ -74,7 +74,7 @@ public class UttakResultatPeriodeAktivitet {
 
 
     public static final class Builder {
-        private String trekkonto;
+        private StønadskontoType trekkonto;
         private int trekkdager;
         private String tidsperiode;
         private BigDecimal utbetalingsprosent;
@@ -86,7 +86,7 @@ public class UttakResultatPeriodeAktivitet {
         private Builder() {
         }
 
-        public Builder medTrekkonto(String trekkonto) {
+        public Builder medTrekkonto(StønadskontoType trekkonto) {
             this.trekkonto = trekkonto;
             return this;
         }

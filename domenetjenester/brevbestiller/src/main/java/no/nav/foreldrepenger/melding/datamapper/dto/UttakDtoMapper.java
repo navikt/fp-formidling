@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
@@ -54,6 +55,7 @@ public class UttakDtoMapper {
                 .medTrekkdager(dto.getTrekkdager())
                 .medUtbetalingsprosent(dto.getUtbetalingsgrad())
                 .medGraderingInnvilget(dto.isGradering())
+                .medTrekkonto(kodeverkRepository.finn(StønadskontoType.class, dto.getStønadskontoType().getKode()))
                 .medUttakAktivitet(UttakAktivitet.ny()
                         .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                         .medArbeidsgiver(ArbeidsgiverMapper.finnArbeidsgiver(dto.getArbeidsgiver().getNavn(),

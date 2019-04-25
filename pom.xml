@@ -203,11 +203,6 @@
                 <version>7.0</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.felles.kafka</groupId>
-                <artifactId>consumer</artifactId>
-                <version>${felles.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>felles-prosesstask</artifactId>
                 <version>${felles.version}</version>

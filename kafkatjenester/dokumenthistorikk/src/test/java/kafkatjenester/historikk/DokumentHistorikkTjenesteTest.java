@@ -47,7 +47,7 @@ public class DokumentHistorikkTjenesteTest {
         historikkRepository = new HistorikkRepositoryImpl(repositoryRule.getEntityManager());
         dokumentRepository = new DokumentRepositoryImpl(repositoryRule.getEntityManager());
         hendelseRepository = new HendelseRepositoryImpl(repositoryRule.getEntityManager());
-        historikkTjeneste = new DokumentHistorikkTjeneste(historikkMeldingProducer, historikkRepository);
+        historikkTjeneste = new DokumentHistorikkTjeneste(historikkMeldingProducer);
         doAnswer((i) -> {
             return null;
         }).when(historikkMeldingProducer).sendJson(Mockito.any());

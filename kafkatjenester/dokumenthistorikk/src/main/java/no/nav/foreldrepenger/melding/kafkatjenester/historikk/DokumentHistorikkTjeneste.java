@@ -12,9 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHistorikkDto;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
-import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.kafkatjenester.felles.util.Serialiseringsverktøy;
-import no.vedtak.felles.kafka.MeldingProducer;
 
 @ApplicationScoped
 public class DokumentHistorikkTjeneste {
@@ -23,18 +21,15 @@ public class DokumentHistorikkTjeneste {
 
     private static final ObjectMapper mapper = Serialiseringsverktøy.getObjectMapper();
 
-    private MeldingProducer meldingProducer;
-    private HistorikkRepository historikkRepository;
+    private DokumentHistorikkMeldingProducer meldingProducer;
 
     public DokumentHistorikkTjeneste() {
         //CDI
     }
 
     @Inject
-    public DokumentHistorikkTjeneste(DokumentHistorikkMeldingProducer dokumentMeldingProducer,
-                                     HistorikkRepository historikkRepository) {
+    public DokumentHistorikkTjeneste(DokumentHistorikkMeldingProducer dokumentMeldingProducer) {
         this.meldingProducer = dokumentMeldingProducer;
-        this.historikkRepository = historikkRepository;
     }
 
 

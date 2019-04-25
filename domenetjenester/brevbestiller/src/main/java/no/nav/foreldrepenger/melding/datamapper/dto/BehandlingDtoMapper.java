@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
@@ -20,6 +21,7 @@ import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.personopplysning.Personopplysning;
 
+@ApplicationScoped
 public class BehandlingDtoMapper {
     private KodeverkRepository kodeverkRepository;
     private BehandlingRestKlient behandlingRestKlient;

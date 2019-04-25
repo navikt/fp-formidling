@@ -35,7 +35,6 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 @Named(DokumentMalType.FORLENGET_DOK)
 public class ForlengetSaksbehandlingstidBrevMapper implements DokumentTypeMapper {
 
-    private BehandlingMapper behandlingMapper;
     private DomeneobjektProvider domeneobjektProvider;
 
     private Map<String, VariantKode> malTilVariantMap = Map.of(DokumentMalType.FORLENGET_MEDL_DOK, VariantKode.MEDLEM,
@@ -47,10 +46,8 @@ public class ForlengetSaksbehandlingstidBrevMapper implements DokumentTypeMapper
     }
 
     @Inject
-    public ForlengetSaksbehandlingstidBrevMapper(DomeneobjektProvider domeneobjektProvider,
-                                                 BehandlingMapper behandlingMapper) {
+    public ForlengetSaksbehandlingstidBrevMapper(DomeneobjektProvider domeneobjektProvider) {
         this.domeneobjektProvider = domeneobjektProvider;
-        this.behandlingMapper = behandlingMapper;
     }
 
     @Override
@@ -65,7 +62,7 @@ public class ForlengetSaksbehandlingstidBrevMapper implements DokumentTypeMapper
     private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentFelles dokumentFelles, FamilieHendelse familieHendelse) {
         FagType fagType = new FagType();
         fagType.setAntallBarn(familieHendelse.getAntallBarn());
-        fagType.setBehandlingsfristUker(BigInteger.valueOf(behandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
+        fagType.setBehandlingsfristUker(BigInteger.valueOf(BehandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setVariant(mapVariant(dokumentHendelse, behandling));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());

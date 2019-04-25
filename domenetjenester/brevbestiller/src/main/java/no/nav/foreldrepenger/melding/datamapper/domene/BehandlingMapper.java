@@ -19,10 +19,6 @@ import no.nav.vedtak.util.StringUtils;
 
 public class BehandlingMapper {
 
-    public BehandlingMapper() {
-        //CDI
-    }
-
     public static Optional<String> avklarFritekst(DokumentHendelse dokumentHendelse, Behandling behandling) {
         if (!StringUtils.nullOrEmpty(dokumentHendelse.getFritekst())) {
             return Optional.of(dokumentHendelse.getFritekst());

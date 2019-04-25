@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.melding.datamapper.dto.KlageDtoMapper;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -31,20 +32,20 @@ public class KlageMapperTest {
     @Rule
     public final UnittestRepositoryRule repositoryRule = new UnittestRepositoryRule();
 
-    private KlageMapper klageMapper;
+    private KlageDtoMapper klageDtoMapper;
     private KodeverkRepository kodeverkRepository;
     private DokumentHendelse dokumentHendelse;
 
     @Before
     public void setup() {
         kodeverkRepository = new KodeverkRepositoryImpl(repositoryRule.getEntityManager());
-        klageMapper = new KlageMapper(kodeverkRepository, null);
+        klageDtoMapper = new KlageDtoMapper(kodeverkRepository);
         dokumentHendelse = new DokumentHendelse();
     }
 
     @Test
     public void skal_identifisere_opphevet_klage() {
-        assertThat(klageMapper.erOpphevet(lagKlageNFP(true, Collections.emptyList()), dokumentHendelse)).isTrue();
+        assertThat(KlageMapper.erOpphevet(lagKlageNFP(true, Collections.emptyList()), dokumentHendelse)).isTrue();
     }
 
     @Test
@@ -54,26 +55,26 @@ public class KlageMapperTest {
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .medErOpphevetKlage(true)
                 .build();
-        assertThat(klageMapper.erOpphevet(lagKlageNFP(false, Collections.emptyList()), dokumentHendelse)).isTrue();
+        assertThat(KlageMapper.erOpphevet(lagKlageNFP(false, Collections.emptyList()), dokumentHendelse)).isTrue();
     }
 
     @Test
     public void skal_identifisere_ikke_opphevet_klage() {
-        assertThat(klageMapper.erOpphevet(lagKlageNFP(false, Collections.emptyList()), dokumentHendelse)).isFalse();
+        assertThat(KlageMapper.erOpphevet(lagKlageNFP(false, Collections.emptyList()), dokumentHendelse)).isFalse();
     }
 
     @Test
     public void formaterLovhjemlerKlageAvvistTest() throws IOException {
 
         Klage klage = lagKlageNFP(false, List.of(KlageAvvistÅrsak.KLAGET_FOR_SENT, KlageAvvistÅrsak.IKKE_KONKRET));
-        assertLovFormateringKlage(klageMapper.hentKlageHjemler(klage), false, "forvaltningsloven §§ 31, 32 og 33");
+        assertLovFormateringKlage(KlageMapper.hentKlageHjemler(klage), false, "forvaltningsloven §§ 31, 32 og 33");
 
         klage = lagKlageNFP(false, List.of(KlageAvvistÅrsak.KLAGER_IKKE_PART));
-        assertLovFormateringKlage(klageMapper.hentKlageHjemler(klage), false, "forvaltningsloven §§ 28 og 33");
+        assertLovFormateringKlage(KlageMapper.hentKlageHjemler(klage), false, "forvaltningsloven §§ 28 og 33");
     }
 
     private Klage lagKlageNFP(boolean opphevet, List<KlageAvvistÅrsak> avvistÅrsaker) {
-        return klageMapper.mapKlagefraDto(lagKlageDto(opphevet, avvistÅrsaker));
+        return klageDtoMapper.mapKlagefraDto(lagKlageDto(opphevet, avvistÅrsaker));
     }
 
     private KlagebehandlingDto lagKlageDto(boolean opphevet, List<KlageAvvistÅrsak> avvistÅrsaker) {

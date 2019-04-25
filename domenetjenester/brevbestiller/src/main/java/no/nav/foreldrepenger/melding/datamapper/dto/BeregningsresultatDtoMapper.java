@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.datamapper.domene;
+package no.nav.foreldrepenger.melding.datamapper.dto;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,37 +12,34 @@ import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatMedUttaksplanDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatPeriodeAndelDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatPeriodeDto;
-import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.melding.datamapper.domene.ArbeidsgiverMapper;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
-public class BeregningsresultatFPMapper {
+public class BeregningsresultatDtoMapper {
     private BehandlingRestKlient behandlingRestKlient;
     private KodeverkRepository kodeverkRepository;
 
-    public BeregningsresultatFPMapper() {
+    public BeregningsresultatDtoMapper() {
         //CDI
     }
 
     @Inject
-    public BeregningsresultatFPMapper(BehandlingRestKlient behandlingRestKlient,
-                                      KodeverkRepository kodeverkRepository) {
+    public BeregningsresultatDtoMapper(BehandlingRestKlient behandlingRestKlient,
+                                       KodeverkRepository kodeverkRepository) {
         this.behandlingRestKlient = behandlingRestKlient;
         this.kodeverkRepository = kodeverkRepository;
     }
 
-    public BeregningsresultatFP hentBeregningsresultat(Behandling behandling) {
-        return mapBeregningsresultatFPFraDto(behandlingRestKlient.hentBeregningsresultatForeldrepenger(behandling.getResourceLinkDtos()));
-    }
 
-    private BeregningsresultatFP mapBeregningsresultatFPFraDto(BeregningsresultatMedUttaksplanDto dto) {
+    public BeregningsresultatFP mapBeregningsresultatFPFraDto(BeregningsresultatMedUttaksplanDto dto) {
         return BeregningsresultatFP.ny()
                 .medBeregningsresultatPerioder(Arrays.stream(dto.getPerioder()).map(this::mapPeriodeFraDto).collect(Collectors.toList()))
                 .build();

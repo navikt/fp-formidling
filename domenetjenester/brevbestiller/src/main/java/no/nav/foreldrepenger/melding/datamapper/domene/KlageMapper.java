@@ -8,7 +8,6 @@ import static no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak.KLAGER_IKKE_
 import static no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak.KLAGET_FOR_SENT;
 import static no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak.KLAGE_UGYLDIG;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,24 +16,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
-import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
-import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
-import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
-import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.AvvistGrunnKode;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
-import no.nav.foreldrepenger.melding.klage.KlageFormkravResultat;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
-import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 
-@ApplicationScoped
 public class KlageMapper {
     public static Map<String, AvvistGrunnKode> avvistGrunnMap;
 
@@ -48,60 +35,7 @@ public class KlageMapper {
         avvistGrunnMap.put(IKKE_SIGNERT.getKode(), AvvistGrunnKode.KLAGEUGYLDIG);
     }
 
-    private KodeverkRepository kodeverkRepository;
-    private BehandlingRestKlient behandlingRestKlient;
-
-    public KlageMapper() {
-        //CDI
-    }
-
-    @Inject
-    public KlageMapper(KodeverkRepository kodeverkRepository,
-                       BehandlingRestKlient behandlingRestKlient) {
-        this.kodeverkRepository = kodeverkRepository;
-        this.behandlingRestKlient = behandlingRestKlient;
-    }
-
-    public Klage hentKlagebehandling(Behandling behandling) {
-        KlagebehandlingDto klagebehandlingDto = behandlingRestKlient.hentKlagebehandling(behandling.getResourceLinkDtos());
-        return mapKlagefraDto(klagebehandlingDto);
-    }
-
-    public Klage mapKlagefraDto(KlagebehandlingDto dto) {
-        Klage.Builder builder = Klage.ny();
-        if (dto.getKlageFormkravResultatNFP() != null) {
-            builder.medFormkravNFP(mapKlageFormkravResultatfraDto(dto.getKlageFormkravResultatNFP()));
-        }
-        if (dto.getKlageFormkravResultatKA() != null) {
-            builder.medFormkravKA(mapKlageFormkravResultatfraDto(dto.getKlageFormkravResultatKA()));
-        }
-        if (dto.getKlageVurderingResultatNFP() != null) {
-            builder.medKlageVurderingResultatNFP(mapKlageVurderingResultatfraDto(dto.getKlageVurderingResultatNFP()));
-        }
-        if (dto.getKlageVurderingResultatNK() != null) {
-            builder.medKlageVurderingResultatNK(mapKlageVurderingResultatfraDto(dto.getKlageVurderingResultatNK()));
-        }
-        return builder.build();
-    }
-
-    private KlageFormkravResultat mapKlageFormkravResultatfraDto(KlageFormkravResultatDto dto) {
-        KlageFormkravResultat.Builder builder = KlageFormkravResultat.ny();
-        builder.medBegrunnelse(dto.getBegrunnelse());
-        List<KlageAvvistÅrsak> avvistÅrsaker = new ArrayList<>();
-        dto.getAvvistArsaker().forEach(årsak -> {
-            avvistÅrsaker.add(kodeverkRepository.finn(KlageAvvistÅrsak.class, årsak.kode));
-        });
-        builder.medAvvistÅrsaker(avvistÅrsaker);
-        return builder.build();
-    }
-
-    private KlageVurderingResultat mapKlageVurderingResultatfraDto(KlageVurderingResultatDto dto) {
-        KlageVurderingResultat.Builder builder = KlageVurderingResultat.ny();
-        builder.medKlageVurdering(kodeverkRepository.finn(KlageVurdering.class, dto.getKlageVurdering()));
-        return builder.build();
-    }
-
-    public List<KlageAvvistÅrsak> listeAvAvvisteÅrsaker(Klage klage) {
+    public static List<KlageAvvistÅrsak> listeAvAvvisteÅrsaker(Klage klage) {
         if (klage.getFormkravKA() != null) {
             return klage.getFormkravKA().getAvvistÅrsaker();
         } else if (klage.getFormkravNFP() != null) {
@@ -110,14 +44,14 @@ public class KlageMapper {
         return Collections.emptyList();
     }
 
-    public Optional<String> hentOgFormaterLovhjemlerForAvvistKlage(Klage klage) {
+    public static Optional<String> hentOgFormaterLovhjemlerForAvvistKlage(Klage klage) {
         Set<String> klagehjemler = hentKlageHjemler(klage);
         boolean klagetEtterKlagefrist = listeAvAvvisteÅrsaker(klage).stream()
                 .anyMatch(KLAGET_FOR_SENT::equals);
         return formaterLovhjemlerForAvvistKlage(klagehjemler, klagetEtterKlagefrist);
     }
 
-    Set<String> hentKlageHjemler(Klage klage) {
+    static Set<String> hentKlageHjemler(Klage klage) {
         Set<String> klageHjemler = new TreeSet<>();
         String klageVurdertAv = klage.getFormkravKA() != null ? "KA" : "NFP";
         listeAvAvvisteÅrsaker(klage).forEach(årsak -> klageHjemler.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(årsak, klageVurdertAv)));
@@ -135,7 +69,7 @@ public class KlageMapper {
         return Optional.of(lovhjemmelBuiloer.toString());
     }
 
-    public boolean erOpphevet(Klage klage, DokumentHendelse hendelse) {
+    public static boolean erOpphevet(Klage klage, DokumentHendelse hendelse) {
         if (hendelse.getErOpphevetKlage()) {
             return true;
         }

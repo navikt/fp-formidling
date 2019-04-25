@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Innsyn;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.InnsynMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -32,18 +33,18 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class InnsynskravSvarBrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private InnsynMapper innsynMapper;
+    private DomeneobjektProvider domeneobjektProvider;
 
     @Inject
     public InnsynskravSvarBrevMapper(BrevParametere brevParametere,
-                                     InnsynMapper innsynMapper) {
+                                     DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
-        this.innsynMapper = innsynMapper;
+        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        Innsyn innsyn = innsynMapper.hentInnsyn(behandling);
+        Innsyn innsyn = domeneobjektProvider.hentInnsyn(behandling);
         FagType fagType = mapFagType(dokumentHendelse, behandling, innsyn);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnsynConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);

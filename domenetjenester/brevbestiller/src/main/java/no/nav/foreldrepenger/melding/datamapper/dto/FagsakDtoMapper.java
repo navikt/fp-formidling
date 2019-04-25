@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.datamapper.domene;
+package no.nav.foreldrepenger.melding.datamapper.dto;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -9,16 +9,16 @@ import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 
 @ApplicationScoped
-public class FagsakMapper {
+class FagsakDtoMapper {
+
     private KodeverkRepository kodeverkRepository;
 
-    public FagsakMapper() {
-        //CDO
+    @Inject
+    public FagsakDtoMapper(KodeverkRepository kodeverkRepository) {
+        this.kodeverkRepository = kodeverkRepository;
     }
 
-    @Inject
-    public FagsakMapper(KodeverkRepository kodeverkRepository) {
-        this.kodeverkRepository = kodeverkRepository;
+    public FagsakDtoMapper() {
     }
 
     public Fagsak mapFagsakFraDto(FagsakDto fagsakDto) {
@@ -27,4 +27,5 @@ public class FagsakMapper {
                 .medBrukerRolle(kodeverkRepository.finn(RelasjonsRolleType.class, fagsakDto.getRelasjonsRolleType().getKode()))
                 .build();
     }
+
 }

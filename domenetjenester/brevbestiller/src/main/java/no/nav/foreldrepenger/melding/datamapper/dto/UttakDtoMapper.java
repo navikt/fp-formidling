@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.datamapper.domene;
+package no.nav.foreldrepenger.melding.datamapper.dto;
 
 import java.util.stream.Collectors;
 
@@ -8,8 +8,7 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeAktivitetDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeDto;
-import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
-import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.datamapper.domene.ArbeidsgiverMapper;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
@@ -20,36 +19,25 @@ import no.nav.foreldrepenger.melding.uttak.UttakAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
-public class UttakMapper {
+public class UttakDtoMapper {
 
-    private BehandlingRestKlient behandlingRestKlient;
     private KodeverkRepository kodeverkRepository;
 
-    public UttakMapper() {
+    public UttakDtoMapper() {
         //CDI
     }
 
     @Inject
-    public UttakMapper(BehandlingRestKlient behandlingRestKlient,
-                       KodeverkRepository kodeverkRepository) {
-        this.behandlingRestKlient = behandlingRestKlient;
+    public UttakDtoMapper(BehandlingRestKlient behandlingRestKlient,
+                          KodeverkRepository kodeverkRepository) {
         this.kodeverkRepository = kodeverkRepository;
     }
 
-    public UttakResultatPerioder hentUttaksresultat(Behandling behandling) {
-        UttakResultatPerioderDto resultatPerioderDto = behandlingRestKlient.hentUttaksresultat(behandling.getResourceLinkDtos());
-        return UttakResultatPerioder.ny()
-                .medPerioder(resultatPerioderDto.getPerioderSøker().stream().map(this::periodeFraDto).collect(Collectors.toList()))
-                .medPerioderAnnenPart(resultatPerioderDto.getPerioderAnnenpart().stream().map(this::periodeFraDto).collect(Collectors.toList()))
-                .build();
-    }
-
-    UttakResultatPeriode periodeFraDto(UttakResultatPeriodeDto dto) {
+    public UttakResultatPeriode periodeFraDto(UttakResultatPeriodeDto dto) {
         return UttakResultatPeriode.ny()
                 .medGraderingAvslagÅrsak(kodeverkRepository.finn(GraderingAvslagÅrsak.class, dto.getGraderingAvslagÅrsak().getKode()))
                 .medPeriodeResultatType(kodeverkRepository.finn(PeriodeResultatType.class, dto.getPeriodeResultatType().getKode()))

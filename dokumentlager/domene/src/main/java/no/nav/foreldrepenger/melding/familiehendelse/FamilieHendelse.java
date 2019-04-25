@@ -29,6 +29,7 @@ public class FamilieHendelse {
         this.gjelderFødsel = gjelderFødsel;
     }
 
+    //TODO - Flytt til en DTOMapper
     public static FamilieHendelse fraDto(FamiliehendelseDto dto) {
         BigInteger antallBarnFraDto = utledAntallBarnFraDto(dto);
         Optional<LocalDate> termindatoFraDto = finnTermindato(dto);

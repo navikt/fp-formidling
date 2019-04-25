@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -36,24 +37,21 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class KlageYtelsesvedtakOpphevetBrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private BehandlingMapper behandlingMapper;
-    private KlageMapper klageMapper;
+    private DomeneobjektProvider domeneobjektProvider;
 
     public KlageYtelsesvedtakOpphevetBrevMapper() {
     }
 
     @Inject
     public KlageYtelsesvedtakOpphevetBrevMapper(BrevParametere brevParametere,
-                                                BehandlingMapper behandlingMapper,
-                                                KlageMapper klageMapper) {
+                                                DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
-        this.behandlingMapper = behandlingMapper;
-        this.klageMapper = klageMapper;
+        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        Klage klage = klageMapper.hentKlagebehandling(behandling);
+        Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
         FagType fagType = mapFagType(dokumentHendelse, behandling, klage);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(KlageYtelsesvedtakOpphevetConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
@@ -64,8 +62,8 @@ public class KlageYtelsesvedtakOpphevetBrevMapper implements DokumentTypeMapper 
         final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
         fagType.setFritekst(hendelse.getFritekst());
-        fagType.setOpphevet(klageMapper.erOpphevet(klage, hendelse));
-        fagType.setAntallUker(BigInteger.valueOf(behandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
+        fagType.setOpphevet(KlageMapper.erOpphevet(klage, hendelse));
+        fagType.setAntallUker(BigInteger.valueOf(BehandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
         return fagType;
     }

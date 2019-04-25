@@ -88,7 +88,7 @@ class DokumentMalUtleder {
 
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
         //TODO aleksander - Fpsak kan sannsynligvis selv utlede hvilket vedtadsbrev som bestilles
-        if (Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST.getKode())) {
+        if (Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.FRITEKST_DOK);
         }
         if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {

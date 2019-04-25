@@ -15,8 +15,8 @@ import org.xml.sax.SAXException;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.FamiliehendelseMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
@@ -36,7 +36,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class ForlengetSaksbehandlingstidBrevMapper implements DokumentTypeMapper {
 
     private BehandlingMapper behandlingMapper;
-    private FamiliehendelseMapper familiehendelseMapper;
+    private DomeneobjektProvider domeneobjektProvider;
 
     private Map<String, VariantKode> malTilVariantMap = Map.of(DokumentMalType.FORLENGET_MEDL_DOK, VariantKode.MEDLEM,
             DokumentMalType.FORLENGET_TIDLIG_SOK, VariantKode.FORTIDLIG,
@@ -47,15 +47,15 @@ public class ForlengetSaksbehandlingstidBrevMapper implements DokumentTypeMapper
     }
 
     @Inject
-    public ForlengetSaksbehandlingstidBrevMapper(FamiliehendelseMapper familiehendelseMapper,
+    public ForlengetSaksbehandlingstidBrevMapper(DomeneobjektProvider domeneobjektProvider,
                                                  BehandlingMapper behandlingMapper) {
-        this.familiehendelseMapper = familiehendelseMapper;
+        this.domeneobjektProvider = domeneobjektProvider;
         this.behandlingMapper = behandlingMapper;
     }
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        FamilieHendelse familieHendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
+        FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         FagType fagType = mapFagType(dokumentHendelse, behandling, dokumentFelles, familieHendelse);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(ForlengetConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);

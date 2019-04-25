@@ -19,9 +19,8 @@ import org.xml.sax.SAXException;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.FamiliehendelseMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.VilkårMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -61,22 +60,16 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
     }
 
     private BrevParametere brevParametere;
-    private BehandlingMapper behandlingMapper;
-    private FamiliehendelseMapper familiehendelseMapper;
-    private VilkårMapper vilkårMapper;
+    private DomeneobjektProvider domeneobjektProvider;
 
     public AvslagEngangstønadBrevMapper() {
     }
 
     @Inject
     public AvslagEngangstønadBrevMapper(BrevParametere brevParametere,
-                                        BehandlingMapper behandlingMapper,
-                                        FamiliehendelseMapper familiehendelseMapper,
-                                        VilkårMapper vilkårMapper) {
+                                        DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
-        this.behandlingMapper = behandlingMapper;
-        this.familiehendelseMapper = familiehendelseMapper;
-        this.vilkårMapper = vilkårMapper;
+        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
@@ -84,9 +77,9 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
                                 DokumentFelles dokumentFelles,
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        FamilieHendelse familiehendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
-        Vilkår vilkår = vilkårMapper.hentVilkår(behandling);
-        BehandlingstypeType value = behandlingMapper.utledBehandlingsTypeAvslagES(behandling);
+        FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        Vilkår vilkår = domeneobjektProvider.hentVilkår(behandling);
+        BehandlingstypeType value = BehandlingMapper.utledBehandlingsTypeAvslagES(behandling);
         FagType fagType = mapFagType(behandling, dokumentHendelse, familiehendelse, vilkår, value);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(AvslagConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);

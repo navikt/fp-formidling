@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
-import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -28,7 +28,7 @@ class DokumentMalUtleder {
     private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingId: ";
 
     private KodeverkTabellRepository kodeverkTabellRepository;
-    private KlageMapper klageMapper;
+    private DomeneobjektProvider domeneobjektProvider;
 
     public DokumentMalUtleder() {
         //CDI
@@ -36,9 +36,9 @@ class DokumentMalUtleder {
 
     @Inject
     public DokumentMalUtleder(KodeverkTabellRepository kodeverkTabellRepository,
-                              KlageMapper klageMapper) {
+                              DomeneobjektProvider domeneobjektProvider) {
         this.kodeverkTabellRepository = kodeverkTabellRepository;
-        this.klageMapper = klageMapper;
+        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     private static boolean erKunEndringIFordelingAvYtelsen(Behandlingsresultat behandlingsresultat) {
@@ -117,7 +117,7 @@ class DokumentMalUtleder {
     }
 
     private DokumentMalType mapKlageBrev(Behandling behandling) {
-        Klage klage = klageMapper.hentKlagebehandling(behandling);
+        Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
         KlageVurderingResultat klageVurderingResultat = klage.getGjeldendeKlageVurderingsresultat();
         if (klageVurderingResultat == null) {
             throw DokumentBestillerFeil.FACTORY.behandlingManglerKlageVurderingResultat(behandling.getId()).toException();

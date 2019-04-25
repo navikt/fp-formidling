@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.IAYMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -42,7 +43,7 @@ public class InntektsmeldingFørSøknadBrevMapper implements DokumentTypeMapper 
 
     private ObjectFactory objectFactory;
 
-    private IAYMapper iayMapper;
+    private DomeneobjektProvider domeneobjektProvider;
     private BrevParametere brevParametere;
 
     public InntektsmeldingFørSøknadBrevMapper() {
@@ -50,14 +51,14 @@ public class InntektsmeldingFørSøknadBrevMapper implements DokumentTypeMapper 
     }
 
     @Inject
-    public InntektsmeldingFørSøknadBrevMapper(IAYMapper iayMapper, BrevParametere brevParametere) {
-        this.iayMapper = iayMapper;
+    public InntektsmeldingFørSøknadBrevMapper(DomeneobjektProvider domeneobjektProvider, BrevParametere brevParametere) {
+        this.domeneobjektProvider = domeneobjektProvider;
         this.brevParametere = brevParametere;
     }
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        InntektArbeidYtelse iay = iayMapper.hentInntektArbeidYtelse(behandling);
+        InntektArbeidYtelse iay = domeneobjektProvider.hentInntektArbeidYtelse(behandling);
         FagType fagType = mapFagType(behandling, iay);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InntektsmeldingForTidligConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);

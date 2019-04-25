@@ -14,8 +14,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.foreldrepenger.felles.kafka</groupId>
-            <artifactId>consumer</artifactId>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-streams</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>

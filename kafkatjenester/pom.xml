@@ -17,6 +17,9 @@
         <module>kafkautil</module>
     </modules>
 
+    <properties>
+        <kafka.version>2.2.0</kafka.version>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -24,6 +27,22 @@
                 <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>kafkautil</artifactId>
                 <version>${revision}${sha1}${changelist}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-streams</artifactId>
+                <version>${kafka.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>

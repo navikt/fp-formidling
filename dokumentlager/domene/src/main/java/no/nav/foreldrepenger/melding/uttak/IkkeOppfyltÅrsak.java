@@ -89,7 +89,7 @@ public class IkkeOppfyltÅrsak extends PeriodeResultatÅrsak {
     public static final IkkeOppfyltÅrsak AVSLAG_GRADERINGSAVTALE_MANGLER_IKKE_DOKUMENTERT = new IkkeOppfyltÅrsak("4094");
 
 
-    IkkeOppfyltÅrsak(String kode) {
+    public IkkeOppfyltÅrsak(String kode) {
         super(kode, DISCRIMINATOR);
     }
 

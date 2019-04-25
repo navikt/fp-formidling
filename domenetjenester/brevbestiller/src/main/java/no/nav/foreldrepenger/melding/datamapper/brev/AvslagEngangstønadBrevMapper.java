@@ -34,6 +34,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.RelasjonskodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.VilkaartypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
+import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
@@ -41,13 +42,13 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 @ApplicationScoped
 @Named(DokumentMalType.AVSLAGSVEDTAK_DOK)
 public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
-    private static final Map<String, RelasjonskodeType> relasjonskodeTypeMap = new HashMap<>();
+    private static final Map<RelasjonsRolleType, RelasjonskodeType> relasjonskodeTypeMap = new HashMap<>();
     private static final Map<String, VilkaartypeType> vilkaartypeMap = new HashMap<>();
 
     static {
-        relasjonskodeTypeMap.put("MORA", RelasjonskodeType.MOR);
-        relasjonskodeTypeMap.put("FARA", RelasjonskodeType.FAR);
-        relasjonskodeTypeMap.put("MMOR", RelasjonskodeType.MEDMOR);
+        relasjonskodeTypeMap.put(RelasjonsRolleType.MORA, RelasjonskodeType.MOR);
+        relasjonskodeTypeMap.put(RelasjonsRolleType.FARA, RelasjonskodeType.FAR);
+        relasjonskodeTypeMap.put(RelasjonsRolleType.MEDMOR, RelasjonskodeType.MEDMOR);
 
         vilkaartypeMap.put(VilkårType.FP_VK_1, VilkaartypeType.FP_VK_1);
         vilkaartypeMap.put(VilkårType.FP_VK_2, VilkaartypeType.FP_VK_2);

@@ -31,6 +31,7 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -119,19 +120,19 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                UttakResultatPerioder uttakResultatPerioder) {
         final FagType fagType = objectFactory.createFagType();
 
+        fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
+        fagType.setRelasjonskode(tilRelasjonskode(behandling.getRelasjonsRolleType(), behandling.getPersonopplysning().getNavBrukerKjonn()));
         //Obligatoriske felter
         //Faktisk mappet
         mapFelterRelatertTilBehandling(behandling, fagType);
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, originaltBeregningsgrunnlag, fagType);
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType);
+        mapFelterRelatertTilStønadskontoer(fagType);
         mapFelterRelatertTilFamiliehendelse(familieHendelse, fagType);
         mapFelterRelatertTilSøknad(søknad, fagType);
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
 
         //Map
-        //Loop gjennom perioder
-        fagType.setIkkeOmsorg(Boolean.parseBoolean((finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe))));
-
         //Optional
         avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
@@ -148,8 +149,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setLovhjemmel(lovhjemmelType);
         fagType.setMottattDato(finnDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe));
 
-        fagType.setRelasjonskode(tilRelasjonskode(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe), finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
-        fagType.setSokersNavn(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe));
         fagType.setKonsekvensForYtelse(tilKonsekvensForYtelseKode(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
         fagType.setBehandlingsResultat(tilBehandlingsResultatKode(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
         fagType.setInntektMottattArbgiver(Boolean.parseBoolean(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
@@ -162,6 +161,12 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         //Disse ser også på perioder
         fagType.setAnnenForelderHarRett(Boolean.parseBoolean(finnVerdiAv("PLACEHOLDER", Collections.emptyList())));
         fagType.setAleneomsorg(VurderingsstatusKode.fromValue("IKKE_VURDERT"));
+    }
+
+    private void mapFelterRelatertTilStønadskontoer(FagType fagType) {
+        fagType.setDagerTaptFørTermin(BigInteger.valueOf(0)); /*TODO Mangler Stønadskonto - Finnes et endepunkt for dette*/
+        fagType.setDisponibleDager(BigInteger.valueOf(0));/*TODO Bruker Stønadskonto*/
+        fagType.setDisponibleFellesDager(BigInteger.valueOf(0))/*TODO Bruker Stønadskonto*/;
     }
 
     private void mapFelterRelatertTilPerioder(BeregningsresultatFP beregningsresultatFP, Beregningsgrunnlag beregningsgrunnlag, UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
@@ -182,17 +187,10 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         if (sisteInnvilgedeDag != null) {
             fagType.setSisteUtbetalingsdag(sisteInnvilgedeDag);
         }
-        fagType.setDisponibleDager(BigInteger.valueOf(0));/*TODO*/
-        fagType.setDisponibleFellesDager(BigInteger.valueOf(0))/*TODO*/;
-
-        //ikke obligatoriske felter
-
-        fagType.setDagerTaptFørTermin(BigInteger.valueOf(0)); /*TODO Mangler Stønadskonto - Finnes et endepunkt for dette*/
-
-        //TODO
-//        finnOptionalDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe).ifPresent(fagType::setSisteDagIFellesPeriode);
-//        finnOptionalDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe).ifPresent(fagType::setSisteDagMedUtsettelse);
-//        finnOptionalVerdiAv("PLACEHOLDER", dokumentTypeDataListe).map(BigInteger::new).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);
+        fagType.setIkkeOmsorg(UttakMapper.finnesPeriodeMedIkkeOmsorg(periodeListe.getPeriode()));
+        UttakMapper.finnSisteDagIFelleseriodeHvisFinnes(uttakResultatPerioder).ifPresent(fagType::setSisteDagIFellesPeriode);
+        UttakMapper.finnSisteDagMedUtsettelseHvisFinnes(uttakResultatPerioder).ifPresent(fagType::setSisteDagMedUtsettelse);
+        //Optional.empty().ifPresent(fagType::setForeldrepengeperiodenUtvidetUker); /* TODO Mangler Tjeneste som regner ut dette */
     }
 
     private void mapFelterRelatertTilBehandling(Behandling behandling, FagType fagType) {
@@ -218,132 +216,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setBarnErFødt(familieHendelse.isBarnErFødt());
         fagType.setGjelderFoedsel(familieHendelse.isGjelderFødsel());
     }
-
-    private PeriodeListeType konverterPeriodeListe(List<DokumentTypeData> dokumentTypeDataListe) {
-        PeriodeListeType liste = objectFactory.createPeriodeListeType();
-//        List<PeriodeDto> periodeDtos = new ArrayList<>();
-//        for (DokumentTypeData data : finnListeMedVerdierAv("PLACEHOLDER", dokumentTypeDataListe)) {
-//            String feltNavnMedIndeks = data.getDoksysId();
-//            String strukturertFelt = finnStrukturertVerdiAv(feltNavnMedIndeks, dokumentTypeDataListe);
-//            PeriodeDto dto = FlettefeltJsonObjectMapper.readValue(strukturertFelt, PeriodeDto.class);
-//            periodeDtos.add(dto);
-//        }
-//        periodeDtos.forEach(dto -> {
-//            PeriodeType periode = objectFactory.createPeriodeType();
-//            periode.setInnvilget(dto.getInnvilget());
-//            periode.setÅrsak(dto.getÅrsak());
-//            periode.setPeriodeFom(finnDatoVerdiAvUtenTidSone(dto.getPeriodeFom()));
-//            periode.setPeriodeTom(finnDatoVerdiAvUtenTidSone(dto.getPeriodeTom()));
-//            periode.setPeriodeDagsats(dto.getPeriodeDagsats());
-//            periode.setAntallTapteDager(BigInteger.valueOf(dto.getAntallTapteDager()));
-//            if (!dto.getArbeidsforhold().isEmpty()) {
-//                periode.setArbeidsforholdListe(fraArbeidsforhold(dto.getArbeidsforhold()));
-//            }
-//            if (dto.getNæring() != null) {
-//                periode.setNæringListe(fraNæring(dto.getNæring()));
-//            }
-//            if (!dto.getAnnenAktivitet().isEmpty()) {
-//                periode.setAnnenAktivitetListe(fraAnnenAktivitet(dto.getAnnenAktivitet()));
-//            }
-//            liste.getPeriode().add(periode);
-//        });
-
-        return liste;
-    }
-/*
-
-    private AnnenAktivitetListeType fraAnnenAktivitet(List<AnnenAktivitetDto> dtoListe) {
-        AnnenAktivitetListeType liste = objectFactory.createAnnenAktivitetListeType();
-        dtoListe.forEach(dto -> {
-            AnnenAktivitetType aktivitet = objectFactory.createAnnenAktivitetType();
-            aktivitet.setAktivitetType(tilStatusTypeKode(dto.getAktivitetType()));
-            aktivitet.setGradering(dto.getGradering());
-            aktivitet.setProsentArbeid(BigInteger.valueOf(dto.getProsentArbeid()));
-            aktivitet.setUttaksgrad(BigInteger.valueOf(dto.getUttaksgrad()));
-            aktivitet.setAktivitetDagsats(dto.getDagsats());
-            liste.getAnnenAktivitet().add(aktivitet);
-        });
-        return liste;
-    }
-
-    private NæringListeType fraNæring(NæringDto dto) {
-        NæringListeType liste = null;
-        if (dto != null) {
-            liste = objectFactory.createNæringListeType();
-            NæringType næring = objectFactory.createNæringType();
-            næring.setGradering(dto.getGradering());
-            næring.setInntekt1(dto.getInntekt1());
-            næring.setInntekt2(dto.getInntekt2());
-            næring.setInntekt3(dto.getInntekt3());
-            næring.setAktivitetDagsats(dto.getDagsats());
-            næring.setUttaksgrad(BigInteger.valueOf(dto.getUttaksgrad()));
-            næring.setProsentArbeid(BigInteger.valueOf(dto.getProsentArbeid()));
-            næring.setSistLignedeÅr(BigInteger.valueOf(dto.getSistLignedeÅr()));
-            liste.setNæring(næring);
-        }
-        return liste;
-    }
-
-    private ArbeidsforholdListeType fraArbeidsforhold(List<ArbeidsforholdDto> dtoListe) {
-        ArbeidsforholdListeType liste = objectFactory.createArbeidsforholdListeType();
-        dtoListe.forEach(dto -> {
-            ArbeidsforholdType arbeidsforhold = objectFactory.createArbeidsforholdType();
-            arbeidsforhold.setArbeidsgiverNavn(dto.getArbeidsgiverNavn());
-            arbeidsforhold.setGradering(dto.getGradering());
-            arbeidsforhold.setAktivitetDagsats(dto.getDagsats());
-            arbeidsforhold.setProsentArbeid(BigInteger.valueOf(dto.getProsentArbeid()));
-            arbeidsforhold.setStillingsprosent(BigInteger.valueOf(dto.getStillingsprosent()));
-            arbeidsforhold.setUttaksgrad(BigInteger.valueOf(dto.getUttaksgrad()));
-            arbeidsforhold.setUtbetalingsgrad(BigInteger.valueOf(dto.getUtbetalingsgrad()));
-            if (dto.getNaturalYtelseDto() != null) {
-                Optional.ofNullable(dto.getNaturalYtelseDto().getNaturalYtelseEndringStatus()).ifPresent(naturalYtelseEndringStatus -> arbeidsforhold.setNaturalytelseEndringType(NaturalytelseEndringTypeKode.valueOf(naturalYtelseEndringStatus.toString())));
-                Optional.ofNullable(dto.getNaturalYtelseDto().getNaturalYtelseEndringDato()).ifPresent(localDate -> arbeidsforhold.setNaturalytelseEndringDato(finnDatoVerdiAvUtenTidSone(localDate.toString())));
-                Optional.ofNullable(dto.getNaturalYtelseDto().getNaturalYtelseDagsats()).ifPresent(arbeidsforhold::setNaturalytelseNyDagsats);
-            }
-            liste.getArbeidsforhold().add(arbeidsforhold);
-        });
-        return liste;
-    }
-*/
-
-    private BeregningsgrunnlagRegelListeType konverterBeregningsgrunnlagRegelListe(List<DokumentTypeData> dokumentTypeDataListe) {
-        BeregningsgrunnlagRegelListeType liste = objectFactory.createBeregningsgrunnlagRegelListeType();
-/*        for (DokumentTypeData data : finnListeMedVerdierAv("PLACEHOLDER", dokumentTypeDataListe)) {
-            String feltNavnMedIndeks = data.getDoksysId();
-            String strukturertFelt = finnStrukturertVerdiAv(feltNavnMedIndeks, dokumentTypeDataListe);
-            BeregningsgrunnlagRegelDto dto = FlettefeltJsonObjectMapper.readValue(strukturertFelt, BeregningsgrunnlagRegelDto.class);
-            BeregningsgrunnlagRegelType beregningsgrunnlagRegel = objectFactory.createBeregningsgrunnlagRegelType();
-            beregningsgrunnlagRegel.setRegelStatus(tilStatusTypeKode(dto.getStatus()));
-            beregningsgrunnlagRegel.setAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(BigInteger.valueOf(dto.getAntallArbeidsgivereIBeregning()));
-            beregningsgrunnlagRegel.setBesteBeregning(dto.getBesteBeregning());
-            beregningsgrunnlagRegel.setSNNyoppstartet(Boolean.parseBoolean(dto.getSNnyoppstartet()));
-            beregningsgrunnlagRegel.setAndelListe(fraAndelListe(dto.getBeregningsgrunnlagAndelDto()));
-            liste.getBeregningsgrunnlagRegel().add(beregningsgrunnlagRegel);
-        }*/
-        return liste;
-    }
-/*
-
-    private AndelListeType fraAndelListe(List<BeregningsgrunnlagAndelDto> beregningsgrunnlagAndelDto) {
-        AndelListeType liste = objectFactory.createAndelListeType();
-        beregningsgrunnlagAndelDto.forEach(dto -> {
-            AndelType andel = objectFactory.createAndelType();
-            andel.setStatus(tilStatusTypeKode(dto.getStatus()));
-            andel.setDagsats(Long.parseLong(dto.getDagsats()));
-            andel.setMånedsinntekt(Long.parseLong(dto.getMånedsinntekt()));
-            andel.setÅrsinntekt(Long.parseLong(dto.getÅrsinntekt()));
-            if (StatusTypeKode.ARBEIDSTAKER.equals(andel.getStatus())) {
-                andel.setArbeidsgiverNavn(dto.getArbeidsgiverNavn());
-            } else if (StatusTypeKode.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getStatus())) {
-                Optional.ofNullable(dto.getSisteLignedeÅr()).map(Long::parseLong).ifPresent(andel::setSisteLignedeÅr);
-                Optional.ofNullable(dto.getPensjonsgivendeInntekt()).map(Long::parseLong).ifPresent(andel::setPensjonsgivendeInntekt);
-            }
-            andel.setEtterlønnSluttpakke(Boolean.parseBoolean(dto.getEtterlønnSluttpakke()));
-            liste.getAndel().add(andel);
-        });
-        return liste;
-    }
-*/
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {
         BrevdataType brevdataType = objectFactory.createBrevdataType();
@@ -379,10 +251,10 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         }
     }
 
-    private RelasjonskodeKode tilRelasjonskode(String brukerRolle, String navBrukerKjønn) {
-        if (RelasjonsRolleType.MORA.getKode().equals(brukerRolle)) {
+    private RelasjonskodeKode tilRelasjonskode(RelasjonsRolleType brukerRolle, NavBrukerKjønn navBrukerKjønn) {
+        if (RelasjonsRolleType.MORA.equals(brukerRolle)) {
             return RelasjonskodeKode.MOR;
-        } else if (NavBrukerKjønn.MANN.getKode().equals(navBrukerKjønn)) {
+        } else if (NavBrukerKjønn.MANN.equals(navBrukerKjønn)) {
             return RelasjonskodeKode.FAR;
         } else {
             return RelasjonskodeKode.MEDMOR;

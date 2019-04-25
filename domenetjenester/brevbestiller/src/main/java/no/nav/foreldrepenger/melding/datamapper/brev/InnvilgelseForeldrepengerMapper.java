@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnDatoVerdiAvUtenTidSone;
-import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnOptionalDatoVerdiAvUtenTidSone;
-import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnOptionalVerdiAv;
 import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnVerdiAv;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
 
@@ -17,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
@@ -141,14 +140,8 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         //Settes basert på Perioder, eventuelt søknad
 
         //Kan ikke mappes
+        fagType.setDekningsgrad(BigInteger.valueOf(Integer.parseInt(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)))); //Mangler fagsakrelasjon
 
-        fagType.setDagerTaptFørTermin(BigInteger.valueOf(Integer.parseInt(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe))));
-        fagType.setDekningsgrad(BigInteger.valueOf(Integer.parseInt(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe))));
-        fagType.setDisponibleDager(BigInteger.valueOf(Integer.parseInt(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe))));
-        fagType.setDisponibleFellesDager(BigInteger.valueOf(Integer.parseInt(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe))));
-        fagType.setAntallInnvilget(BigInteger.valueOf(Integer.parseInt(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe))));
-        fagType.setAntallAvslag(BigInteger.valueOf(Integer.parseInt(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe))));
-        fagType.setGraderingFinnes(Boolean.parseBoolean(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
         LovhjemmelType lovhjemmelType = objectFactory.createLovhjemmelType();
         lovhjemmelType.setBeregning(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe));
         lovhjemmelType.setVurdering(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe));
@@ -156,26 +149,11 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setMottattDato(finnDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe));
 
         fagType.setRelasjonskode(tilRelasjonskode(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe), finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
-        fagType.setSeksG(Long.parseLong(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
-        fagType.setSisteDagAvSistePeriode(finnDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe));
         fagType.setSokersNavn(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe));
-        fagType.setStønadsperiodeFom(finnDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe));
-        fagType.setStønadsperiodeTom(finnDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe));
-        fagType.setTotalArbeidsgiverAndel(Long.parseLong(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
-        fagType.setTotalBrukerAndel(Long.parseLong(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
         fagType.setKonsekvensForYtelse(tilKonsekvensForYtelseKode(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
         fagType.setBehandlingsResultat(tilBehandlingsResultatKode(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
         fagType.setInntektMottattArbgiver(Boolean.parseBoolean(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
-        PeriodeListeType konvertertPeriodeListe = konverterPeriodeListe(dokumentTypeDataListe);
-        fagType.setPeriodeListe(konvertertPeriodeListe);
-        fagType.setAntallPerioder(BigInteger.valueOf(konvertertPeriodeListe.getPeriode().size()));
         fagType.setForMyeUtbetalt(UtbetaltKode.fromValue(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)));
-
-        //ikke obligatoriske felter
-        finnOptionalDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe).ifPresent(fagType::setSisteDagIFellesPeriode);
-        finnOptionalDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe).ifPresent(fagType::setSisteDagMedUtsettelse);
-        finnOptionalDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe).ifPresent(fagType::setSisteUtbetalingsdag);
-        finnOptionalVerdiAv("PLACEHOLDER", dokumentTypeDataListe).map(BigInteger::new).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);
 
         return fagType;
     }
@@ -189,7 +167,32 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
     private void mapFelterRelatertTilPerioder(BeregningsresultatFP beregningsresultatFP, Beregningsgrunnlag beregningsgrunnlag, UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
         //Match, Map, merge - Blæh
         fagType.setAntallArbeidsgivere(BeregningsresultatMapper.antallArbeidsgivere(beregningsresultatFP));
-        fagType.setPeriodeListe(BeregningsresultatMapper.mapPeriodeListe(beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder, beregningsgrunnlag.getBeregningsgrunnlagPerioder()));
+        PeriodeListeType periodeListe = BeregningsresultatMapper.mapPeriodeListe(beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder, beregningsgrunnlag.getBeregningsgrunnlagPerioder());
+        fagType.setPeriodeListe(periodeListe);
+        fagType.setAntallPerioder(BigInteger.valueOf(periodeListe.getPeriode().size()));
+        fagType.setTotalArbeidsgiverAndel(BeregningsresultatMapper.finnTotalArbeidsgiverAndel(beregningsresultatFP));
+        fagType.setTotalBrukerAndel(BeregningsresultatMapper.finnTotalBrukerAndel(beregningsresultatFP));
+        fagType.setAntallAvslag(BeregningsresultatMapper.tellAntallAvslag(periodeListe));
+        fagType.setAntallInnvilget(BeregningsresultatMapper.tellAntallInnvilget(periodeListe));
+        fagType.setGraderingFinnes(BeregningsresultatMapper.graderingFinnes(periodeListe));
+        fagType.setStønadsperiodeFom(BeregningsresultatMapper.finnStønadsperiodeFom(periodeListe));
+        XMLGregorianCalendar sisteInnvilgedeDag = BeregningsresultatMapper.finnStønadsperiodeTom(periodeListe);
+        fagType.setStønadsperiodeTom(sisteInnvilgedeDag);
+        fagType.setSisteDagAvSistePeriode(sisteInnvilgedeDag);
+        if (sisteInnvilgedeDag != null) {
+            fagType.setSisteUtbetalingsdag(sisteInnvilgedeDag);
+        }
+        fagType.setDisponibleDager(BigInteger.valueOf(0));/*TODO*/
+        fagType.setDisponibleFellesDager(BigInteger.valueOf(0))/*TODO*/;
+
+        //ikke obligatoriske felter
+
+        fagType.setDagerTaptFørTermin(BigInteger.valueOf(0)); /*TODO Mangler Stønadskonto - Finnes et endepunkt for dette*/
+
+        //TODO
+//        finnOptionalDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe).ifPresent(fagType::setSisteDagIFellesPeriode);
+//        finnOptionalDatoVerdiAvUtenTidSone("PLACEHOLDER", dokumentTypeDataListe).ifPresent(fagType::setSisteDagMedUtsettelse);
+//        finnOptionalVerdiAv("PLACEHOLDER", dokumentTypeDataListe).map(BigInteger::new).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);
     }
 
     private void mapFelterRelatertTilBehandling(Behandling behandling, FagType fagType) {

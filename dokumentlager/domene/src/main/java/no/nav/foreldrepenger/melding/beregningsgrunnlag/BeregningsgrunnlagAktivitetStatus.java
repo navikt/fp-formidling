@@ -1,24 +1,19 @@
 package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
-
 public class BeregningsgrunnlagAktivitetStatus {
+    /*TODO Trenger hjemmel */
     private Hjemmel hjemmel;
-    private String aktivitetStatus;//Kodeliste.AktivitetStatus;
+    private AktivitetStatus aktivitetStatus;//Kodeliste.AktivitetStatus;
 
-    public BeregningsgrunnlagAktivitetStatus(String aktivitetStatus) {
+    public BeregningsgrunnlagAktivitetStatus(AktivitetStatus aktivitetStatus) {
         this.aktivitetStatus = aktivitetStatus;
-    }
-
-    public static BeregningsgrunnlagAktivitetStatus fraDto(KodeDto kodedto) {
-        return new BeregningsgrunnlagAktivitetStatus(kodedto.kode);
     }
 
     public Hjemmel getHjemmel() {
         return hjemmel;
     }
 
-    public String getAktivitetStatus() {
+    public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
     }
 }

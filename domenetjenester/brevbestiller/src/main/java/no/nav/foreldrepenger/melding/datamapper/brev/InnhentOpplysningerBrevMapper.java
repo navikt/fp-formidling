@@ -19,9 +19,9 @@ import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.InnhentingMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.SøknadMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -50,8 +50,7 @@ public class InnhentOpplysningerBrevMapper implements DokumentTypeMapper {
     ));
 
     private BrevParametere brevParametere;
-    private BehandlingMapper behandlingMapper;
-    private SøknadMapper søknadMapper;
+    private DomeneobjektProvider domeneobjektProvider;
 
     public InnhentOpplysningerBrevMapper() {
         //CDI
@@ -59,16 +58,14 @@ public class InnhentOpplysningerBrevMapper implements DokumentTypeMapper {
 
     @Inject
     public InnhentOpplysningerBrevMapper(BrevParametere brevParametere,
-                                         BehandlingMapper behandlingMapper,
-                                         SøknadMapper søknadMapper) {
+                                         DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
-        this.behandlingMapper = behandlingMapper;
-        this.søknadMapper = søknadMapper;
+        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        Søknad søknad = søknadMapper.hentSøknad(behandling);
+        Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
         FagType fagType = mapFagType(dokumentFelles, dokumentHendelse, behandling, søknad);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnhentopplysningerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
@@ -87,7 +84,7 @@ public class InnhentOpplysningerBrevMapper implements DokumentTypeMapper {
     }
 
     private BehandlingsTypeKode mapBehandlingType(Behandling behandling) {
-        String behandlingTypeKode = behandlingMapper.finnBehandlingTypeForDokument(behandling);
+        String behandlingTypeKode = BehandlingMapper.finnBehandlingTypeForDokument(behandling);
         if (!gyldigeKoder.contains(behandlingTypeKode)) {
             throw DokumentMapperFeil.FACTORY.innhentDokumentasjonKreverGyldigBehandlingstype(behandlingTypeKode).toException();
         }

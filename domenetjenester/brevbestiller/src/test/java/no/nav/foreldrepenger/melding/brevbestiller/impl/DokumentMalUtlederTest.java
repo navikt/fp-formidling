@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
@@ -29,6 +29,7 @@ import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepository;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepositoryImpl;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.VLException;
+
 public class DokumentMalUtlederTest {
     private final long BEHANDLING_ID = 123L;
     @Rule
@@ -37,14 +38,14 @@ public class DokumentMalUtlederTest {
     private KodeverkTabellRepository kodeverkTabellRepository = new KodeverkTabellRepositoryImpl(repositoryRule.getEntityManager());
     private DokumentRepository dokumentRepository;
 
-    private KlageMapper klageMapper = Mockito.mock(KlageMapper.class);
+    private DomeneobjektProvider domeneobjektProvider = Mockito.mock(DomeneobjektProvider.class);
     private DokumentMalUtleder dokumentMalUtleder;
     private DokumentHendelse hendelse;
 
     @Before
     public void setup() {
         dokumentRepository = new DokumentRepositoryImpl(repositoryRule.getEntityManager());
-        dokumentMalUtleder = new DokumentMalUtleder(kodeverkTabellRepository, klageMapper);
+        dokumentMalUtleder = new DokumentMalUtleder(kodeverkTabellRepository, domeneobjektProvider);
     }
 
     @Test
@@ -70,7 +71,7 @@ public class DokumentMalUtlederTest {
                 .build();
         Behandling behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
-                .medBehandlingsresultat(Behandlingsresultat.builder().medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.INGEN_ENDRING.getKode())).build())
+                .medBehandlingsresultat(Behandlingsresultat.builder().medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.INGEN_ENDRING)).build())
                 .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.UENDRETUTFALL_DOK);
     }
@@ -182,7 +183,7 @@ public class DokumentMalUtlederTest {
         Behandling behandling = Behandling.builder()
                 .medBehandlingsresultat(
                         Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
-                                .medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.ENDRING_I_FORDELING_AV_YTELSEN.getKode()))
+                                .medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.ENDRING_I_FORDELING_AV_YTELSEN))
                                 .build())
                 .build();
         assertThatThrownBy(() -> dokumentMalUtleder.utledDokumentmal(behandling, hendelse)).isInstanceOf(VLException.class);
@@ -195,7 +196,7 @@ public class DokumentMalUtlederTest {
                 .build();
         Behandling behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
-                .medBehandlingsresultat(Behandlingsresultat.builder().medVedtaksbrev(Vedtaksbrev.FRITEKST.getKode()).build())
+                .medBehandlingsresultat(Behandlingsresultat.builder().medVedtaksbrev(Vedtaksbrev.FRITEKST).build())
                 .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FRITEKST_DOK);
     }
@@ -232,7 +233,7 @@ public class DokumentMalUtlederTest {
         Klage klage = Klage.ny()
                 .medKlageVurderingResultatNK(KlageVurderingResultat.ny().medKlageVurdering(klageVurdering).build())
                 .build();
-        Mockito.doReturn(klage).when(klageMapper).hentKlagebehandling(behandling);
+        Mockito.doReturn(klage).when(domeneobjektProvider).hentKlagebehandling(behandling);
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(dokumentmal);
     }
 

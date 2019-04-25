@@ -14,7 +14,7 @@ import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.FamiliehendelseMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -34,7 +34,7 @@ import no.nav.vedtak.util.StringUtils;
 @Named(DokumentMalType.REVURDERING_DOK)
 public class RevurderingBrevMapper implements DokumentTypeMapper {
 
-    private FamiliehendelseMapper familiehendelseMapper;
+    private DomeneobjektProvider domeneobjektProvider;
     private BrevParametere brevParametere;
 
     public RevurderingBrevMapper() {
@@ -42,15 +42,15 @@ public class RevurderingBrevMapper implements DokumentTypeMapper {
     }
 
     @Inject
-    public RevurderingBrevMapper(FamiliehendelseMapper familiehendelseMapper,
+    public RevurderingBrevMapper(DomeneobjektProvider domeneobjektProvider,
                                  BrevParametere brevParametere) {
-        this.familiehendelseMapper = familiehendelseMapper;
+        this.domeneobjektProvider = domeneobjektProvider;
         this.brevParametere = brevParametere;
     }
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException, XMLStreamException, SAXException {
-        FamilieHendelse familieHendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
+        FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         FagType fagType = mapFagType(fellesType, hendelse, behandling, familieHendelse);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(RevurderingConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);

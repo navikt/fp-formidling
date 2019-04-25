@@ -12,9 +12,8 @@ import javax.xml.stream.XMLStreamException;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -26,6 +25,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.ObjectFa
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.OpphavTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.VedtakMedholdConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.vedtak.mehold.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -33,22 +33,22 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private KlageMapper klageMapper;
+    private DomeneobjektProvider domeneobjektProvider;
 
     public VedtakMedholdBrevMapper() {
         //CDI
     }
 
     @Inject
-    public VedtakMedholdBrevMapper(KlageMapper klageMapper,
+    public VedtakMedholdBrevMapper(DomeneobjektProvider domeneobjektProvider,
                                    BrevParametere brevParametere) {
-        this.klageMapper = klageMapper;
+        this.domeneobjektProvider = domeneobjektProvider;
         this.brevParametere = brevParametere;
     }
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        Klage klage = klageMapper.hentKlagebehandling(behandling);
+        Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
         FagType fagType = mapFagType(dokumentHendelse, klage);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapTilBrevDataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(VedtakMedholdConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);

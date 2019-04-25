@@ -46,7 +46,7 @@ public class BeregningsgrunnlagMapperTest {
     private BeregningsgrunnlagPrStatusOgAndel lagBgpsaBruttoFrilanser() {
         return BeregningsgrunnlagPrStatusOgAndel.ny()
                 .medBruttoPrÅr(BRUTTO_PR_ÅR)
-                .medAktivitetStatus(AktivitetStatus.FRILANSER.getKode())
+                .medAktivitetStatus(AktivitetStatus.FRILANSER)
                 .build();
     }
 
@@ -54,7 +54,7 @@ public class BeregningsgrunnlagMapperTest {
     private BeregningsgrunnlagPrStatusOgAndel lagBgpsaAvkortetArbeidstaker() {
         return BeregningsgrunnlagPrStatusOgAndel.ny()
                 .medAvkortetPrÅr(AVKORTET_PR_ÅR)
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.getKode())
+                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .build();
     }
 
@@ -95,21 +95,21 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_identifsere_statuser() {
         List<BeregningsgrunnlagPrStatusOgAndel> arbeidstakerAndeler = BeregningsgrunnlagMapper
-                .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.getKode()),
+                .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER),
                         beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
         List<BeregningsgrunnlagPrStatusOgAndel> frilansAndeler = BeregningsgrunnlagMapper
-                .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER.getKode()),
+                .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER),
                         beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
 
         List<BeregningsgrunnlagPrStatusOgAndel> selvstendigAndeler = BeregningsgrunnlagMapper
-                .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.getKode()),
+                .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE),
                         beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
         assertThat(arbeidstakerAndeler).hasSize(1);
         assertThat(frilansAndeler).hasSize(1);
         assertThat(selvstendigAndeler).hasSize(0);
 
-        assertThat(arbeidstakerAndeler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER.getKode());
-        assertThat(frilansAndeler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER.getKode());
+        assertThat(arbeidstakerAndeler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
+        assertThat(frilansAndeler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER);
     }
 
     @Test
@@ -144,7 +144,7 @@ public class BeregningsgrunnlagMapperTest {
         beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode.ny()
                         .medBeregningsgrunnlagPrStatusOgAndelList(List.of(BeregningsgrunnlagPrStatusOgAndel.ny()
-                                .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.getKode())
+                                .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
                                 .medNyIArbeidslivet(true)
                                 .build()))
                         .build())
@@ -157,7 +157,7 @@ public class BeregningsgrunnlagMapperTest {
         beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode.ny()
                         .medBeregningsgrunnlagPrStatusOgAndelList(List.of(BeregningsgrunnlagPrStatusOgAndel.ny()
-                                .medAktivitetStatus(AktivitetStatus.FRILANSER.getKode())
+                                .medAktivitetStatus(AktivitetStatus.FRILANSER)
                                 .medNyIArbeidslivet(true)
                                 .build()))
                         .build())

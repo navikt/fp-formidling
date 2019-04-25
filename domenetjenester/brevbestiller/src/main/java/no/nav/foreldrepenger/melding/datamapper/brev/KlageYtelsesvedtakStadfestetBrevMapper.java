@@ -13,7 +13,6 @@ import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -31,17 +30,15 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class KlageYtelsesvedtakStadfestetBrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private KlageMapper klageMapper;
+
 
     public KlageYtelsesvedtakStadfestetBrevMapper() {
         //CDI
     }
 
     @Inject
-    public KlageYtelsesvedtakStadfestetBrevMapper(BrevParametere brevParametere,
-                                                  KlageMapper klageMapper) {
+    public KlageYtelsesvedtakStadfestetBrevMapper(BrevParametere brevParametere) {
         this.brevParametere = brevParametere;
-        this.klageMapper = klageMapper;
     }
 
     @Override

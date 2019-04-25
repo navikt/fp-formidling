@@ -14,9 +14,8 @@ import javax.xml.stream.XMLStreamException;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
-import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -30,6 +29,8 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.KlageAvvistConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.klage.Klage;
+import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -37,21 +38,21 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class KlageAvvistDokumentBrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private KlageMapper klageMapper;
+    private DomeneobjektProvider domeneobjektProvider;
 
     public KlageAvvistDokumentBrevMapper() {
     }
 
     @Inject
     public KlageAvvistDokumentBrevMapper(BrevParametere brevParametere,
-                                         KlageMapper klageMapper) {
+                                         DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
-        this.klageMapper = klageMapper;
+        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        Klage klage = klageMapper.hentKlagebehandling(behandling);
+        Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
         FagType fagType = mapFagType(dokumentHendelse, klage);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(KlageAvvistConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
@@ -61,13 +62,13 @@ public class KlageAvvistDokumentBrevMapper implements DokumentTypeMapper {
         FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
-        List<KlageAvvistÅrsak> avvistÅrsaker = klageMapper.listeAvAvvisteÅrsaker(klage);
+        List<KlageAvvistÅrsak> avvistÅrsaker = KlageMapper.listeAvAvvisteÅrsaker(klage);
         fagType.setAntallAvvistGrunn(BigInteger.valueOf(avvistÅrsaker.size()));
         //Valgfrie felter
         if (!avvistÅrsaker.isEmpty()) {
             fagType.setAvvistGrunnListe(avvistGrunnListeFra(
                     avvistÅrsaker.stream().map(KlageAvvistÅrsak::getKode).collect(Collectors.toList())));
-            klageMapper.hentOgFormaterLovhjemlerForAvvistKlage(klage).ifPresent(fagType::setLovhjemler);
+            KlageMapper.hentOgFormaterLovhjemlerForAvvistKlage(klage).ifPresent(fagType::setLovhjemler);
         }
         return fagType;
     }

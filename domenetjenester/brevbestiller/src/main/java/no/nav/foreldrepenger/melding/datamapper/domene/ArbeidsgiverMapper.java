@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.melding.virksomhet.Virksomhet;
 
 public class ArbeidsgiverMapper {
 
-    static Arbeidsgiver finnArbeidsgiver(String arbeidsgiverNavn, String arbeidsgiverIdentifikator) {
+    public static Arbeidsgiver finnArbeidsgiver(String arbeidsgiverNavn, String arbeidsgiverIdentifikator) {
         Virksomhet virksomhet = null;
         AktørId aktørId = null;
         if (OrganisasjonsNummerValidator.erGyldig(arbeidsgiverIdentifikator)) {

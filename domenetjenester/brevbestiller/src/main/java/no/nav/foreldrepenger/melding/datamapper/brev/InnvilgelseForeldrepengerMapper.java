@@ -28,13 +28,10 @@ import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatFPMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.FamiliehendelseMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.SøknadMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -66,36 +63,18 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
     public static final String ENDRING_BEREGNING_OG_UTTAK = "ENDRING_BEREGNING_OG_UTTAK";
 
     private ObjectFactory objectFactory = new ObjectFactory();
-    private BehandlingMapper behandlingMapper;
-    private BeregningsresultatMapper beregningsresultatMapper;
-    private BeregningsresultatFPMapper beregningsresultatFPMapper;
-    private SøknadMapper søknadMapper;
-    private FamiliehendelseMapper familiehendelseMapper;
-    private BeregningsgrunnlagMapper beregningsgrunnlagMapper;
-    private UttakMapper uttakMapper;
     private BrevParametere brevParametere;
+    private DomeneobjektProvider domeneobjektProvider;
 
     public InnvilgelseForeldrepengerMapper() {
         //CDI
     }
 
     @Inject
-    public InnvilgelseForeldrepengerMapper(BehandlingMapper behandlingMapper,
-                                           BeregningsresultatMapper beregningsresultatMapper,
-                                           BeregningsresultatFPMapper beregningsresultatFPMapper,
-                                           BeregningsgrunnlagMapper beregningsgrunnlagMapper,
-                                           FamiliehendelseMapper familiehendelseMapper,
-                                           SøknadMapper søknadMapper,
-                                           UttakMapper uttakMapper,
+    public InnvilgelseForeldrepengerMapper(DomeneobjektProvider domeneobjektProvider,
                                            BrevParametere brevParametere) {
-        this.behandlingMapper = behandlingMapper;
-        this.beregningsresultatMapper = beregningsresultatMapper;
-        this.beregningsresultatFPMapper = beregningsresultatFPMapper;
-        this.familiehendelseMapper = familiehendelseMapper;
-        this.beregningsgrunnlagMapper = beregningsgrunnlagMapper;
         this.brevParametere = brevParametere;
-        this.søknadMapper = søknadMapper;
-        this.uttakMapper = uttakMapper;
+        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
@@ -104,17 +83,17 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         //TODO - Burde vi lage et wrapper objekt for inputobjektene når det er så mange??
-        UttakResultatPerioder uttakResultatPerioder = uttakMapper.hentUttaksresultat(behandling);
-        BeregningsresultatFP beregningsresultatFP = beregningsresultatFPMapper.hentBeregningsresultat(behandling);
-        Beregningsgrunnlag beregningsgrunnlag = beregningsgrunnlagMapper.hentBeregningsgrunnlag(behandling);
+        UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
+        BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
+        Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         Behandling originalBehandling;
         Beregningsgrunnlag originaltBeregningsgrunnlag = null;
         if (behandling.getOriginalBehandlingId() != null) {
-            originalBehandling = behandlingMapper.hentBehandling(behandling.getOriginalBehandlingId());
-            originaltBeregningsgrunnlag = beregningsgrunnlagMapper.hentBeregningsgrunnlag(originalBehandling);
+            originalBehandling = domeneobjektProvider.hentBehandling(behandling.getOriginalBehandlingId());
+            originaltBeregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(originalBehandling);
         }
-        FamilieHendelse familieHendelse = familiehendelseMapper.hentFamiliehendelse(behandling);
-        Søknad søknad = søknadMapper.hentSøknad(behandling);
+        FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
         FagType fagType = mapFagType(dokumentHendelse,
                 behandling,
                 beregningsresultatFP,
@@ -214,7 +193,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
     }
 
     private void mapFelterRelatertTilBehandling(Behandling behandling, FagType fagType) {
-        fagType.setBehandlingsType(behandlingMapper.utledBehandlingsTypeInnvilgetFP(behandling));
+        fagType.setBehandlingsType(BehandlingMapper.utledBehandlingsTypeInnvilgetFP(behandling));
         fagType.setFødselsHendelse(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling));
     }
 

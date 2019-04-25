@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelSNDto;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.RelatertYtelseType;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
@@ -15,7 +13,7 @@ import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 public class BeregningsgrunnlagPrStatusOgAndel {
     private Long dagsatsArbeidsgiver;
     private Long dagsatsBruker;
-    private String aktivitetStatus; // Kodeliste.AktivitetStatus
+    private AktivitetStatus aktivitetStatus;
     private Long originalDagsatsFraTilstøtendeYtelse;
     private BigDecimal bruttoPrÅr;
     private BigDecimal avkortetPrÅr;
@@ -32,63 +30,30 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     private BGAndelArbeidsforhold bgAndelArbeidsforhold;
 
     private BeregningsgrunnlagPrStatusOgAndel(Builder builder) {
-        this.dagsatsArbeidsgiver = builder.dagsatsArbeidsgiver;
-        this.dagsatsBruker = builder.dagsatsBruker;
-        this.aktivitetStatus = builder.aktivitetStatus;
-        this.originalDagsatsFraTilstøtendeYtelse = builder.originalDagsatsFraTilstøtendeYtelse;
-        this.bruttoPrÅr = builder.bruttoPrÅr;
-        this.avkortetPrÅr = builder.avkortetPrÅr;
-        this.besteberegningPrÅr = builder.besteberegningPrÅr;
-        this.overstyrtPrÅr = builder.overstyrtPrÅr;
-        this.pgiSnitt = builder.pgiSnitt;
-        this.pgi1 = builder.pgi1;
-        this.pgi2 = builder.pgi2;
-        this.pgi3 = builder.pgi3;
-        this.nyIArbeidslivet = builder.nyIArbeidslivet;
-        this.ytelse = builder.ytelse;
-        this.arbeidsforholdType = builder.arbeidsforholdType;
-        this.beregningsperiode = builder.beregningsperiode;
-        this.bgAndelArbeidsforhold = builder.bgAndelArbeidsforhold;
-    }
-
-    //TODO - Flytt mappingen ut og bruk kodeliste istedenfor string
-
-    public static BeregningsgrunnlagPrStatusOgAndel fraDto(BeregningsgrunnlagPrStatusOgAndelDto dto) {
-        Builder builder = BeregningsgrunnlagPrStatusOgAndel.ny();
-        BGAndelArbeidsforhold bgAndelArbeidsforhold = BGAndelArbeidsforhold.fraDto(dto.getArbeidsforhold());
-        builder.medAktivitetStatus(dto.getAktivitetStatus().kode)
-                .medBruttoPrÅr(dto.getBruttoPrAar())
-                .medAvkortetPrÅr(dto.getAvkortetPrAar())
-                .medBesteberegningPrÅr(dto.getBesteberegningPrAar())
-                .medOverstyrtPrÅr(dto.getOverstyrtPrAar())
-                .medNyIArbeidslivet(dto.getErNyIArbeidslivet())
-                //TODO - mangler verdi
-                .medOriginalDagsatsFraTilstøtendeYtelse(null)
-                //TODO - mangler verdi
-                .medDagsatsArbeidsgiver(null)
-                //TODO - mangler verdi
-                .medDagsatsBruker(null)
-                .medBeregningsperiode(avklarBeregningsperiode(dto))
-                .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
-                .medArbeidsforholdType(bgAndelArbeidsforhold.getArbeidsforholdType());
-        if (dto instanceof BeregningsgrunnlagPrStatusOgAndelSNDto) {
-            BeregningsgrunnlagPrStatusOgAndelSNDto snDto = (BeregningsgrunnlagPrStatusOgAndelSNDto) dto;
-            builder.medPgi1(snDto.getPgi1())
-                    .medPgi2(snDto.getPgi2())
-                    .medPgi3(snDto.getPgi3())
-                    .medPgiSnitt(snDto.getPgiSnitt());
-        }
-        return builder.build();
-    }
-
-    private static DatoIntervall avklarBeregningsperiode(BeregningsgrunnlagPrStatusOgAndelDto dto) {
-        if (dto.getBeregningsgrunnlagTom() == null) {
-            return DatoIntervall.fraOgMed(dto.getBeregningsgrunnlagFom());
-        }
-        return DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagFom(), dto.getBeregningsgrunnlagTom());
+        dagsatsArbeidsgiver = builder.dagsatsArbeidsgiver;
+        dagsatsBruker = builder.dagsatsBruker;
+        aktivitetStatus = builder.aktivitetStatus;
+        originalDagsatsFraTilstøtendeYtelse = builder.originalDagsatsFraTilstøtendeYtelse;
+        bruttoPrÅr = builder.bruttoPrÅr;
+        avkortetPrÅr = builder.avkortetPrÅr;
+        besteberegningPrÅr = builder.besteberegningPrÅr;
+        overstyrtPrÅr = builder.overstyrtPrÅr;
+        pgiSnitt = builder.pgiSnitt;
+        pgi1 = builder.pgi1;
+        pgi2 = builder.pgi2;
+        pgi3 = builder.pgi3;
+        nyIArbeidslivet = builder.nyIArbeidslivet;
+        ytelse = builder.ytelse;
+        arbeidsforholdType = builder.arbeidsforholdType;
+        beregningsperiode = builder.beregningsperiode;
+        bgAndelArbeidsforhold = builder.bgAndelArbeidsforhold;
     }
 
     public static Builder ny() {
+        return new Builder();
+    }
+
+    public static Builder newBuilder() {
         return new Builder();
     }
 
@@ -100,7 +65,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         return dagsatsBruker;
     }
 
-    public String getAktivitetStatus() {
+    public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
     }
 
@@ -190,11 +155,10 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     }
 
 
-    //Generert ny
     public static final class Builder {
         private Long dagsatsArbeidsgiver;
         private Long dagsatsBruker;
-        private String aktivitetStatus;
+        private AktivitetStatus aktivitetStatus;
         private Long originalDagsatsFraTilstøtendeYtelse;
         private BigDecimal bruttoPrÅr;
         private BigDecimal avkortetPrÅr;
@@ -213,88 +177,88 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         private Builder() {
         }
 
-        public Builder medDagsatsArbeidsgiver(Long val) {
-            dagsatsArbeidsgiver = val;
+        public Builder medDagsatsArbeidsgiver(Long dagsatsArbeidsgiver) {
+            this.dagsatsArbeidsgiver = dagsatsArbeidsgiver;
             return this;
         }
 
-        public Builder medDagsatsBruker(Long val) {
-            dagsatsBruker = val;
+        public Builder medDagsatsBruker(Long dagsatsBruker) {
+            this.dagsatsBruker = dagsatsBruker;
             return this;
         }
 
-        public Builder medAktivitetStatus(String val) {
-            aktivitetStatus = val;
+        public Builder medAktivitetStatus(AktivitetStatus aktivitetStatus) {
+            this.aktivitetStatus = aktivitetStatus;
             return this;
         }
 
-        public Builder medOriginalDagsatsFraTilstøtendeYtelse(Long val) {
-            originalDagsatsFraTilstøtendeYtelse = val;
+        public Builder medOriginalDagsatsFraTilstøtendeYtelse(Long originalDagsatsFraTilstøtendeYtelse) {
+            this.originalDagsatsFraTilstøtendeYtelse = originalDagsatsFraTilstøtendeYtelse;
             return this;
         }
 
-        public Builder medBruttoPrÅr(BigDecimal val) {
-            bruttoPrÅr = val;
+        public Builder medBruttoPrÅr(BigDecimal bruttoPrÅr) {
+            this.bruttoPrÅr = bruttoPrÅr;
             return this;
         }
 
-        public Builder medAvkortetPrÅr(BigDecimal val) {
-            avkortetPrÅr = val;
+        public Builder medAvkortetPrÅr(BigDecimal avkortetPrÅr) {
+            this.avkortetPrÅr = avkortetPrÅr;
             return this;
         }
 
-        public Builder medBesteberegningPrÅr(BigDecimal val) {
-            besteberegningPrÅr = val;
+        public Builder medBesteberegningPrÅr(BigDecimal besteberegningPrÅr) {
+            this.besteberegningPrÅr = besteberegningPrÅr;
             return this;
         }
 
-        public Builder medOverstyrtPrÅr(BigDecimal val) {
-            overstyrtPrÅr = val;
+        public Builder medOverstyrtPrÅr(BigDecimal overstyrtPrÅr) {
+            this.overstyrtPrÅr = overstyrtPrÅr;
             return this;
         }
 
-        public Builder medPgiSnitt(BigDecimal val) {
-            pgiSnitt = val;
+        public Builder medPgiSnitt(BigDecimal pgiSnitt) {
+            this.pgiSnitt = pgiSnitt;
             return this;
         }
 
-        public Builder medPgi1(BigDecimal val) {
-            pgi1 = val;
+        public Builder medPgi1(BigDecimal pgi1) {
+            this.pgi1 = pgi1;
             return this;
         }
 
-        public Builder medPgi2(BigDecimal val) {
-            pgi2 = val;
+        public Builder medPgi2(BigDecimal pgi2) {
+            this.pgi2 = pgi2;
             return this;
         }
 
-        public Builder medPgi3(BigDecimal val) {
-            pgi3 = val;
+        public Builder medPgi3(BigDecimal pgi3) {
+            this.pgi3 = pgi3;
             return this;
         }
 
-        public Builder medNyIArbeidslivet(Boolean val) {
-            nyIArbeidslivet = val;
+        public Builder medNyIArbeidslivet(Boolean nyIArbeidslivet) {
+            this.nyIArbeidslivet = nyIArbeidslivet;
             return this;
         }
 
-        public Builder medYtelse(RelatertYtelseType val) {
-            ytelse = val;
+        public Builder medYtelse(RelatertYtelseType ytelse) {
+            this.ytelse = ytelse;
             return this;
         }
 
-        public Builder medArbeidsforholdType(String val) {
-            arbeidsforholdType = val;
+        public Builder medArbeidsforholdType(String arbeidsforholdType) {
+            this.arbeidsforholdType = arbeidsforholdType;
             return this;
         }
 
-        public Builder medBeregningsperiode(DatoIntervall val) {
-            beregningsperiode = val;
+        public Builder medBeregningsperiode(DatoIntervall beregningsperiode) {
+            this.beregningsperiode = beregningsperiode;
             return this;
         }
 
-        public Builder medBgAndelArbeidsforhold(BGAndelArbeidsforhold val) {
-            bgAndelArbeidsforhold = val;
+        public Builder medBgAndelArbeidsforhold(BGAndelArbeidsforhold bgAndelArbeidsforhold) {
+            this.bgAndelArbeidsforhold = bgAndelArbeidsforhold;
             return this;
         }
 

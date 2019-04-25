@@ -5,10 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 
 public class BeregningsgrunnlagPeriode {
@@ -29,20 +26,6 @@ public class BeregningsgrunnlagPeriode {
         periodeÅrsaker = builder.periodeÅrsaker;
         periode = builder.periode;
         beregningsgrunnlagPrStatusOgAndelList = builder.beregningsgrunnlagPrStatusOgAndelList;
-    }
-
-    public static BeregningsgrunnlagPeriode fraDto(BeregningsgrunnlagPeriodeDto dto) {
-        DatoIntervall intervall = dto.getBeregningsgrunnlagPeriodeTom() != null ?
-                DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagPeriodeFom(), dto.getBeregningsgrunnlagPeriodeTom()) :
-                DatoIntervall.fraOgMed(dto.getBeregningsgrunnlagPeriodeFom());
-        return ny()
-                .medBruttoPrÅr(dto.getBruttoPrAar())
-                .medRedusertPrÅr(dto.getRedusertPrAar())
-                .medDagsats(dto.getDagsats())
-                .medPeriode(intervall)
-                .medperiodeÅrsaker(dto.getPeriodeAarsaker().stream().map(KodeDto::getKode).collect(Collectors.toList()))
-                .medBeregningsgrunnlagPrStatusOgAndelList(dto.getBeregningsgrunnlagPrStatusOgAndel().stream().map(BeregningsgrunnlagPrStatusOgAndel::fraDto).collect(Collectors.toList()))
-                .build();
     }
 
     public static Builder ny() {

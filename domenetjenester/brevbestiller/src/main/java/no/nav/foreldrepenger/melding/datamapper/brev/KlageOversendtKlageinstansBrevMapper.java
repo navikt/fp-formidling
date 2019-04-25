@@ -34,16 +34,13 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class KlageOversendtKlageinstansBrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private BehandlingMapper behandlingMapper;
 
     public KlageOversendtKlageinstansBrevMapper() {
         //CDI
     }
 
     @Inject
-    public KlageOversendtKlageinstansBrevMapper(BehandlingMapper behandlingMapper,
-                                                BrevParametere brevParametere) {
-        this.behandlingMapper = behandlingMapper;
+    public KlageOversendtKlageinstansBrevMapper(BrevParametere brevParametere) {
         this.brevParametere = brevParametere;
     }
 
@@ -61,7 +58,7 @@ public class KlageOversendtKlageinstansBrevMapper implements DokumentTypeMapper 
         //TODO må eksponeres fra fpsak
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(LocalDate.now()));
         fagType.setFritekst(hendelse.getFritekst());
-        fagType.setAntallUker(BigInteger.valueOf(behandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
+        fagType.setAntallUker(BigInteger.valueOf(BehandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
         return fagType;
     }

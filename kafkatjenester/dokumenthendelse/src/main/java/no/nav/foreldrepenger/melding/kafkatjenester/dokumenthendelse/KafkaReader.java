@@ -17,15 +17,13 @@ import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakStatus;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
-import no.vedtak.felles.kafka.DokumentMeldingConsumer;
-import no.vedtak.felles.kafka.MeldingConsumer;
 
 @ApplicationScoped
 public class KafkaReader {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaReader.class);
     private JsonHendelseHandler jsonHendelseHandler;
-    private MeldingConsumer meldingConsumer;
+    private DokumentMeldingConsumer meldingConsumer;
     private StringBuilder feilmelding;
     private HendelseRepository hendelseRepository;
 

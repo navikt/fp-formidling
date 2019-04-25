@@ -15,12 +15,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>kafkautil</artifactId>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>2.2.0</version> <!-- TODO -->
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.felles.kafka</groupId>
-            <artifactId>producer</artifactId>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>kafkautil</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>

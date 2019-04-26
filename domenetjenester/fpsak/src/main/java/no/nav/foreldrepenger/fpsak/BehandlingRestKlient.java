@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.fpsak;
 
 import java.util.List;
-import java.util.Optional;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
@@ -24,7 +23,7 @@ public interface BehandlingRestKlient {
 
     BehandlingDto hentBehandling(BehandlingIdDto behandlingIdDto);
 
-    Optional<PersonopplysningDto> hentPersonopplysninger(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    PersonopplysningDto hentPersonopplysninger(List<BehandlingResourceLinkDto> resourceLinkDtos);
 
     VergeDto hentVerge(List<BehandlingResourceLinkDto> resourceLinkDtos);
 

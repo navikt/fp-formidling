@@ -134,7 +134,7 @@ public class DokumentFellesDataMapper {
                 .medSaksnummer(new Saksnummer(behandling.getSaksnummer().getVerdi()))
                 .medSakspartId(fnrBruker)
                 .medSakspartNavn(navnBruker)
-                //TODO: Hent språk preferanse fra selvbetjeningløsning
+                //TODO ramesh: Hent språk preferanse fra selvbetjeningløsning
 //                .medSpråkkode(fagsak.getNavBruker().getSpråkkode())
                 .medSpråkkode(Språkkode.nb)
                 .medSakspartPersonStatus(getPersonstatusVerdi(personstatusBruker));

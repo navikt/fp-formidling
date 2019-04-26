@@ -74,7 +74,7 @@ public class DokumentXmlDataMapper {
             Document doc = db.parse(is);
             brevXmlElement = doc.getDocumentElement();
         } catch (SAXException | XMLStreamException | ParserConfigurationException | IOException | JAXBException e) {
-            //TODO feilmelding dokumentID
+            //TODO feilmelding dokumentID - Vi genererer aldri denne IDen..
             throw FeilFactory.create(DokumentBestillerFeil.class).xmlgenereringsfeil(1l, e).toException();
         }
         return brevXmlElement;

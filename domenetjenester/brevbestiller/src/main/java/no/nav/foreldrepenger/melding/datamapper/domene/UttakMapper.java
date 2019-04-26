@@ -7,8 +7,12 @@ import java.util.function.Predicate;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
+import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
 import no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
@@ -45,5 +49,12 @@ public class UttakMapper {
     public static boolean finnesPeriodeMedIkkeOmsorg(List<PeriodeType> perioder) {
         return perioder.
                 stream().map(PeriodeType::getÅrsak).anyMatch(årsak -> MOR_HAR_IKKE_OMSORG.getKode().equals(årsak) || FAR_HAR_IKKE_OMSORG.getKode().equals(årsak));
+    }
+
+    public static UtbetaltKode forMyeUtbetaltKode(PeriodeListeType periodeListe, Behandling behandling) {
+        if (!behandling.erRevurdering()) {
+            return UtbetaltKode.INGEN;
+        }
+        return PeriodeBeregner.forMyeUtbetalt(periodeListe, null);
     }
 }

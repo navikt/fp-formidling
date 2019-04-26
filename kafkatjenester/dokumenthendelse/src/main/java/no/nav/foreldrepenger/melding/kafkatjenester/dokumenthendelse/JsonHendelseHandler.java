@@ -46,7 +46,6 @@ public class JsonHendelseHandler {
     private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {
         ProsessTaskData prosessTaskData = new ProsessTaskData(ProduserBrevTaskProperties.TASKTYPE);
         prosessTaskData.setProperty(ProduserBrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
-        //TODO (aleksander)
         prosessTaskData.setGruppe("FORMIDLING");
         prosessTaskRepository.lagre(prosessTaskData);
     }

@@ -33,8 +33,6 @@ public class AvklartDataFodselDto extends FamiliehendelseDto {
         this.brukAntallBarnFraTps = brukAntallBarnFraTps;
     }
 
-    //TODO(OJR) burde fjerne enten denne eller setAntallBarnFødt
-
     @JsonProperty("termindato")
     public LocalDate getTermindato() {
         return termindato;

@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -19,12 +18,6 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetListeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdListeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringListeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
@@ -141,36 +134,6 @@ public class BeregningsresultatMapper {
         return BigInteger.valueOf(periodeListe.getPeriode().stream()
                 .filter(PeriodeType::isInnvilget)
                 .count());
-    }
-
-    public static Boolean graderingFinnes(PeriodeListeType periodeListe) {
-        Stream<PeriodeType> innvilgedePerioderStream = periodeListe.getPeriode().stream().filter(PeriodeType::isInnvilget);
-        return arbeidsforholdMedGraderingFinnes(innvilgedePerioderStream) ||
-                annenAktivtitetMedGraderingFinnes(innvilgedePerioderStream) ||
-                næringMedGraderingFinnes(innvilgedePerioderStream);
-    }
-
-    private static boolean annenAktivtitetMedGraderingFinnes(Stream<PeriodeType> periodeStream) {
-        return periodeStream
-                .map(PeriodeType::getAnnenAktivitetListe)
-                .map(AnnenAktivitetListeType::getAnnenAktivitet)
-                .flatMap(Collection::stream)
-                .anyMatch(AnnenAktivitetType::isGradering);
-    }
-
-    private static boolean næringMedGraderingFinnes(Stream<PeriodeType> periodeStream) {
-        return periodeStream
-                .map(PeriodeType::getNæringListe)
-                .map(NæringListeType::getNæring)
-                .anyMatch(NæringType::isGradering);
-    }
-
-    private static boolean arbeidsforholdMedGraderingFinnes(Stream<PeriodeType> periodeStream) {
-        return periodeStream
-                .map(PeriodeType::getArbeidsforholdListe)
-                .map(ArbeidsforholdListeType::getArbeidsforhold)
-                .flatMap(Collection::stream)
-                .anyMatch(ArbeidsforholdType::isGradering);
     }
 
     //TODO Test denne

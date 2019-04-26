@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.familiehendelse;
+package no.nav.foreldrepenger.melding.dtomapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,13 +14,12 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataFod
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataOmsorgDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 
-public class FamilieHendelseTest {
-
+public class FamiliehendelseDtoMapperTest {
     private static final LocalDate FØRSTE_JANUAR = LocalDate.of(2018, 1, 1);
 
     @Test
     public void utledTermindato() {
-        assertThat(FamilieHendelse.finnTermindato(lagDtoMedTermindato(FØRSTE_JANUAR)).get()).isEqualTo(FØRSTE_JANUAR);
+        assertThat(FamiliehendelseDtoMapper.finnTermindato(lagDtoMedTermindato(FØRSTE_JANUAR)).get()).isEqualTo(FØRSTE_JANUAR);
     }
 
     @Test
@@ -28,10 +27,10 @@ public class FamilieHendelseTest {
         int antallBarnFødsel = 1;
         int antallBarnAdopsjon = 2;
         int antallBarnOmsorg = 3;
-        assertThat(FamilieHendelse.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, false, antallBarnFødsel))).isEqualTo(antallBarnFødsel);
-        assertThat(FamilieHendelse.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, true, antallBarnFødsel))).isEqualTo(antallBarnFødsel);
-        assertThat(FamilieHendelse.utledAntallBarnFraDto(lagAdopsjonsDtoMedAntallBarn(antallBarnAdopsjon))).isEqualTo(antallBarnAdopsjon);
-        assertThat(FamilieHendelse.utledAntallBarnFraDto(lagOmsorgDtoMedAntallBarn(antallBarnOmsorg)));
+        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, false, antallBarnFødsel))).isEqualTo(antallBarnFødsel);
+        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, true, antallBarnFødsel))).isEqualTo(antallBarnFødsel);
+        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagAdopsjonsDtoMedAntallBarn(antallBarnAdopsjon))).isEqualTo(antallBarnAdopsjon);
+        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagOmsorgDtoMedAntallBarn(antallBarnOmsorg)));
     }
 
     private FamiliehendelseDto lagAdopsjonsDtoMedAntallBarn(int antallBarn) {
@@ -65,5 +64,4 @@ public class FamilieHendelseTest {
     private FamiliehendelseDto lagDtoMedTermindato(LocalDate termindato) {
         return lagFødselDtoMedBarnOgTermindato(termindato, false, 0);
     }
-
 }

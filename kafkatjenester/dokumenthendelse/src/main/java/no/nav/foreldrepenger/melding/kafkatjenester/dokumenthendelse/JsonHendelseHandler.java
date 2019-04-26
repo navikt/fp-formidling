@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.melding.brevbestiller.task.ProduserBrevTaskProperties;
-import no.nav.foreldrepenger.melding.dtomapper.DtoTilDomeneobjektMapper;
+import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
@@ -21,7 +21,7 @@ public class JsonHendelseHandler {
 
     private HendelseRepository hendelseRepository;
     private ProsessTaskRepository prosessTaskRepository;
-    private DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper;
+    private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
 
     public JsonHendelseHandler() {
         //CDI
@@ -30,14 +30,14 @@ public class JsonHendelseHandler {
     @Inject
     public JsonHendelseHandler(HendelseRepository hendelseRepository,
                                ProsessTaskRepository prosessTaskRepository,
-                               DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper) {
+                               DokumentHendelseDtoMapper dtoTilDomeneobjektMapper) {
         this.hendelseRepository = hendelseRepository;
         this.prosessTaskRepository = prosessTaskRepository;
         this.dtoTilDomeneobjektMapper = dtoTilDomeneobjektMapper;
     }
 
     public void prosesser(DokumentHendelseDto jsonHendelse) {
-        DokumentHendelse hendelse = dtoTilDomeneobjektMapper.fraDto(jsonHendelse);
+        DokumentHendelse hendelse = dtoTilDomeneobjektMapper.mapDokumentHendelseFraDto(jsonHendelse);
         hendelseRepository.lagre(hendelse);
         opprettBestillBrevTask(hendelse);
         log.info("lagret hendelse:{} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingId());

@@ -1,15 +1,13 @@
 package no.nav.foreldrepenger.melding.behandling;
 
-import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
-
 public class Innsyn {
-    private String innsynResultatType; //Kodeliste.InnsynResultatType
+    private InnsynResultatType innsynResultatType;
 
-    public Innsyn(InnsynsbehandlingDto dto) {
-        this.innsynResultatType = dto.getInnsynResultatType().kode;
+    public Innsyn(InnsynResultatType innsynResultatType) {
+        this.innsynResultatType = innsynResultatType;
     }
 
-    public String getInnsynResultatType() {
+    public InnsynResultatType getInnsynResultatType() {
         return innsynResultatType;
     }
 }

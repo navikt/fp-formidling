@@ -8,15 +8,15 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.InnsynResultatT
 
 public class InnsynMapper {
 
-    public static InnsynResultatTypeKode mapInnsynResultatKode(String internResultatTypeKode) {
-        if (Objects.equals(internResultatTypeKode, InnsynResultatType.INNVILGET.getKode())) {
+    public static InnsynResultatTypeKode mapInnsynResultatKode(InnsynResultatType internResultatTypeKode) {
+        if (Objects.equals(internResultatTypeKode, InnsynResultatType.INNVILGET)) {
             return InnsynResultatTypeKode.INNVILGET;
-        } else if (Objects.equals(internResultatTypeKode, InnsynResultatType.DELVIS_INNVILGET.getKode())) {
+        } else if (Objects.equals(internResultatTypeKode, InnsynResultatType.DELVIS_INNVILGET)) {
             return InnsynResultatTypeKode.DELVISINNVILGET;
-        } else if (Objects.equals(internResultatTypeKode, InnsynResultatType.AVVIST.getKode())) {
+        } else if (Objects.equals(internResultatTypeKode, InnsynResultatType.AVVIST)) {
             return InnsynResultatTypeKode.AVVIST;
         }
-        throw DokumentMapperFeil.FACTORY.innsynskravSvarHarUkjentResultatType(internResultatTypeKode).toException();
+        throw DokumentMapperFeil.FACTORY.innsynskravSvarHarUkjentResultatType(internResultatTypeKode.getKode()).toException();
     }
 
 

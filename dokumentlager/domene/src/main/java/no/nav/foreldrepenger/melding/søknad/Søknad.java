@@ -2,16 +2,15 @@ package no.nav.foreldrepenger.melding.søknad;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
-
 public class Søknad {
     private LocalDate mottattDato;
     private LocalDate søknadsdato;
     private Object OppgittRettighet;
 
-    public Søknad(SoknadDto dto) {
-        this.søknadsdato = dto.getMottattDato();
+    public Søknad(LocalDate mottattDato) {
+        this.mottattDato = mottattDato;
     }
+
 
     public LocalDate getMottattDato() {
         return mottattDato;

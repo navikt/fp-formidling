@@ -1,4 +1,6 @@
-package no.nav.foreldrepenger.melding.datamapper.dto;
+package no.nav.foreldrepenger.melding.dtomapper;
+
+import static no.nav.foreldrepenger.melding.dtomapper.ArbeidsgiverMapper.finnArbeidsgiver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,14 +11,15 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
+import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatMedUttaksplanDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatPeriodeAndelDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatPeriodeDto;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.melding.datamapper.domene.ArbeidsgiverMapper;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
@@ -38,6 +41,10 @@ public class BeregningsresultatDtoMapper {
         this.kodeverkRepository = kodeverkRepository;
     }
 
+
+    public static BeregningsresultatES mapBeregningsresultatESFraDto(BeregningsresultatEngangsstønadDto dto) {
+        return new BeregningsresultatES(dto.getBeregnetTilkjentYtelse());
+    }
 
     public BeregningsresultatFP mapBeregningsresultatFPFraDto(BeregningsresultatMedUttaksplanDto dto) {
         return BeregningsresultatFP.ny()
@@ -71,10 +78,9 @@ public class BeregningsresultatDtoMapper {
         return BeregningsresultatAndel.ny()
                 .medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().getKode()))
                 .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
-                .medArbeidsgiver(ArbeidsgiverMapper.finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr()))
+                .medArbeidsgiver(finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr()))
                 .medStillingsprosent(null/*TODO*/)
                 .medBrukerErMottaker(brukerErMottaker)
                 .build();
     }
-
 }

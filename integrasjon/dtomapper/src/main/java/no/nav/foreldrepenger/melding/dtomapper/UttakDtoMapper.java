@@ -1,14 +1,12 @@
-package no.nav.foreldrepenger.melding.datamapper.dto;
+package no.nav.foreldrepenger.melding.dtomapper;
 
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeAktivitetDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeDto;
-import no.nav.foreldrepenger.melding.datamapper.domene.ArbeidsgiverMapper;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
@@ -33,8 +31,7 @@ public class UttakDtoMapper {
     }
 
     @Inject
-    public UttakDtoMapper(BehandlingRestKlient behandlingRestKlient,
-                          KodeverkRepository kodeverkRepository) {
+    public UttakDtoMapper(KodeverkRepository kodeverkRepository) {
         this.kodeverkRepository = kodeverkRepository;
     }
 

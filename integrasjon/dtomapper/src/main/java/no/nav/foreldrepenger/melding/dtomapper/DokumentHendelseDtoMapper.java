@@ -15,27 +15,24 @@ import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
-public class DtoTilDomeneobjektMapper {
+public class DokumentHendelseDtoMapper {
 
     private KodeverkRepository kodeverkRepository;
     private DokumentRepository dokumentRepository;
 
-    public DtoTilDomeneobjektMapper() {
+    public DokumentHendelseDtoMapper() {
         //CDI
     }
 
     @Inject
-    public DtoTilDomeneobjektMapper(KodeverkRepository kodeverkRepository,
-                                    DokumentRepository dokumentRepository) {
+    public DokumentHendelseDtoMapper(KodeverkRepository kodeverkRepository,
+                                     DokumentRepository dokumentRepository) {
         this.kodeverkRepository = kodeverkRepository;
         this.dokumentRepository = dokumentRepository;
     }
 
 
-    public DokumentHendelse fraDto(DokumentHendelseDto hendelseDto) {
-        //TODO putt bare ett sted!
-        //TODO ha alle feltene..
-        //Ny modul under domenetjenester? :) Hva skal den hete..?
+    public DokumentHendelse mapDokumentHendelseFraDto(DokumentHendelseDto hendelseDto) {
         return new DokumentHendelse.Builder()
                 .medBehandlingId(hendelseDto.getBehandlingId())
                 .medBehandlingType(utledBehandlingType(hendelseDto.getBehandlingType()))

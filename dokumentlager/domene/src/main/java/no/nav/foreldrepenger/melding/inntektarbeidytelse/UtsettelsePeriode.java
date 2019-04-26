@@ -2,18 +2,18 @@ package no.nav.foreldrepenger.melding.inntektarbeidytelse;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.UtsettelsePeriodeDto;
+import no.nav.foreldrepenger.melding.ytelsefordeling.UtsettelseÅrsak;
 
 public class UtsettelsePeriode {
 
     private LocalDate fom;
     private LocalDate tom;
-    private String utsettelseÅrsak;
+    private UtsettelseÅrsak utsettelseÅrsak;
 
-    public UtsettelsePeriode(UtsettelsePeriodeDto dto) {
-        this.fom = dto.getFom();
-        this.tom = dto.getTom();
-        this.utsettelseÅrsak = dto.getUtsettelseArsak().kode;
+    public UtsettelsePeriode(LocalDate fom, LocalDate tom, UtsettelseÅrsak utsettelseÅrsak) {
+        this.fom = fom;
+        this.tom = tom;
+        this.utsettelseÅrsak = utsettelseÅrsak;
     }
 
     public LocalDate getFom() {
@@ -24,7 +24,7 @@ public class UtsettelsePeriode {
         return tom;
     }
 
-    public String getUtsettelseÅrsak() {
+    public UtsettelseÅrsak getUtsettelseÅrsak() {
         return utsettelseÅrsak;
     }
 }

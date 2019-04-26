@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dtomapper.DtoTilDomeneobjektMapper;
+import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
@@ -47,7 +47,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     private DokumentMalUtleder dokumentMalUtleder;
     private BehandlingRestKlient behandlingRestKlient;
     private DokumentbestillingMapper dokumentbestillingMapper;
-    private DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper;
+    private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
     private DomeneobjektProvider domeneobjektProvider;
 
     public BrevBestillerApplikasjonTjenesteImpl() {
@@ -60,7 +60,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
                                                 DokumentMalUtleder dokumentMalUtleder,
                                                 BehandlingRestKlient behandlingRestKlient,
                                                 DokumentbestillingMapper dokumentbestillingMapper,
-                                                DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper,
+                                                DokumentHendelseDtoMapper dtoTilDomeneobjektMapper,
                                                 DokumentFellesDataMapper dokumentFellesDataMapper,
                                                 DomeneobjektProvider domeneobjektProvider) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
@@ -120,7 +120,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     @Override
     public byte[] forhandsvisBrev(DokumentHendelseDto hendelseDto) {
         byte[] dokument = null;
-        DokumentHendelse hendelse = dtoTilDomeneobjektMapper.fraDto(hendelseDto);
+        DokumentHendelse hendelse = dtoTilDomeneobjektMapper.mapDokumentHendelseFraDto(hendelseDto);
         Behandling behandling = domeneobjektProvider.hentBehandling(hendelse.getBehandlingId());
 
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, hendelse);

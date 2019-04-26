@@ -1,15 +1,13 @@
 package no.nav.foreldrepenger.melding.vilkår;
 
-import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
-
 public class Vilkår {
-    private String vilkårType; // Kodeliste.VilkårType
+    private VilkårType vilkårType;
 
-    public Vilkår(VilkårDto dto) {
-        this.vilkårType = dto.getVilkarType().kode;
+    public Vilkår(VilkårType vilkårType) {
+        this.vilkårType = vilkårType;
     }
 
-    public String getVilkårType() {
+    public VilkårType getVilkårType() {
         return vilkårType;
     }
 }

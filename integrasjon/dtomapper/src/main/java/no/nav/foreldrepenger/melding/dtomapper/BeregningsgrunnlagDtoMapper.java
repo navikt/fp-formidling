@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.datamapper.dto;
+package no.nav.foreldrepenger.melding.dtomapper;
 
 import java.math.BigDecimal;
 import java.util.stream.Collectors;
@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
+import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagArbeidsforholdDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
@@ -20,8 +21,13 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivi
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
+import no.nav.foreldrepenger.melding.typer.AktørId;
+import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
+import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+import no.nav.foreldrepenger.melding.virksomhet.Virksomhet;
 
 @ApplicationScoped
 public class BeregningsgrunnlagDtoMapper {
@@ -48,8 +54,15 @@ public class BeregningsgrunnlagDtoMapper {
         return DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagFom(), dto.getBeregningsgrunnlagTom());
     }
 
-    public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        return mapBeregningsgrunnlagFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinkDtos()));
+    static Arbeidsgiver mapArbeidsgiverFraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
+        AktørId aktørId = null;
+        Virksomhet virksomhet = null;
+        if (dto.getAktørId() != null) {
+            virksomhet = new Virksomhet(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverId());
+        } else {
+            aktørId = new AktørId(dto.getAktørId());
+        }
+        return new Arbeidsgiver(dto.getArbeidsgiverNavn(), virksomhet, aktørId);
     }
 
     public Beregningsgrunnlag mapBeregningsgrunnlagFraDto(BeregningsgrunnlagDto dto) {
@@ -75,9 +88,13 @@ public class BeregningsgrunnlagDtoMapper {
                 .build();
     }
 
+    public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
+        return mapBeregningsgrunnlagFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinker()));
+    }
+
     BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagPrStatusOgAndelDto dto) {
         BeregningsgrunnlagPrStatusOgAndel.Builder builder = BeregningsgrunnlagPrStatusOgAndel.ny();
-        BGAndelArbeidsforhold bgAndelArbeidsforhold = BGAndelArbeidsforhold.fraDto(dto.getArbeidsforhold());
+        BGAndelArbeidsforhold bgAndelArbeidsforhold = mapBgAndelArbeidsforholdfraDto(dto.getArbeidsforhold());
         builder.medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().kode))
                 .medBruttoPrÅr(dto.getBruttoPrAar())
                 .medAvkortetPrÅr(dto.getAvkortetPrAar())
@@ -101,6 +118,11 @@ public class BeregningsgrunnlagDtoMapper {
                     .medPgiSnitt(snDto.getPgiSnitt());
         }
         return builder.build();
+    }
+
+    BGAndelArbeidsforhold mapBgAndelArbeidsforholdfraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
+        return new BGAndelArbeidsforhold(mapArbeidsgiverFraDto(dto), ArbeidsforholdRef.ref(dto.getArbeidsforholdId()),
+                kodeverkRepository.finn(OpptjeningAktivitetType.class, dto.getArbeidsforholdType().getKode()));
     }
 
     BeregningsgrunnlagAktivitetStatus mapBeregningsgrunnlagAktivitetStatusFraDto(KodeDto kodedto) {

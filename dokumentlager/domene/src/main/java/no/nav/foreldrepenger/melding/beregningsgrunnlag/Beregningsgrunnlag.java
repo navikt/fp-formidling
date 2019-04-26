@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import no.nav.foreldrepenger.melding.typer.Beløp;
 
@@ -11,6 +10,7 @@ public class Beregningsgrunnlag {
     private Beløp grunnbeløp;
     private List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = new ArrayList<>();
     private List<BeregningsgrunnlagAktivitetStatus> aktivitetStatuser = new ArrayList<>();
+    private Hjemmel hjemmel;
 
     private Beregningsgrunnlag() {
 
@@ -33,28 +33,14 @@ public class Beregningsgrunnlag {
     }
 
     public Hjemmel getHjemmel() {
-        if (aktivitetStatuser.isEmpty()) {
-            return Hjemmel.UDEFINERT;
-        }
-        if (aktivitetStatuser.size() == 1) {
-            return aktivitetStatuser.get(0).getHjemmel();
-        }
-        Optional<BeregningsgrunnlagAktivitetStatus> dagpenger = aktivitetStatuser.stream()
-                .filter(as -> Hjemmel.F_14_7_8_49.equals(as.getHjemmel()))
-                .findFirst();
-        if (dagpenger.isPresent()) {
-            return dagpenger.get().getHjemmel();
-        }
-        Optional<BeregningsgrunnlagAktivitetStatus> gjelder = aktivitetStatuser.stream()
-                .filter(as -> !Hjemmel.F_14_7.equals(as.getHjemmel()))
-                .findFirst();
-        return gjelder.isPresent() ? gjelder.get().getHjemmel() : Hjemmel.F_14_7;
+        return hjemmel;
     }
 
     public static class Builder {
         private Beløp grunnbeløp;
         private List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = new ArrayList<>();
         private List<BeregningsgrunnlagAktivitetStatus> aktivitetStatuser = new ArrayList<>();
+        private Hjemmel hjemmel;
 
         public Builder medGrunnbeløp(Beløp grunnbeløp) {
             this.grunnbeløp = grunnbeløp;
@@ -71,11 +57,17 @@ public class Beregningsgrunnlag {
             return this;
         }
 
+        public Builder medhHjemmel(Hjemmel hjemmel) {
+            this.hjemmel = hjemmel;
+            return this;
+        }
+
         public Beregningsgrunnlag build() {
             Beregningsgrunnlag beregningsgrunnlag = new Beregningsgrunnlag();
             beregningsgrunnlag.grunnbeløp = grunnbeløp;
             beregningsgrunnlag.beregningsgrunnlagPerioder = beregningsgrunnlagPerioder;
             beregningsgrunnlag.aktivitetStatuser = aktivitetStatuser;
+            beregningsgrunnlag.hjemmel = hjemmel;
             return beregningsgrunnlag;
         }
 

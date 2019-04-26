@@ -1,11 +1,45 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.ENDRING_BEREGNING_OG_UTTAK;
+
 import java.util.Set;
 
+import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.vedtak.util.StringUtils;
 
 public class FellesMapper {
 
+    //TODO kopier over tester..
+    public static String formaterLovhjemlerForBeregning(String lovhjemmelBeregning, String konsekvensForYtelse, boolean innvilgetRevurdering) {
+        if (lovhjemmelBeregning == null) {
+            return "";
+        }
+        if (endringIBeregning(konsekvensForYtelse) || innvilgetRevurdering) {
+            lovhjemmelBeregning += (" og forvaltningsloven § 35");
+        }
+        return lovhjemmelBeregning.replace("folketrygdloven ", "");
+    }
+
+    public static String formaterLovhjemlerUttak(Set<String> hjemler, String konsekvensForYtelse, boolean innvilgetRevurdering) {
+        StringBuilder lovHjemmelBuilder = new StringBuilder();
+        String forvaltningslovenTillegg = endringIBeregningEllerInnvilgetRevurdering(innvilgetRevurdering, konsekvensForYtelse) ?
+                "forvaltningsloven § 35" : null;
+        int antallLovreferanser = formaterLovhjemler(hjemler, lovHjemmelBuilder,
+                null, forvaltningslovenTillegg);
+        if (antallLovreferanser == 0 && forvaltningslovenTillegg == null) {
+            return "";
+        }
+        return lovHjemmelBuilder.toString();
+    }
+
+    private static boolean endringIBeregningEllerInnvilgetRevurdering(boolean innvilgetRevurdering, String konsekvensForYtelse) {
+        return endringIBeregning(konsekvensForYtelse) || innvilgetRevurdering;
+    }
+
+    private static boolean endringIBeregning(String konsekvensForYtelse) {
+        return KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvensForYtelse)
+                || ENDRING_BEREGNING_OG_UTTAK.equals(konsekvensForYtelse);
+    }
 
     public static int formaterLovhjemler(Set<String> hjemler, StringBuilder builder,
                                          String startTillegg, String sluttTillegg) {

@@ -6,20 +6,19 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagArbeidsforholdDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelSNDto;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
-import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
@@ -33,14 +32,10 @@ import no.nav.foreldrepenger.melding.virksomhet.Virksomhet;
 public class BeregningsgrunnlagDtoMapper {
 
     private KodeverkRepository kodeverkRepository;
-    private BehandlingRestKlient behandlingRestKlient;
-
 
     @Inject
-    public BeregningsgrunnlagDtoMapper(KodeverkRepository kodeverkRepository,
-                                       BehandlingRestKlient behandlingRestKlient) {
+    public BeregningsgrunnlagDtoMapper(KodeverkRepository kodeverkRepository) {
         this.kodeverkRepository = kodeverkRepository;
-        this.behandlingRestKlient = behandlingRestKlient;
     }
 
     public BeregningsgrunnlagDtoMapper() {
@@ -71,6 +66,7 @@ public class BeregningsgrunnlagDtoMapper {
         builder.medGrunnbeløp(new Beløp(BigDecimal.valueOf(dto.getHalvG()).multiply(BigDecimal.valueOf(2))));
         dto.getAktivitetStatus().stream().map(this::mapBeregningsgrunnlagAktivitetStatusFraDto).forEach(builder::leggTilBeregningsgrunnlagAktivitetStatus);
         dto.getBeregningsgrunnlagPeriode().stream().map(this::mapBeregningsgrunnlagPeriodeFraDto).forEach(builder::leggTilBeregningsgrunnlagPeriode);
+        builder.medhHjemmel(kodeverkRepository.finn(Hjemmel.class, dto.getHjemmel().getKode()));
         return builder.build();
     }
 
@@ -86,10 +82,6 @@ public class BeregningsgrunnlagDtoMapper {
                 .medperiodeÅrsaker(dto.getPeriodeAarsaker().stream().map(KodeDto::getKode).collect(Collectors.toList()))
                 .medBeregningsgrunnlagPrStatusOgAndelList(dto.getBeregningsgrunnlagPrStatusOgAndel().stream().map(this::mapBgpsaFraDto).collect(Collectors.toList()))
                 .build();
-    }
-
-    public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        return mapBeregningsgrunnlagFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinker()));
     }
 
     BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagPrStatusOgAndelDto dto) {

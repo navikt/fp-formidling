@@ -24,12 +24,14 @@ import no.nav.foreldrepenger.melding.dtomapper.KlageDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.SøknadDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.UttakDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.VilkårDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.YtelseFordelingDtoMapper;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.InntektArbeidYtelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
+import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 
 @ApplicationScoped
 public class DomeneobjektProvider {
@@ -121,6 +123,10 @@ public class DomeneobjektProvider {
                 .medPerioder(resultatPerioderDto.getPerioderSøker().stream().map(uttakDtoMapper::periodeFraDto).collect(Collectors.toList()))
                 .medPerioderAnnenPart(resultatPerioderDto.getPerioderAnnenpart().stream().map(uttakDtoMapper::periodeFraDto).collect(Collectors.toList()))
                 .build();
+    }
+
+    public YtelseFordeling hentYtelseFordeling(Behandling behandling) {
+        return YtelseFordelingDtoMapper.mapYtelseFordelingFraDto(behandlingRestKlient.hentYtelseFordeling(behandling.getResourceLinker()));
     }
 
 }

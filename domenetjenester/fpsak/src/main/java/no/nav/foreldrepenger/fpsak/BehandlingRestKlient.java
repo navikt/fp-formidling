@@ -17,6 +17,7 @@ import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
+import no.nav.foreldrepenger.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 
 public interface BehandlingRestKlient {
@@ -48,4 +49,6 @@ public interface BehandlingRestKlient {
     FagsakDto hentFagsak(List<BehandlingResourceLink> resourceLinkDtos);
 
     UttakResultatPerioderDto hentUttaksresultat(List<BehandlingResourceLink> resourceLinkDtos);
+
+    YtelseFordelingDto hentYtelseFordeling(List<BehandlingResourceLink> resourceLinker);
 }

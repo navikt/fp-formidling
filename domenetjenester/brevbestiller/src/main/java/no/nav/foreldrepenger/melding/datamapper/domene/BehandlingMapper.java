@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
@@ -133,15 +132,14 @@ public class BehandlingMapper {
         }
     }
 
-    public static KonsekvensForYtelseKode finnKonsekvensForYtelseKode(Behandlingsresultat behandlingsresultat) {
-        String konsekvens = kodeFra(behandlingsresultat.getKonsekvenserForYtelsen());
+    public static KonsekvensForYtelseKode finnKonsekvensForYtelseKode(String konsekvens) {
         if (konsekvensForYtelseKodeMap.containsKey(konsekvens)) {
             return konsekvensForYtelseKodeMap.get(konsekvens);
         }
         return KonsekvensForYtelseKode.INGEN_ENDRING;
     }
 
-    private static String kodeFra(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {
+    public static String kodeFra(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {
         if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING)) { // viktigst å få med endring i beregning
             return konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_UTTAK) ?
                     ENDRING_BEREGNING_OG_UTTAK : KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode();

@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
+import no.nav.foreldrepenger.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
 import no.nav.foreldrepenger.melding.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
@@ -199,6 +200,16 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 .findFirst().flatMap(link -> hentDtoFraLink(link, FagsakDto.class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente fagsak for behandling: " + hentBehandlingId(resourceLinker));
+                });
+    }
+
+    @Override
+    public YtelseFordelingDto hentYtelseFordeling(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker.stream()
+                .filter(dto -> "ytelsefordeling".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, YtelseFordelingDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente ytelsefordeling for behandling: " + hentBehandlingId(resourceLinker));
                 });
     }
 

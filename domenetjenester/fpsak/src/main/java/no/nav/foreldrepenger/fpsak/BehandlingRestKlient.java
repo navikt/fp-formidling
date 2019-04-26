@@ -4,7 +4,6 @@ import java.util.List;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
@@ -18,34 +17,35 @@ import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
+import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 
 public interface BehandlingRestKlient {
 
     BehandlingDto hentBehandling(BehandlingIdDto behandlingIdDto);
 
-    PersonopplysningDto hentPersonopplysninger(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    PersonopplysningDto hentPersonopplysninger(List<BehandlingResourceLink> resourceLinkDtos);
 
-    VergeDto hentVerge(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    VergeDto hentVerge(List<BehandlingResourceLink> resourceLinkDtos);
 
-    FamiliehendelseDto hentFamiliehendelse(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    FamiliehendelseDto hentFamiliehendelse(List<BehandlingResourceLink> resourceLinkDtos);
 
-    SoknadDto hentSoknad(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    SoknadDto hentSoknad(List<BehandlingResourceLink> resourceLinkDtos);
 
-    BeregningsresultatEngangsstønadDto hentBeregningsresultatEngangsstønad(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    BeregningsresultatEngangsstønadDto hentBeregningsresultatEngangsstønad(List<BehandlingResourceLink> resourceLinkDtos);
 
-    BeregningsresultatMedUttaksplanDto hentBeregningsresultatForeldrepenger(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    BeregningsresultatMedUttaksplanDto hentBeregningsresultatForeldrepenger(List<BehandlingResourceLink> resourceLinkDtos);
 
-    InntektArbeidYtelseDto hentInntektArbeidYtelseDto(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    InntektArbeidYtelseDto hentInntektArbeidYtelseDto(List<BehandlingResourceLink> resourceLinkDtos);
 
-    KlagebehandlingDto hentKlagebehandling(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    KlagebehandlingDto hentKlagebehandling(List<BehandlingResourceLink> resourceLinkDtos);
 
-    InnsynsbehandlingDto hentInnsynsbehandling(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    InnsynsbehandlingDto hentInnsynsbehandling(List<BehandlingResourceLink> resourceLinkDtos);
 
-    BeregningsgrunnlagDto hentBeregningsgrunnlag(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    BeregningsgrunnlagDto hentBeregningsgrunnlag(List<BehandlingResourceLink> resourceLinkDtos);
 
-    VilkårDto hentVilkår(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    VilkårDto hentVilkår(List<BehandlingResourceLink> resourceLinkDtos);
 
-    FagsakDto hentFagsak(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    FagsakDto hentFagsak(List<BehandlingResourceLink> resourceLinkDtos);
 
-    UttakResultatPerioderDto hentUttaksresultat(List<BehandlingResourceLinkDto> resourceLinkDtos);
+    UttakResultatPerioderDto hentUttaksresultat(List<BehandlingResourceLink> resourceLinkDtos);
 }

@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.personopplysning.Personopplysning;
@@ -13,7 +12,7 @@ import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 public class Behandling {
     private Behandlingsresultat behandlingsresultat;
-    private List<BehandlingResourceLinkDto> resourceLinkDtos;
+    private List<BehandlingResourceLink> resourceLinker;
 
     //Felter brukt i brev
     private long id;
@@ -21,7 +20,7 @@ public class Behandling {
     private BehandlingType behandlingType;
     private Integer behandlingstidFristUker;
     private LocalDateTime opprettetDato;
-    private List<BehandlingÅrsak> behandlingÅrsaker = new ArrayList<>();
+    private List<BehandlingÅrsak> behandlingÅrsaker;
     private String ansvarligSaksbehandler;
     private Boolean toTrinnsBehandling;
     private String behandlendeEnhetNavn;
@@ -33,7 +32,7 @@ public class Behandling {
         id = builder.id;
         behandlendeEnhetNavn = builder.behandlendeEnhetNavn;
         behandlingsresultat = builder.behandlingsresultat;
-        resourceLinkDtos = builder.resourceLinkDtos;
+        resourceLinker = builder.resourceLinker;
         originalBehandlingId = builder.originalBehandlingId;
         behandlingType = builder.behandlingType;
         behandlingstidFristUker = builder.behandlingstidFristUker;
@@ -94,8 +93,8 @@ public class Behandling {
         return id;
     }
 
-    public List<BehandlingResourceLinkDto> getResourceLinkDtos() {
-        return resourceLinkDtos;
+    public List<BehandlingResourceLink> getResourceLinker() {
+        return resourceLinker;
     }
 
     public Long getOriginalBehandlingId() {
@@ -130,7 +129,7 @@ public class Behandling {
     public static class Builder {
         private String behandlendeEnhetNavn;
         private Behandlingsresultat behandlingsresultat;
-        private List<BehandlingResourceLinkDto> resourceLinkDtos = new ArrayList<>();
+        private List<BehandlingResourceLink> resourceLinker = new ArrayList<>();
 
         private long id;
         private Long originalBehandlingId;
@@ -154,8 +153,8 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder leggTilResourceLink(BehandlingResourceLinkDto resourceLinkDto) {
-            this.resourceLinkDtos.add(resourceLinkDto);
+        public Behandling.Builder leggTilResourceLink(BehandlingResourceLink resourceLink) {
+            this.resourceLinker.add(resourceLink);
             return this;
         }
 

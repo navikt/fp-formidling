@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
+import no.nav.foreldrepenger.melding.dtomapper.VergeDtoMapper;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.personopplysning.Personopplysning;
 import no.nav.foreldrepenger.melding.typer.AktørId;
@@ -62,9 +63,9 @@ public class DokumentFellesDataMapper {
             return dokumentData;
         }
 
-        final VergeDto vergeDto = behandlingRestKlient.hentVerge(behandling.getResourceLinkDtos());
+        final VergeDto vergeDto = behandlingRestKlient.hentVerge(behandling.getResourceLinker());
 
-        Verge verge = new Verge(vergeDto);
+        Verge verge = VergeDtoMapper.mapVergeFraDto(vergeDto);
         AktørId vergesAktørId = tpsTjeneste.hentAktørForFnr(PersonIdent.fra(verge.getFnr())).orElseThrow(IllegalStateException::new);
         if (verge.brevTilBegge()) {
             opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);

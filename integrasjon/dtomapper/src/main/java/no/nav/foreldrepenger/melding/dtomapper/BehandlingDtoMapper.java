@@ -1,19 +1,23 @@
-package no.nav.foreldrepenger.melding.datamapper.dto;
+package no.nav.foreldrepenger.melding.dtomapper;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingRelLinkPayloadDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingRelLinkPayload;
+import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
@@ -27,6 +31,7 @@ public class BehandlingDtoMapper {
     private BehandlingRestKlient behandlingRestKlient;
     private FagsakDtoMapper fagsakDtoMapper;
     private BehandlingsresultatDtoMapper behandlingsresultatDtoMapper;
+    private PersonopplysningDtoMapper personopplysningDtoMapper;
 
     public BehandlingDtoMapper() {
         //CDI
@@ -36,11 +41,13 @@ public class BehandlingDtoMapper {
     public BehandlingDtoMapper(KodeverkRepository kodeverkRepository,
                                BehandlingRestKlient behandlingRestKlient,
                                FagsakDtoMapper fagsakDtoMapper,
-                               BehandlingsresultatDtoMapper behandlingsresultatDtoMapper) {
+                               BehandlingsresultatDtoMapper behandlingsresultatDtoMapper,
+                               PersonopplysningDtoMapper personopplysningDtoMapper) {
         this.kodeverkRepository = kodeverkRepository;
         this.behandlingRestKlient = behandlingRestKlient;
         this.fagsakDtoMapper = fagsakDtoMapper;
         this.behandlingsresultatDtoMapper = behandlingsresultatDtoMapper;
+        this.personopplysningDtoMapper = personopplysningDtoMapper;
     }
 
     private static Long finnSaksnummer(BehandlingDto dto) {
@@ -53,9 +60,20 @@ public class BehandlingDtoMapper {
                 .findFirst().orElse(null);
     }
 
+    private static BehandlingResourceLink mapResourceLinkFraDto(BehandlingResourceLinkDto dto) {
+        return BehandlingResourceLink.ny()
+                .medHref(dto.getHref())
+                .medRel(dto.getRel())
+                .medRequestPayload(new BehandlingRelLinkPayload(dto.getRequestPayload().getSaksnummer(), dto.getRequestPayload().getBehandlingId()))
+                .medType(dto.getType())
+                .build();
+    }
+
     public Behandling mapBehandlingFraDto(BehandlingDto dto) {
-        Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(dto.getLinks()));
         Behandling.Builder builder = Behandling.builder();
+        Stream<BehandlingResourceLink> behandlingResourceLinkStream = dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
+        behandlingResourceLinkStream.forEach(builder::leggTilResourceLink);
+        Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(behandlingResourceLinkStream.collect(Collectors.toList())));
         builder.medId(dto.getId())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
                 .medOpprettetDato(dto.getOpprettet())
@@ -64,16 +82,31 @@ public class BehandlingDtoMapper {
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()))
-                .medPersonopplysning(new Personopplysning(dto.getPersonopplysningDto(), kodeverkRepository))
+                .medPersonopplysning(hentPersonopplysning(dto))
                 .medFagsak(fagsak);
 
-        dto.getLinks().forEach(builder::leggTilResourceLink);
 
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(behandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));
         }
 
         return builder.build();
+    }
+
+    private Personopplysning hentPersonopplysning(BehandlingDto dto) {
+        if (BehandlingType.FØRSTEGANGSSØKNAD.getKode().equals(dto.getType().kode)) {
+            return personopplysningDtoMapper.mapPersonopplysningFraDto(
+                    behandlingRestKlient.hentPersonopplysninger(mapOgSamleLenkerFraDto(dto)));
+        }
+        if (dto.getOriginalBehandlingId() == null) {
+            throw new IllegalStateException();
+        }
+        BehandlingDto originalBehandlingDto = behandlingRestKlient.hentBehandling(new BehandlingIdDto(dto.getOriginalBehandlingId()));
+        return personopplysningDtoMapper.mapPersonopplysningFraDto(behandlingRestKlient.hentPersonopplysninger(mapOgSamleLenkerFraDto(originalBehandlingDto)));
+    }
+
+    private List<BehandlingResourceLink> mapOgSamleLenkerFraDto(BehandlingDto dto) {
+        return dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto).collect(Collectors.toList());
     }
 
     private List<BehandlingÅrsak> mapBehandlingÅrsakListe(List<BehandlingÅrsakDto> behandlingÅrsakDtoer) {

@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
-import no.nav.foreldrepenger.melding.dtomapper.DtoTilDomeneobjektMapper;
+import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
@@ -43,7 +43,7 @@ public class KafkaReaderTest {
     private KodeverkRepository kodeverkRepository;
     private DokumentRepository dokumentRepository;
     private JsonHendelseHandler jsonHendelseHandler;
-    private DtoTilDomeneobjektMapper dtoTilDomeneobjektMapper;
+    private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
 
 
     private KafkaReader kafkaReader;
@@ -54,7 +54,7 @@ public class KafkaReaderTest {
         hendelseRepository = new HendelseRepositoryImpl(entityManager);
         kodeverkRepository = new KodeverkRepositoryImpl(entityManager);
         dokumentRepository = new DokumentRepositoryImpl(entityManager);
-        dtoTilDomeneobjektMapper = new DtoTilDomeneobjektMapper(kodeverkRepository, dokumentRepository);
+        dtoTilDomeneobjektMapper = new DokumentHendelseDtoMapper(kodeverkRepository, dokumentRepository);
         jsonHendelseHandler = new JsonHendelseHandler(hendelseRepository, prosessTaskRepository, dtoTilDomeneobjektMapper);
         this.kafkaReader = new KafkaReader(null, jsonHendelseHandler, hendelseRepository);
     }

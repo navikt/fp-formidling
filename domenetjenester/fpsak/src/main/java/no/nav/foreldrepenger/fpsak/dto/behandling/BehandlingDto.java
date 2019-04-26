@@ -8,7 +8,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
-import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingDto {
@@ -37,9 +36,6 @@ public class BehandlingDto {
     private String taskStatus;
     private String venteArsakKode;
     private List<BehandlingÅrsakDto> behandlingArsaker = new ArrayList<>();
-
-    //Andre aggregater
-    private PersonopplysningDto personopplysningDto;
 
     public Long getId() {
         return id;
@@ -241,14 +237,6 @@ public class BehandlingDto {
         this.erAktivPapirsoknad = erAktivPapirsoknad;
     }
 
-    public PersonopplysningDto getPersonopplysningDto() {
-        return personopplysningDto;
-    }
-
-    public void setPersonopplysningDto(PersonopplysningDto personopplysningDto) {
-        this.personopplysningDto = personopplysningDto;
-    }
-
     @Override
     public String toString() {
         return "BehandlingDto{" +
@@ -276,7 +264,6 @@ public class BehandlingDto {
                 ", taskStatus='" + taskStatus + '\'' +
                 ", venteArsakKode='" + venteArsakKode + '\'' +
                 ", behandlingArsaker=" + behandlingArsaker +
-                ", personopplysningDto=" + personopplysningDto +
                 '}';
     }
 }

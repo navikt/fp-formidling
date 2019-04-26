@@ -1,13 +1,12 @@
-package no.nav.foreldrepenger.melding.datamapper.domene;
+package no.nav.foreldrepenger.melding.dtomapper;
 
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.OrganisasjonsNummerValidator;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.melding.virksomhet.Virksomhet;
 
-public class ArbeidsgiverMapper {
-
-    public static Arbeidsgiver finnArbeidsgiver(String arbeidsgiverNavn, String arbeidsgiverIdentifikator) {
+class ArbeidsgiverMapper {
+    static Arbeidsgiver finnArbeidsgiver(String arbeidsgiverNavn, String arbeidsgiverIdentifikator) {
         Virksomhet virksomhet = null;
         AktørId aktørId = null;
         if (OrganisasjonsNummerValidator.erGyldig(arbeidsgiverIdentifikator)) {
@@ -17,5 +16,4 @@ public class ArbeidsgiverMapper {
         }
         return new Arbeidsgiver(arbeidsgiverNavn, virksomhet, aktørId);
     }
-
 }

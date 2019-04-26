@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
-import static no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse.typeFødsel;
-import static no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse.typeTermin;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +23,7 @@ import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.AvslagConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.BehandlingstypeType;
@@ -101,19 +100,19 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
 
 
     private boolean fra(FamilieHendelse familiehendelse) {
-        String familieHendelseType = familiehendelse.getFamilieHendelseType();
-        return typeFødsel.equals(familieHendelseType) || typeTermin.equals(familieHendelseType);
+        FamilieHendelseType familieHendelseType = familiehendelse.getFamilieHendelseType();
+        return FamilieHendelseType.FØDSEL.equals(familieHendelseType) || FamilieHendelseType.TERMIN.equals(familieHendelseType);
     }
 
-    private VilkaartypeType fra(String internVilkårType) {
-        if (vilkaartypeMap.containsKey(internVilkårType)) {
-            return vilkaartypeMap.get(internVilkårType);
-        } else if ("FP_VK_6".equals(internVilkårType)) {
+    private VilkaartypeType fra(VilkårType internVilkårType) {
+        if (vilkaartypeMap.containsKey(internVilkårType.getKode())) {
+            return vilkaartypeMap.get(internVilkårType.getKode());
+        } else if ("FP_VK_6".equals(internVilkårType.getKode())) {
             return VilkaartypeType.FP_VK_6;
-        } else if ("FP_VK_7".equals(internVilkårType)) {
+        } else if ("FP_VK_7".equals(internVilkårType.getKode())) {
             return VilkaartypeType.FP_VK_7;
         }
-        throw DokumentMapperFeil.FACTORY.behandlingHarUkjentVilkårType(internVilkårType).toException();
+        throw DokumentMapperFeil.FACTORY.behandlingHarUkjentVilkårType(internVilkårType.getKode()).toException();
     }
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {

@@ -120,7 +120,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setBehandlingsResultat(BehandlingMapper.tilBehandlingsResultatKode(behandling.getBehandlingsresultat().getBehandlingResultatType()));
         fagType.setKonsekvensForYtelse(BehandlingMapper.finnKonsekvensForYtelseKode(behandling.getBehandlingsresultat()));
         avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
-        fagType.setDekningsgrad(BigInteger.valueOf(Integer.parseInt(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)))); //TODO Mangler fagsakrelasjon
+        fagType.setDekningsgrad(BigInteger.valueOf(Integer.parseInt(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)))); //TODO YtelseFordelingDto.gjeldendeDekningsgrad
 
         mapFelterRelatertTilBehandling(behandling, fagType);
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, originaltBeregningsgrunnlag, fagType);

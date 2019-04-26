@@ -19,6 +19,8 @@ import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.aktør.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
@@ -27,6 +29,7 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeVerktøy;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -49,6 +52,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -87,6 +91,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         }
         FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
+        YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
         FagType fagType = mapFagType(dokumentHendelse,
                 behandling,
                 beregningsresultatFP,
@@ -96,7 +101,8 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                 Collections.emptyList(),
                 søknad,
                 dokumentFelles,
-                uttakResultatPerioder);
+                uttakResultatPerioder,
+                ytelseFordeling);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnvilgetForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, InnvilgetForeldrepengerConstants.XSD_LOCATION);
     }
@@ -110,7 +116,8 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                List<DokumentTypeData> dokumentTypeDataListe,
                                Søknad søknad,
                                DokumentFelles dokumentFelles,
-                               UttakResultatPerioder uttakResultatPerioder) {
+                               UttakResultatPerioder uttakResultatPerioder,
+                               YtelseFordeling ytelseFordeling) {
         final FagType fagType = objectFactory.createFagType();
 
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
@@ -118,9 +125,10 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
         fagType.setBehandlingsResultat(BehandlingMapper.tilBehandlingsResultatKode(behandling.getBehandlingsresultat().getBehandlingResultatType()));
-        fagType.setKonsekvensForYtelse(BehandlingMapper.finnKonsekvensForYtelseKode(behandling.getBehandlingsresultat()));
+        String konsekvensForYtelsen = BehandlingMapper.kodeFra(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
+        fagType.setKonsekvensForYtelse(BehandlingMapper.finnKonsekvensForYtelseKode(konsekvensForYtelsen));
         avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
-        fagType.setDekningsgrad(BigInteger.valueOf(Integer.parseInt(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)))); //TODO YtelseFordelingDto.gjeldendeDekningsgrad
+        fagType.setDekningsgrad(BigInteger.valueOf(ytelseFordeling.getDekningsgrad().getVerdi()));
 
         mapFelterRelatertTilBehandling(behandling, fagType);
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, originaltBeregningsgrunnlag, fagType);
@@ -128,13 +136,19 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         mapFelterRelatertTilStønadskontoer(fagType);
         mapFelterRelatertTilFamiliehendelse(familieHendelse, fagType);
         mapFelterRelatertTilSøknad(søknad, fagType);
-        mapLovhjemmel(dokumentTypeDataListe, fagType);
+        mapLovhjemmel(dokumentTypeDataListe, fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling);
         return fagType;
     }
 
-    private void mapLovhjemmel(List<DokumentTypeData> dokumentTypeDataListe, FagType fagType) {
+    private void mapLovhjemmel(List<DokumentTypeData> dokumentTypeDataListe,
+                               FagType fagType,
+                               Beregningsgrunnlag beregningsgrunnlag, String konsekvensForYtelsen,
+                               Behandling behandling) {
         LovhjemmelType lovhjemmelType = objectFactory.createLovhjemmelType();
-        lovhjemmelType.setBeregning(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)); /* TODO Må legges til i beregningsgrunnlagDTO*/
+        boolean revurdering = BehandlingType.REVURDERING.equals(behandling.getBehandlingType());
+        boolean innvilget = BehandlingResultatType.INNVILGET.equals(behandling.getBehandlingsresultat().getBehandlingResultatType());
+        boolean innvilgetRevurdering = revurdering && innvilget;
+        lovhjemmelType.setBeregning(FellesMapper.formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForYtelsen, innvilgetRevurdering));
         lovhjemmelType.setVurdering(finnVerdiAv("PLACEHOLDER", dokumentTypeDataListe)); /* TODO Må Mappes */
         fagType.setLovhjemmel(lovhjemmelType);
     }

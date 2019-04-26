@@ -17,6 +17,7 @@ public class BeregningsgrunnlagDto {
     private Double halvG;
     private FaktaOmBeregningDto faktaOmBeregning;
     private List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG;
+    private KodeDto hjemmel;
 
     public BeregningsgrunnlagDto() {
         // trengs for deserialisering av JSON
@@ -56,6 +57,10 @@ public class BeregningsgrunnlagDto {
 
     public FaktaOmBeregningDto getFaktaOmBeregning() {
         return faktaOmBeregning;
+    }
+
+    public KodeDto getHjemmel() {
+        return hjemmel;
     }
 
     public void setSkjaeringstidspunktBeregning(LocalDate skjaeringstidspunktBeregning) {
@@ -100,5 +105,9 @@ public class BeregningsgrunnlagDto {
 
     public void setAndelerMedGraderingUtenBG(List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG) {
         this.andelerMedGraderingUtenBG = andelerMedGraderingUtenBG;
+    }
+
+    public void setHjemmel(KodeDto hjemmel) {
+        this.hjemmel = hjemmel;
     }
 }

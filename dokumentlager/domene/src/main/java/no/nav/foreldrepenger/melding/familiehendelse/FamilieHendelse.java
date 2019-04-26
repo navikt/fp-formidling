@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public class FamilieHendelse {
-    public static final String typeFødsel = "FODSL";
-    public static final String typeTermin = "TERM";
 
     private FamilieHendelseType familieHendelseType; //Kodeliste.FamilieHendelseType
     private BigInteger antallBarn;

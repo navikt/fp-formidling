@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,14 +42,16 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 @ApplicationScoped
 @Named(DokumentMalType.AVSLAGSVEDTAK_DOK)
 public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
-    private static final Map<RelasjonsRolleType, RelasjonskodeType> relasjonskodeTypeMap = new HashMap<>();
-    private static final Map<String, VilkaartypeType> vilkaartypeMap = new HashMap<>();
+    private static final Map<RelasjonsRolleType, RelasjonskodeType> relasjonskodeTypeMap;
+    private static final Map<String, VilkaartypeType> vilkaartypeMap;
 
     static {
+        relasjonskodeTypeMap = new HashMap<>();
         relasjonskodeTypeMap.put(RelasjonsRolleType.MORA, RelasjonskodeType.MOR);
         relasjonskodeTypeMap.put(RelasjonsRolleType.FARA, RelasjonskodeType.FAR);
         relasjonskodeTypeMap.put(RelasjonsRolleType.MEDMOR, RelasjonskodeType.MEDMOR);
 
+        vilkaartypeMap = new HashMap<>();
         vilkaartypeMap.put(VilkårType.FP_VK_1, VilkaartypeType.FP_VK_1);
         vilkaartypeMap.put(VilkårType.FP_VK_2, VilkaartypeType.FP_VK_2);
         vilkaartypeMap.put(VilkårType.FP_VK_3, VilkaartypeType.FP_VK_3);
@@ -79,29 +82,25 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         Vilkår vilkår = domeneobjektProvider.hentVilkår(behandling);
-        BehandlingstypeType value = BehandlingMapper.utledBehandlingsTypeAvslagES(behandling);
-        FagType fagType = mapFagType(behandling, dokumentHendelse, familiehendelse, vilkår, value);
+        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling);
+        FagType fagType = mapFagType(behandling, behandlingstype, dokumentHendelse, familiehendelse, vilkår);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(AvslagConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(Behandling behandling, DokumentHendelse dokumentHendelse, FamilieHendelse familiehendelse, Vilkår vilkår, BehandlingstypeType value) {
+    private FagType mapFagType(Behandling behandling,
+                               String behandlingstype,
+                               DokumentHendelse dokumentHendelse, FamilieHendelse familiehendelse, Vilkår vilkår) {
         FagType fagType = new FagType();
-        fagType.setBehandlingsType(value);
+        fagType.setBehandlingsType(REVURDERING.equals(behandlingstype) ? BehandlingstypeType.REVURDERING : BehandlingstypeType.SØKNAD);
         fagType.setRelasjonsKode(relasjonskodeTypeMap.get(behandling.getFagsak().getRelasjonsRolleType()));
-        fagType.setGjelderFoedsel(fra(familiehendelse));
+        fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn().intValue());
         fagType.setAvslagsAarsak(behandling.getBehandlingsresultat().getAvslagsårsak().getKode());
         avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
         fagType.setKlageFristUker(brevParametere.getKlagefristUker());
         fagType.setVilkaarType(fra(vilkår.getVilkårType()));
         return fagType;
-    }
-
-
-    private boolean fra(FamilieHendelse familiehendelse) {
-        FamilieHendelseType familieHendelseType = familiehendelse.getFamilieHendelseType();
-        return FamilieHendelseType.FØDSEL.equals(familieHendelseType) || FamilieHendelseType.TERMIN.equals(familieHendelseType);
     }
 
     private VilkaartypeType fra(VilkårType internVilkårType) {

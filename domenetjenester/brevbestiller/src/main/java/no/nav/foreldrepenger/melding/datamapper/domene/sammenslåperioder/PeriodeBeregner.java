@@ -24,7 +24,9 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriod
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
 import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.DokumentTypeMedPerioderDto;
-import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.PeriodeDto;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.Stønadskonto;
@@ -223,45 +225,45 @@ public class PeriodeBeregner {
         return false;
     }
 
-    public static String forMyeUtbetalt(List<PeriodeDto> periodeListe, LocalDate vedtaksdato) {
+    public static UtbetaltKode forMyeUtbetalt(PeriodeListeType periodeListe, LocalDate vedtaksdato) {
         LocalDate innvilgetUtsettelseFOM = null;
 
         boolean generell = false;
         boolean ferie = false;
         boolean jobb = false;
 
-        for (PeriodeDto periode : periodeListe) {
-            if (periode.isGraderingFinnes() || manglendeEllerForSenSøknadOmGraderingÅrsaker.contains(periode.getÅrsak())) {
+        for (PeriodeType periode : periodeListe.getPeriode()) {
+            if (PeriodeVerktøy.periodeHarGradering(periode) || manglendeEllerForSenSøknadOmGraderingÅrsaker.contains(periode.getÅrsak())) {
                 generell = true;
                 break;
             }
             if (innvilgetUtsettelsePgaFerieÅrsaker.contains(periode.getÅrsak())) {
                 ferie = true;
-                innvilgetUtsettelseFOM = tidligsteAv(innvilgetUtsettelseFOM, LocalDate.parse(periode.getPeriodeFom()));
+                innvilgetUtsettelseFOM = tidligsteAv(innvilgetUtsettelseFOM, PeriodeVerktøy.xmlGregorianTilLocalDate(periode.getPeriodeFom()));
             }
             if (innvilgetUtsettelsePgaArbeidÅrsaker.contains(periode.getÅrsak())) {
                 jobb = true;
-                innvilgetUtsettelseFOM = tidligsteAv(innvilgetUtsettelseFOM, LocalDate.parse(periode.getPeriodeFom()));
+                innvilgetUtsettelseFOM = tidligsteAv(innvilgetUtsettelseFOM, PeriodeVerktøy.xmlGregorianTilLocalDate(periode.getPeriodeFom()));
             }
         }
         return forMyeUtbetaltKode(generell, ferie, jobb, innvilgetUtsettelseFOM, vedtaksdato);
     }
 
-    private static String forMyeUtbetaltKode(boolean generell, boolean ferie, boolean jobb,
-                                             LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
+    private static UtbetaltKode forMyeUtbetaltKode(boolean generell, boolean ferie, boolean jobb,
+                                                   LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
         if (generell) {
-            return "GENERELL";
+            return UtbetaltKode.GENERELL;
         }
         if ((ferie || jobb) && erInnvilgetUtsettelseInneværendeMånedEllerTidligere(innvilgetUtsettelseFOM, vedtaksdato)) {
-            return ferie && jobb ? "GENERELL"
-                    : ferie ? "FERIE"
-                    : "JOBB";
+            return ferie && jobb ? UtbetaltKode.GENERELL
+                    : ferie ? UtbetaltKode.FERIE
+                    : UtbetaltKode.JOBB;
         }
-        return "INGEN";
+        return UtbetaltKode.INGEN;
     }
 
     private static boolean erInnvilgetUtsettelseInneværendeMånedEllerTidligere(LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
-        LocalDate iDag = vedtaksdato != null ? vedtaksdato : FPDateUtil.iDag();
+        LocalDate iDag = vedtaksdato != null ? vedtaksdato : FPDateUtil.iDag(); // TODO avklaring Hva er vitsen med å sjekke denne datoen?
         return innvilgetUtsettelseFOM.isBefore(iDag.plusMonths(1).withDayOfMonth(1));
     }
 

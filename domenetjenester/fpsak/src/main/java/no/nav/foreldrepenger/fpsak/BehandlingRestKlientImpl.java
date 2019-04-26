@@ -61,8 +61,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
             behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
             if (behandling.isPresent()) {
                 final BehandlingDto behandlingDto = behandling.get();
-                final Optional<PersonopplysningDto> personopplysningDto = hentPersonopplysninger(behandlingDto.getLinks());
-                personopplysningDto.ifPresent(behandlingDto::setPersonopplysningDto);
+                behandlingDto.setPersonopplysningDto(hentPersonopplysninger(behandlingDto.getLinks()));
             }
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);
@@ -72,12 +71,14 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
         });
     }
 
-    //TODO ramesh/aleksander - er det egentlig greit at denne er optional?
     @Override
-    public Optional<PersonopplysningDto> hentPersonopplysninger(List<BehandlingResourceLinkDto> resourceLinkDtos) {
+    public PersonopplysningDto hentPersonopplysninger(List<BehandlingResourceLinkDto> resourceLinkDtos) {
         return resourceLinkDtos.stream()
                 .filter(dto -> "soeker-personopplysninger".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, PersonopplysningDto.class));
+                .findFirst().flatMap(link -> hentDtoFraLink(link, PersonopplysningDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente Personopplysning for behandling: " + hentBehandlingId(resourceLinkDtos));
+                });
     }
 
     @Override

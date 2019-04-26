@@ -101,12 +101,20 @@ public class Behandling {
         return originalBehandlingId;
     }
 
+    public boolean erFørstegangssøknad() {
+        return BehandlingType.FØRSTEGANGSSØKNAD.equals(getBehandlingType());
+    }
+
     public boolean erRevurdering() {
         return BehandlingType.REVURDERING.equals(getBehandlingType());
     }
 
     public Fagsak getFagsak() {
         return fagsak;
+    }
+
+    public boolean gjelderForeldrepenger() {
+        return getFagsak().getYtelseType().gjelderForeldrepenger();
     }
 
     @Deprecated

@@ -1,6 +1,9 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.ENDRINGSSØKNAD;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.FØRSTEGANGSSØKNAD;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
 
 import java.util.HashMap;
 import java.util.List;
@@ -86,6 +89,15 @@ public class BehandlingMapper {
             return BehandlingsTypeType.MEDHOLD;
         }
         return BehandlingType.REVURDERING.equals(behandling.getBehandlingType()) ? BehandlingsTypeType.REVURDERING : BehandlingsTypeType.FOERSTEGANGSBEHANDLING;
+    }
+
+    public static String utledBehandlingsTypeForAvslagVedtak(Behandling behandling) {
+        if (behandling.erRevurdering()) {
+            return REVURDERING;
+        } else if (behandling.erFørstegangssøknad() && behandling.gjelderForeldrepenger()) {
+            return FØRSTEGANGSSØKNAD;
+        }
+        return SØKNAD;
     }
 
     public static BehandlingstypeType utledBehandlingsTypeAvslagES(Behandling behandling) {

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.datamapper.dto;
+package no.nav.foreldrepenger.melding.dtomapper;
 
 import java.util.ArrayList;
 import java.util.List;

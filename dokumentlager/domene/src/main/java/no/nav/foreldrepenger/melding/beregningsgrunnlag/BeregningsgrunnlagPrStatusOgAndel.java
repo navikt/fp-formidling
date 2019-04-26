@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.RelatertYtelseType;
+import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
@@ -25,7 +26,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     private BigDecimal pgi3;
     private Boolean nyIArbeidslivet;
     private RelatertYtelseType ytelse;
-    private String arbeidsforholdType;
+    private OpptjeningAktivitetType arbeidsforholdType;
     private DatoIntervall beregningsperiode;
     private BGAndelArbeidsforhold bgAndelArbeidsforhold;
 
@@ -109,8 +110,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         return ytelse;
     }
 
-    //OpptjeningAktivitetType
-    public String getArbeidsforholdType() {
+    public OpptjeningAktivitetType getArbeidsforholdType() {
         return arbeidsforholdType;
     }
 
@@ -170,7 +170,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         private BigDecimal pgi3;
         private Boolean nyIArbeidslivet;
         private RelatertYtelseType ytelse;
-        private String arbeidsforholdType;
+        private OpptjeningAktivitetType arbeidsforholdType;
         private DatoIntervall beregningsperiode;
         private BGAndelArbeidsforhold bgAndelArbeidsforhold;
 
@@ -247,7 +247,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
             return this;
         }
 
-        public Builder medArbeidsforholdType(String arbeidsforholdType) {
+        public Builder medArbeidsforholdType(OpptjeningAktivitetType arbeidsforholdType) {
             this.arbeidsforholdType = arbeidsforholdType;
             return this;
         }

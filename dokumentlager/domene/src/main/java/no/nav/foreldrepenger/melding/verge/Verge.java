@@ -1,17 +1,15 @@
 package no.nav.foreldrepenger.melding.verge;
 
-import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
-
 public class Verge {
 
     private boolean brevTilSøker;
     private boolean brevTilVerge;
     private String fnr;
 
-    public Verge(VergeDto dto) {
-        brevTilSøker = dto.getSokerErKontaktPerson();
-        brevTilVerge = dto.getVergeErKontaktPerson();
-        fnr = dto.getFnr();
+    public Verge(boolean brevTilSøker, boolean brevTilVerge, String fnr) {
+        this.brevTilSøker = brevTilSøker;
+        this.brevTilVerge = brevTilVerge;
+        this.fnr = fnr;
     }
 
     public String getFnr() {

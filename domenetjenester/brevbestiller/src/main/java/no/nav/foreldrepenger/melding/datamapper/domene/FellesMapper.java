@@ -9,7 +9,6 @@ import no.nav.vedtak.util.StringUtils;
 
 public class FellesMapper {
 
-    //TODO kopier over tester..
     public static String formaterLovhjemlerForBeregning(String lovhjemmelBeregning, String konsekvensForYtelse, boolean innvilgetRevurdering) {
         if (lovhjemmelBeregning == null) {
             return "";

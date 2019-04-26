@@ -61,10 +61,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
             URIBuilder behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + HENT_BEHANLDING_ENDPOINT);
             behandlingUriBuilder.setParameter("behandlingId", String.valueOf(behandlingIdDto.getBehandlingId()));
             behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
-            if (behandling.isPresent()) {
-                final BehandlingDto behandlingDto = behandling.get();
-                //TODO bruk TPS behandlingDto.setPersonopplysningDto(hentPersonopplysninger(behandlingDto.getLinks()));
-            }
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);
         }

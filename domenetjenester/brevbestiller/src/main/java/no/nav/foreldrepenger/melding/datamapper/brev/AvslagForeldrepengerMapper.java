@@ -27,12 +27,14 @@ import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.AvslagsårsakMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.AarsakListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.AvslagForeldrepengerConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.BrevdataType;
@@ -113,10 +115,13 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setBarnErFødt(familiehendelse.isBarnErFødt());
         fagType.setHalvG(beregningsgrunnlag.getGrunnbeløp().getVerdi().divide(BigDecimal.valueOf(2)).longValue());
         UttakMapper.finnSisteDagIFelleseriodeHvisFinnes(uttakResultatPerioder).ifPresent(fagType::setSisteDagIFellesPeriode);
-        // TODO ..
-        //fagType.setAntallAarsaker(BeregningsresultatMapper.tellAntallAvslag(periodeListe));
-        //fagType.setAarsakListe();
+        AarsakListeType aarsakListe = AvslagsårsakMapper.mapAarsakListeFra(behandling.getBehandlingsresultat(),
+                beregningsresultatFP.getBeregningsresultatPerioder(),
+                uttakResultatPerioder);
+        fagType.setAntallAarsaker(BigInteger.valueOf(aarsakListe.getAvslagsAarsak().size()));
+        fagType.setAarsakListe(aarsakListe);
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
+        // TODO ..
         //fagType.setLovhjemmelForAvslag();
         avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
         return fagType;

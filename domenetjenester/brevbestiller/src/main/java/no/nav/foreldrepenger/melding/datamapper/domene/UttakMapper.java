@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -23,7 +24,12 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType;
 
+@ApplicationScoped
 public class UttakMapper {
+
+    public UttakMapper() {
+        //CDI
+    }
 
     public static final IkkeOppfyltÅrsak FAR_HAR_IKKE_OMSORG = new IkkeOppfyltÅrsak("4012");
     public static final IkkeOppfyltÅrsak MOR_HAR_IKKE_OMSORG = new IkkeOppfyltÅrsak("4003");

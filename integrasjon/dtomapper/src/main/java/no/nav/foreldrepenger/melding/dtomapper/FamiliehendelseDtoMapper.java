@@ -9,6 +9,7 @@ import javax.enterprise.context.ApplicationScoped;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataAdopsjonDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataFodselDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataOmsorgDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
@@ -46,16 +47,17 @@ public class FamiliehendelseDtoMapper {
         return sum;
     }
 
-    public FamilieHendelse mapFamiliehendelsefraDto(FamiliehendelseDto dto) {
-        BigInteger antallBarnFraDto = utledAntallBarnFraDto(dto);
-        Optional<LocalDate> termindatoFraDto = finnTermindato(dto);
+    public FamilieHendelse mapFamiliehendelsefraDto(FamilieHendelseGrunnlagDto grunnlagDto) {
+        FamiliehendelseDto gjeldendeHendelseDto = grunnlagDto.getGjeldende();
+        BigInteger antallBarnFraDto = utledAntallBarnFraDto(gjeldendeHendelseDto);
+        Optional<LocalDate> termindatoFraDto = finnTermindato(gjeldendeHendelseDto);
         boolean barnErFødtFraDto = false;
         boolean gjelderFødsel = false;
-        if (dto instanceof AvklartDataFodselDto) {
-            barnErFødtFraDto = !((AvklartDataFodselDto) dto).getAvklartBarn().isEmpty();
+        if (gjeldendeHendelseDto instanceof AvklartDataFodselDto) {
+            barnErFødtFraDto = !((AvklartDataFodselDto) gjeldendeHendelseDto).getAvklartBarn().isEmpty();
             gjelderFødsel = true;
         }
-        FamilieHendelseType familiehendelseType = mapFamiliehendelseType(dto);
+        FamilieHendelseType familiehendelseType = mapFamiliehendelseType(gjeldendeHendelseDto);
         return new FamilieHendelse(antallBarnFraDto, termindatoFraDto, barnErFødtFraDto, gjelderFødsel, familiehendelseType);
     }
 

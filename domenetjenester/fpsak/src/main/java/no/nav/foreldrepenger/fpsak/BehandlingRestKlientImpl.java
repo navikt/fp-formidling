@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagDto;
@@ -98,10 +98,10 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    public FamiliehendelseDto hentFamiliehendelse(List<BehandlingResourceLink> resourceLinker) {
+    public FamilieHendelseGrunnlagDto hentFamiliehendelse(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "familiehendelse-v2".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, FamiliehendelseDto.class))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, FamilieHendelseGrunnlagDto.class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente Familiehendelse for behandling: " + hentBehandlingId(resourceLinker));
                 });

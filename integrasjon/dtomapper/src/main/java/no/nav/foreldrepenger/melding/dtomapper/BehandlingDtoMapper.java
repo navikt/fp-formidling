@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.dtomapper;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -74,9 +75,9 @@ public class BehandlingDtoMapper {
 
     public Behandling mapBehandlingFraDto(BehandlingDto dto) {
         Behandling.Builder builder = Behandling.builder();
-        Stream<BehandlingResourceLink> behandlingResourceLinkStream = dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
-        behandlingResourceLinkStream.forEach(builder::leggTilResourceLink);
-        Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(behandlingResourceLinkStream.collect(Collectors.toList())));
+        Supplier<Stream<BehandlingResourceLink>> behandlingResourceLinkStreamSupplier = () -> dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
+        behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
+        Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(behandlingResourceLinkStreamSupplier.get().collect(Collectors.toList())));
         builder.medId(dto.getId())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
                 .medOpprettetDato(dto.getOpprettet())

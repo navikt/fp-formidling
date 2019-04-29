@@ -69,6 +69,12 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
         });
     }
 
+    public Optional<BehandlingDto> hentOriginalBehandling(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker.stream()
+                .filter(dto -> "original-behandling".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, BehandlingDto.class));
+    }
+
     @Override
     public PersonopplysningDto hentPersonopplysninger(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()

@@ -77,16 +77,18 @@ public class BehandlingDtoMapper {
         Behandling.Builder builder = Behandling.builder();
         Supplier<Stream<BehandlingResourceLink>> behandlingResourceLinkStreamSupplier = () -> dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
-        Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(behandlingResourceLinkStreamSupplier.get().collect(Collectors.toList())));
+        List<BehandlingResourceLink> linkListe = behandlingResourceLinkStreamSupplier.get().collect(Collectors.toList());
+        Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(linkListe));
+        Long originalBehandlingId = behandlingRestKlient.hentOriginalBehandling(linkListe).map(BehandlingDto::getId).orElse(null);
         builder.medId(dto.getId())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
                 .medOpprettetDato(dto.getOpprettet())
-                .medOriginalBehandling(dto.getOriginalBehandlingId())
+                .medOriginalBehandling(originalBehandlingId)
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()))
-                .medPersonopplysning(hentPersonopplysning(dto))
+                .medPersonopplysning(hentPersonopplysning(linkListe, originalBehandlingId))
                 .medFagsak(fagsak);
 
 
@@ -97,16 +99,13 @@ public class BehandlingDtoMapper {
         return builder.build();
     }
 
-    private Personopplysning hentPersonopplysning(BehandlingDto dto) {
-        if (BehandlingType.FØRSTEGANGSSØKNAD.getKode().equals(dto.getType().kode)) {
-            return personopplysningDtoMapper.mapPersonopplysningFraDto(
-                    behandlingRestKlient.hentPersonopplysninger(mapOgSamleLenkerFraDto(dto)));
+    private Personopplysning hentPersonopplysning(List<BehandlingResourceLink> linkListe, Long originalBehandlingId) {
+        if (originalBehandlingId != null) {
+            BehandlingDto originalBehandlingDto = behandlingRestKlient.hentBehandling(new BehandlingIdDto(originalBehandlingId));
+            return personopplysningDtoMapper.mapPersonopplysningFraDto(behandlingRestKlient.hentPersonopplysninger(mapOgSamleLenkerFraDto(originalBehandlingDto)));
         }
-        if (dto.getOriginalBehandlingId() == null) {
-            throw new IllegalStateException();
-        }
-        BehandlingDto originalBehandlingDto = behandlingRestKlient.hentBehandling(new BehandlingIdDto(dto.getOriginalBehandlingId()));
-        return personopplysningDtoMapper.mapPersonopplysningFraDto(behandlingRestKlient.hentPersonopplysninger(mapOgSamleLenkerFraDto(originalBehandlingDto)));
+        return personopplysningDtoMapper.mapPersonopplysningFraDto(
+                behandlingRestKlient.hentPersonopplysninger(linkListe));
     }
 
     private List<BehandlingResourceLink> mapOgSamleLenkerFraDto(BehandlingDto dto) {

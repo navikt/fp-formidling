@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.melding.fagsak;
 
 import no.nav.foreldrepenger.melding.aktør.NavBruker;
-import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
@@ -10,7 +9,6 @@ public class Fagsak {
     private RelasjonsRolleType brukerRolle; //Kode
     private FagsakYtelseType ytelseType; //Kode
     private Saksnummer saksnummer;
-    private Personinfo personinfo;
 
     private NavBruker navBruker;
 
@@ -46,9 +44,6 @@ public class Fagsak {
         return brukerRolle;
     }
 
-    public Personinfo getPersoninfo() {
-        return personinfo;
-    }
 
     public static final class Builder {
         private Long id;
@@ -56,7 +51,6 @@ public class Fagsak {
         private FagsakYtelseType ytelseType;
         private Saksnummer saksnummer;
         private NavBruker navBruker;
-        private Personinfo personinfo;
 
         private Builder() {
         }
@@ -83,11 +77,6 @@ public class Fagsak {
 
         public Builder medNavBruker(NavBruker navBruker) {
             this.navBruker = navBruker;
-            return this;
-        }
-
-        public Builder medPersonInfo(Personinfo personinfo) {
-            this.personinfo = personinfo;
             return this;
         }
 

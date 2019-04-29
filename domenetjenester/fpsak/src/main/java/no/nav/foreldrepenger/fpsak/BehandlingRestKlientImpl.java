@@ -39,6 +39,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
     private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/behandlinger";
     private static final String SAKSNUMMER = "saksnummer";
+    private static final String BEHANDLINGID = "behandlingId";
 
     private OidcRestClient oidcRestClient;
     private String endpointFpsakRestBase;
@@ -226,12 +227,17 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
         }
     }
 
-    private URI saksnummerRequest(String endpoint, BehandlingRelLinkPayload saksnummer) {
+    private URI saksnummerRequest(String endpoint, BehandlingRelLinkPayload payload) {
         try {
             URIBuilder uriBuilder = new URIBuilder(endpoint);
-            if (saksnummer != null) {
+            if (payload != null) {
                 //Hvis payloaden er null, er GET parameterne antagelivis allerede satt i urlen
-                uriBuilder.addParameter(SAKSNUMMER, String.valueOf(saksnummer.getSaksnummer()));
+                if (payload.getSaksnummer() != null) {
+                    uriBuilder.addParameter(SAKSNUMMER, String.valueOf(payload.getSaksnummer()));
+                }
+                if (payload.getBehandlingId() != null) {
+                    uriBuilder.addParameter(BEHANDLINGID, String.valueOf(payload.getBehandlingId()));
+                }
             }
             return uriBuilder
                     .build();

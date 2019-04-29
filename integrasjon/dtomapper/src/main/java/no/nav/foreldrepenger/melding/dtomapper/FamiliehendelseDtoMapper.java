@@ -62,15 +62,19 @@ public class FamiliehendelseDtoMapper {
         FamiliehendelseDto gjeldendeHendelseDto = grunnlagDto.getGjeldende();
         BigInteger antallBarnFraDto = utledAntallBarnFraDto(gjeldendeHendelseDto);
         Optional<LocalDate> termindatoFraDto = finnTermindato(gjeldendeHendelseDto);
-        Optional<LocalDate> fødselsdatoFraDto = finnFødselsdatoFraDto(dto);
+        Optional<LocalDate> fødselsdatoFraDto = finnFødselsdatoFraDto(gjeldendeHendelseDto);
         boolean barnErFødtFraDto = false;
         boolean gjelderFødsel = false;
         if (gjeldendeHendelseDto instanceof AvklartDataFodselDto) {
-            barnErFødtFraDto = !((AvklartDataFodselDto) gjeldendeHendelseDto).getAvklartBarn().isEmpty();
+            barnErFødtFraDto = erBarnFraDto((AvklartDataFodselDto) gjeldendeHendelseDto);
             gjelderFødsel = true;
         }
         FamilieHendelseType familiehendelseType = mapFamiliehendelseType(gjeldendeHendelseDto);
         return new FamilieHendelse(antallBarnFraDto, termindatoFraDto, barnErFødtFraDto, gjelderFødsel, familiehendelseType, fødselsdatoFraDto);
+    }
+
+    private boolean erBarnFraDto(AvklartDataFodselDto gjeldendeHendelseDto) {
+        return gjeldendeHendelseDto.getAvklartBarn() != null && !gjeldendeHendelseDto.getAvklartBarn().isEmpty();
     }
 
 

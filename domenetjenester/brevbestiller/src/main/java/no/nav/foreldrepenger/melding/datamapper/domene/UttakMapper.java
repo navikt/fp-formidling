@@ -61,14 +61,20 @@ public class UttakMapper {
         return PeriodeBeregner.forMyeUtbetalt(periodeListe, null);
     }
 
+    /*TODO*/
     public String mapLovhjemlerForUttak(UttakResultatPerioder uttakResultatPerioder) {
         for (UttakResultatPeriode periode : uttakResultatPerioder.getPerioder()) {
-            ÅrsakskodeMedLovreferanse årsak = utledÅrsakskode(uttakPeriode);
+            ÅrsakskodeMedLovreferanse årsak = utledÅrsakskode(periode);
             if (erUkjent(årsak)) {
-                return Optional.empty();
+                continue;
             }
         }
         return "TODO"; //TODO
+    }
+
+
+    private boolean erUkjent(ÅrsakskodeMedLovreferanse årsaksKode) {
+        return PeriodeResultatÅrsak.UKJENT.getKode().equals(årsaksKode.getKode());
     }
 
     private ÅrsakskodeMedLovreferanse utledÅrsakskode(UttakResultatPeriode uttakPeriode) {

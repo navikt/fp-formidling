@@ -19,6 +19,10 @@ public class FellesMapper {
         return lovhjemmelBeregning.replace("folketrygdloven ", "");
     }
 
+    public static String formaterLovhjemlerUttak(Set<String> hjemler) {
+        return formaterLovhjemlerUttak(hjemler, null,false);
+    }
+
     public static String formaterLovhjemlerUttak(Set<String> hjemler, String konsekvensForYtelse, boolean innvilgetRevurdering) {
         StringBuilder lovHjemmelBuilder = new StringBuilder();
         String forvaltningslovenTillegg = endringIBeregningEllerInnvilgetRevurdering(innvilgetRevurdering, konsekvensForYtelse) ?

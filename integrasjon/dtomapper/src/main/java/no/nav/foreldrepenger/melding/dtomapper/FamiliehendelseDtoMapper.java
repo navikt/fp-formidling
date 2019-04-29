@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartBarnDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataAdopsjonDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataFodselDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataOmsorgDto;
@@ -38,6 +39,14 @@ public class FamiliehendelseDtoMapper {
         return Optional.empty();
     }
 
+
+    private Optional<LocalDate> finnFødselsdatoFraDto(FamiliehendelseDto dto) {
+        if (dto instanceof AvklartDataFodselDto) {
+            return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().map(AvklartBarnDto::getFodselsdato).min(LocalDate::compareTo);
+        }
+        return Optional.empty();
+    }
+
     private static int utledAntallBarnFødsel(AvklartDataFodselDto familiehendelseDto) {
         int sum = 0;
         if (familiehendelseDto.getAntallBarnTermin() != null) {
@@ -53,6 +62,7 @@ public class FamiliehendelseDtoMapper {
         FamiliehendelseDto gjeldendeHendelseDto = grunnlagDto.getGjeldende();
         BigInteger antallBarnFraDto = utledAntallBarnFraDto(gjeldendeHendelseDto);
         Optional<LocalDate> termindatoFraDto = finnTermindato(gjeldendeHendelseDto);
+        Optional<LocalDate> fødselsdatoFraDto = finnFødselsdatoFraDto(dto);
         boolean barnErFødtFraDto = false;
         boolean gjelderFødsel = false;
         if (gjeldendeHendelseDto instanceof AvklartDataFodselDto) {
@@ -60,8 +70,9 @@ public class FamiliehendelseDtoMapper {
             gjelderFødsel = true;
         }
         FamilieHendelseType familiehendelseType = mapFamiliehendelseType(gjeldendeHendelseDto);
-        return new FamilieHendelse(antallBarnFraDto, termindatoFraDto, barnErFødtFraDto, gjelderFødsel, familiehendelseType);
+        return new FamilieHendelse(antallBarnFraDto, termindatoFraDto, barnErFødtFraDto, gjelderFødsel, familiehendelseType, fødselsdatoFraDto);
     }
+
 
     private FamilieHendelseType mapFamiliehendelseType(FamiliehendelseDto dto) {
         if (dto instanceof AvklartDataAdopsjonDto) {

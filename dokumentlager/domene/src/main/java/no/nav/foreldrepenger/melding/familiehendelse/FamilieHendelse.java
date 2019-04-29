@@ -12,15 +12,17 @@ public class FamilieHendelse {
     private String UidentifisertBarn;
     private String terminbekreftelse;
     private Optional<LocalDate> termindato;
+    private Optional<LocalDate> fødselsdato;
     private boolean barnErFødt;
     private boolean gjelderFødsel;
 
-    public FamilieHendelse(BigInteger antallBarn, Optional<LocalDate> termindato, boolean barnErFødt, boolean gjelderFødsel, FamilieHendelseType familieHendelseType) {
+    public FamilieHendelse(BigInteger antallBarn, Optional<LocalDate> termindato, boolean barnErFødt, boolean gjelderFødsel, FamilieHendelseType familieHendelseType, Optional<LocalDate> fødselsdato) {
         this.antallBarn = antallBarn;
         this.termindato = termindato;
         this.barnErFødt = barnErFødt;
         this.gjelderFødsel = gjelderFødsel;
         this.familieHendelseType = familieHendelseType;
+        this.fødselsdato = fødselsdato;
     }
 
     public boolean isGjelderFødsel() {
@@ -33,6 +35,10 @@ public class FamilieHendelse {
 
     public Optional<LocalDate> getTermindato() {
         return termindato;
+    }
+
+    public Optional<LocalDate> getFødselsdato() {
+        return fødselsdato;
     }
 
     public FamilieHendelseType getFamilieHendelseType() {

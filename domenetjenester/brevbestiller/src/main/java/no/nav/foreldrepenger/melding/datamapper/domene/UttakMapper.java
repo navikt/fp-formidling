@@ -8,12 +8,15 @@ import java.util.function.Predicate;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
+import no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak;
 import no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
@@ -56,5 +59,34 @@ public class UttakMapper {
             return UtbetaltKode.INGEN;
         }
         return PeriodeBeregner.forMyeUtbetalt(periodeListe, null);
+    }
+
+    public String mapLovhjemlerForUttak(UttakResultatPerioder uttakResultatPerioder) {
+        for (UttakResultatPeriode periode : uttakResultatPerioder.getPerioder()) {
+            ÅrsakskodeMedLovreferanse årsak = utledÅrsakskode(uttakPeriode);
+            if (erUkjent(årsak)) {
+                return Optional.empty();
+            }
+        }
+        return "TODO"; //TODO
+    }
+
+    private ÅrsakskodeMedLovreferanse utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
+        if (erGraderingAvslått(uttakPeriode) && uttakPeriode.isInnvilget()) {
+            return uttakPeriode.getGraderingAvslagÅrsak();
+        } else if (uttakPeriode.getPeriodeResultatÅrsak() != null) {
+            return uttakPeriode.getPeriodeResultatÅrsak();
+        }
+        return PeriodeResultatÅrsak.UKJENT;
+    }
+
+    private boolean erGraderingAvslått(UttakResultatPeriode uttakPeriode) {
+        return !uttakPeriode.erGraderingInnvilget()
+                && erGraderingÅrsakKjent(uttakPeriode.getGraderingAvslagÅrsak());
+    }
+
+    private boolean erGraderingÅrsakKjent(GraderingAvslagÅrsak årsak) {
+        return årsak != null
+                && !årsak.getKode().equals(GraderingAvslagÅrsak.UKJENT.getKode());
     }
 }

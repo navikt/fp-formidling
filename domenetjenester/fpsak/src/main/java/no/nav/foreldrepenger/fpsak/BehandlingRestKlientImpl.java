@@ -211,22 +211,23 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
 
     private <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
 
-        BehandlingIdDto behandlingIdDto = new BehandlingIdDto();
-        behandlingIdDto.setBehandlingId(link.getRequestPayload().getBehandlingId());
-        behandlingIdDto.setSaksnummer(link.getRequestPayload().getSaksnummer());
         if ("POST".equals(link.getType())) {
             URI uri = URI.create(endpointFpsakRestBase + link.getHref());
             return oidcRestClient.postReturnsOptional(uri, link.getRequestPayload(), clazz);
         } else {
-            URI uri = saksnummerRequest(endpointFpsakRestBase + link.getHref(), String.valueOf(link.getRequestPayload().getSaksnummer()));
+            URI uri = saksnummerRequest(endpointFpsakRestBase + link.getHref(), link.getRequestPayload());
             return oidcRestClient.getReturnsOptional(uri, clazz);
         }
     }
 
-    private URI saksnummerRequest(String endpoint, String saksnummer) {
+    private URI saksnummerRequest(String endpoint, BehandlingRelLinkPayload saksnummer) {
         try {
-            return new URIBuilder(endpoint)
-                    .addParameter(SAKSNUMMER, saksnummer)
+            URIBuilder uriBuilder = new URIBuilder(endpoint);
+            if (saksnummer != null) {
+                //Hvis payloaden er null, er GET parameterne antagelivis allerede satt i urlen
+                uriBuilder.addParameter(SAKSNUMMER, String.valueOf(saksnummer.getSaksnummer()));
+            }
+            return uriBuilder
                     .build();
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);

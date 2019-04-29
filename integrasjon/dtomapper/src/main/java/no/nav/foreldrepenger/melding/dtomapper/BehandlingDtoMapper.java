@@ -61,11 +61,14 @@ public class BehandlingDtoMapper {
     }
 
     private static BehandlingResourceLink mapResourceLinkFraDto(BehandlingResourceLinkDto dto) {
-        return BehandlingResourceLink.ny()
+        BehandlingResourceLink.Builder linkBuilder = BehandlingResourceLink.ny()
                 .medHref(dto.getHref())
                 .medRel(dto.getRel())
-                .medRequestPayload(new BehandlingRelLinkPayload(dto.getRequestPayload().getSaksnummer(), dto.getRequestPayload().getBehandlingId()))
-                .medType(dto.getType())
+                .medType(dto.getType());
+        if (dto.getRequestPayload() != null) {
+            linkBuilder.medRequestPayload(new BehandlingRelLinkPayload(dto.getRequestPayload().getSaksnummer(), dto.getRequestPayload().getBehandlingId()));
+        }
+        return linkBuilder
                 .build();
     }
 

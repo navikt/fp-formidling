@@ -17,6 +17,7 @@ public abstract class SoknadDto {
 
     private SøknadType soknadType;
     private LocalDate mottattDato;
+    private LocalDate soknadsdato;
     private String tilleggsopplysninger;
     private String begrunnelseForSenInnsending;
     private String annenPartNavn;
@@ -36,6 +37,10 @@ public abstract class SoknadDto {
 
     public LocalDate getMottattDato() {
         return mottattDato;
+    }
+
+    public LocalDate getSoknadsdato() {
+        return soknadsdato;
     }
 
     public String getTilleggsopplysninger() {

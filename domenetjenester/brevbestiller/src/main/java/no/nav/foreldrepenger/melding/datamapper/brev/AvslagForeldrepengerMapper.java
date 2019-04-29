@@ -20,6 +20,7 @@ import javax.xml.stream.XMLStreamException;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
@@ -44,8 +45,10 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.RelasjonskodeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 @Named(DokumentMalType.AVSLAG_FORELDREPENGER_DOK)
@@ -81,9 +84,11 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
         Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
+        Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling);
         FagType fagType = mapFagType(behandling,
                 behandlingstype,
+                søknad.getMottattDato(),
                 dokumentFelles,
                 dokumentHendelse,
                 familiehendelse,
@@ -96,35 +101,49 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
 
     private FagType mapFagType(Behandling behandling,
                                String behandlingstypeKode,
+                               LocalDate søknadMottatDato,
                                DokumentFelles dokumentFelles,
                                DokumentHendelse dokumentHendelse,
                                FamilieHendelse familiehendelse,
                                Beregningsgrunnlag beregningsgrunnlag,
                                BeregningsresultatFP beregningsresultatFP,
                                UttakResultatPerioder uttakResultatPerioder) {
-
         FagType fagType = new FagType();
         fagType.setBehandlingsType(fra(behandlingstypeKode));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setRelasjonskode(fra(behandling.getFagsak()));
-        // TODO mangler denne verdien..
-        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(LocalDate.now()));
+        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknadMottatDato));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());
         fagType.setBarnErFødt(familiehendelse.isBarnErFødt());
         fagType.setHalvG(beregningsgrunnlag.getGrunnbeløp().getVerdi().divide(BigDecimal.valueOf(2)).longValue());
-        UttakMapper.finnSisteDagIFelleseriodeHvisFinnes(uttakResultatPerioder).ifPresent(fagType::setSisteDagIFellesPeriode);
-        AarsakListeType aarsakListe = AvslagsårsakMapper.mapAarsakListeFra(behandling.getBehandlingsresultat(),
+        fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
+
+        mapFelterRelatertTilAvslagårsaker(behandling.getBehandlingsresultat(),
+                beregningsresultatFP,
+                uttakResultatPerioder,
+                fagType);
+
+        UttakMapper.finnSisteDagIFelleseriodeHvisFinnes(uttakResultatPerioder)
+                .ifPresent(fagType::setSisteDagIFellesPeriode);
+        avklarFritekst(dokumentHendelse, behandling)
+                .ifPresent(fagType::setFritekst);
+        return fagType;
+    }
+
+    private void mapFelterRelatertTilAvslagårsaker(Behandlingsresultat behandlingsresultat,
+                                                   BeregningsresultatFP beregningsresultatFP,
+                                                   UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
+        Tuple<AarsakListeType, String> AarsakListeOgLovhjemmel = AvslagsårsakMapper.mapAarsakListeOgLovhjemmelFra(
+                behandlingsresultat,
                 beregningsresultatFP.getBeregningsresultatPerioder(),
                 uttakResultatPerioder);
+        AarsakListeType aarsakListe = AarsakListeOgLovhjemmel.getElement1();
+
         fagType.setAntallAarsaker(BigInteger.valueOf(aarsakListe.getAvslagsAarsak().size()));
         fagType.setAarsakListe(aarsakListe);
-        fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
-        // TODO ..
-        //fagType.setLovhjemmelForAvslag();
-        avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
-        return fagType;
+        fagType.setLovhjemmelForAvslag(AarsakListeOgLovhjemmel.getElement2());
     }
 
     private RelasjonskodeKode fra(Fagsak fagsak) {

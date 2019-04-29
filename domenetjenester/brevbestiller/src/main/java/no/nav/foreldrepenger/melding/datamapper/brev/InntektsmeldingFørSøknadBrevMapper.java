@@ -41,7 +41,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 @Named(DokumentMalType.INNTEKTSMELDING_FOR_TIDLIG_DOK)
 public class InntektsmeldingFørSøknadBrevMapper implements DokumentTypeMapper {
 
-    private ObjectFactory objectFactory;
+    private ObjectFactory objectFactory = new ObjectFactory();
 
     private DomeneobjektProvider domeneobjektProvider;
     private BrevParametere brevParametere;

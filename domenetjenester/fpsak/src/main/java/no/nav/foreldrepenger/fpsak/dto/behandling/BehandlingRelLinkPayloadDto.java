@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class BehandlingRelLinkPayloadDto {
     private Long saksnummer;
     private Long behandlingId;
+    private String behandlingUuid;
 
     public Long getSaksnummer() {
         return saksnummer;
@@ -23,11 +24,16 @@ public class BehandlingRelLinkPayloadDto {
         this.behandlingId = behandlingId;
     }
 
+    public String getBehandlingUuid() {
+        return behandlingUuid;
+    }
+
     @Override
     public String toString() {
         return "BehandlingRelLinkPayloadDto{" +
                 "saksnummer=" + saksnummer +
                 ", behandlingId=" + behandlingId +
+                ", behandlingUuid='" + behandlingUuid + '\'' +
                 '}';
     }
 }

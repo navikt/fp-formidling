@@ -6,7 +6,6 @@ import java.util.List;
 
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.personopplysning.Personopplysning;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
@@ -26,7 +25,6 @@ public class Behandling {
     private String behandlendeEnhetNavn;
     private String ansvarligBeslutter;
     private Fagsak fagsak;
-    private Personopplysning personopplysning;
 
     private Behandling(Builder builder) {
         id = builder.id;
@@ -42,7 +40,6 @@ public class Behandling {
         toTrinnsBehandling = builder.toTrinnsBehandling;
         ansvarligBeslutter = builder.ansvarligBeslutter;
         fagsak = builder.fagsak;
-        personopplysning = builder.personopplysning;
     }
 
     public String getBehandlendeEnhetNavn() {
@@ -83,10 +80,6 @@ public class Behandling {
 
     public Boolean isToTrinnsBehandling() {
         return toTrinnsBehandling;
-    }
-
-    public Personopplysning getPersonopplysning() {
-        return personopplysning;
     }
 
     public long getId() {
@@ -149,7 +142,6 @@ public class Behandling {
         private Boolean toTrinnsBehandling;
         private String ansvarligBeslutter;
         private Fagsak fagsak;
-        private Personopplysning personopplysning;
 
         public Behandling.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {
             this.behandlendeEnhetNavn = behandlendeEnhetNavn;
@@ -163,11 +155,6 @@ public class Behandling {
 
         public Behandling.Builder leggTilResourceLink(BehandlingResourceLink resourceLink) {
             this.resourceLinker.add(resourceLink);
-            return this;
-        }
-
-        public Behandling.Builder medPersonopplysning(Personopplysning personopplysning) {
-            this.personopplysning = personopplysning;
             return this;
         }
 

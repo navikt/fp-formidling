@@ -7,8 +7,9 @@ public class Søknad {
     private LocalDate søknadsdato;
     private Object OppgittRettighet;
 
-    public Søknad(LocalDate mottattDato) {
+    public Søknad(LocalDate mottattDato, LocalDate søknadsdato) {
         this.mottattDato = mottattDato;
+        this.søknadsdato = søknadsdato;
     }
 
 

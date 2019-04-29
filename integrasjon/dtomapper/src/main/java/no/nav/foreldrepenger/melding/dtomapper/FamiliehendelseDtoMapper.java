@@ -43,7 +43,9 @@ public class FamiliehendelseDtoMapper {
         if (familiehendelseDto.getAntallBarnTermin() != null) {
             sum += familiehendelseDto.getAntallBarnTermin();
         }
-        sum += familiehendelseDto.getAvklartBarn().size();
+        if (familiehendelseDto.getAvklartBarn() != null) {
+            sum += familiehendelseDto.getAvklartBarn().size();
+        }
         return sum;
     }
 

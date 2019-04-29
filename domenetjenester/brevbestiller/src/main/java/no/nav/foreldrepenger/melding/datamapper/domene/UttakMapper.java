@@ -5,22 +5,31 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
+import no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak;
 import no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType;
 
+@ApplicationScoped
 public class UttakMapper {
+
+    public UttakMapper() {
+        //CDI
+    }
 
     public static final IkkeOppfyltÅrsak FAR_HAR_IKKE_OMSORG = new IkkeOppfyltÅrsak("4012");
     public static final IkkeOppfyltÅrsak MOR_HAR_IKKE_OMSORG = new IkkeOppfyltÅrsak("4003");
@@ -56,5 +65,40 @@ public class UttakMapper {
             return UtbetaltKode.INGEN;
         }
         return PeriodeBeregner.forMyeUtbetalt(periodeListe, null);
+    }
+
+    /*TODO*/
+    public String mapLovhjemlerForUttak(UttakResultatPerioder uttakResultatPerioder) {
+        for (UttakResultatPeriode periode : uttakResultatPerioder.getPerioder()) {
+            ÅrsakskodeMedLovreferanse årsak = utledÅrsakskode(periode);
+            if (erUkjent(årsak)) {
+                continue;
+            }
+        }
+        return "TODO"; //TODO
+    }
+
+
+    private boolean erUkjent(ÅrsakskodeMedLovreferanse årsaksKode) {
+        return PeriodeResultatÅrsak.UKJENT.getKode().equals(årsaksKode.getKode());
+    }
+
+    private ÅrsakskodeMedLovreferanse utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
+        if (erGraderingAvslått(uttakPeriode) && uttakPeriode.isInnvilget()) {
+            return uttakPeriode.getGraderingAvslagÅrsak();
+        } else if (uttakPeriode.getPeriodeResultatÅrsak() != null) {
+            return uttakPeriode.getPeriodeResultatÅrsak();
+        }
+        return PeriodeResultatÅrsak.UKJENT;
+    }
+
+    private boolean erGraderingAvslått(UttakResultatPeriode uttakPeriode) {
+        return !uttakPeriode.erGraderingInnvilget()
+                && erGraderingÅrsakKjent(uttakPeriode.getGraderingAvslagÅrsak());
+    }
+
+    private boolean erGraderingÅrsakKjent(GraderingAvslagÅrsak årsak) {
+        return årsak != null
+                && !årsak.getKode().equals(GraderingAvslagÅrsak.UKJENT.getKode());
     }
 }

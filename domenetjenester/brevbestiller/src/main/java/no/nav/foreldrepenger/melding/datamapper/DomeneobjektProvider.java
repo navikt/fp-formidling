@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.melding.dtomapper.FamiliehendelseDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.IAYDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.InnsynDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.KlageDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.StønadskontoDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.SøknadDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.UttakDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.VilkårDtoMapper;
@@ -29,6 +30,7 @@ import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.InntektArbeidYtelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
+import no.nav.foreldrepenger.melding.uttak.Saldoer;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
@@ -46,6 +48,7 @@ public class DomeneobjektProvider {
     private InnsynDtoMapper innsynDtoMapper;
     private VilkårDtoMapper vilkårDtoMapper;
     private FamiliehendelseDtoMapper familiehendelseDtoMapper;
+    private StønadskontoDtoMapper stønadskontoDtoMapper;
 
     @Inject
     public DomeneobjektProvider(BehandlingRestKlient behandlingRestKlient,
@@ -57,7 +60,8 @@ public class DomeneobjektProvider {
                                 IAYDtoMapper iayDtoMapper,
                                 InnsynDtoMapper innsynDtoMapper,
                                 VilkårDtoMapper vilkårDtoMapper,
-                                FamiliehendelseDtoMapper familiehendelseDtoMapper) {
+                                FamiliehendelseDtoMapper familiehendelseDtoMapper,
+                                StønadskontoDtoMapper stønadskontoDtoMapper) {
         this.behandlingRestKlient = behandlingRestKlient;
         this.beregningsgrunnlagDtoMapper = beregningsgrunnlagDtoMapper;
         this.behandlingDtoMapper = behandlingDtoMapper;
@@ -68,6 +72,7 @@ public class DomeneobjektProvider {
         this.innsynDtoMapper = innsynDtoMapper;
         this.vilkårDtoMapper = vilkårDtoMapper;
         this.familiehendelseDtoMapper = familiehendelseDtoMapper;
+        this.stønadskontoDtoMapper = stønadskontoDtoMapper;
     }
 
     public DomeneobjektProvider() {
@@ -127,6 +132,10 @@ public class DomeneobjektProvider {
 
     public YtelseFordeling hentYtelseFordeling(Behandling behandling) {
         return YtelseFordelingDtoMapper.mapYtelseFordelingFraDto(behandlingRestKlient.hentYtelseFordeling(behandling.getResourceLinker()));
+    }
+
+    public Saldoer hentSaldoer(Behandling behandling) {
+        return stønadskontoDtoMapper.mapSaldoerFraDto(behandlingRestKlient.hentSaldoer(behandling.getResourceLinker()));
     }
 
 }

@@ -210,9 +210,9 @@ public class PeriodeBeregner {
         return totaltAntallDager - brukteDager;
     }
 
-    public static Optional<Stønadskonto> finnStønadsKontoMedType(Set<Stønadskonto> stønadskontoer, StønadskontoType foreldrepengerFørFødsel) {
+    public static Optional<Stønadskonto> finnStønadsKontoMedType(Set<Stønadskonto> stønadskontoer, StønadskontoType stønadskontoType) {
         return stønadskontoer.stream().
-                filter(stønadskonto -> foreldrepengerFørFødsel.equals(stønadskonto.getStønadskontoType()))
+                filter(stønadskonto -> stønadskontoType.equals(stønadskonto.getStønadskontoType()))
                 .findFirst();
     }
 

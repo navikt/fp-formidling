@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.fpsak;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -249,7 +250,9 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     private Long hentBehandlingId(List<BehandlingResourceLink> linkListe) {
         return linkListe.stream()
                 .map(BehandlingResourceLink::getRequestPayload)
+                .filter(Objects::nonNull)
                 .map(BehandlingRelLinkPayload::getBehandlingId)
+                .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
     }

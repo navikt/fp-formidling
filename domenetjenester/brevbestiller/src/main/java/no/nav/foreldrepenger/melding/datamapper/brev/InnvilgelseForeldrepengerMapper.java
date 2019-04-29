@@ -161,7 +161,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
 
     private void mapFelterRelatertTilSøknad(Søknad søknad, FagType fagType) {
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknad.getMottattDato()));
-        //Disse ser også på perioder
+        //TODO - Disse bruker perioder fra Ytelsefordeling - og litt data fra søknaden
         fagType.setAnnenForelderHarRett(Boolean.parseBoolean(finnVerdiAv("PLACEHOLDER", Collections.emptyList()))); //TODO
         fagType.setAleneomsorg(VurderingsstatusKode.fromValue("IKKE_VURDERT")); //TODO
     }

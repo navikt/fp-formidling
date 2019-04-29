@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
+import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
@@ -71,7 +72,7 @@ public class UttakMapper {
     }
 
     public String mapLovhjemlerForUttak(UttakResultatPerioder uttakResultatPerioder, String konsekvensForYtelse, boolean innvilgetRevurdering) {
-        Set<String> lovhjemler = new TreeSet<>();
+        Set<String> lovhjemler = new TreeSet<>(new LovhjemmelComparator());
         for (UttakResultatPeriode periode : uttakResultatPerioder.getPerioder()) {
             ÅrsakskodeMedLovreferanse årsak = utledÅrsakskode(periode);
             if (erUkjent(årsak)) {

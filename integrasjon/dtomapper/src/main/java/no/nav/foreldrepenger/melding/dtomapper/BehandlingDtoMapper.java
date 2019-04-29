@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.dtomapper;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -13,7 +12,6 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingRelLinkPayloadDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -49,16 +47,6 @@ public class BehandlingDtoMapper {
         this.fagsakDtoMapper = fagsakDtoMapper;
         this.behandlingsresultatDtoMapper = behandlingsresultatDtoMapper;
         this.personopplysningDtoMapper = personopplysningDtoMapper;
-    }
-
-    private static Long finnSaksnummer(BehandlingDto dto) {
-        return dto.getLinks().stream()
-                .filter(Objects::nonNull)
-                .map(BehandlingResourceLinkDto::getRequestPayload)
-                .filter(Objects::nonNull)
-                .map(BehandlingRelLinkPayloadDto::getSaksnummer)
-                .filter(Objects::nonNull)
-                .findFirst().orElse(null);
     }
 
     private static BehandlingResourceLink mapResourceLinkFraDto(BehandlingResourceLinkDto dto) {

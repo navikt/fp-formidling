@@ -20,7 +20,6 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dtomapper.VergeDtoMapper;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.personopplysning.Personopplysning;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
@@ -54,11 +53,11 @@ public class DokumentFellesDataMapper {
 
     DokumentData opprettDokumentDataForBehandling(Behandling behandling, DokumentMalType dokumentMalType) {
         //Data for mapping
-        Personopplysning personopplysning = behandling.getPersonopplysning();
+        Personinfo personinfo = behandling.getFagsak().getPersoninfo();
         DokumentData dokumentData = DokumentData.opprettNy(dokumentMalType, behandling.getId());
-        final AktørId søkersAktørId = new AktørId(personopplysning.getAktoerId());
+        final AktørId søkersAktørId = personinfo.getAktørId();
 
-        if (Boolean.FALSE.equals(personopplysning.getHarVerge())) {
+        if (!harLenkeForVerge(behandling)) {
             opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
             return dokumentData;
         }
@@ -76,6 +75,11 @@ public class DokumentFellesDataMapper {
             opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId);
         }
         return dokumentData;
+    }
+
+    private boolean harLenkeForVerge(Behandling behandling) {
+        return behandling.getResourceLinker().stream()
+                .anyMatch(link -> "soeker-verge".equals(link.getRel()));
     }
 
     private void opprettDokumentDataForMottaker(Behandling behandling,

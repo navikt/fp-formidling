@@ -121,7 +121,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         final FagType fagType = objectFactory.createFagType();
 
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
-        fagType.setRelasjonskode(tilRelasjonskode(behandling.getRelasjonsRolleType(), behandling.getPersonopplysning().getNavBrukerKjonn()));
+        fagType.setRelasjonskode(tilRelasjonskode(behandling.getRelasjonsRolleType(), behandling.getFagsak().getPersoninfo().getKjønn()));
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
         fagType.setBehandlingsResultat(BehandlingMapper.tilBehandlingsResultatKode(behandling.getBehandlingsresultat().getBehandlingResultatType()));

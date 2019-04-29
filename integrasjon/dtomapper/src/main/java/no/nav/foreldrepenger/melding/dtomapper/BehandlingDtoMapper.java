@@ -55,7 +55,7 @@ public class BehandlingDtoMapper {
                 .medRel(dto.getRel())
                 .medType(dto.getType());
         if (dto.getRequestPayload() != null) {
-            linkBuilder.medRequestPayload(new BehandlingRelLinkPayload(dto.getRequestPayload().getSaksnummer(), dto.getRequestPayload().getBehandlingId()));
+            linkBuilder.medRequestPayload(new BehandlingRelLinkPayload(dto.getRequestPayload().getSaksnummer(), dto.getRequestPayload().getBehandlingId(), dto.getRequestPayload().getBehandlingUuid()));
         }
         return linkBuilder
                 .build();
@@ -76,9 +76,7 @@ public class BehandlingDtoMapper {
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()))
-                .medPersonopplysning(hentPersonopplysning(linkListe, originalBehandlingId))
                 .medFagsak(fagsak);
-
 
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(behandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));

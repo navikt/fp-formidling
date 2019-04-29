@@ -54,4 +54,11 @@ public class StønadskontoMapper {
     public static BigInteger finnDisponibleFellesDager(Saldoer saldoer) {
         return finnSaldo(saldoer, StønadskontoType.FELLESPERIODE);
     }
+
+    public static Optional<BigInteger> finnForeldrepengeperiodenUtvidetUkerHvisFinnes(Saldoer saldoer) {
+        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.getStønadskontoer(), StønadskontoType.FLERBARNSDAGER)
+                .map(Stønadskonto::getMaxDager)
+                .map(BigInteger::valueOf);
+
+    }
 }

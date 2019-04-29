@@ -84,7 +84,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                 DokumentFelles dokumentFelles,
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        //TODO - Burde vi lage et wrapper objekt for inputobjektene når det er så mange??
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
         BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
         Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
@@ -156,7 +155,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         boolean innvilget = BehandlingResultatType.INNVILGET.equals(behandling.getBehandlingsresultat().getBehandlingResultatType());
         boolean innvilgetRevurdering = revurdering && innvilget;
         lovhjemmelType.setBeregning(FellesMapper.formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForYtelsen, innvilgetRevurdering));
-        lovhjemmelType.setVurdering(uttakMapper.mapLovhjemlerForUttak(uttakResultatPerioder)); /* TODO Må Mappes */
+        lovhjemmelType.setVurdering(uttakMapper.mapLovhjemlerForUttak(uttakResultatPerioder, konsekvensForYtelsen, innvilgetRevurdering));
         fagType.setLovhjemmel(lovhjemmelType);
     }
 
@@ -171,6 +170,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setDagerTaptFørTermin(StønadskontoMapper.finnTapteDagerFørTermin(uttakResultatPerioder, saldoer, familieHendelse));
         fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(behandling, false, false, saldoer));//TODO aleneomsorg og annenForeldreHarRett
         fagType.setDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer));
+        StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);
     }
 
     private void mapFelterRelatertTilPerioder(BeregningsresultatFP beregningsresultatFP, Beregningsgrunnlag beregningsgrunnlag, UttakResultatPerioder uttakResultatPerioder, FagType fagType, Behandling behandling) {
@@ -195,7 +195,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setForMyeUtbetalt(UttakMapper.forMyeUtbetaltKode(periodeListe, behandling));
         UttakMapper.finnSisteDagIFelleseriodeHvisFinnes(uttakResultatPerioder).ifPresent(fagType::setSisteDagIFellesPeriode);
         UttakMapper.finnSisteDagMedUtsettelseHvisFinnes(uttakResultatPerioder).ifPresent(fagType::setSisteDagMedUtsettelse);
-        //Optional.empty().ifPresent(fagType::setForeldrepengeperiodenUtvidetUker); // TODO aleksander Mangler Tjeneste som regner ut dette
     }
 
     private void mapFelterRelatertTilBehandling(Behandling behandling, FagType fagType) {

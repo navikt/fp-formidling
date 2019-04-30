@@ -88,7 +88,7 @@ public class UttakMapper {
 
 
     private boolean erUkjent(ÅrsakskodeMedLovreferanse årsaksKode) {
-        return PeriodeResultatÅrsak.UKJENT.getKode().equals(årsaksKode.getKode());
+        return PeriodeResultatÅrsak.UKJENT.equals(årsaksKode);
     }
 
     private ÅrsakskodeMedLovreferanse utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
@@ -107,6 +107,6 @@ public class UttakMapper {
 
     private boolean erGraderingÅrsakKjent(GraderingAvslagÅrsak årsak) {
         return årsak != null
-                && !årsak.getKode().equals(GraderingAvslagÅrsak.UKJENT.getKode());
+                && !årsak.equals(GraderingAvslagÅrsak.UKJENT);
     }
 }

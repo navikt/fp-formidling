@@ -45,7 +45,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
-@Named(DokumentMalType.AVSLAG_FORELDREPENGER_DOK)
+@Named(DokumentMalType.OPPHØR_DOK)
 public class OpphørbrevMapper implements DokumentTypeMapper {
     private static final Map<RelasjonsRolleType, RelasjonskodeKode> relasjonskodeTypeMap;
 

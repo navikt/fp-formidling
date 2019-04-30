@@ -62,6 +62,9 @@ public class FamiliehendelseDtoMapper {
 
     public FamilieHendelse mapFamiliehendelsefraDto(FamilieHendelseGrunnlagDto grunnlagDto) {
         FamiliehendelseDto gjeldendeHendelseDto = grunnlagDto.getGjeldende();
+        if (alleFelterErNull(gjeldendeHendelseDto)) {
+            gjeldendeHendelseDto = grunnlagDto.getOppgitt();
+        }
         BigInteger antallBarnFraDto = utledAntallBarnFraDto(gjeldendeHendelseDto);
         Optional<LocalDate> termindatoFraDto = finnTermindato(gjeldendeHendelseDto);
         Optional<LocalDate> fødselsdatoFraDto = finnFødselsdatoFraDto(gjeldendeHendelseDto);
@@ -73,6 +76,48 @@ public class FamiliehendelseDtoMapper {
         }
         FamilieHendelseType familiehendelseType = mapFamiliehendelseType(gjeldendeHendelseDto);
         return new FamilieHendelse(antallBarnFraDto, termindatoFraDto, barnErFødtFraDto, gjelderFødsel, familiehendelseType, fødselsdatoFraDto);
+    }
+
+    private boolean alleFelterErNull(FamiliehendelseDto dto) {
+        if (dto instanceof AvklartDataOmsorgDto) {
+            return alleFelterOmsorgErNull((AvklartDataOmsorgDto) dto);
+        }
+        if (dto instanceof AvklartDataFodselDto) {
+            return alleFelterFødselErNull((AvklartDataFodselDto) dto);
+        }
+        if (dto instanceof AvklartDataAdopsjonDto) {
+            return alleFelterAdopsjonErNull((AvklartDataAdopsjonDto) dto);
+        }
+        return true;
+
+    }
+
+    private boolean alleFelterAdopsjonErNull(AvklartDataAdopsjonDto dto) {
+        return dto.getEktefellesBarn() == null &&
+                dto.getMannAdoptererAlene() == null &&
+                dto.getAdopsjonFodelsedatoer() == null &&
+                dto.getAnkomstNorge() == null &&
+                dto.getOmsorgsovertakelseDato() == null;
+    }
+
+    private boolean alleFelterFødselErNull(AvklartDataFodselDto dto) {
+        return dto.getAvklartBarn() == null &&
+                dto.getBrukAntallBarnFraTps() == null &&
+                dto.getErOverstyrt() == null &&
+                dto.getMorForSykVedFodsel() == null &&
+                dto.getAntallBarnTermin() == null &&
+                dto.getTermindato() == null &&
+                dto.getUtstedtdato() == null &&
+                dto.getVedtaksDatoSomSvangerskapsuke() == null &&
+                dto.getSkjæringstidspunkt() == null;
+    }
+
+    private boolean alleFelterOmsorgErNull(AvklartDataOmsorgDto dto) {
+        return dto.getAntallBarnTilBeregning() == null &&
+                dto.getForeldreansvarDato() == null &&
+                dto.getOmsorgsovertakelseDato() == null &&
+                dto.getVilkarType() == null &&
+                dto.getSkjæringstidspunkt() == null;
     }
 
     private boolean erBarnFraDto(AvklartDataFodselDto gjeldendeHendelseDto) {

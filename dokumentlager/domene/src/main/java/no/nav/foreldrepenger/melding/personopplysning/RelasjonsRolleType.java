@@ -34,11 +34,11 @@ public class RelasjonsRolleType extends Kodeliste {
     }
 
     public static boolean erFar(RelasjonsRolleType relasjon) {
-        return FARA.getKode().equals(relasjon.getKode());
+        return FARA.equals(relasjon);
     }
 
     public static boolean erMedmor(RelasjonsRolleType relasjon) {
-        return MEDMOR.getKode().equals(relasjon.getKode());
+        return MEDMOR.equals(relasjon);
     }
 
     public static boolean erFarEllerMedmor(RelasjonsRolleType relasjon) {
@@ -46,7 +46,7 @@ public class RelasjonsRolleType extends Kodeliste {
     }
 
     public static boolean erMor(RelasjonsRolleType relasjon) {
-        return MORA.getKode().equals(relasjon.getKode());
+        return MORA.equals(relasjon);
     }
 
     public static boolean erRegistrertForeldre(RelasjonsRolleType type) {

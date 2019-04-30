@@ -105,7 +105,7 @@ public class BeregningsresultatMapper {
     }
 
     private static boolean erGraderingÅrsakKjent(GraderingAvslagÅrsak årsak) {
-        return årsak != null && !årsak.getKode().equals(GraderingAvslagÅrsak.UKJENT.getKode());
+        return årsak != null && !årsak.equals(GraderingAvslagÅrsak.UKJENT);
     }
 
     public static long finnTotalBrukerAndel(BeregningsresultatFP beregningsresultatFP) {

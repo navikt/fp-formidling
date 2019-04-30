@@ -26,11 +26,11 @@ public class FagsakYtelseType extends Kodeliste {
     }
 
     public final boolean gjelderEngangsstønad() {
-        return ENGANGSTØNAD.getKode().equals(this.getKode());
+        return ENGANGSTØNAD.equals(this);
     }
 
     public final boolean gjelderForeldrepenger() {
-        return FORELDREPENGER.getKode().equals(this.getKode());
+        return FORELDREPENGER.equals(this);
     }
 
 }

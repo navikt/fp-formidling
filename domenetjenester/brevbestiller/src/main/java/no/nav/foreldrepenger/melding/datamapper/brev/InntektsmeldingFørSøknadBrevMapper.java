@@ -97,7 +97,7 @@ public class InntektsmeldingFørSøknadBrevMapper implements DokumentTypeMapper 
         PeriodeListeType periodeListe = objectFactory.createPeriodeListeType();
         inntektsmelding.getUtsettelsePerioder()
                 .stream()
-                .filter(up -> UtsettelseÅrsak.FERIE.getKode().equals(up.getUtsettelseÅrsak()))
+                .filter(up -> UtsettelseÅrsak.FERIE.equals(up.getUtsettelseÅrsak()))
                 .forEach(up -> {
                     PeriodeType periode = objectFactory.createPeriodeType();
                     periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(up.getFom()));

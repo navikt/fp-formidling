@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunkterDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
@@ -228,6 +229,16 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 });
     }
 
+    @Override
+    public AksjonspunkterDto hentAksjonspunkter(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker.stream()
+                .filter(dto -> "aksjonspunkter".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, AksjonspunkterDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente vilkår for behandling: " + hentBehandlingId(resourceLinker));
+                });
+    }
+
     private <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
 
         if ("POST".equals(link.getType())) {
@@ -267,6 +278,5 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 .findFirst()
                 .orElse(null);
     }
-
 }
 

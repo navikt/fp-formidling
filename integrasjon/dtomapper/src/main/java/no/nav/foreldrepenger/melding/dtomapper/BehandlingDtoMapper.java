@@ -11,18 +11,17 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
+import no.nav.foreldrepenger.melding.behandling.BehandlingStatus;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
-import no.nav.foreldrepenger.melding.personopplysning.Personopplysning;
 
 @ApplicationScoped
 public class BehandlingDtoMapper {
@@ -30,7 +29,6 @@ public class BehandlingDtoMapper {
     private BehandlingRestKlient behandlingRestKlient;
     private FagsakDtoMapper fagsakDtoMapper;
     private BehandlingsresultatDtoMapper behandlingsresultatDtoMapper;
-    private PersonopplysningDtoMapper personopplysningDtoMapper;
 
     public BehandlingDtoMapper() {
         //CDI
@@ -40,13 +38,11 @@ public class BehandlingDtoMapper {
     public BehandlingDtoMapper(KodeverkRepository kodeverkRepository,
                                BehandlingRestKlient behandlingRestKlient,
                                FagsakDtoMapper fagsakDtoMapper,
-                               BehandlingsresultatDtoMapper behandlingsresultatDtoMapper,
-                               PersonopplysningDtoMapper personopplysningDtoMapper) {
+                               BehandlingsresultatDtoMapper behandlingsresultatDtoMapper) {
         this.kodeverkRepository = kodeverkRepository;
         this.behandlingRestKlient = behandlingRestKlient;
         this.fagsakDtoMapper = fagsakDtoMapper;
         this.behandlingsresultatDtoMapper = behandlingsresultatDtoMapper;
-        this.personopplysningDtoMapper = personopplysningDtoMapper;
     }
 
     private static BehandlingResourceLink mapResourceLinkFraDto(BehandlingResourceLinkDto dto) {
@@ -55,7 +51,10 @@ public class BehandlingDtoMapper {
                 .medRel(dto.getRel())
                 .medType(dto.getType());
         if (dto.getRequestPayload() != null) {
-            linkBuilder.medRequestPayload(new BehandlingRelLinkPayload(dto.getRequestPayload().getSaksnummer(), dto.getRequestPayload().getBehandlingId(), dto.getRequestPayload().getBehandlingUuid()));
+            linkBuilder.medRequestPayload(
+                    new BehandlingRelLinkPayload(dto.getRequestPayload().getSaksnummer(),
+                            dto.getRequestPayload().getBehandlingId(),
+                            dto.getRequestPayload().getBehandlingUuid()));
         }
         return linkBuilder
                 .build();
@@ -70,6 +69,7 @@ public class BehandlingDtoMapper {
         Long originalBehandlingId = behandlingRestKlient.hentOriginalBehandling(linkListe).map(BehandlingDto::getId).orElse(null);
         builder.medId(dto.getId())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
+                .medStatus(kodeverkRepository.finn(BehandlingStatus.class, dto.getStatus().getKode()))
                 .medOpprettetDato(dto.getOpprettet())
                 .medOriginalBehandling(originalBehandlingId)
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
@@ -83,19 +83,6 @@ public class BehandlingDtoMapper {
         }
 
         return builder.build();
-    }
-
-    private Personopplysning hentPersonopplysning(List<BehandlingResourceLink> linkListe, Long originalBehandlingId) {
-        if (originalBehandlingId != null) {
-            BehandlingDto originalBehandlingDto = behandlingRestKlient.hentBehandling(new BehandlingIdDto(originalBehandlingId));
-            return personopplysningDtoMapper.mapPersonopplysningFraDto(behandlingRestKlient.hentPersonopplysninger(mapOgSamleLenkerFraDto(originalBehandlingDto)));
-        }
-        return personopplysningDtoMapper.mapPersonopplysningFraDto(
-                behandlingRestKlient.hentPersonopplysninger(linkListe));
-    }
-
-    private List<BehandlingResourceLink> mapOgSamleLenkerFraDto(BehandlingDto dto) {
-        return dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto).collect(Collectors.toList());
     }
 
     private List<BehandlingÅrsak> mapBehandlingÅrsakListe(List<BehandlingÅrsakDto> behandlingÅrsakDtoer) {

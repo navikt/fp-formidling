@@ -15,7 +15,7 @@ public class Behandlingsresultat {
     private Vedtaksbrev vedtaksbrev;
     private BehandlingResultatType behandlingResultatType;
     private String avslagarsakFritekst;
-    private List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>(); //Kode BehandlingsresultatKonsekvensForYtelsen
+    private List<KonsekvensForYtelsen> konsekvenserForYtelsen; //Kode BehandlingsresultatKonsekvensForYtelsen
 
     //Objekter
     private String beregning; //BeregningResultat
@@ -128,6 +128,9 @@ public class Behandlingsresultat {
         return behandling;
     }
 
+    public boolean isBehandlingHenlagt() {
+        return BehandlingResultatType.getAlleHenleggelseskoder().contains(behandlingResultatType);
+    }
 
     public static final class Builder {
         private Avslagsårsak avslagsårsak;

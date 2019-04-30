@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunkterDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
@@ -57,4 +58,6 @@ public interface BehandlingRestKlient {
     YtelseFordelingDto hentYtelseFordeling(List<BehandlingResourceLink> resourceLinker);
 
     SaldoerDto hentSaldoer(List<BehandlingResourceLink> resourceLinker);
+
+    AksjonspunkterDto hentAksjonspunkter(List<BehandlingResourceLink> resourceLinkDtos);
 }

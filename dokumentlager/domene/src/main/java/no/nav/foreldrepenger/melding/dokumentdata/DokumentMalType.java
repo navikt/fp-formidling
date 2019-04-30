@@ -39,9 +39,11 @@ public class DokumentMalType extends KodeverkTabell {
     public static final String AVSLAG_FORELDREPENGER_DOK = "AVSLFP";
     public static final String FRITEKST_DOK = "FRITKS";
     public static final String VEDTAK_MEDHOLD = "VEDMED";
+
     @Convert(converter = BooleanToStringConverter.class)
     @Column(name = "tilgjengelig_manuell_utsendelse", nullable = false)
     private boolean tilgjengeligManuellUtsendelse;
+
     @ManyToOne(optional = false)
     @JoinColumnsOrFormulas({
             @JoinColumnOrFormula(column = @JoinColumn(name = "DOKUMENT_MAL_RESTRIKSJON", referencedColumnName = "kode", nullable = false)),
@@ -66,5 +68,4 @@ public class DokumentMalType extends KodeverkTabell {
     public boolean erTilgjengeligForManuellUtsendelse() {
         return tilgjengeligManuellUtsendelse;
     }
-
 }

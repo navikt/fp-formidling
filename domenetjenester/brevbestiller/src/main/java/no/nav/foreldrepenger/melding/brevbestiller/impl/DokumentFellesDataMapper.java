@@ -144,7 +144,7 @@ public class DokumentFellesDataMapper {
                 .medSpråkkode(Språkkode.nb)
                 .medSakspartPersonStatus(getPersonstatusVerdi(personstatusBruker));
 
-        if (behandling.isToTrinnsBehandling()) {
+        if (Boolean.TRUE.equals(behandling.isToTrinnsBehandling())) {
             builder
                     .medAutomatiskBehandlet(Boolean.FALSE)
                     .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())

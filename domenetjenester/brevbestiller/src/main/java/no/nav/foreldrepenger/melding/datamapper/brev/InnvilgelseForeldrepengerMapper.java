@@ -131,9 +131,9 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         mapFelterRelatertTilBehandling(behandling, fagType);
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, originaltBeregningsgrunnlag, fagType);
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType, behandling);
-        mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, behandling);
-        mapFelterRelatertTilFamiliehendelse(familieHendelse, fagType);
         mapFelterRelatertTilSøknadOgYtelseFordeling(søknad, ytelseFordeling, fagType);
+        mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, behandling, søknad, ytelseFordeling);
+        mapFelterRelatertTilFamiliehendelse(familieHendelse, fagType);
         mapLovhjemmel(fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling, uttakResultatPerioder);
         return fagType;
     }
@@ -152,14 +152,13 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
 
     private void mapFelterRelatertTilSøknadOgYtelseFordeling(Søknad søknad, YtelseFordeling ytelseFordeling, FagType fagType) {
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknad.getMottattDato()));
-        //TODO - Disse bruker perioder fra Ytelsefordeling - og litt data fra søknaden
         fagType.setAnnenForelderHarRett(ytelseFordeling.isAnnenForelderHarRett());
         fagType.setAleneomsorg(YtelsefordelingMapper.harSøkerAleneomsorg(søknad, ytelseFordeling));
     }
 
-    private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Behandling behandling) {
+    private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Behandling behandling, Søknad søknad, YtelseFordeling ytelseFordeling) {
         fagType.setDagerTaptFørTermin(StønadskontoMapper.finnTapteDagerFørTermin(uttakResultatPerioder, saldoer, familieHendelse));
-        fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(behandling, false, false, saldoer));//TODO aleneomsorg og annenForeldreHarRett
+        fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(behandling, YtelsefordelingMapper.harSøkerAleneomsorgBoolean(søknad, ytelseFordeling), ytelseFordeling.isAnnenForelderHarRett(), saldoer));
         fagType.setDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer));
         StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);
     }

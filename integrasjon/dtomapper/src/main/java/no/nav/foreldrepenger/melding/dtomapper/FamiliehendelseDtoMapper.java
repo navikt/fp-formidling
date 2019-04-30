@@ -94,7 +94,7 @@ public class FamiliehendelseDtoMapper {
     }
 
     private FamilieHendelseType utledFødselEllerTermin(AvklartDataFodselDto dto) {
-        if (dto.getAvklartBarn().isEmpty()) {
+        if (dto.getAvklartBarn() == null || dto.getAvklartBarn().isEmpty()) {
             return FamilieHendelseType.TERMIN;
         }
         return FamilieHendelseType.FØDSEL;

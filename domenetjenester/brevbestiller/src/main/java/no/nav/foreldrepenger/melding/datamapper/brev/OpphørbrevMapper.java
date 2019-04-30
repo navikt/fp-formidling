@@ -1,12 +1,10 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,38 +19,34 @@ import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.ÅrsakMapperAvslag;
+import no.nav.foreldrepenger.melding.datamapper.domene.ÅrsakMapperOpphør;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.AarsakListeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.AvslagForeldrepengerConstants;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.BehandlingsTypeKode;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.BrevdataType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.FagType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.ObjectFactory;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.PersonstatusKode;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.RelasjonskodeKode;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.AarsakListeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.OpphørConstants;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.BehandlingsTypeKode;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.BrevdataType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.FagType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.ObjectFactory;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.PersonstatusKode;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.RelasjonskodeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 @Named(DokumentMalType.AVSLAG_FORELDREPENGER_DOK)
-public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
+public class OpphørbrevMapper implements DokumentTypeMapper {
     private static final Map<RelasjonsRolleType, RelasjonskodeKode> relasjonskodeTypeMap;
 
     static {
@@ -65,12 +59,12 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
 
-    public AvslagForeldrepengerMapper() {
+    public OpphørbrevMapper() {
     }
 
     @Inject
-    public AvslagForeldrepengerMapper(BrevParametere brevParametere,
-                                      DomeneobjektProvider domeneobjektProvider) {
+    public OpphørbrevMapper(BrevParametere brevParametere,
+                            DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
     }
@@ -82,62 +76,50 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
-        BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
-        Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling);
         FagType fagType = mapFagType(behandling,
                 behandlingstype,
-                søknad.getMottattDato(),
                 dokumentFelles,
-                dokumentHendelse,
                 familiehendelse,
                 beregningsgrunnlag,
-                beregningsresultatFP,
                 uttakResultatPerioder);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
-        return JaxbHelper.marshalNoNamespaceXML(AvslagForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
+        return JaxbHelper.marshalNoNamespaceXML(OpphørConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
     private FagType mapFagType(Behandling behandling,
                                String behandlingstypeKode,
-                               LocalDate søknadMottatDato,
                                DokumentFelles dokumentFelles,
-                               DokumentHendelse dokumentHendelse,
                                FamilieHendelse familiehendelse,
                                Beregningsgrunnlag beregningsgrunnlag,
-                               BeregningsresultatFP beregningsresultatFP,
                                UttakResultatPerioder uttakResultatPerioder) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(fra(behandlingstypeKode));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setRelasjonskode(fra(behandling.getFagsak()));
-        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknadMottatDato));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());
-        fagType.setBarnErFødt(familiehendelse.isBarnErFødt());
         fagType.setHalvG(beregningsgrunnlag.getGrunnbeløp().getVerdi().divide(BigDecimal.valueOf(2)).longValue());
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
 
         mapFelterRelatertTilAvslagårsaker(behandling.getBehandlingsresultat(),
-                beregningsresultatFP,
                 uttakResultatPerioder,
                 fagType);
 
-        UttakMapper.finnSisteDagIFelleseriodeHvisFinnes(uttakResultatPerioder)
-                .ifPresent(fagType::setSisteDagIFellesPeriode);
-        avklarFritekst(dokumentHendelse, behandling)
-                .ifPresent(fagType::setFritekst);
+        //TODO Ikke obligatoriske felter
+//        finnOptionalDatoVerdiAvUtenTidSone(Flettefelt.STONADSDATO_FOM, dokumentTypeDataListe).ifPresent(fagType::setFomStonadsdato);
+//        finnOptionalDatoVerdiAvUtenTidSone(Flettefelt.STONADSDATO_TOM, dokumentTypeDataListe).ifPresent(fagType::setTomStonadsdato);
+//        finnOptionalDatoVerdiAvUtenTidSone(Flettefelt.OPPHORDATO, dokumentTypeDataListe).ifPresent(fagType::setOpphorDato);
+//        finnOptionalDatoVerdiAvUtenTidSone(Flettefelt.DODSDATO, dokumentTypeDataListe).ifPresent(fagType::setDodsdato);
         return fagType;
     }
 
     private void mapFelterRelatertTilAvslagårsaker(Behandlingsresultat behandlingsresultat,
-                                                   BeregningsresultatFP beregningsresultatFP,
                                                    UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
-        Tuple<AarsakListeType, String> AarsakListeOgLovhjemmel = ÅrsakMapperAvslag.mapAarsakListeOgLovhjemmelFra(
+        Tuple<AarsakListeType, String> AarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapAarsakListeOgLovhjemmelFra(
                 behandlingsresultat,
-                beregningsresultatFP.getBeregningsresultatPerioder(),
                 uttakResultatPerioder);
         AarsakListeType aarsakListe = AarsakListeOgLovhjemmel.getElement1();
 

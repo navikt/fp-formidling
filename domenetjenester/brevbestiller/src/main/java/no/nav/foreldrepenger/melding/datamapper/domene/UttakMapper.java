@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Predicate;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -12,6 +14,8 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
+import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
@@ -67,15 +71,19 @@ public class UttakMapper {
         return PeriodeBeregner.forMyeUtbetalt(periodeListe, null);
     }
 
-    /*TODO*/
-    public String mapLovhjemlerForUttak(UttakResultatPerioder uttakResultatPerioder) {
+    public String mapLovhjemlerForUttak(UttakResultatPerioder uttakResultatPerioder, String konsekvensForYtelse, boolean innvilgetRevurdering) {
+        Set<String> lovhjemler = new TreeSet<>(new LovhjemmelComparator());
         for (UttakResultatPeriode periode : uttakResultatPerioder.getPerioder()) {
             ÅrsakskodeMedLovreferanse årsak = utledÅrsakskode(periode);
             if (erUkjent(årsak)) {
                 continue;
             }
+            if (årsak instanceof GraderingAvslagÅrsak) {
+                LovhjemmelUtil.hentLovhjemlerFraJson(FagsakYtelseType.FORELDREPENGER, periode.getPeriodeResultatÅrsak());
+            }
+            lovhjemler.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(FagsakYtelseType.FORELDREPENGER, årsak));
         }
-        return "TODO"; //TODO
+        return FellesMapper.formaterLovhjemlerUttak(lovhjemler, konsekvensForYtelse, innvilgetRevurdering);
     }
 
 

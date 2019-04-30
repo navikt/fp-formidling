@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.dokumentdata.repository;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -7,7 +8,10 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.hibernate.jpa.QueryHints;
+
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
 import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
@@ -33,6 +37,23 @@ public class DokumentRepositoryImpl implements DokumentRepository {
                 .createQuery("from DokumentMalType d where d.kode = :kode", DokumentMalType.class)
                 .setParameter("kode", kode);
         return HibernateVerktøy.hentEksaktResultat(query);
+    }
+
+    @Override
+    public List<DokumentMalType> hentAlleDokumentMalTyper() {
+        return entityManager.createQuery("SELECT d FROM DokumentMalType d", DokumentMalType.class) //$NON-NLS-1$
+                .setHint(QueryHints.HINT_READONLY, "true") //$NON-NLS-1$
+                .getResultList();
+    }
+
+    @Override
+    public List<DokumentData> hentDokumentDataListe(Long behandlingId, String dokumentmal) {
+        TypedQuery<DokumentData> query = entityManager
+                .createQuery("from DokumentData dd where dd.behandling.id = :behandlingId and dd.dokumentMalType.kode = :dokumentmal", DokumentData.class)
+                .setParameter("behandlingId", behandlingId)
+                .setParameter("dokumentmal", dokumentmal);
+
+        return query.getResultList();
     }
 
     //TODO: Cascade fra DokumentFelles entity

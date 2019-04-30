@@ -9,9 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
@@ -45,7 +42,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     private DokumentproduksjonConsumer dokumentproduksjonProxyService;
     private DokumentXmlDataMapper dokumentXmlDataMapper;
     private DokumentMalUtleder dokumentMalUtleder;
-    private BehandlingRestKlient behandlingRestKlient;
     private DokumentbestillingMapper dokumentbestillingMapper;
     private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
     private DomeneobjektProvider domeneobjektProvider;
@@ -58,7 +54,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     public BrevBestillerApplikasjonTjenesteImpl(DokumentproduksjonConsumer dokumentproduksjonProxyService,
                                                 DokumentXmlDataMapper dokumentXmlDataMapper,
                                                 DokumentMalUtleder dokumentMalUtleder,
-                                                BehandlingRestKlient behandlingRestKlient,
                                                 DokumentbestillingMapper dokumentbestillingMapper,
                                                 DokumentHendelseDtoMapper dtoTilDomeneobjektMapper,
                                                 DokumentFellesDataMapper dokumentFellesDataMapper,
@@ -66,7 +61,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
         this.dokumentXmlDataMapper = dokumentXmlDataMapper;
         this.dokumentMalUtleder = dokumentMalUtleder;
-        this.behandlingRestKlient = behandlingRestKlient;
         this.dokumentbestillingMapper = dokumentbestillingMapper;
         this.dtoTilDomeneobjektMapper = dtoTilDomeneobjektMapper;
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
@@ -147,10 +141,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
             return produserDokumentutkastResponse.getDokumentutkast();//$NON-NLS-1$
         }
         return null;
-    }
-
-    private BehandlingDto hentBehandlingFraFpsak(long behandlingId) {
-        return behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId));
     }
 
     private DokumentFelles lagDokumentFelles(Behandling behandling, DokumentMalType dokumentMalType) {

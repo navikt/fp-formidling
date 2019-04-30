@@ -3,9 +3,10 @@ package no.nav.foreldrepenger.melding.behandling;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
@@ -25,6 +26,7 @@ public class Behandling {
     private String behandlendeEnhetNavn;
     private String ansvarligBeslutter;
     private Fagsak fagsak;
+    private BehandlingStatus status;
 
     private Behandling(Builder builder) {
         id = builder.id;
@@ -40,6 +42,7 @@ public class Behandling {
         toTrinnsBehandling = builder.toTrinnsBehandling;
         ansvarligBeslutter = builder.ansvarligBeslutter;
         fagsak = builder.fagsak;
+        status = builder.status;
     }
 
     public String getBehandlendeEnhetNavn() {
@@ -98,8 +101,16 @@ public class Behandling {
         return BehandlingType.FØRSTEGANGSSØKNAD.equals(getBehandlingType());
     }
 
+    public BehandlingStatus getStatus() {
+        return status;
+    }
+
     public boolean erRevurdering() {
         return BehandlingType.REVURDERING.equals(getBehandlingType());
+    }
+
+    public boolean erKlage() {
+        return BehandlingType.KLAGE.equals(getBehandlingType());
     }
 
     public Fagsak getFagsak() {
@@ -110,17 +121,38 @@ public class Behandling {
         return getFagsak().getYtelseType().gjelderForeldrepenger();
     }
 
-    @Deprecated
-    public FagsakYtelseType getFagsakYtelseType() {
-        return getFagsak().getYtelseType();
-    }
-
     public Saksnummer getSaksnummer() {
         return getFagsak().getSaksnummer();
     }
 
     public RelasjonsRolleType getRelasjonsRolleType() {
         return getFagsak().getRelasjonsRolleType();
+    }
+
+    public boolean erSaksbehandlingAvsluttet() {
+        if (behandlingsresultat == null) {
+            return false;
+        }
+        return erAvsluttet() || erUnderIverksettelse() || erHenlagt();
+    }
+
+    private boolean erHenlagt() {
+        return getBehandlingsresultat().isBehandlingHenlagt();
+    }
+
+    public boolean erUnderIverksettelse() {
+        return Objects.equals(BehandlingStatus.IVERKSETTER_VEDTAK, getStatus());
+    }
+
+    public boolean erAvsluttet() {
+        return Objects.equals(BehandlingStatus.AVSLUTTET, getStatus());
+    }
+
+    public boolean erManueltOpprettet() {
+        return getBehandlingÅrsaker().stream()
+                .map(BehandlingÅrsak::getManueltOpprettet)
+                .collect(Collectors.toList())
+                .contains(true);
     }
 
     public static Behandling.Builder builder() {
@@ -142,6 +174,7 @@ public class Behandling {
         private Boolean toTrinnsBehandling;
         private String ansvarligBeslutter;
         private Fagsak fagsak;
+        private BehandlingStatus status;
 
         public Behandling.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {
             this.behandlendeEnhetNavn = behandlendeEnhetNavn;
@@ -200,6 +233,11 @@ public class Behandling {
 
         public Behandling.Builder medAnsvarligBeslutter(String ansvarligBeslutter) {
             this.ansvarligBeslutter = ansvarligBeslutter;
+            return this;
+        }
+
+        public Behandling.Builder medStatus(BehandlingStatus status) {
+            this.status = status;
             return this;
         }
 

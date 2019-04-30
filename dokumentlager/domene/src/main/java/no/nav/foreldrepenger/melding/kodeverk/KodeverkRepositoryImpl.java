@@ -247,7 +247,7 @@ public class KodeverkRepositoryImpl implements KodeverkRepository {
         String kodeverk;
         try {
             Method getKodeverk = kodeliste1.getMethod("getKodeverk");
-            kodeverk = ((String) getKodeverk.invoke(kodeliste1.newInstance()));
+            kodeverk = ((String) getKodeverk.invoke(kodeliste1.getDeclaredConstructor().newInstance()));
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException | NoSuchMethodException e) {
             throw new IllegalArgumentException("Fant ikke kodeverk for kodeverk=" + kodeliste1, e);
         }

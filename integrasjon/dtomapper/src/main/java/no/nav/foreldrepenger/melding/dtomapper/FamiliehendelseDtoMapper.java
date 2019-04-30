@@ -42,7 +42,9 @@ public class FamiliehendelseDtoMapper {
 
     private Optional<LocalDate> finnFødselsdatoFraDto(FamiliehendelseDto dto) {
         if (dto instanceof AvklartDataFodselDto) {
-            return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().map(AvklartBarnDto::getFodselsdato).min(LocalDate::compareTo);
+            if (((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
+                return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().map(AvklartBarnDto::getFodselsdato).min(LocalDate::compareTo);
+            }
         }
         return Optional.empty();
     }

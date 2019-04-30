@@ -10,7 +10,15 @@ import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 public class YtelseFordelingDtoMapper {
 
     public static YtelseFordeling mapYtelseFordelingFraDto(YtelseFordelingDto dto) {
-        return new YtelseFordeling(new Dekningsgrad(dto.getGjeldendeDekningsgrad()));
+        boolean annenForelderHarRett = false;
+        boolean harPeriodeMedAleneomsorg = false;
+        if (dto.getAnnenforelderHarRettDto() != null && dto.getAnnenforelderHarRettDto().getAnnenforelderHarRett() != null) {
+            annenForelderHarRett = dto.getAnnenforelderHarRettDto().getAnnenforelderHarRett();
+        }
+        if (dto.getAleneOmsorgPerioder() != null) {
+            harPeriodeMedAleneomsorg = !dto.getAleneOmsorgPerioder().isEmpty();
+        }
+        return new YtelseFordeling(new Dekningsgrad(dto.getGjeldendeDekningsgrad()), annenForelderHarRett, harPeriodeMedAleneomsorg);
     }
 
 }

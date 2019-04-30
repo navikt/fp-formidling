@@ -59,7 +59,7 @@ public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         fagType.setOpphavType(utledOpphaveTypeKode(klage));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
-        return null;
+        return fagType;
     }
 
     private OpphavTypeKode utledOpphaveTypeKode(Klage klage) {

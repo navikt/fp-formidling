@@ -28,7 +28,7 @@ import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
-public class AvslagsårsakMapper {
+public class ÅrsakMapperAvslag {
 
     private static ObjectFactory objectFactory = new ObjectFactory();
     private static Set<String> lovReferanser;

@@ -7,15 +7,12 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
-import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunkterDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.BrevmalDto;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.dto.AksjonspunktDtoMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalRestriksjon;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
@@ -23,8 +20,6 @@ import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 @ApplicationScoped
 public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjeneste {
     private DokumentRepository dokumentRepository;
-    private BehandlingRestKlient behandlingRestKlient;
-    private AksjonspunktDtoMapper aksjonspunktDtoMapper;
     private DomeneobjektProvider domeneobjektProvider;
 
     public DokumentBehandlingTjenesteImpl() {
@@ -33,20 +28,15 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
 
     @Inject
     public DokumentBehandlingTjenesteImpl(DokumentRepository dokumentRepository,
-                                          BehandlingRestKlient behandlingRestKlient,
-                                          DomeneobjektProvider domeneobjektProvider,
-                                          AksjonspunktDtoMapper aksjonspunktDtoMapper) {
+                                          DomeneobjektProvider domeneobjektProvider) {
         this.dokumentRepository = dokumentRepository;
-        this.behandlingRestKlient = behandlingRestKlient;
         this.domeneobjektProvider = domeneobjektProvider;
-        this.aksjonspunktDtoMapper = aksjonspunktDtoMapper;
     }
 
     @Override
     public List<BrevmalDto> hentBrevmalerFor(Long behandlingId) {
         Behandling behandling = domeneobjektProvider.hentBehandling(behandlingId);
-        final AksjonspunkterDto aksjonspunktDto = behandlingRestKlient.hentAksjonspunkter(behandling.getResourceLinker());
-        final List<Aksjonspunkt> aksjonspunkter = aksjonspunktDtoMapper.mapAksjonspunktFraDto(aksjonspunktDto);
+        final List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
 
         List<DokumentMalType> kandidater = new ArrayList<>(dokumentRepository.hentAlleDokumentMalTyper());
         List<DokumentMalType> fjernes = filtrerUtilgjengeligBrevmaler(behandling, kandidater, automatiskOpprettet(behandling), aksjonspunkter);

@@ -34,21 +34,20 @@ public class BehandlingsresultatDtoMapper {
     public Behandlingsresultat mapBehandlingsresultatFraDto(BehandlingsresultatDto dto) {
         Behandlingsresultat.Builder builder = builder();
         if (dto.getAvslagsarsak() != null) {
-            builder.medAvslagsårsak(kodeverkRepository.finn(Avslagsårsak.class, dto.getAvslagsarsak().kode));
+            builder.medAvslagsårsak(kodeverkRepository.finn(Avslagsårsak.class, dto.getAvslagsarsak().getKode()));
         }
         if (dto.getType() != null) {
-            builder.medBehandlingResultatType(kodeverkRepository.finn(BehandlingResultatType.class, dto.getType().kode));
+            builder.medBehandlingResultatType(kodeverkRepository.finn(BehandlingResultatType.class, dto.getType().getKode()));
         }
         builder.medFritekstbrev(dto.getFritekstbrev())
                 .medOverskrift(dto.getOverskrift())
-                .medVedtaksbrev(kodeverkRepository.finn(Vedtaksbrev.class, dto.getVedtaksbrev().kode))
+                .medVedtaksbrev(kodeverkRepository.finn(Vedtaksbrev.class, dto.getVedtaksbrev().getKode()))
                 .medAvslagarsakFritekst(dto.getAvslagsarsakFritekst());
         List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>();
         for (KodeDto kodeDto : dto.getKonsekvenserForYtelsen()) {
-            konsekvenserForYtelsen.add(kodeverkRepository.finn(KonsekvensForYtelsen.class, kodeDto.kode));
+            konsekvenserForYtelsen.add(kodeverkRepository.finn(KonsekvensForYtelsen.class, kodeDto.getKode()));
         }
         builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);
         return builder.build();
     }
-
 }

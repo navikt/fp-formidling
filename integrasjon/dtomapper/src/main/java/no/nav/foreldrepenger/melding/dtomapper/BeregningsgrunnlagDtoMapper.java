@@ -49,7 +49,7 @@ public class BeregningsgrunnlagDtoMapper {
         return DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagFom(), dto.getBeregningsgrunnlagTom());
     }
 
-    static Arbeidsgiver mapArbeidsgiverFraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
+    private static Arbeidsgiver mapArbeidsgiverFraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
         AktørId aktørId = null;
         Virksomhet virksomhet = null;
         if (dto.getAktørId() != null) {
@@ -70,7 +70,7 @@ public class BeregningsgrunnlagDtoMapper {
         return builder.build();
     }
 
-    BeregningsgrunnlagPeriode mapBeregningsgrunnlagPeriodeFraDto(BeregningsgrunnlagPeriodeDto dto) {
+    private BeregningsgrunnlagPeriode mapBeregningsgrunnlagPeriodeFraDto(BeregningsgrunnlagPeriodeDto dto) {
         DatoIntervall intervall = dto.getBeregningsgrunnlagPeriodeTom() != null ?
                 DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagPeriodeFom(), dto.getBeregningsgrunnlagPeriodeTom()) :
                 DatoIntervall.fraOgMed(dto.getBeregningsgrunnlagPeriodeFom());
@@ -84,10 +84,10 @@ public class BeregningsgrunnlagDtoMapper {
                 .build();
     }
 
-    BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagPrStatusOgAndelDto dto) {
+    private BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagPrStatusOgAndelDto dto) {
         BeregningsgrunnlagPrStatusOgAndel.Builder builder = BeregningsgrunnlagPrStatusOgAndel.ny();
         BGAndelArbeidsforhold bgAndelArbeidsforhold = mapBgAndelArbeidsforholdfraDto(dto.getArbeidsforhold());
-        builder.medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().kode))
+        builder.medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().getKode()))
                 .medBruttoPrÅr(dto.getBruttoPrAar())
                 .medAvkortetPrÅr(dto.getAvkortetPrAar())
                 .medBesteberegningPrÅr(dto.getBesteberegningPrAar())
@@ -112,12 +112,12 @@ public class BeregningsgrunnlagDtoMapper {
         return builder.build();
     }
 
-    BGAndelArbeidsforhold mapBgAndelArbeidsforholdfraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
+    private BGAndelArbeidsforhold mapBgAndelArbeidsforholdfraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
         return new BGAndelArbeidsforhold(mapArbeidsgiverFraDto(dto), ArbeidsforholdRef.ref(dto.getArbeidsforholdId()),
                 kodeverkRepository.finn(OpptjeningAktivitetType.class, dto.getArbeidsforholdType().getKode()));
     }
 
-    BeregningsgrunnlagAktivitetStatus mapBeregningsgrunnlagAktivitetStatusFraDto(KodeDto kodedto) {
-        return new BeregningsgrunnlagAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, kodedto.kode));
+    private BeregningsgrunnlagAktivitetStatus mapBeregningsgrunnlagAktivitetStatusFraDto(KodeDto kodedto) {
+        return new BeregningsgrunnlagAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, kodedto.getKode()));
     }
 }

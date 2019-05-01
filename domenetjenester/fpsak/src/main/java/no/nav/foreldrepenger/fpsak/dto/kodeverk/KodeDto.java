@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KodeDto {
-    public String kodeverk;
-    public String kode;
-    public String navn;
+    private String kodeverk;
+    private String kode;
+    private String navn;
 
     public KodeDto() {
     }

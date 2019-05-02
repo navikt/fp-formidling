@@ -9,8 +9,10 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
+import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
+import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.klage.KlageFormkravResultat;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
@@ -28,6 +30,10 @@ public class KlageDtoMapper {
 
     public KlageDtoMapper() {
         //CDI
+    }
+
+    public KlageDokument mapKlagedokumentFraDto(MottattKlagedokumentDto dto) {
+        return new KlageDokument(dto.getMottattDato());
     }
 
     public Klage mapKlagefraDto(KlagebehandlingDto dto) {

@@ -250,26 +250,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 });
     }
 
-    @Override
-    public MottattKlagedokumentDto hentKlagedokument(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker.stream()
-                .filter(dto -> "mottatt-klagedokument".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, MottattKlagedokumentDto.class))
-                .orElseThrow(() -> {
-                    throw new IllegalStateException("Klarte ikke hente klagedokument for behandling: " + hentBehandlingId(resourceLinker));
-                });
-    }
-
-    @Override
-    public MottattKlagedokumentDto hentKlagedokument(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker.stream()
-                .filter(dto -> "mottatt-klagedokument".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, MottattKlagedokumentDto.class))
-                .orElseThrow(() -> {
-                    throw new IllegalStateException("Klarte ikke hente klagedokument for behandling: " + hentBehandlingId(resourceLinker));
-                });
-    }
-
     private <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
 
         if ("POST".equals(link.getType())) {

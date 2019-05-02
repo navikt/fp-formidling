@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.Beregningsre
 import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
+import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
@@ -60,4 +61,6 @@ public interface BehandlingRestKlient {
     SaldoerDto hentSaldoer(List<BehandlingResourceLink> resourceLinker);
 
     AksjonspunkterDto hentAksjonspunkter(List<BehandlingResourceLink> resourceLinkDtos);
+
+    MottattKlagedokumentDto hentKlagedokument(List<BehandlingResourceLink> resourceLinker);
 }

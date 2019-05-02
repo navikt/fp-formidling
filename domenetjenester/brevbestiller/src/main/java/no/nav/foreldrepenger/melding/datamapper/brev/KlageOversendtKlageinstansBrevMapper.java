@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,6 +15,7 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.oversendt.klagei
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.oversendt.klageinstans.KlageOversendtKlageinstansConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.oversendt.klageinstans.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.oversendt.klageinstans.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -34,29 +35,32 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 public class KlageOversendtKlageinstansBrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
+    private DomeneobjektProvider domeneobjektProvider;
 
     public KlageOversendtKlageinstansBrevMapper() {
         //CDI
     }
 
     @Inject
-    public KlageOversendtKlageinstansBrevMapper(BrevParametere brevParametere) {
+    public KlageOversendtKlageinstansBrevMapper(BrevParametere brevParametere,
+                                                DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
+        this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        FagType fagType = mapFagType(dokumentHendelse, behandling);
+        KlageDokument klageDokument = domeneobjektProvider.hentKlageDokument(behandling);
+        FagType fagType = mapFagType(dokumentHendelse, behandling, klageDokument);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(KlageOversendtKlageinstansConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
 
-    private FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
+    private FagType mapFagType(DokumentHendelse hendelse, Behandling behandling, KlageDokument klageDokument) {
         final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
-        //TODO må eksponeres fra fpsak
-        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(LocalDate.now()));
+        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(klageDokument.getMottattDato()));
         fagType.setFritekst(hendelse.getFritekst());
         fagType.setAntallUker(BigInteger.valueOf(BehandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));

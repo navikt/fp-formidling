@@ -8,6 +8,9 @@ public class AvklartBarnDto {
     private LocalDate fodselsdato;
     private LocalDate dodsdato;
 
+    public AvklartBarnDto() {
+    }
+
     public AvklartBarnDto(LocalDate fodselsdato, LocalDate dodsdato) {
         this.fodselsdato = fodselsdato;
         this.dodsdato = dodsdato;

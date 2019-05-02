@@ -128,7 +128,6 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
                 uttakResultatPerioder,
                 fagType);
 
-        //TODO Ikke obligatoriske felter
         finnDødsdatoHvisFinnes(personinfo, familiehendelse, fagType.getAarsakListe()).map(XmlUtil::finnDatoVerdiAvUtenTidSone)
                 .ifPresent(fagType::setDodsdato);
         finnOpphørsdatoHvisFinnes(uttakResultatPerioder, familiehendelse).map(XmlUtil::finnDatoVerdiAvUtenTidSone)

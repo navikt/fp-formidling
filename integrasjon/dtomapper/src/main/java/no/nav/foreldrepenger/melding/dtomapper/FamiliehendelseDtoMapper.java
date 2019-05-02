@@ -45,7 +45,7 @@ public class FamiliehendelseDtoMapper {
     private Optional<LocalDate> finnFødselsdatoFraDto(FamiliehendelseDto dto) {
         if (dto instanceof AvklartDataFodselDto) {
             if (((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
-                return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().map(AvklartBarnDto::getFodselsdato).min(LocalDate::compareTo);
+                return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().filter(avklartBarnDto -> avklartBarnDto.getFodselsdato() != null).map(AvklartBarnDto::getFodselsdato).min(LocalDate::compareTo);
             }
         }
         return Optional.empty();
@@ -54,7 +54,7 @@ public class FamiliehendelseDtoMapper {
     private Optional<LocalDate> finnDødsdatoFraDto(FamiliehendelseDto dto) {
         if (dto instanceof AvklartDataFodselDto) {
             if (((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
-                return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().map(AvklartBarnDto::getDodsdato).min(LocalDate::compareTo);
+                return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().filter(avklartBarnDto -> avklartBarnDto.getDodsdato() != null).map(AvklartBarnDto::getDodsdato).min(LocalDate::compareTo);
             }
         }
         return Optional.empty();

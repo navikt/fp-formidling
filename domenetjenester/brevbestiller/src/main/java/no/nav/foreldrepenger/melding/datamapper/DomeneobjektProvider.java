@@ -32,6 +32,7 @@ import no.nav.foreldrepenger.melding.dtomapper.YtelseFordelingDtoMapper;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.InntektArbeidYtelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
+import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
@@ -117,6 +118,10 @@ public class DomeneobjektProvider {
     public Klage hentKlagebehandling(Behandling behandling) {
         KlagebehandlingDto klagebehandlingDto = behandlingRestKlient.hentKlagebehandling(behandling.getResourceLinker());
         return klageDtoMapper.mapKlagefraDto(klagebehandlingDto);
+    }
+
+    public KlageDokument hentKlageDokument(Behandling behandling) {
+        return klageDtoMapper.mapKlagedokumentFraDto(behandlingRestKlient.hentKlagedokument(behandling.getResourceLinker()));
     }
 
     public Søknad hentSøknad(Behandling behandling) {

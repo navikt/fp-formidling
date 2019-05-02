@@ -79,7 +79,7 @@ public class BeregningsresultatDtoMapper {
                 .medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().getKode()))
                 .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                 .medArbeidsgiver(finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr()))
-                .medStillingsprosent(null/*TODO*/)
+                .medStillingsprosent(dto.getStillingsprosent())
                 .medBrukerErMottaker(brukerErMottaker)
                 .build();
     }

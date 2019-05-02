@@ -3,7 +3,8 @@ package no.nav.foreldrepenger.melding.aksjonspunkt;
 public enum AksjonspunktDefinisjon {
 
     VARSEL_REVURDERING_ETTERKONTROLL("5025"),
-    VARSEL_REVURDERING_MANUELL("5026");
+    VARSEL_REVURDERING_MANUELL("5026"),
+    UDEFINERT("-");
 
     private final String kode;
 

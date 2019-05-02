@@ -1,27 +1,36 @@
 package no.nav.foreldrepenger.melding.datamapper.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
+import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunkterDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
 
 @ApplicationScoped
 public class AksjonspunktDtoMapper {
-    private KodeverkRepository kodeverkRepository;
-
-    public AksjonspunktDtoMapper() {
-    }
-
-    @Inject
-    public AksjonspunktDtoMapper(KodeverkRepository kodeverkRepository) {
-        this.kodeverkRepository = kodeverkRepository;
-    }
 
     public List<Aksjonspunkt> mapAksjonspunktFraDto(AksjonspunkterDto dto) {
-        return null;
+        List<Aksjonspunkt> aksjonspunktList = new ArrayList<>();
+        for (AksjonspunktDto aksjonspunktDto : dto.getAksjonspunktDtos()) {
+            aksjonspunktList.add(Aksjonspunkt.ny()
+                    .medAksjonspunktDefinisjon(finnAksjonspunktDefinisjon(aksjonspunktDto.getDefinisjon().getKode()))
+                    .build());
+        }
+
+        return aksjonspunktList;
+    }
+
+    private AksjonspunktDefinisjon finnAksjonspunktDefinisjon(String kode) {
+        if (AksjonspunktDefinisjon.VARSEL_REVURDERING_ETTERKONTROLL.getKode().equals(kode)) {
+            return AksjonspunktDefinisjon.VARSEL_REVURDERING_ETTERKONTROLL;
+        } else if (AksjonspunktDefinisjon.VARSEL_REVURDERING_MANUELL.getKode().equals(kode)) {
+            return AksjonspunktDefinisjon.VARSEL_REVURDERING_MANUELL;
+        } else {
+            return AksjonspunktDefinisjon.UDEFINERT;
+        }
     }
 }

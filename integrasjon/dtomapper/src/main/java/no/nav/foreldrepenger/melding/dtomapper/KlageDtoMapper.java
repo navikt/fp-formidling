@@ -53,7 +53,7 @@ public class KlageDtoMapper {
         builder.medBegrunnelse(dto.getBegrunnelse());
         List<KlageAvvistÅrsak> avvistÅrsaker = new ArrayList<>();
         dto.getAvvistArsaker().forEach(årsak -> {
-            avvistÅrsaker.add(kodeverkRepository.finn(KlageAvvistÅrsak.class, årsak.kode));
+            avvistÅrsaker.add(kodeverkRepository.finn(KlageAvvistÅrsak.class, årsak.getKode()));
         });
         builder.medAvvistÅrsaker(avvistÅrsaker);
         return builder.build();

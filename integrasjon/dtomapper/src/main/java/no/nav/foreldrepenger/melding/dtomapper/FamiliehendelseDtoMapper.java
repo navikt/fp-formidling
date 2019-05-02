@@ -49,6 +49,15 @@ public class FamiliehendelseDtoMapper {
         return Optional.empty();
     }
 
+    private Optional<LocalDate> finnDødsdatoFraDto(FamiliehendelseDto dto) {
+        if (dto instanceof AvklartDataFodselDto) {
+            if (((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
+                return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().map(AvklartBarnDto::getDodsdato).min(LocalDate::compareTo);
+            }
+        }
+        return Optional.empty();
+    }
+
     private static int utledAntallBarnFødsel(AvklartDataFodselDto familiehendelseDto) {
         int sum = 0;
         if (familiehendelseDto.getAntallBarnTermin() != null) {
@@ -66,8 +75,10 @@ public class FamiliehendelseDtoMapper {
             gjeldendeHendelseDto = grunnlagDto.getOppgitt();
         }
         BigInteger antallBarnFraDto = utledAntallBarnFraDto(gjeldendeHendelseDto);
+        Optional<LocalDate> skjæringstidspunkt = Optional.ofNullable(gjeldendeHendelseDto.getSkjæringstidspunkt());
         Optional<LocalDate> termindatoFraDto = finnTermindato(gjeldendeHendelseDto);
         Optional<LocalDate> fødselsdatoFraDto = finnFødselsdatoFraDto(gjeldendeHendelseDto);
+        Optional<LocalDate> dødsdatoFraDto = finnDødsdatoFraDto(gjeldendeHendelseDto);
         boolean barnErFødtFraDto = false;
         boolean gjelderFødsel = false;
         if (gjeldendeHendelseDto instanceof AvklartDataFodselDto) {
@@ -75,7 +86,8 @@ public class FamiliehendelseDtoMapper {
             gjelderFødsel = true;
         }
         FamilieHendelseType familiehendelseType = mapFamiliehendelseType(gjeldendeHendelseDto);
-        return new FamilieHendelse(antallBarnFraDto, termindatoFraDto, barnErFødtFraDto, gjelderFødsel, familiehendelseType, fødselsdatoFraDto);
+        return new FamilieHendelse(antallBarnFraDto, skjæringstidspunkt, termindatoFraDto, barnErFødtFraDto, gjelderFødsel,
+                familiehendelseType, fødselsdatoFraDto, dødsdatoFraDto);
     }
 
     private boolean alleFelterErNull(FamiliehendelseDto dto) {

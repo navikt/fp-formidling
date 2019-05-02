@@ -33,4 +33,8 @@ public class XmlUtil {
 
         }
     }
+
+    public static LocalDate finnDatoVerdiAv(XMLGregorianCalendar calendar) {
+        return LocalDate.of(calendar.getYear(), calendar.getMonth(), calendar.getDay());
+    }
 }

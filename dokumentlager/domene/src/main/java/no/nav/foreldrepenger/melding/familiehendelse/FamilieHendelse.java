@@ -11,18 +11,27 @@ public class FamilieHendelse {
     private String barna;
     private String UidentifisertBarn;
     private String terminbekreftelse;
+
+    private Optional<LocalDate> skjæringstidspunkt;
     private Optional<LocalDate> termindato;
     private Optional<LocalDate> fødselsdato;
+    private Optional<LocalDate> dødsdato;
     private boolean barnErFødt;
     private boolean gjelderFødsel;
 
-    public FamilieHendelse(BigInteger antallBarn, Optional<LocalDate> termindato, boolean barnErFødt, boolean gjelderFødsel, FamilieHendelseType familieHendelseType, Optional<LocalDate> fødselsdato) {
+    public FamilieHendelse(BigInteger antallBarn,
+                           boolean barnErFødt,
+                           boolean gjelderFødsel,
+                           FamilieHendelseType familieHendelseType,
+                           OptionalDatoer optionalDato) {
         this.antallBarn = antallBarn;
-        this.termindato = termindato;
+        this.skjæringstidspunkt = optionalDato.skjæringstidspunkt;
+        this.termindato = optionalDato.termindato;
         this.barnErFødt = barnErFødt;
         this.gjelderFødsel = gjelderFødsel;
         this.familieHendelseType = familieHendelseType;
-        this.fødselsdato = fødselsdato;
+        this.fødselsdato = optionalDato.fødselsdato;
+        this.dødsdato = optionalDato.dødsdato;
     }
 
     public boolean isGjelderFødsel() {
@@ -33,12 +42,20 @@ public class FamilieHendelse {
         return barnErFødt;
     }
 
+    public Optional<LocalDate> getSkjæringstidspunkt() {
+        return skjæringstidspunkt;
+    }
+
     public Optional<LocalDate> getTermindato() {
         return termindato;
     }
 
     public Optional<LocalDate> getFødselsdato() {
         return fødselsdato;
+    }
+
+    public Optional<LocalDate> getDødsdato() {
+        return dødsdato;
     }
 
     public FamilieHendelseType getFamilieHendelseType() {
@@ -59,5 +76,20 @@ public class FamilieHendelse {
 
     public String getTerminbekreftelse() {
         return terminbekreftelse;
+    }
+
+    public static final class OptionalDatoer {
+        private Optional<LocalDate> skjæringstidspunkt;
+        private Optional<LocalDate> termindato;
+        private Optional<LocalDate> fødselsdato;
+        private Optional<LocalDate> dødsdato;
+
+        public OptionalDatoer(Optional<LocalDate> skjæringstidspunkt, Optional<LocalDate> termindato,
+                              Optional<LocalDate> fødselsdato, Optional<LocalDate> dødsdato) {
+            this.skjæringstidspunkt = skjæringstidspunkt;
+            this.termindato = termindato;
+            this.fødselsdato = fødselsdato;
+            this.dødsdato = dødsdato;
+        }
     }
 }

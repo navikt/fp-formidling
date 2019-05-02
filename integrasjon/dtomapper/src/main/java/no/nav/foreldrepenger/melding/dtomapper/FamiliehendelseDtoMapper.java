@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 @ApplicationScoped
 public class FamiliehendelseDtoMapper {
 
-
     static BigInteger utledAntallBarnFraDto(FamiliehendelseDto familiehendelseDto) {
         if (familiehendelseDto instanceof AvklartDataAdopsjonDto) {
             return BigInteger.valueOf(((AvklartDataAdopsjonDto) familiehendelseDto).getAdopsjonFodelsedatoer().size());
@@ -30,6 +29,10 @@ public class FamiliehendelseDtoMapper {
         throw new IllegalStateException("Familihendelse er av ukjent type");
     }
 
+    private Optional<LocalDate> hentSkjæringstidspunkt(FamiliehendelseDto gjeldendeHendelseDto) {
+        return Optional.ofNullable(gjeldendeHendelseDto.getSkjæringstidspunkt());
+    }
+
     static Optional<LocalDate> finnTermindato(FamiliehendelseDto dto) {
         if (dto instanceof AvklartDataFodselDto) {
             if (((AvklartDataFodselDto) dto).getTermindato() != null) {
@@ -39,11 +42,19 @@ public class FamiliehendelseDtoMapper {
         return Optional.empty();
     }
 
-
     private Optional<LocalDate> finnFødselsdatoFraDto(FamiliehendelseDto dto) {
         if (dto instanceof AvklartDataFodselDto) {
             if (((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
                 return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().map(AvklartBarnDto::getFodselsdato).min(LocalDate::compareTo);
+            }
+        }
+        return Optional.empty();
+    }
+
+    private Optional<LocalDate> finnDødsdatoFraDto(FamiliehendelseDto dto) {
+        if (dto instanceof AvklartDataFodselDto) {
+            if (((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
+                return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().map(AvklartBarnDto::getDodsdato).min(LocalDate::compareTo);
             }
         }
         return Optional.empty();
@@ -66,8 +77,11 @@ public class FamiliehendelseDtoMapper {
             gjeldendeHendelseDto = grunnlagDto.getOppgitt();
         }
         BigInteger antallBarnFraDto = utledAntallBarnFraDto(gjeldendeHendelseDto);
-        Optional<LocalDate> termindatoFraDto = finnTermindato(gjeldendeHendelseDto);
-        Optional<LocalDate> fødselsdatoFraDto = finnFødselsdatoFraDto(gjeldendeHendelseDto);
+        FamilieHendelse.OptionalDatoer optionalDatoer = new FamilieHendelse.OptionalDatoer(
+                hentSkjæringstidspunkt(gjeldendeHendelseDto),
+                finnTermindato(gjeldendeHendelseDto),
+                finnFødselsdatoFraDto(gjeldendeHendelseDto),
+                finnDødsdatoFraDto(gjeldendeHendelseDto));
         boolean barnErFødtFraDto = false;
         boolean gjelderFødsel = false;
         if (gjeldendeHendelseDto instanceof AvklartDataFodselDto) {
@@ -75,7 +89,7 @@ public class FamiliehendelseDtoMapper {
             gjelderFødsel = true;
         }
         FamilieHendelseType familiehendelseType = mapFamiliehendelseType(gjeldendeHendelseDto);
-        return new FamilieHendelse(antallBarnFraDto, termindatoFraDto, barnErFødtFraDto, gjelderFødsel, familiehendelseType, fødselsdatoFraDto);
+        return new FamilieHendelse(antallBarnFraDto, barnErFødtFraDto, gjelderFødsel, familiehendelseType, optionalDatoer);
     }
 
     private boolean alleFelterErNull(FamiliehendelseDto dto) {
@@ -123,7 +137,6 @@ public class FamiliehendelseDtoMapper {
     private boolean erBarnFraDto(AvklartDataFodselDto gjeldendeHendelseDto) {
         return gjeldendeHendelseDto.getAvklartBarn() != null && !gjeldendeHendelseDto.getAvklartBarn().isEmpty();
     }
-
 
     private FamilieHendelseType mapFamiliehendelseType(FamiliehendelseDto dto) {
         if (dto instanceof AvklartDataAdopsjonDto) {

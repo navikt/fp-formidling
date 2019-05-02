@@ -20,21 +20,18 @@ public class FamilieHendelse {
     private boolean gjelderFødsel;
 
     public FamilieHendelse(BigInteger antallBarn,
-                           Optional<LocalDate> skjæringstidspunkt,
-                           Optional<LocalDate> termindato,
                            boolean barnErFødt,
                            boolean gjelderFødsel,
                            FamilieHendelseType familieHendelseType,
-                           Optional<LocalDate> fødselsdato,
-                           Optional<LocalDate> dødsdato) {
+                           OptionalDatoer optionalDato) {
         this.antallBarn = antallBarn;
-        this.skjæringstidspunkt = skjæringstidspunkt;
-        this.termindato = termindato;
+        this.skjæringstidspunkt = optionalDato.skjæringstidspunkt;
+        this.termindato = optionalDato.termindato;
         this.barnErFødt = barnErFødt;
         this.gjelderFødsel = gjelderFødsel;
         this.familieHendelseType = familieHendelseType;
-        this.fødselsdato = fødselsdato;
-        this.dødsdato = dødsdato;
+        this.fødselsdato = optionalDato.fødselsdato;
+        this.dødsdato = optionalDato.dødsdato;
     }
 
     public boolean isGjelderFødsel() {
@@ -79,5 +76,20 @@ public class FamilieHendelse {
 
     public String getTerminbekreftelse() {
         return terminbekreftelse;
+    }
+
+    public static final class OptionalDatoer {
+        private Optional<LocalDate> skjæringstidspunkt;
+        private Optional<LocalDate> termindato;
+        private Optional<LocalDate> fødselsdato;
+        private Optional<LocalDate> dødsdato;
+
+        public OptionalDatoer(Optional<LocalDate> skjæringstidspunkt, Optional<LocalDate> termindato,
+                              Optional<LocalDate> fødselsdato, Optional<LocalDate> dødsdato) {
+            this.skjæringstidspunkt = skjæringstidspunkt;
+            this.termindato = termindato;
+            this.fødselsdato = fødselsdato;
+            this.dødsdato = dødsdato;
+        }
     }
 }

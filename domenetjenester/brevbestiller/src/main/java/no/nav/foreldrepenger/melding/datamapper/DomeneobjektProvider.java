@@ -128,7 +128,7 @@ public class DomeneobjektProvider {
         return SøknadDtoMapper.mapSøknadFraDto(behandlingRestKlient.hentSoknad(behandling.getResourceLinker()));
     }
 
-    public Vilkår hentVilkår(Behandling behandling) {
+    public List<Vilkår> hentVilkår(Behandling behandling) {
         return vilkårDtoMapper.mapVilkårFraDto(behandlingRestKlient.hentVilkår(behandling.getResourceLinker()));
     }
 

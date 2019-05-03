@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
+import java.util.Arrays;
+
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
@@ -27,7 +29,15 @@ public class DokumentBestillerTjenesteUtil {
     }
 
     static SpraakkodeType mapSpråkkode(Språkkode språkkode) {
-        return SpraakkodeType.fromValue(språkkode.getKode());
+        if (erStøtteFor(språkkode)) {
+            return SpraakkodeType.fromValue(språkkode.getKode());
+        }
+        return SpraakkodeType.NB;
+    }
+
+    private static boolean erStøtteFor(Språkkode språkkode) {
+        return Arrays.stream(SpraakkodeType.values())
+                .anyMatch(kode -> kode.value().equals(språkkode.getKode()));
     }
 
     static SignerendeBeslutterType lageSignerendeBeslutterType(DokumentFelles dokumentFelles) {

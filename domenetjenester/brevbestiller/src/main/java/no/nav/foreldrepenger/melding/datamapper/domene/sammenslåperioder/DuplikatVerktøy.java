@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.ArbeidsforholdDto;
-import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.PeriodeDto;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdType;
 
 public class DuplikatVerktøy {
 
@@ -13,25 +12,29 @@ public class DuplikatVerktøy {
         //for sonar
     }
 
-    public static void slåSammenLikeArbeidsforhold(PeriodeDto periodeDto) {
-        List<ArbeidsforholdDto> arbeidsforhold = periodeDto.getArbeidsforhold();
-        List<ArbeidsforholdDto> nyListe = new ArrayList<>();
-        nyListe.addAll(arbeidsforhold);
+    public static List<ArbeidsforholdType> slåSammenLikeArbeidsforhold(List<ArbeidsforholdType> eksisterendeListe) {
+        List<ArbeidsforholdType> nyListe = new ArrayList<>(eksisterendeListe);
 
-        for (ArbeidsforholdDto dto : arbeidsforhold) {
-            for (ArbeidsforholdDto dto2 : arbeidsforhold) {
-                if (nyListe.containsAll(List.of(dto, dto2)) && sammeArbeidsforhold(dto, dto2)) {
-                    dto.setDagsats(dto.getDagsats() + dto2.getDagsats());
-                    nyListe.remove(dto2);
+        for (ArbeidsforholdType arbeidsforhold : eksisterendeListe) {
+            for (ArbeidsforholdType arbeidsforhold2 : eksisterendeListe) {
+                if (nyListe.containsAll(List.of(arbeidsforhold, arbeidsforhold2)) && sammeArbeidsforhold(arbeidsforhold, arbeidsforhold2)) {
+                    summerDagsats(arbeidsforhold, arbeidsforhold2);
+                    nyListe.remove(arbeidsforhold2);
                 }
             }
         }
-        periodeDto.setArbeidsforhold(nyListe);
+        return nyListe;
     }
 
-    private static boolean sammeArbeidsforhold(ArbeidsforholdDto dto, ArbeidsforholdDto dto2) {
-        return !dto.equals(dto2)
-                && Objects.equals(dto.getArbeidsgiverNavn(), dto2.getArbeidsgiverNavn())
-                && Objects.equals(dto.getArbeidsforholdId(), dto2.getArbeidsforholdId());
+    private static void summerDagsats(ArbeidsforholdType arbeidsforhold, ArbeidsforholdType arbeidsforhold2) {
+        arbeidsforhold.setAktivitetDagsats(arbeidsforhold.getAktivitetDagsats() + arbeidsforhold2.getAktivitetDagsats());
+    }
+
+    private static boolean sammeArbeidsforhold(ArbeidsforholdType arb1, ArbeidsforholdType arb2) {
+        return !arb1.equals(arb2)
+                && Objects.equals(arb1.getArbeidsgiverNavn(), arb2.getArbeidsgiverNavn())
+                && Objects.equals(arb1.getStillingsprosent(), arb2.getStillingsprosent())
+                && Objects.equals(arb1.getProsentArbeid(), arb2.getProsentArbeid())
+                && Objects.equals(arb1.getUtbetalingsgrad(), arb2.getUtbetalingsgrad());
     }
 }

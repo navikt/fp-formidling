@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriod
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
+import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.DuplikatVerktøy;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetType;
@@ -52,15 +54,18 @@ public class AktivtetsMapper {
     }
 
     static ArbeidsforholdListeType mapArbeidsforholdliste(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        ArbeidsforholdListeType arbeidsforholdListe = objectFactory.createArbeidsforholdListeType();
+        ArbeidsforholdListeType arbeidsforholdListeType = objectFactory.createArbeidsforholdListeType();
+        List<ArbeidsforholdType> arbeidsforholdListe = new ArrayList<>();
         for (BeregningsresultatAndel andel : finnArbeidsandeler(beregningsresultatPeriode)) {
-            arbeidsforholdListe.getArbeidsforhold().add(mapArbeidsforholdAndel(beregningsresultatPeriode, andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel), beregningsgrunnlagPeriode));
+            arbeidsforholdListe.add(mapArbeidsforholdAndel(beregningsresultatPeriode, andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel), beregningsgrunnlagPeriode));
         }
-        return arbeidsforholdListe;
+        List<ArbeidsforholdType> sammenslåtteArbeidsforhold = DuplikatVerktøy.slåSammenLikeArbeidsforhold(arbeidsforholdListe);
+        arbeidsforholdListeType.getArbeidsforhold().addAll(sammenslåtteArbeidsforhold);
+        return arbeidsforholdListeType;
     }
 
+
     private static ArbeidsforholdType mapArbeidsforholdAndel(BeregningsresultatPeriode beregningsresultatPeriode, BeregningsresultatAndel beregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet> uttakAktivitet, Optional<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagAndel, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        //TODO - det er noe sammenslåing av "like" arbeidsforhold - da summerer man dagsatsen
         ArbeidsforholdType arbeidsforhold = objectFactory.createArbeidsforholdType();
         arbeidsforhold.setAktivitetDagsats((long) beregningsresultatAndel.getDagsats());
         arbeidsforhold.setArbeidsgiverNavn(beregningsresultatAndel.getArbeidsgiver().map(Arbeidsgiver::getNavn).orElse("Andel"));

@@ -26,6 +26,7 @@ public class BehandlingDto {
     private Boolean behandlingPaaVent;
     private Boolean behandlingKoet;
     private String ansvarligSaksbehandler;
+    private String ansvarligBeslutter;
     private LocalDate fristBehandlingPaaVent;
     private Boolean behandlingHenlagt;
     private BehandlingsresultatDto behandlingsresultat;
@@ -115,6 +116,14 @@ public class BehandlingDto {
 
     public void setAnsvarligSaksbehandler(String ansvarligSaksbehandler) {
         this.ansvarligSaksbehandler = ansvarligSaksbehandler;
+    }
+
+    public String getAnsvarligBeslutter() {
+        return ansvarligBeslutter;
+    }
+
+    public void setAnsvarligBeslutter(String ansvarligBeslutter) {
+        this.ansvarligBeslutter = ansvarligBeslutter;
     }
 
     public LocalDate getFristBehandlingPaaVent() {
@@ -254,6 +263,7 @@ public class BehandlingDto {
                 ", behandlingPaaVent=" + behandlingPaaVent +
                 ", behandlingKoet=" + behandlingKoet +
                 ", ansvarligSaksbehandler='" + ansvarligSaksbehandler + '\'' +
+                ", ansvarligBeslutter='" + ansvarligBeslutter + '\'' +
                 ", fristBehandlingPaaVent=" + fristBehandlingPaaVent +
                 ", behandlingHenlagt=" + behandlingHenlagt +
                 ", behandlingsresultat=" + behandlingsresultat +

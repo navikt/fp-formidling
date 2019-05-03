@@ -7,8 +7,8 @@ import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 public class Fagsak {
     private Long id;
-    private RelasjonsRolleType brukerRolle; //Kode
-    private FagsakYtelseType ytelseType; //Kode
+    private RelasjonsRolleType brukerRolle;
+    private FagsakYtelseType ytelseType;
     private Saksnummer saksnummer;
     private Personinfo personinfo;
 

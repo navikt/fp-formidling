@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
-import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.vedtak.feil.Feil;
 import no.nav.vedtak.feil.FeilFactory;
 import no.nav.vedtak.feil.LogLevel;
@@ -26,7 +25,7 @@ public interface DokumentMapperFeil extends DeklarerteFeil {
     Feil behandlingHarUkjentVilkårType(String type);
 
     @TekniskFeil(feilkode = "FPFORMIDLING-316712", feilmelding = "Feil i ferdigstilling av dokument med journalpostId %s", logLevel = LogLevel.ERROR)
-    Feil ferdigstillingAvDokumentFeil(JournalpostId journalpostId, Exception cause);
+    Feil ferdigstillingAvDokumentFeil(String journalpostId, Exception cause);
 
     @TekniskFeil(feilkode = "FPFORMIDLING-795245", feilmelding = "Feil i knytting av vedlegg til dokument med id %s", logLevel = LogLevel.ERROR)
     Feil knyttingAvVedleggFeil(String dokumentId, Exception cause);

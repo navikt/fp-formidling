@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import java.util.Objects;
 
-import no.nav.foreldrepenger.melding.behandling.InnsynResultatType;
+import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynResultatType;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.InnsynResultatTypeKode;
 

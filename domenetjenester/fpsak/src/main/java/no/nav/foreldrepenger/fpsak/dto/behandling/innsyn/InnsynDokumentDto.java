@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpsak.dto.behandling.innsyn;
 
-class InnsynDokumentDto {
+public class InnsynDokumentDto {
 
     private boolean fikkInnsyn;
 

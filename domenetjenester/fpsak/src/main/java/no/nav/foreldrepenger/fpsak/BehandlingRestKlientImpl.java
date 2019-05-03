@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpsak;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunkterDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
@@ -231,13 +232,13 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    public AksjonspunkterDto hentAksjonspunkter(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker.stream()
+    public List<AksjonspunktDto> hentAksjonspunkter(List<BehandlingResourceLink> resourceLinker) {
+        return Arrays.asList(resourceLinker.stream()
                 .filter(dto -> "aksjonspunkter".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, AksjonspunkterDto.class))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, AksjonspunktDto[].class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente vilkår for behandling: " + hentBehandlingId(resourceLinker));
-                });
+                }));
     }
 
     @Override

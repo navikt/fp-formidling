@@ -73,6 +73,7 @@ public class BehandlingDtoMapper {
                 .medOpprettetDato(dto.getOpprettet())
                 .medOriginalBehandling(originalBehandlingId)
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
+                .medAnsvarligBeslutter(dto.getAnsvarligBeslutter())
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()))

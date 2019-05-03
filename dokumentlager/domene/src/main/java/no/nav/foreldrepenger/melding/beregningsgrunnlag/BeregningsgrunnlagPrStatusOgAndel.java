@@ -12,8 +12,7 @@ import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public class BeregningsgrunnlagPrStatusOgAndel {
-    private Long dagsatsArbeidsgiver;
-    private Long dagsatsBruker;
+    private Long dagsats;
     private AktivitetStatus aktivitetStatus;
     private Long originalDagsatsFraTilstøtendeYtelse;
     private BigDecimal bruttoPrÅr;
@@ -31,8 +30,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     private BGAndelArbeidsforhold bgAndelArbeidsforhold;
 
     private BeregningsgrunnlagPrStatusOgAndel(Builder builder) {
-        dagsatsArbeidsgiver = builder.dagsatsArbeidsgiver;
-        dagsatsBruker = builder.dagsatsBruker;
+        dagsats = builder.dagsats;
         aktivitetStatus = builder.aktivitetStatus;
         originalDagsatsFraTilstøtendeYtelse = builder.originalDagsatsFraTilstøtendeYtelse;
         bruttoPrÅr = builder.bruttoPrÅr;
@@ -58,12 +56,8 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         return new Builder();
     }
 
-    public Long getDagsatsArbeidsgiver() {
-        return dagsatsArbeidsgiver;
-    }
-
-    public Long getDagsatsBruker() {
-        return dagsatsBruker;
+    public Long getDagsats() {
+        return dagsats;
     }
 
     public AktivitetStatus getAktivitetStatus() {
@@ -132,16 +126,6 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         return Objects.equals(this.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsforholdRef), arbeidsforholdRef);
     }
 
-    public Long getDagsats() {
-        if (dagsatsBruker == null) {
-            return dagsatsArbeidsgiver;
-        }
-        if (dagsatsArbeidsgiver == null) {
-            return dagsatsBruker;
-        }
-        return dagsatsBruker + dagsatsArbeidsgiver;
-    }
-
     public LocalDate getBeregningsperiodeFom() {
         return beregningsperiode != null ? beregningsperiode.getFomDato() : null;
     }
@@ -156,8 +140,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
 
 
     public static final class Builder {
-        private Long dagsatsArbeidsgiver;
-        private Long dagsatsBruker;
+        private Long dagsats;
         private AktivitetStatus aktivitetStatus;
         private Long originalDagsatsFraTilstøtendeYtelse;
         private BigDecimal bruttoPrÅr;
@@ -177,13 +160,8 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         private Builder() {
         }
 
-        public Builder medDagsatsArbeidsgiver(Long dagsatsArbeidsgiver) {
-            this.dagsatsArbeidsgiver = dagsatsArbeidsgiver;
-            return this;
-        }
-
-        public Builder medDagsatsBruker(Long dagsatsBruker) {
-            this.dagsatsBruker = dagsatsBruker;
+        public Builder medDagsats(Long dagsats) {
+            this.dagsats = dagsats;
             return this;
         }
 

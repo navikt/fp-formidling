@@ -61,6 +61,13 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
     @JsonProperty("fastsattAvSaksbehandler")
     private Boolean fastsattAvSaksbehandler;
 
+    @JsonProperty("dagsats")
+    private Long dagsats;
+
+    @JsonProperty("originalDagsatsFraTilstøtendeYtelse")
+    private Long originalDagsatsFraTilstøtendeYtelse;
+
+
     public BeregningsgrunnlagPrStatusOgAndelDto() {
         // trengs for deserialisering av JSON
     }
@@ -193,5 +200,21 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
 
     public void setFastsattAvSaksbehandler(Boolean fastsattAvSaksbehandler) {
         this.fastsattAvSaksbehandler = fastsattAvSaksbehandler;
+    }
+
+    public Long getDagsats() {
+        return dagsats;
+    }
+
+    public void setDagsats(Long dagsats) {
+        this.dagsats = dagsats;
+    }
+
+    public Long getOriginalDagsatsFraTilstøtendeYtelse() {
+        return originalDagsatsFraTilstøtendeYtelse;
+    }
+
+    public void setOriginalDagsatsFraTilstøtendeYtelse(Long originalDagsatsFraTilstøtendeYtelse) {
+        this.originalDagsatsFraTilstøtendeYtelse = originalDagsatsFraTilstøtendeYtelse;
     }
 }

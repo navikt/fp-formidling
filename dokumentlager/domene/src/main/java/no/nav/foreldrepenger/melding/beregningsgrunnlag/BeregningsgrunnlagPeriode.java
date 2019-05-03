@@ -12,7 +12,7 @@ public class BeregningsgrunnlagPeriode {
     private Long dagsats;
     private BigDecimal bruttoPrÅr;
     private BigDecimal redusertPrÅr;
-    private List<String> periodeÅrsaker; //Kode beregningsgrunnlagperiodeÅrsakerer.periodeÅrsaker
+    private List<PeriodeÅrsak> periodeÅrsaker;
     private DatoIntervall periode;
     private List<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagPrStatusOgAndelList = new ArrayList<>();
 
@@ -40,7 +40,7 @@ public class BeregningsgrunnlagPeriode {
         return bruttoPrÅr;
     }
 
-    public List<String> getperiodeÅrsaker() {
+    public List<PeriodeÅrsak> getperiodeÅrsaker() {
         return periodeÅrsaker;
     }
 
@@ -64,7 +64,7 @@ public class BeregningsgrunnlagPeriode {
         private Long dagsats;
         private BigDecimal bruttoPrÅr;
         private BigDecimal redusertPrÅr;
-        private List<String> periodeÅrsaker;
+        private List<PeriodeÅrsak> periodeÅrsaker;
         private DatoIntervall periode;
         private List<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagPrStatusOgAndelList;
 
@@ -86,7 +86,7 @@ public class BeregningsgrunnlagPeriode {
             return this;
         }
 
-        public Builder medperiodeÅrsaker(List<String> val) {
+        public Builder medperiodeÅrsaker(List<PeriodeÅrsak> val) {
             periodeÅrsaker = val;
             return this;
         }

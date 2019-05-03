@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -14,6 +15,8 @@ public class BeregningsgrunnlagArbeidsforholdDto {
     private String arbeidsforholdId;
     private KodeDto arbeidsforholdType;
     private Long aktørId;
+    private BigDecimal naturalytelseBortfaltPrÅr;
+    private BigDecimal naturalytelseTilkommetPrÅr;
 
     public BeregningsgrunnlagArbeidsforholdDto() {
         // Hibernate
@@ -73,6 +76,22 @@ public class BeregningsgrunnlagArbeidsforholdDto {
 
     public Long getAktørId() {
         return aktørId;
+    }
+
+    public BigDecimal getNaturalytelseBortfaltPrÅr() {
+        return naturalytelseBortfaltPrÅr;
+    }
+
+    public void setNaturalytelseBortfaltPrÅr(BigDecimal naturalytelseBortfaltPrÅr) {
+        this.naturalytelseBortfaltPrÅr = naturalytelseBortfaltPrÅr;
+    }
+
+    public BigDecimal getNaturalytelseTilkommetPrÅr() {
+        return naturalytelseTilkommetPrÅr;
+    }
+
+    public void setNaturalytelseTilkommetPrÅr(BigDecimal naturalytelseTilkommetPrÅr) {
+        this.naturalytelseTilkommetPrÅr = naturalytelseTilkommetPrÅr;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
@@ -11,11 +12,19 @@ public class BGAndelArbeidsforhold {
     private Arbeidsgiver arbeidsgiver;
     private ArbeidsforholdRef arbeidsforholdRef;
     private OpptjeningAktivitetType arbeidsforholdType;
+    private BigDecimal naturalytelseBortfaltPrÅr;
+    private BigDecimal naturalytelseTilkommetPrÅr;
 
-    public BGAndelArbeidsforhold(Arbeidsgiver arbeidsgiver, ArbeidsforholdRef arbeidsforholdRef, OpptjeningAktivitetType arbeidsforholdType) {
+    public BGAndelArbeidsforhold(Arbeidsgiver arbeidsgiver,
+                                 ArbeidsforholdRef arbeidsforholdRef,
+                                 OpptjeningAktivitetType arbeidsforholdType,
+                                 BigDecimal naturalytelseBortfaltPrÅr,
+                                 BigDecimal naturalytelseTilkommetPrÅr) {
         this.arbeidsgiver = arbeidsgiver;
         this.arbeidsforholdRef = arbeidsforholdRef;
         this.arbeidsforholdType = arbeidsforholdType;
+        this.naturalytelseBortfaltPrÅr = naturalytelseBortfaltPrÅr;
+        this.naturalytelseTilkommetPrÅr = naturalytelseTilkommetPrÅr;
     }
 
     public OpptjeningAktivitetType getArbeidsforholdType() {
@@ -32,5 +41,13 @@ public class BGAndelArbeidsforhold {
 
     public Optional<Virksomhet> getVirksomhet() {
         return Optional.ofNullable(arbeidsgiver).map(Arbeidsgiver::getVirksomhet);
+    }
+
+    public BigDecimal getNaturalytelseBortfaltPrÅr() {
+        return naturalytelseBortfaltPrÅr;
+    }
+
+    public BigDecimal getNaturalytelseTilkommetPrÅr() {
+        return naturalytelseTilkommetPrÅr;
     }
 }

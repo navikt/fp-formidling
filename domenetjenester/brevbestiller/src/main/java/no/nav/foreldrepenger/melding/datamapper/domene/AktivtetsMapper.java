@@ -14,11 +14,14 @@ import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
+import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NaturalytelseEndringTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
@@ -51,12 +54,12 @@ public class AktivtetsMapper {
     static ArbeidsforholdListeType mapArbeidsforholdliste(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         ArbeidsforholdListeType arbeidsforholdListe = objectFactory.createArbeidsforholdListeType();
         for (BeregningsresultatAndel andel : finnArbeidsandeler(beregningsresultatPeriode)) {
-            arbeidsforholdListe.getArbeidsforhold().add(mapArbeidsforholdAndel(andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel)));
+            arbeidsforholdListe.getArbeidsforhold().add(mapArbeidsforholdAndel(beregningsresultatPeriode, andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel), beregningsgrunnlagPeriode));
         }
         return arbeidsforholdListe;
     }
 
-    private static ArbeidsforholdType mapArbeidsforholdAndel(BeregningsresultatAndel beregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet> uttakAktivitet, Optional<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagAndel) {
+    private static ArbeidsforholdType mapArbeidsforholdAndel(BeregningsresultatPeriode beregningsresultatPeriode, BeregningsresultatAndel beregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet> uttakAktivitet, Optional<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagAndel, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         //TODO - det er noe sammenslåing av "like" arbeidsforhold - da summerer man dagsatsen
         ArbeidsforholdType arbeidsforhold = objectFactory.createArbeidsforholdType();
         arbeidsforhold.setAktivitetDagsats((long) beregningsresultatAndel.getDagsats());
@@ -68,8 +71,31 @@ public class AktivtetsMapper {
             arbeidsforhold.setGradering(uttakAktivitet.get().getGraderingInnvilget());
         }
         arbeidsforhold.setStillingsprosent(beregningsresultatAndel.getStillingsprosent().toBigInteger());
-        //TODO Map naturalytelse - mangler
+        beregningsgrunnlagAndel.ifPresent(bgAndel -> {
+            final BeregningsgrunnlagPrStatusOgAndel statusOgAndel = beregningsgrunnlagAndel.get();
+            statusOgAndel.getBgAndelArbeidsforhold().ifPresent(bgAndelArbeidsforhold -> {
+                if (bgAndelArbeidsforhold.getNaturalytelseBortfaltPrÅr() != null ||
+                        bgAndelArbeidsforhold.getNaturalytelseTilkommetPrÅr() != null)
+                    mapNaturalytelse(arbeidsforhold, beregningsgrunnlagPeriode, beregningsresultatPeriode);
+            });
+        });
         return arbeidsforhold;
+    }
+
+    private static void mapNaturalytelse(ArbeidsforholdType arbeidsforhold, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, BeregningsresultatPeriode beregningsresultatPeriode) {
+        for (PeriodeÅrsak årsak : beregningsgrunnlagPeriode.getperiodeÅrsaker()) {
+            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.equals(årsak)) {
+                arbeidsforhold.setNaturalytelseEndringType(NaturalytelseEndringTypeKode.STOPP);
+                arbeidsforhold.setNaturalytelseNyDagsats(beregningsgrunnlagPeriode.getDagsats());
+                arbeidsforhold.setNaturalytelseEndringDato(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
+            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.equals(årsak)) {
+                arbeidsforhold.setNaturalytelseEndringType(NaturalytelseEndringTypeKode.START);
+                arbeidsforhold.setNaturalytelseNyDagsats(beregningsgrunnlagPeriode.getDagsats());
+                arbeidsforhold.setNaturalytelseEndringDato(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
+            } else {
+                arbeidsforhold.setNaturalytelseEndringType(NaturalytelseEndringTypeKode.INGEN_ENDRING);
+            }
+        }
     }
 
     static NæringListeType mapNæringsliste(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {

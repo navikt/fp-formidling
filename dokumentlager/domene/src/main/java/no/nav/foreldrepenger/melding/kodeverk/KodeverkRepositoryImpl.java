@@ -161,7 +161,7 @@ public class KodeverkRepositoryImpl implements KodeverkRepository {
                         "AND k2.navn = k3.navn ) AS land_2bokstav " +
                         "FROM kodeliste k3 " +
                         "WHERE k3.kodeverk = 'LANDKODER' " +
-                        "AND EXISTS (SELECT k2.kl_kode " +
+                        "AND EXISTS (SELECT k2.kode " +
                         "FROM kodeliste k2 " +
                         "WHERE k2.kodeverk = 'LANDKODE_ISO2' " +
                         "AND k2.navn = k3.navn)");

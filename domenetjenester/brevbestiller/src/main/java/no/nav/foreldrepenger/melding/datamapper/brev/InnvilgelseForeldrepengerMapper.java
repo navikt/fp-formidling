@@ -1,11 +1,8 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles.finnVerdiAv;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
 
 import java.math.BigInteger;
-import java.util.Collections;
-import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -32,11 +29,11 @@ import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.StønadskontoMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.YtelsefordelingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeVerktøy;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeData;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
@@ -49,7 +46,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.RelasjonskodeKode;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.VurderingsstatusKode;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
@@ -64,7 +60,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
     private ObjectFactory objectFactory = new ObjectFactory();
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
-    private UttakMapper uttakMapper;
 
     public InnvilgelseForeldrepengerMapper() {
         //CDI
@@ -72,11 +67,9 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
 
     @Inject
     public InnvilgelseForeldrepengerMapper(DomeneobjektProvider domeneobjektProvider,
-                                           BrevParametere brevParametere,
-                                           UttakMapper uttakMapper) {
+                                           BrevParametere brevParametere) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
-        this.uttakMapper = uttakMapper;
     }
 
     @Override
@@ -103,7 +96,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                 familieHendelse,
                 beregningsgrunnlag,
                 originaltBeregningsgrunnlag,
-                Collections.emptyList(),
                 søknad,
                 dokumentFelles,
                 uttakResultatPerioder,
@@ -119,7 +111,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                FamilieHendelse familieHendelse,
                                Beregningsgrunnlag beregningsgrunnlag,
                                Beregningsgrunnlag originaltBeregningsgrunnlag,
-                               List<DokumentTypeData> dokumentTypeDataListe,
                                Søknad søknad,
                                DokumentFelles dokumentFelles,
                                UttakResultatPerioder uttakResultatPerioder,
@@ -140,9 +131,9 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         mapFelterRelatertTilBehandling(behandling, fagType);
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, originaltBeregningsgrunnlag, fagType);
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType, behandling);
-        mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, behandling);
+        mapFelterRelatertTilSøknadOgYtelseFordeling(søknad, ytelseFordeling, fagType);
+        mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, behandling, søknad, ytelseFordeling);
         mapFelterRelatertTilFamiliehendelse(familieHendelse, fagType);
-        mapFelterRelatertTilSøknad(søknad, fagType);
         mapLovhjemmel(fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling, uttakResultatPerioder);
         return fagType;
     }
@@ -155,20 +146,19 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         boolean innvilget = BehandlingResultatType.INNVILGET.equals(behandling.getBehandlingsresultat().getBehandlingResultatType());
         boolean innvilgetRevurdering = revurdering && innvilget;
         lovhjemmelType.setBeregning(FellesMapper.formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForYtelsen, innvilgetRevurdering));
-        lovhjemmelType.setVurdering(uttakMapper.mapLovhjemlerForUttak(uttakResultatPerioder, konsekvensForYtelsen, innvilgetRevurdering));
+        lovhjemmelType.setVurdering(UttakMapper.mapLovhjemlerForUttak(uttakResultatPerioder, konsekvensForYtelsen, innvilgetRevurdering));
         fagType.setLovhjemmel(lovhjemmelType);
     }
 
-    private void mapFelterRelatertTilSøknad(Søknad søknad, FagType fagType) {
+    private void mapFelterRelatertTilSøknadOgYtelseFordeling(Søknad søknad, YtelseFordeling ytelseFordeling, FagType fagType) {
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknad.getMottattDato()));
-        //TODO - Disse bruker perioder fra Ytelsefordeling - og litt data fra søknaden
-        fagType.setAnnenForelderHarRett(Boolean.parseBoolean(finnVerdiAv("PLACEHOLDER", Collections.emptyList()))); //TODO
-        fagType.setAleneomsorg(VurderingsstatusKode.fromValue("IKKE_VURDERT")); //TODO
+        fagType.setAnnenForelderHarRett(ytelseFordeling.isAnnenForelderHarRett());
+        fagType.setAleneomsorg(YtelsefordelingMapper.harSøkerAleneomsorg(søknad, ytelseFordeling));
     }
 
-    private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Behandling behandling) {
+    private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Behandling behandling, Søknad søknad, YtelseFordeling ytelseFordeling) {
         fagType.setDagerTaptFørTermin(StønadskontoMapper.finnTapteDagerFørTermin(uttakResultatPerioder, saldoer, familieHendelse));
-        fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(behandling, false, false, saldoer));//TODO aleneomsorg og annenForeldreHarRett
+        fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(behandling, YtelsefordelingMapper.harSøkerAleneomsorgBoolean(søknad, ytelseFordeling), ytelseFordeling.isAnnenForelderHarRett(), saldoer));
         fagType.setDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer));
         StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);
     }

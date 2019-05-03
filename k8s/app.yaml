@@ -132,3 +132,5 @@ spec:
       value: defaultDS.username
     - name: DEFAULTDS_URL
       value: defaultDS.url
+    - name: TASK_MANAGER_RUNNER_THREADS
+      value: 1

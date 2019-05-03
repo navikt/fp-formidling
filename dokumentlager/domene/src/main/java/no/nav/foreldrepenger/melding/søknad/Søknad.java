@@ -2,14 +2,17 @@ package no.nav.foreldrepenger.melding.søknad;
 
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.melding.ytelsefordeling.OppgittRettighet;
+
 public class Søknad {
     private LocalDate mottattDato;
     private LocalDate søknadsdato;
-    private Object OppgittRettighet;
+    private OppgittRettighet oppgittRettighet;
 
-    public Søknad(LocalDate mottattDato, LocalDate søknadsdato) {
+    public Søknad(LocalDate mottattDato, LocalDate søknadsdato, OppgittRettighet oppgittRettighet) {
         this.mottattDato = mottattDato;
         this.søknadsdato = søknadsdato;
+        this.oppgittRettighet = oppgittRettighet;
     }
 
 
@@ -21,7 +24,7 @@ public class Søknad {
         return søknadsdato;
     }
 
-    public Object getOppgittRettighet() {
-        return OppgittRettighet;
+    public OppgittRettighet getOppgittRettighet() {
+        return oppgittRettighet;
     }
 }

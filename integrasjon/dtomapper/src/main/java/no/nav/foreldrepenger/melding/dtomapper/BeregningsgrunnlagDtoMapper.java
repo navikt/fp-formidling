@@ -98,12 +98,8 @@ public class BeregningsgrunnlagDtoMapper {
                 .medBesteberegningPrÅr(dto.getBesteberegningPrAar())
                 .medOverstyrtPrÅr(dto.getOverstyrtPrAar())
                 .medNyIArbeidslivet(dto.getErNyIArbeidslivet())
-                //TODO - mangler verdi
-                .medOriginalDagsatsFraTilstøtendeYtelse(null)
-                //TODO - mangler verdi
-                .medDagsatsArbeidsgiver(null)
-                //TODO - mangler verdi
-                .medDagsatsBruker(null)
+                .medOriginalDagsatsFraTilstøtendeYtelse(dto.getOriginalDagsatsFraTilstøtendeYtelse())
+                .medDagsats(dto.getDagsats())
                 .medBeregningsperiode(avklarBeregningsperiode(dto))
                 .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
                 .medArbeidsforholdType(bgAndelArbeidsforhold.getArbeidsforholdType());

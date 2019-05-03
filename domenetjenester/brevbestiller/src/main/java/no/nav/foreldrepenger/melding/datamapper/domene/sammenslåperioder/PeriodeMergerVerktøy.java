@@ -6,10 +6,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
-import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
-import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.AnnenAktivitetDto;
-import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.ArbeidsforholdDto;
-import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.PeriodeDto;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
 
 class PeriodeMergerVerktøy {
@@ -18,25 +18,25 @@ class PeriodeMergerVerktøy {
         //SONAR
     }
 
-    static PeriodeDto slåSammenPerioder(PeriodeDto periodeEn, PeriodeDto periodeTo) {
-        periodeEn.setAntallTapteDager(periodeEn.getAntallTapteDager() + periodeTo.getAntallTapteDager());
+    static PeriodeType slåSammenPerioder(PeriodeType periodeEn, PeriodeType periodeTo) {
+        periodeEn.setAntallTapteDager(periodeEn.getAntallTapteDager().add(periodeTo.getAntallTapteDager()));
         periodeEn.setPeriodeTom(periodeTo.getPeriodeTom());
         return periodeEn;
     }
 
-    static boolean sammeStatusOgÅrsak(PeriodeDto periodeEn, PeriodeDto periodeTo) {
-        return periodeEn.getInnvilget() == periodeTo.getInnvilget()
+    static boolean sammeStatusOgÅrsak(PeriodeType periodeEn, PeriodeType periodeTo) {
+        return Objects.equals(periodeEn.isInnvilget(), periodeTo.isInnvilget())
                 && (Objects.equals(periodeEn.getÅrsak(), periodeTo.getÅrsak())
                 || erRegnetSomLike(periodeEn.getÅrsak(), periodeTo.getÅrsak()));
     }
 
     private static boolean erRegnetSomLike(String årsak1, String årsak2) {
-        return PeriodeMerger.nonEqualKoderSomLikevelOppfyllerMerge.containsAll(Set.of(årsak1, årsak2));
+        return PeriodeMergerInnvilgelse.nonEqualKoderSomLikevelOppfyllerMerge.containsAll(Set.of(årsak1, årsak2));
     }
 
-    static boolean erFomRettEtterTomDato(PeriodeDto periodeEn, PeriodeDto periodeTo) {
-        LocalDate tomEnDate = DateUtil.convertToLocalDate(DokumentTypeFelles.finnDatoVerdiAvUtenTidSone(periodeEn.getPeriodeTom()));
-        LocalDate fomToDate = DateUtil.convertToLocalDate(DokumentTypeFelles.finnDatoVerdiAvUtenTidSone(periodeTo.getPeriodeFom()));
+    static boolean erFomRettEtterTomDato(PeriodeType periodeEn, PeriodeType periodeTo) {
+        LocalDate tomEnDate = DateUtil.convertToLocalDate(periodeEn.getPeriodeTom());
+        LocalDate fomToDate = DateUtil.convertToLocalDate(periodeTo.getPeriodeFom());
         return tomEnDate.plusDays(1).isEqual(fomToDate) ||
                 tomEnDate.plusDays(2).isEqual(fomToDate) && erLørdagEllerSøndag(tomEnDate.plusDays(1)) ||
                 tomEnDate.plusDays(3).isEqual(fomToDate) && erLørdag(tomEnDate.plusDays(1)) && erSøndag(tomEnDate.plusDays(2));
@@ -54,7 +54,7 @@ class PeriodeMergerVerktøy {
         return date.getDayOfWeek().equals(DayOfWeek.SATURDAY);
     }
 
-    static boolean likeAktiviteter(PeriodeDto periodeEn, PeriodeDto periodeTo) {
+    static boolean likeAktiviteter(PeriodeType periodeEn, PeriodeType periodeTo) {
         return likeArbeidsforhold(periodeEn, periodeTo) && likNæring(periodeEn, periodeTo) && likeAndreAktiviteter(periodeEn, periodeTo);
     }
 
@@ -63,9 +63,15 @@ class PeriodeMergerVerktøy {
                 (!o1.isPresent() || o1.equals(o2));
     }
 
-    static boolean likeAndreAktiviteter(PeriodeDto periodeEn, PeriodeDto periodeTo) {
-        boolean alleMatcher = periodeEn.getAnnenAktivitet().size() == periodeTo.getAnnenAktivitet().size();
-        for (AnnenAktivitetDto akt : periodeEn.getAnnenAktivitet()) {
+    static boolean likeAndreAktiviteter(PeriodeType periodeEn, PeriodeType periodeTo) {
+        boolean alleMatcher = likAktivitetsliste(periodeEn, periodeTo);
+        if (!alleMatcher) {
+            return false;
+        }
+        if (periodeEn.getAnnenAktivitetListe() == null) {
+            return true;
+        }
+        for (AnnenAktivitetType akt : periodeEn.getAnnenAktivitetListe().getAnnenAktivitet()) {
             if (!finnesMatch(akt, periodeTo)) {
                 alleMatcher = false;
             }
@@ -73,13 +79,49 @@ class PeriodeMergerVerktøy {
         return alleMatcher;
     }
 
-    static boolean likNæring(PeriodeDto periodeEn, PeriodeDto periodeTo) {
-        return Objects.equals(periodeEn.getNæring(), periodeTo.getNæring());
+    private static boolean likAktivitetsliste(PeriodeType periodeEn, PeriodeType periodeTo) {
+        if (periodeEn.getAnnenAktivitetListe() == null && periodeTo.getAnnenAktivitetListe() == null) {
+            return true;
+        }
+        if ((periodeEn.getAnnenAktivitetListe() == null) != (periodeTo.getAnnenAktivitetListe() == null)) {
+            return false;
+        }
+        return periodeEn.getAnnenAktivitetListe().getAnnenAktivitet().size() == periodeTo.getAnnenAktivitetListe().getAnnenAktivitet().size();
     }
 
-    static boolean likeArbeidsforhold(PeriodeDto periodeEn, PeriodeDto periodeTo) {
-        boolean alleMatcher = periodeEn.getArbeidsforhold().size() == periodeTo.getArbeidsforhold().size();
-        for (ArbeidsforholdDto arb : periodeEn.getArbeidsforhold()) {
+    private static boolean likArbeidsforholdListe(PeriodeType periodeEn, PeriodeType periodeTo) {
+        if (periodeEn.getArbeidsforholdListe() == null && periodeTo.getArbeidsforholdListe() == null) {
+            return true;
+        }
+        if ((periodeEn.getArbeidsforholdListe() == null) != (periodeTo.getArbeidsforholdListe() == null)) {
+            return false;
+        }
+        return periodeEn.getArbeidsforholdListe().getArbeidsforhold().size() == periodeTo.getArbeidsforholdListe().getArbeidsforhold().size();
+    }
+
+    static boolean likNæring(PeriodeType periodeEn, PeriodeType periodeTo) {
+        if (periodeEn.getNæringListe() == null && periodeTo.getNæringListe() == null) {
+            return true;
+        } else if ((periodeEn.getNæringListe() == null) != (periodeTo.getNæringListe() == null)) {
+            return false;
+        }
+        if (periodeEn.getNæringListe().getNæring() == null && periodeTo.getNæringListe().getNæring() == null) {
+            return true;
+        } else if ((periodeEn.getNæringListe().getNæring() == null) != (periodeTo.getNæringListe().getNæring() == null)) {
+            return false;
+        }
+        return likNæringType(periodeEn.getNæringListe().getNæring(), periodeTo.getNæringListe().getNæring());
+    }
+
+    static boolean likeArbeidsforhold(PeriodeType periodeEn, PeriodeType periodeTo) {
+        boolean alleMatcher = likArbeidsforholdListe(periodeEn, periodeTo);
+        if (!alleMatcher) {
+            return false;
+        }
+        if (periodeEn.getArbeidsforholdListe() == null) {
+            return true;
+        }
+        for (ArbeidsforholdType arb : periodeEn.getArbeidsforholdListe().getArbeidsforhold()) {
             if (!finnesMatch(arb, periodeTo)) {
                 alleMatcher = false;
             }
@@ -87,23 +129,43 @@ class PeriodeMergerVerktøy {
         return alleMatcher;
     }
 
-    private static boolean finnesMatch(AnnenAktivitetDto akt, PeriodeDto periode) {
+    private static boolean finnesMatch(AnnenAktivitetType akt, PeriodeType periode) {
         boolean match = false;
-        for (AnnenAktivitetDto akt2 : periode.getAnnenAktivitet()) {
-            if (Objects.equals(akt, akt2)) {
+        for (AnnenAktivitetType akt2 : periode.getAnnenAktivitetListe().getAnnenAktivitet()) {
+            if (likAnnenAktivitetType(akt, akt2)) {
                 match = true;
             }
         }
         return match;
     }
 
-    private static boolean finnesMatch(ArbeidsforholdDto arb, PeriodeDto periode) {
+    private static boolean finnesMatch(ArbeidsforholdType arb, PeriodeType periode) {
         boolean match = false;
-        for (ArbeidsforholdDto arb2 : periode.getArbeidsforhold()) {
-            if (Objects.equals(arb, arb2)) {
+        for (ArbeidsforholdType arb2 : periode.getArbeidsforholdListe().getArbeidsforhold()) {
+            if (likArbeidsforholdType(arb, arb2)) {
                 match = true;
             }
         }
         return match;
+    }
+
+    private static boolean likNæringType(NæringType næringEn, NæringType næringTo) {
+        return Objects.equals(næringEn.getAktivitetDagsats(), næringTo.getAktivitetDagsats()) &&
+                Objects.equals(næringEn.getInntekt1(), næringTo.getInntekt1()) &&
+                Objects.equals(næringEn.getInntekt2(), næringTo.getInntekt2()) &&
+                Objects.equals(næringEn.getInntekt3(), næringTo.getInntekt3()) &&
+                Objects.equals(næringEn.getSistLignedeÅr(), næringTo.getSistLignedeÅr());
+    }
+
+    private static boolean likAnnenAktivitetType(AnnenAktivitetType akt, AnnenAktivitetType akt2) {
+        return Objects.equals(akt.getAktivitetType(), akt2.getAktivitetType()) &&
+                Objects.equals(akt.getAktivitetDagsats(), akt2.getAktivitetDagsats());
+    }
+
+    private static boolean likArbeidsforholdType(ArbeidsforholdType arb, ArbeidsforholdType arb2) {
+        return Objects.equals(arb.getAktivitetDagsats(), arb2.getAktivitetDagsats()) &&
+                Objects.equals(arb.getNaturalytelseEndringDato(), arb2.getNaturalytelseEndringDato()) &&
+                Objects.equals(arb.getNaturalytelseEndringType(), arb2.getNaturalytelseEndringType()) &&
+                Objects.equals(arb.getNaturalytelseNyDagsats(), arb2.getNaturalytelseNyDagsats());
     }
 }

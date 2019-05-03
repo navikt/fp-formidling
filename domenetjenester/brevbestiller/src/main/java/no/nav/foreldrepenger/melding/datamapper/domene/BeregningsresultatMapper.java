@@ -3,9 +3,11 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -18,6 +20,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
+import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerInnvilgelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
@@ -48,26 +51,58 @@ public class BeregningsresultatMapper {
                                                    UttakResultatPerioder uttakResultatPerioder,
                                                    List<BeregningsgrunnlagPeriode> beregningingsgrunnlagperioder) {
         PeriodeListeType periodeListe = objectFactory.createPeriodeListeType();
+        List<PeriodeType> periodelisteFørSammenslåing = new ArrayList<>();
+        List<UttakResultatPeriode> uttaksperioder = uttakResultatPerioder.getPerioder();
+        List<UttakResultatPeriode> ikkeMatchedePerioder = new ArrayList<>(plukkIkkeUkjentePerioder(uttaksperioder));
         for (BeregningsresultatPeriode beregningsresultatPeriode : beregningsresultatPerioder) {
-            //TODO Må nok ignorere "ukjente" perioder
-            periodeListe.getPeriode().add(mapEnkelPeriode(beregningsresultatPeriode,
-                    PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttakResultatPerioder.getPerioder()),
+            UttakResultatPeriode matchetUttaksperiode = PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttaksperioder);
+            if (PeriodeResultatÅrsak.UKJENT.equals(matchetUttaksperiode.getPeriodeResultatÅrsak())) {
+                continue;
+            }
+            ikkeMatchedePerioder.remove(matchetUttaksperiode);
+            periodelisteFørSammenslåing.add(mapEnkelPeriode(beregningsresultatPeriode,
+                    matchetUttaksperiode,
                     PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder)
             ));
         }
+        periodelisteFørSammenslåing.addAll(mapAvslåttePerioder(ikkeMatchedePerioder));
+        periodeListe.getPeriode().addAll(PeriodeMergerInnvilgelse.mergePerioder(periodelisteFørSammenslåing));
         return periodeListe;
+    }
+
+    private static List<PeriodeType> mapAvslåttePerioder(List<UttakResultatPeriode> ikkeMatchedePerioder) {
+        List<PeriodeType> avslåttePerioder = new ArrayList<>();
+        for (UttakResultatPeriode uttakperiode : ikkeMatchedePerioder) {
+            avslåttePerioder.add(mapEnkelUttaksperiode(uttakperiode));
+        }
+        return avslåttePerioder;
+    }
+
+    private static List<UttakResultatPeriode> plukkIkkeUkjentePerioder(List<UttakResultatPeriode> uttaksperioder) {
+        return uttaksperioder.stream()
+                .filter(Predicate.not(up -> PeriodeResultatÅrsak.UKJENT.equals(up.getPeriodeResultatÅrsak())))
+                .collect(Collectors.toList());
+    }
+
+    private static PeriodeType mapEnkelUttaksperiode(UttakResultatPeriode uttakperiode) {
+        PeriodeType periode = objectFactory.createPeriodeType();
+        periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakperiode.getAktiviteter())));
+        periode.setInnvilget(uttakperiode.isInnvilget() && !erGraderingAvslått(uttakperiode));
+        periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(uttakperiode.getFom()));
+        periode.setPeriodeTom(XmlUtil.finnDatoVerdiAvUtenTidSone(uttakperiode.getTom()));
+        periode.setÅrsak(uttakperiode.getPeriodeResultatÅrsak().getKode());
+        return periode;
     }
 
     static PeriodeType mapEnkelPeriode(BeregningsresultatPeriode beregningsresultatPeriode,
                                        UttakResultatPeriode uttakResultatPeriode,
                                        BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        //TODO Avslåtte perioder må mappes seperat da de ikke har tilkjent ytelse
         PeriodeType periode = objectFactory.createPeriodeType();
         periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter())));
         periode.setInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode));
+        ÅrsakskodeMedLovreferanse årsakskodeMedLovreferanse = utledÅrsakskode(uttakResultatPeriode);
         periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
         periode.setPeriodeTom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeTom()));
-        ÅrsakskodeMedLovreferanse årsakskodeMedLovreferanse = utledÅrsakskode(uttakResultatPeriode);
         periode.setÅrsak(årsakskodeMedLovreferanse.getKode());
         periode.setPeriodeDagsats(beregningsresultatPeriode.getDagsats());
 
@@ -136,19 +171,18 @@ public class BeregningsresultatMapper {
                 .count());
     }
 
-    //TODO Test denne
     public static XMLGregorianCalendar finnStønadsperiodeFom(PeriodeListeType periodeListe) {
         return periodeListe.getPeriode().stream()
-                .filter(PeriodeType::isInnvilget)
+                .filter(p -> Boolean.TRUE.equals(p.isInnvilget()))
                 .map(PeriodeType::getPeriodeFom)
-                .max(XMLGregorianCalendar::compare)
+                .min(XMLGregorianCalendar::compare)
                 .orElse(null);
     }
 
 
     public static XMLGregorianCalendar finnStønadsperiodeTom(PeriodeListeType periodeListe) {
         return periodeListe.getPeriode().stream()
-                .filter(PeriodeType::isInnvilget)
+                .filter(p -> Boolean.TRUE.equals(p.isInnvilget()))
                 .map(PeriodeType::getPeriodeTom)
                 .max(XMLGregorianCalendar::compare)
                 .orElse(null);

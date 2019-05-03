@@ -27,6 +27,7 @@ public class Behandling {
     private String ansvarligBeslutter;
     private Fagsak fagsak;
     private BehandlingStatus status;
+    private String endretAv;
 
     private Behandling(Builder builder) {
         id = builder.id;
@@ -43,6 +44,7 @@ public class Behandling {
         ansvarligBeslutter = builder.ansvarligBeslutter;
         fagsak = builder.fagsak;
         status = builder.status;
+        endretAv = builder.endretAv;
     }
 
     public String getBehandlendeEnhetNavn() {
@@ -148,6 +150,10 @@ public class Behandling {
         return Objects.equals(BehandlingStatus.AVSLUTTET, getStatus());
     }
 
+    public String getEndretAv() {
+        return endretAv;
+    }
+
     public boolean erManueltOpprettet() {
         return getBehandlingÅrsaker().stream()
                 .map(BehandlingÅrsak::getManueltOpprettet)
@@ -175,6 +181,7 @@ public class Behandling {
         private String ansvarligBeslutter;
         private Fagsak fagsak;
         private BehandlingStatus status;
+        private String endretAv;
 
         public Behandling.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {
             this.behandlendeEnhetNavn = behandlendeEnhetNavn;
@@ -243,6 +250,11 @@ public class Behandling {
 
         public Behandling.Builder medFagsak(Fagsak fagsak) {
             this.fagsak = fagsak;
+            return this;
+        }
+
+        public Behandling.Builder medEndretAv(String endretAv) {
+            this.endretAv = endretAv;
             return this;
         }
 

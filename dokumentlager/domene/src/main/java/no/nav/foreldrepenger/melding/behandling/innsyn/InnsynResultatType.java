@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.behandling;
+package no.nav.foreldrepenger.melding.behandling.innsyn;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

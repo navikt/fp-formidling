@@ -2,6 +2,10 @@ package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -10,9 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
+import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
@@ -28,6 +34,8 @@ import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.binding.ProduserIkkeredigerbartDokumentDokumentErRedigerbart;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.binding.ProduserIkkeredigerbartDokumentDokumentErVedlegg;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Dokumentbestillingsinformasjon;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.FerdigstillForsendelseRequest;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.KnyttVedleggTilForsendelseRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
@@ -74,11 +82,54 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         DokumentFelles dokumentFelles = lagDokumentFelles(behandling, dokumentMal);
         Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling);
 
-        final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
-                dokumentFelles, false);
+        List<InnsynDokument> vedlegg = finnEventuelleVedlegg(behandling, dokumentMal);
 
+        boolean harVedlegg = !vedlegg.isEmpty();
+        final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
+                dokumentFelles, harVedlegg);
         ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = produserIkkeredigerbartDokument(brevXmlElement, dokumentbestillingsinformasjon);
+        if (harVedlegg) {
+            String journalpostId = produserIkkeredigerbartDokumentResponse.getJournalpostId();
+            knyttAlleVedleggTilDokument(vedlegg, journalpostId, behandling.getEndretAv());
+            ferdigstillForsendelse(journalpostId, behandling.getEndretAv());
+        }
         return lagHistorikkinnslag(dokumentHendelse, produserIkkeredigerbartDokumentResponse, dokumentMal, elementTilString(brevXmlElement));
+    }
+
+    private void ferdigstillForsendelse(String journalpostId, String endretAvNavn) {
+        FerdigstillForsendelseRequest request = new FerdigstillForsendelseRequest();
+        request.setJournalpostId(journalpostId);
+        request.setEndretAvNavn(endretAvNavn);
+        try {
+            dokumentproduksjonProxyService.ferdigstillForsendelse(request);
+        } catch (Exception e) {
+            throw DokumentMapperFeil.FACTORY.ferdigstillingAvDokumentFeil(journalpostId, e).toException();
+        }
+    }
+
+    private void knyttAlleVedleggTilDokument(Collection<InnsynDokument> vedlegg, String journalpostId, String endretAv) {
+        vedlegg.forEach(v -> knyttVedleggTilForsendelse(journalpostId, v.getJournalpostId(), v.getDokumentId(), endretAv));
+    }
+
+    private void knyttVedleggTilForsendelse(String knyttesTilJournalpostId, String knyttesFraJournalpostId, String dokumentId,
+                                            String endretAvNavn) {
+        KnyttVedleggTilForsendelseRequest request = new KnyttVedleggTilForsendelseRequest();
+        request.setDokumentId(dokumentId);
+        request.setEndretAvNavn(endretAvNavn);
+        request.setKnyttesFraJournalpostId(knyttesFraJournalpostId);
+        request.setKnyttesTilJournalpostId(knyttesTilJournalpostId);
+        try {
+            dokumentproduksjonProxyService.knyttVedleggTilForsendelse(request);
+        } catch (Exception e) {
+            throw DokumentMapperFeil.FACTORY.knyttingAvVedleggFeil(dokumentId, e).toException();
+        }
+    }
+
+    private List<InnsynDokument> finnEventuelleVedlegg(Behandling behandling, DokumentMalType dokumentMal) {
+        if (!DokumentMalType.INNSYNSKRAV_SVAR.equals(dokumentMal.getKode())) {
+            return Collections.emptyList();
+        }
+        return domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter();
     }
 
     private ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokument(Element

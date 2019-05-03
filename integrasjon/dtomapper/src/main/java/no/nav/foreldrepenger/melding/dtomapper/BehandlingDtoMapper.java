@@ -77,7 +77,8 @@ public class BehandlingDtoMapper {
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()))
-                .medFagsak(fagsak);
+                .medFagsak(fagsak)
+                .medEndretAv("TODO"); //TODO
 
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(behandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));

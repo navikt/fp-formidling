@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -28,7 +27,6 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType;
 
-@ApplicationScoped
 public class UttakMapper {
 
     public UttakMapper() {
@@ -71,7 +69,7 @@ public class UttakMapper {
         return PeriodeBeregner.forMyeUtbetalt(periodeListe, null);
     }
 
-    public String mapLovhjemlerForUttak(UttakResultatPerioder uttakResultatPerioder, String konsekvensForYtelse, boolean innvilgetRevurdering) {
+    public static String mapLovhjemlerForUttak(UttakResultatPerioder uttakResultatPerioder, String konsekvensForYtelse, boolean innvilgetRevurdering) {
         Set<String> lovhjemler = new TreeSet<>(new LovhjemmelComparator());
         for (UttakResultatPeriode periode : uttakResultatPerioder.getPerioder()) {
             ÅrsakskodeMedLovreferanse årsak = utledÅrsakskode(periode);
@@ -87,11 +85,11 @@ public class UttakMapper {
     }
 
 
-    private boolean erUkjent(ÅrsakskodeMedLovreferanse årsaksKode) {
+    private static boolean erUkjent(ÅrsakskodeMedLovreferanse årsaksKode) {
         return PeriodeResultatÅrsak.UKJENT.equals(årsaksKode);
     }
 
-    private ÅrsakskodeMedLovreferanse utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
+    private static ÅrsakskodeMedLovreferanse utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
         if (erGraderingAvslått(uttakPeriode) && uttakPeriode.isInnvilget()) {
             return uttakPeriode.getGraderingAvslagÅrsak();
         } else if (uttakPeriode.getPeriodeResultatÅrsak() != null) {
@@ -100,12 +98,12 @@ public class UttakMapper {
         return PeriodeResultatÅrsak.UKJENT;
     }
 
-    private boolean erGraderingAvslått(UttakResultatPeriode uttakPeriode) {
+    private static boolean erGraderingAvslått(UttakResultatPeriode uttakPeriode) {
         return !uttakPeriode.erGraderingInnvilget()
                 && erGraderingÅrsakKjent(uttakPeriode.getGraderingAvslagÅrsak());
     }
 
-    private boolean erGraderingÅrsakKjent(GraderingAvslagÅrsak årsak) {
+    private static boolean erGraderingÅrsakKjent(GraderingAvslagÅrsak årsak) {
         return årsak != null
                 && !årsak.equals(GraderingAvslagÅrsak.UKJENT);
     }

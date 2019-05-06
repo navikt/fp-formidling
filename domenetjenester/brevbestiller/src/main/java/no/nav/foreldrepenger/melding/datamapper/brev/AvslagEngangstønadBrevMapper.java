@@ -86,7 +86,7 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         List<Vilkår> vilkår = domeneobjektProvider.hentVilkår(behandling);
-        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling);
+        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         FagType fagType = mapFagType(behandling, behandlingstype, dokumentHendelse, familiehendelse, vilkår);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(AvslagConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);

@@ -90,7 +90,7 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
 
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
-        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling);
+        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         Personinfo personinfo = behandling.getFagsak().getPersoninfo();
         UttakResultatPerioder originaltUttakResultat = null;
         if (behandling.getOriginalBehandlingId() != null) {

@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.melding.dtomapper.KlageDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.StønadskontoDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.SøknadDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.UttakDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.VergeDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.VilkårDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.YtelseFordelingDtoMapper;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
@@ -36,6 +37,7 @@ import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 
@@ -150,5 +152,9 @@ public class DomeneobjektProvider {
 
     public List<Aksjonspunkt> hentAksjonspunkter(Behandling behandling) {
         return aksjonspunktDtoMapper.mapAksjonspunktFraDto(behandlingRestKlient.hentAksjonspunkter(behandling.getResourceLinker()));
+    }
+
+    public Verge hentVerge(Behandling behandling) {
+        return VergeDtoMapper.mapVergeFraDto(behandlingRestKlient.hentVerge(behandling.getResourceLinker()));
     }
 }

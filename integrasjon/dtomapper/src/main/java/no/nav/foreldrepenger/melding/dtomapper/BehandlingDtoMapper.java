@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 
 @ApplicationScoped
@@ -78,7 +79,8 @@ public class BehandlingDtoMapper {
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()))
                 .medFagsak(fagsak)
-                .medEndretAv("TODO"); //TODO
+                .medEndretAv("TODO") //TODO
+                .medSpråkkode(kodeverkRepository.finn(Språkkode.class, dto.getSprakkode().getKode()));
 
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(behandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));

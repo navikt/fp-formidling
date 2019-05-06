@@ -3,9 +3,13 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
@@ -15,6 +19,21 @@ public class BeregningsresultatMapperTest {
 
     private ObjectFactory objectFactory = new ObjectFactory();
     private PeriodeListeType periodeListeType = objectFactory.createPeriodeListeType();
+    private static final long HUNDRE = 100L;
+    private BeregningsresultatFP beregningsresultat;
+
+    @Before
+    public void setup() {
+        beregningsresultat = BeregningsresultatFP.ny()
+                .medBeregningsresultatPerioder(List.of(BeregningsresultatPeriode.ny()
+                                .medDagsats(HUNDRE)
+                                .build(),
+                        BeregningsresultatPeriode.ny()
+                                .medDagsats(HUNDRE * 2)
+                                .build()))
+                .build();
+    }
+
 
     @Test
     public void skal_finne_første_stønadsdato_null_ikke_satt() {
@@ -33,6 +52,16 @@ public class BeregningsresultatMapperTest {
         leggtilPeriode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 30), false);
         assertThat(BeregningsresultatMapper.finnStønadsperiodeFom(periodeListeType)).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(førsteJanuarTjueAtten));
         assertThat(BeregningsresultatMapper.finnStønadsperiodeTom(periodeListeType)).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(TrettiendeAprilTjueAtten));
+    }
+
+    @Test
+    public void skal_finne_dagsats() {
+        assertThat(BeregningsresultatMapper.finnDagsats(beregningsresultat)).isEqualTo(HUNDRE);
+    }
+
+    @Test
+    public void skal_finne_månedsbeløp() {
+        assertThat(BeregningsresultatMapper.finnMånedsbeløp(beregningsresultat)).isEqualTo(2166);
     }
 
     private boolean leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget) {

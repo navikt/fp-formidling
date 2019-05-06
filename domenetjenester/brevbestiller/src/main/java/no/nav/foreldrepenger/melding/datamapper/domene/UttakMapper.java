@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -106,5 +107,16 @@ public class UttakMapper {
     private static boolean erGraderingÅrsakKjent(GraderingAvslagÅrsak årsak) {
         return årsak != null
                 && !årsak.equals(GraderingAvslagÅrsak.UKJENT);
+    }
+
+    public static XMLGregorianCalendar finnSisteDagAvSistePeriode(UttakResultatPerioder uttakResultatPerioder) {
+        return Stream.concat(
+                uttakResultatPerioder.getPerioder().stream(),
+                uttakResultatPerioder.getPerioderAnnenPart().stream()
+        ).filter(UttakResultatPeriode::isInnvilget)
+                .map(UttakResultatPeriode::getTom)
+                .max(LocalDate::compareTo)
+                .map(XmlUtil::finnDatoVerdiAvUtenTidSone)
+                .orElse(null);
     }
 }

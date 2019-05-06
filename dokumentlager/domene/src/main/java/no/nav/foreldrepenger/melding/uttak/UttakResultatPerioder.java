@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UttakResultatPerioder {
-    private List<UttakResultatPeriode> perioder = new ArrayList<>();
-    private List<UttakResultatPeriode> perioderAnnenPart = new ArrayList<>();
+    private List<UttakResultatPeriode> perioder;
+    private List<UttakResultatPeriode> perioderAnnenPart;
 
     private UttakResultatPerioder(Builder builder) {
         perioder = builder.perioder;
@@ -22,10 +22,13 @@ public class UttakResultatPerioder {
         return perioder.stream().sorted(Comparator.comparing(UttakResultatPeriode::getFom)).collect(Collectors.toList());
     }
 
+    public List<UttakResultatPeriode> getPerioderAnnenPart() {
+        return perioderAnnenPart;
+    }
 
     public static final class Builder {
-        private List<UttakResultatPeriode> perioder;
-        private List<UttakResultatPeriode> perioderAnnenPart;
+        private List<UttakResultatPeriode> perioder = new ArrayList<>();
+        private List<UttakResultatPeriode> perioderAnnenPart = new ArrayList<>();
 
         private Builder() {
         }

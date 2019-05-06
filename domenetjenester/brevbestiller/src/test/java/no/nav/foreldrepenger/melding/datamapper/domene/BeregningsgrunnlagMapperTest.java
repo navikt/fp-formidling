@@ -19,7 +19,6 @@ public class BeregningsgrunnlagMapperTest {
     private Beregningsgrunnlag beregningsgrunnlag;
     private static final BigDecimal AVKORTET_PR_ÅR = BigDecimal.valueOf(60);
     private static final BigDecimal BRUTTO_PR_ÅR = BigDecimal.valueOf(120);
-    private static final BigDecimal REDUSERT_PR_ÅR = BigDecimal.valueOf(12);
     private static final BigDecimal GRUNNBELØP = BigDecimal.valueOf(50_000);
     private static final long STANDARD_PERIODE_DAGSATS = 100L;
 
@@ -172,31 +171,6 @@ public class BeregningsgrunnlagMapperTest {
         assertThat(BeregningsgrunnlagMapper.tellAntallArbeidsforholdIBeregning(
                 beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()))
                 .isEqualTo(1);
-    }
-
-    @Test
-    public void skal_finne_dagsats() {
-        assertThat(BeregningsgrunnlagMapper.finnDagsats(beregningsgrunnlag)).isEqualTo(STANDARD_PERIODE_DAGSATS);
-    }
-
-    @Test
-    public void skal_finne_månedsbeløp() {
-        assertThat(BeregningsgrunnlagMapper.finnMånedsbeløp(beregningsgrunnlag)).isEqualTo(10L);
-    }
-
-    @Test
-    public void skal_finne_månedsbeløp_redusert() {
-
-        beregningsgrunnlag = Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagPeriode(
-                        BeregningsgrunnlagPeriode.ny()
-                                .medDagsats(STANDARD_PERIODE_DAGSATS)
-                                .medBruttoPrÅr(BRUTTO_PR_ÅR)
-                                .medRedusertPrÅr(REDUSERT_PR_ÅR)
-                                .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListe())
-                                .build())
-                .build();
-        assertThat(BeregningsgrunnlagMapper.finnMånedsbeløp(beregningsgrunnlag)).isEqualTo(1L);
     }
 
     @Test

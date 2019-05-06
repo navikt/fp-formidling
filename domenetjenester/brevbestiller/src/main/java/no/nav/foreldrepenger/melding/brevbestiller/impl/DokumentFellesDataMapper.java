@@ -6,20 +6,17 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
-import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.aktør.PersonstatusType;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.foreldrepenger.melding.dtomapper.VergeDtoMapper;
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
@@ -33,7 +30,7 @@ public class DokumentFellesDataMapper {
     private final String DEFAULT_PERSON_STATUS = "ANNET";
     private DokumentRepository dokumentRepository;
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
-    private BehandlingRestKlient behandlingRestKlient;
+    private DomeneobjektProvider domeneobjektProvider;
     private TpsTjeneste tpsTjeneste;
 
     public DokumentFellesDataMapper() {
@@ -43,16 +40,15 @@ public class DokumentFellesDataMapper {
     @Inject
     public DokumentFellesDataMapper(TpsTjeneste tpsTjeneste,
                                     DokumentRepository dokumentRepository,
-                                    BehandlingRestKlient behandlingRestKlient,
+                                    DomeneobjektProvider domeneobjektProvider,
                                     NavKontaktKonfigurasjon navKontaktKonfigurasjon) {
         this.tpsTjeneste = tpsTjeneste;
         this.dokumentRepository = dokumentRepository;
-        this.behandlingRestKlient = behandlingRestKlient;
+        this.domeneobjektProvider = domeneobjektProvider;
         this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
     }
 
     DokumentData opprettDokumentDataForBehandling(Behandling behandling, DokumentMalType dokumentMalType) {
-        //Data for mapping
         Personinfo personinfo = behandling.getFagsak().getPersoninfo();
         DokumentData dokumentData = DokumentData.opprettNy(dokumentMalType, behandling.getId());
         final AktørId søkersAktørId = personinfo.getAktørId();
@@ -62,10 +58,9 @@ public class DokumentFellesDataMapper {
             return dokumentData;
         }
 
-        final VergeDto vergeDto = behandlingRestKlient.hentVerge(behandling.getResourceLinker());
-
-        Verge verge = VergeDtoMapper.mapVergeFraDto(vergeDto);
+        Verge verge = domeneobjektProvider.hentVerge(behandling);
         AktørId vergesAktørId = tpsTjeneste.hentAktørForFnr(PersonIdent.fra(verge.getFnr())).orElseThrow(IllegalStateException::new);
+
         if (verge.brevTilBegge()) {
             opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
             opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId);
@@ -139,9 +134,7 @@ public class DokumentFellesDataMapper {
                 .medSaksnummer(new Saksnummer(behandling.getSaksnummer().getVerdi()))
                 .medSakspartId(fnrBruker)
                 .medSakspartNavn(navnBruker)
-                //TODO ramesh: Hent språk preferanse fra selvbetjeningløsning
-//                .medSpråkkode(fagsak.getNavBruker().getSpråkkode())
-                .medSpråkkode(Språkkode.nb)
+                .medSpråkkode(behandling.getSpråkkode())
                 .medSakspartPersonStatus(getPersonstatusVerdi(personstatusBruker));
 
         if (behandling.isToTrinnsBehandling()) {

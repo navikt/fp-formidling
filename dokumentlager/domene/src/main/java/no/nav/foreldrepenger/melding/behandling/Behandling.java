@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
@@ -28,6 +29,7 @@ public class Behandling {
     private Fagsak fagsak;
     private BehandlingStatus status;
     private String endretAv;
+    private Språkkode språkkode;
 
     private Behandling(Builder builder) {
         id = builder.id;
@@ -45,6 +47,7 @@ public class Behandling {
         fagsak = builder.fagsak;
         status = builder.status;
         endretAv = builder.endretAv;
+        språkkode = builder.språkkode;
     }
 
     public String getBehandlendeEnhetNavn() {
@@ -95,6 +98,10 @@ public class Behandling {
         return originalBehandlingId;
     }
 
+    public Språkkode getSpråkkode() {
+        return språkkode;
+    }
+
     public boolean erFørstegangssøknad() {
         return BehandlingType.FØRSTEGANGSSØKNAD.equals(getBehandlingType());
     }
@@ -114,7 +121,6 @@ public class Behandling {
     public Fagsak getFagsak() {
         return fagsak;
     }
-
 
     public Saksnummer getSaksnummer() {
         return getFagsak().getSaksnummer();
@@ -175,6 +181,7 @@ public class Behandling {
         private Fagsak fagsak;
         private BehandlingStatus status;
         private String endretAv;
+        private Språkkode språkkode;
 
         public Behandling.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {
             this.behandlendeEnhetNavn = behandlendeEnhetNavn;
@@ -248,6 +255,11 @@ public class Behandling {
 
         public Behandling.Builder medEndretAv(String endretAv) {
             this.endretAv = endretAv;
+            return this;
+        }
+
+        public Behandling.Builder medSpråkkode(Språkkode språkkode) {
+            this.språkkode = språkkode;
             return this;
         }
 

@@ -53,34 +53,40 @@ public class BeregningsresultatDtoMapper {
     }
 
     private BeregningsresultatPeriode mapPeriodeFraDto(BeregningsresultatPeriodeDto dto) {
+        List<BeregningsresultatAndel> andelListe = new ArrayList<>();
+        for (BeregningsresultatPeriodeAndelDto beregningsresultatPeriodeAndelDto : dto.getAndeler()) {
+            andelListe.add(mapAndelFraDto(beregningsresultatPeriodeAndelDto));
+        }
         BeregningsresultatPeriode beregningsresultatPeriode = BeregningsresultatPeriode.ny()
                 .medDagsats((long) dto.getDagsats())
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
-                .medBeregningsresultatAndel(Arrays.stream(dto.getAndeler()).map(this::mapAndelerFraDto)
-                        .flatMap(List::stream).collect(Collectors.toList()))
+                .medBeregningsresultatAndel(andelListe)
                 .build();
         return beregningsresultatPeriode;
     }
 
     //Fpsak slår sammen andeler i dto, så vi må eventuelt splitte dem opp igjen
-    private List<BeregningsresultatAndel> mapAndelerFraDto(BeregningsresultatPeriodeAndelDto dto) {
-        List<BeregningsresultatAndel> andeler = new ArrayList<>();
-        if (dto.getRefusjon() != null && dto.getRefusjon() != 0) {
-            andeler.add(lagEnkelAndel(dto, false, dto.getRefusjon()));
-        }
-        if (dto.getTilSoker() != null && dto.getTilSoker() != 0) {
-            andeler.add(lagEnkelAndel(dto, true, dto.getTilSoker()));
-        }
-        return andeler;
-    }
-
-    private BeregningsresultatAndel lagEnkelAndel(BeregningsresultatPeriodeAndelDto dto, boolean brukerErMottaker, int dagsats) {
+    private BeregningsresultatAndel mapAndelFraDto(BeregningsresultatPeriodeAndelDto dto) {
         return BeregningsresultatAndel.ny()
                 .medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().getKode()))
                 .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                 .medArbeidsgiver(finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr()))
                 .medStillingsprosent(dto.getStillingsprosent())
-                .medBrukerErMottaker(brukerErMottaker)
+                .medBrukerErMottaker(dto.getTilSoker() != null && dto.getTilSoker() != 0)
+                .medArbeidsgiverErMottaker(dto.getRefusjon() != null && dto.getRefusjon() != 0)
+                .medDagsats(summerDagsats(dto))
                 .build();
     }
+
+    private int summerDagsats(BeregningsresultatPeriodeAndelDto dto) {
+        int sum = 0;
+        if (dto.getTilSoker() != null) {
+            sum += dto.getTilSoker();
+        }
+        if (dto.getRefusjon() != null) {
+            sum += dto.getRefusjon();
+        }
+        return sum;
+    }
+
 }

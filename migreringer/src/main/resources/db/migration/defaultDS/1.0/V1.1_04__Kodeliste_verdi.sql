@@ -1741,16 +1741,6 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'KLAGEVURDERING', 'AVVIS_KLAGE', null, 'Klagen avvises',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'KLAGE_AVVIST_AARSAK', 'KLAGET_FOR_SENT', null,
-        'Bruker har klaget etter at klagefristen er utløpt', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'KLAGE_AVVIST_AARSAK', 'KLAGE_UGYLDIG', null, 'Klage er ugyldig',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'KLAGE_AVVIST_AARSAK', '-', null, 'Ikke definert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'DOKUMENT_TYPE_ID', 'KLAGE_DOKUMENT', 'I000027', 'Klage/anke',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
@@ -1896,93 +1886,6 @@ values (nextval('seq_kodeliste'), 'HISTORIKKINNSLAG_TYPE', 'NY_INFO_FRA_TPS', nu
         to_date('01.01.2017', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'HISTORIKKINNSLAG_TYPE', '-', null, null, to_date('01.01.2017', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1001', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1002', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1003', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1004', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1005', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1006', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1007', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1008', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1009', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1010', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1011', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1012', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1013', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1014', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1015', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1016', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1017', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1018', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1019', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1020', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1021', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1023', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1024', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1025', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1026', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1032', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1033', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1034', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '-', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'BEHANDLING_STEG_STATUS', 'FREMOVERFØRT', null,
@@ -2520,9 +2423,6 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'RELATERT_YTELSE_TILSTAND', 'AVSLUTTET', null, null,
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1031', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'INNSENDINGSVALG', 'IKKE_VALGT', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
@@ -2770,9 +2670,6 @@ values (nextval('seq_kodeliste'), 'PERMISJONSBESKRIVELSE_TYPE', '-', null, 'Ikke
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'STOENADSKONTOTYPE', 'FORELDREPENGER_FØR_FØDSEL', null,
         'Foreldrepenger som må benyttes av mor før fødselen.', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1041', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'VURDER_AARSAK', 'FEIL_FAKTA', null, 'Feil fakta',
@@ -3142,9 +3039,6 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'VILKAR_UTFALL_MERKNAD', '1035', null, 'Ikke tilstrekkelig opptjening',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1035', null, 'Ikke tilstrekkelig opptjening',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', '-', null, 'Udefinert',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
@@ -3329,15 +3223,6 @@ values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'SLUTTPAKKE', null, null, to_da
         to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'VARTPENGER', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1027', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1028', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1029', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'HISTORIKKINNSLAG_FELT_TYPE', 'BEGRUNNELSE', null, 'Begrunnelse',
@@ -3970,13 +3855,7 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'SKJERMLENKE_TYPE', 'FAKTA_OM_BEREGNING', null, 'Fakta om beregning',
         to_date('15.03.2018', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'GRADERING_AVSLAG_AARSAK', '-', null, 'Ikke definert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'MANUELL_BEHANDLING_AARSAK', '-', null, 'Ikke definert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'PERIODE_RESULTAT_AARSAK', '-', null, 'Ikke definert',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'SKJERMLENKE_TYPE', 'FAKTA_OM_UTTAK', null, 'Fakta om uttak',
@@ -4132,126 +4011,6 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'MANUELL_BEHANDLING_AARSAK', '5099', null,
         'Foreldrepenger ikke implementert, må behandles manuelt', to_date('01.01.2000', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '-', null, 'Ikke definert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4005', null,
-        '§14-10 sjuende ledd: Hull mellom søknadsperioder', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4002', null, '§14-9: Ikke stønadsdager igjen på stønadskonto',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4020', null, '§22-13 tredje ledd: Brudd på søknadsfrist',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4022', null, '§14-10 tredje ledd: Barnet er over 3 år',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4012', null, '§14-10 fjerde ledd: Far/medmor har ikke omsorg',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4003', null, '§14-10 fjerde ledd: Mor har ikke omsorg',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4013', null,
-        '§14-10 første ledd: Mor søker fellesperiode før 12 uker før termin/fødsel',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4060', null,
-        '§14-10 sjette ledd: Samtidig uttak - ikke gyldig kombinasjon', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4007', null,
-        '§14-12 tredje ledd: Den andre part syk/skadet ikke oppfylt', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4008', null,
-        '§14-12 tredje ledd: Den andre part innleggelse ikke oppfylt', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4033', null,
-        '§14-11 første ledd bokstav a: Ikke lovbestemt ferie', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4032', null,
-        '§14-11 første ledd bokstav a: Ferie - selvstendig næringsdrivende/frilanser',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4037', null,
-        '§14-11 første ledd bokstav b: Ikke heltidsarbeid', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4038', null,
-        '§14-11 første ledd bokstav c: Søkers sykdom/skade ikke oppfylt', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4039', null,
-        '§14-11 første ledd bokstav c: Søkers innleggelse ikke oppfylt', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4040', null,
-        '§14-11 første ledd bokstav d: Barnets innleggelse ikke oppfylt', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4031', null, '§14-9: Ferie innenfor de første 6 ukene',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4034', null,
-        '§14-11, jf §14-9: Avslag utsettelse - ingen stønadsdager igjen', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4035', null,
-        '§14-11 første ledd bokstav b: Far aleneomsorg,  mor fyller ikke aktivitetskravet',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4030', null, '§14-9: Avslag utsettelse før termin/fødsel',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4041', null,
-        '§14-11 første ledd bokstav a: Avslag utsettelse ferie på bevegelig helligdag',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4050', null,
-        '§14-13 første ledd bokstav a: Aktivitetskravet arbeid ikke oppfylt', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4051', null,
-        '§14-13 første ledd bokstav b: Aktivitetskravet offentlig godkjent utdanning ikke oppfylt',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4052', null,
-        '§14-13 første ledd bokstav c: Aktivitetskravet offentlig godkjent utdanning i kombinasjon med arbeid ikke oppfylt',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4053', null,
-        '§14-13 første ledd bokstav d: Aktivitetskravet mors sykdom/skade ikke oppfylt',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4054', null,
-        '§14-13 første ledd bokstav e: Aktivitetskravet mors innleggelse ikke oppfylt',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4055', null,
-        '§14-13 første ledd bokstav f: Aktivitetskravet mors deltakelse på introduksjonssprogram ikke oppfylt',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4056', null,
-        '§14-13 første ledd bokstav g: Aktivitetskravet mors deltakelse på kvalifiseringsprogram ikke oppfylt',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4057', null,
-        '§14-14 tredje ledd: Unntak for aktivitetskravet, mors mottak av uføretrygd ikke oppfylt',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4058', null,
-        '§14-5 tredje ledd: Unntak for Aktivitetskravet, stebarnsadopsjon - ikke nok dager',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4059', null,
-        '§14-13 sjette ledd: Unntak for Aktivitetskravet, flerbarnsfødsel - ikke nok dager',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'PERIODE_RESULTAT_TYPE', 'MANUELL_BEHANDLING', null, 'Perioden må behandles manuelt',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
@@ -4455,15 +4214,6 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'BEREGNINGSGRUNNLAG_ANDELTYPE', 'FRILANS', null, null,
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4006', null, 'Påkrevd stønadsperiode mangler',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'GRADERING_AVSLAG_AARSAK', '4523', null, 'Avslag gradering - arbeid 100% eller mer',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'GRADERING_AVSLAG_AARSAK', '4504', null, 'Avslag gradering - gradering før uke 7',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'FAGSYSTEM_UNDERKATEGORI', 'INFOTRYGD_SAK', null,
         'Er registrert som en sak Sakdatabasen i Infotrygd', to_date('01.01.2000', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
@@ -4627,14 +4377,6 @@ values (nextval('seq_kodeliste'), 'UTTAK_DOKUMENTASJON_TYPE', 'SYKDOM_ANNEN_FORE
         'Det er dokumentert at annen forelder er syk eller skadet', to_date('01.01.2000', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4023', null,
-        '§14-10 femte ledd: Arbeider i utaksperioden mer enn 0%', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4025', null,
-        '§14-16 første ledd: Avslag gradering - arbeid 100% eller mer', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'HISTORIKKINNSLAG_TYPE', 'BEH_STARTET_PÅ_NYTT', null, null,
         to_date('01.01.2017', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
@@ -4658,9 +4400,6 @@ values (nextval('seq_kodeliste'), 'UTTAK_UTSETTELSE_TYPE', 'SØKER_INNLAGT', nul
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'UTTAK_UTSETTELSE_TYPE', 'BARN_INNLAGT', null, 'Barn er innlagt i helseinstitusjon',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'AVSLAGSARSAK', '1051', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'ARBEIDSFORHOLD_HANDLING_TYPE', '-', null, 'Udefinert',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
@@ -4793,17 +4532,6 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'VEDTAKSBREV', '-', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'INNVILGET_AARSAK', '2001', null, '§14-6: Uttak er oppfylt',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'INNVILGET_AARSAK', '2022', null,
-        '§14-12: Overføring oppfylt, annen part er innlagt i helseinstitusjon', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'INNVILGET_AARSAK', '2021', null,
-        '§14-12: Overføring oppfylt, annen part er helt avhengig av hjelp til å ta seg av barnet',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'HISTORIKK_ENDRET_FELT_VERDI_TYPE', 'DOKUMENTERT', null, 'dokumentert',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
@@ -4811,87 +4539,6 @@ values (nextval('seq_kodeliste'), 'HISTORIKK_ENDRET_FELT_VERDI_TYPE', 'IKKE_DOKU
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'HISTORIKK_ENDRET_FELT_TYPE', 'SYKDOM', null, 'Sykdom',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4018', null,
-        '§14-10 andre ledd: Søkt uttak/utsettelse før omsorgsovertakelse', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4080', null, '§14-16: Ikke gradering pga. for sen søknad',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4084', null,
-        '§14-10 sjette ledd: Annen part har overlappende uttak, det er ikke søkt/innvilget samtidig uttak',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4085', null,
-        '§14-10 sjette ledd: Det er ikke samtykke mellom partene', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4086', null,
-        '§14-10 sjette ledd og §14-11: Annen part har overlappende uttaksperioder som er innvilget utsettelse',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4073', null,
-        '§14-12 tredje ledd: Ikke rett til kvote fordi mor ikke har rett til foreldrepenger',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4074', null,
-        '§14-12 tredje ledd, jf §21-3: Avslag overføring kvote pga. sykdom/skade/innleggelse ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4066', null,
-        '§14-13 første ledd bokstav a, jf §21-3: Aktivitetskrav - arbeid ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4067', null,
-        '§14-13 første ledd boktav b, jf §21-3: Aktivitetskrav – utdanning ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4068', null,
-        '§14-13 første ledd bokstav c, jf §21-3: Aktivitetskrav – arbeid i komb utdanning ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4069', null,
-        '§14-13 første ledd bokstav d, jf §21-3: Aktivitetskrav – sykdom/skade ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4070', null,
-        '§14-13 første ledd bokstav e, jf §21-3: Aktivitetskrav – innleggelse ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4071', null, '§14-10: Bruker er død',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4072', null, '§14-9 sjette ledd: Barnet er dødt',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4081', null,
-        '§14-11 første ledd bokstav a: Avslag utsettelse pga ferie tilbake i tid', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4082', null,
-        '§14-11 første ledd bokstav b: Avslag utsettelse pga arbeid tilbake i tid', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4061', null,
-        '§14-11 første ledd bokstav a, jf §21-3: Utsettelse ferie ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4062', null,
-        '§14-11 første ledd bokstav b, jf §21-3: Utsettelse arbeid ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4063', null,
-        '§14-11 første ledd bokstav c, jf §21-3: Utsettelse søkers sykdom/skade ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4064', null,
-        '§14-11 første ledd bokstav c, jf §21-3: Utsettelse søkers innleggelse ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4065', null,
-        '§14-11 første ledd bokstav d, jf §21-3: Utsettelse barnets innleggelse - ikke dokumentert',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'MORS_AKTIVITET', 'ARBEID_OG_UTDANNING', null, 'Er i arbeid og utdanning',
@@ -4919,65 +4566,6 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'VENT_AARSAK', 'VENT_ÅPEN_BEHANDLING', null,
         'Søker eller den andre forelderen har en åpen behandling', to_date('01.01.2000', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'INNVILGET_AARSAK', '2023', null,
-        '§14-12 tredje ledd: Overføring oppfylt, søker har aleneomsorg for barnet', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'INNVILGET_AARSAK', '2010', null,
-        '§14-11 første ledd bokstav a: Gyldig utsettelse pga. ferie', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'INNVILGET_AARSAK', '2011', null,
-        '§14-11 første ledd bokstav b: Gyldig utsettelse pga. 100% arbeid', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'INNVILGET_AARSAK', '2012', null,
-        '§14-11 første ledd bokstav c: Gyldig utsettelse pga. innleggelse', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'INNVILGET_AARSAK', '2013', null,
-        '§14-11 første ledd bokstav d: Gyldig utsettelse pga. barn innlagt', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'INNVILGET_AARSAK', '2014', null,
-        '§14-11 første ledd bokstav c: Gyldig utsettelse pga. sykdom', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'INNVILGET_AARSAK', '2020', null,
-        '§14-12 tredje ledd: Overføring oppfylt, annen part har ikke rett til foreldrepenge',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4092', null,
-        '§14-12: Avslag overføring - har ikke aleneomsorg for barnet', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4093', null,
-        '§14-16: Avslag gradering - søker er ikke i arbeid', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4091', null,
-        '§14-10: sjuende ledd: Hull mellom søknadsperioder etter siste utsettelse', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4090', null,
-        '§14-10: sjuende ledd: Hull mellom søknadsperioder etter siste uttak', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4094', null,
-        '§14-16 femte ledd, jf §21-3: Avslag graderingsavtale mangler - ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4088', null,
-        '§14-13 første ledd bokstav f, jf §21-3: Aktivitetskrav – introprogram ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4089', null,
-        '§14-13 første ledd bokstav g, jf §21-3: Aktivitetskrav – KVP ikke dokumentert',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'IKKE_OPPFYLT_AARSAK', '4087', null, '§14-2: Opphør medlemsskap',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'VENT_AARSAK', 'VENT_OPPTJENING_OPPLYSNINGER', null,
         'Venter på opptjeningsopplysninger', to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));

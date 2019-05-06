@@ -59,7 +59,7 @@ public class AktivtetsMapper {
         for (BeregningsresultatAndel andel : finnArbeidsandeler(beregningsresultatPeriode)) {
             arbeidsforholdListe.add(mapArbeidsforholdAndel(beregningsresultatPeriode, andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel), beregningsgrunnlagPeriode));
         }
-        List<ArbeidsforholdType> sammenslåtteArbeidsforhold = DuplikatVerktøy.slåSammenLikeArbeidsforhold(arbeidsforholdListe);
+        List<ArbeidsforholdType> sammenslåtteArbeidsforhold = DuplikatVerktøy.slåSammenLikeArbeidsforhold(arbeidsforholdListe); //TODO (aleksander) - Kanskje slå disse sammen i dto mappingen, her mangler vi arbeidsforholdID og kan potensielt slå sammen for mange
         arbeidsforholdListeType.getArbeidsforhold().addAll(sammenslåtteArbeidsforhold);
         return arbeidsforholdListeType;
     }

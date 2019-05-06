@@ -187,4 +187,20 @@ public class BeregningsresultatMapper {
                 .max(XMLGregorianCalendar::compare)
                 .orElse(null);
     }
+
+    public static long finnDagsats(BeregningsresultatFP beregningsresultat) {
+        return finnFørstePeriode(beregningsresultat).getDagsats();
+    }
+
+    private static BeregningsresultatPeriode finnFørstePeriode(BeregningsresultatFP beregningsresultat) {
+        return beregningsresultat.getBeregningsresultatPerioder().get(0);
+    }
+
+    public static long finnMånedsbeløp(BeregningsresultatFP beregningsresultat) {
+        return getMånedsbeløp(finnFørstePeriode(beregningsresultat));
+    }
+
+    private static long getMånedsbeløp(BeregningsresultatPeriode førstePeriode) {
+        return førstePeriode.getDagsats() * 260 / 12;
+    }
 }

@@ -91,10 +91,6 @@ public class BeregningsgrunnlagMapper {
         return sum.get();
     }
 
-    public static long finnDagsats(Beregningsgrunnlag beregningsgrunnlag) {
-        return finnFørstePeriode(beregningsgrunnlag).getDagsats();
-    }
-
     static List<BeregningsgrunnlagPrStatusOgAndel> finnAktivitetStatuserForAndeler(BeregningsgrunnlagAktivitetStatus bgAktivitetStatus, List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         if (AktivitetStatus.KOMBINERTE_STATUSER.contains(bgAktivitetStatus.getAktivitetStatus())) {
             List<AktivitetStatus> relevanteStatuser = kombinerteRegelStatuserMap.get(bgAktivitetStatus.getAktivitetStatus());
@@ -155,18 +151,8 @@ public class BeregningsgrunnlagMapper {
         return andelListeType;
     }
 
-    public static long finnMånedsbeløp(Beregningsgrunnlag beregningsgrunnlag) {
-        return getMånedsbeløp(finnFørstePeriode(beregningsgrunnlag));
-    }
-
     private static BeregningsgrunnlagPeriode finnFørstePeriode(Beregningsgrunnlag beregningsgrunnlag) {
         return beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-    }
-
-    private static long getMånedsbeløp(BeregningsgrunnlagPeriode førstePeriode) {
-        BigDecimal redusertPrÅr = førstePeriode.getRedusertPrÅr();
-        BigDecimal årsbeløp = redusertPrÅr != null ? redusertPrÅr : førstePeriode.getBruttoPrÅr();
-        return årsbeløp.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue();
     }
 
     public static boolean inntektOverSeksG(Beregningsgrunnlag beregningsgrunnlag, BigDecimal seksG) {

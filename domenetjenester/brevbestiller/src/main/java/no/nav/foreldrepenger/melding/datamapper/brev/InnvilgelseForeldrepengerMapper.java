@@ -135,13 +135,20 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setDekningsgrad(BigInteger.valueOf(ytelseFordeling.getDekningsgrad().getVerdi()));
 
         mapFelterRelatertTilBehandling(behandling, fagType);
-        mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, originaltBeregningsgrunnlag, familieHendelse.getSkjæringstidspunkt().orElse(LocalDate.now()),  fagType);
+        mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, originaltBeregningsgrunnlag, familieHendelse.getSkjæringstidspunkt().orElse(LocalDate.now()), fagType);
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType, behandling);
         mapFelterRelatertTilSøknadOgYtelseFordeling(søknad, ytelseFordeling, fagType);
         mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, behandling, søknad, ytelseFordeling);
         mapFelterRelatertTilFamiliehendelse(familieHendelse, fagType);
         mapLovhjemmel(fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling, uttakResultatPerioder);
+        mapFelterRelatertTilDagsats(fagType, beregningsresultatFP);
         return fagType;
+    }
+
+    private void mapFelterRelatertTilDagsats(FagType fagType, BeregningsresultatFP beregningsresultat) {
+        fagType.setDagsats(BeregningsresultatMapper.finnDagsats(beregningsresultat));
+        fagType.setMånedsbeløp(BeregningsresultatMapper.finnMånedsbeløp(beregningsresultat));
+
     }
 
     private void mapLovhjemmel(FagType fagType,
@@ -182,7 +189,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setStønadsperiodeFom(BeregningsresultatMapper.finnStønadsperiodeFom(periodeListe));
         XMLGregorianCalendar sisteInnvilgedeDag = BeregningsresultatMapper.finnStønadsperiodeTom(periodeListe);
         fagType.setStønadsperiodeTom(sisteInnvilgedeDag);
-        fagType.setSisteDagAvSistePeriode(sisteInnvilgedeDag);
+        fagType.setSisteDagAvSistePeriode(UttakMapper.finnSisteDagAvSistePeriode(uttakResultatPerioder));
         if (sisteInnvilgedeDag != null) {
             fagType.setSisteUtbetalingsdag(sisteInnvilgedeDag);
         }
@@ -202,14 +209,13 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                                         LocalDate skjæringstidspunkt, FagType fagType) {
         fagType.setOverbetaling(BeregningsgrunnlagMapper.erOverbetalt(beregningsgrunnlag, originaltBeregningsgrunnlag));
         fagType.setBruttoBeregningsgrunnlag(BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag));
-        fagType.setDagsats(BeregningsgrunnlagMapper.finnDagsats(beregningsgrunnlag));
         BeregningsgrunnlagRegelListeType beregningsgrunnlagRegelListe = BeregningsgrunnlagMapper.mapRegelListe(beregningsgrunnlag);
         fagType.setBeregningsgrunnlagRegelListe(beregningsgrunnlagRegelListe);
         fagType.setAntallBeregningsgrunnlagRegeler(BigInteger.valueOf(beregningsgrunnlagRegelListe.getBeregningsgrunnlagRegel().size()));
-        fagType.setMånedsbeløp(BeregningsgrunnlagMapper.finnMånedsbeløp(beregningsgrunnlag));
         BigDecimal seksG = grunnbeløpTjeneste.grunnbeløpPå(skjæringstidspunkt).getVerdi().multiply(BigDecimal.valueOf(6));
         fagType.setSeksG(seksG.longValue());
         fagType.setInntektOverSeksG(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag, seksG));
+        fagType.setOverbetaling(BeregningsgrunnlagMapper.erOverbetalt(beregningsgrunnlag, originaltBeregningsgrunnlag));
     }
 
     private void mapFelterRelatertTilFamiliehendelse(FamilieHendelse familieHendelse, FagType fagType) {

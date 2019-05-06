@@ -34,7 +34,7 @@ public class BehandlingDto {
     private boolean toTrinnsBehandling;
     private Long originalBehandlingId;
     private List<BehandlingResourceLinkDto> links = new ArrayList<>();
-    private String taskStatus;
+    private AsyncPollingStatus taskStatus;
     private String venteArsakKode;
     private List<BehandlingÅrsakDto> behandlingArsaker = new ArrayList<>();
 
@@ -182,11 +182,11 @@ public class BehandlingDto {
         this.links = links;
     }
 
-    public String getTaskStatus() {
+    public AsyncPollingStatus getTaskStatus() {
         return taskStatus;
     }
 
-    public void setTaskStatus(String taskStatus) {
+    public void setTaskStatus(AsyncPollingStatus taskStatus) {
         this.taskStatus = taskStatus;
     }
 

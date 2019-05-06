@@ -15,7 +15,6 @@ import javax.persistence.Transient;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.dokumentdata.BaseEntitet;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -36,11 +35,6 @@ public class DokumentHendelse extends BaseEntitet {
     @ManyToOne
     @JoinColumn(name = "dokument_mal_navn")
     private DokumentMalType dokumentMalType;
-
-    @ManyToOne(optional = false)
-    @JoinColumnOrFormula(column = @JoinColumn(name = "behandling_type", referencedColumnName = "kode", nullable = false))
-    @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + BehandlingType.DISCRIMINATOR + "'"))
-    private BehandlingType behandlingType = BehandlingType.UDEFINERT;
 
     @ManyToOne
     @JoinColumnOrFormula(column = @JoinColumn(name = "ytelse_type", referencedColumnName = "kode", nullable = false))
@@ -91,32 +85,12 @@ public class DokumentHendelse extends BaseEntitet {
         return behandlingId;
     }
 
-    private void setBehandlingId(Long behandlingId) {
-        this.behandlingId = behandlingId;
-    }
-
     public DokumentMalType getDokumentMalType() {
         return dokumentMalType;
     }
 
-    private void setDokumentMalType(DokumentMalType dokumentMalType) {
-        this.dokumentMalType = dokumentMalType;
-    }
-
     public FagsakYtelseType getYtelseType() {
         return ytelseType;
-    }
-
-    private void setYtelseType(FagsakYtelseType ytelseType) {
-        this.ytelseType = ytelseType;
-    }
-
-    public BehandlingType getBehandlingType() {
-        return behandlingType;
-    }
-
-    private void setBehandlingType(BehandlingType behandlingType) {
-        this.behandlingType = behandlingType;
     }
 
     public Boolean isGjelderVedtak() {
@@ -127,40 +101,20 @@ public class DokumentHendelse extends BaseEntitet {
         return tittel;
     }
 
-    private void setTittel(String tittel) {
-        this.tittel = tittel;
-    }
-
     public String getFritekst() {
         return fritekst;
-    }
-
-    private void setFritekst(String fritekst) {
-        this.fritekst = fritekst;
     }
 
     public Boolean getGjelderVedtak() {
         return gjelderVedtak;
     }
 
-    private void setGjelderVedtak(Boolean gjelderVedtak) {
-        this.gjelderVedtak = gjelderVedtak;
-    }
-
     public HistorikkAktør getHistorikkAktør() {
         return historikkAktør;
     }
 
-    private void setHistorikkAktør(HistorikkAktør historikkAktør) {
-        this.historikkAktør = historikkAktør;
-    }
-
     public RevurderingVarslingÅrsak getRevurderingVarslingÅrsak() {
         return revurderingVarslingÅrsak;
-    }
-
-    private void setRevurderingVarslingÅrsak(RevurderingVarslingÅrsak revurderingVarslingÅrsak) {
-        this.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
     }
 
     public boolean getErOpphevetKlage() {
@@ -175,7 +129,6 @@ public class DokumentHendelse extends BaseEntitet {
         return id.equals(that.id) &&
                 behandlingId.equals(that.behandlingId) &&
                 Objects.equals(dokumentMalType, that.dokumentMalType) &&
-                Objects.equals(behandlingType, that.behandlingType) &&
                 Objects.equals(ytelseType, that.ytelseType) &&
                 Objects.equals(gjelderVedtak, that.gjelderVedtak) &&
                 Objects.equals(tittel, that.tittel) &&
@@ -185,7 +138,7 @@ public class DokumentHendelse extends BaseEntitet {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, behandlingId, dokumentMalType, behandlingType, ytelseType, gjelderVedtak, tittel, fritekst, historikkAktør);
+        return Objects.hash(id, behandlingId, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, historikkAktør);
     }
 
     @Override
@@ -194,7 +147,6 @@ public class DokumentHendelse extends BaseEntitet {
                 "id=" + id +
                 ", behandlingId=" + behandlingId +
                 ", dokumentMalType=" + dokumentMalType +
-                ", behandlingType=" + behandlingType +
                 ", ytelseType=" + ytelseType +
                 ", gjelderVedtak=" + gjelderVedtak +
                 ", tittel='" + tittel + '\'' +
@@ -207,7 +159,6 @@ public class DokumentHendelse extends BaseEntitet {
         private DokumentMalType dokumentMalType;
         private Long behandlingId;
         private FagsakYtelseType ytelseType;
-        private BehandlingType behandlingType = BehandlingType.UDEFINERT;
         private String tittel;
         private String fritekst;
         private Boolean gjelderVedtak;
@@ -232,11 +183,6 @@ public class DokumentHendelse extends BaseEntitet {
 
         public DokumentHendelse.Builder medYtelseType(FagsakYtelseType ytelseType) {
             this.ytelseType = ytelseType;
-            return this;
-        }
-
-        public DokumentHendelse.Builder medBehandlingType(BehandlingType behandlingType) {
-            this.behandlingType = behandlingType;
             return this;
         }
 
@@ -269,7 +215,6 @@ public class DokumentHendelse extends BaseEntitet {
             verifyStateForBuild();
             DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingId, ytelseType);
             dokumentHendelse.erOpphevetKlage = erOpphevetKlage;
-            dokumentHendelse.behandlingType = behandlingType;
             dokumentHendelse.gjelderVedtak = gjelderVedtak;
             dokumentHendelse.fritekst = fritekst;
             dokumentHendelse.tittel = tittel;

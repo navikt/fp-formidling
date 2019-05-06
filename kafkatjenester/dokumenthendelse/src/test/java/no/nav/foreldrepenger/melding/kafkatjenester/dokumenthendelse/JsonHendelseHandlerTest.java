@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
@@ -69,7 +68,6 @@ public class JsonHendelseHandlerTest {
 
     @Test
     public void hendelseUtenBehandlingsId_skalGiNullPointer() {
-        dokumentHendelse.setBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD.getKode());
         dokumentHendelse.setFritekst("fritekst");
         assertThatNullPointerException()
                 .isThrownBy(() -> jsonHendelseHandler.prosesser(dokumentHendelse));

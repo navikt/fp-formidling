@@ -21,6 +21,10 @@ public class KodeDto {
         return kode;
     }
 
+    public String getKodeverk() {
+        return kodeverk;
+    }
+
     @Override
     public String toString() {
         return "Kode{" +

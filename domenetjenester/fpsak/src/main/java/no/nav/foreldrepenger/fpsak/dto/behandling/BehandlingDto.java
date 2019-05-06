@@ -31,7 +31,7 @@ public class BehandlingDto {
     private Boolean behandlingHenlagt;
     private BehandlingsresultatDto behandlingsresultat;
     private KodeDto sprakkode;
-    private Boolean toTrinnsBehandling;
+    private boolean toTrinnsBehandling;
     private Long originalBehandlingId;
     private List<BehandlingResourceLinkDto> links = new ArrayList<>();
     private String taskStatus;
@@ -166,7 +166,7 @@ public class BehandlingDto {
         this.sprakkode = sprakkode;
     }
 
-    public Boolean getToTrinnsBehandling() {
+    public boolean getToTrinnsBehandling() {
         return toTrinnsBehandling;
     }
 

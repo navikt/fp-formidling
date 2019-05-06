@@ -22,7 +22,7 @@ public class Behandling {
     private LocalDateTime opprettetDato;
     private List<BehandlingÅrsak> behandlingÅrsaker;
     private String ansvarligSaksbehandler;
-    private Boolean toTrinnsBehandling;
+    private boolean toTrinnsBehandling;
     private String behandlendeEnhetNavn;
     private String ansvarligBeslutter;
     private Fagsak fagsak;
@@ -75,15 +75,11 @@ public class Behandling {
         return ansvarligSaksbehandler;
     }
 
-    public Boolean getToTrinnsBehandling() {
-        return toTrinnsBehandling;
-    }
-
     public String getAnsvarligBeslutter() {
         return ansvarligBeslutter;
     }
 
-    public Boolean isToTrinnsBehandling() {
+    public boolean isToTrinnsBehandling() {
         return toTrinnsBehandling;
     }
 
@@ -177,7 +173,7 @@ public class Behandling {
         private LocalDateTime opprettetDato;
         private List<BehandlingÅrsak> behandlingÅrsaker = new ArrayList<>();
         private String ansvarligSaksbehandler;
-        private Boolean toTrinnsBehandling;
+        private boolean toTrinnsBehandling;
         private String ansvarligBeslutter;
         private Fagsak fagsak;
         private BehandlingStatus status;
@@ -233,7 +229,7 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder medToTrinnsBehandling(Boolean toTrinnsBehandling) {
+        public Behandling.Builder medToTrinnsBehandling(boolean toTrinnsBehandling) {
             this.toTrinnsBehandling = toTrinnsBehandling;
             return this;
         }

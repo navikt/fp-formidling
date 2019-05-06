@@ -4,6 +4,7 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.a
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -24,7 +25,6 @@ import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.AvslagConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.BehandlingstypeType;
@@ -37,6 +37,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
+import no.nav.foreldrepenger.melding.vilkår.repository.VilkårKodeverkRepository;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -64,15 +65,18 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
+    private VilkårKodeverkRepository vilkårKodeverkRepository;
 
     public AvslagEngangstønadBrevMapper() {
     }
 
     @Inject
     public AvslagEngangstønadBrevMapper(BrevParametere brevParametere,
-                                        DomeneobjektProvider domeneobjektProvider) {
+                                        DomeneobjektProvider domeneobjektProvider,
+                                        VilkårKodeverkRepository vilkårKodeverkRepository) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
+        this.vilkårKodeverkRepository = vilkårKodeverkRepository;
     }
 
     @Override
@@ -81,7 +85,7 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        Vilkår vilkår = domeneobjektProvider.hentVilkår(behandling);
+        List<Vilkår> vilkår = domeneobjektProvider.hentVilkår(behandling);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling);
         FagType fagType = mapFagType(behandling, behandlingstype, dokumentHendelse, familiehendelse, vilkår);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
@@ -90,7 +94,9 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
 
     private FagType mapFagType(Behandling behandling,
                                String behandlingstype,
-                               DokumentHendelse dokumentHendelse, FamilieHendelse familiehendelse, Vilkår vilkår) {
+                               DokumentHendelse dokumentHendelse,
+                               FamilieHendelse familiehendelse,
+                               List<Vilkår> vilkårene) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(REVURDERING.equals(behandlingstype) ? BehandlingstypeType.REVURDERING : BehandlingstypeType.SØKNAD);
         fagType.setRelasjonsKode(relasjonskodeTypeMap.get(behandling.getFagsak().getRelasjonsRolleType()));
@@ -99,11 +105,20 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
         fagType.setAvslagsAarsak(behandling.getBehandlingsresultat().getAvslagsårsak().getKode());
         avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
         fagType.setKlageFristUker(brevParametere.getKlagefristUker());
-        fagType.setVilkaarType(fra(vilkår.getVilkårType()));
+        fagType.setVilkaarType(utledVilkårTypeFra(vilkårene, fagType.getAvslagsAarsak()));
         return fagType;
     }
 
-    private VilkaartypeType fra(VilkårType internVilkårType) {
+    private VilkaartypeType utledVilkårTypeFra(List<Vilkår> vilkårene, String avslagsÅrsakKode) {
+        List<VilkårType> vilkårTyper = vilkårKodeverkRepository.finnVilkårTypeListe(avslagsÅrsakKode);
+        return vilkårene.stream()
+                .filter(v -> vilkårTyper.contains(v.getVilkårType()))
+                .map(Vilkår::getVilkårType)
+                .map(this::tilVilkaartypeType)
+                .findFirst().orElseThrow(() -> new IllegalStateException("Fant ingen vilkår"));
+    }
+
+    private VilkaartypeType tilVilkaartypeType(VilkårType internVilkårType) {
         if (vilkaartypeMap.containsKey(internVilkårType.getKode())) {
             return vilkaartypeMap.get(internVilkårType.getKode());
         } else if ("FP_VK_6".equals(internVilkårType.getKode())) {

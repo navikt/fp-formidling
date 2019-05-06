@@ -182,13 +182,13 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    public VilkårDto hentVilkår(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker.stream()
+    public List<VilkårDto> hentVilkår(List<BehandlingResourceLink> resourceLinker) {
+        return Arrays.asList(resourceLinker.stream()
                 .filter(dto -> "vilkar".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, VilkårDto.class))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, VilkårDto[].class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente vilkår for behandling: " + hentBehandlingId(resourceLinker));
-                });
+                }));
     }
 
     @Override

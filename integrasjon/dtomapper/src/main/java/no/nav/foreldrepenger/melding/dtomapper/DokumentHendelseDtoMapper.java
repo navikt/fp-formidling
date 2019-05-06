@@ -35,7 +35,6 @@ public class DokumentHendelseDtoMapper {
     public DokumentHendelse mapDokumentHendelseFraDto(DokumentHendelseDto hendelseDto) {
         return new DokumentHendelse.Builder()
                 .medBehandlingId(hendelseDto.getBehandlingId())
-                .medBehandlingType(utledBehandlingType(hendelseDto.getBehandlingType()))
                 .medYtelseType(utledYtelseType(hendelseDto.getYtelseType()))
                 .medFritekst(hendelseDto.getFritekst())
                 .medTittel(hendelseDto.getTittel())

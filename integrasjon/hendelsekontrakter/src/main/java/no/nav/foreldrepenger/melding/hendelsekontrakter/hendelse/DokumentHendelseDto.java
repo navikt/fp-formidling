@@ -14,7 +14,6 @@ public class DokumentHendelseDto implements AbacDto {
     @Max(Long.MAX_VALUE)
     private Long behandlingId;
     private String dokumentMal;
-    private String behandlingType;
     @NotNull
     private String ytelseType;
     private String tittel;
@@ -54,14 +53,6 @@ public class DokumentHendelseDto implements AbacDto {
 
     public void setGjelderVedtak(boolean gjelderVedtak) {
         this.gjelderVedtak = gjelderVedtak;
-    }
-
-    public String getBehandlingType() {
-        return behandlingType;
-    }
-
-    public void setBehandlingType(String behandlingType) {
-        this.behandlingType = behandlingType;
     }
 
     public String getYtelseType() {
@@ -106,7 +97,6 @@ public class DokumentHendelseDto implements AbacDto {
         return "DokumentHendelseDto{" +
                 "behandlingId=" + behandlingId +
                 ", dokumentMal='" + dokumentMal + '\'' +
-                ", behandlingType='" + behandlingType + '\'' +
                 ", ytelseType='" + ytelseType + '\'' +
                 ", tittel='" + tittel + '\'' +
                 ", historikkAktør='" + historikkAktør + '\'' +

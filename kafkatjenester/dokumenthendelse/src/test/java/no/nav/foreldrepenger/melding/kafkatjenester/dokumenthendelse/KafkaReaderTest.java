@@ -13,7 +13,6 @@ import org.mockito.junit.MockitoRule;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
@@ -84,7 +83,6 @@ public class KafkaReaderTest {
     private DokumentHendelseDto lagOkDto() {
         DokumentHendelseDto dto = new DokumentHendelseDto();
         dto.setBehandlingId(behandlingId);
-        dto.setBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD.getKode());
         dto.setDokumentMal(DokumentMalType.AVSLAGSVEDTAK_DOK);
         dto.setFritekst("123");
         dto.setTittel("tittel");

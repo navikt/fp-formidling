@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
+
 import java.math.BigInteger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -49,16 +51,17 @@ public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
-        FagType fagType = mapFagType(dokumentHendelse, klage);
+        FagType fagType = mapFagType(dokumentHendelse, klage, behandling);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapTilBrevDataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(VedtakMedholdConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage) {
+    private FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage, Behandling behandling) {
         FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         fagType.setOpphavType(utledOpphaveTypeKode(klage));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
+        avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
         return fagType;
     }
 

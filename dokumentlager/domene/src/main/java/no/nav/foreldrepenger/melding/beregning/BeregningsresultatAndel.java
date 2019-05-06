@@ -13,7 +13,8 @@ public class BeregningsresultatAndel {
     private AktivitetStatus aktivitetStatus;
     private Arbeidsgiver arbeidsgiver;
     private ArbeidsforholdRef arbeidsforholdRef;
-    private Boolean brukerErMottaker;
+    private boolean brukerErMottaker;
+    private boolean arbeidsgiverErMottaker;
 
     private BeregningsresultatAndel(Builder builder) {
         dagsats = builder.dagsats;
@@ -22,6 +23,7 @@ public class BeregningsresultatAndel {
         arbeidsgiver = builder.arbeidsgiver;
         arbeidsforholdRef = builder.arbeidsforholdRef;
         brukerErMottaker = builder.brukerErMottaker;
+        arbeidsgiverErMottaker = builder.arbeidsgiverErMottaker;
     }
 
     public static Builder ny() {
@@ -52,6 +54,9 @@ public class BeregningsresultatAndel {
         return brukerErMottaker;
     }
 
+    public boolean erArbeidsgiverMottaker() {
+        return arbeidsgiverErMottaker;
+    }
 
     public static final class Builder {
         private int dagsats;
@@ -59,7 +64,8 @@ public class BeregningsresultatAndel {
         private AktivitetStatus aktivitetStatus;
         private Arbeidsgiver arbeidsgiver;
         private ArbeidsforholdRef arbeidsforholdRef;
-        private Boolean brukerErMottaker;
+        private boolean brukerErMottaker;
+        private boolean arbeidsgiverErMottaker;
 
         private Builder() {
         }
@@ -89,8 +95,14 @@ public class BeregningsresultatAndel {
             return this;
         }
 
-        public Builder medBrukerErMottaker(Boolean brukerErMottaker) {
+        public Builder medBrukerErMottaker(boolean brukerErMottaker) {
             this.brukerErMottaker = brukerErMottaker;
+            return this;
+        }
+
+
+        public Builder medArbeidsgiverErMottaker(boolean arbeidsgiverErMottaker) {
+            this.arbeidsgiverErMottaker = arbeidsgiverErMottaker;
             return this;
         }
 

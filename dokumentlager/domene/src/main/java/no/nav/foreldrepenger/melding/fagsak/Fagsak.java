@@ -8,7 +8,6 @@ import no.nav.foreldrepenger.melding.typer.Saksnummer;
 public class Fagsak {
     private Long id;
     private RelasjonsRolleType brukerRolle;
-    private FagsakYtelseType ytelseType;
     private Saksnummer saksnummer;
     private Personinfo personinfo;
 
@@ -17,7 +16,6 @@ public class Fagsak {
     private Fagsak(Builder builder) {
         id = builder.id;
         brukerRolle = builder.brukerRolle;
-        ytelseType = builder.ytelseType;
         saksnummer = builder.saksnummer;
         navBruker = builder.navBruker;
         personinfo = builder.personinfo;
@@ -29,10 +27,6 @@ public class Fagsak {
 
     public Long getId() {
         return id;
-    }
-
-    public FagsakYtelseType getYtelseType() {
-        return ytelseType;
     }
 
     public Saksnummer getSaksnummer() {
@@ -69,11 +63,6 @@ public class Fagsak {
 
         public Builder medBrukerRolle(RelasjonsRolleType brukerRolle) {
             this.brukerRolle = brukerRolle;
-            return this;
-        }
-
-        public Builder medYtelseType(FagsakYtelseType ytelseType) {
-            this.ytelseType = ytelseType;
             return this;
         }
 

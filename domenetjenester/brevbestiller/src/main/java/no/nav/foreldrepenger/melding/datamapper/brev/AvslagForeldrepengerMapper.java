@@ -87,7 +87,7 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
         BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
         Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
-        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling);
+        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         FagType fagType = mapFagType(behandling,
                 behandlingstype,
                 søknad.getMottattDato(),

@@ -169,12 +169,8 @@ public class BeregningsgrunnlagMapper {
         return årsbeløp.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue();
     }
 
-    public static BigDecimal finnSeksG(Beregningsgrunnlag beregningsgrunnlag) {
-        return beregningsgrunnlag.getGrunnbeløp().getVerdi().multiply(BigDecimal.valueOf(6));
-    }
-
-    public static boolean inntektOverSeksG(Beregningsgrunnlag beregningsgrunnlag) {
-        return finnFørstePeriode(beregningsgrunnlag).getBruttoPrÅr().compareTo(finnSeksG(beregningsgrunnlag)) > 0;
+    public static boolean inntektOverSeksG(Beregningsgrunnlag beregningsgrunnlag, BigDecimal seksG) {
+        return finnFørstePeriode(beregningsgrunnlag).getBruttoPrÅr().compareTo(seksG) > 0;
     }
 
     static StatusTypeKode tilStatusTypeKode(AktivitetStatus statuskode) {

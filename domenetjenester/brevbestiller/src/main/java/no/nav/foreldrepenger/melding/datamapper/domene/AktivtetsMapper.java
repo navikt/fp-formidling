@@ -17,7 +17,6 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriod
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
-import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.DuplikatVerktøy;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetType;
@@ -59,8 +58,7 @@ public class AktivtetsMapper {
         for (BeregningsresultatAndel andel : finnArbeidsandeler(beregningsresultatPeriode)) {
             arbeidsforholdListe.add(mapArbeidsforholdAndel(beregningsresultatPeriode, andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel), beregningsgrunnlagPeriode));
         }
-        List<ArbeidsforholdType> sammenslåtteArbeidsforhold = DuplikatVerktøy.slåSammenLikeArbeidsforhold(arbeidsforholdListe); //TODO (aleksander) - Kanskje slå disse sammen i dto mappingen, her mangler vi arbeidsforholdID og kan potensielt slå sammen for mange
-        arbeidsforholdListeType.getArbeidsforhold().addAll(sammenslåtteArbeidsforhold);
+        arbeidsforholdListeType.getArbeidsforhold().addAll(arbeidsforholdListe);
         return arbeidsforholdListeType;
     }
 

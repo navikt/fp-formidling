@@ -155,7 +155,7 @@ public class BeregningsresultatMapper {
         return beregningsresultatFP.getBeregningsresultatPerioder().stream()
                 .map(BeregningsresultatPeriode::getBeregningsresultatAndelList)
                 .flatMap(List::stream)
-                .filter(Predicate.not(BeregningsresultatAndel::erBrukerMottaker))
+                .filter(BeregningsresultatAndel::erArbeidsgiverMottaker)
                 .count();
     }
 

@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,7 @@ import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
+import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerAvslag;
 import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.AarsakListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.AvslagsAarsakType;
@@ -36,17 +38,21 @@ public class ÅrsakMapperAvslag {
     public static Tuple<AarsakListeType, String> mapAarsakListeOgLovhjemmelFra(Behandlingsresultat behandlingsresultat,
                                                                                List<BeregningsresultatPeriode> beregningsresultatPerioder,
                                                                                UttakResultatPerioder uttakResultatPerioder) {
+        AarsakListeType aarsakListeType = objectFactory.createAarsakListeType();
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
 
-        AarsakListeType aarsakListeType = objectFactory.createAarsakListeType();
-        aarsakListeType.getAvslagsAarsak().addAll(årsakerFra(beregningsresultatPerioder, uttakResultatPerioder));
+        List<AvslagsAarsakType> avslagsAarsaker = new ArrayList<>();
+        avslagsAarsaker.addAll(årsakerFra(beregningsresultatPerioder, uttakResultatPerioder));
         String lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
                 BehandlingMapper.kodeFra(behandlingsresultat.getKonsekvenserForYtelsen()),
                 false);
-        if (aarsakListeType.getAvslagsAarsak().isEmpty()) {
-            aarsakListeType.getAvslagsAarsak().addAll(årsakerFra(behandlingsresultat, uttakResultatPerioder));
+        if (avslagsAarsaker.isEmpty()) {
+            avslagsAarsaker.addAll(årsakerFra(behandlingsresultat, uttakResultatPerioder));
             lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser);
         }
+        avslagsAarsaker = PeriodeMergerAvslag.mergePerioder(avslagsAarsaker);
+        aarsakListeType.getAvslagsAarsak().addAll(avslagsAarsaker);
+
         return new Tuple<>(aarsakListeType, lovhjemmelForAvslag);
     }
 

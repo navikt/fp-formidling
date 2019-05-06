@@ -6,6 +6,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.AvslagsAarsakType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringType;
@@ -24,6 +27,12 @@ class PeriodeMergerVerktøy {
         return periodeEn;
     }
 
+    static AvslagsAarsakType slåSammenPerioder(AvslagsAarsakType periodeEn, AvslagsAarsakType periodeTo) {
+        periodeEn.setAntallTapteDager(periodeEn.getAntallTapteDager().add(periodeTo.getAntallTapteDager()));
+        periodeEn.setPeriodeTom(periodeTo.getPeriodeTom());
+        return periodeEn;
+    }
+
     static boolean sammeStatusOgÅrsak(PeriodeType periodeEn, PeriodeType periodeTo) {
         return Objects.equals(periodeEn.isInnvilget(), periodeTo.isInnvilget())
                 && (Objects.equals(periodeEn.getÅrsak(), periodeTo.getÅrsak())
@@ -35,8 +44,16 @@ class PeriodeMergerVerktøy {
     }
 
     static boolean erFomRettEtterTomDato(PeriodeType periodeEn, PeriodeType periodeTo) {
-        LocalDate tomEnDate = DateUtil.convertToLocalDate(periodeEn.getPeriodeTom());
-        LocalDate fomToDate = DateUtil.convertToLocalDate(periodeTo.getPeriodeFom());
+        return erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
+    }
+
+    static boolean erFomRettEtterTomDato(AvslagsAarsakType periodeEn, AvslagsAarsakType periodeTo) {
+        return erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
+    }
+
+    private static boolean erFomRettEtterTomDato(XMLGregorianCalendar periodeEnTom, XMLGregorianCalendar periodeToFom) {
+        LocalDate tomEnDate = DateUtil.convertToLocalDate(periodeEnTom);
+        LocalDate fomToDate = DateUtil.convertToLocalDate(periodeToFom);
         return tomEnDate.plusDays(1).isEqual(fomToDate) ||
                 tomEnDate.plusDays(2).isEqual(fomToDate) && erLørdagEllerSøndag(tomEnDate.plusDays(1)) ||
                 tomEnDate.plusDays(3).isEqual(fomToDate) && erLørdag(tomEnDate.plusDays(1)) && erSøndag(tomEnDate.plusDays(2));

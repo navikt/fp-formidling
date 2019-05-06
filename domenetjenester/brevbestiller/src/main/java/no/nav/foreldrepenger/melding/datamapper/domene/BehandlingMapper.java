@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.BehandlingstypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsResultatKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsTypeKode;
@@ -90,18 +89,13 @@ public class BehandlingMapper {
         return BehandlingType.REVURDERING.equals(behandling.getBehandlingType()) ? BehandlingsTypeType.REVURDERING : BehandlingsTypeType.FOERSTEGANGSBEHANDLING;
     }
 
-    public static String utledBehandlingsTypeForAvslagVedtak(Behandling behandling) {
+    public static String utledBehandlingsTypeForAvslagVedtak(Behandling behandling, DokumentHendelse dokumentHendelse) {
         if (behandling.erRevurdering()) {
             return REVURDERING;
-        } else if (behandling.erFørstegangssøknad() && behandling.gjelderForeldrepenger()) {
+        } else if (behandling.erFørstegangssøknad() && dokumentHendelse.getYtelseType().gjelderForeldrepenger()) {
             return FØRSTEGANGSSØKNAD;
         }
         return SØKNAD;
-    }
-
-    public static BehandlingstypeType utledBehandlingsTypeAvslagES(Behandling behandling) {
-        boolean erRevurdering = BehandlingType.REVURDERING.equals(behandling.getBehandlingType());
-        return erRevurdering ? BehandlingstypeType.REVURDERING : BehandlingstypeType.SØKNAD;
     }
 
     public static boolean erEndringMedEndretInntektsmelding(Behandling behandling) {

@@ -115,9 +115,6 @@ public class Behandling {
         return fagsak;
     }
 
-    public boolean gjelderForeldrepenger() {
-        return getFagsak().getYtelseType().gjelderForeldrepenger();
-    }
 
     public Saksnummer getSaksnummer() {
         return getFagsak().getSaksnummer();

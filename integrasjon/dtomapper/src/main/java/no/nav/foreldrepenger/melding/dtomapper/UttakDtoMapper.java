@@ -11,6 +11,8 @@ import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak;
+import no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.melding.uttak.InnvilgetÅrsak;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
@@ -39,12 +41,22 @@ public class UttakDtoMapper {
         return UttakResultatPeriode.ny()
                 .medGraderingAvslagÅrsak(kodeverkRepository.finn(GraderingAvslagÅrsak.class, dto.getGraderingAvslagÅrsak().getKode()))
                 .medPeriodeResultatType(kodeverkRepository.finn(PeriodeResultatType.class, dto.getPeriodeResultatType().getKode()))
-                .medPeriodeResultatÅrsak(kodeverkRepository.finn(PeriodeResultatÅrsak.class, dto.getPeriodeResultatÅrsak().getKode()))
+                .medPeriodeResultatÅrsak(kodeverkRepository.finn(finnKodeverk(dto.getPeriodeResultatÅrsak().getKodeverk()), dto.getPeriodeResultatÅrsak().getKode()))
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
                 .medUttakUtsettelseType(kodeverkRepository.finn(UttakUtsettelseType.class, dto.getUtsettelseType().getKode()))
                 .medAktiviteter(dto.getAktiviteter().stream().map(this::aktivitetFraDto).collect(Collectors.toList()))
                 .build();
     }
+
+    private Class<? extends PeriodeResultatÅrsak> finnKodeverk(String kodeverk) {
+        if (InnvilgetÅrsak.DISCRIMINATOR.equals(kodeverk)) {
+            return InnvilgetÅrsak.class;
+        } else if (IkkeOppfyltÅrsak.DISCRIMINATOR.equals(kodeverk)) {
+            return IkkeOppfyltÅrsak.class;
+        }
+        return PeriodeResultatÅrsak.class;
+    }
+
 
     UttakResultatPeriodeAktivitet aktivitetFraDto(UttakResultatPeriodeAktivitetDto dto) {
         return UttakResultatPeriodeAktivitet.ny()

@@ -59,7 +59,7 @@ public class AktivtetsMapper {
             arbeidsforholdListe.add(mapArbeidsforholdAndel(beregningsresultatPeriode, andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel), beregningsgrunnlagPeriode));
         }
         arbeidsforholdListeType.getArbeidsforhold().addAll(arbeidsforholdListe);
-        return arbeidsforholdListeType;
+        return arbeidsforholdListeType.getArbeidsforhold().isEmpty() ? null : arbeidsforholdListeType;
     }
 
 
@@ -108,7 +108,7 @@ public class AktivtetsMapper {
                 PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel)))
                 .findFirst()
                 .ifPresent(næringListe::setNæring);
-        return næringListe;
+        return næringListe.getNæring() != null ? næringListe : null;
         //Optional<UttakResultatPeriodeAktivitet>;
     }
 
@@ -148,7 +148,7 @@ public class AktivtetsMapper {
     static AnnenAktivitetListeType mapAnnenAktivtetListe(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakPeriode) {
         AnnenAktivitetListeType annenAktivitetListe = objectFactory.createAnnenAktivitetListeType();
         finnAndelerOgUttakAnnenAktivitet(beregningsresultatPeriode, uttakPeriode).map(AktivtetsMapper::mapAnnenAktivitet).forEach(aktivitet -> annenAktivitetListe.getAnnenAktivitet().add(aktivitet));
-        return annenAktivitetListe;
+        return annenAktivitetListe.getAnnenAktivitet().isEmpty() ? null : annenAktivitetListe;
     }
 
     static AnnenAktivitetType mapAnnenAktivitet(Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> tilkjentYtelseAndelMedTilhørendeUttaksaktivitet) {

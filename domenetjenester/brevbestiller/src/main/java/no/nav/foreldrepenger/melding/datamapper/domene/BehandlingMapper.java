@@ -41,9 +41,8 @@ public class BehandlingMapper {
     public static Optional<String> avklarFritekst(DokumentHendelse dokumentHendelse, Behandling behandling) {
         if (!StringUtils.nullOrEmpty(dokumentHendelse.getFritekst())) {
             return Optional.of(dokumentHendelse.getFritekst());
-        } else if (behandling.getBehandlingsresultat() != null &&
-                !StringUtils.nullOrEmpty(behandling.getBehandlingsresultat().getAvslagarsakFritekst())) {
-            return Optional.of(behandling.getBehandlingsresultat().getAvslagarsakFritekst());
+        } else if (behandling.getBehandlingsresultat() != null) {
+            return Optional.ofNullable(behandling.getBehandlingsresultat().getAvslagarsakFritekst());
         }
         return Optional.empty();
     }

@@ -68,6 +68,7 @@ public class KlageDtoMapper {
     private KlageVurderingResultat mapKlageVurderingResultatfraDto(KlageVurderingResultatDto dto) {
         KlageVurderingResultat.Builder builder = KlageVurderingResultat.ny();
         builder.medKlageVurdering(kodeverkRepository.finn(KlageVurdering.class, dto.getKlageVurdering()));
+        builder.medFritekstTilbrev(dto.getFritekstTilBrev());
         return builder.build();
     }
 

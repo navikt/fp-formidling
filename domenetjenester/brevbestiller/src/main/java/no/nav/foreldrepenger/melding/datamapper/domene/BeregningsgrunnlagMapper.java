@@ -41,6 +41,7 @@ public class BeregningsgrunnlagMapper {
             beregningsgrunnlagRegel.setAntallArbeidsgivereIBeregning(tellAntallArbeidsforholdIBeregning(filtrertListe));
             beregningsgrunnlagRegel.setBesteBeregning(harNoenAvAndeleneBesteberegning(filtrertListe));
             beregningsgrunnlagRegel.setSNNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
+            regelListe.getBeregningsgrunnlagRegel().add(beregningsgrunnlagRegel);
         }
         return regelListe;
     }

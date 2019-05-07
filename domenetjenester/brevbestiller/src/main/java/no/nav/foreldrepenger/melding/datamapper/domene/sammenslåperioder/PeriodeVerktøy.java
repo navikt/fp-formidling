@@ -2,7 +2,8 @@ package no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.function.Supplier;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -20,20 +21,18 @@ public class PeriodeVerktøy {
 
 
     public static Boolean graderingFinnes(PeriodeListeType periodeListe) {
-        Supplier<Stream<PeriodeType>> innvilgedePerioderStreamSupplier = () -> periodeListe.getPeriode().stream().filter(PeriodeType::isInnvilget);
-        return periodeStreamInneholderGradering(innvilgedePerioderStreamSupplier.get());
+        List<PeriodeType> innvilgedePerioder = periodeListe.getPeriode().stream().filter(PeriodeType::isInnvilget).collect(Collectors.toList());
+        return periodeStreamInneholderGradering(innvilgedePerioder);
     }
 
-    private static Boolean periodeStreamInneholderGradering(Stream<PeriodeType> innvilgedePerioderStream) {
-        //TODO Litt kronglete gjenbruk av streams
-        Supplier<Stream<PeriodeType>> streamSupplier = () -> innvilgedePerioderStream;
-        return arbeidsforholdMedGraderingFinnes(streamSupplier.get()) ||
-                annenAktivtitetMedGraderingFinnes(streamSupplier.get()) ||
-                næringMedGraderingFinnes(streamSupplier.get());
+    private static Boolean periodeStreamInneholderGradering(List<PeriodeType> innvilgedePerioder) {
+        return arbeidsforholdMedGraderingFinnes(innvilgedePerioder.stream()) ||
+                annenAktivtitetMedGraderingFinnes(innvilgedePerioder.stream()) ||
+                næringMedGraderingFinnes(innvilgedePerioder.stream());
     }
 
     public static boolean periodeHarGradering(PeriodeType periodeType) {
-        return periodeStreamInneholderGradering(Stream.of(periodeType));
+        return periodeStreamInneholderGradering(List.of(periodeType));
     }
 
     private static boolean annenAktivtitetMedGraderingFinnes(Stream<PeriodeType> periodeStream) {

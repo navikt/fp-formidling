@@ -108,7 +108,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                 ytelseFordeling,
                 saldoer);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
-        return JaxbHelper.marshalNoNamespaceXML(InnvilgetForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, InnvilgetForeldrepengerConstants.XSD_LOCATION);
+        return JaxbHelper.marshalNoNamespaceXML(InnvilgetForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
     private FagType mapFagType(DokumentHendelse dokumentHendelse,

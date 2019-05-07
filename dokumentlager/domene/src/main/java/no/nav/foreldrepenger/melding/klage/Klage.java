@@ -34,10 +34,11 @@ public class Klage {
     }
 
     public KlageVurderingResultat getGjeldendeKlageVurderingsresultat() {
-        if (klageVurderingResultatNFP != null) {
-            return klageVurderingResultatNFP;
-        } else if (klageVurderingResultatNK != null) {
+
+        if (klageVurderingResultatNK != null) {
             return klageVurderingResultatNK;
+        } else if (klageVurderingResultatNFP != null) {
+            return klageVurderingResultatNFP;
         }
         return null;
     }

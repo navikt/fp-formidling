@@ -20,11 +20,12 @@ public class PeriodeVerktøy {
 
 
     public static Boolean graderingFinnes(PeriodeListeType periodeListe) {
-        Stream<PeriodeType> innvilgedePerioderStream = periodeListe.getPeriode().stream().filter(PeriodeType::isInnvilget);
-        return periodeStreamInneholderGradering(innvilgedePerioderStream);
+        Supplier<Stream<PeriodeType>> innvilgedePerioderStreamSupplier = () -> periodeListe.getPeriode().stream().filter(PeriodeType::isInnvilget);
+        return periodeStreamInneholderGradering(innvilgedePerioderStreamSupplier.get());
     }
 
     private static Boolean periodeStreamInneholderGradering(Stream<PeriodeType> innvilgedePerioderStream) {
+        //TODO Litt kronglete gjenbruk av streams
         Supplier<Stream<PeriodeType>> streamSupplier = () -> innvilgedePerioderStream;
         return arbeidsforholdMedGraderingFinnes(streamSupplier.get()) ||
                 annenAktivtitetMedGraderingFinnes(streamSupplier.get()) ||

@@ -19,6 +19,7 @@ public class BehandlingDto {
     private LocalDateTime opprettet;
     private LocalDateTime avsluttet;
     private LocalDateTime endret;
+    private String endretAvBrukernavn;
     private String behandlendeEnhetId;
     private String behandlendeEnhetNavn;
     private Boolean erAktivPapirsoknad;
@@ -244,6 +245,14 @@ public class BehandlingDto {
 
     public void setErAktivPapirsoknad(Boolean erAktivPapirsoknad) {
         this.erAktivPapirsoknad = erAktivPapirsoknad;
+    }
+
+    public String getEndretAvBrukernavn() {
+        return endretAvBrukernavn;
+    }
+
+    public void setEndretAvBrukernavn(String endretAvBrukernavn) {
+        this.endretAvBrukernavn = endretAvBrukernavn;
     }
 
     @Override

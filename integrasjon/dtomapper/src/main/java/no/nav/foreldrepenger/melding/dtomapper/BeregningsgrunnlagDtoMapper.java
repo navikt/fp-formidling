@@ -54,9 +54,9 @@ public class BeregningsgrunnlagDtoMapper {
         AktørId aktørId = null;
         Virksomhet virksomhet = null;
         if (dto.getAktørId() != null) {
-            virksomhet = new Virksomhet(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverId());
-        } else {
             aktørId = new AktørId(dto.getAktørId());
+        } else {
+            virksomhet = new Virksomhet(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverId());
         }
         return new Arbeidsgiver(dto.getArbeidsgiverNavn(), virksomhet, aktørId);
     }

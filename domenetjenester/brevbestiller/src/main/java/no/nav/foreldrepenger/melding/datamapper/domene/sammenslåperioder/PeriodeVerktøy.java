@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,6 +39,7 @@ public class PeriodeVerktøy {
     private static boolean annenAktivtitetMedGraderingFinnes(Stream<PeriodeType> periodeStream) {
         return periodeStream
                 .map(PeriodeType::getAnnenAktivitetListe)
+                .filter(Objects::nonNull)
                 .map(AnnenAktivitetListeType::getAnnenAktivitet)
                 .flatMap(Collection::stream)
                 .anyMatch(AnnenAktivitetType::isGradering);
@@ -46,13 +48,16 @@ public class PeriodeVerktøy {
     private static boolean næringMedGraderingFinnes(Stream<PeriodeType> periodeStream) {
         return periodeStream
                 .map(PeriodeType::getNæringListe)
+                .filter(Objects::nonNull)
                 .map(NæringListeType::getNæring)
+                .filter(Objects::nonNull)
                 .anyMatch(NæringType::isGradering);
     }
 
     private static boolean arbeidsforholdMedGraderingFinnes(Stream<PeriodeType> periodeStream) {
         return periodeStream
                 .map(PeriodeType::getArbeidsforholdListe)
+                .filter(Objects::nonNull)
                 .map(ArbeidsforholdListeType::getArbeidsforhold)
                 .flatMap(Collection::stream)
                 .anyMatch(ArbeidsforholdType::isGradering);

@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.Innsyn;
@@ -105,6 +104,11 @@ public class DomeneobjektProvider {
         return beregningsresultatDtoMapper.mapBeregningsresultatFPFraDto(behandlingRestKlient.hentBeregningsresultatForeldrepenger(behandling.getResourceLinker()));
     }
 
+
+    public Optional<BeregningsresultatFP> hentBeregningsresultatFPHvisFinnes(Behandling behandling) {
+        return behandlingRestKlient.hentBeregningsresultatForeldrepengerHvisFinnes(behandling.getResourceLinker()).map(beregningsresultatDtoMapper::mapBeregningsresultatFPFraDto);
+    }
+
     public FamilieHendelse hentFamiliehendelse(Behandling behandling) {
         return familiehendelseDtoMapper.mapFamiliehendelsefraDto(behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinker()));
     }
@@ -134,12 +138,13 @@ public class DomeneobjektProvider {
         return vilkårDtoMapper.mapVilkårFraDto(behandlingRestKlient.hentVilkår(behandling.getResourceLinker()));
     }
 
+
+    public Optional<UttakResultatPerioder> hentUttaksresultatHvisFinnes(Behandling behandling) {
+        return behandlingRestKlient.hentUttaksresultatHvisFinnes(behandling.getResourceLinker()).map(uttakDtoMapper::mapUttaksresultatPerioderFraDto);
+    }
+
     public UttakResultatPerioder hentUttaksresultat(Behandling behandling) {
-        UttakResultatPerioderDto resultatPerioderDto = behandlingRestKlient.hentUttaksresultat(behandling.getResourceLinker());
-        return UttakResultatPerioder.ny()
-                .medPerioder(resultatPerioderDto.getPerioderSøker().stream().map(uttakDtoMapper::periodeFraDto).collect(Collectors.toList()))
-                .medPerioderAnnenPart(resultatPerioderDto.getPerioderAnnenpart().stream().map(uttakDtoMapper::periodeFraDto).collect(Collectors.toList()))
-                .build();
+        return uttakDtoMapper.mapUttaksresultatPerioderFraDto(behandlingRestKlient.hentUttaksresultat(behandling.getResourceLinker()));
     }
 
     public YtelseFordeling hentYtelseFordeling(Behandling behandling) {

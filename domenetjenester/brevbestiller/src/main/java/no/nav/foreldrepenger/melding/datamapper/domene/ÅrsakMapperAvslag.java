@@ -4,8 +4,10 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -37,7 +39,7 @@ public class ÅrsakMapperAvslag {
 
     public static Tuple<AarsakListeType, String> mapAarsakListeOgLovhjemmelFra(Behandlingsresultat behandlingsresultat,
                                                                                List<BeregningsresultatPeriode> beregningsresultatPerioder,
-                                                                               UttakResultatPerioder uttakResultatPerioder) {
+                                                                               Optional<UttakResultatPerioder> uttakResultatPerioder) {
         AarsakListeType aarsakListeType = objectFactory.createAarsakListeType();
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
 
@@ -57,25 +59,25 @@ public class ÅrsakMapperAvslag {
     }
 
     private static Set<AvslagsAarsakType> årsakerFra(List<BeregningsresultatPeriode> beregningsresultatPerioder,
-                                                     UttakResultatPerioder uttakResultatPerioder) {
+                                                     Optional<UttakResultatPerioder> uttakResultatPerioder) {
         Set<AvslagsAarsakType> avslagsAarsaker = new HashSet<>();
         for (BeregningsresultatPeriode beregningsresultatPeriode : beregningsresultatPerioder) {
             AvslagsAarsakType aarsakType = årsaktypeFra(beregningsresultatPeriode,
-                    PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttakResultatPerioder.getPerioder()));
+                    PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttakResultatPerioder.map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList())));
             avslagsAarsaker.add(aarsakType);
         }
         return avslagsAarsaker;
     }
 
     private static Set<AvslagsAarsakType> årsakerFra(Behandlingsresultat behandlingsresultat,
-                                                     UttakResultatPerioder uttakResultatPerioder) {
+                                                     Optional<UttakResultatPerioder> uttakResultatPerioder) {
         Set<AvslagsAarsakType> avslagsAarsaker = new HashSet<>();
 
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
         if (avslagsårsak != null) {
             avslagsAarsaker.add(årsaktypeFra(avslagsårsak));
         }
-        for (UttakResultatPeriode periode : uttakResultatPerioder.getPerioder()) {
+        for (UttakResultatPeriode periode : uttakResultatPerioder.map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList())) {
             PeriodeResultatÅrsak periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
             if (PeriodeResultatType.AVSLÅTT.equals(periode.getPeriodeResultatType()) && periodeResultatÅrsak != null) {
                 avslagsAarsaker.add(årsaktypeFra(periodeResultatÅrsak));

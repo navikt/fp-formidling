@@ -52,6 +52,7 @@ public class BeregningsresultatDtoMapper {
                 .build();
     }
 
+
     private BeregningsresultatPeriode mapPeriodeFraDto(BeregningsresultatPeriodeDto dto) {
         List<BeregningsresultatAndel> andelListe = new ArrayList<>();
         for (BeregningsresultatPeriodeAndelDto beregningsresultatPeriodeAndelDto : dto.getAndeler()) {

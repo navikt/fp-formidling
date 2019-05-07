@@ -84,15 +84,10 @@ public class KlageMapper {
         if (hendelse.getErOpphevetKlage()) {
             return true;
         }
-        KlageVurdering klageVurdering = null;
-        if (klage.getKlageVurderingResultatNFP() != null) {
-            klageVurdering = klage.getKlageVurderingResultatNFP().getKlageVurdering();
-        } else if (klage.getKlageVurderingResultatNK() != null) {
-            klageVurdering = klage.getKlageVurderingResultatNK().getKlageVurdering();
-        }
-        if (klageVurdering == null) {
+        if (klage.getGjeldendeKlageVurderingsresultat() == null) {
             throw new IllegalStateException();
         }
+        KlageVurdering klageVurdering = klage.getGjeldendeKlageVurderingsresultat().getKlageVurdering();
         return KlageVurdering.OPPHEVE_YTELSESVEDTAK.equals(klageVurdering);
     }
 }

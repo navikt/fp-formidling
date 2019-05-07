@@ -5,10 +5,11 @@ import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstan
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
 
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -84,8 +85,8 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
-        UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
+        Optional<BeregningsresultatFP> beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFPHvisFinnes(behandling);
+        Optional<UttakResultatPerioder> uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling);
         Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         FagType fagType = mapFagType(behandling,
@@ -106,8 +107,8 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
                                DokumentFelles dokumentFelles,
                                DokumentHendelse dokumentHendelse,
                                FamilieHendelse familiehendelse,
-                               BeregningsresultatFP beregningsresultatFP,
-                               UttakResultatPerioder uttakResultatPerioder) {
+                               Optional<BeregningsresultatFP> beregningsresultatFP,
+                               Optional<UttakResultatPerioder> uttakResultatPerioder) {
         LocalDate skjæringstidspunkt = familiehendelse.getSkjæringstidspunkt().orElse(LocalDate.now());
 
         FagType fagType = new FagType();
@@ -127,7 +128,7 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
                 uttakResultatPerioder,
                 fagType);
 
-        UttakMapper.finnSisteDagIFelleseriodeHvisFinnes(uttakResultatPerioder)
+        uttakResultatPerioder.flatMap(UttakMapper::finnSisteDagIFelleseriodeHvisFinnes)
                 .ifPresent(fagType::setSisteDagIFellesPeriode);
         avklarFritekst(dokumentHendelse, behandling)
                 .ifPresent(fagType::setFritekst);
@@ -135,11 +136,11 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
     }
 
     private void mapFelterRelatertTilAvslagårsaker(Behandlingsresultat behandlingsresultat,
-                                                   BeregningsresultatFP beregningsresultatFP,
-                                                   UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
+                                                   Optional<BeregningsresultatFP> beregningsresultatFP,
+                                                   Optional<UttakResultatPerioder> uttakResultatPerioder, FagType fagType) {
         Tuple<AarsakListeType, String> AarsakListeOgLovhjemmel = ÅrsakMapperAvslag.mapAarsakListeOgLovhjemmelFra(
                 behandlingsresultat,
-                beregningsresultatFP.getBeregningsresultatPerioder(),
+                beregningsresultatFP.map(BeregningsresultatFP::getBeregningsresultatPerioder).orElse(Collections.emptyList()),
                 uttakResultatPerioder);
         AarsakListeType aarsakListe = AarsakListeOgLovhjemmel.getElement1();
 

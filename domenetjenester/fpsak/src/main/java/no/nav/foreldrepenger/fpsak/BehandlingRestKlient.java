@@ -42,6 +42,8 @@ public interface BehandlingRestKlient {
 
     BeregningsresultatMedUttaksplanDto hentBeregningsresultatForeldrepenger(List<BehandlingResourceLink> resourceLinkDtos);
 
+    Optional<BeregningsresultatMedUttaksplanDto> hentBeregningsresultatForeldrepengerHvisFinnes(List<BehandlingResourceLink> resourceLinkDtos);
+
     InntektArbeidYtelseDto hentInntektArbeidYtelseDto(List<BehandlingResourceLink> resourceLinkDtos);
 
     KlagebehandlingDto hentKlagebehandling(List<BehandlingResourceLink> resourceLinkDtos);
@@ -55,6 +57,8 @@ public interface BehandlingRestKlient {
     FagsakDto hentFagsak(List<BehandlingResourceLink> resourceLinkDtos);
 
     UttakResultatPerioderDto hentUttaksresultat(List<BehandlingResourceLink> resourceLinkDtos);
+
+    Optional<UttakResultatPerioderDto> hentUttaksresultatHvisFinnes(List<BehandlingResourceLink> resourceLinkDtos);
 
     YtelseFordelingDto hentYtelseFordeling(List<BehandlingResourceLink> resourceLinker);
 

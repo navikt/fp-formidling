@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
+
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -7,6 +9,7 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeAktivitetDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeDto;
+import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
@@ -20,6 +23,7 @@ import no.nav.foreldrepenger.melding.uttak.UttakAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType;
 import no.nav.vedtak.util.StringUtils;
 
@@ -35,6 +39,14 @@ public class UttakDtoMapper {
     @Inject
     public UttakDtoMapper(KodeverkRepository kodeverkRepository) {
         this.kodeverkRepository = kodeverkRepository;
+    }
+
+
+    public UttakResultatPerioder mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto) {
+        return UttakResultatPerioder.ny()
+                .medPerioder(emptyIfNull(resultatPerioderDto.getPerioderSøker()).stream().map(this::periodeFraDto).collect(Collectors.toList()))
+                .medPerioderAnnenPart(emptyIfNull(resultatPerioderDto.getPerioderAnnenpart()).stream().map(this::periodeFraDto).collect(Collectors.toList()))
+                .build();
     }
 
     public UttakResultatPeriode periodeFraDto(UttakResultatPeriodeDto dto) {

@@ -123,12 +123,16 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
 
     @Override
     public BeregningsresultatMedUttaksplanDto hentBeregningsresultatForeldrepenger(List<BehandlingResourceLink> resourceLinker) {
+        return hentBeregningsresultatForeldrepengerHvisFinnes(resourceLinker).orElseThrow(() -> {
+            throw new IllegalStateException("Klarte ikke hente Beregningsresultat foreldrepenger for behandling: " + hentBehandlingId(resourceLinker));
+        });
+    }
+
+    @Override
+    public Optional<BeregningsresultatMedUttaksplanDto> hentBeregningsresultatForeldrepengerHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "beregningsresultat-foreldrepenger".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsresultatMedUttaksplanDto.class))
-                .orElseThrow(() -> {
-                    throw new IllegalStateException("Klarte ikke hente Beregningsresultat foreldrepenger for behandling: " + hentBehandlingId(resourceLinker));
-                });
+                .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsresultatMedUttaksplanDto.class));
     }
 
     @Override
@@ -193,12 +197,17 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
 
     @Override
     public UttakResultatPerioderDto hentUttaksresultat(List<BehandlingResourceLink> resourceLinker) {
+        return hentUttaksresultatHvisFinnes(resourceLinker).orElseThrow(() -> {
+            throw new IllegalStateException("Klarte ikke hente uttaksperioder for behandling: " + hentBehandlingId(resourceLinker));
+        });
+    }
+
+    @Override
+    public Optional<UttakResultatPerioderDto> hentUttaksresultatHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "uttaksresultat-perioder".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, UttakResultatPerioderDto.class))
-                .orElseThrow(() -> {
-                    throw new IllegalStateException("Klarte ikke hente uttaksperioder for behandling: " + hentBehandlingId(resourceLinker));
-                });
+                .findFirst().flatMap(link -> hentDtoFraLink(link, UttakResultatPerioderDto.class));
+
     }
 
     @Override

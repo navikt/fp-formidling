@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -24,9 +25,10 @@ public class PeriodeVerktøy {
     }
 
     private static Boolean periodeStreamInneholderGradering(Stream<PeriodeType> innvilgedePerioderStream) {
-        return arbeidsforholdMedGraderingFinnes(innvilgedePerioderStream) ||
-                annenAktivtitetMedGraderingFinnes(innvilgedePerioderStream) ||
-                næringMedGraderingFinnes(innvilgedePerioderStream);
+        Supplier<Stream<PeriodeType>> streamSupplier = () -> innvilgedePerioderStream;
+        return arbeidsforholdMedGraderingFinnes(streamSupplier.get()) ||
+                annenAktivtitetMedGraderingFinnes(streamSupplier.get()) ||
+                næringMedGraderingFinnes(streamSupplier.get());
     }
 
     public static boolean periodeHarGradering(PeriodeType periodeType) {

@@ -61,7 +61,7 @@ public class KlageYtelsesvedtakOpphevetBrevMapper implements DokumentTypeMapper 
     private FagType mapFagType(DokumentHendelse hendelse, Behandling behandling, Klage klage) {
         final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
-        fagType.setFritekst(hendelse.getFritekst());
+        KlageMapper.avklarFritekstKlage(hendelse, klage).ifPresent(fagType::setFritekst);
         fagType.setOpphevet(KlageMapper.erOpphevet(klage, hendelse));
         fagType.setAntallUker(BigInteger.valueOf(BehandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));

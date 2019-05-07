@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
-
 import java.math.BigInteger;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,6 +14,7 @@ import org.xml.sax.SAXException;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -51,17 +50,17 @@ public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
-        FagType fagType = mapFagType(dokumentHendelse, klage, behandling);
+        FagType fagType = mapFagType(dokumentHendelse, klage);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapTilBrevDataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(VedtakMedholdConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage, Behandling behandling) {
+    private FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage) {
         FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         fagType.setOpphavType(utledOpphaveTypeKode(klage));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
-        avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
+        KlageMapper.avklarFritekstKlage(dokumentHendelse, klage).ifPresent(fagType::setFritekst);
         return fagType;
     }
 

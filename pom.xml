@@ -58,6 +58,7 @@
         <swagger2markup.version>1.1.2</swagger2markup.version>
         <cxf.version>3.3.1</cxf.version>
         <prometheus.version>0.6.0</prometheus.version>
+        <kontrakter.version>5.0_20190503122814_3c19e1d</kontrakter.version> <!-- TODO Oppdater -->
     </properties>
 
     <prerequisites>
@@ -123,11 +124,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>feed</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>migreringer</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>
@@ -161,6 +157,11 @@
 
             <!-- Foreldrepengeprosjektet -->
             <dependency>
+                <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
+                <artifactId>fp-topics-manifest</artifactId>
+                <version>${kontrakter.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>felles</artifactId>
                 <version>${felles.version}</version>
@@ -178,6 +179,13 @@
                 <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
                 <artifactId>felles-integrasjon-pom</artifactId>
                 <version>${felles.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
+                <artifactId>fp-topics</artifactId>
+                <version>${kontrakter.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>

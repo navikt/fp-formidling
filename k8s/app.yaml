@@ -117,8 +117,8 @@ spec:
     - name: KAFKA_DOKUMENTHISTORIKK_TOPIC
       value: kafka.dokumenthistorikk.topic
     #Generell Kafka
-    - name: BOOTSTRAP_SERVERS
-      value: bootstrap.servers
+    - name: KAFKA_BOOTSTRAP_SERVERS
+      value: kafka.bootstrap.servers
     - name: KAFKA_ENABLE_AUTO_COMMIT_CONFIG
       value: kafka.enable.auto.commit.config
     - name: KAFKA_AUTO_COMMIT_INTERNAL_MS_CONFIG

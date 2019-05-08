@@ -30,10 +30,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>feed</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>migreringer</artifactId>
         </dependency>
         <dependency>
@@ -68,6 +64,10 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>dokumenthendelse</artifactId>
         </dependency>
 
         <!-- Database håndtering -->

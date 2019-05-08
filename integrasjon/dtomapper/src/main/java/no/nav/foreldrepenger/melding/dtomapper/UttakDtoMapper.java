@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.dtomapper;
 
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -51,14 +52,17 @@ public class UttakDtoMapper {
     }
 
     public UttakResultatPeriode periodeFraDto(UttakResultatPeriodeDto dto) {
-        return UttakResultatPeriode.ny()
+        List<UttakResultatPeriodeAktivitet> aktiviteter = dto.getAktiviteter().stream().map(this::aktivitetFraDto).collect(Collectors.toList());
+        UttakResultatPeriode mappetPeriode = UttakResultatPeriode.ny()
                 .medGraderingAvslagÅrsak(kodeverkRepository.finn(GraderingAvslagÅrsak.class, dto.getGraderingAvslagÅrsak().getKode()))
                 .medPeriodeResultatType(kodeverkRepository.finn(PeriodeResultatType.class, dto.getPeriodeResultatType().getKode()))
                 .medPeriodeResultatÅrsak(kodeverkRepository.finn(finnKodeverk(dto.getPeriodeResultatÅrsak().getKodeverk()), dto.getPeriodeResultatÅrsak().getKode()))
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
                 .medUttakUtsettelseType(kodeverkRepository.finn(UttakUtsettelseType.class, dto.getUtsettelseType().getKode()))
-                .medAktiviteter(dto.getAktiviteter().stream().map(this::aktivitetFraDto).collect(Collectors.toList()))
+                .medAktiviteter(aktiviteter)
                 .build();
+        aktiviteter.forEach(aktivitet -> aktivitet.leggTilPeriode(mappetPeriode));
+        return mappetPeriode;
     }
 
     private Class<? extends PeriodeResultatÅrsak> finnKodeverk(String kodeverk) {

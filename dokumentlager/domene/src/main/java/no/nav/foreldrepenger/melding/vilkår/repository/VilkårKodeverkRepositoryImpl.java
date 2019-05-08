@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.vilkår.repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,10 @@ class VilkårKodeverkRepositoryImpl implements VilkårKodeverkRepository{
         @SuppressWarnings("unchecked")
         List<String> koder = query.getResultList();
         List<String> unikeKoder = koder.stream().distinct().collect(Collectors.toList());
+
+        if (unikeKoder.isEmpty()) {
+            return Collections.emptyList();
+        }
         return kodeverkRepository.finnListe(VilkårType.class, unikeKoder);
     }
 }

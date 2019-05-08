@@ -86,12 +86,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
         BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
         Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
-        Behandling originalBehandling;
-        Beregningsgrunnlag originaltBeregningsgrunnlag = null;
-        if (behandling.getOriginalBehandlingId() != null) {
-            originalBehandling = domeneobjektProvider.hentBehandling(behandling.getOriginalBehandlingId());
-            originaltBeregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(originalBehandling);
-        }
         FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
         YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
@@ -101,7 +95,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                 beregningsresultatFP,
                 familieHendelse,
                 beregningsgrunnlag,
-                originaltBeregningsgrunnlag,
                 søknad,
                 dokumentFelles,
                 uttakResultatPerioder,
@@ -116,7 +109,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                BeregningsresultatFP beregningsresultatFP,
                                FamilieHendelse familieHendelse,
                                Beregningsgrunnlag beregningsgrunnlag,
-                               Beregningsgrunnlag originaltBeregningsgrunnlag,
                                Søknad søknad,
                                DokumentFelles dokumentFelles,
                                UttakResultatPerioder uttakResultatPerioder,
@@ -135,7 +127,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setDekningsgrad(BigInteger.valueOf(ytelseFordeling.getDekningsgrad().getVerdi()));
 
         mapFelterRelatertTilBehandling(behandling, fagType);
-        mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, originaltBeregningsgrunnlag, familieHendelse.getSkjæringstidspunkt().orElse(LocalDate.now()), fagType);
+        mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, familieHendelse.getSkjæringstidspunkt().orElse(LocalDate.now()), fagType);
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType, behandling);
         mapFelterRelatertTilSøknadOgYtelseFordeling(søknad, ytelseFordeling, fagType);
         mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, behandling, søknad, ytelseFordeling);
@@ -205,9 +197,8 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setInntektMottattArbgiver(BehandlingMapper.erEndringMedEndretInntektsmelding(behandling));
     }
 
-    private void mapFelterRelatertTilBeregningsgrunnlag(Beregningsgrunnlag beregningsgrunnlag, Beregningsgrunnlag originaltBeregningsgrunnlag,
+    private void mapFelterRelatertTilBeregningsgrunnlag(Beregningsgrunnlag beregningsgrunnlag,
                                                         LocalDate skjæringstidspunkt, FagType fagType) {
-        fagType.setOverbetaling(BeregningsgrunnlagMapper.erOverbetalt(beregningsgrunnlag, originaltBeregningsgrunnlag));
         fagType.setBruttoBeregningsgrunnlag(BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag));
         BeregningsgrunnlagRegelListeType beregningsgrunnlagRegelListe = BeregningsgrunnlagMapper.mapRegelListe(beregningsgrunnlag);
         fagType.setBeregningsgrunnlagRegelListe(beregningsgrunnlagRegelListe);
@@ -215,7 +206,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         BigDecimal seksG = grunnbeløpTjeneste.grunnbeløpPå(skjæringstidspunkt).getVerdi().multiply(BigDecimal.valueOf(6));
         fagType.setSeksG(seksG.longValue());
         fagType.setInntektOverSeksG(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag, seksG));
-        fagType.setOverbetaling(BeregningsgrunnlagMapper.erOverbetalt(beregningsgrunnlag, originaltBeregningsgrunnlag));
     }
 
     private void mapFelterRelatertTilFamiliehendelse(FamilieHendelse familieHendelse, FagType fagType) {

@@ -144,19 +144,25 @@ public class BeregningsresultatMapper {
     }
 
     public static long finnTotalBrukerAndel(BeregningsresultatFP beregningsresultatFP) {
+        return harBrukerAndel(beregningsresultatFP) ? 1 : 0; // Dette er i praksis en boolean, så holder med å bruke 0 og 1
+    }
+
+    private static boolean harBrukerAndel(BeregningsresultatFP beregningsresultatFP) {
         return beregningsresultatFP.getBeregningsresultatPerioder().stream()
                 .map(BeregningsresultatPeriode::getBeregningsresultatAndelList)
                 .flatMap(List::stream)
-                .filter(BeregningsresultatAndel::erBrukerMottaker)
-                .count();
+                .anyMatch(BeregningsresultatAndel::erBrukerMottaker);
     }
 
     public static long finnTotalArbeidsgiverAndel(BeregningsresultatFP beregningsresultatFP) {
+        return harArbeidsgiverAndel(beregningsresultatFP) ? 1 : 0; // Dette er i praksis en boolean, så holder med å bruke 0 og 1
+    }
+
+    private static boolean harArbeidsgiverAndel(BeregningsresultatFP beregningsresultatFP) {
         return beregningsresultatFP.getBeregningsresultatPerioder().stream()
                 .map(BeregningsresultatPeriode::getBeregningsresultatAndelList)
                 .flatMap(List::stream)
-                .filter(BeregningsresultatAndel::erArbeidsgiverMottaker)
-                .count();
+                .anyMatch(BeregningsresultatAndel::erArbeidsgiverMottaker);
     }
 
     public static BigInteger tellAntallAvslag(PeriodeListeType periodeListe) {

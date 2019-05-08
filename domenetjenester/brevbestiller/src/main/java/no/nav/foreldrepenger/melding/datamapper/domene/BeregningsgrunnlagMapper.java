@@ -38,7 +38,7 @@ public class BeregningsgrunnlagMapper {
             List<BeregningsgrunnlagPrStatusOgAndel> filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe);
             beregningsgrunnlagRegel.setRegelStatus(tilStatusTypeKode(bgAktivitetStatus.getAktivitetStatus()));
             beregningsgrunnlagRegel.setAndelListe(mapAndelListe(filtrertListe));
-            beregningsgrunnlagRegel.setAntallArbeidsgivereIBeregning(tellAntallArbeidsforholdIBeregning(filtrertListe));
+            beregningsgrunnlagRegel.setAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
             beregningsgrunnlagRegel.setBesteBeregning(harNoenAvAndeleneBesteberegning(filtrertListe));
             beregningsgrunnlagRegel.setSNNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
             regelListe.getBeregningsgrunnlagRegel().add(beregningsgrunnlagRegel);
@@ -115,6 +115,7 @@ public class BeregningsgrunnlagMapper {
             andelType.setSisteLignedeÅr(andel.getBeregningsperiodeTom() == null ? null : (long) andel.getBeregningsperiodeTom().getYear());
         }
         if (AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())) {
+            andelType.setEtterlønnSluttpakke(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(andel.getArbeidsforholdType()));
             andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::getNavn).ifPresent(andelType::setArbeidsgiverNavn);
             if (OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(andel.getArbeidsforholdType())) {
                 andelType.setEtterlønnSluttpakke(true);
@@ -124,9 +125,10 @@ public class BeregningsgrunnlagMapper {
         return andelType;
     }
 
-    static BigInteger tellAntallArbeidsforholdIBeregning(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+    static BigInteger tellAntallArbeidsforholdIBeregningUtenSluttpakke(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         return BigInteger.valueOf(bgpsaListe.stream()
                 .filter(bgpsa -> AktivitetStatus.ARBEIDSTAKER.equals(bgpsa.getAktivitetStatus()))
+                .filter(bgpsa -> !OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(bgpsa.getArbeidsforholdType()))
                 .count());
     }
 

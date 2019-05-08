@@ -168,7 +168,7 @@ public class BeregningsgrunnlagMapperTest {
 
     @Test
     public void skal_telle_antall_arbeidsforhold() {
-        assertThat(BeregningsgrunnlagMapper.tellAntallArbeidsforholdIBeregning(
+        assertThat(BeregningsgrunnlagMapper.tellAntallArbeidsforholdIBeregningUtenSluttpakke(
                 beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()))
                 .isEqualTo(1);
     }

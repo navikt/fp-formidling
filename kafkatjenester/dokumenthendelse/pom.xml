@@ -11,7 +11,7 @@
 
     <artifactId>dokumenthendelse</artifactId>
     <packaging>jar</packaging>
-    <name>fpformidling :: Dokumenthendelse</name>
+    <name>FP-FORMIDLING :: Dokumenthendelse</name>
 
     <dependencies>
         <dependency>

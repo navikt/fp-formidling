@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hendelsekontrakter</artifactId>
-    <name>fpformidling :: Hendelsekontrakter</name>
+    <name>FP-FORMIDLING :: Hendelsekontrakter</name>
     <dependencies>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>

@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>dokumentlager</artifactId>
-    <name>fpformidling :: Domene</name>
+    <name>FP-FORMIDLING :: Domene</name>
     <packaging>pom</packaging>
 
     <modules>

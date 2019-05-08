@@ -11,7 +11,7 @@
 
     <artifactId>webapp</artifactId>
     <packaging>jar</packaging>
-    <name>fpformidling :: Web :: Applikasjon</name>
+    <name>FP-FORMIDLING :: Web :: Applikasjon</name>
 
     <dependencies>
         <dependency>

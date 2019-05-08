@@ -11,7 +11,7 @@
 
     <artifactId>tps</artifactId>
     <packaging>jar</packaging>
-    <name>fpformidling :: Domenetjenester - TPS</name>
+    <name>FP-FORMIDLING :: Domenetjenester - TPS</name>
 
     <dependencies>
         <dependency>

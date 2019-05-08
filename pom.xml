@@ -6,7 +6,7 @@
     <groupId>no.nav.foreldrepenger.melding</groupId>
     <artifactId>fpformidling</artifactId>
     <packaging>pom</packaging>
-    <name>fpformidling :: Root</name>
+    <name>FP-FORMIDLING :: Root</name>
     <version>${revision}${sha1}${changelist}</version>
 
     <modules>

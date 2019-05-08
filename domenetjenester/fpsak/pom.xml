@@ -11,7 +11,7 @@
 
     <artifactId>fpsak</artifactId>
     <packaging>jar</packaging>
-    <name>fpformidling :: Domenetjenester - fpsak</name>
+    <name>FP-FORMIDLING :: Domenetjenester - fpsak</name>
 
     <dependencies>
         <dependency>

@@ -11,7 +11,7 @@
 
     <artifactId>migreringer</artifactId>
     <packaging>jar</packaging>
-    <name>fpformidling :: Database migreringer</name>
+    <name>FP-FORMIDLING :: Database migreringer</name>
     <description>Inneholder migreringsfiler for alle datasources brukt i fp-formidling</description>
 
     <dependencies>

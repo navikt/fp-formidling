@@ -12,7 +12,7 @@
 
     <artifactId>integrasjon</artifactId>
     <packaging>pom</packaging>
-    <name>fpformidling :: Integrasjon</name>
+    <name>FP-FORMIDLING :: Integrasjon</name>
 
     <modules>
         <module>hendelsekontrakter</module>

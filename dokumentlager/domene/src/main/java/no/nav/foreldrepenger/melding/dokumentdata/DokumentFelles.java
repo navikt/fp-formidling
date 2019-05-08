@@ -1,24 +1,19 @@
 package no.nav.foreldrepenger.melding.dokumentdata;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -127,9 +122,6 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "dokument_dato", nullable = false)
     private LocalDate dokumentDato;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "dokumentFelles", cascade = CascadeType.PERSIST)
-    private List<DokumentTypeData> dokumentTypeDataListe = new ArrayList<>();
-
     @Column(name = "sakspart_person_status", nullable = false)
     private String sakspartPersonStatus;
 
@@ -232,10 +224,6 @@ public class DokumentFelles extends BaseEntitet {
 
     public LocalDate getDokumentDato() {
         return dokumentDato;
-    }
-
-    public List<DokumentTypeData> getDokumentTypeDataListe() {
-        return dokumentTypeDataListe;
     }
 
     public String getSakspartPersonStatus() {
@@ -420,7 +408,7 @@ public class DokumentFelles extends BaseEntitet {
             return dokumentFelles;
         }
 
-        public void verifyStateForBuild() {
+        private void verifyStateForBuild() {
             Objects.requireNonNull(dokumentFelles.språkkode, "språkkode");
             Objects.requireNonNull(dokumentFelles.saksnummer, "saksnummer");
             Objects.requireNonNull(dokumentFelles.automatiskBehandlet, "automatiskBehandlet");

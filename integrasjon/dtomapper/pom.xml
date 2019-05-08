@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dtomapper</artifactId>
+    <name>FP-FORMIDLING :: DtoMapper</name>
 
     <dependencies>
         <dependency>

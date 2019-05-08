@@ -8,9 +8,9 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>FP-FORMIDLING :: Kafkatjenester</name>
     <artifactId>kafkatjenester</artifactId>
     <packaging>pom</packaging>
-    <name>fpformidling :: Kafkatjenester</name>
     <modules>
         <module>dokumenthistorikk</module>
         <module>dokumenthendelse</module>

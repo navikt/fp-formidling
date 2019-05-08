@@ -11,7 +11,7 @@
 
     <artifactId>web</artifactId>
     <packaging>pom</packaging>
-    <name>fpformidling :: Web</name>
+    <name>FP-FORMIDLING :: Web</name>
 
     <modules>
         <module>webapp</module>

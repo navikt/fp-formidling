@@ -5,7 +5,7 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -35,35 +35,36 @@ import no.nav.vedtak.util.Tuple;
 public class ÅrsakMapperAvslag {
 
     private static ObjectFactory objectFactory = new ObjectFactory();
+    private static Set<AvslagsAarsakType> avslagsAarsaker;
     private static Set<String> lovReferanser;
 
     public static Tuple<AarsakListeType, String> mapAarsakListeOgLovhjemmelFra(Behandlingsresultat behandlingsresultat,
                                                                                List<BeregningsresultatPeriode> beregningsresultatPerioder,
                                                                                Optional<UttakResultatPerioder> uttakResultatPerioder) {
         AarsakListeType aarsakListeType = objectFactory.createAarsakListeType();
+        avslagsAarsaker = new TreeSet<>(medSorteringPåPeriodeFom());
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
 
-        List<AvslagsAarsakType> avslagsAarsaker = new ArrayList<>();
-        avslagsAarsaker.addAll(årsakerFra(beregningsresultatPerioder, uttakResultatPerioder));
+        List<AvslagsAarsakType> avslag = new ArrayList<>(medÅrsakerFra(beregningsresultatPerioder, uttakResultatPerioder));
         String lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
                 BehandlingMapper.kodeFra(behandlingsresultat.getKonsekvenserForYtelsen()),
                 false);
-        if (avslagsAarsaker.isEmpty()) {
-            avslagsAarsaker.addAll(årsakerFra(behandlingsresultat, uttakResultatPerioder));
+        if (avslag.isEmpty()) {
+            avslag.addAll(årsakerFra(behandlingsresultat, uttakResultatPerioder));
             lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser);
         }
-        avslagsAarsaker = PeriodeMergerAvslag.mergePerioder(avslagsAarsaker);
-        aarsakListeType.getAvslagsAarsak().addAll(avslagsAarsaker);
+        avslag = PeriodeMergerAvslag.mergePerioder(avslag);
+        aarsakListeType.getAvslagsAarsak().addAll(avslag);
 
         return new Tuple<>(aarsakListeType, lovhjemmelForAvslag);
     }
 
-    private static Set<AvslagsAarsakType> årsakerFra(List<BeregningsresultatPeriode> beregningsresultatPerioder,
-                                                     Optional<UttakResultatPerioder> uttakResultatPerioder) {
-        Set<AvslagsAarsakType> avslagsAarsaker = new HashSet<>();
+    private static Set<AvslagsAarsakType> medÅrsakerFra(List<BeregningsresultatPeriode> beregningsresultatPerioder,
+                                                        Optional<UttakResultatPerioder> uttakResultatPerioder) {
         for (BeregningsresultatPeriode beregningsresultatPeriode : beregningsresultatPerioder) {
             AvslagsAarsakType aarsakType = årsaktypeFra(beregningsresultatPeriode,
-                    PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttakResultatPerioder.map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList())));
+                    PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttakResultatPerioder
+                            .map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList())));
             avslagsAarsaker.add(aarsakType);
         }
         return avslagsAarsaker;
@@ -71,8 +72,6 @@ public class ÅrsakMapperAvslag {
 
     private static Set<AvslagsAarsakType> årsakerFra(Behandlingsresultat behandlingsresultat,
                                                      Optional<UttakResultatPerioder> uttakResultatPerioder) {
-        Set<AvslagsAarsakType> avslagsAarsaker = new HashSet<>();
-
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
         if (avslagsårsak != null) {
             avslagsAarsaker.add(årsaktypeFra(avslagsårsak));
@@ -93,8 +92,8 @@ public class ÅrsakMapperAvslag {
         return avslagsAarsak;
     }
 
-    static AvslagsAarsakType årsaktypeFra(BeregningsresultatPeriode beregningsresultatPeriode,
-                                          UttakResultatPeriode uttakResultatPeriode) {
+    private static AvslagsAarsakType årsaktypeFra(BeregningsresultatPeriode beregningsresultatPeriode,
+                                                  UttakResultatPeriode uttakResultatPeriode) {
         AvslagsAarsakType periode = årsaktypeFra(uttakResultatPeriode.getPeriodeResultatÅrsak());
         periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter())));
         periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
@@ -109,5 +108,9 @@ public class ÅrsakMapperAvslag {
                         .mapToInt(UttakResultatPeriodeAktivitet::getTrekkdager)
                         .max()
                         .orElse(0) : 0;
+    }
+
+    private static Comparator<AvslagsAarsakType> medSorteringPåPeriodeFom() {
+        return (a1, a2) -> a1.getPeriodeFom().compare(a2.getPeriodeFom());
     }
 }

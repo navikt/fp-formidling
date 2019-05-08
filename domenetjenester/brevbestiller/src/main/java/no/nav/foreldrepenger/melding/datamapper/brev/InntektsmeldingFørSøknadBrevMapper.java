@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.util.Objects;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -70,8 +69,7 @@ public class InntektsmeldingFørSøknadBrevMapper implements DokumentTypeMapper 
         Inntektsmelding inntektsmelding = IAYMapper.hentVillkårligInntektsmelding(iay);
         fagType.setSokAntallUkerFor(BigInteger.valueOf(brevParametere.getSøkAntallUker()));
         fagType.setArbeidsgiverNavn(inntektsmelding.getArbeidsgiver());
-        //TODO mangler denne verdien..
-        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(LocalDate.now()));
+        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(inntektsmelding.getInnsendingstidspunkt()));
         fagType.setPeriodeListe(mapFeriePerioder(inntektsmelding));
         return fagType;
     }

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ public class InntektsmeldingDto {
     private String arbeidsgiver;
     private String arbeidsgiverOrgnr;
     private LocalDate arbeidsgiverStartdato;
+    private LocalDateTime innsendingstidspunkt;
 
     private List<UtsettelsePeriodeDto> utsettelsePerioder = new ArrayList<>();
     private List<GraderingPeriodeDto> graderingPerioder = new ArrayList<>();
@@ -46,5 +48,9 @@ public class InntektsmeldingDto {
 
     public List<GraderingPeriodeDto> getGraderingPerioder() {
         return graderingPerioder;
+    }
+
+    public LocalDateTime getInnsendingstidspunkt() {
+        return innsendingstidspunkt;
     }
 }

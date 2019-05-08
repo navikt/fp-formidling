@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,8 @@ public class IAYDtoMapper {
     public Inntektsmelding mapInntektsmeldingFraDto(InntektsmeldingDto dto) {
         List<UtsettelsePeriode> utsettelsePerioder = new ArrayList<>();
         dto.getUtsettelsePerioder().stream().map(this::mapUtsettelsesPeriodeFraDto).forEach(utsettelsePerioder::add);
-        return new Inntektsmelding(dto.getArbeidsgiver(), dto.getArbeidsgiverOrgnr(), dto.getArbeidsgiverStartdato(), utsettelsePerioder);
+        LocalDate innsendingstidspunkt = dto.getInnsendingstidspunkt() != null ? dto.getInnsendingstidspunkt().toLocalDate() : LocalDate.now(); //TODO burde ikke være nødvendig
+        return new Inntektsmelding(dto.getArbeidsgiver(), dto.getArbeidsgiverOrgnr(), dto.getArbeidsgiverStartdato(), utsettelsePerioder, innsendingstidspunkt);
     }
 
     public UtsettelsePeriode mapUtsettelsesPeriodeFraDto(UtsettelsePeriodeDto dto) {

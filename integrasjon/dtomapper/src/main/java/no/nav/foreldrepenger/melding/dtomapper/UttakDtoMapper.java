@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType;
+import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
@@ -79,11 +80,18 @@ public class UttakDtoMapper {
                 .medTrekkonto(kodeverkRepository.finn(StønadskontoType.class, dto.getStønadskontoType().getKode()))
                 .medUttakAktivitet(UttakAktivitet.ny()
                         .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
-                        .medArbeidsgiver(ArbeidsgiverMapper.finnArbeidsgiver(dto.getArbeidsgiver().getNavn(),
-                                dto.getArbeidsgiver().getAktørId() != null ? dto.getArbeidsgiver().getAktørId()
-                                        : dto.getArbeidsgiver().getIdentifikator()))
+                        .medArbeidsgiver(mapArbeidsgiver(dto))
                         .medUttakArbeidType(kodeverkRepository.finn(UttakArbeidType.class, dto.getUttakArbeidType().getKode()))
                         .build())
                 .build();
+    }
+
+    private Arbeidsgiver mapArbeidsgiver(UttakResultatPeriodeAktivitetDto dto) {
+        if (dto.getArbeidsgiver() == null) {
+            return null;
+        }
+        return ArbeidsgiverMapper.finnArbeidsgiver(dto.getArbeidsgiver().getNavn(),
+                dto.getArbeidsgiver().getAktørId() != null ? dto.getArbeidsgiver().getAktørId()
+                        : dto.getArbeidsgiver().getIdentifikator());
     }
 }

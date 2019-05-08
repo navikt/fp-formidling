@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 @ApplicationScoped
 public class BeregningsresultatMapper {
@@ -42,6 +44,8 @@ public class BeregningsresultatMapper {
                 .flatMap(Collection::stream)
                 .filter(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus()))
                 .map(BeregningsresultatAndel::getArbeidsgiver)
+                .flatMap(Optional::stream)
+                .map(Arbeidsgiver::getNavn)
                 .distinct()
                 .count());
 

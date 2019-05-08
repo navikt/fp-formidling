@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>FP-FORMIDLING :: Kafkautil</name>
     <artifactId>kafkautil</artifactId>
 
     <dependencies>

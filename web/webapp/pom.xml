@@ -11,7 +11,7 @@
 
     <artifactId>webapp</artifactId>
     <packaging>jar</packaging>
-    <name>fpformidling :: Web :: Applikasjon</name>
+    <name>FP-FORMIDLING :: Web :: Applikasjon</name>
 
     <dependencies>
         <dependency>
@@ -27,10 +27,6 @@
             <artifactId>test-sikkerhet</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>feed</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
@@ -68,6 +64,10 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>dokumenthendelse</artifactId>
         </dependency>
 
         <!-- Database håndtering -->

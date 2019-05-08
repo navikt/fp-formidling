@@ -15,7 +15,7 @@
     </properties>
 
     <artifactId>docs</artifactId>
-    <name>fpformidling :: Docs</name>
+    <name>FP-FORMIDLING :: Docs</name>
     <packaging>jar</packaging>
 
     <dependencies>

@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <name>fpformidling :: Dokumenthistorikk</name>
+    <name>FP-FORMIDLING :: Dokumenthistorikk</name>
     <artifactId>dokumenthistorikk</artifactId>
 
     <dependencies>

@@ -10,13 +10,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dokumenthendelse</artifactId>
-    <name>fpformidling :: Dokumenthendelse</name>
+    <packaging>jar</packaging>
+    <name>FP-FORMIDLING :: Dokumenthendelse</name>
 
     <dependencies>
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-streams</artifactId>
-            <version>2.2.0</version> <!-- TODO -->
+            <version>2.2.0</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
@@ -76,6 +77,15 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>dtomapper</artifactId>
+        </dependency>
+        <!-- TODO
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
+            <artifactId>hendelse-dokumentbestilling</artifactId>
+        </dependency> -->
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
+            <artifactId>fp-topics-manifest</artifactId>
         </dependency>
     </dependencies>
 

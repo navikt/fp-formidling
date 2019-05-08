@@ -11,7 +11,7 @@
 
     <artifactId>domenetjenester</artifactId>
     <packaging>pom</packaging>
-    <name>fpformidling :: Domenetjenester</name>
+    <name>FP-FORMIDLING :: Domenetjenester</name>
 
     <modules>
         <module>brevbestiller</module>

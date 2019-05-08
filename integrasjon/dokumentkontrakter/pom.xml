@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dokumentkontrakter</artifactId>
-    <name>fpformidling :: Dokumentkontrakter</name>
+    <name>FP-FORMIDLING :: Dokumentkontrakter</name>
 
     <dependencies>
         <dependency>

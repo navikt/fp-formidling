@@ -11,7 +11,7 @@
 
     <artifactId>brevbestiller</artifactId>
     <packaging>jar</packaging>
-    <name>fpformidling :: Domenetjenester - Brevbestiller</name>
+    <name>FP-FORMIDLING :: Domenetjenester - Brevbestiller</name>
     <build>
         <plugins>
             <plugin>

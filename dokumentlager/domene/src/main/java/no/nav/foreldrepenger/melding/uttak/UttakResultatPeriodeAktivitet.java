@@ -24,6 +24,12 @@ public class UttakResultatPeriodeAktivitet {
         uttakAktivitet = builder.uttakAktivitet;
     }
 
+    public void leggTilPeriode(UttakResultatPeriode periode) {
+        if (this.uttakResultatPeriode == null) {
+            this.uttakResultatPeriode = periode;
+        }
+    }
+
     public static Builder ny() {
         return new Builder();
     }

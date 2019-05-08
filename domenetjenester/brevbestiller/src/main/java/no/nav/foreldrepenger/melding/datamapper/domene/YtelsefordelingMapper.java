@@ -19,4 +19,5 @@ public class YtelsefordelingMapper {
         }
         return VurderingsstatusKode.NEI;
     }
+
 }

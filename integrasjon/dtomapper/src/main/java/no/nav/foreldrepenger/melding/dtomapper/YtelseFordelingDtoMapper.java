@@ -10,7 +10,7 @@ import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 public class YtelseFordelingDtoMapper {
 
     public static YtelseFordeling mapYtelseFordelingFraDto(YtelseFordelingDto dto) {
-        boolean annenForelderHarRett = false;
+        boolean annenForelderHarRett = true;
         boolean harPeriodeMedAleneomsorg = false;
         if (dto.getAnnenforelderHarRettDto() != null && dto.getAnnenforelderHarRettDto().getAnnenforelderHarRett() != null) {
             annenForelderHarRett = dto.getAnnenforelderHarRettDto().getAnnenforelderHarRett();

@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
@@ -178,15 +177,15 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setAntallAvslag(BeregningsresultatMapper.tellAntallAvslag(periodeListe));
         fagType.setAntallInnvilget(BeregningsresultatMapper.tellAntallInnvilget(periodeListe));
         fagType.setGraderingFinnes(PeriodeVerktøy.graderingFinnes(periodeListe));
-        fagType.setStønadsperiodeFom(BeregningsresultatMapper.finnStønadsperiodeFom(periodeListe));
-        XMLGregorianCalendar sisteInnvilgedeDag = BeregningsresultatMapper.finnStønadsperiodeTom(periodeListe);
-        fagType.setStønadsperiodeTom(sisteInnvilgedeDag);
         fagType.setSisteDagAvSistePeriode(UttakMapper.finnSisteDagAvSistePeriode(uttakResultatPerioder));
-        if (sisteInnvilgedeDag != null) {
-            fagType.setSisteUtbetalingsdag(sisteInnvilgedeDag);
-        }
         fagType.setIkkeOmsorg(UttakMapper.finnesPeriodeMedIkkeOmsorg(periodeListe.getPeriode()));
         fagType.setForMyeUtbetalt(UttakMapper.forMyeUtbetaltKode(periodeListe, behandling));
+
+        BeregningsresultatMapper.finnStønadsperiodeFomHvisFinnes(periodeListe).ifPresent(fagType::setStønadsperiodeFom);
+        BeregningsresultatMapper.finnStønadsperiodeTomHvisFinnes(periodeListe).ifPresent(sisteInnvilgedeDag -> {
+            fagType.setStønadsperiodeTom(sisteInnvilgedeDag);
+            fagType.setSisteUtbetalingsdag(sisteInnvilgedeDag);
+        });
         UttakMapper.finnSisteDagIFelleseriodeHvisFinnes(uttakResultatPerioder).ifPresent(fagType::setSisteDagIFellesPeriode);
         UttakMapper.finnSisteDagMedUtsettelseHvisFinnes(uttakResultatPerioder).ifPresent(fagType::setSisteDagMedUtsettelse);
     }

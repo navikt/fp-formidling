@@ -21,14 +21,15 @@
             <xs:element type="personstatusKode" name="personstatus" minOccurs="0"/>
             <xs:element type="relasjonskodeKode" name="relasjonskode"/>
             <xs:element type="behandlingsResultatKode" name="behandlingsResultat"/>
-            <xs:element type="xs:boolean" name="overbetaling"/>
+			<xs:element type="xs:boolean" name="overbetaling" minOccurs="0"/>
             <xs:element type="xs:date" name="mottattDato"/>
             <xs:element type="xs:integer" name="dekningsgrad"/>
             <xs:element type="xs:long" name="bruttoBeregningsgrunnlag"/>
             <xs:element type="xs:long" name="dagsats"/>
             <xs:element type="xs:long" name="månedsbeløp"/>
             <xs:element type="xs:date" name="stønadsperiodeFom" minOccurs="0"/>
-            <xs:element type="xs:date" name="stønadsperiodeTom"/>
+			<xs:element type="xs:date" name="stønadsperiodeTom" minOccurs="0"/>
+			<xs:element type="xs:date" name="dodsdato" minOccurs="0"/>
             <xs:element type="xs:long" name="totalBrukerAndel"/>
             <xs:element type="xs:long" name="totalArbeidsgiverAndel"/>
             <xs:element type="xs:integer" name="antallArbeidsgivere"/>
@@ -48,6 +49,7 @@
             <xs:element type="xs:date" name="sisteUtbetalingsdag" minOccurs="0"/>
             <xs:element type="xs:date" name="sisteDagMedUtsettelse" minOccurs="0"/>
             <xs:element type="xs:integer" name="foreldrepengeperiodenUtvidetUker" minOccurs="0"/>
+			<xs:element type="xs:boolean" name="besteBeregning" minOccurs="0"/>
             <xs:element type="periodeListeType" name="periodeListe"/>
             <xs:element type="xs:integer" name="disponibleDager"/>
             <xs:element type="xs:integer" name="disponibleFellesDager"/>
@@ -484,9 +486,12 @@
             </xs:enumeration>
             <xs:enumeration value="2036">
                 <xs:annotation>
-                    <xs:documentation>§ 14-14 innvilgelse når bare far har rett og mor er ufør, og han bare søker om
-                        foreldrepenger tilsvarende fedrekvotens lengde.
-                    </xs:documentation>
+				<xs:documentation>§ 14-14 innvilgelse når bare far har rett og mor er ufør, og han bare søker om foreldrepenger tilsvarende fedrekvotens lengde.</xs:documentation>
+			</xs:annotation>
+		</xs:enumeration>
+		<xs:enumeration value="2037">
+			<xs:annotation>
+				<xs:documentation></xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4005">
@@ -809,9 +814,17 @@
             </xs:enumeration>
             <xs:enumeration value="4070">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av
-                        manglende dokumentasjon.
-                    </xs:documentation>
+					<xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av manglende dokumentasjon.</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		<xs:enumeration value="4072">
+			<xs:annotation>
+				<xs:documentation></xs:documentation>
+			</xs:annotation>
+		</xs:enumeration>
+		<xs:enumeration value="4087">
+			<xs:annotation>
+				<xs:documentation></xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4088">
@@ -875,6 +888,11 @@
                     <xs:documentation>Ikke rett til kvote fordi mor ikke har rett til foreldrepenger</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
+			<xs:enumeration value="4075">
+				<xs:annotation>
+					<xs:documentation>Ikke rett til kvote fordi mor ikke har rett til foreldrepenger</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
             <xs:enumeration value="4095">
                 <xs:annotation>
                     <xs:documentation>Mor tar ikke alle 3 ukene før termin</xs:documentation>

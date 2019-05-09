@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.kafkatjenester.dokumenthendelse;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -22,19 +23,34 @@ public class KafkaReader {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaReader.class);
     private JsonHendelseHandler jsonHendelseHandler;
+    private DokumentMeldingConsumer meldingConsumer;
     private StringBuilder feilmelding;
     private HendelseRepository hendelseRepository;
 
 
     @Inject
-    public KafkaReader(JsonHendelseHandler jsonOppgaveHandler,
+    public KafkaReader(DokumentMeldingConsumer meldingConsumer,
+                       JsonHendelseHandler jsonOppgaveHandler,
                        HendelseRepository hendelseRepository) {
+        this.meldingConsumer = meldingConsumer;
         this.jsonHendelseHandler = jsonOppgaveHandler;
         this.hendelseRepository = hendelseRepository;
     }
 
     public KafkaReader() {
         //CDI
+    }
+
+    public void hentOgLagreMeldingene() {
+        List<String> meldinger = meldingConsumer.hentConsumerMeldingene();
+        for (String melding : meldinger) {
+            prosesser(melding);
+        }
+        commitMelding();
+    }
+
+    private void commitMelding() {
+        meldingConsumer.manualCommitSync();
     }
 
     void prosesser(String melding) {

@@ -1,126 +1,117 @@
 package no.nav.foreldrepenger.melding.kafkatjenester.dokumenthendelse;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.apache.kafka.clients.CommonClientConfigs;
-import org.apache.kafka.common.config.SaslConfigs;
-import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.Topology;
-import org.apache.kafka.streams.errors.LogAndFailExceptionHandler;
-import org.apache.kafka.streams.kstream.Consumed;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.serialization.StringDeserializer;
 
-import no.nav.vedtak.apptjeneste.AppServiceHandler;
-import no.nav.vedtak.felles.AktiverContextOgTransaksjon;
+import no.nav.vedtak.konfig.KonfigVerdi;
 
 @ApplicationScoped
-@AktiverContextOgTransaksjon
-public class DokumentMeldingConsumer implements AppServiceHandler {
+public class DokumentMeldingConsumer {
 
-    private static final Logger log = LoggerFactory.getLogger(DokumentMeldingConsumer.class);
-    private KafkaStreams stream;
-    private String topic;
-    private KafkaReader kafkaReader;
+    private static final int TIMEOUT = 10000;
+    KafkaConsumer<String, String> kafkaConsumer;
+    String topic;
 
-    DokumentMeldingConsumer() {
+    public DokumentMeldingConsumer() {
         //CDI
     }
 
     @Inject
-    public DokumentMeldingConsumer(DokumenthendelseStreamKafkaProperties streamKafkaProperties,
-                                   KafkaReader kafkaReader) {
-        this.topic = streamKafkaProperties.getTopic();
-        this.kafkaReader = kafkaReader;
+    public DokumentMeldingConsumer(@KonfigVerdi("kafka.dokumenthendelse.topic") String topic,
+                                   @KonfigVerdi("kafka.bootstrap.servers") String bootstrapServers,
+                                   @KonfigVerdi("kafka.dokumenthendelse.schema.registry.url") String schemaRegistryUrl,
+                                   @KonfigVerdi("kafka.dokumenthendelse.group.id") String groupId,
+                                   @KonfigVerdi("systembruker.username") String username,
+                                   @KonfigVerdi("systembruker.password") String password) {
 
-        Properties props = setupProperties(streamKafkaProperties);
+        Properties properties = new Properties();
+        properties.put("bootstrap.servers", bootstrapServers);
+        properties.put("schema.registry.url", schemaRegistryUrl);
+        properties.put("group.id", groupId);
+        properties.put("enable.auto.commit", "false");
+        properties.put("max.poll.records", "1");
 
-        final StreamsBuilder builder = new StreamsBuilder();
+        setSecurity(username, properties);
 
-        Consumed<String, String> stringStringConsumed = Consumed.with(Topology.AutoOffsetReset.EARLIEST);
-        builder.stream(this.topic, stringStringConsumed)
-                .foreach(this::handleMessage);
+        addUserToProperties(username, password, properties);
 
-        final Topology topology = builder.build();
-        stream = new KafkaStreams(topology, props);
+        this.kafkaConsumer =
+
+                createConsumer(properties);
+        this.topic = topic;
+
+        subscribe();
+
     }
 
-    private Properties setupProperties(DokumenthendelseStreamKafkaProperties streamProperties) {
-        Properties props = new Properties();
+    void setSecurity(String username, Properties properties) {
+        if (username != null && !username.isEmpty()) {
+            properties.put("security.protocol", "SASL_SSL");
+            properties.put("sasl.mechanism", "PLAIN");
+        }
+    }
 
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, streamProperties.getApplicationId());
-        props.put(StreamsConfig.CLIENT_ID_CONFIG, streamProperties.getClientId());
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, streamProperties.getBootstrapServers());
 
-        // Sikkerhet
-        if (streamProperties.harSattBrukernavn()) {
-            log.info("Using user name {} to authenticate against Kafka brokers ", streamProperties.getUsername());
-            props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
-            props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT");
+    void addUserToProperties(@KonfigVerdi("kafka.username") String username, @KonfigVerdi("kafka.password") String password, Properties properties) {
+        if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
             String jaasTemplate = "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"%s\" password=\"%s\";";
-            props.put(SaslConfigs.SASL_JAAS_CONFIG, String.format(jaasTemplate, streamProperties.getUsername(), streamProperties.getPassword()));
+            String jaasCfg = String.format(jaasTemplate, username, password);
+            properties.put("sasl.jaas.config", jaasCfg);
         }
+    }
 
-        // Setup truststore? Skal det settes opp?
-        // if(truststore != null) {
-        //     props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL")
-        //     props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, truststore.absolutePath)
-        //     props.put(SslConfigs.S SL_TRUSTSTORE_PASSWORD_CONFIG, truststore.password)
-        // }
-
-        // Setup schema-registry
-        if (streamProperties.getSchemaRegistryUrl() != null) {
-            props.put("schema.registry.url", streamProperties.getSchemaRegistryUrl());
+    public List<String> hentConsumerMeldingene() {
+        ConsumerRecords<String, String> records = kafkaConsumer.poll(TIMEOUT);
+        List<String> responseStringList = new ArrayList<>();
+        for (ConsumerRecord<String, String> record : records) {
+            responseStringList.add(record.value());
         }
-
-        // Serde
-        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, streamProperties.getKeyClass());
-        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, streamProperties.getValueClass());
-        props.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, LogAndFailExceptionHandler.class);
-
-        return props;
+        return responseStringList;
     }
 
-
-    private void handleMessage(String key, String payload) {
-        kafkaReader.prosesser(payload);
+    void subscribe() {
+        kafkaConsumer.subscribe(Collections.singletonList(topic));
     }
 
-    @Override
-    public void start() {
-        addShutdownHooks();
-
-        stream.start();
-        log.info("Starter konsumering av topic={}, tilstand={}", topic, stream.state());
+    public List<String> hentConsumerMeldingeneFraStarten() {
+        kafkaConsumer.poll(TIMEOUT);
+        kafkaConsumer.seekToBeginning(kafkaConsumer.assignment());
+        ConsumerRecords<String, String> records = kafkaConsumer.poll(1000);
+        List<String> responseStringList = new ArrayList<>();
+        for (ConsumerRecord<String, String> record : records) {
+            responseStringList.add(record.value());
+        }
+        return responseStringList;
     }
 
-    @Override
-    public void stop() {
-        log.info("Starter shutdown av topic={}, tilstand={} med 10 sekunder timeout", topic, stream.state());
-        stream.close(60, TimeUnit.SECONDS);
-        log.info("Shutdown av topic={}, tilstand={} med 10 sekunder timeout", topic, stream.state());
+    public void close() {
+        kafkaConsumer.close();
     }
 
-
-    private void addShutdownHooks() {
-        stream.setStateListener((oldState, newState) -> {
-            log.info("From state={} to state={}", oldState, newState);
-
-            if (newState == KafkaStreams.State.ERROR) {
-                // if the stream has died there is no reason to keep spinning
-                log.warn("No reason to keep living, closing stream");
-                stop();
-            }
-        });
-        stream.setUncaughtExceptionHandler((t, e) -> {
-            log.error("Caught exception in stream, exiting", e);
-            stop();
-        });
+    public void manualCommitSync() {
+        kafkaConsumer.commitSync();
     }
+
+    public void manualCommitAsync() {
+        kafkaConsumer.commitAsync();
+    }
+
+    KafkaConsumer<String, String> createConsumer(Properties properties) {
+        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        properties.put("auto.offset.reset", "earliest");
+        return new KafkaConsumer<>(properties);
+    }
+
 }

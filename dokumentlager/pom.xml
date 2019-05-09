@@ -15,6 +15,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>feed</module>
         <module>domene</module>
     </modules>
 

@@ -13,6 +13,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.typer.Beløp;
 
 public class BeregningsgrunnlagMapperTest {
 
@@ -176,27 +177,27 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_identifisere_brutto_over_6g() {
 
-        BigDecimal seksG = GRUNNBELØP.multiply(BigDecimal.valueOf(6));
         beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .medGrunnbeløp(new Beløp(GRUNNBELØP))
                 .leggTilBeregningsgrunnlagPeriode(
                         BeregningsgrunnlagPeriode.ny()
-                                .medBruttoPrÅr(seksG.add(BigDecimal.ONE))
+                                .medBruttoPrÅr(GRUNNBELØP.multiply(BigDecimal.valueOf(6)).add(BigDecimal.ONE))
                                 .build())
                 .build();
-        assertThat(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag, seksG)).isTrue();
+        assertThat(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag)).isTrue();
     }
 
     @Test
     public void skal_identifisere_ikke_brutto_over_6g() {
 
-        BigDecimal seksG = GRUNNBELØP.multiply(BigDecimal.valueOf(6));
         beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .medGrunnbeløp(new Beløp(GRUNNBELØP))
                 .leggTilBeregningsgrunnlagPeriode(
                         BeregningsgrunnlagPeriode.ny()
-                                .medBruttoPrÅr(seksG)
+                                .medBruttoPrÅr(GRUNNBELØP.multiply(BigDecimal.valueOf(6)))
                                 .build())
                 .build();
-        assertThat(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag, seksG)).isFalse();
+        assertThat(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag)).isFalse();
     }
 
 }

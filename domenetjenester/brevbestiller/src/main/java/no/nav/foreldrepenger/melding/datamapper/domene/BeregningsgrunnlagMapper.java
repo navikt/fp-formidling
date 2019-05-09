@@ -158,8 +158,12 @@ public class BeregningsgrunnlagMapper {
         return beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
     }
 
-    public static boolean inntektOverSeksG(Beregningsgrunnlag beregningsgrunnlag, BigDecimal seksG) {
-        return finnFørstePeriode(beregningsgrunnlag).getBruttoPrÅr().compareTo(seksG) > 0;
+    public static BigDecimal finnSeksG(Beregningsgrunnlag beregningsgrunnlag) {
+        return beregningsgrunnlag.getGrunnbeløp().getVerdi().multiply(BigDecimal.valueOf(6));
+    }
+
+    public static boolean inntektOverSeksG(Beregningsgrunnlag beregningsgrunnlag) {
+        return finnFørstePeriode(beregningsgrunnlag).getBruttoPrÅr().compareTo(finnSeksG(beregningsgrunnlag)) > 0;
     }
 
     static StatusTypeKode tilStatusTypeKode(AktivitetStatus statuskode) {

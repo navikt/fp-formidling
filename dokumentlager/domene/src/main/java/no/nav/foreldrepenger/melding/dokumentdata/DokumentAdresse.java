@@ -2,53 +2,14 @@ package no.nav.foreldrepenger.melding.dokumentdata;
 
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Version;
+public class DokumentAdresse {
 
-import no.nav.foreldrepenger.melding.kodeverk.diff.ChangeTracked;
-
-@Entity(name = "DokumentAdresse")
-@Table(name = "DOKUMENT_ADRESSE")
-public class DokumentAdresse extends BaseEntitet {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_DOKUMENT_ADRESSE")
-    private Long id;
-
-    @Version
-    @Column(name = "versjon", nullable = false)
-    private long versjon;
-
-    @ChangeTracked
-    @Column(name = "mottaker_navn")
     private String mottakerNavn;
-
-    @ChangeTracked
-    @Column(name = "adresselinje1")
     private String adresselinje1;
-
-    @ChangeTracked
-    @Column(name = "adresselinje2")
     private String adresselinje2;
-
-    @ChangeTracked
-    @Column(name = "adresselinje3")
     private String adresselinje3;
-
-    @ChangeTracked
-    @Column(name = "postnummer")
     private String postnummer;
-
-    @ChangeTracked
-    @Column(name = "poststed")
     private String poststed;
-
-    @ChangeTracked
-    @Column(name = "land")
     private String land;
 
     private DokumentAdresse() {
@@ -63,14 +24,6 @@ public class DokumentAdresse extends BaseEntitet {
         this.postnummer = adresse.postnummer;
         this.poststed = adresse.poststed;
         this.land = adresse.land;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getMottakerNavn() {
@@ -126,7 +79,7 @@ public class DokumentAdresse extends BaseEntitet {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "<id=" + id + ", mottakerNavn=" + mottakerNavn + ", adresselinje1=" + adresselinje1 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return getClass().getSimpleName() + "<mottakerNavn=" + mottakerNavn + ", adresselinje1=" + adresselinje1 //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 + ", poststed=" + poststed + ", land=" + land + ">"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 

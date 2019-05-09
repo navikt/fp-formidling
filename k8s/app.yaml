@@ -49,6 +49,7 @@ spec:
   logtransform: dns_loglevel # Optional. The transformation of the logs, if they should be handled differently than plain text or json
   webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.
   secrets: true # Optional. If set to true fetch secrets from Secret Service and inject into the pods. todo link to doc.
+  sidecar: true # refresh token
   env:
     - name: APP_VERSION
       value: RELEASE_VERSION
@@ -119,12 +120,6 @@ spec:
     #Generell Kafka
     - name: KAFKA_BOOTSTRAP_SERVERS
       value: kafka.bootstrap.servers
-    - name: KAFKA_ENABLE_AUTO_COMMIT_CONFIG
-      value: kafka.enable.auto.commit.config
-    - name: KAFKA_AUTO_COMMIT_INTERNAL_MS_CONFIG
-      value: kafka.auto.commit.internal.ms.config
-    - name: KAFKA_AUTO_OFFSET_RESET_CONFIG
-      value: kafka.auto.offset.reset.config
     - name: KAFKA_USERNAME
       value: kafka.username
       #Database
@@ -132,3 +127,5 @@ spec:
       value: defaultDS.username
     - name: DEFAULTDS_URL
       value: defaultDS.url
+    - name: TASK_MANAGER_RUNNER_THREADS
+      value: taskmanager.runner.thread

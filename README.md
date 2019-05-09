@@ -19,7 +19,6 @@ Interne henvendelser kan sendes via Slack i kanalen #fp-fomidling.
 #### Konfigfiler
 For å kjøre lokalt trenger du 
 app.properties & app-local.properties med riktige verdier i web\webapp
-man trenger også (foreløpig) app-dev.properties i web/webapp/src/test/resources/
 
 #### Sertifikater
 For å kunne kjøre mot miljø fra lokalt, må man oppgi testsertfikater i 

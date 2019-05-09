@@ -81,7 +81,6 @@ public class BehandlingDtoMapper {
                 .medFagsak(fagsak)
                 .medEndretAv(dto.getEndretAvBrukernavn())
                 .medSpråkkode(kodeverkRepository.finn(Språkkode.class, dto.getSprakkode().getKode()));
-
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(behandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));
         }

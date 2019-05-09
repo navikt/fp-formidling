@@ -1,9 +1,3 @@
--- Nyt kodeverk for grunnbeløp og gsnitt
-INSERT INTO KODELISTE (ID, KODE, BESKRIVELSE, KODEVERK, GYLDIG_FOM)
-VALUES (nextval('seq_kodeliste'), 'GRUNNBELØP', 'Grunnbeløp', 'SATS_TYPE', to_date('2000-01-01', 'YYYY-MM-DD'));
-INSERT INTO KODELISTE (ID, KODE, BESKRIVELSE, KODEVERK, GYLDIG_FOM)
-VALUES (nextval('seq_kodeliste'), 'GSNITT', 'Grunnbeløp årsgjennomsnitt', 'SATS_TYPE', to_date('2000-01-01', 'YYYY-MM-DD'));
-
 -- Sats verdier for grunnbeløp og gsnitt fra 1967 til 2018
 INSERT INTO SATS (ID, SATS_TYPE, FOM, TOM, VERDI, KL_SATS_TYPE)
 VALUES (nextval('seq_sats'), 'GRUNNBELØP', to_date('2018-05-01', 'YYYY-MM-DD'), to_date('2099-12-31', 'YYYY-MM-DD'), 96883, 'SATS_TYPE');

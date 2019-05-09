@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.MottattDokumentDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
@@ -258,6 +259,16 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente klagedokument for behandling: " + hentBehandlingId(resourceLinker));
                 });
+    }
+
+    @Override
+    public List<MottattDokumentDto> hentMottatteDokumenter(List<BehandlingResourceLink> resourceLinker) {
+        return Arrays.asList(resourceLinker.stream()
+                .filter(dto -> "mottattdokument".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, MottattDokumentDto[].class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente mottatte dokumenter for behandling: " + hentBehandlingId(resourceLinker));
+                }));
     }
 
     private <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {

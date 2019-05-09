@@ -128,4 +128,4 @@ spec:
     - name: DEFAULTDS_URL
       value: defaultDS.url
     - name: TASK_MANAGER_RUNNER_THREADS
-      value: taskmanager.runner.thread
+      value: "1"

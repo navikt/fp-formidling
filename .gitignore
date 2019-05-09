@@ -10,7 +10,6 @@ bin
 _*.sh
 *.local
 *.localz
-app.properties
 app-dev.properties
 app-local.properties
 app.properties.backup

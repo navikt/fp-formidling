@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 class PropertiesUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesUtils.class);
 
-    private static String TEMPLATE_FILNAVN = "app-dev.properties";
     private static String JETTY_SCHEMAS_LOCAL = "jetty_web_server.json";
     private static String DEV_FILNAVN = "app.properties";
     private static String DEV_FILNAVN_LOCAL = "app-local.properties";
@@ -31,13 +30,6 @@ class PropertiesUtils {
     }
 
     static void lagPropertiesFilFraTemplate() throws IOException {
-        File devFil = new File(DEV_FILNAVN);
-
-        ClassLoader classLoader = PropertiesUtils.class.getClassLoader();
-        File templateFil = new File(classLoader.getResource(TEMPLATE_FILNAVN).getFile());
-
-        copyTemplateFile(templateFil, devFil, true);
-
         // create local file
         File localProps = new File(DEV_FILNAVN_LOCAL);
         if (!localProps.exists()) {

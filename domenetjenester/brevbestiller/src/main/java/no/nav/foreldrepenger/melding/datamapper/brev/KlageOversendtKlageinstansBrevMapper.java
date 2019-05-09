@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -33,6 +32,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_OVERSENDT_KLAGEINSTANS_DOK)
 public class KlageOversendtKlageinstansBrevMapper implements DokumentTypeMapper {
+    private static final int BEHANDLINGSFRIST_UKER_KA = 14;
 
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
@@ -62,7 +62,7 @@ public class KlageOversendtKlageinstansBrevMapper implements DokumentTypeMapper 
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(klageDokument.getMottattDato()));
         fagType.setFritekst(hendelse.getFritekst());
-        fagType.setAntallUker(BigInteger.valueOf(BehandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
+        fagType.setAntallUker(BigInteger.valueOf(BEHANDLINGSFRIST_UKER_KA));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
         return fagType;
     }

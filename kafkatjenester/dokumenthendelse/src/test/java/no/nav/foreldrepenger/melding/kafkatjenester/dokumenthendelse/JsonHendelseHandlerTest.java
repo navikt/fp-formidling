@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 
@@ -45,7 +46,7 @@ public class JsonHendelseHandlerTest {
 
     private DokumentHendelseDto dokumentHendelse;
 
-    private long behandlingId = 123l;
+    private UUID behandlingId = UUID.randomUUID();
 
     @Before
     public void setup() {
@@ -75,7 +76,7 @@ public class JsonHendelseHandlerTest {
 
     @Test
     public void hendelseMedBareBehandlingIdOgYtelseType_skalLagres() {
-        dokumentHendelse.setBehandlingId(behandlingId);
+        dokumentHendelse.setBehandlingUuid(behandlingId);
         dokumentHendelse.setYtelseType("FP");
         jsonHendelseHandler.prosesser(dokumentHendelse);
 

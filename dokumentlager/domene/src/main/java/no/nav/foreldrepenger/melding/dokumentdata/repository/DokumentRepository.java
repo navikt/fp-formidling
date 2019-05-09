@@ -11,5 +11,6 @@ public interface DokumentRepository {
 
     List<DokumentMalType> hentAlleDokumentMalTyper();
 
+    @Deprecated
     List<DokumentData> hentDokumentDataListe(Long behandlingId, String dokumentmal);
 }

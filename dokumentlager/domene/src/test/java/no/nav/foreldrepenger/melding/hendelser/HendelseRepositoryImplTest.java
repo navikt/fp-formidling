@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.hendelser;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,8 +19,6 @@ public class HendelseRepositoryImplTest {
 
     private HendelseRepository hendelseRepository;
 
-    private Long behandlingId = 123l;
-
     @Before
     public void setup() {
         hendelseRepository = new HendelseRepositoryImpl(repositoryRule.getEntityManager());
@@ -27,14 +26,15 @@ public class HendelseRepositoryImplTest {
 
     @Test
     public void skalLagreOgHenteOppIgjen() {
+        UUID behandlingUuid = UUID.randomUUID();
         DokumentHendelse dokumentHendelse = DokumentHendelse
                 .builder()
-                .medBehandlingId(behandlingId)
+                .medBehandlingUuid(behandlingUuid)
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .build();
         hendelseRepository.lagre(dokumentHendelse);
 
-        List<DokumentHendelse> hendelseListe = hendelseRepository.hentDokumentHendelserForBehandling(behandlingId);
+        List<DokumentHendelse> hendelseListe = hendelseRepository.hentDokumentHendelserForBehandling(behandlingUuid);
 
         assertThat(hendelseListe).hasSize(1);
 

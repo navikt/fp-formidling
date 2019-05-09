@@ -4,6 +4,8 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,12 +58,12 @@ public class DokumentHistorikkTjenesteTest {
     @Test
     public void publiserHistorikk() {
         DokumentHendelse hendelse = DokumentHendelse.builder()
-                .medBehandlingId(123l)
+                .medBehandlingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .build();
         hendelseRepository.lagre(hendelse);
         DokumentHistorikkinnslag historikk = DokumentHistorikkinnslag.builder()
-                .medBehandlingId(1l)
+                .medBehandlingUuid(UUID.randomUUID())
                 .medHendelseId(hendelse.getId())
                 .medDokumentMalType(dokumentRepository.hentDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK))
                 .medJournalpostId(new JournalpostId("ID"))

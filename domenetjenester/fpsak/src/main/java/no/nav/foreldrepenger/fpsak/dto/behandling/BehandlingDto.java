@@ -33,7 +33,6 @@ public class BehandlingDto {
     private BehandlingsresultatDto behandlingsresultat;
     private KodeDto sprakkode;
     private boolean toTrinnsBehandling;
-    private Long originalBehandlingId;
     private List<BehandlingResourceLinkDto> links = new ArrayList<>();
     private AsyncPollingStatus taskStatus;
     private String venteArsakKode;
@@ -61,14 +60,6 @@ public class BehandlingDto {
 
     public void setFagsakId(Long fagsakId) {
         this.fagsakId = fagsakId;
-    }
-
-    public Long getOriginalBehandlingId() {
-        return originalBehandlingId;
-    }
-
-    public void setOriginalBehandlingId(Long originalBehandlingId) {
-        this.originalBehandlingId = originalBehandlingId;
     }
 
     public KodeDto getType() {
@@ -278,7 +269,6 @@ public class BehandlingDto {
                 ", behandlingsresultat=" + behandlingsresultat +
                 ", sprakkode=" + sprakkode +
                 ", toTrinnsBehandling=" + toTrinnsBehandling +
-                ", originalBehandlingId=" + originalBehandlingId +
                 ", links=" + links +
                 ", taskStatus='" + taskStatus + '\'' +
                 ", venteArsakKode='" + venteArsakKode + '\'' +

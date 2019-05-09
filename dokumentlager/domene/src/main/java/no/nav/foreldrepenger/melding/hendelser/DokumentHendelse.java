@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.hendelser;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,8 +30,8 @@ public class DokumentHendelse extends BaseEntitet {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_DOKUMENT_HENDELSE")
     private Long id;
 
-    @Column(name = "behandling_id")
-    private Long behandlingId;
+    @Column(name = "behandling_uuid")
+    private UUID behandlingUuid;
 
     @ManyToOne
     @JoinColumn(name = "dokument_mal_navn")
@@ -68,8 +69,8 @@ public class DokumentHendelse extends BaseEntitet {
         //For Hibernate
     }
 
-    DokumentHendelse(Long behandlingId, FagsakYtelseType ytelseType) {
-        this.behandlingId = behandlingId;
+    DokumentHendelse(UUID behandlingUuid, FagsakYtelseType ytelseType) {
+        this.behandlingUuid = behandlingUuid;
         this.ytelseType = ytelseType;
     }
 
@@ -81,8 +82,8 @@ public class DokumentHendelse extends BaseEntitet {
         return id;
     }
 
-    public Long getBehandlingId() {
-        return behandlingId;
+    public UUID getBehandlingUuid() {
+        return behandlingUuid;
     }
 
     public DokumentMalType getDokumentMalType() {
@@ -127,7 +128,7 @@ public class DokumentHendelse extends BaseEntitet {
         if (o == null || getClass() != o.getClass()) return false;
         DokumentHendelse that = (DokumentHendelse) o;
         return id.equals(that.id) &&
-                behandlingId.equals(that.behandlingId) &&
+                behandlingUuid.equals(that.behandlingUuid) &&
                 Objects.equals(dokumentMalType, that.dokumentMalType) &&
                 Objects.equals(ytelseType, that.ytelseType) &&
                 Objects.equals(gjelderVedtak, that.gjelderVedtak) &&
@@ -138,14 +139,14 @@ public class DokumentHendelse extends BaseEntitet {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, behandlingId, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, historikkAktør);
+        return Objects.hash(id, behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, historikkAktør);
     }
 
     @Override
     public String toString() {
         return "DokumentHendelse{" +
                 "id=" + id +
-                ", behandlingId=" + behandlingId +
+                ", behandlingUuid=" + behandlingUuid +
                 ", dokumentMalType=" + dokumentMalType +
                 ", ytelseType=" + ytelseType +
                 ", gjelderVedtak=" + gjelderVedtak +
@@ -157,7 +158,7 @@ public class DokumentHendelse extends BaseEntitet {
 
     public static class Builder {
         private DokumentMalType dokumentMalType;
-        private Long behandlingId;
+        private UUID behandlingUuid;
         private FagsakYtelseType ytelseType;
         private String tittel;
         private String fritekst;
@@ -176,8 +177,8 @@ public class DokumentHendelse extends BaseEntitet {
             return this;
         }
 
-        public DokumentHendelse.Builder medBehandlingId(Long behandlingId) {
-            this.behandlingId = behandlingId;
+        public DokumentHendelse.Builder medBehandlingUuid(UUID behandlingUuid) {
+            this.behandlingUuid = behandlingUuid;
             return this;
         }
 
@@ -213,7 +214,7 @@ public class DokumentHendelse extends BaseEntitet {
 
         public DokumentHendelse build() {
             verifyStateForBuild();
-            DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingId, ytelseType);
+            DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingUuid, ytelseType);
             dokumentHendelse.erOpphevetKlage = erOpphevetKlage;
             dokumentHendelse.gjelderVedtak = gjelderVedtak;
             dokumentHendelse.fritekst = fritekst;
@@ -225,7 +226,7 @@ public class DokumentHendelse extends BaseEntitet {
         }
 
         private void verifyStateForBuild() {
-            Objects.requireNonNull(behandlingId, "behandlingId");
+            Objects.requireNonNull(behandlingUuid, "behandlingUuid");
             Objects.requireNonNull(ytelseType, "ytelseType");
         }
 

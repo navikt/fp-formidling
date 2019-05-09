@@ -30,7 +30,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <felles.version>1.1.0_20190374082109_418f6d5</felles.version>
+        <felles.version>1.1.0_20190507192716_e55c00b</felles.version>
         <metrics.version>3.2.5</metrics.version>
 
         <abac-attribute-constants.version>2.0.0</abac-attribute-constants.version>
@@ -183,15 +183,9 @@
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-                <artifactId>felles-integrasjon-bom</artifactId>
+                <groupId>no.nav.foreldrepenger.felles</groupId>
+                <artifactId>felles-prosesstask</artifactId>
                 <version>${felles.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-                        <artifactId>felles-integrasjon-jms</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
@@ -203,23 +197,8 @@
                 <artifactId>asm-analysis</artifactId>
                 <version>7.0</version>
             </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.felles</groupId>
-                <artifactId>felles-prosesstask</artifactId>
-                <version>${felles.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-                <artifactId>felles-integrasjon-jms</artifactId>
-                <version>${felles.version}</version>
-                <type>test-jar</type>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-                <artifactId>felles-integrasjon-rest-klient</artifactId>
-                <version>${felles.version}</version>
-            </dependency>
 
+            <!-- Metrics -->
             <dependency>
                 <groupId>io.dropwizard.metrics</groupId>
                 <artifactId>metrics-core</artifactId>
@@ -246,6 +225,7 @@
                 <version>${metrics.version}</version>
             </dependency>
 
+            <!-- Test -->
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
@@ -262,6 +242,7 @@
                 <version>${mockito.version}</version>
             </dependency>
 
+            <!-- Log -->
             <dependency>
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>

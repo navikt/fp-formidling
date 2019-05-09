@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.datamapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -92,8 +93,8 @@ public class DomeneobjektProvider {
     }
 
 
-    public Behandling hentBehandling(long behandlingId) {
-        return behandlingDtoMapper.mapBehandlingFraDto((behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingId))));
+    public Behandling hentBehandling(UUID behandlingUuid) {
+        return behandlingDtoMapper.mapBehandlingFraDto((behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingUuid))));
     }
 
     public BeregningsresultatES hentBeregningsresultatES(Behandling behandling) {

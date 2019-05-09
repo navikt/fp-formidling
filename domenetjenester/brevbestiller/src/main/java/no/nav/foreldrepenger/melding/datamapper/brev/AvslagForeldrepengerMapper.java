@@ -4,6 +4,7 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.a
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -23,7 +24,7 @@ import org.xml.sax.SAXException;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.GrunnbeløpTjeneste;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
@@ -65,18 +66,15 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
-    private GrunnbeløpTjeneste grunnbeløpTjeneste;
 
     public AvslagForeldrepengerMapper() {
     }
 
     @Inject
     public AvslagForeldrepengerMapper(BrevParametere brevParametere,
-                                      DomeneobjektProvider domeneobjektProvider,
-                                      GrunnbeløpTjeneste grunnbeløpTjeneste) {
+                                      DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
-        this.grunnbeløpTjeneste = grunnbeløpTjeneste;
     }
 
     @Override
@@ -85,6 +83,7 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         Optional<BeregningsresultatFP> beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFPHvisFinnes(behandling);
         Optional<UttakResultatPerioder> uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling);
         Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
@@ -95,6 +94,7 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
                 dokumentFelles,
                 dokumentHendelse,
                 familiehendelse,
+                beregningsgrunnlag,
                 beregningsresultatFP,
                 uttakResultatPerioder);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
@@ -107,10 +107,9 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
                                DokumentFelles dokumentFelles,
                                DokumentHendelse dokumentHendelse,
                                FamilieHendelse familiehendelse,
+                               Beregningsgrunnlag beregningsgrunnlag,
                                Optional<BeregningsresultatFP> beregningsresultatFP,
                                Optional<UttakResultatPerioder> uttakResultatPerioder) {
-        LocalDate skjæringstidspunkt = familiehendelse.getSkjæringstidspunkt().orElse(LocalDate.now());
-
         FagType fagType = new FagType();
         fagType.setBehandlingsType(fra(behandlingstypeKode));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
@@ -120,7 +119,7 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());
         fagType.setBarnErFødt(familiehendelse.isBarnErFødt());
-        fagType.setHalvG(grunnbeløpTjeneste.finnHalvGPå(skjæringstidspunkt));
+        fagType.setHalvG(beregningsgrunnlag.getGrunnbeløp().getVerdi().divide(BigDecimal.valueOf(2)).longValue());
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
 
         mapFelterRelatertTilAvslagårsaker(behandling.getBehandlingsresultat(),

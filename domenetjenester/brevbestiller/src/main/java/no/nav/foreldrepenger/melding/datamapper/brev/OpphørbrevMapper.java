@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ import org.xml.sax.SAXException;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.GrunnbeløpTjeneste;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
@@ -68,18 +69,15 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
 
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
-    private GrunnbeløpTjeneste grunnbeløpTjeneste;
 
     public OpphørbrevMapper() {
     }
 
     @Inject
     public OpphørbrevMapper(BrevParametere brevParametere,
-                            DomeneobjektProvider domeneobjektProvider,
-                            GrunnbeløpTjeneste grunnbeløpTjeneste) {
+                            DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
-        this.grunnbeløpTjeneste = grunnbeløpTjeneste;
     }
 
     @Override
@@ -89,6 +87,7 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
 
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         Personinfo personinfo = behandling.getFagsak().getPersoninfo();
@@ -99,6 +98,7 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
         FagType fagType = mapFagType(behandlingstype, behandling,
                 dokumentFelles,
                 familiehendelse,
+                beregningsgrunnlag,
                 uttakResultatPerioder,
                 originaltUttakResultat,
                 personinfo
@@ -110,11 +110,10 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
     private FagType mapFagType(String behandlingstypeKode, Behandling behandling,
                                DokumentFelles dokumentFelles,
                                FamilieHendelse familiehendelse,
+                               Beregningsgrunnlag beregningsgrunnlag,
                                UttakResultatPerioder uttakResultatPerioder,
                                UttakResultatPerioder originaltUttakResultat,
                                Personinfo personinfo) {
-        LocalDate skjæringstidspunkt = familiehendelse.getSkjæringstidspunkt().orElse(LocalDate.now());
-
         FagType fagType = new FagType();
         fagType.setBehandlingsType(fra(behandlingstypeKode));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
@@ -122,7 +121,7 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
         fagType.setRelasjonskode(fra(behandling.getFagsak()));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());
-        fagType.setHalvG(grunnbeløpTjeneste.finnHalvGPå(skjæringstidspunkt));
+        fagType.setHalvG(beregningsgrunnlag.getGrunnbeløp().getVerdi().divide(BigDecimal.valueOf(2)).longValue());
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
 
         mapFelterRelatertTilAvslagårsaker(behandling.getBehandlingsresultat(),

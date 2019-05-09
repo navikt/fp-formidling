@@ -105,21 +105,18 @@ public class BeregningsgrunnlagMapper {
         AndelType andelType = objectFactory.createAndelType();
         andelType.setStatus(tilStatusTypeKode(andel.getAktivitetStatus()));
         andelType.setDagsats(andel.getOriginalDagsatsFraTilstøtendeYtelse() == null ? andel.getDagsats() : andel.getOriginalDagsatsFraTilstøtendeYtelse());
+        andelType.setEtterlønnSluttpakke(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(andel.getArbeidsforholdType()));
         BigDecimal bgBruttoPrÅr = andel.getAvkortetPrÅr() != null ? andel.getAvkortetPrÅr() : andel.getBruttoPrÅr();
         if (bgBruttoPrÅr != null) {
             andelType.setMånedsinntekt(andel.getBruttoPrÅr().divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
             andelType.setÅrsinntekt(andel.getBruttoPrÅr().longValue());
         }
         if (AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus())) {
-            andelType.setPensjonsgivendeInntekt(andel.getPgiSnitt() == null ? null : andel.getPgiSnitt().longValue());
-            andelType.setSisteLignedeÅr(andel.getBeregningsperiodeTom() == null ? null : (long) andel.getBeregningsperiodeTom().getYear());
+            andelType.setPensjonsgivendeInntekt(andel.getPgiSnitt() == null ? 0 : andel.getPgiSnitt().longValue());
+            andelType.setSisteLignedeÅr(andel.getBeregningsperiodeTom() == null ? 0 : (long) andel.getBeregningsperiodeTom().getYear());
         }
         if (AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())) {
-            andelType.setEtterlønnSluttpakke(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(andel.getArbeidsforholdType()));
             andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::getNavn).ifPresent(andelType::setArbeidsgiverNavn);
-            if (OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(andel.getArbeidsforholdType())) {
-                andelType.setEtterlønnSluttpakke(true);
-            }
         }
 
         return andelType;

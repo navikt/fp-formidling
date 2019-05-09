@@ -17,6 +17,9 @@ public class YtelseFordelingDtoMapper {
         }
         if (dto.getAleneOmsorgPerioder() != null) {
             harPeriodeMedAleneomsorg = !dto.getAleneOmsorgPerioder().isEmpty();
+            if (harPeriodeMedAleneomsorg) {
+                annenForelderHarRett = false;
+            }
         }
         return new YtelseFordeling(new Dekningsgrad(dto.getGjeldendeDekningsgrad()), annenForelderHarRett, harPeriodeMedAleneomsorg);
     }

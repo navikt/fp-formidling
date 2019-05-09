@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
+import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -61,13 +62,20 @@ public class BehandlingDtoMapper {
                 .build();
     }
 
+    /**
+     * Vi får en forenklet versjon av dtoen når vi kaller på den via revurdering..
+     */
+    public Behandling mapOriginalBehandlingFraDto(BehandlingDto dto) {
+        return mapBehandlingFraDto(behandlingRestKlient.hentBehandling(new BehandlingIdDto(dto.getId()))); //TODO - Endre til UUID..
+    }
+
     public Behandling mapBehandlingFraDto(BehandlingDto dto) {
         Behandling.Builder builder = Behandling.builder();
         Supplier<Stream<BehandlingResourceLink>> behandlingResourceLinkStreamSupplier = () -> dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
         List<BehandlingResourceLink> linkListe = behandlingResourceLinkStreamSupplier.get().collect(Collectors.toList());
         Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(linkListe));
-        Behandling originalBehandling = behandlingRestKlient.hentOriginalBehandling(linkListe).map(this::mapBehandlingFraDto).orElse(null);
+        Behandling originalBehandling = behandlingRestKlient.hentOriginalBehandling(linkListe).map(this::mapOriginalBehandlingFraDto).orElse(null);
         builder.medId(dto.getId())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
                 .medStatus(kodeverkRepository.finn(BehandlingStatus.class, dto.getStatus().getKode()))

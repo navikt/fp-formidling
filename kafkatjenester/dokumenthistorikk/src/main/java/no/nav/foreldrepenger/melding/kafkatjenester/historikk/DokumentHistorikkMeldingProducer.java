@@ -30,7 +30,7 @@ public class DokumentHistorikkMeldingProducer {
 
     @Inject
     public DokumentHistorikkMeldingProducer(@KonfigVerdi("kafka.dokumenthistorikk.topic") String topic,
-                                            @KonfigVerdi("bootstrap.servers") String bootstrapServers,
+                                            @KonfigVerdi("kafka.bootstrap.servers") String bootstrapServers,
                                             @KonfigVerdi("kafka.dokumenthistorikk.schema.registry.url") String schemaRegistryUrl,
                                             @KonfigVerdi("kafka.dokumenthistorikk.client.id") String clientId,
                                             @KonfigVerdi("systembruker.username") String username,

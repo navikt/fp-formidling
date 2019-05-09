@@ -100,7 +100,7 @@ public class UttakDtoMapper {
     }
 
     private Arbeidsgiver mapArbeidsgiver(UttakResultatPeriodeAktivitetDto dto) {
-        if (dto.getArbeidsgiver() == null) {
+        if (dto.getArbeidsgiver() == null || (dto.getArbeidsgiver().getIdentifikator() == null && dto.getArbeidsgiver().getAktørId() == null)) {
             return null;
         }
         return ArbeidsgiverMapper.finnArbeidsgiver(dto.getArbeidsgiver().getNavn(),

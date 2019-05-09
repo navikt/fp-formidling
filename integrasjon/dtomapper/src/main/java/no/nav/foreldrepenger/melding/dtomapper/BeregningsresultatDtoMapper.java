@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.melding.dtomapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
+import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
@@ -75,12 +76,19 @@ public class BeregningsresultatDtoMapper {
         return BeregningsresultatAndel.ny()
                 .medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().getKode()))
                 .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
-                .medArbeidsgiver(finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr()))
+                .medArbeidsgiver(mapArbeidsgiverFraDto(dto))
                 .medStillingsprosent(dto.getStillingsprosent())
                 .medBrukerErMottaker(dto.getTilSoker() != null && dto.getTilSoker() != 0)
                 .medArbeidsgiverErMottaker(dto.getRefusjon() != null && dto.getRefusjon() != 0)
                 .medDagsats(summerDagsats(dto))
                 .build();
+    }
+
+    private Arbeidsgiver mapArbeidsgiverFraDto(BeregningsresultatPeriodeAndelDto dto) {
+        if (!AktivitetStatus.ARBEIDSTAKER.getKode().equals(dto.getAktivitetStatus().getKode())) {
+            return null;
+        }
+        return finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr());
     }
 
     private int summerDagsats(BeregningsresultatPeriodeAndelDto dto) {

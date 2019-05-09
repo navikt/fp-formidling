@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
@@ -28,7 +27,6 @@ import no.nav.vedtak.util.FPDateUtil;
 public class DokumentFellesDataMapper {
     private final String DOD_PERSON_STATUS = "DOD";
     private final String DEFAULT_PERSON_STATUS = "ANNET";
-    private DokumentRepository dokumentRepository;
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private DomeneobjektProvider domeneobjektProvider;
     private TpsTjeneste tpsTjeneste;
@@ -39,11 +37,9 @@ public class DokumentFellesDataMapper {
 
     @Inject
     public DokumentFellesDataMapper(TpsTjeneste tpsTjeneste,
-                                    DokumentRepository dokumentRepository,
                                     DomeneobjektProvider domeneobjektProvider,
                                     NavKontaktKonfigurasjon navKontaktKonfigurasjon) {
         this.tpsTjeneste = tpsTjeneste;
-        this.dokumentRepository = dokumentRepository;
         this.domeneobjektProvider = domeneobjektProvider;
         this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
     }
@@ -138,11 +134,10 @@ public class DokumentFellesDataMapper {
                 .medSakspartPersonStatus(getPersonstatusVerdi(personstatusBruker));
 
         if (behandling.isToTrinnsBehandling()) {
-            builder
-                    .medAutomatiskBehandlet(Boolean.FALSE)
+            builder.medAutomatiskBehandlet(Boolean.FALSE)
                     .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
                     .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter())
-                    .medSignerendeBeslutterGeografiskEnhet("N/A");  // FIXME SOMMERFUGL Denne skal vel ikke hardkodes?
+                    .medSignerendeBeslutterGeografiskEnhet("N/A");
         }
         builder.build();
     }
@@ -157,7 +152,7 @@ public class DokumentFellesDataMapper {
     }
 
     private DokumentAdresse fra(Adresseinfo adresseinfo) {
-        DokumentAdresse adresse = new DokumentAdresse.Builder()
+        return new DokumentAdresse.Builder()
                 .medAdresselinje1(adresseinfo.getAdresselinje1())
                 .medAdresselinje2(adresseinfo.getAdresselinje2())
                 .medAdresselinje3(adresseinfo.getAdresselinje3())
@@ -165,9 +160,6 @@ public class DokumentFellesDataMapper {
                 .medPostNummer(adresseinfo.getPostNr())
                 .medPoststed(adresseinfo.getPoststed())
                 .build();
-
-        dokumentRepository.lagre(adresse);
-        return adresse;
     }
 
     private String norg2KontaktTelefonnummer(String behandlendeEnhetNavn) {

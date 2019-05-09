@@ -66,14 +66,18 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
         Optional<BehandlingDto> behandling = Optional.empty();
         try {
             URIBuilder behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + HENT_BEHANLDING_ENDPOINT);
-            behandlingUriBuilder.setParameter("behandlingId", behandlingIdDto.getBehandlingUuid().toString());
+            behandlingUriBuilder.setParameter("behandlingId", velgRiktigBehandlingIdfraDto(behandlingIdDto));
             behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);
         }
         return behandling.orElseThrow(() -> {
-            throw new IllegalStateException("Klarte ikke hente behandling: " + behandlingIdDto.getBehandlingId());
+            throw new IllegalStateException("Klarte ikke hente behandling: " + behandlingIdDto.getBehandlingId().toString());
         });
+    }
+
+    private String velgRiktigBehandlingIdfraDto(BehandlingIdDto behandlingIdDto) {
+        return behandlingIdDto.getBehandlingUuid() != null ? behandlingIdDto.getBehandlingUuid().toString() : behandlingIdDto.getBehandlingId().toString();
     }
 
     public Optional<BehandlingDto> hentOriginalBehandling(List<BehandlingResourceLink> resourceLinker) {

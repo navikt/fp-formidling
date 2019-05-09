@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.historikk;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,8 +28,6 @@ public class HistorikkRepositoryImplTest {
     private DokumentRepository dokumentRepository;
     private HendelseRepository hendelseRepository;
 
-    private Long behandlingId = 123l;
-
     @Before
     public void setup() {
         dokumentRepository = new DokumentRepositoryImpl(repositoryRule.getEntityManager());
@@ -38,13 +37,14 @@ public class HistorikkRepositoryImplTest {
 
     @Test
     public void skalLagreOgHenteOppIgjen() {
+        UUID behandlingUuid = UUID.randomUUID();
         DokumentHendelse hendelse = DokumentHendelse.builder()
-                .medBehandlingId(123l)
+                .medBehandlingUuid(behandlingUuid)
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .build();
         hendelseRepository.lagre(hendelse);
         DokumentHistorikkinnslag historikkInnslag = DokumentHistorikkinnslag.builder()
-                .medBehandlingId(behandlingId)
+                .medBehandlingUuid(behandlingUuid)
                 .medHendelseId(hendelse.getId())
                 .medJournalpostId(new JournalpostId(123l))
                 .medDokumentId("123")
@@ -55,7 +55,7 @@ public class HistorikkRepositoryImplTest {
                 .build();
         historikkRepository.lagre(historikkInnslag);
 
-        List<DokumentHistorikkinnslag> hendelseListe = historikkRepository.hentInnslagForBehandling(behandlingId);
+        List<DokumentHistorikkinnslag> hendelseListe = historikkRepository.hentInnslagForBehandling(behandlingUuid);
 
         assertThat(hendelseListe).hasSize(1);
     }

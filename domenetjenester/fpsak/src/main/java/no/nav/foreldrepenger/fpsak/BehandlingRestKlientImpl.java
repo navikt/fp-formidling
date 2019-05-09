@@ -65,7 +65,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
         Optional<BehandlingDto> behandling = Optional.empty();
         try {
             URIBuilder behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + HENT_BEHANLDING_ENDPOINT);
-            behandlingUriBuilder.setParameter("behandlingId", String.valueOf(behandlingIdDto.getBehandlingId()));
+            behandlingUriBuilder.setParameter("behandlingId", behandlingIdDto.getBehandlingUuid().toString());
             behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);
@@ -290,11 +290,11 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
         }
     }
 
-    private Long hentBehandlingId(List<BehandlingResourceLink> linkListe) {
+    private String hentBehandlingId(List<BehandlingResourceLink> linkListe) {
         return linkListe.stream()
                 .map(BehandlingResourceLink::getRequestPayload)
                 .filter(Objects::nonNull)
-                .map(BehandlingRelLinkPayload::getBehandlingId)
+                .map(BehandlingRelLinkPayload::getBehandlingUuid)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);

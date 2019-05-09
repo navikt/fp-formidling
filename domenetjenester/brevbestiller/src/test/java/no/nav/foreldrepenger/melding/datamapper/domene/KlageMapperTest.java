@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -51,7 +52,7 @@ public class KlageMapperTest {
     @Test
     public void skal_identifisere_opphevet_klage_basert_på_hendelse() {
         dokumentHendelse = DokumentHendelse.builder()
-                .medBehandlingId(123l)
+                .medBehandlingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .medErOpphevetKlage(true)
                 .build();

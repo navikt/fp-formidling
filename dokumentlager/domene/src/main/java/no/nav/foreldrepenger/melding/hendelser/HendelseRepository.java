@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.hendelser;
 
 import java.util.List;
+import java.util.UUID;
 
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 
@@ -12,5 +13,5 @@ public interface HendelseRepository {
 
     DokumentHendelse hentDokumentHendelseMedId(long id);
 
-    List<DokumentHendelse> hentDokumentHendelserForBehandling(long behandlingId);
+    List<DokumentHendelse> hentDokumentHendelserForBehandling(UUID behandlingUuid);
 }

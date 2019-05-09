@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.UUID;
+
 import org.junit.Test;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -53,7 +55,7 @@ public class BehandlingMapperTest {
 
     private DokumentHendelse.Builder standardHendelseBuilder() {
         return DokumentHendelse.builder()
-                .medBehandlingId(BEHANDLING_ID)
+                .medBehandlingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER);
     }
 

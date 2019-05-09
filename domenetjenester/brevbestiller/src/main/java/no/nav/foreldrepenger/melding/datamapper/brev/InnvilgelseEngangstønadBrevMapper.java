@@ -64,9 +64,8 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
     }
 
     private BeregningsresultatES originaltBeregningsresultat(Behandling behandling) {
-        if (behandling.getOriginalBehandlingId() != null && behandling.getOriginalBehandlingId() != behandling.getId()) {
-            Behandling originalBehandling = domeneobjektProvider.hentBehandling(behandling.getOriginalBehandlingId());
-            return domeneobjektProvider.hentBeregningsresultatES(originalBehandling);
+        if (behandling.getOriginalBehandling() != null && behandling.getOriginalBehandling().getId() != behandling.getId()) {
+            return domeneobjektProvider.hentBeregningsresultatES(behandling.getOriginalBehandling());
         }
         return null;
     }

@@ -23,7 +23,6 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
-import no.nav.foreldrepenger.melding.datamapper.domene.hjelperdto.DokumentTypeMedPerioderDto;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
@@ -134,50 +133,6 @@ public class PeriodeBeregner {
             }
         }
         return Optional.empty();
-    }
-
-    public static void mapUttakPerioder(DokumentTypeMedPerioderDto dto, List<UttakResultatPeriode> perioder) {
-        for (UttakResultatPeriode periode : perioder) {
-            mapUttakPeriode(dto, periode);
-        }
-    }
-
-    private static void mapUttakPeriodeAktivitet(DokumentTypeMedPerioderDto dto, UttakResultatPeriodeAktivitet aktivitet) {
-        if (StønadskontoType.FELLESPERIODE.equals(aktivitet.getTrekkonto())) {
-            if (dto.getSisteDagIFellesPeriode() == null || dto.getSisteDagIFellesPeriode().isBefore(aktivitet.getTom())) {
-                dto.setSisteDagIFellesPeriode(aktivitet.getTom());
-            }
-        }
-    }
-
-    private static void mapInnvilgetUttakPeriode(DokumentTypeMedPerioderDto dto, UttakResultatPeriode periode) {
-        if (dto.getSisteDagAvSistePeriode() == null || dto.getSisteDagAvSistePeriode().isBefore(periode.getTom())) {
-            dto.setSisteDagAvSistePeriode(periode.getTom());
-            dto.setStønadsperiodeTom(periode.getTom());
-            dto.setSisteUtbetalingsdag(periode.getTom());
-        }
-        if (dto.getStønadsperiodeFom() == null || dto.getStønadsperiodeFom().isAfter(periode.getFom())) {
-            dto.setStønadsperiodeFom(periode.getFom());
-        }
-    }
-
-    private static void mapUttakPeriode(DokumentTypeMedPerioderDto dto, UttakResultatPeriode periode) {
-        for (UttakResultatPeriodeAktivitet aktivitet : periode.getAktiviteter()) {
-            mapUttakPeriodeAktivitet(dto, aktivitet);
-        }
-        if (erInnvilgetPeriode(periode)) {
-            mapInnvilgetUttakPeriode(dto, periode);
-        } else if (erAvslåttPeriode(periode)) {
-            if (erDefinertUttakUtsettelseFor(periode) && erTomDatoEtterDtoSisteDag(dto, periode)) {
-                dto.setSisteDagMedUtsettelse(periode.getTom());
-            }
-        } else {
-            throw FeilFactory.create(DokumentBestillerFeil.class).behandlingInneholderIkkeFastsattPeriode(dto.getBehandlingId()).toException();
-        }
-    }
-
-    private static boolean erTomDatoEtterDtoSisteDag(DokumentTypeMedPerioderDto dto, UttakResultatPeriode periode) {
-        return dto.getSisteDagMedUtsettelse() == null || dto.getSisteDagMedUtsettelse().isBefore(periode.getTom());
     }
 
     private static boolean erDefinertUttakUtsettelseFor(UttakResultatPeriode periode) {

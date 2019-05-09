@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.fpsak.dto.behandling;
 
+import java.util.UUID;
+
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -24,17 +27,28 @@ public class BehandlingIdDto implements AbacDto {
     @Max(Long.MAX_VALUE)
     private Long behandlingId;
 
+    /**
+     * Behandling UUID (nytt alternativ til intern behandlingId. Bør brukes av eksterne systemer).
+     */
+    @Valid
+    private UUID behandlingUuid;
+
     public BehandlingIdDto() {
         behandlingId = null; // NOSONAR
+    }
+
+    public BehandlingIdDto(UUID behandlingUuid) {
+        this.behandlingUuid = behandlingUuid;
     }
 
     public BehandlingIdDto(String behandlingId) {
         this.behandlingId = Long.valueOf(behandlingId);
     }
 
-    public BehandlingIdDto(Long saksnummer, Long behandlingId) {
+    public BehandlingIdDto(Long saksnummer, Long behandlingId, UUID behandlingUuid) {
         this.saksnummer = saksnummer;
         this.behandlingId = behandlingId;
+        this.behandlingUuid = behandlingUuid;
     }
 
     public BehandlingIdDto(Long behandlingId) {
@@ -47,6 +61,10 @@ public class BehandlingIdDto implements AbacDto {
 
     public Long getSaksnummer() {
         return saksnummer;
+    }
+
+    public UUID getBehandlingUuid() {
+        return behandlingUuid;
     }
 
     @Override

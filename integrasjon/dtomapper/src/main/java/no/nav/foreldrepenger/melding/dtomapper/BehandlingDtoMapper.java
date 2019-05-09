@@ -67,12 +67,12 @@ public class BehandlingDtoMapper {
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
         List<BehandlingResourceLink> linkListe = behandlingResourceLinkStreamSupplier.get().collect(Collectors.toList());
         Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(linkListe));
-        Long originalBehandlingId = behandlingRestKlient.hentOriginalBehandling(linkListe).map(BehandlingDto::getId).orElse(null);
+        Behandling originalBehandling = behandlingRestKlient.hentOriginalBehandling(linkListe).map(this::mapBehandlingFraDto).orElse(null);
         builder.medId(dto.getId())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
                 .medStatus(kodeverkRepository.finn(BehandlingStatus.class, dto.getStatus().getKode()))
                 .medOpprettetDato(dto.getOpprettet())
-                .medOriginalBehandling(originalBehandlingId)
+                .medOriginalBehandling(originalBehandling)
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
                 .medAnsvarligBeslutter(dto.getAnsvarligBeslutter())
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())

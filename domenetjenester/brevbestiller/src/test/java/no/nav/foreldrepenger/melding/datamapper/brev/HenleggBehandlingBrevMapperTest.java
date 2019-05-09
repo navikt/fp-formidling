@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,7 +29,7 @@ public class HenleggBehandlingBrevMapperTest {
                 .medBehandlendeEnhetNavn(HenleggBehandlingBrevMapper.FAMPEN)
                 .build();
         dokumentHendelse = DokumentHendelse.builder()
-                .medBehandlingId(ID)
+                .medBehandlingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .build();
     }

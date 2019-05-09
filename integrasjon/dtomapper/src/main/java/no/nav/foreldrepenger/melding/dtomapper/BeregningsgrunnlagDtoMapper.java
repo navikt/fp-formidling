@@ -109,7 +109,7 @@ public class BeregningsgrunnlagDtoMapper {
                 .medDagsats(dto.getDagsats())
                 .medBeregningsperiode(avklarBeregningsperiode(dto))
                 .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
-                .medArbeidsforholdType(bgAndelArbeidsforhold.getArbeidsforholdType());
+                .medArbeidsforholdType(bgAndelArbeidsforhold == null ? OpptjeningAktivitetType.UDEFINERT : bgAndelArbeidsforhold.getArbeidsforholdType());
         if (dto instanceof BeregningsgrunnlagPrStatusOgAndelSNDto) {
             BeregningsgrunnlagPrStatusOgAndelSNDto snDto = (BeregningsgrunnlagPrStatusOgAndelSNDto) dto;
             builder.medPgi1(snDto.getPgi1())

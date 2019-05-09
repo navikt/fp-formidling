@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.JoinColumnOrFormula;
@@ -84,9 +85,7 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "mottaker_navn", nullable = false)
     private String mottakerNavn;
 
-    //TODO ramesh: Cascade
-    @ManyToOne
-    @JoinColumn(name = "mottaker_adresse_id", nullable = false)
+    @Transient
     private DokumentAdresse mottakerAdresse;
 
     @Column(name = "navn_avsender_enhet", nullable = false)
@@ -98,14 +97,10 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "kontakt_tlf", nullable = false)
     private String kontaktTlf;
 
-    //TODO ramesh: returadresse kan fjernes
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "retur_adresse_id", nullable = false)
+    @Transient
     private DokumentAdresse returadresse;
 
-    //TODO ramesh: postadresse kan fjernes
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "post_adresse_id", nullable = false)
+    @Transient
     private DokumentAdresse postadresse;
 
     @ManyToOne(optional = false)
@@ -257,12 +252,9 @@ public class DokumentFelles extends BaseEntitet {
                 && Objects.equals(signerendeBeslutterGeografiskEnhet, dokFelles.getSignerendeBeslutterGeografiskEnhet())
                 && Objects.equals(mottakerId, dokFelles.getMottakerId())
                 && Objects.equals(mottakerNavn, dokFelles.getMottakerNavn())
-                && Objects.equals(mottakerAdresse, dokFelles.getMottakerAdresse())
                 && Objects.equals(navnAvsenderEnhet, dokFelles.getNavnAvsenderEnhet())
                 && Objects.equals(nummerAvsenderEnhet, dokFelles.getNummerAvsenderEnhet())
                 && Objects.equals(kontaktTlf, dokFelles.getKontaktTlf())
-                && Objects.equals(returadresse, dokFelles.getReturadresse())
-                && Objects.equals(postadresse, dokFelles.getPostadresse())
                 && Objects.equals(dokumentId, dokFelles.getDokumentId())
                 && Objects.equals(journalpostId, dokFelles.getJournalpostId())
                 && Objects.equals(dokumentDato, dokFelles.getDokumentDato())
@@ -272,8 +264,8 @@ public class DokumentFelles extends BaseEntitet {
     @Override
     public int hashCode() {
         return Objects.hash(getSpråkkode(), saksnummer, signerendeSaksbehandlerNavn, automatiskBehandlet, sakspartId, sakspartNavn,
-                signerendeBeslutterNavn, signerendeBeslutterGeografiskEnhet, mottakerId, mottakerNavn, mottakerAdresse, navnAvsenderEnhet,
-                nummerAvsenderEnhet, kontaktTlf, returadresse, postadresse, dokumentId, journalpostId, dokumentDato, sakspartPersonStatus);
+                signerendeBeslutterNavn, signerendeBeslutterGeografiskEnhet, mottakerId, mottakerNavn, navnAvsenderEnhet,
+                nummerAvsenderEnhet, kontaktTlf, dokumentId, journalpostId, dokumentDato, sakspartPersonStatus);
     }
 
     @Override

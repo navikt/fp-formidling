@@ -10,7 +10,6 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.jpa.QueryHints;
 
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
@@ -54,12 +53,5 @@ public class DokumentRepositoryImpl implements DokumentRepository {
                 .setParameter("dokumentmal", dokumentmal);
 
         return query.getResultList();
-    }
-
-    //TODO: Cascade fra DokumentFelles entity
-    @Override
-    public Long lagre(DokumentAdresse adresse) {
-        entityManager.persist(adresse);
-        return adresse.getId();
     }
 }

@@ -24,8 +24,8 @@ spec:
     periodSeconds: 10
     failureThreshold: 27
   replicas: # Optional. Set min = max to disable autoscaling.
-    min: 3 # minimum number of replicas.
-    max: 3 # maximum number of replicas.
+    min: 2 # minimum number of replicas.
+    max: 2 # maximum number of replicas.
     cpuThresholdPercentage: 80 # total cpu percentage threshold on deployment, at which point it will increase number of pods if current < max
   leaderElection: false # Optional. If true, a http endpoint will be available at $ELECTOR_PATH that return the current leader
   # Compare this value with the $HOSTNAME to see if the current instance is the leader
@@ -38,10 +38,10 @@ spec:
     enabled: false # Optional. When true, envoy-proxy sidecar will be injected into pod and https urls envvars will be rewritten
   resources: # Optional. See: http://kubernetes.io/docs/user-guide/compute-resources/
     limits:
-      cpu: 1000m # app will have its cpu usage throttled if exceeding this limit
+      cpu: 3 # app will have its cpu usage throttled if exceeding this limit
       memory: "2048Mi"  # app will be killed if exceeding these limits
     requests: # App is guaranteed the requested resources and  will be scheduled on nodes with at least this amount of resources available
-      cpu: 500m
+      cpu: 0,5
       memory: "1024Mi"
   ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
     - "INGRESS_URL"

@@ -37,9 +37,10 @@ public class BeregningsresultatMapperTest {
 
     @Test
     public void skal_finne_første_stønadsdato_null_ikke_satt() {
-        assertThat(BeregningsresultatMapper.finnStønadsperiodeFom(periodeListeType)).isNull();
+        assertThat(BeregningsresultatMapper.finnStønadsperiodeFomHvisFinnes(periodeListeType)).isEmpty();
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void skal_finne_første_og_siste_stønadsdato_og_håndtere_null() {
         LocalDate førsteJanuarTjueAtten = LocalDate.of(2018, 1, 1);
@@ -50,8 +51,8 @@ public class BeregningsresultatMapperTest {
         leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), null);
         leggtilPeriode(LocalDate.of(2018, 4, 1), TrettiendeAprilTjueAtten, true);
         leggtilPeriode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 30), false);
-        assertThat(BeregningsresultatMapper.finnStønadsperiodeFom(periodeListeType)).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(førsteJanuarTjueAtten));
-        assertThat(BeregningsresultatMapper.finnStønadsperiodeTom(periodeListeType)).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(TrettiendeAprilTjueAtten));
+        assertThat(BeregningsresultatMapper.finnStønadsperiodeFomHvisFinnes(periodeListeType).get()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(førsteJanuarTjueAtten));
+        assertThat(BeregningsresultatMapper.finnStønadsperiodeTomHvisFinnes(periodeListeType).get()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(TrettiendeAprilTjueAtten));
     }
 
     @Test

@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -199,15 +200,22 @@ public class BeregningsresultatMapper {
     }
 
     public static long finnDagsats(BeregningsresultatFP beregningsresultat) {
-        return finnFørstePeriode(beregningsresultat).getDagsats();
+        return finnFørsteInnvilgedePeriode(beregningsresultat).map(BeregningsresultatPeriode::getDagsats).orElse(0L);
     }
 
-    private static BeregningsresultatPeriode finnFørstePeriode(BeregningsresultatFP beregningsresultat) {
-        return beregningsresultat.getBeregningsresultatPerioder().get(0);
+    private static Optional<BeregningsresultatPeriode> finnFørsteInnvilgedePeriode(BeregningsresultatFP beregningsresultat) {
+        return beregningsresultat.getBeregningsresultatPerioder()
+                .stream()
+                .filter(harDagsatsOverNull())
+                .min(Comparator.comparing(BeregningsresultatPeriode::getBeregningsresultatPeriodeFom));
+    }
+
+    private static Predicate<BeregningsresultatPeriode> harDagsatsOverNull() {
+        return beregningsresultatPeriode -> beregningsresultatPeriode.getDagsats() != null && beregningsresultatPeriode.getDagsats() > 0;
     }
 
     public static long finnMånedsbeløp(BeregningsresultatFP beregningsresultat) {
-        return getMånedsbeløp(finnFørstePeriode(beregningsresultat));
+        return finnFørsteInnvilgedePeriode(beregningsresultat).map(BeregningsresultatMapper::getMånedsbeløp).orElse(0L);
     }
 
     private static long getMånedsbeløp(BeregningsresultatPeriode førstePeriode) {

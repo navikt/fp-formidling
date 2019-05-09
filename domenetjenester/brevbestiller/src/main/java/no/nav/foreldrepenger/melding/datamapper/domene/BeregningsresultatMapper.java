@@ -181,21 +181,19 @@ public class BeregningsresultatMapper {
                 .count());
     }
 
-    public static XMLGregorianCalendar finnStønadsperiodeFom(PeriodeListeType periodeListe) {
+    public static Optional<XMLGregorianCalendar> finnStønadsperiodeFomHvisFinnes(PeriodeListeType periodeListe) {
         return periodeListe.getPeriode().stream()
                 .filter(p -> Boolean.TRUE.equals(p.isInnvilget()))
                 .map(PeriodeType::getPeriodeFom)
-                .min(XMLGregorianCalendar::compare)
-                .orElse(null);
+                .min(XMLGregorianCalendar::compare);
     }
 
 
-    public static XMLGregorianCalendar finnStønadsperiodeTom(PeriodeListeType periodeListe) {
+    public static Optional<XMLGregorianCalendar> finnStønadsperiodeTomHvisFinnes(PeriodeListeType periodeListe) {
         return periodeListe.getPeriode().stream()
                 .filter(p -> Boolean.TRUE.equals(p.isInnvilget()))
                 .map(PeriodeType::getPeriodeTom)
-                .max(XMLGregorianCalendar::compare)
-                .orElse(null);
+                .max(XMLGregorianCalendar::compare);
     }
 
     public static long finnDagsats(BeregningsresultatFP beregningsresultat) {

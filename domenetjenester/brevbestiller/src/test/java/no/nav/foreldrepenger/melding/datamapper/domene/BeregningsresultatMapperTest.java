@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
+import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 
 public class BeregningsresultatMapperTest {
 
@@ -24,12 +25,15 @@ public class BeregningsresultatMapperTest {
 
     @Before
     public void setup() {
+        DatoIntervall ubetydeligPeriode = DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1));
         beregningsresultat = BeregningsresultatFP.ny()
                 .medBeregningsresultatPerioder(List.of(BeregningsresultatPeriode.ny()
                                 .medDagsats(HUNDRE)
+                                .medPeriode(ubetydeligPeriode)
                                 .build(),
                         BeregningsresultatPeriode.ny()
                                 .medDagsats(HUNDRE * 2)
+                                .medPeriode(ubetydeligPeriode)
                                 .build()))
                 .build();
     }

@@ -1,10 +1,14 @@
 package no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse;
 
+import java.util.UUID;
+
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 
+
+//TODO Denne utgår..
 public class DokumentHistorikkDto {
 
-    private long behandlingId;
+    private UUID behandlingId;
     private String dokumentMal;
     private String journalpostId;
     private String historikkinnslagType;
@@ -16,7 +20,7 @@ public class DokumentHistorikkDto {
     }
 
     public DokumentHistorikkDto(DokumentHistorikkinnslag historikkInnslag) {
-        behandlingId = historikkInnslag.getBehandlingId();
+        behandlingId = historikkInnslag.getBehandlingUuid();
         dokumentMal = historikkInnslag.getDokumentMalType().getKode();
         journalpostId = historikkInnslag.getJournalpostId().getVerdi();
         historikkAktør = historikkInnslag.getHistorikkAktør().getKode();
@@ -52,11 +56,11 @@ public class DokumentHistorikkDto {
         this.dokumentBegrunnelse = dokumentBegrunnelse;
     }
 
-    public long getBehandlingId() {
+    public UUID getBehandlingId() {
         return behandlingId;
     }
 
-    public void setBehandlingId(long behandlingId) {
+    public void setBehandlingId(UUID behandlingId) {
         this.behandlingId = behandlingId;
     }
 

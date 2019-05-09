@@ -15,6 +15,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>no.nav.foreldrepenger.felles.sikkerhet</groupId>
+            <artifactId>felles-sikkerhet</artifactId>
+            <version>${felles.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-servlet-initializer</artifactId>
         </dependency>
@@ -48,9 +53,9 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>felles-integrasjon-bom</artifactId>
+            <version>${felles.version}</version>
         </dependency>
 
-        <!-- REST + WebService -->
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>felles-integrasjon-rest</artifactId>
@@ -60,10 +65,6 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-prosesstask</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles.sikkerhet</groupId>
-            <artifactId>felles-sikkerhet</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
@@ -218,6 +219,7 @@
             <groupId>no.nav.foreldrepenger.felles.sikkerhet</groupId>
             <artifactId>felles-sikkerhet-testutilities</artifactId>
             <scope>test</scope>
+            <version>${felles.version}</version>
         </dependency>
 
         <!-- Java10 -->

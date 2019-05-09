@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.UUID;
+
 import org.junit.Test;
 
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
@@ -19,7 +21,7 @@ public class UendretutfallBrevMapperTest {
 
     private DokumentHendelse lagHendelse() {
         return DokumentHendelse.builder()
-                .medBehandlingId(123l)
+                .medBehandlingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .build();
     }

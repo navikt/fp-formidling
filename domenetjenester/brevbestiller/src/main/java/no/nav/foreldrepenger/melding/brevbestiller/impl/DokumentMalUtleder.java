@@ -53,7 +53,7 @@ class DokumentMalUtleder {
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.AVSLAGSVEDTAK_DOK);
         }
-        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getId()).toException();
+        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
     }
 
     private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling) {
@@ -65,7 +65,7 @@ class DokumentMalUtleder {
         } else if (behandlingsresultat.erOpphørt()) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.OPPHØR_DOK);
         }
-        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getId()).toException();
+        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
     }
 
     private boolean innvilgetForeldrepenger(Behandlingsresultat behandlingsresultat) {
@@ -83,7 +83,7 @@ class DokumentMalUtleder {
         if (Boolean.TRUE.equals(hendelse.isGjelderVedtak())) {
             return utledVedtaksbrev(behandling, hendelse);
         }
-        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getId()).toException();
+        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
     }
 
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
@@ -100,7 +100,7 @@ class DokumentMalUtleder {
         } else if (FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType())) {
             return mapEngangstønadVedtaksbrev(behandling);
         }
-        throw DokumentBestillerFeil.FACTORY.kjennerIkkeYtelse(hendelse.getYtelseType().getKode(), behandling.getId()).toException();
+        throw DokumentBestillerFeil.FACTORY.kjennerIkkeYtelse(hendelse.getYtelseType().getKode(), behandling.getUuid().toString()).toException();
     }
 
     private boolean erRevurderingMedUendretUtfall(Behandling behandling) {
@@ -120,7 +120,7 @@ class DokumentMalUtleder {
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
         KlageVurderingResultat klageVurderingResultat = klage.getGjeldendeKlageVurderingsresultat();
         if (klageVurderingResultat == null) {
-            throw DokumentBestillerFeil.FACTORY.behandlingManglerKlageVurderingResultat(behandling.getId()).toException();
+            throw DokumentBestillerFeil.FACTORY.behandlingManglerKlageVurderingResultat(behandling.getUuid().toString()).toException();
         }
         KlageVurdering klagevurdering = klageVurderingResultat.getKlageVurdering();
         if (KlageVurdering.AVVIS_KLAGE.equals(klagevurdering)) {
@@ -133,6 +133,6 @@ class DokumentMalUtleder {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_YTELSESVEDTAK_STADFESTET_DOK);
         }
         //TODO aleksander
-        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getId()).toException();
+        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
     }
 }

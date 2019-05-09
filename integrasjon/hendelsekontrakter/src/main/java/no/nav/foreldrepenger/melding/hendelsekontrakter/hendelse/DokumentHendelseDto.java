@@ -1,7 +1,8 @@
 package no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import java.util.UUID;
+
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
@@ -10,9 +11,8 @@ import no.nav.vedtak.sikkerhet.abac.AbacDto;
 public class DokumentHendelseDto implements AbacDto {
 
     @NotNull
-    @Min(0)
-    @Max(Long.MAX_VALUE)
-    private Long behandlingId;
+    @Valid
+    private UUID behandlingUuid;
     private String dokumentMal;
     @NotNull
     private String ytelseType;
@@ -63,12 +63,12 @@ public class DokumentHendelseDto implements AbacDto {
         this.ytelseType = ytelseType;
     }
 
-    public Long getBehandlingId() {
-        return behandlingId;
+    public UUID getBehandlingUuid() {
+        return behandlingUuid;
     }
 
-    public void setBehandlingId(Long behandlingId) {
-        this.behandlingId = behandlingId;
+    public void setBehandlingUuid(UUID behandlingUuid) {
+        this.behandlingUuid = behandlingUuid;
     }
 
     public String getDokumentMal() {
@@ -89,13 +89,13 @@ public class DokumentHendelseDto implements AbacDto {
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTilBehandlingsId(getBehandlingId());
+        return AbacDataAttributter.opprett().leggTilBehandlingsUUID(getBehandlingUuid());
     }
 
     @Override
     public String toString() {
         return "DokumentHendelseDto{" +
-                "behandlingId=" + behandlingId +
+                "behandlingUuid=" + behandlingUuid +
                 ", dokumentMal='" + dokumentMal + '\'' +
                 ", ytelseType='" + ytelseType + '\'' +
                 ", tittel='" + tittel + '\'' +

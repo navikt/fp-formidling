@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.historikk;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -30,9 +31,9 @@ public class HistorikkRepositoryImpl implements HistorikkRepository {
     }
 
     @Override
-    public List<DokumentHistorikkinnslag> hentInnslagForBehandling(long behandlingId) {
-        TypedQuery<DokumentHistorikkinnslag> query = entityManager.createQuery("from DokumentHistorikkinnslag where behandlingId=:behandlingId", DokumentHistorikkinnslag.class);
-        query.setParameter("behandlingId", behandlingId);
+    public List<DokumentHistorikkinnslag> hentInnslagForBehandling(UUID behandlingUuid) {
+        TypedQuery<DokumentHistorikkinnslag> query = entityManager.createQuery("from DokumentHistorikkinnslag where behandlingUuid=:behandlingUuid", DokumentHistorikkinnslag.class);
+        query.setParameter("behandlingUuid", behandlingUuid);
         return query.getResultList();
     }
 

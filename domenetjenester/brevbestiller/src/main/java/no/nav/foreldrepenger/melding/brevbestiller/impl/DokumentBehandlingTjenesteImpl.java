@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -34,8 +35,8 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
     }
 
     @Override
-    public List<BrevmalDto> hentBrevmalerFor(Long behandlingId) {
-        Behandling behandling = domeneobjektProvider.hentBehandling(behandlingId);
+    public List<BrevmalDto> hentBrevmalerFor(UUID behandlingUuid) {
+        Behandling behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
         final List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
 
         List<DokumentMalType> kandidater = new ArrayList<>(dokumentRepository.hentAlleDokumentMalTyper());
@@ -59,6 +60,7 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
         return sorterte;
     }
 
+    //TODO - Denne gjør ingenting?
     @Override
     public boolean erDokumentProdusert(Long behandlingId, String dokumentMalTypeKode) {
         return new SjekkDokumentTilgjengelig(dokumentRepository)

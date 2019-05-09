@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.hendelser;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -45,9 +46,9 @@ public class HendelseRepositoryImpl implements HendelseRepository {
     }
 
     @Override
-    public List<DokumentHendelse> hentDokumentHendelserForBehandling(long behandlingId) {
-        TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where behandlingId=:behandlingId", DokumentHendelse.class);
-        query.setParameter("behandlingId", behandlingId);
+    public List<DokumentHendelse> hentDokumentHendelserForBehandling(UUID behandlingUuid) {
+        TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid", DokumentHendelse.class);
+        query.setParameter("behandlingUuid", behandlingUuid);
         return query.getResultList();
     }
 

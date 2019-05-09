@@ -36,15 +36,15 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.AarsakListeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.OpphørConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.BrevdataType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.ObjectFactory;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.OpphørConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.RelasjonskodeKode;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
@@ -93,9 +93,8 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         Personinfo personinfo = behandling.getFagsak().getPersoninfo();
         UttakResultatPerioder originaltUttakResultat = null;
-        if (behandling.getOriginalBehandlingId() != null) {
-            Behandling originalBehandling = domeneobjektProvider.hentBehandling(behandling.getOriginalBehandlingId());
-            originaltUttakResultat = domeneobjektProvider.hentUttaksresultat(originalBehandling);
+        if (behandling.getOriginalBehandling() != null) {
+            originaltUttakResultat = domeneobjektProvider.hentUttaksresultat(behandling.getOriginalBehandling());
         }
         FagType fagType = mapFagType(behandlingstype, behandling,
                 dokumentFelles,

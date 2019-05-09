@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.melding.kafkatjenester.dokumenthendelse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.UUID;
+
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
@@ -46,7 +48,6 @@ public class KafkaReaderTest {
 
 
     private KafkaReader kafkaReader;
-    private long behandlingId = 123l;
 
     @Before
     public void setup() {
@@ -82,7 +83,7 @@ public class KafkaReaderTest {
 
     private DokumentHendelseDto lagOkDto() {
         DokumentHendelseDto dto = new DokumentHendelseDto();
-        dto.setBehandlingId(behandlingId);
+        dto.setBehandlingUuid(UUID.randomUUID());
         dto.setDokumentMal(DokumentMalType.AVSLAGSVEDTAK_DOK);
         dto.setFritekst("123");
         dto.setTittel("tittel");

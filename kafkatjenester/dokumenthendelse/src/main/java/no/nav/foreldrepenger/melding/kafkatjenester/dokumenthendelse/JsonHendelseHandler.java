@@ -40,7 +40,7 @@ public class JsonHendelseHandler {
         DokumentHendelse hendelse = dtoTilDomeneobjektMapper.mapDokumentHendelseFraDto(jsonHendelse);
         hendelseRepository.lagre(hendelse);
         opprettBestillBrevTask(hendelse);
-        log.info("lagret hendelse:{} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingId());
+        log.info("lagret hendelse:{} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingUuid());
     }
 
     private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {

@@ -31,7 +31,7 @@ Manglende tilgang. Når en bruker forsøker å gjøre en operasjon, men mangler 
 
 Lesing av data. Det logges brukerident for brukeren, hvilken leseoperasjon som er kalt, en rekke metadata som beskriver hva som ble lest (for eksempel fødselsnumre, saksnummer)
 
-Utføring av skriveoperasjon. Det logges brukerident for brukeren, hvilken skriveoperasjon som er kalt, en rekke metadata som beskriver hva som ble modifisert (for eksempel fødselsnumre, saksnummer, behandlingId, aksjonspunktId)
+Utføring av skriveoperasjon. Det logges brukerident for brukeren, hvilken skriveoperasjon som er kalt, en rekke metadata som beskriver hva som ble modifisert (for eksempel fødselsnumre, saksnummer, behandlingUuid, aksjonspunktId)
 
 |/var/log/apps/<appnavn>_sporing.log
 

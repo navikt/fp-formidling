@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
@@ -17,7 +18,8 @@ public class Behandling {
 
     //Felter brukt i brev
     private long id;
-    private Long originalBehandlingId;
+    private UUID uuid;
+    private Behandling originalBehandling;
     private BehandlingType behandlingType;
     private Integer behandlingstidFristUker;
     private LocalDateTime opprettetDato;
@@ -33,10 +35,11 @@ public class Behandling {
 
     private Behandling(Builder builder) {
         id = builder.id;
+        uuid = builder.uuid;
         behandlendeEnhetNavn = builder.behandlendeEnhetNavn;
         behandlingsresultat = builder.behandlingsresultat;
         resourceLinker = builder.resourceLinker;
-        originalBehandlingId = builder.originalBehandlingId;
+        originalBehandling = builder.originalBehandling;
         behandlingType = builder.behandlingType;
         behandlingstidFristUker = builder.behandlingstidFristUker;
         opprettetDato = builder.opprettetDato;
@@ -86,6 +89,18 @@ public class Behandling {
         return toTrinnsBehandling;
     }
 
+    //TODO - Hack
+    public UUID getUuid() {
+        return uuid != null ? uuid : resourceLinker.stream()
+                .map(BehandlingResourceLink::getRequestPayload)
+                .filter(Objects::nonNull)
+                .map(BehandlingRelLinkPayload::getBehandlingUuid)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(UUID::fromString)
+                .orElse(null);
+    }
+
     public long getId() {
         return id;
     }
@@ -94,8 +109,8 @@ public class Behandling {
         return resourceLinker;
     }
 
-    public Long getOriginalBehandlingId() {
-        return originalBehandlingId;
+    public Behandling getOriginalBehandling() {
+        return originalBehandling;
     }
 
     public Språkkode getSpråkkode() {
@@ -170,7 +185,8 @@ public class Behandling {
         private List<BehandlingResourceLink> resourceLinker = new ArrayList<>();
 
         private long id;
-        private Long originalBehandlingId;
+        private UUID uuid;
+        private Behandling originalBehandling;
         private BehandlingType behandlingType;
         private Integer behandlingstidFristUker;
         private LocalDateTime opprettetDato;
@@ -203,13 +219,18 @@ public class Behandling {
             return this;
         }
 
+        public Behandling.Builder medUuid(UUID uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
         public Behandling.Builder medBehandlingType(BehandlingType behandlingType) {
             this.behandlingType = behandlingType;
             return this;
         }
 
-        public Behandling.Builder medOriginalBehandling(Long originalBehandlingId) {
-            this.originalBehandlingId = originalBehandlingId;
+        public Behandling.Builder medOriginalBehandling(Behandling originalBehandling) {
+            this.originalBehandling = originalBehandling;
             return this;
         }
 

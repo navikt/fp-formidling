@@ -48,7 +48,7 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public List<BrevmalDto> hentMaler(@Valid BehandlingIdDto dto) {
-        return dokumentBehandlingTjeneste.hentBrevmalerFor(dto.getBehandlingId()); // NOSONAR
+        return dokumentBehandlingTjeneste.hentBrevmalerFor(dto.getBehandlingUuid()); // NOSONAR
     }
 
     @POST

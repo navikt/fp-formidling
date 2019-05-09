@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.melding.dtomapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
@@ -47,8 +48,12 @@ public class BeregningsresultatDtoMapper {
     }
 
     public BeregningsresultatFP mapBeregningsresultatFPFraDto(BeregningsresultatMedUttaksplanDto dto) {
+        List<BeregningsresultatPeriode> beregningsresultatPerioder = Arrays.stream(dto.getPerioder())
+                .map(this::mapPeriodeFraDto)
+                .sorted(PeriodeComparator.BEREGNINGSRESULTAT)
+                .collect(Collectors.toList());
         return BeregningsresultatFP.ny()
-                .medBeregningsresultatPerioder(Arrays.stream(dto.getPerioder()).map(this::mapPeriodeFraDto).collect(Collectors.toList()))
+                .medBeregningsresultatPerioder(beregningsresultatPerioder)
                 .build();
     }
 
@@ -58,12 +63,11 @@ public class BeregningsresultatDtoMapper {
         for (BeregningsresultatPeriodeAndelDto beregningsresultatPeriodeAndelDto : dto.getAndeler()) {
             andelListe.add(mapAndelFraDto(beregningsresultatPeriodeAndelDto));
         }
-        BeregningsresultatPeriode beregningsresultatPeriode = BeregningsresultatPeriode.ny()
+        return BeregningsresultatPeriode.ny()
                 .medDagsats((long) dto.getDagsats())
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
                 .medBeregningsresultatAndel(andelListe)
                 .build();
-        return beregningsresultatPeriode;
     }
 
     //Fpsak slår sammen andeler i dto, så vi må eventuelt splitte dem opp igjen

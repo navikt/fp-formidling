@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -43,13 +42,12 @@ public class ÅrsakMapperAvslag {
         AarsakListeType aarsakListeType = objectFactory.createAarsakListeType();
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
 
-        List<AvslagsAarsakType> avslagsAarsaker = new ArrayList<>();
-        avslagsAarsaker.addAll(årsakerFra(beregningsresultatPerioder, uttakResultatPerioder));
+        List<AvslagsAarsakType> avslagsAarsaker = årsakerFra(beregningsresultatPerioder, uttakResultatPerioder);
         String lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
                 BehandlingMapper.kodeFra(behandlingsresultat.getKonsekvenserForYtelsen()),
                 false);
         if (avslagsAarsaker.isEmpty()) {
-            avslagsAarsaker.addAll(årsakerFra(behandlingsresultat, uttakResultatPerioder));
+            avslagsAarsaker = årsakerFra(behandlingsresultat, uttakResultatPerioder);
             lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser);
         }
         avslagsAarsaker = PeriodeMergerAvslag.mergePerioder(avslagsAarsaker);
@@ -58,20 +56,21 @@ public class ÅrsakMapperAvslag {
         return new Tuple<>(aarsakListeType, lovhjemmelForAvslag);
     }
 
-    private static Set<AvslagsAarsakType> årsakerFra(List<BeregningsresultatPeriode> beregningsresultatPerioder,
-                                                     Optional<UttakResultatPerioder> uttakResultatPerioder) {
-        Set<AvslagsAarsakType> avslagsAarsaker = new HashSet<>();
+    private static List<AvslagsAarsakType> årsakerFra(List<BeregningsresultatPeriode> beregningsresultatPerioder,
+                                                      Optional<UttakResultatPerioder> uttakResultatPerioder) {
+        List<AvslagsAarsakType> avslagsAarsaker = new ArrayList<>();
         for (BeregningsresultatPeriode beregningsresultatPeriode : beregningsresultatPerioder) {
             AvslagsAarsakType aarsakType = årsaktypeFra(beregningsresultatPeriode,
-                    PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttakResultatPerioder.map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList())));
+                    PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttakResultatPerioder
+                            .map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList())));
             avslagsAarsaker.add(aarsakType);
         }
         return avslagsAarsaker;
     }
 
-    private static Set<AvslagsAarsakType> årsakerFra(Behandlingsresultat behandlingsresultat,
-                                                     Optional<UttakResultatPerioder> uttakResultatPerioder) {
-        Set<AvslagsAarsakType> avslagsAarsaker = new HashSet<>();
+    private static List<AvslagsAarsakType> årsakerFra(Behandlingsresultat behandlingsresultat,
+                                                      Optional<UttakResultatPerioder> uttakResultatPerioder) {
+        List<AvslagsAarsakType> avslagsAarsaker = new ArrayList<>();
 
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
         if (avslagsårsak != null) {
@@ -93,8 +92,8 @@ public class ÅrsakMapperAvslag {
         return avslagsAarsak;
     }
 
-    static AvslagsAarsakType årsaktypeFra(BeregningsresultatPeriode beregningsresultatPeriode,
-                                          UttakResultatPeriode uttakResultatPeriode) {
+    private static AvslagsAarsakType årsaktypeFra(BeregningsresultatPeriode beregningsresultatPeriode,
+                                                  UttakResultatPeriode uttakResultatPeriode) {
         AvslagsAarsakType periode = årsaktypeFra(uttakResultatPeriode.getPeriodeResultatÅrsak());
         periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter())));
         periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));

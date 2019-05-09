@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeAktivitetDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
+import no.nav.foreldrepenger.melding.dtomapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
@@ -45,9 +46,17 @@ public class UttakDtoMapper {
 
 
     public UttakResultatPerioder mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto) {
+        List<UttakResultatPeriode> uttakResultatPerioder = emptyIfNull(resultatPerioderDto.getPerioderSøker()).stream()
+                .map(this::periodeFraDto)
+                .sorted(PeriodeComparator.UTTAKRESULTAT)
+                .collect(Collectors.toList());
+        List<UttakResultatPeriode> perioderAnnenPart = emptyIfNull(resultatPerioderDto.getPerioderAnnenpart()).stream()
+                .map(this::periodeFraDto)
+                .sorted(PeriodeComparator.UTTAKRESULTAT)
+                .collect(Collectors.toList());
         return UttakResultatPerioder.ny()
-                .medPerioder(emptyIfNull(resultatPerioderDto.getPerioderSøker()).stream().map(this::periodeFraDto).collect(Collectors.toList()))
-                .medPerioderAnnenPart(emptyIfNull(resultatPerioderDto.getPerioderAnnenpart()).stream().map(this::periodeFraDto).collect(Collectors.toList()))
+                .medPerioder(uttakResultatPerioder)
+                .medPerioderAnnenPart(perioderAnnenPart)
                 .build();
     }
 

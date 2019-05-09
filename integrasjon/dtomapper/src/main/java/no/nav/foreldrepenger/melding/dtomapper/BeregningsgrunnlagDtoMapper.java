@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriod
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
+import no.nav.foreldrepenger.melding.dtomapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
@@ -66,7 +67,10 @@ public class BeregningsgrunnlagDtoMapper {
         //TODO - vi burde ikke trenge å gange
         builder.medGrunnbeløp(new Beløp(BigDecimal.valueOf(dto.getHalvG()).multiply(BigDecimal.valueOf(2))));
         dto.getAktivitetStatus().stream().map(this::mapBeregningsgrunnlagAktivitetStatusFraDto).forEach(builder::leggTilBeregningsgrunnlagAktivitetStatus);
-        dto.getBeregningsgrunnlagPeriode().stream().map(this::mapBeregningsgrunnlagPeriodeFraDto).forEach(builder::leggTilBeregningsgrunnlagPeriode);
+        dto.getBeregningsgrunnlagPeriode().stream()
+                .map(this::mapBeregningsgrunnlagPeriodeFraDto)
+                .sorted(PeriodeComparator.BEREGNINGSGRUNNLAG)
+                .forEach(builder::leggTilBeregningsgrunnlagPeriode);
         builder.medhHjemmel(kodeverkRepository.finn(Hjemmel.class, dto.getHjemmel().getKode()));
         return builder.build();
     }

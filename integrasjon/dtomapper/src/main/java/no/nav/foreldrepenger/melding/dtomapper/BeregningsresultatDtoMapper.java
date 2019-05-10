@@ -85,7 +85,7 @@ public class BeregningsresultatDtoMapper {
     }
 
     private Arbeidsgiver mapArbeidsgiverFraDto(BeregningsresultatPeriodeAndelDto dto) {
-        if (!AktivitetStatus.ARBEIDSTAKER.getKode().equals(dto.getAktivitetStatus().getKode())) {
+        if (!AktivitetStatus.ARBEIDSTAKER.getKode().equals(dto.getAktivitetStatus().getKode()) || dto.getArbeidsgiverOrgnr() == null) {
             return null;
         }
         return finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr());

@@ -16,6 +16,7 @@ public class Arbeidsgiver {
         this.virksomhet = virksomhet;
         this.arbeidsgiverAktørId = arbeidsgiverAktørId;
     }
+
     /**
      * Returneer ident for arbeidsgiver. Kan være Org nummer eller Aktør id (dersom arbeidsgiver er en enkelt person -
      * f.eks. for Frilans el.)
@@ -24,7 +25,10 @@ public class Arbeidsgiver {
         if (arbeidsgiverAktørId != null) {
             return arbeidsgiverAktørId.getId();
         }
-        return virksomhet.getOrgnr();
+        if (virksomhet != null) {
+            return virksomhet.getOrgnr();
+        }
+        return null;
     }
 
     public boolean erAktørId() {

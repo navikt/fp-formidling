@@ -22,6 +22,16 @@ public class FamiliehendelseDtoMapperTest {
         assertThat(FamiliehendelseDtoMapper.finnTermindato(lagDtoMedTermindato(FØRSTE_JANUAR)).get()).isEqualTo(FØRSTE_JANUAR);
     }
 
+
+    @Test
+    public void finnAntallbarnFødt() {
+        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 1, 2))).isEqualTo(2);
+        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 3, 0))).isEqualTo(3);
+        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 3, 3))).isEqualTo(3);
+        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 3, 1))).isEqualTo(1);
+    }
+
+
     @Test
     public void finnTermindato() {
         int antallBarnFødsel = 1;
@@ -46,6 +56,17 @@ public class FamiliehendelseDtoMapperTest {
     private FamiliehendelseDto lagOmsorgDtoMedAntallBarn(int antallBarn) {
         AvklartDataOmsorgDto dto = new AvklartDataOmsorgDto();
         dto.setAntallBarnTilBeregning(antallBarn);
+        return dto;
+    }
+
+
+    private FamiliehendelseDto lagFødselDtoMedBarnTerminOgFødsel(LocalDate termindato, int antallBarnTermin, int antallbarnFødsel) {
+        AvklartDataFodselDto dto = new AvklartDataFodselDto();
+        dto.setTermindato(termindato);
+        dto.setAntallBarnTermin(antallBarnTermin);
+        for (int i = 0; i < antallbarnFødsel; i++) {
+            dto.getAvklartBarn().add(new AvklartBarnDto(LocalDate.now(), null));
+        }
         return dto;
     }
 

@@ -95,6 +95,7 @@ public class PeriodeBeregner {
         throw FeilFactory.create(DokumentBestillerFeil.class).kanIkkeMatchePerioder("uttaksperiode").toException();
     }
 
+    //TODO - Skriv tester.. Dette oppfører seg annerledes i DTOene enn fpsak
     public static Optional<BeregningsgrunnlagPrStatusOgAndel> finnBgPerStatusOgAndelHvisFinnes(List<BeregningsgrunnlagPrStatusOgAndel> bgPerStatusOgAndelListe,
                                                                                                BeregningsresultatAndel andel) {
         for (BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel : bgPerStatusOgAndelListe) {

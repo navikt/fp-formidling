@@ -24,8 +24,6 @@ import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepositoryImpl;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
-import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
-import no.nav.foreldrepenger.melding.historikk.HistorikkRepositoryImpl;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkMeldingProducer;
 import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkTjeneste;
@@ -40,19 +38,15 @@ public class DokumentHistorikkTjenesteTest {
     private DokumentHistorikkTjeneste historikkTjeneste;
     @Spy
     private DokumentHistorikkMeldingProducer historikkMeldingProducer;
-    private HistorikkRepository historikkRepository;
     private DokumentRepository dokumentRepository;
     private HendelseRepository hendelseRepository;
 
     @Before
     public void setup() {
-        historikkRepository = new HistorikkRepositoryImpl(repositoryRule.getEntityManager());
         dokumentRepository = new DokumentRepositoryImpl(repositoryRule.getEntityManager());
         hendelseRepository = new HendelseRepositoryImpl(repositoryRule.getEntityManager());
         historikkTjeneste = new DokumentHistorikkTjeneste(historikkMeldingProducer);
-        doAnswer((i) -> {
-            return null;
-        }).when(historikkMeldingProducer).sendJson(Mockito.any());
+        doAnswer((i) -> null).when(historikkMeldingProducer).sendJson(Mockito.any());
     }
 
     @Test
@@ -70,7 +64,6 @@ public class DokumentHistorikkTjenesteTest {
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)
                 .medDokumentId("123")
                 .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
-                .medXml("<test/>")
                 .build();
         historikkTjeneste.publiserHistorikk(historikk);
         verify(historikkMeldingProducer, times(1)).sendJson(Mockito.anyString());

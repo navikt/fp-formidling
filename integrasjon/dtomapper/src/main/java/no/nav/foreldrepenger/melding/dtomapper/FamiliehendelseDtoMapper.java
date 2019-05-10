@@ -61,14 +61,13 @@ public class FamiliehendelseDtoMapper {
     }
 
     private static int utledAntallBarnFødsel(AvklartDataFodselDto familiehendelseDto) {
-        int sum = 0;
-        if (familiehendelseDto.getAntallBarnTermin() != null) {
-            sum += familiehendelseDto.getAntallBarnTermin();
+        //bruk antall barn som er født hvis det finnes
+        if (familiehendelseDto.getAvklartBarn() != null && familiehendelseDto.getAvklartBarn().size() > 0) {
+            return familiehendelseDto.getAvklartBarn().size();
+        } else if (familiehendelseDto.getAntallBarnTermin() != null) {
+            return familiehendelseDto.getAntallBarnTermin();
         }
-        if (familiehendelseDto.getAvklartBarn() != null) {
-            sum += familiehendelseDto.getAvklartBarn().size();
-        }
-        return sum;
+        return 0;
     }
 
     public FamilieHendelse mapFamiliehendelsefraDto(FamilieHendelseGrunnlagDto grunnlagDto) {

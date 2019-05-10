@@ -6,6 +6,7 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.StatusTypeKode;
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
+import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public class BeregningsgrunnlagMapper {
@@ -170,5 +172,8 @@ public class BeregningsgrunnlagMapper {
         throw new IllegalArgumentException("Utviklerfeil: Fant ikke riktig aktivitetstatus " + statuskode);
     }
 
-
+    public static long getHalvGOrElseZero(Optional<Beregningsgrunnlag> beregningsgrunnlag) {
+        return beregningsgrunnlag.map(Beregningsgrunnlag::getGrunnbeløp).map(Beløp::getVerdi).orElse(BigDecimal.ZERO)
+                .divide(BigDecimal.valueOf(2), RoundingMode.HALF_EVEN).longValue();
+    }
 }

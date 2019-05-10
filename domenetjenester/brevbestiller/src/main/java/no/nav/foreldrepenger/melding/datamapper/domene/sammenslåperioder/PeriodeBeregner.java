@@ -97,22 +97,32 @@ public class PeriodeBeregner {
 
     public static Optional<BeregningsgrunnlagPrStatusOgAndel> finnBgPerStatusOgAndelHvisFinnes(List<BeregningsgrunnlagPrStatusOgAndel> bgPerStatusOgAndelListe,
                                                                                                BeregningsresultatAndel andel) {
-        Optional<Arbeidsgiver> arbeidsgiver = andel.getArbeidsgiver();
-        if (arbeidsgiver.isEmpty()) {
-            return Optional.empty();
-        }
-        ArbeidsforholdRef arbeidsforholdRef = andel.getArbeidsforholdRef();
-
         for (BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel : bgPerStatusOgAndelListe) {
-            //TODO -- det er feil datatype her
             if (andel.getAktivitetStatus().equals(bgPerStatusOgAndel.getAktivitetStatus())) {
-                if (bgPerStatusOgAndel.gjelderSammeArbeidsforhold(arbeidsgiver.get(), arbeidsforholdRef)) {
+                if (AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())) {
+                    if (sammeArbeidsforhold(andel, bgPerStatusOgAndel)) {
+                        return Optional.of(bgPerStatusOgAndel);
+                    }
+                } else {
                     return Optional.of(bgPerStatusOgAndel);
                 }
             }
         }
 
         return Optional.empty();
+    }
+
+    private static boolean sammeArbeidsforhold(BeregningsresultatAndel andel, BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel) {
+        Optional<Arbeidsgiver> arbeidsgiver = andel.getArbeidsgiver();
+        if (arbeidsgiver.isEmpty()) {
+            return false;
+        }
+        ArbeidsforholdRef arbeidsforholdRef = andel.getArbeidsforholdRef();
+        return sammeArbeidsforhold(arbeidsgiver.get(), arbeidsforholdRef, bgPerStatusOgAndel);
+    }
+
+    private static boolean sammeArbeidsforhold(Arbeidsgiver arbeidsgiver, ArbeidsforholdRef arbeidsforholdRef, BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel) {
+        return bgPerStatusOgAndel.gjelderSammeArbeidsforhold(arbeidsgiver, arbeidsforholdRef);
     }
 
     public static boolean alleAktiviteterHarNullUtbetaling(List<UttakResultatPeriodeAktivitet> uttakAktiviteter) {

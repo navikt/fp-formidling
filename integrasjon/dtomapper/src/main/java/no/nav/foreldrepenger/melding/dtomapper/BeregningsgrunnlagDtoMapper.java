@@ -44,11 +44,11 @@ public class BeregningsgrunnlagDtoMapper {
         //CDI
     }
 
-    private static DatoIntervall avklarBeregningsperiode(BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriodeDto) {
-        if (beregningsgrunnlagPeriodeDto.getBeregningsgrunnlagPeriodeTom() == null) {
-            return DatoIntervall.fraOgMed(beregningsgrunnlagPeriodeDto.getBeregningsgrunnlagPeriodeFom());
+    private static DatoIntervall avklarBeregningsperiode(BeregningsgrunnlagPrStatusOgAndelDto dto) {
+        if (dto.getBeregningsgrunnlagTom() == null) {
+            return DatoIntervall.fraOgMed(dto.getBeregningsgrunnlagFom());
         }
-        return DatoIntervall.fraOgMedTilOgMed(beregningsgrunnlagPeriodeDto.getBeregningsgrunnlagPeriodeFom(), beregningsgrunnlagPeriodeDto.getBeregningsgrunnlagPeriodeTom());
+        return DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagFom(), dto.getBeregningsgrunnlagTom());
     }
 
     private static Arbeidsgiver mapArbeidsgiverFraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
@@ -85,7 +85,7 @@ public class BeregningsgrunnlagDtoMapper {
                 .medDagsats(dto.getDagsats())
                 .medPeriode(intervall)
                 .medperiodeÅrsaker(dto.getPeriodeAarsaker().stream().map(this::finnPeriodeÅrsakFraDto).collect(Collectors.toList()))
-                .medBeregningsgrunnlagPrStatusOgAndelList(dto.getBeregningsgrunnlagPrStatusOgAndel().stream().map(andel -> mapBgpsaFraDto(andel, dto)).collect(Collectors.toList()))
+                .medBeregningsgrunnlagPrStatusOgAndelList(dto.getBeregningsgrunnlagPrStatusOgAndel().stream().map(this::mapBgpsaFraDto).collect(Collectors.toList()))
                 .build();
     }
 
@@ -93,7 +93,7 @@ public class BeregningsgrunnlagDtoMapper {
         return kodeverkRepository.finn(PeriodeÅrsak.class, dto.getKode());
     }
 
-    private BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagPrStatusOgAndelDto dto, BeregningsgrunnlagPeriodeDto beregningsgrunnlagPeriodeDto) {
+    private BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagPrStatusOgAndelDto dto) {
         BeregningsgrunnlagPrStatusOgAndel.Builder builder = BeregningsgrunnlagPrStatusOgAndel.ny();
         BGAndelArbeidsforhold bgAndelArbeidsforhold = null;
         if (dto.getArbeidsforhold() != null) {
@@ -107,7 +107,7 @@ public class BeregningsgrunnlagDtoMapper {
                 .medNyIArbeidslivet(dto.getErNyIArbeidslivet())
                 .medOriginalDagsatsFraTilstøtendeYtelse(dto.getOriginalDagsatsFraTilstøtendeYtelse())
                 .medDagsats(dto.getDagsats())
-                .medBeregningsperiode(avklarBeregningsperiode(beregningsgrunnlagPeriodeDto))
+                .medBeregningsperiode(avklarBeregningsperiode(dto))
                 .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
                 .medArbeidsforholdType(bgAndelArbeidsforhold == null ? OpptjeningAktivitetType.UDEFINERT : bgAndelArbeidsforhold.getArbeidsforholdType());
         if (dto instanceof BeregningsgrunnlagPrStatusOgAndelSNDto) {

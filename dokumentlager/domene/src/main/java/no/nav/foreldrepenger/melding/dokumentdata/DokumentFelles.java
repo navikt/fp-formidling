@@ -22,7 +22,6 @@ import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
@@ -107,18 +106,14 @@ public class DokumentFelles extends BaseEntitet {
     @JoinColumn(name = "dokument_data_id", nullable = false, updatable = false)
     private DokumentData dokumentData;
 
-    @Column(name = "dokument_id")
-    private String dokumentId;
-
-    @Embedded
-    @AttributeOverrides(@AttributeOverride(name = "journalpostId", column = @Column(name = "journalpost_id")))
-    private JournalpostId journalpostId;
-
     @Column(name = "dokument_dato", nullable = false)
     private LocalDate dokumentDato;
 
     @Column(name = "sakspart_person_status", nullable = false)
     private String sakspartPersonStatus;
+
+    @Column
+    private String xml;
 
     public DokumentFelles() {
         // Hibernate
@@ -201,14 +196,6 @@ public class DokumentFelles extends BaseEntitet {
         return dokumentData;
     }
 
-    public String getDokumentId() {
-        return dokumentId;
-    }
-
-    public JournalpostId getJournalpostId() {
-        return journalpostId;
-    }
-
     public DokumentAdresse getReturadresse() {
         return returadresse;
     }
@@ -225,12 +212,12 @@ public class DokumentFelles extends BaseEntitet {
         return sakspartPersonStatus;
     }
 
-    public void setDokumentId(String dokumentId) {
-        this.dokumentId = dokumentId;
+    public String getXml() {
+        return xml;
     }
 
-    public void setJournalpostId(JournalpostId journalpostId) {
-        this.journalpostId = journalpostId;
+    public void setXml(String xml) {
+        this.xml = xml;
     }
 
     @Override
@@ -255,8 +242,6 @@ public class DokumentFelles extends BaseEntitet {
                 && Objects.equals(navnAvsenderEnhet, dokFelles.getNavnAvsenderEnhet())
                 && Objects.equals(nummerAvsenderEnhet, dokFelles.getNummerAvsenderEnhet())
                 && Objects.equals(kontaktTlf, dokFelles.getKontaktTlf())
-                && Objects.equals(dokumentId, dokFelles.getDokumentId())
-                && Objects.equals(journalpostId, dokFelles.getJournalpostId())
                 && Objects.equals(dokumentDato, dokFelles.getDokumentDato())
                 && Objects.equals(sakspartPersonStatus, dokFelles.getSakspartPersonStatus());
     }
@@ -265,7 +250,7 @@ public class DokumentFelles extends BaseEntitet {
     public int hashCode() {
         return Objects.hash(getSpråkkode(), saksnummer, signerendeSaksbehandlerNavn, automatiskBehandlet, sakspartId, sakspartNavn,
                 signerendeBeslutterNavn, signerendeBeslutterGeografiskEnhet, mottakerId, mottakerNavn, navnAvsenderEnhet,
-                nummerAvsenderEnhet, kontaktTlf, dokumentId, journalpostId, dokumentDato, sakspartPersonStatus);
+                nummerAvsenderEnhet, kontaktTlf, dokumentDato, sakspartPersonStatus);
     }
 
     @Override
@@ -380,18 +365,13 @@ public class DokumentFelles extends BaseEntitet {
             return this;
         }
 
-        public DokumentFelles.Builder medDokumentId(String dokumentId) {
-            this.dokumentFelles.setDokumentId(dokumentId);
-            return this;
-        }
-
-        public DokumentFelles.Builder medJournalpostId(JournalpostId journalpostId) {
-            this.dokumentFelles.setJournalpostId(journalpostId);
-            return this;
-        }
-
         public DokumentFelles.Builder medSakspartPersonStatus(String sakspartPersonStatus) {
             this.dokumentFelles.sakspartPersonStatus = sakspartPersonStatus;
+            return this;
+        }
+
+        public DokumentFelles.Builder medXml(String xml) {
+            this.dokumentFelles.xml = xml;
             return this;
         }
 

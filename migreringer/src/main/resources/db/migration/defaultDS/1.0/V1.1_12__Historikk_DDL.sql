@@ -5,7 +5,6 @@ CREATE TABLE DOKUMENT_HISTORIKKINNSLAG
     HENDELSE_ID              bigint                                       NOT NULL,
     JOURNALPOST_ID           VARCHAR(20)                                  NOT NULL,
     DOKUMENT_ID              VARCHAR(20)                                  NOT NULL,
-    XML                      text                                         NOT NULL,
     DOKUMENT_MAL_NAVN        VARCHAR(7)                                   NOT NULL,
     HISTORIKK_AKTOER         VARCHAR(100)                                 NOT NULL,
     KL_HISTORIKK_AKTOER      VARCHAR(100) DEFAULT 'HISTORIKK_AKTOER'      NOT NULL,
@@ -55,4 +54,3 @@ COMMENT ON COLUMN DOKUMENT_HISTORIKKINNSLAG.DOKUMENT_MAL_NAVN IS 'FK: Dokument m
 COMMENT ON COLUMN DOKUMENT_HISTORIKKINNSLAG.HISTORIKK_AKTOER IS 'Kodeverk, hvem som bestilte dokumentet';
 COMMENT ON COLUMN DOKUMENT_HISTORIKKINNSLAG.DOKUMENT_ID IS 'Dokumentets Dokument ID i JOARK';
 COMMENT ON COLUMN DOKUMENT_HISTORIKKINNSLAG.KL_HISTORIKK_AKTOER IS 'Kodeliste';
-COMMENT ON COLUMN DOKUMENT_HISTORIKKINNSLAG.XML IS 'XML som er sendt til dokprod'

@@ -15,7 +15,6 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
@@ -44,14 +43,14 @@ public class DokumentFellesDataMapper {
         this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
     }
 
-    DokumentData opprettDokumentDataForBehandling(Behandling behandling, DokumentMalType dokumentMalType) {
+    void opprettDokumentDataForBehandling(Behandling behandling, DokumentData dokumentData) {
         Personinfo personinfo = behandling.getFagsak().getPersoninfo();
-        DokumentData dokumentData = DokumentData.opprettNy(dokumentMalType, behandling.getId());
+
         final AktørId søkersAktørId = personinfo.getAktørId();
 
         if (!harLenkeForVerge(behandling)) {
             opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
-            return dokumentData;
+            return;
         }
 
         Verge verge = domeneobjektProvider.hentVerge(behandling);
@@ -65,7 +64,6 @@ public class DokumentFellesDataMapper {
         } else if (verge.isBrevTilVerge()) {
             opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId);
         }
-        return dokumentData;
     }
 
     private boolean harLenkeForVerge(Behandling behandling) {

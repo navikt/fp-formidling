@@ -122,7 +122,7 @@ public class AktivtetsMapper {
             næring.setProsentArbeid(uttakAktivitet.get().getArbeidsprosent().toBigInteger());
             næring.setGradering(uttakAktivitet.get().getGraderingInnvilget());
         }
-        beregningsgrunnlagAndel.map(bgandel -> beregningsgrunnlagAndel.get()).ifPresent(bgAndel -> {
+        beregningsgrunnlagAndel.ifPresent(bgAndel -> {
             if (bgAndel.getPgi1() != null) {
                 næring.setInntekt1(bgAndel.getPgi1().longValue());
             }

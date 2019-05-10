@@ -20,7 +20,6 @@ import no.nav.foreldrepenger.melding.hendelser.HendelseRepositoryImpl;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
 public class HistorikkRepositoryImplTest {
-
     @Rule
     public final UnittestRepositoryRule repositoryRule = new UnittestRepositoryRule();
 
@@ -46,12 +45,11 @@ public class HistorikkRepositoryImplTest {
         DokumentHistorikkinnslag historikkInnslag = DokumentHistorikkinnslag.builder()
                 .medBehandlingUuid(behandlingUuid)
                 .medHendelseId(hendelse.getId())
-                .medJournalpostId(new JournalpostId(123l))
+                .medJournalpostId(new JournalpostId(123L))
                 .medDokumentId("123")
                 .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
                 .medDokumentMalType(dokumentRepository.hentDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK))
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)
-                .medXml("<test/>")
                 .build();
         historikkRepository.lagre(historikkInnslag);
 
@@ -59,6 +57,4 @@ public class HistorikkRepositoryImplTest {
 
         assertThat(hendelseListe).hasSize(1);
     }
-
-
 }

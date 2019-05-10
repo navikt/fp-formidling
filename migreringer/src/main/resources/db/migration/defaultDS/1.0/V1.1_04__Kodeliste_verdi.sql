@@ -2644,12 +2644,6 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'VENT_AARSAK', '-', null, 'Ikke definert', to_date('01.01.2000', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'VANLIG', 'VANLIG', null, to_date('07.12.2017', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', '-', null, 'Ikke definert', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'INNTEKTS_KILDE', 'VANLIG', 'VANLIG', null, to_date('07.12.2017', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
@@ -2937,25 +2931,6 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'AVKORTING_AARSAK_TYPE', 'SØKT_FOR_SENT', null, 'Søker har søkt for sent.',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'ORDINÆRT_ARBEIDSFORHOLD', 'ordinaertArbeidsforhold', null,
-        to_date('01.01.2014', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'FORENKLET_OPPGJØRSORDNING', 'forenkletOppgjoersordning', null,
-        to_date('01.01.2014', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'FRILANSER_OPPDRAGSTAKER', 'frilanserOppdragstakerHonorarPersonerMm',
-        null, to_date('01.01.2014', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'MARITIMT_ARBEIDSFORHOLD', 'maritimtArbeidsforhold', null,
-        to_date('01.01.2014', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'PENSJON_OG_ANDRE_TYPER_YTELSER_UTEN_ANSETTELSESFORHOLD',
-        'pensjonOgAndreTyperYtelserUtenAnsettelsesforhold', null, to_date('01.01.2014', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'NÆRING', null, null, to_date('01.01.2014', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'FORRETNINGSHENDELSE_TYPE', 'FØDSEL', null, 'Forretningshendelse fødsel',
         to_date('23.08.2018', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
@@ -2972,58 +2947,6 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'VILKAR_TYPE', 'FP_VK_21', null, 'Fastsett opptjeningsperiode 14-6',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'ARBEID', null,
-        'Registrert arbeidsforhold i AA-registeret', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'FRILANS', null, 'Frilanser',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'NÆRING', null,
-        'Registrert i Enhetsregisteret som selvstendig næringsdrivende', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'DAGPENGER', null, 'Mottar ytelse for Dagpenger',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'AAP', null, 'Mottar ytelse for Arbeidsavklaringspenger',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'FORELDREPENGER', null,
-        'Mottar ytelse for Foreldrepenger', to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'SYKEPENGER', null, 'Mottar ytelse for Sykepenger',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'SVANGERSKAPSPENGER', null,
-        'Mottar ytelse for Svangerskapspenger', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'OPPLÆRINGSPENGER', null,
-        'Mottar ytelse for Opplæringspenger', to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'OMSORGSPENGER', null, 'Mottar ytelse for Omsorgspenger',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'PLEIEPENGER', null, 'Mottar ytelse for Pleiepenger',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'VARTPENGER', null,
-        'Vartpenger. Pensjonsgivende inntekt som likestilles med yrkesaktivitet', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'VENTELØNN', null,
-        'Ventelønn. Pensjonsgivende inntekt som likestilles med yrkesaktivitet', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'VIDERE_ETTERUTDANNING', null,
-        'Lønn fra arbeidsgiver ifbm. videre- og etterutdanning. Pensjonsgivende inntekt som likestilles med yrkesaktivitet',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'MILITÆR_ELLER_SIVILTJENESTE', null,
-        'vtjening av militær- eller siviltjeneste eller obligatorisk sivilforsvarstjeneste. Pensjonsgivende inntekt som likestilles med yrkesaktivitet',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_KLASSIFISERING', 'BEKREFTET_GODKJENT', null,
         'Aktivitet er bekreftet godkjent i forbindelse med vurdering av Opptjeningsvilkåret.',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
@@ -3037,9 +2960,6 @@ values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_KLASSIFISERING', 'BEKREF
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'VILKAR_UTFALL_MERKNAD', '1035', null, 'Ikke tilstrekkelig opptjening',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', '-', null, 'Udefinert',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_KLASSIFISERING', '-', null, 'Udefinert',
@@ -3097,9 +3017,6 @@ values (nextval('seq_kodeliste'), 'PERIODE_RESULTAT_TYPE', 'UGYLDIG_UTSETTELSE',
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'HISTORIKK_AKTOER', 'ARBEIDSGIVER', null, 'Arbeidsgiver',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'VENTELØNN', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'REFERANSE_TYPE', 'ORG_NR', null, 'Orgnr registrert for virksomhet',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
@@ -3213,26 +3130,11 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'INNTEKTS_KILDE', 'SIGRUN', 'SIGRUN', null, to_date('07.12.2017', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'MILITÆR_ELLER_SIVILTJENESTE', null, null,
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'LØNN_UNDER_UTDANNING', null, null,
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'SLUTTPAKKE', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'VARTPENGER', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'HISTORIKKINNSLAG_FELT_TYPE', 'BEGRUNNELSE', null, 'Begrunnelse',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'VEDTAK_RESULTAT_TYPE', 'DELVIS_INNVILGET', null, 'delvis innvilget',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'UTDANNINGSPERMISJON', 'UTDANNINGSPERMISJON',
-        'Kode for utdanningspermisjon', to_date('23.08.2018', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'VILKAR_UTFALL_MERKNAD', '1027', null, 'ingen barn dokumentert på far/medmor',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
@@ -3260,17 +3162,6 @@ values (nextval('seq_kodeliste'), 'VIRKSOMHET_TYPE', 'JORDBRUK_SKOGBRUK', null, 
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'VIRKSOMHET_TYPE', 'ANNEN', null, 'Annen næringsvirksomhet',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'SLUTTPAKKE', null,
-        'Sluttpakke. Pensjonsgivende inntekt som likestilles med yrkesaktivitet', to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'ETTERLØNN_ARBEIDSGIVER', null,
-        'Etterlønn fra arbeidsgiver. Pensjonsgivende inntekt som likestilles med yrkesaktivitet',
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'ETTERLØNN_ARBEIDSGIVER', null, null,
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'DOKUMENT_GRUPPE', 'SØKNAD', null, 'Dokumentkoder av type Søknad',
@@ -4225,12 +4116,6 @@ Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_F
 values (nextval('seq_kodeliste'), 'FAGSYSTEM_UNDERKATEGORI', '-', null, 'Udefinert.',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'UTENLANDSK_ARBEIDSFORHOLD', null, null,
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'OPPTJENING_AKTIVITET_TYPE', 'UTENLANDSK_ARBEIDSFORHOLD', null, null,
-        to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'INNTEKTSKATEGORI', 'SJØMANN', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
         to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
@@ -4727,9 +4612,6 @@ values (nextval('seq_kodeliste'), 'MANUELL_BEHANDLING_AARSAK', '5013', null, 'Ik
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'MANUELL_BEHANDLING_AARSAK', '5014', null, 'Vurder samtidig uttak',
         to_date('01.01.2000', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));
-Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
-values (nextval('seq_kodeliste'), 'ARBEID_TYPE', 'FRILANSER', null, null, to_date('01.01.2000', 'DD.MM.RRRR'),
-        to_date('31.12.9999', 'DD.MM.RRRR'));
 Insert into KODELISTE (ID, KODEVERK, KODE, OFFISIELL_KODE, BESKRIVELSE, GYLDIG_FOM, GYLDIG_TOM)
 values (nextval('seq_kodeliste'), 'FAGSYSTEM', 'UTBETALINGSMELDING', 'OB36', 'Utbetalingsmelding',
         to_date('01.06.2018', 'DD.MM.RRRR'), to_date('31.12.9999', 'DD.MM.RRRR'));

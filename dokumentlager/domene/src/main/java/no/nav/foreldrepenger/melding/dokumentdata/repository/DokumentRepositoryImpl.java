@@ -11,6 +11,7 @@ import javax.persistence.TypedQuery;
 import org.hibernate.jpa.QueryHints;
 
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
 import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
@@ -28,6 +29,16 @@ public class DokumentRepositoryImpl implements DokumentRepository {
     public DokumentRepositoryImpl(@VLPersistenceUnit EntityManager entityManager) {
         Objects.requireNonNull(entityManager, "entityManager"); //$NON-NLS-1$
         this.entityManager = entityManager;
+    }
+
+    @Override
+    public Long lagre(DokumentData dokumentData) {
+        entityManager.persist(dokumentData);
+        for (DokumentFelles df : dokumentData.getDokumentFelles()) {
+            entityManager.persist(df);
+        }
+        entityManager.flush();
+        return dokumentData.getId();
     }
 
     @Override

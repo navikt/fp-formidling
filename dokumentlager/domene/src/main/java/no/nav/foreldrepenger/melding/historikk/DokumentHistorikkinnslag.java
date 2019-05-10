@@ -53,14 +53,13 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
     @JoinColumn(name = "dokument_mal_navn", nullable = false)
     private DokumentMalType dokumentMalType;
 
-    @Column
-    private String xml;
-
     public DokumentHistorikkinnslag() {
         //Hibernate
     }
 
-    DokumentHistorikkinnslag(UUID behandlingUuid, long hendelseId, String dokumentId, JournalpostId journalpostId, DokumentMalType dokumentMalType, HistorikkinnslagType historikkinnslagType, String xml) {
+    DokumentHistorikkinnslag(UUID behandlingUuid, long hendelseId, String dokumentId,
+                             JournalpostId journalpostId, DokumentMalType dokumentMalType,
+                             HistorikkinnslagType historikkinnslagType) {
         this.behandlingUuid = behandlingUuid;
         this.hendelseId = hendelseId;
         this.dokumentId = dokumentId;
@@ -68,7 +67,6 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
         this.dokumentMalType = dokumentMalType;
         this.historikkinnslagType = historikkinnslagType;
         this.dokumentMalType = dokumentMalType;
-        this.xml = xml;
     }
 
     public static Builder builder() {
@@ -87,13 +85,12 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
                 Objects.equals(journalpostId, that.journalpostId) &&
                 Objects.equals(historikkAktør, that.historikkAktør) &&
                 Objects.equals(historikkinnslagType, that.historikkinnslagType) &&
-                Objects.equals(dokumentMalType, that.dokumentMalType) &&
-                Objects.equals(xml, that.xml);
+                Objects.equals(dokumentMalType, that.dokumentMalType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, behandlingUuid, hendelseId, dokumentId, journalpostId, historikkAktør, historikkinnslagType, dokumentMalType, xml);
+        return Objects.hash(id, behandlingUuid, hendelseId, dokumentId, journalpostId, historikkAktør, historikkinnslagType, dokumentMalType);
     }
 
     @Override
@@ -107,7 +104,6 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
                 ", historikkAktør=" + historikkAktør +
                 ", historikkinnslagType=" + historikkinnslagType +
                 ", dokumentMalType=" + dokumentMalType +
-                ", xml='" + xml + '\'' +
                 '}';
     }
 
@@ -121,10 +117,6 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
 
     public Long getHendelseId() {
         return hendelseId;
-    }
-
-    public String getXml() {
-        return xml;
     }
 
     public String getDokumentId() {
@@ -155,7 +147,6 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
         private HistorikkAktør historikkAktør;
         private HistorikkinnslagType historikkinnslagType;
         private DokumentMalType dokumentMalType;
-        private String xml;
 
         public DokumentHistorikkinnslag.Builder medBehandlingUuid(UUID behandlingUuid) {
             this.behandlingUuid = behandlingUuid;
@@ -192,14 +183,10 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
             return this;
         }
 
-        public DokumentHistorikkinnslag.Builder medXml(String xml) {
-            this.xml = xml;
-            return this;
-        }
-
         public DokumentHistorikkinnslag build() {
             verifyStateForBuild();
-            DokumentHistorikkinnslag dokumentHistorikkinnslag = new DokumentHistorikkinnslag(behandlingUuid, hendelseId, dokumentId, journalpostId, dokumentMalType, historikkinnslagType, xml);
+            DokumentHistorikkinnslag dokumentHistorikkinnslag = new DokumentHistorikkinnslag(behandlingUuid, hendelseId,
+                    dokumentId, journalpostId, dokumentMalType, historikkinnslagType);
             dokumentHistorikkinnslag.historikkAktør = historikkAktør;
             return dokumentHistorikkinnslag;
         }
@@ -211,7 +198,6 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
             Objects.requireNonNull(journalpostId, "journalpostId");
             Objects.requireNonNull(dokumentMalType, "dokumentMalType");
             Objects.requireNonNull(historikkinnslagType, "historikkinnslagType");
-            Objects.requireNonNull(xml, "xml");
         }
     }
 }

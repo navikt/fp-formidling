@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,33 +34,37 @@ public class DokumentData extends BaseEntitet implements IndexKey {
     @JoinColumn(name = "dokument_mal_navn", nullable = false)
     private DokumentMalType dokumentMalType;
 
-    @Column(name = "forhaandsvist_tid")
-    private LocalDateTime forhåndsvistTid;
-
-    @Column(name = "sendt_tid")
-    private LocalDateTime sendtTid;
-
     @OneToMany(mappedBy = "dokumentData")
     private Set<DokumentFelles> dokumentFelles = new HashSet<>(1);
 
-    @Column(name = "behandling_id", nullable = false)
-    private Long behandling;
+    @Column(name = "behandling_uuid", nullable = false)
+    private UUID behandlingUuid;
 
-    @Column(name = "bestilt_tid")
+    @Column(name = "bestilt_tid", nullable = false)
     private LocalDateTime bestiltTid;
 
+    @Column(name = "bestilling_type", nullable = false)
+    private String bestillingType;
+
     @SuppressWarnings("unused")
-    private DokumentData() {
+    public DokumentData() {
+        //Hibernate
     }
 
-    public DokumentData(DokumentMalType dokumentMalType, Long behandling) {
-        this.dokumentMalType = dokumentMalType;
-        this.behandling = behandling;
+    private DokumentData(Builder builder) {
+        dokumentMalType = builder.dokumentMalType;
+        behandlingUuid = builder.behandlingUuid;
+        bestiltTid = builder.bestiltTid;
+        bestillingType = builder.bestillingType;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     @Override
     public String getIndexKey() {
-        return IndexKey.createKey(dokumentMalType, bestiltTid);
+        return IndexKey.createKey(dokumentMalType, behandlingUuid);
     }
 
     public Long getId() {
@@ -68,22 +73,6 @@ public class DokumentData extends BaseEntitet implements IndexKey {
 
     public DokumentMalType getDokumentMalType() {
         return dokumentMalType;
-    }
-
-    public LocalDateTime getForhåndsvistTid() {
-        return forhåndsvistTid;
-    }
-
-    public void setForhåndsvistTid(LocalDateTime forhåndsvistTid) {
-        this.forhåndsvistTid = forhåndsvistTid;
-    }
-
-    public LocalDateTime getSendtTid() {
-        return sendtTid;
-    }
-
-    public void setSendtTid(LocalDateTime sendtTid) {
-        this.sendtTid = sendtTid;
     }
 
     public Set<DokumentFelles> getDokumentFelles() {
@@ -98,16 +87,16 @@ public class DokumentData extends BaseEntitet implements IndexKey {
         return dokumentFelles.iterator().next();
     }
 
-    public Long getBehandling() {
-        return behandling;
+    public UUID getBehandlingUuid() {
+        return behandlingUuid;
     }
 
     public LocalDateTime getBestiltTid() {
         return bestiltTid;
     }
 
-    public void setBestiltTid(LocalDateTime bestiltTid) {
-        this.bestiltTid = bestiltTid;
+    public String getBestillingType() {
+        return bestillingType;
     }
 
     @Override
@@ -120,14 +109,14 @@ public class DokumentData extends BaseEntitet implements IndexKey {
         }
         DokumentData dokData = (DokumentData) object;
         return Objects.equals(dokumentMalType, dokData.getDokumentMalType())
-                && Objects.equals(forhåndsvistTid, dokData.getForhåndsvistTid())
-                && Objects.equals(sendtTid, dokData.getSendtTid())
-                && Objects.equals(bestiltTid, dokData.getBestiltTid());
+                && Objects.equals(behandlingUuid, dokData.getBehandlingUuid())
+                && Objects.equals(bestiltTid, dokData.getBestiltTid())
+                && Objects.equals(bestillingType, dokData.getBestillingType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dokumentMalType, forhåndsvistTid, sendtTid, bestiltTid);
+        return Objects.hash(dokumentMalType, behandlingUuid, bestiltTid, bestillingType);
     }
 
     @Override
@@ -135,59 +124,47 @@ public class DokumentData extends BaseEntitet implements IndexKey {
         return getClass().getSimpleName() + "<>";
     }
 
-    public static DokumentData opprettNy(DokumentMalType dokumentMalType, Long behandling) {
-        return new DokumentData(dokumentMalType, behandling);
-    }
 
-    public static DokumentData.Builder builder() {
-        return new DokumentData.Builder();
-    }
+    public static final class Builder {
 
-    public static class Builder {
         private DokumentMalType dokumentMalType;
-        private LocalDateTime forhåndsvistTid;
-        private LocalDateTime sendtTid;
+        private UUID behandlingUuid;
         private LocalDateTime bestiltTid;
-        private Long behandling;
+        private String bestillingType;
 
-        public DokumentData.Builder medDokumentMalType(DokumentMalType dokumentMalType) {
+        private Builder() {
+        }
+
+        public Builder medDokumentMalType(DokumentMalType dokumentMalType) {
             this.dokumentMalType = dokumentMalType;
             return this;
         }
 
-        public DokumentData.Builder medForhåndsvistTid(LocalDateTime forhåndsvistTid) {
-            this.forhåndsvistTid = forhåndsvistTid;
+        public Builder medBehandlingUuid(UUID behandlingUuid) {
+            this.behandlingUuid = behandlingUuid;
             return this;
         }
 
-        public DokumentData.Builder medSendtTid(LocalDateTime sendtTid) {
-            this.sendtTid = sendtTid;
-            return this;
-        }
-
-        public DokumentData.Builder medBestiltTid(LocalDateTime bestiltTid) {
+        public Builder medBestiltTid(LocalDateTime bestiltTid) {
             this.bestiltTid = bestiltTid;
             return this;
         }
 
-        public DokumentData.Builder medBehandling(Long behandling) {
-            this.behandling = behandling;
+        public Builder medBestillingType(String bestillingType) {
+            this.bestillingType = bestillingType;
             return this;
         }
 
         public DokumentData build() {
             verifyStateForBuild();
-            DokumentData dokData = new DokumentData(dokumentMalType, behandling);
-            dokData.forhåndsvistTid = forhåndsvistTid;
-            dokData.sendtTid = sendtTid;
-            dokData.bestiltTid = bestiltTid;
-
-            return dokData;
+            return new DokumentData(this);
         }
 
-        public void verifyStateForBuild() {
+        private void verifyStateForBuild() {
             Objects.requireNonNull(dokumentMalType, "dokumentMalType");
-            Objects.requireNonNull(behandling, "behandling");
+            Objects.requireNonNull(behandlingUuid, "behandlingUuid");
+            Objects.requireNonNull(bestiltTid, "bestiltTid");
+            Objects.requireNonNull(bestillingType, "bestillingType");
         }
     }
 }

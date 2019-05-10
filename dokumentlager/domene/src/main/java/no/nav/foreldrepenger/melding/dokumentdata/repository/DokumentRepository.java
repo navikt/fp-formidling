@@ -7,6 +7,8 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 
 public interface DokumentRepository {
 
+    Long lagre(DokumentData dokumentData);
+
     DokumentMalType hentDokumentMalType(String kode);
 
     List<DokumentMalType> hentAlleDokumentMalTyper();

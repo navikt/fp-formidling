@@ -11,7 +11,7 @@ public class YtelseFordelingDtoMapper {
 
     public static YtelseFordeling mapYtelseFordelingFraDto(YtelseFordelingDto dto) {
         boolean annenForelderHarRett = true;
-        boolean harPeriodeMedAleneomsorg = false;
+        boolean harPeriodeMedAleneomsorg = true;
         if (dto.getAnnenforelderHarRettDto() != null && dto.getAnnenforelderHarRettDto().getAnnenforelderHarRett() != null) {
             annenForelderHarRett = dto.getAnnenforelderHarRettDto().getAnnenforelderHarRett();
         }

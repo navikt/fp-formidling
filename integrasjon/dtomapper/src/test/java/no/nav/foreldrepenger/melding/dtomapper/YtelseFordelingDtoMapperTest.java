@@ -21,10 +21,10 @@ public class YtelseFordelingDtoMapperTest {
     }
 
     @Test
-    public void skal_sette_ingen_periode_med_aleneomsorg_når_liste_er_null() {
+    public void skal_sette_periode_med_aleneomsorg_når_liste_er_null() {
         YtelseFordelingDto dto = new YtelseFordelingDto.Builder().medAleneOmsorgPerioder(null).build();
         YtelseFordeling ytelseFordeling = YtelseFordelingDtoMapper.mapYtelseFordelingFraDto(dto);
-        assertThat(ytelseFordeling.isHarPerioderMedAleneomsorg()).isFalse();
+        assertThat(ytelseFordeling.isHarPerioderMedAleneomsorg()).isTrue();
     }
 
     @Test

@@ -182,12 +182,16 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
 
     @Override
     public BeregningsgrunnlagDto hentBeregningsgrunnlag(List<BehandlingResourceLink> resourceLinker) {
+        return hentBeregningsgrunnlagHvisFinnes(resourceLinker).orElseThrow(() -> {
+            throw new IllegalStateException("Klarte ikke hente beregningsgrunnlag for behandling: " + hentBehandlingId(resourceLinker));
+        });
+    }
+
+    @Override
+    public Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "beregningsgrunnlag".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDto.class))
-                .orElseThrow(() -> {
-                    throw new IllegalStateException("Klarte ikke hente beregningsgrunnlag for behandling: " + hentBehandlingId(resourceLinker));
-                });
+                .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDto.class));
     }
 
     @Override

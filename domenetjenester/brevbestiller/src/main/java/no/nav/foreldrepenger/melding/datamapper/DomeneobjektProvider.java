@@ -97,6 +97,9 @@ public class DomeneobjektProvider {
         return beregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinker()));
     }
 
+    public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
+        return behandlingRestKlient.hentBeregningsgrunnlagHvisFinnes(behandling.getResourceLinker()).map(beregningsgrunnlagDtoMapper::mapBeregningsgrunnlagFraDto);
+    }
 
     public Behandling hentBehandling(UUID behandlingUuid) {
         return behandlingDtoMapper.mapBehandlingFraDto((behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingUuid))));

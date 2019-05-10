@@ -53,6 +53,8 @@ public interface BehandlingRestKlient {
 
     BeregningsgrunnlagDto hentBeregningsgrunnlag(List<BehandlingResourceLink> resourceLinkDtos);
 
+    Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagHvisFinnes(List<BehandlingResourceLink> resourceLinker);
+
     List<VilkårDto> hentVilkår(List<BehandlingResourceLink> resourceLinkDtos);
 
     FagsakDto hentFagsak(List<BehandlingResourceLink> resourceLinkDtos);

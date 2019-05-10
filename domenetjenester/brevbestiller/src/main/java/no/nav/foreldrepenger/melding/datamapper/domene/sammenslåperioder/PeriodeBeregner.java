@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -125,7 +126,7 @@ public class PeriodeBeregner {
 
         for (UttakResultatPeriodeAktivitet aktivitet : uttakAktiviteter) {
             if (uttakAktivitetStatusMap.getOrDefault(andel.getAktivitetStatus(), UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType())) {
-                if (arbeidsgiver.isEmpty() || arbeidsgiver.get().getIdentifikator().equals(aktivitet.getArbeidsgiverIdentifikator())) {
+                if (arbeidsgiver.isEmpty() || Objects.equals(arbeidsgiver.get().getIdentifikator(), aktivitet.getArbeidsgiverIdentifikator())) {
                     if (arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold() && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId()))) {
                         return Optional.of(aktivitet);
                     }

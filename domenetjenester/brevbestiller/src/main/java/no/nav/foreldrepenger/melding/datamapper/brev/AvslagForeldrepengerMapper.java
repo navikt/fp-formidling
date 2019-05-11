@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.a
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -29,6 +28,7 @@ import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.ÅrsakMapperAvslag;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -48,7 +48,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
-import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 import no.nav.vedtak.util.Tuple;
@@ -84,9 +83,10 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         Optional<BeregningsresultatFP> beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFPHvisFinnes(behandling);
         Optional<UttakResultatPerioder> uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling);
-        BigDecimal grunnbeløp = hentGrunnbeløpHvisFinnes(behandling).orElse(BigDecimal.ZERO);
+        long grunnbeløp = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
         Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         FagType fagType = mapFagType(behandling,
@@ -102,19 +102,13 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
         return JaxbHelper.marshalNoNamespaceXML(AvslagForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private Optional<BigDecimal> hentGrunnbeløpHvisFinnes(Behandling behandling) {
-        return domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling)
-                .map(Beregningsgrunnlag::getGrunnbeløp)
-                .map(Beløp::getVerdi);
-    }
-
     private FagType mapFagType(Behandling behandling,
                                String behandlingstypeKode,
                                LocalDate søknadMottatDato,
                                DokumentFelles dokumentFelles,
                                DokumentHendelse dokumentHendelse,
                                FamilieHendelse familiehendelse,
-                               BigDecimal grunnbeløp,
+                               long grunnbeløp,
                                Optional<BeregningsresultatFP> beregningsresultatFP,
                                Optional<UttakResultatPerioder> uttakResultatPerioder) {
         FagType fagType = new FagType();
@@ -126,7 +120,7 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());
         fagType.setBarnErFødt(familiehendelse.isBarnErFødt());
-        fagType.setHalvG(grunnbeløp.divide(BigDecimal.valueOf(2)).longValue());
+        fagType.setHalvG(grunnbeløp);
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
 
         mapFelterRelatertTilAvslagårsaker(behandling.getBehandlingsresultat(),

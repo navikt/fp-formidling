@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -34,21 +36,23 @@ public class ÅrsakMapperOpphør {
         return new Tuple<>(aarsakListeType, FellesMapper.formaterLovhjemlerUttak(lovReferanser));
     }
 
-    private static Set<AvslagsAarsakType> årsakerFra(Behandlingsresultat behandlingsresultat,
-                                                     UttakResultatPerioder uttakResultatPerioder) {
-        Set<AvslagsAarsakType> avslagsAarsaker = new HashSet<>();
+    private static Collection<AvslagsAarsakType> årsakerFra(Behandlingsresultat behandlingsresultat,
+                                                            UttakResultatPerioder uttakResultatPerioder) {
+        Map<String, AvslagsAarsakType> avslagsAarsaker= new HashMap<>();
 
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
         if (avslagsårsak != null) {
-            avslagsAarsaker.add(årsaktypeFra(avslagsårsak));
+            String avslagKode = avslagsårsak.getKode();
+            avslagsAarsaker.put(avslagKode, årsaktypeFra(avslagsårsak));
         }
         for (UttakResultatPeriode periode : uttakResultatPerioder.getPerioder()) {
             PeriodeResultatÅrsak periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
             if (PeriodeResultatType.AVSLÅTT.equals(periode.getPeriodeResultatType()) && periodeResultatÅrsak != null) {
-                avslagsAarsaker.add(årsaktypeFra(periodeResultatÅrsak));
+                String avslagKode = periodeResultatÅrsak.getKode();
+                avslagsAarsaker.put(avslagKode, årsaktypeFra(periodeResultatÅrsak));
             }
         }
-        return avslagsAarsaker;
+        return avslagsAarsaker.values();
     }
 
     private static AvslagsAarsakType årsaktypeFra(ÅrsakskodeMedLovreferanse årsakKode) {

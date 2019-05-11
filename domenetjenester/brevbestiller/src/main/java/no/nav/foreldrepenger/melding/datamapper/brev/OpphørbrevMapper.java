@@ -3,9 +3,9 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +30,7 @@ import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.ÅrsakMapperOpphør;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -85,20 +86,21 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
                                 DokumentFelles dokumentFelles,
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
-        UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
-        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
-        Personinfo personinfo = behandling.getFagsak().getPersoninfo();
-        UttakResultatPerioder originaltUttakResultat = null;
+        Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
+        UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)
+                .orElse(UttakResultatPerioder.ny().build()); // bestående av tomme lister.
+        Optional<UttakResultatPerioder> originaltUttakResultat = Optional.empty();
         if (behandling.getOriginalBehandling() != null) {
-            originaltUttakResultat = domeneobjektProvider.hentUttaksresultat(behandling.getOriginalBehandling());
+            originaltUttakResultat = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling.getOriginalBehandling());
         }
+        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
+        long grunnbeløp = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
+        Personinfo personinfo = behandling.getFagsak().getPersoninfo();
         FagType fagType = mapFagType(behandlingstype, behandling,
                 dokumentFelles,
                 familiehendelse,
-                beregningsgrunnlag,
+                grunnbeløp,
                 uttakResultatPerioder,
                 originaltUttakResultat,
                 personinfo
@@ -110,9 +112,9 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
     private FagType mapFagType(String behandlingstypeKode, Behandling behandling,
                                DokumentFelles dokumentFelles,
                                FamilieHendelse familiehendelse,
-                               Beregningsgrunnlag beregningsgrunnlag,
+                               long grunnbeløp,
                                UttakResultatPerioder uttakResultatPerioder,
-                               UttakResultatPerioder originaltUttakResultat,
+                               Optional<UttakResultatPerioder> originaltUttakResultat,
                                Personinfo personinfo) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(fra(behandlingstypeKode));
@@ -121,7 +123,7 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
         fagType.setRelasjonskode(fra(behandling.getFagsak()));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());
-        fagType.setHalvG(beregningsgrunnlag.getGrunnbeløp().getVerdi().divide(BigDecimal.valueOf(2)).longValue());
+        fagType.setHalvG(grunnbeløp);
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
 
         mapFelterRelatertTilAvslagårsaker(behandling.getBehandlingsresultat(),
@@ -181,7 +183,7 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
 
     private Optional<LocalDate> finnOpphørsdatoHvisFinnes(UttakResultatPerioder uttakResultatPerioder, FamilieHendelse familiehendelse) {
         LocalDate opphørsdato = utledOpphørsdatoFraUttak(uttakResultatPerioder);
-        return Optional.ofNullable(opphørsdato).or(() -> familiehendelse.getSkjæringstidspunkt());
+        return Optional.ofNullable(opphørsdato).or(familiehendelse::getSkjæringstidspunkt);
     }
 
     private LocalDate utledOpphørsdatoFraUttak(UttakResultatPerioder uttakResultatPerioder) {
@@ -202,8 +204,8 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
         return null;
     }
 
-    private Optional<LocalDate> finnStønadFomDatoHvisFinnes(UttakResultatPerioder originaltUttakResultat) {
-        return originaltUttakResultat.getPerioder().stream()
+    private Optional<LocalDate> finnStønadFomDatoHvisFinnes(Optional<UttakResultatPerioder> originaltUttakResultat) {
+        return originaltUttakResultat.map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList()).stream()
                 .filter(UttakResultatPeriode::isInnvilget)
                 .map(UttakResultatPeriode::getFom)
                 .findFirst();

@@ -84,7 +84,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     public DokumentHistorikkinnslag bestillBrev(DokumentHendelse dokumentHendelse) {
         Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
-        DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, "Bestill");
+        DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.BESTILL);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
         //FIXME : RS - den tar ikke hensyn til at det kan være flere mottakere
         Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentData.getFørsteDokumentFelles(), dokumentHendelse, behandling);
@@ -179,7 +179,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         Behandling behandling = domeneobjektProvider.hentBehandling(hendelse.getBehandlingUuid());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, hendelse);
 
-        DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, "Forhåndsvis");
+        DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.UTKAST);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
         final DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
 
@@ -209,12 +209,18 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         return null;
     }
 
-    private DokumentData lagDokumentData(Behandling behandling, DokumentMalType dokumentMalType, String bestillingType) {
+    private DokumentData lagDokumentData(Behandling behandling, DokumentMalType dokumentMalType, BestillingType bestillingType) {
         return DokumentData.builder()
                 .medDokumentMalType(dokumentMalType)
                 .medBehandlingUuid(behandling.getUuid())
                 .medBestiltTid(LocalDateTime.now())
-                .medBestillingType(bestillingType)
+                .medBestillingType(bestillingType.name())
                 .build();
     }
+
+    enum BestillingType {
+        UTKAST,
+        BESTILL
+    }
+
 }

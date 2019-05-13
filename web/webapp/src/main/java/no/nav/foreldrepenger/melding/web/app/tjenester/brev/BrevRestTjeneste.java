@@ -97,7 +97,7 @@ public class BrevRestTjeneste {
     @ApiOperation(value = "Returnerer en pdf som er en forhåndsvisning av brevet")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response hentForhåndsvisningDokument(
+    public Response forhaandsvisDokument(
             @ApiParam("Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid BestillBrevDto bestillBrevDto) { // NOSONAR
         Response.ResponseBuilder responseBuilder;
         byte[] dokument = brevBestillerApplikasjonTjeneste.forhandsvisBrev(bestillBrevDto);

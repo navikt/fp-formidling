@@ -28,10 +28,10 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.BestillBrevDto;
+import no.nav.foreldrepenger.melding.brevbestiller.dto.BestillBrevDtoMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.BrevmalDto;
 import no.nav.foreldrepenger.melding.brevbestiller.task.ProduserBrevTaskProperties;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.vedtak.felles.jpa.Transaction;
@@ -48,8 +48,8 @@ public class BrevRestTjeneste {
     private DokumentBehandlingTjeneste dokumentBehandlingTjeneste;
     private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
     private ProsessTaskRepository prosessTaskRepository;
-    private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
     private HendelseRepository hendelseRepository;
+    private BestillBrevDtoMapper bestillBrevDtoMapper;
 
     public BrevRestTjeneste() {
         //CDI
@@ -59,13 +59,13 @@ public class BrevRestTjeneste {
     public BrevRestTjeneste(DokumentBehandlingTjeneste dokumentBehandlingTjeneste,
                             BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste,
                             ProsessTaskRepository prosessTaskRepository,
-                            DokumentHendelseDtoMapper dtoTilDomeneobjektMapper,
-                            HendelseRepository hendelseRepository) {
+                            HendelseRepository hendelseRepository,
+                            BestillBrevDtoMapper bestillBrevDtoMapper) {
         this.dokumentBehandlingTjeneste = dokumentBehandlingTjeneste;
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
         this.prosessTaskRepository = prosessTaskRepository;
-        this.dtoTilDomeneobjektMapper = dtoTilDomeneobjektMapper;
         this.hendelseRepository = hendelseRepository;
+        this.bestillBrevDtoMapper = bestillBrevDtoMapper;
     }
 
     @POST
@@ -120,7 +120,7 @@ public class BrevRestTjeneste {
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public void bestillDokument(
             @ApiParam("Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid BestillBrevDto bestillBrevDto) { // NOSONAR
-        DokumentHendelse hendelse = dtoTilDomeneobjektMapper.mapDokumentHendelseFraDto(bestillBrevDto);
+        DokumentHendelse hendelse = bestillBrevDtoMapper.mapDokumentbestillingFraDtoForEndepunkt(bestillBrevDto);
         hendelseRepository.lagre(hendelse);
         opprettBestillBrevTask(hendelse);
         LOG.info("lagret hendelse:{} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingUuid());

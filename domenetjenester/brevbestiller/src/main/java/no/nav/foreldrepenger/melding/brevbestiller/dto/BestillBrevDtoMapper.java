@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.dtomapper;
+package no.nav.foreldrepenger.melding.brevbestiller.dto;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -10,24 +10,34 @@ import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
-import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
-public class DokumentHendelseDtoMapper {
+public class BestillBrevDtoMapper {
 
     private KodeverkRepository kodeverkRepository;
     private DokumentRepository dokumentRepository;
 
-    public DokumentHendelseDtoMapper() {
+    public BestillBrevDtoMapper() {
         //CDI
     }
 
     @Inject
-    public DokumentHendelseDtoMapper(KodeverkRepository kodeverkRepository,
-                                     DokumentRepository dokumentRepository) {
+    public BestillBrevDtoMapper(KodeverkRepository kodeverkRepository, DokumentRepository dokumentRepository) {
         this.kodeverkRepository = kodeverkRepository;
         this.dokumentRepository = dokumentRepository;
+    }
+
+    public DokumentHendelse mapDokumentbestillingFraDtoForEndepunkt(BestillBrevDto brevDto) {
+        return new DokumentHendelse.Builder()
+                .medBehandlingUuid(brevDto.getBehandlingUuid())
+                .medYtelseType(utledYtelseType(brevDto.getYtelseType()))
+                .medFritekst(brevDto.getFritekst())
+                .medTittel(brevDto.getTittel())
+                .medHistorikkAktør(utledHistorikkAktør(brevDto.getHistorikkAktør()))
+                .medDokumentMalType(utleddokumentMalType(brevDto.getDokumentMal()))
+                .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(brevDto.getArsakskode()))
+                .build();
     }
 
     private RevurderingVarslingÅrsak utledRevurderingVarslingsårsak(String varslingsårsak) {
@@ -56,16 +66,5 @@ public class DokumentHendelseDtoMapper {
             return HistorikkAktør.UDEFINERT;
         }
         return kodeverkRepository.finn(HistorikkAktør.class, historikkAktør);
-    }
-
-    public DokumentHendelse mapDokumentHendelseFraDtoForKafka(DokumentbestillingV1 dokumentbestilling) {
-        return new DokumentHendelse.Builder()
-                .medBehandlingUuid(dokumentbestilling.getBehandlingUuid())
-                .medYtelseType(utledYtelseType(dokumentbestilling.getYtelseType().getKode()))
-                .medFritekst(dokumentbestilling.getFritekst())
-                .medHistorikkAktør(utledHistorikkAktør(dokumentbestilling.getHistorikkAktør()))
-                .medDokumentMalType(utleddokumentMalType(dokumentbestilling.getDokumentMal()))
-                .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(dokumentbestilling.getArsakskode()))
-                .build();
     }
 }

@@ -6,12 +6,12 @@ import javax.inject.Inject;
 import com.codahale.metrics.annotation.Timed;
 
 import no.nav.foreldrepenger.melding.feed.poller.FeedPoller;
-import no.nav.foreldrepenger.melding.kafkatjenester.dokumenthendelse.KafkaReader;
+import no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling.KafkaReader;
 
 @ApplicationScoped
 public class KafkaFeedPoller implements FeedPoller {
 
-    public static final String FEED_NAME = "KAFKA_FORELDREPENGER_EVENT_KØ";
+    public static final String FEED_NAME = "KAFKA_FORELDREPENGER_DOKUMENTBESTILLING";
 
     private KafkaReader kafaReader;
 

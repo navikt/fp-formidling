@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.kafkatjenester.dokumenthendelse;
+package no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.melding.brevbestiller.task.ProduserBrevTaskProperties;
 import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
-import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
+import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 
@@ -36,8 +36,8 @@ public class JsonHendelseHandler {
         this.dtoTilDomeneobjektMapper = dtoTilDomeneobjektMapper;
     }
 
-    public void prosesser(DokumentHendelseDto jsonHendelse) {
-        DokumentHendelse hendelse = dtoTilDomeneobjektMapper.mapDokumentHendelseFraDto(jsonHendelse);
+    public void prosesser(DokumentbestillingV1 jsonHendelse) {
+        DokumentHendelse hendelse = dtoTilDomeneobjektMapper.mapDokumentHendelseFraDtoForKafka(jsonHendelse);
         hendelseRepository.lagre(hendelse);
         opprettBestillBrevTask(hendelse);
         log.info("lagret hendelse:{} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingUuid());

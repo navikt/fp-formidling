@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.kafkatjenester.dokumenthendelse;
+package no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -15,8 +15,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakStatus;
-import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
+import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 
 @ApplicationScoped
 public class KafkaReader {
@@ -57,7 +57,7 @@ public class KafkaReader {
         log.info("Mottatt melding med start : {}", melding.substring(0, Math.min(melding.length() - 1, 1000)));
         feilmelding = new StringBuilder();
         try {
-            DokumentHendelseDto jsonHendelse = deserialiser(melding, DokumentHendelseDto.class);
+            DokumentbestillingV1 jsonHendelse = deserialiser(melding, DokumentbestillingV1.class);
             if (jsonHendelse != null) {
                 jsonHendelseHandler.prosesser(jsonHendelse);
                 return;

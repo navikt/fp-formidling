@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.kafkatjenester.dokumenthendelse;
+package no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling;
 
 import java.util.ArrayList;
 import java.util.Collections;

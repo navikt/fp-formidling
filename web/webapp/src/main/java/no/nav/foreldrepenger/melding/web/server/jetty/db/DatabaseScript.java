@@ -10,6 +10,7 @@ public class DatabaseScript {
 
     private final MigrationDataSource migrationDataSource;
     private final String locations;
+    private final static boolean SKAL_CLEANE_DATABASEN = false;
 
     public DatabaseScript(MigrationDataSource migrationDataSource, String locations) {
         this.migrationDataSource = migrationDataSource;
@@ -31,8 +32,7 @@ public class DatabaseScript {
         try {
             flyway.migrate();
         } catch (FlywayException fwe) {
-            //TODO ikke drep hele databasen hver gang
-            if (true) {
+            if (SKAL_CLEANE_DATABASEN) {
                 flyway.clean();
                 flyway.migrate();
             }

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.kafkatjenester.dokumenthendelse;
+package no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,17 +21,18 @@ import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
 import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepositoryImpl;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.kafkatjenester.felles.util.Serialiseringsverktøy;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepositoryImpl;
+import no.nav.vedtak.felles.dokumentbestilling.kodeverk.FagsakYtelseType;
+import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 
 public class KafkaReaderTest {
+
 
     @Rule
     public UnittestRepositoryRule repoRule = new UnittestRepositoryRule();
@@ -73,7 +74,7 @@ public class KafkaReaderTest {
         assertThat(repoRule.getRepository().hentAlle(EventmottakFeillogg.class).get(0).getMelding()).isEqualToIgnoringCase("Bare tull");
     }
 
-    private String serialiser(DokumentHendelseDto dto) {
+    private String serialiser(DokumentbestillingV1 dto) {
         try {
             return Serialiseringsverktøy.getObjectMapper().writeValueAsString(dto);
         } catch (JsonProcessingException e) {
@@ -81,15 +82,13 @@ public class KafkaReaderTest {
         }
     }
 
-    private DokumentHendelseDto lagOkDto() {
-        DokumentHendelseDto dto = new DokumentHendelseDto();
+    private DokumentbestillingV1 lagOkDto() {
+        DokumentbestillingV1 dto = new DokumentbestillingV1();
         dto.setBehandlingUuid(UUID.randomUUID());
         dto.setDokumentMal(DokumentMalType.AVSLAGSVEDTAK_DOK);
         dto.setFritekst("123");
-        dto.setTittel("tittel");
-        dto.setGjelderVedtak(false);
         dto.setHistorikkAktør(HistorikkAktør.BESLUTTER.getKode());
-        dto.setYtelseType(FagsakYtelseType.FORELDREPENGER.getKode());
+        dto.setYtelseType(FagsakYtelseType.FORELDREPENGER);
         return dto;
     }
 

@@ -29,3 +29,7 @@ Du trenger postgres installert lokalt(helst 11+), og unit tester bruker en datab
 fpformidling_unit, og en bruker med det samme (fpformidling_unit) som brukernavn og passord
 For å kjøre trenger du bruker vl_dba med samme passord, men denne bruker default database med
 eget schema
+
+ #### Run Config
+ Set $MODULE_DIR$ som working directory, og bruk classpath til webapp. 
+ Kjører på java 11. Kan korte ned classpathen med jar manifest.

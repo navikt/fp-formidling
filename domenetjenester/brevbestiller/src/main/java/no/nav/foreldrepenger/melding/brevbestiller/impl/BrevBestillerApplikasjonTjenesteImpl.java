@@ -19,6 +19,8 @@ import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
+import no.nav.foreldrepenger.melding.brevbestiller.dto.BestillBrevDto;
+import no.nav.foreldrepenger.melding.brevbestiller.dto.BestillBrevDtoMapper;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
@@ -27,7 +29,6 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
-import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
@@ -56,6 +57,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
     private DomeneobjektProvider domeneobjektProvider;
     private DokumentRepository dokumentRepository;
+    private BestillBrevDtoMapper bestillBrevDtoMapper;
 
     public BrevBestillerApplikasjonTjenesteImpl() {
         // for cdi proxy
@@ -69,7 +71,8 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
                                                 DokumentHendelseDtoMapper dtoTilDomeneobjektMapper,
                                                 DokumentFellesDataMapper dokumentFellesDataMapper,
                                                 DomeneobjektProvider domeneobjektProvider,
-                                                DokumentRepository dokumentRepository) {
+                                                DokumentRepository dokumentRepository,
+                                                BestillBrevDtoMapper bestillBrevDtoMapper) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
         this.dokumentXmlDataMapper = dokumentXmlDataMapper;
         this.dokumentMalUtleder = dokumentMalUtleder;
@@ -78,6 +81,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentRepository = dokumentRepository;
+        this.bestillBrevDtoMapper = bestillBrevDtoMapper;
     }
 
     @Override
@@ -173,9 +177,9 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     }
 
     @Override
-    public byte[] forhandsvisBrev(DokumentHendelseDto hendelseDto) {
+    public byte[] forhandsvisBrev(BestillBrevDto brevDto) {
         byte[] dokument;
-        DokumentHendelse hendelse = dtoTilDomeneobjektMapper.mapDokumentHendelseFraDto(hendelseDto);
+        DokumentHendelse hendelse = bestillBrevDtoMapper.mapDokumentbestillingFraDtoForEndepunkt(brevDto);
         Behandling behandling = domeneobjektProvider.hentBehandling(hendelse.getBehandlingUuid());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, hendelse);
 

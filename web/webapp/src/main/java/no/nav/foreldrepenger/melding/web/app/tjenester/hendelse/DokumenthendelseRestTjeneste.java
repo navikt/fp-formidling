@@ -23,7 +23,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
-import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHendelseDto;
+import no.nav.foreldrepenger.melding.brevbestiller.dto.BestillBrevDto;
 import no.nav.vedtak.felles.jpa.Transaction;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
@@ -52,7 +52,7 @@ public class DokumenthendelseRestTjeneste {
     @ApiOperation(value = "Proseserer hendelse og sender ")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response prossesereHendelse(@NotNull @ApiParam("DokumentHendelseDto") @Valid DokumentHendelseDto dokumentHendelseDto) {
+    public Response prossesereHendelse(@NotNull @ApiParam("DokumentHendelseDto") @Valid BestillBrevDto dokumentHendelseDto) {
         LOGGER.info("hendelse = " + dokumentHendelseDto);
         Response.ResponseBuilder responseBuilder;
         final byte[] brevPdfVersjon = brevBestillerApplikasjonTjeneste.forhandsvisBrev(dokumentHendelseDto);

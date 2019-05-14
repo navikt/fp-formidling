@@ -13,26 +13,21 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Fagomraader;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Fagsystemer;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Person;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.UtenlandskPostadresse;
-import no.nav.vedtak.konfig.KonfigVerdi;
 
 @ApplicationScoped
 public class DokumentbestillingMapper {
-
     private static final String FAGOMRÅDE_KODE = "FOR";
     private static final String JOURNALFØRENDE_ENHET_KODE = "9999";
     private static final String UKJENT_ADRESSE = "Ukjent adresse";
     private LandkodeOversetter landkodeOversetter;
-    private String testFnr;
 
     public DokumentbestillingMapper() {
         //CDI
     }
 
     @Inject
-    public DokumentbestillingMapper(LandkodeOversetter landkodeOversetter,
-                                    @KonfigVerdi(value = "test.fnr") String testFnr) {
+    public DokumentbestillingMapper(LandkodeOversetter landkodeOversetter) {
         this.landkodeOversetter = landkodeOversetter;
-        this.testFnr = testFnr;
     }
 
     public Dokumentbestillingsinformasjon mapFraBehandling(DokumentMalType dokumentMal, DokumentFelles dokumentFelles, boolean harVedlegg) {
@@ -44,7 +39,7 @@ public class DokumentbestillingMapper {
         dokumentbestillingsinformasjon.setBestillendeFagsystem(vlfp);
         setPostadresse(dokumentFelles, dokumentbestillingsinformasjon);
         Person bruker = new Person();
-        bruker.setIdent(testFnr);
+        bruker.setIdent(dokumentFelles.getSakspartId());
         bruker.setNavn(dokumentFelles.getSakspartNavn());
         dokumentbestillingsinformasjon.setBruker(bruker);
         Fagomraader dokumenttilhørendeFagområde = new Fagomraader();
@@ -53,10 +48,14 @@ public class DokumentbestillingMapper {
         dokumentbestillingsinformasjon.setDokumenttilhoerendeFagomraade(dokumenttilhørendeFagområde);
         dokumentbestillingsinformasjon.setFerdigstillForsendelse(!harVedlegg);
         dokumentbestillingsinformasjon.setInkludererEksterneVedlegg(harVedlegg);
-        dokumentbestillingsinformasjon.setJournalfoerendeEnhet(JOURNALFØRENDE_ENHET_KODE); // FIXME (ONYX): (bts) bruke 9999 hvis automatisk, ellers pålogget saksbehandlers enhetskode
+
+        // TODO: RS - Dette felt er ikke brukt, venter at team dokument for å selette dette felt.
+        // (bts) bruke 9999 hvis automatisk, ellers pålogget saksbehandlers enhetskode
+        dokumentbestillingsinformasjon.setJournalfoerendeEnhet(JOURNALFØRENDE_ENHET_KODE);
+
         dokumentbestillingsinformasjon.setJournalsakId(dokumentFelles.getSaksnummer().getVerdi());
         Person mottaker = new Person();
-        mottaker.setIdent(testFnr);
+        mottaker.setIdent(dokumentFelles.getMottakerId());
         mottaker.setNavn(dokumentFelles.getMottakerNavn());
         dokumentbestillingsinformasjon.setMottaker(mottaker);
         dokumentbestillingsinformasjon.setSaksbehandlernavn(dokumentFelles.getSignerendeBeslutterNavn() == null ? "Vedtaksløsning Prosess" : dokumentFelles.getSignerendeBeslutterNavn());

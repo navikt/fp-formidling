@@ -12,6 +12,7 @@ import no.nav.foreldrepenger.melding.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
 @ApplicationScoped
 public class InnsynDtoMapper {
@@ -39,6 +40,6 @@ public class InnsynDtoMapper {
     }
 
     private InnsynDokument mapDokumentFraDto(InnsynDokumentDto dto) {
-        return new InnsynDokument(dto.getJournalpostId(), dto.getDokumentId());
+        return new InnsynDokument(new JournalpostId(dto.getJournalpostId()), dto.getDokumentId());
     }
 }

@@ -32,13 +32,12 @@ public class DokumentRepositoryImpl implements DokumentRepository {
     }
 
     @Override
-    public Long lagre(DokumentData dokumentData) {
+    public void lagre(DokumentData dokumentData) {
         entityManager.persist(dokumentData);
         for (DokumentFelles df : dokumentData.getDokumentFelles()) {
             entityManager.persist(df);
         }
         entityManager.flush();
-        return dokumentData.getId();
     }
 
     @Override

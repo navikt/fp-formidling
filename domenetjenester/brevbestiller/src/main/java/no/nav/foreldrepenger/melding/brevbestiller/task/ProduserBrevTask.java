@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.task;
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -40,11 +42,12 @@ public class ProduserBrevTask implements ProsessTaskHandler {
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
         long hendelseId = Long.valueOf(prosessTaskData.getPropertyValue(ProduserBrevTaskProperties.HENDELSE_ID));
-        DokumentHistorikkinnslag historikkinnslag = brevBestillerApplikasjonTjeneste.bestillBrev(hendelseRepository.hentDokumentHendelseMedId(hendelseId));
-        historikkRepository.lagre(historikkinnslag);
-        opprettProsesstaskForHistorikkInnslag(historikkinnslag);
+        List<DokumentHistorikkinnslag> historikkinnslagList = brevBestillerApplikasjonTjeneste.bestillBrev(hendelseRepository.hentDokumentHendelseMedId(hendelseId));
+        for (DokumentHistorikkinnslag historikkinnslag : historikkinnslagList) {
+            historikkRepository.lagre(historikkinnslag);
+            opprettProsesstaskForHistorikkInnslag(historikkinnslag);
+        }
     }
-
 
     private void opprettProsesstaskForHistorikkInnslag(DokumentHistorikkinnslag historikkinnslag) {
         ProsessTaskData prosessTaskData = new ProsessTaskData(PubliserHistorikkTaskProperties.TASKTYPE);
@@ -52,5 +55,4 @@ public class ProduserBrevTask implements ProsessTaskHandler {
         prosessTaskData.setGruppe("FORMIDLING");
         prosessTaskRepository.lagre(prosessTaskData);
     }
-
 }

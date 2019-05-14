@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -24,11 +24,11 @@ import no.nav.foreldrepenger.melding.brevbestiller.dto.BestillBrevDtoMapper;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.melding.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
@@ -44,6 +44,7 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
 import no.nav.vedtak.felles.integrasjon.dokument.produksjon.DokumentproduksjonConsumer;
+import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
 public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplikasjonTjeneste {
@@ -54,7 +55,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     private DokumentXmlDataMapper dokumentXmlDataMapper;
     private DokumentMalUtleder dokumentMalUtleder;
     private DokumentbestillingMapper dokumentbestillingMapper;
-    private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
     private DomeneobjektProvider domeneobjektProvider;
     private DokumentRepository dokumentRepository;
     private BestillBrevDtoMapper bestillBrevDtoMapper;
@@ -68,7 +68,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
                                                 DokumentXmlDataMapper dokumentXmlDataMapper,
                                                 DokumentMalUtleder dokumentMalUtleder,
                                                 DokumentbestillingMapper dokumentbestillingMapper,
-                                                DokumentHendelseDtoMapper dtoTilDomeneobjektMapper,
                                                 DokumentFellesDataMapper dokumentFellesDataMapper,
                                                 DomeneobjektProvider domeneobjektProvider,
                                                 DokumentRepository dokumentRepository,
@@ -77,7 +76,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         this.dokumentXmlDataMapper = dokumentXmlDataMapper;
         this.dokumentMalUtleder = dokumentMalUtleder;
         this.dokumentbestillingMapper = dokumentbestillingMapper;
-        this.dtoTilDomeneobjektMapper = dtoTilDomeneobjektMapper;
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentRepository = dokumentRepository;
@@ -85,35 +83,40 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     }
 
     @Override
-    public DokumentHistorikkinnslag bestillBrev(DokumentHendelse dokumentHendelse) {
+    public List<DokumentHistorikkinnslag> bestillBrev(DokumentHendelse dokumentHendelse) {
         Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.BESTILL);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
-        //FIXME : RS - den tar ikke hensyn til at det kan være flere mottakere
-        Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentData.getFørsteDokumentFelles(), dokumentHendelse, behandling);
-        final DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
         List<InnsynDokument> vedlegg = finnEventuelleVedlegg(behandling, dokumentMal);
-
         boolean harVedlegg = !vedlegg.isEmpty();
-        final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
-                førsteDokumentFelles, harVedlegg);
 
-        førsteDokumentFelles.setXml(elementTilString(brevXmlElement));
+        List<DokumentHistorikkinnslag> historikkinnslagList = new ArrayList<>();
         dokumentRepository.lagre(dokumentData);
 
-        ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = produserIkkeredigerbartDokument(brevXmlElement, dokumentbestillingsinformasjon);
-        if (harVedlegg) {
-            String journalpostId = produserIkkeredigerbartDokumentResponse.getJournalpostId();
-            knyttAlleVedleggTilDokument(vedlegg, journalpostId, behandling.getEndretAv());
-            ferdigstillForsendelse(journalpostId, behandling.getEndretAv());
+        for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
+            Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling);
+            dokumentFelles.setXml(elementTilString(brevXmlElement));
+
+            final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
+                    dokumentFelles, harVedlegg);
+
+            ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = produserIkkeredigerbartDokument(brevXmlElement, dokumentbestillingsinformasjon);
+            if (harVedlegg) {
+                JournalpostId journalpostId = new JournalpostId(produserIkkeredigerbartDokumentResponse.getJournalpostId());
+                knyttAlleVedleggTilDokument(vedlegg, journalpostId, behandling.getEndretAv());
+                ferdigstillForsendelse(journalpostId, behandling.getEndretAv());
+            }
+
+            historikkinnslagList.add(lagHistorikkinnslag(dokumentHendelse, produserIkkeredigerbartDokumentResponse, dokumentMal));
         }
-        return lagHistorikkinnslag(dokumentHendelse, produserIkkeredigerbartDokumentResponse, dokumentMal);
+
+        return historikkinnslagList;
     }
 
-    private void ferdigstillForsendelse(String journalpostId, String endretAvNavn) {
+    private void ferdigstillForsendelse(JournalpostId journalpostId, String endretAvNavn) {
         FerdigstillForsendelseRequest request = new FerdigstillForsendelseRequest();
-        request.setJournalpostId(journalpostId);
+        request.setJournalpostId(journalpostId.getVerdi());
         request.setEndretAvNavn(endretAvNavn);
         try {
             dokumentproduksjonProxyService.ferdigstillForsendelse(request);
@@ -122,17 +125,17 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         }
     }
 
-    private void knyttAlleVedleggTilDokument(Collection<InnsynDokument> vedlegg, String journalpostId, String endretAv) {
+    private void knyttAlleVedleggTilDokument(Collection<InnsynDokument> vedlegg, JournalpostId journalpostId, String endretAv) {
         vedlegg.forEach(v -> knyttVedleggTilForsendelse(journalpostId, v.getJournalpostId(), v.getDokumentId(), endretAv));
     }
 
-    private void knyttVedleggTilForsendelse(String knyttesTilJournalpostId, String knyttesFraJournalpostId, String dokumentId,
+    private void knyttVedleggTilForsendelse(JournalpostId knyttesTilJournalpostId, JournalpostId knyttesFraJournalpostId, String dokumentId,
                                             String endretAvNavn) {
         KnyttVedleggTilForsendelseRequest request = new KnyttVedleggTilForsendelseRequest();
         request.setDokumentId(dokumentId);
         request.setEndretAvNavn(endretAvNavn);
-        request.setKnyttesFraJournalpostId(knyttesFraJournalpostId);
-        request.setKnyttesTilJournalpostId(knyttesTilJournalpostId);
+        request.setKnyttesFraJournalpostId(knyttesFraJournalpostId.getVerdi());
+        request.setKnyttesTilJournalpostId(knyttesTilJournalpostId.getVerdi());
         try {
             dokumentproduksjonProxyService.knyttVedleggTilForsendelse(request);
         } catch (Exception e) {
@@ -147,8 +150,8 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         return domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter();
     }
 
-    private ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokument(Element
-                                                                                            brevXmlElement, Dokumentbestillingsinformasjon dokumentbestillingsinformasjon) {
+    private ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokument(Element brevXmlElement,
+                                                                                    Dokumentbestillingsinformasjon dokumentbestillingsinformasjon) {
         ProduserIkkeredigerbartDokumentRequest produserIkkeredigerbartDokumentRequest = new ProduserIkkeredigerbartDokumentRequest();
         produserIkkeredigerbartDokumentRequest.setBrevdata(brevXmlElement);
         produserIkkeredigerbartDokumentRequest.setDokumentbestillingsinformasjon(dokumentbestillingsinformasjon);
@@ -159,7 +162,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
             throw BrevbestillerFeil.FACTORY.feilFraDokumentProduksjon(funksjonellFeil).toException();
         }
     }
-
 
     private DokumentHistorikkinnslag lagHistorikkinnslag(DokumentHendelse dokumentHendelse,
                                                          ProduserIkkeredigerbartDokumentResponse response,
@@ -217,14 +219,8 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         return DokumentData.builder()
                 .medDokumentMalType(dokumentMalType)
                 .medBehandlingUuid(behandling.getUuid())
-                .medBestiltTid(LocalDateTime.now())
+                .medBestiltTid(FPDateUtil.nå())
                 .medBestillingType(bestillingType.name())
                 .build();
     }
-
-    enum BestillingType {
-        UTKAST,
-        BESTILL
-    }
-
 }

@@ -133,7 +133,7 @@ spec:
     - name: TASK_MANAGER_RUNNER_THREADS
       value: "1"
     - name: DEFAULTDS_VAULT_ENABLE
-      value: true
+      value: "true"
     - name: DEFAULTDS_VAULT_MOUNTPATH
       value: defaultDS.vault.mountpath
     - name: DEFAULTDS_URL

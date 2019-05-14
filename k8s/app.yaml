@@ -41,7 +41,7 @@ spec:
       cpu: "3" # app will have its cpu usage throttled if exceeding this limit
       memory: "2048Mi"  # app will be killed if exceeding these limits
     requests: # App is guaranteed the requested resources and  will be scheduled on nodes with at least this amount of resources available
-      cpu: "0.5"
+      cpu: "0,5"
       memory: "1024Mi"
   ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
     - "INGRESS_URL"

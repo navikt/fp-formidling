@@ -4,8 +4,6 @@ RUN mkdir /app/lib
 RUN mkdir /app/webapp
 RUN mkdir /app/conf
 
-# AppDynamics config
-COPY appdynamics.sh /init-scripts/
 
 # Config
 COPY web/webapp/target/classes/logback.xml /app/conf/

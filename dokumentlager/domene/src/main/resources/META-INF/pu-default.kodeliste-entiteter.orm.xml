@@ -5,32 +5,80 @@
       http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"
                  version="2.1">
 
-    <entity class="no.nav.foreldrepenger.melding.aktør.AdresseType"/>
-    <entity class="no.nav.foreldrepenger.melding.kodeverk.arkiv.ArkivFilType"/>
-    <entity class="no.nav.foreldrepenger.melding.behandling.BehandlingStatus"/>
-    <entity class="no.nav.foreldrepenger.melding.behandling.BehandlingType"/>
-    <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentKategori"/>
-    <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeId"/>
-    <entity class="no.nav.foreldrepenger.melding.fagsak.FagsakStatus"/>
-    <entity class="no.nav.foreldrepenger.melding.fagsak.Fagsystem"/>
-    <entity class="no.nav.foreldrepenger.melding.konfig.KonfigVerdiGruppe"/>
-    <entity class="no.nav.foreldrepenger.melding.konfig.KonfigVerdiType"/>
-    <entity class="no.nav.foreldrepenger.melding.geografisk.Landkoder"/>
-    <entity class="no.nav.foreldrepenger.melding.behandling.MottakKanal"/>
-    <entity class="no.nav.foreldrepenger.melding.aktør.NavBrukerKjønn"/>
-    <entity class="no.nav.foreldrepenger.melding.aktør.PersonstatusType"/>
-    <entity class="no.nav.foreldrepenger.melding.geografisk.Poststed"/>
-    <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.ReaktiveringStatus"/>
-    <entity class="no.nav.foreldrepenger.melding.geografisk.Region"/>
-    <entity class="no.nav.foreldrepenger.melding.personopplysning.SivilstandType"/>
-    <entity class="no.nav.foreldrepenger.melding.skjermlenke.SkjermlenkeType"/>
-    <entity class="no.nav.foreldrepenger.melding.geografisk.Språkkode"/>
-    <entity class="no.nav.foreldrepenger.melding.behandling.VariantFormat"/>
     <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.Venteårsak"/>
     <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.VurderÅrsak"/>
-    <entity class="no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType"/>
-    <entity class="no.nav.foreldrepenger.melding.historikk.HistorikkAktør"/>
+    <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.ReaktiveringStatus"/>
+    <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktType"/>
+
+    <entity class="no.nav.foreldrepenger.melding.aktør.AdresseType"/>
+    <entity class="no.nav.foreldrepenger.melding.aktør.NavBrukerKjønn"/>
+    <entity class="no.nav.foreldrepenger.melding.aktør.PersonstatusType"/>
+
+    <entity class="no.nav.foreldrepenger.melding.behandling.MottakKanal"/>
+    <entity class="no.nav.foreldrepenger.melding.behandling.VariantFormat"/>
+    <entity class="no.nav.foreldrepenger.melding.behandling.BehandlingStatus"/>
+    <entity class="no.nav.foreldrepenger.melding.behandling.BehandlingType"/>
     <entity class="no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak"/>
+    <entity class="no.nav.foreldrepenger.melding.behandling.BehandlingResultatType"/>
+    <entity class="no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen"/>
+    <entity class="no.nav.foreldrepenger.melding.behandling.innsyn.InnsynResultatType"/>
+
+    <entity class="no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus"/>
+    <entity class="no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel"/>
+    <entity class="no.nav.foreldrepenger.melding.beregningsgrunnlag.Inntektskategori"/>
+    <entity class="no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak"/>
+
+    <entity class="no.nav.foreldrepenger.melding.eventmottak.EventmottakStatus"/>
+
+    <entity class="no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType"/>
+    <entity class="no.nav.foreldrepenger.melding.fagsak.FagsakStatus"/>
+    <entity class="no.nav.foreldrepenger.melding.fagsak.Fagsystem"/>
+
+    <entity class="no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType"/>
+
+    <entity class="no.nav.foreldrepenger.melding.geografisk.Landkoder"/>
+    <entity class="no.nav.foreldrepenger.melding.geografisk.Poststed"/>
+    <entity class="no.nav.foreldrepenger.melding.geografisk.Region"/>
+    <entity class="no.nav.foreldrepenger.melding.geografisk.Språkkode"/>
+
+    <entity class="no.nav.foreldrepenger.melding.historikk.HistorikkAktør"/>
+    <entity class="no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType"/>
+
+    <entity class="no.nav.foreldrepenger.melding.inntektarbeidytelse.Arbeidskategori"/>
+    <entity class="no.nav.foreldrepenger.melding.inntektarbeidytelse.RelatertYtelseType"/>
+
     <entity class="no.nav.foreldrepenger.melding.klage.KlageVurdering"/>
+    <entity class="no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak"/>
+
+    <entity class="no.nav.foreldrepenger.melding.kodeverk.arkiv.ArkivFilType"/>
+
+    <entity class="no.nav.foreldrepenger.melding.konfig.KonfigVerdiGruppe"/>
+    <entity class="no.nav.foreldrepenger.melding.konfig.KonfigVerdiType"/>
+
+    <entity class="no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType"/>
+
+    <entity class="no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType"/>
+    <entity class="no.nav.foreldrepenger.melding.personopplysning.SivilstandType"/>
+
+    <entity class="no.nav.foreldrepenger.melding.skjermlenke.SkjermlenkeType"/>
+
+
+    <entity class="no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak"/>
+    <entity class="no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak"/>
+    <entity class="no.nav.foreldrepenger.melding.uttak.InnvilgetÅrsak"/>
+    <entity class="no.nav.foreldrepenger.melding.uttak.PeriodeResultatType"/>
+    <entity class="no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak"/>
+    <entity class="no.nav.foreldrepenger.melding.uttak.StønadskontoType"/>
+    <entity class="no.nav.foreldrepenger.melding.uttak.UttakArbeidType"/>
+    <entity class="no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType"/>
+
+    <entity class="no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev"/>
+
+    <entity class="no.nav.foreldrepenger.melding.verge.BrevMottaker"/>
+
+    <entity class="no.nav.foreldrepenger.melding.vilkår.VilkårType"/>
+    <entity class="no.nav.foreldrepenger.melding.vilkår.Avslagsårsak"/>
+
     <entity class="no.nav.foreldrepenger.melding.ytelsefordeling.UtsettelseÅrsak"/>
+    <entity class="no.nav.foreldrepenger.melding.ytelsefordeling.Årsak"/>
 </entity-mappings>

@@ -22,12 +22,10 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>aktoer-klient</artifactId>
-            <version>${felles.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>person-klient</artifactId>
-            <version>${felles.version}</version>
         </dependency>
     </dependencies>
 

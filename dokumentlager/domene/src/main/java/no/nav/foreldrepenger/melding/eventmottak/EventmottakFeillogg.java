@@ -28,9 +28,10 @@ public class EventmottakFeillogg extends BaseEntitet {
     private String melding;
 
     @ManyToOne(optional = false)
-    @JoinColumnOrFormula(column = @JoinColumn(name = "STATUS", referencedColumnName = "kode", nullable = false))
+    @JoinColumnOrFormula(column = @JoinColumn(name = "status", referencedColumnName = "kode", nullable = false))
     @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + EventmottakStatus.DISCRIMINATOR + "'"))
     private EventmottakStatus status;
+
 
     @Column(name = "ANTALL_FEILEDE_FORSOK")
     private Long antallFeiledeForsøk = 0L;

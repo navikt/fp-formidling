@@ -106,7 +106,7 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>${flyway.version}</version>
+            <version>6.0.0-beta</version>
         </dependency>
 
         <!-- For Status side -->

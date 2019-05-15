@@ -15,8 +15,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.SpraakkodeType;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.NorskPostadresse;
 
 public class DokumentBestillerTjenesteUtil {
-
-    public static final String LANDSKODE_NORGE = "NOR";
+    private static final String LANDSKODE_NORGE = "NOR";
 
     private DokumentBestillerTjenesteUtil() {
 
@@ -43,7 +42,7 @@ public class DokumentBestillerTjenesteUtil {
     static SignerendeBeslutterType lageSignerendeBeslutterType(DokumentFelles dokumentFelles) {
         SignerendeBeslutterType signerendeBeslutterType = new SignerendeBeslutterType();
         signerendeBeslutterType.setSignerendeBeslutterNavn(dokumentFelles.getSignerendeBeslutterNavn());
-        signerendeBeslutterType.setGeografiskEnhet(dokumentFelles.getSignerendeBeslutterGeografiskEnhet());
+        signerendeBeslutterType.setGeografiskEnhet("N/A");
         return signerendeBeslutterType;
     }
 
@@ -88,5 +87,4 @@ public class DokumentBestillerTjenesteUtil {
         adresse.setPoststed(dokumentFelles.getMottakerAdresse().getPoststed());
         return adresse;
     }
-
 }

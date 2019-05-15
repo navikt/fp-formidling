@@ -81,11 +81,9 @@ CREATE TABLE DOKUMENT_FELLES
   SAKSPART_ID              VARCHAR(20)                          NOT NULL,
   SAKSPART_NAVN            VARCHAR(80)                          NOT NULL,
   SIGN_BESLUTTER_NAVN      VARCHAR(80),
-  SIGN_BESLUTTER_GEO_ENHET VARCHAR(80),
   MOTTAKER_ID              VARCHAR(20)                          NOT NULL,
   MOTTAKER_NAVN            VARCHAR(80)                          NOT NULL,
   NAVN_AVSENDER_ENHET      VARCHAR(80)                          NOT NULL,
-  NUMMER_AVSENDER_ENHET    VARCHAR(80),
   KONTAKT_TLF              VARCHAR(80)                          NOT NULL,
   DOKUMENT_DATO            TIMESTAMP(3)                         NOT NULL,
   OPPRETTET_AV             VARCHAR(20)  DEFAULT 'VL'            NOT NULL,
@@ -117,11 +115,9 @@ COMMENT ON COLUMN DOKUMENT_FELLES.AUTOMATISK_BEHANDLET IS 'Er saken blitt automa
 COMMENT ON COLUMN DOKUMENT_FELLES.SAKSPART_ID IS 'Fødselsnummer eller D-nummer til bruker saken gjelder';
 COMMENT ON COLUMN DOKUMENT_FELLES.SAKSPART_NAVN IS 'Navn på bruker saken gjelder';
 COMMENT ON COLUMN DOKUMENT_FELLES.SIGN_BESLUTTER_NAVN IS 'Signerende beslutters navn';
-COMMENT ON COLUMN DOKUMENT_FELLES.SIGN_BESLUTTER_GEO_ENHET IS 'Navn på signerende beslutters geografiske enhet';
 COMMENT ON COLUMN DOKUMENT_FELLES.MOTTAKER_ID IS 'Fødselsnummer eller D-nummer til dokumentmottaker';
 COMMENT ON COLUMN DOKUMENT_FELLES.MOTTAKER_NAVN IS 'Navn på adressat';
 COMMENT ON COLUMN DOKUMENT_FELLES.NAVN_AVSENDER_ENHET IS 'Navn på NAV-enhet som har sendt dokumentet';
-COMMENT ON COLUMN DOKUMENT_FELLES.NUMMER_AVSENDER_ENHET IS 'ID til NAV-enhet som har sendt dokumentet';
 COMMENT ON COLUMN DOKUMENT_FELLES.KONTAKT_TLF IS 'Dokumentmottakers kontaktnummer';
 COMMENT ON COLUMN DOKUMENT_FELLES.DOKUMENT_DATO IS 'Dato dokumentet er produsert';
 COMMENT ON COLUMN DOKUMENT_FELLES.KL_SPRAAK_KODE IS 'Referanse til KODEVERK-kolonnen i KODELISTE-tabellen';

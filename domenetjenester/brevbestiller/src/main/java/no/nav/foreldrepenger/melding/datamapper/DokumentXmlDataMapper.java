@@ -21,7 +21,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -38,9 +37,7 @@ import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
 public class DokumentXmlDataMapper {
-
     private KodeverkRepository kodeverkRepository;
-    private BrevParametere brevParametere;
 
     private Set<String> forlengetBrevMaler = Set.of(DokumentMalType.FORLENGET_MEDL_DOK,
             DokumentMalType.FORLENGET_TIDLIG_SOK,
@@ -52,20 +49,17 @@ public class DokumentXmlDataMapper {
     }
 
     @Inject
-    public DokumentXmlDataMapper(KodeverkRepository kodeverkRepository,
-                                 BrevParametere brevParametere) {
+    public DokumentXmlDataMapper(KodeverkRepository kodeverkRepository) {
         this.kodeverkRepository = kodeverkRepository;
-        this.brevParametere = brevParametere;
     }
 
     public Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
         Element brevXmlElement;
-        DokumentTypeMapper dokumentTypeMapper = null;
+        DokumentTypeMapper dokumentTypeMapper;
         try {
             FellesType fellesType = mapFellesType(dokumentFelles);
             dokumentTypeMapper = velgDokumentMapper(dokumentMalType);
             String brevXml = dokumentTypeMapper.mapTilBrevXML(fellesType, dokumentFelles, hendelse, behandling);
-//            String brevXml = DokumentTypeRuter.dokumentTypeMapper(dokumentMalType).mapTilBrevXML(fellesType, dokumentFelles, hendelse, behandling);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
@@ -74,8 +68,7 @@ public class DokumentXmlDataMapper {
             Document doc = db.parse(is);
             brevXmlElement = doc.getDocumentElement();
         } catch (SAXException | XMLStreamException | ParserConfigurationException | IOException | JAXBException e) {
-            //TODO feilmelding dokumentID - Vi genererer aldri denne IDen..
-            throw FeilFactory.create(DokumentBestillerFeil.class).xmlgenereringsfeil(1l, e).toException();
+            throw FeilFactory.create(DokumentBestillerFeil.class).xmlgenereringsfeil(behandling.getUuid().toString(), e).toException();
         }
         return brevXmlElement;
     }
@@ -88,7 +81,7 @@ public class DokumentXmlDataMapper {
         return CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(faktiskDokumentmal)).get();
     }
 
-    public FellesType mapFellesType(final DokumentFelles dokumentFelles) {
+    private FellesType mapFellesType(final DokumentFelles dokumentFelles) {
         final FellesType fellesType = new FellesType();
         fellesType.setSpraakkode(DokumentBestillerTjenesteUtil.mapSpråkkode(dokumentFelles.getSpråkkode()));
         fellesType.setFagsaksnummer(dokumentFelles.getSaksnummer().getVerdi());
@@ -102,7 +95,6 @@ public class DokumentXmlDataMapper {
         }
         fellesType.setMottaker(lageMottakerType(dokumentFelles));
         fellesType.setNavnAvsenderEnhet(dokumentFelles.getNavnAvsenderEnhet());
-        fellesType.setNummerAvsenderEnhet(dokumentFelles.getNummerAvsenderEnhet());
         fellesType.setKontaktInformasjon(DokumentBestillerTjenesteUtil.lageKontaktInformasjonType(dokumentFelles));
 
         fellesType.setDokumentDato(DateUtil.convertToXMLGregorianCalendarRemoveTimezone(FPDateUtil.iDag()));
@@ -122,7 +114,8 @@ public class DokumentXmlDataMapper {
         mottakerAdresseType.setAdresselinje3(mottakerAdresse.getAdresselinje3());
         mottakerAdresseType.setPostNr(mottakerAdresse.getPostnummer());
         mottakerAdresseType.setPoststed(mottakerAdresse.getPoststed());
-        Landkoder land = mottakerAdresse.getLand() == null ? kodeverkRepository.finn(Landkoder.class, Landkoder.NOR) : kodeverkRepository.finn(Landkoder.class, mottakerAdresse.getLand());
+        Landkoder land = mottakerAdresse.getLand() == null ? kodeverkRepository.finn(Landkoder.class, Landkoder.NOR) :
+                kodeverkRepository.finn(Landkoder.class, mottakerAdresse.getLand());
         mottakerAdresseType.setLand(land.getNavn());
         mottakerType.setMottakerAdresse(mottakerAdresseType);
         return mottakerType;

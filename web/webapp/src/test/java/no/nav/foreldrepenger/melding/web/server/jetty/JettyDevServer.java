@@ -25,7 +25,7 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import no.nav.foreldrepenger.melding.sikkerhet.TestSertifikater;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DataSourceKonfig;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.EnvironmentClass;
 
 public class JettyDevServer extends JettyServer {
     private static final String VTP_ARGUMENT = "--vtp";
@@ -51,6 +51,11 @@ public class JettyDevServer extends JettyServer {
     protected void konfigurer() throws Exception {
         konfigurerLogback();
         super.konfigurer();
+    }
+
+    @Override
+    protected EnvironmentClass getEnvironmentClass() {
+        return EnvironmentClass.LOCALHOST;
     }
 
     protected void konfigurerLogback() throws IOException {
@@ -86,20 +91,11 @@ public class JettyDevServer extends JettyServer {
         if (konfigs.size() == 1) {
             final JettyDevDbKonfigurasjon konfig = konfigs.get(0);
             System.setProperty("defaultDS.url", konfig.getUrl());
-            schema = konfig.getSchema();
             System.setProperty("defaultDS.username", konfig.getUser()); // benyttes kun hvis vault.enable=false
             System.setProperty("defaultDS.password", konfig.getPassword()); // benyttes kun hvis vault.enable=false
-            System.setProperty("defaultDS.vault.enable", Boolean.toString(konfig.isVaultEnable()));
-            System.setProperty("defaultDS.vault.roleprefix", konfig.getVaultRoleprefix());
-            System.setProperty("defaultDS.vault.mountpath", konfig.getVaultMountpath());
         } else {
             throw new RuntimeException("forventet én datasourc-konfiger med defaultDS, men fant " + konfigs.size());
         }
-        konfigurerDataSourceKonfig(schema);
-    }
-
-    protected void konfigurerDataSourceKonfig(String schema) {
-        dataSourceKonfig = new DataSourceKonfig(schema);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.dokumentdata.repository;
 
 import java.util.List;
+import java.util.UUID;
 
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -13,6 +14,5 @@ public interface DokumentRepository {
 
     List<DokumentMalType> hentAlleDokumentMalTyper();
 
-    @Deprecated
-    List<DokumentData> hentDokumentDataListe(Long behandlingId, String dokumentmal);
+    List<DokumentData> hentDokumentDataListe(UUID behandlingUuid, String dokumentmal);
 }

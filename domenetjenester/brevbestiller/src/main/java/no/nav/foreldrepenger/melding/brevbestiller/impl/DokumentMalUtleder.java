@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 @ApplicationScoped
 class DokumentMalUtleder {
 
-    private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingId: ";
+    private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingUuid: ";
 
     private KodeverkTabellRepository kodeverkTabellRepository;
     private DomeneobjektProvider domeneobjektProvider;
@@ -111,7 +111,7 @@ class DokumentMalUtleder {
         List<KonsekvensForYtelsen> konsekvenserForYtelsen = behandlingsresultat.getKonsekvenserForYtelsen();
         boolean ingenKonsekvensForYtelsen = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.INGEN_ENDRING);
         if (ingenKonsekvensForYtelsen && konsekvenserForYtelsen.size() > 1) {
-            throw new IllegalStateException(UTVIKLERFEIL_INGEN_ENDRING_SAMMEN + behandling.getId());
+            throw new IllegalStateException(UTVIKLERFEIL_INGEN_ENDRING_SAMMEN + behandling.getUuid());
         }
         return ingenKonsekvensForYtelsen;
     }

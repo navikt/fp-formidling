@@ -70,9 +70,6 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "sign_beslutter_navn")
     private String signerendeBeslutterNavn;
 
-    @Column(name = "sign_beslutter_geo_enhet")
-    private String signerendeBeslutterGeografiskEnhet;
-
     /**
      * Dokumentbestillingsinformasjon fra dokumentproduksjon tjenesten bruker mottakerId for å sette identen til
      * mottaker.
@@ -89,9 +86,6 @@ public class DokumentFelles extends BaseEntitet {
 
     @Column(name = "navn_avsender_enhet", nullable = false)
     private String navnAvsenderEnhet;
-
-    @Column(name = "nummer_avsender_enhet")
-    private String nummerAvsenderEnhet;
 
     @Column(name = "kontakt_tlf", nullable = false)
     private String kontaktTlf;
@@ -164,10 +158,6 @@ public class DokumentFelles extends BaseEntitet {
         return signerendeBeslutterNavn;
     }
 
-    public String getSignerendeBeslutterGeografiskEnhet() {
-        return signerendeBeslutterGeografiskEnhet;
-    }
-
     public String getMottakerId() {
         return mottakerId;
     }
@@ -182,10 +172,6 @@ public class DokumentFelles extends BaseEntitet {
 
     public String getNavnAvsenderEnhet() {
         return navnAvsenderEnhet;
-    }
-
-    public String getNummerAvsenderEnhet() {
-        return nummerAvsenderEnhet;
     }
 
     public String getKontaktTlf() {
@@ -236,11 +222,9 @@ public class DokumentFelles extends BaseEntitet {
                 && Objects.equals(sakspartId, dokFelles.getSakspartId())
                 && Objects.equals(sakspartNavn, dokFelles.getSakspartNavn())
                 && Objects.equals(signerendeBeslutterNavn, dokFelles.getSignerendeBeslutterNavn())
-                && Objects.equals(signerendeBeslutterGeografiskEnhet, dokFelles.getSignerendeBeslutterGeografiskEnhet())
                 && Objects.equals(mottakerId, dokFelles.getMottakerId())
                 && Objects.equals(mottakerNavn, dokFelles.getMottakerNavn())
                 && Objects.equals(navnAvsenderEnhet, dokFelles.getNavnAvsenderEnhet())
-                && Objects.equals(nummerAvsenderEnhet, dokFelles.getNummerAvsenderEnhet())
                 && Objects.equals(kontaktTlf, dokFelles.getKontaktTlf())
                 && Objects.equals(dokumentDato, dokFelles.getDokumentDato())
                 && Objects.equals(sakspartPersonStatus, dokFelles.getSakspartPersonStatus());
@@ -249,8 +233,8 @@ public class DokumentFelles extends BaseEntitet {
     @Override
     public int hashCode() {
         return Objects.hash(getSpråkkode(), saksnummer, signerendeSaksbehandlerNavn, automatiskBehandlet, sakspartId, sakspartNavn,
-                signerendeBeslutterNavn, signerendeBeslutterGeografiskEnhet, mottakerId, mottakerNavn, navnAvsenderEnhet,
-                nummerAvsenderEnhet, kontaktTlf, dokumentDato, sakspartPersonStatus);
+                signerendeBeslutterNavn, mottakerId, mottakerNavn, navnAvsenderEnhet,
+                kontaktTlf, dokumentDato, sakspartPersonStatus);
     }
 
     @Override
@@ -310,11 +294,6 @@ public class DokumentFelles extends BaseEntitet {
             return this;
         }
 
-        public DokumentFelles.Builder medSignerendeBeslutterGeografiskEnhet(String signerendeBeslutterGeografiskEnhet) {
-            this.dokumentFelles.signerendeBeslutterGeografiskEnhet = signerendeBeslutterGeografiskEnhet;
-            return this;
-        }
-
         public DokumentFelles.Builder medMottakerId(String mottakerId) {
             medMottakerId(mottakerId == null ? null : new PersonIdent(mottakerId));
             return this;
@@ -337,11 +316,6 @@ public class DokumentFelles extends BaseEntitet {
 
         public DokumentFelles.Builder medNavnAvsenderEnhet(String navnAvsenderEnhet) {
             this.dokumentFelles.navnAvsenderEnhet = navnAvsenderEnhet;
-            return this;
-        }
-
-        public DokumentFelles.Builder medNummerAvsenderEnhet(String nummerAvsenderEnhet) {
-            this.dokumentFelles.nummerAvsenderEnhet = nummerAvsenderEnhet;
             return this;
         }
 

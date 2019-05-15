@@ -134,8 +134,7 @@ public class DokumentFellesDataMapper {
         if (behandling.isToTrinnsBehandling()) {
             builder.medAutomatiskBehandlet(Boolean.FALSE)
                     .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
-                    .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter())
-                    .medSignerendeBeslutterGeografiskEnhet("N/A");
+                    .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter());
         }
         builder.build();
     }

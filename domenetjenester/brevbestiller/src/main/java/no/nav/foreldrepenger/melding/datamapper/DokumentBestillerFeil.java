@@ -11,8 +11,8 @@ import no.nav.vedtak.feil.deklarasjon.TekniskFeil;
 public interface DokumentBestillerFeil extends DeklarerteFeil {
     DokumentBestillerFeil FACTORY = FeilFactory.create(DokumentBestillerFeil.class);
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-151666", feilmelding = "Kan ikke bestille dokument for dokumentdata_id %s. Problemer ved generering av xml", logLevel = LogLevel.ERROR)
-    Feil xmlgenereringsfeil(Long dokumentDataId, Exception cause);
+    @TekniskFeil(feilkode = "FPFORMIDLING-151666", feilmelding = "Kan ikke bestille dokument for behandling %s. Problemer ved generering av xml", logLevel = LogLevel.ERROR)
+    Feil xmlgenereringsfeil(String behandlingUuid, Exception cause);
 
     @TekniskFeil(feilkode = "FPFORMIDLING-151337", feilmelding = "Kan ikke konvertere dato %s til xmlformatert dato.", logLevel = LogLevel.ERROR)
     Feil datokonverteringsfeil(String dokumentDataId, Exception cause);

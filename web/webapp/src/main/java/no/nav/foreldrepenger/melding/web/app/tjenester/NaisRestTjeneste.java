@@ -9,12 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.swagger.annotations.Api;
-import no.nav.foreldrepenger.melding.web.app.konfig.InternalApplication;
-import no.nav.foreldrepenger.melding.web.app.selftest.SelftestService;
 
 @Api(tags = {"nais"})
 @Path("/")
@@ -26,20 +21,15 @@ public class NaisRestTjeneste {
     private static final String RESPONSE_CACHE_VAL = "must-revalidate,no-cache,no-store";
     private static final String RESPONSE_OK = "OK";
 
-    private static Logger logger = LoggerFactory.getLogger(InternalApplication.class);
-
     private ApplicationServiceStarter starterService;
-    private SelftestService selftestService;
 
     public NaisRestTjeneste() {
         // CDI
     }
 
     @Inject
-    public NaisRestTjeneste(ApplicationServiceStarter starterService, SelftestService selftestService) {
+    public NaisRestTjeneste(ApplicationServiceStarter starterService) {
         this.starterService = starterService;
-        this.selftestService = selftestService;
-        logger.info("NaisResttjeneste init");
     }
 
     @GET

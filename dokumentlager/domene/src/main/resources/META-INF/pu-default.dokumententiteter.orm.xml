@@ -18,5 +18,7 @@
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentMalRestriksjon"/>
     <entity class="no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg"/>
     <entity class="no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag"/>
+    <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentKategori"/>
+    <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeId"/>
 
 </entity-mappings>

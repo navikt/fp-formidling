@@ -57,7 +57,7 @@ public class KafkaReaderTest {
         dokumentRepository = new DokumentRepositoryImpl(entityManager);
         dtoTilDomeneobjektMapper = new DokumentHendelseDtoMapper(kodeverkRepository, dokumentRepository);
         jsonHendelseHandler = new JsonHendelseHandler(hendelseRepository, prosessTaskRepository, dtoTilDomeneobjektMapper);
-        this.kafkaReader = new KafkaReader(null, jsonHendelseHandler, hendelseRepository);
+        this.kafkaReader = new KafkaReader(jsonHendelseHandler, hendelseRepository);
     }
 
     @Test

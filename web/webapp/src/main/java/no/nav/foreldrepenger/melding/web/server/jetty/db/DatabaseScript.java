@@ -10,7 +10,7 @@ public class DatabaseScript {
 
     private final MigrationDataSource migrationDataSource;
     private final String locations;
-    private final static boolean SKAL_CLEANE_DATABASEN = false;
+    private final static boolean SKAL_CLEANE_DATABASEN = true;
 
     public DatabaseScript(MigrationDataSource migrationDataSource, String locations) {
         this.migrationDataSource = migrationDataSource;
@@ -53,6 +53,5 @@ public class DatabaseScript {
             this.dataSource = dataSource;
             this.initSql = initSql;
         }
-
     }
 }

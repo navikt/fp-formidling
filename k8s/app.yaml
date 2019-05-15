@@ -38,7 +38,7 @@ spec:
     enabled: false # Optional. When true, envoy-proxy sidecar will be injected into pod and https urls envvars will be rewritten
   resources: # Optional. See: http://kubernetes.io/docs/user-guide/compute-resources/
     limits:
-      cpu: "3" # app will have its cpu usage throttled if exceeding this limit
+      cpu: "2" # app will have its cpu usage throttled if exceeding this limit
       memory: "2048Mi"  # app will be killed if exceeding these limits
     requests: # App is guaranteed the requested resources and  will be scheduled on nodes with at least this amount of resources available
       cpu: 500m

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.datamapper.brev;
+package no.nav.foreldrepenger.melding.brev.fritekstmal;
 
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 

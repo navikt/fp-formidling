@@ -15,6 +15,7 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.brev.fritekstmal.BrevmalKildefiler;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -61,7 +62,7 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
     @Override
     protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
         FagType fagType = new FagType();
-        fagType.setHovedoverskrift(tryApply(new Object(), overskriftMal));
+        fagType.setHovedoverskrift(tryApply(new Brevdata(behandling.getSpråkkode()) {}, overskriftMal));
         fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling), brødtekstMal));
         return fagType;
     }
@@ -81,7 +82,7 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
         }
     }
 
-    private String tryApply(Object brevdata, Template template) {
+    private String tryApply(Brevdata brevdata, Template template) {
         try {
             return template.apply(brevdata);
         } catch (IOException e) {
@@ -90,6 +91,7 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
     }
 
     abstract String getSubfolder();
+
     abstract Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling);
 
     abstract class Brevdata {
@@ -101,11 +103,11 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
             bundle = RESOURCE_BUNDLE_ROOT + getSubfolder();
         }
 
-        String getLocale() {
+        public String getLocale() {
             return locale;
         }
 
-        String getBundle() {
+        public String getBundle() {
             return bundle;
         }
     }

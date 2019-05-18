@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.dokumentdata.repository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -56,10 +57,10 @@ public class DokumentRepositoryImpl implements DokumentRepository {
     }
 
     @Override
-    public List<DokumentData> hentDokumentDataListe(Long behandlingId, String dokumentmal) {
+    public List<DokumentData> hentDokumentDataListe(UUID behandlingUuid, String dokumentmal) {
         TypedQuery<DokumentData> query = entityManager
-                .createQuery("from DokumentData dd where dd.behandling.id = :behandlingId and dd.dokumentMalType.kode = :dokumentmal", DokumentData.class)
-                .setParameter("behandlingId", behandlingId)
+                .createQuery("from DokumentData dd where dd.behandlingUuid = :behandlingUuid and dd.dokumentMalType.kode = :dokumentmal", DokumentData.class)
+                .setParameter("behandlingUuid", behandlingUuid)
                 .setParameter("dokumentmal", dokumentmal);
 
         return query.getResultList();

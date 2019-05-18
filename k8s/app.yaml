@@ -24,7 +24,7 @@ spec:
     periodSeconds: 10
     failureThreshold: 27
   replicas: # Optional. Set min = max to disable autoscaling.
-    min: 2 # minimum number of replicas.
+    min: 1 # minimum number of replicas.
     max: 2 # maximum number of replicas.
     cpuThresholdPercentage: 80 # total cpu percentage threshold on deployment, at which point it will increase number of pods if current < max
   leaderElection: false # Optional. If true, a http endpoint will be available at $ELECTOR_PATH that return the current leader

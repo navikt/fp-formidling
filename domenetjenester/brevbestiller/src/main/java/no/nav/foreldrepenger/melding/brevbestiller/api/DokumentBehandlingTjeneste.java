@@ -6,8 +6,7 @@ import java.util.UUID;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.BrevmalDto;
 
 public interface DokumentBehandlingTjeneste {
-    List<BrevmalDto> hentBrevmalerFor(UUID behandlingId);
+    List<BrevmalDto> hentBrevmalerFor(UUID behandlingUuid);
 
-    @Deprecated
-    boolean erDokumentProdusert(Long behandlingId, String dokumentMalTypeKode);
+    boolean erDokumentProdusert(UUID behandlingUuid, String dokumentMalTypeKode);
 }

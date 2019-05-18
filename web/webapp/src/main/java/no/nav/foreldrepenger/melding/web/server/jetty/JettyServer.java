@@ -12,13 +12,13 @@ import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import no.nav.foreldrepenger.melding.web.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DataSourceKonfig;
 import no.nav.foreldrepenger.melding.web.server.jetty.db.DatabaseScript;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceRole;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceUtil;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.EnvironmentClass;
 import no.nav.vedtak.isso.IssoApplication;
 
 public class JettyServer extends AbstractJettyServer {
-
-    DataSourceKonfig dataSourceKonfig;
 
     public JettyServer() {
         this(new JettyWebKonfigurasjon());
@@ -45,12 +45,7 @@ public class JettyServer extends AbstractJettyServer {
 
     @Override
     protected void konfigurerMiljø() throws Exception {
-        konfigurerDataSourceKonfig();
         hacks4Nais();
-    }
-
-    protected void konfigurerDataSourceKonfig() {
-        dataSourceKonfig = new DataSourceKonfig();
     }
 
     private void hacks4Nais() {
@@ -83,12 +78,23 @@ public class JettyServer extends AbstractJettyServer {
 
     @Override
     protected void konfigurerJndi() throws Exception {
-        new EnvEntry("jdbc/defaultDS", dataSourceKonfig.getDefaultDatasource());
+        new EnvEntry("jdbc/defaultDS", DatasourceUtil.createDatasource("defaultDS", DatasourceRole.USER, getEnvironmentClass()));
     }
 
     @Override
     protected void migrerDatabaser() throws IOException {
-        new DatabaseScript(dataSourceKonfig.getMigrationDatasource(), dataSourceKonfig.getMigrationScripts()).migrate();
+        EnvironmentClass environmentClass = getEnvironmentClass();
+        String initSql = String.format("SET ROLE \"%s\"", DatasourceUtil.getDbRole("defaultDS", DatasourceRole.ADMIN));
+        if (EnvironmentClass.LOCALHOST.equals(environmentClass)) {
+            //  TODO: Ønsker egentlig ikke dette, men har ikke satt opp skjema lokalt
+            // til å ha en admin bruker som gjør migrering og en annen som gjør CRUD operasjoner
+            initSql = null;
+        }
+        DatabaseScript.migrate(DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass), initSql);
+    }
+
+    protected EnvironmentClass getEnvironmentClass() {
+        return EnvironmentUtil.getEnvironmentClass();
     }
 
     @Override

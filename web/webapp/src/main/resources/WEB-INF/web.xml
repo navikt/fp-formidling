@@ -15,12 +15,6 @@
         <param-value>false</param-value>
     </context-param>
 
-    <!-- Listeners her slik at vi kan styre rekkefølgen de kjøres i: -->
-    <listener>
-        <!-- Ønsker denne _sist_. -->
-        <listener-class>no.nav.foreldrepenger.melding.web.app.tjenester.ApplicationContextListener</listener-class>
-    </listener>
-
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Ubeskyttet</web-resource-name>

@@ -60,11 +60,10 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
         return sorterte;
     }
 
-    //TODO - Denne gjør ingenting?
     @Override
-    public boolean erDokumentProdusert(Long behandlingId, String dokumentMalTypeKode) {
+    public boolean erDokumentProdusert(UUID behandlingUuid, String dokumentMalTypeKode) {
         return new SjekkDokumentTilgjengelig(dokumentRepository)
-                .erDokumentProdusert(behandlingId, dokumentMalTypeKode);
+                .erDokumentProdusert(behandlingUuid, dokumentMalTypeKode);
     }
 
     // Fjerner dokumentmaler som aldri er relevante for denne behandlingstypen

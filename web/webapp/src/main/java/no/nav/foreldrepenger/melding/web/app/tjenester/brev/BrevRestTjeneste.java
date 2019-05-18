@@ -87,7 +87,7 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Boolean harSendtVarselOmRevurdering(@Valid BehandlingIdDto dto) {
-        return dokumentBehandlingTjeneste.erDokumentProdusert(dto.getBehandlingId(), DokumentMalType.REVURDERING_DOK); // NOSONAR
+        return dokumentBehandlingTjeneste.erDokumentProdusert(dto.getBehandlingUuid(), DokumentMalType.REVURDERING_DOK); // NOSONAR
     }
 
     @POST

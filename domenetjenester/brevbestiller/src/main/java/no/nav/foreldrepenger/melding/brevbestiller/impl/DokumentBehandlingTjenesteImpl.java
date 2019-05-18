@@ -71,6 +71,9 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
         List<DokumentMalType> fjernes = kandidater.stream()
                 .filter(dm -> !dm.erTilgjengeligForManuellUtsendelse())
                 .collect(Collectors.toList());
+//        if (!behandling.gjelderForeldrepenger) { // TODO, men ikke en blocker.
+//            fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.ETTERLYS_INNTEKTSMELDING_DOK));
+//        }
         if (harBehandledeAksjonspunktVarselOmRevurdering(aksjonspunkter)) {
             fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.FORLENGET_DOK));
             fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.FORLENGET_MEDL_DOK));

@@ -33,7 +33,7 @@ public class FritekstBrevMapper implements DokumentTypeMapper {
         return JaxbHelper.marshalNoNamespaceXML(FritekstbrevConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
+    protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
         FagType fagType = new FagType();
         String faktiskBrødtekst = finnFaktiskBrødtekst(hendelse, behandling);
         String faktiskTittel = finnFaktiskTittel(hendelse, behandling);

@@ -59,6 +59,13 @@
             <artifactId>hendelsekontrakter</artifactId>
         </dependency>
 
+        <!-- External Libraries -->
+        <dependency>
+            <groupId>com.github.jknack</groupId>
+            <artifactId>handlebars</artifactId>
+            <version>4.1.2</version>
+        </dependency>
+        
         <!-- test -->
         <dependency>
             <groupId>junit</groupId>

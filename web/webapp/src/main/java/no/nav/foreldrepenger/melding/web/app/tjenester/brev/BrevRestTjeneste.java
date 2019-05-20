@@ -25,11 +25,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.ForhaandsvisDokumentDto;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjeneste;
-import no.nav.foreldrepenger.melding.brevbestiller.dto.BestillBrevDto;
-import no.nav.foreldrepenger.melding.brevbestiller.dto.BestillBrevDtoMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.BrevmalDto;
+import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingDtoMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.task.ProduserBrevTaskProperties;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -49,7 +49,7 @@ public class BrevRestTjeneste {
     private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
     private ProsessTaskRepository prosessTaskRepository;
     private HendelseRepository hendelseRepository;
-    private BestillBrevDtoMapper bestillBrevDtoMapper;
+    private DokumentbestillingDtoMapper dokumentbestillingDtoMapper;
 
     public BrevRestTjeneste() {
         //CDI
@@ -60,12 +60,12 @@ public class BrevRestTjeneste {
                             BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste,
                             ProsessTaskRepository prosessTaskRepository,
                             HendelseRepository hendelseRepository,
-                            BestillBrevDtoMapper bestillBrevDtoMapper) {
+                            DokumentbestillingDtoMapper dokumentbestillingDtoMapper) {
         this.dokumentBehandlingTjeneste = dokumentBehandlingTjeneste;
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
         this.prosessTaskRepository = prosessTaskRepository;
         this.hendelseRepository = hendelseRepository;
-        this.bestillBrevDtoMapper = bestillBrevDtoMapper;
+        this.dokumentbestillingDtoMapper = dokumentbestillingDtoMapper;
     }
 
     @POST
@@ -97,10 +97,12 @@ public class BrevRestTjeneste {
     @ApiOperation(value = "Returnerer en pdf som er en forhåndsvisning av brevet")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response forhaandsvisDokument(
-            @ApiParam("Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid BestillBrevDto bestillBrevDto) { // NOSONAR
+    public ForhaandsvisDokumentDto forhaandsvisDokument(
+            @ApiParam("Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid AbacDokumentbestillingDto dokumentbestillingDto) { // NOSONAR
         Response.ResponseBuilder responseBuilder;
-        byte[] dokument = brevBestillerApplikasjonTjeneste.forhandsvisBrev(bestillBrevDto);
+        byte[] dokument = brevBestillerApplikasjonTjeneste.forhandsvisBrev(dokumentbestillingDto);
+        //TODO: Dette trenges når fpsak-frontend kaller fpformidling direkt, ikke via fpsak
+/*
         if (dokument != null && dokument.length != 0) {
             responseBuilder = Response.ok().entity(java.util.Base64.getEncoder().encode(dokument));
             responseBuilder.type("application/pdf");
@@ -109,6 +111,8 @@ public class BrevRestTjeneste {
         }
         responseBuilder = Response.serverError();
         return responseBuilder.build();
+*/
+        return new ForhaandsvisDokumentDto(dokument);
     }
 
     @POST
@@ -119,8 +123,8 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(action = UPDATE, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public void bestillDokument(
-            @ApiParam("Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid BestillBrevDto bestillBrevDto) { // NOSONAR
-        DokumentHendelse hendelse = bestillBrevDtoMapper.mapDokumentbestillingFraDtoForEndepunkt(bestillBrevDto);
+            @ApiParam("Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid AbacDokumentbestillingDto dokumentbestillingDto) { // NOSONAR
+        DokumentHendelse hendelse = dokumentbestillingDtoMapper.mapDokumentbestillingFraDtoForEndepunkt(dokumentbestillingDto);
         hendelseRepository.lagre(hendelse);
         opprettBestillBrevTask(hendelse);
         LOG.info("lagret hendelse:{} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingUuid());

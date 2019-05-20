@@ -48,7 +48,11 @@
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>dokumentproduksjon-klient</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+            <artifactId>fp-formidling-v1</artifactId>
+        </dependency>
+        
         <!-- Kontrakter -->
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>

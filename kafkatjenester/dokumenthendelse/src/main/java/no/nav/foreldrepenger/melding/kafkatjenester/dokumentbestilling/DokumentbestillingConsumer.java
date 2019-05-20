@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling;
 
+import java.time.Duration;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,20 +23,20 @@ import no.nav.vedtak.felles.cdi.AktiverRequestContext;
 
 @ApplicationScoped
 @AktiverRequestContext
-public class DokumentMeldingConsumer implements AppServiceHandler {
+public class DokumentbestillingConsumer implements AppServiceHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(DokumentMeldingConsumer.class);
+    private static final Logger log = LoggerFactory.getLogger(DokumentbestillingConsumer.class);
     private KafkaStreams stream;
     private String topic;
     private KafkaReader kafkaReader;
 
-    public DokumentMeldingConsumer() {
+    public DokumentbestillingConsumer() {
         //CDI
     }
 
     @Inject
-    public DokumentMeldingConsumer(DokumenthendelseStreamKafkaProperties streamKafkaProperties,
-                                   KafkaReader kafkaReader) {
+    public DokumentbestillingConsumer(DokumentbestillingStreamKafkaProperties streamKafkaProperties,
+                                      KafkaReader kafkaReader) {
         this.topic = streamKafkaProperties.getTopic();
         this.kafkaReader = kafkaReader;
 
@@ -52,7 +52,7 @@ public class DokumentMeldingConsumer implements AppServiceHandler {
         stream = new KafkaStreams(topology, props);
     }
 
-    private Properties setupProperties(DokumenthendelseStreamKafkaProperties streamProperties) {
+    private Properties setupProperties(DokumentbestillingStreamKafkaProperties streamProperties) {
         Properties props = new Properties();
 
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, streamProperties.getApplicationId());
@@ -85,12 +85,23 @@ public class DokumentMeldingConsumer implements AppServiceHandler {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, streamProperties.getValueClass());
         props.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, LogAndFailExceptionHandler.class);
 
-        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "200");
-        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "100000");
+        props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        props.put("num.standby.replicas", 1);
+
+
+        //props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "100000");
 
         return props;
     }
 
+    public KafkaStreams.State getTilstand() {
+        return stream.state();
+    }
+
+    public String getTopic() {
+        return topic;
+    }
 
     private void handleMessage(String key, String payload) {
         kafkaReader.prosesser(payload);
@@ -107,7 +118,7 @@ public class DokumentMeldingConsumer implements AppServiceHandler {
     @Override
     public void stop() {
         log.info("Starter shutdown av topic={}, tilstand={} med 10 sekunder timeout", topic, stream.state());
-        stream.close(60, TimeUnit.SECONDS);
+        stream.close(Duration.ofSeconds(10));
         log.info("Shutdown av topic={}, tilstand={} med 10 sekunder timeout", topic, stream.state());
     }
 

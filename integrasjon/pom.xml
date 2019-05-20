@@ -15,7 +15,6 @@
     <name>FP-FORMIDLING :: Integrasjon</name>
 
     <modules>
-        <module>hendelsekontrakter</module>
         <module>dokumentkontrakter</module>
         <module>dtomapper</module>
     </modules>

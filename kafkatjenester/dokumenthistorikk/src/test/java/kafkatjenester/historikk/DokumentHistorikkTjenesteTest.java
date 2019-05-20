@@ -25,8 +25,8 @@ import no.nav.foreldrepenger.melding.hendelser.HendelseRepositoryImpl;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
-import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkMeldingProducer;
 import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkTjeneste;
+import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkinnslagProducer;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
 public class DokumentHistorikkTjenesteTest {
@@ -37,7 +37,7 @@ public class DokumentHistorikkTjenesteTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
     private DokumentHistorikkTjeneste historikkTjeneste;
     @Spy
-    private DokumentHistorikkMeldingProducer historikkMeldingProducer;
+    private DokumentHistorikkinnslagProducer historikkMeldingProducer;
     private DokumentRepository dokumentRepository;
     private HendelseRepository hendelseRepository;
 
@@ -60,7 +60,7 @@ public class DokumentHistorikkTjenesteTest {
                 .medBehandlingUuid(UUID.randomUUID())
                 .medHendelseId(hendelse.getId())
                 .medDokumentMalType(dokumentRepository.hentDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK))
-                .medJournalpostId(new JournalpostId("ID"))
+                .medJournalpostId(new JournalpostId("123"))
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)
                 .medDokumentId("123")
                 .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)

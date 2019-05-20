@@ -8,7 +8,7 @@ import no.nav.familie.topic.TopicManifest;
 import no.nav.vedtak.konfig.KonfigVerdi;
 
 @Dependent
-public class DokumenthendelseStreamKafkaProperties {
+public class DokumentbestillingStreamKafkaProperties {
 
     private final String bootstrapServers;
     private final String schemaRegistryUrl;
@@ -19,11 +19,11 @@ public class DokumenthendelseStreamKafkaProperties {
     private Topic kontraktTopic;
 
     @Inject
-    DokumenthendelseStreamKafkaProperties(@KonfigVerdi("kafka.bootstrap.servers") String bootstrapServers,
-                                          @KonfigVerdi("kafka.dokumenthendelse.schema.registry.url") String schemaRegistryUrl,
-                                          @KonfigVerdi("systembruker.username") String username,
-                                          @KonfigVerdi("systembruker.password") String password,
-                                          @KonfigVerdi("kafka.dokumenthendelse.topic") String topic) {
+    DokumentbestillingStreamKafkaProperties(@KonfigVerdi("kafka.bootstrap.servers") String bootstrapServers,
+                                            @KonfigVerdi("schema.registry.url") String schemaRegistryUrl,
+                                            @KonfigVerdi("systembruker.username") String username,
+                                            @KonfigVerdi("systembruker.password") String password,
+                                            @KonfigVerdi("kafka.dokumentbestilling.topic") String topic) {
         this.topic = topic;
         this.applicationId = ApplicationIdUtil.get();
         this.bootstrapServers = bootstrapServers;
@@ -40,10 +40,6 @@ public class DokumenthendelseStreamKafkaProperties {
     String getSchemaRegistryUrl() {
         return schemaRegistryUrl;
     }
-
-//    String getClientId() {
-//        return topic.getConsumerClientId();
-//    }
 
     String getUsername() {
         return username;

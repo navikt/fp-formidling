@@ -19,27 +19,26 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import no.nav.vedtak.konfig.KonfigVerdi;
 
 @ApplicationScoped
-public class DokumentHistorikkMeldingProducer {
+public class DokumentHistorikkinnslagProducer {
 
     Producer<String, String> producer;
     String topic;
 
-    public DokumentHistorikkMeldingProducer() {
+    public DokumentHistorikkinnslagProducer() {
         // for CDI proxy
     }
 
     @Inject
-    public DokumentHistorikkMeldingProducer(@KonfigVerdi("kafka.dokumenthistorikk.topic") String topic,
+    public DokumentHistorikkinnslagProducer(@KonfigVerdi("kafka.historikkinnslag.topic") String topic,
                                             @KonfigVerdi("kafka.bootstrap.servers") String bootstrapServers,
-                                            @KonfigVerdi("kafka.dokumenthistorikk.schema.registry.url") String schemaRegistryUrl,
-                                            @KonfigVerdi("kafka.dokumenthistorikk.client.id") String clientId,
+                                            @KonfigVerdi("schema.registry.url") String schemaRegistryUrl,
                                             @KonfigVerdi("systembruker.username") String username,
                                             @KonfigVerdi("systembruker.password") String password) {
         Properties properties = new Properties();
 
         properties.put("bootstrap.servers", bootstrapServers);
         properties.put("schema.registry.url", schemaRegistryUrl);
-        properties.put("client.id", clientId);
+        properties.put("client.id", "KP-" + topic);
 
         setSecurity(username, properties);
         setUsernameAndPassword(username, password, properties);

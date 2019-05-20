@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import no.nav.foreldrepenger.melding.hendelsekontrakter.hendelse.DokumentHistorikkDto;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.kafkatjenester.felles.util.Serialiseringsverktøy;
+import no.nav.historikk.v1.HistorikkInnslagV1;
 
 @ApplicationScoped
 public class DokumentHistorikkTjeneste {
@@ -21,30 +21,30 @@ public class DokumentHistorikkTjeneste {
 
     private static final ObjectMapper mapper = Serialiseringsverktøy.getObjectMapper();
 
-    private DokumentHistorikkMeldingProducer meldingProducer;
+    private DokumentHistorikkinnslagProducer meldingProducer;
 
     public DokumentHistorikkTjeneste() {
         //CDI
     }
 
     @Inject
-    public DokumentHistorikkTjeneste(DokumentHistorikkMeldingProducer dokumentMeldingProducer) {
+    public DokumentHistorikkTjeneste(DokumentHistorikkinnslagProducer dokumentMeldingProducer) {
         this.meldingProducer = dokumentMeldingProducer;
     }
 
 
     public void publiserHistorikk(DokumentHistorikkinnslag historikkInnslag) {
-        DokumentHistorikkDto historikk = new DokumentHistorikkDto(historikkInnslag);
+        HistorikkInnslagV1 historikk = HistorikkTilDtoMapper.mapHistorikkinnslag(historikkInnslag);
         publiserHistorikk(historikk, historikkInnslag.getHendelseId());
     }
 
-    void publiserHistorikk(DokumentHistorikkDto jsonHistorikk, long hendelseId) {
+    void publiserHistorikk(HistorikkInnslagV1 jsonHistorikk, long hendelseId) {
         String serialisertJson = serialiser(jsonHistorikk);
         meldingProducer.sendJson(serialisertJson);
         log.info("Publisert historikk for hendelse: {} : {}", hendelseId, serialisertJson);
     }
 
-    private String serialiser(DokumentHistorikkDto historikk) {
+    private String serialiser(HistorikkInnslagV1 historikk) {
         try {
             return mapper.writeValueAsString(historikk);
         } catch (IOException e) {

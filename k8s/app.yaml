@@ -106,18 +106,12 @@ spec:
       value: oidc_sts.issuerUrl
     - name: OIDC_STS_JWKSURL
       value: oidc_sts.jwksUrl
-      #Dokumenthendelse
-    - name: KAFKA_DOKUMENTHENDELSE_SCHEMA_REGISTRY_URL
-      value: kafka.dokumenthendelse.schema.registry.url
-    - name: KAFKA_DOKUMENTHENDELSE_GROUP_ID
-      value: kafka.dokumenthendelse.group.id
-    - name: KAFKA_DOKUMENTHENDELSE_TOPIC
-      value: kafka.dokumenthendelse.topic
+      #KAFKA
+    - name: SCHEMA_REGISTRY_URL
+      value: schema.registry.url
+    - name: KAFKA_DOKUMENTBESTILLING_TOPIC
+      value: kafka.dokumentbestilling.topic
     #DokumentHistorikk
-    - name: KAFKA_DOKUMENTHISTORIKK_SCHEMA_REGISTRY_URL
-      value: kafka.dokumenthistorikk.schema.registry.url
-    - name: KAFKA_DOKUMENTHISTORIKK_CLIENT_ID
-      value: kafka.dokumenthistorikk.client.id
     - name: KAFKA_DOKUMENTHISTORIKK_TOPIC
       value: kafka.dokumenthistorikk.topic
     #Generell Kafka

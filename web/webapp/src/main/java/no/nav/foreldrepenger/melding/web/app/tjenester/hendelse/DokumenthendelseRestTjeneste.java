@@ -23,7 +23,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
-import no.nav.foreldrepenger.melding.brevbestiller.dto.BestillBrevDto;
+import no.nav.foreldrepenger.melding.web.app.tjenester.brev.AbacDokumentbestillingDto;
 import no.nav.vedtak.felles.jpa.Transaction;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
@@ -52,12 +52,11 @@ public class DokumenthendelseRestTjeneste {
     @ApiOperation(value = "Proseserer hendelse og sender ")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response prossesereHendelse(@NotNull @ApiParam("DokumentHendelseDto") @Valid BestillBrevDto dokumentHendelseDto) {
+    public Response prossesereHendelse(@NotNull @ApiParam("DokumentHendelseDto") @Valid AbacDokumentbestillingDto dokumentHendelseDto) {
         LOGGER.info("hendelse = " + dokumentHendelseDto);
         Response.ResponseBuilder responseBuilder;
         final byte[] brevPdfVersjon = brevBestillerApplikasjonTjeneste.forhandsvisBrev(dokumentHendelseDto);
         if (brevPdfVersjon != null && brevPdfVersjon.length != 0) {
-            LOGGER.info("Forhåndsvist brev=" + brevPdfVersjon);
             responseBuilder = Response.ok().entity(java.util.Base64.getEncoder().encode(brevPdfVersjon));
             responseBuilder.type("application/pdf");
             responseBuilder.header("Content-Disposition", "filename=dokument.pdf");

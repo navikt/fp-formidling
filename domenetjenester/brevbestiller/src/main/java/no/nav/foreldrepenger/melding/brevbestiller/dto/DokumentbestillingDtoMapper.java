@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.brevbestiller.dto;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
@@ -13,25 +14,24 @@ import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
-public class BestillBrevDtoMapper {
-
+public class DokumentbestillingDtoMapper {
     private KodeverkRepository kodeverkRepository;
     private DokumentRepository dokumentRepository;
 
-    public BestillBrevDtoMapper() {
+    public DokumentbestillingDtoMapper() {
         //CDI
     }
 
     @Inject
-    public BestillBrevDtoMapper(KodeverkRepository kodeverkRepository, DokumentRepository dokumentRepository) {
+    public DokumentbestillingDtoMapper(KodeverkRepository kodeverkRepository, DokumentRepository dokumentRepository) {
         this.kodeverkRepository = kodeverkRepository;
         this.dokumentRepository = dokumentRepository;
     }
 
-    public DokumentHendelse mapDokumentbestillingFraDtoForEndepunkt(BestillBrevDto brevDto) {
+    public DokumentHendelse mapDokumentbestillingFraDtoForEndepunkt(DokumentbestillingDto brevDto) {
         return new DokumentHendelse.Builder()
                 .medBehandlingUuid(brevDto.getBehandlingUuid())
-                .medYtelseType(utledYtelseType(brevDto.getYtelseType()))
+                .medYtelseType(utledYtelseType(brevDto.getYtelseType().getKode()))
                 .medFritekst(brevDto.getFritekst())
                 .medTittel(brevDto.getTittel())
                 .medHistorikkAktør(utledHistorikkAktør(brevDto.getHistorikkAktør()))

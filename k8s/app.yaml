@@ -112,8 +112,8 @@ spec:
     - name: KAFKA_DOKUMENTBESTILLING_TOPIC
       value: kafka.dokumentbestilling.topic
     #DokumentHistorikk
-    - name: KAFKA_DOKUMENTHISTORIKK_TOPIC
-      value: kafka.dokumenthistorikk.topic
+    - name: KAFKA_HISTORIKKINNSLAG_TOPIC
+      value: kafka.historikkinnslag.topic
     #Generell Kafka
     - name: KAFKA_BOOTSTRAP_SERVERS
       value: kafka.bootstrap.servers

@@ -12,8 +12,11 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakStatus;
+import no.nav.foreldrepenger.melding.hendelse.HendelseHandler;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.vedtak.felles.AktiverContextOgTransaksjon;
 import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
@@ -21,18 +24,19 @@ import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 @ApplicationScoped
 @AktiverContextOgTransaksjon
 public class KafkaReader {
-
     private static final Logger log = LoggerFactory.getLogger(KafkaReader.class);
-    private JsonHendelseHandler jsonHendelseHandler;
+    private HendelseHandler hendelseHandler;
     private StringBuilder feilmelding;
     private HendelseRepository hendelseRepository;
-
+    private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
 
     @Inject
-    public KafkaReader(JsonHendelseHandler jsonOppgaveHandler,
-                       HendelseRepository hendelseRepository) {
-        this.jsonHendelseHandler = jsonOppgaveHandler;
+    public KafkaReader(HendelseHandler jsonOppgaveHandler,
+                       HendelseRepository hendelseRepository,
+                       DokumentHendelseDtoMapper dtoTilDomeneobjektMapper) {
+        this.hendelseHandler = jsonOppgaveHandler;
         this.hendelseRepository = hendelseRepository;
+        this.dtoTilDomeneobjektMapper = dtoTilDomeneobjektMapper;
     }
 
     public KafkaReader() {
@@ -45,7 +49,8 @@ public class KafkaReader {
         try {
             DokumentbestillingV1 jsonHendelse = deserialiser(melding, DokumentbestillingV1.class);
             if (jsonHendelse != null) {
-                jsonHendelseHandler.prosesser(jsonHendelse);
+                DokumentHendelse hendelse = dtoTilDomeneobjektMapper.mapDokumentHendelseFraDtoForKafka(jsonHendelse);
+                hendelseHandler.prosesser(hendelse);
                 return;
             }
             loggFeiletDeserialisering(melding);
@@ -73,5 +78,4 @@ public class KafkaReader {
     private void loggFeiletDeserialisering(String melding) {
         hendelseRepository.lagre(new EventmottakFeillogg(melding, EventmottakStatus.FEILET, LocalDateTime.now(), feilmelding.toString()));
     }
-
 }

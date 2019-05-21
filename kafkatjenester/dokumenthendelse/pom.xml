@@ -28,6 +28,10 @@
             <artifactId>domene</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>hendelse</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-testutilities</artifactId>
             <scope>test</scope>

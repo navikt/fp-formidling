@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
 import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
+import no.nav.foreldrepenger.melding.hendelse.HendelseHandler;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepositoryImpl;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
@@ -32,8 +33,6 @@ import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 
 public class KafkaReaderTest {
-
-
     @Rule
     public UnittestRepositoryRule repoRule = new UnittestRepositoryRule();
     @Rule
@@ -44,10 +43,8 @@ public class KafkaReaderTest {
     private ProsessTaskRepository prosessTaskRepository;
     private KodeverkRepository kodeverkRepository;
     private DokumentRepository dokumentRepository;
-    private JsonHendelseHandler jsonHendelseHandler;
+    private HendelseHandler hendelseHandler;
     private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
-
-
     private KafkaReader kafkaReader;
 
     @Before
@@ -56,8 +53,8 @@ public class KafkaReaderTest {
         kodeverkRepository = new KodeverkRepositoryImpl(entityManager);
         dokumentRepository = new DokumentRepositoryImpl(entityManager);
         dtoTilDomeneobjektMapper = new DokumentHendelseDtoMapper(kodeverkRepository, dokumentRepository);
-        jsonHendelseHandler = new JsonHendelseHandler(hendelseRepository, prosessTaskRepository, dtoTilDomeneobjektMapper);
-        this.kafkaReader = new KafkaReader(jsonHendelseHandler, hendelseRepository);
+        hendelseHandler = new HendelseHandler(hendelseRepository, prosessTaskRepository);
+        this.kafkaReader = new KafkaReader(hendelseHandler, hendelseRepository, dtoTilDomeneobjektMapper);
     }
 
     @Test
@@ -91,5 +88,4 @@ public class KafkaReaderTest {
         dto.setYtelseType(FagsakYtelseType.FORELDREPENGER);
         return dto;
     }
-
 }

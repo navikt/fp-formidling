@@ -57,6 +57,8 @@ public class UttakDtoMapper {
         return UttakResultatPerioder.ny()
                 .medPerioder(uttakResultatPerioder)
                 .medPerioderAnnenPart(perioderAnnenPart)
+                .medAleneomsorg(resultatPerioderDto.isAleneomsorg())
+                .medAnnenForelderHarRett(resultatPerioderDto.isAnnenForelderHarRett())
                 .build();
     }
 

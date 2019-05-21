@@ -9,10 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.VurderingsstatusKode;
+import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.ytelsefordeling.OppgittRettighet;
 
 public class UttakMapperTest {
 
@@ -51,6 +54,35 @@ public class UttakMapperTest {
                                 .medPeriodeResultatType(periodeResultatAndre)
                                 .build()))
                 .build();
+    }
+
+    Søknad søknad;
+    UttakResultatPerioder uttakresultatPerioder;
+    private LocalDate nå = LocalDate.now();
+
+    @Test
+    public void skal_oppdage_aleneomsorg() {
+        søknad = new Søknad(nå, nå, new OppgittRettighet(true));
+        uttakresultatPerioder = UttakResultatPerioder.ny().medAleneomsorg(true).build();
+        assertThat(UttakMapper.harSøkerAleneomsorg(søknad, uttakresultatPerioder)).isEqualTo(VurderingsstatusKode.JA);
+        assertThat(UttakMapper.harSøkerAleneomsorgBoolean(søknad, uttakresultatPerioder)).isTrue();
+    }
+
+    @Test
+    public void skal_oppdage_ikke_søkt_om_aleneomsorg() {
+        søknad = new Søknad(nå, nå, new OppgittRettighet(false));
+        uttakresultatPerioder = UttakResultatPerioder.ny().medAleneomsorg(false).build();
+        assertThat(UttakMapper.harSøkerAleneomsorg(søknad, uttakresultatPerioder)).isEqualTo(VurderingsstatusKode.IKKE_VURDERT);
+        assertThat(UttakMapper.harSøkerAleneomsorgBoolean(søknad, uttakresultatPerioder)).isFalse();
+    }
+
+
+    @Test
+    public void skal_oppdage_avslått_aleneomsorg() {
+        søknad = new Søknad(nå, nå, new OppgittRettighet(true));
+        uttakresultatPerioder = UttakResultatPerioder.ny().build();
+        assertThat(UttakMapper.harSøkerAleneomsorg(søknad, uttakresultatPerioder)).isEqualTo(VurderingsstatusKode.NEI);
+        assertThat(UttakMapper.harSøkerAleneomsorgBoolean(søknad, uttakresultatPerioder)).isFalse();
     }
 
 }

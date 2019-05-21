@@ -28,7 +28,6 @@ import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.StønadskontoMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.YtelsefordelingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeVerktøy;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -122,7 +121,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         mapFelterRelatertTilBehandling(behandling, fagType);
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, fagType);
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType, behandling);
-        mapFelterRelatertTilSøknadOgYtelseFordeling(søknad, ytelseFordeling, fagType);
+        mapFelterRelatertTilSøknadOgRettighet(søknad, uttakResultatPerioder, fagType);
         mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, behandling, søknad, ytelseFordeling);
         mapFelterRelatertTilFamiliehendelse(familieHendelse, fagType);
         mapLovhjemmel(fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling, uttakResultatPerioder);
@@ -148,15 +147,15 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setLovhjemmel(lovhjemmelType);
     }
 
-    private void mapFelterRelatertTilSøknadOgYtelseFordeling(Søknad søknad, YtelseFordeling ytelseFordeling, FagType fagType) {
+    private void mapFelterRelatertTilSøknadOgRettighet(Søknad søknad, UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknad.getMottattDato()));
-        fagType.setAnnenForelderHarRett(ytelseFordeling.isAnnenForelderHarRett());
-        fagType.setAleneomsorg(YtelsefordelingMapper.harSøkerAleneomsorg(søknad, ytelseFordeling));
+        fagType.setAnnenForelderHarRett(uttakResultatPerioder.isAnnenForelderHarRett());
+        fagType.setAleneomsorg(UttakMapper.harSøkerAleneomsorg(søknad, uttakResultatPerioder));
     }
 
     private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Behandling behandling, Søknad søknad, YtelseFordeling ytelseFordeling) {
         fagType.setDagerTaptFørTermin(StønadskontoMapper.finnTapteDagerFørTermin(uttakResultatPerioder, saldoer, familieHendelse));
-        fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(behandling, YtelsefordelingMapper.harSøkerAleneomsorgBoolean(søknad, ytelseFordeling), ytelseFordeling.isAnnenForelderHarRett(), saldoer));
+        fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(behandling, UttakMapper.harSøkerAleneomsorgBoolean(søknad, uttakResultatPerioder), ytelseFordeling.isAnnenForelderHarRett(), saldoer));
         fagType.setDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer));
         StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);
     }

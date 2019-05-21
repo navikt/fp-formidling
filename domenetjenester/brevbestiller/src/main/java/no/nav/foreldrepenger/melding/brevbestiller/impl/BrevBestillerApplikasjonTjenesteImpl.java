@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -22,8 +23,10 @@ import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingDtoMapper;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
+import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.melding.datamapper.brev.FritekstmalBrevMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -100,7 +103,9 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
             final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
                     dokumentFelles, harVedlegg);
-
+            hentJournalpostTittel(dokumentXmlDataMapper.velgDokumentMapper(dokumentMal)).ifPresent(tittel -> {
+                //dokumentbestillingsinformasjon.setUstrukturertTittel(tittel); //TODO Aktiver etter at dokprod version er oppdatert til 2.1.8
+            });
             ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = produserIkkeredigerbartDokument(brevXmlElement, dokumentbestillingsinformasjon);
             if (harVedlegg) {
                 JournalpostId journalpostId = new JournalpostId(produserIkkeredigerbartDokumentResponse.getJournalpostId());
@@ -112,6 +117,13 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         }
 
         return historikkinnslagList;
+    }
+
+    private Optional<String> hentJournalpostTittel(DokumentTypeMapper dokumentTypeMapper) {
+        if (dokumentTypeMapper instanceof FritekstmalBrevMapper) {
+            return Optional.of(((FritekstmalBrevMapper) dokumentTypeMapper).getDisplayName());
+        }
+        return Optional.empty();
     }
 
     private void ferdigstillForsendelse(JournalpostId journalpostId, String endretAvNavn) {

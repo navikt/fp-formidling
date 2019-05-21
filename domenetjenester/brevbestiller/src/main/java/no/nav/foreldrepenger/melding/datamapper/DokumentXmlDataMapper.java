@@ -73,7 +73,7 @@ public class DokumentXmlDataMapper {
         return brevXmlElement;
     }
 
-    private DokumentTypeMapper velgDokumentMapper(DokumentMalType dokumentMalType) {
+    public DokumentTypeMapper velgDokumentMapper(DokumentMalType dokumentMalType) {
         String faktiskDokumentmal = dokumentMalType.getKode();
         if (forlengetBrevMaler.contains(dokumentMalType.getKode())) {
             faktiskDokumentmal = DokumentMalType.FORLENGET_DOK;

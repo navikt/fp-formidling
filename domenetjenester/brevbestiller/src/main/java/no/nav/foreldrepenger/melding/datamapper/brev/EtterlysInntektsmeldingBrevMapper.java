@@ -12,6 +12,11 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 @Named(DokumentMalType.ETTERLYS_INNTEKTSMELDING_DOK)
 public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
     @Override
+    public String getDisplayName() {
+        return "Infobrev: Inntektsmelding";
+    }
+
+    @Override
     String getSubfolder() {
         return "etterlysinntektsmelding";
     }

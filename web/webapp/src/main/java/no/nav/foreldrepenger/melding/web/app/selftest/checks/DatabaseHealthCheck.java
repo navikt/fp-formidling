@@ -6,10 +6,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Locale;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+@ApplicationScoped
 public class DatabaseHealthCheck extends ExtHealthCheck {
 
     private static final String JDBC_DEFAULT_DS = "jdbc/defaultDS";

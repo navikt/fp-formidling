@@ -22,7 +22,7 @@ public class DokumentbestillingConsumerHealthCheck extends ExtHealthCheck {
 
     @Override
     protected String getDescription() {
-        return "Consumer av vedtak fra fpsak.";
+        return "Test av consumering av bestillinger fra kafka";
     }
 
     @Override

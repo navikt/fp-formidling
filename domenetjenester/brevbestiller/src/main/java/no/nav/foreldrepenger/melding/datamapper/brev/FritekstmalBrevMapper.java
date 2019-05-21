@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 
-abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements BrevmalKildefiler {
+public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements BrevmalKildefiler {
 
     private FileTemplateLoader templateLoader;
     private Handlebars handlebars;
@@ -44,9 +44,6 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
                                  DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
-        initHandlebars();
-        overskriftMal = tryCompile(OVERSKRIFT);
-        brødtekstMal = tryCompile(BRØDTEKST);
     }
 
     @Override
@@ -61,6 +58,7 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
 
     @Override
     protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
+        initHandlebars();
         FagType fagType = new FagType();
         fagType.setHovedoverskrift(tryApply(new Brevdata(behandling.getSpråkkode()) {}, overskriftMal));
         fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling), brødtekstMal));
@@ -72,6 +70,8 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
         handlebars = new Handlebars(templateLoader).setCharset(Charset.forName("latin1"));
         handlebars.setInfiniteLoops(false);
         handlebars.setPrettyPrint(true);
+        overskriftMal = tryCompile(OVERSKRIFT);
+        brødtekstMal = tryCompile(BRØDTEKST);
     }
 
     private Template tryCompile(String location) {
@@ -89,6 +89,8 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
             throw new IllegalArgumentException("Klarte ikke mappe feltverdier til dokumentmal", e);
         }
     }
+
+    public abstract String getDisplayName();
 
     abstract String getSubfolder();
 
@@ -109,6 +111,10 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
 
         public String getBundle() {
             return bundle;
+        }
+
+        public String getFelles() {
+            return SHARED;
         }
     }
 }

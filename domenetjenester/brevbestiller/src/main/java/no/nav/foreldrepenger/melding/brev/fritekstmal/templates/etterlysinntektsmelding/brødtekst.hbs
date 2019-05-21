@@ -4,7 +4,16 @@
 
 {{i18n "a1" fristDato bundle=bundle locale=locale }}
 
-{{i18n "harSporsmalVedtak_001" kontaktTelefonnummer bundle=bundle locale=locale }}
+{{i18n "harSporsmalVedtak_001" kontaktTelefonnummer bundle=felles locale=locale }}
 
 
-{{i18n "vedtakMvh_001" navnAvsenderEnhet bundle=bundle locale=locale }}
+
+
+{{i18n "vedtakMvh_001" navnAvsenderEnhet bundle=felles locale=locale }}
+
+
+
+
+{{#if erAutomatiskVedtak}}
+    {{i18n "automatiskVedtakMvh_001" bundle=felles locale=locale}}
+{{/if}}

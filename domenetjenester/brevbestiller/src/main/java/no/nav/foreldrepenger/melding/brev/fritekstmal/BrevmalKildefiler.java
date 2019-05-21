@@ -5,6 +5,7 @@ import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 public interface BrevmalKildefiler {
     String TEMPLATES_PATH = "src/main/java/no/nav/foreldrepenger/melding/brev/fritekstmal/templates/";
     String RESOURCE_BUNDLE_ROOT = "dokumentmal/";
+    String SHARED = "felles";
     String OVERSKRIFT = "overskrift";
     String BRØDTEKST = "brødtekst";
 

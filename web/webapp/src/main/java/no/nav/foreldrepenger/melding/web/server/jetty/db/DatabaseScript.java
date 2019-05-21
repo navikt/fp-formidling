@@ -9,7 +9,6 @@ import org.flywaydb.core.api.configuration.ClassicConfiguration;
 public class DatabaseScript {
 
     private static final String location = "classpath:/db/migration/";
-    private static final boolean SKAL_CLEANE_DATABASEN = true;
 
     public static void migrate(final DataSource dataSource, String initSql) {
         ClassicConfiguration conf = new ClassicConfiguration();
@@ -23,12 +22,7 @@ public class DatabaseScript {
         try {
             flyway.migrate();
         } catch (FlywayException fwe) {
-            if (SKAL_CLEANE_DATABASEN) {
-                flyway.clean();
-                flyway.migrate();
-            } else {
                 throw new IllegalStateException("Migrering feiler", fwe);
-            }
         }
     }
 }

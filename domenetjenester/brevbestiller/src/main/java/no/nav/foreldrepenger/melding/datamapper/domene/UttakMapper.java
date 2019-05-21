@@ -67,7 +67,7 @@ public class UttakMapper {
         if (!behandling.erRevurdering()) {
             return UtbetaltKode.INGEN;
         }
-        return PeriodeBeregner.forMyeUtbetalt(periodeListe, null);
+        return PeriodeBeregner.forMyeUtbetalt(periodeListe, behandling.getAvsluttet() != null ? behandling.getAvsluttet().toLocalDate() : null);
     }
 
     public static String mapLovhjemlerForUttak(UttakResultatPerioder uttakResultatPerioder, String konsekvensForYtelse, boolean innvilgetRevurdering) {

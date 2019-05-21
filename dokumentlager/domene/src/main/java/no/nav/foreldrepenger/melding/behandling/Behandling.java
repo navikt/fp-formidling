@@ -23,6 +23,7 @@ public class Behandling {
     private BehandlingType behandlingType;
     private Integer behandlingstidFristUker;
     private LocalDateTime opprettetDato;
+    private LocalDateTime avsluttet;
     private List<BehandlingÅrsak> behandlingÅrsaker;
     private String ansvarligSaksbehandler;
     private boolean toTrinnsBehandling;
@@ -43,6 +44,7 @@ public class Behandling {
         behandlingType = builder.behandlingType;
         behandlingstidFristUker = builder.behandlingstidFristUker;
         opprettetDato = builder.opprettetDato;
+        avsluttet = builder.avsluttet;
         behandlingÅrsaker = builder.behandlingÅrsaker;
         ansvarligSaksbehandler = builder.ansvarligSaksbehandler;
         toTrinnsBehandling = builder.toTrinnsBehandling;
@@ -51,6 +53,10 @@ public class Behandling {
         status = builder.status;
         endretAv = builder.endretAv;
         språkkode = builder.språkkode;
+    }
+
+    public LocalDateTime getAvsluttet() {
+        return avsluttet;
     }
 
     public String getBehandlendeEnhetNavn() {
@@ -190,6 +196,7 @@ public class Behandling {
         private BehandlingType behandlingType;
         private Integer behandlingstidFristUker;
         private LocalDateTime opprettetDato;
+        private LocalDateTime avsluttet;
         private List<BehandlingÅrsak> behandlingÅrsaker = new ArrayList<>();
         private String ansvarligSaksbehandler;
         private boolean toTrinnsBehandling;
@@ -241,6 +248,11 @@ public class Behandling {
 
         public Behandling.Builder medOpprettetDato(LocalDateTime opprettetDato) {
             this.opprettetDato = opprettetDato;
+            return this;
+        }
+
+        public Behandling.Builder medAvsluttet(LocalDateTime avsluttet) {
+            this.avsluttet = avsluttet;
             return this;
         }
 

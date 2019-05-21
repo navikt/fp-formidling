@@ -80,6 +80,7 @@ public class BehandlingDtoMapper {
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
                 .medStatus(kodeverkRepository.finn(BehandlingStatus.class, dto.getStatus().getKode()))
                 .medOpprettetDato(dto.getOpprettet())
+                .medAvsluttet(dto.getAvsluttet())
                 .medOriginalBehandling(originalBehandling)
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
                 .medAnsvarligBeslutter(dto.getAnsvarligBeslutter())

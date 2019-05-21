@@ -57,7 +57,7 @@
         <swagger2markup.version>1.1.2</swagger2markup.version>
         <cxf.version>3.3.1</cxf.version>
         <prometheus.version>0.6.0</prometheus.version>
-        <kontrakter.version>5.0_20190520103813_629c582</kontrakter.version>
+        <kontrakter.version>5.0_201905141121311_e44a2d5</kontrakter.version>
         <kafka.version>2.2.0</kafka.version>
     </properties>
 

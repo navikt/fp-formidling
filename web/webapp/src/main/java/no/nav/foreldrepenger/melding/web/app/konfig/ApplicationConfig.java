@@ -14,13 +14,12 @@ import no.nav.foreldrepenger.melding.web.app.exceptions.JsonMappingExceptionMapp
 import no.nav.foreldrepenger.melding.web.app.exceptions.JsonParseExceptionMapper;
 import no.nav.foreldrepenger.melding.web.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.melding.web.app.tjenester.brev.BrevRestTjeneste;
-import no.nav.foreldrepenger.melding.web.app.tjenester.hendelse.DokumenthendelseRestTjeneste;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 
 @ApplicationPath(ApplicationConfig.API_URI)
 public class ApplicationConfig extends Application {
 
-    public static final String API_URI = "/api";
+    static final String API_URI = "/api";
 
     public ApplicationConfig() {
         BeanConfig beanConfig = new BeanConfig();
@@ -51,7 +50,6 @@ public class ApplicationConfig extends Application {
     public Set<Class<?>> getClasses() {
         Set<Class<?>> classes = new HashSet<>();
 
-        classes.add(DokumenthendelseRestTjeneste.class);
         classes.add(BrevRestTjeneste.class);
         classes.add(ProsessTaskRestTjeneste.class);
 

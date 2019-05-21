@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling;
+package no.nav.foreldrepenger.melding.hendelse;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -7,40 +7,32 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.melding.brevbestiller.task.ProduserBrevTaskProperties;
-import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
-import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 
 @ApplicationScoped
-public class JsonHendelseHandler {
-
-    private static final Logger log = LoggerFactory.getLogger(JsonHendelseHandler.class);
-
+public class HendelseHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HendelseHandler.class);
     private HendelseRepository hendelseRepository;
     private ProsessTaskRepository prosessTaskRepository;
-    private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
 
-    public JsonHendelseHandler() {
+    public HendelseHandler() {
         //CDI
     }
 
     @Inject
-    public JsonHendelseHandler(HendelseRepository hendelseRepository,
-                               ProsessTaskRepository prosessTaskRepository,
-                               DokumentHendelseDtoMapper dtoTilDomeneobjektMapper) {
+    public HendelseHandler(HendelseRepository hendelseRepository,
+                           ProsessTaskRepository prosessTaskRepository) {
         this.hendelseRepository = hendelseRepository;
         this.prosessTaskRepository = prosessTaskRepository;
-        this.dtoTilDomeneobjektMapper = dtoTilDomeneobjektMapper;
     }
 
-    public void prosesser(DokumentbestillingV1 jsonHendelse) {
-        DokumentHendelse hendelse = dtoTilDomeneobjektMapper.mapDokumentHendelseFraDtoForKafka(jsonHendelse);
+    public void prosesser(DokumentHendelse hendelse) {
         hendelseRepository.lagre(hendelse);
         opprettBestillBrevTask(hendelse);
-        log.info("lagret hendelse:{} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingUuid());
+        LOGGER.info("lagret hendelse:{} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingUuid());
     }
 
     private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {

@@ -16,9 +16,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.codahale.metrics.annotation.Timed;
 
 import io.swagger.annotations.Api;
@@ -30,13 +27,10 @@ import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonT
 import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.BrevmalDto;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingDtoMapper;
-import no.nav.foreldrepenger.melding.brevbestiller.task.ProduserBrevTaskProperties;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
+import no.nav.foreldrepenger.melding.hendelse.HendelseHandler;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.vedtak.felles.jpa.Transaction;
-import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
-import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
 @Api(tags = "brev")
@@ -44,11 +38,9 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @ApplicationScoped
 @Transaction
 public class BrevRestTjeneste {
-    private static final Logger LOG = LoggerFactory.getLogger(BrevRestTjeneste.class);
     private DokumentBehandlingTjeneste dokumentBehandlingTjeneste;
     private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
-    private ProsessTaskRepository prosessTaskRepository;
-    private HendelseRepository hendelseRepository;
+    private HendelseHandler hendelseHandler;
     private DokumentbestillingDtoMapper dokumentbestillingDtoMapper;
 
     public BrevRestTjeneste() {
@@ -58,13 +50,11 @@ public class BrevRestTjeneste {
     @Inject
     public BrevRestTjeneste(DokumentBehandlingTjeneste dokumentBehandlingTjeneste,
                             BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste,
-                            ProsessTaskRepository prosessTaskRepository,
-                            HendelseRepository hendelseRepository,
+                            HendelseHandler hendelseHandler,
                             DokumentbestillingDtoMapper dokumentbestillingDtoMapper) {
         this.dokumentBehandlingTjeneste = dokumentBehandlingTjeneste;
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
-        this.prosessTaskRepository = prosessTaskRepository;
-        this.hendelseRepository = hendelseRepository;
+        this.hendelseHandler = hendelseHandler;
         this.dokumentbestillingDtoMapper = dokumentbestillingDtoMapper;
     }
 
@@ -125,15 +115,6 @@ public class BrevRestTjeneste {
     public void bestillDokument(
             @ApiParam("Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid AbacDokumentbestillingDto dokumentbestillingDto) { // NOSONAR
         DokumentHendelse hendelse = dokumentbestillingDtoMapper.mapDokumentbestillingFraDtoForEndepunkt(dokumentbestillingDto);
-        hendelseRepository.lagre(hendelse);
-        opprettBestillBrevTask(hendelse);
-        LOG.info("lagret hendelse:{} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingUuid());
-    }
-
-    private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {
-        ProsessTaskData prosessTaskData = new ProsessTaskData(ProduserBrevTaskProperties.TASKTYPE);
-        prosessTaskData.setProperty(ProduserBrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
-        prosessTaskData.setGruppe("FORMIDLING");
-        prosessTaskRepository.lagre(prosessTaskData);
+        hendelseHandler.prosesser(hendelse);
     }
 }

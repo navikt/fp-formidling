@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXBException;

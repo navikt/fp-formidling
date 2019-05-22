@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 import org.junit.Before;
@@ -9,34 +11,14 @@ import org.junit.Test;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKildefiler;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.YtelseTypeKode;
 
 public class InfoTilAnnenForelderBrevMapperTest {
     private static final long ID = 123L;
-    private static final String OVERSKRIFT_FASIT = "Du må søke om foreldrepenger i tideDu må søke om foreldrepenger i tide";
-    private static final String BRØDTEKST_FASIT = "Du kan ha rett til foreldrepenger. Du må søke innen 5 milliarder år, som er den siste dagen i perioden\n" +
-            "dere begge kan ta ut. Hvis du ikke søker, mister du foreldrepengene.\n" +
-            "\n" +
-            "_Har du spørsmål?\n" +
-            "Du finner nyttig informasjon på nav.no/familie. Du kan også kontakte oss på telefon\n" +
-            "11111111.\n" +
-            "\n" +
-            "\n" +
-            "\n" +
-            "\n" +
-            "Med vennlig hilsen\n" +
-            "Avsender\n" +
-            "\n" +
-            "\n" +
-            "\n" +
-            "\n" +
-            "Vedtaket har blitt automatisk saksbehandlet av vårt fagsystem.\n" +
-            "Vedtaksbrevet er derfor ikke underskrevet av saksbehandler.\n";
-
     private Behandling behandling;
     private DokumentHendelse dokumentHendelse;
     private InfoTilAnnenForelderBrevMapper mapper = new InfoTilAnnenForelderBrevMapper() {
@@ -44,7 +26,7 @@ public class InfoTilAnnenForelderBrevMapperTest {
         Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
             return new Brevdata(behandling.getSpråkkode()) {
                 public String getDato() {
-                    return "5 milliarder år";
+                    return "31.12.9999";
                 }
 
                 public String getKontaktTelefonnummer() {
@@ -77,8 +59,12 @@ public class InfoTilAnnenForelderBrevMapperTest {
 
     @Test
     public void test_map_fagtype() {
+        ResourceBundle expectedValues = ResourceBundle.getBundle(
+                BrevmalKildefiler.TEMPLATES_ROOT + mapper.getSubfolder() + "/expected",
+                new Locale("nb", "NO"));
+
         FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
-        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(BRØDTEKST_FASIT);
-        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(OVERSKRIFT_FASIT);
+        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst"));
+        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift"));
     }
 }

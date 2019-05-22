@@ -17,6 +17,7 @@ public interface BrevmalKildefiler {
 
     static String getPathTo(String brevmalMappe) {
         return BrevmalKildefiler.class.getClassLoader().getResource(TEMPLATES_ROOT + brevmalMappe).toExternalForm()
-            .replaceFirst("file:/", "");
+                .replaceFirst("file:/", "")
+                .replaceFirst("test-", ""); // for at det skal bli riktig path fra testklasser.
     }
 }

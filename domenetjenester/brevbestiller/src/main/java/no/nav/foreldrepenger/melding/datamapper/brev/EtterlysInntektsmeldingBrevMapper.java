@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
     @Override
     public String getDisplayName() {
-        return "Infobrev: Inntektsmelding";
+        return "Etterlys inntektsmelding";
     }
 
     @Override

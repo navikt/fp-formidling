@@ -14,7 +14,7 @@ public final class ApplicationIdUtil {
         try {
             hostname = System.getenv("hostname"); // settes på pod i cluster (pod identifikator)
             if (hostname == null) {
-                hostname = Inet4Address.getLocalHost().getHostName();
+                hostname = Inet4Address.getLocalHost().getHostName() + "-" + UUID.randomUUID();
             }
         } catch (NullPointerException | SecurityException | UnknownHostException e) {
             hostname = System.getProperty("application.name", "java-application") + "-" + UUID.randomUUID();

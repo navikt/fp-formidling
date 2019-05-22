@@ -15,7 +15,7 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.brev.fritekstmal.BrevmalKildefiler;
+import no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKildefiler;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -66,7 +66,7 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
     }
 
     private void initHandlebars() {
-        templateLoader = new FileTemplateLoader(Paths.get(TEMPLATES_PATH + getSubfolder()).toFile());
+        templateLoader = new FileTemplateLoader(BrevmalKildefiler.getPathTo(getSubfolder()));
         handlebars = new Handlebars(templateLoader).setCharset(Charset.forName("latin1"));
         handlebars.setInfiniteLoops(false);
         handlebars.setPrettyPrint(true);
@@ -102,7 +102,7 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
 
         public Brevdata(Språkkode språkkode) {
             locale = BrevmalKildefiler.getLocaleSuffixFor(språkkode);
-            bundle = RESOURCE_BUNDLE_ROOT + getSubfolder();
+            bundle = TEMPLATES_ROOT + getSubfolder() + "/" + getSubfolder();
         }
 
         public String getLocale() {

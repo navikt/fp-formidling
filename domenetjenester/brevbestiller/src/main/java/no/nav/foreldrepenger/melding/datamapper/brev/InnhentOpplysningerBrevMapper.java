@@ -67,7 +67,9 @@ public class InnhentOpplysningerBrevMapper implements DokumentTypeMapper {
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        List<MottattDokument> mottattDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
+        List<MottattDokument> mottattDokumenter = behandling.getOriginalBehandling() == null ?
+                domeneobjektProvider.hentMottatteDokumenter(behandling)
+                : domeneobjektProvider.hentMottatteDokumenter(behandling.getOriginalBehandling());
         FagType fagType = mapFagType(dokumentFelles, dokumentHendelse, behandling, mottattDokumenter);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnhentopplysningerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);

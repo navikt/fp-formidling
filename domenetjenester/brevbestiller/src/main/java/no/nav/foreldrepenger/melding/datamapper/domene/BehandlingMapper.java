@@ -57,7 +57,7 @@ public class BehandlingMapper {
                 behandling.getBehandlingType().getKode();
     }
 
-    static boolean gjelderEndringsøknad(Behandling behandling) {
+    public static boolean gjelderEndringsøknad(Behandling behandling) {
         return getBehandlingÅrsakStringListe(behandling)
                 .contains(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER);
     }

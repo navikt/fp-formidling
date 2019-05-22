@@ -104,7 +104,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
             final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
                     dokumentFelles, harVedlegg);
             hentJournalpostTittel(dokumentXmlDataMapper.velgDokumentMapper(dokumentMal)).ifPresent(tittel -> {
-                //dokumentbestillingsinformasjon.setUstrukturertTittel(tittel); //TODO Aktiver etter at dokprod version er oppdatert til 2.1.8
+                dokumentbestillingsinformasjon.setUstrukturertTittel(tittel);
             });
             ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = produserIkkeredigerbartDokument(brevXmlElement, dokumentbestillingsinformasjon);
             if (harVedlegg) {

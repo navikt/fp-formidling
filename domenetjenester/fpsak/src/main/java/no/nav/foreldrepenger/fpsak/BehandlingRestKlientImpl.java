@@ -117,10 +117,15 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    public BeregningsresultatEngangsstønadDto hentBeregningsresultatEngangsstønad(List<BehandlingResourceLink> resourceLinker) {
+    public Optional<BeregningsresultatEngangsstønadDto> hentBeregningsresultatEngangsstønadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "beregningsresultat-engangsstonad".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsresultatEngangsstønadDto.class))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsresultatEngangsstønadDto.class));
+    }
+
+    @Override
+    public BeregningsresultatEngangsstønadDto hentBeregningsresultatEngangsstønad(List<BehandlingResourceLink> resourceLinker) {
+        return hentBeregningsresultatEngangsstønadHvisFinnes(resourceLinker)
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente Beregningsresultat engangsstønad for behandling: " + hentBehandlingId(resourceLinker));
                 });

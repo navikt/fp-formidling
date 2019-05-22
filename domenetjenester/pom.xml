@@ -17,6 +17,7 @@
         <module>brevbestiller</module>
         <module>fpsak</module>
         <module>tps</module>
+        <module>hendelse</module>
     </modules>
 
 </project>

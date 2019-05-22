@@ -109,6 +109,10 @@ public class DomeneobjektProvider {
         return BeregningsresultatDtoMapper.mapBeregningsresultatESFraDto(behandlingRestKlient.hentBeregningsresultatEngangsstønad(behandling.getResourceLinker()));
     }
 
+    public Optional<BeregningsresultatES> hentBeregningsresultatESHvisFinnes(Behandling behandling) {
+        return behandlingRestKlient.hentBeregningsresultatEngangsstønadHvisFinnes(behandling.getResourceLinker()).map(BeregningsresultatDtoMapper::mapBeregningsresultatESFraDto);
+    }
+
     public BeregningsresultatFP hentBeregningsresultatFP(Behandling behandling) {
         return beregningsresultatDtoMapper.mapBeregningsresultatFPFraDto(behandlingRestKlient.hentBeregningsresultatForeldrepenger(behandling.getResourceLinker()));
     }

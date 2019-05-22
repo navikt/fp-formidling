@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -10,6 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
@@ -37,6 +39,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.In
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
@@ -67,24 +70,30 @@ public class InnhentOpplysningerBrevMapper implements DokumentTypeMapper {
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        List<MottattDokument> mottattDokumenter = behandling.getOriginalBehandling() == null ?
-                domeneobjektProvider.hentMottatteDokumenter(behandling)
-                : domeneobjektProvider.hentMottatteDokumenter(behandling.getOriginalBehandling());
-        FagType fagType = mapFagType(dokumentFelles, dokumentHendelse, behandling, mottattDokumenter);
+        List<MottattDokument> mottattDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
+        Optional<KlageDokument> klageDokument = Optional.empty();
+        if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {
+            klageDokument = Optional.of(domeneobjektProvider.hentKlageDokument(behandling));
+        }
+        FagType fagType = mapFagType(dokumentFelles, dokumentHendelse, behandling, mottattDokumenter, klageDokument);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnhentopplysningerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling, List<MottattDokument> mottatteDokumenter) {
+    private FagType mapFagType(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling, List<MottattDokument> mottatteDokumenter, Optional<KlageDokument> klageDokument) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(mapBehandlingType(behandling));
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
-        fagType.setSoknadDato(MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(mottatteDokumenter));
+        fagType.setSoknadDato(klageDokument.map(this::hentMottattDatoFraKlage).orElse(MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter)));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
         fagType.setFritekst(dokumentHendelse.getFritekst());
         return fagType;
+    }
+
+    private XMLGregorianCalendar hentMottattDatoFraKlage(KlageDokument klageDokument) {
+        return XmlUtil.finnDatoVerdiAvUtenTidSone(klageDokument.getMottattDato());
     }
 
     private BehandlingsTypeKode mapBehandlingType(Behandling behandling) {

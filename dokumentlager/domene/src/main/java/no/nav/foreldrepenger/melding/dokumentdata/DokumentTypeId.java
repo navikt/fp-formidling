@@ -78,6 +78,10 @@ public class DokumentTypeId extends Kodeliste {
         // Hibernate trenger en
     }
 
+    public boolean erEndringsøknadType() {
+        return ENDRING_SØKNAD_TYPER.contains(this);
+    }
+
     public boolean erSøknadType() {
         return SØKNAD_TYPER.contains(this);
     }

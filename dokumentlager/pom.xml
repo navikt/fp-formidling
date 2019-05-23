@@ -9,7 +9,7 @@
         <artifactId>fpformidling</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
-
+blabla
     <artifactId>dokumentlager</artifactId>
     <name>FP-FORMIDLING :: Dokumentlager</name>
     <packaging>pom</packaging>

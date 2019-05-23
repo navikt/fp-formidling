@@ -78,7 +78,7 @@ public class DokumentbestillingConsumer implements AppServiceHandler {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, streamProperties.getValueClass());
         props.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, LogAndFailExceptionHandler.class);
 
-        props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "exactly_once");
+        props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "at_least_once");
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
         props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "100000");
 

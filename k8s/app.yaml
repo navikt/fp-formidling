@@ -143,3 +143,6 @@ spec:
       value: "true"
     - name: APPDYNAMICS_AGENT_ACCOUNT_NAME
       value: appdynamics.agent.account.name
+    - name: APPD_ENABLED
+      value: appd.enabled
+

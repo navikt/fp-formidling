@@ -25,7 +25,7 @@ public class DokumentbestillingStreamKafkaProperties {
                                             @KonfigVerdi("systembruker.password") String password,
                                             @KonfigVerdi("kafka.dokumentbestilling.topic") String topic) {
         this.topic = topic;
-        this.applicationId = ApplicationIdUtil.get();
+        this.applicationId = "ID-" + topic;
         this.bootstrapServers = bootstrapServers;
         this.schemaRegistryUrl = schemaRegistryUrl;
         this.username = username;

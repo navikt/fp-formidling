@@ -85,9 +85,9 @@ public class DokumentbestillingConsumer implements AppServiceHandler {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, streamProperties.getValueClass());
         props.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, LogAndFailExceptionHandler.class);
 
+        props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "exactly-once");
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
-        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
-        props.put("num.standby.replicas", 1);
+        props.put(StreamsConfig.NUM_STANDBY_REPLICAS_CONFIG, "1");
 
 
         //props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "100000");

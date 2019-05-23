@@ -32,10 +32,9 @@ public class HistorikkTilDtoMapper {
     public static HistorikkInnslagV1 mapHistorikkinnslag(DokumentHistorikkinnslag dokumentHistorikkinnslag) {
         return new HistorikkInnslagV1.Builder()
                 .medBehandlingUuid(dokumentHistorikkinnslag.getBehandlingUuid())
-                .medHistorikkAktørType(mapHistorikkaktør(dokumentHistorikkinnslag))
+                .medHistorikkAktørType(HistorikkAktørEnum.VEDTAKSLØSNINGEN)
                 .medType(HistorikkinnslagType.BREV_SENT.getKode())
                 .medDokumentLinker(mapLink(dokumentHistorikkinnslag))
-                .medHistorikkInnslagDeler(mapDel(dokumentHistorikkinnslag))
                 .build();
     }
 

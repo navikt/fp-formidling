@@ -56,6 +56,7 @@ public class DokumentbestillingConsumer implements AppServiceHandler {
         Properties props = new Properties();
 
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, streamProperties.getApplicationId());
+        log.info("Bruker applicationID: " + streamProperties.getApplicationId());
         props.put(StreamsConfig.CLIENT_ID_CONFIG, streamProperties.getClientId());
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, streamProperties.getBootstrapServers());
 
@@ -68,29 +69,18 @@ public class DokumentbestillingConsumer implements AppServiceHandler {
             props.put(SaslConfigs.SASL_JAAS_CONFIG, String.format(jaasTemplate, streamProperties.getUsername(), streamProperties.getPassword()));
         }
 
-        // Setup truststore? Skal det settes opp?
-        // if(truststore != null) {
-        //     props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL")
-        //     props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, truststore.absolutePath)
-        //     props.put(SslConfigs.S SL_TRUSTSTORE_PASSWORD_CONFIG, truststore.password)
-        // }
-
         // Setup schema-registry
         if (streamProperties.getSchemaRegistryUrl() != null) {
             props.put("schema.registry.url", streamProperties.getSchemaRegistryUrl());
         }
-
         // Serde
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, streamProperties.getKeyClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, streamProperties.getValueClass());
         props.put(StreamsConfig.DEFAULT_DESERIALIZATION_EXCEPTION_HANDLER_CLASS_CONFIG, LogAndFailExceptionHandler.class);
 
-        props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "exactly-once");
+        props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, "exactly_once");
         props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1");
-        props.put(StreamsConfig.NUM_STANDBY_REPLICAS_CONFIG, "1");
-
-
-        //props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "100000");
+        props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, "100000");
 
         return props;
     }

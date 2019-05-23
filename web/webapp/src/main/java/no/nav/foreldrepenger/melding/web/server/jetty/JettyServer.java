@@ -1,9 +1,12 @@
 package no.nav.foreldrepenger.melding.web.server.jetty;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.sql.DataSource;
 
 import org.eclipse.jetty.plus.jndi.EnvEntry;
 import org.eclipse.jetty.util.resource.Resource;
@@ -90,7 +93,13 @@ public class JettyServer extends AbstractJettyServer {
             // til å ha en admin bruker som gjør migrering og en annen som gjør CRUD operasjoner
             initSql = null;
         }
-        DatabaseScript.migrate(DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass), initSql);
+        DataSource migrerDS = DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass);
+        DatabaseScript.migrate(migrerDS, initSql);
+        try {
+            migrerDS.getConnection().close();
+        } catch (SQLException e) {
+            //TODO
+        }
     }
 
     protected EnvironmentClass getEnvironmentClass() {

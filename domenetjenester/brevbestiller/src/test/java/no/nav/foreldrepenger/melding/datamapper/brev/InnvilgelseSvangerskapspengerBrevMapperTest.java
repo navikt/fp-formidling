@@ -17,16 +17,23 @@ import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 
-public class InfoTilAnnenForelderBrevMapperTest {
+public class InnvilgelseSvangerskapspengerBrevMapperTest {
     private static final long ID = 123L;
     private Behandling behandling;
     private DokumentHendelse dokumentHendelse;
-    private InfoTilAnnenForelderBrevMapper mapper = new InfoTilAnnenForelderBrevMapper() {
+    private InnvilgelseSvangerskapspengerBrevMapper mapper = new InnvilgelseSvangerskapspengerBrevMapper() {
         @Override
         Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
             return new Brevdata(behandling.getSpråkkode()) {
-                public String getDato() {
-                    return "31.12.9999";
+                boolean refusjonTilBruker = true;
+                int refusjonerTilArbeidsgivere = 1;
+
+                public boolean isRefusjonTilBruker() {
+                    return refusjonTilBruker;
+                }
+
+                public int getRefusjonerTilArbeidsgivere() {
+                    return refusjonerTilArbeidsgivere;
                 }
 
                 public String getKontaktTelefonnummer() {

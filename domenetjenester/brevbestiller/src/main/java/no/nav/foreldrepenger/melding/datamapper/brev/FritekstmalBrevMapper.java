@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXBException;
@@ -15,7 +14,7 @@ import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.brev.fritekstmal.BrevmalKildefiler;
+import no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKildefiler;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -24,7 +23,7 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 
-abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements BrevmalKildefiler {
+public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements BrevmalKildefiler {
 
     private FileTemplateLoader templateLoader;
     private Handlebars handlebars;
@@ -44,9 +43,6 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
                                  DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
-        initHandlebars();
-        overskriftMal = tryCompile(OVERSKRIFT);
-        brødtekstMal = tryCompile(BRØDTEKST);
     }
 
     @Override
@@ -61,6 +57,7 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
 
     @Override
     protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
+        initHandlebars();
         FagType fagType = new FagType();
         fagType.setHovedoverskrift(tryApply(new Brevdata(behandling.getSpråkkode()) {}, overskriftMal));
         fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling), brødtekstMal));
@@ -68,10 +65,12 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
     }
 
     private void initHandlebars() {
-        templateLoader = new FileTemplateLoader(Paths.get(TEMPLATES_PATH + getSubfolder()).toFile());
+        templateLoader = new FileTemplateLoader(BrevmalKildefiler.getPathTo(getSubfolder()));
         handlebars = new Handlebars(templateLoader).setCharset(Charset.forName("latin1"));
         handlebars.setInfiniteLoops(false);
         handlebars.setPrettyPrint(true);
+        overskriftMal = tryCompile(OVERSKRIFT);
+        brødtekstMal = tryCompile(BRØDTEKST);
     }
 
     private Template tryCompile(String location) {
@@ -90,6 +89,8 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
         }
     }
 
+    public abstract String getDisplayName();
+
     abstract String getSubfolder();
 
     abstract Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling);
@@ -100,7 +101,7 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
 
         public Brevdata(Språkkode språkkode) {
             locale = BrevmalKildefiler.getLocaleSuffixFor(språkkode);
-            bundle = RESOURCE_BUNDLE_ROOT + getSubfolder();
+            bundle = TEMPLATES_ROOT + getSubfolder() + "/" + getSubfolder();
         }
 
         public String getLocale() {
@@ -109,6 +110,10 @@ abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements Brevm
 
         public String getBundle() {
             return bundle;
+        }
+
+        public String getFelles() {
+            return SHARED;
         }
     }
 }

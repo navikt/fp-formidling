@@ -16,12 +16,12 @@ import no.nav.vedtak.feil.FeilFactory;
 @Named(DokumentMalType.INFO_TIL_ANNEN_FORELDER_DOK)
 public class InfoTilAnnenForelderBrevMapper extends FritekstmalBrevMapper {
     @Override
-    public String getDisplayName() {
+    public String displayName() {
         return "Infobrev: Annen forelder";
     }
 
     @Override
-    String getSubfolder() {
+    String templateFolder() {
         return "informasjontilannenforelder";
     }
 

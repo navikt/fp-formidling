@@ -103,9 +103,8 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
             final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
                     dokumentFelles, harVedlegg);
-            hentJournalpostTittel(dokumentXmlDataMapper.velgDokumentMapper(dokumentMal)).ifPresent(tittel -> {
-                dokumentbestillingsinformasjon.setUstrukturertTittel(tittel);
-            });
+            hentJournalpostTittel(dokumentXmlDataMapper.velgDokumentMapper(dokumentMal)).ifPresent(dokumentbestillingsinformasjon::setUstrukturertTittel);
+
             ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = produserIkkeredigerbartDokument(brevXmlElement, dokumentbestillingsinformasjon);
             if (harVedlegg) {
                 JournalpostId journalpostId = new JournalpostId(produserIkkeredigerbartDokumentResponse.getJournalpostId());
@@ -121,7 +120,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
 
     private Optional<String> hentJournalpostTittel(DokumentTypeMapper dokumentTypeMapper) {
         if (dokumentTypeMapper instanceof FritekstmalBrevMapper) {
-            return Optional.of(((FritekstmalBrevMapper) dokumentTypeMapper).getDisplayName());
+            return Optional.of(((FritekstmalBrevMapper) dokumentTypeMapper).displayName());
         }
         return Optional.empty();
     }

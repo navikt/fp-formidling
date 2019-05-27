@@ -8,7 +8,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 
 @ApplicationScoped
-@Named(DokumentMalType.ETTERLYS_INNTEKTSMELDING_DOK)
+//@Named(DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK) //TODO
 public class InnvilgelseSvangerskapspengerBrevMapper extends FritekstmalBrevMapper {
     @Override
     public String displayName() {

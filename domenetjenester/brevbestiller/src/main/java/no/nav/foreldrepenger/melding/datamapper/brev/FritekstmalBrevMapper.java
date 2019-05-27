@@ -11,10 +11,13 @@ import org.xml.sax.SAXException;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
-import com.github.jknack.handlebars.io.FileTemplateLoader;
+import com.github.jknack.handlebars.helper.ConditionalHelpers;
+import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
+import com.github.jknack.handlebars.io.CompositeTemplateLoader;
+import com.github.jknack.handlebars.io.TemplateLoader;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKildefiler;
+import no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -23,9 +26,9 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 
-public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements BrevmalKildefiler {
+public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements BrevmalKilder {
 
-    private FileTemplateLoader templateLoader;
+    private CompositeTemplateLoader templateLoader;
     private Handlebars handlebars;
     private Template overskriftMal;
     private Template brødtekstMal;
@@ -65,19 +68,22 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
     }
 
     private void initHandlebars() {
-        templateLoader = new FileTemplateLoader(BrevmalKildefiler.getPathTo(getSubfolder()));
+        TemplateLoader folder = new ClassPathTemplateLoader(getClassPath("", ROTMAPPE, templateFolder()));
+        TemplateLoader felles = new ClassPathTemplateLoader(getClassPath("", ROTMAPPE, FELLES));
+        templateLoader = new CompositeTemplateLoader(folder, felles);
         handlebars = new Handlebars(templateLoader).setCharset(Charset.forName("latin1"));
         handlebars.setInfiniteLoops(false);
         handlebars.setPrettyPrint(true);
+        handlebars.registerHelpers(ConditionalHelpers.class);
         overskriftMal = tryCompile(OVERSKRIFT);
         brødtekstMal = tryCompile(BRØDTEKST);
     }
 
-    private Template tryCompile(String location) {
+    private Template tryCompile(String source) {
         try {
-            return handlebars.compile(location);
+            return handlebars.compile(source);
         } catch (IOException e) {
-            throw new IllegalStateException("Kunne ikke kompilere fil: " + location + ".hbs", e);
+            throw new IllegalStateException("Klarte ikke kompilere fil: " + source + ".hbs", e);
         }
     }
 
@@ -89,31 +95,29 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
         }
     }
 
-    public abstract String getDisplayName();
+    public abstract String displayName();
 
-    abstract String getSubfolder();
+    abstract String templateFolder();
 
     abstract Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling);
 
     abstract class Brevdata {
-        private String locale;
-        private String bundle;
+        private Språkkode språkkode;
 
         public Brevdata(Språkkode språkkode) {
-            locale = BrevmalKildefiler.getLocaleSuffixFor(språkkode);
-            bundle = TEMPLATES_ROOT + getSubfolder() + "/" + getSubfolder();
+            this.språkkode = språkkode;
         }
 
         public String getLocale() {
-            return locale;
+            return getLocaleSuffixFor(språkkode);
         }
 
         public String getBundle() {
-            return bundle;
+            return getResourceBundle(templateFolder());
         }
 
         public String getFelles() {
-            return SHARED;
+            return getResourceBundle(FELLES);
         }
     }
 }

@@ -1,0 +1,72 @@
+{
+  "Response": [
+    {
+      "Decision": "Deny",
+      "Status": {
+        "StatusCode": {
+          "Value": "urn:oasis:names:tc:xacml:1.0:status:ok",
+          "StatusCode": {
+            "Value": "urn:oasis:names:tc:xacml:1.0:status:ok"
+          }
+        }
+      },
+      "AssociatedAdvice": {
+        "Id": "no.nav.abac.advices.reason.deny_reason",
+        "AttributeAssignment": [
+          {
+            "AttributeId": "no.nav.abac.attributter.adviceorobligation.cause",
+            "Value": "cause-0001-manglerrolle",
+            "Category": "urn:oasis:names:tc:xacml:3.0:attribute-category:environment",
+            "DataType": "http://www.w3.org/2001/XMLSchema#string"
+          },
+          {
+            "AttributeId": "no.nav.abac.attributter.adviceorobligation.deny_policy",
+            "Value": "fp3_behandle_egen_ansatt",
+            "Category": "urn:oasis:names:tc:xacml:3.0:attribute-category:environment",
+            "DataType": "http://www.w3.org/2001/XMLSchema#string"
+          },
+          {
+            "AttributeId": "no.nav.abac.attributter.adviceorobligation.deny_rule",
+            "Value": "intern_behandle_egen_ansatt_feilgruppetilgang",
+            "Category": "urn:oasis:names:tc:xacml:3.0:attribute-category:environment",
+            "DataType": "http://www.w3.org/2001/XMLSchema#string"
+          }
+        ]
+      }
+    },
+    {
+      "Decision": "Permit",
+      "Status": {
+        "StatusCode": {
+          "Value": "urn:oasis:names:tc:xacml:1.0:status:ok",
+          "StatusCode": {
+            "Value": "urn:oasis:names:tc:xacml:1.0:status:ok"
+          }
+        }
+      },
+      "AssociatedAdvice": {
+        "Id": "no.nav.abac.advices.action.sporbarhetslogg",
+        "AttributeAssignment": [
+          {
+            "AttributeId": "no.nav.abac.attributter.adviceorobligation.deny_policy",
+            "Value": "fp1_behandle_kode6",
+            "Category": "urn:oasis:names:tc:xacml:3.0:attribute-category:environment",
+            "DataType": "http://www.w3.org/2001/XMLSchema#string"
+          },
+          {
+            "AttributeId": "urn:oasis:names:tc:xacml:1.0:subject:subject-id",
+            "Value": "Z991113",
+            "Category": "urn:oasis:names:tc:xacml:1.0:subject-category:access-subject",
+            "DataType": "http://www.w3.org/2001/XMLSchema#string"
+          },
+          {
+            "AttributeId": "no.nav.abac.attributter.resource.felles.person.fnr",
+            "Value": "07078515206",
+            "Category": "urn:oasis:names:tc:xacml:3.0:attribute-category:resource",
+            "DataType": "http://www.w3.org/2001/XMLSchema#string"
+          }
+        ]
+      }
+    }
+  ]
+}

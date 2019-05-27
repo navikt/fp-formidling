@@ -40,6 +40,7 @@ public class DokumentMalType extends KodeverkTabell {
     public static final String FRITEKST_DOK = "FRITKS";
     public static final String VEDTAK_MEDHOLD = "VEDMED";
     public static final String ETTERLYS_INNTEKTSMELDING_DOK = "INNLYS";
+    public static final String INFO_TIL_ANNEN_FORELDER_DOK = "INAFOR";
 
     @Convert(converter = BooleanToStringConverter.class)
     @Column(name = "tilgjengelig_manuell_utsendelse", nullable = false)

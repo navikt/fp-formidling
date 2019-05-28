@@ -93,6 +93,7 @@ public class DokumentMalUtlederTest {
     public void utled_innvilget_es() {
         hendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
@@ -107,6 +108,7 @@ public class DokumentMalUtlederTest {
     public void utled_avslått_es() {
         hendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
@@ -121,6 +123,7 @@ public class DokumentMalUtlederTest {
     public void utled_avslått_opphør_es() {
         hendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
@@ -135,6 +138,7 @@ public class DokumentMalUtlederTest {
     public void kast_exception_hvis_ugyldig_es() {
         hendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
@@ -253,6 +257,7 @@ public class DokumentMalUtlederTest {
     private DokumentHendelse.Builder standardBuilder() {
         return DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER);
     }
 }

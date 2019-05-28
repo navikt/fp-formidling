@@ -22,6 +22,7 @@ public class UendretutfallBrevMapperTest {
     private DokumentHendelse lagHendelse() {
         return DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .build();
     }

@@ -53,6 +53,7 @@ public class KlageMapperTest {
     public void skal_identifisere_opphevet_klage_basert_på_hendelse() {
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .medErOpphevetKlage(true)
                 .build();

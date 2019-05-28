@@ -30,6 +30,7 @@ public class HenleggBehandlingBrevMapperTest {
                 .build();
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .build();
     }

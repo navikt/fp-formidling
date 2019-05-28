@@ -82,6 +82,7 @@ public class KafkaReaderTest {
     private DokumentbestillingV1 lagOkDto() {
         DokumentbestillingV1 dto = new DokumentbestillingV1();
         dto.setBehandlingUuid(UUID.randomUUID());
+        dto.setDokumentbestillingUuid(UUID.randomUUID());
         dto.setDokumentMal(DokumentMalType.AVSLAGSVEDTAK_DOK);
         dto.setFritekst("123");
         dto.setHistorikkAktør(HistorikkAktør.BESLUTTER.getKode());

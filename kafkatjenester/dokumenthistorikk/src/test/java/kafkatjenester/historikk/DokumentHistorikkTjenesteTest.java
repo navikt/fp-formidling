@@ -53,6 +53,7 @@ public class DokumentHistorikkTjenesteTest {
     public void publiserHistorikk() {
         DokumentHendelse hendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .build();
         hendelseRepository.lagre(hendelse);

@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -79,7 +80,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
         Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
+        Søknad søknad = hentSøknadUansett(behandling);
         YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
         Saldoer saldoer = domeneobjektProvider.hentSaldoer(behandling);
         FagType fagType = mapFagType(dokumentHendelse,
@@ -94,6 +95,21 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                 saldoer);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnvilgetForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
+    }
+
+    Søknad hentSøknadUansett(Behandling behandling) {
+        int maxForsøk = 20;
+        int nåværendeForsøk = 0;
+        Optional<Søknad> søknad = Optional.empty();
+        Behandling nåværendeBehandling = behandling;
+        while (søknad.isEmpty() && nåværendeForsøk < maxForsøk) {
+            søknad = domeneobjektProvider.hentSøknad(nåværendeBehandling);
+            if (søknad.isEmpty()) {
+                nåværendeBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(nåværendeBehandling).orElseThrow(IllegalStateException::new);
+            }
+            nåværendeForsøk++;
+        }
+        return søknad.orElseThrow(IllegalStateException::new);
     }
 
     private FagType mapFagType(DokumentHendelse dokumentHendelse,

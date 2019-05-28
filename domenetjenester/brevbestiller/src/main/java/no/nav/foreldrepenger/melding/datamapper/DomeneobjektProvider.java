@@ -105,6 +105,10 @@ public class DomeneobjektProvider {
         return behandlingDtoMapper.mapBehandlingFraDto((behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingUuid))));
     }
 
+    public Optional<Behandling> hentOriginalBehandlingHvisFinnes (Behandling behandling){
+        return behandlingRestKlient.hentOriginalBehandling(behandling.getResourceLinker()).map(behandlingDtoMapper::mapOriginalBehandlingFraDto);
+    }
+
     public BeregningsresultatES hentBeregningsresultatES(Behandling behandling) {
         return BeregningsresultatDtoMapper.mapBeregningsresultatESFraDto(behandlingRestKlient.hentBeregningsresultatEngangsstønad(behandling.getResourceLinker()));
     }
@@ -144,8 +148,8 @@ public class DomeneobjektProvider {
     }
 
     @Deprecated
-    public Søknad hentSøknad(Behandling behandling) {
-        return SøknadDtoMapper.mapSøknadFraDto(behandlingRestKlient.hentSoknad(behandling.getResourceLinker()));
+    public Optional<Søknad> hentSøknad(Behandling behandling) {
+        return behandlingRestKlient.hentSoknadHvisFinnes(behandling.getResourceLinker()).map(SøknadDtoMapper::mapSøknadFraDto);
     }
 
     public List<Vilkår> hentVilkår(Behandling behandling) {

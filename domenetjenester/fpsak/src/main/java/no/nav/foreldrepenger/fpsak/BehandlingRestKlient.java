@@ -37,7 +37,7 @@ public interface BehandlingRestKlient {
 
     FamilieHendelseGrunnlagDto hentFamiliehendelse(List<BehandlingResourceLink> resourceLinkDtos);
 
-    SoknadDto hentSoknad(List<BehandlingResourceLink> resourceLinkDtos);
+    Optional<SoknadDto> hentSoknadHvisFinnes(List<BehandlingResourceLink> resourceLinkDtos);
 
     BeregningsresultatEngangsstønadDto hentBeregningsresultatEngangsstønad(List<BehandlingResourceLink> resourceLinkDtos);
 

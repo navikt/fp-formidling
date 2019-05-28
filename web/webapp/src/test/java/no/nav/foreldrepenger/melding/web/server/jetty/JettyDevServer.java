@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.sql.DataSource;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -25,6 +28,9 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import no.nav.foreldrepenger.melding.sikkerhet.TestSertifikater;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatabaseScript;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceRole;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceUtil;
 import no.nav.foreldrepenger.melding.web.server.jetty.db.EnvironmentClass;
 
 public class JettyDevServer extends JettyServer {
@@ -95,6 +101,23 @@ public class JettyDevServer extends JettyServer {
             System.setProperty("defaultDS.password", konfig.getPassword()); // benyttes kun hvis vault.enable=false
         } else {
             throw new RuntimeException("forventet én datasourc-konfiger med defaultDS, men fant " + konfigs.size());
+        }
+    }
+
+
+    @Override
+    protected void migrerDatabaser() throws IOException {
+        EnvironmentClass environmentClass = getEnvironmentClass();
+        String initSql = String.format("SET ROLE \"%s\"", DatasourceUtil.getDbRole("defaultDS", DatasourceRole.ADMIN));
+        if (EnvironmentClass.LOCALHOST.equals(environmentClass)) {
+            initSql = null;
+        }
+        DataSource migratateDS = DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass);
+        DatabaseScript.migrate(migratateDS, initSql, true);
+        try {
+            migratateDS.getConnection().close();
+        } catch (SQLException e) {
+            throw new RuntimeException("Klarte ikke stenge databaseconnection");
         }
     }
 

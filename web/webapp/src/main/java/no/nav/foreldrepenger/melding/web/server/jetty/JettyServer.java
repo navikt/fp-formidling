@@ -1,9 +1,12 @@
 package no.nav.foreldrepenger.melding.web.server.jetty;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.sql.DataSource;
 
 import org.eclipse.jetty.plus.jndi.EnvEntry;
 import org.eclipse.jetty.util.resource.Resource;
@@ -85,12 +88,13 @@ public class JettyServer extends AbstractJettyServer {
     protected void migrerDatabaser() throws IOException {
         EnvironmentClass environmentClass = getEnvironmentClass();
         String initSql = String.format("SET ROLE \"%s\"", DatasourceUtil.getDbRole("defaultDS", DatasourceRole.ADMIN));
-        if (EnvironmentClass.LOCALHOST.equals(environmentClass)) {
-            //  TODO: Ønsker egentlig ikke dette, men har ikke satt opp skjema lokalt
-            // til å ha en admin bruker som gjør migrering og en annen som gjør CRUD operasjoner
-            initSql = null;
+        DataSource migratateDS = DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass);
+        DatabaseScript.migrate(migratateDS, initSql, false);
+        try {
+            migratateDS.getConnection().close();
+        } catch (SQLException e) {
+            throw new RuntimeException("Klarte ikke stenge databaseconnection");
         }
-        DatabaseScript.migrate(DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass), initSql);
     }
 
     protected EnvironmentClass getEnvironmentClass() {

@@ -10,7 +10,7 @@ public class DatabaseScript {
 
     private static final String location = "classpath:/db/migration/";
 
-    public static void migrate(final DataSource dataSource, String initSql) {
+    public static void migrate(final DataSource dataSource, String initSql, boolean clean) {
         ClassicConfiguration conf = new ClassicConfiguration();
         conf.setDataSource(dataSource);
         conf.setLocationsAsStrings(location);
@@ -22,7 +22,12 @@ public class DatabaseScript {
         try {
             flyway.migrate();
         } catch (FlywayException fwe) {
+            if (clean) {
+                flyway.clean();
+                flyway.migrate();
+            } else {
                 throw new IllegalStateException("Migrering feiler", fwe);
+            }
         }
     }
 }

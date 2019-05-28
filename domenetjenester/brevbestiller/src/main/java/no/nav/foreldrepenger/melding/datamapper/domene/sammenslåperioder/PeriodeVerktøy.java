@@ -63,7 +63,7 @@ public class PeriodeVerktøy {
                 .anyMatch(ArbeidsforholdType::isGradering);
     }
 
-    static LocalDate xmlGregorianTilLocalDate(XMLGregorianCalendar dato) {
+    public static LocalDate xmlGregorianTilLocalDate(XMLGregorianCalendar dato) {
         return dato.toGregorianCalendar().toZonedDateTime().toLocalDate();
     }
 }

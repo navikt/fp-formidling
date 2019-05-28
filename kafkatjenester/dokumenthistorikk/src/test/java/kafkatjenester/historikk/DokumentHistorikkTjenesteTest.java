@@ -58,6 +58,7 @@ public class DokumentHistorikkTjenesteTest {
         hendelseRepository.lagre(hendelse);
         DokumentHistorikkinnslag historikk = DokumentHistorikkinnslag.builder()
                 .medBehandlingUuid(UUID.randomUUID())
+                .medHistorikkUuid(UUID.randomUUID())
                 .medHendelseId(hendelse.getId())
                 .medDokumentMalType(dokumentRepository.hentDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK))
                 .medJournalpostId(new JournalpostId("123"))

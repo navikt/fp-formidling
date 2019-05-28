@@ -39,11 +39,13 @@ public class HistorikkRepositoryImplTest {
         UUID behandlingUuid = UUID.randomUUID();
         DokumentHendelse hendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(behandlingUuid)
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .build();
         hendelseRepository.lagre(hendelse);
         DokumentHistorikkinnslag historikkInnslag = DokumentHistorikkinnslag.builder()
                 .medBehandlingUuid(behandlingUuid)
+                .medHistorikkUuid(UUID.randomUUID())
                 .medHendelseId(hendelse.getId())
                 .medJournalpostId(new JournalpostId(123L))
                 .medDokumentId("123")

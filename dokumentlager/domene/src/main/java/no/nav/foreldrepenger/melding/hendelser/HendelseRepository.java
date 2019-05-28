@@ -9,6 +9,8 @@ public interface HendelseRepository {
 
     void lagre(DokumentHendelse dokumentHendelse);
 
+    boolean finnesHendelseMedUuidAllerede(UUID bestillingUuid);
+
     void lagre(EventmottakFeillogg eventmottakFeillogg);
 
     DokumentHendelse hentDokumentHendelseMedId(long id);

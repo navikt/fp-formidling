@@ -143,6 +143,7 @@ public class DomeneobjektProvider {
         return klageDtoMapper.mapKlagedokumentFraDto(behandlingRestKlient.hentKlagedokument(behandling.getResourceLinker()));
     }
 
+    @Deprecated
     public Søknad hentSøknad(Behandling behandling) {
         return SøknadDtoMapper.mapSøknadFraDto(behandlingRestKlient.hentSoknad(behandling.getResourceLinker()));
     }

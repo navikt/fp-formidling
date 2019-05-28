@@ -33,6 +33,9 @@ public class DokumentHendelse extends BaseEntitet {
     @Column(name = "behandling_uuid")
     private UUID behandlingUuid;
 
+    @Column(name = "bestilling_uuid")
+    private UUID bestillingUuid;
+
     @ManyToOne
     @JoinColumn(name = "dokument_mal_navn")
     private DokumentMalType dokumentMalType;
@@ -86,6 +89,10 @@ public class DokumentHendelse extends BaseEntitet {
         return behandlingUuid;
     }
 
+    public UUID getBestillingUuid() {
+        return bestillingUuid;
+    }
+
     public DokumentMalType getDokumentMalType() {
         return dokumentMalType;
     }
@@ -127,8 +134,7 @@ public class DokumentHendelse extends BaseEntitet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DokumentHendelse that = (DokumentHendelse) o;
-        return id.equals(that.id) &&
-                behandlingUuid.equals(that.behandlingUuid) &&
+        return behandlingUuid.equals(that.behandlingUuid) &&
                 Objects.equals(dokumentMalType, that.dokumentMalType) &&
                 Objects.equals(ytelseType, that.ytelseType) &&
                 Objects.equals(gjelderVedtak, that.gjelderVedtak) &&
@@ -139,7 +145,7 @@ public class DokumentHendelse extends BaseEntitet {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, historikkAktør);
+        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, historikkAktør);
     }
 
     @Override
@@ -147,18 +153,22 @@ public class DokumentHendelse extends BaseEntitet {
         return "DokumentHendelse{" +
                 "id=" + id +
                 ", behandlingUuid=" + behandlingUuid +
+                ", bestillingUuid=" + bestillingUuid +
                 ", dokumentMalType=" + dokumentMalType +
                 ", ytelseType=" + ytelseType +
                 ", gjelderVedtak=" + gjelderVedtak +
                 ", tittel='" + tittel + '\'' +
                 ", fritekst='" + fritekst + '\'' +
                 ", historikkAktør=" + historikkAktør +
+                ", revurderingVarslingÅrsak=" + revurderingVarslingÅrsak +
+                ", erOpphevetKlage=" + erOpphevetKlage +
                 '}';
     }
 
     public static class Builder {
         private DokumentMalType dokumentMalType;
         private UUID behandlingUuid;
+        private UUID bestillingUuid;
         private FagsakYtelseType ytelseType;
         private String tittel;
         private String fritekst;
@@ -179,6 +189,11 @@ public class DokumentHendelse extends BaseEntitet {
 
         public DokumentHendelse.Builder medBehandlingUuid(UUID behandlingUuid) {
             this.behandlingUuid = behandlingUuid;
+            return this;
+        }
+
+        public DokumentHendelse.Builder medBestillingUuid(UUID bestillingUuid) {
+            this.bestillingUuid = bestillingUuid;
             return this;
         }
 
@@ -215,6 +230,7 @@ public class DokumentHendelse extends BaseEntitet {
         public DokumentHendelse build() {
             verifyStateForBuild();
             DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingUuid, ytelseType);
+            dokumentHendelse.bestillingUuid = bestillingUuid;
             dokumentHendelse.erOpphevetKlage = erOpphevetKlage;
             dokumentHendelse.gjelderVedtak = gjelderVedtak;
             dokumentHendelse.fritekst = fritekst;
@@ -227,6 +243,7 @@ public class DokumentHendelse extends BaseEntitet {
 
         private void verifyStateForBuild() {
             Objects.requireNonNull(behandlingUuid, "behandlingUuid");
+            Objects.requireNonNull(bestillingUuid, "bestillingUuid");
             Objects.requireNonNull(ytelseType, "ytelseType");
         }
 

@@ -38,7 +38,8 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
     protected FellesType fellesType;
     protected DokumentFelles dokumentFelles;
 
-    public FritekstmalBrevMapper() {
+    protected FritekstmalBrevMapper() {
+
     }
 
     @Inject

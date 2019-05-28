@@ -147,49 +147,30 @@ public class PeriodeBeregner {
         return Optional.empty();
     }
 
-    private static boolean erDefinertUttakUtsettelseFor(UttakResultatPeriode periode) {
-        return !UttakUtsettelseType.UDEFINERT.equals(periode.getUttakUtsettelseType());
-    }
-
-    private static boolean erAvslåttPeriode(UttakResultatPeriode periode) {
-        return PeriodeResultatType.AVSLÅTT.equals(periode.getPeriodeResultatType());
-    }
-
-    private static boolean erInnvilgetPeriode(UttakResultatPeriode periode) {
-        return PeriodeResultatType.INNVILGET.equals(periode.getPeriodeResultatType());
-    }
-
-    //TODO PK-54195 lag nye tester
     public static int beregnTapteDagerFørTermin(List<UttakResultatPeriode> perioder, Optional<Stønadskonto> stønadsKontoForeldrepengerFørFødsel) {
         int totaltAntallDager = stønadsKontoForeldrepengerFørFødsel.map(Stønadskonto::getMaxDager).orElse(0);
         if (totaltAntallDager <= 0) {
             return 0;
         }
         List<UttakResultatPeriode> perioderMedForeldrepengerFørFødsel = finnPerioderMedStønadskontoType(perioder, StønadskontoType.FORELDREPENGER_FØR_FØDSEL);
-        int brukteDager = 0;
+        BigDecimal brukteDager = BigDecimal.ZERO;
         for (UttakResultatPeriode periode : perioderMedForeldrepengerFørFødsel) {
-            brukteDager += periode.getAktiviteter().stream()
+            brukteDager = brukteDager.add(periode.getAktiviteter().stream()
                     .filter(aktivitet -> StønadskontoType.FORELDREPENGER_FØR_FØDSEL.equals(aktivitet.getTrekkonto()))
-                    .filter(aktivitet -> aktivitet.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0).mapToInt(UttakResultatPeriodeAktivitet::getTrekkdager)
-                    .max()
-                    .orElse(0);
+                    .filter(aktivitet -> aktivitet.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0) //Hvis utbetaling er over 0, er det ikke tapte dager
+                    .map(UttakResultatPeriodeAktivitet::getTrekkdager)
+                    .max(BigDecimal::compareTo)
+                    .orElse(BigDecimal.ZERO));
         }
-        return totaltAntallDager - brukteDager;
+        //Resultat skal aldri være et desimaltall her
+        //brukte dager burde aldri være mindre enn total..
+        return totaltAntallDager < brukteDager.intValue() ? totaltAntallDager : totaltAntallDager - brukteDager.intValue();
     }
 
     public static Optional<Stønadskonto> finnStønadsKontoMedType(Set<Stønadskonto> stønadskontoer, StønadskontoType stønadskontoType) {
         return stønadskontoer.stream().
                 filter(stønadskonto -> stønadskontoType.equals(stønadskonto.getStønadskontoType()))
                 .findFirst();
-    }
-
-    public static boolean erPeriodeDekket(UttakResultatPeriode uttaksPeriode, List<BeregningsresultatPeriode> perioder) {
-        for (BeregningsresultatPeriode periode : perioder) {
-            if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttaksPeriode.getFom()) && !periode.getBeregningsresultatPeriodeTom().isAfter(uttaksPeriode.getTom())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public static UtbetaltKode forMyeUtbetalt(PeriodeListeType periodeListe, LocalDate vedtaksdato) {
@@ -230,7 +211,7 @@ public class PeriodeBeregner {
     }
 
     private static boolean erInnvilgetUtsettelseInneværendeMånedEllerTidligere(LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
-        LocalDate iDag = vedtaksdato != null ? vedtaksdato : FPDateUtil.iDag(); // TODO avklaring Hva er vitsen med å sjekke denne datoen?
+        LocalDate iDag = vedtaksdato != null ? vedtaksdato : FPDateUtil.iDag();
         return innvilgetUtsettelseFOM.isBefore(iDag.plusMonths(1).withDayOfMonth(1));
     }
 

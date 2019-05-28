@@ -1,14 +1,9 @@
 package no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat;
 
 public class UttakDto {
-    private int trekkdager;
     private String stonadskontoType;
     private String periodeResultatType;
     private boolean gradering;
-
-    public int getTrekkdager() {
-        return trekkdager;
-    }
 
     public String getStonadskontoType() {
         return stonadskontoType;
@@ -20,10 +15,6 @@ public class UttakDto {
 
     public boolean isGradering() {
         return gradering;
-    }
-
-    public void setTrekkdager(int trekkdager) {
-        this.trekkdager = trekkdager;
     }
 
     public void setStonadskontoType(String stonadskontoType) {

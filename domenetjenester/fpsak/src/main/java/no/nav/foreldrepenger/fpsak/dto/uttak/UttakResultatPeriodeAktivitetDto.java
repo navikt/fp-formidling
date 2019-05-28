@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 public class UttakResultatPeriodeAktivitetDto {
 
     private KodeDto stønadskontoType;
-    private Integer trekkdager;
+    private BigDecimal trekkdager;
     private BigDecimal prosentArbeid;
     private String arbeidsforholdId;
     private ArbeidsgiverDto arbeidsgiver;
@@ -22,9 +22,7 @@ public class UttakResultatPeriodeAktivitetDto {
         return stønadskontoType;
     }
 
-    @Deprecated
-    //TODO Denne endres snart til desimaltall
-    public Integer getTrekkdager() {
+    public BigDecimal getTrekkdager() {
         return trekkdager;
     }
 

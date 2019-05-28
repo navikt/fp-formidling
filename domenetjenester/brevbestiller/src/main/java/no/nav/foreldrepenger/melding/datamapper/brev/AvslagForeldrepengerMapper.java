@@ -5,9 +5,9 @@ import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstan
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,11 +24,11 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.ÅrsakMapperAvslag;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -46,8 +46,8 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.RelasjonskodeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
+import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 import no.nav.vedtak.util.Tuple;
@@ -87,11 +87,11 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
         Optional<BeregningsresultatFP> beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFPHvisFinnes(behandling);
         Optional<UttakResultatPerioder> uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling);
         long grunnbeløp = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
-        Søknad søknad = domeneobjektProvider.hentSøknad(behandling);
+        List<MottattDokument> mottattDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         FagType fagType = mapFagType(behandling,
                 behandlingstype,
-                søknad.getMottattDato(),
+                mottattDokumenter,
                 dokumentFelles,
                 dokumentHendelse,
                 familiehendelse,
@@ -104,7 +104,7 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
 
     private FagType mapFagType(Behandling behandling,
                                String behandlingstypeKode,
-                               LocalDate søknadMottatDato,
+                               List<MottattDokument> mottatteDokumenter,
                                DokumentFelles dokumentFelles,
                                DokumentHendelse dokumentHendelse,
                                FamilieHendelse familiehendelse,
@@ -116,7 +116,7 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setRelasjonskode(fra(behandling.getFagsak()));
-        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknadMottatDato));
+        fagType.setMottattDato(MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());
         fagType.setBarnErFødt(familiehendelse.isBarnErFødt());

@@ -146,13 +146,10 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    public SoknadDto hentSoknad(List<BehandlingResourceLink> resourceLinker) {
+    public Optional<SoknadDto> hentSoknadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "soknad".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, SoknadDto.class))
-                .orElseThrow(() -> {
-                    throw new IllegalStateException("Klarte ikke hente Søknad for behandling: " + hentBehandlingId(resourceLinker));
-                });
+                .findFirst().flatMap(link -> hentDtoFraLink(link, SoknadDto.class));
     }
 
     @Override

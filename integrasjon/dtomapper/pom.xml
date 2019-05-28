@@ -43,7 +43,6 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
             <artifactId>hendelse-dokumentbestilling</artifactId>
-            <version>5.0_201905133150210_b43503d</version>
         </dependency>
     </dependencies>
 </project>

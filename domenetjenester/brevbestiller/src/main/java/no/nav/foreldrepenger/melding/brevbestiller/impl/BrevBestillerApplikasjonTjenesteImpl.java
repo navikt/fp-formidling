@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -179,6 +180,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
                                                          DokumentMalType dokumentMal) {
         return DokumentHistorikkinnslag.builder()
                 .medBehandlingUuid(dokumentHendelse.getBehandlingUuid())
+                .medHistorikkUuid(UUID.randomUUID())
                 .medHendelseId(dokumentHendelse.getId())
                 .medJournalpostId(new JournalpostId(response.getJournalpostId()))
                 .medDokumentId(response.getDokumentId())

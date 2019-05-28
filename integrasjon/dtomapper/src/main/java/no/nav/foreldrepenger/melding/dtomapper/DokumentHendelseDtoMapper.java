@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
+import java.util.UUID;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -61,6 +63,7 @@ public class DokumentHendelseDtoMapper {
     public DokumentHendelse mapDokumentHendelseFraDtoForKafka(DokumentbestillingV1 dokumentbestilling) {
         return new DokumentHendelse.Builder()
                 .medBehandlingUuid(dokumentbestilling.getBehandlingUuid())
+                .medBestillingUuid(dokumentbestilling.getDokumentbestillingUuid())
                 .medYtelseType(utledYtelseType(dokumentbestilling.getYtelseType().getKode()))
                 .medFritekst(dokumentbestilling.getFritekst())
                 .medHistorikkAktør(utledHistorikkAktør(dokumentbestilling.getHistorikkAktør()))

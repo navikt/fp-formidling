@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -12,6 +13,7 @@ import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingDto {
     private Long id;
+    private UUID uuid;
     private Integer versjon;
     private KodeDto type;
     private KodeDto status;
@@ -88,6 +90,14 @@ public class BehandlingDto {
 
     public String getBehandlendeEnhetNavn() {
         return behandlendeEnhetNavn;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public void setBehandlendeEnhetNavn(String behandlendeEnhetNavn) {

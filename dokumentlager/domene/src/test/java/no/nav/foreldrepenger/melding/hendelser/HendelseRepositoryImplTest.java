@@ -27,9 +27,11 @@ public class HendelseRepositoryImplTest {
     @Test
     public void skalLagreOgHenteOppIgjen() {
         UUID behandlingUuid = UUID.randomUUID();
+        UUID bestiilingUuid = UUID.randomUUID();
         DokumentHendelse dokumentHendelse = DokumentHendelse
                 .builder()
                 .medBehandlingUuid(behandlingUuid)
+                .medBestillingUuid(bestiilingUuid)
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .build();
         hendelseRepository.lagre(dokumentHendelse);
@@ -40,5 +42,7 @@ public class HendelseRepositoryImplTest {
 
         assertThat(hendelseRepository.hentDokumentHendelseMedId(hendelseListe.get(0).getId()))
                 .isNotNull();
+        assertThat(hendelseRepository.finnesHendelseMedUuidAllerede(bestiilingUuid)).isTrue();
+
     }
 }

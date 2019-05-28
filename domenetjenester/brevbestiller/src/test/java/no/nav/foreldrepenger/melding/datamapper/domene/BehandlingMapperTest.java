@@ -56,6 +56,7 @@ public class BehandlingMapperTest {
     private DokumentHendelse.Builder standardHendelseBuilder() {
         return DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER);
     }
 

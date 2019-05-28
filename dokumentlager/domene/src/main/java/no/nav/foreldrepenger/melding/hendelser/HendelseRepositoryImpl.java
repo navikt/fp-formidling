@@ -39,6 +39,13 @@ public class HendelseRepositoryImpl implements HendelseRepository {
     }
 
     @Override
+    public boolean finnesHendelseMedUuidAllerede(UUID bestillingUuid) {
+        TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where bestilling_uuid=:bestillingUuid", DokumentHendelse.class);
+        query.setParameter("bestillingUuid", bestillingUuid);
+        return !query.getResultList().isEmpty();
+    }
+
+    @Override
     public DokumentHendelse hentDokumentHendelseMedId(long hendelseId) {
         TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where id=:hendelseId", DokumentHendelse.class);
         query.setParameter("hendelseId", hendelseId);

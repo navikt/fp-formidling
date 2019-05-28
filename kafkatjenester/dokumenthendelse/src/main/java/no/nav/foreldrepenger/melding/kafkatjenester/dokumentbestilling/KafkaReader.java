@@ -44,7 +44,6 @@ public class KafkaReader {
     }
 
     void prosesser(String melding) {
-        log.info("Mottatt melding med start : {}", melding.substring(0, Math.min(melding.length() - 1, 1000)));
         feilmelding = new StringBuilder();
         try {
             DokumentbestillingV1 jsonHendelse = deserialiser(melding, DokumentbestillingV1.class);

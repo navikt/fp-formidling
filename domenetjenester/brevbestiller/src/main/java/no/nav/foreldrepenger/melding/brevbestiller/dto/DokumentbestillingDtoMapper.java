@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.dto;
 
+import java.util.UUID;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -31,6 +33,7 @@ public class DokumentbestillingDtoMapper {
     public DokumentHendelse mapDokumentbestillingFraDtoForEndepunkt(DokumentbestillingDto brevDto) {
         return new DokumentHendelse.Builder()
                 .medBehandlingUuid(brevDto.getBehandlingUuid())
+                .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(utledYtelseType(brevDto.getYtelseType().getKode()))
                 .medFritekst(brevDto.getFritekst())
                 .medTittel(brevDto.getTittel())

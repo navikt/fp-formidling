@@ -30,6 +30,9 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
     @Column(name = "behandling_uuid")
     private UUID behandlingUuid;
 
+    @Column(name = "historikk_uuid")
+    private UUID historikkUuuid;
+
     @Column(name = "hendelse_id")
     private Long hendelseId;
 
@@ -57,10 +60,11 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
         //Hibernate
     }
 
-    DokumentHistorikkinnslag(UUID behandlingUuid, long hendelseId, String dokumentId,
+    DokumentHistorikkinnslag(UUID behandlingUuid, UUID historikkUuuid, long hendelseId, String dokumentId,
                              JournalpostId journalpostId, DokumentMalType dokumentMalType,
                              HistorikkinnslagType historikkinnslagType) {
         this.behandlingUuid = behandlingUuid;
+        this.historikkUuuid = historikkUuuid;
         this.hendelseId = hendelseId;
         this.dokumentId = dokumentId;
         this.journalpostId = journalpostId;
@@ -78,8 +82,7 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DokumentHistorikkinnslag that = (DokumentHistorikkinnslag) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(behandlingUuid, that.behandlingUuid) &&
+        return Objects.equals(behandlingUuid, that.behandlingUuid) &&
                 Objects.equals(hendelseId, that.hendelseId) &&
                 Objects.equals(dokumentId, that.dokumentId) &&
                 Objects.equals(journalpostId, that.journalpostId) &&
@@ -90,14 +93,15 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, behandlingUuid, hendelseId, dokumentId, journalpostId, historikkAktør, historikkinnslagType, dokumentMalType);
+        return Objects.hash(behandlingUuid, hendelseId, dokumentId, journalpostId, historikkAktør, historikkinnslagType, dokumentMalType);
     }
 
     @Override
     public String toString() {
         return "DokumentHistorikkinnslag{" +
                 "id=" + id +
-                ", behandlingId=" + behandlingUuid +
+                ", behandlingUuid=" + behandlingUuid +
+                ", historikkUuuid=" + historikkUuuid +
                 ", hendelseId=" + hendelseId +
                 ", dokumentId='" + dokumentId + '\'' +
                 ", journalpostId=" + journalpostId +
@@ -113,6 +117,10 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
 
     public UUID getBehandlingUuid() {
         return behandlingUuid;
+    }
+
+    public UUID getHistorikkUuuid() {
+        return historikkUuuid;
     }
 
     public Long getHendelseId() {
@@ -141,6 +149,7 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
 
     public static class Builder {
         private UUID behandlingUuid;
+        private UUID historikkUuuid;
         private Long hendelseId;
         private String dokumentId;
         private JournalpostId journalpostId;
@@ -150,6 +159,11 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
 
         public DokumentHistorikkinnslag.Builder medBehandlingUuid(UUID behandlingUuid) {
             this.behandlingUuid = behandlingUuid;
+            return this;
+        }
+
+        public DokumentHistorikkinnslag.Builder medHistorikkUuid(UUID historikkUuuid) {
+            this.historikkUuuid = historikkUuuid;
             return this;
         }
 
@@ -185,7 +199,7 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
 
         public DokumentHistorikkinnslag build() {
             verifyStateForBuild();
-            DokumentHistorikkinnslag dokumentHistorikkinnslag = new DokumentHistorikkinnslag(behandlingUuid, hendelseId,
+            DokumentHistorikkinnslag dokumentHistorikkinnslag = new DokumentHistorikkinnslag(behandlingUuid, historikkUuuid, hendelseId,
                     dokumentId, journalpostId, dokumentMalType, historikkinnslagType);
             dokumentHistorikkinnslag.historikkAktør = historikkAktør;
             return dokumentHistorikkinnslag;
@@ -193,6 +207,7 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
 
         private void verifyStateForBuild() {
             Objects.requireNonNull(behandlingUuid, "behandlingUuid");
+            Objects.requireNonNull(historikkUuuid, "historikkUuuid");
             Objects.requireNonNull(hendelseId, "hendelseId");
             Objects.requireNonNull(dokumentId, "dokumentId");
             Objects.requireNonNull(journalpostId, "journalpostId");

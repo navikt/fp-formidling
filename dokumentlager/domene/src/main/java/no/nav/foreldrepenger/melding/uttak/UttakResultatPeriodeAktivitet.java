@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class UttakResultatPeriodeAktivitet {
     private StønadskontoType trekkonto;
-    private int trekkdager;
+    private BigDecimal trekkdager;
     private String tidsperiode;
     private BigDecimal utbetalingsprosent;
     private boolean graderingInnvilget;
@@ -38,7 +38,7 @@ public class UttakResultatPeriodeAktivitet {
         return trekkonto;
     }
 
-    public int getTrekkdager() {
+    public BigDecimal getTrekkdager() {
         return trekkdager;
     }
 
@@ -81,7 +81,7 @@ public class UttakResultatPeriodeAktivitet {
 
     public static final class Builder {
         private StønadskontoType trekkonto;
-        private int trekkdager;
+        private BigDecimal trekkdager;
         private String tidsperiode;
         private BigDecimal utbetalingsprosent;
         private boolean graderingInnvilget;
@@ -97,7 +97,7 @@ public class UttakResultatPeriodeAktivitet {
             return this;
         }
 
-        public Builder medTrekkdager(int trekkdager) {
+        public Builder medTrekkdager(BigDecimal trekkdager) {
             this.trekkdager = trekkdager;
             return this;
         }

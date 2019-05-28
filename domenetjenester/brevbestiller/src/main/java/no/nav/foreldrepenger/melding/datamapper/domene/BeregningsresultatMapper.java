@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -121,7 +122,8 @@ public class BeregningsresultatMapper {
     private static int mapAntallTapteDagerFra(List<UttakResultatPeriodeAktivitet> uttakAktiviteter) {
         return alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ?
                 uttakAktiviteter.stream()
-                        .mapToInt(UttakResultatPeriodeAktivitet::getTrekkdager)
+                        .map(UttakResultatPeriodeAktivitet::getTrekkdager)
+                        .mapToInt(BigDecimal::intValue)
                         .max()
                         .orElse(0) : 0;
     }

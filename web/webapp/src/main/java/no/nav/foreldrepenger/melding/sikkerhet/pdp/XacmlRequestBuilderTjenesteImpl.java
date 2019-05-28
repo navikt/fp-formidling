@@ -19,9 +19,9 @@ import no.nav.vedtak.util.Tuple;
 @Dependent
 @Alternative
 @Priority(2)
-public class XamlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjeneste {
+public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjeneste {
 
-    public XamlRequestBuilderTjenesteImpl() {
+    public XacmlRequestBuilderTjenesteImpl() {
     }
 
     @Override

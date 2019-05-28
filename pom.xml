@@ -33,8 +33,6 @@
         <felles.version>1.1.0_20190522154906_20b3f63</felles.version>
         <metrics.version>3.2.5</metrics.version>
 
-        <abac-attribute-constants.version>2.0.0</abac-attribute-constants.version>
-
         <!-- Eksterne -->
         <assertj.version>3.7.0</assertj.version>
         <postgres.version>42.2.5</postgres.version>

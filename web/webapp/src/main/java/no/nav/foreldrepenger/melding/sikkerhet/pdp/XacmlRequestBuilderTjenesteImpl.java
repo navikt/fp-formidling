@@ -33,7 +33,6 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
         xacmlBuilder.addActionAttributeSet(actionAttributeSet);
 
         List<Tuple<String, String>> identer = hentIdenter(pdpRequest,
-                NavAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE,
                 NavAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE);
 
         if (identer.isEmpty()) {

@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -95,18 +96,18 @@ public class ÅrsakMapperAvslag {
     private static AvslagsAarsakType årsaktypeFra(BeregningsresultatPeriode beregningsresultatPeriode,
                                                   UttakResultatPeriode uttakResultatPeriode) {
         AvslagsAarsakType periode = årsaktypeFra(uttakResultatPeriode.getPeriodeResultatÅrsak());
-        periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter())));
+        periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter()).longValue()));
         periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
         periode.setPeriodeTom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeTom()));
 
         return periode;
     }
 
-    private static int mapAntallTapteDagerFra(List<UttakResultatPeriodeAktivitet> uttakAktiviteter) {
+    private static BigDecimal mapAntallTapteDagerFra(List<UttakResultatPeriodeAktivitet> uttakAktiviteter) {
         return alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ?
                 uttakAktiviteter.stream()
-                        .mapToInt(UttakResultatPeriodeAktivitet::getTrekkdager)
-                        .max()
-                        .orElse(0) : 0;
+                        .map(UttakResultatPeriodeAktivitet::getTrekkdager)
+                        .max(BigDecimal::compareTo)
+                        .orElse(BigDecimal.ZERO) : BigDecimal.ZERO;
     }
 }

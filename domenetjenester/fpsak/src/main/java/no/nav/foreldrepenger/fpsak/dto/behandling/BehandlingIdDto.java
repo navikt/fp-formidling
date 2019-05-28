@@ -9,8 +9,10 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import no.nav.vedtak.sikkerhet.abac.AbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 
 /**
  * Referanse til en behandling.
@@ -70,7 +72,7 @@ public class BehandlingIdDto implements AbacDto {
     @Override
     public AbacDataAttributter abacAttributter() {
         AbacDataAttributter abac = AbacDataAttributter.opprett();
-        return abac.leggTilBehandlingsId(getBehandlingId());
+        return abac.leggTil(StandardAbacAttributtType.BEHANDLING_UUID,getBehandlingId());
     }
 
     @Override

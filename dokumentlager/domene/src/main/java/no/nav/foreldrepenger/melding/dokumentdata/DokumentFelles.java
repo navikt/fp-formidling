@@ -131,7 +131,7 @@ public class DokumentFelles extends BaseEntitet {
     }
 
     public Språkkode getSpråkkode() {
-        return Objects.equals(Språkkode.UDEFINERT, språkkode) ? null : språkkode;
+        return språkkode;
     }
 
     public Saksnummer getSaksnummer() {

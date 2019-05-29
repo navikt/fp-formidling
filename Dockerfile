@@ -4,6 +4,8 @@ RUN mkdir /app/lib
 RUN mkdir /app/webapp
 RUN mkdir /app/conf
 
+ENV APPD_ENABLED=true
+
 # Config
 COPY web/webapp/target/classes/logback.xml /app/conf/
 COPY web/webapp/target/classes/jetty/jaspi-conf.xml /app/conf/

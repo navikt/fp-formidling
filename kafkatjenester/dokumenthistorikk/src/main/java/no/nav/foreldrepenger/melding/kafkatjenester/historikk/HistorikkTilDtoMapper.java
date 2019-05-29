@@ -37,6 +37,7 @@ public class HistorikkTilDtoMapper {
                 .medHistorikkAktørType(HistorikkAktørEnum.VEDTAKSLØSNINGEN)
                 .medType(HistorikkinnslagType.BREV_SENT.getKode())
                 .medDokumentLinker(mapLink(dokumentHistorikkinnslag))
+                .medAvsender("FP-FORMIDLING")
                 .build();
     }
 

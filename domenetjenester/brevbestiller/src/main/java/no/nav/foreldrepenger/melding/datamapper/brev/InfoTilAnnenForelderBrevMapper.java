@@ -30,7 +30,7 @@ public class InfoTilAnnenForelderBrevMapper extends FritekstmalBrevMapper {
 
     @Override
     public String displayName() {
-        return "Infobrev: Annen forelder";
+        return "Informasjon til den andre forelderen";
     }
 
     @Override

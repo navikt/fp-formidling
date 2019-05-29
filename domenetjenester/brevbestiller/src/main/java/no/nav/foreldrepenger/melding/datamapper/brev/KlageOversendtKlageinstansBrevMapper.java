@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import java.math.BigInteger;
+import java.time.LocalDate;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -28,6 +29,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.oversendt.klagei
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.oversendt.klageinstans.YtelseTypeKode;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_OVERSENDT_KLAGEINSTANS_DOK)
@@ -60,7 +62,8 @@ public class KlageOversendtKlageinstansBrevMapper implements DokumentTypeMapper 
     private FagType mapFagType(DokumentHendelse hendelse, Behandling behandling, KlageDokument klageDokument) {
         final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
-        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(klageDokument.getMottattDato()));
+        LocalDate mottattDato = klageDokument.getMottattDato() != null ? klageDokument.getMottattDato() : FPDateUtil.iDag();
+        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(mottattDato));
         fagType.setFritekst(hendelse.getFritekst());
         fagType.setAntallUker(BigInteger.valueOf(BEHANDLINGSFRIST_UKER_KA));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));

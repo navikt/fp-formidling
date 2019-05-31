@@ -7,7 +7,9 @@ import java.util.Objects;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
@@ -16,6 +18,8 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
+import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
@@ -29,6 +33,8 @@ class DokumentMalUtleder {
 
     private KodeverkTabellRepository kodeverkTabellRepository;
     private DomeneobjektProvider domeneobjektProvider;
+    private HistorikkRepository historikkRepository;
+    private BehandlingRestKlient behandlingRestKlient;
 
     public DokumentMalUtleder() {
         //CDI
@@ -36,9 +42,13 @@ class DokumentMalUtleder {
 
     @Inject
     public DokumentMalUtleder(KodeverkTabellRepository kodeverkTabellRepository,
-                              DomeneobjektProvider domeneobjektProvider) {
+                              DomeneobjektProvider domeneobjektProvider,
+                              HistorikkRepository historikkRepository,
+                              BehandlingRestKlient behandlingRestKlient) {
         this.kodeverkTabellRepository = kodeverkTabellRepository;
         this.domeneobjektProvider = domeneobjektProvider;
+        this.historikkRepository = historikkRepository;
+        this.behandlingRestKlient = behandlingRestKlient;
     }
 
     private static boolean erKunEndringIFordelingAvYtelsen(Behandlingsresultat behandlingsresultat) {
@@ -113,7 +123,26 @@ class DokumentMalUtleder {
         if (ingenKonsekvensForYtelsen && konsekvenserForYtelsen.size() > 1) {
             throw new IllegalStateException(UTVIKLERFEIL_INGEN_ENDRING_SAMMEN + behandling.getUuid());
         }
-        return ingenKonsekvensForYtelsen;
+        return ingenKonsekvensForYtelsen || erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(behandling);
+    }
+
+    private boolean erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(Behandling behandling) {
+        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        return behandlingsresultat != null &&
+                foreldrepengerErEndret(behandlingsresultat)
+                && erKunEndringIFordelingAvYtelsen(behandlingsresultat)
+                && harSendtVarselOmRevurdering(behandling);
+    }
+
+    private boolean harSendtVarselOmRevurdering(Behandling behandling) {
+        return historikkRepository.hentInnslagForBehandling(behandling.getUuid())
+                .stream().map(DokumentHistorikkinnslag::getDokumentMalType)
+                .anyMatch(mal -> mal.getKode().equals(DokumentMalType.REVURDERING_DOK))
+                || Boolean.TRUE.equals(behandlingRestKlient.harSendtVarselOmRevurdering(behandling.getResourceLinker()).orElse(false));
+    }
+
+    private boolean foreldrepengerErEndret(Behandlingsresultat behandlingsresultat) {
+        return BehandlingResultatType.FORELDREPENGER_ENDRET.equals(behandlingsresultat.getBehandlingResultatType());
     }
 
     private DokumentMalType mapKlageBrev(Behandling behandling) {
@@ -132,7 +161,6 @@ class DokumentMalUtleder {
         } else if (KlageVurdering.STADFESTE_YTELSESVEDTAK.equals(klagevurdering)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_YTELSESVEDTAK_STADFESTET_DOK);
         }
-        //TODO aleksander
         throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
     }
 }

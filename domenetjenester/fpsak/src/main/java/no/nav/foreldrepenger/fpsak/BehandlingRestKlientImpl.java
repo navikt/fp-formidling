@@ -281,6 +281,13 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 }));
     }
 
+    @Override
+    public Optional<Boolean> harSendtVarselOmRevurdering(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker.stream()
+                .filter(dto -> "sendt-varsel-om-revurdering".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, Boolean.class));
+    }
+
     private <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
 
         if ("POST".equals(link.getType())) {

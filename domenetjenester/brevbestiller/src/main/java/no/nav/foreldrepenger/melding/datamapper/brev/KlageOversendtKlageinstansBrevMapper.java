@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.oversendt.klagei
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.oversendt.klageinstans.KlageOversendtKlageinstansConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.oversendt.klageinstans.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.oversendt.klageinstans.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 import no.nav.vedtak.util.FPDateUtil;
@@ -53,21 +54,27 @@ public class KlageOversendtKlageinstansBrevMapper implements DokumentTypeMapper 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         KlageDokument klageDokument = domeneobjektProvider.hentKlageDokument(behandling);
-        FagType fagType = mapFagType(dokumentHendelse, behandling, klageDokument);
+        Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
+        FagType fagType = mapFagType(dokumentHendelse, klage, klageDokument);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(KlageOversendtKlageinstansConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
 
-    private FagType mapFagType(DokumentHendelse hendelse, Behandling behandling, KlageDokument klageDokument) {
+    private FagType mapFagType(DokumentHendelse hendelse, Klage klage, KlageDokument klageDokument) {
         final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
         LocalDate mottattDato = klageDokument.getMottattDato() != null ? klageDokument.getMottattDato() : FPDateUtil.iDag();
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(mottattDato));
-        fagType.setFritekst(hendelse.getFritekst());
+        fagType.setFritekst(avklarFritekst(hendelse, klage));
         fagType.setAntallUker(BigInteger.valueOf(BEHANDLINGSFRIST_UKER_KA));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
         return fagType;
+    }
+
+    private String avklarFritekst(DokumentHendelse hendelse, Klage klage) {
+        return hendelse.getFritekst() != null ? hendelse.getFritekst() :
+                klage.getGjeldendeKlageVurderingsresultat().getFritekstTilBrev();
     }
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {

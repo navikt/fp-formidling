@@ -74,4 +74,6 @@ public interface BehandlingRestKlient {
     MottattKlagedokumentDto hentKlagedokument(List<BehandlingResourceLink> resourceLinker);
 
     List<MottattDokumentDto> hentMottatteDokumenter(List<BehandlingResourceLink> resourceLinker);
+
+    Optional<Boolean> harSendtVarselOmRevurdering(List<BehandlingResourceLink> resourceLinker);
 }

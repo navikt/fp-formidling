@@ -113,6 +113,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
                 JournalpostId journalpostId = new JournalpostId(produserIkkeredigerbartDokumentResponse.getJournalpostId());
                 knyttAlleVedleggTilDokument(vedlegg, journalpostId, behandling.getEndretAv());
                 ferdigstillForsendelse(journalpostId, behandling.getEndretAv());
+                //TODO kanseller forsendelse hvis det feiler
             }
 
             historikkinnslagList.add(lagHistorikkinnslag(dokumentHendelse, produserIkkeredigerbartDokumentResponse, dokumentMal));

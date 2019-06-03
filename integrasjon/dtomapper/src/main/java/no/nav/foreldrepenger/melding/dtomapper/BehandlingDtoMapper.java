@@ -77,6 +77,7 @@ public class BehandlingDtoMapper {
         Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(linkListe));
         Behandling originalBehandling = behandlingRestKlient.hentOriginalBehandling(linkListe).map(this::mapOriginalBehandlingFraDto).orElse(null);
         builder.medId(dto.getId())
+                .medUuid(dto.getUuid())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
                 .medStatus(kodeverkRepository.finn(BehandlingStatus.class, dto.getStatus().getKode()))
                 .medOpprettetDato(dto.getOpprettet())

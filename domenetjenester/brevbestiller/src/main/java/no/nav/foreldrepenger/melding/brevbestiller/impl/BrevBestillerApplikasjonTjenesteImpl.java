@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -92,7 +94,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.BESTILL);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
-        List<InnsynDokument> vedlegg = finnEventuelleVedlegg(behandling, dokumentMal);
+        Collection<InnsynDokument> vedlegg = finnEventuelleVedlegg(behandling, dokumentMal);
         boolean harVedlegg = !vedlegg.isEmpty();
 
         List<DokumentHistorikkinnslag> historikkinnslagList = new ArrayList<>();
@@ -155,11 +157,19 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         }
     }
 
-    private List<InnsynDokument> finnEventuelleVedlegg(Behandling behandling, DokumentMalType dokumentMal) {
+    private Collection<InnsynDokument> finnEventuelleVedlegg(Behandling behandling, DokumentMalType dokumentMal) {
         if (!DokumentMalType.INNSYNSKRAV_SVAR.equals(dokumentMal.getKode())) {
             return Collections.emptyList();
         }
-        return domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter();
+        return filtrerUtDuplikater(domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter());
+    }
+
+
+    public static Collection<InnsynDokument> filtrerUtDuplikater(List<InnsynDokument> dokumenter) {
+        return dokumenter
+                .stream()
+                .collect(Collectors.toConcurrentMap(InnsynDokument::getDokumentId, Function.identity(), (p, q) -> p))
+                .values();
     }
 
     private ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokument(Element brevXmlElement,

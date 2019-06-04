@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import io.swagger.annotations.Api;
+import no.nav.foreldrepenger.melding.web.app.selftest.SelftestService;
 
 @Api(tags = {"nais"})
 @Path("/")
@@ -22,23 +23,31 @@ public class NaisRestTjeneste {
     private static final String RESPONSE_OK = "OK";
 
     private ApplicationServiceStarter starterService;
+    private SelftestService selftestService;
 
     public NaisRestTjeneste() {
         // CDI
     }
 
     @Inject
-    public NaisRestTjeneste(ApplicationServiceStarter starterService) {
+    public NaisRestTjeneste(ApplicationServiceStarter starterService,
+                            SelftestService selftestService) {
         this.starterService = starterService;
+        this.selftestService = selftestService;
     }
 
     @GET
     @Path("isAlive")
     public Response isAlive() {
-        return Response
-                .ok(RESPONSE_OK)
-                .header(RESPONSE_CACHE_KEY, RESPONSE_CACHE_VAL)
-                .build();
+        return selftestService.kritiskTjenesteFeilet() ?
+                Response.serverError()
+                        .header(RESPONSE_CACHE_KEY, RESPONSE_CACHE_VAL)
+                        .build()
+                :
+                Response
+                        .ok(RESPONSE_OK)
+                        .header(RESPONSE_CACHE_KEY, RESPONSE_CACHE_VAL)
+                        .build();
     }
 
     @GET

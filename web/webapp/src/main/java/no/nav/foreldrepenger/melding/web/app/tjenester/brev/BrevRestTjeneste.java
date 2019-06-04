@@ -4,8 +4,6 @@ import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.UPDATE;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.FAGSAK;
 
-import java.util.List;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -23,9 +21,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.ForhaandsvisDokumentDto;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.HentBrevmalerDto;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjeneste;
-import no.nav.foreldrepenger.melding.brevbestiller.dto.BrevmalDto;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingDtoMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelse.HendelseHandler;
@@ -65,8 +63,8 @@ public class BrevRestTjeneste {
     @ApiOperation(value = "Henter liste over tilgjengelige brevtyper")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public List<BrevmalDto> hentMaler(@Valid BehandlingIdDto dto) {
-        return dokumentBehandlingTjeneste.hentBrevmalerFor(dto.getBehandlingUuid()); // NOSONAR
+    public HentBrevmalerDto hentMaler(@Valid AbacBehandlingUuidDto dto) {
+        return new HentBrevmalerDto(dokumentBehandlingTjeneste.hentBrevmalerFor(dto.getBehandlingUuid())); // NOSONAR
     }
 
     @POST

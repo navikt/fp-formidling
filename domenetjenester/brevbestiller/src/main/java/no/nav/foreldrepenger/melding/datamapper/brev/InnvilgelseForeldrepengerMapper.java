@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
 
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -14,6 +16,9 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
+import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
+import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
+import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktStatus;
 import no.nav.foreldrepenger.melding.aktør.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
@@ -83,6 +88,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         Søknad søknad = hentSøknadUansett(behandling);
         YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
         Saldoer saldoer = domeneobjektProvider.hentSaldoer(behandling);
+        List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
         FagType fagType = mapFagType(dokumentHendelse,
                 behandling,
                 beregningsresultatFP,
@@ -92,7 +98,8 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                 dokumentFelles,
                 uttakResultatPerioder,
                 ytelseFordeling,
-                saldoer);
+                saldoer,
+                aksjonspunkter);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnvilgetForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
@@ -121,7 +128,8 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                DokumentFelles dokumentFelles,
                                UttakResultatPerioder uttakResultatPerioder,
                                YtelseFordeling ytelseFordeling,
-                               Saldoer saldoer) {
+                               Saldoer saldoer,
+                               List<Aksjonspunkt> aksjonspunkter) {
         final FagType fagType = objectFactory.createFagType();
 
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
@@ -131,7 +139,9 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setBehandlingsResultat(BehandlingMapper.tilBehandlingsResultatKode(behandling.getBehandlingsresultat().getBehandlingResultatType()));
         String konsekvensForYtelsen = BehandlingMapper.kodeFra(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
         fagType.setKonsekvensForYtelse(BehandlingMapper.finnKonsekvensForYtelseKode(konsekvensForYtelsen));
-        avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
+        if (!fritekstGjelderIkkeLenger(aksjonspunkter)) {
+            avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
+        }
         fagType.setDekningsgrad(BigInteger.valueOf(ytelseFordeling.getDekningsgrad().getVerdi()));
 
         mapFelterRelatertTilBehandling(behandling, fagType);
@@ -143,6 +153,12 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         mapLovhjemmel(fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling, uttakResultatPerioder);
         mapFelterRelatertTilDagsats(fagType, beregningsresultatFP);
         return fagType;
+    }
+
+    private boolean fritekstGjelderIkkeLenger(List<Aksjonspunkt> aksjonspunkter) {
+        return aksjonspunkter.stream()
+                .filter(ap -> Objects.equals(ap.getAksjonspunktDefinisjon(), AksjonspunktDefinisjon.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS))
+                .anyMatch(ap -> Objects.equals(ap.getAksjonspunktStatus(), AksjonspunktStatus.AVBRUTT));
     }
 
     private void mapFelterRelatertTilDagsats(FagType fagType, BeregningsresultatFP beregningsresultat) {

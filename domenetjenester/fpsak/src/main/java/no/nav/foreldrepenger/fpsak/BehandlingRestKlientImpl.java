@@ -274,10 +274,12 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
 
     @Override
     public List<MottattDokumentDto> hentMottatteDokumenter(List<BehandlingResourceLink> resourceLinker) {
-        return Arrays.asList(resourceLinker.stream()
+        return resourceLinker.stream()
                 .filter(dto -> "mottattdokument".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, MottattDokumentDto[].class))
-                .orElseGet(() -> (MottattDokumentDto[]) Collections.emptyList().toArray()));
+                .findFirst()
+                .flatMap(link -> hentDtoFraLink(link, MottattDokumentDto[].class))
+                .map(Arrays::asList)
+                .orElse(Collections.emptyList());
     }
 
     @Override

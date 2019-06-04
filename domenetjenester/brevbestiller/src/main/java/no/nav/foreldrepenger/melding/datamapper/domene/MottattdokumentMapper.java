@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -11,12 +12,14 @@ import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 public class MottattdokumentMapper {
 
     public static XMLGregorianCalendar finnSøknadsDatoFraMottatteDokumenter(Behandling behandling, List<MottattDokument> mottatteDokumer) {
+        return XmlUtil.finnDatoVerdiAvUtenTidSone(finnSøknadDokument(behandling, mottatteDokumer));
+    }
+
+    private static LocalDate finnSøknadDokument(Behandling behandling, List<MottattDokument> mottatteDokumer) {
         return mottatteDokumer.stream()
                 .filter(dok -> BehandlingMapper.gjelderEndringsøknad(behandling) ? velgEndringssøknad(dok) : velgSøknad(dok))
                 .findFirst()
-                .map(MottattDokument::getMottattDato)
-                .map(XmlUtil::finnDatoVerdiAvUtenTidSone)
-                .orElseThrow(IllegalStateException::new);
+                .map(MottattDokument::getMottattDato).orElse(LocalDate.now());
     }
 
 

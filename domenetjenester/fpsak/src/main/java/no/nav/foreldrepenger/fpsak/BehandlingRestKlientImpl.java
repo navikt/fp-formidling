@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.fpsak;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -276,9 +277,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
         return Arrays.asList(resourceLinker.stream()
                 .filter(dto -> "mottattdokument".equals(dto.getRel()))
                 .findFirst().flatMap(link -> hentDtoFraLink(link, MottattDokumentDto[].class))
-                .orElseThrow(() -> {
-                    throw new IllegalStateException("Klarte ikke hente mottatte dokumenter for behandling: " + hentBehandlingId(resourceLinker));
-                }));
+                .orElseGet(() -> (MottattDokumentDto[]) Collections.emptyList().toArray()));
     }
 
     @Override

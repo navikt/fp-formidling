@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.web.app.tjenester.brev;
 
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.UPDATE;
+import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.APPLIKASJON;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.FAGSAK;
 
 import java.util.Collections;
@@ -76,7 +77,8 @@ public class BrevRestTjeneste {
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @ApiOperation(value = "Henter tom liste")
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public HentBrevmalerDto hentMalerDummy(@Valid AbacBehandlingUuidDto dto) {
+    @BeskyttetRessurs(action = READ, ressurs = APPLIKASJON, sporingslogg = false)
+    public HentBrevmalerDto hentMalerDummy(@Valid AbacBehandlingUuidDummyDto dto) {
         return new HentBrevmalerDto(Collections.emptyList());
     }
 

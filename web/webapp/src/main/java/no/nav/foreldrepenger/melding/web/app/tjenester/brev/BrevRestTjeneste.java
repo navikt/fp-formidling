@@ -4,6 +4,8 @@ import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.UPDATE;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.FAGSAK;
 
+import java.util.Collections;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -65,6 +67,17 @@ public class BrevRestTjeneste {
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public HentBrevmalerDto hentMaler(@Valid AbacBehandlingUuidDto dto) {
         return new HentBrevmalerDto(dokumentBehandlingTjeneste.hentBrevmalerFor(dto.getBehandlingUuid())); // NOSONAR
+    }
+
+
+    @POST
+    @Timed
+    @Path("/maler-dummy")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @ApiOperation(value = "Henter tom liste")
+    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
+    public HentBrevmalerDto hentMalerDummy(@Valid AbacBehandlingUuidDto dto) {
+        return new HentBrevmalerDto(Collections.emptyList());
     }
 
     @POST

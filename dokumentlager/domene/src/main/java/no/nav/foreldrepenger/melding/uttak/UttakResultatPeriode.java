@@ -6,11 +6,12 @@ import java.util.List;
 import java.util.Objects;
 
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
+import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 
 public class UttakResultatPeriode {
-    private PeriodeResultatÅrsak periodeResultatÅrsak; //Kodeliste.PeriodeResultatÅrsak
+    private PeriodeResultatÅrsak periodeResultatÅrsak;
     private DatoIntervall tidsperiode;
-    private GraderingAvslagÅrsak graderingAvslagÅrsak; //Kodeliste.GraderingAvslagÅrsak
+    private PeriodeResultatÅrsak graderingAvslagÅrsak;
     private UttakUtsettelseType uttakUtsettelseType; //Kodeliste.UttakUtsettelseType
     private PeriodeResultatType periodeResultatType; //Kodeliste.PeriodeResultatType
     private List<UttakResultatPeriodeAktivitet> aktiviteter = new ArrayList<>();
@@ -29,7 +30,7 @@ public class UttakResultatPeriode {
     }
 
     public PeriodeResultatÅrsak getPeriodeResultatÅrsak() {
-        return periodeResultatÅrsak;
+        return periodeResultatÅrsak != null ? periodeResultatÅrsak : PeriodeResultatÅrsak.UKJENT;
     }
 
     public LocalDate getFom() {
@@ -40,8 +41,8 @@ public class UttakResultatPeriode {
         return tidsperiode.getTomDato();
     }
 
-    public GraderingAvslagÅrsak getGraderingAvslagÅrsak() {
-        return graderingAvslagÅrsak;
+    public PeriodeResultatÅrsak getGraderingAvslagÅrsak() {
+        return graderingAvslagÅrsak == null ? PeriodeResultatÅrsak.UKJENT : graderingAvslagÅrsak;
     }
 
     public UttakUtsettelseType getUttakUtsettelseType() {
@@ -68,7 +69,7 @@ public class UttakResultatPeriode {
     public static final class Builder {
         private PeriodeResultatÅrsak periodeResultatÅrsak;
         private DatoIntervall tidsperiode;
-        private GraderingAvslagÅrsak graderingAvslagÅrsak;
+        private PeriodeResultatÅrsak graderingAvslagÅrsak;
         private UttakUtsettelseType uttakUtsettelseType;
         private PeriodeResultatType periodeResultatType;
         private List<UttakResultatPeriodeAktivitet> aktiviteter;
@@ -86,7 +87,7 @@ public class UttakResultatPeriode {
             return this;
         }
 
-        public Builder medGraderingAvslagÅrsak(GraderingAvslagÅrsak graderingAvslagÅrsak) {
+        public Builder medGraderingAvslagÅrsak(PeriodeResultatÅrsak graderingAvslagÅrsak) {
             this.graderingAvslagÅrsak = graderingAvslagÅrsak;
             return this;
         }

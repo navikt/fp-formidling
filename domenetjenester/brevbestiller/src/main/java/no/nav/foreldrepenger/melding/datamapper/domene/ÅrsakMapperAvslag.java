@@ -14,7 +14,7 @@ import java.util.TreeSet;
 import javax.enterprise.context.ApplicationScoped;
 
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
+import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
@@ -24,10 +24,10 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.AvslagsAarsakType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.vedtak.util.Tuple;
 
@@ -86,7 +86,7 @@ public class ÅrsakMapperAvslag {
         return avslagsAarsaker;
     }
 
-    private static AvslagsAarsakType årsaktypeFra(ÅrsakskodeMedLovreferanse årsakKode) {
+    private static AvslagsAarsakType årsaktypeFra(ÅrsakMedLovReferanse årsakKode) {
         AvslagsAarsakType avslagsAarsak = objectFactory.createAvslagsAarsakType();
         avslagsAarsak.setAvslagsAarsakKode(årsakKode.getKode());
         lovReferanser.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(årsakKode, "FP"));

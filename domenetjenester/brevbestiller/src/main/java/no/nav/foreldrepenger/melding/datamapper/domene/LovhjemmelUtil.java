@@ -12,7 +12,7 @@ import java.util.stream.StreamSupport;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
+import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
@@ -23,7 +23,7 @@ public class LovhjemmelUtil {
 
     }
 
-    public static Set<String> hentLovhjemlerFraJson(ÅrsakskodeMedLovreferanse årsak, String key) {
+    public static Set<String> hentLovhjemlerFraJson(ÅrsakMedLovReferanse årsak, String key) {
         JsonNode jsonData = parseLovDataFor(årsak);
         if (jsonData != null) {
             JsonNode hjemmelNode = jsonData.findValue(key);
@@ -43,7 +43,7 @@ public class LovhjemmelUtil {
         return Set.of();
     }
 
-    public static Set<String> hentLovhjemlerFraJson(FagsakYtelseType fagsakYtelseType, ÅrsakskodeMedLovreferanse årsak) {
+    public static Set<String> hentLovhjemlerFraJson(FagsakYtelseType fagsakYtelseType, ÅrsakMedLovReferanse årsak) {
         if (fagsakYtelseType.gjelderEngangsstønad()) {
             return hentLovhjemlerFraJson(årsak, "ES");
         } else if (fagsakYtelseType.gjelderForeldrepenger()) {
@@ -52,7 +52,7 @@ public class LovhjemmelUtil {
         throw DokumentMapperFeil.FACTORY.manglerInfoOmLovhjemmelForAvslagsårsak(årsak.getKode()).toException();
     }
 
-    private static JsonNode parseLovDataFor(ÅrsakskodeMedLovreferanse årsakKode) {
+    private static JsonNode parseLovDataFor(ÅrsakMedLovReferanse årsakKode) {
         String lovData = årsakKode.getLovHjemmelData();
         if (lovData == null) {
             return null;

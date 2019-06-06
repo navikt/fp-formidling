@@ -9,15 +9,15 @@ import java.util.TreeSet;
 import javax.enterprise.context.ApplicationScoped;
 
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
+import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
 import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.AarsakListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.AvslagsAarsakType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.ObjectFactory;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.vedtak.util.Tuple;
 
@@ -38,7 +38,7 @@ public class ÅrsakMapperOpphør {
 
     private static Collection<AvslagsAarsakType> årsakerFra(Behandlingsresultat behandlingsresultat,
                                                             UttakResultatPerioder uttakResultatPerioder) {
-        Map<String, AvslagsAarsakType> avslagsAarsaker= new HashMap<>();
+        Map<String, AvslagsAarsakType> avslagsAarsaker = new HashMap<>();
 
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
         if (avslagsårsak != null) {
@@ -55,7 +55,14 @@ public class ÅrsakMapperOpphør {
         return avslagsAarsaker.values();
     }
 
-    private static AvslagsAarsakType årsaktypeFra(ÅrsakskodeMedLovreferanse årsakKode) {
+    private static AvslagsAarsakType årsaktypeFra(PeriodeResultatÅrsak periodeResultatÅrsak) {
+        AvslagsAarsakType avslagsAarsak = objectFactory.createAvslagsAarsakType();
+        avslagsAarsak.setAvslagsAarsakKode(periodeResultatÅrsak.getKode());
+        lovReferanser.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(periodeResultatÅrsak, "FP"));
+        return avslagsAarsak;
+    }
+
+    private static AvslagsAarsakType årsaktypeFra(ÅrsakMedLovReferanse årsakKode) {
         AvslagsAarsakType avslagsAarsak = objectFactory.createAvslagsAarsakType();
         avslagsAarsak.setAvslagsAarsakKode(årsakKode.getKode());
         lovReferanser.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(årsakKode, "FP"));

@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
@@ -27,12 +26,11 @@ import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.Period
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
-import no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 @ApplicationScoped
@@ -62,7 +60,7 @@ public class BeregningsresultatMapper {
         List<UttakResultatPeriode> ikkeMatchedePerioder = new ArrayList<>(plukkIkkeUkjentePerioder(uttaksperioder));
         for (BeregningsresultatPeriode beregningsresultatPeriode : beregningsresultatPerioder) {
             UttakResultatPeriode matchetUttaksperiode = PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttaksperioder);
-            if (PeriodeResultatÅrsak.UKJENT.equals(matchetUttaksperiode.getPeriodeResultatÅrsak())) {
+            if (matchetUttaksperiode.getPeriodeResultatÅrsak().erUkjent()) {
                 continue;
             }
             ikkeMatchedePerioder.remove(matchetUttaksperiode);
@@ -86,7 +84,7 @@ public class BeregningsresultatMapper {
 
     private static List<UttakResultatPeriode> plukkIkkeUkjentePerioder(List<UttakResultatPeriode> uttaksperioder) {
         return uttaksperioder.stream()
-                .filter(Predicate.not(up -> PeriodeResultatÅrsak.UKJENT.equals(up.getPeriodeResultatÅrsak())))
+                .filter(Predicate.not(up -> up.getPeriodeResultatÅrsak().erUkjent()))
                 .collect(Collectors.toList());
     }
 
@@ -106,10 +104,10 @@ public class BeregningsresultatMapper {
         PeriodeType periode = objectFactory.createPeriodeType();
         periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter())));
         periode.setInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode));
-        ÅrsakskodeMedLovreferanse årsakskodeMedLovreferanse = utledÅrsakskode(uttakResultatPeriode);
+        PeriodeResultatÅrsak periodeResultatÅrsak = utledÅrsakskode(uttakResultatPeriode);
         periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
         periode.setPeriodeTom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeTom()));
-        periode.setÅrsak(årsakskodeMedLovreferanse.getKode());
+        periode.setÅrsak(periodeResultatÅrsak.getKode());
         periode.setPeriodeDagsats(beregningsresultatPeriode.getDagsats());
 
         periode.setArbeidsforholdListe(AktivtetsMapper.mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
@@ -129,7 +127,7 @@ public class BeregningsresultatMapper {
     }
 
 
-    private static ÅrsakskodeMedLovreferanse utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
+    private static PeriodeResultatÅrsak utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
         if (erGraderingAvslått(uttakPeriode) && erInnvilget(uttakPeriode)) {
             return uttakPeriode.getGraderingAvslagÅrsak();
         } else if (uttakPeriode.getPeriodeResultatÅrsak() != null) {
@@ -143,11 +141,7 @@ public class BeregningsresultatMapper {
     }
 
     private static boolean erGraderingAvslått(UttakResultatPeriode uttakPeriode) {
-        return !uttakPeriode.erGraderingInnvilget() && erGraderingÅrsakKjent(uttakPeriode.getGraderingAvslagÅrsak());
-    }
-
-    private static boolean erGraderingÅrsakKjent(GraderingAvslagÅrsak årsak) {
-        return årsak != null && !årsak.equals(GraderingAvslagÅrsak.UKJENT);
+        return !uttakPeriode.erGraderingInnvilget() && !uttakPeriode.getGraderingAvslagÅrsak().erUkjent();
     }
 
     public static long finnTotalBrukerAndel(BeregningsresultatFP beregningsresultatFP) {

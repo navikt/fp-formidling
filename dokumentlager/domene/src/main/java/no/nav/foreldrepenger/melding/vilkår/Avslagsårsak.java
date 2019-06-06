@@ -9,11 +9,12 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
-import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
+import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
+import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
 
 @Entity(name = "Avslagsårsak")
 @DiscriminatorValue(Avslagsårsak.DISCRIMINATOR)
-public class Avslagsårsak extends ÅrsakskodeMedLovreferanse {
+public class Avslagsårsak extends Kodeliste implements ÅrsakMedLovReferanse {
 
     public static final String DISCRIMINATOR = "AVSLAGSARSAK"; //$NON-NLS-1$
 
@@ -67,6 +68,12 @@ public class Avslagsårsak extends ÅrsakskodeMedLovreferanse {
 
     Avslagsårsak() {
         // Hibernate trenger den
+    }
+
+
+    @Override
+    public String getLovHjemmelData() {
+        return getEkstraData();
     }
 
     private Avslagsårsak(String kode) {

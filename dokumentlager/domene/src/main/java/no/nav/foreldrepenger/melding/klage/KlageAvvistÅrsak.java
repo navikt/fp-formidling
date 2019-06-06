@@ -6,11 +6,12 @@ import java.util.Map;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
+import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
+import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
 
 @Entity(name = "KlageAvvistÅrsak")
 @DiscriminatorValue(KlageAvvistÅrsak.DISCRIMINATOR)
-public class KlageAvvistÅrsak extends ÅrsakskodeMedLovreferanse {
+public class KlageAvvistÅrsak extends Kodeliste implements ÅrsakMedLovReferanse {
 
     public static final String DISCRIMINATOR = "KLAGE_AVVIST_AARSAK";
     private static final Map<String, KlageAvvistÅrsak> REG_KODER = new HashMap<>();
@@ -31,5 +32,10 @@ public class KlageAvvistÅrsak extends ÅrsakskodeMedLovreferanse {
 
     private KlageAvvistÅrsak(String kode) {
         super(kode, DISCRIMINATOR);
+    }
+
+    @Override
+    public String getLovHjemmelData() {
+        return getEkstraData();
     }
 }

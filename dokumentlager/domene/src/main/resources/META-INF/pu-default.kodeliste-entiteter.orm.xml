@@ -63,12 +63,7 @@
 
     <entity class="no.nav.foreldrepenger.melding.skjermlenke.SkjermlenkeType"/>
 
-
-    <entity class="no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak"/>
-    <entity class="no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak"/>
-    <entity class="no.nav.foreldrepenger.melding.uttak.InnvilgetÅrsak"/>
     <entity class="no.nav.foreldrepenger.melding.uttak.PeriodeResultatType"/>
-    <entity class="no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak"/>
     <entity class="no.nav.foreldrepenger.melding.uttak.StønadskontoType"/>
     <entity class="no.nav.foreldrepenger.melding.uttak.UttakArbeidType"/>
     <entity class="no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType"/>

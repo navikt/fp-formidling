@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.ÅrsakskodeMedLovreferanse;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
@@ -21,23 +20,18 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.VurderingsstatusKode;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
-import no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak;
-import no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType;
+import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 
 public class UttakMapper {
 
     public UttakMapper() {
         //CDI
     }
-
-    public static final IkkeOppfyltÅrsak FAR_HAR_IKKE_OMSORG = new IkkeOppfyltÅrsak("4012");
-    public static final IkkeOppfyltÅrsak MOR_HAR_IKKE_OMSORG = new IkkeOppfyltÅrsak("4003");
 
     public static Optional<XMLGregorianCalendar> finnSisteDagIFelleseriodeHvisFinnes(UttakResultatPerioder uttakResultatPerioder) {
         return uttakResultatPerioder.getPerioder()
@@ -62,7 +56,7 @@ public class UttakMapper {
 
     public static boolean finnesPeriodeMedIkkeOmsorg(List<PeriodeType> perioder) {
         return perioder.
-                stream().map(PeriodeType::getÅrsak).anyMatch(årsak -> MOR_HAR_IKKE_OMSORG.getKode().equals(årsak) || FAR_HAR_IKKE_OMSORG.getKode().equals(årsak));
+                stream().map(PeriodeType::getÅrsak).anyMatch(årsak -> PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode().equals(årsak) || PeriodeResultatÅrsak.FAR_HAR_IKKE_OMSORG.getKode().equals(årsak));
     }
 
     public static boolean harSøkerAleneomsorgBoolean(Søknad søknad, UttakResultatPerioder uttakResultatPerioder) {
@@ -89,11 +83,11 @@ public class UttakMapper {
     public static String mapLovhjemlerForUttak(UttakResultatPerioder uttakResultatPerioder, String konsekvensForYtelse, boolean innvilgetRevurdering) {
         Set<String> lovhjemler = new TreeSet<>(new LovhjemmelComparator());
         for (UttakResultatPeriode periode : uttakResultatPerioder.getPerioder()) {
-            ÅrsakskodeMedLovreferanse årsak = utledÅrsakskode(periode);
-            if (erUkjent(årsak)) {
+            PeriodeResultatÅrsak årsak = utledÅrsakskode(periode);
+            if (årsak.erUkjent()) {
                 continue;
             }
-            if (årsak instanceof GraderingAvslagÅrsak) {
+            if (årsak.erGraderingAvslagÅrsak()) {
                 LovhjemmelUtil.hentLovhjemlerFraJson(FagsakYtelseType.FORELDREPENGER, periode.getPeriodeResultatÅrsak());
             }
             lovhjemler.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(FagsakYtelseType.FORELDREPENGER, årsak));
@@ -101,12 +95,7 @@ public class UttakMapper {
         return FellesMapper.formaterLovhjemlerUttak(lovhjemler, konsekvensForYtelse, innvilgetRevurdering);
     }
 
-
-    private static boolean erUkjent(ÅrsakskodeMedLovreferanse årsaksKode) {
-        return PeriodeResultatÅrsak.UKJENT.equals(årsaksKode);
-    }
-
-    private static ÅrsakskodeMedLovreferanse utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
+    private static PeriodeResultatÅrsak utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
         if (erGraderingAvslått(uttakPeriode) && uttakPeriode.isInnvilget()) {
             return uttakPeriode.getGraderingAvslagÅrsak();
         } else if (uttakPeriode.getPeriodeResultatÅrsak() != null) {
@@ -117,12 +106,7 @@ public class UttakMapper {
 
     private static boolean erGraderingAvslått(UttakResultatPeriode uttakPeriode) {
         return !uttakPeriode.erGraderingInnvilget()
-                && erGraderingÅrsakKjent(uttakPeriode.getGraderingAvslagÅrsak());
-    }
-
-    private static boolean erGraderingÅrsakKjent(GraderingAvslagÅrsak årsak) {
-        return årsak != null
-                && !årsak.equals(GraderingAvslagÅrsak.UKJENT);
+                && !uttakPeriode.getGraderingAvslagÅrsak().erUkjent();
     }
 
     public static XMLGregorianCalendar finnSisteDagAvSistePeriode(UttakResultatPerioder uttakResultatPerioder) {

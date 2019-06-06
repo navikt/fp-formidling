@@ -9,8 +9,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -40,6 +42,7 @@ import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.AarsakListeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.AvslagsAarsakType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.BrevdataType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.FagType;
@@ -48,10 +51,9 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.OpphørConstant
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.RelasjonskodeKode;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.vedtak.feil.Feil;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 import no.nav.vedtak.util.Tuple;
@@ -172,13 +174,22 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
 
     private Optional<LocalDate> finnDødsdatoHvisFinnes(final Personinfo personinfo, final FamilieHendelse familieHendelse, AarsakListeType årsakListe) {
         Optional<LocalDate> dødsdato = Optional.empty();
-        if (årsakListe.getAvslagsAarsak().contains(IkkeOppfyltÅrsak.SØKER_ER_DØD.getKode())) {
+        List<String> avslagsArsaker = hentAvslagsårsaker(årsakListe);
+        if (avslagsArsaker.contains(PeriodeResultatÅrsak.SØKER_ER_DØD.getKode())) {
             dødsdato = Optional.ofNullable(personinfo.getDødsdato());
         }
-        if (årsakListe.getAvslagsAarsak().contains(IkkeOppfyltÅrsak.BARNET_ER_DØD.getKode())) {
+        if (avslagsArsaker.contains(PeriodeResultatÅrsak.BARNET_ER_DØD.getKode())) {
             dødsdato = familieHendelse.getDødsdato();
         }
         return dødsdato;
+    }
+
+    private List<String> hentAvslagsårsaker(AarsakListeType årsakListe) {
+        return årsakListe.getAvslagsAarsak() == null ? Collections.emptyList() :
+                årsakListe.getAvslagsAarsak().stream()
+                        .map(AvslagsAarsakType::getAvslagsAarsakKode)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
     }
 
     private Optional<LocalDate> finnOpphørsdatoHvisFinnes(UttakResultatPerioder uttakResultatPerioder, FamilieHendelse familiehendelse) {
@@ -187,14 +198,14 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
     }
 
     private LocalDate utledOpphørsdatoFraUttak(UttakResultatPerioder uttakResultatPerioder) {
-        Set<PeriodeResultatÅrsak> opphørsårsaker = IkkeOppfyltÅrsak.opphørsAvslagÅrsaker();
+        Set<String> opphørsårsaker = PeriodeResultatÅrsak.opphørsAvslagÅrsaker();
         List<UttakResultatPeriode> perioder = uttakResultatPerioder.getPerioder();
 
         // Finn fom-dato i første periode av de siste sammenhengende periodene med opphørårsaker
         LocalDate fom = null;
-        for (int i = perioder.size() - 1; i >= 0 ; i--) {
+        for (int i = perioder.size() - 1; i >= 0; i--) {
             UttakResultatPeriode periode = perioder.get(i);
-            if (opphørsårsaker.contains(periode.getPeriodeResultatÅrsak())) {
+            if (opphørsårsaker.contains(periode.getPeriodeResultatÅrsak().getKode())) {
                 fom = periode.getFom();
             } else if (fom != null && periode.isInnvilget()) {
                 return fom;

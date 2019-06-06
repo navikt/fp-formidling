@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder;
 
-import static no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak.FOR_SEN_SØKNAD;
-import static no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak.ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT;
-import static no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak.AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD;
-import static no.nav.foreldrepenger.melding.uttak.InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID;
-import static no.nav.foreldrepenger.melding.uttak.InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT;
-import static no.nav.foreldrepenger.melding.uttak.InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE;
-import static no.nav.foreldrepenger.melding.uttak.InnvilgetÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.FOR_SEN_SØKNAD;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,13 +28,11 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.Stønadskonto;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.feil.FeilFactory;
 import no.nav.vedtak.util.FPDateUtil;
@@ -60,7 +58,6 @@ public class PeriodeBeregner {
         uttakAktivitetStatusMap.put(AktivitetStatus.FRILANSER, UttakArbeidType.FRILANS);
         uttakAktivitetStatusMap.put(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE);
     }
-
 
     private PeriodeBeregner() {
         //for sonar

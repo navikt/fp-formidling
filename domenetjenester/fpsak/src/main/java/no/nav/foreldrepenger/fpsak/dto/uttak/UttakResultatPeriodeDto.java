@@ -26,6 +26,8 @@ public class UttakResultatPeriodeDto {
     private KodeDto periodeType;
     private KodeDto utsettelseType;
     private KodeDto oppholdÅrsak;
+    private String periodeResultatÅrsakLovhjemmel;
+    private String graderingsAvslagÅrsakLovhjemmel;
 
     private UttakResultatPeriodeDto() {
 
@@ -77,6 +79,14 @@ public class UttakResultatPeriodeDto {
 
     public String getBegrunnelse() {
         return begrunnelse;
+    }
+
+    public String getPeriodeResultatÅrsakLovhjemmel() {
+        return periodeResultatÅrsakLovhjemmel;
+    }
+
+    public String getGraderingsAvslagÅrsakLovhjemmel() {
+        return graderingsAvslagÅrsakLovhjemmel;
     }
 
     @JsonProperty("gradertAktivitet")

@@ -15,11 +15,7 @@ import no.nav.foreldrepenger.melding.dtomapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
-import no.nav.foreldrepenger.melding.uttak.GraderingAvslagÅrsak;
-import no.nav.foreldrepenger.melding.uttak.IkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.melding.uttak.InnvilgetÅrsak;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
@@ -27,6 +23,7 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType;
+import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.util.StringUtils;
 
@@ -65,9 +62,9 @@ public class UttakDtoMapper {
     public UttakResultatPeriode periodeFraDto(UttakResultatPeriodeDto dto) {
         List<UttakResultatPeriodeAktivitet> aktiviteter = dto.getAktiviteter().stream().map(this::aktivitetFraDto).collect(Collectors.toList());
         UttakResultatPeriode mappetPeriode = UttakResultatPeriode.ny()
-                .medGraderingAvslagÅrsak(kodeverkRepository.finn(GraderingAvslagÅrsak.class, dto.getGraderingAvslagÅrsak().getKode()))
+                .medGraderingAvslagÅrsak(velgGraderingsavslagÅrsak(dto))
                 .medPeriodeResultatType(kodeverkRepository.finn(PeriodeResultatType.class, dto.getPeriodeResultatType().getKode()))
-                .medPeriodeResultatÅrsak(kodeverkRepository.finn(finnKodeverk(dto.getPeriodeResultatÅrsak().getKodeverk()), dto.getPeriodeResultatÅrsak().getKode()))
+                .medPeriodeResultatÅrsak(velgPerioderesultatÅrsak(dto))
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
                 .medUttakUtsettelseType(kodeverkRepository.finn(UttakUtsettelseType.class, dto.getUtsettelseType().getKode()))
                 .medAktiviteter(aktiviteter)
@@ -76,15 +73,13 @@ public class UttakDtoMapper {
         return mappetPeriode;
     }
 
-    private Class<? extends PeriodeResultatÅrsak> finnKodeverk(String kodeverk) {
-        if (InnvilgetÅrsak.DISCRIMINATOR.equals(kodeverk)) {
-            return InnvilgetÅrsak.class;
-        } else if (IkkeOppfyltÅrsak.DISCRIMINATOR.equals(kodeverk)) {
-            return IkkeOppfyltÅrsak.class;
-        }
-        return PeriodeResultatÅrsak.class;
+    private PeriodeResultatÅrsak velgPerioderesultatÅrsak(UttakResultatPeriodeDto dto) {
+        return dto.getPeriodeResultatÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getPeriodeResultatÅrsak().getKode(), dto.getPeriodeResultatÅrsak().getKode(), dto.getPeriodeResultatÅrsakLovhjemmel());
     }
 
+    private PeriodeResultatÅrsak velgGraderingsavslagÅrsak(UttakResultatPeriodeDto dto) {
+        return dto.getGraderingAvslagÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getGraderingAvslagÅrsak().getKode(), dto.getGraderingAvslagÅrsak().getKodeverk(), dto.getGraderingsAvslagÅrsakLovhjemmel());
+    }
 
     UttakResultatPeriodeAktivitet aktivitetFraDto(UttakResultatPeriodeAktivitetDto dto) {
         return UttakResultatPeriodeAktivitet.ny()

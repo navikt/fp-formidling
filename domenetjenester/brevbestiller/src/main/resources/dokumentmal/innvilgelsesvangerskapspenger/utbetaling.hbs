@@ -1,17 +1,17 @@
-{{i18n "du_far_x_kroner" kontaktTelefonnummer bundle=bundle locale=locale}}
+{{i18n "du_far_x_kroner" manedsbelop}}
 
 {{#if refusjonTilBruker}}
     {{#unless refusjonerTilArbeidsgivere}}
-{{i18n "svp_blir_utbetalt" bundle=bundle locale=locale}}
-{{i18n "pengene_er_pa_konto"  bundle=bundle locale=locale}}
+{{i18n "svp_blir_utbetalt"}}
+{{i18n "pengene_er_pa_konto"}}
     {{else}}
-{{i18n "arbeidsgiveren_din_betaler_deg" bundle=bundle locale=locale}}
+{{i18n "arbeidsgiveren_din_betaler_deg"}}
     {{/unless}}
 {{else}}
     {{#eq refusjonerTilArbeidsgivere 1}}
-{{i18n "utbetaler_svp_til_arb_giver" bundle=bundle locale=locale}}
+{{i18n "utbetaler_svp_til_arb_giver"}}
     {{/eq}}
     {{#gt refusjonerTilArbeidsgivere 1}}
-{{i18n "utbetaler_svp_til_arb_giverne" bundle=bundle locale=locale}}
+{{i18n "utbetaler_svp_til_arb_giverne"}}
     {{/gt}}
 {{/if}}

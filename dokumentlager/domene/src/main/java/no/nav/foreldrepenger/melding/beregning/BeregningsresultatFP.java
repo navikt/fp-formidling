@@ -20,13 +20,13 @@ public class BeregningsresultatFP {
 
 
     public static final class Builder {
-        private List<BeregningsresultatPeriode> beregningsresultatPerioder;
+        private List<BeregningsresultatPeriode> beregningsresultatPerioder = new ArrayList<>();
 
         private Builder() {
         }
 
-        public Builder medBeregningsresultatPerioder(List<BeregningsresultatPeriode> beregningsresultatPerioder) {
-            this.beregningsresultatPerioder = beregningsresultatPerioder;
+        public Builder leggTilBeregningsresultatPerioder(List<BeregningsresultatPeriode> beregningsresultatPerioder) {
+            this.beregningsresultatPerioder.addAll(beregningsresultatPerioder);
             return this;
         }
 

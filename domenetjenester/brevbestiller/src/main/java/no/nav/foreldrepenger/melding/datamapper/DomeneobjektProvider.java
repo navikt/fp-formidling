@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.melding.dtomapper.MottattDokumentDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.StønadskontoDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.SøknadDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.UttakDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.UttakSvpDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.VergeDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.VilkårDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.YtelseFordelingDtoMapper;
@@ -39,6 +40,7 @@ import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
@@ -52,6 +54,7 @@ public class DomeneobjektProvider {
     private BeregningsresultatDtoMapper beregningsresultatDtoMapper;
     private KlageDtoMapper klageDtoMapper;
     private UttakDtoMapper uttakDtoMapper;
+    private UttakSvpDtoMapper uttakSvpDtoMapper;
     private IAYDtoMapper iayDtoMapper;
     private InnsynDtoMapper innsynDtoMapper;
     private VilkårDtoMapper vilkårDtoMapper;
@@ -67,6 +70,7 @@ public class DomeneobjektProvider {
                                 BeregningsresultatDtoMapper beregningsresultatDtoMapper,
                                 KlageDtoMapper klageDtoMapper,
                                 UttakDtoMapper uttakDtoMapper,
+                                UttakSvpDtoMapper uttakSvpDtoMapper,
                                 IAYDtoMapper iayDtoMapper,
                                 InnsynDtoMapper innsynDtoMapper,
                                 VilkårDtoMapper vilkårDtoMapper,
@@ -80,6 +84,7 @@ public class DomeneobjektProvider {
         this.beregningsresultatDtoMapper = beregningsresultatDtoMapper;
         this.klageDtoMapper = klageDtoMapper;
         this.uttakDtoMapper = uttakDtoMapper;
+        this.uttakSvpDtoMapper = uttakSvpDtoMapper;
         this.iayDtoMapper = iayDtoMapper;
         this.innsynDtoMapper = innsynDtoMapper;
         this.vilkårDtoMapper = vilkårDtoMapper;
@@ -163,6 +168,14 @@ public class DomeneobjektProvider {
 
     public UttakResultatPerioder hentUttaksresultat(Behandling behandling) {
         return uttakDtoMapper.mapUttaksresultatPerioderFraDto(behandlingRestKlient.hentUttaksresultat(behandling.getResourceLinker()));
+    }
+
+    public Optional<SvpUttaksresultat> hentUttakresultatSvpHvisFinnes(Behandling behandling) {
+        return behandlingRestKlient.hentUttaksresultatSvpHvisFinnes(behandling.getResourceLinker()).map(uttakSvpDtoMapper::mapSvpUttaksresultatFraDto);
+    }
+
+    public SvpUttaksresultat hentUttaksresultatSvp(Behandling behandling) {
+        return uttakSvpDtoMapper.mapSvpUttaksresultatFraDto(behandlingRestKlient.hentUttaksresultatSvp(behandling.getResourceLinker()));
     }
 
     public YtelseFordeling hentYtelseFordeling(Behandling behandling) {

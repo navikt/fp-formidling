@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.fpsak.dto.uttak.ArbeidsgiverDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeAktivitetDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
@@ -90,18 +91,18 @@ public class UttakDtoMapper {
                 .medTrekkonto(kodeverkRepository.finn(StønadskontoType.class, dto.getStønadskontoType().getKode()))
                 .medUttakAktivitet(UttakAktivitet.ny()
                         .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
-                        .medArbeidsgiver(mapArbeidsgiver(dto))
+                        .medArbeidsgiver(mapArbeidsgiver(dto.getArbeidsgiver()))
                         .medUttakArbeidType(kodeverkRepository.finn(UttakArbeidType.class, dto.getUttakArbeidType().getKode()))
                         .build())
                 .build();
     }
 
-    private Arbeidsgiver mapArbeidsgiver(UttakResultatPeriodeAktivitetDto dto) {
-        if (dto.getArbeidsgiver() == null || (dto.getArbeidsgiver().getIdentifikator() == null && dto.getArbeidsgiver().getAktørId() == null)) {
+    static  Arbeidsgiver mapArbeidsgiver(ArbeidsgiverDto arbeidsgiverDto) {
+        if (arbeidsgiverDto == null || (arbeidsgiverDto.getIdentifikator() == null && arbeidsgiverDto.getAktørId() == null)) {
             return null;
         }
-        return ArbeidsgiverMapper.finnArbeidsgiver(dto.getArbeidsgiver().getNavn(),
-                dto.getArbeidsgiver().getAktørId() != null ? dto.getArbeidsgiver().getAktørId()
-                        : dto.getArbeidsgiver().getIdentifikator());
+        return ArbeidsgiverMapper.finnArbeidsgiver(arbeidsgiverDto.getNavn(),
+                arbeidsgiverDto.getAktørId() != null ? arbeidsgiverDto.getAktørId()
+                        : arbeidsgiverDto.getIdentifikator());
     }
 }

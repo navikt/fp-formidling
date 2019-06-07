@@ -34,6 +34,7 @@ import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.saldo.SaldoerDto;
+import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
 import no.nav.foreldrepenger.melding.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
@@ -220,6 +221,20 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 .filter(dto -> "uttaksresultat-perioder".equals(dto.getRel()))
                 .findFirst().flatMap(link -> hentDtoFraLink(link, UttakResultatPerioderDto.class));
 
+    }
+
+    @Override
+    public SvangerskapspengerUttakResultatDto hentUttaksresultatSvp(List<BehandlingResourceLink> resourceLinker) {
+        return hentUttaksresultatSvpHvisFinnes(resourceLinker).orElseThrow(() -> {
+            throw new IllegalStateException("Klarte ikke hente uttaksresultat for behandling: " + hentBehandlingId(resourceLinker));
+        });
+    }
+
+    @Override
+    public Optional<SvangerskapspengerUttakResultatDto> hentUttaksresultatSvpHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker.stream()
+                .filter(dto -> "uttaksresultat-perioder".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, SvangerskapspengerUttakResultatDto.class));
     }
 
     @Override

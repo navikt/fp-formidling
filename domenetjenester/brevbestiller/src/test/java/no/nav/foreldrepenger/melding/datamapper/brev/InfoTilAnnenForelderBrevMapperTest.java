@@ -24,7 +24,7 @@ public class InfoTilAnnenForelderBrevMapperTest {
     private InfoTilAnnenForelderBrevMapper mapper = new InfoTilAnnenForelderBrevMapper() {
         @Override
         Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
-            return new Brevdata(behandling.getSpråkkode()) {
+            return new Brevdata(null, null) {
                 public String getDato() {
                     return "31.12.9999";
                 }

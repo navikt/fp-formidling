@@ -78,6 +78,14 @@ class DokumentMalUtleder {
         throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
     }
 
+    private DokumentMalType mapSvangerskapspengerVedtaksbrev(Behandling behandling) {
+        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        if (behandlingsresultat.erInnvilget()) {
+            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK);
+        }
+        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
+    }
+
     private boolean innvilgetForeldrepenger(Behandlingsresultat behandlingsresultat) {
         return behandlingsresultat.erInnvilget() || skalBenytteInnvilgelsesbrev(behandlingsresultat);
     }
@@ -109,6 +117,8 @@ class DokumentMalUtleder {
             return mapForeldrepengerVedtaksbrev(behandling);
         } else if (FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType())) {
             return mapEngangstønadVedtaksbrev(behandling);
+        } else if (FagsakYtelseType.SVANGERSKAPSPENGER.equals(hendelse.getYtelseType())) {
+            return mapSvangerskapspengerVedtaksbrev(behandling);
         }
         throw DokumentBestillerFeil.FACTORY.kjennerIkkeYtelse(hendelse.getYtelseType().getKode(), behandling.getUuid().toString()).toException();
     }

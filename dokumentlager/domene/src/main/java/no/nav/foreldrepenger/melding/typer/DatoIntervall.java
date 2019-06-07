@@ -4,39 +4,36 @@ import static no.nav.vedtak.konfig.Tid.TIDENES_ENDE;
 
 import java.time.LocalDate;
 
-public class DatoIntervall {
-    private LocalDate fomDato;
-    private LocalDate tomDato;
+public interface DatoIntervall extends Comparable<DatoIntervall> {
 
-    public LocalDate getFomDato() {
-        return fomDato;
+    LocalDate getFomDato();
+
+    LocalDate getTomDato();
+
+    default String getFom() {
+        return formaterDato(getFomDato());
     }
 
-    public LocalDate getTomDato() {
-        return tomDato;
+    default String getTom() {
+        return formaterDato(getTomDato());
     }
 
-
-    public DatoIntervall(LocalDate fomDato, LocalDate tomDato) {
-        if (fomDato == null) {
-            throw new IllegalArgumentException("Fra og med dato må være satt.");
-        }
-        if (tomDato == null) {
-            throw new IllegalArgumentException("Til og med dato må være satt.");
-        }
-        if (tomDato.isBefore(fomDato)) {
-            throw new IllegalArgumentException("Til og med dato før fra og med dato.");
-        }
-        this.fomDato = fomDato;
-        this.tomDato = tomDato;
+    default String formaterDato(LocalDate dato) {
+        return dato.getDayOfMonth() + ". " + DatoIntervallImpl.månedMap.get(dato.getMonthValue()) + " " + dato.getYear();
     }
 
-    public static DatoIntervall fraOgMedTilOgMed(LocalDate fomDato, LocalDate tomDato) {
-        return new DatoIntervall(fomDato, tomDato);
+    static DatoIntervall fraOgMedTilOgMed(LocalDate fomDato, LocalDate tomDato) {
+        return new DatoIntervallImpl(fomDato, tomDato);
     }
 
-    public static DatoIntervall fraOgMed(LocalDate fomDato) {
-        return new DatoIntervall(fomDato, TIDENES_ENDE);
+    static DatoIntervall fraOgMed(LocalDate fomDato) {
+        return new DatoIntervallImpl(fomDato, TIDENES_ENDE);
     }
 
+    @Override
+    public default int compareTo(DatoIntervall o) {
+        int compareFom = this.getFomDato().compareTo(o.getFomDato());
+        int compareTom = this.getTomDato().compareTo(o.getTomDato());
+        return compareFom != 0 ? compareFom : compareTom;
+    }
 }

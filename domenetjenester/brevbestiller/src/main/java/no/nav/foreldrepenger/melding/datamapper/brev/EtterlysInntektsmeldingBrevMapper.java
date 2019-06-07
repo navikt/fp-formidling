@@ -36,7 +36,7 @@ public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
     }
 
     @Override
-    String templateFolder() {
+    public String templateFolder() {
         return "etterlysinntektsmelding";
     }
 
@@ -45,11 +45,9 @@ public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
         List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         XMLGregorianCalendar søknadsDato = MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter);
 
-        return new Brevdata(behandling.getSpråkkode()) {
+        return new Brevdata(dokumentFelles, fellesType)  {
             String soknadDato = PeriodeVerktøy.xmlGregorianTilLocalDate(søknadsDato).toString();
             String fristDato = BrevMapperUtil.getSvarFrist(brevParametere).toString();
-            String kontaktTelefonnummer = dokumentFelles.getKontaktTlf();
-            String navnAvsenderEnhet = dokumentFelles.getNavnAvsenderEnhet();
 
             public String getSoknadDato() {
                 return soknadDato;
@@ -57,14 +55,6 @@ public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
 
             public String getFristDato() {
                 return fristDato;
-            }
-
-            public String getKontaktTelefonnummer() {
-                return kontaktTelefonnummer;
-            }
-
-            public String getNavnAvsenderEnhet() {
-                return navnAvsenderEnhet;
             }
         };
     }

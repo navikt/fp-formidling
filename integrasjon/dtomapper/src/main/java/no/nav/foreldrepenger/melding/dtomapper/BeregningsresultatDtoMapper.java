@@ -54,7 +54,7 @@ public class BeregningsresultatDtoMapper {
                 .sorted(PeriodeComparator.BEREGNINGSRESULTAT)
                 .collect(Collectors.toList());
         return BeregningsresultatFP.ny()
-                .medBeregningsresultatPerioder(beregningsresultatPerioder)
+                .leggTilBeregningsresultatPerioder(beregningsresultatPerioder)
                 .build();
     }
 

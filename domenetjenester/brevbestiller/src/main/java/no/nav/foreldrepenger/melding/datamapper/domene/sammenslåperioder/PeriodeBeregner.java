@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.Stønadskonto;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
@@ -83,9 +84,9 @@ public class PeriodeBeregner {
         throw FeilFactory.create(DokumentBestillerFeil.class).kanIkkeMatchePerioder("beregningsgrunnlagperiode").toException();
     }
 
-    public static UttakResultatPeriode finnUttaksPeriode(BeregningsresultatPeriode periode, List<UttakResultatPeriode> uttakPerioder) {
-        for (UttakResultatPeriode uttakPeriode : uttakPerioder) {
-            if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom()) && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
+    public static <T extends DatoIntervall> T finnUttaksPeriode(BeregningsresultatPeriode periode, List<T> uttakPerioder) {
+        for (T uttakPeriode : uttakPerioder) {
+            if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFomDato()) && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTomDato())) {
                 return uttakPeriode;
             }
         }

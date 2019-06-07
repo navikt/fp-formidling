@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Locale;
 
-import javax.inject.Inject;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 
@@ -12,6 +12,7 @@ import org.xml.sax.SAXException;
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.helper.ConditionalHelpers;
+import com.github.jknack.handlebars.helper.I18nHelper;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.CompositeTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
@@ -21,7 +22,6 @@ import no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
@@ -42,9 +42,8 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
 
     }
 
-    @Inject
-    public FritekstmalBrevMapper(BrevParametere brevParametere,
-                                 DomeneobjektProvider domeneobjektProvider) {
+    FritekstmalBrevMapper(BrevParametere brevParametere,
+                          DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
     }
@@ -61,21 +60,23 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
 
     @Override
     protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
-        initHandlebars();
+        initHandlebars(BrevmalKilder.getLocale(behandling.getSpråkkode()));
         FagType fagType = new FagType();
-        fagType.setHovedoverskrift(tryApply(new Brevdata(behandling.getSpråkkode()) {}, overskriftMal));
+        fagType.setHovedoverskrift(tryApply(new Brevdata(dokumentFelles, fellesType) {}, overskriftMal));
         fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling), brødtekstMal));
         return fagType;
     }
 
-    private void initHandlebars() {
-        TemplateLoader folder = new ClassPathTemplateLoader(getClassPath("", ROTMAPPE, templateFolder()));
-        TemplateLoader felles = new ClassPathTemplateLoader(getClassPath("", ROTMAPPE, FELLES));
+    private void initHandlebars(Locale locale) {
+        TemplateLoader folder = new ClassPathTemplateLoader(getTemplateClassPath());
+        TemplateLoader felles = new ClassPathTemplateLoader(getFellesClassPath());
         templateLoader = new CompositeTemplateLoader(folder, felles);
         handlebars = new Handlebars(templateLoader).setCharset(Charset.forName("latin1"));
         handlebars.setInfiniteLoops(false);
         handlebars.setPrettyPrint(true);
         handlebars.registerHelpers(ConditionalHelpers.class);
+        I18nHelper.i18n.setDefaultBundle(BrevmalKilder.getResourceBundle(templateFolder()));
+        I18nHelper.i18n.setDefaultLocale(locale);
         overskriftMal = tryCompile(OVERSKRIFT);
         brødtekstMal = tryCompile(BRØDTEKST);
     }
@@ -98,27 +99,31 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
 
     public abstract String displayName();
 
-    abstract String templateFolder();
-
     abstract Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling);
 
-    abstract class Brevdata {
-        private Språkkode språkkode;
+    public static abstract class Brevdata {
+        private DokumentFelles dokumentFelles;
+        private FellesType fellesType;
 
-        public Brevdata(Språkkode språkkode) {
-            this.språkkode = språkkode;
-        }
-
-        public String getLocale() {
-            return getLocaleSuffixFor(språkkode);
-        }
-
-        public String getBundle() {
-            return getResourceBundle(templateFolder());
+        public Brevdata(DokumentFelles dokumentFelles, FellesType fellesType) {
+            this.dokumentFelles = dokumentFelles;
+            this.fellesType = fellesType;
         }
 
         public String getFelles() {
-            return getResourceBundle(FELLES);
+            return BrevmalKilder.getResourceBundle(FELLES);
+        }
+
+        public String getKontaktTelefonnummer() {
+            return dokumentFelles.getKontaktTlf();
+        }
+
+        public String getNavnAvsenderEnhet() {
+            return dokumentFelles.getNavnAvsenderEnhet();
+        }
+
+        public boolean getErAutomatiskVedtak() {
+            return fellesType.isAutomatiskBehandlet();
         }
     }
 }

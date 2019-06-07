@@ -1,0 +1,32 @@
+package no.nav.foreldrepenger.melding.uttak.svp;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
+import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+
+
+@Entity(name = "ArbeidsforholdIkkeOppfyltÅrsak")
+@DiscriminatorValue(ArbeidsforholdIkkeOppfyltÅrsak.DISCRIMINATOR)
+public class ArbeidsforholdIkkeOppfyltÅrsak extends Kodeliste implements ÅrsakMedLovReferanse {
+
+    public static final String DISCRIMINATOR = "SVP_ARBEIDSFORHOLD_IKKE_OPPFYLT_AARSAK";
+
+    public static final ArbeidsforholdIkkeOppfyltÅrsak INGEN = new ArbeidsforholdIkkeOppfyltÅrsak("-");
+    public static final ArbeidsforholdIkkeOppfyltÅrsak UTTAK_KUN_PÅ_HELG = new ArbeidsforholdIkkeOppfyltÅrsak("8302");
+
+    ArbeidsforholdIkkeOppfyltÅrsak() {
+        //For Hibernate
+    }
+
+    ArbeidsforholdIkkeOppfyltÅrsak(String kode) {
+        super(kode, DISCRIMINATOR);
+    }
+
+    @Override
+    public String getLovHjemmelData() {
+        return getEkstraData();
+    }
+
+}

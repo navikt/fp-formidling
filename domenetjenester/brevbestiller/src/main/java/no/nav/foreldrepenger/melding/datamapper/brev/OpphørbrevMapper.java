@@ -206,7 +206,7 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
         for (int i = perioder.size() - 1; i >= 0; i--) {
             UttakResultatPeriode periode = perioder.get(i);
             if (opphørsårsaker.contains(periode.getPeriodeResultatÅrsak().getKode())) {
-                fom = periode.getFom();
+                fom = periode.getFomDato();
             } else if (fom != null && periode.isInnvilget()) {
                 return fom;
             }
@@ -218,7 +218,7 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
     private Optional<LocalDate> finnStønadFomDatoHvisFinnes(Optional<UttakResultatPerioder> originaltUttakResultat) {
         return originaltUttakResultat.map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList()).stream()
                 .filter(UttakResultatPeriode::isInnvilget)
-                .map(UttakResultatPeriode::getFom)
+                .map(UttakResultatPeriode::getFomDato)
                 .findFirst();
     }
 

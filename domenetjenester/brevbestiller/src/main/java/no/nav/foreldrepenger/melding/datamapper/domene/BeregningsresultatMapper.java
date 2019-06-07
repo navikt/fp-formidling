@@ -92,8 +92,8 @@ public class BeregningsresultatMapper {
         PeriodeType periode = objectFactory.createPeriodeType();
         periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakperiode.getAktiviteter())));
         periode.setInnvilget(uttakperiode.isInnvilget() && !erGraderingAvslått(uttakperiode));
-        periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(uttakperiode.getFom()));
-        periode.setPeriodeTom(XmlUtil.finnDatoVerdiAvUtenTidSone(uttakperiode.getTom()));
+        periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(uttakperiode.getFomDato()));
+        periode.setPeriodeTom(XmlUtil.finnDatoVerdiAvUtenTidSone(uttakperiode.getTomDato()));
         periode.setÅrsak(uttakperiode.getPeriodeResultatÅrsak().getKode());
         return periode;
     }

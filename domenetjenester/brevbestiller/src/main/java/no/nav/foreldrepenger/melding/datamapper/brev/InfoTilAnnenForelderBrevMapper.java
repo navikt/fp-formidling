@@ -34,7 +34,7 @@ public class InfoTilAnnenForelderBrevMapper extends FritekstmalBrevMapper {
     }
 
     @Override
-    String templateFolder() {
+    public String templateFolder() {
         return "informasjontilannenforelder";
     }
 
@@ -45,25 +45,9 @@ public class InfoTilAnnenForelderBrevMapper extends FritekstmalBrevMapper {
                 .map(XMLGregorianCalendar::toString)
                 .orElseThrow(() -> FeilFactory.create(DokumentBestillerFeil.class).feltManglerVerdi("dato").toException());
 
-        return new Brevdata(behandling.getSpråkkode()) {
-            String kontaktTelefonnummer = dokumentFelles.getKontaktTlf();
-            String navnAvsenderEnhet = dokumentFelles.getNavnAvsenderEnhet();
-            boolean erAutomatiskVedtak = fellesType.isAutomatiskBehandlet();
-
+        return new Brevdata(dokumentFelles, fellesType) {
             public String getDato() {
                 return fristDato;
-            }
-
-            public String getKontaktTelefonnummer() {
-                return kontaktTelefonnummer;
-            }
-
-            public String getNavnAvsenderEnhet() {
-                return navnAvsenderEnhet;
-            }
-
-            public boolean getErAutomatiskVedtak() {
-                return erAutomatiskVedtak;
             }
         };
     }

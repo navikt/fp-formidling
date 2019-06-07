@@ -1,17 +1,51 @@
-{{i18n "du_far_x_kroner" kontaktTelefonnummer bundle=bundle locale=locale}}
-
-{{#if refusjonTilBruker}}
-    {{#unless refusjonerTilArbeidsgivere}}
-{{i18n "svp_blir_utbetalt" bundle=bundle locale=locale}}
-{{i18n "pengene_er_pa_konto"  bundle=bundle locale=locale}}
-    {{else}}
-{{i18n "arbeidsgiveren_din_betaler_deg" bundle=bundle locale=locale}}
-    {{/unless}}
+{{#gt antallPerioder 1}}
+{{i18n "I_disse_periodene" ""}}
 {{else}}
-    {{#eq refusjonerTilArbeidsgivere 1}}
-{{i18n "utbetaler_svp_til_arb_giver" bundle=bundle locale=locale}}
-    {{/eq}}
-    {{#gt refusjonerTilArbeidsgivere 1}}
-{{i18n "utbetaler_svp_til_arb_giverne" bundle=bundle locale=locale}}
+{{i18n "I_denne_perioden" ""}}
+{{/gt}}
+{{#each resultat.uttakPerioder}}
+{{this.arbeidsgiverNavn}}:
+    {{#each this.perioder}}
+*{{i18n "fra_og_med_til_og_med" this.fom this.tom }}
+        {{~#lt this.utbetalingsgrad 100~}}
+{{i18n "far_du_x_prosent_svp" this.utbetalingsgrad }}
+        {{/lt}}
+    {{/each}}
+{{/each}}
+
+{{#gt antallPerioder 1}}
+{{i18n "Dette_far_du" (i18n "periodene")}}
+{{else}}
+{{i18n "Dette_far_du" (i18n "perioden")}}
+{{/gt}}
+{{#each periodeDagsats}}
+*{{i18n "fra_og_med_til_og_med" @key.fom @key.tom}}
+{{~i18n "x_kroner_pr_dag" . }}
+{{/each}}
+
+{{#unless (eq 0 antallAvslag)}}
+    {{#gt antallAvslag 1}}
+{{i18n "I_disse_periodene" (i18n "ikke")}}
+    {{else}}
+{{i18n "I_denne_perioden" (i18n "ikke")}}
     {{/gt}}
-{{/if}}
+    {{#each resultat.avslagPerioder}}
+        {{#eq aarsakskode 8311}}
+*{{i18n "fra_og_med_til_og_med" fom tom ~}}
+{{i18n "pga_ferie"}}
+        {{/eq}}
+        {{#eq aarsakskode 8303}}
+{{i18n "pga_du_kan_jobbe" arbeidsgiverNavn}}
+        {{/eq}}
+        {{#eq aarsakskode 8301}}
+{{i18n "pga_termin"}}
+        {{/eq}}
+        {{#eq aarsakskode 8308}}
+*{{i18n "fra_og_med_til_og_med" fom tom ~}}
+{{i18n "ikke_rett"~}}
+{{i18n "pga_sokt_for_sent" mottattDato}}
+    {{/eq}}
+    {{/each}}
+
+{{i18n "lovref_vedtak"}}{{i18n "lovhjemmel_14_4"}}
+{{/unless}}

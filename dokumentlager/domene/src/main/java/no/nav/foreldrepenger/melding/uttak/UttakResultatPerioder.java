@@ -23,7 +23,7 @@ public class UttakResultatPerioder {
     }
 
     public List<UttakResultatPeriode> getPerioder() {
-        return perioder.stream().sorted(Comparator.comparing(UttakResultatPeriode::getFom)).collect(Collectors.toList());
+        return perioder.stream().sorted(Comparator.comparing(UttakResultatPeriode::getFomDato)).collect(Collectors.toList());
     }
 
     public List<UttakResultatPeriode> getPerioderAnnenPart() {

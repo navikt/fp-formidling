@@ -6,5 +6,4 @@ public interface ÅrsakMedLovReferanse {
     String getKodeverk();
 
     String getKode();
-
 }

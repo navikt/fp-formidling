@@ -22,6 +22,7 @@ import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.saldo.SaldoerDto;
+import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 
@@ -58,6 +59,10 @@ public interface BehandlingRestKlient {
     Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagHvisFinnes(List<BehandlingResourceLink> resourceLinker);
 
     List<VilkårDto> hentVilkår(List<BehandlingResourceLink> resourceLinkDtos);
+
+    SvangerskapspengerUttakResultatDto hentUttaksresultatSvp(List<BehandlingResourceLink> resourceLinker);
+
+    Optional<SvangerskapspengerUttakResultatDto> hentUttaksresultatSvpHvisFinnes(List<BehandlingResourceLink> resourceLinker);
 
     FagsakDto hentFagsak(List<BehandlingResourceLink> resourceLinkDtos);
 

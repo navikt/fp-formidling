@@ -8,7 +8,7 @@ import java.util.Objects;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 
-public class UttakResultatPeriode {
+public class UttakResultatPeriode implements DatoIntervall {
     private PeriodeResultatÅrsak periodeResultatÅrsak;
     private DatoIntervall tidsperiode;
     private PeriodeResultatÅrsak graderingAvslagÅrsak;
@@ -33,11 +33,13 @@ public class UttakResultatPeriode {
         return periodeResultatÅrsak != null ? periodeResultatÅrsak : PeriodeResultatÅrsak.UKJENT;
     }
 
-    public LocalDate getFom() {
+    @Override
+    public LocalDate getFomDato() {
         return tidsperiode.getFomDato();
     }
 
-    public LocalDate getTom() {
+    @Override
+    public LocalDate getTomDato() {
         return tidsperiode.getTomDato();
     }
 

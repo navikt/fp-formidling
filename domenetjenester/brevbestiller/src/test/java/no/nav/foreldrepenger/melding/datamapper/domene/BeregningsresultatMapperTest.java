@@ -27,7 +27,7 @@ public class BeregningsresultatMapperTest {
     public void setup() {
         DatoIntervall ubetydeligPeriode = DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1));
         beregningsresultat = BeregningsresultatFP.ny()
-                .medBeregningsresultatPerioder(List.of(BeregningsresultatPeriode.ny()
+                .leggTilBeregningsresultatPerioder(List.of(BeregningsresultatPeriode.ny()
                                 .medDagsats(HUNDRE)
                                 .medPeriode(ubetydeligPeriode)
                                 .build(),

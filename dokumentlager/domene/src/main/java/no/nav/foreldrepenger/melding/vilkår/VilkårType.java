@@ -32,7 +32,6 @@ public class VilkårType extends Kodeliste {
 
     public static final String FP_VK_41 = "FP_VK_41"; //$NON-NLS-1$
 
-    //TODO(OJR) medlemskapvilkår løpende
     public static final String FP_VK_2_L = "FP_VK_2_L"; //$NON-NLS-1$
 
     public static final VilkårType FØDSELSVILKÅRET_MOR = new VilkårType(FP_VK_1);

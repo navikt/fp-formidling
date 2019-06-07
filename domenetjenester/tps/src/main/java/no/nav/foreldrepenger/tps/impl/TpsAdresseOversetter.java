@@ -73,7 +73,6 @@ public class TpsAdresseOversetter {
         }
         if (person.getPostadresse() != null) {
             UstrukturertAdresse adresseUstruk = person.getPostadresse().getUstrukturertAdresse();
-            // TODO PK-49366 duplikat adding?
             adresseInfoList.add(konverterUstrukturertAdresse(person, adresseUstruk, AdresseType.POSTADRESSE));
             Landkoder landkode = adresseUstruk.getLandkode();
             if (NORGE.equals(landkode.getValue())) {
@@ -309,7 +308,6 @@ public class TpsAdresseOversetter {
                 return byggOppAdresse(adresseinfo);
             } catch (TekniskException tps) { //NOSONAR
                 //Ukjent adresse eller adresse som ikke kan oversettes.
-                //TODO (HUMLE) logge?
             }
         }
         return "UKJENT ADRESSE";

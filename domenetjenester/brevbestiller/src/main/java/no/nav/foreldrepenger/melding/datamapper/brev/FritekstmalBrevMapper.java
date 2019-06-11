@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.Locale;
 
 import javax.xml.bind.JAXBException;
@@ -75,6 +76,12 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
         handlebars.setInfiniteLoops(false);
         handlebars.setPrettyPrint(true);
         handlebars.registerHelpers(ConditionalHelpers.class);
+        handlebars.registerHelper("size", (o, options) -> {
+            if (o instanceof Collection) {
+                return ((Collection) o).size();
+            }
+            return 0;
+        });
         I18nHelper.i18n.setDefaultBundle(BrevmalKilder.getResourceBundle(templateFolder()));
         I18nHelper.i18n.setDefaultLocale(locale);
         overskriftMal = tryCompile(OVERSKRIFT);

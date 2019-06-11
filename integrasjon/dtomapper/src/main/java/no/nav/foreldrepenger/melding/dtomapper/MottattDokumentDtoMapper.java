@@ -31,7 +31,8 @@ public class MottattDokumentDtoMapper {
     }
 
     private MottattDokument mapMottattDokumentFraDto(MottattDokumentDto dto) {
-        return new MottattDokument(dto.getMottattDato(), kodeverkRepository.finn(DokumentTypeId.class, dto.getDokumentTypeId().getKode()), kodeverkRepository.finn(DokumentKategori.class, dto.getDokumentKategori().getKode()));
+        return new MottattDokument(dto.getMottattDato(), new DokumentTypeId(dto.getDokumentTypeId().getKode()),
+                kodeverkRepository.finn(DokumentKategori.class, dto.getDokumentKategori().getKode()));
     }
 
 }

@@ -1,14 +1,7 @@
 package no.nav.foreldrepenger.melding.dokumentdata;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
-
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
 
 
 /**
@@ -16,11 +9,8 @@ import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
  *
  * @see DokumentType
  */
-@Entity(name = "DokumentTypeId")
-@DiscriminatorValue(DokumentTypeId.DISCRIMINATOR)
-public class DokumentTypeId extends Kodeliste {
+public class DokumentTypeId {
 
-    public static final String DISCRIMINATOR = "DOKUMENT_TYPE_ID";
     // Engangsstønad
     public static final DokumentTypeId SØKNAD_ENGANGSSTØNAD_FØDSEL = new DokumentTypeId("SØKNAD_ENGANGSSTØNAD_FØDSEL"); //$NON-NLS-1$
     public static final DokumentTypeId SØKNAD_ENGANGSSTØNAD_ADOPSJON = new DokumentTypeId("SØKNAD_ENGANGSSTØNAD_ADOPSJON"); //$NON-NLS-1$
@@ -63,30 +53,43 @@ public class DokumentTypeId extends Kodeliste {
     public static final DokumentTypeId ANNET = new DokumentTypeId("ANNET"); //$NON-NLS-1$
 
     public static final DokumentTypeId UDEFINERT = new DokumentTypeId("-"); //$NON-NLS-1$
+    private static final Set<String> SØKNAD_TYPER = Set.of(SØKNAD_ENGANGSSTØNAD_FØDSEL.getKode(), SØKNAD_FORELDREPENGER_FØDSEL.getKode(),
+            SØKNAD_ENGANGSSTØNAD_ADOPSJON.getKode(), SØKNAD_FORELDREPENGER_ADOPSJON.getKode(), SØKNAD_SVANGERSKAPSPENGER.getKode());
+    private static final Set<String> ENDRING_SØKNAD_TYPER = Set.of(FORELDREPENGER_ENDRING_SØKNAD.getKode(), FLEKSIBELT_UTTAK_FORELDREPENGER.getKode());
+    private static final Set<String> ANDRE_SPESIAL_TYPER = Set.of(INNTEKTSMELDING.getKode(), KLAGE_DOKUMENT.getKode());
 
-    private static final Set<DokumentTypeId> VEDLEGG_TYPER = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(
-            BEKREFTELSE_VENTET_FØDSELSDATO, FØDSELSATTEST, DOKUMENTASJON_AV_TERMIN_ELLER_FØDSEL, DOKUMENTASJON_AV_OMSORGSOVERTAKELSE,
-            DOK_INNLEGGELSE, DOK_MORS_UTDANNING_ARBEID_SYKDOM, LEGEERKLÆRING)));
-    private static final Set<DokumentTypeId> SØKNAD_TYPER = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(
-            SØKNAD_ENGANGSSTØNAD_FØDSEL, SØKNAD_FORELDREPENGER_FØDSEL, SØKNAD_ENGANGSSTØNAD_ADOPSJON, SØKNAD_FORELDREPENGER_ADOPSJON)));
-    private static final Set<DokumentTypeId> ENDRING_SØKNAD_TYPER = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(
-            FORELDREPENGER_ENDRING_SØKNAD, FLEKSIBELT_UTTAK_FORELDREPENGER)));
-    private static final Set<DokumentTypeId> ANDRE_SPESIAL_TYPER = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(
-            INNTEKTSMELDING, KLAGE_DOKUMENT)));
+    private static final Set<String> VEDLEGG_TYPER = Set.of(BEKREFTELSE_VENTET_FØDSELSDATO.getKode(), FØDSELSATTEST.getKode(), LEGEERKLÆRING.getKode(),
+            DOKUMENTASJON_AV_TERMIN_ELLER_FØDSEL.getKode(), DOKUMENTASJON_AV_OMSORGSOVERTAKELSE.getKode(), DOK_INNLEGGELSE.getKode(), DOK_MORS_UTDANNING_ARBEID_SYKDOM.getKode());
 
-    public DokumentTypeId() {
-        // Hibernate trenger en
+
+    private String kode;
+
+    public DokumentTypeId(String kode) {
+        this.kode = kode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DokumentTypeId that = (DokumentTypeId) o;
+        return Objects.equals(kode, that.kode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(kode);
+    }
+
+    public String getKode() {
+        return kode;
     }
 
     public boolean erEndringsøknadType() {
-        return ENDRING_SØKNAD_TYPER.contains(this);
+        return ENDRING_SØKNAD_TYPER.contains(this.kode);
     }
 
     public boolean erSøknadType() {
-        return SØKNAD_TYPER.contains(this);
-    }
-
-    private DokumentTypeId(String kode) {
-        super(kode, DISCRIMINATOR);
+        return SØKNAD_TYPER.contains(this.kode);
     }
 }

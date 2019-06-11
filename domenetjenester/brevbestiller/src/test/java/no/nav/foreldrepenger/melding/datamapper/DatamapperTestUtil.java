@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.datamapper;
 import static no.nav.foreldrepenger.melding.datamapper.mal.DokumentType.DEFAULT_PERSON_STATUS;
 import static org.mockito.Mockito.doReturn;
 
+import java.time.LocalDate;
 import java.time.Period;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 public class DatamapperTestUtil {
 
     public static String FRITEKST = "FRITEKST";
+    public static final LocalDate FØRSTE_JANUAR_TJUENITTEN = LocalDate.of(2019, 1, 1);
     static BrevParametereImpl brevParametere = new BrevParametereImpl(14, 14, Period.ofWeeks(6), Period.ofWeeks(6));
 
     public static BrevParametere getBrevParametere() {

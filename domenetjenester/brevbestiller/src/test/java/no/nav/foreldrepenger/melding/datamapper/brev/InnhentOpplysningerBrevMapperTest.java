@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FØRSTE_JANUAR_TJUENITTEN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 
@@ -55,10 +56,9 @@ public class InnhentOpplysningerBrevMapperTest {
     public void skal_bruke_klage_til_å_velge_mottatt_dato() {
         KlageDokument mockKlagedokument = Mockito.mock(KlageDokument.class);
         klageDokument = Optional.of(mockKlagedokument);
-        LocalDate førsteJanuar = LocalDate.of(2019, 1, 1);
-        doReturn(førsteJanuar).when(mockKlagedokument).getMottattDato();
+        doReturn(FØRSTE_JANUAR_TJUENITTEN).when(mockKlagedokument).getMottattDato();
         FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter, klageDokument);
-        assertThat(fagType.getSoknadDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(førsteJanuar));
+        assertThat(fagType.getSoknadDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(FØRSTE_JANUAR_TJUENITTEN));
         assertThat(fagType.getBehandlingsType()).isEqualTo(BehandlingsTypeKode.FOERSTEGANGSBEHANDLING);
         assertThat(fagType.getFritekst()).isEqualTo(FRITEKST);
         assertThat(fagType.getSokersNavn()).isEqualTo(dokumentFelles.getSakspartNavn());

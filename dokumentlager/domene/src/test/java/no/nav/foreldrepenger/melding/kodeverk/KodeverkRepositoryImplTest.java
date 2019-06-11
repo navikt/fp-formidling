@@ -9,8 +9,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktType;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeId;
+import no.nav.foreldrepenger.melding.geografisk.Landkoder;
 import no.nav.foreldrepenger.melding.kodeverk.arkiv.ArkivFilType;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.testutilities.db.RepositoryRule;
@@ -37,25 +38,25 @@ public class KodeverkRepositoryImplTest {
 
     @Test
     public void test_hent_offisiellverdi_flere_ganger() {
-        DokumentTypeId d1 = repo.finnForKodeverkEiersKode(DokumentTypeId.class, "I000027");
-        DokumentTypeId d2 = repo.finnForKodeverkEiersKode(DokumentTypeId.class, "I000027");
+        AksjonspunktType d1 = repo.finnForKodeverkEiersKode(AksjonspunktType.class, "Manuell");
+        AksjonspunktType d2 = repo.finnForKodeverkEiersKode(AksjonspunktType.class, "Manuell");
         assertThat(d1).isEqualTo(d2);
     }
 
     @Test
     public void test_hent_flere_offisielle_koder_samtidig_flere_ganger() {
-        List<DokumentTypeId> dokumentTypeIds1 = repo.finnForKodeverkEiersKoder(DokumentTypeId.class, "I000003", "I000027");
-        assertThat(dokumentTypeIds1).hasSize(2);
-        List<DokumentTypeId> dokumentTypeIds2 = repo.finnForKodeverkEiersKoder(DokumentTypeId.class, "I000003", "I000027");
-        assertThat(dokumentTypeIds2).hasSize(2);
+        List<Landkoder> landkoder1 = repo.finnForKodeverkEiersKoder(Landkoder.class, "349", "546");
+        assertThat(landkoder1).hasSize(2);
+        List<Landkoder> landkoder2 = repo.finnForKodeverkEiersKoder(Landkoder.class, "349", "546");
+        assertThat(landkoder2).hasSize(2);
     }
 
     @Test
     public void test_hent_flere_koder_samtidig_flere_ganger() {
-        List<DokumentTypeId> dokumentTypeIds1 = repo.finnListe(DokumentTypeId.class, Arrays.asList("SØKNAD_ENGANGSSTØNAD_FØDSEL", "KLAGE_DOKUMENT"));
-        assertThat(dokumentTypeIds1).hasSize(2);
-        List<DokumentTypeId> dokumentTypeIds2 = repo.finnListe(DokumentTypeId.class, Arrays.asList("SØKNAD_ENGANGSSTØNAD_FØDSEL", "KLAGE_DOKUMENT"));
-        assertThat(dokumentTypeIds2).hasSize(2);
+        List<AksjonspunktType> aksjonspunktTypes1 = repo.finnListe(AksjonspunktType.class, Arrays.asList("AUTO", "OVST"));
+        assertThat(aksjonspunktTypes1).hasSize(2);
+        List<AksjonspunktType> aksjonspunktTypes2 = repo.finnListe(AksjonspunktType.class, Arrays.asList("AUTO", "OVST"));
+        assertThat(aksjonspunktTypes2).hasSize(2);
     }
 
 }

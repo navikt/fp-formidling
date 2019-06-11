@@ -13,14 +13,15 @@ import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametereImpl;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 
 public class DatamapperTestUtil {
 
     public static String FRITEKST = "FRITEKST";
-
+    static BrevParametereImpl brevParametere = new BrevParametereImpl(14, 14, Period.ofWeeks(6), Period.ofWeeks(6));
 
     public static BrevParametere getBrevParametere() {
-        return new BrevParametereImpl(14, 14, Period.ofWeeks(6), Period.ofWeeks(6));
+        return brevParametere;
     }
 
     public static DokumentFelles getDokumentFelles() {
@@ -28,6 +29,10 @@ public class DatamapperTestUtil {
         doReturn("Aleksander").when(dokumentFelles).getSakspartNavn();
         doReturn(DEFAULT_PERSON_STATUS).when(dokumentFelles).getSakspartPersonStatus();
         return dokumentFelles;
+    }
+
+    public static FellesType getFellesType() {
+        return new FellesType();
     }
 
     public static DokumentHendelse.Builder lagStandardHendelseBuilder() {

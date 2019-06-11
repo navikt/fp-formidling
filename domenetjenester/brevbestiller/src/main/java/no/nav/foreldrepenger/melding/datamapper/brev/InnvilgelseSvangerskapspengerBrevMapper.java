@@ -1,6 +1,9 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
+
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -9,6 +12,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
@@ -48,15 +52,27 @@ public class InnvilgelseSvangerskapspengerBrevMapper extends FritekstmalBrevMapp
         List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         XMLGregorianCalendar søknadsDato = MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter);
 
+        Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
         SvpUttaksresultat svpUttaksresultat = domeneobjektProvider.hentUttaksresultatSvp(behandling);
 
         svpUttaksresultat = SvpMapper.utvidOgTilpassBrev(svpUttaksresultat, beregningsresultatFP);
+        Map<String, Object> beregning = SvpMapper.mapFra(beregningsgrunnlag, beregningsresultatFP, behandling);
+
         int antallArbeidsgiverRefusjoner = SvpMapper.finnAntallRefusjonerTilArbeidsgivere(beregningsresultatFP);
         boolean harRefusjonTilBruker = BeregningsresultatMapper.finnTotalBrukerAndel(beregningsresultatFP) > 0;
 
         return new SvpMapper.SvpBrevData(dokumentFelles, fellesType,
                 svpUttaksresultat, harRefusjonTilBruker, antallArbeidsgiverRefusjoner) {
+
+            public boolean isNyEllerEndretBeregning() {
+                return behandling.erFørstegangssøknad() ||
+                        behandling.getBehandlingsresultat().getKonsekvenserForYtelsen().contains(ENDRING_I_BEREGNING);
+            }
+
+            public Map<String, Object> getBereging () {
+                return beregning;
+            }
 
             public long getManedsbelop() {
                 return BeregningsresultatMapper.finnMånedsbeløp(beregningsresultatFP);

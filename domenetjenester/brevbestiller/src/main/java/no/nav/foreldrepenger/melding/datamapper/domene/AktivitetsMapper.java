@@ -32,7 +32,7 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.util.Tuple;
 
-public class AktivtetsMapper {
+public class AktivitetsMapper {
 
     private static ObjectFactory objectFactory = new ObjectFactory();
     private static Map<AktivitetStatus, StatusTypeKode> aktivitetStatusKodeStatusTypeKodeMap = new HashMap<>();
@@ -147,7 +147,7 @@ public class AktivtetsMapper {
 
     static AnnenAktivitetListeType mapAnnenAktivtetListe(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakPeriode) {
         AnnenAktivitetListeType annenAktivitetListe = objectFactory.createAnnenAktivitetListeType();
-        finnAndelerOgUttakAnnenAktivitet(beregningsresultatPeriode, uttakPeriode).map(AktivtetsMapper::mapAnnenAktivitet).forEach(aktivitet -> annenAktivitetListe.getAnnenAktivitet().add(aktivitet));
+        finnAndelerOgUttakAnnenAktivitet(beregningsresultatPeriode, uttakPeriode).map(AktivitetsMapper::mapAnnenAktivitet).forEach(aktivitet -> annenAktivitetListe.getAnnenAktivitet().add(aktivitet));
         return annenAktivitetListe.getAnnenAktivitet().isEmpty() ? null : annenAktivitetListe;
     }
 

@@ -56,7 +56,7 @@ public class RevurderingBrevMapper implements DokumentTypeMapper {
         return JaxbHelper.marshalNoNamespaceXML(RevurderingConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(FellesType fellesType, DokumentHendelse hendelse, Behandling behandling, FamilieHendelse familieHendelse) {
+    FagType mapFagType(FellesType fellesType, DokumentHendelse hendelse, Behandling behandling, FamilieHendelse familieHendelse) {
         final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));

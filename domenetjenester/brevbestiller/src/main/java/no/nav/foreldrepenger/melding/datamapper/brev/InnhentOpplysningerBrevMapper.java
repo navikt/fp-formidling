@@ -80,7 +80,7 @@ public class InnhentOpplysningerBrevMapper implements DokumentTypeMapper {
         return JaxbHelper.marshalNoNamespaceXML(InnhentopplysningerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling, List<MottattDokument> mottatteDokumenter, Optional<KlageDokument> klageDokument) {
+    FagType mapFagType(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling, List<MottattDokument> mottatteDokumenter, Optional<KlageDokument> klageDokument) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(mapBehandlingType(behandling));
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));

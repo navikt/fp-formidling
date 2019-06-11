@@ -55,7 +55,7 @@ public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
         return JaxbHelper.marshalNoNamespaceXML(VedtakMedholdConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage) {
+    FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage) {
         FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         fagType.setOpphavType(utledOpphaveTypeKode(klage));

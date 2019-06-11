@@ -95,16 +95,8 @@ public class Behandling {
         return toTrinnsBehandling;
     }
 
-    //TODO - Hack
     public UUID getUuid() {
-        return uuid != null ? uuid : resourceLinker.stream()
-                .map(BehandlingResourceLink::getRequestPayload)
-                .filter(Objects::nonNull)
-                .map(BehandlingRelLinkPayload::getBehandlingUuid)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .map(UUID::fromString)
-                .orElse(null);
+        return uuid;
     }
 
     public long getId() {

@@ -1,33 +1,43 @@
-{{#if beregningsgrunnlagRelevant}}
+{{#with bereging}}
+{{#if nyEllerEndretBeregning}}
 {{i18n "Inntekt_brukt"}}
-    {{#if arbeidstakerEllerFrilanser}}
+    {{#if (or arbeidstaker frilanser)}}
 {{i18n "vi_har_brukt" bruttoBeregningsgrunnlag}}
     {{/if}}
     {{#if arbeidstaker}}
         {{#each arbeidsforhold}}
+
 {{i18n "inntekten_din_AT" arbeidsgiverNavn manedsinntekt}}
         {{/each}}
-        {{#gt arbeidsforhold.length 1}}
+        {{#gt (size arbeidsforhold) 1}}
+
 {{i18n "arbeidsgiverne_har_opplyst"}}
+
         {{else}}
-{{i18n "arbeidsgiveren_har_opplyst"}}
+{{~i18n "arbeidsgiveren_har_opplyst"}}
+
         {{/gt}}
 {{i18n "inntektgrunnlag_AT_ATSN"}}
+
     {{/if}}
     {{#if ikkeSoktForAlleArbeidsforhold}}
 {{i18n "beregnet_svp_ut_fra_alle_arbeidsforholdene"}}
+
     {{/if}}
     {{#if frilanser}}
 {{i18n "inntekten_din_FL" frilanser.manedsinntekt}}
 
         {{#unless arbeidstaker}}
 {{i18n "inntektgrunnlag_FL"}}
+
         {{else}}
 {{i18n "inntektgrunnlag_ATFL"}}
+
         {{/unless}}
     {{/if}}
 {{#if ikkeSoktForAlleArbeidsforholdOgOppdrag}}
-    {{i18n "beregnet_svp_ut_fra_alle_arbeidsforhold_og_oppdrag"}}
+{{i18n "beregnet_svp_ut_fra_alle_arbeidsforhold_og_oppdrag"}}
+
 {{/if}}
     {{#if selvstendigNaringsdrivende}}
         {{#unless (or arbeidstaker frilanser)}}
@@ -43,21 +53,24 @@
                 {{#unless frilanser}}
 {{i18n "inntektgrunnlag_SNAT" selvstendigNaringsdrivende.aarsinntekt}}
 
-                    {{#if arbeidsinntektHoyereEnnSnittAvKombinertInntekt}}
+                    {{#if arbeidstaker.inntektHoyereEnnSnittAvKombinertInntekt}}
 {{i18n "AT_inntekt_gt_snitt_ATSN"}}
+
                     {{/if}}
                 {{else}}
 {{i18n "inntektgrunnlag_SNATFL" selvstendigNaringsdrivende.aarsinntekt}}
 
-                    {{#if arbeidOgFrilansinntektHoyereEnnSnittAvKombinertInntekt}}
+                    {{#unless selvstendigNaringsdrivende.inntektHoyereEnnKombinertInntektATFL}}
 {{i18n "ATFN_inntekt_gt_snitt_ATFLSN"}}
-                    {{/if}}
+
+                    {{/unless}}
                 {{/unless}}
             {{else}}
 {{i18n "inntektgrunnlag_SNFL" selvstendigNaringsdrivende.aarsinntekt}}
 
-                {{#if frilansinntektHoyereEnnSnittAvKombinertInntekt}}
+                {{#if frilanser.inntektHoyereEnnSnittAvKombinertInntekt}}
 {{i18n "FL_inntekt_gt_snitt_FLSN"}}
+
                 {{/if}}
             {{/if}}
         {{/unless}}
@@ -74,25 +87,28 @@
 
         {{/if}}
     {{/if}}
-    {{#if naturalYtelseUtbetalingEndretOpp}}
-{{i18n "endring_naturalytelse_opp" naturalytelseEndringDato naturalytelseNyDagsats arbeidsgiverNavn}}
+    {{#with naturalYtelse}}
+        {{#if utbetalingEndret.opp}}
+{{i18n "endring_naturalytelse_opp" endringsDato nyDagsats arbeidsgiverNavn}}
 
-    {{/if}}
-    {{#if naturalYtelseUtbetalingEndretNed}}
-{{i18n "endring_naturalytelse_ned" naturalytelseEndringDato naturalytelseNyDagsats arbeidsgiverNavn}}
+        {{/if}}
+        {{#if utbetalingEndret.ned}}
+{{i18n "endring_naturalytelse_ned" endringsDato nyDagsats arbeidsgiverNavn}}
 
-    {{/if}}
+        {{/if}}
+    {{/with}}
     {{#if militarSivil}}
 {{i18n "militar_sivil"}}
 
     {{/if}}
     {{#if fritekst}}
-        {{fritekst}}
+{{fritekst}}
 
     {{/if}}
     {{#if inntektOver6G}}
 {{i18n "inntekt_over_seksG" seksG}}
 
     {{/if}}
-{{i18n "lovref_beregning" lovHjemmelBeregning}}
+{{i18n "lovref_beregning" lovhjemmel}}
 {{/if}}
+{{/with}}

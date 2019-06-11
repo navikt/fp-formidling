@@ -4,8 +4,10 @@ import static no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilde
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -55,6 +57,15 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest {
             @Override
             Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
                 return new SvpMapper.SvpBrevData(null, null, uttakResultat, true, 2) {
+
+                    public boolean isNyEllerEndretBeregning() {
+                        return true;
+                    }
+
+                    public Map<String, Object> getBereging () {
+                        return mockBeregningsdata();
+                    }
+
                     public long getManedsbelop() {
                         return 25342L;
                     }
@@ -110,6 +121,31 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest {
                 .medUttakResultatPerioder(resArbeidsforhold)
                 .medAvslåttePerioder(List.of(avslåttPeriode))
                 .build();
+
     }
 
+    private Map<String, Object> mockBeregningsdata() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("nyElEndretBeregning", true);
+        map.put("arbeidstakerEllerFrilanser", true);
+        map.put("arbeidstaker", Map.of("inntektHoyereEnnSnittAvKombinertInntekt", true));
+        map.put("arbeidsforhold", List.of(
+                Map.of("arbeidsgiverNavn", "Tine", "manedsinntekt", "22431"),
+                Map.of("arbeidsgiverNavn", "Forsvaret", "manedsinntekt", "12431")
+        ));
+        map.put("ikkeSoktForAlleArbeidsforhold", true);
+        map.put("frilanser", Map.of("inntektHoyereEnnSnittAvKombinertInntekt", true));
+        map.put("ikkeSoktForAlleArbeidsforholdOgOppdrag", true);
+        map.put("selvstendigNaringsdrivende", Map.of("inntektHoyereEnnKombinertInntektATFL", false, "nyoppstartet", true, "aarsinntekt", "24334234", "sistLignedeAar1", "62634", "sistLignedeAar2", "234235", "sistLignedeAar3", "345252"));
+        map.put("ikkeSoktForAlleArbeidsforholdOgNaringsvirksomhet", true);
+        map.put("ikkeSoktForAlleOppdragOgNaringsvirksomhet", true);
+        map.put("ikkeSoktForAlleArbeidsforholdOppdragOgNaringsvirksomhet", true);
+        map.put("naturalYtelse", Map.of("utbetalingEndret", Map.of("opp", true), "endringsDato", "12.12.84", "nyDagsats", "2342", "arbeidsgiverNavn", "Tine"));
+        map.put("militarSivil", true);
+        map.put("fritekst", "Dette er friteksten");
+        map.put("inntektOver6G", true);
+        map.put("seksG", "<seksG>");
+        map.put("lovhjemmel", "§ 14-4");
+        return map;
+    }
 }

@@ -108,9 +108,9 @@ public class BeregningsgrunnlagMapper {
         andelType.setStatus(tilStatusTypeKode(andel.getAktivitetStatus()));
         andelType.setDagsats(andel.getOriginalDagsatsFraTilstøtendeYtelse() == null ? andel.getDagsats() : andel.getOriginalDagsatsFraTilstøtendeYtelse());
         andelType.setEtterlønnSluttpakke(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(andel.getArbeidsforholdType()));
-        BigDecimal bgBruttoPrÅr = andel.getAvkortetPrÅr() != null ? andel.getAvkortetPrÅr() : andel.getBruttoPrÅr();
+        BigDecimal bgBruttoPrÅr = getBgBruttoPrÅr(andel);
         if (bgBruttoPrÅr != null) {
-            andelType.setMånedsinntekt(andel.getBruttoPrÅr().divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
+            andelType.setMånedsinntekt(getMånedsinntekt(andel).longValue());
             andelType.setÅrsinntekt(andel.getBruttoPrÅr().longValue());
         }
         if (AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus())) {
@@ -118,10 +118,22 @@ public class BeregningsgrunnlagMapper {
             andelType.setSisteLignedeÅr(andel.getBeregningsperiodeTom() == null ? 0 : (long) andel.getBeregningsperiodeTom().getYear());
         }
         if (AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())) {
-            andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::getNavn).ifPresent(andelType::setArbeidsgiverNavn);
+            getArbeidsgiverNavn(andel).ifPresent(andelType::setArbeidsgiverNavn);
         }
 
         return andelType;
+    }
+
+    static BigDecimal getMånedsinntekt(BeregningsgrunnlagPrStatusOgAndel andel) {
+        return andel.getBruttoPrÅr().divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP);
+    }
+
+    static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagPrStatusOgAndel andel) {
+        return andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::getNavn);
+    }
+
+    static BigDecimal getBgBruttoPrÅr(BeregningsgrunnlagPrStatusOgAndel andel) {
+        return andel.getAvkortetPrÅr() != null ? andel.getAvkortetPrÅr() : andel.getBruttoPrÅr();
     }
 
     static BigInteger tellAntallArbeidsforholdIBeregningUtenSluttpakke(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {

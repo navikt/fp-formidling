@@ -110,9 +110,9 @@ public class BeregningsresultatMapper {
         periode.setÅrsak(periodeResultatÅrsak.getKode());
         periode.setPeriodeDagsats(beregningsresultatPeriode.getDagsats());
 
-        periode.setArbeidsforholdListe(AktivtetsMapper.mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
-        periode.setNæringListe(AktivtetsMapper.mapNæringsliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
-        periode.setAnnenAktivitetListe(AktivtetsMapper.mapAnnenAktivtetListe(beregningsresultatPeriode, uttakResultatPeriode));
+        periode.setArbeidsforholdListe(AktivitetsMapper.mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
+        periode.setNæringListe(AktivitetsMapper.mapNæringsliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
+        periode.setAnnenAktivitetListe(AktivitetsMapper.mapAnnenAktivtetListe(beregningsresultatPeriode, uttakResultatPeriode));
         return periode;
     }
 

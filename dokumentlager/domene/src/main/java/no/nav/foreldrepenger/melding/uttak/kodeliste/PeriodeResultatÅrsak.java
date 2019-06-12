@@ -33,7 +33,7 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
     private String kode;
     private String ekstraData;
 
-    public PeriodeResultatÅrsak(String kodeverk, String kode, String ekstraData) {
+    public PeriodeResultatÅrsak(String kode, String kodeverk, String ekstraData) {
         this.kodeverk = kodeverk;
         this.kode = kode;
         this.ekstraData = ekstraData;

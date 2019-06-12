@@ -79,9 +79,9 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         pdpRequest.put(CommonAttributter.RESOURCE_FELLES_DOMENE, ABAC_DOMAIN);
         pdpRequest.put(CommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource().getEksternKode());
         pdpRequest.put(CommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, aktørIder);
-        behandling.map(Behandling::getStatus).map(BehandlingStatus::getKode).map(PdpRequestBuilderImpl::oversettBehandlingStatus).map(Optional::get).ifPresent(
+        behandling.map(Behandling::getStatus).map(BehandlingStatus::getKode).map(PdpRequestBuilderImpl::oversettBehandlingStatus).flatMap(o -> o).ifPresent(
                 status -> pdpRequest.put(ForeldrepengerAttributter.RESOURCE_FORELDREPENGER_SAK_BEHANDLINGSSTATUS, status.getEksternKode()));
-        behandling.map(Behandling::getFagsak).map(Fagsak::getFagsakStatus).map(PdpRequestBuilderImpl::oversettFagstatus).map(Optional::get).ifPresent(
+        behandling.map(Behandling::getFagsak).map(Fagsak::getFagsakStatus).map(PdpRequestBuilderImpl::oversettFagstatus).flatMap(o -> o).ifPresent(
                 status -> pdpRequest.put(ForeldrepengerAttributter.RESOURCE_FORELDREPENGER_SAK_SAKSSTATUS, status.getEksternKode()));
         return pdpRequest;
     }

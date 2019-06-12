@@ -10,6 +10,7 @@ public class Fagsak {
     private RelasjonsRolleType brukerRolle;
     private Saksnummer saksnummer;
     private Personinfo personinfo;
+    private String fagsakStatus;
 
     private NavBruker navBruker;
 
@@ -19,6 +20,7 @@ public class Fagsak {
         saksnummer = builder.saksnummer;
         navBruker = builder.navBruker;
         personinfo = builder.personinfo;
+        fagsakStatus = builder.fagsakStatus;
     }
 
     public static Builder ny() {
@@ -45,6 +47,10 @@ public class Fagsak {
         return personinfo;
     }
 
+    public String getFagsakStatus() {
+        return fagsakStatus;
+    }
+
     public static final class Builder {
         private Long id;
         private RelasjonsRolleType brukerRolle;
@@ -52,6 +58,7 @@ public class Fagsak {
         private Saksnummer saksnummer;
         private NavBruker navBruker;
         private Personinfo personinfo;
+        private String fagsakStatus;
 
         private Builder() {
         }
@@ -78,6 +85,11 @@ public class Fagsak {
 
         public Builder medPersoninfo(Personinfo personinfo) {
             this.personinfo = personinfo;
+            return this;
+        }
+
+        public Builder medFagsakStatus(String fagsakStatus) {
+            this.fagsakStatus = fagsakStatus;
             return this;
         }
 

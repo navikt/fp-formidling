@@ -31,6 +31,7 @@ class FagsakDtoMapper {
                 .medSaksnummer(String.valueOf(fagsakDto.getSaksnummer()))
                 .medBrukerRolle(kodeverkRepository.finn(RelasjonsRolleType.class, fagsakDto.getRelasjonsRolleType().getKode()))
                 .medPersoninfo(tpsTjeneste.hentBrukerForFnr(PersonIdent.fra(fagsakDto.getPerson().getPersonnummer())).orElseThrow(IllegalStateException::new))
+                .medFagsakStatus(fagsakDto.getStatus().getKode())
                 .build();
     }
 

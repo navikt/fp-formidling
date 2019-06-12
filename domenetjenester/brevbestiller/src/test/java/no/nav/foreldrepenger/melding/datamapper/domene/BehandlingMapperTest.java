@@ -2,13 +2,20 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.Test;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
+import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
+import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 
 public class BehandlingMapperTest {
@@ -51,6 +58,48 @@ public class BehandlingMapperTest {
         DokumentHendelse dokumentHendelse = standardHendelseBuilder()
                 .build();
         assertThat(BehandlingMapper.avklarFritekst(dokumentHendelse, behandling).get()).isEqualTo(BEHANDLING_FRITEKST);
+    }
+
+    @Test
+    public void skal_mappe_fødselshendelse() {
+        Behandling behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.RE_HENDELSE_FØDSEL);
+
+        assertThat(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling, null, Optional.empty())).isTrue();
+
+        behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.ETTER_KLAGE);
+        FamilieHendelse familieHendelse = opprettFamiliehendelse(false);
+
+        assertThat(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling, familieHendelse, Optional.empty())).isFalse();
+        assertThat(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling, familieHendelse, Optional.of(familieHendelse))).isFalse();
+    }
+
+    @Test
+    public void skal_mappe_ny_fødsel_fra_register() {
+        Behandling behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.ETTER_KLAGE);
+        FamilieHendelse familieHendelseNy = opprettFamiliehendelse(true);
+        FamilieHendelse familieHendelseGammel = opprettFamiliehendelse(false);
+
+        assertThat(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling, familieHendelseNy, Optional.of(familieHendelseGammel))).isTrue();
+    }
+
+    @Test
+    public void skal_mappe_eksisterende_fødsel() {
+        Behandling behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.ETTER_KLAGE);
+        FamilieHendelse familieHendelse = opprettFamiliehendelse(true);
+
+        assertThat(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling, familieHendelse, Optional.of(familieHendelse))).isFalse();
+    }
+
+    private FamilieHendelse opprettFamiliehendelse(boolean barnErFødt) {
+        return new FamilieHendelse(BigInteger.ONE, barnErFødt, false, FamilieHendelseType.FØDSEL, new FamilieHendelse.OptionalDatoer(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()));
+    }
+
+    private Behandling opprettBehandlingMedEnÅrsak(BehandlingÅrsakType årsak) {
+        return standardBehandlingBuilder()
+                .medBehandlingÅrsaker(List.of(BehandlingÅrsak.builder()
+                        .medBehandlingÅrsakType(årsak)
+                        .build()))
+                .build();
     }
 
     private DokumentHendelse.Builder standardHendelseBuilder() {

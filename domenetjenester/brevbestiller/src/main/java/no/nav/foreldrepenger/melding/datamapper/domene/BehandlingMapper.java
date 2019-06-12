@@ -18,6 +18,7 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsResultatKode;
@@ -62,9 +63,10 @@ public class BehandlingMapper {
                 .contains(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER);
     }
 
-    public static boolean erRevurderingPgaFødselshendelse(Behandling behandling) {
+    public static boolean erRevurderingPgaFødselshendelse(Behandling behandling, FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse) {
         return getBehandlingÅrsakStringListe(behandling)
-                .contains(BehandlingÅrsakType.RE_HENDELSE_FØDSEL);
+                .contains(BehandlingÅrsakType.RE_HENDELSE_FØDSEL) ||
+                familieHendelse.isBarnErFødt() && originalFamiliehendelse.map(fh -> !fh.isBarnErFødt()).orElse(false);
     }
 
     static List<BehandlingÅrsakType> getBehandlingÅrsakStringListe(Behandling behandling) {

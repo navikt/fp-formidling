@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.melding.web.app.pdp;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,7 +10,8 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 
-import no.nav.abac.xacml.NavAttributter;
+import no.nav.abac.common.xacml.CommonAttributter;
+import no.nav.abac.foreldrepenger.xacml.ForeldrepengerAttributter;
 import no.nav.abac.xacml.StandardAttributter;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingStatus;
@@ -76,14 +76,13 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
         behandling.map(Behandling::getFagsak).ifPresent(fagsak -> aktørIder.add(fagsak.getPersoninfo().getAktørId().getId()));
         pdpRequest.put(PdpKlient.ENVIRONMENT_AUTH_TOKEN, attributter.getIdToken());
         pdpRequest.put(StandardAttributter.ACTION_ID, attributter.getActionType().getEksternKode());
-        pdpRequest.put(NavAttributter.RESOURCE_FELLES_DOMENE, ABAC_DOMAIN);
-        pdpRequest.put(NavAttributter.RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource().getEksternKode());
-        pdpRequest.put(NavAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, aktørIder);
+        pdpRequest.put(CommonAttributter.RESOURCE_FELLES_DOMENE, ABAC_DOMAIN);
+        pdpRequest.put(CommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource().getEksternKode());
+        pdpRequest.put(CommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, aktørIder);
         behandling.map(Behandling::getStatus).map(BehandlingStatus::getKode).map(PdpRequestBuilderImpl::oversettBehandlingStatus).map(Optional::get).ifPresent(
-                status -> pdpRequest.put(NavAttributter.RESOURCE_FORELDREPENGER_SAK_BEHANDLINGSSTATUS, status.getEksternKode()));
+                status -> pdpRequest.put(ForeldrepengerAttributter.RESOURCE_FORELDREPENGER_SAK_BEHANDLINGSSTATUS, status.getEksternKode()));
         behandling.map(Behandling::getFagsak).map(Fagsak::getFagsakStatus).map(PdpRequestBuilderImpl::oversettFagstatus).map(Optional::get).ifPresent(
-                status -> pdpRequest.put(NavAttributter.RESOURCE_FORELDREPENGER_SAK_SAKSSTATUS, status.getEksternKode()));
-        pdpRequest.put(NavAttributter.RESOURCE_FORELDREPENGER_SAK_AKSJONSPUNKT_TYPE, Collections.emptySet()); //TODO
+                status -> pdpRequest.put(ForeldrepengerAttributter.RESOURCE_FORELDREPENGER_SAK_SAKSSTATUS, status.getEksternKode()));
         return pdpRequest;
     }
 

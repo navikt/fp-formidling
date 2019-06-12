@@ -86,6 +86,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         Søknad søknad = hentSøknadUansett(behandling);
+        Optional<FamilieHendelse> originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).map(domeneobjektProvider::hentFamiliehendelse);
         YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
         Saldoer saldoer = domeneobjektProvider.hentSaldoer(behandling);
         List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
@@ -93,6 +94,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                 behandling,
                 beregningsresultatFP,
                 familieHendelse,
+                originalFamiliehendelse,
                 beregningsgrunnlag,
                 søknad,
                 dokumentFelles,
@@ -123,6 +125,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                Behandling behandling,
                                BeregningsresultatFP beregningsresultatFP,
                                FamilieHendelse familieHendelse,
+                               Optional<FamilieHendelse> originalFamiliehendelse,
                                Beregningsgrunnlag beregningsgrunnlag,
                                Søknad søknad,
                                DokumentFelles dokumentFelles,
@@ -149,7 +152,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType, behandling);
         mapFelterRelatertTilSøknadOgRettighet(søknad, uttakResultatPerioder, fagType);
         mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, behandling, søknad, ytelseFordeling);
-        mapFelterRelatertTilFamiliehendelse(familieHendelse, fagType);
+        mapFelterRelatertTilFamiliehendelse(behandling, familieHendelse, originalFamiliehendelse, fagType);
         mapLovhjemmel(fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling, uttakResultatPerioder);
         mapFelterRelatertTilDagsats(fagType, beregningsresultatFP);
         return fagType;
@@ -217,7 +220,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
 
     private void mapFelterRelatertTilBehandling(Behandling behandling, FagType fagType) {
         fagType.setBehandlingsType(BehandlingMapper.utledBehandlingsTypeInnvilgetFP(behandling));
-        fagType.setFødselsHendelse(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling));
         fagType.setInntektMottattArbgiver(BehandlingMapper.erEndringMedEndretInntektsmelding(behandling));
     }
 
@@ -230,10 +232,11 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setInntektOverSeksG(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag));
     }
 
-    private void mapFelterRelatertTilFamiliehendelse(FamilieHendelse familieHendelse, FagType fagType) {
+    private void mapFelterRelatertTilFamiliehendelse(Behandling behandling, FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse, FagType fagType) {
         fagType.setAntallBarn(familieHendelse.getAntallBarn());
         fagType.setBarnErFødt(familieHendelse.isBarnErFødt());
         fagType.setGjelderFoedsel(familieHendelse.isGjelderFødsel());
+        fagType.setFødselsHendelse(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling, familieHendelse, originalFamiliehendelse));
     }
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {

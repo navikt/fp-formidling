@@ -27,9 +27,12 @@ import no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeId;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.PersonstatusKode;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.YtelseTypeKode;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 
@@ -88,6 +91,13 @@ public class InnhentOpplysningerBrevMapperTest {
         assertThat(fagType.getFritekst()).isEqualTo(FRITEKST);
         assertThat(fagType.getSokersNavn()).isEqualTo(dokumentFelles.getSakspartNavn());
         assertThat(fagType.getPersonstatus()).isEqualTo(PersonstatusKode.ANNET);
+    }
+
+    @Test
+    public void skal_fungere_med_svp() {
+        DokumentHendelse dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build();
+        FagType fagType = brevMapper.mapFagType(dokumentFelles, dokumentHendelse, behandling, mottatteDokumenter, klageDokument);
+        assertThat(fagType.getYtelseType()).isEqualTo(YtelseTypeKode.SVP);
     }
 
     private BehandlingÅrsak opprettBehandlingsårsak(BehandlingÅrsakType årsakType) {

@@ -33,6 +33,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.inntektsmeldingfortidl
 import no.nav.foreldrepenger.melding.integrasjon.dokument.inntektsmeldingfortidlig.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.inntektsmeldingfortidlig.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.inntektsmeldingfortidlig.PeriodeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.inntektsmeldingfortidlig.YtelseTypeKode;
 import no.nav.foreldrepenger.melding.ytelsefordeling.UtsettelseÅrsak;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
@@ -58,12 +59,12 @@ public class InntektsmeldingFørSøknadBrevMapper implements DokumentTypeMapper 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         InntektArbeidYtelse iay = domeneobjektProvider.hentInntektArbeidYtelse(behandling);
-        FagType fagType = mapFagType(behandling, iay);
+        FagType fagType = mapFagType(behandling, iay, dokumentHendelse);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InntektsmeldingForTidligConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(Behandling behandling, InntektArbeidYtelse iay) {
+    private FagType mapFagType(Behandling behandling, InntektArbeidYtelse iay, DokumentHendelse dokumentHendelse) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(mapToXmlBehandlingsType(behandling.getBehandlingType()));
         Inntektsmelding inntektsmelding = IAYMapper.hentVillkårligInntektsmelding(iay);
@@ -71,6 +72,7 @@ public class InntektsmeldingFørSøknadBrevMapper implements DokumentTypeMapper 
         fagType.setArbeidsgiverNavn(inntektsmelding.getArbeidsgiver());
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(inntektsmelding.getInnsendingstidspunkt()));
         fagType.setPeriodeListe(mapFeriePerioder(inntektsmelding));
+        fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         return fagType;
     }
 

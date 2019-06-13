@@ -3,7 +3,8 @@ package no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 
@@ -30,14 +31,22 @@ public class PeriodeMergerSvp {
         List<SvpUttakResultatPeriode> resultat = new ArrayList<>();
         for (int index = 0; index < perioder.size() - 1;) {
             SvpUttakResultatPeriode periodeEn = perioder.get(index);
-            Stream<SvpUttakResultatPeriode> stream = perioder.subList(index + 1, perioder.size()).stream()
-                    .filter(periode -> erLikeHvaBrevAngår(periodeEn, periode));
 
-            if (stream.count() > 0) {
-                long sumDagsats = stream.mapToLong(SvpUttakResultatPeriode::getAktivitetDagsats).sum();
-                resultat.add(SvpUttakResultatPeriode.ny(periodeEn).medAktivitetDagsats(sumDagsats).build());
+            AtomicLong sumDagsats = new AtomicLong();
+            AtomicInteger count = new AtomicInteger();
+
+            perioder.subList(index + 1, perioder.size()).stream()
+                    .filter(periode -> erLikeHvaBrevAngår(periodeEn, periode))
+                    .mapToLong(SvpUttakResultatPeriode::getAktivitetDagsats)
+                    .forEach(value -> {
+                        sumDagsats.getAndAdd(value);
+                        count.getAndIncrement();
+                    });
+
+            if (count.get() > 0) { ;
+                resultat.add(SvpUttakResultatPeriode.ny(periodeEn).medAktivitetDagsats(sumDagsats.get()).build());
             }
-            index = (int) stream.count() + 1;
+            index = count.get() + 1;
 
             if (index == perioder.size() - 1) {
                 resultat.add(perioder.get(index));

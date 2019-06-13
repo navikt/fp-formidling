@@ -6,7 +6,7 @@ metadata:
   name: fpformidling
   namespace: NAMESPACE_VAL
 spec:
-  image: docker.adeo.no:5000/fpformidling:RELEASE_VERSION # Required. Docker image.
+  image: repo.adeo.no:5443fpformidling:RELEASE_VERSION # Required. Docker image.
   port: 8080 # Required. The port number which is exposed by the container and should receive HTTP traffic.
   team: teamforeldrepenger # Required. Set to the team that owns this application.
   liveness: # HTTP endpoint that signals 200 OK when the application is running.

@@ -5,7 +5,8 @@
         <encoder class="net.logstash.logback.encoder.LogstashEncoder">
             <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
                 <charset>UTF-8</charset>
-                <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{userId}, %X{prosess}] - %m%n
+                <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{userId}, %X{prosess}] -
+                    %m%n
                 </pattern>
                 <maxLength>15000</maxLength>
                 <maxDepthPerThrowable>200</maxDepthPerThrowable>
@@ -126,6 +127,8 @@
     <logger name="sikkerhet" level="INFO" additivity="false">
         <appender-ref ref="SIKKERHET_LOG"/>
     </logger>
+
+    <logger name="com.github.jknack.handlebars" level="ERROR" additivity="false"/>
 
     <root level="${log.level.root:-INFO}">
         <appender-ref ref="STDOUT_JSON"/>

@@ -18,7 +18,7 @@ public interface DatoIntervall extends Comparable<DatoIntervall> {
         return formaterDato(getTomDato());
     }
 
-    default String formaterDato(LocalDate dato) {
+    static String formaterDato(LocalDate dato) {
         return dato.getDayOfMonth() + ". " + DatoIntervallImpl.månedMap.get(dato.getMonthValue()) + " " + dato.getYear();
     }
 

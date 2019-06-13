@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.typer.DatoIntervall.formaterDato;
+
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -42,20 +45,18 @@ public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
 
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
+        LocalDate soknadDato = getSøknadsdato(behandling);
+        LocalDate fristDato = BrevMapperUtil.getSvarFrist(brevParametere);
+
+        return new Brevdata()
+                .leggTil("ytelse", hendelse.getYtelseType().getKode())
+                .leggTil("soknadDato", formaterDato(soknadDato))
+                .leggTil("fristDato", formaterDato(fristDato));
+    }
+
+    private LocalDate getSøknadsdato(Behandling behandling) {
         List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         XMLGregorianCalendar søknadsDato = MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter);
-
-        return new Brevdata(dokumentFelles, fellesType)  {
-            String soknadDato = PeriodeVerktøy.xmlGregorianTilLocalDate(søknadsDato).toString();
-            String fristDato = BrevMapperUtil.getSvarFrist(brevParametere).toString();
-
-            public String getSoknadDato() {
-                return soknadDato;
-            }
-
-            public String getFristDato() {
-                return fristDato;
-            }
-        };
+        return PeriodeVerktøy.xmlGregorianTilLocalDate(søknadsDato);
     }
 }

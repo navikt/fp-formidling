@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
+import static no.nav.foreldrepenger.melding.typer.DatoIntervall.formaterDato;
 
 import java.util.List;
 import java.util.Map;
@@ -59,28 +59,15 @@ public class InnvilgelseSvangerskapspengerBrevMapper extends FritekstmalBrevMapp
         svpUttaksresultat = SvpMapper.utvidOgTilpassBrev(svpUttaksresultat, beregningsresultatFP);
         Map<String, Object> beregning = SvpMapper.mapFra(beregningsgrunnlag, beregningsresultatFP, behandling);
 
-        int antallArbeidsgiverRefusjoner = SvpMapper.finnAntallRefusjonerTilArbeidsgivere(beregningsresultatFP);
-        boolean harRefusjonTilBruker = BeregningsresultatMapper.finnTotalBrukerAndel(beregningsresultatFP) > 0;
-
-        return new SvpMapper.SvpBrevData(dokumentFelles, fellesType,
-                svpUttaksresultat, harRefusjonTilBruker, antallArbeidsgiverRefusjoner) {
-
-            public boolean isNyEllerEndretBeregning() {
-                return behandling.erFørstegangssøknad() ||
-                        behandling.getBehandlingsresultat().getKonsekvenserForYtelsen().contains(ENDRING_I_BEREGNING);
-            }
-
-            public Map<String, Object> getBereging () {
-                return beregning;
-            }
-
-            public long getManedsbelop() {
-                return BeregningsresultatMapper.finnMånedsbeløp(beregningsresultatFP);
-            }
-
-            public String getMottattDato() {
-                return PeriodeVerktøy.xmlGregorianTilLocalDate(søknadsDato).toString();
-            }
-        };
+        return new Brevdata()
+                .leggTil("resultat", svpUttaksresultat)
+                .leggTil("beregning", beregning)
+                .leggTil("manedsbelop", BeregningsresultatMapper.finnMånedsbeløp(beregningsresultatFP))
+                .leggTil("mottattDato", formaterDato(PeriodeVerktøy.xmlGregorianTilLocalDate(søknadsDato)))
+                .leggTil("periodeDagsats", SvpMapper.getPeriodeDagsats(svpUttaksresultat))
+                .leggTil("antallPerioder", SvpMapper.getAntallPerioder(svpUttaksresultat))
+                .leggTil("antallAvslag", svpUttaksresultat.getAvslagPerioder().size())
+                .leggTil("refusjonTilBruker", 0 < BeregningsresultatMapper.finnTotalBrukerAndel(beregningsresultatFP))
+                .leggTil("refusjonerTilArbeidsgivere", SvpMapper.finnAntallRefusjonerTilArbeidsgivere(beregningsresultatFP));
     }
 }

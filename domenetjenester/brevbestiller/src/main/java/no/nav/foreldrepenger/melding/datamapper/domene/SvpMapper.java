@@ -55,7 +55,6 @@ public class SvpMapper {
         // TODO Tor Map ferdig og erstatt hardkodede felter.
         map.put("nyEllerEndretBeregning", erNyEllerEndretBeregning(behandling));
         map.put("arbeidstaker", bgMap.get("arbeidstaker"));
-        map.put("arbeidsforhold", mapFra(beregningsgrunnlag));
         map.put("ikkeSoktForAlleArbeidsforhold", false);
         map.put("frilanser",bgMap.get("frilanser"));
         map.put("ikkeSoktForAlleArbeidsforholdOgOppdrag", false);

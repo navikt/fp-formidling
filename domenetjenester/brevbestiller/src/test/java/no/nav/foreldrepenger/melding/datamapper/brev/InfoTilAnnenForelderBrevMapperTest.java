@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder.ROTMAPPE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -63,7 +62,6 @@ public class InfoTilAnnenForelderBrevMapperTest {
                         .leggTil("kontaktTelefonnummer", "11111111")
                         .leggTil("navnAvsenderEnhet", "Avsender")
                         .leggTil("erAutomatiskVedtak", true);
-
             }
         };
         MockitoAnnotations.initMocks(this);

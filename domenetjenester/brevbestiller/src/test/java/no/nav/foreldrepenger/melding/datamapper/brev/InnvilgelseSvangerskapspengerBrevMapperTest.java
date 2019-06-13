@@ -13,16 +13,22 @@ import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.domene.SvpMapper;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
@@ -33,8 +39,15 @@ import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 
 public class InnvilgelseSvangerskapspengerBrevMapperTest {
     private static final long ID = 123L;
-    private Behandling behandling;
     private DokumentHendelse dokumentHendelse;
+    private Behandling behandling;
+
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
+    @Mock
+    DokumentFelles dokumentFelles;
+    @Mock
+    FellesType fellesType;
 
     @InjectMocks
     private InnvilgelseSvangerskapspengerBrevMapper mapper;
@@ -49,43 +62,23 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest {
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
-                .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+                .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER)
                 .build();
         SvpUttaksresultat uttakResultat = mockUttaksresultat();
 
         mapper = new InnvilgelseSvangerskapspengerBrevMapper() {
             @Override
             Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
-                return new SvpMapper.SvpBrevData(null, null, uttakResultat, true, 2) {
-
-                    public boolean isNyEllerEndretBeregning() {
-                        return true;
-                    }
-
-                    public Map<String, Object> getBereging () {
-                        return mockBeregningsdata();
-                    }
-
-                    public long getManedsbelop() {
-                        return 25342L;
-                    }
-
-                    public String getMottattDato() {
-                        return "1. januar 2000";
-                    }
-
-                    public String getKontaktTelefonnummer() {
-                        return "11111111";
-                    }
-
-                    public String getNavnAvsenderEnhet() {
-                        return "Avsender";
-                    }
-
-                    public boolean getErAutomatiskVedtak() {
-                        return true;
-                    }
-                };
+                return new Brevdata()
+                        .leggTil("resultat", uttakResultat)
+                        .leggTil("beregning", mockBeregningsdata())
+                        .leggTil("manedsbelop", 25342L)
+                        .leggTil("mottattDato", "1. januar 2000")
+                        .leggTil("periodeDagsats", SvpMapper.getPeriodeDagsats(uttakResultat))
+                        .leggTil("antallPerioder", SvpMapper.getAntallPerioder(uttakResultat))
+                        .leggTil("antallAvslag", uttakResultat.getAvslagPerioder().size())
+                        .leggTil("refusjonTilBruker", true)
+                        .leggTil("refusjonerTilArbeidsgivere", 2);
             }
         };
         MockitoAnnotations.initMocks(this);
@@ -121,12 +114,11 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest {
                 .medUttakResultatPerioder(resArbeidsforhold)
                 .medAvslåttePerioder(List.of(avslåttPeriode))
                 .build();
-
     }
 
     private Map<String, Object> mockBeregningsdata() {
         Map<String, Object> map = new HashMap<>();
-        map.put("nyElEndretBeregning", true);
+        map.put("nyEllerEndretBeregning", true);
         map.put("arbeidstakerEllerFrilanser", true);
         map.put("arbeidstaker", Map.of("inntektHoyereEnnSnittAvKombinertInntekt", true));
         map.put("arbeidsforhold", List.of(

@@ -6,9 +6,9 @@
 {{#each resultat.uttakPerioder}}
 {{this.arbeidsgiverNavn}}:
     {{#each this.perioder}}
-{{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" this.fom this.tom }}
+{{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" this.fom this.tom}}
         {{~#lt this.utbetalingsgrad 100~}}
-{{i18n "far_du_x_prosent_svp" this.utbetalingsgrad }}
+{{i18n "far_du_x_prosent_svp" this.utbetalingsgrad}}
         {{/lt}}
 {{#if @last}}-*{{/if}}
     {{/each}}

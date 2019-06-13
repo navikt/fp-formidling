@@ -1,19 +1,7 @@
-{{i18n "p1" soknadDato bundle=bundle locale=locale }}
+{{i18n "vi_fikk_soknaden_din_om" (i18n (eq ytelse "SVP" yes="svangerskapspenger" no="foreldrepenger") bundle=felles) soknadDato}}
 
-{{i18n "p2" bundle=bundle locale=locale }}
+{{i18n "hvis_inntektsmeldingen_allerede_er_sendt"}}
 
-{{i18n "a1" fristDato bundle=bundle locale=locale }}
+{{i18n "Soknaden_kan_bli_avslatt" fristDato}}
 
-{{i18n "harSporsmalVedtak_001" kontaktTelefonnummer bundle=felles locale=locale }}
-
-
-
-
-{{i18n "vedtakMvh_001" navnAvsenderEnhet bundle=felles locale=locale }}
-
-
-
-
-{{#if erAutomatiskVedtak}}
-    {{i18n "automatiskVedtakMvh_001" bundle=felles locale=locale}}
-{{/if}}
+{{> felles}}

@@ -142,7 +142,7 @@ public class SvpMapper {
                 ));
     }
 
-    private static boolean erNyEllerEndretBeregning(Behandling behandling) {
+    public static boolean erNyEllerEndretBeregning(Behandling behandling) {
         return behandling.erFørstegangssøknad() ||
                 behandling.getBehandlingsresultat().getKonsekvenserForYtelsen().contains(ENDRING_I_BEREGNING);
     }
@@ -200,54 +200,21 @@ public class SvpMapper {
                 .collect(Collectors.toList());
     }
 
-    public static class SvpBrevData extends Brevdata {
-        private SvpUttaksresultat uttakResultat;
-        private BeregningsresultatFP beregningsresultatFP;
-        private boolean refusjonTilBruker;
-        private int refusjonerTilArbeidsgivere;
-
-        public SvpBrevData(DokumentFelles dokumentFelles, FellesType fellesType,
-                           SvpUttaksresultat uttakResultat, boolean refusjonTilBruker, int refusjonerTilArbeidsgivere) {
-            super(dokumentFelles, fellesType);
-            this.uttakResultat = uttakResultat;
-            this.refusjonTilBruker = refusjonTilBruker;
-            this.refusjonerTilArbeidsgivere = refusjonerTilArbeidsgivere;
-        }
-
-        public SvpUttaksresultat getResultat() {
-            return uttakResultat;
-        }
-
-        public Map<DatoIntervall, Integer> getPeriodeDagsats() {
-            Map<DatoIntervall, Integer> periodeDagsats = new TreeMap<>();
-            uttakResultat.getUttakPerioder().stream()
-                    .flatMap(s -> s.getPerioder().stream())
-                    .forEach(p -> {
-                        periodeDagsats.merge(p.getTidsperiode(),
-                                (int) p.getAktivitetDagsats(),
-                                (sats1, sats2) -> sats1 + sats2);
-                    });
-            return periodeDagsats;
-        }
-
-        public int getAntallPerioder() {
-            return (int) uttakResultat.getUttakPerioder().stream()
-                    .flatMap(arbeidsforhold -> arbeidsforhold.getPerioder().stream())
-                    .count();
-        }
-
-        public int getAntallAvslag() {
-            return uttakResultat.getAvslagPerioder().size();
-        }
-
-        public boolean isRefusjonTilBruker() {
-            return refusjonTilBruker;
-        }
-
-        public int getRefusjonerTilArbeidsgivere() {
-            return refusjonerTilArbeidsgivere;
-        }
-
+    public static Map<DatoIntervall, Integer> getPeriodeDagsats(SvpUttaksresultat uttakResultat) {
+        Map<DatoIntervall, Integer> periodeDagsats = new TreeMap<>();
+        uttakResultat.getUttakPerioder().stream()
+                .flatMap(s -> s.getPerioder().stream())
+                .forEach(p -> {
+                    periodeDagsats.merge(p.getTidsperiode(),
+                            (int) p.getAktivitetDagsats(),
+                            (sats1, sats2) -> sats1 + sats2);
+                });
+        return periodeDagsats;
     }
 
+    public static  int getAntallPerioder(SvpUttaksresultat uttakResultat) {
+        return (int) uttakResultat.getUttakPerioder().stream()
+                .flatMap(arbeidsforhold -> arbeidsforhold.getPerioder().stream())
+                .count();
+    }
 }

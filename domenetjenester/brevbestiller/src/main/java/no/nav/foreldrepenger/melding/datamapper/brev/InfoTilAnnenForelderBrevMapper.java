@@ -1,14 +1,18 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.typer.DatoIntervall.formaterDato;
+
+import java.time.LocalDate;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeVerktøy;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -41,14 +45,11 @@ public class InfoTilAnnenForelderBrevMapper extends FritekstmalBrevMapper {
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
-        String fristDato = UttakMapper.finnSisteDagIFelleseriodeHvisFinnes(uttakResultatPerioder)
-                .map(XMLGregorianCalendar::toString)
+        LocalDate fristDato = UttakMapper.finnSisteDagIFelleseriodeHvisFinnes(uttakResultatPerioder)
+                .map(PeriodeVerktøy::xmlGregorianTilLocalDate)
                 .orElseThrow(() -> FeilFactory.create(DokumentBestillerFeil.class).feltManglerVerdi("dato").toException());
 
-        return new Brevdata(dokumentFelles, fellesType) {
-            public String getDato() {
-                return fristDato;
-            }
-        };
+        return new Brevdata()
+                .leggTil("dato", formaterDato(fristDato));
     }
 }

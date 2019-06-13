@@ -1,9 +1,14 @@
 package no.nav.foreldrepenger.melding.uttak.svp;
 
+import static no.nav.vedtak.konfig.Tid.TIDENES_ENDE;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 
 public class SvpUttaksresultat {
 
@@ -31,10 +36,14 @@ public class SvpUttaksresultat {
     }
 
     public List<SvpUttakResultatArbeidsforhold> getUttakResultatArbeidsforhold() {
-        return uttakResultatArbeidsforhold.stream().sorted(Comparator.comparing(o -> o.getPerioder().get(0)))
+        return uttakResultatArbeidsforhold.stream().sorted(Comparator.comparing(getSammenligningsDato()))
                 .collect(Collectors.toList());
     }
 
+    private Function<SvpUttakResultatArbeidsforhold, DatoIntervall> getSammenligningsDato() {
+        return o -> !o.getPerioder().isEmpty() ?
+                o.getPerioder().get(0) : DatoIntervall.fraOgMed(TIDENES_ENDE);
+    }
 
     public static final class Builder {
         private List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold = new ArrayList<>();

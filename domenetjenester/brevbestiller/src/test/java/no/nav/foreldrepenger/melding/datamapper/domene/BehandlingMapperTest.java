@@ -62,11 +62,11 @@ public class BehandlingMapperTest {
 
     @Test
     public void skal_mappe_fødselshendelse() {
-        Behandling behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.RE_HENDELSE_FØDSEL);
+        Behandling behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.RE_HENDELSE_FØDSEL.getKode());
 
         assertThat(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling, null, Optional.empty())).isTrue();
 
-        behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.ETTER_KLAGE);
+        behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.ETTER_KLAGE.getKode());
         FamilieHendelse familieHendelse = opprettFamiliehendelse(false);
 
         assertThat(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling, familieHendelse, Optional.empty())).isFalse();
@@ -75,7 +75,7 @@ public class BehandlingMapperTest {
 
     @Test
     public void skal_mappe_ny_fødsel_fra_register() {
-        Behandling behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.ETTER_KLAGE);
+        Behandling behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.ETTER_KLAGE.getKode());
         FamilieHendelse familieHendelseNy = opprettFamiliehendelse(true);
         FamilieHendelse familieHendelseGammel = opprettFamiliehendelse(false);
 
@@ -84,7 +84,7 @@ public class BehandlingMapperTest {
 
     @Test
     public void skal_mappe_eksisterende_fødsel() {
-        Behandling behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.ETTER_KLAGE);
+        Behandling behandling = opprettBehandlingMedEnÅrsak(BehandlingÅrsakType.ETTER_KLAGE.getKode());
         FamilieHendelse familieHendelse = opprettFamiliehendelse(true);
 
         assertThat(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling, familieHendelse, Optional.of(familieHendelse))).isFalse();
@@ -94,7 +94,7 @@ public class BehandlingMapperTest {
         return new FamilieHendelse(BigInteger.ONE, barnErFødt, false, FamilieHendelseType.FØDSEL, new FamilieHendelse.OptionalDatoer(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()));
     }
 
-    private Behandling opprettBehandlingMedEnÅrsak(BehandlingÅrsakType årsak) {
+    private Behandling opprettBehandlingMedEnÅrsak(String årsak) {
         return standardBehandlingBuilder()
                 .medBehandlingÅrsaker(List.of(BehandlingÅrsak.builder()
                         .medBehandlingÅrsakType(årsak)

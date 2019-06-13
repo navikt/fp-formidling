@@ -20,7 +20,6 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.melding.behandling.BehandlingStatus;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
@@ -109,7 +108,7 @@ public class BehandlingDtoMapper {
 
     private BehandlingÅrsak mapBehandlingÅrsakFraDto(BehandlingÅrsakDto dto) {
         return BehandlingÅrsak.builder()
-                .medBehandlingÅrsakType(kodeverkRepository.finn(BehandlingÅrsakType.class, dto.getBehandlingArsakType().getKode()))
+                .medBehandlingÅrsakType(dto.getBehandlingArsakType().getKode())
                 .medManueltOpprettet(dto.getManueltOpprettet())
                 .build();
     }

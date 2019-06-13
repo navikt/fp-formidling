@@ -18,7 +18,6 @@
     <entity class="no.nav.foreldrepenger.melding.behandling.VariantFormat"/>
     <entity class="no.nav.foreldrepenger.melding.behandling.BehandlingStatus"/>
     <entity class="no.nav.foreldrepenger.melding.behandling.BehandlingType"/>
-    <entity class="no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType"/>
     <entity class="no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak"/>
     <entity class="no.nav.foreldrepenger.melding.behandling.BehandlingResultatType"/>
     <entity class="no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen"/>

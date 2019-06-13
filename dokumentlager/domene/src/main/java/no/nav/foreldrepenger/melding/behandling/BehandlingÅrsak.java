@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.behandling;
 import java.util.Optional;
 
 public class BehandlingÅrsak {
-    private BehandlingÅrsakType behandlingÅrsakType;
+    private String behandlingÅrsakType;
     private Boolean manueltOpprettet;
     private Behandling originalBehandling;
 
@@ -17,7 +17,7 @@ public class BehandlingÅrsak {
         return new Builder();
     }
 
-    public BehandlingÅrsakType getBehandlingÅrsakType() {
+    public String getBehandlingÅrsakType() {
         return behandlingÅrsakType;
     }
 
@@ -30,14 +30,14 @@ public class BehandlingÅrsak {
     }
 
     public static class Builder {
-        private BehandlingÅrsakType behandlingÅrsakType;
+        private String behandlingÅrsakType;
         private Boolean manueltOpprettet;
         private Behandling originalBehandling;
 
         private Builder() {
         }
 
-        public Builder medBehandlingÅrsakType(BehandlingÅrsakType behandlingÅrsakType) {
+        public Builder medBehandlingÅrsakType(String behandlingÅrsakType) {
             this.behandlingÅrsakType = behandlingÅrsakType;
             return this;
         }

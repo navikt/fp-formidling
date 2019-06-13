@@ -4,14 +4,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import no.nav.foreldrepenger.melding.kodeverk.UlagretKodeliste;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
-
-@Entity(name = "BehandlingÅrsakType")
-@DiscriminatorValue(BehandlingÅrsakType.DISCRIMINATOR)
-public class BehandlingÅrsakType extends Kodeliste {
+public class BehandlingÅrsakType extends UlagretKodeliste {
 
     public static final String DISCRIMINATOR = "BEHANDLING_AARSAK"; //$NON-NLS-1$
     public static final BehandlingÅrsakType RE_MANGLER_FØDSEL = new BehandlingÅrsakType("RE-MF"); //$NON-NLS-1$
@@ -53,20 +48,16 @@ public class BehandlingÅrsakType extends Kodeliste {
 
     public static final BehandlingÅrsakType UDEFINERT = new BehandlingÅrsakType("-"); //$NON-NLS-1$
 
-    BehandlingÅrsakType() {
-        //for Hibernate
-    }
-
-    private BehandlingÅrsakType(String kode) {
+    public BehandlingÅrsakType(String kode) {
         super(kode, DISCRIMINATOR);
     }
 
-    public static Set<BehandlingÅrsakType> årsakerForAutomatiskRevurdering() {
-        return new HashSet<>(Arrays.asList(RE_MANGLER_FØDSEL, RE_MANGLER_FØDSEL_I_PERIODE, RE_AVVIK_ANTALL_BARN,
-                RE_TILSTØTENDE_YTELSE_INNVILGET, RE_ENDRING_BEREGNINGSGRUNNLAG, RE_TILSTØTENDE_YTELSE_OPPHØRT));
+    public static Set<String> årsakerForAutomatiskRevurdering() {
+        return new HashSet<>(Arrays.asList(RE_MANGLER_FØDSEL.getKode(), RE_MANGLER_FØDSEL_I_PERIODE.getKode(), RE_AVVIK_ANTALL_BARN.getKode(),
+                RE_TILSTØTENDE_YTELSE_INNVILGET.getKode(), RE_ENDRING_BEREGNINGSGRUNNLAG.getKode(), RE_TILSTØTENDE_YTELSE_OPPHØRT.getKode()));
     }
 
-    public static Set<BehandlingÅrsakType> årsakerEtterKlageBehandling() {
-        return new HashSet<>(Arrays.asList(ETTER_KLAGE, RE_KLAGE_MED_END_INNTEKT, RE_KLAGE_UTEN_END_INNTEKT));
+    public static Set<String> årsakerEtterKlageBehandling() {
+        return new HashSet<>(Arrays.asList(ETTER_KLAGE.getKode(), RE_KLAGE_MED_END_INNTEKT.getKode(), RE_KLAGE_UTEN_END_INNTEKT.getKode()));
     }
 }

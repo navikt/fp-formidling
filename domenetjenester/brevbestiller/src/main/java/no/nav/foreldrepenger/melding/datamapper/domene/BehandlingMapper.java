@@ -60,16 +60,16 @@ public class BehandlingMapper {
 
     public static boolean gjelderEndringsøknad(Behandling behandling) {
         return getBehandlingÅrsakStringListe(behandling)
-                .contains(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER);
+                .contains(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode());
     }
 
     public static boolean erRevurderingPgaFødselshendelse(Behandling behandling, FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse) {
         return getBehandlingÅrsakStringListe(behandling)
-                .contains(BehandlingÅrsakType.RE_HENDELSE_FØDSEL) ||
+                .contains(BehandlingÅrsakType.RE_HENDELSE_FØDSEL.getKode()) ||
                 familieHendelse.isBarnErFødt() && originalFamiliehendelse.map(fh -> !fh.isBarnErFødt()).orElse(false);
     }
 
-    static List<BehandlingÅrsakType> getBehandlingÅrsakStringListe(Behandling behandling) {
+    static List<String> getBehandlingÅrsakStringListe(Behandling behandling) {
         return behandling.getBehandlingÅrsaker().stream()
                 .map(BehandlingÅrsak::getBehandlingÅrsakType)
                 .collect(Collectors.toList());
@@ -81,7 +81,7 @@ public class BehandlingMapper {
     }
 
     public static BehandlingsTypeType utledBehandlingsTypeInnvilgetES(Behandling behandling) {
-        Stream<BehandlingÅrsakType> årsaker = behandling.getBehandlingÅrsaker().stream()
+        Stream<String> årsaker = behandling.getBehandlingÅrsaker().stream()
                 .map(BehandlingÅrsak::getBehandlingÅrsakType);
         boolean etterKlage = årsaker.anyMatch(BehandlingÅrsakType.årsakerEtterKlageBehandling()::contains);
         if (etterKlage) {
@@ -101,10 +101,10 @@ public class BehandlingMapper {
 
     public static boolean erEndringMedEndretInntektsmelding(Behandling behandling) {
         return erEndring(behandling.getBehandlingType())
-                && getBehandlingÅrsakTypeListe(behandling).contains((BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING));
+                && getBehandlingÅrsakTypeListe(behandling).contains((BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING.getKode()));
     }
 
-    private static List<BehandlingÅrsakType> getBehandlingÅrsakTypeListe(Behandling behandling) {
+    private static List<String> getBehandlingÅrsakTypeListe(Behandling behandling) {
         return behandling.getBehandlingÅrsaker().stream().map(BehandlingÅrsak::getBehandlingÅrsakType).collect(Collectors.toList());
     }
 

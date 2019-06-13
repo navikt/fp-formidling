@@ -82,7 +82,7 @@ public class InnhentOpplysningerBrevMapperTest {
 
     @Test
     public void skal_velge_mottatt_dato_fra_endringssøknad_når_endring() {
-        doReturn(List.of(opprettBehandlingsårsak(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER))).when(behandling).getBehandlingÅrsaker();
+        doReturn(List.of(opprettBehandlingsårsak(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode()))).when(behandling).getBehandlingÅrsaker();
         LocalDate andreJanuar = LocalDate.of(2019, 1, 2);
         mottatteDokumenter.add(new MottattDokument(andreJanuar, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD));
         FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter, klageDokument);
@@ -100,7 +100,7 @@ public class InnhentOpplysningerBrevMapperTest {
         assertThat(fagType.getYtelseType()).isEqualTo(YtelseTypeKode.SVP);
     }
 
-    private BehandlingÅrsak opprettBehandlingsårsak(BehandlingÅrsakType årsakType) {
+    private BehandlingÅrsak opprettBehandlingsårsak(String årsakType) {
         return BehandlingÅrsak.builder()
                 .medBehandlingÅrsakType(årsakType)
                 .build();

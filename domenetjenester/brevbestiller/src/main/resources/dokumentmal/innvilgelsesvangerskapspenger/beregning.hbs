@@ -5,11 +5,11 @@
 {{i18n "vi_har_brukt" bruttoBeregningsgrunnlag}}
     {{/if}}
     {{#if arbeidstaker}}
-        {{#each arbeidsforhold}}
+        {{#each arbeidstaker.arbeidsforhold}}
 
 {{i18n "inntekten_din_AT" arbeidsgiverNavn manedsinntekt}}
         {{/each}}
-        {{#gt (size arbeidsforhold) 1}}
+        {{#gt (size arbeidstaker.arbeidsforhold) 1}}
 
 {{i18n "arbeidsgiverne_har_opplyst"}}
 

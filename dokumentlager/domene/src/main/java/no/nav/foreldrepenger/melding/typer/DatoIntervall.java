@@ -31,7 +31,7 @@ public interface DatoIntervall extends Comparable<DatoIntervall> {
     }
 
     @Override
-    public default int compareTo(DatoIntervall o) {
+    default int compareTo(DatoIntervall o) {
         int compareFom = this.getFomDato().compareTo(o.getFomDato());
         int compareTom = this.getTomDato().compareTo(o.getTomDato());
         return compareFom != 0 ? compareFom : compareTom;

@@ -80,6 +80,10 @@ public class BeregningsgrunnlagMapper {
         return finnFørstePeriode(beregningsgrunnlag).getDagsats() < finnFørstePeriode(originaltBeregningsgrunnlag).getDagsats();
     }
 
+    public static boolean militærEllerSivilTjeneste(Beregningsgrunnlag beregningsgrunnlag) {
+        return beregningsgrunnlag.getAktivitetStatuser().contains(AktivitetStatus.MILITÆR_ELLER_SIVIL);
+    }
+
     public static long finnBrutto(Beregningsgrunnlag beregningsgrunnlag) {
         AtomicLong sum = new AtomicLong();
         finnFørstePeriode(beregningsgrunnlag)
@@ -170,7 +174,7 @@ public class BeregningsgrunnlagMapper {
     }
 
     public static BigDecimal finnSeksG(Beregningsgrunnlag beregningsgrunnlag) {
-        return beregningsgrunnlag.getGrunnbeløp().getVerdi().multiply(BigDecimal.valueOf(6));
+        return beregningsgrunnlag.getGrunnbeløp().multipliser(6).getVerdi();
     }
 
     public static boolean inntektOverSeksG(Beregningsgrunnlag beregningsgrunnlag) {

@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
@@ -48,28 +49,32 @@ public class SvpMapper {
                 .distinct().count();
     }
 
-    public static Map<String, Object> mapFra(Beregningsgrunnlag beregningsgrunnlag, BeregningsresultatFP beregningsresultat, Behandling behandling) {
+    public static Map<String, Object> mapFra(DokumentHendelse hendelse, Beregningsgrunnlag beregningsgrunnlag, BeregningsresultatFP beregningsresultat, Behandling behandling) {
         Map<String, Object> map = new HashMap<>();
         Map<String, Map> bgMap = mapFra(beregningsgrunnlag);
 
         // TODO Tor Map ferdig og erstatt hardkodede felter.
+        mapIkkeSøkteAktiviteter(map);
         map.put("nyEllerEndretBeregning", erNyEllerEndretBeregning(behandling));
         map.put("arbeidstaker", bgMap.get("arbeidstaker"));
-        map.put("ikkeSoktForAlleArbeidsforhold", false);
-        map.put("frilanser",bgMap.get("frilanser"));
-        map.put("ikkeSoktForAlleArbeidsforholdOgOppdrag", false);
+        map.put("frilanser", bgMap.get("frilanser"));
         map.put("selvstendigNaringsdrivende", bgMap.get("selvstendigNaringsdrivende"));
-        map.put("ikkeSoktForAlleArbeidsforholdOgNaringsvirksomhet", false);
-        map.put("ikkeSoktForAlleOppdragOgNaringsvirksomhet", false);
-        map.put("ikkeSoktForAlleArbeidsforholdOppdragOgNaringsvirksomhet", false);
         map.put("naturalYtelse", Map.of());
-        map.put("militarSivil", false);
-        map.put("fritekst", "");
-        map.put("inntektOver6G", false);
-        map.put("seksG", "<seksG>");
+        map.put("militarSivil", BeregningsgrunnlagMapper.militærEllerSivilTjeneste(beregningsgrunnlag));
+        map.put("fritekst", BehandlingMapper.avklarFritekst(hendelse, behandling));
+        map.put("inntektOver6G", BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag));
+        map.put("seksG", BeregningsgrunnlagMapper.finnSeksG(beregningsgrunnlag).intValue());
         map.put("lovhjemmel", "§ 8-2");
 
         return map;
+    }
+
+    private static void mapIkkeSøkteAktiviteter(Map<String, Object> map) {
+        map.put("ikkeSoktForAlleArbeidsforhold", false);
+        map.put("ikkeSoktForAlleArbeidsforholdOgOppdrag", false);
+        map.put("ikkeSoktForAlleArbeidsforholdOgNaringsvirksomhet", false);
+        map.put("ikkeSoktForAlleOppdragOgNaringsvirksomhet", false);
+        map.put("ikkeSoktForAlleArbeidsforholdOppdragOgNaringsvirksomhet", false);
     }
 
     private static Map<String, Map> mapFra(Beregningsgrunnlag beregningsgrunnlag) {
@@ -102,7 +107,7 @@ public class SvpMapper {
     private static void leggTilSnAndel(Map<String, Map> map, BeregningsgrunnlagPrStatusOgAndel andel) {
         int sisteLignedeÅr = getSisteLignedeÅr(andel);
         map.merge("selvstendigNaringsdrivende",
-                Map.of( "aarsinntekt", andel.getBruttoPrÅr().intValue(),
+                Map.of("aarsinntekt", andel.getBruttoPrÅr().intValue(),
                         "nyoppstartet", TRUE.equals(andel.getNyIArbeidslivet()),
                         "sistLignedeAar1", sisteLignedeÅr,
                         "sistLignedeAar2", sisteLignedeÅr - 1,
@@ -208,7 +213,7 @@ public class SvpMapper {
         return periodeDagsats;
     }
 
-    public static  int getAntallPerioder(SvpUttaksresultat uttakResultat) {
+    public static int getAntallPerioder(SvpUttaksresultat uttakResultat) {
         return (int) uttakResultat.getUttakPerioder().stream()
                 .flatMap(arbeidsforhold -> arbeidsforhold.getPerioder().stream())
                 .count();

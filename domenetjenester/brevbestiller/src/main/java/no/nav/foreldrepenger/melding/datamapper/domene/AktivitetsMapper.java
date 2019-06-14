@@ -165,7 +165,7 @@ public class AktivitetsMapper {
         return annenAktivitet;
     }
 
-    private static List<BeregningsresultatAndel> finnArbeidsandeler(BeregningsresultatPeriode beregningsresultatPeriode) {
+    static List<BeregningsresultatAndel> finnArbeidsandeler(BeregningsresultatPeriode beregningsresultatPeriode) {
         return beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
                 .filter(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus()))
                 .collect(Collectors.toList());

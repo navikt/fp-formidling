@@ -10,18 +10,6 @@ public interface DatoIntervall extends Comparable<DatoIntervall> {
 
     LocalDate getTomDato();
 
-    default String getFom() {
-        return formaterDato(getFomDato());
-    }
-
-    default String getTom() {
-        return formaterDato(getTomDato());
-    }
-
-    static String formaterDato(LocalDate dato) {
-        return dato.getDayOfMonth() + ". " + DatoIntervallImpl.månedMap.get(dato.getMonthValue()) + " " + dato.getYear();
-    }
-
     static DatoIntervall fraOgMedTilOgMed(LocalDate fomDato, LocalDate tomDato) {
         return new DatoIntervallImpl(fomDato, tomDato);
     }

@@ -4,12 +4,12 @@
 {{i18n "I_denne_perioden" ""}}
 {{/gt}}
 {{#each resultat.uttakPerioder}}
-{{this.arbeidsgiverNavn}}:
-    {{#each this.perioder}}
-{{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" this.fom this.tom}}
-        {{~#lt this.utbetalingsgrad 100~}}
-{{i18n "far_du_x_prosent_svp" this.utbetalingsgrad}}
-        {{/lt}}
+{{arbeidsgiverNavn}}:
+    {{#each perioder}}
+{{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" fom tom}}
+        {{~#and (lt utbetalingsgrad 100) (gt utbetalingsgrad 0)~}}
+{{i18n "far_du_x_prosent_svp" utbetalingsgrad}}
+        {{/and}}
 {{#if @last}}-*{{/if}}
     {{/each}}
 {{/each}}

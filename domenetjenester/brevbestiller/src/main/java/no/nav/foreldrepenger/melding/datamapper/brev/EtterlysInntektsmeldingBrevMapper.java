@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.typer.DatoIntervall.formaterDato;
+import static no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil.medFormatering;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -50,8 +50,8 @@ public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
 
         return new Brevdata()
                 .leggTil("ytelse", hendelse.getYtelseType().getKode())
-                .leggTil("soknadDato", formaterDato(soknadDato))
-                .leggTil("fristDato", formaterDato(fristDato));
+                .leggTil("soknadDato", medFormatering(soknadDato))
+                .leggTil("fristDato", medFormatering(fristDato));
     }
 
     private LocalDate getSøknadsdato(Behandling behandling) {

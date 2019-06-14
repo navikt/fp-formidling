@@ -74,7 +74,6 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest {
                         .leggTil("beregning", mockBeregningsdata())
                         .leggTil("manedsbelop", 25342L)
                         .leggTil("mottattDato", "1. januar 2000")
-                        .leggTil("periodeDagsats", SvpMapper.getPeriodeDagsats(uttakResultat))
                         .leggTil("antallPerioder", SvpMapper.getAntallPerioder(uttakResultat))
                         .leggTil("antallAvslag", uttakResultat.getAvslagPerioder().size())
                         .leggTil("refusjonTilBruker", true)

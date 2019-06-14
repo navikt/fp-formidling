@@ -53,22 +53,22 @@
                 {{#unless frilanser}}
 {{i18n "inntektgrunnlag_SNAT" selvstendigNaringsdrivende.aarsinntekt}}
 
-                    {{#if arbeidstaker.inntektHoyereEnnSnittAvKombinertInntekt}}
+                    {{#if selvstendigNaringsdrivende.inntekt_lavere_AT_SN}}
 {{i18n "AT_inntekt_gt_snitt_ATSN"}}
 
                     {{/if}}
                 {{else}}
 {{i18n "inntektgrunnlag_SNATFL" selvstendigNaringsdrivende.aarsinntekt}}
 
-                    {{#unless selvstendigNaringsdrivende.inntektHoyereEnnKombinertInntektATFL}}
+                    {{#if selvstendigNaringsdrivende.inntekt_lavere_AT_FL_SN}}
 {{i18n "ATFN_inntekt_gt_snitt_ATFLSN"}}
 
-                    {{/unless}}
+                    {{/if}}
                 {{/unless}}
             {{else}}
 {{i18n "inntektgrunnlag_SNFL" selvstendigNaringsdrivende.aarsinntekt}}
 
-                {{#if frilanser.inntektHoyereEnnSnittAvKombinertInntekt}}
+                {{#if selvstendigNaringsdrivende.inntekt_lavere_FL_SN}}
 {{i18n "FL_inntekt_gt_snitt_FLSN"}}
 
                 {{/if}}
@@ -87,16 +87,16 @@
 
         {{/if}}
     {{/if}}
-    {{#with naturalYtelse}}
-        {{#if utbetalingEndret.opp}}
+    {{#each naturalytelse}}
+            {{#if tilkommer}}
 {{i18n "endring_naturalytelse_opp" endringsDato nyDagsats arbeidsgiverNavn}}
 
         {{/if}}
-        {{#if utbetalingEndret.ned}}
+            {{#if bortfaller}}
 {{i18n "endring_naturalytelse_ned" endringsDato nyDagsats arbeidsgiverNavn}}
 
         {{/if}}
-    {{/with}}
+    {{/each}}
     {{#if militarSivil}}
 {{i18n "militar_sivil"}}
 

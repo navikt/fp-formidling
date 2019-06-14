@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.typer.DatoIntervall.formaterDato;
+import static no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil.medFormatering;
 
 import java.time.LocalDate;
 
@@ -50,6 +50,6 @@ public class InfoTilAnnenForelderBrevMapper extends FritekstmalBrevMapper {
                 .orElseThrow(() -> FeilFactory.create(DokumentBestillerFeil.class).feltManglerVerdi("dato").toException());
 
         return new Brevdata()
-                .leggTil("dato", formaterDato(fristDato));
+                .leggTil("dato", medFormatering(fristDato));
     }
 }

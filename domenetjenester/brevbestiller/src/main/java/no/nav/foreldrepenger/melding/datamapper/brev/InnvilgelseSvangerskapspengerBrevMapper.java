@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.typer.DatoIntervall.formaterDato;
+import static no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil.medFormatering;
 
 import java.util.List;
 import java.util.Map;
@@ -57,14 +57,14 @@ public class InnvilgelseSvangerskapspengerBrevMapper extends FritekstmalBrevMapp
         SvpUttaksresultat svpUttaksresultat = domeneobjektProvider.hentUttaksresultatSvp(behandling);
 
         svpUttaksresultat = SvpMapper.utvidOgTilpassBrev(svpUttaksresultat, beregningsresultatFP);
-        Map<String, Object> beregning = SvpMapper.mapFra(hendelse, beregningsgrunnlag, beregningsresultatFP, behandling);
+        Map<String, Object> beregning = SvpMapper.mapFra(svpUttaksresultat, hendelse, beregningsgrunnlag, beregningsresultatFP, behandling);
 
         return new Brevdata()
                 .leggTil("resultat", svpUttaksresultat)
                 .leggTil("beregning", beregning)
                 .leggTil("manedsbelop", BeregningsresultatMapper.finnMånedsbeløp(beregningsresultatFP))
-                .leggTil("mottattDato", formaterDato(PeriodeVerktøy.xmlGregorianTilLocalDate(søknadsDato)))
-                .leggTil("periodeDagsats", SvpMapper.getPeriodeDagsats(svpUttaksresultat))
+                .leggTil("mottattDato", medFormatering(PeriodeVerktøy.xmlGregorianTilLocalDate(søknadsDato)))
+                .leggTil("periodeDagsats", SvpMapper.getPeriodeDagsats(beregningsresultatFP))
                 .leggTil("antallPerioder", SvpMapper.getAntallPerioder(svpUttaksresultat))
                 .leggTil("antallAvslag", svpUttaksresultat.getAvslagPerioder().size())
                 .leggTil("refusjonTilBruker", 0 < BeregningsresultatMapper.finnTotalBrukerAndel(beregningsresultatFP))

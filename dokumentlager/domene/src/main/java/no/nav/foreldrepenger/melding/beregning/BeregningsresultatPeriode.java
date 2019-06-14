@@ -31,6 +31,10 @@ public class BeregningsresultatPeriode {
         return periode.getFomDato();
     }
 
+    public DatoIntervall getPeriode() {
+        return periode;
+    }
+
     public LocalDate getBeregningsresultatPeriodeTom() {
         return periode.getTomDato();
     }

@@ -13,9 +13,9 @@ import no.nav.vedtak.konfig.PropertyUtil;
 
 public class DatasourceUtil {
 
-    public static DataSource createDatasource(String datasourceName, DatasourceRole role, EnvironmentClass environmentClass) {
+    public static DataSource createDatasource(String datasourceName, DatasourceRole role, EnvironmentClass environmentClass, int maxPoolSize) {
         String rolePrefix = getRolePrefix(datasourceName);
-        HikariConfig config = initConnectionPoolConfig(datasourceName);
+        HikariConfig config = initConnectionPoolConfig(datasourceName, maxPoolSize);
         if (EnvironmentClass.LOCALHOST.equals(environmentClass)) {
             String password = PropertyUtil.getProperty(datasourceName + ".password");
             return createLocalDatasource(config, "public", rolePrefix, password);
@@ -37,13 +37,15 @@ public class DatasourceUtil {
         return PropertyUtil.getProperty(datasourceName + ".username");
     }
 
-    private static HikariConfig initConnectionPoolConfig(String dataSourceName) {
+    private static HikariConfig initConnectionPoolConfig(String dataSourceName, int maxPoolSize) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(PropertyUtil.getProperty(dataSourceName + ".url"));
 
         config.setConnectionTimeout(1000);
-        config.setMinimumIdle(1);
-        config.setMaximumPoolSize(2);
+        config.setMinimumIdle(0);
+        config.setMaximumPoolSize(maxPoolSize);
+        config.setIdleTimeout(10001);
+        config.setMaxLifetime(30001);
         config.setConnectionTestQuery("select 1");
         config.setDriverClassName("org.postgresql.Driver");
 

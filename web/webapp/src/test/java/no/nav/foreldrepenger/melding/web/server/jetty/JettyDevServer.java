@@ -112,7 +112,7 @@ public class JettyDevServer extends JettyServer {
         if (EnvironmentClass.LOCALHOST.equals(environmentClass)) {
             initSql = null;
         }
-        DataSource migratateDS = DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass);
+        DataSource migratateDS = DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass, 1);
         DatabaseScript.migrate(migratateDS, initSql, true);
         try {
             migratateDS.getConnection().close();

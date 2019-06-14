@@ -81,14 +81,14 @@ public class JettyServer extends AbstractJettyServer {
 
     @Override
     protected void konfigurerJndi() throws Exception {
-        new EnvEntry("jdbc/defaultDS", DatasourceUtil.createDatasource("defaultDS", DatasourceRole.USER, getEnvironmentClass()));
+        new EnvEntry("jdbc/defaultDS", DatasourceUtil.createDatasource("defaultDS", DatasourceRole.USER, getEnvironmentClass(), 2));
     }
 
     @Override
     protected void migrerDatabaser() throws IOException {
         EnvironmentClass environmentClass = getEnvironmentClass();
         String initSql = String.format("SET ROLE \"%s\"", DatasourceUtil.getDbRole("defaultDS", DatasourceRole.ADMIN));
-        DataSource migratateDS = DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass);
+        DataSource migratateDS = DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass, 1);
         DatabaseScript.migrate(migratateDS, initSql, false);
         try {
             migratateDS.getConnection().close();

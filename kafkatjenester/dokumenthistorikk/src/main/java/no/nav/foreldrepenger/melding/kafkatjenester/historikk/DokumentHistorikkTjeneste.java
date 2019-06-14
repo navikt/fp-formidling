@@ -41,7 +41,7 @@ public class DokumentHistorikkTjeneste {
     void publiserHistorikk(HistorikkInnslagV1 jsonHistorikk, long hendelseId) {
         String serialisertJson = serialiser(jsonHistorikk);
         meldingProducer.sendJson(serialisertJson);
-        log.info("Publisert historikk for hendelse: {} : {}", hendelseId, serialisertJson);
+        log.info("Publisert historikk for hendelse: {}", hendelseId);
     }
 
     private String serialiser(HistorikkInnslagV1 historikk) {

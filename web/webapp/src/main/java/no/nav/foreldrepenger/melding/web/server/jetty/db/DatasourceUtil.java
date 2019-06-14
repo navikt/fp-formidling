@@ -43,7 +43,7 @@ public class DatasourceUtil {
 
         config.setConnectionTimeout(1000);
         config.setMinimumIdle(1);
-        config.setMaximumPoolSize(10);
+        config.setMaximumPoolSize(2);
         config.setConnectionTestQuery("select 1");
         config.setDriverClassName("org.postgresql.Driver");
 

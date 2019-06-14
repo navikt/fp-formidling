@@ -23,7 +23,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
-import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.ForhaandsvisDokumentDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.HentBrevmalerDto;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
@@ -101,7 +100,7 @@ public class BrevRestTjeneste {
     @ApiOperation(value = "Sjekker om dokument for mal er sendt")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Boolean harProdusertDokument(@Valid DokumentProdusertDto dto) {
+    public Boolean harProdusertDokument(@Valid AbacDokumentProdusertDto dto) {
         return dokumentBehandlingTjeneste.erDokumentProdusert(dto.getBehandlingUuid(), dto.getDokumentMal()); // NOSONAR
     }
 

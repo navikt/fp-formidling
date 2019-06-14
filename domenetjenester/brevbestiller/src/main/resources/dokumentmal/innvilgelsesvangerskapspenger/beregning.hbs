@@ -87,16 +87,16 @@
 
         {{/if}}
     {{/if}}
-    {{#with naturalYtelse}}
-        {{#if utbetalingEndret.opp}}
+    {{#each naturalytelse}}
+            {{#if tilkommer}}
 {{i18n "endring_naturalytelse_opp" endringsDato nyDagsats arbeidsgiverNavn}}
 
         {{/if}}
-        {{#if utbetalingEndret.ned}}
+            {{#if bortfaller}}
 {{i18n "endring_naturalytelse_ned" endringsDato nyDagsats arbeidsgiverNavn}}
 
         {{/if}}
-    {{/with}}
+    {{/each}}
     {{#if militarSivil}}
 {{i18n "militar_sivil"}}
 

@@ -1,32 +1,11 @@
 package no.nav.foreldrepenger.melding.typer;
 
-import static no.nav.vedtak.konfig.Tid.TIDENES_ENDE;
-
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class DatoIntervallImpl implements DatoIntervall {
     private LocalDate fomDato;
     private LocalDate tomDato;
-
-    static Map<Integer, String> månedMap;
-    static {
-        månedMap = new HashMap<>();
-        månedMap.put(1, "januar");
-        månedMap.put(2, "februar");
-        månedMap.put(3, "mars");
-        månedMap.put(4, "april");
-        månedMap.put(5, "mai");
-        månedMap.put(6, "juni");
-        månedMap.put(7, "juli");
-        månedMap.put(8, "august");
-        månedMap.put(9, "september");
-        månedMap.put(10, "oktober");
-        månedMap.put(11, "november");
-        månedMap.put(12, "desember");
-    }
 
     @Override
     public LocalDate getFomDato() {

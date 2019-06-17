@@ -7,6 +7,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -107,6 +108,7 @@ public class ÅrsakMapperAvslag {
         return alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ?
                 uttakAktiviteter.stream()
                         .map(UttakResultatPeriodeAktivitet::getTrekkdager)
+                        .filter(Objects::nonNull)
                         .max(BigDecimal::compareTo)
                         .orElse(BigDecimal.ZERO) : BigDecimal.ZERO;
     }

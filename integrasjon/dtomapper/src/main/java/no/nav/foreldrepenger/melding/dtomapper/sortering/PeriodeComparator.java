@@ -14,5 +14,5 @@ public class PeriodeComparator {
             Comparator.comparing(BeregningsgrunnlagPeriode::getBeregningsgrunnlagPeriodeFom);
 
     public static final Comparator<UttakResultatPeriode> UTTAKRESULTAT =
-            Comparator.comparing(UttakResultatPeriode::getFomDato);
+            Comparator.comparing(UttakResultatPeriode::getFom);
 }

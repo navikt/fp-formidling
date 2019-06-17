@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import static java.lang.Boolean.TRUE;
 import static no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
-import static no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil.medFormatering;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getArbeidsgiverNavn;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getBgBruttoPrÅr;
@@ -38,6 +37,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.typer.Dato;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
@@ -62,15 +62,9 @@ public class SvpMapper {
     public static Map<String, Object> mapFra(SvpUttaksresultat svpUttaksresultat, DokumentHendelse hendelse, Beregningsgrunnlag beregningsgrunnlag, BeregningsresultatFP beregningsresultat, Behandling behandling) {
         Map<String, Object> map = new HashMap<>();
 
-        // TODO Tor Map ferdig og erstatt hardkodede felter.
         map.putAll(mapAtFlSnForholdFra(beregningsgrunnlag));
         mapIkkeSøkteAktiviteter(map);
         map.put("nyEllerEndretBeregning", erNyEllerEndretBeregning(behandling));
-        map.put("ikkeSoktForAlleArbeidsforhold", false);
-        map.put("ikkeSoktForAlleArbeidsforholdOgOppdrag", false);
-        map.put("ikkeSoktForAlleArbeidsforholdOgNaringsvirksomhet", false);
-        map.put("ikkeSoktForAlleOppdragOgNaringsvirksomhet", false);
-        map.put("ikkeSoktForAlleArbeidsforholdOppdragOgNaringsvirksomhet", false);
         map.put("naturalytelse", mapAktiviteter(svpUttaksresultat, beregningsresultat, beregningsgrunnlag).getOrDefault("naturalytelse", null));
         map.put("militarSivil", BeregningsgrunnlagMapper.militærEllerSivilTjeneste(beregningsgrunnlag));
         map.put("fritekst", BehandlingMapper.avklarFritekst(hendelse, behandling));
@@ -81,7 +75,7 @@ public class SvpMapper {
         return map;
     }
 
-    private static void mapIkkeSøkteAktiviteter(Map<String, Object> map) {
+    private static void mapIkkeSøkteAktiviteter(Map<String, Object> map) {// TODO
         map.put("ikkeSoktForAlleArbeidsforhold", false);
         map.put("ikkeSoktForAlleArbeidsforholdOgOppdrag", false);
         map.put("ikkeSoktForAlleArbeidsforholdOgNaringsvirksomhet", false);
@@ -135,7 +129,7 @@ public class SvpMapper {
                         "inntekt_lavere_AT_SN", AktivitetStatus.KOMBINERT_AT_SN.equals(bgAktivitetStatus) && dagsatsErNull(andel)),
                 (map1, map2) -> {
                     map1.merge("aarsinntekt", map2.get("aarsinntekt"), adder());
-                    map1.merge("nyoppstartet", map.get("nyoppstartet"), logicalOr());
+                    map1.merge("nyoppstartet", map2.get("nyoppstartet"), logicalAnd());
                     return map1;
                 });
     }
@@ -144,8 +138,8 @@ public class SvpMapper {
         return andel.getDagsats() == null || andel.getDagsats() == 0;
     }
 
-    private static BiFunction logicalOr() {
-        return (bool, bool2) -> Boolean.logicalOr((boolean) bool, (boolean) bool2);
+    private static BiFunction logicalAnd() {
+        return (bool, bool2) -> Boolean.logicalAnd((boolean) bool, (boolean) bool2);
     }
 
     private static BiFunction adder() {
@@ -190,7 +184,7 @@ public class SvpMapper {
         beregningsresultatPerioder.stream()
                 .forEach(beregningsresultatPeriode -> {
                     var matchetBgPeriode = PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder);
-                    var matchetUttaksperiode = PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttakPerioder);
+                    var matchetUttaksperiode = PeriodeBeregner.finnUttakPeriode(beregningsresultatPeriode, uttakPerioder);
                     beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
                             .forEach(andel -> {
                                 // map arbeidsforhold/aktiviteter
@@ -236,7 +230,7 @@ public class SvpMapper {
         beregningsresultatPerioder.stream()
                 .forEach(beregningsresultatPeriode -> {
                     //var matchetBgPeriode = PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder);
-                    var matchetUttaksperiode = PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttakPerioder);
+                    var matchetUttaksperiode = PeriodeBeregner.finnUttakPeriode(beregningsresultatPeriode, uttakPerioder);
                     beregningsresultatPeriode.getBeregningsresultatAndelList().stream()  // map arbeidsforhold/aktiviteter
                             .forEach(andel -> {
                                 AktivitetStatus aktivitetStatus = andel.getAktivitetStatus();
@@ -278,7 +272,7 @@ public class SvpMapper {
             }
             map.put("arbeidsgiverNavn", arbeidsgiverNavn);
             map.put("nyDagsats", beregningsgrunnlagPeriode.getDagsats());
-            map.put("endringsDato", medFormatering(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
+            map.put("endringsDato", Dato.medFormatering(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
         }
         return map;
     }

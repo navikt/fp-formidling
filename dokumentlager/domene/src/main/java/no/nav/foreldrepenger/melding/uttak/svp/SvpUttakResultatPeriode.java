@@ -7,7 +7,7 @@ import java.util.Optional;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 
-public class SvpUttakResultatPeriode implements DatoIntervall{
+public class SvpUttakResultatPeriode {
     private long utbetalingsgrad;
     private long aktivitetDagsats;
 
@@ -69,13 +69,11 @@ public class SvpUttakResultatPeriode implements DatoIntervall{
         return tidsperiode;
     }
 
-    @Override
-    public LocalDate getFomDato() {
+    public LocalDate getFom() {
         return tidsperiode.getFomDato();
     }
 
-    @Override
-    public LocalDate getTomDato() {
+    public LocalDate getTom() {
         return tidsperiode.getTomDato();
     }
 

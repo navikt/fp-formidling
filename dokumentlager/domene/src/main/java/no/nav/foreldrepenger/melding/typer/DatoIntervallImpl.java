@@ -4,17 +4,27 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class DatoIntervallImpl implements DatoIntervall {
-    private LocalDate fomDato;
-    private LocalDate tomDato;
+    private Dato fomDato;
+    private Dato tomDato;
 
     @Override
-    public LocalDate getFomDato() {
+    public Dato getFom() {
         return fomDato;
     }
 
     @Override
-    public LocalDate getTomDato() {
+    public Dato getTom() {
         return tomDato;
+    }
+
+    @Override
+    public LocalDate getFomDato() {
+        return fomDato.toLocalDate();
+    }
+
+    @Override
+    public LocalDate getTomDato() {
+        return tomDato.toLocalDate();
     }
 
     public DatoIntervallImpl(LocalDate fomDato, LocalDate tomDato) {
@@ -27,8 +37,8 @@ public class DatoIntervallImpl implements DatoIntervall {
         if (tomDato.isBefore(fomDato)) {
             throw new IllegalArgumentException("Til og med dato før fra og med dato.");
         }
-        this.fomDato = fomDato;
-        this.tomDato = tomDato;
+        this.fomDato = new Dato(fomDato);
+        this.tomDato = new Dato(tomDato);
     }
 
     @Override
@@ -44,5 +54,4 @@ public class DatoIntervallImpl implements DatoIntervall {
     public int hashCode() {
         return Objects.hash(getFomDato(), getTomDato());
     }
-
 }

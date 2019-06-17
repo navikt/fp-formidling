@@ -42,7 +42,7 @@ public class SvpUttaksresultat {
 
     private Function<SvpUttakResultatArbeidsforhold, DatoIntervall> getSammenligningsDato() {
         return o -> !o.getPerioder().isEmpty() ?
-                o.getPerioder().get(0) : DatoIntervall.fraOgMed(TIDENES_ENDE);
+                o.getPerioder().get(0).getTidsperiode() : DatoIntervall.fraOgMed(TIDENES_ENDE);
     }
 
     public static final class Builder {

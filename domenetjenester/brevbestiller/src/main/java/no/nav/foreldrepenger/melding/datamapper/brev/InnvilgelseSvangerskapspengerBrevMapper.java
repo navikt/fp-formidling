@@ -56,8 +56,8 @@ public class InnvilgelseSvangerskapspengerBrevMapper extends FritekstmalBrevMapp
         BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
         SvpUttaksresultat svpUttaksresultat = domeneobjektProvider.hentUttaksresultatSvp(behandling);
 
-        svpUttaksresultat = SvpMapper.utvidOgTilpassBrev(svpUttaksresultat, beregningsresultatFP);
         Map<String, Object> beregning = SvpMapper.mapFra(svpUttaksresultat, hendelse, beregningsgrunnlag, beregningsresultatFP, behandling);
+        svpUttaksresultat = SvpMapper.utvidOgTilpassBrev(svpUttaksresultat, beregningsresultatFP);
 
         return new Brevdata()
                 .leggTil("resultat", svpUttaksresultat)

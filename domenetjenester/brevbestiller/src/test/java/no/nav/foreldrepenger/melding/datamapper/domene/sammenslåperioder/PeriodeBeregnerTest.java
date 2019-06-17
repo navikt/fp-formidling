@@ -88,7 +88,7 @@ public class PeriodeBeregnerTest {
 
 
     private Stønadskonto opprettStønadskonto(int maxDager) {
-        return new Stønadskonto(maxDager, StønadskontoType.FORELDREPENGER_FØR_FØDSEL, 0);
+        return new Stønadskonto(maxDager, StønadskontoType.FORELDREPENGER_FØR_FØDSEL, 0, 0, 0);
     }
 
 }

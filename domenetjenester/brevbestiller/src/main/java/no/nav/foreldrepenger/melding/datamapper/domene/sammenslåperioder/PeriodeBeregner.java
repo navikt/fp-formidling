@@ -28,7 +28,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
-import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.Stønadskonto;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
@@ -167,6 +166,7 @@ public class PeriodeBeregner {
                     .filter(aktivitet -> StønadskontoType.FORELDREPENGER_FØR_FØDSEL.equals(aktivitet.getTrekkonto()))
                     .filter(aktivitet -> aktivitet.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0) //Hvis utbetaling er over 0, er det ikke tapte dager
                     .map(UttakResultatPeriodeAktivitet::getTrekkdager)
+                    .filter(Objects::nonNull)
                     .max(BigDecimal::compareTo)
                     .orElse(BigDecimal.ZERO));
         }

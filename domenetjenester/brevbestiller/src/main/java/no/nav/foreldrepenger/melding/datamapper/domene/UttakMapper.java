@@ -49,7 +49,7 @@ public class UttakMapper {
                 .stream()
                 .filter(Predicate.not(UttakResultatPeriode::isInnvilget))
                 .filter(Predicate.not(periode -> UttakUtsettelseType.UDEFINERT.equals(periode.getUttakUtsettelseType())))
-                .map(UttakResultatPeriode::getTomDato)
+                .map(UttakResultatPeriode::getTom)
                 .max(LocalDate::compareTo)
                 .map(XmlUtil::finnDatoVerdiAvUtenTidSone);
     }
@@ -114,7 +114,7 @@ public class UttakMapper {
                 uttakResultatPerioder.getPerioder().stream(),
                 uttakResultatPerioder.getPerioderAnnenPart().stream()
         ).filter(UttakResultatPeriode::isInnvilget)
-                .map(UttakResultatPeriode::getTomDato)
+                .map(UttakResultatPeriode::getTom)
                 .max(LocalDate::compareTo)
                 .map(XmlUtil::finnDatoVerdiAvUtenTidSone)
                 .orElse(null);

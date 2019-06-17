@@ -34,6 +34,7 @@ import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.feil.FeilFactory;
 import no.nav.vedtak.util.FPDateUtil;
@@ -84,9 +85,18 @@ public class PeriodeBeregner {
         throw FeilFactory.create(DokumentBestillerFeil.class).kanIkkeMatchePerioder("beregningsgrunnlagperiode").toException();
     }
 
-    public static <T extends DatoIntervall> T finnUttaksPeriode(BeregningsresultatPeriode periode, List<T> uttakPerioder) {
-        for (T uttakPeriode : uttakPerioder) {
-            if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFomDato()) && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTomDato())) {
+    public static UttakResultatPeriode finnUttaksPeriode(BeregningsresultatPeriode periode, List<UttakResultatPeriode> uttakPerioder) {
+        for (UttakResultatPeriode uttakPeriode : uttakPerioder) {
+            if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom()) && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
+                return uttakPeriode;
+            }
+        }
+        throw FeilFactory.create(DokumentBestillerFeil.class).kanIkkeMatchePerioder("uttaksperiode").toException();
+    }
+
+    public static SvpUttakResultatPeriode finnUttakPeriode(BeregningsresultatPeriode periode, List<SvpUttakResultatPeriode> uttakPerioder) {
+        for (SvpUttakResultatPeriode uttakPeriode : uttakPerioder) {
+            if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom()) && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
                 return uttakPeriode;
             }
         }

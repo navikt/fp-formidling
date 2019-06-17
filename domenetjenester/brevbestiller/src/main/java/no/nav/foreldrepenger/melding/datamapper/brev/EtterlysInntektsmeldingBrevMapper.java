@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil.medFormatering;
+import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
 
 import java.time.LocalDate;
 import java.util.List;

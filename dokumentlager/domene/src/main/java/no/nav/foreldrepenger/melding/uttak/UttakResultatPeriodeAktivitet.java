@@ -71,11 +71,11 @@ public class UttakResultatPeriodeAktivitet {
     }
 
     public LocalDate getFom() {
-        return this.uttakResultatPeriode.getFomDato();
+        return this.uttakResultatPeriode.getFom();
     }
 
     public LocalDate getTom() {
-        return this.uttakResultatPeriode.getTomDato();
+        return this.uttakResultatPeriode.getTom();
     }
 
 

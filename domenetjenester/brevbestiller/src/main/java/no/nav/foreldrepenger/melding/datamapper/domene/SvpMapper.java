@@ -60,18 +60,17 @@ public class SvpMapper {
     }
 
     public static Map<String, Object> mapFra(SvpUttaksresultat svpUttaksresultat, DokumentHendelse hendelse, Beregningsgrunnlag beregningsgrunnlag, BeregningsresultatFP beregningsresultat, Behandling behandling) {
-        Map<String, Object> map = new HashMap<>();
-
-        map.putAll(mapAtFlSnForholdFra(beregningsgrunnlag));
-        mapIkkeSøkteAktiviteter(map);
+        Map<String, Object> map = new HashMap<>(mapAtFlSnForholdFra(beregningsgrunnlag));
         map.put("nyEllerEndretBeregning", erNyEllerEndretBeregning(behandling));
+        map.put("bruttoBeregningsgrunnlag", BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag));
         map.put("naturalytelse", mapAktiviteter(svpUttaksresultat, beregningsresultat, beregningsgrunnlag).getOrDefault("naturalytelse", null));
         map.put("militarSivil", BeregningsgrunnlagMapper.militærEllerSivilTjeneste(beregningsgrunnlag));
-        map.put("fritekst", BehandlingMapper.avklarFritekst(hendelse, behandling));
         map.put("inntektOver6G", BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag));
         map.put("seksG", BeregningsgrunnlagMapper.finnSeksG(beregningsgrunnlag).intValue());
         map.put("lovhjemmel", getLovhjemmelForBeregning(beregningsgrunnlag, behandling));
-
+        mapIkkeSøkteAktiviteter(map);
+        BehandlingMapper.avklarFritekst(hendelse, behandling).ifPresent(fritekst ->
+                map.put("fritekst", fritekst));
         return map;
     }
 
@@ -92,9 +91,6 @@ public class SvpMapper {
 
     private static Map<String, Map> mapAtFlSnForholdFra(Beregningsgrunnlag beregningsgrunnlag) {
         Map<String, Map> map = new HashMap<>();
-        map.put("arbeidstaker", new HashMap<>());
-        map.put("frilanser", new HashMap<>());
-        map.put("selvstendigNaringsdrivende", new HashMap<>());
 
         var bgpsaList = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
         beregningsgrunnlag.getAktivitetStatuser()
@@ -127,10 +123,10 @@ public class SvpMapper {
                         "inntekt_lavere_FL_SN", AktivitetStatus.KOMBINERT_FL_SN.equals(bgAktivitetStatus) && dagsatsErNull(andel),
                         "inntekt_lavere_AT_FL_SN", AktivitetStatus.KOMBINERT_AT_FL_SN.equals(bgAktivitetStatus) && dagsatsErNull(andel),
                         "inntekt_lavere_AT_SN", AktivitetStatus.KOMBINERT_AT_SN.equals(bgAktivitetStatus) && dagsatsErNull(andel)),
-                (map1, map2) -> {
-                    map1.merge("aarsinntekt", map2.get("aarsinntekt"), adder());
-                    map1.merge("nyoppstartet", map2.get("nyoppstartet"), logicalAnd());
-                    return map1;
+                (andel1, andel2) -> {
+                    andel1.merge("aarsinntekt", andel2.get("aarsinntekt"), adder());
+                    andel1.merge("nyoppstartet", andel2.get("nyoppstartet"), logicalAnd());
+                    return andel1;
                 });
     }
 
@@ -151,15 +147,18 @@ public class SvpMapper {
     }
 
     private static void leggTilFrilansinntekt(Map<String, Map> map, BeregningsgrunnlagPrStatusOgAndel andel) {
-        map.get("frilanser").merge("manedsinntekt", getMånedsinntekt(andel).intValue(), adder());
+        map.getOrDefault("frilanser", new HashMap<>())
+                .merge("manedsinntekt", getMånedsinntekt(andel).intValue(), adder());
     }
 
     private static void leggTilArbeidsforhold(Map<String, Map> map, BeregningsgrunnlagPrStatusOgAndel andel) {
-        getArbeidsgiverNavn(andel).ifPresent(arbeidsgiverNavn ->
-                ((HashSet) map.get("arbeidstaker").getOrDefault("arbeidsforhold", new HashSet<>())).add(Map.of(
-                        "arbeidsgiverNavn", arbeidsgiverNavn, "manedsinntekt", getMånedsinntekt(andel).toString()
-                        )
-                ));
+        getArbeidsgiverNavn(andel).ifPresent(arbeidsgiverNavn -> hentEllerOpprettNyArbeidsforholdListe(map).add(Map.of(
+                "arbeidsgiverNavn", arbeidsgiverNavn, "manedsinntekt", getMånedsinntekt(andel).toString()
+        )));
+    }
+
+    private static HashSet hentEllerOpprettNyArbeidsforholdListe(Map<String, Map> map) {
+        return (HashSet) map.getOrDefault("arbeidstaker", new HashMap<>()).getOrDefault("arbeidsforhold", new HashSet<>());
     }
 
     public static boolean erNyEllerEndretBeregning(Behandling behandling) {

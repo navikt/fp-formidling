@@ -24,6 +24,7 @@ import org.mockito.junit.MockitoRule;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.domene.SvpMapper;
+import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
@@ -48,6 +49,8 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest {
     DokumentFelles dokumentFelles;
     @Mock
     FellesType fellesType;
+    @Mock
+    BrevParametere brevParametere;
 
     @InjectMocks
     private InnvilgelseSvangerskapspengerBrevMapper mapper;
@@ -118,6 +121,7 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest {
     private Map<String, Object> mockBeregningsdata() {
         Map<String, Object> map = new HashMap<>();
         map.put("nyEllerEndretBeregning", true);
+        map.put("bruttoBeregningsgrunnlag", 2334);
         map.put("arbeidstakerEllerFrilanser", true);
         map.put("arbeidstaker", Map.of("inntektHoyereEnnSnittAvKombinertInntekt", true));
         map.put("arbeidsforhold", List.of(
@@ -133,7 +137,7 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest {
         map.put("ikkeSoktForAlleArbeidsforholdOppdragOgNaringsvirksomhet", true);
         map.put("naturalYtelse", Map.of("utbetalingEndret", Map.of("opp", true), "endringsDato", "12.12.84", "nyDagsats", "2342", "arbeidsgiverNavn", "Tine"));
         map.put("militarSivil", true);
-        map.put("fritekst", "Dette er friteksten");
+        map.put("fritekst", null);
         map.put("inntektOver6G", true);
         map.put("seksG", "<seksG>");
         map.put("lovhjemmel", "§ 14-4");

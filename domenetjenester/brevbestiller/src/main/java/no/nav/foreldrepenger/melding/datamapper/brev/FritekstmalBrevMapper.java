@@ -143,6 +143,7 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
             map.put("kontaktTelefonnummer", dokumentFelles.getKontaktTlf());
             map.put("navnAvsenderEnhet", dokumentFelles.getNavnAvsenderEnhet());
             map.put("erAutomatiskVedtak", fellesType.isAutomatiskBehandlet());
+            map.put("klageFristUker", brevParametere.getKlagefristUker());
         }
     }
 }

@@ -8,6 +8,7 @@ Applikasjonen bestiller brev basert på hendelser fra en kafka-kø, eller via et
 Spørsmål knyttet til koden eller prosjektet kan rettes til:
 * Ramesh Shiraddi (ramesh.shiraddi@nav.no)
 * Aleksander Andresen (aleksander.andresen@nav.no)
+* Tor Nærland (tor.nerland@nav.no)
 
 ### For NAV-ansatte
 
@@ -21,8 +22,8 @@ For å kjøre lokalt trenger du
 app.properties & app-local.properties med riktige verdier i web\webapp
 
 #### Sertifikater
-For å kunne kjøre mot miljø fra lokalt, må man oppgi testsertfikater i 
-test-sikkerhet/src/test/resources
+For å kunne kjøre mot miljø fra lokalt, må man oppgi testsertfikater under bruker mappe
+slik i windows "c:\Users\<bruker navn>\.modig"
 
 #### Database
 Du trenger postgres installert lokalt(helst 11+), og unit tester bruker en database som heter

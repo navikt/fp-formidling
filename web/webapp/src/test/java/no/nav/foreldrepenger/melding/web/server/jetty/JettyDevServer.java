@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.melding.web.server.jetty;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,6 +32,14 @@ import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceUtil;
 import no.nav.foreldrepenger.melding.web.server.jetty.db.EnvironmentClass;
 
 public class JettyDevServer extends JettyServer {
+    /**
+     * @see https://docs.oracle.com/en/java/javase/11/security/java-secure-socket-extension-jsse-reference-guide.html
+     */
+    private static final String TRUSTSTORE_PASSW_PROP = "javax.net.ssl.trustStorePassword";
+    private static final String TRUSTSTORE_PATH_PROP = "javax.net.ssl.trustStore";
+    private static final String KEYSTORE_PASSW_PROP = "no.nav.modig.security.appcert.password";
+    private static final String KEYSTORE_PATH_PROP = "no.nav.modig.security.appcert.keystore";
+
     private static final String VTP_ARGUMENT = "--vtp";
     private static boolean vtp;
     String schema;
@@ -106,7 +112,7 @@ public class JettyDevServer extends JettyServer {
 
 
     @Override
-    protected void migrerDatabaser() throws IOException {
+    protected void migrerDatabaser() {
         EnvironmentClass environmentClass = getEnvironmentClass();
         String initSql = String.format("SET ROLE \"%s\"", DatasourceUtil.getDbRole("defaultDS", DatasourceRole.ADMIN));
         if (EnvironmentClass.LOCALHOST.equals(environmentClass)) {
@@ -127,11 +133,8 @@ public class JettyDevServer extends JettyServer {
         super.konfigurerSikkerhet();
         //Oppsett for å koble mot miljø fra lokalt, uten å ha avhengighet til modig.
         //Krever at man har tilgang til sertifikater og passord
-        TestSertifikater.setup(System.getProperty("keystore.password"), System.getProperty("truststore.password"));
-        // Eksponer truststore for run-java-local.sh
-        File tempTrustStore = new File(System.getProperty("javax.net.ssl.trustStore"));
-        File truststore = new File("./truststore.jts");
-        Files.copy(tempTrustStore.toPath(), truststore.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        TestSertifikater.setupTemporaryTrustStore(TRUSTSTORE_PATH_PROP, TRUSTSTORE_PASSW_PROP);
+        TestSertifikater.setupTemporaryKeyStore(KEYSTORE_PATH_PROP, KEYSTORE_PASSW_PROP);
     }
 
     @SuppressWarnings("resource")
@@ -140,9 +143,9 @@ public class JettyDevServer extends JettyServer {
         List<Connector> connectors = super.createConnectors(appKonfigurasjon, server);
 
         SslContextFactory sslContextFactory = new SslContextFactory();
-        sslContextFactory.setKeyStorePath(System.getProperty("no.nav.modig.security.appcert.keystore"));
-        sslContextFactory.setKeyStorePassword(System.getProperty("no.nav.modig.security.appcert.password"));
-        sslContextFactory.setKeyManagerPassword(System.getProperty("no.nav.modig.security.appcert.password"));
+        sslContextFactory.setKeyStorePath(System.getProperty(KEYSTORE_PATH_PROP));
+        sslContextFactory.setKeyStorePassword(System.getProperty(KEYSTORE_PASSW_PROP));
+        sslContextFactory.setKeyManagerPassword(System.getProperty(KEYSTORE_PASSW_PROP));
 
         HttpConfiguration https = createHttpConfiguration();
         https.addCustomizer(new SecureRequestCustomizer());
@@ -165,7 +168,7 @@ public class JettyDevServer extends JettyServer {
     }
 
     @Override
-    protected ResourceCollection createResourceCollection() throws IOException {
+    protected ResourceCollection createResourceCollection() {
         return new ResourceCollection(
                 Resource.newClassPathResource("/web")
         );

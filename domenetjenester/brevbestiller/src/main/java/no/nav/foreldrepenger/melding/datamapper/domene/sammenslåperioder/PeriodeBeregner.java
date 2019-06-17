@@ -170,9 +170,12 @@ public class PeriodeBeregner {
                     .max(BigDecimal::compareTo)
                     .orElse(BigDecimal.ZERO));
         }
-        //Resultat skal aldri være et desimaltall her
         //brukte dager burde aldri være mindre enn total..
-        return totaltAntallDager < brukteDager.intValue() ? totaltAntallDager : totaltAntallDager - brukteDager.intValue();
+        if (brukteDager.intValue() > totaltAntallDager) {
+            throw new IllegalStateException(String.format("Brukt %d av totalt %d antall dager", brukteDager.intValue(), totaltAntallDager));
+        }
+        //Resultat skal aldri være et desimaltall her
+        return totaltAntallDager - brukteDager.intValue();
     }
 
     public static Optional<Stønadskonto> finnStønadsKontoMedType(Set<Stønadskonto> stønadskontoer, StønadskontoType stønadskontoType) {

@@ -85,7 +85,7 @@ public class UttakDtoMapper {
     UttakResultatPeriodeAktivitet aktivitetFraDto(UttakResultatPeriodeAktivitetDto dto) {
         return UttakResultatPeriodeAktivitet.ny()
                 .medArbeidsprosent(dto.getProsentArbeid())
-                .medTrekkdager(dto.getTrekkdager())
+                .medTrekkdager(dto.getTrekkdagerDesimaler())
                 .medUtbetalingsprosent(dto.getUtbetalingsgrad())
                 .medGraderingInnvilget(dto.isGradering())
                 .medTrekkonto(kodeverkRepository.finn(StønadskontoType.class, dto.getStønadskontoType().getKode()))

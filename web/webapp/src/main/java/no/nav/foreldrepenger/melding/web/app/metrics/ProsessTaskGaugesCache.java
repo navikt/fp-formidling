@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.web.app.metrics;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -113,7 +114,12 @@ class ProsessTaskGaugesCache {
             String type = (String) row[0]; //NOSONAR
             String status = (String) row[1]; //NOSONAR
             Tuple<String, String> typeOgStatus = new Tuple<>(type, status);
-            BigDecimal antall = (BigDecimal) row[2]; //NOSONAR
+            BigDecimal antall;
+            if (row[2] instanceof BigInteger) {
+                antall = new BigDecimal((BigInteger) row[2]);
+            } else {
+                antall = (BigDecimal) row[2]; //NOSONAR
+            }
             antallPrTypeOgStatus.put(typeOgStatus, antall);
         }
 
@@ -121,7 +127,12 @@ class ProsessTaskGaugesCache {
         antallPrStatus = new HashMap<>();
         for (Object[] row : rowList2) {
             String status = (String) row[0]; //NOSONAR
-            BigDecimal antall = (BigDecimal) row[1]; //NOSONAR
+            BigDecimal antall;
+            if (row[1] instanceof BigInteger) {
+                antall = new BigDecimal((BigInteger) row[1]);
+            } else {
+                antall = (BigDecimal) row[1]; //NOSONAR
+            }
             antallPrStatus.put(status, antall);
         }
 

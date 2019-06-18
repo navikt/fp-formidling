@@ -55,7 +55,9 @@ public class SvpMapper {
                 .map(BeregningsresultatPeriode::getBeregningsresultatAndelList)
                 .flatMap(List::stream)
                 .filter(BeregningsresultatAndel::erArbeidsgiverMottaker)
-                .map(beregningsresultatAndel -> beregningsresultatAndel.getArbeidsgiver().map(Arbeidsgiver::getIdentifikator).orElse(beregningsresultatAndel.getArbeidsforholdRef().getReferanse()))
+                .map(beregningsresultatAndel -> beregningsresultatAndel.getArbeidsgiver().map(Arbeidsgiver::getIdentifikator)
+                        .orElse(beregningsresultatAndel.getArbeidsforholdRef() != null ?
+                                beregningsresultatAndel.getArbeidsforholdRef().getReferanse() : "ukjent")) // om ikke annet som en sikring i test-miljøer.
                 .distinct().count();
     }
 

@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.melding.datamapper.dto.AksjonspunktDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BeregningsgrunnlagDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BeregningsresultatDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.FagsakDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.FamiliehendelseDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.IAYDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.InnsynDtoMapper;
@@ -32,6 +33,7 @@ import no.nav.foreldrepenger.melding.dtomapper.UttakSvpDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.VergeDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.VilkårDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.YtelseFordelingDtoMapper;
+import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.InntektArbeidYtelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
@@ -62,6 +64,7 @@ public class DomeneobjektProvider {
     private StønadskontoDtoMapper stønadskontoDtoMapper;
     private AksjonspunktDtoMapper aksjonspunktDtoMapper;
     private MottattDokumentDtoMapper mottattDokumentDtoMapper;
+    private FagsakDtoMapper fagsakDtoMapper;
 
     @Inject
     public DomeneobjektProvider(BehandlingRestKlient behandlingRestKlient,
@@ -77,7 +80,8 @@ public class DomeneobjektProvider {
                                 FamiliehendelseDtoMapper familiehendelseDtoMapper,
                                 StønadskontoDtoMapper stønadskontoDtoMapper,
                                 AksjonspunktDtoMapper aksjonspunktDtoMapper,
-                                MottattDokumentDtoMapper mottattDokumentDtoMapper) {
+                                MottattDokumentDtoMapper mottattDokumentDtoMapper,
+                                FagsakDtoMapper fagsakDtoMapper) {
         this.behandlingRestKlient = behandlingRestKlient;
         this.beregningsgrunnlagDtoMapper = beregningsgrunnlagDtoMapper;
         this.behandlingDtoMapper = behandlingDtoMapper;
@@ -92,10 +96,21 @@ public class DomeneobjektProvider {
         this.stønadskontoDtoMapper = stønadskontoDtoMapper;
         this.aksjonspunktDtoMapper = aksjonspunktDtoMapper;
         this.mottattDokumentDtoMapper = mottattDokumentDtoMapper;
+        this.fagsakDtoMapper = fagsakDtoMapper;
     }
 
     public DomeneobjektProvider() {
         //CDI
+    }
+
+
+    public Fagsak hentFagsak(Behandling behandling) {
+        if (behandling.harFagsak()) {
+            return behandling.getFagsak();
+        }
+        Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(behandling.getResourceLinker()));
+        behandling.leggtilFagsak(fagsak);
+        return fagsak;
     }
 
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
@@ -110,7 +125,7 @@ public class DomeneobjektProvider {
         return behandlingDtoMapper.mapBehandlingFraDto((behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingUuid))));
     }
 
-    public Optional<Behandling> hentOriginalBehandlingHvisFinnes (Behandling behandling){
+    public Optional<Behandling> hentOriginalBehandlingHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentOriginalBehandling(behandling.getResourceLinker()).map(behandlingDtoMapper::mapOriginalBehandlingFraDto);
     }
 

@@ -89,6 +89,7 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
         long grunnbeløp = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
         List<MottattDokument> mottattDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
+        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
         FagType fagType = mapFagType(behandling,
                 behandlingstype,
                 mottattDokumenter,
@@ -97,7 +98,8 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
                 familiehendelse,
                 grunnbeløp,
                 beregningsresultatFP,
-                uttakResultatPerioder);
+                uttakResultatPerioder,
+                fagsak);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(AvslagForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
@@ -110,12 +112,12 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
                                FamilieHendelse familiehendelse,
                                long grunnbeløp,
                                Optional<BeregningsresultatFP> beregningsresultatFP,
-                               Optional<UttakResultatPerioder> uttakResultatPerioder) {
+                               Optional<UttakResultatPerioder> uttakResultatPerioder, Fagsak fagsak) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(fra(behandlingstypeKode));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
-        fagType.setRelasjonskode(fra(behandling.getFagsak()));
+        fagType.setRelasjonskode(fra(fagsak));
         fagType.setMottattDato(MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());

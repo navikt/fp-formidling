@@ -11,7 +11,7 @@ import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.tps.TpsTjeneste;
 
 @ApplicationScoped
-class FagsakDtoMapper {
+public class FagsakDtoMapper {
 
     private KodeverkRepository kodeverkRepository;
     private TpsTjeneste tpsTjeneste;

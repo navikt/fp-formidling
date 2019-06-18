@@ -92,20 +92,17 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
         Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)
                 .orElse(UttakResultatPerioder.ny().build()); // bestående av tomme lister.
-        Optional<UttakResultatPerioder> originaltUttakResultat = Optional.empty();
-        if (behandling.getOriginalBehandling() != null) {
-            originaltUttakResultat = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling.getOriginalBehandling());
-        }
+        Optional<UttakResultatPerioder> originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).flatMap(domeneobjektProvider::hentUttaksresultatHvisFinnes);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         long grunnbeløp = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
-        Personinfo personinfo = behandling.getFagsak().getPersoninfo();
+        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
         FagType fagType = mapFagType(behandlingstype, behandling,
                 dokumentFelles,
                 familiehendelse,
                 grunnbeløp,
                 uttakResultatPerioder,
                 originaltUttakResultat,
-                personinfo
+                fagsak
         );
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(OpphørConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
@@ -117,12 +114,12 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
                                long grunnbeløp,
                                UttakResultatPerioder uttakResultatPerioder,
                                Optional<UttakResultatPerioder> originaltUttakResultat,
-                               Personinfo personinfo) {
+                               Fagsak fagsak) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(fra(behandlingstypeKode));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
-        fagType.setRelasjonskode(fra(behandling.getFagsak()));
+        fagType.setRelasjonskode(fra(fagsak));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());
         fagType.setHalvG(grunnbeløp);
@@ -132,7 +129,7 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
                 uttakResultatPerioder,
                 fagType);
 
-        finnDødsdatoHvisFinnes(personinfo, familiehendelse, fagType.getAarsakListe()).map(XmlUtil::finnDatoVerdiAvUtenTidSone)
+        finnDødsdatoHvisFinnes(fagsak.getPersoninfo(), familiehendelse, fagType.getAarsakListe()).map(XmlUtil::finnDatoVerdiAvUtenTidSone)
                 .ifPresent(fagType::setDodsdato);
         finnOpphørsdatoHvisFinnes(uttakResultatPerioder, familiehendelse).map(XmlUtil::finnDatoVerdiAvUtenTidSone)
                 .ifPresent(fagType::setOpphorDato);

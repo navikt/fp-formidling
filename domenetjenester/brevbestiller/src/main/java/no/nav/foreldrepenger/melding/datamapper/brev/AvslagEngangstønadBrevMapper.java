@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
+import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.AvslagConstants;
@@ -85,9 +86,10 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
         List<Vilkår> vilkår = domeneobjektProvider.hentVilkår(behandling);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
-        FagType fagType = mapFagType(behandling, behandlingstype, dokumentHendelse, familiehendelse, vilkår);
+        FagType fagType = mapFagType(behandling, behandlingstype, dokumentHendelse, familiehendelse, vilkår, fagsak);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(AvslagConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
@@ -96,10 +98,10 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
                                String behandlingstype,
                                DokumentHendelse dokumentHendelse,
                                FamilieHendelse familiehendelse,
-                               List<Vilkår> vilkårene) {
+                               List<Vilkår> vilkårene, Fagsak fagsak) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(REVURDERING.equals(behandlingstype) ? BehandlingstypeType.REVURDERING : BehandlingstypeType.SØKNAD);
-        fagType.setRelasjonsKode(relasjonskodeTypeMap.get(behandling.getFagsak().getRelasjonsRolleType()));
+        fagType.setRelasjonsKode(relasjonskodeTypeMap.get(fagsak.getRelasjonsRolleType()));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn().intValue());
         fagType.setAvslagsAarsak(behandling.getBehandlingsresultat().getAvslagsårsak().getKode());

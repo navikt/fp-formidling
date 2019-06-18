@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
 import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
@@ -60,7 +61,7 @@ public class HendelseRepositoryImpl implements HendelseRepository {
     }
 
     @Override
-    public boolean erDokumentHendelseMottatt(UUID behandlingUuid, String dokumentMal) {
+    public boolean erDokumentHendelseMottatt(UUID behandlingUuid, DokumentMalType dokumentMal) {
         TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid and dokumentMalType=:dokumentMalType", DokumentHendelse.class);
         query.setParameter("behandlingUuid", behandlingUuid);
         query.setParameter("dokumentMalType", dokumentMal);

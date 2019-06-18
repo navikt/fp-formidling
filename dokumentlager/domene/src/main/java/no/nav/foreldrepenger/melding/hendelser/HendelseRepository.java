@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.hendelser;
 import java.util.List;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 
 public interface HendelseRepository {
@@ -17,6 +18,6 @@ public interface HendelseRepository {
 
     List<DokumentHendelse> hentDokumentHendelserForBehandling(UUID behandlingUuid);
 
-    boolean erDokumentHendelseMottatt(UUID behanlingUuid, String dokumentMal);
+    boolean erDokumentHendelseMottatt(UUID behanlingUuid, DokumentMalType dokumentMal);
 
 }

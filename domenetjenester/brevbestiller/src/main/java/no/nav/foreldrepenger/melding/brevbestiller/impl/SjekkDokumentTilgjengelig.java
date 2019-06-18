@@ -8,18 +8,22 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalRestriksjon;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
+import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 
 @ApplicationScoped
 public class SjekkDokumentTilgjengelig {
     private HendelseRepository hendelseRepository;
+    private DokumentRepository dokumentRepository;
 
     public SjekkDokumentTilgjengelig() {
     }
 
     @Inject
-    public SjekkDokumentTilgjengelig(HendelseRepository hendelseRepository) {
+    public SjekkDokumentTilgjengelig(HendelseRepository hendelseRepository,
+                                     DokumentRepository dokumentRepository) {
         this.hendelseRepository = hendelseRepository;
+        this.dokumentRepository = dokumentRepository;
     }
 
     boolean sjekkOmTilgjengelig(Behandling behandling, DokumentMalType mal) {
@@ -34,6 +38,7 @@ public class SjekkDokumentTilgjengelig {
     }
 
     boolean erDokumentBestilt(UUID behandlingUuId, String dokumentMalTypeKode) {
-        return hendelseRepository.erDokumentHendelseMottatt(behandlingUuId, dokumentMalTypeKode);
+        DokumentMalType dokumentMalType = dokumentRepository.hentDokumentMalType(dokumentMalTypeKode);
+        return hendelseRepository.erDokumentHendelseMottatt(behandlingUuId, dokumentMalType);
     }
 }

@@ -22,6 +22,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjeneste {
     private DokumentRepository dokumentRepository;
     private DomeneobjektProvider domeneobjektProvider;
+    private SjekkDokumentTilgjengelig sjekkDokumentTilgjengelig;
 
     public DokumentBehandlingTjenesteImpl() {
         // for cdi proxy
@@ -29,9 +30,11 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
 
     @Inject
     public DokumentBehandlingTjenesteImpl(DokumentRepository dokumentRepository,
-                                          DomeneobjektProvider domeneobjektProvider) {
+                                          DomeneobjektProvider domeneobjektProvider,
+                                          SjekkDokumentTilgjengelig sjekkDokumentTilgjengelig) {
         this.dokumentRepository = dokumentRepository;
         this.domeneobjektProvider = domeneobjektProvider;
+        this.sjekkDokumentTilgjengelig = sjekkDokumentTilgjengelig;
     }
 
     @Override
@@ -62,8 +65,8 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
 
     @Override
     public boolean erDokumentProdusert(UUID behandlingUuid, String dokumentMalTypeKode) {
-        return new SjekkDokumentTilgjengelig(dokumentRepository)
-                .erDokumentProdusert(behandlingUuid, dokumentMalTypeKode);
+        return sjekkDokumentTilgjengelig
+                .erDokumentBestilt(behandlingUuid, dokumentMalTypeKode);
     }
 
     // Fjerner dokumentmaler som aldri er relevante for denne behandlingstypen
@@ -102,7 +105,7 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
     private List<BrevmalDto> tilBrevmalDto(Behandling behandling, List<DokumentMalType> dmtList) {
         List<BrevmalDto> brevmalDtoList = new ArrayList<>(dmtList.size());
         for (DokumentMalType dmt : dmtList) {
-            boolean tilgjengelig = new SjekkDokumentTilgjengelig(dokumentRepository).sjekkOmTilgjengelig(behandling, dmt);
+            boolean tilgjengelig = sjekkDokumentTilgjengelig.sjekkOmTilgjengelig(behandling, dmt);
             brevmalDtoList.add(new BrevmalDto(dmt.getKode(), dmt.getNavn(), mapKontraktDokumentMalRestriksjon(dmt.getDokumentMalRestriksjon()), tilgjengelig));
         }
         return brevmalDtoList;

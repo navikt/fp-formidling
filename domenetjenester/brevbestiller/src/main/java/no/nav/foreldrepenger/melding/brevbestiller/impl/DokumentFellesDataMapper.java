@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
@@ -44,7 +45,7 @@ public class DokumentFellesDataMapper {
     }
 
     void opprettDokumentDataForBehandling(Behandling behandling, DokumentData dokumentData) {
-        Personinfo personinfo = behandling.getFagsak().getPersoninfo();
+        Personinfo personinfo = domeneobjektProvider.hentFagsak(behandling).getPersoninfo();
 
         final AktørId søkersAktørId = personinfo.getAktørId();
 
@@ -115,6 +116,8 @@ public class DokumentFellesDataMapper {
 
         String avsenderEnhet = behandling.getBehandlendeEnhetNavn();
 
+        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
+
         DokumentFelles.Builder builder = DokumentFelles.builder(dokumentData)
                 .medAutomatiskBehandlet(Boolean.TRUE)
                 .medDokumentDato(FPDateUtil.iDag())
@@ -125,7 +128,7 @@ public class DokumentFellesDataMapper {
                 .medNavnAvsenderEnhet(norg2NavnAvsenderEnhet(avsenderEnhet))
                 .medPostadresse(norg2Postadresse())
                 .medReturadresse(norg2Returadresse())
-                .medSaksnummer(new Saksnummer(behandling.getSaksnummer().getVerdi()))
+                .medSaksnummer(new Saksnummer(fagsak.getSaksnummer().getVerdi()))
                 .medSakspartId(fnrBruker)
                 .medSakspartNavn(navnBruker)
                 .medSpråkkode(behandling.getSpråkkode())

@@ -47,7 +47,8 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         BeregningsresultatES beregningsresultat = domeneobjektProvider.hentBeregningsresultatES(behandling);
-        BeregningsresultatES originaltBeregningsresultat = originaltBeregningsresultat(behandling);
+        Behandling originalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).orElse(null);
+        BeregningsresultatES originaltBeregningsresultat = originaltBeregningsresultat(originalBehandling, behandling);
         FagType fagType = mapFagType(behandling, dokumentFelles, beregningsresultat, originaltBeregningsresultat);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnvilgetConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
@@ -63,9 +64,9 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
         return fagType;
     }
 
-    private BeregningsresultatES originaltBeregningsresultat(Behandling behandling) {
-        if (behandling.getOriginalBehandling() != null && behandling.getOriginalBehandling().getId() != behandling.getId()) {
-            return domeneobjektProvider.hentBeregningsresultatESHvisFinnes(behandling.getOriginalBehandling()).orElse(null);
+    private BeregningsresultatES originaltBeregningsresultat(Behandling behandling, Behandling originalBehandling) {
+        if (originalBehandling != null && behandling.getId() != originalBehandling.getId()) {
+            return domeneobjektProvider.hentBeregningsresultatESHvisFinnes(originalBehandling).orElse(null);
         }
         return null;
     }

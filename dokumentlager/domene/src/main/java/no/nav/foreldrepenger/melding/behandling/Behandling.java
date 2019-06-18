@@ -9,8 +9,6 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 public class Behandling {
     private Behandlingsresultat behandlingsresultat;
@@ -19,7 +17,6 @@ public class Behandling {
     //Felter brukt i brev
     private long id;
     private UUID uuid;
-    private Behandling originalBehandling;
     private BehandlingType behandlingType;
     private Integer behandlingstidFristUker;
     private LocalDateTime opprettetDato;
@@ -40,7 +37,6 @@ public class Behandling {
         behandlendeEnhetNavn = builder.behandlendeEnhetNavn;
         behandlingsresultat = builder.behandlingsresultat;
         resourceLinker = builder.resourceLinker;
-        originalBehandling = builder.originalBehandling;
         behandlingType = builder.behandlingType;
         behandlingstidFristUker = builder.behandlingstidFristUker;
         opprettetDato = builder.opprettetDato;
@@ -107,10 +103,6 @@ public class Behandling {
         return resourceLinker;
     }
 
-    public Behandling getOriginalBehandling() {
-        return originalBehandling;
-    }
-
     public Språkkode getSpråkkode() {
         return språkkode;
     }
@@ -135,14 +127,6 @@ public class Behandling {
         return fagsak;
     }
 
-    public Saksnummer getSaksnummer() {
-        return getFagsak().getSaksnummer();
-    }
-
-    public RelasjonsRolleType getRelasjonsRolleType() {
-        return getFagsak().getRelasjonsRolleType();
-    }
-
     public boolean erSaksbehandlingAvsluttet() {
         if (behandlingsresultat == null) {
             return false;
@@ -164,6 +148,16 @@ public class Behandling {
 
     public String getEndretAv() {
         return endretAv;
+    }
+
+    public void leggtilFagsak(Fagsak fagsak) {
+        if (this.fagsak == null) {
+            this.fagsak = fagsak;
+        }
+    }
+
+    public boolean harFagsak() {
+        return fagsak != null;
     }
 
     public boolean erManueltOpprettet() {
@@ -225,11 +219,6 @@ public class Behandling {
 
         public Behandling.Builder medBehandlingType(BehandlingType behandlingType) {
             this.behandlingType = behandlingType;
-            return this;
-        }
-
-        public Behandling.Builder medOriginalBehandling(Behandling originalBehandling) {
-            this.originalBehandling = originalBehandling;
             return this;
         }
 

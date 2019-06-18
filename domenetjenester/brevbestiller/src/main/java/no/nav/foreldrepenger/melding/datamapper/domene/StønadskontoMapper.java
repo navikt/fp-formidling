@@ -7,8 +7,8 @@ import static no.nav.foreldrepenger.melding.uttak.StønadskontoType.MØDREKVOTE;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
+import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
@@ -19,11 +19,11 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 
 public class StønadskontoMapper {
 
-    public static BigInteger finnDisponibleDager(Behandling behandling, Boolean aleneOmsorg, Boolean annenForelderHarRett, Saldoer saldoer) {
+    public static BigInteger finnDisponibleDager(Fagsak fagsak, Boolean aleneOmsorg, Boolean annenForelderHarRett, Saldoer saldoer) {
         if (aleneOmsorg || (!annenForelderHarRett)) {
             return finnSaldo(saldoer, FORELDREPENGER);
         }
-        boolean forMor = RelasjonsRolleType.MORA.equals(behandling.getRelasjonsRolleType());
+        boolean forMor = RelasjonsRolleType.MORA.equals(fagsak.getRelasjonsRolleType());
         return forMor ? finnSaldo(saldoer, MØDREKVOTE) : finnSaldo(saldoer, FEDREKVOTE);
     }
 

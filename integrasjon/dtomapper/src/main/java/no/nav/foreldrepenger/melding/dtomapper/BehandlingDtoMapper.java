@@ -20,7 +20,6 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.melding.behandling.BehandlingStatus;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 
@@ -73,21 +72,17 @@ public class BehandlingDtoMapper {
         Supplier<Stream<BehandlingResourceLink>> behandlingResourceLinkStreamSupplier = () -> dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
         List<BehandlingResourceLink> linkListe = behandlingResourceLinkStreamSupplier.get().collect(Collectors.toList());
-        Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(linkListe));
-        Behandling originalBehandling = behandlingRestKlient.hentOriginalBehandling(linkListe).map(this::mapOriginalBehandlingFraDto).orElse(null);
         builder.medId(dto.getId())
                 .medUuid(dto.getUuid())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
                 .medStatus(kodeverkRepository.finn(BehandlingStatus.class, dto.getStatus().getKode()))
                 .medOpprettetDato(dto.getOpprettet())
                 .medAvsluttet(dto.getAvsluttet())
-                .medOriginalBehandling(originalBehandling)
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
                 .medAnsvarligBeslutter(dto.getAnsvarligBeslutter())
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()))
-                .medFagsak(fagsak)
                 .medEndretAv(dto.getEndretAvBrukernavn())
                 .medSpråkkode(kodeverkRepository.finn(Språkkode.class, dto.getSprakkode().getKode()));
         if (dto.getBehandlingsresultat() != null) {

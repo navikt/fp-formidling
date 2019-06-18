@@ -38,6 +38,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.Period
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
+import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
@@ -90,6 +91,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
         Saldoer saldoer = domeneobjektProvider.hentSaldoer(behandling);
         List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
+        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
         FagType fagType = mapFagType(dokumentHendelse,
                 behandling,
                 beregningsresultatFP,
@@ -101,7 +103,8 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                 uttakResultatPerioder,
                 ytelseFordeling,
                 saldoer,
-                aksjonspunkter);
+                aksjonspunkter,
+                fagsak);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnvilgetForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
@@ -132,11 +135,12 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                UttakResultatPerioder uttakResultatPerioder,
                                YtelseFordeling ytelseFordeling,
                                Saldoer saldoer,
-                               List<Aksjonspunkt> aksjonspunkter) {
+                               List<Aksjonspunkt> aksjonspunkter,
+                               Fagsak fagsak) {
         final FagType fagType = objectFactory.createFagType();
 
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
-        fagType.setRelasjonskode(tilRelasjonskode(behandling.getRelasjonsRolleType(), behandling.getFagsak().getPersoninfo().getKjønn()));
+        fagType.setRelasjonskode(tilRelasjonskode(fagsak.getRelasjonsRolleType(), fagsak.getPersoninfo().getKjønn()));
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
         fagType.setBehandlingsResultat(BehandlingMapper.tilBehandlingsResultatKode(behandling.getBehandlingsresultat().getBehandlingResultatType()));
@@ -151,7 +155,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, fagType);
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType, behandling);
         mapFelterRelatertTilSøknadOgRettighet(søknad, uttakResultatPerioder, fagType);
-        mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, behandling, søknad, ytelseFordeling);
+        mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, behandling, søknad, ytelseFordeling, fagsak);
         mapFelterRelatertTilFamiliehendelse(behandling, familieHendelse, originalFamiliehendelse, fagType);
         mapLovhjemmel(fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling, uttakResultatPerioder);
         mapFelterRelatertTilDagsats(fagType, beregningsresultatFP);
@@ -188,9 +192,9 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setAleneomsorg(UttakMapper.harSøkerAleneomsorg(søknad, uttakResultatPerioder));
     }
 
-    private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Behandling behandling, Søknad søknad, YtelseFordeling ytelseFordeling) {
+    private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Behandling behandling, Søknad søknad, YtelseFordeling ytelseFordeling, Fagsak fagsak) {
         fagType.setDagerTaptFørTermin(StønadskontoMapper.finnTapteDagerFørTermin(uttakResultatPerioder, saldoer, familieHendelse));
-        fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(behandling, UttakMapper.harSøkerAleneomsorgBoolean(søknad, uttakResultatPerioder), ytelseFordeling.isAnnenForelderHarRett(), saldoer));
+        fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(fagsak, UttakMapper.harSøkerAleneomsorgBoolean(søknad, uttakResultatPerioder), ytelseFordeling.isAnnenForelderHarRett(), saldoer));
         fagType.setDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer));
         StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);
     }

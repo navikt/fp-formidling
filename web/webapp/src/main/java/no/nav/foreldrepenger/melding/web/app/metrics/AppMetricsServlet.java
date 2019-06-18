@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.web.app.metrics;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -25,14 +24,8 @@ import com.codahale.metrics.servlets.MetricsServlet;
 public class AppMetricsServlet extends MetricsServlet {
 
     private static final String KEY_PROSESSTASK = "prosesstask";
-    private static final String PROSESS_TASK_TYPE_PREFIX_FORDELING = "fordeling";
+    private static final String PROSESS_TASK_TYPE_PREFIX_FORDELING = "formidling";
 
-    // TODO (HUMLE): Denne listen er litt dodgy. Er det bedre måter å håndtere det
-    // på? F.eks. håndtere det lazy eller med CDI scan?
-    // Alt. så er det bare OpprettGSakOppgaveTask som ikke er i namespace
-    // integrasjon, kan jo renames
-    private static final List<String> PROSESS_TASK_TYPE_PREFIXES = Arrays.asList(PROSESS_TASK_TYPE_PREFIX_FORDELING,
-            "integrasjon");
 
     private static final String KEY_PREFIX = "fpformidling";
     private static boolean notInitialized = true;
@@ -69,7 +62,7 @@ public class AppMetricsServlet extends MetricsServlet {
 
 
     private void registrerMetricsForKøedeOgFeiledeProsessTasks() {
-        List<String> prosessTaskTyper = metricRepository.hentProsessTaskTyperMedPrefixer(PROSESS_TASK_TYPE_PREFIXES);
+        List<String> prosessTaskTyper = metricRepository.hentProsessTaskTyperMedPrefixer(List.of(PROSESS_TASK_TYPE_PREFIX_FORDELING));
         for (String ptType : prosessTaskTyper) {
             registry.register(KEY_PREFIX + "." + KEY_PROSESSTASK + ".koet." + ptType,
                     (Gauge<BigDecimal>) () -> prosessTaskGaugesCache.antallProsessTaskerKøet(ptType));

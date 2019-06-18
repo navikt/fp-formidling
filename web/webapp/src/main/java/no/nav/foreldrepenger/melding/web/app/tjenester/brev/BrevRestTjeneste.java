@@ -60,7 +60,7 @@ public class BrevRestTjeneste {
     }
 
     @POST
-    @Timed
+    @Timed(name = "fpformidling.in.maler", absolute = true)
     @Path("/maler")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @ApiOperation(value = "Henter liste over tilgjengelige brevtyper")
@@ -94,7 +94,7 @@ public class BrevRestTjeneste {
     }
 
     @POST
-    @Timed
+    @Timed(name = "fpformidling.in.dokument-sendt", absolute = true)
     @Path("/dokument-sendt")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @ApiOperation(value = "Sjekker om dokument for mal er sendt")
@@ -105,7 +105,7 @@ public class BrevRestTjeneste {
     }
 
     @POST
-    @Timed
+    @Timed(name = "fpformidling.in.forhandsvis", absolute = true)
     @Path("/forhandsvis")
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Returnerer en pdf som er en forhåndsvisning av brevet")
@@ -130,7 +130,7 @@ public class BrevRestTjeneste {
     }
 
     @POST
-    @Timed
+    @Timed(name = "fpformidling.in.bestill", absolute = true)
     @Path("/bestill")
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Bestiller generering og sending av brevet")

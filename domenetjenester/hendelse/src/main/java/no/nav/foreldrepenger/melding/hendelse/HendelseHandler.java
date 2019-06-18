@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.hendelse;
 
-import java.util.UUID;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -32,7 +30,7 @@ public class HendelseHandler {
     }
 
     public void prosesser(DokumentHendelse hendelse) {
-        if(hendelseRepository.finnesHendelseMedUuidAllerede(hendelse.getBestillingUuid())){
+        if (hendelseRepository.finnesHendelseMedUuidAllerede(hendelse.getBestillingUuid())) {
             LOGGER.info("Lagrer ikke hendelse med duplikat bestillingUuid:{} for behandling: {} OK", hendelse.getBestillingUuid(), hendelse.getBehandlingUuid());
             return;
         }

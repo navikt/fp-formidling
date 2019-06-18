@@ -27,8 +27,8 @@
             <artifactId>domene</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-prosesstask</artifactId>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>prosesstask</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>

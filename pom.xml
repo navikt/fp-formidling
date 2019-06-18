@@ -16,6 +16,7 @@
         <module>integrasjon</module>
         <module>web</module>
         <module>dokumentlager</module>
+        <module>prosesstask</module>
         <module>domenetjenester</module>
         <module>test-sikkerhet</module>
     </modules>
@@ -98,31 +99,12 @@
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.felles</groupId>
-                <artifactId>felles-prosesstask</artifactId>
-                <version>${felles.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
                 <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
                 <artifactId>fp-topics</artifactId>
                 <version>${kontrakter.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.felles</groupId>
-                <artifactId>felles-prosesstask</artifactId>
-                <version>${felles.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-                        <artifactId>felles-integrasjon-jms</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>dokumentlager</artifactId>
@@ -142,6 +124,11 @@
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>migreringer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>prosesstask</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

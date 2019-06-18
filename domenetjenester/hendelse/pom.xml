@@ -25,8 +25,8 @@
 
         <!-- NAV -->
         <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-prosesstask</artifactId>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>prosesstask</artifactId>
         </dependency>
 
         <!-- Eksterne -->

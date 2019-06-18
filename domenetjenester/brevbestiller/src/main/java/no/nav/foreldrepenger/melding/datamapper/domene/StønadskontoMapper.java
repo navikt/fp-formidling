@@ -28,7 +28,8 @@ public class StønadskontoMapper {
     }
 
     private static BigInteger finnSaldo(Saldoer saldoer, StønadskontoType stønadskontoType) {
-        return BigInteger.valueOf(PeriodeBeregner.finnStønadsKontoMedType(saldoer.getStønadskontoer(), stønadskontoType).map(Stønadskonto::getSaldo).orElse(0));
+        BigInteger saldo = BigInteger.valueOf(PeriodeBeregner.finnStønadsKontoMedType(saldoer.getStønadskontoer(), stønadskontoType).map(Stønadskonto::getSaldo).orElse(0));
+        return saldo.intValue() > 0 ? saldo : BigInteger.valueOf(0);
     }
 
     public static BigInteger finnTapteDagerFørTermin(UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse) {

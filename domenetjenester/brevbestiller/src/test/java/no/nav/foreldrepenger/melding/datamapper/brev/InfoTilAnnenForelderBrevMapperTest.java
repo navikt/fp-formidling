@@ -61,8 +61,7 @@ public class InfoTilAnnenForelderBrevMapperTest {
             @Override
             Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
                 return new Brevdata()
-                        .leggTil("dato", "31.12.9999")
-                        .leggTil("kontaktTelefonnummer", "11111111")
+                        .leggTil("kontaktTelefonnummer", null)
                         .leggTil("navnAvsenderEnhet", "Avsender")
                         .leggTil("erAutomatiskVedtak", true);
             }

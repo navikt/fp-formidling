@@ -59,6 +59,14 @@ public class HendelseRepositoryImpl implements HendelseRepository {
         return query.getResultList();
     }
 
+    @Override
+    public boolean erDokumentHendelseMottatt(UUID behandlingUuid, String dokumentMal) {
+        TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid and dokumentMalType=:dokumentMalType", DokumentHendelse.class);
+        query.setParameter("behandlingUuid", behandlingUuid);
+        query.setParameter("dokumentMalType", dokumentMal);
+        return !query.getResultList().isEmpty();
+    }
+
     private void lagreOgFlush(Object objektTilLagring) {
         entityManager.persist(objektTilLagring);
         entityManager.flush();

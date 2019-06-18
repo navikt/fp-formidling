@@ -1,20 +1,25 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalRestriksjon;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
+import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 
+@ApplicationScoped
 public class SjekkDokumentTilgjengelig {
-    private DokumentRepository dokumentRepository;
+    private HendelseRepository hendelseRepository;
 
-    public SjekkDokumentTilgjengelig(DokumentRepository dokumentRepository) {
-        this.dokumentRepository = dokumentRepository;
+    public SjekkDokumentTilgjengelig() {
+    }
+
+    @Inject
+    public SjekkDokumentTilgjengelig(HendelseRepository hendelseRepository) {
+        this.hendelseRepository = hendelseRepository;
     }
 
     boolean sjekkOmTilgjengelig(Behandling behandling, DokumentMalType mal) {
@@ -23,15 +28,12 @@ public class SjekkDokumentTilgjengelig {
             return !behandling.erSaksbehandlingAvsluttet() && !behandling.erAvsluttet();
         }
         if (DokumentMalRestriksjon.ÅPEN_BEHANDLING_IKKE_SENDT.equals(restriksjon)) {
-            return !(behandling.erSaksbehandlingAvsluttet() || behandling.erAvsluttet() || erDokumentProdusert(behandling.getUuid(), mal.getKode()));
+            return !(behandling.erSaksbehandlingAvsluttet() || behandling.erAvsluttet() || erDokumentBestilt(behandling.getUuid(), mal.getKode()));
         }
         return true;
     }
 
-    boolean erDokumentProdusert(UUID behandlingUuId, String dokumentMalTypeKode) {
-        DokumentMalType dokumentMalType = dokumentRepository.hentDokumentMalType(dokumentMalTypeKode);
-        List<DokumentData> dokumentDatas = dokumentRepository.hentDokumentDataListe(behandlingUuId, dokumentMalType.getKode());
-        Optional<DokumentData> dokumentData = dokumentDatas.stream().filter(dd -> dd.getBestiltTid() != null).findFirst();
-        return dokumentData.isPresent();
+    boolean erDokumentBestilt(UUID behandlingUuId, String dokumentMalTypeKode) {
+        return hendelseRepository.erDokumentHendelseMottatt(behandlingUuId, dokumentMalTypeKode);
     }
 }

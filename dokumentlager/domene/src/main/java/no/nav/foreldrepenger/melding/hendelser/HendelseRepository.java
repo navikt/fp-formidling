@@ -16,4 +16,7 @@ public interface HendelseRepository {
     DokumentHendelse hentDokumentHendelseMedId(long id);
 
     List<DokumentHendelse> hentDokumentHendelserForBehandling(UUID behandlingUuid);
+
+    boolean erDokumentHendelseMottatt(UUID behanlingUuid, String dokumentMal);
+
 }

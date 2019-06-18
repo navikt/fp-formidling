@@ -9,6 +9,8 @@ import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.codahale.metrics.annotation.Timed;
+
 import no.nav.foreldrepenger.melding.web.app.pdp.dto.PipDto;
 import no.nav.vedtak.felles.integrasjon.rest.SystemUserOidcRestClient;
 import no.nav.vedtak.konfig.KonfigVerdi;
@@ -36,6 +38,7 @@ public class PipRestKlient {
         this.endpointFpsakRestBase = endpointFpsakRestBase;
     }
 
+    @Timed(name = "fpformidling.out.pip", absolute = true)
     public PipDto hentPipdataForBehandling(String behandlingUUid) {
         try {
             URIBuilder pipUriBuilder = new URIBuilder(endpointFpsakRestBase + PIP_BEHANDLING_ENDPOINT);

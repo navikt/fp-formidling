@@ -1,47 +1,55 @@
 package no.nav.foreldrepenger.melding.sikkerhet;
 
-import static no.nav.foreldrepenger.melding.sikkerhet.FileUtils.putInTempFile;
-
-import java.io.InputStream;
+import java.io.File;
 
 public final class TestSertifikater {
-
-    public static void setup(String keyStorePassword, String trustStorePassword) {
-        TestSertifikater.setupTemporaryTrustStore("truststore.jts", trustStorePassword);
-        TestSertifikater.setupTemporaryKeyStore("keystore.jks", keyStorePassword);
-    }
-
-    /**
-     * sett opp key store for testing
-     */
-    private static void setupTemporaryKeyStore(String keyStoreResourceName, String password) {
-        InputStream keyStore = TestSertifikater.class.getClassLoader().getResourceAsStream(keyStoreResourceName);
-        setupTemporaryKeyStore(keyStore, password);
-    }
-
-    /**
-     * sett opp key store for testing
-     */
-    private static void setupTemporaryKeyStore(InputStream keystore, String password) {
-        new KeyStore(putInTempFile(keystore).getAbsolutePath(), password).setOn(System.getProperties());
-    }
-
-    /**
-     * sett opp trust store for testing
-     */
-    private static void setupTemporaryTrustStore(String trustStoreResourceName, String password) {
-        InputStream trustStore = TestSertifikater.class.getClassLoader().getResourceAsStream(trustStoreResourceName);
-        setupTemporaryTrustStore(trustStore, password);
-    }
-
-    /**
-     * sett opp trust store for testing
-     */
-    private static void setupTemporaryTrustStore(InputStream trustStore, String password) {
-        new TrustStore(putInTempFile(trustStore).getAbsolutePath(), password).setOn(System.getProperties());
-    }
-
     private TestSertifikater() {
     }
 
+    /**
+     * sett opp key store for testing
+     */
+    public static void setupTemporaryKeyStore(String keyStorePathProperty, String keyStorePasswordProperty) {
+        // keystore genererer sertifikat og TLS for innkommende kall. Bruker standard prop hvis definert, ellers faller tilbake på modig props
+        var keystoreProp = System.getProperty("javax.net.ssl.keyStore") != null ? "javax.net.ssl.keyStore" : keyStorePathProperty;
+        var keystorePasswProp = System.getProperty("javax.net.ssl.keyStorePassword") != null ? "javax.net.ssl.keyStorePassword" : keyStorePasswordProperty;
+
+        initCryptoStoreConfig("keystore", keystoreProp, keystorePasswProp, System.getProperty("keystore.password"));
+    }
+
+    /**
+     * sett opp trust store for testing
+     */
+    public static void setupTemporaryTrustStore(String trustStorePathProperty, String trustStorePasswordProperty) {
+        // truststore avgjør hva vi stoler på av sertifikater når vi gjør utadgående TLS kall
+        initCryptoStoreConfig("truststore", trustStorePathProperty, trustStorePasswordProperty, System.getProperty("truststore.password"));
+    }
+
+    private static void initCryptoStoreConfig(String storeName, String storeProperty, String storePasswordProperty, String defaultPassword) {
+        String defaultLocation = getProperty("user.home", ".") + "/.modig/" + storeName + ".jks";
+
+        String storePath = getProperty(storeProperty, defaultLocation);
+        File storeFile = new File(storePath);
+        if (!storeFile.exists()) {
+            throw new IllegalStateException("Finner ikke " + storeName + " i " + storePath
+                    + "\n\tKonfigurer enten som System property \'" + storeProperty + "\' eller environment variabel \'"
+                    + storeProperty.toUpperCase().replace('.', '_') + "\'");
+        }
+        String password = getProperty(storePasswordProperty, defaultPassword);
+        if (password == null) {
+            throw new IllegalStateException("Passord for å aksessere store " + storeName + " i " + storePath + " er null");
+        }
+
+        System.setProperty(storeProperty, storeFile.getAbsolutePath());
+        System.setProperty(storePasswordProperty, password);
+    }
+
+    private static String getProperty(String key, String defaultValue) {
+        String val = System.getProperty(key, defaultValue);
+        if (val == null) {
+            val = System.getenv(key.toUpperCase().replace('.', '_'));
+            val = val == null ? defaultValue : val;
+        }
+        return val;
+    }
 }

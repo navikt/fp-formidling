@@ -1,0 +1,13 @@
+{
+  "schemas": [
+    {
+      "datasource": "defaultDS",
+      "schema": "felles_behandlingsprosess_unit",
+      "user": "felles_behandlingsprosess_unit",
+      "password": "felles_behandlingsprosess_unit",
+      "url": "jdbc:oracle:thin:@localhost:1521:XE",
+      "default": true,
+      "migrationScriptsFilesystemRoot": "src/test/resources/db/migration/"
+    }
+  ]
+}

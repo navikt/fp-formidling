@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 
-public class SvpUttakResultatPerioder implements Comparable<SvpUttakResultatPerioder>{
+public class SvpUttakResultatPerioder implements Comparable<SvpUttakResultatPerioder> {
     private long utbetalingsgrad;
     private Optional<String> arbeidsgiverNavn;
     private Optional<ArbeidsforholdIkkeOppfyltÅrsak> arbeidsforholdIkkeOppfyltÅrsak;

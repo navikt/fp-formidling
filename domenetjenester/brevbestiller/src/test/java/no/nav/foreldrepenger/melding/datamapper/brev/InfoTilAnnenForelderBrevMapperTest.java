@@ -18,6 +18,7 @@ import org.mockito.junit.MockitoRule;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
@@ -36,6 +37,8 @@ public class InfoTilAnnenForelderBrevMapperTest {
     DokumentFelles dokumentFelles;
     @Mock
     FellesType fellesType;
+    @Mock
+    BrevParametere brevParametere;
 
     @InjectMocks
     private InfoTilAnnenForelderBrevMapper mapper;

@@ -7,7 +7,7 @@ import java.util.Optional;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 
-public class SvpUttakResultatPeriode {
+public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPeriode> {
     private long utbetalingsgrad;
     private long aktivitetDagsats;
 
@@ -49,6 +49,11 @@ public class SvpUttakResultatPeriode {
     @Override
     public int hashCode() {
         return Objects.hash(getUtbetalingsgrad(), getAktivitetDagsats(), getTidsperiode());
+    }
+
+    @Override
+    public int compareTo(SvpUttakResultatPeriode o) {
+        return this.getTidsperiode().compareTo(o.getTidsperiode());
     }
 
     public Optional<ArbeidsforholdIkkeOppfyltÅrsak> getArbeidsforholdIkkeOppfyltÅrsak() {

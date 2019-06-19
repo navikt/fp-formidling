@@ -27,6 +27,9 @@ public class PeriodeMergerInnvilgelse {
 
     private static List<PeriodeType> slåSammenSammenhengendePerioder(List<PeriodeType> perioder) {
         List<PeriodeType> resultat = new ArrayList<>();
+        if (perioder.isEmpty()) {
+            return resultat;
+        }
         for (int index = 0; index < perioder.size() - 1; index++) {
             boolean sistePeriode = (index == perioder.size() - 2);
             PeriodeType periodeEn = perioder.get(index);

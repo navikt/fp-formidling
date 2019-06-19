@@ -6,4 +6,6 @@ public interface ApplicationServiceStarter {
 
     void stopServices();
 
+    boolean isKafkaAlive();
+
 }

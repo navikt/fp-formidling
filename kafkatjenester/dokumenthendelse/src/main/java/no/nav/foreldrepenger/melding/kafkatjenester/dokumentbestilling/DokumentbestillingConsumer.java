@@ -18,12 +18,13 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.foreldrepenger.melding.kodeverk.kafka.KafkaIntegration;
 import no.nav.vedtak.apptjeneste.AppServiceHandler;
 import no.nav.vedtak.felles.cdi.AktiverRequestContext;
 
 @ApplicationScoped
 @AktiverRequestContext
-public class DokumentbestillingConsumer implements AppServiceHandler {
+public class DokumentbestillingConsumer implements AppServiceHandler, KafkaIntegration {
 
     private static final Logger log = LoggerFactory.getLogger(DokumentbestillingConsumer.class);
     private KafkaStreams stream;
@@ -87,6 +88,11 @@ public class DokumentbestillingConsumer implements AppServiceHandler {
 
     public KafkaStreams.State getTilstand() {
         return stream.state();
+    }
+
+    @Override
+    public boolean isAlive() {
+        return stream != null && stream.state().isRunning();
     }
 
     public String getTopic() {

@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.foreldrepenger.melding.kodeverk.kafka.KafkaIntegration;
 import no.nav.vedtak.apptjeneste.AppServiceHandler;
 
 /**
@@ -32,6 +33,14 @@ public class ApplicationServiceStarterImpl implements ApplicationServiceStarter 
     @Inject
     public ApplicationServiceStarterImpl(@Any Instance<AppServiceHandler> serviceHandlers) {
         serviceHandlers.forEach(handler -> serviceMap.put(handler, new AtomicBoolean()));
+    }
+
+    @Override
+    public boolean isKafkaAlive() {
+        return serviceMap.entrySet()
+                .stream()
+                .filter(it -> it.getKey() instanceof KafkaIntegration)
+                .allMatch(it -> ((KafkaIntegration) it.getKey()).isAlive());
     }
 
     @Override

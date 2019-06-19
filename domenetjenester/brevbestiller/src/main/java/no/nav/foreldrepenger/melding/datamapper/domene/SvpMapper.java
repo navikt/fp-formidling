@@ -233,23 +233,24 @@ public class SvpMapper {
 
         beregningsresultatPerioder.stream()
                 .forEach(beregningsresultatPeriode -> {
-                    //var matchetBgPeriode = PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder);
                     var matchetUttaksperiode = PeriodeBeregner.finnUttakPeriode(beregningsresultatPeriode, uttakPerioder);
-                    beregningsresultatPeriode.getBeregningsresultatAndelList().stream()  // map arbeidsforhold/aktiviteter
-                            .forEach(andel -> {
-                                AktivitetStatus aktivitetStatus = andel.getAktivitetStatus();
-                                String arbeidsgiverNavn = andel.getArbeidsgiver().map(Arbeidsgiver::getNavn)
-                                        .orElse(aktivitetStatus.erFrilanser() ? "Som frilanser" : aktivitetStatus.erSelvstendigNæringsdrivende() ?
-                                                "Som næringsdrivende" : matchetUttaksperiode.getArbeidsgiverNavn());
-                                SvpUttakResultatPeriode periode = SvpUttakResultatPeriode.ny()
-                                        .medAktivitetDagsats((long) andel.getDagsats())
-                                        .medUtbetalingsgrad(matchetUttaksperiode.getUtbetalingsgrad())
-                                        .medTidsperiode(beregningsresultatPeriode.getPeriode())
-                                        .build();
-                                Set<SvpUttakResultatPeriode> periodeSet = perioderPerArbeidsgiver.getOrDefault(arbeidsgiverNavn, new HashSet<>());
-                                periodeSet.add(periode);
-                                perioderPerArbeidsgiver.put(arbeidsgiverNavn, periodeSet);
-                            });
+                    if (matchetUttaksperiode.isInnvilget()) {
+                        beregningsresultatPeriode.getBeregningsresultatAndelList().stream()  // map arbeidsforhold/aktiviteter
+                                .forEach(andel -> {
+                                    AktivitetStatus aktivitetStatus = andel.getAktivitetStatus();
+                                    String arbeidsgiverNavn = andel.getArbeidsgiver().map(Arbeidsgiver::getNavn)
+                                            .orElse(aktivitetStatus.erFrilanser() ? "Som frilanser" : aktivitetStatus.erSelvstendigNæringsdrivende() ?
+                                                    "Som næringsdrivende" : matchetUttaksperiode.getArbeidsgiverNavn());
+                                    SvpUttakResultatPeriode periode = SvpUttakResultatPeriode.ny()
+                                            .medAktivitetDagsats((long) andel.getDagsats())
+                                            .medUtbetalingsgrad(matchetUttaksperiode.getUtbetalingsgrad())
+                                            .medTidsperiode(beregningsresultatPeriode.getPeriode())
+                                            .build();
+                                    Set<SvpUttakResultatPeriode> periodeSet = perioderPerArbeidsgiver.getOrDefault(arbeidsgiverNavn, new HashSet<>());
+                                    periodeSet.add(periode);
+                                    perioderPerArbeidsgiver.put(arbeidsgiverNavn, periodeSet);
+                                });
+                    }
                 });
 
         perioderPerArbeidsgiver.keySet().stream()
@@ -298,7 +299,10 @@ public class SvpMapper {
     public static Map<DatoIntervall, Integer> getPeriodeDagsats(BeregningsresultatFP beregningsresultatFP) {
         Map<DatoIntervall, Integer> periodeDagsats = new TreeMap<>(DatoIntervall::compareTo);
         beregningsresultatFP.getBeregningsresultatPerioder().stream().forEach(p -> {
-            periodeDagsats.put(p.getPeriode(), p.getDagsats().intValue());
+            int dagsats = p.getDagsats().intValue();
+            if (dagsats > 0) {
+                periodeDagsats.put(p.getPeriode(), dagsats);
+            }
         });
         return periodeDagsats;
     }

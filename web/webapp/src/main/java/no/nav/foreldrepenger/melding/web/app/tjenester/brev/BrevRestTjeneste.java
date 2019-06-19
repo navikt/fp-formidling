@@ -37,7 +37,6 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @Api(tags = "brev")
 @Path("/brev")
 @ApplicationScoped
-@Transaction
 public class BrevRestTjeneste {
     private DokumentBehandlingTjeneste dokumentBehandlingTjeneste;
     private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
@@ -84,6 +83,7 @@ public class BrevRestTjeneste {
 
     @POST
     @Timed
+    @Transaction
     @Path("/varsel/revurdering")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @ApiOperation(value = "Sjekk har varsel sendt om revurdering")
@@ -96,6 +96,7 @@ public class BrevRestTjeneste {
     @POST
     @Timed(name = "fpformidling.in.dokument-sendt", absolute = true)
     @Path("/dokument-sendt")
+    @Transaction
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @ApiOperation(value = "Sjekker om dokument for mal er sendt")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
@@ -132,6 +133,7 @@ public class BrevRestTjeneste {
     @POST
     @Timed(name = "fpformidling.in.bestill", absolute = true)
     @Path("/bestill")
+    @Transaction
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Bestiller generering og sending av brevet")
     @BeskyttetRessurs(action = UPDATE, ressurs = FAGSAK)

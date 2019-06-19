@@ -35,7 +35,6 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriod
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
-import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.typer.Dato;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
@@ -117,14 +116,14 @@ public class SvpMapper {
     private static void leggTilSnAndel(Map<String, Map> map, BeregningsgrunnlagPrStatusOgAndel andel, BeregningsgrunnlagAktivitetStatus bgAktivitetStatus) {
         int sisteLignedeÅr = getSisteLignedeÅr(andel);
         map.merge("selvstendigNaringsdrivende",
-                Map.of("aarsinntekt", andel.getBruttoPrÅr().intValue(),
+                new HashMap<>(Map.of("aarsinntekt", andel.getBruttoPrÅr().intValue(),
                         "nyoppstartet", TRUE.equals(andel.getNyIArbeidslivet()),
                         "sistLignedeAar1", sisteLignedeÅr,
                         "sistLignedeAar2", sisteLignedeÅr - 1,
                         "sistLignedeAar3", sisteLignedeÅr - 2,
                         "inntekt_lavere_FL_SN", AktivitetStatus.KOMBINERT_FL_SN.equals(bgAktivitetStatus) && dagsatsErNull(andel),
                         "inntekt_lavere_AT_FL_SN", AktivitetStatus.KOMBINERT_AT_FL_SN.equals(bgAktivitetStatus) && dagsatsErNull(andel),
-                        "inntekt_lavere_AT_SN", AktivitetStatus.KOMBINERT_AT_SN.equals(bgAktivitetStatus) && dagsatsErNull(andel)),
+                        "inntekt_lavere_AT_SN", AktivitetStatus.KOMBINERT_AT_SN.equals(bgAktivitetStatus) && dagsatsErNull(andel))),
                 (andel1, andel2) -> {
                     andel1.merge("aarsinntekt", andel2.get("aarsinntekt"), adder());
                     andel1.merge("nyoppstartet", andel2.get("nyoppstartet"), logicalAnd());
@@ -149,7 +148,7 @@ public class SvpMapper {
     }
 
     private static void leggTilFrilansinntekt(Map<String, Map> map, BeregningsgrunnlagPrStatusOgAndel andel) {
-        map.getOrDefault("frilanser", new HashMap<>())
+        map.put("frilanser", map.getOrDefault("frilanser", new HashMap<>()))
                 .merge("manedsinntekt", getMånedsinntekt(andel).intValue(), adder());
     }
 
@@ -160,7 +159,8 @@ public class SvpMapper {
     }
 
     private static HashSet hentEllerOpprettNyArbeidsforholdListe(Map<String, Map> map) {
-        return (HashSet) map.getOrDefault("arbeidstaker", new HashMap<>()).getOrDefault("arbeidsforhold", new HashSet<>());
+        map.putIfAbsent("arbeidstaker", new HashMap<>(Map.of("arbeidsforhold", new HashSet<>())));
+        return (HashSet) map.get("arbeidstaker").get("arbeidsforhold");
     }
 
     public static boolean erNyEllerEndretBeregning(Behandling behandling) {
@@ -253,7 +253,7 @@ public class SvpMapper {
                 .forEach(arbeidsgiverNavn -> {
                     SvpUttakResultatPerioder forArbeidsgiver = SvpUttakResultatPerioder.ny()
                             .medArbeidsgiverNavn(arbeidsgiverNavn)
-                            .medPerioder(PeriodeMergerSvp.mergeLikePerioder(perioderPerArbeidsgiver.get(arbeidsgiverNavn).stream().sorted().collect(Collectors.toList())))
+                            .medPerioder(perioderPerArbeidsgiver.get(arbeidsgiverNavn).stream().sorted().collect(Collectors.toList()))
                             .build();
                     builder.medUttakResultatPerioder(forArbeidsgiver);
                 });

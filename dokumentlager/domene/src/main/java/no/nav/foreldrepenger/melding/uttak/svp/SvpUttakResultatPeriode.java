@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
+import no.nav.foreldrepenger.melding.typer.Dato;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 
@@ -74,12 +75,12 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
         return tidsperiode;
     }
 
-    public LocalDate getFom() {
-        return tidsperiode.getFomDato();
+    public Dato getFom() {
+        return tidsperiode.getFom();
     }
 
-    public LocalDate getTom() {
-        return tidsperiode.getTomDato();
+    public Dato getTom() {
+        return tidsperiode.getTom();
     }
 
     public int getUtbetalingsgrad() {

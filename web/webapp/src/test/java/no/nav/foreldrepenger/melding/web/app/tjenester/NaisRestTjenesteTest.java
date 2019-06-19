@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.web.app.tjenester;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -21,7 +22,16 @@ public class NaisRestTjenesteTest {
     }
 
     @Test
+    public void test_isAlive_skal_ikke_returnere_status_200_når_kafka_feiler() {
+        doReturn(false).when(serviceStarterMock).isKafkaAlive();
+        Response response = restTjeneste.isAlive();
+
+        assertThat(response.getStatus()).isNotEqualTo(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
     public void test_isAlive_skal_returnere_status_200() {
+        doReturn(true).when(serviceStarterMock).isKafkaAlive();
         Response response = restTjeneste.isAlive();
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());

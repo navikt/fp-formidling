@@ -2,7 +2,6 @@ package no.nav.vedtak.felles.prosesstask.rest.app;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -97,27 +96,8 @@ public class ProsessTaskApplikasjonTjenesteImpl implements ProsessTaskApplikasjo
     public ProsessTaskRetryAllResultatDto flaggAlleFeileteProsessTasksForRestart() {
         ProsessTaskRetryAllResultatDto retryAllResultatDto = new ProsessTaskRetryAllResultatDto();
 
-        List<ProsessTaskData> ptdList = prosessTaskRepository.finnAlle(ProsessTaskStatus.FEILET);
+        prosessTaskRepository.rekjørAlleFeiledeTasks();
 
-        Map<String, Integer> taskTypesMaxForsøk = new HashMap<>();
-        ptdList.stream().map(ProsessTaskData::getTaskType).forEach(tasktype -> {
-            if (taskTypesMaxForsøk.get(tasktype) == null) {
-                int forsøk = prosessTaskRepository.finnProsessTaskType(tasktype).map(ProsessTaskTypeInfo::getMaksForsøk).orElse(1);
-                taskTypesMaxForsøk.put(tasktype, forsøk);
-            }
-        });
-        LocalDateTime nå = FPDateUtil.nå();
-        ptdList.forEach(ptd -> {
-            ptd.setStatus(ProsessTaskStatus.KLAR);
-            ptd.setNesteKjøringEtter(nå);
-            ptd.setSisteFeilKode(null);
-            ptd.setSisteFeil(null);
-            if (taskTypesMaxForsøk.get(ptd.getTaskType()) == ptd.getAntallFeiledeForsøk()) { // NOSONAR
-                ptd.setAntallFeiledeForsøk(ptd.getAntallFeiledeForsøk() - 1);
-            }
-            prosessTaskRepository.lagre(ptd);
-            retryAllResultatDto.addProsessTaskId(ptd.getId());
-        });
         return retryAllResultatDto;
     }
 

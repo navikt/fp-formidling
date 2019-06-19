@@ -148,8 +148,11 @@ public class SvpMapper {
     }
 
     private static void leggTilFrilansinntekt(Map<String, Map> map, BeregningsgrunnlagPrStatusOgAndel andel) {
-        map.put("frilanser", map.getOrDefault("frilanser", new HashMap<>()))
-                .merge("manedsinntekt", getMånedsinntekt(andel).intValue(), adder());
+        int månedsinntektAndel = getMånedsinntekt(andel).intValue();
+        Map andeler = map.putIfAbsent("frilanser", new HashMap<>(Map.of("manedsinntekt", månedsinntektAndel)));
+        if (andeler != null) {
+            andeler.merge("manedsinntekt", månedsinntektAndel, adder());
+        }
     }
 
     private static void leggTilArbeidsforhold(Map<String, Map> map, BeregningsgrunnlagPrStatusOgAndel andel) {

@@ -41,7 +41,6 @@ public class DatasourceUtil {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(PropertyUtil.getProperty(dataSourceName + ".url"));
 
-        config.setConnectionTimeout(1000);
         config.setMinimumIdle(0);
         config.setMaximumPoolSize(maxPoolSize);
         config.setIdleTimeout(10001);

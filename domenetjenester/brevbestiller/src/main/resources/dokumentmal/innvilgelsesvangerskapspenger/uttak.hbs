@@ -13,7 +13,6 @@
 {{#if @last}}-*{{/if}}
     {{/each}}
 {{/each}}
-
 {{#gt antallPerioder 1}}
 {{i18n "Dette_far_du" (i18n "periodene")}}
 {{else}}
@@ -24,7 +23,6 @@
 {{~i18n "x_kroner_pr_dag" . }}
 {{#if @last}}-*{{/if}}
 {{/each}}
-
 {{#unless (eq 0 antallAvslag)}}
     {{#gt antallAvslag 1}}
 {{i18n "I_disse_periodene" (i18n "ikke")}}

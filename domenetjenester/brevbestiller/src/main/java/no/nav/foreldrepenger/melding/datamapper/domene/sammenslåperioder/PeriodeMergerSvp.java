@@ -29,7 +29,10 @@ public class PeriodeMergerSvp {
 
     private static List<SvpUttakResultatPeriode> slåSammenLikePerioder(List<SvpUttakResultatPeriode> perioder) {
         List<SvpUttakResultatPeriode> resultat = new ArrayList<>();
-        for (int index = 0; index < perioder.size() - 1;) {
+        if (perioder.isEmpty()) {
+            return resultat;
+        }
+        for (int index = 0; index < perioder.size() - 1; ) {
             SvpUttakResultatPeriode periodeEn = perioder.get(index);
 
             AtomicLong sumDagsats = new AtomicLong();
@@ -43,7 +46,8 @@ public class PeriodeMergerSvp {
                         count.getAndIncrement();
                     });
 
-            if (count.get() > 0) { ;
+            if (count.get() > 0) {
+                ;
                 resultat.add(SvpUttakResultatPeriode.ny(periodeEn).medAktivitetDagsats(sumDagsats.get()).build());
             }
             index = count.get() + 1;

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -42,6 +43,13 @@ public class BeregningsgrunnlagMapperTest {
         return List.of(lagBgpsaBruttoFrilanser(), lagBgpsaAvkortetArbeidstaker());
     }
 
+    private BeregningsgrunnlagPrStatusOgAndel lagBgpsaAap() {
+        return BeregningsgrunnlagPrStatusOgAndel.ny()
+                .medBruttoPrÅr(BRUTTO_PR_ÅR)
+                .medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER)
+                .build();
+    }
+
     private BeregningsgrunnlagPrStatusOgAndel lagBgpsaBruttoFrilanser() {
         return BeregningsgrunnlagPrStatusOgAndel.ny()
                 .medBruttoPrÅr(BRUTTO_PR_ÅR)
@@ -49,6 +57,12 @@ public class BeregningsgrunnlagMapperTest {
                 .build();
     }
 
+    private BeregningsgrunnlagPrStatusOgAndel lagBgpsaSN() {
+        return BeregningsgrunnlagPrStatusOgAndel.ny()
+                .medAvkortetPrÅr(AVKORTET_PR_ÅR)
+                .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
+                .build();
+    }
 
     private BeregningsgrunnlagPrStatusOgAndel lagBgpsaAvkortetArbeidstaker() {
         return BeregningsgrunnlagPrStatusOgAndel.ny()
@@ -100,15 +114,29 @@ public class BeregningsgrunnlagMapperTest {
                 .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER),
                         beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
 
-        List<BeregningsgrunnlagPrStatusOgAndel> selvstendigAndeler = BeregningsgrunnlagMapper
-                .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE),
-                        beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
         assertThat(arbeidstakerAndeler).hasSize(1);
         assertThat(frilansAndeler).hasSize(1);
-        assertThat(selvstendigAndeler).hasSize(0);
 
         assertThat(arbeidstakerAndeler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
         assertThat(frilansAndeler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER);
+    }
+
+    @Test
+    public void skal_matche_aap() {
+        BeregningsgrunnlagAktivitetStatus bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
+    }
+
+    @Test
+    public void skal_kaste_exception_matcher_ikke() {
+        BeregningsgrunnlagAktivitetStatus bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER);
+        assertThatThrownBy(() -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    public void skal_matche_AT_SN() {
+        BeregningsgrunnlagAktivitetStatus bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.KOMBINERT_AT_SN);
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).hasSize(2);
     }
 
     @Test

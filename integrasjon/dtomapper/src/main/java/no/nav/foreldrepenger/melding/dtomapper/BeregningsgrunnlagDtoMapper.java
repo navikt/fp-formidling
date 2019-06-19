@@ -46,6 +46,9 @@ public class BeregningsgrunnlagDtoMapper {
 
     private static DatoIntervall avklarBeregningsperiode(BeregningsgrunnlagPrStatusOgAndelDto dto) {
         if (dto.getBeregningsgrunnlagTom() == null) {
+            if (dto.getBeregningsgrunnlagFom() == null) {
+                return null;
+            }
             return DatoIntervall.fraOgMed(dto.getBeregningsgrunnlagFom());
         }
         return DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagFom(), dto.getBeregningsgrunnlagTom());

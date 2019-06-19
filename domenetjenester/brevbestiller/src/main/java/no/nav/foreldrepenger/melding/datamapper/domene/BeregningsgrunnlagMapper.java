@@ -101,6 +101,9 @@ public class BeregningsgrunnlagMapper {
 
     static List<BeregningsgrunnlagPrStatusOgAndel> finnAktivitetStatuserForAndeler(BeregningsgrunnlagAktivitetStatus bgAktivitetStatus, List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         List<BeregningsgrunnlagPrStatusOgAndel> resultatListe;
+        if (AktivitetStatus.KUN_YTELSE.equals(bgAktivitetStatus.getAktivitetStatus())) {
+            return bgpsaListe;
+        }
         if (AktivitetStatus.KOMBINERTE_STATUSER.contains(bgAktivitetStatus.getAktivitetStatus())) {
             List<AktivitetStatus> relevanteStatuser = kombinerteRegelStatuserMap.get(bgAktivitetStatus.getAktivitetStatus());
             resultatListe = bgpsaListe.stream().filter(andel -> relevanteStatuser.contains(andel.getAktivitetStatus())).collect(Collectors.toList());

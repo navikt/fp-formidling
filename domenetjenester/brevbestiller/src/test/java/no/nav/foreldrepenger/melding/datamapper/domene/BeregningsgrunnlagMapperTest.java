@@ -128,6 +128,13 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
+    public void skal_matche_alt_på_kun_ytelse() {
+        BeregningsgrunnlagAktivitetStatus bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.KUN_YTELSE);
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaSN()))).isNotEmpty();
+    }
+
+    @Test
     public void skal_kaste_exception_matcher_ikke() {
         BeregningsgrunnlagAktivitetStatus bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER);
         assertThatThrownBy(() -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).isInstanceOf(IllegalStateException.class);

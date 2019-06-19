@@ -118,7 +118,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
             søknad = domeneobjektProvider.hentSøknad(nåværendeBehandling);
             if (søknad.isEmpty()) {
                 Behandling nesteBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(nåværendeBehandling).orElseThrow(IllegalStateException::new);
-                if (nåværendeBehandling.getId() == nesteBehandling.getId()) {
+                if (nåværendeBehandling.getUuid() == nesteBehandling.getUuid()) {
                     throw new IllegalStateException();
                 }
                 nåværendeBehandling = nesteBehandling;

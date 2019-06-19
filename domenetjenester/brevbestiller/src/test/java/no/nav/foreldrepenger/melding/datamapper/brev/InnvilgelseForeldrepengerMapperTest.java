@@ -2,9 +2,11 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +35,11 @@ public class InnvilgelseForeldrepengerMapperTest {
 
     @Before
     public void setup() {
+        doReturn(UUID.fromString("EACD223A-B0F9-4CB4-A9FE-39EFB52A0C50")).when(behandling).getUuid();
+        doReturn(UUID.fromString("EBCD223A-B0F9-4CB4-A9FE-39EFB52A0C50")).when(annenBehandling).getUuid();
+        doReturn(UUID.fromString("ECCD223A-B0F9-4CB4-A9FE-39EFB52A0C50")).when(tredjeBehandling).getUuid();
+        doReturn(UUID.fromString("EDCD223A-B0F9-4CB4-A9FE-39EFB52A0C50")).when(fjerdeBehandling).getUuid();
+        doReturn(UUID.fromString("EECD223A-B0F9-4CB4-A9FE-39EFB52A0C50")).when(femteBehandling).getUuid();
         when(domeneobjektProvider.hentSøknad(Mockito.any())).thenReturn(Optional.empty());
         mapper = new InnvilgelseForeldrepengerMapper(domeneobjektProvider, brevParametere);
     }

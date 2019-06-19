@@ -12,8 +12,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,18 +31,18 @@ import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataPayloadDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRestartInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRestartResultatDto;
-import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRetryAllResultatDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.SokeFilterDto;
 import no.nav.vedtak.felles.prosesstask.rest.feil.ProsessTaskRestTjenesteFeil;
 import no.nav.vedtak.util.FPDateUtil;
-
 public class ProsessTaskApplikasjonTjenesteImplTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     private static final String PAYLOAD_STRING = "payload-string";
     private static final String TASK_TYPE = "random-string-uten-mening";
     private static final int DEFAULT_MAKS_ANTALL_FEIL_FORSØK = 3;
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
+
     private ProsessTaskRepository prosessTaskRepositoryMock;
 
 
@@ -157,47 +155,6 @@ public class ProsessTaskApplikasjonTjenesteImplTest {
         inputDto.setProsessTaskId(id);
         inputDto.setNaaVaaerendeStatus(status);
         return inputDto;
-    }
-
-    @Test
-    public void skal_returnere_en_restartet_prosesstask() {
-        ProsessTaskData mockPT = lagMedStatusOgFeiledeForsøk(TASK_TYPE, ProsessTaskStatus.FEILET, DEFAULT_MAKS_ANTALL_FEIL_FORSØK, 10L);
-
-        when(prosessTaskRepositoryMock.finnAlle(ProsessTaskStatus.FEILET)).thenReturn(Collections.singletonList(mockPT));
-        when(prosessTaskRepositoryMock.lagre(any(ProsessTaskData.class))).thenReturn("gruppe-id");
-
-        ProsessTaskRetryAllResultatDto result = prosessTaskApplikasjonTjeneste.flaggAlleFeileteProsessTasksForRestart();
-
-        ArgumentCaptor<ProsessTaskData> argumentCaptor = ArgumentCaptor.forClass(ProsessTaskData.class);
-        verify(prosessTaskRepositoryMock).lagre(argumentCaptor.capture());
-
-        ProsessTaskData dataTilPersistering = argumentCaptor.getValue();
-
-        assertThat(result.getProsessTaskIds()).hasSize(1);
-        assertThat(result.getProsessTaskIds().get(0)).isEqualTo(10L);
-        verify(prosessTaskRepositoryMock, times(1)).finnAlle(ProsessTaskStatus.FEILET);
-        assertThat(dataTilPersistering.getStatus()).isEqualTo(ProsessTaskStatus.KLAR);
-        assertThat(dataTilPersistering.getAntallFeiledeForsøk()).isEqualTo(DEFAULT_MAKS_ANTALL_FEIL_FORSØK - 1);
-
-        // Neste kjøring setes til LocalDateTime.now(), så tester på en enkel måte.
-        assertThat(dataTilPersistering.getNesteKjøringEtter()).isAfter(LocalDateTime.now().minusSeconds(5));
-    }
-
-    @Test
-    public void skal_returnere_tre_restartet_prosesstask() {
-
-        when(prosessTaskRepositoryMock.finnAlle(ProsessTaskStatus.FEILET)).thenReturn(Arrays.asList(
-                lagMedStatusOgFeiledeForsøk(TASK_TYPE, ProsessTaskStatus.FEILET, DEFAULT_MAKS_ANTALL_FEIL_FORSØK, 10L),
-                lagMedStatusOgFeiledeForsøk(TASK_TYPE, ProsessTaskStatus.FEILET, DEFAULT_MAKS_ANTALL_FEIL_FORSØK, 11L),
-                lagMedStatusOgFeiledeForsøk(TASK_TYPE + "aa", ProsessTaskStatus.FEILET, DEFAULT_MAKS_ANTALL_FEIL_FORSØK, 12L)
-        ));
-        when(prosessTaskRepositoryMock.lagre(any(ProsessTaskData.class))).thenReturn("gruppe-id");
-
-        ProsessTaskRetryAllResultatDto result = prosessTaskApplikasjonTjeneste.flaggAlleFeileteProsessTasksForRestart();
-
-        assertThat(result.getProsessTaskIds()).hasSize(3);
-        verify(prosessTaskRepositoryMock, times(1)).finnAlle(ProsessTaskStatus.FEILET);
-        verify(prosessTaskRepositoryMock, times(3)).lagre(any(ProsessTaskData.class));
     }
 
     @Test

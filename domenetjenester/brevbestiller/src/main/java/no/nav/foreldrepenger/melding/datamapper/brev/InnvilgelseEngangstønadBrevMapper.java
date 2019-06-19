@@ -48,7 +48,7 @@ public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         BeregningsresultatES beregningsresultat = domeneobjektProvider.hentBeregningsresultatES(behandling);
         Behandling originalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).orElse(null);
-        BeregningsresultatES originaltBeregningsresultat = originaltBeregningsresultat(originalBehandling, behandling);
+        BeregningsresultatES originaltBeregningsresultat = originaltBeregningsresultat(behandling, originalBehandling);
         FagType fagType = mapFagType(behandling, dokumentFelles, beregningsresultat, originaltBeregningsresultat);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnvilgetConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);

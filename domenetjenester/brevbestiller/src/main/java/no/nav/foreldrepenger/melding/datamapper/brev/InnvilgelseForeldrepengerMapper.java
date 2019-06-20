@@ -238,6 +238,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setAntallBeregningsgrunnlagRegeler(BigInteger.valueOf(beregningsgrunnlagRegelListe.getBeregningsgrunnlagRegel().size()));
         fagType.setSeksG(BeregningsgrunnlagMapper.finnSeksG(beregningsgrunnlag).longValue());
         fagType.setInntektOverSeksG(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag));
+        fagType.setBesteBeregning(BeregningsgrunnlagMapper.harNoenAvAndeleneBesteberegning(BeregningsgrunnlagMapper.finnBgpsaListe(beregningsgrunnlag)));
     }
 
     private void mapFelterRelatertTilFamiliehendelse(Behandling behandling, FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse, FagType fagType) {

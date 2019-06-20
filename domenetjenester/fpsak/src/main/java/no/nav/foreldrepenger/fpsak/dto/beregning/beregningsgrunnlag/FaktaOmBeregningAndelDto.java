@@ -32,16 +32,6 @@ public class FaktaOmBeregningAndelDto {
     @JsonProperty("andelIArbeid")
     private List<BigDecimal> andelIArbeid = new ArrayList<>();
 
-    FaktaOmBeregningAndelDto(Long andelsnr, BeregningsgrunnlagArbeidsforholdDto arbeidsforhold, KodeDto inntektskategori, KodeDto aktivitetStatus, Boolean lagtTilAvSaksbehandler, Boolean fastsattAvSaksbehandler, List<BigDecimal> andelIArbeid) {
-        this.andelsnr = andelsnr;
-        this.arbeidsforhold = arbeidsforhold;
-        this.inntektskategori = inntektskategori;
-        this.aktivitetStatus = aktivitetStatus;
-        this.lagtTilAvSaksbehandler = lagtTilAvSaksbehandler;
-        this.fastsattAvSaksbehandler = fastsattAvSaksbehandler;
-        this.andelIArbeid = andelIArbeid;
-    }
-
     public FaktaOmBeregningAndelDto() {
         // Hibernate
     }

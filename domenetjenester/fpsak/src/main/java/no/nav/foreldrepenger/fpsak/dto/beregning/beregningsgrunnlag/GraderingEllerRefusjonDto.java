@@ -15,15 +15,6 @@ public class GraderingEllerRefusjonDto {
     @JsonProperty("tom")
     private LocalDate tom;
 
-
-    public GraderingEllerRefusjonDto(boolean erRefusjon, boolean erGradering) {
-        if ((erRefusjon && erGradering) || (!erRefusjon && !erGradering)) {
-            throw new IllegalArgumentException("Må gjelde enten gradering eller refusjon");
-        }
-        this.erGradering = erGradering;
-        this.erRefusjon = erRefusjon;
-    }
-
     public boolean isErRefusjon() {
         return erRefusjon;
     }

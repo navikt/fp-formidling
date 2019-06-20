@@ -17,9 +17,7 @@ public class EndringBeregningsgrunnlagAndelDto extends FaktaOmBeregningAndelDto 
     private BigDecimal refusjonskravFraInntektsmelding;
     private BigDecimal snittIBeregningsperiodenPrMnd;
 
-    public EndringBeregningsgrunnlagAndelDto(FaktaOmBeregningAndelDto superDto) {
-        super(superDto.getAndelsnr(), superDto.getArbeidsforhold(), superDto.getInntektskategori(),
-                superDto.getAktivitetStatus(), superDto.getLagtTilAvSaksbehandler(), superDto.getFastsattAvSaksbehandler(), superDto.getAndelIArbeid());
+    public EndringBeregningsgrunnlagAndelDto() {
     }
 
     public BigDecimal getSnittIBeregningsperiodenPrMnd() {

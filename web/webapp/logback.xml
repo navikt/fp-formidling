@@ -1,11 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <charset>UTF-8</charset>
-            <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{userId}, %X{prosess}] - %m%n
-            </pattern>
+    <appender name="STDOUT_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                <charset>UTF-8</charset>
+                <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{userId}, %X{prosess}] -
+                    %m%n
+                </pattern>
+                <maxLength>15000</maxLength>
+                <maxDepthPerThrowable>200</maxDepthPerThrowable>
+                <shortenedClassNameLength>70</shortenedClassNameLength>
+                <exclude>\$\$_Weld</exclude>
+                <exclude>java\.lang\.reflect\.Method\.invoke</exclude>
+                <exclude>java\.lang\.reflect\.Constructor\.newInstance</exclude>
+                <exclude>jdk\.internal\.reflect\.DelegatingMethodAccessorImpl\.invoke</exclude>
+                <exclude>jdk\.internal\.reflect\.DelegatingConstructorAccessorImpl\.newInstance</exclude>
+                <exclude>jdk\.internal\.reflect\.NativeMethodAccessorImpl\.invoke</exclude>
+                <exclude>jdk\.internal\.reflect\.NativeConstructorAccessorImpl\.newInstance</exclude>
+                <exclude>org\.jboss\.weld\.bean\.proxy\.CombinedInterceptorAndDecoratorStackMethodHandler</exclude>
+                <exclude>org\.jboss\.weld\.interceptor\.proxy\.AroundInvokeInvocationContext</exclude>
+                <exclude>org\.jboss\.weld\.interceptor\.proxy\.InterceptorMethodHandler</exclude>
+                <exclude>org\.jboss\.weld\.interceptor\.proxy\.NonTerminalAroundInvokeInvocationContext</exclude>
+                <exclude>org\.jboss\.weld\.interceptor\.proxy\.TerminalAroundInvokeInvocationContext</exclude>
+                <exclude>org\.jboss\.weld\.interceptor\.reader\.SimpleInterceptorInvocation</exclude>
+                <exclude>org\.jboss\.resteasy\.core\.MethodInjectorImpl</exclude>
+                <exclude>org\.jboss\.resteasy\.core\.ResourceMethodInvoker</exclude>
+                <exclude>org\.jboss\.resteasy\.core\.SynchronousDispatcher</exclude>
+                <exclude>org\.jboss\.resteasy\.core\.interception\.PreMatchContainerRequestContext</exclude>
+                <exclude>io\.astefanutti\.metrics\.cdi\.TimedInterceptor</exclude>
+                <rootCauseFirst>false</rootCauseFirst>
+            </throwableConverter>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
@@ -103,8 +128,10 @@
         <appender-ref ref="SIKKERHET_LOG"/>
     </logger>
 
+    <logger name="com.github.jknack.handlebars" level="ERROR" additivity="false"/>
+
     <root level="${log.level.root:-INFO}">
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="STDOUT_JSON"/>
         <appender-ref ref="APP_FILE_LOG"/>
     </root>
 </configuration>

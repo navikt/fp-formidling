@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
@@ -19,7 +18,7 @@ public class BeregningsgrunnlagArbeidsforholdDto {
     private BigDecimal naturalytelseTilkommetPrÅr;
 
     public BeregningsgrunnlagArbeidsforholdDto() {
-        // Hibernate
+        //Deserialisering
     }
 
     public String getArbeidsforholdId() {
@@ -92,25 +91,5 @@ public class BeregningsgrunnlagArbeidsforholdDto {
 
     public void setNaturalytelseTilkommetPrÅr(BigDecimal naturalytelseTilkommetPrÅr) {
         this.naturalytelseTilkommetPrÅr = naturalytelseTilkommetPrÅr;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BeregningsgrunnlagArbeidsforholdDto that = (BeregningsgrunnlagArbeidsforholdDto) o;
-        return Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn) &&
-                Objects.equals(arbeidsgiverId, that.arbeidsgiverId) &&
-                Objects.equals(startdato, that.startdato) &&
-                Objects.equals(opphoersdato, that.opphoersdato) &&
-                Objects.equals(arbeidsforholdId, that.arbeidsforholdId) &&
-                Objects.equals(arbeidsforholdType, that.arbeidsforholdType) &&
-                Objects.equals(aktørId, that.aktørId);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(arbeidsgiverNavn, arbeidsgiverId, startdato, opphoersdato, arbeidsforholdId, arbeidsforholdType, aktørId);
     }
 }

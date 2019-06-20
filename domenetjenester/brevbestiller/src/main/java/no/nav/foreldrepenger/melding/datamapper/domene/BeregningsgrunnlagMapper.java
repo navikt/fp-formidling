@@ -35,18 +35,21 @@ public class BeregningsgrunnlagMapper {
     public static BeregningsgrunnlagRegelListeType mapRegelListe(Beregningsgrunnlag beregningsgrunnlag) {
         ObjectFactory objectFactory = new ObjectFactory();
         BeregningsgrunnlagRegelListeType regelListe = objectFactory.createBeregningsgrunnlagRegelListeType();
-        List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe = finnFørstePeriode(beregningsgrunnlag).getBeregningsgrunnlagPrStatusOgAndelList();
+        List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe = finnBgpsaListe(beregningsgrunnlag);
         for (BeregningsgrunnlagAktivitetStatus bgAktivitetStatus : beregningsgrunnlag.getAktivitetStatuser()) {
             BeregningsgrunnlagRegelType beregningsgrunnlagRegel = objectFactory.createBeregningsgrunnlagRegelType();
             List<BeregningsgrunnlagPrStatusOgAndel> filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe);
             beregningsgrunnlagRegel.setRegelStatus(tilStatusTypeKode(bgAktivitetStatus.getAktivitetStatus()));
             beregningsgrunnlagRegel.setAndelListe(mapAndelListe(filtrertListe));
             beregningsgrunnlagRegel.setAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
-            beregningsgrunnlagRegel.setBesteBeregning(harNoenAvAndeleneBesteberegning(filtrertListe));
             beregningsgrunnlagRegel.setSNNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
             regelListe.getBeregningsgrunnlagRegel().add(beregningsgrunnlagRegel);
         }
         return regelListe;
+    }
+
+    public static List<BeregningsgrunnlagPrStatusOgAndel> finnBgpsaListe(Beregningsgrunnlag beregningsgrunnlag) {
+        return finnFørstePeriode(beregningsgrunnlag).getBeregningsgrunnlagPrStatusOgAndelList();
     }
 
     private static Map<AktivitetStatus, StatusTypeKode> aktivitetStatusKodeStatusTypeKodeMap = new HashMap<>();
@@ -87,8 +90,7 @@ public class BeregningsgrunnlagMapper {
 
     public static long finnBrutto(Beregningsgrunnlag beregningsgrunnlag) {
         AtomicLong sum = new AtomicLong();
-        finnFørstePeriode(beregningsgrunnlag)
-                .getBeregningsgrunnlagPrStatusOgAndelList()
+        finnBgpsaListe(beregningsgrunnlag)
                 .forEach(andel -> {
                     if (andel.getAvkortetPrÅr() != null) {
                         sum.addAndGet(andel.getAvkortetPrÅr().longValue());
@@ -160,7 +162,7 @@ public class BeregningsgrunnlagMapper {
                 .count());
     }
 
-    static boolean harNoenAvAndeleneBesteberegning(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+    public static boolean harNoenAvAndeleneBesteberegning(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         return bgpsaListe.stream()
                 .anyMatch(andel -> andel.getBesteberegningPrÅr() != null);
     }

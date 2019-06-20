@@ -246,6 +246,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setBarnErFødt(familieHendelse.isBarnErFødt());
         fagType.setGjelderFoedsel(familieHendelse.isGjelderFødsel());
         fagType.setFødselsHendelse(BehandlingMapper.erRevurderingPgaFødselshendelse(behandling, familieHendelse, originalFamiliehendelse));
+        familieHendelse.getDødsdato().map(XmlUtil::finnDatoVerdiAvUtenTidSone).ifPresent(fagType::setDodsdato);
     }
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {

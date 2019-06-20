@@ -89,7 +89,7 @@ public class BeregningsresultatDtoMapper {
                 || (dto.getArbeidsgiverOrgnr() == null && dto.getAktørId() == null)) {
             return null;
         }
-        return finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr() != null ? dto.getArbeidsgiverOrgnr() : dto.getAktørId());
+        return finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getAktørId() != null ? dto.getAktørId() : dto.getArbeidsgiverOrgnr());
     }
 
     private int summerDagsats(BeregningsresultatPeriodeAndelDto dto) {

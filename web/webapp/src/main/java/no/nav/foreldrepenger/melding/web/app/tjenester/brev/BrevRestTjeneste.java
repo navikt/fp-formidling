@@ -93,6 +93,7 @@ public class BrevRestTjeneste {
         return dokumentBehandlingTjeneste.erDokumentProdusert(dto.getBehandlingUuid(), DokumentMalType.REVURDERING_DOK); // NOSONAR
     }
 
+
     @POST
     @Timed(name = "fpformidling.in.dokument-sendt", absolute = true)
     @Path("/dokument-sendt")
@@ -103,6 +104,16 @@ public class BrevRestTjeneste {
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Boolean harProdusertDokument(@Valid AbacDokumentProdusertDto dto) {
         return dokumentBehandlingTjeneste.erDokumentProdusert(dto.getBehandlingUuid(), dto.getDokumentMal()); // NOSONAR
+    }
+
+    @POST
+    @Path("/dokument-sendt-dummy")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @ApiOperation(value = "Returnerer alltid false")
+    @BeskyttetRessurs(action = READ, ressurs = APPLIKASJON, sporingslogg = false)
+    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
+    public Boolean harProdusertDokumentDummy(@Valid AbacDokumentProdusertDummyDto dto) {
+        return false; // NOSONAR
     }
 
     @POST

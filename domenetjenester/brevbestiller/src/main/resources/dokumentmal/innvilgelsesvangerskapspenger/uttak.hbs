@@ -12,12 +12,14 @@
     {{/each}}
 {{else}}
 {{i18n "I_denne_perioden" ""}}
-    {{#with resultat.uttakPerioder.perioder.[0]}}
+    {{#each resultat.uttakPerioder}}
+        {{#each perioder}}
 {{i18n "fra_og_med_til_og_med" fom tom}}
         {{~#and (lt utbetalingsgrad 100) (gt utbetalingsgrad 0)~}}
 {{i18n "far_du_x_prosent_svp" utbetalingsgrad}}
         {{/and}}
-    {{/with}}
+        {{/each}}
+    {{/each}}
 {{/gt}}
 {{#gt antallPerioder 1}}
 {{i18n "Dette_far_du" (i18n "periodene")}}

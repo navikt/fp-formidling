@@ -80,7 +80,8 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest {
                         .leggTil("antallPerioder", SvpMapper.getAntallPerioder(uttakResultat))
                         .leggTil("antallAvslag", uttakResultat.getAvslagPerioder().size())
                         .leggTil("refusjonTilBruker", true)
-                        .leggTil("refusjonerTilArbeidsgivere", 2);
+                        .leggTil("refusjonerTilArbeidsgivere", 2)
+                        .leggTil("erAutomatiskVedtak", true);
             }
         };
         MockitoAnnotations.initMocks(this);
@@ -123,11 +124,10 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest {
         map.put("nyEllerEndretBeregning", true);
         map.put("bruttoBeregningsgrunnlag", 2334);
         map.put("arbeidstakerEllerFrilanser", true);
-        map.put("arbeidstaker", Map.of("inntektHoyereEnnSnittAvKombinertInntekt", true));
-        map.put("arbeidsforhold", List.of(
+        map.put("arbeidstaker", Map.of("arbeidsforhold", List.of(
                 Map.of("arbeidsgiverNavn", "Tine", "manedsinntekt", "22431"),
                 Map.of("arbeidsgiverNavn", "Forsvaret", "manedsinntekt", "12431")
-        ));
+        )));
         map.put("ikkeSoktForAlleArbeidsforhold", true);
         map.put("frilanser", Map.of("inntektHoyereEnnSnittAvKombinertInntekt", true));
         map.put("ikkeSoktForAlleArbeidsforholdOgOppdrag", true);

@@ -1,18 +1,24 @@
 {{#gt antallPerioder 1}}
 {{i18n "I_disse_periodene" ""}}
+    {{#each resultat.uttakPerioder}}
+{{arbeidsgiverNavn}}:
+        {{#each perioder}}
+{{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" fom tom}}
+            {{~#and (lt utbetalingsgrad 100) (gt utbetalingsgrad 0)~}}
+{{i18n "far_du_x_prosent_svp" utbetalingsgrad}}
+            {{/and}}
+{{#if @last}}-*{{/if}}
+        {{/each}}
+    {{/each}}
 {{else}}
 {{i18n "I_denne_perioden" ""}}
-{{/gt}}
-{{#each resultat.uttakPerioder}}
-{{arbeidsgiverNavn}}:
-    {{#each perioder}}
-{{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" fom tom}}
+    {{#with resultat.uttakPerioder.perioder.[0]}}
+{{i18n "fra_og_med_til_og_med" fom tom}}
         {{~#and (lt utbetalingsgrad 100) (gt utbetalingsgrad 0)~}}
 {{i18n "far_du_x_prosent_svp" utbetalingsgrad}}
         {{/and}}
-{{#if @last}}-*{{/if}}
-    {{/each}}
-{{/each}}
+    {{/with}}
+{{/gt}}
 {{#gt antallPerioder 1}}
 {{i18n "Dette_far_du" (i18n "periodene")}}
 {{else}}
@@ -48,6 +54,6 @@
     {{/eq}}
 {{#if @last}}-*{{/if}}
     {{/each}}
+{{/unless}}
 
 {{i18n "lovref_vedtak"}}{{i18n "lovhjemmel_14_4"}}
-{{/unless}}

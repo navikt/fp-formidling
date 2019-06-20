@@ -6,8 +6,13 @@
     {{/if}}
     {{#if arbeidstaker}}
         {{#each arbeidstaker.arbeidsforhold}}
+            {{#unless (and (eq @index 0) @last)}}
 
 {{i18n "inntekten_din_AT" arbeidsgiverNavn manedsinntekt}}
+            {{else}}
+
+{{i18n "inntekten_din_AT" arbeidsgiverNavn manedsinntekt~}}
+            {{/unless}}
         {{/each}}
         {{#gt (size arbeidstaker.arbeidsforhold) 1}}
 
@@ -44,8 +49,10 @@
             {{#with selvstendigNaringsdrivende}}
                 {{#unless nyoppstartet}}
 {{i18n "inntektgrunnlag_SN" aarsinntekt sistLignedeAar1 sistLignedeAar2 sistLignedeAar3}}
+
                 {{else}}
 {{i18n "inntektgrunnlag_ny_SN" aarsinntekt}}
+
                 {{/unless}}
             {{/with}}
         {{else}}

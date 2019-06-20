@@ -85,10 +85,11 @@ public class BeregningsresultatDtoMapper {
     }
 
     private Arbeidsgiver mapArbeidsgiverFraDto(BeregningsresultatPeriodeAndelDto dto) {
-        if (!AktivitetStatus.ARBEIDSTAKER.getKode().equals(dto.getAktivitetStatus().getKode()) || dto.getArbeidsgiverOrgnr() == null) {
+        if (!AktivitetStatus.ARBEIDSTAKER.getKode().equals(dto.getAktivitetStatus().getKode())
+                || (dto.getArbeidsgiverOrgnr() == null && dto.getAktørId() == null)) {
             return null;
         }
-        return finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr());
+        return finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverOrgnr() != null ? dto.getArbeidsgiverOrgnr() : dto.getAktørId());
     }
 
     private int summerDagsats(BeregningsresultatPeriodeAndelDto dto) {

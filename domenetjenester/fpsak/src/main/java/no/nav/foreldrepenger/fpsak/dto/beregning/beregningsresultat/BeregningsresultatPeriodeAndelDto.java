@@ -8,6 +8,7 @@ import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 public class BeregningsresultatPeriodeAndelDto {
     private String arbeidsgiverNavn;
     private String arbeidsgiverOrgnr;
+    private String aktørId;
     private Integer refusjon;
     private Integer tilSoker;
     private UttakDto uttak;
@@ -17,6 +18,13 @@ public class BeregningsresultatPeriodeAndelDto {
     private String arbeidsforholdId;
     private KodeDto arbeidsforholdType;
     private BigDecimal stillingsprosent;
+
+    public BeregningsresultatPeriodeAndelDto() {
+    }
+
+    public String getAktørId() {
+        return aktørId;
+    }
 
     public String getArbeidsgiverNavn() {
         return arbeidsgiverNavn;

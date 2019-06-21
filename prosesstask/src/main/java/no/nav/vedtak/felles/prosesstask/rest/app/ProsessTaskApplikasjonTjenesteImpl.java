@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
@@ -21,6 +22,7 @@ import no.nav.vedtak.felles.prosesstask.rest.dto.FeiletProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataKonverter;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataPayloadDto;
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskEndreStatusInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRestartInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRestartResultatDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRetryAllResultatDto;
@@ -124,6 +126,15 @@ public class ProsessTaskApplikasjonTjenesteImpl implements ProsessTaskApplikasjo
         LocalDateTime neste = new CronExpression(type.getCronExpression()).neste(LocalDateTime.now());
         data.setNesteKjøringEtter(neste);
         prosessTaskRepository.lagre(data);
+    }
+
+    @Override
+    public Response endreStatusPåProsessTask(ProsessTaskEndreStatusInputDto endreStatusInputDto) {
+        ProsessTaskData prosessTaskData = prosessTaskRepository.finn(endreStatusInputDto.getProsessTaskId());
+        ProsessTaskStatus status = ProsessTaskStatus.valueOf(endreStatusInputDto.getProsessTaskStatusDto().getProsessTaskStatusName());
+        prosessTaskData.setStatus(status);
+        prosessTaskRepository.lagre(prosessTaskData);
+        return Response.ok().build();
     }
 
     private void oppdaterProsessTaskDataMedKjoerbarStatus(ProsessTaskData eksisterendeProsessTaskData) {

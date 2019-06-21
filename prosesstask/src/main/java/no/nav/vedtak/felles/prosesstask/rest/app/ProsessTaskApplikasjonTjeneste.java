@@ -3,9 +3,12 @@ package no.nav.vedtak.felles.prosesstask.rest.app;
 import java.util.List;
 import java.util.Optional;
 
+import javax.ws.rs.core.Response;
+
 import no.nav.vedtak.felles.prosesstask.rest.dto.FeiletProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataPayloadDto;
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskEndreStatusInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRestartInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRestartResultatDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRetryAllResultatDto;
@@ -24,6 +27,8 @@ public interface ProsessTaskApplikasjonTjeneste {
      * som trigger den.
      */
     ProsessTaskRestartResultatDto flaggProsessTaskForRestart(ProsessTaskRestartInputDto prosessTaskRestartInputDto);
+
+    Response endreStatusPåProsessTask(ProsessTaskEndreStatusInputDto endreStatusInputDto);
 
     ProsessTaskRetryAllResultatDto flaggAlleFeileteProsessTasksForRestart();
 

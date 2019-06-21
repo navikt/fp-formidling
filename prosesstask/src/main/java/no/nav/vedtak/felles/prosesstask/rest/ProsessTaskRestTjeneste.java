@@ -32,6 +32,7 @@ import no.nav.vedtak.felles.prosesstask.rest.dto.FeiletProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataInfo;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataPayloadDto;
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskEndreStatusInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskIdDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRestartInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRestartResultatDto;
@@ -82,6 +83,28 @@ public class ProsessTaskRestTjeneste {
         logger.info("Restarter prossess task {}", restartInputDto.getProsessTaskId());
 
         return prosessTaskApplikasjonTjeneste.flaggProsessTaskForRestart(restartInputDto);
+    }
+
+    @POST
+    @Path("/endre-status")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(
+            value = "Oppdaterer status på en eksisterende prosesstask",
+            notes = "Dette tvinger gitt status på en eksisterende prosesstask"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 200,
+                    message = "OK",
+                    response = Response.class
+            ),
+            @ApiResponse(code = 500, message = "Feilet pga ukjent feil eller tekniske/funksjonelle feil")
+    })
+    @BeskyttetRessurs(action = CREATE, ressurs = DRIFT)
+    public Response endreStatusPåProsessTask(@ApiParam("Informasjon for endring av status av eksisterende prosess task") @Valid ProsessTaskEndreStatusInputDto endreStatusInputDto) {
+        //kjøres manuelt for å avhjelpe feilsituasjon, da er det veldig greit at det blir logget!
+        logger.warn("Endrer status på  prossess task {} til {}", endreStatusInputDto.getProsessTaskId(), endreStatusInputDto.getProsessTaskStatusDto().getProsessTaskStatusName());
+        return prosessTaskApplikasjonTjeneste.endreStatusPåProsessTask(endreStatusInputDto);
     }
 
     @POST

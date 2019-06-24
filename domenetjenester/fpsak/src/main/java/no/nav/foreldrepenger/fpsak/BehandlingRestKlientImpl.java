@@ -105,13 +105,10 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
 
     @Override
     @Timed(name = "fpformidling.out.verge", absolute = true)
-    public VergeDto hentVerge(List<BehandlingResourceLink> resourceLinker) {
+    public Optional<VergeDto> hentVergeHvisfinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "soeker-verge".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, VergeDto.class))
-                .orElseThrow(() -> {
-                    throw new IllegalStateException("Klarte ikke hente Verge for behandling: " + hentBehandlingId(resourceLinker));
-                });
+                .findFirst().flatMap(link -> hentDtoFraLink(link, VergeDto.class));
     }
 
     @Override

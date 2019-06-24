@@ -54,7 +54,14 @@ public class DokumentFellesDataMapper {
             return;
         }
 
-        Verge verge = domeneobjektProvider.hentVerge(behandling);
+        Optional<Verge> vergeOpt = domeneobjektProvider.hentVerge(behandling);
+        if (vergeOpt.isEmpty()) {
+            opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
+            return;
+        }
+
+        Verge verge = vergeOpt.get();
+
         AktørId vergesAktørId = tpsTjeneste.hentAktørForFnr(PersonIdent.fra(verge.getFnr())).orElseThrow(IllegalStateException::new);
 
         if (verge.brevTilBegge()) {

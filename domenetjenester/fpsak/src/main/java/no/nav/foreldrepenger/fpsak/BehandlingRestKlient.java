@@ -34,7 +34,7 @@ public interface BehandlingRestKlient {
 
     PersonopplysningDto hentPersonopplysninger(List<BehandlingResourceLink> resourceLinkDtos);
 
-    VergeDto hentVerge(List<BehandlingResourceLink> resourceLinkDtos);
+    Optional<VergeDto> hentVergeHvisfinnes(List<BehandlingResourceLink> resourceLinkDtos);
 
     FamilieHendelseGrunnlagDto hentFamiliehendelse(List<BehandlingResourceLink> resourceLinkDtos);
 

@@ -205,8 +205,8 @@ public class DomeneobjektProvider {
         return aksjonspunktDtoMapper.mapAksjonspunktFraDto(behandlingRestKlient.hentAksjonspunkter(behandling.getResourceLinker()));
     }
 
-    public Verge hentVerge(Behandling behandling) {
-        return VergeDtoMapper.mapVergeFraDto(behandlingRestKlient.hentVerge(behandling.getResourceLinker()));
+    public Optional<Verge> hentVerge(Behandling behandling) {
+        return behandlingRestKlient.hentVergeHvisfinnes(behandling.getResourceLinker()).map(VergeDtoMapper::mapVergeFraDto);
     }
 
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {

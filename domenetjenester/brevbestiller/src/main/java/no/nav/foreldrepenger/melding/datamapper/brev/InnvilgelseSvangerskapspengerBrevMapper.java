@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.SvpMapper.mapFra;
 import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -13,6 +13,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
+import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
@@ -49,6 +50,9 @@ public class InnvilgelseSvangerskapspengerBrevMapper extends FritekstmalBrevMapp
 
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
+        if (behandling.erRevurdering()) { // TODO
+            throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
+        }
         List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         XMLGregorianCalendar søknadsDato = MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter);
 
@@ -56,17 +60,10 @@ public class InnvilgelseSvangerskapspengerBrevMapper extends FritekstmalBrevMapp
         BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
         SvpUttaksresultat svpUttaksresultat = domeneobjektProvider.hentUttaksresultatSvp(behandling);
 
-        Map<String, Object> beregning = SvpMapper.mapFra(svpUttaksresultat, hendelse, beregningsgrunnlag, beregningsresultatFP, behandling);
-        svpUttaksresultat = SvpMapper.utvidOgTilpassBrev(svpUttaksresultat, beregningsresultatFP);
-
         return new Brevdata()
-                .leggTil("resultat", svpUttaksresultat)
-                .leggTil("beregning", beregning)
+                .leggTilAlle(mapFra(svpUttaksresultat, hendelse, beregningsgrunnlag, beregningsresultatFP, behandling))
                 .leggTil("manedsbelop", BeregningsresultatMapper.finnMånedsbeløp(beregningsresultatFP))
                 .leggTil("mottattDato", medFormatering(PeriodeVerktøy.xmlGregorianTilLocalDate(søknadsDato)))
-                .leggTil("periodeDagsats", SvpMapper.getPeriodeDagsats(beregningsresultatFP))
-                .leggTil("antallPerioder", SvpMapper.getAntallPerioder(svpUttaksresultat))
-                .leggTil("antallAvslag", svpUttaksresultat.getAvslagPerioder().size())
                 .leggTil("refusjonTilBruker", 0 < BeregningsresultatMapper.finnTotalBrukerAndel(beregningsresultatFP))
                 .leggTil("refusjonerTilArbeidsgivere", SvpMapper.finnAntallRefusjonerTilArbeidsgivere(beregningsresultatFP));
     }

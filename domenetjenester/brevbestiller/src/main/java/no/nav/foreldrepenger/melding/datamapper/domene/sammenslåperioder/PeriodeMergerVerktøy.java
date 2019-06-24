@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
 
-class PeriodeMergerVerktøy {
+public class PeriodeMergerVerktøy {
 
     private PeriodeMergerVerktøy() {
         //SONAR
@@ -52,11 +52,13 @@ class PeriodeMergerVerktøy {
     }
 
     private static boolean erFomRettEtterTomDato(XMLGregorianCalendar periodeEnTom, XMLGregorianCalendar periodeToFom) {
-        LocalDate tomEnDate = DateUtil.convertToLocalDate(periodeEnTom);
-        LocalDate fomToDate = DateUtil.convertToLocalDate(periodeToFom);
-        return tomEnDate.plusDays(1).isEqual(fomToDate) ||
-                tomEnDate.plusDays(2).isEqual(fomToDate) && erLørdagEllerSøndag(tomEnDate.plusDays(1)) ||
-                tomEnDate.plusDays(3).isEqual(fomToDate) && erLørdag(tomEnDate.plusDays(1)) && erSøndag(tomEnDate.plusDays(2));
+        return erFomRettEtterTomDato(DateUtil.convertToLocalDate(periodeEnTom), DateUtil.convertToLocalDate(periodeToFom));
+    }
+
+    public static boolean erFomRettEtterTomDato(LocalDate periodeEnTom, LocalDate periodeToFom) {
+        return periodeEnTom.plusDays(1).isEqual(periodeToFom) ||
+                periodeEnTom.plusDays(2).isEqual(periodeToFom) && erLørdagEllerSøndag(periodeEnTom.plusDays(1)) ||
+                periodeEnTom.plusDays(3).isEqual(periodeToFom) && erLørdag(periodeEnTom.plusDays(1)) && erSøndag(periodeEnTom.plusDays(2));
     }
 
     private static boolean erLørdagEllerSøndag(LocalDate date) {

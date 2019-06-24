@@ -15,8 +15,10 @@
     {{#each uttakPerioder}}
         {{#each perioder}}
 {{i18n "fra_og_med_til_og_med" fom tom}}
-        {{~#and (lt utbetalingsgrad 100) (gt utbetalingsgrad 0)~}}
+        {{~#and (lt utbetalingsgrad 100) (gt utbetalingsgrad 0)}}
 {{i18n "far_du_x_prosent_svp" utbetalingsgrad}}
+        {{else}}
+
         {{/and}}
         {{/each}}
     {{/each}}

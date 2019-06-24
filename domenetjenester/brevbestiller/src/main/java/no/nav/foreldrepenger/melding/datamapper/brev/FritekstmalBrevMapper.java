@@ -139,6 +139,11 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
             return this;
         }
 
+        Brevdata leggTilAlle(Map mappings) {
+            map.putAll(mappings);
+            return this;
+        }
+
         private void mapFellesdata() {
             map.put("kontaktTelefonnummer", dokumentFelles.getKontaktTlf());
             map.put("navnAvsenderEnhet", dokumentFelles.getNavnAvsenderEnhet());

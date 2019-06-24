@@ -27,7 +27,7 @@ public class DatoIntervallImpl implements DatoIntervall {
         return tomDato.toLocalDate();
     }
 
-    public DatoIntervallImpl(LocalDate fomDato, LocalDate tomDato) {
+    public DatoIntervallImpl(Dato fomDato, Dato tomDato) {
         if (fomDato == null) {
             throw new IllegalArgumentException("Fra og med dato må være satt.");
         }
@@ -37,8 +37,12 @@ public class DatoIntervallImpl implements DatoIntervall {
         if (tomDato.isBefore(fomDato)) {
             throw new IllegalArgumentException("Til og med dato før fra og med dato.");
         }
-        this.fomDato = new Dato(fomDato);
-        this.tomDato = new Dato(tomDato);
+        this.fomDato = fomDato;
+        this.tomDato = tomDato;
+    }
+
+    public DatoIntervallImpl(LocalDate fom, LocalDate tom) {
+        this(new Dato(fom), new Dato(tom));
     }
 
     @Override

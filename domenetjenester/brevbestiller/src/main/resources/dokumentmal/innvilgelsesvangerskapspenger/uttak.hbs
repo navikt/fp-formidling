@@ -1,7 +1,7 @@
 {{#gt antallPerioder 1}}
 {{i18n "I_disse_periodene" ""}}
-    {{#each resultat.uttakPerioder}}
-{{arbeidsgiverNavn}}:
+    {{#each uttakPerioder}}
+{{@key}}:
         {{#each perioder}}
 {{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" fom tom}}
             {{~#and (lt utbetalingsgrad 100) (gt utbetalingsgrad 0)~}}
@@ -12,7 +12,7 @@
     {{/each}}
 {{else}}
 {{i18n "I_denne_perioden" ""}}
-    {{#each resultat.uttakPerioder}}
+    {{#each uttakPerioder}}
         {{#each perioder}}
 {{i18n "fra_og_med_til_og_med" fom tom}}
         {{~#and (lt utbetalingsgrad 100) (gt utbetalingsgrad 0)~}}
@@ -20,26 +20,25 @@
         {{/and}}
         {{/each}}
     {{/each}}
-
 {{/gt}}
-{{#gt antallPerioder 1}}
-{{i18n "Dette_far_du" (i18n "periodene")}}
+{{#gt (size periodeDagsats) 1}}
+{{~i18n "Dette_far_du" (i18n "periodene")}}
 {{else}}
-{{i18n "Dette_far_du" (i18n "perioden")}}
+{{~i18n "Dette_far_du" (i18n "perioden")}}
 {{/gt}}
 {{#each periodeDagsats}}
-{{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" @key.fom @key.tom}}
-{{~i18n "x_kroner_pr_dag" . }}
+{{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" periode.fom periode.tom}}
+{{~i18n "x_kroner_pr_dag" dagsats }}
 {{#if @last}}-*{{/if}}
 {{/each}}
-{{#unless (eq 0 antallAvslag)}}
-    {{#gt antallAvslag 1}}
-{{i18n "I_disse_periodene" (i18n "ikke")}}
+{{#unless (eq (size avslagPerioder) 0)}}
+    {{#gt (size avslagPerioder) 1}}
+{{~i18n "I_disse_periodene" (i18n "ikke")}}
     {{else}}
-{{i18n "I_denne_perioden" (i18n "ikke")}}
+{{~i18n "I_denne_perioden" (i18n "ikke")}}
     {{/gt}}
-    {{#each resultat.avslagPerioder}}
-{{#if @first}}*-{{/if}}
+    {{#each avslagPerioder}}
+{{#if @first}}*-{{/if~}}
         {{#eq aarsakskode 8311}}
 {{i18n "fra_og_med_til_og_med" fom tom ~}}
 {{i18n "pga_ferie"}}
@@ -54,7 +53,7 @@
 {{i18n "fra_og_med_til_og_med" fom tom ~}}
 {{i18n "ikke_rett"~}}
 {{i18n "pga_sokt_for_sent" mottattDato}}
-    {{/eq}}
+        {{/eq}}
 {{#if @last}}-*{{/if}}
     {{/each}}
 {{/unless}}

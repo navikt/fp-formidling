@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.uttak.svp;
 
-import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -34,7 +33,7 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
     }
 
     public String getArbeidsgiverNavn() {
-        return arbeidsgiverNavn.orElse("Andel");
+        return arbeidsgiverNavn.orElse("");
     }
 
     @Override

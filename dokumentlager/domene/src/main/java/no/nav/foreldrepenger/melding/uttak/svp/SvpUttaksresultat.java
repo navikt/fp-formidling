@@ -5,6 +5,7 @@ import static no.nav.vedtak.konfig.Tid.TIDENES_ENDE;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -15,13 +16,13 @@ public class SvpUttaksresultat {
     private List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold;
     private List<SvpUttakResultatPerioder> uttakPerioder;
 
-    private List<SvpUttakResultatPeriode> avslagPerioder;
+    private List<Map> avslagPerioder;
 
     public List<SvpUttakResultatPerioder> getUttakPerioder() {
         return uttakPerioder;
     }
 
-    public List<SvpUttakResultatPeriode> getAvslagPerioder() {
+    public List<Map> getAvslagPerioder() {
         return avslagPerioder;
     }
 
@@ -48,7 +49,7 @@ public class SvpUttaksresultat {
     public static final class Builder {
         private List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold = new ArrayList<>();
         private List<SvpUttakResultatPerioder> uttakResultatPerioder = new ArrayList();
-        private List<SvpUttakResultatPeriode> avslåttePerioder = new ArrayList();
+        private List<Map> avslåttePerioder = new ArrayList();
 
         public Builder() {
         }
@@ -67,7 +68,7 @@ public class SvpUttaksresultat {
             return this;
         }
 
-        public Builder medAvslåttePerioder(List<SvpUttakResultatPeriode> avslåttePerioder) {
+        public Builder medAvslåttePerioder(List<Map> avslåttePerioder) {
             this.avslåttePerioder = avslåttePerioder;
             return this;
         }

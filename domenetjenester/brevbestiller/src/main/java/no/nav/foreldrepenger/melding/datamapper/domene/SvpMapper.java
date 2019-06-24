@@ -7,18 +7,18 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.Beregningsgrunnlag
 import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getBgBruttoPrÅr;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getMånedsinntekt;
 import static no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper.formaterLovhjemlerForBeregning;
+import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp.erPerioderSammenhengendeOgSkalSlåSammen;
 
 import java.time.chrono.ChronoLocalDate;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -40,10 +40,10 @@ import no.nav.foreldrepenger.melding.typer.Dato;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
+@SuppressWarnings("unchecked")
 public class SvpMapper {
 
     private SvpMapper() {
@@ -62,16 +62,15 @@ public class SvpMapper {
 
     public static Map<String, Object> mapFra(SvpUttaksresultat svpUttaksresultat, DokumentHendelse hendelse, Beregningsgrunnlag beregningsgrunnlag, BeregningsresultatFP beregningsresultat, Behandling behandling) {
         Map<String, Object> map = new HashMap<>(mapAtFlSnForholdFra(beregningsgrunnlag));
+        map.putAll(mapAktiviteter(svpUttaksresultat, beregningsresultat, beregningsgrunnlag));
         map.put("nyEllerEndretBeregning", erNyEllerEndretBeregning(behandling));
         map.put("bruttoBeregningsgrunnlag", BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag));
-        map.put("naturalytelse", mapAktiviteter(svpUttaksresultat, beregningsresultat, beregningsgrunnlag).getOrDefault("naturalytelse", null));
         map.put("militarSivil", BeregningsgrunnlagMapper.militærEllerSivilTjeneste(beregningsgrunnlag));
         map.put("inntektOver6G", BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag));
         map.put("seksG", BeregningsgrunnlagMapper.finnSeksG(beregningsgrunnlag).intValue());
         map.put("lovhjemmel", getLovhjemmelForBeregning(beregningsgrunnlag, behandling));
         mapIkkeSøkteAktiviteter(map);
-        BehandlingMapper.avklarFritekst(hendelse, behandling).ifPresent(fritekst ->
-                map.put("fritekst", fritekst));
+        BehandlingMapper.avklarFritekst(hendelse, behandling).ifPresent(fritekst -> map.put("fritekst", fritekst));
         return map;
     }
 
@@ -157,13 +156,17 @@ public class SvpMapper {
 
     private static void leggTilArbeidsforhold(Map<String, Map> map, BeregningsgrunnlagPrStatusOgAndel andel) {
         getArbeidsgiverNavn(andel).ifPresent(arbeidsgiverNavn -> hentEllerOpprettNyArbeidsforholdListe(map).add(Map.of(
-                "arbeidsgiverNavn", arbeidsgiverNavn, "manedsinntekt", getMånedsinntekt(andel).toString()
+                "arbeidsgiverNavn", arbeidsgiverNavn, "manedsinntekt", getMånedsinntekt(andel).intValue()
         )));
     }
 
-    private static HashSet hentEllerOpprettNyArbeidsforholdListe(Map<String, Map> map) {
-        map.putIfAbsent("arbeidstaker", new HashMap<>(Map.of("arbeidsforhold", new HashSet<>())));
-        return (HashSet) map.get("arbeidstaker").get("arbeidsforhold");
+    private static Set hentEllerOpprettNyArbeidsforholdListe(Map<String, Map> map) {
+        map.putIfAbsent("arbeidstaker", new HashMap<>(Map.of("arbeidsforhold", new TreeSet<Map>(sotertEtterMånedsinntektHøyesteFørst()))));
+        return (Set) map.get("arbeidstaker").get("arbeidsforhold");
+    }
+
+    private static Comparator<Object> sotertEtterMånedsinntektHøyesteFørst() {
+        return Comparator.comparing(arbeidsforhold -> ((Integer) ((Map) arbeidsforhold).get("manedsinntekt"))).reversed();
     }
 
     public static boolean erNyEllerEndretBeregning(Behandling behandling) {
@@ -171,7 +174,7 @@ public class SvpMapper {
                 behandling.getBehandlingsresultat().getKonsekvenserForYtelsen().contains(ENDRING_I_BEREGNING);
     }
 
-    public static Map mapAktiviteter(SvpUttaksresultat svpUttaksresultat, BeregningsresultatFP beregningsresultatFP,
+    public static Map mapAktiviteter(SvpUttaksresultat svpUttaksresultat, BeregningsresultatFP beregningsresultatFP, // TODO Tor Refaktorer: Trekk ut ting som kan puttes i egne metoder
                                      Beregningsgrunnlag beregningsgrunnlag) {
         Map<String, Object> map = new HashMap<>();
         Set<Map> naturalytelser = new TreeSet<>(Comparator.comparing(naturalytelse -> ((ChronoLocalDate) naturalytelse.get("endringsDato"))));
@@ -182,128 +185,134 @@ public class SvpMapper {
         List<BeregningsgrunnlagPeriode> beregningingsgrunnlagperioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
 
         map.put("avslagPerioder", plukkAvslåttePeridoder(uttakPerioder));
-        map.put("innvilgedePerioder", new HashSet<>());
+        map.put("uttakPerioder", new HashMap<>());
 
+        LinkedList<BeregningsresultatPeriode> periodeDagsats = new LinkedList<>();
 
         beregningsresultatPerioder.stream()
                 .forEach(beregningsresultatPeriode -> {
                     var matchetBgPeriode = PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder);
                     var matchetUttaksperiode = PeriodeBeregner.finnUttakPeriode(beregningsresultatPeriode, uttakPerioder);
-                    beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
-                            .forEach(andel -> {
-                                // map arbeidsforhold/aktiviteter
-                                AktivitetStatus aktivitetStatus = andel.getAktivitetStatus();
-                                String arbeidsgiverNavn = andel.getArbeidsgiver().map(Arbeidsgiver::getNavn)
-                                        .orElse(aktivitetStatus.erFrilanser() ? "Som frilanser" : aktivitetStatus.erSelvstendigNæringsdrivende() ?
-                                                "Som næringsdrivende" : matchetUttaksperiode.getArbeidsgiverNavn());
-                                SvpUttakResultatPeriode periode = SvpUttakResultatPeriode.ny()
-                                        .medAktivitetDagsats((long) andel.getDagsats())
-                                        .medUtbetalingsgrad(matchetUttaksperiode.getUtbetalingsgrad())
-                                        .medTidsperiode(matchetUttaksperiode.getTidsperiode())
-                                        .build();
-                                ((Collection) map.get("innvilgedePerioder")).add(Map.of("arbeidsgiverNavn", arbeidsgiverNavn, "perioder", periode));
-
-                                // map naturalytelse
-                                PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(matchetBgPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel)
-                                        .ifPresent(bgAndel -> {
-                                            bgAndel.getBgAndelArbeidsforhold().ifPresent(bgAndelArbeidsforhold -> {
-                                                if (bgAndelArbeidsforhold.getNaturalytelseBortfaltPrÅr() != null ||
-                                                        bgAndelArbeidsforhold.getNaturalytelseTilkommetPrÅr() != null) {
-                                                    Map naturalytelse = mapNaturalytelse(matchetBgPeriode, beregningsresultatPeriode, arbeidsgiverNavn);
-                                                    naturalytelser.add(naturalytelse);
-                                                }
-                                            });
-                                        });
-                            });
-                });
-        map.put("naturalytelse", naturalytelser);
-        return map;
-    }
-
-    @Deprecated // TODO (Tor) Konsolideres i metoden over
-    public static SvpUttaksresultat utvidOgTilpassBrev(SvpUttaksresultat svpUttaksresultat, BeregningsresultatFP beregningsresultatFP) {
-        SvpUttaksresultat.Builder builder = SvpUttaksresultat.ny();
-
-        List<SvpUttakResultatPeriode> uttakPerioder = svpUttaksresultat.getUttakResultatArbeidsforhold().stream()
-                .flatMap(ur -> ur.getPerioder().stream()).collect(Collectors.toList());
-        List<BeregningsresultatPeriode> beregningsresultatPerioder = beregningsresultatFP.getBeregningsresultatPerioder();
-        builder.medAvslåttePerioder(plukkAvslåttePeridoder(uttakPerioder));
-
-        Map<String, Set<SvpUttakResultatPeriode>> perioderPerArbeidsgiver = new HashMap<>();
-
-        beregningsresultatPerioder.stream()
-                .forEach(beregningsresultatPeriode -> {
-                    var matchetUttaksperiode = PeriodeBeregner.finnUttakPeriode(beregningsresultatPeriode, uttakPerioder);
                     if (matchetUttaksperiode.isInnvilget()) {
-                        beregningsresultatPeriode.getBeregningsresultatAndelList().stream()  // map arbeidsforhold/aktiviteter
+                        beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
                                 .forEach(andel -> {
+                                    // map arbeidsforhold/aktiviteter
                                     AktivitetStatus aktivitetStatus = andel.getAktivitetStatus();
                                     String arbeidsgiverNavn = andel.getArbeidsgiver().map(Arbeidsgiver::getNavn)
                                             .orElse(aktivitetStatus.erFrilanser() ? "Som frilanser" : aktivitetStatus.erSelvstendigNæringsdrivende() ?
                                                     "Som næringsdrivende" : matchetUttaksperiode.getArbeidsgiverNavn());
-                                    SvpUttakResultatPeriode periode = SvpUttakResultatPeriode.ny()
+                                    SvpUttakResultatPeriode uttakResultat = SvpUttakResultatPeriode.ny()
                                             .medAktivitetDagsats((long) andel.getDagsats())
                                             .medUtbetalingsgrad(matchetUttaksperiode.getUtbetalingsgrad())
-                                            .medTidsperiode(beregningsresultatPeriode.getPeriode())
+                                            .medTidsperiode(matchetUttaksperiode.getTidsperiode())
                                             .build();
-                                    Set<SvpUttakResultatPeriode> periodeSet = perioderPerArbeidsgiver.getOrDefault(arbeidsgiverNavn, new HashSet<>());
-                                    periodeSet.add(periode);
-                                    perioderPerArbeidsgiver.put(arbeidsgiverNavn, periodeSet);
+
+                                    Map eksisterendeMap = (Map) ((Map) map.get("uttakPerioder"))
+                                            .putIfAbsent(arbeidsgiverNavn, new HashMap<>(Map.of("perioder", new TreeSet<>(Set.of(uttakResultat)))));
+                                    if (eksisterendeMap != null) {
+                                        eksisterendeMap.merge("perioder", uttakResultat, leggTilEllerMergeHvisSammenhengende());
+                                    }
+
+                                    PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(matchetBgPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel)
+                                            .ifPresent(bgAndel -> {
+                                                bgAndel.getBgAndelArbeidsforhold().ifPresent(bgAndelArbeidsforhold -> {
+                                                    if (bgAndelArbeidsforhold.getNaturalytelseBortfaltPrÅr() != null ||
+                                                            bgAndelArbeidsforhold.getNaturalytelseTilkommetPrÅr() != null) {
+                                                        Map naturalytelse = mapNaturalytelse(matchetBgPeriode, beregningsresultatPeriode, arbeidsgiverNavn);
+                                                        naturalytelser.add(naturalytelse);
+                                                    }
+                                                });
+                                            });
                                 });
+                    }
+
+                    if (periodeDagsats.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(periodeDagsats.getLast(), beregningsresultatPeriode)) {
+                        periodeDagsats.add(beregningsresultatPeriode);
+                    } else {
+                        var sammenhengendeFom = periodeDagsats.pollLast().getPeriode().getFom();
+                        periodeDagsats.add(BeregningsresultatPeriode.ny()
+                                .medPeriode(DatoIntervall.fraOgMedTilOgMed(sammenhengendeFom, beregningsresultatPeriode.getPeriode().getTom()))
+                                .medDagsats(beregningsresultatPeriode.getDagsats())
+                                .build());
                     }
                 });
 
-        perioderPerArbeidsgiver.keySet().stream()
-                .forEach(arbeidsgiverNavn -> {
-                    SvpUttakResultatPerioder forArbeidsgiver = SvpUttakResultatPerioder.ny()
-                            .medArbeidsgiverNavn(arbeidsgiverNavn)
-                            .medPerioder(perioderPerArbeidsgiver.get(arbeidsgiverNavn).stream().sorted().collect(Collectors.toList()))
-                            .build();
-                    builder.medUttakResultatPerioder(forArbeidsgiver);
-                });
+        map.put("antallPerioder", getAntallPerioder((Map) map.get("uttakPerioder")));
+        map.put("periodeDagsats", periodeDagsats);
+        map.put("naturalytelse", naturalytelser);
 
-        return builder.build();
+        return map;
+    }
+
+    private static int getAntallPerioder(Map uttakPerioder) {
+        return  uttakPerioder.values().stream()
+                .mapToInt(foreachArbeidsforhold -> ((Set) ((Map) foreachArbeidsforhold).get("perioder")).size())
+                .sum();
+    }
+
+    private static BiFunction leggTilEllerMergeHvisSammenhengende() {
+        return (perioder, nyPeriode) -> {
+            ((Set) perioder).add(nyPeriode);
+            var perioderEtterSammenslåing = new TreeSet<SvpUttakResultatPeriode>();
+            return ((Set) perioder).stream()
+                    .reduce(perioderEtterSammenslåing, slåSammenSammenhengendePerioder(), dummyCombiner());
+        };
+    }
+
+    private static BinaryOperator dummyCombiner() { // trengs ikke for sekvensielle streams
+        return (result1, result2) -> {
+            ((Set) result1).addAll((Set) result2);
+            return result1;
+        };
+    }
+
+    private static BiFunction slåSammenSammenhengendePerioder() {
+        return (delresultat, element) -> {
+            var next = (SvpUttakResultatPeriode) element;
+            var resultat = (TreeSet<SvpUttakResultatPeriode>) delresultat;
+            if (resultat.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(resultat.last(), next)) {
+                resultat.add(next);
+            } else {
+                var previous = resultat.pollLast();
+                resultat.add(SvpUttakResultatPeriode.ny(previous)
+                        .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(previous.getFom(), next.getTom()))
+                        .build());
+            }
+            return resultat;
+        };
     }
 
     private static Map mapNaturalytelse(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, BeregningsresultatPeriode beregningsresultatPeriode, String arbeidsgiverNavn) {
         Map<String, Object> map = new HashMap<>();
+        String endringType = null;
         for (PeriodeÅrsak årsak : beregningsgrunnlagPeriode.getperiodeÅrsaker()) {
             if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.equals(årsak)) {
-                map.put("bortfaller", true);
+                endringType = "bortfaller";
             } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.equals(årsak)) {
-                map.put("tilkommer", true);
+                endringType = "tilkommer";
             } else {
-                continue;
+                endringType = null;
             }
+        }
+        if (endringType != null) {
             map.put("arbeidsgiverNavn", arbeidsgiverNavn);
+            map.put(endringType, true);
             map.put("nyDagsats", beregningsgrunnlagPeriode.getDagsats());
             map.put("endringsDato", Dato.medFormatering(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
         }
         return map;
     }
 
-    private static List<SvpUttakResultatPeriode> plukkAvslåttePeridoder(List<SvpUttakResultatPeriode> uttakPerioder) {
+    public static List<Map> plukkAvslåttePeridoder(List<SvpUttakResultatPeriode> uttakPerioder) {
         return uttakPerioder.stream()
                 .filter(Predicate.not(SvpUttakResultatPeriode::isInnvilget))
                 .filter(Predicate.not(periode -> PeriodeIkkeOppfyltÅrsak.INGEN.equals(periode.getPeriodeIkkeOppfyltÅrsak())))
+                .map(AvslåttPeriode -> Map.of(
+                        "fom", AvslåttPeriode.getFom(), "tom", AvslåttPeriode.getTom(),
+                        "aarsakskode", AvslåttPeriode.getAarsakskode(), "arbeidsgiverNavn", AvslåttPeriode.getArbeidsgiverNavn()
+                ))
+                .distinct()
                 .collect(Collectors.toList());
     }
 
-
-    public static int getAntallPerioder(SvpUttaksresultat uttakResultat) {
-        return (int) uttakResultat.getUttakPerioder().stream()
-                .flatMap(arbeidsforhold -> arbeidsforhold.getPerioder().stream())
-                .count();
-    }
-
-    public static Map<DatoIntervall, Integer> getPeriodeDagsats(BeregningsresultatFP beregningsresultatFP) {
-        Map<DatoIntervall, Integer> periodeDagsats = new TreeMap<>(DatoIntervall::compareTo);
-        beregningsresultatFP.getBeregningsresultatPerioder().stream().forEach(p -> {
-            int dagsats = p.getDagsats().intValue();
-            if (dagsats > 0) {
-                periodeDagsats.put(p.getPeriode(), dagsats);
-            }
-        });
-        return periodeDagsats;
-    }
 }

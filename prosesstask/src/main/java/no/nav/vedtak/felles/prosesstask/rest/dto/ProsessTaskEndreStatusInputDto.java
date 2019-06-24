@@ -5,7 +5,9 @@ import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
 public class ProsessTaskEndreStatusInputDto implements AbacDto {
 
-    private ProsessTaskStatusDto prosessTaskStatusDto;
+    private ProsessTaskStatusDto nyStatus;
+    private ProsessTaskStatusDto nåværendeStatus;
+    private String tasktype;
     private Long prosessTaskId;
 
     public Long getProsessTaskId() {
@@ -16,12 +18,28 @@ public class ProsessTaskEndreStatusInputDto implements AbacDto {
         this.prosessTaskId = prosessTaskId;
     }
 
-    public ProsessTaskStatusDto getProsessTaskStatusDto() {
-        return prosessTaskStatusDto;
+    public ProsessTaskStatusDto getNyStatus() {
+        return nyStatus;
     }
 
-    public void setProsessTaskStatusDto(ProsessTaskStatusDto prosessTaskStatusDto) {
-        this.prosessTaskStatusDto = prosessTaskStatusDto;
+    public void setNyStatus(ProsessTaskStatusDto nyStatus) {
+        this.nyStatus = nyStatus;
+    }
+
+    public ProsessTaskStatusDto getNåværendeStatus() {
+        return nåværendeStatus;
+    }
+
+    public void setNåværendeStatus(ProsessTaskStatusDto nåværendeStatus) {
+        this.nåværendeStatus = nåværendeStatus;
+    }
+
+    public String getTasktype() {
+        return tasktype;
+    }
+
+    public void setTasktype(String tasktype) {
+        this.tasktype = tasktype;
     }
 
     @Override

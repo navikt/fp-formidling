@@ -103,7 +103,6 @@ public class ProsessTaskRestTjeneste {
     @BeskyttetRessurs(action = CREATE, ressurs = DRIFT)
     public Response endreStatusPåProsessTask(@ApiParam("Informasjon for endring av status av eksisterende prosess task") @Valid ProsessTaskEndreStatusInputDto endreStatusInputDto) {
         //kjøres manuelt for å avhjelpe feilsituasjon, da er det veldig greit at det blir logget!
-        logger.warn("Endrer status på  prossess task {} til {}", endreStatusInputDto.getProsessTaskId(), endreStatusInputDto.getProsessTaskStatusDto().getProsessTaskStatusName());
         return prosessTaskApplikasjonTjeneste.endreStatusPåProsessTask(endreStatusInputDto);
     }
 

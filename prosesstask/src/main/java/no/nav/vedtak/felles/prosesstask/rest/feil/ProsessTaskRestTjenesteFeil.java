@@ -12,6 +12,7 @@ public interface ProsessTaskRestTjenesteFeil extends DeklarerteFeil {
     String KAN_IKKE_RESTARTE_FERDIG_TASK_FEIL_ID = "FP-711948";
     String MAA_ANGI_NAVARENDE_STATUS_FEIL_ID = "FP-306456";
     String UKJENT_TASK_FEIL_ID = "FP-752429";
+    String ENDRE_STATUS_FEIL_PARAMETER = "FP-414626";
 
     @TekniskFeil(feilkode = KAN_IKKE_RESTARTE_FERDIG_TASK_FEIL_ID,
             feilmelding = "Prosesstasken %s har allerede kjørt ferdig, og kan ikke kjøres på nytt",
@@ -22,6 +23,11 @@ public interface ProsessTaskRestTjenesteFeil extends DeklarerteFeil {
             feilmelding = "Prosesstasken %s har ikke status KLAR. For restart må nåværende status angis.",
             logLevel = LogLevel.WARN)
     Feil måAngiNåværendeProsesstaskStatusForRestart(long prosessTaskId);
+
+    @TekniskFeil(feilkode = ENDRE_STATUS_FEIL_PARAMETER,
+            feilmelding = "Prosesstasken %s har ikke status %s eller type %s. For restart må nåværende status angis.",
+            logLevel = LogLevel.WARN)
+    Feil måVæreRiktigStatusOgType(long prosessTaskId, String status, String type);
 
     @TekniskFeil(feilkode = UKJENT_TASK_FEIL_ID,
             feilmelding = "Ingen prosesstask med id %s eksisterer",

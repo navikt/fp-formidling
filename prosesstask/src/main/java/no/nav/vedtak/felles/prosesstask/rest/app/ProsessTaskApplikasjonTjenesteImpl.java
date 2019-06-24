@@ -4,11 +4,16 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
@@ -21,6 +26,7 @@ import no.nav.vedtak.felles.prosesstask.rest.dto.FeiletProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataKonverter;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskDataPayloadDto;
+import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskEndreStatusInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRestartInputDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRestartResultatDto;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskRetryAllResultatDto;
@@ -33,6 +39,8 @@ import no.nav.vedtak.util.FPDateUtil;
 public class ProsessTaskApplikasjonTjenesteImpl implements ProsessTaskApplikasjonTjeneste {
 
     private ProsessTaskRepository prosessTaskRepository;
+    private static final Logger logger = LoggerFactory.getLogger(ProsessTaskApplikasjonTjenesteImpl.class);
+
 
     ProsessTaskApplikasjonTjenesteImpl() {
     }
@@ -124,6 +132,29 @@ public class ProsessTaskApplikasjonTjenesteImpl implements ProsessTaskApplikasjo
         LocalDateTime neste = new CronExpression(type.getCronExpression()).neste(LocalDateTime.now());
         data.setNesteKjøringEtter(neste);
         prosessTaskRepository.lagre(data);
+    }
+
+    @Override
+    public Response endreStatusPåProsessTask(ProsessTaskEndreStatusInputDto endreStatusInputDto) {
+        ProsessTaskData prosessTaskData = prosessTaskRepository.finn(endreStatusInputDto.getProsessTaskId());
+        if (!alleFelterStemmer(endreStatusInputDto, prosessTaskData)) {
+            throw ProsessTaskRestTjenesteFeil.FACTORY.måVæreRiktigStatusOgType(
+                    endreStatusInputDto.getProsessTaskId(),
+                    endreStatusInputDto.getNåværendeStatus().getProsessTaskStatusName(),
+                    endreStatusInputDto.getTasktype())
+                    .toException();
+        }
+
+        ProsessTaskStatus status = ProsessTaskStatus.valueOf(endreStatusInputDto.getNyStatus().getProsessTaskStatusName());
+        prosessTaskData.setStatus(status);
+        prosessTaskRepository.lagre(prosessTaskData);
+        logger.warn("Endrer status på  prossess task {} til {}", endreStatusInputDto.getProsessTaskId(), endreStatusInputDto.getNyStatus().getProsessTaskStatusName());
+        return Response.ok().build();
+    }
+
+    private boolean alleFelterStemmer(ProsessTaskEndreStatusInputDto endreStatusInputDto, ProsessTaskData prosessTaskData) {
+        return Objects.equals(prosessTaskData.getTaskType(), endreStatusInputDto.getTasktype())
+                && Objects.equals(endreStatusInputDto.getNåværendeStatus().getProsessTaskStatusName(), prosessTaskData.getStatus().getDbKode());
     }
 
     private void oppdaterProsessTaskDataMedKjoerbarStatus(ProsessTaskData eksisterendeProsessTaskData) {

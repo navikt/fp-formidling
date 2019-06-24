@@ -75,6 +75,13 @@ public class FamiliehendelseDtoMapper {
         if (alleFelterErNull(gjeldendeHendelseDto)) {
             gjeldendeHendelseDto = grunnlagDto.getOppgitt();
         }
+        if (alleFelterErNull(gjeldendeHendelseDto)) {
+            return new FamilieHendelse(BigInteger.ZERO,
+                    false,
+                    false,
+                    FamilieHendelseType.UDEFINERT,
+                    new FamilieHendelse.OptionalDatoer(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty()));
+        }
         BigInteger antallBarnFraDto = utledAntallBarnFraDto(gjeldendeHendelseDto);
         FamilieHendelse.OptionalDatoer optionalDatoer = new FamilieHendelse.OptionalDatoer(
                 hentSkjæringstidspunkt(gjeldendeHendelseDto),

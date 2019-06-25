@@ -57,11 +57,10 @@ public class StønadskontoMapper {
     }
 
     public static Optional<BigInteger> finnForeldrepengeperiodenUtvidetUkerHvisFinnes(Saldoer saldoer) {
-        saldoer.getStønadskontoer().stream().map()
-//        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.getStønadskontoer(), StønadskontoType.FLERBARNSDAGER)
-//                .map(Stønadskonto::getMaxDager)
-//                .map(BigInteger::valueOf)
-//                .map(dager -> dager.divide(BigInteger.valueOf(5)));
+        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.getStønadskontoer(), StønadskontoType.FLERBARNSDAGER)
+                .map(Stønadskonto::getMaxDager)
+                .map(BigInteger::valueOf)
+                .map(dager -> dager.divide(BigInteger.valueOf(5)));
 
     }
 }

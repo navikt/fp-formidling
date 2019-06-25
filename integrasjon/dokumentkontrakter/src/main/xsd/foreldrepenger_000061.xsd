@@ -49,6 +49,7 @@
             <xs:element type="xs:integer" name="antallInnvilget"/>
             <xs:element type="xs:integer" name="antallAvslag"/>
             <xs:element type="xs:boolean" name="graderingFinnes" minOccurs="0"/>
+            <xs:element type="xs:int" name="prematurDager" minOccurs="0"/>
             <xs:element type="xs:date" name="sisteDagIFellesPeriode" minOccurs="0"/>
             <xs:element type="xs:date" name="sisteUtbetalingsdag" minOccurs="0"/>
             <xs:element type="xs:date" name="sisteDagMedUtsettelse" minOccurs="0"/>
@@ -782,6 +783,11 @@
 			<xs:enumeration value="4076">
 				<xs:annotation>
 					<xs:documentation></xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4077">
+                <xs:annotation>
+                    <xs:documentation>Prematur fødsel</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4095">

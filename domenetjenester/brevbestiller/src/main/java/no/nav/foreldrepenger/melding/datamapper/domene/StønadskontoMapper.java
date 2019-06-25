@@ -63,4 +63,12 @@ public class StønadskontoMapper {
                 .map(dager -> dager.divide(BigInteger.valueOf(5)));
 
     }
+
+    public static Optional<Integer> finnPrematurDagerHvisFinnes(Saldoer saldoer) {
+        return saldoer.getStønadskontoer()
+                .stream()
+                .map(Stønadskonto::getPrematurDager)
+                .max(Integer::compareTo);
+    }
+
 }

@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.melding.web.app.exceptions.JsonMappingExceptionMapp
 import no.nav.foreldrepenger.melding.web.app.exceptions.JsonParseExceptionMapper;
 import no.nav.foreldrepenger.melding.web.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.melding.web.app.tjenester.brev.BrevRestTjeneste;
+import no.nav.foreldrepenger.melding.web.app.tjenester.brev.SaksbehandlerTekstRestTjeneste;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 
 @ApplicationPath(ApplicationConfig.API_URI)
@@ -52,6 +53,7 @@ public class ApplicationConfig extends Application {
 
         classes.add(BrevRestTjeneste.class);
         classes.add(ProsessTaskRestTjeneste.class);
+        classes.add(SaksbehandlerTekstRestTjeneste.class);
 
         classes.add(io.swagger.jaxrs.listing.ApiListingResource.class);
         classes.add(io.swagger.jaxrs.listing.SwaggerSerializers.class);

@@ -16,6 +16,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
+import no.nav.foreldrepenger.melding.aktør.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
@@ -98,10 +99,11 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
                                String behandlingstype,
                                DokumentHendelse dokumentHendelse,
                                FamilieHendelse familiehendelse,
-                               List<Vilkår> vilkårene, Fagsak fagsak) {
+                               List<Vilkår> vilkårene,
+                               Fagsak fagsak) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(REVURDERING.equals(behandlingstype) ? BehandlingstypeType.REVURDERING : BehandlingstypeType.SØKNAD);
-        fagType.setRelasjonsKode(relasjonskodeTypeMap.get(fagsak.getRelasjonsRolleType()));
+        fagType.setRelasjonsKode(utledRelasjonsrolle(fagsak));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn().intValue());
         fagType.setAvslagsAarsak(behandling.getBehandlingsresultat().getAvslagsårsak().getKode());
@@ -109,6 +111,20 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
         fagType.setKlageFristUker(brevParametere.getKlagefristUker());
         fagType.setVilkaarType(utledVilkårTypeFra(vilkårene, fagType.getAvslagsAarsak()));
         return fagType;
+    }
+
+    private RelasjonskodeType utledRelasjonsrolle(Fagsak fagsak) {
+        return tilRelasjonskodeType(fagsak.getRelasjonsRolleType(), fagsak.getPersoninfo().getKjønn());
+    }
+
+    private RelasjonskodeType tilRelasjonskodeType(RelasjonsRolleType brukerRolle, NavBrukerKjønn navBrukerKjønn) {
+        if (RelasjonsRolleType.MORA.equals(brukerRolle)) {
+            return RelasjonskodeType.MOR;
+        } else if (NavBrukerKjønn.MANN.equals(navBrukerKjønn)) {
+            return RelasjonskodeType.FAR;
+        } else {
+            return RelasjonskodeType.MEDMOR;
+        }
     }
 
     private VilkaartypeType utledVilkårTypeFra(List<Vilkår> vilkårene, String avslagsÅrsakKode) {

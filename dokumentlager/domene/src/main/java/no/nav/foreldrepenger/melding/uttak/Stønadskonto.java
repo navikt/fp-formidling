@@ -11,6 +11,8 @@ public class Stønadskonto {
         this.maxDager = maxDager;
         this.stønadskontoType = stønadskontoType;
         this.saldo = saldo;
+        this.prematurDager = prematurDager;
+        this.flerbarnsDager = flerbarnsDager;
     }
 
     public Integer getMaxDager() {

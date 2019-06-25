@@ -119,6 +119,7 @@ public class BrevRestTjeneste {
     @POST
     @Timed(name = "fpformidling.in.forhandsvis", absolute = true)
     @Path("/forhandsvis")
+    @Transaction
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Returnerer en pdf som er en forhåndsvisning av brevet")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)

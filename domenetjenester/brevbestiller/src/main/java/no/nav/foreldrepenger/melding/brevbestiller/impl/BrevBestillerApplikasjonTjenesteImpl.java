@@ -216,7 +216,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, hendelse, behandling);
 
         førsteDokumentFelles.setXml(elementTilString(brevXmlElement));
-//        dokumentRepository.lagre(dokumentData);
+        dokumentRepository.lagre(dokumentData);
 
         dokument = forhåndsvis(dokumentMal, brevXmlElement);
         if (dokument == null) {

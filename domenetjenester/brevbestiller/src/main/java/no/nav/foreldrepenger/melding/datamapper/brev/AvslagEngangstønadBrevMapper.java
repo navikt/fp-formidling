@@ -113,11 +113,11 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
         return fagType;
     }
 
-    private RelasjonskodeType utledRelasjonsrolle(Fagsak fagsak) {
+    static RelasjonskodeType utledRelasjonsrolle(Fagsak fagsak) {
         return tilRelasjonskodeType(fagsak.getRelasjonsRolleType(), fagsak.getPersoninfo().getKjønn());
     }
 
-    private RelasjonskodeType tilRelasjonskodeType(RelasjonsRolleType brukerRolle, NavBrukerKjønn navBrukerKjønn) {
+    static RelasjonskodeType tilRelasjonskodeType(RelasjonsRolleType brukerRolle, NavBrukerKjønn navBrukerKjønn) {
         if (RelasjonsRolleType.MORA.equals(brukerRolle)) {
             return RelasjonskodeType.MOR;
         } else if (NavBrukerKjønn.MANN.equals(navBrukerKjønn)) {

@@ -9,6 +9,7 @@ public class StønadskontoDto {
     private int saldo;
     private List<AktivitetSaldoDto> aktivitetSaldoDtoList;
     private boolean gyldigForbruk;
+    private KontoUtvidelser kontoUtvidelser;
 
     public StønadskontoDto() {
     }
@@ -31,5 +32,9 @@ public class StønadskontoDto {
 
     public boolean isGyldigForbruk() {
         return gyldigForbruk;
+    }
+
+    public KontoUtvidelser getKontoUtvidelser() {
+        return kontoUtvidelser;
     }
 }

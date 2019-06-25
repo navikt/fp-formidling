@@ -201,6 +201,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(fagsak, UttakMapper.harSøkerAleneomsorgBoolean(søknad, uttakResultatPerioder), ytelseFordeling.isAnnenForelderHarRett(), saldoer));
         fagType.setDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer));
         StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);
+        StønadskontoMapper.finnPrematurDagerHvisFinnes(saldoer).ifPresent(fagType::setPrematurDager);
     }
 
     private void mapFelterRelatertTilPerioder(BeregningsresultatFP beregningsresultatFP, Beregningsgrunnlag beregningsgrunnlag, UttakResultatPerioder uttakResultatPerioder, FagType fagType, Behandling behandling) {

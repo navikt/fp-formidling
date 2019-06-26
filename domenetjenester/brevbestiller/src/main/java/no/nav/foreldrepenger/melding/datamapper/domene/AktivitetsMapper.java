@@ -123,15 +123,6 @@ public class AktivitetsMapper {
             næring.setGradering(uttakAktivitet.get().getGraderingInnvilget());
         }
         beregningsgrunnlagAndel.ifPresent(bgAndel -> {
-            if (bgAndel.getPgi1() != null) {
-                næring.setInntekt1(bgAndel.getPgi1().longValue());
-            }
-            if (bgAndel.getPgi2() != null) {
-                næring.setInntekt2(bgAndel.getPgi2().longValue());
-            }
-            if (bgAndel.getPgi3() != null) {
-                næring.setInntekt3(bgAndel.getPgi3().longValue());
-            }
             if (bgAndel.getBeregningsperiodeTom() != null) {
                 næring.setSistLignedeÅr(BigInteger.valueOf(bgAndel.getBeregningsperiodeTom().getYear()));
             }

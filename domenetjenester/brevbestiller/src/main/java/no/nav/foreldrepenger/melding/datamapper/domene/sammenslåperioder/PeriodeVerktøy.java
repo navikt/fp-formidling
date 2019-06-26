@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -15,16 +14,9 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 
 public class PeriodeVerktøy {
-
-
-    public static Boolean graderingFinnes(PeriodeListeType periodeListe) {
-        List<PeriodeType> innvilgedePerioder = periodeListe.getPeriode().stream().filter(PeriodeType::isInnvilget).collect(Collectors.toList());
-        return periodeStreamInneholderGradering(innvilgedePerioder);
-    }
 
     private static Boolean periodeStreamInneholderGradering(List<PeriodeType> innvilgedePerioder) {
         return arbeidsforholdMedGraderingFinnes(innvilgedePerioder.stream()) ||

@@ -132,7 +132,6 @@ public class BeregningsgrunnlagMapper {
             andelType.setÅrsinntekt(andel.getBruttoPrÅr().longValue());
         }
         if (AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus())) {
-            andelType.setPensjonsgivendeInntekt(andel.getPgiSnitt() == null ? 0 : andel.getPgiSnitt().longValue());
             andelType.setSisteLignedeÅr(andel.getBeregningsperiodeTom() == null ? 0 : (long) andel.getBeregningsperiodeTom().getYear());
         }
         if (AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())) {

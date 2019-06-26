@@ -34,7 +34,6 @@ import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.StønadskontoMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeVerktøy;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -49,7 +48,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.LovhjemmelType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.RelasjonskodeKode;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
@@ -99,7 +97,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                 originalFamiliehendelse,
                 beregningsgrunnlag,
                 søknad,
-                dokumentFelles,
                 uttakResultatPerioder,
                 ytelseFordeling,
                 saldoer,
@@ -135,7 +132,6 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                Optional<FamilieHendelse> originalFamiliehendelse,
                                Beregningsgrunnlag beregningsgrunnlag,
                                Søknad søknad,
-                               DokumentFelles dokumentFelles,
                                UttakResultatPerioder uttakResultatPerioder,
                                YtelseFordeling ytelseFordeling,
                                Saldoer saldoer,
@@ -143,9 +139,7 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
                                Fagsak fagsak) {
         final FagType fagType = objectFactory.createFagType();
 
-        fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
         fagType.setRelasjonskode(tilRelasjonskode(fagsak.getRelasjonsRolleType(), fagsak.getPersoninfo().getKjønn()));
-        fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
         fagType.setBehandlingsResultat(BehandlingMapper.tilBehandlingsResultatKode(behandling.getBehandlingsresultat().getBehandlingResultatType()));
         String konsekvensForYtelsen = BehandlingMapper.kodeFra(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
@@ -213,18 +207,12 @@ public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
         fagType.setTotalBrukerAndel(BeregningsresultatMapper.finnTotalBrukerAndel(beregningsresultatFP));
         fagType.setAntallAvslag(BeregningsresultatMapper.tellAntallAvslag(periodeListe));
         fagType.setAntallInnvilget(BeregningsresultatMapper.tellAntallInnvilget(periodeListe));
-        fagType.setGraderingFinnes(PeriodeVerktøy.graderingFinnes(periodeListe));
         fagType.setSisteDagAvSistePeriode(UttakMapper.finnSisteDagAvSistePeriode(uttakResultatPerioder));
         fagType.setIkkeOmsorg(UttakMapper.finnesPeriodeMedIkkeOmsorg(periodeListe.getPeriode()));
         fagType.setForMyeUtbetalt(UttakMapper.forMyeUtbetaltKode(periodeListe, behandling));
 
         BeregningsresultatMapper.finnStønadsperiodeFomHvisFinnes(periodeListe).ifPresent(fagType::setStønadsperiodeFom);
-        BeregningsresultatMapper.finnStønadsperiodeTomHvisFinnes(periodeListe).ifPresent(sisteInnvilgedeDag -> {
-            fagType.setStønadsperiodeTom(sisteInnvilgedeDag);
-            fagType.setSisteUtbetalingsdag(sisteInnvilgedeDag);
-        });
-        UttakMapper.finnSisteDagIFelleseriodeHvisFinnes(uttakResultatPerioder).ifPresent(fagType::setSisteDagIFellesPeriode);
-        UttakMapper.finnSisteDagMedUtsettelseHvisFinnes(uttakResultatPerioder).ifPresent(fagType::setSisteDagMedUtsettelse);
+        BeregningsresultatMapper.finnStønadsperiodeTomHvisFinnes(periodeListe).ifPresent(fagType::setStønadsperiodeTom);
     }
 
     private void mapFelterRelatertTilBehandling(Behandling behandling, FagType fagType) {

@@ -26,10 +26,8 @@ import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.ÅrsakMapperAvslag;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -43,7 +41,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.BrevdataType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.ObjectFactory;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.RelasjonskodeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
@@ -88,12 +85,9 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
         Optional<UttakResultatPerioder> uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling);
         long grunnbeløp = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
         List<MottattDokument> mottattDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
-        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
         FagType fagType = mapFagType(behandling,
-                behandlingstype,
                 mottattDokumenter,
-                dokumentFelles,
                 dokumentHendelse,
                 familiehendelse,
                 grunnbeløp,
@@ -105,18 +99,13 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
     }
 
     private FagType mapFagType(Behandling behandling,
-                               String behandlingstypeKode,
                                List<MottattDokument> mottatteDokumenter,
-                               DokumentFelles dokumentFelles,
                                DokumentHendelse dokumentHendelse,
                                FamilieHendelse familiehendelse,
                                long grunnbeløp,
                                Optional<BeregningsresultatFP> beregningsresultatFP,
                                Optional<UttakResultatPerioder> uttakResultatPerioder, Fagsak fagsak) {
         FagType fagType = new FagType();
-        fagType.setBehandlingsType(fra(behandlingstypeKode));
-        fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
-        fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setRelasjonskode(fra(fagsak));
         fagType.setMottattDato(MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
@@ -130,8 +119,7 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
                 uttakResultatPerioder,
                 fagType);
 
-        uttakResultatPerioder.flatMap(UttakMapper::finnSisteDagIFelleseriodeHvisFinnes)
-                .ifPresent(fagType::setSisteDagIFellesPeriode);
+
         avklarFritekst(dokumentHendelse, behandling)
                 .ifPresent(fagType::setFritekst);
         return fagType;

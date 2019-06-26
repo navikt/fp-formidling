@@ -2,10 +2,8 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -20,38 +18,14 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.VurderingsstatusKode;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
-import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
-import no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 
 public class UttakMapper {
 
     public UttakMapper() {
         //CDI
-    }
-
-    public static Optional<XMLGregorianCalendar> finnSisteDagIFelleseriodeHvisFinnes(UttakResultatPerioder uttakResultatPerioder) {
-        return uttakResultatPerioder.getPerioder()
-                .stream()
-                .map(UttakResultatPeriode::getAktiviteter)
-                .flatMap(List::stream)
-                .filter(aktivitet -> StønadskontoType.FELLESPERIODE.equals(aktivitet.getTrekkonto()))
-                .map(UttakResultatPeriodeAktivitet::getTom)
-                .max(LocalDate::compareTo)
-                .map(XmlUtil::finnDatoVerdiAvUtenTidSone);
-    }
-
-    public static Optional<XMLGregorianCalendar> finnSisteDagMedUtsettelseHvisFinnes(UttakResultatPerioder uttakResultatPerioder) {
-        return uttakResultatPerioder.getPerioder()
-                .stream()
-                .filter(Predicate.not(UttakResultatPeriode::isInnvilget))
-                .filter(Predicate.not(periode -> UttakUtsettelseType.UDEFINERT.equals(periode.getUttakUtsettelseType())))
-                .map(UttakResultatPeriode::getTom)
-                .max(LocalDate::compareTo)
-                .map(XmlUtil::finnDatoVerdiAvUtenTidSone);
     }
 
     public static boolean finnesPeriodeMedIkkeOmsorg(List<PeriodeType> perioder) {

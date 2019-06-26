@@ -19,6 +19,10 @@
             <artifactId>felles-integrasjon-rest-klient</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+            <artifactId>unleash-klient</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>domene</artifactId>
         </dependency>
@@ -40,10 +44,6 @@
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-annotation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.finn.unleash</groupId>
-            <artifactId>unleash-client-java</artifactId>
         </dependency>
         <dependency>
             <groupId>org.json</groupId>

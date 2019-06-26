@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 public abstract class DokumentTypeMapper implements AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(DokumentTypeMapper.class);
 
-    protected DomeneobjektProvider domeneobjektProvider = null;
+    protected DomeneobjektProvider domeneobjektProvider;
 
     protected DokumentTypeMapper() {
     }

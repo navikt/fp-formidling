@@ -32,9 +32,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.FORLENGET_DOK)
-public class ForlengetSaksbehandlingstidBrevMapper implements DokumentTypeMapper {
-
-    private DomeneobjektProvider domeneobjektProvider;
+public class ForlengetSaksbehandlingstidBrevMapper extends DokumentTypeMapper {
 
     private Map<String, VariantKode> malTilVariantMap = Map.of(DokumentMalType.FORLENGET_MEDL_DOK, VariantKode.MEDLEM,
             DokumentMalType.FORLENGET_TIDLIG_SOK, VariantKode.FORTIDLIG,

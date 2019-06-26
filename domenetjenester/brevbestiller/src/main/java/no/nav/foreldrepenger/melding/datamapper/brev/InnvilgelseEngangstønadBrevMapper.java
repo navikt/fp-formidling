@@ -29,10 +29,9 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.POSITIVT_VEDTAK_DOK)
-public class InnvilgelseEngangstønadBrevMapper implements DokumentTypeMapper {
+public class InnvilgelseEngangstønadBrevMapper extends DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
 
     public InnvilgelseEngangstønadBrevMapper() {
     }

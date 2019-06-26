@@ -34,10 +34,9 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_YTELSESVEDTAK_OPPHEVET_DOK)
-public class KlageYtelsesvedtakOpphevetBrevMapper implements DokumentTypeMapper {
+public class KlageYtelsesvedtakOpphevetBrevMapper extends DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
 
     public KlageYtelsesvedtakOpphevetBrevMapper() {
     }

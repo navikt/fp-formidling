@@ -31,10 +31,9 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.VEDTAK_MEDHOLD)
-public class VedtakMedholdBrevMapper implements DokumentTypeMapper {
+public class VedtakMedholdBrevMapper extends DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
 
     public VedtakMedholdBrevMapper() {
         //CDI

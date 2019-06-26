@@ -30,7 +30,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.HENLEGG_BEHANDLING_DOK)
-public class HenleggBehandlingBrevMapper implements DokumentTypeMapper {
+public class HenleggBehandlingBrevMapper extends DokumentTypeMapper {
     static final String FAMPEN = "NAV Familie- og pensjonsytelser";
 
     public HenleggBehandlingBrevMapper() {

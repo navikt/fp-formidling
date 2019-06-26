@@ -35,10 +35,9 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_AVVIST_DOK)
-public class KlageAvvistDokumentBrevMapper implements DokumentTypeMapper {
+public class KlageAvvistDokumentBrevMapper extends DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
 
     public KlageAvvistDokumentBrevMapper() {
     }

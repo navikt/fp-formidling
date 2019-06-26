@@ -9,7 +9,6 @@ import javax.xml.stream.XMLStreamException;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.datamapper.DokumentTypeFelles;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
@@ -24,7 +23,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.UENDRETUTFALL_DOK)
-public class UendretutfallBrevMapper implements DokumentTypeMapper {
+public class UendretutfallBrevMapper extends DokumentTypeMapper {
 
     public UendretutfallBrevMapper() {
         //CDI

@@ -81,4 +81,6 @@ public interface BehandlingRestKlient {
     List<MottattDokumentDto> hentMottatteDokumenter(List<BehandlingResourceLink> resourceLinker);
 
     Optional<Boolean> harSendtVarselOmRevurdering(List<BehandlingResourceLink> resourceLinker);
+
+    String getJsonTestdata();
 }

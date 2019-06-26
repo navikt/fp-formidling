@@ -30,11 +30,9 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_YTELSESVEDTAK_STADFESTET_DOK)
-public class KlageYtelsesvedtakStadfestetBrevMapper implements DokumentTypeMapper {
+public class KlageYtelsesvedtakStadfestetBrevMapper extends DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
-
 
     public KlageYtelsesvedtakStadfestetBrevMapper() {
         //CDI

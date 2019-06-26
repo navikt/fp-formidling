@@ -32,9 +32,8 @@ import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 @Named(DokumentMalType.REVURDERING_DOK)
-public class RevurderingBrevMapper implements DokumentTypeMapper {
+public class RevurderingBrevMapper extends DokumentTypeMapper {
 
-    private DomeneobjektProvider domeneobjektProvider;
     private BrevParametere brevParametere;
 
     public RevurderingBrevMapper() {

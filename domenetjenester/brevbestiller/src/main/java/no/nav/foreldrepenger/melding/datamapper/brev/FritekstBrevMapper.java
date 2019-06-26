@@ -23,8 +23,7 @@ import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 @Named(DokumentMalType.FRITEKST_DOK)
-public class FritekstBrevMapper implements DokumentTypeMapper {
-
+public class FritekstBrevMapper extends DokumentTypeMapper {
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException, XMLStreamException, SAXException {

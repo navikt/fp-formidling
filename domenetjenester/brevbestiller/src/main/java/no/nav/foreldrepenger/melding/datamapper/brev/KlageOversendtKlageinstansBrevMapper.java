@@ -34,11 +34,10 @@ import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_OVERSENDT_KLAGEINSTANS_DOK)
-public class KlageOversendtKlageinstansBrevMapper implements DokumentTypeMapper {
+public class KlageOversendtKlageinstansBrevMapper extends DokumentTypeMapper {
     private static final int BEHANDLINGSFRIST_UKER_KA = 14;
 
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
 
     public KlageOversendtKlageinstansBrevMapper() {
         //CDI

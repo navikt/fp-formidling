@@ -45,7 +45,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.INNHENT_DOK)
-public class InnhentOpplysningerBrevMapper implements DokumentTypeMapper {
+public class InnhentOpplysningerBrevMapper extends DokumentTypeMapper {
 
     private static final Set<String> gyldigeKoder = new HashSet<>(Arrays.asList(
             BehandlingType.REVURDERING.getKode(),
@@ -55,7 +55,6 @@ public class InnhentOpplysningerBrevMapper implements DokumentTypeMapper {
     ));
 
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
 
     public InnhentOpplysningerBrevMapper() {
         //CDI

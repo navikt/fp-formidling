@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.util.Set;
 
@@ -8,17 +7,13 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
 
 import org.jboss.weld.literal.NamedLiteral;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
@@ -55,10 +50,8 @@ public class DokumentXmlDataMapper {
 
     public Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
         Element brevXmlElement;
-        DokumentTypeMapper dokumentTypeMapper;
-        try {
-            FellesType fellesType = mapFellesType(dokumentFelles);
-            dokumentTypeMapper = velgDokumentMapper(dokumentMalType);
+        FellesType fellesType = mapFellesType(dokumentFelles);
+        try (DokumentTypeMapper dokumentTypeMapper = velgDokumentMapper(dokumentMalType)) {
             String brevXml = dokumentTypeMapper.mapTilBrevXML(fellesType, dokumentFelles, hendelse, behandling);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
@@ -67,7 +60,7 @@ public class DokumentXmlDataMapper {
             InputSource is = new InputSource(new StringReader(brevXml));
             Document doc = db.parse(is);
             brevXmlElement = doc.getDocumentElement();
-        } catch (SAXException | XMLStreamException | ParserConfigurationException | IOException | JAXBException e) {
+        } catch (Exception e) { // SAXException | XMLStreamException | ParserConfigurationException | IOException | JAXBException
             throw FeilFactory.create(DokumentBestillerFeil.class).xmlgenereringsfeil(behandling.getUuid().toString(), e).toException();
         }
         return brevXmlElement;

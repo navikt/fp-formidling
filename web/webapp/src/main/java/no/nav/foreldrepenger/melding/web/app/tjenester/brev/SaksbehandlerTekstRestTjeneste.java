@@ -90,4 +90,14 @@ public class SaksbehandlerTekstRestTjeneste {
         final Optional<SaksbehandlerTekst> formidlingDataOptional = dokumentRepository.hentSaksbehandlerTekstHvisEksisterer(dto.getBehandlingUuid());
         return formidlingDataOptional.map(formidlingData -> saksbehandlerTekstMapper.mapSaksbehandlerTekstTilDto(formidlingData)).orElse(null);
     }
+
+    @POST
+    @Path("/hent-saksbehandler-tekst-dummy")
+    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @ApiOperation(value = "hent tekst fra saksbehandler retunerer altid null")
+    @BeskyttetRessurs(action = READ, ressurs = FAGSAK, sporingslogg = false)
+    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
+    public TekstFraSaksbehandlerDto hentTekstFraSaksbehandlerDummy(@Valid AbacTekstFraSaksbehandlerDtoDummy dto) { // NOSONAR
+        return null; //NOSONAR
+    }
 }

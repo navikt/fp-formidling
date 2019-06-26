@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -18,7 +17,6 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -30,7 +28,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.ObjectFactor
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.VariantKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.YtelseTypeKode;
-import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -54,21 +51,19 @@ public class ForlengetSaksbehandlingstidBrevMapper implements DokumentTypeMapper
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        List<MottattDokument> mottateDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
-        FagType fagType = mapFagType(dokumentHendelse, behandling, dokumentFelles, mottateDokumenter);
+        FagType fagType = mapFagType(dokumentHendelse, behandling, dokumentFelles);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(ForlengetConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
 
     }
 
-    private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentFelles dokumentFelles, List<MottattDokument> mottateDokumenter) {
+    private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentFelles dokumentFelles) {
         FagType fagType = new FagType();
         fagType.setBehandlingsfristUker(BigInteger.valueOf(BehandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setVariant(mapVariant(dokumentHendelse, behandling));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
-        fagType.setSoknadsdato(MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottateDokumenter));
         return fagType;
     }
 

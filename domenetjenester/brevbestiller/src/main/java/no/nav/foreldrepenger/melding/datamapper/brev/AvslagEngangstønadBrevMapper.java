@@ -44,7 +44,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.AVSLAGSVEDTAK_DOK)
-public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
+public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
     private static final Map<RelasjonsRolleType, RelasjonskodeType> relasjonskodeTypeMap;
     private static final Map<String, VilkaartypeType> vilkaartypeMap;
 
@@ -66,7 +66,6 @@ public class AvslagEngangstønadBrevMapper implements DokumentTypeMapper {
     }
 
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
     private VilkårKodeverkRepository vilkårKodeverkRepository;
 
     public AvslagEngangstønadBrevMapper() {

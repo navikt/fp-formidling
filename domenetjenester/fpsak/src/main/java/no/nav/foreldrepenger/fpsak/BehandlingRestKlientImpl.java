@@ -1,22 +1,34 @@
 package no.nav.foreldrepenger.fpsak;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
 
+import no.finn.unleash.Unleash;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.MottattDokumentDto;
@@ -40,8 +52,10 @@ import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultat
 import no.nav.foreldrepenger.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
 import no.nav.foreldrepenger.melding.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
+import no.nav.vedtak.felles.integrasjon.rest.JsonMapper;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 import no.nav.vedtak.konfig.KonfigVerdi;
+import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 public class BehandlingRestKlientImpl implements BehandlingRestKlient {
@@ -50,9 +64,15 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/behandlinger";
     private static final String SAKSNUMMER = "saksnummer";
     private static final String BEHANDLINGID = "behandlingId";
+    private static final String LOG_TESTDATA_TOGGLE = "fpformidling.logging_av_test_data";
 
     private OidcRestClient oidcRestClient;
     private String endpointFpsakRestBase;
+
+    private Unleash unleash;
+
+    Map<URI, String> rel = new HashMap<>();
+    Map<String, String> responseData = new HashMap<>();
 
     public BehandlingRestKlientImpl() {
         //CDI
@@ -60,9 +80,11 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
 
     @Inject
     public BehandlingRestKlientImpl(OidcRestClient oidcRestClient,
-                                    @KonfigVerdi(FPSAK_REST_BASE_URL) String endpointFpsakRestBase) {
-        this.oidcRestClient = oidcRestClient;
+                                    @KonfigVerdi(FPSAK_REST_BASE_URL) String endpointFpsakRestBase,
+                                    Unleash unleash) {
+        this.oidcRestClient = unleash.isEnabled(LOG_TESTDATA_TOGGLE) ? new WrapperCollectingTestdata(oidcRestClient) : oidcRestClient;
         this.endpointFpsakRestBase = endpointFpsakRestBase;
+        this.unleash = unleash;
     }
 
     @Override
@@ -325,13 +347,15 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 .findFirst().flatMap(link -> hentDtoFraLink(link, Boolean.class));
     }
 
-    private <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
+    protected <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
 
         if ("POST".equals(link.getType())) {
             URI uri = URI.create(endpointFpsakRestBase + link.getHref());
+            rel.put(uri, link.getRel());
             return oidcRestClient.postReturnsOptional(uri, link.getRequestPayload(), clazz);
         } else {
             URI uri = saksnummerRequest(endpointFpsakRestBase + link.getHref(), link.getRequestPayload());
+            rel.put(uri, link.getRel());
             return oidcRestClient.getReturnsOptional(uri, clazz);
         }
     }
@@ -363,6 +387,74 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public String getJsonTestdata() {
+        if (this.unleash.isEnabled(LOG_TESTDATA_TOGGLE)) {
+            return new JSONObject(responseData).toString();
+        }
+        return null;
+    }
+
+    private class WrapperCollectingTestdata extends OidcRestClient {
+
+        public WrapperCollectingTestdata(OidcRestClient oidcRestClient) {
+            super(oidcRestClient);
+        }
+
+        private <T> Optional<T> getResultOptional(Class<T> clazz, URI endpoint, String entity) {
+            if (StringUtils.nullOrEmpty(entity)) {
+                return Optional.empty();
+            }
+            responseData.put(rel.get(endpoint), entity);
+            return Optional.of(JsonMapper.fromJson(entity, clazz));
+        }
+
+        @Override
+        public <T> Optional<T> postReturnsOptional(URI endpoint, Object dto, Class<T> clazz) {
+            String entity = post(endpoint, dto);
+            return getResultOptional(clazz, endpoint, entity);
+        }
+
+        @Override
+        public <T> Optional<T> getReturnsOptional(URI endpoint, Class<T> clazz) {
+            String entity = get(endpoint);
+            return getResultOptional(clazz, endpoint, entity);
+        }
+
+        private String get(URI endpoint) {
+            HttpGet get = new HttpGet(endpoint);
+            try {
+                return this.execute(get, new OidcRestClientResponseHandler(endpoint));
+            } catch (IOException e) {
+                throw new RuntimeException("IOException ved kommunikasjon med server");
+            }
+        }
+
+        class OidcRestClientResponseHandler implements ResponseHandler<String> {
+
+            private URI endpoint;
+
+            OidcRestClientResponseHandler(URI endpoint) {
+                this.endpoint = endpoint;
+            }
+
+            @Override
+            public String handleResponse(final HttpResponse response) throws IOException {
+                int status = response.getStatusLine().getStatusCode();
+                if (status >= HttpStatus.SC_OK && status < HttpStatus.SC_MULTIPLE_CHOICES) {
+                    HttpEntity entity = response.getEntity();
+                    return entity != null ? EntityUtils.toString(entity, StandardCharsets.UTF_8) : null;
+                } else if (status == HttpStatus.SC_FORBIDDEN) {
+                    throw new RuntimeException("Mangler tilgang. Fikk http-kode 403 fra server");
+                } else {
+                    throw new RuntimeException(String.format("Server svarte med feilkode http-kode '%s' og response var '%s'",
+                            status,
+                            response.getStatusLine().getReasonPhrase()));
+                }
+            }
+        }
     }
 }
 

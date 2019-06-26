@@ -58,11 +58,10 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK)
-public class InnvilgelseForeldrepengerMapper implements DokumentTypeMapper {
+public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
 
     private ObjectFactory objectFactory = new ObjectFactory();
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
 
     public InnvilgelseForeldrepengerMapper() {
         //CDI

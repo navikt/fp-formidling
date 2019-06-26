@@ -30,10 +30,9 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalType.INNSYNSKRAV_SVAR)
-public class InnsynskravSvarBrevMapper implements DokumentTypeMapper {
+public class InnsynskravSvarBrevMapper extends DokumentTypeMapper {
 
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
 
     @Inject
     public InnsynskravSvarBrevMapper(BrevParametere brevParametere,

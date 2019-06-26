@@ -60,7 +60,7 @@ import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 @Named(DokumentMalType.OPPHØR_DOK)
-public class OpphørbrevMapper implements DokumentTypeMapper {
+public class OpphørbrevMapper extends DokumentTypeMapper {
     private static final Map<RelasjonsRolleType, RelasjonskodeKode> relasjonskodeTypeMap;
 
     static {
@@ -71,7 +71,6 @@ public class OpphørbrevMapper implements DokumentTypeMapper {
     }
 
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
 
     public OpphørbrevMapper() {
     }

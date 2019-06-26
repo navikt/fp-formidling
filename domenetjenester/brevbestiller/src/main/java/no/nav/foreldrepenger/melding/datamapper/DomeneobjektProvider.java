@@ -213,4 +213,8 @@ public class DomeneobjektProvider {
         return mottattDokumentDtoMapper.mapMottattedokumenterFraDto(behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
     }
 
+    public String getJsonTestdata() {
+        return behandlingRestKlient.getJsonTestdata();
+    }
+
 }

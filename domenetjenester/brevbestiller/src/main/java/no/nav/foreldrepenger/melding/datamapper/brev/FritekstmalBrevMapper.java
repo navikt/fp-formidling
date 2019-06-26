@@ -39,7 +39,6 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
     private Template brødtekstMal;
 
     protected BrevParametere brevParametere;
-    protected DomeneobjektProvider domeneobjektProvider;
     protected FellesType fellesType;
     protected DokumentFelles dokumentFelles;
 

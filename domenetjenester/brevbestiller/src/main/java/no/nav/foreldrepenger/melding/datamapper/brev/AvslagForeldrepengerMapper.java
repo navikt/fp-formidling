@@ -51,7 +51,7 @@ import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 @Named(DokumentMalType.AVSLAG_FORELDREPENGER_DOK)
-public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
+public class AvslagForeldrepengerMapper extends DokumentTypeMapper {
     private static final Map<RelasjonsRolleType, RelasjonskodeKode> relasjonskodeTypeMap;
 
     static {
@@ -62,7 +62,6 @@ public class AvslagForeldrepengerMapper implements DokumentTypeMapper {
     }
 
     private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
 
     public AvslagForeldrepengerMapper() {
     }

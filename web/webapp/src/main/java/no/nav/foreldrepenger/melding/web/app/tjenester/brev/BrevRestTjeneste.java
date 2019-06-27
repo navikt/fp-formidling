@@ -17,8 +17,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.codahale.metrics.annotation.Timed;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -59,7 +57,6 @@ public class BrevRestTjeneste {
     }
 
     @POST
-    @Timed(name = "fpformidling.in.maler", absolute = true)
     @Path("/maler")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @ApiOperation(value = "Henter liste over tilgjengelige brevtyper")
@@ -71,7 +68,6 @@ public class BrevRestTjeneste {
 
 
     @POST
-    @Timed
     @Path("/maler-dummy")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @ApiOperation(value = "Henter tom liste")
@@ -82,7 +78,6 @@ public class BrevRestTjeneste {
     }
 
     @POST
-    @Timed
     @Transaction
     @Path("/varsel/revurdering")
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -95,7 +90,6 @@ public class BrevRestTjeneste {
 
 
     @POST
-    @Timed(name = "fpformidling.in.dokument-sendt", absolute = true)
     @Path("/dokument-sendt")
     @Transaction
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -117,7 +111,6 @@ public class BrevRestTjeneste {
     }
 
     @POST
-    @Timed(name = "fpformidling.in.forhandsvis", absolute = true)
     @Path("/forhandsvis")
     @Transaction
     @Consumes(MediaType.APPLICATION_JSON)
@@ -143,7 +136,6 @@ public class BrevRestTjeneste {
     }
 
     @POST
-    @Timed(name = "fpformidling.in.bestill", absolute = true)
     @Path("/bestill")
     @Transaction
     @Consumes(MediaType.APPLICATION_JSON)

@@ -10,7 +10,6 @@
     <version>${revision}${sha1}${changelist}</version>
 
     <modules>
-        <module>docs</module>
         <module>migreringer</module>
         <module>kafkatjenester</module>
         <module>integrasjon</module>

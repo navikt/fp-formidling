@@ -16,8 +16,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.codahale.metrics.annotation.Timed;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,7 +44,6 @@ public class SaksbehandlerTekstRestTjeneste {
     }
 
     @POST
-    @Timed(name = "fpformidling.in.lagre-saksbehandlertekst", absolute = true)
     @Path("/lagre-saksbehandler-tekst")
     @Transaction
     @Consumes(MediaType.APPLICATION_JSON)
@@ -79,7 +76,6 @@ public class SaksbehandlerTekstRestTjeneste {
     }
 
     @POST
-    @Timed(name = "fpformidling.in.hent-saksbehandlertekst", absolute = true)
     @Path("/hent-saksbehandler-tekst")
     @Transaction
     @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")

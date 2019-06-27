@@ -26,8 +26,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codahale.metrics.annotation.Timed;
-
 import no.finn.unleash.Unleash;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
@@ -88,7 +86,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.behandling", absolute = true)
     public BehandlingDto hentBehandling(BehandlingIdDto behandlingIdDto) {
         Optional<BehandlingDto> behandling = Optional.empty();
         try {
@@ -107,7 +104,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
         return behandlingIdDto.getBehandlingUuid() != null ? behandlingIdDto.getBehandlingUuid().toString() : behandlingIdDto.getBehandlingId().toString();
     }
 
-    @Timed(name = "fpformidling.out.original-behandling", absolute = true)
     public Optional<BehandlingDto> hentOriginalBehandling(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "original-behandling".equals(dto.getRel()))
@@ -115,7 +111,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.personopplysninger", absolute = true)
     public PersonopplysningDto hentPersonopplysninger(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "soeker-personopplysninger".equals(dto.getRel()))
@@ -126,7 +121,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.verge", absolute = true)
     public Optional<VergeDto> hentVergeHvisfinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "soeker-verge".equals(dto.getRel()))
@@ -134,7 +128,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.familiehendelse", absolute = true)
     public FamilieHendelseGrunnlagDto hentFamiliehendelse(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "familiehendelse-v2".equals(dto.getRel()))
@@ -145,7 +138,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.beregningresultatES", absolute = true)
     public Optional<BeregningsresultatEngangsstønadDto> hentBeregningsresultatEngangsstønadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "beregningsresultat-engangsstonad".equals(dto.getRel()))
@@ -161,7 +153,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.beregningresultatFP", absolute = true)
     public BeregningsresultatMedUttaksplanDto hentBeregningsresultatForeldrepenger(List<BehandlingResourceLink> resourceLinker) {
         return hentBeregningsresultatForeldrepengerHvisFinnes(resourceLinker).orElseThrow(() -> {
             throw new IllegalStateException("Klarte ikke hente Beregningsresultat foreldrepenger for behandling: " + hentBehandlingId(resourceLinker));
@@ -176,7 +167,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.soknad", absolute = true)
     public Optional<SoknadDto> hentSoknadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "soknad".equals(dto.getRel()))
@@ -184,7 +174,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.iay", absolute = true)
     public InntektArbeidYtelseDto hentInntektArbeidYtelseDto(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "inntekt-arbeid-ytelse".equals(dto.getRel()))
@@ -195,7 +184,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.klage", absolute = true)
     public KlagebehandlingDto hentKlagebehandling(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "klage-vurdering".equals(dto.getRel()))
@@ -206,7 +194,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.innsyn", absolute = true)
     public InnsynsbehandlingDto hentInnsynsbehandling(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "innsyn".equals(dto.getRel()))
@@ -217,7 +204,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.beregningsgrunnlag", absolute = true)
     public BeregningsgrunnlagDto hentBeregningsgrunnlag(List<BehandlingResourceLink> resourceLinker) {
         return hentBeregningsgrunnlagHvisFinnes(resourceLinker).orElseThrow(() -> {
             throw new IllegalStateException("Klarte ikke hente beregningsgrunnlag for behandling: " + hentBehandlingId(resourceLinker));
@@ -232,7 +218,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.vilkar", absolute = true)
     public List<VilkårDto> hentVilkår(List<BehandlingResourceLink> resourceLinker) {
         return Arrays.asList(resourceLinker.stream()
                 .filter(dto -> "vilkar".equals(dto.getRel()))
@@ -250,7 +235,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.uttak-resultat", absolute = true)
     public Optional<UttakResultatPerioderDto> hentUttaksresultatHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "uttaksresultat-perioder".equals(dto.getRel()))
@@ -266,7 +250,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.uttak-resultat-svp", absolute = true)
     public Optional<SvangerskapspengerUttakResultatDto> hentUttaksresultatSvpHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "uttaksresultat-svangerskapspenger".equals(dto.getRel()))
@@ -274,7 +257,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.fagsak", absolute = true)
     public FagsakDto hentFagsak(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "fagsak".equals(dto.getRel()))
@@ -285,7 +267,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.ytelsefordeling", absolute = true)
     public YtelseFordelingDto hentYtelseFordeling(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "ytelsefordeling".equals(dto.getRel()))
@@ -296,7 +277,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.saldoer", absolute = true)
     public SaldoerDto hentSaldoer(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "uttak-stonadskontoer".equals(dto.getRel()))
@@ -307,7 +287,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.aksjonspunkter", absolute = true)
     public List<AksjonspunktDto> hentAksjonspunkter(List<BehandlingResourceLink> resourceLinker) {
         return Arrays.asList(resourceLinker.stream()
                 .filter(dto -> "aksjonspunkter".equals(dto.getRel()))
@@ -318,7 +297,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.klagedokument", absolute = true)
     public MottattKlagedokumentDto hentKlagedokument(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "mottatt-klagedokument".equals(dto.getRel()))
@@ -329,7 +307,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.mottattdokument", absolute = true)
     public List<MottattDokumentDto> hentMottatteDokumenter(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "mottattdokument".equals(dto.getRel()))
@@ -340,7 +317,6 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     }
 
     @Override
-    @Timed(name = "fpformidling.out.varsel-revurdering", absolute = true)
     public Optional<Boolean> harSendtVarselOmRevurdering(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "sendt-varsel-om-revurdering".equals(dto.getRel()))

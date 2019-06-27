@@ -29,6 +29,7 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @Api(tags = "saksbehandlertekst")
 @Path("/saksbehandlertekst")
 @ApplicationScoped
+@Transaction
 public class SaksbehandlerTekstRestTjeneste {
     private SaksbehandlerTekstMapper saksbehandlerTekstMapper;
     private DokumentRepository dokumentRepository;
@@ -45,7 +46,6 @@ public class SaksbehandlerTekstRestTjeneste {
 
     @POST
     @Path("/lagre-saksbehandler-tekst")
-    @Transaction
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Lagrer tekst fra saksbehandler")
     @BeskyttetRessurs(action = UPDATE, ressurs = FAGSAK)
@@ -77,23 +77,24 @@ public class SaksbehandlerTekstRestTjeneste {
 
     @POST
     @Path("/hent-saksbehandler-tekst")
-    @Transaction
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "hent tekst fra saksbehandler")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public TekstFraSaksbehandlerDto hentTekstFraSaksbehandler(@Valid AbacBehandlingUuidDto dto) { // NOSONAR
-        final Optional<SaksbehandlerTekst> formidlingDataOptional = dokumentRepository.hentSaksbehandlerTekstHvisEksisterer(dto.getBehandlingUuid());
-        return formidlingDataOptional.map(formidlingData -> saksbehandlerTekstMapper.mapSaksbehandlerTekstTilDto(formidlingData)).orElse(null);
+        final Optional<SaksbehandlerTekst> saksbehandlerTekstOptional = dokumentRepository.hentSaksbehandlerTekstHvisEksisterer(dto.getBehandlingUuid());
+        return saksbehandlerTekstOptional.map(saksbehandlerTekst -> saksbehandlerTekstMapper.mapSaksbehandlerTekstTilDto(saksbehandlerTekst)).orElse(null);
     }
 
     @POST
     @Path("/hent-saksbehandler-tekst-dummy")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "hent tekst fra saksbehandler retunerer altid null")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public TekstFraSaksbehandlerDto hentTekstFraSaksbehandlerDummy(@Valid AbacTekstFraSaksbehandlerDtoDummy dto) { // NOSONAR
+    public TekstFraSaksbehandlerDto hentTekstFraSaksbehandlerDummy(@Valid AbacBehandlingUuidDto dto) { // NOSONAR
         return null; //NOSONAR
     }
 }

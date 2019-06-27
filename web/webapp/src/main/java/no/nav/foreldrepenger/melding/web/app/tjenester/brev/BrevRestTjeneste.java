@@ -58,7 +58,7 @@ public class BrevRestTjeneste {
 
     @POST
     @Path("/maler")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Henter liste over tilgjengelige brevtyper")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
@@ -69,7 +69,7 @@ public class BrevRestTjeneste {
 
     @POST
     @Path("/maler-dummy")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Henter tom liste")
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     @BeskyttetRessurs(action = READ, ressurs = APPLIKASJON, sporingslogg = false)
@@ -80,7 +80,7 @@ public class BrevRestTjeneste {
     @POST
     @Transaction
     @Path("/varsel/revurdering")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Sjekk har varsel sendt om revurdering")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
@@ -92,7 +92,7 @@ public class BrevRestTjeneste {
     @POST
     @Path("/dokument-sendt")
     @Transaction
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Sjekker om dokument for mal er sendt")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
@@ -102,7 +102,7 @@ public class BrevRestTjeneste {
 
     @POST
     @Path("/dokument-sendt-dummy")
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Returnerer alltid false")
     @BeskyttetRessurs(action = READ, ressurs = APPLIKASJON, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")

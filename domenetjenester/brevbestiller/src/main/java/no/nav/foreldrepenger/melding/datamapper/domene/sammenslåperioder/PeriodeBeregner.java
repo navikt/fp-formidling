@@ -10,6 +10,7 @@ import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsa
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,11 +94,15 @@ public class PeriodeBeregner {
         throw FeilFactory.create(DokumentBestillerFeil.class).kanIkkeMatchePerioder("uttaksperiode").toException();
     }
 
-    public static SvpUttakResultatPeriode finnUttakPeriode(BeregningsresultatPeriode periode, List<SvpUttakResultatPeriode> uttakPerioder) {
+    public static List<SvpUttakResultatPeriode> finnUttakPeriodeKandidater(BeregningsresultatPeriode periode, List<SvpUttakResultatPeriode> uttakPerioder) {
+        List<SvpUttakResultatPeriode> kandidater = new ArrayList<>();
         for (SvpUttakResultatPeriode uttakPeriode : uttakPerioder) {
             if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom()) && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
-                return uttakPeriode;
+                kandidater.add(uttakPeriode);
             }
+        }
+        if (!kandidater.isEmpty()) {
+            return kandidater.stream().filter(SvpUttakResultatPeriode::isInnvilget).collect(Collectors.toList());
         }
         throw FeilFactory.create(DokumentBestillerFeil.class).kanIkkeMatchePerioder("uttaksperiode").toException();
     }

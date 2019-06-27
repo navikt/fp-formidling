@@ -1,3 +1,0 @@
-= Biblioteker
-
-.Oversikt over brukte Java biblioteker

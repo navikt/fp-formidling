@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -83,7 +84,7 @@ public class InnhentOpplysningerBrevMapper extends DokumentTypeMapper {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(mapBehandlingType(behandling));
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
-        fagType.setSoknadDato(klageDokument.map(this::hentMottattDatoFraKlage).orElse(MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter)));
+        fagType.setSoknadDato(klageDokument.map(kd -> hentMottattDatoFraKlage(kd, behandling)).orElse(MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter)));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
@@ -91,8 +92,9 @@ public class InnhentOpplysningerBrevMapper extends DokumentTypeMapper {
         return fagType;
     }
 
-    private XMLGregorianCalendar hentMottattDatoFraKlage(KlageDokument klageDokument) {
-        return XmlUtil.finnDatoVerdiAvUtenTidSone(klageDokument.getMottattDato());
+    private XMLGregorianCalendar hentMottattDatoFraKlage(KlageDokument klageDokument, Behandling behandling) {
+        LocalDate klageDato = klageDokument.getMottattDato() != null ? klageDokument.getMottattDato() : behandling.getOpprettetDato().toLocalDate();
+        return XmlUtil.finnDatoVerdiAvUtenTidSone(klageDato);
     }
 
     private BehandlingsTypeKode mapBehandlingType(Behandling behandling) {

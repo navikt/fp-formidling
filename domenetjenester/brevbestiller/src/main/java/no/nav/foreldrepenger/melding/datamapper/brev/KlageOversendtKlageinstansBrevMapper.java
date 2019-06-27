@@ -30,7 +30,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.oversendt.klagei
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
-import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_OVERSENDT_KLAGEINSTANS_DOK)
@@ -54,16 +53,16 @@ public class KlageOversendtKlageinstansBrevMapper extends DokumentTypeMapper {
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         KlageDokument klageDokument = domeneobjektProvider.hentKlageDokument(behandling);
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
-        FagType fagType = mapFagType(dokumentHendelse, klage, klageDokument);
+        FagType fagType = mapFagType(dokumentHendelse, klage, klageDokument, behandling);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(KlageOversendtKlageinstansConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
 
-    private FagType mapFagType(DokumentHendelse hendelse, Klage klage, KlageDokument klageDokument) {
+    private FagType mapFagType(DokumentHendelse hendelse, Klage klage, KlageDokument klageDokument, Behandling behandling) {
         final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
-        LocalDate mottattDato = klageDokument.getMottattDato() != null ? klageDokument.getMottattDato() : FPDateUtil.iDag();
+        LocalDate mottattDato = klageDokument.getMottattDato() != null ? klageDokument.getMottattDato() : behandling.getOpprettetDato().toLocalDate();
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(mottattDato));
         fagType.setFritekst(avklarFritekst(hendelse, klage));
         fagType.setAntallUker(BigInteger.valueOf(BEHANDLINGSFRIST_UKER_KA));

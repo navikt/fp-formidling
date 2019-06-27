@@ -94,7 +94,7 @@ public class SaksbehandlerTekstRestTjeneste {
     @ApiOperation(value = "hent tekst fra saksbehandler retunerer altid null")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public TekstFraSaksbehandlerDto hentTekstFraSaksbehandlerDummy(@Valid AbacBehandlingUuidDto dto) { // NOSONAR
+    public TekstFraSaksbehandlerDto hentTekstFraSaksbehandlerDummy(@Valid AbacBehandlingUuidDummyDto dto) { // NOSONAR
         return null; //NOSONAR
     }
 }

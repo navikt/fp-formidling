@@ -1,68 +1,86 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.SvpMapper.mapFra;
 import static no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder.ROTMAPPE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.EntityManager;
+
+import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
+import no.nav.foreldrepenger.fpsak.BehandlingRestKlientImpl;
+import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
+import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.melding.datamapper.dto.AksjonspunktDtoMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dtomapper.BehandlingDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.BehandlingsresultatDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.BeregningsgrunnlagDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.BeregningsresultatDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.FagsakDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.FamiliehendelseDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.IAYDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.InnsynDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.KlageDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.MottattDokumentDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.StønadskontoDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.UttakDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.UttakSvpDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.VilkårDtoMapper;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
-import no.nav.foreldrepenger.melding.typer.Beløp;
-import no.nav.foreldrepenger.melding.typer.DatoIntervall;
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatArbeidsforhold;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPerioder;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
-import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepositoryImpl;
+import no.nav.foreldrepenger.tps.impl.TpsAdapterImpl;
+import no.nav.foreldrepenger.tps.impl.TpsOversetter;
+import no.nav.foreldrepenger.tps.impl.TpsTjenesteImpl;
+import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.AktoerIder;
+import no.nav.vedtak.felles.integrasjon.aktør.klient.AktørConsumer;
+import no.nav.vedtak.felles.integrasjon.aktør.klient.AktørConsumerMedCache;
+import no.nav.vedtak.felles.integrasjon.person.PersonConsumer;
+import no.nav.vedtak.felles.integrasjon.rest.JsonMapper;
+import no.nav.vedtak.util.StringUtils;
 
 public class InnvilgelseSvangerskapspengerBrevMapperTest {
     private static final long ID = 123L;
-    private DokumentHendelse dokumentHendelse;
     private Behandling behandling;
-    private Arbeidsgiver arbeidsgiver = new Arbeidsgiver("Tine", null, null);
-    private DatoIntervall datoIntervallPeriode1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusMonths(1));
-    private DatoIntervall datoIntervallPeriode2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.now().plusMonths(1).plusDays(1), LocalDate.now().plusMonths(2));
-    private DatoIntervall datoIntervallPeriode3 = DatoIntervall.fraOgMed(LocalDate.now().plusMonths(2).plusDays(1));
+    private DokumentHendelse dokumentHendelse;
+
+    private JSONObject testdata;
+    private ResourceBundle testScenario = ResourceBundle.getBundle(
+            String.join("/", ROTMAPPE, "innvilgelsesvangerskapspenger", "testdata"),
+            new Locale("nb", "NO"));
 
     @Rule
+    public UnittestRepositoryRule repoRule = new UnittestRepositoryRule();
+    @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
+    private EntityManager entityManager = repoRule.getEntityManager();
+    private KodeverkRepository kodeverkRepository = new KodeverkRepositoryImpl(entityManager);
+
     @Mock
     DokumentFelles dokumentFelles;
     @Mock
@@ -70,173 +88,88 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest {
     @Mock
     BrevParametere brevParametere;
 
+    private BehandlingRestKlient behandlingRestKlient = new RedirectedToJsonResource();
+
+    private final BehandlingDtoMapper behandlingDtoMapper = new BehandlingDtoMapper(kodeverkRepository,
+            behandlingRestKlient,
+            null,
+            new BehandlingsresultatDtoMapper(kodeverkRepository));
+
+    private DomeneobjektProvider domeneobjektProvider = new DomeneobjektProvider(behandlingRestKlient,
+            new BeregningsgrunnlagDtoMapper(kodeverkRepository),
+            this.behandlingDtoMapper,
+            new BeregningsresultatDtoMapper(behandlingRestKlient,
+                    kodeverkRepository),
+            new KlageDtoMapper(kodeverkRepository),
+            new UttakDtoMapper(kodeverkRepository),
+            new UttakSvpDtoMapper(kodeverkRepository),
+            new IAYDtoMapper(kodeverkRepository),
+            new InnsynDtoMapper(kodeverkRepository),
+            new VilkårDtoMapper(kodeverkRepository),
+            new FamiliehendelseDtoMapper(),
+            new StønadskontoDtoMapper(kodeverkRepository),
+            new AksjonspunktDtoMapper(),
+            new MottattDokumentDtoMapper(kodeverkRepository),
+            new FagsakDtoMapper(kodeverkRepository, mockTpsTjeneste())
+    );
+
+    private TpsTjenesteImpl mockTpsTjeneste() {
+        return new TpsTjenesteImpl(new TpsAdapterImpl(
+                new AktørConsumerMedCache(new AktørConsumer() {
+                    @Override
+                    public Optional<String> hentAktørIdForPersonIdent(String s) {
+                        return Optional.of("123456");
+                    }
+
+                    @Override
+                    public Optional<String> hentPersonIdentForAktørId(String s) {
+                        return Optional.of("654321");
+                    }
+
+                    @Override
+                    public List<AktoerIder> hentAktørIdForPersonIdentSet(Set<String> set) {
+                        return Collections.emptyList();
+                    }
+                }),
+                Mockito.mock(PersonConsumer.class),
+                Mockito.mock(TpsOversetter.class)));
+    }
+
     @InjectMocks
     private InnvilgelseSvangerskapspengerBrevMapper mapper;
 
     @Before
     public void setup() {
-        behandling = Behandling.builder().medId(ID)
-                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medBehandlendeEnhetNavn(HenleggBehandlingBrevMapper.FAMPEN)
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                        .build())
-                .medSpråkkode(Språkkode.nb)
-                .build();
+        testdata = new JSONObject(testScenario.getString("scenario"));
+        String behandlingJson = testdata.getString("null");
+        BehandlingDto dto = JsonMapper.fromJson(behandlingJson, BehandlingDto.class);
+        behandling = Behandling.builder(behandlingDtoMapper.mapBehandlingFraDto(dto)).build();
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
-                .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER)
+                .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .build();
-        SvpUttaksresultat uttakResultat = mockUttaksresultat();
-        BeregningsresultatFP beregningsresultat = mockBeregningsresultat();
 
-
-        mapper = new InnvilgelseSvangerskapspengerBrevMapper() {
-            @Override
-            Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
-                return new Brevdata()
-                        .leggTilAlle(mapFra(uttakResultat, dokumentHendelse, mockBeregningsgrunnlag(), beregningsresultat, behandling))
-                        .leggTil("manedsbelop", 25342L)
-                        .leggTil("mottattDato", "1. januar 2000")
-                        .leggTil("refusjonTilBruker", true)
-                        .leggTil("refusjonerTilArbeidsgivere", 2)
-                        .leggTil("erAutomatiskVedtak", true);
-            }
-        };
+        mapper = new InnvilgelseSvangerskapspengerBrevMapper(brevParametere, domeneobjektProvider);
         MockitoAnnotations.initMocks(this);
     }
 
-    @Ignore
     @Test
     public void test_map_fagtype() {
-        ResourceBundle expectedValues = ResourceBundle.getBundle(
-                String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
-                new Locale("nb", "NO"));
-
         FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
-        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst"));
-        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift"));
+        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(testScenario.getString("forventet_brødtekst"));
+        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(testScenario.getString("forventet_overskrift"));
     }
 
-    private BeregningsresultatFP mockBeregningsresultat() {
-        return BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(List.of(BeregningsresultatPeriode.ny()
-                                .medPeriode(datoIntervallPeriode1)
-                        .medBeregningsresultatAndel(List.of(BeregningsresultatAndel.ny()
-                                .medArbeidsgiver(arbeidsgiver)
-                                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                                .medDagsats(2452)
-                                .medBrukerErMottaker(true)
-                                .build()))
-                        .medDagsats(2452L)
-                        .build(),
-                        BeregningsresultatPeriode.ny()
-                                .medPeriode(datoIntervallPeriode2)
-                                .medBeregningsresultatAndel(List.of(BeregningsresultatAndel.ny()
-                                        .medArbeidsgiver(arbeidsgiver)
-                                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                                        .medDagsats(2452)
-                                        .medBrukerErMottaker(true)
-                                        .build()))
-                                .medDagsats(2452L)
-                                .build(),
-                        BeregningsresultatPeriode.ny()
-                                .medPeriode(datoIntervallPeriode3)
-                                .medBeregningsresultatAndel(List.of(BeregningsresultatAndel.ny()
-                                        .medArbeidsgiver(arbeidsgiver)
-                                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                                        .medDagsats(2452)
-                                        .medBrukerErMottaker(true)
-                                        .build()))
-                                .medDagsats(2452L)
-                                .build()
-                        ))
-                .build();
-    }
+    private class RedirectedToJsonResource extends BehandlingRestKlientImpl {
 
-    private Beregningsgrunnlag mockBeregningsgrunnlag() {
-        List<BeregningsgrunnlagPrStatusOgAndel> bgpsaList = List.of(BeregningsgrunnlagPrStatusOgAndel.ny()
-                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                        .medBgAndelArbeidsforhold(new BGAndelArbeidsforhold(arbeidsgiver, null, null, null, null))
-                        .medBruttoPrÅr(BigDecimal.valueOf(22431 * 12))
-                        .medBesteberegningPrÅr(BigDecimal.TEN)
-                        .build(),
-                BeregningsgrunnlagPrStatusOgAndel.ny()
-                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                        .medBgAndelArbeidsforhold(new BGAndelArbeidsforhold(new Arbeidsgiver("Forsvaret", null, null), null, null, null, null))
-                        .medBruttoPrÅr(BigDecimal.valueOf(12431 * 12))
-                        .medBesteberegningPrÅr(BigDecimal.TEN)
-                        .build()
-        );
-        BeregningsgrunnlagPeriode periode = BeregningsgrunnlagPeriode.ny()
-                .medBruttoPrÅr(BigDecimal.TEN)
-                .medPeriode(datoIntervallPeriode1)
-                .medBeregningsgrunnlagPrStatusOgAndelList(bgpsaList)
-                .build();
-        BeregningsgrunnlagPeriode periode2 = BeregningsgrunnlagPeriode.ny()
-                .medBruttoPrÅr(BigDecimal.TEN)
-                .medPeriode(datoIntervallPeriode2)
-                .medBeregningsgrunnlagPrStatusOgAndelList(bgpsaList)
-                .build();
-        BeregningsgrunnlagPeriode periode3 = BeregningsgrunnlagPeriode.ny()
-                .medBruttoPrÅr(BigDecimal.TEN)
-                .medPeriode(datoIntervallPeriode3)
-                .medBeregningsgrunnlagPrStatusOgAndelList(bgpsaList)
-                .build();
-
-        return Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagPeriode(periode)
-                .leggTilBeregningsgrunnlagPeriode(periode2)
-                .leggTilBeregningsgrunnlagPeriode(periode3)
-                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-                .medhHjemmel(Hjemmel.F_14_7)
-                .medGrunnbeløp(Beløp.ZERO)
-                .build();
-    }
-
-    private SvpUttaksresultat mockUttaksresultat() {
-        SvpUttakResultatPeriode innvilgetPeriode = SvpUttakResultatPeriode.ny()
-                .medTidsperiode(datoIntervallPeriode1)
-                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .medUtbetalingsgrad(50L)
-                .medAktivitetDagsats(2452).build();
-        SvpUttakResultatPeriode innvilgetPeriode2 = SvpUttakResultatPeriode.ny()
-                .medTidsperiode(datoIntervallPeriode2)
-                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .medUtbetalingsgrad(50L)
-                .medAktivitetDagsats(2452).build();
-        SvpUttakResultatPeriode innvilgetPeriode3 = SvpUttakResultatPeriode.ny()
-                .medTidsperiode(datoIntervallPeriode3)
-                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .medUtbetalingsgrad(50L)
-                .medAktivitetDagsats(2452).build();
-        SvpUttakResultatPeriode avslåttPeriode = SvpUttakResultatPeriode.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusMonths(1)))
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT)
-                .medAktivitetDagsats(3126).build();
-        SvpUttakResultatPeriode avslåttPeriode2 = SvpUttakResultatPeriode.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusMonths(1)))
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medUtbetalingsgrad(50L)
-                .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT)
-                .medAktivitetDagsats(312).build();
-        SvpUttakResultatPerioder resArbeidsforhold = SvpUttakResultatPerioder.ny()
-                .medArbeidsgiverNavn("Tine")
-                .medPeriode(innvilgetPeriode).build();
-
-        return SvpUttaksresultat.ny()
-                .medUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold.ny()
-                        .medArbeidsgiver(arbeidsgiver)
-                        .medPeriode(innvilgetPeriode)
-                        .medPeriode(innvilgetPeriode2)
-                        .medPeriode(innvilgetPeriode3)
-                        .medPeriode(avslåttPeriode)
-                        .medPeriode(avslåttPeriode2)
-                        .medPeriode(avslåttPeriode)
-                        .build())
-                .medUttakResultatPerioder(resArbeidsforhold)
-                .build();
+        @Override
+        protected <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
+            String entity = testdata.getString(link.getRel());
+            if (StringUtils.nullOrEmpty(entity)) {
+                return Optional.empty();
+            }
+            return Optional.of(JsonMapper.fromJson(entity, clazz));
+        }
     }
 }

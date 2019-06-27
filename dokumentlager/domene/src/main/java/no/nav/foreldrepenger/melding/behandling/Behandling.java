@@ -171,6 +171,10 @@ public class Behandling {
         return new Behandling.Builder();
     }
 
+    public static Behandling.Builder builder(Behandling copy) {
+        return new Behandling.Builder(copy);
+    }
+
     public static class Builder {
         private String behandlendeEnhetNavn;
         private Behandlingsresultat behandlingsresultat;
@@ -191,6 +195,29 @@ public class Behandling {
         private BehandlingStatus status;
         private String endretAv;
         private Språkkode språkkode;
+
+        public Builder() {
+        }
+
+        public Builder(Behandling copy) {
+            this.behandlingsresultat = copy.getBehandlingsresultat();
+            this.resourceLinker = copy.getResourceLinker();
+            this.id = copy.getId();
+            this.uuid = copy.getUuid();
+            this.behandlingType = copy.getBehandlingType();
+            this.behandlingstidFristUker = copy.getBehandlingstidFristUker();
+            this.opprettetDato = copy.getOpprettetDato();
+            this.avsluttet = copy.getAvsluttet();
+            this.behandlingÅrsaker = copy.getBehandlingÅrsaker();
+            this.ansvarligSaksbehandler = copy.getAnsvarligSaksbehandler();
+            this.toTrinnsBehandling = copy.isToTrinnsBehandling();
+            this.behandlendeEnhetNavn = copy.getBehandlendeEnhetNavn();
+            this.ansvarligBeslutter = copy.getAnsvarligBeslutter();
+            this.fagsak = copy.getFagsak();
+            this.status = copy.getStatus();
+            this.endretAv = copy.getEndretAv();
+            this.språkkode = copy.getSpråkkode();
+        }
 
         public Behandling.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {
             this.behandlendeEnhetNavn = behandlendeEnhetNavn;

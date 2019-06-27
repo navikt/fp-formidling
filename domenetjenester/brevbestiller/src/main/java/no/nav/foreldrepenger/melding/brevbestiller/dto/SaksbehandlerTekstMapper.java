@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.dto;
 
+import java.util.Objects;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -24,7 +26,7 @@ public class SaksbehandlerTekstMapper {
     public SaksbehandlerTekst mapSaksbehandlerTekstFraDto(TekstFraSaksbehandlerDto tekstFraSaksbehandlerDto) {
         return SaksbehandlerTekst.builder()
                 .medBehandlingUuid(tekstFraSaksbehandlerDto.getBehandlingUuid())
-                .medVedtaksbrev(utledFormidlingVedtaksbrev(tekstFraSaksbehandlerDto.getVedtaksbrev().getKode()))
+                .medVedtaksbrev(utledFormidlingVedtaksbrev(tekstFraSaksbehandlerDto.getVedtaksbrev()))
                 .medAvklarFritekst(tekstFraSaksbehandlerDto.getAvklarFritekst())
                 .medTittel(tekstFraSaksbehandlerDto.getTittel())
                 .medFritekst(tekstFraSaksbehandlerDto.getFritekst())
@@ -53,10 +55,10 @@ public class SaksbehandlerTekstMapper {
         }
     }
 
-    private Vedtaksbrev utledFormidlingVedtaksbrev(String vedtaksbrev) {
-        if (StringUtils.nullOrEmpty(vedtaksbrev)) {
-            return Vedtaksbrev.INGEN;
+    private Vedtaksbrev utledFormidlingVedtaksbrev(no.nav.foreldrepenger.kontrakter.formidling.kodeverk.Vedtaksbrev vedtaksbrev) {
+        if (Objects.nonNull(vedtaksbrev) && StringUtils.nullOrEmpty(vedtaksbrev.getKode())) {
+            return Vedtaksbrev.UDEFINERT;
         }
-        return kodeverkRepository.finn(Vedtaksbrev.class, vedtaksbrev);
+        return kodeverkRepository.finn(Vedtaksbrev.class, vedtaksbrev.getKode());
     }
 }

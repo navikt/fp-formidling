@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.dto;
 
-import java.util.Objects;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -56,7 +54,7 @@ public class SaksbehandlerTekstMapper {
     }
 
     private Vedtaksbrev utledFormidlingVedtaksbrev(no.nav.foreldrepenger.kontrakter.formidling.kodeverk.Vedtaksbrev vedtaksbrev) {
-        if (Objects.nonNull(vedtaksbrev) && StringUtils.nullOrEmpty(vedtaksbrev.getKode())) {
+        if (vedtaksbrev == null || StringUtils.nullOrEmpty(vedtaksbrev.getKode())) {
             return Vedtaksbrev.UDEFINERT;
         }
         return kodeverkRepository.finn(Vedtaksbrev.class, vedtaksbrev.getKode());

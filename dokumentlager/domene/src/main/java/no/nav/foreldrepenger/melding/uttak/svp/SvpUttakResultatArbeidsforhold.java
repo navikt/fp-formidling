@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public class SvpUttakResultatArbeidsforhold {
@@ -12,11 +13,14 @@ public class SvpUttakResultatArbeidsforhold {
 
     private Arbeidsgiver arbeidsgiver;
 
+    private UttakArbeidType uttakArbeidType;
+
     private List<SvpUttakResultatPeriode> perioder;
 
     private SvpUttakResultatArbeidsforhold(Builder builder) {
         arbeidsforholdIkkeOppfyltÅrsak = builder.arbeidsforholdIkkeOppfyltÅrsak;
         arbeidsgiver = builder.arbeidsgiver;
+        uttakArbeidType = builder.uttakArbeidType;
         perioder = builder.perioder;
     }
 
@@ -26,6 +30,10 @@ public class SvpUttakResultatArbeidsforhold {
 
     public Arbeidsgiver getArbeidsgiver() {
         return arbeidsgiver;
+    }
+
+    public UttakArbeidType getUttakArbeidType() {
+        return uttakArbeidType;
     }
 
     public List<SvpUttakResultatPeriode> getPerioder() {
@@ -39,6 +47,7 @@ public class SvpUttakResultatArbeidsforhold {
     public static final class Builder {
         private ArbeidsforholdIkkeOppfyltÅrsak arbeidsforholdIkkeOppfyltÅrsak = ArbeidsforholdIkkeOppfyltÅrsak.INGEN;
         private Arbeidsgiver arbeidsgiver;
+        private UttakArbeidType uttakArbeidType;
         private List<SvpUttakResultatPeriode> perioder = new ArrayList<>();
 
         public Builder() {
@@ -53,6 +62,11 @@ public class SvpUttakResultatArbeidsforhold {
 
         public Builder medArbeidsgiver(Arbeidsgiver arbeidsgiver) {
             this.arbeidsgiver = arbeidsgiver;
+            return this;
+        }
+
+        public Builder medUttakArbeidType(UttakArbeidType uttakArbeidType) {
+            this.uttakArbeidType = uttakArbeidType;
             return this;
         }
 

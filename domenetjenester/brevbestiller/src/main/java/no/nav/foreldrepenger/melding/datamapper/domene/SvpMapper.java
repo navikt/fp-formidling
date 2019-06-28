@@ -251,9 +251,8 @@ public class SvpMapper {
     }
 
     private static Optional<SvpUttakResultatPeriode> finnUttakPeriode(List<SvpUttakResultatPeriode> matchendeUttaksperioder, String arbeidsgiverNavn) {
-        return matchendeUttaksperioder.stream()
-                                            .filter(uttakPeriode -> !uttakPeriode.getArbeidsgiverNavn().isEmpty())
-                                            .filter(uttakPeriode -> arbeidsgiverNavn.toLowerCase().contains(uttakPeriode.getArbeidsgiverNavn().toLowerCase()))
+        return matchendeUttaksperioder.stream().filter(uttakPeriode -> !uttakPeriode.getArbeidsgiverNavn().isEmpty())
+                                            .filter(uttakPeriode -> arbeidsgiverNavn.contains(uttakPeriode.getArbeidsgiverNavn()))
                                             .findFirst();
     }
 

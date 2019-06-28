@@ -66,6 +66,8 @@
     <entity class="no.nav.foreldrepenger.melding.uttak.StønadskontoType"/>
     <entity class="no.nav.foreldrepenger.melding.uttak.UttakArbeidType"/>
     <entity class="no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType"/>
+    <entity class="no.nav.foreldrepenger.melding.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak"/>
+    <entity class="no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak"/>
 
     <entity class="no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev"/>
 

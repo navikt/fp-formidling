@@ -32,7 +32,7 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjeng
     @Ignore
     @Test
     public void scenario_AT_FL() {
-        setup("scenario_AT_FN");
+        setup("scenario_AT_FN_2");
         FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
         assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(testScenario.getString("forventet_brødtekst"));
     }

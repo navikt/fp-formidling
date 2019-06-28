@@ -11,6 +11,7 @@ import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultat
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
+import no.nav.foreldrepenger.melding.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
@@ -36,8 +37,8 @@ public class UttakSvpDtoMapper {
                 .forEach(arbeidsforhold -> {
                     SvpUttakResultatArbeidsforhold.Builder resultat = SvpUttakResultatArbeidsforhold.ny();
                     resultat.medArbeidsgiver(mapArbeidsgiver(arbeidsforhold.getArbeidsgiver()));
-                    resultat.medUttakArbeidType(arbeidsforhold.getUttakArbeidType());
-                    resultat.medArbeidsforholdIkkeOppfyltÅrsak(arbeidsforhold.getArbeidsforholdIkkeOppfyltÅrsak());
+                    resultat.medUttakArbeidType(kodeverkRepository.finn(UttakArbeidType.class, arbeidsforhold.getArbeidType().getKode()));
+                    resultat.medArbeidsforholdIkkeOppfyltÅrsak(kodeverkRepository.finn(ArbeidsforholdIkkeOppfyltÅrsak.class, arbeidsforhold.getArbeidsforholdIkkeOppfyltÅrsak().getKode()));
                     emptyIfNull(arbeidsforhold.getPerioder()).stream()
                             .map(periodeDto -> SvpUttakResultatPeriode.ny()
                                     .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(periodeDto.getFom(), periodeDto.getTom()))
@@ -58,8 +59,8 @@ public class UttakSvpDtoMapper {
     }
 
     private String brukUttakArbeidType(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold) {
-        return UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.equals(arbeidsforhold.getUttakArbeidType()) ?
-                "næringsdrivende" : UttakArbeidType.FRILANS.equals(arbeidsforhold.getUttakArbeidType()) ?
+        return UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.getKode().equals(arbeidsforhold.getArbeidType().getKode()) ?
+                "næringsdrivende" : UttakArbeidType.FRILANS.getKode().equals(arbeidsforhold.getArbeidType().getKode()) ?
                 "frilanser" : null;
     }
 }

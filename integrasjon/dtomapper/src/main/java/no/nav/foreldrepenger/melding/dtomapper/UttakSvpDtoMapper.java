@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultat
 import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
+import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
@@ -35,6 +36,7 @@ public class UttakSvpDtoMapper {
                 .forEach(arbeidsforhold -> {
                     SvpUttakResultatArbeidsforhold.Builder resultat = SvpUttakResultatArbeidsforhold.ny();
                     resultat.medArbeidsgiver(mapArbeidsgiver(arbeidsforhold.getArbeidsgiver()));
+                    resultat.medUttakArbeidType(arbeidsforhold.getUttakArbeidType());
                     resultat.medArbeidsforholdIkkeOppfyltÅrsak(arbeidsforhold.getArbeidsforholdIkkeOppfyltÅrsak());
                     emptyIfNull(arbeidsforhold.getPerioder()).stream()
                             .map(periodeDto -> SvpUttakResultatPeriode.ny()
@@ -51,6 +53,13 @@ public class UttakSvpDtoMapper {
     }
 
     private String getArbeidsgiverNavn(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold) {
-        return arbeidsforhold.getArbeidsgiver() == null ? null : arbeidsforhold.getArbeidsgiver().getNavn();
+        return arbeidsforhold.getArbeidsgiver() != null ?
+                arbeidsforhold.getArbeidsgiver().getNavn() : brukUttakArbeidType(arbeidsforhold);
+    }
+
+    private String brukUttakArbeidType(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold) {
+        return UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.equals(arbeidsforhold.getUttakArbeidType()) ?
+                "næringsdrivende" : UttakArbeidType.FRILANS.equals(arbeidsforhold.getUttakArbeidType()) ?
+                "frilanser" : null;
     }
 }

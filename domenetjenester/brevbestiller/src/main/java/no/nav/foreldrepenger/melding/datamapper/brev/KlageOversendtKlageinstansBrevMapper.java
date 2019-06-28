@@ -34,7 +34,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_OVERSENDT_KLAGEINSTANS_DOK)
 public class KlageOversendtKlageinstansBrevMapper extends DokumentTypeMapper {
-    private static final int BEHANDLINGSFRIST_UKER_KA = 14;
+    static final int BEHANDLINGSFRIST_UKER_KA = 14;
 
     private BrevParametere brevParametere;
 
@@ -59,7 +59,7 @@ public class KlageOversendtKlageinstansBrevMapper extends DokumentTypeMapper {
     }
 
 
-    private FagType mapFagType(DokumentHendelse hendelse, Klage klage, KlageDokument klageDokument, Behandling behandling) {
+    FagType mapFagType(DokumentHendelse hendelse, Klage klage, KlageDokument klageDokument, Behandling behandling) {
         final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
         LocalDate mottattDato = klageDokument.getMottattDato() != null ? klageDokument.getMottattDato() : behandling.getOpprettetDato().toLocalDate();

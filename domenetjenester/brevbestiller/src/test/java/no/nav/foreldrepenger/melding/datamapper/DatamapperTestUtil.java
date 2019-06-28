@@ -9,6 +9,8 @@ import java.util.UUID;
 
 import org.mockito.Mockito;
 
+import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametereImpl;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -20,6 +22,9 @@ public class DatamapperTestUtil {
 
     public static String FRITEKST = "FRITEKST";
     public static final LocalDate FØRSTE_JANUAR_TJUENITTEN = LocalDate.of(2019, 1, 1);
+    public static final int BEHANDLINGSFRIST = 4;
+
+
     static BrevParametereImpl brevParametere = new BrevParametereImpl(14, 14, Period.ofWeeks(6), Period.ofWeeks(6));
 
     public static BrevParametere getBrevParametere() {
@@ -47,6 +52,18 @@ public class DatamapperTestUtil {
 
     public static DokumentHendelse standardDokumenthendelse() {
         return lagStandardHendelseBuilder().build();
+    }
+
+    public static Behandling.Builder standardBehandlingBuilder() {
+        BehandlingType førstegangssøknad = Mockito.mock(BehandlingType.class);
+        doReturn(BEHANDLINGSFRIST).when(førstegangssøknad).getBehandlingstidFristUker();
+        doReturn(BehandlingType.FØRSTEGANGSSØKNAD.getKode()).when(førstegangssøknad).getKode();
+        return Behandling.builder().medId(123l)
+                .medBehandlingType(førstegangssøknad);
+    }
+
+    public static Behandling standardBehandling() {
+        return standardBehandlingBuilder().build();
     }
 
 }

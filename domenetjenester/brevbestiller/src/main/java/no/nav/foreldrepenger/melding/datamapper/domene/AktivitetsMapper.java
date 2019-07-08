@@ -1,11 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -58,6 +54,8 @@ public class AktivitetsMapper {
         for (BeregningsresultatAndel andel : finnArbeidsandeler(beregningsresultatPeriode)) {
             arbeidsforholdListe.add(mapArbeidsforholdAndel(beregningsresultatPeriode, andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel), beregningsgrunnlagPeriode));
         }
+        Comparator<ArbeidsforholdType> arbeidsforholdTypeIsGraderingComparator = (a, b) -> - Boolean.compare(a.isGradering(), b.isGradering()); // - for reverse order.
+        arbeidsforholdListe.sort(arbeidsforholdTypeIsGraderingComparator);
         arbeidsforholdListeType.getArbeidsforhold().addAll(arbeidsforholdListe);
         return arbeidsforholdListeType.getArbeidsforhold().isEmpty() ? null : arbeidsforholdListeType;
     }

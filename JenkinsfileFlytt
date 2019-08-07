@@ -20,10 +20,16 @@ pipeline {
             steps {
                 script {
                     dir ('k8s') {
-						String msgColor = "#077040"
-						artifactid = 'fpformidling'
-						def version = getDeployetVersion(artifactid, fra)
-						
+                        String msgColor = "#077040"
+                        artifactid = 'fpformidling'
+
+                        def naisContext = (fra == "p") ? 'prod-fss' : 'preprod-fss'
+                        sh "k config use-context ${naisContext}"
+                        def version = sh(
+                           script: "k get pods -n\${fra} -l app=fpsak-frontend -o jsonpath='{.items[*].spec.containers[*].image}' | awk '{print \$1;}' | rev | cut -d: -f1 | rev",
+                           returnStdout: true
+                        ).trim()
+
                         def props = readProperties  interpolate: true, file: "application.${til}.variabler.properties"
                         def value = "s/RELEASE_VERSION/${version}/g"
                         props.each{ k,v -> value=value+";s%$k%$v%g" }
@@ -33,21 +39,16 @@ pipeline {
                         def naisNamespace = til
                         if (til == "p") {
                             naisNamespace = "default"
-                        } 
-						//slackInfo("Deploy av *fp-formidling*:" + version + " til *" + til + '*')
+                        }
+                        slackInfo("Deploy av *fp-formidling*:" + version + " til *" + til + '*')
                         def exitCode=sh returnStatus: true, script: "k rollout status -n${naisNamespace} deployment/${artifactid}"
                         echo "exit code is $exitCode"
 
                         if(exitCode == 0) {
-                            def veraPayload = "{\"environment\": \"${til}\",\"application\": \"${artifactid}\",\"version\": \"${version}\",\"deployedBy\": \"Jenkins\"}"
-                            def response = httpRequest([
-                                    url                   : "https://vera.adeo.no/api/v1/deploylog",
-                                    consoleLogResponseBody: true,
-                                    contentType           : "APPLICATION_JSON",
-                                    httpMode              : "POST",
-                                    requestBody           : veraPayload,
-                                    ignoreSslErrors       : true
-                            ])
+                        slackInfo(msgColor, "_Deploy av fp-formidling:$version til $til var suksessfult._")
+                        } else {
+                            slackError("Dette gjelder ${artifactId} til: ${til}")
+                            throw error
                         }
                         addBadge icon: '', id: '', link: '', text: "${til}-${version}"
                     }

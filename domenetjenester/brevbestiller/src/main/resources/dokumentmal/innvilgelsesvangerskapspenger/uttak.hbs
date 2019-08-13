@@ -1,7 +1,9 @@
 {{#gt antallPerioder 1}}
 {{i18n "I_disse_periodene" ""}}
     {{#each uttakPerioder}}
+        {{#unless (and (eq @index 0) @last)}}
 {{@key}}:
+        {{/unless}}
         {{#each perioder}}
 {{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" fom tom}}
             {{~#and (lt utbetalingsgrad 100) (gt utbetalingsgrad 0)~}}
@@ -25,14 +27,16 @@
 {{/gt}}
 {{#gt (size periodeDagsats) 1}}
 {{~i18n "Dette_far_du" (i18n "periodene")}}
+    {{#each periodeDagsats}}
+{{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" periode.fom periode.tom}}
+{{~i18n "x_kroner_pr_dag" dagsats }}{{#if @last}}-*{{/if}}
+    {{/each}}
 {{else}}
 {{~i18n "Dette_far_du" (i18n "perioden")}}
+    {{#each periodeDagsats}}
+{{i18n "fra_og_med_til_og_med" periode.fom periode.tom}}{{i18n "x_kroner_pr_dag" dagsats }}
+    {{/each}}
 {{/gt}}
-{{#each periodeDagsats}}
-{{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" periode.fom periode.tom}}
-{{~i18n "x_kroner_pr_dag" dagsats }}
-{{#if @last}}-*{{/if}}
-{{/each}}
 {{#unless (eq (size avslagPerioder) 0)}}
     {{#gt (size avslagPerioder) 1}}
 {{~i18n "I_disse_periodene" (i18n "ikke")}}
@@ -46,6 +50,8 @@
 {{i18n "pga_ferie"}}
         {{/eq}}
         {{#eq aarsakskode 8303}}
+{{i18n "fra_og_med_til_og_med" fom tom ~}}
+{{i18n "ikke_rett"~}}
 {{i18n "pga_du_kan_jobbe" arbeidsgiverNavn}}
         {{/eq}}
         {{#eq aarsakskode 8301}}

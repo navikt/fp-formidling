@@ -84,12 +84,12 @@ public class AktivitetsMapper {
     }
 
     private static void mapNaturalytelse(ArbeidsforholdType arbeidsforhold, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, BeregningsresultatPeriode beregningsresultatPeriode) {
-        for (PeriodeÅrsak årsak : beregningsgrunnlagPeriode.getperiodeÅrsaker()) {
-            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.equals(årsak)) {
+        for (String årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
+            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode().equals(årsak)) {
                 arbeidsforhold.setNaturalytelseEndringType(NaturalytelseEndringTypeKode.STOPP);
                 arbeidsforhold.setNaturalytelseNyDagsats(beregningsgrunnlagPeriode.getDagsats());
                 arbeidsforhold.setNaturalytelseEndringDato(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
-            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.equals(årsak)) {
+            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode().equals(årsak)) {
                 arbeidsforhold.setNaturalytelseEndringType(NaturalytelseEndringTypeKode.START);
                 arbeidsforhold.setNaturalytelseNyDagsats(beregningsgrunnlagPeriode.getDagsats());
                 arbeidsforhold.setNaturalytelseEndringDato(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));

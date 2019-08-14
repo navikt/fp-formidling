@@ -297,10 +297,10 @@ public class SvpMapper {
     private static Map mapNaturalytelse(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, BeregningsresultatPeriode beregningsresultatPeriode, String arbeidsgiverNavn) {
         Map<String, Object> map = new HashMap<>();
         String endringType = null;
-        for (PeriodeÅrsak årsak : beregningsgrunnlagPeriode.getperiodeÅrsaker()) {
-            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.equals(årsak)) {
+        for (String årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
+            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode().equals(årsak)) {
                 endringType = "bortfaller";
-            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.equals(årsak)) {
+            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode().equals(årsak)) {
                 endringType = "tilkommer";
             } else {
                 endringType = null;

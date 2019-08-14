@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivi
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
 import no.nav.foreldrepenger.melding.dtomapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
@@ -86,13 +85,9 @@ public class BeregningsgrunnlagDtoMapper {
                 .medRedusertPrÅr(dto.getRedusertPrAar())
                 .medDagsats(dto.getDagsats())
                 .medPeriode(intervall)
-                .medperiodeÅrsaker(dto.getPeriodeAarsaker().stream().map(this::finnPeriodeÅrsakFraDto).collect(Collectors.toList()))
+                .medperiodeÅrsaker(dto.getPeriodeAarsaker().stream().map(KodeDto::getKode).collect(Collectors.toList()))
                 .medBeregningsgrunnlagPrStatusOgAndelList(dto.getBeregningsgrunnlagPrStatusOgAndel().stream().map(this::mapBgpsaFraDto).collect(Collectors.toList()))
                 .build();
-    }
-
-    private PeriodeÅrsak finnPeriodeÅrsakFraDto(KodeDto dto) {
-        return kodeverkRepository.finn(PeriodeÅrsak.class, dto.getKode());
     }
 
     private BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagPrStatusOgAndelDto dto) {

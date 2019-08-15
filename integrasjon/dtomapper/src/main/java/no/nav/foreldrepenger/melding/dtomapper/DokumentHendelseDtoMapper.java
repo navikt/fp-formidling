@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
-import java.util.UUID;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -69,6 +67,7 @@ public class DokumentHendelseDtoMapper {
                 .medHistorikkAktør(utledHistorikkAktør(dokumentbestilling.getHistorikkAktør()))
                 .medDokumentMalType(utleddokumentMalType(dokumentbestilling.getDokumentMal()))
                 .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(dokumentbestilling.getArsakskode()))
+                .medBehandlendeEnhetNavn(dokumentbestilling.getBehandlendeEnhetNavn())
                 .build();
     }
 }

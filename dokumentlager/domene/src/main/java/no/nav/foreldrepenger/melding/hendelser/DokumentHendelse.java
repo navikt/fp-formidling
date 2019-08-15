@@ -64,6 +64,9 @@ public class DokumentHendelse extends BaseEntitet {
     @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + RevurderingVarslingÅrsak.DISCRIMINATOR + "'"))
     private RevurderingVarslingÅrsak revurderingVarslingÅrsak;
 
+    @Column(name = "behandlende_enhet_navn")
+    private String behandlendeEnhetNavn;
+
     //Brukes KUN til forhåndsvisning
     @Transient
     private boolean erOpphevetKlage;
@@ -125,6 +128,10 @@ public class DokumentHendelse extends BaseEntitet {
         return revurderingVarslingÅrsak;
     }
 
+    public String getBehandlendeEnhetNavn() {
+        return behandlendeEnhetNavn;
+    }
+
     public boolean getErOpphevetKlage() {
         return erOpphevetKlage;
     }
@@ -140,12 +147,13 @@ public class DokumentHendelse extends BaseEntitet {
                 Objects.equals(gjelderVedtak, that.gjelderVedtak) &&
                 Objects.equals(tittel, that.tittel) &&
                 Objects.equals(fritekst, that.fritekst) &&
-                Objects.equals(historikkAktør, that.historikkAktør);
+                Objects.equals(historikkAktør, that.historikkAktør) &&
+                Objects.equals(behandlendeEnhetNavn, that.behandlendeEnhetNavn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, historikkAktør);
+        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, historikkAktør, behandlendeEnhetNavn);
     }
 
     @Override
@@ -161,6 +169,7 @@ public class DokumentHendelse extends BaseEntitet {
                 ", fritekst='" + fritekst + '\'' +
                 ", historikkAktør=" + historikkAktør +
                 ", revurderingVarslingÅrsak=" + revurderingVarslingÅrsak +
+                ", behandlendeEnhetNavn=" + behandlendeEnhetNavn +
                 ", erOpphevetKlage=" + erOpphevetKlage +
                 '}';
     }
@@ -175,6 +184,7 @@ public class DokumentHendelse extends BaseEntitet {
         private Boolean gjelderVedtak;
         private HistorikkAktør historikkAktør;
         private RevurderingVarslingÅrsak revurderingVarslingÅrsak;
+        private String behandlendeEnhetNavn;
         private boolean erOpphevetKlage;
 
         public DokumentHendelse.Builder medErOpphevetKlage(boolean erOpphevetKlage) {
@@ -227,6 +237,11 @@ public class DokumentHendelse extends BaseEntitet {
             return this;
         }
 
+        public DokumentHendelse.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {
+            this.behandlendeEnhetNavn = behandlendeEnhetNavn;
+            return this;
+        }
+
         public DokumentHendelse build() {
             verifyStateForBuild();
             DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingUuid, ytelseType);
@@ -238,6 +253,7 @@ public class DokumentHendelse extends BaseEntitet {
             dokumentHendelse.dokumentMalType = dokumentMalType;
             dokumentHendelse.historikkAktør = historikkAktør;
             dokumentHendelse.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
+            dokumentHendelse.behandlendeEnhetNavn = behandlendeEnhetNavn;
             return dokumentHendelse;
         }
 

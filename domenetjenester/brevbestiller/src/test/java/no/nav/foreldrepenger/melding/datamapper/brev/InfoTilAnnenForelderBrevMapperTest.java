@@ -48,13 +48,13 @@ public class InfoTilAnnenForelderBrevMapperTest {
 
         behandling = Behandling.builder().medId(ID)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medBehandlendeEnhetNavn(HenleggBehandlingBrevMapper.FAMPEN)
                 .medSpråkkode(Språkkode.nb)
                 .build();
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+                .medBehandlendeEnhetNavn(HenleggBehandlingBrevMapper.FAMPEN)
                 .build();
 
         mapper = new InfoTilAnnenForelderBrevMapper() {

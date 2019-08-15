@@ -26,12 +26,12 @@ public class HenleggBehandlingBrevMapperTest {
     public void setup() {
         behandling = Behandling.builder().medId(ID)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medBehandlendeEnhetNavn(HenleggBehandlingBrevMapper.FAMPEN)
                 .build();
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+                .medBehandlendeEnhetNavn(HenleggBehandlingBrevMapper.FAMPEN)
                 .build();
     }
 

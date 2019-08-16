@@ -11,6 +11,7 @@ import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsa
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,16 +96,19 @@ public class PeriodeBeregner {
     }
 
     public static List<SvpUttakResultatPeriode> finnUttakPeriodeKandidater(BeregningsresultatPeriode periode, List<SvpUttakResultatPeriode> uttakPerioder) {
-        List<SvpUttakResultatPeriode> kandidater = new ArrayList<>();
-        for (SvpUttakResultatPeriode uttakPeriode : uttakPerioder) {
-            if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom()) && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
-                kandidater.add(uttakPeriode);
+        if (periode.getDagsats() > 0) {
+            List<SvpUttakResultatPeriode> kandidater = new ArrayList<>();
+            for (SvpUttakResultatPeriode uttakPeriode : uttakPerioder) {
+                if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom()) && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
+                    kandidater.add(uttakPeriode);
+                }
             }
+            if (!kandidater.isEmpty()) {
+                return kandidater.stream().filter(SvpUttakResultatPeriode::isInnvilget).collect(Collectors.toList());
+            }
+            throw FeilFactory.create(DokumentBestillerFeil.class).kanIkkeMatchePerioder("uttaksperiode").toException();
         }
-        if (!kandidater.isEmpty()) {
-            return kandidater.stream().filter(SvpUttakResultatPeriode::isInnvilget).collect(Collectors.toList());
-        }
-        throw FeilFactory.create(DokumentBestillerFeil.class).kanIkkeMatchePerioder("uttaksperiode").toException();
+        return Collections.emptyList();
     }
 
     //TODO - Skriv tester.. Dette oppfører seg annerledes i DTOene enn fpsak

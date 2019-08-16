@@ -215,9 +215,9 @@ public class SvpMapper {
                                 }
 
                             });
-
-                    mapPeriodeDagsats(periodeDagsats, beregningsresultatPeriode);
-
+                    if (beregningsresultatPeriode.getDagsats() > 0) {
+                        mapPeriodeDagsats(periodeDagsats, beregningsresultatPeriode);
+                    }
                 });
 
         map.put("antallPerioder", getAntallPerioder((Map) map.get("uttakPerioder")));

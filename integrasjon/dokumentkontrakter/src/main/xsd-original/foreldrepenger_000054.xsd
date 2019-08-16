@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           attributeFormDefault="unqualified"
-           elementFormDefault="qualified">
+<xs:schema attributeFormDefault="unqualified"
+		   elementFormDefault="qualified"
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
     <xs:include schemaLocation="foreldrepenger_felles.xsd"/>
 
@@ -17,10 +17,9 @@
     <xs:complexType name="fagType">
         <xs:all>
             <xs:element type="ytelseTypeKode" name="ytelseType"/>
-            <xs:element type="avvistGrunnKode" name="avvistGrunn" minOccurs="0"/>
-            <xs:element type="avvistGrunnListeType" name="avvistGrunnListe" minOccurs="0"/>
-            <xs:element type="xs:integer" name="antallAvvistGrunn" minOccurs="0"/>
-            <xs:element type="nonEmptyStringType" name="lovhjemler" minOccurs="0"/>
+			<xs:element type="avvistGrunnListeType" name="avvistGrunnListe"/>
+			<xs:element type="xs:integer" name="antallAvvistGrunn"/>
+			<xs:element type="nonEmptyStringType" name="lovhjemler"/>
             <xs:element type="xs:integer" name="klageFristUker"/>
         </xs:all>
     </xs:complexType>
@@ -48,6 +47,11 @@
             <xs:enumeration value="FP">
                 <xs:annotation>
                     <xs:documentation>Foreldrepenger</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SVP">
+				<xs:annotation>
+					<xs:documentation>Svangerskapspenger</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
         </xs:restriction>

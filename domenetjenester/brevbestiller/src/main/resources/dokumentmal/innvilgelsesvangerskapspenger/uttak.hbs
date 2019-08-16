@@ -40,30 +40,49 @@
 {{#unless (eq (size avslagPerioder) 0)}}
     {{#gt (size avslagPerioder) 1}}
 {{~i18n "I_disse_periodene" (i18n "ikke")}}
-    {{else}}
-{{~i18n "I_denne_perioden" (i18n "ikke")}}
-    {{/gt}}
-    {{#each avslagPerioder}}
+        {{#each avslagPerioder}}
 {{#if @first}}*-{{/if~}}
-        {{#eq aarsakskode 8311}}
+            {{#eq aarsakskode 8311}}
 {{i18n "fra_og_med_til_og_med" fom tom ~}}
 {{i18n "pga_ferie"}}
-        {{/eq}}
-        {{#eq aarsakskode 8303}}
+            {{/eq}}
+            {{#eq aarsakskode 8303}}
 {{i18n "fra_og_med_til_og_med" fom tom ~}}
 {{i18n "ikke_rett"~}}
 {{i18n "pga_du_kan_jobbe" arbeidsgiverNavn}}
-        {{/eq}}
-        {{#eq aarsakskode 8301}}
+            {{/eq}}
+            {{#eq aarsakskode 8301}}
 {{i18n "pga_termin"}}
-        {{/eq}}
-        {{#eq aarsakskode 8308}}
+            {{/eq}}
+            {{#eq aarsakskode 8308}}
 {{i18n "fra_og_med_til_og_med" fom tom ~}}
 {{i18n "ikke_rett"~}}
 {{i18n "pga_sokt_for_sent" mottattDato}}
-        {{/eq}}
+            {{/eq}}
 {{#if @last}}-*{{/if}}
-    {{/each}}
+        {{/each}}
+    {{else}}
+{{~i18n "I_denne_perioden" (i18n "ikke")}}
+        {{#each avslagPerioder}}
+            {{#eq aarsakskode 8311}}
+{{i18n "fra_og_med_til_og_med" fom tom ~}}
+{{i18n "pga_ferie"}}
+            {{/eq}}
+            {{#eq aarsakskode 8303}}
+{{i18n "fra_og_med_til_og_med" fom tom ~}}
+{{i18n "ikke_rett"~}}
+{{i18n "pga_du_kan_jobbe" arbeidsgiverNavn}}
+            {{/eq}}
+            {{#eq aarsakskode 8301}}
+{{i18n "pga_termin"}}
+            {{/eq}}
+            {{#eq aarsakskode 8308}}
+{{i18n "fra_og_med_til_og_med" fom tom ~}}
+{{i18n "ikke_rett"~}}
+{{i18n "pga_sokt_for_sent" mottattDato}}
+            {{/eq}}
+        {{/each}}
+    {{/gt}}
 {{/unless}}
 
 {{i18n "lovref_vedtak"}}{{i18n "lovhjemmel_14_4"}}

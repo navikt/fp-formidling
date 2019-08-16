@@ -63,6 +63,30 @@ public class BehandlingMapper {
                 .contains(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode());
     }
 
+    public static boolean erTermindatoEndret(FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse) {
+        if (originalFamiliehendelse.isEmpty()) {
+            return false;
+        }
+        return !originalFamiliehendelse.get().getTermindato().equals(familieHendelse.getTermindato());
+    }
+
+
+    public static Boolean erEndretFraAvslått(Optional<Behandling> orginalBehandling) {
+        return orginalBehandling.map(forrigeBehandling -> forrigeBehandling.getBehandlingsresultat().erAvslått())
+                .orElse(false);
+    }
+
+    public static boolean erRevurderingPgaEndretBeregningsgrunnlag(Behandling revurdering) {
+        List<KonsekvensForYtelsen> konsekvenserForYtelsen = revurdering.getBehandlingsresultat().getKonsekvenserForYtelsen();
+        boolean kunEndringIBeregning = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING) &&
+                konsekvenserForYtelsen.size() == 1;
+
+        List<String> behandlingÅrsakStringListe = getBehandlingÅrsakStringListe(revurdering);
+        return behandlingÅrsakStringListe.contains(BehandlingÅrsakType.RE_ENDRING_BEREGNINGSGRUNNLAG.getKode()) &&
+                behandlingÅrsakStringListe.size() == 1 ||
+                kunEndringIBeregning;
+    }
+
     public static boolean erRevurderingPgaFødselshendelse(Behandling behandling, FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse) {
         return getBehandlingÅrsakStringListe(behandling)
                 .contains(BehandlingÅrsakType.RE_HENDELSE_FØDSEL.getKode()) ||

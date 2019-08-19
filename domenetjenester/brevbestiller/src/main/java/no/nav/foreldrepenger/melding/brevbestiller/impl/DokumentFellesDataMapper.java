@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
@@ -44,19 +45,19 @@ public class DokumentFellesDataMapper {
         this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
     }
 
-    void opprettDokumentDataForBehandling(Behandling behandling, DokumentData dokumentData) {
+    void opprettDokumentDataForBehandling(Behandling behandling, DokumentData dokumentData, DokumentHendelse dokumentHendelse) {
         Personinfo personinfo = domeneobjektProvider.hentFagsak(behandling).getPersoninfo();
 
         final AktørId søkersAktørId = personinfo.getAktørId();
 
         if (!harLenkeForVerge(behandling)) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
+            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId);
             return;
         }
 
         Optional<Verge> vergeOpt = domeneobjektProvider.hentVerge(behandling);
         if (vergeOpt.isEmpty()) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
+            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId);
             return;
         }
 
@@ -65,12 +66,12 @@ public class DokumentFellesDataMapper {
         AktørId vergesAktørId = tpsTjeneste.hentAktørForFnr(PersonIdent.fra(verge.getFnr())).orElseThrow(IllegalStateException::new);
 
         if (verge.brevTilBegge()) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
-            opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId);
+            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId);
+            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, vergesAktørId, søkersAktørId);
         } else if (verge.isBrevTilSøker()) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
+            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId);
         } else if (verge.isBrevTilVerge()) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId);
+            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, vergesAktørId, søkersAktørId);
         }
     }
 
@@ -81,6 +82,7 @@ public class DokumentFellesDataMapper {
 
     private void opprettDokumentDataForMottaker(Behandling behandling,
                                                 DokumentData dokumentData,
+                                                DokumentHendelse dokumentHendelse,
                                                 AktørId aktørId,
                                                 AktørId aktørIdBruker) {
 
@@ -110,7 +112,8 @@ public class DokumentFellesDataMapper {
                 fnrBruker,
                 navnBruker,
                 personstatusBruker,
-                adresseinfo);
+                adresseinfo,
+                dokumentHendelse.getBehandlendeEnhetNavn());
     }
 
     private void buildDokumentFelles(Behandling behandling,
@@ -119,9 +122,8 @@ public class DokumentFellesDataMapper {
                                      PersonIdent fnrBruker,
                                      String navnBruker,
                                      PersonstatusType personstatusBruker,
-                                     Adresseinfo adresseinfo) {
-
-        String avsenderEnhet = behandling.getBehandlendeEnhetNavn();
+                                     Adresseinfo adresseinfo,
+                                     String avsenderEnhet) {
 
         Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
 

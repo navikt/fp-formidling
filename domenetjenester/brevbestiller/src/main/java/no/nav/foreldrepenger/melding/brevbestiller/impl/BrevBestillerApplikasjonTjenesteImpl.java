@@ -93,7 +93,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.BESTILL);
-        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
+        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
         Collection<InnsynDokument> vedlegg = finnEventuelleVedlegg(behandling, dokumentMal);
         boolean harVedlegg = !vedlegg.isEmpty();
 
@@ -210,7 +210,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, hendelse);
 
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.UTKAST);
-        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
+        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, hendelse);
         final DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
 
         Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, hendelse, behandling);

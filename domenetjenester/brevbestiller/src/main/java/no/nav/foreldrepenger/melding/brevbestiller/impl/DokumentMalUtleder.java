@@ -127,12 +127,16 @@ class DokumentMalUtleder {
             return false;
         }
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+
+        Boolean erRevurderingMedUendretUtfall = behandlingsresultat.erRevurderingMedUendretUtfall();
+
         List<KonsekvensForYtelsen> konsekvenserForYtelsen = behandlingsresultat.getKonsekvenserForYtelsen();
         boolean ingenKonsekvensForYtelsen = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.INGEN_ENDRING);
         if (ingenKonsekvensForYtelsen && konsekvenserForYtelsen.size() > 1) {
             throw new IllegalStateException(UTVIKLERFEIL_INGEN_ENDRING_SAMMEN + behandling.getUuid());
         }
-        return ingenKonsekvensForYtelsen || erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(behandling);
+        return erRevurderingMedUendretUtfall || ingenKonsekvensForYtelsen
+                || erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(behandling);
     }
 
     private boolean erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(Behandling behandling) {

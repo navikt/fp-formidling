@@ -40,6 +40,7 @@ public class DokumentbestillingDtoMapper {
                 .medHistorikkAktør(utledHistorikkAktør(brevDto.getHistorikkAktør()))
                 .medDokumentMalType(utleddokumentMalType(brevDto.getDokumentMal()))
                 .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(brevDto.getArsakskode()))
+                .medGjelderVedtak(brevDto.isGjelderVedtak())
                 .build();
     }
 

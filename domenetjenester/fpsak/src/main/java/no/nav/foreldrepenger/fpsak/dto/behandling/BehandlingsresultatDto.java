@@ -18,6 +18,7 @@ public class BehandlingsresultatDto {
     private String avslagsarsakFritekst;
     private String overskrift;
     private String fritekstbrev;
+    private Boolean erRevurderingMedUendretUtfall;
     private LocalDate skjaeringstidspunktForeldrepenger;
 
     public Integer getId() {
@@ -100,6 +101,14 @@ public class BehandlingsresultatDto {
         this.vedtaksbrev = vedtaksbrev;
     }
 
+    public Boolean getErRevurderingMedUendretUtfall() {
+        return Boolean.TRUE.equals(erRevurderingMedUendretUtfall);
+    }
+
+    public void setErRevurderingMedUendretUtfall(Boolean erRevurderingMedUendretUtfall) {
+        this.erRevurderingMedUendretUtfall = erRevurderingMedUendretUtfall;
+    }
+
     @Override
     public String toString() {
         return "BehandlingsresultatDto{" +
@@ -113,6 +122,7 @@ public class BehandlingsresultatDto {
                 ", overskrift='" + overskrift + '\'' +
                 ", fritekstbrev='" + fritekstbrev + '\'' +
                 ", skjaeringstidspunktForeldrepenger='" + skjaeringstidspunktForeldrepenger + '\'' +
+                ", erRevurderingMedUendretUtfall='" + erRevurderingMedUendretUtfall + '\'' +
                 '}';
     }
 }

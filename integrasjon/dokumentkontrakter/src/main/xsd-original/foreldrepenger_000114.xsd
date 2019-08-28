@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           attributeFormDefault="unqualified"
-           elementFormDefault="qualified">
+<xs:schema attributeFormDefault="unqualified"
+		   elementFormDefault="qualified"
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
     <xs:include schemaLocation="foreldrepenger_felles.xsd"/>
 
@@ -33,6 +33,11 @@
             <xs:enumeration value="FP">
                 <xs:annotation>
                     <xs:documentation>Foreldrepenger</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SVP">
+				<xs:annotation>
+					<xs:documentation>Svangerskapspenger</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
         </xs:restriction>

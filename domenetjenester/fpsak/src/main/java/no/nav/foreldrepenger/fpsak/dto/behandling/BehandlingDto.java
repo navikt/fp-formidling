@@ -39,6 +39,7 @@ public class BehandlingDto {
     private AsyncPollingStatus taskStatus;
     private String venteArsakKode;
     private List<BehandlingÅrsakDto> behandlingArsaker = new ArrayList<>();
+    private LocalDate originalVedtaksDato;
 
     public Long getId() {
         return id;
@@ -256,6 +257,14 @@ public class BehandlingDto {
         this.endretAvBrukernavn = endretAvBrukernavn;
     }
 
+    public LocalDate getOriginalVedtaksDato() {
+        return originalVedtaksDato;
+    }
+
+    public void setOriginalVedtaksDato(LocalDate originalVedtaksDato) {
+        this.originalVedtaksDato = originalVedtaksDato;
+    }
+
     @Override
     public String toString() {
         return "BehandlingDto{" +
@@ -282,7 +291,8 @@ public class BehandlingDto {
                 ", links=" + links +
                 ", taskStatus='" + taskStatus + '\'' +
                 ", venteArsakKode='" + venteArsakKode + '\'' +
-                ", behandlingArsaker=" + behandlingArsaker +
+                ", behandlingArsaker=" + behandlingArsaker + '\'' +
+                ", originalVedtaksDato=" + originalVedtaksDato +
                 '}';
     }
 }

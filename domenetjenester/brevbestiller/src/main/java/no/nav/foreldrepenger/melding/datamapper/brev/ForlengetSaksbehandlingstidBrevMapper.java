@@ -34,9 +34,11 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 @Named(DokumentMalType.FORLENGET_DOK)
 public class ForlengetSaksbehandlingstidBrevMapper extends DokumentTypeMapper {
 
-    private Map<String, VariantKode> malTilVariantMap = Map.of(DokumentMalType.FORLENGET_MEDL_DOK, VariantKode.MEDLEM,
+    private Map<String, VariantKode> malTilVariantMap = Map.of(
+            DokumentMalType.FORLENGET_MEDL_DOK, VariantKode.MEDLEM,
             DokumentMalType.FORLENGET_TIDLIG_SOK, VariantKode.FORTIDLIG,
-            DokumentMalType.FORLENGET_OPPTJENING, VariantKode.OPPTJENING);
+            DokumentMalType.FORLENGET_OPPTJENING, VariantKode.OPPTJENING
+    );
 
     public ForlengetSaksbehandlingstidBrevMapper() {
         //CDI
@@ -48,14 +50,14 @@ public class ForlengetSaksbehandlingstidBrevMapper extends DokumentTypeMapper {
     }
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
+                                Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         FagType fagType = mapFagType(dokumentHendelse, behandling, dokumentFelles);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(ForlengetConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
-
     }
 
-    FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentFelles dokumentFelles) {
+    private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentFelles dokumentFelles) {
         FagType fagType = new FagType();
         fagType.setBehandlingsfristUker(BigInteger.valueOf(BehandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType())));
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));

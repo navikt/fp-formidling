@@ -207,6 +207,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         byte[] dokument;
         DokumentHendelse hendelse = dokumentbestillingDtoMapper.mapDokumentbestillingFraDtoForEndepunkt(dokumentbestillingDto);
         Behandling behandling = domeneobjektProvider.hentBehandling(hendelse.getBehandlingUuid());
+
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, hendelse);
 
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.UTKAST);

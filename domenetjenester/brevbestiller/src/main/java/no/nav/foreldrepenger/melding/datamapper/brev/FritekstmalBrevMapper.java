@@ -66,7 +66,7 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
     protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
         initHandlebars(behandling.getSpråkkode());
         FagType fagType = new FagType();
-        fagType.setHovedoverskrift(tryApply(behandling, overskriftMal));
+        fagType.setHovedoverskrift(tryApply(Map.of("behandling", behandling, "dokumentHendelse", hendelse), overskriftMal));
         fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling).map, brødtekstMal));
         return fagType;
     }

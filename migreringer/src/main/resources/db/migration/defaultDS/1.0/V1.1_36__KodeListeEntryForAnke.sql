@@ -97,22 +97,22 @@ INSERT INTO KODELISTE (ID, KODE, KODEVERK, BESKRIVELSE) VALUES (nextval('seq_kod
 
 
 ------------------------ BEHANDLING_RESULTAT_TYPE -----------------------------------------------------
-insert into KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_AVVIST', 'Anke er avvist', 'BEHANDLING_RESULTAT_TYPE');
+insert INTO KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_AVVIST', 'Anke er avvist', 'BEHANDLING_RESULTAT_TYPE');
 
 
-insert into KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_OMGJOER', 'Bruker har fått omgjøring i anke', 'BEHANDLING_RESULTAT_TYPE');
+insert INTO KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_OMGJOER', 'Bruker har fått omgjøring i anke', 'BEHANDLING_RESULTAT_TYPE');
 
 
-insert into KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_OPPHEVE_OG_HJEMSENDE', 'Bruker har fått vedtaket opphevet og hjemsendt i anke', 'BEHANDLING_RESULTAT_TYPE');
+insert INTO KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_OPPHEVE_OG_HJEMSENDE', 'Bruker har fått vedtaket opphevet og hjemsendt i anke', 'BEHANDLING_RESULTAT_TYPE');
 
 
-insert into KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_YTELSESVEDTAK_STADFESTET', 'Anken er stadfestet/opprettholdt', 'BEHANDLING_RESULTAT_TYPE');
+insert INTO KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_YTELSESVEDTAK_STADFESTET', 'Anken er stadfestet/opprettholdt', 'BEHANDLING_RESULTAT_TYPE');
 
 
-insert into KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_DELVIS_OMGJOERING_TIL_GUNST', 'Anke er delvis omgjøring, til gunst', 'BEHANDLING_RESULTAT_TYPE');
+insert INTO KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_DELVIS_OMGJOERING_TIL_GUNST', 'Anke er delvis omgjøring, til gunst', 'BEHANDLING_RESULTAT_TYPE');
 
 
-insert into KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_TIL_UGUNST', 'Gunst omgjør i anke', 'BEHANDLING_RESULTAT_TYPE');
+insert INTO KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'ANKE_TIL_UGUNST', 'Gunst omgjør i anke', 'BEHANDLING_RESULTAT_TYPE');
 
 
 --Nye skjermlenke for anke
@@ -123,14 +123,18 @@ VALUES (nextval('seq_kodeliste'), 'ANKE_VURDERING', 'Anke vurdering', 'SKJERMLEN
 INSERT INTO KODELISTE (id, kode, beskrivelse, kodeverk)
 VALUES (nextval('seq_kodeliste'), 'ANKE_MERKNADER', 'Anke merknader', 'SKJERMLENKE_TYPE');
 
+-- HISTORIKKINNSLAG_TYPE
 
-insert into KODELISTE (id, kodeverk, kode, gyldig_fom, ekstra_data)
+insert INTO KODELISTE (id, kodeverk, kode, gyldig_fom, ekstra_data)
 values(nextval('seq_kodeliste'), 'HISTORIKKINNSLAG_TYPE', 'ANKEBEH_STARTET', to_date('2017-01-01', 'YYYY-MM-DD'), '{"mal": "TYPE1"}');
 
 
-insert into KODELISTE (id, kodeverk, kode, gyldig_fom, ekstra_data)
+insert INTO KODELISTE (id, kodeverk, kode, gyldig_fom, ekstra_data)
 values(nextval('seq_kodeliste'), 'HISTORIKKINNSLAG_TYPE', 'ANKE_BEH', to_date('2017-01-01', 'YYYY-MM-DD'), '{"mal": "TYPE5"}');
 
+
+
+-- Historikk endret feltype for anke
 
 INSERT INTO KODELISTE (id, kode, beskrivelse, kodeverk)
 VALUES (nextval('seq_kodeliste'), 'ER_ANKER_IKKE_PART', 'Angir om anker ikke er part i saken.', 'HISTORIKK_ENDRET_FELT_TYPE');
@@ -147,20 +151,6 @@ VALUES (nextval('seq_kodeliste'), 'ER_ANKEFRIST_IKKE_OVERHOLDT', 'Er ankefrist i
 INSERT INTO KODELISTE (id, kode, beskrivelse, kodeverk)
 VALUES (nextval('seq_kodeliste'), 'ER_ANKEN_IKKE_SIGNERT', 'er anken ikke signert.', 'HISTORIKK_ENDRET_FELT_TYPE');
 
-
-
-INSERT INTO KODELISTE (id, kodeverk, kode, beskrivelse)
-VALUES  (nextval('seq_kodeliste'), 'VENT_AARSAK', 'ANKE_VENTER_PAA_MERKNADER_FRA_BRUKER',
-        'Venter på merknader fra bruker');
-
-
-INSERT INTO KODELISTE (id, kodeverk, kode, beskrivelse)
-VALUES  (nextval('seq_kodeliste'), 'VENT_AARSAK', 'ANKE_OVERSENDT_TIL_TRYGDERETTEN',
-        'Venter på at saken blir behandlet hos Trygderetten');
-
-
-
--- Historikk endret feltype for anke
 INSERT INTO KODELISTE (id, kode, beskrivelse, kodeverk)
 VALUES (nextval('seq_kodeliste'), 'ANKE_RESULTAT', 'anke resultat', 'HISTORIKK_ENDRET_FELT_TYPE');
 
@@ -176,9 +166,18 @@ VALUES (nextval('seq_kodeliste'), 'ANKE_AVVIST_ÅRSAK', 'Årsak til avvist anke'
 INSERT INTO KODELISTE (id, kode, beskrivelse, kodeverk)
 VALUES (nextval('seq_kodeliste'), 'PA_ANKET_BEHANDLINGID', 'på anket behandlingsId.', 'HISTORIKK_ENDRET_FELT_TYPE');
 
+--  
+INSERT INTO KODELISTE (id, kodeverk, kode, beskrivelse)
+VALUES  (nextval('seq_kodeliste'), 'VENT_AARSAK', 'ANKE_VENTER_PAA_MERKNADER_FRA_BRUKER',
+        'Venter på merknader fra bruker');
 
+
+INSERT INTO KODELISTE (id, kodeverk, kode, beskrivelse)
+VALUES  (nextval('seq_kodeliste'), 'VENT_AARSAK', 'ANKE_OVERSENDT_TIL_TRYGDERETTEN',
+        'Venter på at saken blir behandlet hos Trygderetten');
+		
 -- Ny VedtakResultatType for KLAGE
-insert into KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'VEDTAK_I_ANKEBEHANDLING', 'vedtak i ankebehandling', 'VEDTAK_RESULTAT_TYPE');
+insert INTO KODELISTE (id, kode, beskrivelse, kodeverk) values (nextval('seq_kodeliste'), 'VEDTAK_I_ANKEBEHANDLING', 'vedtak i ankebehandling', 'VEDTAK_RESULTAT_TYPE');
 
 
 

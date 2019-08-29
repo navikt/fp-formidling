@@ -46,7 +46,8 @@ public class KlageYtelsesvedtakStadfestetBrevMapper extends DokumentTypeMapper {
     }
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
+                                Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
         FagType fagType = mapFagType(dokumentHendelse, klage);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
@@ -61,7 +62,6 @@ public class KlageYtelsesvedtakStadfestetBrevMapper extends DokumentTypeMapper {
         return fagType;
     }
 
-
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {
         ObjectFactory of = new ObjectFactory();
         BrevdataType brevdataType = of.createBrevdataType();
@@ -69,4 +69,5 @@ public class KlageYtelsesvedtakStadfestetBrevMapper extends DokumentTypeMapper {
         brevdataType.setFelles(fellesType);
         return of.createBrevdata(brevdataType);
     }
+
 }

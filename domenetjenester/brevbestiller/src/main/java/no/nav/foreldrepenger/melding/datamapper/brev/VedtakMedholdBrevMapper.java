@@ -47,14 +47,15 @@ public class VedtakMedholdBrevMapper extends DokumentTypeMapper {
     }
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
+                                Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
         FagType fagType = mapFagType(dokumentHendelse, klage);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapTilBrevDataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(VedtakMedholdConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage) {
+    private FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage) {
         FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         fagType.setOpphavType(utledOpphaveTypeKode(klage));

@@ -20,12 +20,16 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 
 public class DatamapperTestUtil {
 
-    public static String FRITEKST = "FRITEKST";
+    public static final String FRITEKST = "FRITEKST";
     public static final LocalDate FØRSTE_JANUAR_TJUENITTEN = LocalDate.of(2019, 1, 1);
     public static final int BEHANDLINGSFRIST = 4;
 
+    public static final Period SVARFRIST = Period.ofWeeks(6);
+    private static final int KLAGEFRIST = 14;
+    private static final int KLAGEFRIST_INNSYN = 14;
+    private static final Period SØK_ANTALL_UKER = Period.ofWeeks(6);
 
-    static BrevParametereImpl brevParametere = new BrevParametereImpl(14, 14, Period.ofWeeks(6), Period.ofWeeks(6));
+    private static BrevParametereImpl brevParametere = new BrevParametereImpl(KLAGEFRIST, KLAGEFRIST_INNSYN, SVARFRIST, SØK_ANTALL_UKER);
 
     public static BrevParametere getBrevParametere() {
         return brevParametere;
@@ -58,8 +62,7 @@ public class DatamapperTestUtil {
         BehandlingType førstegangssøknad = Mockito.mock(BehandlingType.class);
         doReturn(BEHANDLINGSFRIST).when(førstegangssøknad).getBehandlingstidFristUker();
         doReturn(BehandlingType.FØRSTEGANGSSØKNAD.getKode()).when(førstegangssøknad).getKode();
-        return Behandling.builder().medId(123l)
-                .medBehandlingType(førstegangssøknad);
+        return Behandling.builder().medId(123L).medBehandlingType(førstegangssøknad);
     }
 
     public static Behandling standardBehandling() {

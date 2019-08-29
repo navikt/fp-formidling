@@ -17,7 +17,6 @@ public class KlageVurdering extends Kodeliste {
     public static final KlageVurdering HJEMSENDE_UTEN_Å_OPPHEVE = new KlageVurdering("HJEMSENDE_UTEN_Å_OPPHEVE"); //$NON-NLS-1$
     public static final KlageVurdering UDEFINERT = new KlageVurdering("-"); //$NON-NLS-1$
 
-
     public KlageVurdering() {
         // for hibernate
     }

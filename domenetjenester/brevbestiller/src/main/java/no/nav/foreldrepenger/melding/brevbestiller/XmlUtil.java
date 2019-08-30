@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.brevbestiller;
 import java.time.LocalDate;
 
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -27,7 +28,15 @@ public class XmlUtil {
 
     public static XMLGregorianCalendar finnDatoVerdiAvUtenTidSone(LocalDate dato) {
         try {
-            return DatatypeFactory.newInstance().newXMLGregorianCalendar(dato.getYear(), dato.getMonthValue(), dato.getDayOfMonth(), -2147483648, -2147483648, -2147483648, -2147483648, -2147483648);
+            return DatatypeFactory.newInstance().newXMLGregorianCalendar(
+                    dato.getYear(),
+                    dato.getMonthValue(),
+                    dato.getDayOfMonth(),
+                    DatatypeConstants.FIELD_UNDEFINED,
+                    DatatypeConstants.FIELD_UNDEFINED,
+                    DatatypeConstants.FIELD_UNDEFINED,
+                    DatatypeConstants.FIELD_UNDEFINED,
+                    DatatypeConstants.FIELD_UNDEFINED);
         } catch (DatatypeConfigurationException e) {
             throw FeilFactory.create(DokumentBestillerFeil.class).datokonverteringsfeil(dato.toString(), e).toException();
 

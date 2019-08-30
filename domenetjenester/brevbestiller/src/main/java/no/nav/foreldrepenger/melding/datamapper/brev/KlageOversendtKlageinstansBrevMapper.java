@@ -34,7 +34,8 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_OVERSENDT_KLAGEINSTANS_DOK)
 public class KlageOversendtKlageinstansBrevMapper extends DokumentTypeMapper {
-    static final int BEHANDLINGSFRIST_UKER_KA = 14;
+
+    private static final int BEHANDLINGSFRIST_UKER_KA = 14;
 
     private BrevParametere brevParametere;
 
@@ -50,7 +51,8 @@ public class KlageOversendtKlageinstansBrevMapper extends DokumentTypeMapper {
     }
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
+                                Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         KlageDokument klageDokument = domeneobjektProvider.hentKlageDokument(behandling);
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
         FagType fagType = mapFagType(dokumentHendelse, klage, klageDokument, behandling);
@@ -58,16 +60,22 @@ public class KlageOversendtKlageinstansBrevMapper extends DokumentTypeMapper {
         return JaxbHelper.marshalNoNamespaceXML(KlageOversendtKlageinstansConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-
-    FagType mapFagType(DokumentHendelse hendelse, Klage klage, KlageDokument klageDokument, Behandling behandling) {
+    private FagType mapFagType(DokumentHendelse hendelse, Klage klage, KlageDokument klageDokument, Behandling behandling) {
         final FagType fagType = new FagType();
+        final LocalDate mottatDato = utledMottattDato(klageDokument, behandling);
+        final LocalDate svarFrist = BrevMapperUtil.getSvarFrist(brevParametere);
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
-        LocalDate mottattDato = klageDokument.getMottattDato() != null ? klageDokument.getMottattDato() : behandling.getOpprettetDato().toLocalDate();
-        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(mottattDato));
+        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(mottatDato));
         fagType.setFritekst(avklarFritekst(hendelse, klage));
         fagType.setAntallUker(BigInteger.valueOf(BEHANDLINGSFRIST_UKER_KA));
-        fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
+        fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(svarFrist));
         return fagType;
+    }
+
+    private LocalDate utledMottattDato(KlageDokument klageDokument, Behandling behandling) {
+        return klageDokument.getMottattDato() != null
+                ? klageDokument.getMottattDato()
+                : behandling.getOpprettetDato().toLocalDate();
     }
 
     private String avklarFritekst(DokumentHendelse hendelse, Klage klage) {

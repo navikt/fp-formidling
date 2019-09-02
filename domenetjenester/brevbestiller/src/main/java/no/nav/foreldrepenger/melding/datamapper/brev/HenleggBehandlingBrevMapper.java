@@ -31,6 +31,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 @ApplicationScoped
 @Named(DokumentMalType.HENLEGG_BEHANDLING_DOK)
 public class HenleggBehandlingBrevMapper extends DokumentTypeMapper {
+
     static final String FAMPEN = "NAV Familie- og pensjonsytelser";
 
     public HenleggBehandlingBrevMapper() {
@@ -38,38 +39,45 @@ public class HenleggBehandlingBrevMapper extends DokumentTypeMapper {
     }
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException, XMLStreamException, SAXException {
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse,
+                                Behandling behandling) throws JAXBException, XMLStreamException, SAXException {
         FagType fagType = mapFagType(hendelse, behandling);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(AvbruttbehandlingConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
-        FagType fagType = new FagType();
+    private FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
+        final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
         fagType.setBehandlingsType(mapToXmlBehandlingsType(behandling.getBehandlingType().getKode()));
-        if (hendelse.getBehandlendeEnhetNavn() != null && !hendelse.getBehandlendeEnhetNavn().isEmpty()) {
-            fagType.setOpphavType(mapToXmlOpphavType(hendelse.getBehandlendeEnhetNavn()));
-        } else {
-            fagType.setOpphavType(mapToXmlOpphavType(behandling.getBehandlendeEnhetNavn()));
-        }
+        fagType.setOpphavType(utledOpphavType(hendelse, behandling));
         return fagType;
     }
-
 
     private static BehandlingsTypeKode mapToXmlBehandlingsType(String vlKode) {
         if (Objects.equals(vlKode, BehandlingTypeKonstanter.ENDRINGSSØKNAD)) {
             return BehandlingsTypeKode.ENDRINGSSØKNAD;
-        } else if (Objects.equals(vlKode, BehandlingType.FØRSTEGANGSSØKNAD.getKode())) {
+        }
+        if (Objects.equals(vlKode, BehandlingType.FØRSTEGANGSSØKNAD.getKode())) {
             return BehandlingsTypeKode.FØRSTEGANGSSØKNAD;
-        } else if (Objects.equals(vlKode, BehandlingType.KLAGE.getKode())) {
+        }
+        if (Objects.equals(vlKode, BehandlingType.KLAGE.getKode())) {
             return BehandlingsTypeKode.KLAGE;
-        } else if (Objects.equals(vlKode, BehandlingType.REVURDERING.getKode())) {
+        }
+        if (Objects.equals(vlKode, BehandlingType.REVURDERING.getKode())) {
             return BehandlingsTypeKode.REVURDERING;
-        } else if (Objects.equals(vlKode, BehandlingType.INNSYN.getKode())) {
+        }
+        if (Objects.equals(vlKode, BehandlingType.INNSYN.getKode())) {
             return BehandlingsTypeKode.INNSYN;
         }
         throw DokumentMapperFeil.FACTORY.HenleggBehandlingBrevKreverGyldigBehandlingstype(vlKode).toException();
+    }
+
+    private OpphavTypeKode utledOpphavType(DokumentHendelse hendelse, Behandling behandling) {
+        if (hendelse.getBehandlendeEnhetNavn() != null && !hendelse.getBehandlendeEnhetNavn().isEmpty()) {
+            return mapToXmlOpphavType(hendelse.getBehandlendeEnhetNavn());
+        }
+        return mapToXmlOpphavType(behandling.getBehandlendeEnhetNavn());
     }
 
     private OpphavTypeKode mapToXmlOpphavType(String behandlendeEnhetNavn) {
@@ -86,4 +94,5 @@ public class HenleggBehandlingBrevMapper extends DokumentTypeMapper {
         brevdataType.setFelles(fellesType);
         return of.createBrevdata(brevdataType);
     }
+
 }

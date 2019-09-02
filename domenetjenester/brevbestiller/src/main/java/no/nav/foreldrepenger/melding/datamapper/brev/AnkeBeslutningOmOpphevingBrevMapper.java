@@ -4,6 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import no.nav.foreldrepenger.melding.anke.Anke;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -12,14 +13,14 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 
 @ApplicationScoped
 @Named(DokumentMalType.ANKEBREV_BESLUTNING_OM_OPPHEVING)
-public class BeslutningOmOpphevingAnkeBrevMapper extends FritekstmalBrevMapper {
+public class AnkeBeslutningOmOpphevingBrevMapper extends FritekstmalBrevMapper {
 
-    public BeslutningOmOpphevingAnkeBrevMapper() {
+    public AnkeBeslutningOmOpphevingBrevMapper() {
         //CDI
     }
 
     @Inject
-    public BeslutningOmOpphevingAnkeBrevMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
+    public AnkeBeslutningOmOpphevingBrevMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
         super(brevParametere, domeneobjektProvider);
     }
 
@@ -35,7 +36,9 @@ public class BeslutningOmOpphevingAnkeBrevMapper extends FritekstmalBrevMapper {
 
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
+        Anke anke = domeneobjektProvider.hentAnkebehandling(behandling);
         return new Brevdata()
-                .leggTil("ytelseType", hendelse.getYtelseType().getKode());
+                .leggTil("ytelseType", hendelse.getYtelseType().getKode())
+                .leggTil("fritekst", anke.getFritekstTilBrev());
     }
 }

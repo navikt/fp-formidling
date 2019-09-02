@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.finn.unleash.Unleash;
+import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.MottattDokumentDto;
@@ -188,6 +189,16 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
         return resourceLinker.stream()
                 .filter(dto -> "klage-vurdering".equals(dto.getRel()))
                 .findFirst().flatMap(link -> hentDtoFraLink(link, KlagebehandlingDto.class))
+                .orElseThrow(() -> {
+                    throw new IllegalStateException("Klarte ikke hente klage for behandling: " + hentBehandlingId(resourceLinker));
+                });
+    }
+
+    @Override
+    public AnkebehandlingDto hentAnkebehandling(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker.stream()
+                .filter(dto -> "anke-vurdering".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, AnkebehandlingDto.class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente klage for behandling: " + hentBehandlingId(resourceLinker));
                 });

@@ -30,14 +30,15 @@ public class UendretutfallBrevMapper extends DokumentTypeMapper {
     }
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException, XMLStreamException, SAXException {
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse,
+                                Behandling behandling) throws JAXBException, XMLStreamException, SAXException {
         FagType fagType = mapFagType(hendelse);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(UendretutfallConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    FagType mapFagType(DokumentHendelse hendelse) {
-        FagType fagType = new FagType();
+    private FagType mapFagType(DokumentHendelse hendelse) {
+        final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
         return fagType;
     }

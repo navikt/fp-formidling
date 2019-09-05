@@ -101,8 +101,7 @@ public class UttakDtoMapper {
         if (arbeidsgiverDto == null || (arbeidsgiverDto.getIdentifikator() == null && arbeidsgiverDto.getAktørId() == null)) {
             return null;
         }
-        return ArbeidsgiverMapper.finnArbeidsgiver(arbeidsgiverDto.getNavn(),
-                arbeidsgiverDto.getAktørId() != null ? arbeidsgiverDto.getAktørId()
-                        : arbeidsgiverDto.getIdentifikator());
+        String id = arbeidsgiverDto.getAktørId() != null ? arbeidsgiverDto.getAktørId() : arbeidsgiverDto.getIdentifikator();
+        return ArbeidsgiverMapper.finnArbeidsgiver(arbeidsgiverDto.getNavn(), id);
     }
 }

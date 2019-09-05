@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erEndretFraAvslått;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erTermindatoEndret;
-import static no.nav.foreldrepenger.melding.datamapper.domene.SvpMapper.mapFra;
+import static no.nav.foreldrepenger.melding.datamapper.domene.svp.SvpMapper.mapFra;
 import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
 
 import java.util.List;
@@ -20,8 +20,8 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.SvpMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeVerktøy;
+import no.nav.foreldrepenger.melding.datamapper.domene.svp.SvpMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;

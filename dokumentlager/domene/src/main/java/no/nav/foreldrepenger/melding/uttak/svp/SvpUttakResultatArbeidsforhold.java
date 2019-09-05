@@ -10,11 +10,8 @@ import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 public class SvpUttakResultatArbeidsforhold {
 
     private ArbeidsforholdIkkeOppfyltÅrsak arbeidsforholdIkkeOppfyltÅrsak;
-
     private Arbeidsgiver arbeidsgiver;
-
     private UttakArbeidType uttakArbeidType;
-
     private List<SvpUttakResultatPeriode> perioder;
 
     private SvpUttakResultatArbeidsforhold(Builder builder) {
@@ -40,17 +37,18 @@ public class SvpUttakResultatArbeidsforhold {
         return perioder.stream().sorted().collect(Collectors.toList());
     }
 
-    public static Builder ny() {
-        return new Builder();
-    }
-
     public static final class Builder {
         private ArbeidsforholdIkkeOppfyltÅrsak arbeidsforholdIkkeOppfyltÅrsak = ArbeidsforholdIkkeOppfyltÅrsak.INGEN;
         private Arbeidsgiver arbeidsgiver;
         private UttakArbeidType uttakArbeidType;
         private List<SvpUttakResultatPeriode> perioder = new ArrayList<>();
 
-        public Builder() {
+        private Builder() {
+            // Skjul default constructor
+        }
+
+        public static Builder ny() {
+            return new Builder();
         }
 
         public Builder medArbeidsforholdIkkeOppfyltÅrsak(ArbeidsforholdIkkeOppfyltÅrsak arbeidsforholdIkkeOppfyltÅrsak) {
@@ -70,8 +68,13 @@ public class SvpUttakResultatArbeidsforhold {
             return this;
         }
 
-        public Builder medPeriode(SvpUttakResultatPeriode periode) {
+        public Builder leggTilPeriode(SvpUttakResultatPeriode periode) {
             this.perioder.add(periode);
+            return this;
+        }
+
+        public Builder leggTilPerioder(List<SvpUttakResultatPeriode> perioder) {
+            this.perioder.addAll(perioder);
             return this;
         }
 
@@ -79,4 +82,5 @@ public class SvpUttakResultatArbeidsforhold {
             return new SvpUttakResultatArbeidsforhold(this);
         }
     }
+
 }

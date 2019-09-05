@@ -3,6 +3,9 @@ package no.nav.foreldrepenger.melding.dtomapper;
 import static no.nav.foreldrepenger.melding.dtomapper.UttakDtoMapper.mapArbeidsgiver;
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -32,35 +35,46 @@ public class UttakSvpDtoMapper {
     }
 
     public SvpUttaksresultat mapSvpUttaksresultatFraDto(SvangerskapspengerUttakResultatDto svpUttaksresultatresultatDto) {
-        SvpUttaksresultat.Builder svpUttaksresultat = SvpUttaksresultat.ny();
-        emptyIfNull(svpUttaksresultatresultatDto.getUttaksResultatArbeidsforhold()).stream()
-                .forEach(arbeidsforhold -> {
-                    SvpUttakResultatArbeidsforhold.Builder resultat = SvpUttakResultatArbeidsforhold.ny();
-                    resultat.medArbeidsgiver(mapArbeidsgiver(arbeidsforhold.getArbeidsgiver()));
-                    resultat.medUttakArbeidType(kodeverkRepository.finn(UttakArbeidType.class, arbeidsforhold.getArbeidType().getKode()));
-                    resultat.medArbeidsforholdIkkeOppfyltÅrsak(kodeverkRepository.finn(ArbeidsforholdIkkeOppfyltÅrsak.class, arbeidsforhold.getArbeidsforholdIkkeOppfyltÅrsak().getKode()));
-                    emptyIfNull(arbeidsforhold.getPerioder()).stream()
-                            .map(periodeDto -> SvpUttakResultatPeriode.ny()
-                                    .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(periodeDto.getFom(), periodeDto.getTom()))
-                                    .medUtbetalingsgrad(periodeDto.getUtbetalingsgrad().longValue())
-                                    .medPeriodeResultatType(periodeDto.getPeriodeResultatType())
-                                    .medPeriodeIkkeOppfyltÅrsak(periodeDto.getPeriodeIkkeOppfyltÅrsak())
-                                    .medArbeidsgiverNavn(getArbeidsgiverNavn(arbeidsforhold))
-                                    .build())
-                            .forEach(resultat::medPeriode);
-                    svpUttaksresultat.medUttakResultatArbeidsforhold(resultat.build());
-                });
-        return svpUttaksresultat.build();
+        final var svpUttaksresultatBuilder = SvpUttaksresultat.Builder.ny();
+        final var uttaksResultatArbeidsforhold = svpUttaksresultatresultatDto.getUttaksResultatArbeidsforhold();
+        emptyIfNull(uttaksResultatArbeidsforhold).forEach(arbeidsforhold -> {
+            final var uttakResultatArbeidsforholdBuild = SvpUttakResultatArbeidsforhold.Builder.ny();
+            final var arbeidsforholdIkkeOppfyltÅrsak = kodeverkRepository.finn(ArbeidsforholdIkkeOppfyltÅrsak.class, arbeidsforhold.getArbeidsforholdIkkeOppfyltÅrsak().getKode());
+            final var uttakArbeidType = kodeverkRepository.finn(UttakArbeidType.class, arbeidsforhold.getArbeidType().getKode());
+            uttakResultatArbeidsforholdBuild.medArbeidsgiver(mapArbeidsgiver(arbeidsforhold.getArbeidsgiver()));
+            uttakResultatArbeidsforholdBuild.medUttakArbeidType(uttakArbeidType);
+            uttakResultatArbeidsforholdBuild.medArbeidsforholdIkkeOppfyltÅrsak(arbeidsforholdIkkeOppfyltÅrsak);
+            uttakResultatArbeidsforholdBuild.leggTilPerioder(utledSvpUttakResultatPeriode(arbeidsforhold));
+            svpUttaksresultatBuilder.medUttakResultatArbeidsforhold(uttakResultatArbeidsforholdBuild.build());
+        });
+        return svpUttaksresultatBuilder.build();
+    }
+
+    private List<SvpUttakResultatPeriode> utledSvpUttakResultatPeriode(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold) {
+        return emptyIfNull(arbeidsforhold.getPerioder()).stream()
+                .map(periodeDto -> SvpUttakResultatPeriode.Builder.ny()
+                    .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(periodeDto.getFom(), periodeDto.getTom()))
+                    .medUtbetalingsgrad(periodeDto.getUtbetalingsgrad().longValue())
+                    .medPeriodeResultatType(periodeDto.getPeriodeResultatType())
+                    .medPeriodeIkkeOppfyltÅrsak(periodeDto.getPeriodeIkkeOppfyltÅrsak())
+                    .medArbeidsgiverNavn(getArbeidsgiverNavn(arbeidsforhold))
+                    .build())
+                .collect(Collectors.toList());
     }
 
     private String getArbeidsgiverNavn(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold) {
-        return arbeidsforhold.getArbeidsgiver() != null ?
-                arbeidsforhold.getArbeidsgiver().getNavn() : brukUttakArbeidType(arbeidsforhold);
+        return arbeidsforhold.getArbeidsgiver() != null
+                ? arbeidsforhold.getArbeidsgiver().getNavn()
+                : brukUttakArbeidType(arbeidsforhold);
     }
 
     private String brukUttakArbeidType(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold) {
-        return UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.getKode().equals(arbeidsforhold.getArbeidType().getKode()) ?
-                "næringsdrivende" : UttakArbeidType.FRILANS.getKode().equals(arbeidsforhold.getArbeidType().getKode()) ?
-                "frilanser" : null;
+        if (UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.getKode().equals(arbeidsforhold.getArbeidType().getKode())) {
+            return "næringsdrivende";
+        }
+        if (UttakArbeidType.FRILANS.getKode().equals(arbeidsforhold.getArbeidType().getKode())) {
+            return "frilanser";
+        }
+        return null;
     }
 }

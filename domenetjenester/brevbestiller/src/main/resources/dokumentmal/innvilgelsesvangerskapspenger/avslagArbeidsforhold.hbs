@@ -1,0 +1,61 @@
+{{#unless (eq (size avslagArbeidsforhold) 0)}}
+    {{#gt (size avslagArbeidsforhold) 1}}
+        {{#each avslagArbeidsforhold}}
+            {{~#if @first~}}*-{{~/if~}}
+            {{#eq aarsakskode 8312}}
+                {{~ i18n "du_har_ikke_rett_til_svp" ~}}
+                {{#if arbeidsgiverNavn}}
+                    {{~ i18n "hos_arbeidsgiver" arbeidsgiverNavn ~}}
+                {{else if erFL}}
+                    {{~ i18n "som_FL" ~}}
+                {{else if erSN}}
+                    {{~ i18n "som_SN" ~}}
+                {{/if}}
+                {{~ i18n "fordi_du_kan_gjore_arbeidsoppgaver_fram_til_3_uker_for_termin" }}
+            {{/eq}}
+            {{#eq aarsakskode 8303}}
+                {{~ i18n "du_har_ikke_rett_til_svp" ~}}
+                {{#if arbeidsgiverNavn}}
+                    {{~ i18n "hos_arbeidsgiver" arbeidsgiverNavn ~}}
+                {{else if erFL}}
+                    {{~ i18n "som_FL" ~}}
+                {{else if erSN}}
+                    {{~ i18n "som_SN" ~}}
+                {{/if}}
+                {{~ i18n "fordi_du_kan_gjore_arbeidsoppgaver"}}
+            {{/eq}}
+            {{#eq aarsakskode 8301}}
+                {{~ i18n "pga_termin"}}
+            {{/eq}}
+            {{~#if @last~}}-*{{~/if~}}
+        {{/each}}
+    {{else}}
+        {{#each avslagArbeidsforhold}}
+            {{#eq aarsakskode 8312}}
+                {{~ i18n "du_har_ikke_rett_til_svp" ~}}
+                {{#if arbeidsgiverNavn}}
+                    {{~ i18n "hos_arbeidsgiver" arbeidsgiverNavn ~}}
+                {{else if erFL}}
+                    {{~ i18n "som_FL" ~}}
+                {{else if erSN}}
+                    {{~ i18n "som_SN" ~}}
+                {{/if}}
+                {{~ i18n "fordi_du_kan_gjore_arbeidsoppgaver_fram_til_3_uker_for_termin" }}
+            {{/eq}}
+            {{#eq aarsakskode 8303}}
+                {{~ i18n "du_har_ikke_rett_til_svp" ~}}
+                {{#if arbeidsgiverNavn}}
+                    {{~ i18n "hos_arbeidsgiver" arbeidsgiverNavn ~}}
+                {{else if erFL}}
+                    {{~ i18n "som_FL" ~}}
+                {{else if erSN}}
+                    {{~ i18n "som_SN" ~}}
+                {{/if}}
+                {{~ i18n "fordi_du_kan_gjore_arbeidsoppgaver" }}
+            {{/eq}}
+            {{#eq aarsakskode 8301}}
+                {{~ i18n "pga_termin" }}
+            {{/eq}}
+        {{/each}}
+    {{/gt}}
+{{/unless}}

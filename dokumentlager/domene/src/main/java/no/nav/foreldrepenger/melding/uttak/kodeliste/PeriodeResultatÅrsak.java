@@ -24,6 +24,8 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
     public static final PeriodeResultatÅrsak BARNET_ER_DØD = new PeriodeResultatÅrsak("4072", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak SØKER_ER_DØD = new PeriodeResultatÅrsak("4071", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak OPPHØR_MEDLEMSKAP = new PeriodeResultatÅrsak("4087", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak MOR_TAR_IKKE_ALLE_UKENE = new PeriodeResultatÅrsak("4095", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
+
     public static final PeriodeResultatÅrsak FØDSELSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4096", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak ADOPSJONSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4097", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4098", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);

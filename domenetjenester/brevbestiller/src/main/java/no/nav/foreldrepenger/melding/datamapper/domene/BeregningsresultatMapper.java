@@ -171,6 +171,8 @@ public class BeregningsresultatMapper {
     public static BigInteger tellAntallAvslag(PeriodeListeType periodeListe) {
         return BigInteger.valueOf(periodeListe.getPeriode().stream()
                 .filter(Predicate.not(PeriodeType::isInnvilget))
+                //Skal ikke opplyse søker om tapt fpff siden bruker ikke har søkt om det
+                .filter(p -> !PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE.getKode().equals(p.getÅrsak()))
                 .count());
     }
 

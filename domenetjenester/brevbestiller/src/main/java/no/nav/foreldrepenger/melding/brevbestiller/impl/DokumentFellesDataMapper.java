@@ -106,6 +106,9 @@ public class DokumentFellesDataMapper {
             personstatusBruker = personinfo.getPersonstatus();
         }
 
+        String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
+                dokumentHendelse.getBehandlendeEnhetNavn() : behandling.getBehandlendeEnhetNavn();
+
         buildDokumentFelles(behandling,
                 dokumentData,
                 adresse,
@@ -113,7 +116,7 @@ public class DokumentFellesDataMapper {
                 navnBruker,
                 personstatusBruker,
                 adresseinfo,
-                dokumentHendelse.getBehandlendeEnhetNavn());
+                avsenderEnhet);
     }
 
     private void buildDokumentFelles(Behandling behandling,

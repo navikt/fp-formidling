@@ -17,6 +17,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -36,6 +39,9 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @Path("/brev")
 @ApplicationScoped
 public class BrevRestTjeneste {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BrevRestTjeneste.class);
+
     private DokumentBehandlingTjeneste dokumentBehandlingTjeneste;
     private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
     private HendelseHandler hendelseHandler;
@@ -111,27 +117,36 @@ public class BrevRestTjeneste {
     }
 
     @POST
+    @Path("/forhaandsvis")
+    @Transaction
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Returnerer en pdf som er en forhåndsvisning av brevet")
+    @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
+    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
+    public Response forhaandsvisDokument(
+            @ApiParam("Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid AbacDokumentbestillingDto dokumentbestillingDto) { // NOSONAR
+        byte[] dokument = brevBestillerApplikasjonTjeneste.forhandsvisBrev(dokumentbestillingDto);
+
+        if (dokument != null && dokument.length != 0) {
+            Response.ResponseBuilder responseBuilder = Response.ok(dokument);
+            responseBuilder.type("application/pdf");
+            responseBuilder.header("Content-Disposition", "filename=dokument.pdf");
+            return responseBuilder.build();
+        }
+        return Response.serverError().build();
+    }
+
+    @POST
     @Path("/forhandsvis")
     @Transaction
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Returnerer en pdf som er en forhåndsvisning av brevet")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public ForhaandsvisDokumentDto forhaandsvisDokument(
+    public ForhaandsvisDokumentDto forhaandsvisDokumentFpsak(
             @ApiParam("Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid AbacDokumentbestillingDto dokumentbestillingDto) { // NOSONAR
-        Response.ResponseBuilder responseBuilder;
+        LOGGER.warn("Utvikler-feil: Gammel tjeneste for forhåndsvisning av brev ble kalt. Skal ikke skje etter TFP-481 på fpsak-frontend - gi beskjed til Jan Erik!");
         byte[] dokument = brevBestillerApplikasjonTjeneste.forhandsvisBrev(dokumentbestillingDto);
-        //TODO: Dette trenges når fpsak-frontend kaller fpformidling direkt, ikke via fpsak
-/*
-        if (dokument != null && dokument.length != 0) {
-            responseBuilder = Response.ok().entity(java.util.Base64.getEncoder().encode(dokument));
-            responseBuilder.type("application/pdf");
-            responseBuilder.header("Content-Disposition", "filename=dokument.pdf");
-            return responseBuilder.build();
-        }
-        responseBuilder = Response.serverError();
-        return responseBuilder.build();
-*/
         return new ForhaandsvisDokumentDto(dokument);
     }
 

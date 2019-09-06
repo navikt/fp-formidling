@@ -48,6 +48,7 @@ public class BehandlingsresultatDtoMapper {
             konsekvenserForYtelsen.add(kodeverkRepository.finn(KonsekvensForYtelsen.class, kodeDto.getKode()));
         }
         builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);
+        builder.medErRevurderingMedUendretUtfall(dto.getErRevurderingMedUendretUtfall());
         return builder.build();
     }
 }

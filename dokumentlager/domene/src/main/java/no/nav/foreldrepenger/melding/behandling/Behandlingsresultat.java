@@ -16,6 +16,7 @@ public class Behandlingsresultat {
     private BehandlingResultatType behandlingResultatType;
     private String avslagarsakFritekst;
     private List<KonsekvensForYtelsen> konsekvenserForYtelsen; //Kode BehandlingsresultatKonsekvensForYtelsen
+    private Boolean erRevurderingMedUendretUtfall;
 
     //Objekter
     private String beregning; //BeregningResultat
@@ -32,6 +33,7 @@ public class Behandlingsresultat {
         behandlingResultatType = builder.behandlingResultatType;
         avslagarsakFritekst = builder.avslagarsakFritekst;
         konsekvenserForYtelsen = builder.konsekvenserForYtelsen;
+        erRevurderingMedUendretUtfall = builder.erRevurderingMedUendretUtfall;
         beregning = builder.beregning;
         vilkårResultat = builder.vilkårResultat;
         Periode = builder.Periode;
@@ -87,6 +89,10 @@ public class Behandlingsresultat {
         return konsekvenserForYtelsen;
     }
 
+    public Boolean erRevurderingMedUendretUtfall() {
+        return Boolean.TRUE.equals(erRevurderingMedUendretUtfall);
+    }
+
     public boolean isBehandlingsresultatAvslåttOrOpphørt() {
         return BehandlingResultatType.AVSLÅTT.equals(behandlingResultatType)
                 || BehandlingResultatType.OPPHØR.equals(behandlingResultatType);
@@ -140,6 +146,7 @@ public class Behandlingsresultat {
         private BehandlingResultatType behandlingResultatType;
         private String avslagarsakFritekst;
         private List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>();
+        private Boolean erRevurderingMedUendretUtfall;
         private String beregning;
         private VilkårResultat vilkårResultat;
         private String Periode;
@@ -181,6 +188,11 @@ public class Behandlingsresultat {
 
         public Builder medKonsekvenserForYtelsen(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {
             this.konsekvenserForYtelsen = konsekvenserForYtelsen;
+            return this;
+        }
+
+        public Builder medErRevurderingMedUendretUtfall(Boolean erRevurderingMedUendretUtfall) {
+            this.erRevurderingMedUendretUtfall = erRevurderingMedUendretUtfall;
             return this;
         }
 

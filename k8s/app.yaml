@@ -44,8 +44,8 @@ spec:
       cpu: 100m
       memory: "1024Mi"
   ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
-    - "INGRESS_URL"
-    - "INGRESS_URL2"
+    - "INGRESS1_URL"
+    - "INGRESS2_URL"
   logformat: accesslog # Optional. The format of the logs from the container if the logs should be handled differently than plain text or json
   logtransform: dns_loglevel # Optional. The transformation of the logs, if they should be handled differently than plain text or json
   webproxy: false # Optional. Expose web proxy configuration to the application using the HTTP_PROXY, HTTPS_PROXY and NO_PROXY environment variables.

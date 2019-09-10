@@ -17,6 +17,7 @@ public class ArbeidsforholdIkkeOppfyltÅrsak extends Kodeliste implements Årsak
     public static final ArbeidsforholdIkkeOppfyltÅrsak HELE_UTTAKET_ER_ETTER_3_UKER_FØR_TERMINDATO = new ArbeidsforholdIkkeOppfyltÅrsak("8301");
     public static final ArbeidsforholdIkkeOppfyltÅrsak UTTAK_KUN_PÅ_HELG = new ArbeidsforholdIkkeOppfyltÅrsak("8302");
     public static final ArbeidsforholdIkkeOppfyltÅrsak ARBEIDSGIVER_KAN_TILRETTELEGGE = new ArbeidsforholdIkkeOppfyltÅrsak("8303");
+    public static final ArbeidsforholdIkkeOppfyltÅrsak ARBEIDSGIVER_KAN_TILRETTELEGGE_FREM_TIL_3_UKER_FØR_TERMIN = new ArbeidsforholdIkkeOppfyltÅrsak("8312");
 
     ArbeidsforholdIkkeOppfyltÅrsak() {
         //For Hibernate

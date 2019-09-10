@@ -26,6 +26,7 @@ public class PeriodeIkkeOppfyltÅrsak extends Kodeliste implements ÅrsakMedLovR
     public static final PeriodeIkkeOppfyltÅrsak OPPTJENINGSVILKÅRET_IKKE_OPPFYLT = new PeriodeIkkeOppfyltÅrsak("4099");
 
     public static final PeriodeIkkeOppfyltÅrsak SØKT_FOR_SENT = new PeriodeIkkeOppfyltÅrsak("8308");
+    public static final PeriodeIkkeOppfyltÅrsak PERIODE_SAMTIDIG_SOM_FERIE = new PeriodeIkkeOppfyltÅrsak("8311");
 
     PeriodeIkkeOppfyltÅrsak() {
         //For Hibernate
@@ -43,7 +44,8 @@ public class PeriodeIkkeOppfyltÅrsak extends Kodeliste implements ÅrsakMedLovR
                 OPPHØR_MEDLEMSKAP,
                 SVANGERSKAPSVILKÅRET_IKKE_OPPFYLT,
                 OPPTJENINGSVILKÅRET_IKKE_OPPFYLT,
-                SØKT_FOR_SENT
+                SØKT_FOR_SENT,
+                PERIODE_SAMTIDIG_SOM_FERIE
         ));
     }
 

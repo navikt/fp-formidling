@@ -8,15 +8,18 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
+import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
+import no.nav.foreldrepenger.melding.anke.Anke;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.datamapper.dto.AksjonspunktDtoMapper;
+import no.nav.foreldrepenger.melding.dtomapper.AnkeDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BeregningsgrunnlagDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BeregningsresultatDtoMapper;
@@ -55,6 +58,7 @@ public class DomeneobjektProvider {
     private BehandlingDtoMapper behandlingDtoMapper;
     private BeregningsresultatDtoMapper beregningsresultatDtoMapper;
     private KlageDtoMapper klageDtoMapper;
+    private AnkeDtoMapper ankeDtoMapper;
     private UttakDtoMapper uttakDtoMapper;
     private UttakSvpDtoMapper uttakSvpDtoMapper;
     private IAYDtoMapper iayDtoMapper;
@@ -72,6 +76,7 @@ public class DomeneobjektProvider {
                                 BehandlingDtoMapper behandlingDtoMapper,
                                 BeregningsresultatDtoMapper beregningsresultatDtoMapper,
                                 KlageDtoMapper klageDtoMapper,
+                                AnkeDtoMapper ankeDtoMapper,
                                 UttakDtoMapper uttakDtoMapper,
                                 UttakSvpDtoMapper uttakSvpDtoMapper,
                                 IAYDtoMapper iayDtoMapper,
@@ -87,6 +92,7 @@ public class DomeneobjektProvider {
         this.behandlingDtoMapper = behandlingDtoMapper;
         this.beregningsresultatDtoMapper = beregningsresultatDtoMapper;
         this.klageDtoMapper = klageDtoMapper;
+        this.ankeDtoMapper = ankeDtoMapper;
         this.uttakDtoMapper = uttakDtoMapper;
         this.uttakSvpDtoMapper = uttakSvpDtoMapper;
         this.iayDtoMapper = iayDtoMapper;
@@ -161,6 +167,11 @@ public class DomeneobjektProvider {
     public Klage hentKlagebehandling(Behandling behandling) {
         KlagebehandlingDto klagebehandlingDto = behandlingRestKlient.hentKlagebehandling(behandling.getResourceLinker());
         return klageDtoMapper.mapKlagefraDto(klagebehandlingDto);
+    }
+
+    public Anke hentAnkebehandling(Behandling behandling) {
+        AnkebehandlingDto ankebehandlingDto = behandlingRestKlient.hentAnkebehandling(behandling.getResourceLinker());
+        return ankeDtoMapper.mapAnkeFraDto(ankebehandlingDto);
     }
 
     public KlageDokument hentKlageDokument(Behandling behandling) {

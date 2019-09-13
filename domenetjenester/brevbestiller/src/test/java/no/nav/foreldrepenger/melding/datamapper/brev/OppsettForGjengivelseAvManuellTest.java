@@ -29,6 +29,7 @@ import no.nav.foreldrepenger.melding.datamapper.dto.AksjonspunktDtoMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dtomapper.AnkeDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingsresultatDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BeregningsgrunnlagDtoMapper;
@@ -93,6 +94,7 @@ public abstract class OppsettForGjengivelseAvManuellTest {
             new BeregningsresultatDtoMapper(behandlingRestKlient,
                     kodeverkRepository),
             new KlageDtoMapper(kodeverkRepository),
+            new AnkeDtoMapper(),
             new UttakDtoMapper(kodeverkRepository),
             new UttakSvpDtoMapper(kodeverkRepository),
             new IAYDtoMapper(kodeverkRepository),

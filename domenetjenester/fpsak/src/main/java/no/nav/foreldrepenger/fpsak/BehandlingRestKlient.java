@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.fpsak;
 import java.util.List;
 import java.util.Optional;
 
+import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.MottattDokumentDto;
@@ -51,6 +52,8 @@ public interface BehandlingRestKlient {
     InntektArbeidYtelseDto hentInntektArbeidYtelseDto(List<BehandlingResourceLink> resourceLinkDtos);
 
     KlagebehandlingDto hentKlagebehandling(List<BehandlingResourceLink> resourceLinkDtos);
+
+    AnkebehandlingDto hentAnkebehandling(List<BehandlingResourceLink> resourceLinkDtos);
 
     InnsynsbehandlingDto hentInnsynsbehandling(List<BehandlingResourceLink> resourceLinkDtos);
 

@@ -1,0 +1,9 @@
+{{#eq dokumentHendelse.ytelseType.kode "SVP"}}
+{{i18n "NAV_skal_behandle_saken_din_om_svangerskapspenger_på_nytt"}}
+{{else}}
+    {{#eq dokumentHendelse.ytelseType.kode "FP"}}
+{{i18n "NAV_skal_behandle_saken_din_om_foreldrepenger_på_nytt"}}
+    {{else}}
+{{i18n "NAV_skal_behandle_saken_din_om_engangsstønad_på_nytt"}}
+    {{/eq}}
+{{/eq}}

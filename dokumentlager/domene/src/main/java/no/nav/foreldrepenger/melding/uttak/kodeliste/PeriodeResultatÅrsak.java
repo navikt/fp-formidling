@@ -20,6 +20,7 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
     // Uttak årsaker
     public static final PeriodeResultatÅrsak ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT = new PeriodeResultatÅrsak("4023", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak FAR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4012", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak HULL_MELLOM_FORELDRENES_PERIODER = new PeriodeResultatÅrsak("4005", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak MOR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4003", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak BARNET_ER_DØD = new PeriodeResultatÅrsak("4072", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak SØKER_ER_DØD = new PeriodeResultatÅrsak("4071", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);

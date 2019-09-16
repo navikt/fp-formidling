@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
@@ -34,10 +33,12 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
-@ApplicationScoped
-public class BeregningsresultatMapper {
+public final class BeregningsresultatMapper {
 
     private static ObjectFactory objectFactory = new ObjectFactory();
+
+    private BeregningsresultatMapper() {
+    }
 
     public static BigInteger antallArbeidsgivere(BeregningsresultatFP beregningsresultat) {
         return BigInteger.valueOf(beregningsresultat.getBeregningsresultatPerioder().stream()
@@ -58,32 +59,46 @@ public class BeregningsresultatMapper {
         PeriodeListeType periodeListe = objectFactory.createPeriodeListeType();
         List<PeriodeType> periodelisteFørSammenslåing = new ArrayList<>();
         List<UttakResultatPeriode> uttaksperioder = uttakResultatPerioder.getPerioder();
-        List<UttakResultatPeriode> ikkeMatchedePerioder = new ArrayList<>(plukkIkkeUkjentePerioder(uttaksperioder));
+        List<UttakResultatPeriode> uttaksperioderMedÅrsak = new ArrayList<>(filtrerBortUkjentÅrsak(uttaksperioder));
         for (BeregningsresultatPeriode beregningsresultatPeriode : beregningsresultatPerioder) {
             UttakResultatPeriode matchetUttaksperiode = PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttaksperioder);
-            if (matchetUttaksperiode.getPeriodeResultatÅrsak().erUkjent()) {
+            if (matchetUttaksperiode.getPeriodeResultatÅrsak().erUkjent() || avslåttManglendeSøktUtenTrekkdager(matchetUttaksperiode)) {
                 continue;
             }
-            ikkeMatchedePerioder.remove(matchetUttaksperiode);
+            uttaksperioderMedÅrsak.remove(matchetUttaksperiode);
             periodelisteFørSammenslåing.add(mapEnkelPeriode(beregningsresultatPeriode,
                     matchetUttaksperiode,
                     PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder)
             ));
         }
-        periodelisteFørSammenslåing.addAll(mapAvslåttePerioder(ikkeMatchedePerioder));
+        periodelisteFørSammenslåing.addAll(mapPerioderUtenBeregningsgrunnlag(uttaksperioderMedÅrsak));
         periodeListe.getPeriode().addAll(PeriodeMergerInnvilgelse.mergePerioder(periodelisteFørSammenslåing));
         return periodeListe;
     }
 
-    private static List<PeriodeType> mapAvslåttePerioder(List<UttakResultatPeriode> ikkeMatchedePerioder) {
-        List<PeriodeType> avslåttePerioder = new ArrayList<>();
-        for (UttakResultatPeriode uttakperiode : ikkeMatchedePerioder) {
-            avslåttePerioder.add(mapEnkelUttaksperiode(uttakperiode));
-        }
-        return avslåttePerioder;
+    private static boolean ingenTrekkdager(UttakResultatPeriode p) {
+        return mapAntallTapteDagerFra(p.getAktiviteter()) == 0;
     }
 
-    private static List<UttakResultatPeriode> plukkIkkeUkjentePerioder(List<UttakResultatPeriode> uttaksperioder) {
+    private static boolean avslåttManglendeSøktPeriode(UttakResultatPeriode matchetUttaksperiode) {
+        return PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode().equals(matchetUttaksperiode.getPeriodeResultatÅrsak().getKode());
+    }
+
+    private static List<PeriodeType> mapPerioderUtenBeregningsgrunnlag(List<UttakResultatPeriode> perioderUtenBeregningsgrunnlag) {
+        List<PeriodeType> perioder = new ArrayList<>();
+        for (UttakResultatPeriode uttakperiode : perioderUtenBeregningsgrunnlag) {
+            if (!avslåttManglendeSøktUtenTrekkdager(uttakperiode)) {
+                perioder.add(mapEnkelUttaksperiode(uttakperiode));
+            }
+        }
+        return perioder;
+    }
+
+    private static boolean avslåttManglendeSøktUtenTrekkdager(UttakResultatPeriode uttakperiode) {
+        return avslåttManglendeSøktPeriode(uttakperiode) && ingenTrekkdager(uttakperiode);
+    }
+
+    private static List<UttakResultatPeriode> filtrerBortUkjentÅrsak(List<UttakResultatPeriode> uttaksperioder) {
         return uttaksperioder.stream()
                 .filter(Predicate.not(up -> up.getPeriodeResultatÅrsak().erUkjent()))
                 .collect(Collectors.toList());
@@ -99,9 +114,9 @@ public class BeregningsresultatMapper {
         return periode;
     }
 
-    static PeriodeType mapEnkelPeriode(BeregningsresultatPeriode beregningsresultatPeriode,
-                                       UttakResultatPeriode uttakResultatPeriode,
-                                       BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+    private static PeriodeType mapEnkelPeriode(BeregningsresultatPeriode beregningsresultatPeriode,
+                                               UttakResultatPeriode uttakResultatPeriode,
+                                               BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         PeriodeType periode = objectFactory.createPeriodeType();
         periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter())));
         periode.setInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode));

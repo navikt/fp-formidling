@@ -57,6 +57,7 @@
         <prometheus.version>0.6.0</prometheus.version>
         <kontrakter.version>5.0_20190814104704_1d84eee</kontrakter.version>
         <kafka.version>2.2.0</kafka.version>
+        <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
     </properties>
 
     <prerequisites>
@@ -540,7 +541,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M2</version>
+                <version>${maven-enforcer-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>enforce-versions</id>

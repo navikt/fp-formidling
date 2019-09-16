@@ -2,78 +2,145 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
+import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 
 public class BeregningsresultatMapperTest {
 
-    private ObjectFactory objectFactory = new ObjectFactory();
-    private PeriodeListeType periodeListeType = objectFactory.createPeriodeListeType();
-    private static final long HUNDRE = 100L;
-    private BeregningsresultatFP beregningsresultat;
-
-    @Before
-    public void setup() {
-        DatoIntervall ubetydeligPeriode = DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1));
-        beregningsresultat = BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(List.of(BeregningsresultatPeriode.ny()
-                                .medDagsats(HUNDRE)
-                                .medPeriode(ubetydeligPeriode)
-                                .build(),
-                        BeregningsresultatPeriode.ny()
-                                .medDagsats(HUNDRE * 2)
-                                .medPeriode(ubetydeligPeriode)
-                                .build()))
-                .build();
-    }
-
-
     @Test
     public void skal_finne_første_stønadsdato_null_ikke_satt() {
+        ObjectFactory objectFactory = new ObjectFactory();
+        PeriodeListeType periodeListeType = objectFactory.createPeriodeListeType();
         assertThat(BeregningsresultatMapper.finnStønadsperiodeFomHvisFinnes(periodeListeType)).isEmpty();
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Test
     public void skal_finne_første_og_siste_stønadsdato_og_håndtere_null() {
+        ObjectFactory objectFactory = new ObjectFactory();
+        PeriodeListeType periodeListeType = objectFactory.createPeriodeListeType();
         LocalDate førsteJanuarTjueAtten = LocalDate.of(2018, 1, 1);
         LocalDate TrettiendeAprilTjueAtten = LocalDate.of(2018, 4, 30);
-        leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false);
-        leggtilPeriode(førsteJanuarTjueAtten, LocalDate.of(2018, 1, 30), true);
-        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true);
-        leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), null);
-        leggtilPeriode(LocalDate.of(2018, 4, 1), TrettiendeAprilTjueAtten, true);
-        leggtilPeriode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 30), false);
+        leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, periodeListeType, objectFactory);
+        leggtilPeriode(førsteJanuarTjueAtten, LocalDate.of(2018, 1, 30), true, periodeListeType, objectFactory);
+        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true, periodeListeType, objectFactory);
+        leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), null, periodeListeType, objectFactory);
+        leggtilPeriode(LocalDate.of(2018, 4, 1), TrettiendeAprilTjueAtten, true, periodeListeType, objectFactory);
+        leggtilPeriode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 30), false, periodeListeType, objectFactory);
         assertThat(BeregningsresultatMapper.finnStønadsperiodeFomHvisFinnes(periodeListeType).get()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(førsteJanuarTjueAtten));
         assertThat(BeregningsresultatMapper.finnStønadsperiodeTomHvisFinnes(periodeListeType).get()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(TrettiendeAprilTjueAtten));
     }
 
     @Test
     public void skal_finne_dagsats() {
-        assertThat(BeregningsresultatMapper.finnDagsats(beregningsresultat)).isEqualTo(HUNDRE);
+        DatoIntervall ubetydeligPeriode = DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1));
+        BeregningsresultatFP beregningsresultat = BeregningsresultatFP.ny()
+                .leggTilBeregningsresultatPerioder(List.of(BeregningsresultatPeriode.ny()
+                                .medDagsats(100L)
+                                .medPeriode(ubetydeligPeriode)
+                                .build(),
+                        BeregningsresultatPeriode.ny()
+                                .medDagsats(100L * 2)
+                                .medPeriode(ubetydeligPeriode)
+                                .build()))
+                .build();
+        assertThat(BeregningsresultatMapper.finnDagsats(beregningsresultat)).isEqualTo(100L);
     }
 
     @Test
     public void skal_finne_månedsbeløp() {
+        DatoIntervall ubetydeligPeriode = DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1));
+        BeregningsresultatFP beregningsresultat = BeregningsresultatFP.ny()
+                .leggTilBeregningsresultatPerioder(List.of(BeregningsresultatPeriode.ny()
+                                .medDagsats(100L)
+                                .medPeriode(ubetydeligPeriode)
+                                .build(),
+                        BeregningsresultatPeriode.ny()
+                                .medDagsats(100L * 2)
+                                .medPeriode(ubetydeligPeriode)
+                                .build()))
+                .build();
         assertThat(BeregningsresultatMapper.finnMånedsbeløp(beregningsresultat)).isEqualTo(2166);
     }
 
-    private boolean leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget) {
-        return periodeListeType.getPeriode().add(lagPeriode(fom, tom, innvilget));
+    @Test
+    public void skal_ignorere_avslåtte_manglende_søkte_perioder_med_null_trekkdager_ved_mapping_av_periodeliste() {
+        DatoIntervall tidsperiode = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 16), LocalDate.of(2019, 9, 16));
+        BeregningsresultatPeriode brPeriode = BeregningsresultatPeriode.ny()
+                .medPeriode(tidsperiode)
+                .build();
+        List<BeregningsresultatPeriode> beregningsresultatPerioder = List.of(brPeriode);
+        UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
+                .medTrekkdager(BigDecimal.ZERO)
+                .medUtbetalingsprosent(BigDecimal.ZERO)
+                .build();
+        UttakResultatPeriode uPeriode = UttakResultatPeriode.ny()
+                .medAktiviteter(List.of(uttakAktivitet))
+                .medTidsperiode(tidsperiode)
+                .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER)
+                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+                .build();
+        UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(List.of(uPeriode)).build();
+        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+                .medPeriode(tidsperiode)
+                .build();
+        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = List.of(bgPeriode);
+
+        PeriodeListeType resultat = BeregningsresultatMapper.mapPeriodeListe(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder);
+
+        assertThat(resultat.getPeriode()).hasSize(0);
     }
 
-    PeriodeType lagPeriode(LocalDate fom, LocalDate tom, Boolean innvilget) {
+    @Test
+    public void skal_ta_med_avslåtte_manglende_søkte_perioder_med_trekkdager_ved_mapping_av_periodeliste() {
+        DatoIntervall tidsperiode = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 16), LocalDate.of(2019, 9, 16));
+        BeregningsresultatPeriode brPeriode = BeregningsresultatPeriode.ny()
+                .medPeriode(tidsperiode)
+                .build();
+        List<BeregningsresultatPeriode> beregningsresultatPerioder = List.of(brPeriode);
+        UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
+                .medTrekkdager(BigDecimal.TEN)
+                .medUtbetalingsprosent(BigDecimal.ZERO)
+                .build();
+        UttakResultatPeriode uPeriode = UttakResultatPeriode.ny()
+                .medAktiviteter(List.of(uttakAktivitet))
+                .medTidsperiode(tidsperiode)
+                .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER)
+                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+                .build();
+        UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(List.of(uPeriode)).build();
+        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+                .medPeriode(tidsperiode)
+                .build();
+        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = List.of(bgPeriode);
+
+        PeriodeListeType resultat = BeregningsresultatMapper.mapPeriodeListe(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder);
+
+        assertThat(resultat.getPeriode()).hasSize(1);
+    }
+
+    private void leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, PeriodeListeType periodeListeType, ObjectFactory objectFactory) {
+        periodeListeType.getPeriode().add(lagPeriode(fom, tom, innvilget, objectFactory));
+    }
+
+    private PeriodeType lagPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, ObjectFactory objectFactory) {
         PeriodeType periodeType = objectFactory.createPeriodeType();
         periodeType.setInnvilget(innvilget);
         periodeType.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(fom));

@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.melding.datamapper.domene.svp;
 import static java.lang.Boolean.TRUE;
 import static no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getMånedsinntekt;
-import static no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper.formaterLovhjemlerForBeregning;
 import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp.erPerioderSammenhengendeOgSkalSlåSammen;
 
 import java.time.chrono.ChronoLocalDate;
@@ -20,8 +19,6 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
@@ -67,7 +64,7 @@ public class SvpMapper {
         map.put("militarSivil", BeregningsgrunnlagMapper.militærEllerSivilTjeneste(beregningsgrunnlag));
         map.put("inntektOver6G", BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag));
         map.put("seksG", BeregningsgrunnlagMapper.finnSeksG(beregningsgrunnlag).intValue());
-        map.put("lovhjemmel", getLovhjemmelForBeregning(beregningsgrunnlag, behandling));
+        map.put("lovhjemmel", SvpUtledHjemmelForBeregning.utled(beregningsgrunnlag, behandling));
         mapIkkeSøkteAktiviteter(map);
         BehandlingMapper.avklarFritekst(hendelse, behandling).ifPresent(fritekst -> map.put("fritekst", fritekst));
         return map;
@@ -79,13 +76,6 @@ public class SvpMapper {
         map.put("ikkeSoktForAlleArbeidsforholdOgNaringsvirksomhet", false);
         map.put("ikkeSoktForAlleOppdragOgNaringsvirksomhet", false);
         map.put("ikkeSoktForAlleArbeidsforholdOppdragOgNaringsvirksomhet", false);
-    }
-
-    private static String getLovhjemmelForBeregning(Beregningsgrunnlag beregningsgrunnlag, Behandling behandling) {
-        boolean revurdering = BehandlingType.REVURDERING.equals(behandling.getBehandlingType());
-        boolean innvilget = BehandlingResultatType.INNVILGET.equals(behandling.getBehandlingsresultat().getBehandlingResultatType());
-        String konsekvensForYtelsen = BehandlingMapper.kodeFra(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
-        return formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForYtelsen, innvilget && revurdering);
     }
 
     private static Map<String, Map> mapAtFlSnForholdFra(Beregningsgrunnlag beregningsgrunnlag) {

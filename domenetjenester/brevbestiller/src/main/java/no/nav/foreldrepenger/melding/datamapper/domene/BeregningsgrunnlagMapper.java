@@ -101,7 +101,8 @@ public class BeregningsgrunnlagMapper {
         return sum.get();
     }
 
-    static List<BeregningsgrunnlagPrStatusOgAndel> finnAktivitetStatuserForAndeler(BeregningsgrunnlagAktivitetStatus bgAktivitetStatus, List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+    public static List<BeregningsgrunnlagPrStatusOgAndel> finnAktivitetStatuserForAndeler(BeregningsgrunnlagAktivitetStatus bgAktivitetStatus,
+                                                                                          List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         List<BeregningsgrunnlagPrStatusOgAndel> resultatListe;
         if (AktivitetStatus.KUN_YTELSE.equals(bgAktivitetStatus.getAktivitetStatus())) {
             return bgpsaListe;
@@ -141,15 +142,15 @@ public class BeregningsgrunnlagMapper {
         return andelType;
     }
 
-    static BigDecimal getMånedsinntekt(BeregningsgrunnlagPrStatusOgAndel andel) {
+    public static BigDecimal getMånedsinntekt(BeregningsgrunnlagPrStatusOgAndel andel) {
         return andel.getBruttoPrÅr().divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP);
     }
 
-    static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagPrStatusOgAndel andel) {
+    public static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagPrStatusOgAndel andel) {
         return andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::getNavn);
     }
 
-    static BigDecimal getBgBruttoPrÅr(BeregningsgrunnlagPrStatusOgAndel andel) {
+    public static BigDecimal getBgBruttoPrÅr(BeregningsgrunnlagPrStatusOgAndel andel) {
         return andel.getAvkortetPrÅr() != null ? andel.getAvkortetPrÅr() : andel.getBruttoPrÅr();
     }
 

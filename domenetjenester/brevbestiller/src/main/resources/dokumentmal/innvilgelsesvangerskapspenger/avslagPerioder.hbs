@@ -1,0 +1,31 @@
+{{#unless (eq (size avslagPerioder) 0)}}
+    {{#gt (size avslagPerioder) 1}}
+        {{~i18n "I_disse_periodene" (i18n "ikke")}}
+        {{#each avslagPerioder }}
+            {{~#if @first~}}*-{{~/if~}}
+            {{#eq aarsakskode 8311}}
+                {{~ i18n "fra_og_med_til_og_med" fom tom ~}}
+                {{~ i18n "pga_ferie"}}
+            {{/eq}}
+            {{#eq aarsakskode 8308}}
+                {{~ i18n "fra_og_med_til_og_med" fom tom ~}}
+                {{~ i18n "ikke_rett" ~}}
+                {{~ i18n "pga_sokt_for_sent" mottattDato}}
+            {{/eq}}
+            {{~#if @last~}}-*{{~/if~}}
+        {{/each}}
+    {{else}}
+        {{~ i18n "I_denne_perioden" (i18n "ikke")}}
+        {{#each avslagPerioder}}
+            {{#eq aarsakskode 8311}}
+                {{~ i18n "fra_og_med_til_og_med" fom tom ~}}
+                {{~ i18n "pga_ferie"}}
+            {{/eq}}
+            {{#eq aarsakskode 8308}}
+                {{~ i18n "fra_og_med_til_og_med" fom tom ~}}
+                {{~ i18n "ikke_rett" ~}}
+                {{~ i18n "pga_sokt_for_sent" mottattDato}}
+            {{/eq}}
+        {{/each}}
+    {{/gt}}
+{{/unless}}

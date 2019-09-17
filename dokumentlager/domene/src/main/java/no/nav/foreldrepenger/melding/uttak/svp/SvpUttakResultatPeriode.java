@@ -8,18 +8,23 @@ import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 
 public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPeriode> {
-    private long utbetalingsgrad;
-    private long aktivitetDagsats;
 
+    private long utbetalingsgrad;
+    private PeriodeResultatType periodeResultatType;
+    private PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak;
+    private DatoIntervall tidsperiode;
+
+    private long aktivitetDagsats;
     private Optional<String> arbeidsgiverNavn;
 
-    private Optional<ArbeidsforholdIkkeOppfyltÅrsak> arbeidsforholdIkkeOppfyltÅrsak;
-
-    private PeriodeResultatType periodeResultatType;
-
-    private PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak;
-
-    private DatoIntervall tidsperiode;
+    private SvpUttakResultatPeriode(Builder builder) {
+        utbetalingsgrad = builder.utbetalingsgrad;
+        aktivitetDagsats = builder.aktivitetDagsats;
+        arbeidsgiverNavn = builder.arbeidsgiverNavn;
+        periodeResultatType = builder.periodeResultatType;
+        periodeIkkeOppfyltÅrsak = builder.periodeIkkeOppfyltÅrsak;
+        tidsperiode = builder.tidsperiode;
+    }
 
     public long getAktivitetDagsats() {
         return aktivitetDagsats;
@@ -34,40 +39,6 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
 
     public String getArbeidsgiverNavn() {
         return arbeidsgiverNavn.orElse("");
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SvpUttakResultatPeriode that = (SvpUttakResultatPeriode) o;
-        return getUtbetalingsgrad() == that.getUtbetalingsgrad() &&
-                getAktivitetDagsats() == that.getAktivitetDagsats() &&
-                Objects.equals(getTidsperiode(), that.getTidsperiode());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUtbetalingsgrad(), getAktivitetDagsats(), getTidsperiode());
-    }
-
-    @Override
-    public int compareTo(SvpUttakResultatPeriode o) {
-        return this.getTidsperiode().compareTo(o.getTidsperiode());
-    }
-
-    public Optional<ArbeidsforholdIkkeOppfyltÅrsak> getArbeidsforholdIkkeOppfyltÅrsak() {
-        return arbeidsforholdIkkeOppfyltÅrsak;
-    }
-
-    private SvpUttakResultatPeriode(Builder builder) {
-        utbetalingsgrad = builder.utbetalingsgrad;
-        aktivitetDagsats = builder.aktivitetDagsats;
-        arbeidsgiverNavn = builder.arbeidsgiverNavn;
-        arbeidsforholdIkkeOppfyltÅrsak = builder.arbeidsforholdIkkeOppfyltÅrsak;
-        periodeResultatType = builder.periodeResultatType;
-        periodeIkkeOppfyltÅrsak = builder.periodeIkkeOppfyltÅrsak;
-        tidsperiode = builder.tidsperiode;
     }
 
     public DatoIntervall getTidsperiode() {
@@ -98,34 +69,55 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
         return Objects.equals(getPeriodeResultatType(), PeriodeResultatType.INNVILGET);
     }
 
-    public static Builder ny() {
-        return new Builder();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SvpUttakResultatPeriode that = (SvpUttakResultatPeriode) o;
+        return getUtbetalingsgrad() == that.getUtbetalingsgrad() &&
+                getAktivitetDagsats() == that.getAktivitetDagsats() &&
+                Objects.equals(getTidsperiode(), that.getTidsperiode());
     }
 
-    public static Builder ny(SvpUttakResultatPeriode copy) {
-        return new Builder(copy);
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUtbetalingsgrad(), getAktivitetDagsats(), getTidsperiode());
+    }
+
+    @Override
+    public int compareTo(SvpUttakResultatPeriode o) {
+        return this.getTidsperiode().compareTo(o.getTidsperiode());
     }
 
     public static final class Builder {
+
         private long utbetalingsgrad;
         private PeriodeResultatType periodeResultatType = PeriodeResultatType.IKKE_FASTSATT;
         private PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak = PeriodeIkkeOppfyltÅrsak.INGEN;
         private DatoIntervall tidsperiode;
+
         private long aktivitetDagsats;
         private Optional<String> arbeidsgiverNavn = Optional.empty();
-        private Optional<ArbeidsforholdIkkeOppfyltÅrsak> arbeidsforholdIkkeOppfyltÅrsak = Optional.empty();
 
-        public Builder() {
+        private Builder() {
+            // Skjul default constructor
         }
 
-        public Builder(SvpUttakResultatPeriode copy) {
+        private Builder(SvpUttakResultatPeriode copy) {
             this.utbetalingsgrad = copy.getUtbetalingsgrad();
             this.aktivitetDagsats = copy.getAktivitetDagsats();
             this.arbeidsgiverNavn = copy.arbeidsgiverNavn;
-            this.arbeidsforholdIkkeOppfyltÅrsak = copy.getArbeidsforholdIkkeOppfyltÅrsak();
             this.periodeResultatType = copy.getPeriodeResultatType();
             this.periodeIkkeOppfyltÅrsak = copy.getPeriodeIkkeOppfyltÅrsak();
             this.tidsperiode = copy.getTidsperiode();
+        }
+
+        public static Builder ny() {
+            return new Builder();
+        }
+
+        public static Builder ny(SvpUttakResultatPeriode copy) {
+            return new Builder(copy);
         }
 
         public Builder medUtbetalingsgrad(long utbetalingsgrad) {
@@ -153,18 +145,14 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
             return this;
         }
 
-        public SvpUttakResultatPeriode build() {
-            return new SvpUttakResultatPeriode(this);
-        }
-
-        public Builder medArbeidsforholdIkkeOppfyltÅrsak(Optional<ArbeidsforholdIkkeOppfyltÅrsak> arbeidsforholdIkkeOppfyltÅrsak) {
-            this.arbeidsforholdIkkeOppfyltÅrsak = arbeidsforholdIkkeOppfyltÅrsak;
-            return this;
-        }
-
         public Builder medArbeidsgiverNavn(String arbeidsgiverNavn) {
             this.arbeidsgiverNavn = Optional.ofNullable(arbeidsgiverNavn);
             return this;
         }
+
+        public SvpUttakResultatPeriode build() {
+            return new SvpUttakResultatPeriode(this);
+        }
+
     }
 }

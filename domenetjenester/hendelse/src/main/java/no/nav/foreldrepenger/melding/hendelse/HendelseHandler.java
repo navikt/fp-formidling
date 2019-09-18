@@ -42,6 +42,7 @@ public class HendelseHandler {
     private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {
         ProsessTaskData prosessTaskData = new ProsessTaskData(ProduserBrevTaskProperties.TASKTYPE);
         prosessTaskData.setProperty(ProduserBrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
+        prosessTaskData.setProperty(ProduserBrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
         prosessTaskData.setGruppe("FORMIDLING");
         prosessTaskRepository.lagre(prosessTaskData);
     }

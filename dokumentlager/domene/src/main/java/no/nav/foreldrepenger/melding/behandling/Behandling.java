@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.behandling;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ public class Behandling {
     private BehandlingStatus status;
     private String endretAv;
     private Språkkode språkkode;
+    private LocalDate originalVedtaksDato;
 
     private Behandling(Builder builder) {
         id = builder.id;
@@ -49,6 +51,7 @@ public class Behandling {
         status = builder.status;
         endretAv = builder.endretAv;
         språkkode = builder.språkkode;
+        originalVedtaksDato = builder.originalVedtaksDato;
     }
 
     public LocalDateTime getAvsluttet() {
@@ -106,6 +109,12 @@ public class Behandling {
     public Språkkode getSpråkkode() {
         return språkkode;
     }
+
+    public LocalDate getOriginalVedtaksDato() {
+        return originalVedtaksDato;
+    }
+
+
 
     public boolean erFørstegangssøknad() {
         return BehandlingType.FØRSTEGANGSSØKNAD.equals(getBehandlingType());
@@ -195,6 +204,7 @@ public class Behandling {
         private BehandlingStatus status;
         private String endretAv;
         private Språkkode språkkode;
+        private LocalDate originalVedtaksDato;
 
         public Builder() {
         }
@@ -217,6 +227,7 @@ public class Behandling {
             this.status = copy.getStatus();
             this.endretAv = copy.getEndretAv();
             this.språkkode = copy.getSpråkkode();
+            this.originalVedtaksDato = copy.getOriginalVedtaksDato();
         }
 
         public Behandling.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {
@@ -303,6 +314,13 @@ public class Behandling {
             this.språkkode = språkkode;
             return this;
         }
+
+        public Behandling.Builder medOriginalVedtaksDato(LocalDate originalVedtaksDato) {
+            this.originalVedtaksDato = originalVedtaksDato;
+            return this;
+        }
+
+
 
         public Behandling build() {
             return new Behandling(this);

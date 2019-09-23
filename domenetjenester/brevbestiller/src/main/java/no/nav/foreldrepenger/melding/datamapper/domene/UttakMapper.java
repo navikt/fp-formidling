@@ -16,8 +16,6 @@ import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.VurderingsstatusKode;
-import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
@@ -31,20 +29,6 @@ public class UttakMapper {
     public static boolean finnesPeriodeMedIkkeOmsorg(List<PeriodeType> perioder) {
         return perioder.
                 stream().map(PeriodeType::getÅrsak).anyMatch(årsak -> PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode().equals(årsak) || PeriodeResultatÅrsak.FAR_HAR_IKKE_OMSORG.getKode().equals(årsak));
-    }
-
-    public static boolean harSøkerAleneomsorgBoolean(Søknad søknad, UttakResultatPerioder uttakResultatPerioder) {
-        return VurderingsstatusKode.JA.equals(harSøkerAleneomsorg(søknad, uttakResultatPerioder));
-    }
-
-    public static VurderingsstatusKode harSøkerAleneomsorg(Søknad søknad, UttakResultatPerioder uttakResultatPerioder) {
-        if (!søknad.getOppgittRettighet().isHarAleneomsorgForBarnet()) {
-            return VurderingsstatusKode.IKKE_VURDERT;
-        }
-        if (uttakResultatPerioder.isAleneomsorg()) {
-            return VurderingsstatusKode.JA;
-        }
-        return VurderingsstatusKode.NEI;
     }
 
     public static UtbetaltKode forMyeUtbetaltKode(PeriodeListeType periodeListe, Behandling behandling) {

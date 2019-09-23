@@ -1,27 +1,15 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import no.nav.foreldrepenger.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
 import no.nav.foreldrepenger.melding.fagsak.Dekningsgrad;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 
-@ApplicationScoped
-public class YtelseFordelingDtoMapper {
+public final class YtelseFordelingDtoMapper {
 
-    public static YtelseFordeling mapYtelseFordelingFraDto(YtelseFordelingDto dto) {
-        boolean annenForelderHarRett = true;
-        boolean harPeriodeMedAleneomsorg = true;
-        if (dto.getAnnenforelderHarRettDto() != null && dto.getAnnenforelderHarRettDto().getAnnenforelderHarRett() != null) {
-            annenForelderHarRett = dto.getAnnenforelderHarRettDto().getAnnenforelderHarRett();
-        }
-        if (dto.getAleneOmsorgPerioder() != null) {
-            harPeriodeMedAleneomsorg = !dto.getAleneOmsorgPerioder().isEmpty();
-            if (harPeriodeMedAleneomsorg) {
-                annenForelderHarRett = false;
-            }
-        }
-        return new YtelseFordeling(new Dekningsgrad(dto.getGjeldendeDekningsgrad()), annenForelderHarRett, harPeriodeMedAleneomsorg);
+    private YtelseFordelingDtoMapper() {
     }
 
+    public static YtelseFordeling mapYtelseFordelingFraDto(YtelseFordelingDto dto) {
+        return new YtelseFordeling(new Dekningsgrad(dto.getGjeldendeDekningsgrad()));
+    }
 }

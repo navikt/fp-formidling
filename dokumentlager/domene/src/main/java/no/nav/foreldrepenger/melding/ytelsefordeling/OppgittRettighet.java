@@ -7,7 +7,7 @@ public class OppgittRettighet {
         this.harAleneomsorgForBarnet = harAleneomsorgForBarnet;
     }
 
-    public boolean isHarAleneomsorgForBarnet() {
+    public boolean harAleneomsorgForBarnet() {
         return harAleneomsorgForBarnet;
     }
 }

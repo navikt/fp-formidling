@@ -49,6 +49,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.RelasjonskodeKode;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.VurderingsstatusKode;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
@@ -152,7 +153,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, fagType);
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType, behandling);
         mapFelterRelatertTilSøknadOgRettighet(søknad, uttakResultatPerioder, fagType);
-        mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, behandling, søknad, ytelseFordeling, fagsak);
+        mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, fagsak);
         mapFelterRelatertTilFamiliehendelse(behandling, familieHendelse, originalFamiliehendelse, fagType);
         mapLovhjemmel(fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling, uttakResultatPerioder);
         mapFelterRelatertTilDagsats(fagType, beregningsresultatFP);
@@ -186,12 +187,19 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
     private void mapFelterRelatertTilSøknadOgRettighet(Søknad søknad, UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknad.getMottattDato()));
         fagType.setAnnenForelderHarRett(uttakResultatPerioder.isAnnenForelderHarRett());
-        fagType.setAleneomsorg(UttakMapper.harSøkerAleneomsorg(søknad, uttakResultatPerioder));
+        //Dokprod tolker FagType.aleneomsorg som om "det har vært søkt om aleneomsorg og verdien er resultatet. Hvis det ikke er søkt aleneomsorg så skal det ikke stå noe i brevet om dette (derav IKKE_VURDERT)
+        VurderingsstatusKode aleneomsorg;
+        if (søknad.getOppgittRettighet().harAleneomsorgForBarnet()) {
+            aleneomsorg = uttakResultatPerioder.isAleneomsorg() ? VurderingsstatusKode.JA : VurderingsstatusKode.NEI;
+        } else {
+            aleneomsorg = VurderingsstatusKode.IKKE_VURDERT;
+        }
+        fagType.setAleneomsorg(aleneomsorg);
     }
 
-    private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Behandling behandling, Søknad søknad, YtelseFordeling ytelseFordeling, Fagsak fagsak) {
+    private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Fagsak fagsak) {
         fagType.setDagerTaptFørTermin(StønadskontoMapper.finnTapteDagerFørTermin(uttakResultatPerioder, saldoer, familieHendelse));
-        fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(fagsak, UttakMapper.harSøkerAleneomsorgBoolean(søknad, uttakResultatPerioder), ytelseFordeling.isAnnenForelderHarRett(), saldoer));
+        fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()));
         fagType.setDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer));
         StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);
         StønadskontoMapper.finnPrematurDagerHvisFinnes(saldoer).ifPresent(fagType::setPrematurDager);

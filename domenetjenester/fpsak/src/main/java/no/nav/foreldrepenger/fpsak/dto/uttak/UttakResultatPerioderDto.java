@@ -4,7 +4,6 @@ import java.util.List;
 
 public class UttakResultatPerioderDto {
 
-
     private List<UttakResultatPeriodeDto> perioderSøker;
     private List<UttakResultatPeriodeDto> perioderAnnenpart;
     private boolean annenForelderHarRett;

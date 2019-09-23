@@ -7,8 +7,6 @@ import no.nav.foreldrepenger.fpsak.dto.PeriodeDto;
 
 public class YtelseFordelingDto {
     private List<PeriodeDto> ikkeOmsorgPerioder;
-    private List<PeriodeDto> aleneOmsorgPerioder;
-    private AnnenforelderHarRettDto annenforelderHarRettDto;
     private LocalDate endringsdato;
     private int gjeldendeDekningsgrad;
     private LocalDate førsteUttaksdato;
@@ -20,16 +18,8 @@ public class YtelseFordelingDto {
         return ikkeOmsorgPerioder;
     }
 
-    public List<PeriodeDto> getAleneOmsorgPerioder() {
-        return aleneOmsorgPerioder;
-    }
-
     public LocalDate getEndringsdato() {
         return endringsdato;
-    }
-
-    public AnnenforelderHarRettDto getAnnenforelderHarRettDto() {
-        return annenforelderHarRettDto;
     }
 
     public int getGjeldendeDekningsgrad() {
@@ -49,18 +39,8 @@ public class YtelseFordelingDto {
             return this;
         }
 
-        public Builder medAleneOmsorgPerioder(List<PeriodeDto> aleneOmsorgPerioder) {
-            kladd.aleneOmsorgPerioder = aleneOmsorgPerioder;
-            return this;
-        }
-
         public Builder medEndringsdato(LocalDate endringsDato) {
             kladd.endringsdato = endringsDato;
-            return this;
-        }
-
-        public Builder medAnnenforelderHarRett(AnnenforelderHarRettDto annenforelderHarRettDto) {
-            kladd.annenforelderHarRettDto = annenforelderHarRettDto;
             return this;
         }
 

@@ -237,6 +237,41 @@ public class DokumentMalUtlederTest {
         assertThatThrownBy(() -> sjekkKlageDokument(KlageVurdering.UDEFINERT, DokumentMalType.KLAGE_AVVIST_DOK)).isInstanceOf(VLException.class);
     }
 
+    @Test
+    public void utled_SVP_revurdering_med_endring() {
+        hendelse = standardBuilder()
+                .medGjelderVedtak(true)
+                .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER)
+                .build();
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
+                .medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.ENDRING_I_UTTAK))
+                .build();
+        Behandling behandling = Behandling.builder()
+                .medUuid(UUID.randomUUID())
+                .medBehandlingType(BehandlingType.REVURDERING)
+                .medBehandlingsresultat(behandlingsresultat)
+                .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK);
+    }
+
+    @Test
+    public void utled_SVP_førstegangsbehandling_innvilget() {
+        hendelse = standardBuilder()
+                .medGjelderVedtak(true)
+                .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER)
+                .build();
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder()
+                .medUuid(UUID.randomUUID())
+                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+                .medBehandlingsresultat(behandlingsresultat)
+                .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK);
+    }
+
     private void sjekkKlageDokument(KlageVurdering klageVurdering, String dokumentmal) {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)

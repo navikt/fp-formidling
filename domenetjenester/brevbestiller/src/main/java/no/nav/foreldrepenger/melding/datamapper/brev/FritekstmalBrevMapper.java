@@ -71,7 +71,7 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
         return fagType;
     }
 
-    private void initHandlebars(Språkkode språkkode) {
+    protected void initHandlebars(Språkkode språkkode) {
         TemplateLoader folder = new ClassPathTemplateLoader(getTemplateClassPath());
         TemplateLoader felles = new ClassPathTemplateLoader(getFellesClassPath());
         templateLoader = new CompositeTemplateLoader(folder, felles);
@@ -114,7 +114,7 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
         }
     }
 
-    private String tryApply(Object brevdata, Template template) {
+    protected String tryApply(Object brevdata, Template template) {
         try {
             return template.apply(brevdata);
         } catch (IOException e) {
@@ -123,6 +123,14 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
     }
 
     public abstract String displayName();
+
+    public Template getOverskriftMal() {
+        return overskriftMal;
+    }
+
+    public Template getBrødtekstMal() {
+        return brødtekstMal;
+    }
 
     abstract Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling);
 
@@ -148,6 +156,10 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
             map.put("navnAvsenderEnhet", dokumentFelles.getNavnAvsenderEnhet());
             map.put("erAutomatiskVedtak", fellesType.isAutomatiskBehandlet());
             map.put("klageFristUker", brevParametere.getKlagefristUker());
+        }
+
+        public Map<String, Object> getMap(){
+            return map;
         }
     }
 }

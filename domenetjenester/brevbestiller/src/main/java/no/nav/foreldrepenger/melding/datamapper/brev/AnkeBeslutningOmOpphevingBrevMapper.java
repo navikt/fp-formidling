@@ -36,7 +36,7 @@ public class AnkeBeslutningOmOpphevingBrevMapper extends FritekstmalBrevMapper {
 
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
-        Anke anke = domeneobjektProvider.hentAnkebehandling(behandling);
+        Anke anke = domeneobjektProvider.hentAnkebehandling(behandling).get();
         return new Brevdata()
                 .leggTil("ytelseType", hendelse.getYtelseType().getKode())
                 .leggTil("fritekst", anke.getFritekstTilBrev());

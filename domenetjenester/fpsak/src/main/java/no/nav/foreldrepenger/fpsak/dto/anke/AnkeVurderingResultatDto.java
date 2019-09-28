@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpsak.dto.anke;
 
+import java.util.UUID;
+
 public class AnkeVurderingResultatDto {
 
     private String ankeVurdering;
@@ -14,7 +16,7 @@ public class AnkeVurderingResultatDto {
     private boolean erIkkeKonkret;
     private boolean erIkkeSignert;
     private boolean erSubsidiartRealitetsbehandles;
-    private Long paAnketBehandlingId;
+    private UUID paAnketBehandlingUuid;
 
     public AnkeVurderingResultatDto() {
     }
@@ -67,8 +69,8 @@ public class AnkeVurderingResultatDto {
         return erSubsidiartRealitetsbehandles;
     }
 
-    public Long getPaAnketBehandlingId() {
-        return paAnketBehandlingId;
+    public UUID getPaAnketBehandlingUuid() {
+        return paAnketBehandlingUuid;
     }
 
     public void setAnkeVurderingOmgjoer(String ankeVurderingOmgjoer) {
@@ -119,7 +121,7 @@ public class AnkeVurderingResultatDto {
         this.erSubsidiartRealitetsbehandles = erSubsidiartRealitetsbehandles;
     }
 
-    public void setPaAnketBehandlingId(Long paAnketBehandlingId) {
-        this.paAnketBehandlingId = paAnketBehandlingId;
+    public void setPaAnketBehandlingUuid(UUID paAnketBehandlingUuid) {
+        this.paAnketBehandlingUuid = paAnketBehandlingUuid;
     }
 }

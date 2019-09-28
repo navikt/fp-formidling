@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.anke;
 
+import java.util.UUID;
+
 public class Anke {
 
     private String ankeVurdering;
@@ -14,7 +16,7 @@ public class Anke {
     private boolean erIkkeKonkret;
     private boolean erIkkeSignert;
     private boolean erSubsidiartRealitetsbehandles;
-    private Long paAnketBehandlingId;
+    private UUID paAnketBehandlingUuid;
 
     private Anke(Builder builder) {
         ankeVurdering = builder.ankeVurdering;
@@ -29,7 +31,7 @@ public class Anke {
         erIkkeKonkret = builder.erIkkeKonkret;
         erIkkeSignert = builder.erIkkeSignert;
         erSubsidiartRealitetsbehandles = builder.erSubsidiartRealitetsbehandles;
-        paAnketBehandlingId = builder.paAnketBehandlingId;
+        paAnketBehandlingUuid = builder.paAnketBehandlingUuid;
     }
 
     public static Builder ny() {
@@ -84,8 +86,8 @@ public class Anke {
         return erSubsidiartRealitetsbehandles;
     }
 
-    public Long getPaAnketBehandlingId() {
-        return paAnketBehandlingId;
+    public UUID getPaAnketBehandlingUuid() {
+        return paAnketBehandlingUuid;
     }
 
     public static final class Builder {
@@ -101,7 +103,7 @@ public class Anke {
         private boolean erIkkeKonkret;
         private boolean erIkkeSignert;
         private boolean erSubsidiartRealitetsbehandles;
-        private Long paAnketBehandlingId;
+        private UUID paAnketBehandlingUuid;
 
         public Builder() {
         }
@@ -166,8 +168,8 @@ public class Anke {
             return this;
         }
 
-        public Builder medPaAnketBehandlingId(Long val) {
-            paAnketBehandlingId = val;
+        public Builder medPaAnketBehandlingUuid(UUID val) {
+            paAnketBehandlingUuid = val;
             return this;
         }
 

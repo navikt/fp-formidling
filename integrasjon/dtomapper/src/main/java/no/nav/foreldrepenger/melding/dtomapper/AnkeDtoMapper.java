@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
+import java.util.Optional;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -16,10 +18,14 @@ public class AnkeDtoMapper {
         //CDI
     }
 
-    public Anke mapAnkeFraDto(AnkebehandlingDto dto) {
+    public Optional<Anke> mapAnkeFraDto(AnkebehandlingDto dto) {
         Anke.Builder builder = Anke.ny();
 
         AnkeVurderingResultatDto ankeResultat = dto.getAnkeVurderingResultat();
+
+        if(ankeResultat == null){
+            return Optional.empty();
+        }
 
         builder.medFritekstTilBrev(ankeResultat.getFritekstTilBrev())
                 .medAnkeOmgjoerArsak(ankeResultat.getAnkeOmgjoerArsak())
@@ -33,8 +39,8 @@ public class AnkeDtoMapper {
                 .medErIkkeSignert(ankeResultat.isErIkkeSignert())
                 .medErSubsidiartRealitetsbehandles(ankeResultat.isErSubsidiartRealitetsbehandles())
                 .medGodkjentAvMedunderskriver(ankeResultat.isGodkjentAvMedunderskriver())
-                .medPaAnketBehandlingId(ankeResultat.getPaAnketBehandlingId());
+                .medPaAnketBehandlingUuid(ankeResultat.getPaAnketBehandlingUuid());
 
-        return builder.build();
+        return Optional.of(builder.build());
     }
 }

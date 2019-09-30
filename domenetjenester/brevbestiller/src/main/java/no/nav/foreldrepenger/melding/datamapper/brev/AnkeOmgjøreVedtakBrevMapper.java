@@ -5,12 +5,16 @@ import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import no.nav.foreldrepenger.melding.anke.Anke;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
@@ -19,7 +23,9 @@ import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.Period
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
+import no.nav.foreldrepenger.melding.typer.Dato;
 
 @ApplicationScoped
 @Named(DokumentMalType.ANKE_VEDTAK_OMGJORING_DOK)
@@ -48,17 +54,38 @@ public class AnkeOmgjøreVedtakBrevMapper  extends FritekstmalBrevMapper {
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
 
-
         return new Brevdata()
                 .leggTil("mintekst", hendelse.getFritekst())
                 .leggTil("saksbehandler", behandling.getAnsvarligSaksbehandler())
                 .leggTil("medunderskriver",behandling.getAnsvarligBeslutter())
-                .leggTil("behandlingtype",behandling.getBehandlingType().getKode())
-                .leggTil("vedtaksDato",behandling.getOriginalVedtaksDato()!=null?medFormatering(behandling.getOriginalVedtaksDato()):null);
-
+                .leggTil("behandlingtype",behandling.getBehandlingType().getKode());
 
     }
+    @Override
+    protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
 
+        Dato vedtaksDato = null;
+
+        initHandlebars(behandling.getSpråkkode());
+
+        Optional<Anke> anke = domeneobjektProvider.hentAnkebehandling(behandling);
+        if(anke.isPresent()){
+            UUID klageBehandlingUuid =  anke.get().getPaAnketBehandlingUuid();
+            Behandling klageBehandling = domeneobjektProvider.hentBehandling(klageBehandlingUuid);
+            vedtaksDato = klageBehandling.getOriginalVedtaksDato()!=null?medFormatering(klageBehandling.getOriginalVedtaksDato()):null;
+        }
+
+
+        FagType fagType = new FagType();
+        fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling).leggTil("vedtaksDato",vedtaksDato).getMap(), getBrødtekstMal()));
+        if(vedtaksDato== null){
+            fagType.setHovedoverskrift(tryApply(Map.of("behandling", behandling, "dokumentHendelse", hendelse), getOverskriftMal()));
+        }
+        else{
+            fagType.setHovedoverskrift(tryApply(Map.of("behandling", behandling, "dokumentHendelse", hendelse,"vedtaksDato",vedtaksDato), getOverskriftMal()));
+        }
+        return fagType;
+    }
 }
 
 

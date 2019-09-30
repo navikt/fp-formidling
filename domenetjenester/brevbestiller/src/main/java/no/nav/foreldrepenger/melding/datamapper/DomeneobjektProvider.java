@@ -169,7 +169,7 @@ public class DomeneobjektProvider {
         return klageDtoMapper.mapKlagefraDto(klagebehandlingDto);
     }
 
-    public Anke hentAnkebehandling(Behandling behandling) {
+    public Optional<Anke> hentAnkebehandling(Behandling behandling) {
         AnkebehandlingDto ankebehandlingDto = behandlingRestKlient.hentAnkebehandling(behandling.getResourceLinker());
         return ankeDtoMapper.mapAnkeFraDto(ankebehandlingDto);
     }

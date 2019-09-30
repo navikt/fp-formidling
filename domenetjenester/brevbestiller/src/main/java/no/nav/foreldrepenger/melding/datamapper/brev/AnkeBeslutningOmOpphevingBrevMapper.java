@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import java.util.Optional;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -36,9 +38,15 @@ public class AnkeBeslutningOmOpphevingBrevMapper extends FritekstmalBrevMapper {
 
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
-        Anke anke = domeneobjektProvider.hentAnkebehandling(behandling);
-        return new Brevdata()
-                .leggTil("ytelseType", hendelse.getYtelseType().getKode())
-                .leggTil("fritekst", anke.getFritekstTilBrev());
+        Optional<Anke> anke  = domeneobjektProvider.hentAnkebehandling(behandling);
+       if( anke.isPresent()) {
+           return new Brevdata()
+                   .leggTil("ytelseType", hendelse.getYtelseType().getKode())
+                   .leggTil("fritekst", anke.get().getFritekstTilBrev());
+       }
+       else{
+           return new Brevdata()
+                   .leggTil("ytelseType", hendelse.getYtelseType().getKode());
+       }
     }
 }

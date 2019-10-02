@@ -30,7 +30,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <felles.version>1.1.0_20190522154906_20b3f63</felles.version>
+        <felles.version>1.1.0_20191001141114_08e62f6</felles.version>
         <metrics.version>3.2.5</metrics.version>
 
         <!-- Eksterne -->
@@ -55,7 +55,7 @@
         <swagger2markup.version>1.1.2</swagger2markup.version>
         <cxf.version>3.3.1</cxf.version>
         <prometheus.version>0.6.0</prometheus.version>
-        <kontrakter.version>5.0_20190814104704_1d84eee</kontrakter.version>
+        <kontrakter.version>5.0_20190927100144_12ac550</kontrakter.version>
         <kafka.version>2.2.0</kafka.version>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
     </properties>

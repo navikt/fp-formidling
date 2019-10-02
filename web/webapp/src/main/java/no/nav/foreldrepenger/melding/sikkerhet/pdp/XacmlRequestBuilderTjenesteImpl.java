@@ -10,7 +10,6 @@ import javax.enterprise.inject.Alternative;
 
 import no.nav.abac.common.xacml.CommonAttributter;
 import no.nav.abac.foreldrepenger.xacml.ForeldrepengerAttributter;
-import no.nav.abac.xacml.StandardAttributter;
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
 import no.nav.vedtak.sikkerhet.pdp.XacmlRequestBuilderTjeneste;
 import no.nav.vedtak.sikkerhet.pdp.xacml.XacmlAttributeSet;
@@ -30,7 +29,7 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
         XacmlRequestBuilder xacmlBuilder = new XacmlRequestBuilder();
 
         XacmlAttributeSet actionAttributeSet = new XacmlAttributeSet();
-        actionAttributeSet.addAttribute(StandardAttributter.ACTION_ID, pdpRequest.getString(StandardAttributter.ACTION_ID));
+        actionAttributeSet.addAttribute(CommonAttributter.XACML_1_0_ACTION_ACTION_ID, pdpRequest.getString(CommonAttributter.XACML_1_0_ACTION_ACTION_ID));
         xacmlBuilder.addActionAttributeSet(actionAttributeSet);
 
         List<Tuple<String, String>> identer = hentIdenter(pdpRequest,

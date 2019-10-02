@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder.ROTMAPPE;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -18,6 +19,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlientImpl;
@@ -56,7 +62,6 @@ import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.AktoerIder;
 import no.nav.vedtak.felles.integrasjon.aktør.klient.AktørConsumer;
 import no.nav.vedtak.felles.integrasjon.aktør.klient.AktørConsumerMedCache;
 import no.nav.vedtak.felles.integrasjon.person.PersonConsumer;
-import no.nav.vedtak.felles.integrasjon.rest.JsonMapper;
 import no.nav.vedtak.util.StringUtils;
 
 public abstract class OppsettForGjengivelseAvManuellTest {
@@ -72,6 +77,7 @@ public abstract class OppsettForGjengivelseAvManuellTest {
     FellesType fellesType;
 
     private JSONObject testdata;
+    private ObjectMapper jsonMapper = new ObjectMapper();
     protected ResourceBundle testScenario = ResourceBundle.getBundle(
             String.join("/", ROTMAPPE, mappenHvorFilenMedLoggetTestdataLigger(), "testdata"),
             new Locale("nb", "NO"));
@@ -130,9 +136,17 @@ public abstract class OppsettForGjengivelseAvManuellTest {
     }
 
     protected void setup(String scenario) {
+        jsonMapper.registerModule(new Jdk8Module());
+        jsonMapper.registerModule(new JavaTimeModule());
+        jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         testdata = new JSONObject(testScenario.getString(scenario));
         String behandlingJson = testdata.getString("null");
-        BehandlingDto dto = JsonMapper.fromJson(behandlingJson, BehandlingDto.class);
+        BehandlingDto dto;
+        try {
+            dto = jsonMapper.readValue(behandlingJson, BehandlingDto.class);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Kunne ikke deserialiser fra json til BehandlingDto", e);
+        }
         behandling = Behandling.builder(behandlingDtoMapper.mapBehandlingFraDto(dto)).build();
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
@@ -151,7 +165,13 @@ public abstract class OppsettForGjengivelseAvManuellTest {
             if (StringUtils.nullOrEmpty(entity)) {
                 return Optional.empty();
             }
-            return Optional.of(JsonMapper.fromJson(entity, clazz));
+            T value;
+            try {
+                value = jsonMapper.readValue(entity, clazz);
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Kunne ikke deserialiser fra json til klasse" + clazz.getSimpleName(), e);
+            }
+            return Optional.of(value);
         }
     }
 }

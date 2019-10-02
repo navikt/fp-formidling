@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import no.nav.abac.common.xacml.CommonAttributter;
 import no.nav.abac.foreldrepenger.xacml.ForeldrepengerAttributter;
-import no.nav.abac.xacml.StandardAttributter;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingStatus;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
@@ -86,7 +85,7 @@ public class PdpRequestBuilderImpl implements PdpRequestBuilder {
                 }
         );
         pdpRequest.put(PdpKlient.ENVIRONMENT_AUTH_TOKEN, attributter.getIdToken());
-        pdpRequest.put(StandardAttributter.ACTION_ID, attributter.getActionType().getEksternKode());
+        pdpRequest.put(CommonAttributter.XACML_1_0_ACTION_ACTION_ID, attributter.getActionType().getEksternKode());
         pdpRequest.put(CommonAttributter.RESOURCE_FELLES_DOMENE, ABAC_DOMAIN);
         pdpRequest.put(CommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE, attributter.getResource().getEksternKode());
         pdpRequest.put(CommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, aktørIder);

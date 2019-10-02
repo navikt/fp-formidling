@@ -51,7 +51,8 @@ public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
         return new Brevdata()
                 .leggTil("ytelse", hendelse.getYtelseType().getKode())
                 .leggTil("soknadDato", medFormatering(soknadDato))
-                .leggTil("fristDato", medFormatering(fristDato));
+                .leggTil("fristDato", medFormatering(fristDato))
+                .leggTil("erAutomatiskVedtak", Boolean.FALSE); // For å unngå automatiskVedtakMvh_001 - bør skille informasjon/vedtak i tillegg til automatisk
     }
 
     private LocalDate getSøknadsdato(Behandling behandling) {

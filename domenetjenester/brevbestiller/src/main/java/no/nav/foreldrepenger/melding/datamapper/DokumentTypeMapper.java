@@ -24,6 +24,7 @@ public abstract class DokumentTypeMapper implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
+        // Trengs dette? getJsonTestdata vil alltid returnere null
         if (domeneobjektProvider != null && domeneobjektProvider.getJsonTestdata() != null) {
             LOG.warn(domeneobjektProvider.getJsonTestdata());
         }

@@ -36,6 +36,7 @@ public class InfoTilAnnenForelderBrevMapper extends FritekstmalBrevMapper {
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
         return new Brevdata()
+                .leggTil("erAutomatiskVedtak", Boolean.FALSE) // For å unngå automatiskVedtakMvh_001 - bør skille informasjon/vedtak i tillegg til automatisk
                 .leggTil("kontaktTelefonnummer", null);  // null fordi det ikke skal være med i dette brevet.
     }
 }

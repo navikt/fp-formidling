@@ -34,6 +34,7 @@
             <xs:element type="xs:long" name="totalArbeidsgiverAndel"/>
             <xs:element type="xs:integer" name="antallArbeidsgivere"/>
             <xs:element type="xs:boolean" name="annenForelderHarRett"/>
+            <xs:element type="vurderingsstatusKode" name="annenForelderHarRettVurdert"/>
             <xs:element type="vurderingsstatusKode" name="aleneomsorg"/>
             <xs:element type="xs:boolean" name="ikkeOmsorg"/>
             <xs:element type="xs:integer" name="antallBarn"/>

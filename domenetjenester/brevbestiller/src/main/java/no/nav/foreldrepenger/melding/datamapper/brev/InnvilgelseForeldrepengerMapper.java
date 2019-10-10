@@ -152,7 +152,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         mapFelterRelatertTilBehandling(behandling, fagType);
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, fagType);
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType, behandling);
-        mapFelterRelatertTilSøknadOgRettighet(søknad, uttakResultatPerioder, fagType);
+        mapFelterRelatertTilSøknadOgRettighet(søknad, uttakResultatPerioder, aksjonspunkter, fagType);
         mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, fagsak);
         mapFelterRelatertTilFamiliehendelse(behandling, familieHendelse, originalFamiliehendelse, fagType);
         mapLovhjemmel(fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling, uttakResultatPerioder);
@@ -184,8 +184,9 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         fagType.setLovhjemmel(lovhjemmelType);
     }
 
-    private void mapFelterRelatertTilSøknadOgRettighet(Søknad søknad, UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
+    private void mapFelterRelatertTilSøknadOgRettighet(Søknad søknad, UttakResultatPerioder uttakResultatPerioder, List<Aksjonspunkt> aksjonspunkter, FagType fagType) {
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknad.getMottattDato()));
+        //TODO AGA Fjerne annenForelderHarRett når annenForelderHarRettVurdert er implementert ok og fungerer mot dokument
         fagType.setAnnenForelderHarRett(uttakResultatPerioder.isAnnenForelderHarRett());
         //Dokprod tolker FagType.aleneomsorg som om "det har vært søkt om aleneomsorg og verdien er resultatet. Hvis det ikke er søkt aleneomsorg så skal det ikke stå noe i brevet om dette (derav IKKE_VURDERT)
         VurderingsstatusKode aleneomsorg;
@@ -195,6 +196,19 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
             aleneomsorg = VurderingsstatusKode.IKKE_VURDERT;
         }
         fagType.setAleneomsorg(aleneomsorg);
+
+        //Nytt felt for å angi ikke vurdert når saksbehandler aldri har vurdert rettighet for annen part fordi tekst skal da aldri vises i dokument
+        VurderingsstatusKode annenForelderHarRettVurdert;
+        if(aksjonspunkter.stream().
+                filter(ap -> Objects.equals(ap.getAksjonspunktDefinisjon(), AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT)).
+                anyMatch(ap -> Objects.equals(ap.getAksjonspunktStatus(), AksjonspunktStatus.UTFØRT))){
+            annenForelderHarRettVurdert = uttakResultatPerioder.isAnnenForelderHarRett() ? VurderingsstatusKode.JA : VurderingsstatusKode.NEI;
+        }
+        else {
+            annenForelderHarRettVurdert = VurderingsstatusKode.IKKE_VURDERT;
+        }
+        fagType.setAnnenForelderHarRettVurdert(annenForelderHarRettVurdert);
+
     }
 
     private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Fagsak fagsak) {

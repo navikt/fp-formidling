@@ -197,7 +197,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         }
         fagType.setAleneomsorg(aleneomsorg);
 
-        //Nytt felt for å angi ikke vurdert når saksbehandler aldri har vurdert rettighet for annen part fordi tekst skal da aldri vises i dokument
+        //Nytt felt for å angi ikke vurdert når saksbehandler aldri har vurdert rettighet for annen part. I dette tilfellet skal ikke tekst vises
         VurderingsstatusKode annenForelderHarRettVurdert;
         if(aksjonspunkter.stream().
                 filter(ap -> Objects.equals(ap.getAksjonspunktDefinisjon(), AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT)).
@@ -208,7 +208,6 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
             annenForelderHarRettVurdert = VurderingsstatusKode.IKKE_VURDERT;
         }
         fagType.setAnnenForelderHarRettVurdert(annenForelderHarRettVurdert);
-
     }
 
     private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Fagsak fagsak) {

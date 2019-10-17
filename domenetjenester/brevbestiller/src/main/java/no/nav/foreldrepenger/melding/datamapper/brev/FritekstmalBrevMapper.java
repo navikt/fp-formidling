@@ -156,6 +156,7 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
             map.put("navnAvsenderEnhet", dokumentFelles.getNavnAvsenderEnhet());
             map.put("erAutomatiskVedtak", fellesType.isAutomatiskBehandlet());
             map.put("klageFristUker", brevParametere.getKlagefristUker());
+            map.put("erKopi", dokumentFelles.getErKopi().isPresent() ? (dokumentFelles.getErKopi().get()==DokumentFelles.Kopi.JA?"JA":"NEI"):"");
         }
 
         public Map<String, Object> getMap(){

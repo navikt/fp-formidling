@@ -7,10 +7,12 @@ import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerTjenesteUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.Fagsystem;
+import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Adresse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Dokumentbestillingsinformasjon;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Fagomraader;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Fagsystemer;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Organisasjon;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Person;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.UtenlandskPostadresse;
 
@@ -54,10 +56,22 @@ public class DokumentbestillingMapper {
         dokumentbestillingsinformasjon.setJournalfoerendeEnhet(JOURNALFØRENDE_ENHET_KODE);
 
         dokumentbestillingsinformasjon.setJournalsakId(dokumentFelles.getSaksnummer().getVerdi());
-        Person mottaker = new Person();
-        mottaker.setIdent(dokumentFelles.getMottakerId());
-        mottaker.setNavn(dokumentFelles.getMottakerNavn());
-        dokumentbestillingsinformasjon.setMottaker(mottaker);
+
+
+        if(dokumentFelles.getMottakerType()==DokumentFelles.MottakerType.PERSON) {
+            Person mottaker = new Person();
+            mottaker.setIdent(dokumentFelles.getMottakerId());
+            mottaker.setNavn(dokumentFelles.getMottakerNavn());
+            dokumentbestillingsinformasjon.setMottaker(mottaker);
+
+        }
+        else{
+            Organisasjon mottaker = new Organisasjon();
+            mottaker.setOrgnummer(dokumentFelles.getMottakerId());
+            mottaker.setNavn(dokumentFelles.getMottakerNavn());
+            dokumentbestillingsinformasjon.setMottaker(mottaker);
+        }
+
         dokumentbestillingsinformasjon.setSaksbehandlernavn(dokumentFelles.getSignerendeBeslutterNavn() == null ? "Vedtaksløsning Prosess" : dokumentFelles.getSignerendeBeslutterNavn());
         Fagsystemer gsak = new Fagsystemer();
         gsak.setKodeRef(Fagsystem.GOSYS.getOffisiellKode());

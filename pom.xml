@@ -185,6 +185,11 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>organisasjon</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>hendelse</artifactId>
                 <version>${project.version}</version>
             </dependency>

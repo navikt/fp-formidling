@@ -6,6 +6,6 @@ import no.nav.foreldrepenger.melding.verge.Verge;
 public class VergeDtoMapper {
 
     public static Verge mapVergeFraDto(VergeDto dto) {
-        return new Verge(dto.getSokerErKontaktPerson(), dto.getVergeErKontaktPerson(), dto.getFnr());
+        return new Verge(dto.getFnr(), dto.getOrganisasjonsnummer() ,dto.getNavn());
     }
 }

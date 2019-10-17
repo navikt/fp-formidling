@@ -26,6 +26,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.IdKodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerAdresseType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerType;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.vedtak.feil.FeilFactory;
 import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
 import no.nav.vedtak.util.FPDateUtil;
@@ -98,7 +99,13 @@ public class DokumentXmlDataMapper {
     private MottakerType lageMottakerType(DokumentFelles dokumentFelles) {
         MottakerType mottakerType = new MottakerType();
         mottakerType.setMottakerId(dokumentFelles.getMottakerId());
-        mottakerType.setMottakerTypeKode(IdKodeType.PERSON);
+        if(dokumentFelles.getMottakerType()==DokumentFelles.MottakerType.PERSON) {
+            mottakerType.setMottakerTypeKode(IdKodeType.PERSON);
+        }
+        else {
+            mottakerType.setMottakerTypeKode(IdKodeType.ORGANISASJON);
+        }
+
         mottakerType.setMottakerNavn(dokumentFelles.getMottakerNavn());
         MottakerAdresseType mottakerAdresseType = new MottakerAdresseType();
         final DokumentAdresse mottakerAdresse = dokumentFelles.getMottakerAdresse();

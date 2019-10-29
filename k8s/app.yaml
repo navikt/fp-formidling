@@ -71,7 +71,7 @@ spec:
     - name: PERSON_V3_URL
       value: Person_v3.url
     - name: ORGANISASJON_V4_URL
-      Organisasjon_v4.url
+      value: Organisasjon_v4.url
     - name: AKTOER_V2_URL
       value: Aktoer_v2.url
     - name: FPSAK_REST_BASE_URL

@@ -2,29 +2,25 @@ package no.nav.foreldrepenger.melding.verge;
 
 public class Verge {
 
-    private boolean brevTilSøker;
-    private boolean brevTilVerge;
+    private String organisasjonsnummer;
+    private String navn;
     private String fnr;
 
-    public Verge(boolean brevTilSøker, boolean brevTilVerge, String fnr) {
-        this.brevTilSøker = brevTilSøker;
-        this.brevTilVerge = brevTilVerge;
+    public Verge(String fnr, String organisasjonsnummer,String navn) {
+        this.organisasjonsnummer = organisasjonsnummer;
         this.fnr = fnr;
+        this.navn = navn;
     }
 
     public String getFnr() {
         return fnr;
     }
 
-    public boolean isBrevTilSøker() {
-        return brevTilSøker;
+    public String getOrganisasjonsnummer() {
+        return organisasjonsnummer;
     }
 
-    public boolean isBrevTilVerge() {
-        return brevTilVerge;
-    }
-
-    public boolean brevTilBegge() {
-        return brevTilVerge && brevTilSøker;
+    public String getNavn() {
+        return navn;
     }
 }

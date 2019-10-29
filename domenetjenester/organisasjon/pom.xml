@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>no.nav.foreldrepenger.melding</groupId>
+        <artifactId>domenetjenester</artifactId>
+        <version>${revision}${sha1}${changelist}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>organisasjon</artifactId>
+    <packaging>jar</packaging>
+    <name>FP-FORMIDLING :: Domenetjenester - organisasjon</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+            <artifactId>organisasjon-klient</artifactId>
+        </dependency>
+        <!-- test -->
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>dokumenthistorikk</artifactId>
+        </dependency>
+    </dependencies>
+</project>

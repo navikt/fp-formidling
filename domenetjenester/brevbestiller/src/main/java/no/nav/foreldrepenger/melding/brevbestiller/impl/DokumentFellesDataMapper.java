@@ -10,7 +10,9 @@ import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.aktør.PersonstatusType;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.brevbestiller.LandkodeOversetter;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
+import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
@@ -21,7 +23,11 @@ import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.melding.verge.Verge;
+import no.nav.foreldrepenger.organisasjon.Virksomhet;
+import no.nav.foreldrepenger.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.tps.TpsTjeneste;
+import no.nav.tjeneste.virksomhet.organisasjon.v4.binding.HentOrganisasjonOrganisasjonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.organisasjon.v4.binding.HentOrganisasjonUgyldigInput;
 import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
@@ -31,6 +37,8 @@ public class DokumentFellesDataMapper {
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private DomeneobjektProvider domeneobjektProvider;
     private TpsTjeneste tpsTjeneste;
+    private VirksomhetTjeneste virksomhetTjeneste;
+    private LandkodeOversetter landkodeOversetter;
 
     public DokumentFellesDataMapper() {
         //CDI
@@ -39,39 +47,44 @@ public class DokumentFellesDataMapper {
     @Inject
     public DokumentFellesDataMapper(TpsTjeneste tpsTjeneste,
                                     DomeneobjektProvider domeneobjektProvider,
-                                    NavKontaktKonfigurasjon navKontaktKonfigurasjon) {
+                                    NavKontaktKonfigurasjon navKontaktKonfigurasjon,
+                                    VirksomhetTjeneste virksomhetTjeneste,
+                                    LandkodeOversetter landkodeOversetter) {
         this.tpsTjeneste = tpsTjeneste;
         this.domeneobjektProvider = domeneobjektProvider;
         this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
+        this.virksomhetTjeneste = virksomhetTjeneste;
+        this.landkodeOversetter = landkodeOversetter;
     }
 
     void opprettDokumentDataForBehandling(Behandling behandling, DokumentData dokumentData, DokumentHendelse dokumentHendelse) {
+
         Personinfo personinfo = domeneobjektProvider.hentFagsak(behandling).getPersoninfo();
 
         final AktørId søkersAktørId = personinfo.getAktørId();
 
         if (!harLenkeForVerge(behandling)) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId);
+            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId, Optional.empty());
             return;
         }
 
         Optional<Verge> vergeOpt = domeneobjektProvider.hentVerge(behandling);
         if (vergeOpt.isEmpty()) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId);
+            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId, Optional.empty());
             return;
         }
 
+        // til søker
+        opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId,Optional.of( DokumentFelles.Kopi.JA)); // kopien går til søker
+
         Verge verge = vergeOpt.get();
 
-        AktørId vergesAktørId = tpsTjeneste.hentAktørForFnr(PersonIdent.fra(verge.getFnr())).orElseThrow(IllegalStateException::new);
 
-        if (verge.brevTilBegge()) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId);
-            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, vergesAktørId, søkersAktørId);
-        } else if (verge.isBrevTilSøker()) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId);
-        } else if (verge.isBrevTilVerge()) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, vergesAktørId, søkersAktørId);
+        if (verge.getFnr() != null) {
+            AktørId vergesAktørId = tpsTjeneste.hentAktørForFnr(PersonIdent.fra(verge.getFnr())).orElseThrow(IllegalStateException::new);
+            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, vergesAktørId, søkersAktørId, Optional.of( DokumentFelles.Kopi.NEI)); // orginalen går til verge
+        } else if (verge.getOrganisasjonsnummer() != null) {
+            opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, dokumentHendelse, verge, søkersAktørId, Optional.of( DokumentFelles.Kopi.NEI));// orginalen går til verge
         }
     }
 
@@ -80,11 +93,66 @@ public class DokumentFellesDataMapper {
                 .anyMatch(link -> "soeker-verge".equals(link.getRel()));
     }
 
+
+    private void opprettDokumentDataForOrganisasjonsMottaker(Behandling behandling,
+                                                             DokumentData dokumentData,
+                                                             DokumentHendelse dokumentHendelse,
+                                                             Verge verge,
+                                                             AktørId aktørIdBruker,
+                                                             Optional<DokumentFelles.Kopi> erKopi) {
+
+        Virksomhet virksomhet = getVirksomhet(verge);
+
+        DokumentAdresse adresseVerge = fra(virksomhet);
+        PersonIdent fnrBruker;
+        String navnBruker;
+        PersonstatusType personstatusBruker;
+
+
+        Personinfo personinfo = tpsTjeneste.hentBrukerForAktør(aktørIdBruker)
+                .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeFnrForAktørId(aktørIdBruker).toException());
+        fnrBruker = personinfo.getPersonIdent();
+        navnBruker = personinfo.getNavn();
+        personstatusBruker = personinfo.getPersonstatus();
+
+
+        String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
+                dokumentHendelse.getBehandlendeEnhetNavn() : behandling.getBehandlendeEnhetNavn();
+
+        buildDokumentFellesVirksomhet(behandling,
+                dokumentData,
+                adresseVerge,
+                fnrBruker,
+                navnBruker,
+                personstatusBruker,
+                virksomhet,
+                verge.getNavn(),
+                avsenderEnhet,
+                erKopi);
+    }
+
+    private Virksomhet getVirksomhet(Verge verge) {
+        Virksomhet virksomhet;
+        try {
+            virksomhet = virksomhetTjeneste.getOrganisasjon(verge.getOrganisasjonsnummer());
+            var builder = new Virksomhet.Builder(virksomhet);
+            builder.medLandkode(landkodeOversetter.tilIso2(virksomhet.getLandkode()));
+        } catch (
+                HentOrganisasjonOrganisasjonIkkeFunnet e) {
+            throw DokumentMapperFeil.FACTORY.organisasjonIkkeFunnet(verge.getOrganisasjonsnummer(), e).toException();
+        } catch (
+                HentOrganisasjonUgyldigInput e) {
+            throw DokumentMapperFeil.FACTORY.ugyldigInput("Organisasjon", verge.getOrganisasjonsnummer(), e).toException();
+        }
+        return virksomhet;
+    }
+
+
     private void opprettDokumentDataForMottaker(Behandling behandling,
                                                 DokumentData dokumentData,
                                                 DokumentHendelse dokumentHendelse,
                                                 AktørId aktørId,
-                                                AktørId aktørIdBruker) {
+                                                AktørId aktørIdBruker,Optional<DokumentFelles.Kopi> erKopi) {
 
         Adresseinfo adresseinfo = innhentAdresseopplysningerForDokumentsending(aktørId)
                 .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeAdresse(aktørId).toException());
@@ -109,24 +177,28 @@ public class DokumentFellesDataMapper {
         String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
                 dokumentHendelse.getBehandlendeEnhetNavn() : behandling.getBehandlendeEnhetNavn();
 
-        buildDokumentFelles(behandling,
+        buildDokumentFellesPerson(behandling,
                 dokumentData,
                 adresse,
                 fnrBruker,
                 navnBruker,
                 personstatusBruker,
                 adresseinfo,
-                avsenderEnhet);
+                avsenderEnhet,
+                erKopi);
     }
 
-    private void buildDokumentFelles(Behandling behandling,
+
+    private void buildDokumentFellesVirksomhet(Behandling behandling,
                                      DokumentData dokumentData,
                                      DokumentAdresse adresse,
                                      PersonIdent fnrBruker,
                                      String navnBruker,
                                      PersonstatusType personstatusBruker,
-                                     Adresseinfo adresseinfo,
-                                     String avsenderEnhet) {
+                                     Virksomhet virksomhet,
+                                     String vergeNavn,
+                                     String avsenderEnhet,
+                                     Optional<DokumentFelles.Kopi> erKopi) {
 
         Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
 
@@ -135,14 +207,55 @@ public class DokumentFellesDataMapper {
                 .medDokumentDato(FPDateUtil.iDag())
                 .medKontaktTelefonNummer(norg2KontaktTelefonnummer(avsenderEnhet))
                 .medMottakerAdresse(adresse)
-                .medMottakerId(adresseinfo.getPersonIdent())
-                .medMottakerNavn(adresseinfo.getMottakerNavn())
                 .medNavnAvsenderEnhet(norg2NavnAvsenderEnhet(avsenderEnhet))
                 .medPostadresse(norg2Postadresse())
                 .medReturadresse(norg2Returadresse())
+                .medMottakerId(virksomhet.getOrgnr())
+                .medMottakerNavn(virksomhet.getNavn() + (vergeNavn == null || "".equals(vergeNavn) ? "" : " c/o " + vergeNavn))
                 .medSaksnummer(new Saksnummer(fagsak.getSaksnummer().getVerdi()))
                 .medSakspartId(fnrBruker)
                 .medSakspartNavn(navnBruker)
+                .medErKopi(erKopi)
+                .medMottakerType(DokumentFelles.MottakerType.ORGANISASJON)
+                .medSpråkkode(behandling.getSpråkkode())
+                .medSakspartPersonStatus(getPersonstatusVerdi(personstatusBruker));
+
+
+        if (behandling.isToTrinnsBehandling()) {
+            builder.medAutomatiskBehandlet(Boolean.FALSE)
+                    .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
+                    .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter());
+        }
+        builder.build();
+    }
+
+    private void buildDokumentFellesPerson(Behandling behandling,
+                                     DokumentData dokumentData,
+                                     DokumentAdresse adresse,
+                                     PersonIdent fnrBruker,
+                                     String navnBruker,
+                                     PersonstatusType personstatusBruker,
+                                     Adresseinfo adresseinfo,
+                                     String avsenderEnhet,
+                                     Optional<DokumentFelles.Kopi> erKopi) {
+
+        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
+
+        DokumentFelles.Builder builder = DokumentFelles.builder(dokumentData)
+                .medAutomatiskBehandlet(Boolean.TRUE)
+                .medDokumentDato(FPDateUtil.iDag())
+                .medKontaktTelefonNummer(norg2KontaktTelefonnummer(avsenderEnhet))
+                .medMottakerAdresse(adresse)
+                .medNavnAvsenderEnhet(norg2NavnAvsenderEnhet(avsenderEnhet))
+                .medPostadresse(norg2Postadresse())
+                .medReturadresse(norg2Returadresse())
+                .medMottakerId(adresseinfo.getPersonIdent())
+                .medMottakerNavn(adresseinfo.getMottakerNavn())
+                .medSaksnummer(new Saksnummer(fagsak.getSaksnummer().getVerdi()))
+                .medSakspartId(fnrBruker)
+                .medSakspartNavn(navnBruker)
+                .medErKopi(erKopi)
+                .medMottakerType(DokumentFelles.MottakerType.PERSON)
                 .medSpråkkode(behandling.getSpråkkode())
                 .medSakspartPersonStatus(getPersonstatusVerdi(personstatusBruker));
 
@@ -153,6 +266,7 @@ public class DokumentFellesDataMapper {
         }
         builder.build();
     }
+
 
     private String getPersonstatusVerdi(PersonstatusType personstatus) {
         return PersonstatusType.erDød(personstatus) ? DOD_PERSON_STATUS : DEFAULT_PERSON_STATUS;
@@ -173,6 +287,19 @@ public class DokumentFellesDataMapper {
                 .medPoststed(adresseinfo.getPoststed())
                 .build();
     }
+
+
+    private DokumentAdresse fra(Virksomhet virksomhet) {
+        return new DokumentAdresse.Builder()
+                .medAdresselinje1(virksomhet.getAdresselinje1())
+                .medAdresselinje2(virksomhet.getAdresselinje2())
+                .medAdresselinje3(virksomhet.getAdresselinje3())
+                .medLand(virksomhet.getLandkode())
+                .medPostNummer(virksomhet.getPostNr())
+                .medPoststed(virksomhet.getPoststed())
+                .build();
+    }
+
 
     private String norg2KontaktTelefonnummer(String behandlendeEnhetNavn) {
         if (behandlendeEnhetNavn == null) {

@@ -43,6 +43,10 @@
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>tps</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>organisasjon</artifactId>
+        </dependency>
         <!-- Integrasjon avhengigheter -->
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
@@ -53,6 +57,15 @@
                 <artifactId>jaxb2-basics-runtime</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+            <artifactId>organisasjon-klient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+            <artifactId>felles-integrasjon-bom</artifactId>
+            <version>${felles.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>

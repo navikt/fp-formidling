@@ -205,16 +205,16 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
     @Override
     public byte[] forhandsvisBrev(DokumentbestillingDto dokumentbestillingDto) {
         byte[] dokument;
-        DokumentHendelse hendelse = dokumentbestillingDtoMapper.mapDokumentbestillingFraDtoForEndepunkt(dokumentbestillingDto);
-        Behandling behandling = domeneobjektProvider.hentBehandling(hendelse.getBehandlingUuid());
+        DokumentHendelse dokumentHendelse = dokumentbestillingDtoMapper.mapDokumentbestillingFraDtoForEndepunkt(dokumentbestillingDto);
 
-        DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, hendelse);
-
+        Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
+        DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.UTKAST);
-        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, hendelse);
+        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
+
         final DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
 
-        Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, hendelse, behandling);
+        Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, dokumentHendelse, behandling);
 
         førsteDokumentFelles.setXml(elementTilString(brevXmlElement));
         dokumentRepository.lagre(dokumentData);

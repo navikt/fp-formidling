@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.dokumentdata;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -30,7 +31,20 @@ import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
 @Table(name = "DOKUMENT_FELLES")
 public class DokumentFelles extends BaseEntitet {
 
-    @Id
+    public enum Kopi
+    {
+        JA,
+        NEI;
+    }
+
+    public enum MottakerType {
+        PERSON,
+        ORGANISASJON;
+    }
+
+
+
+        @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_DOKUMENT_FELLES")
     private Long id;
 
@@ -108,6 +122,12 @@ public class DokumentFelles extends BaseEntitet {
 
     @Column
     private String xml;
+
+    @Transient
+    private Optional<Kopi> erKopi;
+
+    @Transient
+    private MottakerType mottakerType;
 
     public DokumentFelles() {
         // Hibernate
@@ -198,6 +218,10 @@ public class DokumentFelles extends BaseEntitet {
         return sakspartPersonStatus;
     }
 
+    public Optional<Kopi> getErKopi() { return erKopi; }
+
+    public MottakerType getMottakerType() { return mottakerType; }
+
     public String getXml() {
         return xml;
     }
@@ -241,6 +265,7 @@ public class DokumentFelles extends BaseEntitet {
     public String toString() {
         return getClass().getSimpleName() + "<>";
     }
+
 
     public static class Builder {
 
@@ -346,6 +371,16 @@ public class DokumentFelles extends BaseEntitet {
 
         public DokumentFelles.Builder medXml(String xml) {
             this.dokumentFelles.xml = xml;
+            return this;
+        }
+
+        public DokumentFelles.Builder medErKopi(Optional<Kopi> kopi) {
+            this.dokumentFelles.erKopi = kopi;
+            return this;
+        }
+
+        public DokumentFelles.Builder medMottakerType(MottakerType mottakerType) {
+            this.dokumentFelles.mottakerType = mottakerType;
             return this;
         }
 

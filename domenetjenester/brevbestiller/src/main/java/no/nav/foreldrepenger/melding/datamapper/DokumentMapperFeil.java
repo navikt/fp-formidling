@@ -1,10 +1,15 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import no.nav.foreldrepenger.organisasjon.OrganisasjonIkkeFunnetException;
+import no.nav.foreldrepenger.organisasjon.OrganisasjonUgyldigInputException;
+import no.nav.tjeneste.virksomhet.organisasjon.v4.binding.HentOrganisasjonOrganisasjonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.organisasjon.v4.binding.HentOrganisasjonUgyldigInput;
 import no.nav.vedtak.feil.Feil;
 import no.nav.vedtak.feil.FeilFactory;
 import no.nav.vedtak.feil.LogLevel;
 import no.nav.vedtak.feil.deklarasjon.DeklarerteFeil;
+import no.nav.vedtak.feil.deklarasjon.IntegrasjonFeil;
 import no.nav.vedtak.feil.deklarasjon.TekniskFeil;
 
 public interface DokumentMapperFeil extends DeklarerteFeil {
@@ -48,5 +53,11 @@ public interface DokumentMapperFeil extends DeklarerteFeil {
 
     @TekniskFeil(feilkode = "FPFORMIDLING-743452", feilmelding = "Feil ved produksjon av opphørdokument: Klarte ikke utlede startdato fra det opprinnelige vedtaket. Påkrevd når personstatus = 'DØD", logLevel = LogLevel.ERROR)
     Feil ingenStartdatoVedPersonstatusDød();
+
+    @IntegrasjonFeil(feilkode = "FP-254132", feilmelding = "Fant ikke organisasjon for orgNummer %s", logLevel = LogLevel.WARN, exceptionClass = OrganisasjonIkkeFunnetException.class)
+    Feil organisasjonIkkeFunnet(String orgnr, HentOrganisasjonOrganisasjonIkkeFunnet årsak);
+
+    @IntegrasjonFeil(feilkode= "FP-934726", feilmelding = "Funksjonell feil i grensesnitt mot %s, med orgnr %s", logLevel = LogLevel.WARN, exceptionClass = OrganisasjonUgyldigInputException.class)
+    Feil ugyldigInput(String tjeneste, String orgnr, HentOrganisasjonUgyldigInput årsak);
 }
 

@@ -18,13 +18,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
-import no.nav.foreldrepenger.kontrakter.formidling.v1.ForhaandsvisDokumentDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.HentBrevmalerDto;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjeneste;
@@ -38,8 +34,6 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @ApplicationScoped
 @Transactional
 public class BrevRestTjeneste {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BrevRestTjeneste.class);
 
     private DokumentBehandlingTjeneste dokumentBehandlingTjeneste;
     private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
@@ -130,19 +124,6 @@ public class BrevRestTjeneste {
             return responseBuilder.build();
         }
         return Response.serverError().build();
-    }
-
-    @POST
-    @Path("/forhandsvis")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Returnerer en pdf som er en forhåndsvisning av brevet", tags = "brev")
-    @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
-    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public ForhaandsvisDokumentDto forhaandsvisDokumentFpsak(
-            @Parameter(description = "Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid AbacDokumentbestillingDto dokumentbestillingDto) { // NOSONAR
-        LOGGER.warn("Utvikler-feil: Gammel tjeneste for forhåndsvisning av brev ble kalt. Skal ikke skje etter TFP-481 på fpsak-frontend - gi beskjed til Jan Erik!");
-        byte[] dokument = brevBestillerApplikasjonTjeneste.forhandsvisBrev(dokumentbestillingDto);
-        return new ForhaandsvisDokumentDto(dokument);
     }
 
     @POST

@@ -34,23 +34,11 @@ public class SaksbehandlerTekstMapper {
     public TekstFraSaksbehandlerDto mapSaksbehandlerTekstTilDto(SaksbehandlerTekst saksbehandlerTekst) {
         TekstFraSaksbehandlerDto tekstFraSaksbehandlerDto = new TekstFraSaksbehandlerDto();
         tekstFraSaksbehandlerDto.setBehandlingUuid(saksbehandlerTekst.getBehandlingUuid());
-        tekstFraSaksbehandlerDto.setVedtaksbrev(utledVedtaksbrev(saksbehandlerTekst.getVedtaksbrev()));
+        tekstFraSaksbehandlerDto.setVedtaksbrev(VedtaksbrevMapper.fraEntitet(saksbehandlerTekst.getVedtaksbrev()));
         tekstFraSaksbehandlerDto.setAvklarFritekst(saksbehandlerTekst.getAvklarFritekst());
         tekstFraSaksbehandlerDto.setTittel(saksbehandlerTekst.getTittel());
         tekstFraSaksbehandlerDto.setFritekst(saksbehandlerTekst.getFritekst());
         return tekstFraSaksbehandlerDto;
-    }
-
-    private no.nav.foreldrepenger.kontrakter.formidling.kodeverk.Vedtaksbrev utledVedtaksbrev(Vedtaksbrev vedtaksbrev) {
-        if (Vedtaksbrev.INGEN.equals(vedtaksbrev)) {
-            return no.nav.foreldrepenger.kontrakter.formidling.kodeverk.Vedtaksbrev.INGEN;
-        } else if (Vedtaksbrev.AUTOMATISK.equals(vedtaksbrev)) {
-            return no.nav.foreldrepenger.kontrakter.formidling.kodeverk.Vedtaksbrev.AUTOMATISK;
-        } else if (Vedtaksbrev.FRITEKST.equals(vedtaksbrev)) {
-            return no.nav.foreldrepenger.kontrakter.formidling.kodeverk.Vedtaksbrev.FRITEKST;
-        } else {
-            return no.nav.foreldrepenger.kontrakter.formidling.kodeverk.Vedtaksbrev.UDEFINERT;
-        }
     }
 
     private Vedtaksbrev utledFormidlingVedtaksbrev(no.nav.foreldrepenger.kontrakter.formidling.kodeverk.Vedtaksbrev vedtaksbrev) {

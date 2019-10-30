@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
+import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 
 @Entity(name = "DokumentHendelse")
 @Table(name = "DOKUMENT_HENDELSE")
@@ -66,6 +67,11 @@ public class DokumentHendelse extends BaseEntitet {
 
     @Column(name = "behandlende_enhet_navn")
     private String behandlendeEnhetNavn;
+
+    @ManyToOne
+    @JoinColumnOrFormula(column = @JoinColumn(name = "vedtaksbrev", referencedColumnName = "kode", nullable = false))
+    @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + Vedtaksbrev.DISCRIMINATOR + "'"))
+    private Vedtaksbrev vedtaksbrev = Vedtaksbrev.UDEFINERT;
 
     //Brukes KUN til forhåndsvisning
     @Transient
@@ -132,6 +138,10 @@ public class DokumentHendelse extends BaseEntitet {
         return behandlendeEnhetNavn;
     }
 
+    public Vedtaksbrev getVedtaksbrev() {
+        return vedtaksbrev;
+    }
+
     public boolean getErOpphevetKlage() {
         return erOpphevetKlage;
     }
@@ -148,12 +158,14 @@ public class DokumentHendelse extends BaseEntitet {
                 Objects.equals(tittel, that.tittel) &&
                 Objects.equals(fritekst, that.fritekst) &&
                 Objects.equals(historikkAktør, that.historikkAktør) &&
-                Objects.equals(behandlendeEnhetNavn, that.behandlendeEnhetNavn);
+                Objects.equals(behandlendeEnhetNavn, that.behandlendeEnhetNavn) &&
+                Objects.equals(vedtaksbrev, that.vedtaksbrev);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, historikkAktør, behandlendeEnhetNavn);
+        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, historikkAktør,
+                behandlendeEnhetNavn, vedtaksbrev);
     }
 
     @Override
@@ -170,6 +182,7 @@ public class DokumentHendelse extends BaseEntitet {
                 ", historikkAktør=" + historikkAktør +
                 ", revurderingVarslingÅrsak=" + revurderingVarslingÅrsak +
                 ", behandlendeEnhetNavn=" + behandlendeEnhetNavn +
+                ", vedtaksbrev=" + vedtaksbrev +
                 ", erOpphevetKlage=" + erOpphevetKlage +
                 '}';
     }
@@ -185,6 +198,7 @@ public class DokumentHendelse extends BaseEntitet {
         private HistorikkAktør historikkAktør;
         private RevurderingVarslingÅrsak revurderingVarslingÅrsak;
         private String behandlendeEnhetNavn;
+        private Vedtaksbrev vedtaksbrev = Vedtaksbrev.UDEFINERT;
         private boolean erOpphevetKlage;
 
         public DokumentHendelse.Builder medErOpphevetKlage(boolean erOpphevetKlage) {
@@ -242,6 +256,11 @@ public class DokumentHendelse extends BaseEntitet {
             return this;
         }
 
+        public DokumentHendelse.Builder medVedtaksbrev(Vedtaksbrev vedtaksbrev) {
+            this.vedtaksbrev = vedtaksbrev;
+            return this;
+        }
+
         public DokumentHendelse build() {
             verifyStateForBuild();
             DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingUuid, ytelseType);
@@ -254,6 +273,7 @@ public class DokumentHendelse extends BaseEntitet {
             dokumentHendelse.historikkAktør = historikkAktør;
             dokumentHendelse.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
             dokumentHendelse.behandlendeEnhetNavn = behandlendeEnhetNavn;
+            dokumentHendelse.vedtaksbrev = vedtaksbrev;
             return dokumentHendelse;
         }
 

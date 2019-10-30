@@ -102,7 +102,8 @@ class DokumentMalUtleder {
     }
 
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
-        if (Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST)) {
+        if (!Objects.equals(hendelse.getVedtaksbrev(), Vedtaksbrev.AUTOMATISK) &&
+                Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.FRITEKST_DOK);
         }
         if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {

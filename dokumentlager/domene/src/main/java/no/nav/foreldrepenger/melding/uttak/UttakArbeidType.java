@@ -14,7 +14,6 @@ public class UttakArbeidType extends Kodeliste {
     public static final UttakArbeidType ORDINÆRT_ARBEID = new UttakArbeidType("ORDINÆRT_ARBEID");
     public static final UttakArbeidType SELVSTENDIG_NÆRINGSDRIVENDE = new UttakArbeidType("SELVSTENDIG_NÆRINGSDRIVENDE");
     public static final UttakArbeidType FRILANS = new UttakArbeidType("FRILANS");
-    public static final UttakArbeidType ARBEIDSAVKLARINGSPENGER = new UttakArbeidType("ARBEIDSAVKLARINGSPENGER");
     public static final UttakArbeidType ANNET = new UttakArbeidType("ANNET");
 
     UttakArbeidType() {

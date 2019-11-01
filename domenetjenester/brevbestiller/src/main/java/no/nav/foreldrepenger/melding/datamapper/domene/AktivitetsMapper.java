@@ -1,7 +1,12 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -135,12 +140,18 @@ public class AktivitetsMapper {
     }
 
     static AnnenAktivitetListeType mapAnnenAktivtetListe(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakPeriode) {
+
         AnnenAktivitetListeType annenAktivitetListe = objectFactory.createAnnenAktivitetListeType();
-        finnAndelerOgUttakAnnenAktivitet(beregningsresultatPeriode, uttakPeriode).map(AktivitetsMapper::mapAnnenAktivitet).forEach(aktivitet -> annenAktivitetListe.getAnnenAktivitet().add(aktivitet));
+         Comparator<AnnenAktivitetType> annenAktiviteTypeIsGraderingComparator = (a, b) -> - Boolean.compare(a.isGradering(), b.isGradering()); // - for å reverse rekkefølgen-gradering først i listen
+        finnAndelerOgUttakAnnenAktivitet(beregningsresultatPeriode, uttakPeriode)
+                .map(AktivitetsMapper::mapAnnenAktivitet)
+                .sorted(annenAktiviteTypeIsGraderingComparator)
+                .forEach(aktivitet -> annenAktivitetListe.getAnnenAktivitet().add(aktivitet));
         return annenAktivitetListe.getAnnenAktivitet().isEmpty() ? null : annenAktivitetListe;
     }
 
     static AnnenAktivitetType mapAnnenAktivitet(Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> tilkjentYtelseAndelMedTilhørendeUttaksaktivitet) {
+
         BeregningsresultatAndel beregningsresultatAndel = tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement1();
         AnnenAktivitetType annenAktivitet = objectFactory.createAnnenAktivitetType();
         annenAktivitet.setAktivitetDagsats((long) beregningsresultatAndel.getDagsats());

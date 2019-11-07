@@ -16,6 +16,7 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
     public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE = new PeriodeResultatÅrsak("2010", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2016", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2015", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT= new PeriodeResultatÅrsak("2004", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
     private static final String IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR = "IKKE_OPPFYLT_AARSAK";
     // Uttak årsaker
     public static final PeriodeResultatÅrsak ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT = new PeriodeResultatÅrsak("4023", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);

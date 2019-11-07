@@ -142,29 +142,23 @@ public class BeregningsresultatMapperTest {
         DatoIntervall tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
         DatoIntervall tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
         DatoIntervall tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+        DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
 
         BeregningsresultatPeriode brPeriode = BeregningsresultatPeriode.ny()
                 .medPeriode(tidsperiodeBp1)
                 .medDagsats(0L)
                 .build();
-
         BeregningsresultatPeriode brPeriode2 = BeregningsresultatPeriode.ny()
                 .medPeriode(tidsperiodeBp2)
                 .medDagsats(620L)
                 .build();
-
         List<BeregningsresultatPeriode> beregningsresultatPerioder = List.of(brPeriode, brPeriode2);
 
- /*       BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
-                .medPeriode(tidsperiodeBp1)
-                .medDagsats(0L)
-                .build();*/
-        BeregningsgrunnlagPeriode bgPeriode2 = BeregningsgrunnlagPeriode.ny()
-                .medPeriode(tidsperiodeBp2)
+       BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+                .medPeriode(beregningPer)
                 .medDagsats(620L)
                 .build();
-
-        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = List.of(bgPeriode2);
+        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = List.of(bgPeriode);
 
         UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.TEN)
@@ -176,7 +170,6 @@ public class BeregningsresultatMapperTest {
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER)
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .build();
-
         UttakResultatPeriodeAktivitet uttakAktivitet2 = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.ZERO)
                 .medUtbetalingsprosent(BigDecimal.valueOf(100L))
@@ -184,6 +177,7 @@ public class BeregningsresultatMapperTest {
         UttakResultatPeriode uPeriode2 = UttakResultatPeriode.ny()
                 .medAktiviteter(List.of(uttakAktivitet2))
                 .medTidsperiode(tidsperiodeUp2)
+                .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .build();
         UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(List.of(uPeriode, uPeriode2)).build();
@@ -192,7 +186,7 @@ public class BeregningsresultatMapperTest {
 
         assertThat(resultat.getPeriode()).hasSize(2);
         assertThat(resultat.getPeriode().get(0).getPeriodeFom().equals(uPeriode.getFom()));
-        assertThat(resultat.getPeriode().get(1).getPeriodeFom().equals(bgPeriode2.getBeregningsgrunnlagPeriodeFom()));
+        assertThat(resultat.getPeriode().get(1).getPeriodeFom().equals(brPeriode2.getBeregningsresultatPeriodeFom()));
     }
     private void leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, PeriodeListeType periodeListeType, ObjectFactory objectFactory) {
         periodeListeType.getPeriode().add(lagPeriode(fom, tom, innvilget, objectFactory));

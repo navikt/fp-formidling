@@ -121,7 +121,7 @@ public final class BeregningsresultatMapper {
         periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter())));
         periode.setInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode));
         PeriodeResultatÅrsak periodeResultatÅrsak = utledÅrsakskode(uttakResultatPeriode);
-        if(uttakResultatPeriode.getFom().isBefore(beregningsresultatPeriode.getBeregningsresultatPeriodeFom())&& beregningsresultatPeriode.getDagsats()== 0 )
+        if(uttakResultatPeriode.getFom().isBefore(beregningsresultatPeriode.getBeregningsresultatPeriodeFom())&& periodeResultatÅrsak.getKode().equals(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode()) )
             periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(uttakResultatPeriode.getFom()));
         else
             periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));

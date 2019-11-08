@@ -33,6 +33,7 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
     public static final PeriodeResultatÅrsak FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4098", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak OPPTJENINGSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4099", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4080", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
+
     private String kodeverk;
     private String kode;
     private String ekstraData;

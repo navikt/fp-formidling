@@ -137,7 +137,7 @@ public class BeregningsresultatMapperTest {
     }
 
     @Test
-    public void skal_hente_dato_fra_uttaksperiode_når_denne_er_før_beregningsresulatperioden_og_dagsats_er_0() {
+    public void skal_hente_dato_fra_uttaksperiode_når_denne_er_før_beregningsresulatperioden_og_uttaksperioden_er_avslått_pga_manglende_sokt() {
         DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 4));
         DatoIntervall tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
         DatoIntervall tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
@@ -185,8 +185,8 @@ public class BeregningsresultatMapperTest {
         PeriodeListeType resultat = BeregningsresultatMapper.mapPeriodeListe(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder);
 
         assertThat(resultat.getPeriode()).hasSize(2);
-        assertThat(resultat.getPeriode().get(0).getPeriodeFom().equals(uPeriode.getFom()));
-        assertThat(resultat.getPeriode().get(1).getPeriodeFom().equals(brPeriode2.getBeregningsresultatPeriodeFom()));
+        assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(0).getPeriodeFom()).isEqual(uPeriode.getFom()));
+        assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(1).getPeriodeFom()).isEqual(brPeriode2.getBeregningsresultatPeriodeFom()));
     }
     private void leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, PeriodeListeType periodeListeType, ObjectFactory objectFactory) {
         periodeListeType.getPeriode().add(lagPeriode(fom, tom, innvilget, objectFactory));

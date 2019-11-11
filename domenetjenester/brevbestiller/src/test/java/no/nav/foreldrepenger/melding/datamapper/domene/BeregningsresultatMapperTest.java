@@ -185,9 +185,10 @@ public class BeregningsresultatMapperTest {
         PeriodeListeType resultat = BeregningsresultatMapper.mapPeriodeListe(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder);
 
         assertThat(resultat.getPeriode()).hasSize(2);
-        assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(0).getPeriodeFom()).isEqual(uPeriode.getFom()));
-        assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(1).getPeriodeFom()).isEqual(brPeriode2.getBeregningsresultatPeriodeFom()));
+        assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(0).getPeriodeFom())).isEqualTo(uPeriode.getFom());
+        assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(1).getPeriodeFom())).isEqualTo(brPeriode2.getBeregningsresultatPeriodeFom());
     }
+
     private void leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, PeriodeListeType periodeListeType, ObjectFactory objectFactory) {
         periodeListeType.getPeriode().add(lagPeriode(fom, tom, innvilget, objectFactory));
     }

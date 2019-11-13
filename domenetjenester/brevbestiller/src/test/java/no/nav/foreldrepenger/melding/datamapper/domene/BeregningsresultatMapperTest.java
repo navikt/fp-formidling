@@ -137,9 +137,10 @@ public class BeregningsresultatMapperTest {
     }
 
     @Test
-    public void skal_hente_dato_fra_uttaksperiode_når_denne_er_før_beregningsresulatperioden_og_uttaksperioden_er_avslått_pga_manglende_sokt() {
-        DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 4));
-        DatoIntervall tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+    public void skal_hente_dato_fra_uttaksperiode_når_denne_er_før_beregningsresulatperioden_og_det_er_forste_beregningResPeriode() {
+        DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
+        DatoIntervall tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 3), LocalDate.of(2019, 10, 4));
+        DatoIntervall tidsperiodeBp3 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
         DatoIntervall tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
         DatoIntervall tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
         DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
@@ -150,9 +151,13 @@ public class BeregningsresultatMapperTest {
                 .build();
         BeregningsresultatPeriode brPeriode2 = BeregningsresultatPeriode.ny()
                 .medPeriode(tidsperiodeBp2)
+                .medDagsats(0L)
+                .build();
+        BeregningsresultatPeriode brPeriode3 = BeregningsresultatPeriode.ny()
+                .medPeriode(tidsperiodeBp3)
                 .medDagsats(620L)
                 .build();
-        List<BeregningsresultatPeriode> beregningsresultatPerioder = List.of(brPeriode, brPeriode2);
+        List<BeregningsresultatPeriode> beregningsresultatPerioder = List.of(brPeriode, brPeriode2, brPeriode3);
 
        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(beregningPer)
@@ -186,7 +191,7 @@ public class BeregningsresultatMapperTest {
 
         assertThat(resultat.getPeriode()).hasSize(2);
         assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(0).getPeriodeFom())).isEqualTo(uPeriode.getFom());
-        assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(1).getPeriodeFom())).isEqualTo(brPeriode2.getBeregningsresultatPeriodeFom());
+        assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(1).getPeriodeFom())).isEqualTo(brPeriode3.getBeregningsresultatPeriodeFom());
     }
 
     private void leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, PeriodeListeType periodeListeType, ObjectFactory objectFactory) {

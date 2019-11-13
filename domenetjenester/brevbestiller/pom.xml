@@ -49,7 +49,7 @@
         </dependency>
         <!-- Integrasjon avhengigheter -->
         <dependency>
-            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>dokumentproduksjon-klient</artifactId>
             <exclusions>
                 <exclusion>

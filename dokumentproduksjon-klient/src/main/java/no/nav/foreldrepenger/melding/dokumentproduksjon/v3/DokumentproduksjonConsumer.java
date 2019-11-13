@@ -1,0 +1,54 @@
+package no.nav.foreldrepenger.melding.dokumentproduksjon.v3;
+
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.FerdigstillForsendelseDokumentUnderRedigering;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.FerdigstillForsendelseInputValideringFeilet;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.FerdigstillForsendelseJournalpostIkkeFunnet;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.FerdigstillForsendelseJournalpostIkkeUnderArbeid;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.FerdigstillForsendelseSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.KnyttVedleggTilForsendelseDokumentIkkeFunnet;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.KnyttVedleggTilForsendelseDokumentTillatesIkkeGjenbrukt;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.KnyttVedleggTilForsendelseEksterntVedleggIkkeTillatt;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.KnyttVedleggTilForsendelseInputValideringFeilet;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.KnyttVedleggTilForsendelseJournalpostIkkeFerdigstilt;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.KnyttVedleggTilForsendelseJournalpostIkkeFunnet;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.KnyttVedleggTilForsendelseJournalpostIkkeUnderArbeid;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.KnyttVedleggTilForsendelseSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.KnyttVedleggTilForsendelseUlikeFagomraader;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.ProduserDokumentutkastBrevdataValideringFeilet;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.ProduserDokumentutkastInputValideringFeilet;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.ProduserIkkeRedigerbartDokumentInputValideringFeilet;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.ProduserIkkeRedigerbartDokumentJoarkForretningsmessigUnntak;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.ProduserIkkeredigerbartDokumentBrevdataValideringFeilet;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.ProduserIkkeredigerbartDokumentDokumentErRedigerbart;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.ProduserIkkeredigerbartDokumentDokumentErVedlegg;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.ProduserIkkeredigerbartDokumentSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.meldinger.FerdigstillForsendelseRequest;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.meldinger.KnyttVedleggTilForsendelseRequest;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.meldinger.ProduserDokumentutkastRequest;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.meldinger.ProduserDokumentutkastResponse;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.meldinger.ProduserIkkeredigerbartDokumentRequest;
+import no.nav.tjeneste.virksomhet.dokumentproduksjon.v3.meldinger.ProduserIkkeredigerbartDokumentResponse;
+
+
+public interface DokumentproduksjonConsumer {
+    ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokument(ProduserIkkeredigerbartDokumentRequest request)
+        throws ProduserIkkeRedigerbartDokumentInputValideringFeilet, ProduserIkkeredigerbartDokumentDokumentErRedigerbart,
+        ProduserIkkeredigerbartDokumentSikkerhetsbegrensning, ProduserIkkeRedigerbartDokumentJoarkForretningsmessigUnntak,
+        ProduserIkkeredigerbartDokumentBrevdataValideringFeilet, ProduserIkkeredigerbartDokumentDokumentErVedlegg;
+
+    ProduserDokumentutkastResponse produserDokumentutkast(ProduserDokumentutkastRequest request)
+        throws ProduserDokumentutkastInputValideringFeilet, ProduserDokumentutkastBrevdataValideringFeilet;
+
+    void knyttVedleggTilForsendelse(KnyttVedleggTilForsendelseRequest request)
+        throws KnyttVedleggTilForsendelseJournalpostIkkeFerdigstilt, KnyttVedleggTilForsendelseUlikeFagomraader,
+        KnyttVedleggTilForsendelseJournalpostIkkeFunnet, KnyttVedleggTilForsendelseJournalpostIkkeUnderArbeid,
+        KnyttVedleggTilForsendelseInputValideringFeilet, KnyttVedleggTilForsendelseDokumentIkkeFunnet,
+        KnyttVedleggTilForsendelseDokumentTillatesIkkeGjenbrukt, KnyttVedleggTilForsendelseEksterntVedleggIkkeTillatt,
+        KnyttVedleggTilForsendelseSikkerhetsbegrensning;
+
+
+    void ferdigstillForsendelse(FerdigstillForsendelseRequest request)
+        throws FerdigstillForsendelseDokumentUnderRedigering, FerdigstillForsendelseJournalpostIkkeFunnet,
+        FerdigstillForsendelseJournalpostIkkeUnderArbeid, FerdigstillForsendelseInputValideringFeilet,
+        FerdigstillForsendelseSikkerhetsbegrensning;
+}

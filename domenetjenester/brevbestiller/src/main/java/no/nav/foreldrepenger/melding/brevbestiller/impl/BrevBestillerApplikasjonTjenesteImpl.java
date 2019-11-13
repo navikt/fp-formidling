@@ -35,6 +35,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
+import no.nav.foreldrepenger.melding.dokumentproduksjon.v2.DokumentproduksjonConsumer;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
@@ -49,7 +50,6 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
-import no.nav.vedtak.felles.integrasjon.dokument.produksjon.DokumentproduksjonConsumer;
 import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped

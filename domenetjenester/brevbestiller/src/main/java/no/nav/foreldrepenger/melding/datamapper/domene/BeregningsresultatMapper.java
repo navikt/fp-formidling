@@ -60,10 +60,8 @@ public final class BeregningsresultatMapper {
         List<PeriodeType> periodelisteFørSammenslåing = new ArrayList<>();
         List<UttakResultatPeriode> uttaksperioder = uttakResultatPerioder.getPerioder();
         //er avhengig av at listen er sortert med tidligste periode først
-        List<BeregningsresultatPeriode> beregningsresultatperSortert = beregningsresultatPerioder;
-        if(beregningsresultatperSortert.size()>1) {
-            beregningsresultatperSortert.stream().sorted(Comparator.comparing(BeregningsresultatPeriode::getBeregningsresultatPeriodeFom)).collect(Collectors.toList());
-        }
+        List<BeregningsresultatPeriode> beregningsresultatperSortert = beregningsresultatPerioder.stream().sorted(Comparator.comparing(BeregningsresultatPeriode::getBeregningsresultatPeriodeFom)).collect(Collectors.toList());
+
         List<UttakResultatPeriode> uttaksperioderMedÅrsak = new ArrayList<>(filtrerBortUkjentÅrsak(uttaksperioder));
 
         for (int i = 0; i < beregningsresultatperSortert.size() ; i++) {

@@ -194,6 +194,64 @@ public class BeregningsresultatMapperTest {
         assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(1).getPeriodeFom())).isEqualTo(brPeriode3.getBeregningsresultatPeriodeFom());
     }
 
+    @Test
+    public void verifisere_at_resultatet_blir_det_samme_om_periodene_ikke_er_sortert() {
+        DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
+        DatoIntervall tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 3), LocalDate.of(2019, 10, 4));
+        DatoIntervall tidsperiodeBp3 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+        DatoIntervall tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
+        DatoIntervall tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+        DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
+
+        BeregningsresultatPeriode brPeriode = BeregningsresultatPeriode.ny()
+                .medPeriode(tidsperiodeBp1)
+                .medDagsats(0L)
+                .build();
+        BeregningsresultatPeriode brPeriode2 = BeregningsresultatPeriode.ny()
+                .medPeriode(tidsperiodeBp2)
+                .medDagsats(0L)
+                .build();
+        BeregningsresultatPeriode brPeriode3 = BeregningsresultatPeriode.ny()
+                .medPeriode(tidsperiodeBp3)
+                .medDagsats(620L)
+                .build();
+        List<BeregningsresultatPeriode> beregningsresultatPerioder = List.of(brPeriode3, brPeriode2, brPeriode);
+
+        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+                .medPeriode(beregningPer)
+                .medDagsats(620L)
+                .build();
+        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = List.of(bgPeriode);
+
+        UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
+                .medTrekkdager(BigDecimal.TEN)
+                .medUtbetalingsprosent(BigDecimal.ZERO)
+                .build();
+        UttakResultatPeriode uPeriode = UttakResultatPeriode.ny()
+                .medAktiviteter(List.of(uttakAktivitet))
+                .medTidsperiode(tidsperiodeUp1)
+                .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER)
+                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+                .build();
+        UttakResultatPeriodeAktivitet uttakAktivitet2 = UttakResultatPeriodeAktivitet.ny()
+                .medTrekkdager(BigDecimal.ZERO)
+                .medUtbetalingsprosent(BigDecimal.valueOf(100L))
+                .build();
+        UttakResultatPeriode uPeriode2 = UttakResultatPeriode.ny()
+                .medAktiviteter(List.of(uttakAktivitet2))
+                .medTidsperiode(tidsperiodeUp2)
+                .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT)
+                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
+                .build();
+        UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(List.of(uPeriode2, uPeriode)).build();
+
+        PeriodeListeType resultat = BeregningsresultatMapper.mapPeriodeListe(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder);
+
+        assertThat(resultat.getPeriode()).hasSize(2);
+        assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(0).getPeriodeFom())).isEqualTo(uPeriode.getFom());
+        assertThat(XmlUtil.finnDatoVerdiAv(resultat.getPeriode().get(1).getPeriodeFom())).isEqualTo(brPeriode3.getBeregningsresultatPeriodeFom());
+    }
+
     private void leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, PeriodeListeType periodeListeType, ObjectFactory objectFactory) {
         periodeListeType.getPeriode().add(lagPeriode(fom, tom, innvilget, objectFactory));
     }

@@ -81,9 +81,9 @@ public final class BeregningsresultatMapper {
                         beregningsgrunnlagPeriode);
             }
             else {
-                periodeTilListen = mapEnkelPeriode(beregningsresultatPeriode,
+                periodeTilListen = mapPerioderEtterFørste(beregningsresultatPeriode,
                         matchetUttaksperiode,
-                        beregningsgrunnlagPeriode,null);
+                        beregningsgrunnlagPeriode);
             }
             periodelisteFørSammenslåing.add(periodeTilListen);
         }
@@ -136,10 +136,13 @@ public final class BeregningsresultatMapper {
         if (uttakResultatPeriode.getFom().isBefore(beregningsresultatPeriode.getBeregningsresultatPeriodeFom())) {
             return mapEnkelPeriode(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, uttakResultatPeriode.getFom());
         }
-        else {
-            return mapEnkelPeriode(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, beregningsresultatPeriode.getBeregningsresultatPeriodeFom());
-        }
+        return mapEnkelPeriode(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, beregningsresultatPeriode.getBeregningsresultatPeriodeFom());
+    }
 
+    private static PeriodeType mapPerioderEtterFørste(BeregningsresultatPeriode beregningsresultatPeriode,
+                                                      UttakResultatPeriode matchetUttaksperiode,
+                                                      BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        return mapEnkelPeriode(beregningsresultatPeriode, matchetUttaksperiode, beregningsgrunnlagPeriode, beregningsresultatPeriode.getBeregningsresultatPeriodeFom());
     }
 
     private static PeriodeType mapEnkelPeriode(BeregningsresultatPeriode beregningsresultatPeriode,
@@ -150,13 +153,7 @@ public final class BeregningsresultatMapper {
         periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter())));
         periode.setInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode));
         PeriodeResultatÅrsak periodeResultatÅrsak = utledÅrsakskode(uttakResultatPeriode);
-        //Dersom første periode kan denne være hentet fra uttaksperioden
-        if (fomDate==null) {
-            periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
-        }
-        else {
-            periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(fomDate));
-        }
+        periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(fomDate));
         periode.setPeriodeTom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeTom()));
         periode.setÅrsak(periodeResultatÅrsak.getKode());
         periode.setPeriodeDagsats(beregningsresultatPeriode.getDagsats());

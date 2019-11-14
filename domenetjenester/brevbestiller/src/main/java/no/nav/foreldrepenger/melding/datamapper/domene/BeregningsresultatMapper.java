@@ -73,15 +73,17 @@ public final class BeregningsresultatMapper {
             }
             uttaksperioderMedÅrsak.remove(matchetUttaksperiode);
             PeriodeType periodeTilListen;
+            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder);
+
             if (i==0) {
                 periodeTilListen = mapForstePeriode(beregningsresultatPeriode,
                         matchetUttaksperiode,
-                        PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder));
+                        beregningsgrunnlagPeriode);
             }
             else {
                 periodeTilListen = mapEnkelPeriode(beregningsresultatPeriode,
                         matchetUttaksperiode,
-                        PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder), null);
+                        beregningsgrunnlagPeriode,null);
             }
             periodelisteFørSammenslåing.add(periodeTilListen);
         }

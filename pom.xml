@@ -55,7 +55,7 @@
         <swagger.spec-parser.version>1.0.28</swagger.spec-parser.version>
         <swagger2markup.version>1.1.2</swagger2markup.version>
         <cxf.version>3.3.1</cxf.version>
-        <prometheus.version>0.6.0</prometheus.version>
+        <prometheus.version>0.8.0</prometheus.version>
         <kontrakter.version>5.0_20190927100144_12ac550</kontrakter.version>
         <kafka.version>2.2.0</kafka.version>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>

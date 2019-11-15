@@ -16,6 +16,7 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
     public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE = new PeriodeResultatÅrsak("2010", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2016", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2015", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT= new PeriodeResultatÅrsak("2004", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
     private static final String IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR = "IKKE_OPPFYLT_AARSAK";
     // Uttak årsaker
     public static final PeriodeResultatÅrsak ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT = new PeriodeResultatÅrsak("4023", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
@@ -32,6 +33,7 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
     public static final PeriodeResultatÅrsak FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4098", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak OPPTJENINGSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4099", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4080", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
+
     private String kodeverk;
     private String kode;
     private String ekstraData;

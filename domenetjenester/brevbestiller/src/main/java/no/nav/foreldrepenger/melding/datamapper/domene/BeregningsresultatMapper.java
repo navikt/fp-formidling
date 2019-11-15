@@ -4,6 +4,7 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -59,17 +60,32 @@ public final class BeregningsresultatMapper {
         PeriodeListeType periodeListe = objectFactory.createPeriodeListeType();
         List<PeriodeType> periodelisteFørSammenslåing = new ArrayList<>();
         List<UttakResultatPeriode> uttaksperioder = uttakResultatPerioder.getPerioder();
+        //er avhengig av at listen er sortert med tidligste periode først
+        List<BeregningsresultatPeriode> beregningsresultatperSortert = beregningsresultatPerioder.stream().sorted(Comparator.comparing(BeregningsresultatPeriode::getBeregningsresultatPeriodeFom)).collect(Collectors.toList());
+
         List<UttakResultatPeriode> uttaksperioderMedÅrsak = new ArrayList<>(filtrerBortUkjentÅrsak(uttaksperioder));
-        for (BeregningsresultatPeriode beregningsresultatPeriode : beregningsresultatPerioder) {
+
+        for (int i = 0; i < beregningsresultatperSortert.size() ; i++) {
+            var beregningsresultatPeriode = beregningsresultatperSortert.get(i);
             UttakResultatPeriode matchetUttaksperiode = PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttaksperioder);
             if (matchetUttaksperiode.getPeriodeResultatÅrsak().erUkjent() || avslåttManglendeSøktUtenTrekkdager(matchetUttaksperiode)) {
                 continue;
             }
             uttaksperioderMedÅrsak.remove(matchetUttaksperiode);
-            periodelisteFørSammenslåing.add(mapEnkelPeriode(beregningsresultatPeriode,
-                    matchetUttaksperiode,
-                    PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder)
-            ));
+            PeriodeType periodeTilListen;
+            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder);
+
+            if (i==0) {
+                periodeTilListen = mapForstePeriode(beregningsresultatPeriode,
+                        matchetUttaksperiode,
+                        beregningsgrunnlagPeriode);
+            }
+            else {
+                periodeTilListen = mapPerioderEtterFørste(beregningsresultatPeriode,
+                        matchetUttaksperiode,
+                        beregningsgrunnlagPeriode);
+            }
+            periodelisteFørSammenslåing.add(periodeTilListen);
         }
         periodelisteFørSammenslåing.addAll(mapPerioderUtenBeregningsgrunnlag(uttaksperioderMedÅrsak));
         periodeListe.getPeriode().addAll(PeriodeMergerInnvilgelse.mergePerioder(periodelisteFørSammenslåing));
@@ -114,18 +130,33 @@ public final class BeregningsresultatMapper {
         return periode;
     }
 
+    private static PeriodeType mapForstePeriode(BeregningsresultatPeriode beregningsresultatPeriode,
+                                                UttakResultatPeriode uttakResultatPeriode,
+                                                BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        if (uttakResultatPeriode.getFom().isBefore(beregningsresultatPeriode.getBeregningsresultatPeriodeFom())) {
+            return mapEnkelPeriode(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, uttakResultatPeriode.getFom());
+        }
+        return mapEnkelPeriode(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, beregningsresultatPeriode.getBeregningsresultatPeriodeFom());
+    }
+
+    private static PeriodeType mapPerioderEtterFørste(BeregningsresultatPeriode beregningsresultatPeriode,
+                                                      UttakResultatPeriode matchetUttaksperiode,
+                                                      BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        return mapEnkelPeriode(beregningsresultatPeriode, matchetUttaksperiode, beregningsgrunnlagPeriode, beregningsresultatPeriode.getBeregningsresultatPeriodeFom());
+    }
+
     private static PeriodeType mapEnkelPeriode(BeregningsresultatPeriode beregningsresultatPeriode,
                                                UttakResultatPeriode uttakResultatPeriode,
-                                               BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+                                               BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
+                                               LocalDate fomDate) {
         PeriodeType periode = objectFactory.createPeriodeType();
         periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter())));
         periode.setInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode));
         PeriodeResultatÅrsak periodeResultatÅrsak = utledÅrsakskode(uttakResultatPeriode);
-        periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
+        periode.setPeriodeFom(XmlUtil.finnDatoVerdiAvUtenTidSone(fomDate));
         periode.setPeriodeTom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeTom()));
         periode.setÅrsak(periodeResultatÅrsak.getKode());
         periode.setPeriodeDagsats(beregningsresultatPeriode.getDagsats());
-
         periode.setArbeidsforholdListe(AktivitetsMapper.mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
         periode.setNæringListe(AktivitetsMapper.mapNæringsliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
         periode.setAnnenAktivitetListe(AktivitetsMapper.mapAnnenAktivtetListe(beregningsresultatPeriode, uttakResultatPeriode));

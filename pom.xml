@@ -48,7 +48,7 @@
         <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence).  Skal ikke benyttes direkte av vår egen kode. -->
         <apache.ws.xmlschema.version>2.2.2</apache.ws.xmlschema.version>
         <joda-time.version>2.9.9</joda-time.version>
-        <owaspencoder.version>1.2.1</owaspencoder.version>
+        <owaspencoder.version>1.2.2</owaspencoder.version>
         <sysdoc.version>1.0.8</sysdoc.version>
         <javaslang.version>2.0.6</javaslang.version>
         <swagger.version>1.5.17</swagger.version>

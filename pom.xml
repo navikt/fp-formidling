@@ -51,7 +51,7 @@
         <owaspencoder.version>1.2.1</owaspencoder.version>
         <sysdoc.version>1.0.8</sysdoc.version>
         <javaslang.version>2.0.6</javaslang.version>
-        <swagger.version>1.5.17</swagger.version>
+        <swagger.version>1.6.0</swagger.version>
         <swagger.spec-parser.version>1.0.28</swagger.spec-parser.version>
         <swagger2markup.version>1.1.2</swagger2markup.version>
         <cxf.version>3.3.1</cxf.version>

@@ -186,8 +186,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
 
     private void mapFelterRelatertTilSøknadOgRettighet(Søknad søknad, UttakResultatPerioder uttakResultatPerioder, List<Aksjonspunkt> aksjonspunkter, FagType fagType) {
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknad.getMottattDato()));
-        //TODO AGA Fjerne annenForelderHarRett når annenForelderHarRettVurdert er implementert ok og fungerer mot dokument
-        fagType.setAnnenForelderHarRett(uttakResultatPerioder.isAnnenForelderHarRett());
+
         //Dokprod tolker FagType.aleneomsorg som om "det har vært søkt om aleneomsorg og verdien er resultatet. Hvis det ikke er søkt aleneomsorg så skal det ikke stå noe i brevet om dette (derav IKKE_VURDERT)
         VurderingsstatusKode aleneomsorg;
         if (søknad.getOppgittRettighet().harAleneomsorgForBarnet()) {
@@ -199,9 +198,9 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
 
         //Nytt felt for å angi ikke vurdert når saksbehandler aldri har vurdert rettighet for annen part. I dette tilfellet skal ikke tekst vises
         VurderingsstatusKode annenForelderHarRettVurdert;
-        if(aksjonspunkter.stream().
+        if (aksjonspunkter.stream().
                 filter(ap -> Objects.equals(ap.getAksjonspunktDefinisjon(), AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT)).
-                anyMatch(ap -> Objects.equals(ap.getAksjonspunktStatus(), AksjonspunktStatus.UTFØRT))){
+                anyMatch(ap -> Objects.equals(ap.getAksjonspunktStatus(), AksjonspunktStatus.UTFØRT))) {
             annenForelderHarRettVurdert = uttakResultatPerioder.isAnnenForelderHarRett() ? VurderingsstatusKode.JA : VurderingsstatusKode.NEI;
         }
         else {

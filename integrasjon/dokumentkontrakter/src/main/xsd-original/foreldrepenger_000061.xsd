@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema attributeFormDefault="unqualified"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           elementFormDefault="qualified">
+           elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
     <xs:include schemaLocation="foreldrepenger_felles.xsd"/>
 
@@ -33,8 +33,8 @@
             <xs:element type="xs:long" name="totalBrukerAndel"/>
             <xs:element type="xs:long" name="totalArbeidsgiverAndel"/>
             <xs:element type="xs:integer" name="antallArbeidsgivere"/>
-            <xs:element type="xs:boolean" name="annenForelderHarRett"/>
-            <xs:element type="vurderingsstatusKode" name="annenForelderHarRettVurdert"/>
+            <xs:element type="xs:boolean" name="annenForelderHarRett" minOccurs="0"/>
+            <xs:element type="vurderingsstatusKode" name="annenForelderHarRettVurdert" minOccurs="0"/>
             <xs:element type="vurderingsstatusKode" name="aleneomsorg"/>
             <xs:element type="xs:boolean" name="ikkeOmsorg"/>
             <xs:element type="xs:integer" name="antallBarn"/>
@@ -318,16 +318,12 @@
         <xs:restriction base="xs:token">
             <xs:enumeration value="4020">
                 <xs:annotation>
-                    <xs:documentation>Denne skal komme hver gang bruker mister dager fordi søknaden er kommet inn for
-                        sent og når det ikke er søkt om utsettelse, overføring av kvote eller gradering.
-                    </xs:documentation>
+                    <xs:documentation>Denne skal komme hver gang bruker mister dager fordi søknaden er kommet inn for sent og når det ikke er søkt om utsettelse, overføring av kvote eller gradering. </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2001">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker får 100% foreldrepenger. - Burde denne heller byttes ut
-                        med en sjekk på "dekningsgrad = 100" ?
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker får 100% foreldrepenger. - Burde denne heller byttes ut med en sjekk på "dekningsgrad = 100" ?</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2002">
@@ -342,8 +338,7 @@
             </xs:enumeration>
             <xs:enumeration value="2004">
                 <xs:annotation>
-                    <xs:documentation>§ 14-14, jf. § 14-13 : Innvilget foreldrepenger, kun far har rett
-                    </xs:documentation>
+                    <xs:documentation>§ 14-14, jf. § 14-13 : Innvilget foreldrepenger, kun far har rett</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2005">
@@ -363,28 +358,22 @@
             </xs:enumeration>
             <xs:enumeration value="2010">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker får utsatt foreldrepengene pga. ferie.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker får utsatt foreldrepengene pga. ferie.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2011">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker får utsatt foreldrepengene pga. 100% arbeid.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker får utsatt foreldrepengene pga. 100% arbeid.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2012">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker får utsatt foreldrepengene pga. innleggelse i
-                        helseinstitusjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker får utsatt foreldrepengene pga. innleggelse i helseinstitusjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2013">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når bruker får utsatt foreldrepengene pga. at barnet er innlagt i
-                        helseinstitusjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når bruker får utsatt foreldrepengene pga. at barnet er innlagt i helseinstitusjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2014">
@@ -394,70 +383,48 @@
             </xs:enumeration>
             <xs:enumeration value="2015">
                 <xs:annotation>
-                    <xs:documentation>§ 14-11 første ledd bokstav a, jf. § 14-14, jf. § 14-13: Utsettelse pga. ferie,
-                        kun far har rett
-                    </xs:documentation>
+                    <xs:documentation>§ 14-11 første ledd bokstav a, jf. § 14-14, jf. § 14-13: Utsettelse pga. ferie, kun far har rett</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2016">
                 <xs:annotation>
-                    <xs:documentation>§ 14-11 første ledd bokstav b, jf. § 14-14, jf. § 14-13: Utsettelse pga. 100%
-                        arbeid, kun far har rett
-                    </xs:documentation>
+                    <xs:documentation>§ 14-11 første ledd bokstav b, jf. § 14-14, jf. § 14-13: Utsettelse pga. 100% arbeid, kun far har rett</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2017">
                 <xs:annotation>
-                    <xs:documentation>§ 14-11 første ledd bokstav c, jf. § 14-14, jf. § 14-13: Utsettelse pga. sykdom,
-                        skade, kun far har rett
-                    </xs:documentation>
+                    <xs:documentation>§ 14-11 første ledd bokstav c, jf. § 14-14, jf. § 14-13: Utsettelse pga. sykdom, skade, kun far har rett</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2018">
                 <xs:annotation>
-                    <xs:documentation>§ 14-11 første ledd bokstav c, jf. § 14-14, jf. § 14-13: Utsettelse pga. egen
-                        innleggelse på helseinstiusjon, kun far har rett
-                    </xs:documentation>
+                    <xs:documentation>§ 14-11 første ledd bokstav c, jf. § 14-14, jf. § 14-13: Utsettelse pga. egen innleggelse på helseinstiusjon, kun far har rett</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2019">
                 <xs:annotation>
-                    <xs:documentation>§ 14-11 første ledd bokstav d, jf. § 14-14, jf. § 14-13: Utsettelse pga. barnets
-                        innleggelse på helseinstitusjon, kun far har rett
-                    </xs:documentation>
+                    <xs:documentation>§ 14-11 første ledd bokstav d, jf. § 14-14, jf. § 14-13: Utsettelse pga. barnets innleggelse på helseinstitusjon, kun far har rett</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2020">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når mor overtar kvoten til den andre forelderen fordi far eller medmor
-                        ikke har rett til foreldrepenger. Gjelder kun ved innvilgelse, helt eller delvis og ved avslag
-                        på endringssøknad.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når mor overtar kvoten til den andre forelderen fordi far eller medmor ikke har rett til foreldrepenger. Gjelder kun ved innvilgelse, helt eller delvis og ved avslag på endringssøknad.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2021">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når mor overtar kvoten til den andre forelderen fordi far eller medmor
-                        er innlagt i helseinstitusjon. Gjelder kun ved innvilgelse, helt eller delvis og ved avslag på
-                        endringssøknad.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når mor overtar kvoten til den andre forelderen fordi far eller medmor er innlagt i helseinstitusjon. Gjelder kun ved innvilgelse, helt eller delvis og ved avslag på endringssøknad.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2022">
                 <xs:annotation>
                     <xs:documentation>
-                        Skal komme når mor overtar kvoten til den andre forelderen fordi far eller medmor er helt
-                        avhengig av hjelp til å ta seg av barnet. Gjelder kun ved innvilgelse, helt eller delvis og ved
-                        avslag på endringssøknad.
-                    </xs:documentation>
+                        Skal komme når mor overtar kvoten til den andre forelderen fordi far eller medmor er helt avhengig av hjelp til å ta seg av barnet. Gjelder kun ved innvilgelse, helt eller delvis og ved avslag på endringssøknad.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2023">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når mor overtar kvoten til den andre forelderen fordi far eller medmor
-                        har overtatt omsorgen for barnet. Gjelder kun ved innvilgelse, helt eller delvis og ved avslag
-                        på endringssøknad.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når mor overtar kvoten til den andre forelderen fordi far eller medmor har overtatt omsorgen for barnet. Gjelder kun ved innvilgelse, helt eller delvis og ved avslag på endringssøknad.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2030">
@@ -477,8 +444,7 @@
             </xs:enumeration>
             <xs:enumeration value="2033">
                 <xs:annotation>
-                    <xs:documentation>§ 14-14, jf. § 14-13, jf. § 14-16: Gradering foreldrepenger, kun far har rett
-                    </xs:documentation>
+                    <xs:documentation>§ 14-14, jf. § 14-13, jf. § 14-16: Gradering foreldrepenger, kun far har rett</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2034">
@@ -488,9 +454,7 @@
             </xs:enumeration>
             <xs:enumeration value="2036">
                 <xs:annotation>
-                    <xs:documentation>§ 14-14 innvilgelse når bare far har rett og mor er ufør, og han bare søker om
-                        foreldrepenger tilsvarende fedrekvotens lengde.
-                    </xs:documentation>
+                    <xs:documentation>§ 14-14 innvilgelse når bare far har rett og mor er ufør, og han bare søker om foreldrepenger tilsvarende fedrekvotens lengde.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="2037">
@@ -500,23 +464,17 @@
             </xs:enumeration>
             <xs:enumeration value="4005">
                 <xs:annotation>
-                    <xs:documentation>Den skal kun komme når det er oppholde mellom periodene til uttaket til
-                        foreldrene, og søker er far eller medmor.
-                    </xs:documentation>
+                    <xs:documentation>Den skal kun komme når det er oppholde mellom periodene til uttaket til foreldrene, og søker er far eller medmor.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4090">
                 <xs:annotation>
-                    <xs:documentation>Den skal kun komme når det er oppholde mellom periodene til uttaket til en eller
-                        begge foreldrene., og det er etter siste dag det ble utbetalt foreldrepenger.
-                    </xs:documentation>
+                    <xs:documentation>Den skal kun komme når det er oppholde mellom periodene til uttaket til en eller begge foreldrene., og det er etter siste dag det ble utbetalt foreldrepenger. </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4091">
                 <xs:annotation>
-                    <xs:documentation>Den skal kun komme når det er oppholde mellom periodene til uttaket til en eller
-                        begge foreldrene, og det er etter siste dag med utsettelse.
-                    </xs:documentation>
+                    <xs:documentation>Den skal kun komme når det er oppholde mellom periodene til uttaket til en eller begge foreldrene, og det er etter siste dag med utsettelse. </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4003">
@@ -531,207 +489,162 @@
             </xs:enumeration>
             <xs:enumeration value="4033">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga. ikke avtalt
-                        ferie.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga. ikke avtalt ferie.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4032">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når utsettelse pga. ferie til en selvstendig næringsdrivende er
-                        avslått.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når utsettelse pga. ferie til en selvstendig næringsdrivende er avslått. </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4040">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga. at barnet ikke er
-                        innlagt.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga. at barnet ikke er innlagt.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4039">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga. at bruker ikke er
-                        innlagt.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga. at bruker ikke er innlagt.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4037">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga.at bruker ikke
-                        jobber 100%.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga.at bruker ikke jobber 100%.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4030">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga. at bruker har søkt
-                        om utsettelse for tidlig.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga. at bruker har søkt om utsettelse for tidlig.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4031">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga. at bruker har søkt
-                        om utsettelse for tidlig.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga. at bruker har søkt om utsettelse for tidlig.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4038">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga.at bruker ikke er
-                        helt avhengig av hjelp til å ta seg av barnet.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker ikke får utsatt foreldrepengene pga.at bruker ikke er helt avhengig av hjelp til å ta seg av barnet. </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4503">
+                <xs:annotation>
+                    <xs:documentation>Skal komme når det er søkt om gradering etter at barnet er født, men før det har gått 6 uker etter fødsel.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4504">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når det er søkt om gradering etter at barnet er født, men før det har
-                        gått 6 uker etter fødsel.
-                    </xs:documentation>
+                    <xs:documentation>Det du tar ut i foreldrepenger kan ikke være høyere enn den prosenten mor jobber.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4025">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når det gis avslag på gradering fordi bruker jobber 100%.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når det gis avslag på gradering fordi bruker jobber 100%.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4080">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker ikke får gradere fordi det er søkt for sent.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker ikke får gradere fordi det er søkt for sent.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4501">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker ikke får gradere fordi det er søkt for sent.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker ikke får gradere fordi det er søkt for sent.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4093">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når bruker ikke får gradere fordi bruker ikke jobber.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når bruker ikke får gradere fordi bruker ikke jobber.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4084">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når det er opplyst at den andre forelderen tar ut sin kvote.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når det er opplyst at den andre forelderen tar ut sin kvote.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4085">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når det er opplyst at den andre forelderen tar ut sin kvote.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når det er opplyst at den andre forelderen tar ut sin kvote.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4086">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når det er opplyst at den andre forelderen tar ut sin kvote.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når det er opplyst at den andre forelderen tar ut sin kvote.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4050">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke jobber.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke jobber.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4051">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke studerer.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke studerer.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4052">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke både jobber og
-                        studerer.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke både jobber og studerer.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4054">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke er innlagt i
-                        helseinstitusjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke er innlagt i helseinstitusjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4055">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke deltar i
-                        introduksjonsprogrammet.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke deltar i introduksjonsprogrammet.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4056">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke deltar i
-                        kvalifiseringsprogrammet.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke deltar i kvalifiseringsprogrammet.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4057">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke mottar uføretrygd.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når det er far/medmor som søker og mor ikke mottar uføretrygd.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4007">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når foreldrepengene avslås fordi den andre forelderen ikke er helt
-                        avhengig av hjelp til å ta seg av barnet. Og det er mor som har søkt.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når foreldrepengene avslås fordi den andre forelderen ikke er helt avhengig av hjelp til å ta seg av barnet. Og det er mor som har søkt.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4053">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når foreldrepengene avslås fordi den andre forelderen ikke er helt
-                        avhengig av hjelp til å ta seg av barnet. Og det er far eller medmor som har søkt.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når foreldrepengene avslås fordi den andre forelderen ikke er helt avhengig av hjelp til å ta seg av barnet. Og det er far eller medmor som har søkt.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4008">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når foreldrepengene avslås fordi den andre forelderen ikke er
-                        innlagt.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når foreldrepengene avslås fordi den andre forelderen ikke er innlagt.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4041">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når det gis avslag på utsettelse pga. av uttak av ferie på
-                        helligdager.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når det gis avslag på utsettelse pga. av uttak av ferie på helligdager.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4023">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi har redusert foreldrepengene fordi bruker ikke har søkt om
-                        gradert uttak, eller søkt for sent.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi har redusert foreldrepengene fordi bruker ikke har søkt om gradert uttak, eller søkt for sent.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4081">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når det gis avslag på utsettelse fordi bruker har søkt for sent.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når det gis avslag på utsettelse fordi bruker har søkt for sent.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4082">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når det gis avslag på utsettelse fordi bruker har søkt for sent.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når det gis avslag på utsettelse fordi bruker har søkt for sent.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4092">
                 <xs:annotation>
-                    <xs:documentation>Skal komme når det gis avslag på overføring av kvote til den andre forelderen
-                        fordi vedkommende ikke har aleneomsorg for barnet.
-                    </xs:documentation>
+                    <xs:documentation>Skal komme når det gis avslag på overføring av kvote til den andre forelderen fordi vedkommende ikke har aleneomsorg for barnet. </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4002">
@@ -741,86 +654,62 @@
             </xs:enumeration>
             <xs:enumeration value="4061">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om utsettelse på grunn v manglende
-                        dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om utsettelse på grunn v manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4062">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om utsettelse på grunn v manglende
-                        dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om utsettelse på grunn v manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4063">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om utsettelse på grunn v manglende
-                        dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om utsettelse på grunn v manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4064">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om utsettelse på grunn v manglende
-                        dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om utsettelse på grunn v manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4065">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om utsettelse på grunn v manglende
-                        dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om utsettelse på grunn v manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4094">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om å kombinere foreldrepenger med arbeid
-                        på grunn av manglende dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om å kombinere foreldrepenger med arbeid på grunn av manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4074">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om å overta kvoten til den andre
-                        forelderen på grunn av manglende dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om å overta kvoten til den andre forelderen på grunn av manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4066">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av
-                        manglende dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4067">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av
-                        manglende dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4068">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av
-                        manglende dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4069">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av
-                        manglende dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4070">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av
-                        manglende dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4072">
@@ -835,16 +724,12 @@
             </xs:enumeration>
             <xs:enumeration value="4088">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av
-                        manglende dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4089">
                 <xs:annotation>
-                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av
-                        manglende dokumentasjon.
-                    </xs:documentation>
+                    <xs:documentation>Skal kun komme når vi avslår en periode om med aktivitetskrav til mor grunn av manglende dokumentasjon.</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4006">
@@ -869,19 +754,17 @@
             </xs:enumeration>
             <xs:enumeration value="4035">
                 <xs:annotation>
-                    <xs:documentation>§14-11 Bare far rett, mor ikke i aktivitet under utsettelse</xs:documentation>
+                    <xs:documentation>§14-11 Bare far rett,  mor ikke i aktivitet under utsettelse </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4058">
                 <xs:annotation>
-                    <xs:documentation>§14-5 - Unntak for Aktivitetskravet, stebarnsadopsjon - ikke nok dager
-                    </xs:documentation>
+                    <xs:documentation>§14-5 - Unntak for Aktivitetskravet, stebarnsadopsjon - ikke nok dager</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4059">
                 <xs:annotation>
-                    <xs:documentation>§14-13 - Unntak for Aktivitetskravet, flerbarnsfødsel - ikke nok dager
-                    </xs:documentation>
+                    <xs:documentation>§14-13 - Unntak for Aktivitetskravet, flerbarnsfødsel - ikke nok dager</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4060">
@@ -911,7 +794,7 @@
             </xs:enumeration>
             <xs:enumeration value="4095">
                 <xs:annotation>
-                    <xs:documentation>Mor tar ikke alle 3 ukene før termin</xs:documentation>
+                    <xs:documentation>Mor tar ikke alle 3 ukene før termin </xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="4100">
@@ -1072,8 +955,7 @@
             </xs:enumeration>
             <xs:enumeration value="GENERELL">
                 <xs:annotation>
-                    <xs:documentation>Begge overstående eller annen grunn til mulig for høy utbetaling
-                    </xs:documentation>
+                    <xs:documentation>Begge overstående eller annen grunn til mulig for høy utbetaling</xs:documentation>
                 </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="INGEN">

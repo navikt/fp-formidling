@@ -1,6 +1,7 @@
 package no.nav.vedtak.felles.prosesstask.impl;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.Path;
 
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
@@ -22,7 +23,9 @@ public class AuthenticatedCdiProsessTaskDispatcher extends BasicCdiProsessTaskDi
     }
 
     static void sporingslogg(ProsessTaskData data) {
-        Sporingsdata sporingsdata = Sporingsdata.opprett();
+        String action = data.getTaskType();
+
+        Sporingsdata sporingsdata = Sporingsdata.opprett(action);
 
         String aktørId = data.getAktørId();
         if (aktørId != null) {
@@ -30,7 +33,15 @@ public class AuthenticatedCdiProsessTaskDispatcher extends BasicCdiProsessTaskDi
         }
         Long behandlingId = data.getKoblingId();
         if (behandlingId != null) {
-            sporingsdata.leggTilId(StandardSporingsloggId.BEHANDLING_ID, behandlingId);
+            sporingsdata.leggTilId(ProsessTaskSporingsloggId.BEHANDLING_ID, behandlingId);
+        }
+        String behandlingUUId = data.getPropertyValue("behandlingUUId");
+        if (behandlingUUId != null) {
+            sporingsdata.leggTilId(ProsessTaskSporingsloggId.BEHANDLING_UUID, behandlingUUId);
+        }
+        String hendelseId = data.getPropertyValue("hendelseId");
+        if (hendelseId != null) {
+            sporingsdata.leggTilId(ProsessTaskSporingsloggId.HENDELSE_ID, hendelseId);
         }
 
         SporingsloggHelper.logSporingForTask(AuthenticatedCdiProsessTaskDispatcher.class, sporingsdata, data.getTaskType());
@@ -55,7 +66,7 @@ public class AuthenticatedCdiProsessTaskDispatcher extends BasicCdiProsessTaskDi
     @Override
     public ProsessTaskHandlerRef findHandler(ProsessTaskInfo task) {
         ProsessTaskHandlerRef prosessTaskHandler = super.findHandler(task);
-        return new AuthenticatedProsessTaskHandlerRef(prosessTaskHandler.getBean());
+        return new AuthenticatedCdiProsessTaskDispatcher.AuthenticatedProsessTaskHandlerRef(prosessTaskHandler.getBean());
     }
 
     private static class AuthenticatedProsessTaskHandlerRef extends ProsessTaskHandlerRef {
@@ -83,7 +94,6 @@ public class AuthenticatedCdiProsessTaskDispatcher extends BasicCdiProsessTaskDi
             successFullLogin = true;
             super.doTask(prosessTaskData);
         }
-
     }
 
 }

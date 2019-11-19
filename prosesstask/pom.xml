@@ -49,6 +49,16 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.jboss.weld.module</groupId>
+            <artifactId>weld-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jboss.spec.javax.annotation</groupId>
+                    <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <!-- Trengs for REST grensesnitt -->
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jackson2-provider</artifactId>
@@ -87,7 +97,7 @@
         <dependency>
             <!-- Trengs for REST grensesnitt -->
             <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-validator-provider-11</artifactId>
+            <artifactId>resteasy-validator-provider</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

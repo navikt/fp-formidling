@@ -114,7 +114,11 @@ public class Behandling {
         return originalVedtaksDato;
     }
 
-
+    public boolean harBehandlingÅrsak(BehandlingÅrsakType behandlingÅrsak) {
+        return getBehandlingÅrsaker().stream()
+                .map(BehandlingÅrsak::getBehandlingÅrsakType)
+                .anyMatch(behandlingÅrsak::equals);
+    }
 
     public boolean erFørstegangssøknad() {
         return BehandlingType.FØRSTEGANGSSØKNAD.equals(getBehandlingType());

@@ -62,11 +62,11 @@
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>organisasjon-klient</artifactId>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>felles-integrasjon-bom</artifactId>
             <version>${felles.version}</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>fp-formidling-v1</artifactId>

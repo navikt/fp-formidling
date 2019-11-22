@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import io.swagger.annotations.ApiModel;
+import no.nav.vedtak.felles.prosesstask.impl.ProsessTaskSporingsloggId;
 import no.nav.vedtak.log.sporingslogg.Sporingsdata;
 import no.nav.vedtak.log.sporingslogg.StandardSporingsloggId;
 
@@ -113,15 +114,16 @@ public class ProsessTaskDataDto implements ProsessTaskDataInfo {
             return Optional.empty();
         }
 
-        Sporingsdata sporingsdata = Sporingsdata.opprett();
+        String action = getTaskType();
+        Sporingsdata sporingsdata = Sporingsdata.opprett(action);
         if (aktørId != null) {
             sporingsdata.leggTilId(StandardSporingsloggId.AKTOR_ID, Long.valueOf(aktørId));
         }
         if (fagsakId != null) {
-            sporingsdata.leggTilId(StandardSporingsloggId.FAGSAK_ID, Long.valueOf(fagsakId));
+            sporingsdata.leggTilId(ProsessTaskSporingsloggId.FAGSAK_ID, Long.valueOf(fagsakId));
         }
         if (behandlingId != null) {
-            sporingsdata.leggTilId(StandardSporingsloggId.BEHANDLING_ID, Long.valueOf(behandlingId));
+            sporingsdata.leggTilId(ProsessTaskSporingsloggId.BEHANDLING_ID, Long.valueOf(behandlingId));
         }
         if (pnrId != null) {
             sporingsdata.leggTilId(StandardSporingsloggId.FNR, Long.valueOf(pnrId));

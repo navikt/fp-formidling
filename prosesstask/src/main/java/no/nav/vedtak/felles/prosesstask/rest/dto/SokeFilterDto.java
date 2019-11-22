@@ -55,13 +55,6 @@ public class SokeFilterDto implements AbacDto {
         this.sisteKjoeretidspunktTilOgMed = sisteKjoeretidspunktTilOgMed;
     }
 
-    public Sporingsdata lagSporingsloggData() {
-        Sporingsdata sporingsdata = Sporingsdata.opprett();
-        sporingsdata.leggTilId(StandardSporingsloggId.PROSESS_TASK_STATUS, prosessTaskStatuser.stream().map(ProsessTaskStatusDto::getProsessTaskStatusName).collect(Collectors.joining(",")));
-        sporingsdata.leggTilId(StandardSporingsloggId.PROSESS_TASK_KJORETIDSINTERVALL, String.format("%s-%s", sisteKjoeretidspunktFraOgMed, sisteKjoeretidspunktTilOgMed));
-        return sporingsdata;
-    }
-
     @Override
     public AbacDataAttributter abacAttributter() {
         return AbacDataAttributter.opprett(); //denne er tom, ProsessTask-API har i praksis rollebasert tilgangskontroll

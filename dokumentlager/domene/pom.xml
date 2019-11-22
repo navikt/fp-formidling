@@ -55,8 +55,8 @@
 
         <dependency>
             <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
-            <groupId>io.github.lukehutch</groupId>
-            <artifactId>fast-classpath-scanner</artifactId>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
             <scope>test</scope>
         </dependency>
 

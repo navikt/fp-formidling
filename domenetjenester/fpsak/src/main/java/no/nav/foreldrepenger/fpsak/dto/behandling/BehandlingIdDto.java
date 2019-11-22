@@ -71,7 +71,7 @@ public class BehandlingIdDto implements AbacDto {
     @Override
     public AbacDataAttributter abacAttributter() {
         AbacDataAttributter abac = AbacDataAttributter.opprett();
-        return abac.leggTil(StandardAbacAttributtType.BEHANDLING_UUID, getBehandlingId());
+        return abac.leggTil(StandardAbacAttributtType.BEHANDLING_UUID, getBehandlingUuid().toString());
     }
 
     @Override

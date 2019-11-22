@@ -31,7 +31,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <felles.version>1.1.0_20191001141114_08e62f6</felles.version>
+        <felles.version>1.3.0_20191013104401_8528511</felles.version>
         <metrics.version>3.2.5</metrics.version>
 
         <!-- Eksterne -->
@@ -44,11 +44,14 @@
         <geronimo.osgi.version>1.1</geronimo.osgi.version>
         <logstash.version>6.2</logstash.version>
         <syslog4j.version>1.0.0</syslog4j.version>
+        <resteasy-validator-provider.version>3.9.0.Final</resteasy-validator-provider.version>
+        <weld-web.version>3.1.2.Final</weld-web.version>
+        <javax.el.version>3.0.1-b09</javax.el.version>
 
         <!-- Transitive avh. versjoner for å sikre unikhet (enforcer dependencyConvergence).  Skal ikke benyttes direkte av vår egen kode. -->
         <apache.ws.xmlschema.version>2.2.2</apache.ws.xmlschema.version>
         <joda-time.version>2.9.9</joda-time.version>
-        <owaspencoder.version>1.2.1</owaspencoder.version>
+        <owaspencoder.version>1.2.2</owaspencoder.version>
         <sysdoc.version>1.0.8</sysdoc.version>
         <javaslang.version>2.0.6</javaslang.version>
         <swagger.version>1.5.17</swagger.version>
@@ -59,6 +62,7 @@
         <kontrakter.version>5.0_20190927100144_12ac550</kontrakter.version>
         <kafka.version>2.2.0</kafka.version>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
+        <classgraph.version>4.8.53</classgraph.version>
     </properties>
 
     <prerequisites>
@@ -255,6 +259,22 @@
                 <version>7.0</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-validator-provider</artifactId>
+                <version>${resteasy-validator-provider.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.weld.module</groupId>
+                <artifactId>weld-web</artifactId>
+                <version>${weld-web.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.el</artifactId>
+                <version>${javax.el.version}</version>
+            </dependency>
+
             <!-- Metrics -->
             <dependency>
                 <groupId>io.dropwizard.metrics</groupId>
@@ -365,8 +385,18 @@
                 <artifactId>simpleclient_servlet</artifactId>
                 <version>${prometheus.version}</version>
             </dependency>
-
-
+            <dependency>
+                <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
+                <groupId>io.github.classgraph</groupId>
+                <artifactId>classgraph</artifactId>
+                <version>${classgraph.version}</version>
+            </dependency>
+            <!-- NAV interne 3djepart avhengigheter til kontrakter og bibliotek -->
+            <dependency>
+                <groupId>no.nav.abac.policies</groupId>
+                <artifactId>abac-foreldrepenger-policies-alfa</artifactId>
+                <version>4.5.0</version>
+            </dependency>
             <!-- Java11 -->
             <dependency>
                 <groupId>com.sun.xml.ws</groupId>

@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.web.app.selftest.checks;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.vedtak.felles.integrasjon.dokument.produksjon.DokumentproduksjonSelftestConsumer;
+import no.nav.vedtak.felles.integrasjon.dokument.produksjon.v2.DokumentproduksjonSelftestConsumer;
 
 @ApplicationScoped
 public class DokumentproduksjonWebServiceHealthCheck extends WebServiceHealthCheck {

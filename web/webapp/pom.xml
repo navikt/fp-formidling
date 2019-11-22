@@ -66,19 +66,6 @@
             <version>5.0.0</version>
         </dependency>
         <!-- Foreldrepengeprosjektet -->
-        <!--dependency>
-            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-            <artifactId>felles-integrasjon-bom</artifactId>
-            <version>${felles.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-                    <artifactId>felles-integrasjon-jms</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency-->
-
-
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>felles-integrasjon-rest</artifactId>

@@ -59,7 +59,7 @@
         <dependency>
             <groupId>com.bettercloud</groupId>
             <artifactId>vault-java-driver</artifactId>
-            <version>3.1.0</version>
+            <version>5.0.0</version>
         </dependency>
         <!-- Foreldrepengeprosjektet -->
         <dependency>
@@ -93,7 +93,11 @@
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>dokumenthendelse</artifactId>
         </dependency>
-
+        <!-- NAV interne 3djepart avhengigheter til kontrakter og bibliotek -->
+        <dependency>
+            <groupId>no.nav.abac.policies</groupId>
+            <artifactId>abac-foreldrepenger-policies-alfa</artifactId>
+        </dependency>
         <!-- Database håndtering -->
         <dependency>
             <groupId>com.zaxxer</groupId>

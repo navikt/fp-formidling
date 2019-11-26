@@ -65,6 +65,7 @@ public class AnkeOmgjøreVedtakBrevMapper  extends FritekstmalBrevMapper {
     protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
 
         Dato vedtaksDato = null;
+        boolean gunst = false;
 
         initHandlebars(behandling.getSpråkkode());
 
@@ -73,11 +74,13 @@ public class AnkeOmgjøreVedtakBrevMapper  extends FritekstmalBrevMapper {
             UUID klageBehandlingUuid =  anke.get().getPaAnketBehandlingUuid();
             Behandling klageBehandling = domeneobjektProvider.hentBehandling(klageBehandlingUuid);
             vedtaksDato = klageBehandling.getOriginalVedtaksDato()!=null?medFormatering(klageBehandling.getOriginalVedtaksDato()):null;
+            if( "ANKE_TIL_GUNST".equals(anke.get().getAnkeVurderingOmgjoer())){
+                gunst= true;
+            }
         }
 
-
         FagType fagType = new FagType();
-        fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling).leggTil("vedtaksDato",vedtaksDato).getMap(), getBrødtekstMal()));
+        fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling).leggTil("vedtaksDato",vedtaksDato).leggTil("gunst",gunst).getMap(), getBrødtekstMal()));
         if(vedtaksDato== null){
             fagType.setHovedoverskrift(tryApply(Map.of("behandling", behandling, "dokumentHendelse", hendelse), getOverskriftMal()));
         }

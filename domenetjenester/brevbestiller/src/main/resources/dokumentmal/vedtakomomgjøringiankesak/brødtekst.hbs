@@ -8,6 +8,10 @@
 
 {{i18n "fritekst" mintekst}}
 
-{{i18n "fasttekst"}}
+{{#if gunst}}
+    {{i18n "fasttekst_gunst"}}
+{{else}}
+    {{i18n "fasttekst_ugunst"}}
+{{/if}}
 
 {{> felles}}

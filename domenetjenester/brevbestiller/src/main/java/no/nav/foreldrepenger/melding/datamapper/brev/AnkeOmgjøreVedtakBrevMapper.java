@@ -53,12 +53,19 @@ public class AnkeOmgjøreVedtakBrevMapper  extends FritekstmalBrevMapper {
 
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
-
+        Optional<Anke> anke  = domeneobjektProvider.hentAnkebehandling(behandling);
+        if( anke.isPresent()) {
+            return new Brevdata()
+                    .leggTil("mintekst",  anke.get().getFritekstTilBrev())
+                    .leggTil("saksbehandler", behandling.getAnsvarligSaksbehandler())
+                    .leggTil("medunderskriver",behandling.getAnsvarligBeslutter())
+                    .leggTil("behandlingtype",behandling.getBehandlingType().getKode());
+        }
         return new Brevdata()
-                .leggTil("mintekst", hendelse.getFritekst())
                 .leggTil("saksbehandler", behandling.getAnsvarligSaksbehandler())
                 .leggTil("medunderskriver",behandling.getAnsvarligBeslutter())
                 .leggTil("behandlingtype",behandling.getBehandlingType().getKode());
+
 
     }
     @Override

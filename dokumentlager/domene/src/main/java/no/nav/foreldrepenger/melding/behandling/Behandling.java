@@ -115,9 +115,10 @@ public class Behandling {
     }
 
     public boolean harBehandlingÅrsak(BehandlingÅrsakType behandlingÅrsak) {
+        var behandlingÅsrakString = behandlingÅrsak.getKode();
         return getBehandlingÅrsaker().stream()
                 .map(BehandlingÅrsak::getBehandlingÅrsakType)
-                .anyMatch(behandlingÅrsak::equals);
+                .anyMatch(behandlingÅsrakString::equals);
     }
 
     public boolean erFørstegangssøknad() {

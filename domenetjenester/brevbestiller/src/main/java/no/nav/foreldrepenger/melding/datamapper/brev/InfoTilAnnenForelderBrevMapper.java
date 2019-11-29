@@ -42,7 +42,7 @@ public class InfoTilAnnenForelderBrevMapper extends FritekstmalBrevMapper {
             aarsak=BehandlingÅrsakType.INFOBREV_BEHANDLING;
         }
         else {
-            aarsak=BehandlingÅrsakType.INFOBREV_OPPHOLD_BEHANDLING;
+            aarsak=BehandlingÅrsakType.INFOBREV_OPPHOLD;
         }
             return new Brevdata()
                 .leggTil("erAutomatiskVedtak", Boolean.FALSE) // For å unngå automatiskVedtakMvh_001 - bør skille informasjon/vedtak i tillegg til automatisk

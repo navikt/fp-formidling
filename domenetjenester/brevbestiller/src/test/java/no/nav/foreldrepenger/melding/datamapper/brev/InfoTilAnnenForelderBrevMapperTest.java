@@ -88,7 +88,7 @@ public class InfoTilAnnenForelderBrevMapperTest {
 
     @Test
     public void test_map_fagtypeOpphold() {
-      setup(BehandlingÅrsakType.INFOBREV_OPPHOLD_BEHANDLING.getKode(), 124L);
+      setup(BehandlingÅrsakType.INFOBREV_OPPHOLD.getKode(), 124L);
 
       ResourceBundle expectedValues = ResourceBundle.getBundle(
             String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),

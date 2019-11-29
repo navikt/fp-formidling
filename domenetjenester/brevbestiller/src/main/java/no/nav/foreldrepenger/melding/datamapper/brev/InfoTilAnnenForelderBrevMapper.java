@@ -36,12 +36,9 @@ public class InfoTilAnnenForelderBrevMapper extends FritekstmalBrevMapper {
 
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
-        BehandlingÅrsakType aarsak=null;
+        BehandlingÅrsakType aarsak=BehandlingÅrsakType.INFOBREV_BEHANDLING;
         //forutsetter at behandlingen har en av disse årsakstypene - er håndtert i fpsak
-        if (behandling.harBehandlingÅrsak(BehandlingÅrsakType.INFOBREV_BEHANDLING)) {
-            aarsak=BehandlingÅrsakType.INFOBREV_BEHANDLING;
-        }
-        else {
+        if (behandling.harBehandlingÅrsak(BehandlingÅrsakType.INFOBREV_OPPHOLD)) {
             aarsak=BehandlingÅrsakType.INFOBREV_OPPHOLD;
         }
             return new Brevdata()

@@ -36,18 +36,15 @@ public class InfoTilAnnenForelderBrevMapper extends FritekstmalBrevMapper {
 
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
-        BehandlingÅrsakType aarsak=null;
+        BehandlingÅrsakType aarsak=BehandlingÅrsakType.INFOBREV_BEHANDLING;
         //forutsetter at behandlingen har en av disse årsakstypene - er håndtert i fpsak
-        if (behandling.harBehandlingÅrsak(BehandlingÅrsakType.INFOBREV_BEHANDLING)) {
-            aarsak=BehandlingÅrsakType.INFOBREV_BEHANDLING;
-        }
-        else {
+        if (behandling.harBehandlingÅrsak(BehandlingÅrsakType.INFOBREV_OPPHOLD)) {
             aarsak=BehandlingÅrsakType.INFOBREV_OPPHOLD;
         }
-            return new Brevdata()
+        return new Brevdata()
                 .leggTil("erAutomatiskVedtak", Boolean.FALSE) // For å unngå automatiskVedtakMvh_001 - bør skille informasjon/vedtak i tillegg til automatisk
                 .leggTil("kontaktTelefonnummer", null)  // null fordi det ikke skal være med i dette brevet.
-                .leggTil("behandlingsAarsak", aarsak); //skiller på tekst om vi mangler søknad pga oppholdsperioder eller siste uttaksdato hos mor
+                .leggTil("behandlingsAarsak", aarsak.getKode()); //skiller på tekst om vi mangler søknad pga oppholdsperioder eller siste uttaksdato hos mor
 
     }
 }

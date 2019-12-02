@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -115,11 +116,12 @@ public class Behandling {
     }
 
     public boolean harBehandlingÅrsak(BehandlingÅrsakType behandlingÅrsak) {
+        var behandlingÅsrakString = behandlingÅrsak.getKode();
         return getBehandlingÅrsaker().stream()
                 .map(BehandlingÅrsak::getBehandlingÅrsakType)
-                .anyMatch(behandlingÅrsak::equals);
+                .anyMatch(behandlingÅsrakString::equals);
     }
-
+    
     public boolean erFørstegangssøknad() {
         return BehandlingType.FØRSTEGANGSSØKNAD.equals(getBehandlingType());
     }

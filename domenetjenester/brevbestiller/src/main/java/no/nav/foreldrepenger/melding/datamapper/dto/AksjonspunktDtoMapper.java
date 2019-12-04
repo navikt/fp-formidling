@@ -32,6 +32,8 @@ public class AksjonspunktDtoMapper {
             return AksjonspunktDefinisjon.VARSEL_REVURDERING_MANUELL;
         } else if (AksjonspunktDefinisjon.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS.getKode().equals(kode)) {
             return AksjonspunktDefinisjon.FASTSETT_BEREGNINGSGRUNNLAG_ARBEIDSTAKER_FRILANS;
+        } else if (AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT.getKode().equals(kode)) {
+            return AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT;
         } else {
             return AksjonspunktDefinisjon.UDEFINERT;
         }

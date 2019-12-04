@@ -1,3 +1,6 @@
-{{i18n "du_kan_ha_rett_til_foreldrepenger" dato}}
-
+{{#eq behandlingsAarsak "INFOBREV_BEHANDLING"}}
+{{i18n "du_kan_ha_rett_til_foreldrepenger"}}
+{{else}}
+{{i18n "du_kan_ha_rett_til_foreldrepenger_opphold"}}
+{{/eq}}
 {{> felles}}

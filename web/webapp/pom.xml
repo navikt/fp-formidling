@@ -64,19 +64,6 @@
         <!-- Foreldrepengeprosjektet -->
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-            <artifactId>felles-integrasjon-bom</artifactId>
-            <version>${felles.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-                    <artifactId>felles-integrasjon-jms</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>felles-integrasjon-rest</artifactId>
         </dependency>
 
@@ -93,7 +80,11 @@
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>dokumenthendelse</artifactId>
         </dependency>
-
+        <!-- NAV interne 3djepart avhengigheter til kontrakter og bibliotek -->
+        <dependency>
+            <groupId>no.nav.abac.policies</groupId>
+            <artifactId>abac-foreldrepenger-policies-alfa</artifactId>
+        </dependency>
         <!-- Database håndtering -->
         <dependency>
             <groupId>com.zaxxer</groupId>

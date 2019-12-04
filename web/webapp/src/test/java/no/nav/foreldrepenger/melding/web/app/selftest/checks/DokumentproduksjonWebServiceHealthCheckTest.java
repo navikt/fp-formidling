@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import org.junit.Test;
 
-import no.nav.vedtak.felles.integrasjon.dokument.produksjon.DokumentproduksjonSelftestConsumer;
+import no.nav.foreldrepenger.melding.dokumentproduksjon.v2.DokumentproduksjonSelftestConsumer;
 
 public class DokumentproduksjonWebServiceHealthCheckTest {
 

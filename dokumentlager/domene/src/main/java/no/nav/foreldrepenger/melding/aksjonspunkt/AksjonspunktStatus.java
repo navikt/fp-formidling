@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.aksjonspunkt;
 public enum AksjonspunktStatus {
 
     OPPRETTET("OPPR"),
-    UTFØRT("UTFØRT"),
+    UTFØRT("UTFO"),
     AVBRUTT("AVBR"), //$NON-NLS-1$
     UDEFINERT("-");
 

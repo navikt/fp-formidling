@@ -53,18 +53,26 @@ public class AnkeOmgjøreVedtakBrevMapper  extends FritekstmalBrevMapper {
 
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
-
+        Optional<Anke> anke  = domeneobjektProvider.hentAnkebehandling(behandling);
+        if( anke.isPresent()) {
+            return new Brevdata()
+                    .leggTil("mintekst",  anke.get().getFritekstTilBrev())
+                    .leggTil("saksbehandler", behandling.getAnsvarligSaksbehandler())
+                    .leggTil("medunderskriver",behandling.getAnsvarligBeslutter())
+                    .leggTil("behandlingtype",behandling.getBehandlingType().getKode());
+        }
         return new Brevdata()
-                .leggTil("mintekst", hendelse.getFritekst())
                 .leggTil("saksbehandler", behandling.getAnsvarligSaksbehandler())
                 .leggTil("medunderskriver",behandling.getAnsvarligBeslutter())
                 .leggTil("behandlingtype",behandling.getBehandlingType().getKode());
+
 
     }
     @Override
     protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
 
         Dato vedtaksDato = null;
+        boolean gunst = false;
 
         initHandlebars(behandling.getSpråkkode());
 
@@ -73,11 +81,13 @@ public class AnkeOmgjøreVedtakBrevMapper  extends FritekstmalBrevMapper {
             UUID klageBehandlingUuid =  anke.get().getPaAnketBehandlingUuid();
             Behandling klageBehandling = domeneobjektProvider.hentBehandling(klageBehandlingUuid);
             vedtaksDato = klageBehandling.getOriginalVedtaksDato()!=null?medFormatering(klageBehandling.getOriginalVedtaksDato()):null;
+            if( "ANKE_TIL_GUNST".equals(anke.get().getAnkeVurderingOmgjoer())){
+                gunst= true;
+            }
         }
 
-
         FagType fagType = new FagType();
-        fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling).leggTil("vedtaksDato",vedtaksDato).getMap(), getBrødtekstMal()));
+        fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling).leggTil("vedtaksDato",vedtaksDato).leggTil("gunst",gunst).getMap(), getBrødtekstMal()));
         if(vedtaksDato== null){
             fagType.setHovedoverskrift(tryApply(Map.of("behandling", behandling, "dokumentHendelse", hendelse), getOverskriftMal()));
         }

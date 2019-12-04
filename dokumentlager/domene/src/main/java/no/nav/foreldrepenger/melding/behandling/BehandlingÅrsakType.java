@@ -44,8 +44,10 @@ public class BehandlingÅrsakType extends UlagretKodeliste {
     public static final BehandlingÅrsakType RE_OPPLYSNINGER_OM_YTELSER = new BehandlingÅrsakType("RE-YTELSE"); //$NON-NLS-1$
     public static final BehandlingÅrsakType RE_TILSTØTENDE_YTELSE_INNVILGET = new BehandlingÅrsakType("RE-TILST-YT-INNVIL"); //$NON-NLS-1$
     public static final BehandlingÅrsakType RE_ENDRING_BEREGNINGSGRUNNLAG = new BehandlingÅrsakType("RE-ENDR-BER-GRUN"); //$NON-NLS-1$
-    public static final BehandlingÅrsakType RE_TILSTØTENDE_YTELSE_OPPHØRT = new BehandlingÅrsakType("RE-TILST-YT-OPPH"); //$NON-NLS-1$
-
+    public static final BehandlingÅrsakType RE_TILSTØTENDE_YTELSE_OPPHØRT = new BehandlingÅrsakType("RE-TILST-YT-OPPH");//$NON-NLS-1$
+    // For å håndtere automatiske informasjonsbrev
+    public static final BehandlingÅrsakType INFOBREV_BEHANDLING = new BehandlingÅrsakType("INFOBREV_BEHANDLING");//$NON-NLS-1$
+    public static final BehandlingÅrsakType INFOBREV_OPPHOLD = new BehandlingÅrsakType("INFOBREV_OPPHOLD");//$NON-NLS-1$
     public static final BehandlingÅrsakType UDEFINERT = new BehandlingÅrsakType("-"); //$NON-NLS-1$
 
     public BehandlingÅrsakType(String kode) {

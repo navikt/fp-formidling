@@ -81,12 +81,30 @@ public class InnhentOpplysningerBrevMapperTest {
     }
 
     @Test
-    public void skal_velge_mottatt_dato_fra_endringssøknad_når_endring() {
+    public void skal_velge_mottattt_dato_fra_siste_søknad_mottatt_når_flere() {
+        LocalDate andreJanuar = LocalDate.of(2019, 1, 2);
+        LocalDate fjerdeJanuar = LocalDate.of(2019, 1, 4);
+        LocalDate forsteJanuar = LocalDate.of(2019, 1, 1);;
+        mottatteDokumenter.add(new MottattDokument(andreJanuar, DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL, DokumentKategori.SØKNAD));
+        mottatteDokumenter.add(new MottattDokument(fjerdeJanuar, DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL, DokumentKategori.SØKNAD));
+        mottatteDokumenter.add(new MottattDokument(forsteJanuar, DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL, DokumentKategori.SØKNAD));
+        FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter, klageDokument);
+        assertThat(fagType.getSoknadDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(fjerdeJanuar));
+        assertThat(fagType.getBehandlingsType()).isEqualTo(BehandlingsTypeKode.FOERSTEGANGSBEHANDLING);
+        assertThat(fagType.getFritekst()).isEqualTo(FRITEKST);
+        assertThat(fagType.getSokersNavn()).isEqualTo(dokumentFelles.getSakspartNavn());
+        assertThat(fagType.getPersonstatus()).isEqualTo(PersonstatusKode.ANNET);
+    }
+
+    @Test
+    public void skal_velge_siste_mottatt_dato_fra_endringssøknad_når_endring() {
         doReturn(List.of(opprettBehandlingsårsak(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode()))).when(behandling).getBehandlingÅrsaker();
         LocalDate andreJanuar = LocalDate.of(2019, 1, 2);
+        LocalDate fjerdeJanuar = LocalDate.of(2019, 1, 4);
         mottatteDokumenter.add(new MottattDokument(andreJanuar, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD));
+        mottatteDokumenter.add(new MottattDokument(fjerdeJanuar, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD));
         FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter, klageDokument);
-        assertThat(fagType.getSoknadDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(andreJanuar));
+        assertThat(fagType.getSoknadDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(fjerdeJanuar));
         assertThat(fagType.getBehandlingsType()).isEqualTo(BehandlingsTypeKode.ENDRINGSSØKNAD);
         assertThat(fagType.getFritekst()).isEqualTo(FRITEKST);
         assertThat(fagType.getSokersNavn()).isEqualTo(dokumentFelles.getSakspartNavn());

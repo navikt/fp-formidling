@@ -62,7 +62,7 @@
         <kontrakter.version>5.0_20191118071403_3337e08</kontrakter.version>
         <kafka.version>2.2.0</kafka.version>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
-        <classgraph.version>4.8.53</classgraph.version>
+        <classgraph.version>4.8.58</classgraph.version>
     </properties>
 
     <prerequisites>

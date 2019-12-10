@@ -42,9 +42,9 @@
         <mockito.version>3.1.0</mockito.version>
         <geronimo.jaspi.version>2.0.0</geronimo.jaspi.version>
         <geronimo.osgi.version>1.1</geronimo.osgi.version>
-        <logstash.version>6.2</logstash.version>
+        <logstash.version>6.3</logstash.version>
         <syslog4j.version>1.0.0</syslog4j.version>
-        <resteasy-validator-provider.version>3.9.0.Final</resteasy-validator-provider.version>
+        <resteasy-validator-provider.version>4.4.1.Final</resteasy-validator-provider.version>
         <weld-web.version>3.1.2.Final</weld-web.version>
         <javax.el.version>3.0.1-b09</javax.el.version>
 
@@ -62,7 +62,7 @@
         <kontrakter.version>5.0_20191118071403_3337e08</kontrakter.version>
         <kafka.version>2.2.0</kafka.version>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
-        <classgraph.version>4.8.53</classgraph.version>
+        <classgraph.version>4.8.58</classgraph.version>
     </properties>
 
     <prerequisites>
@@ -251,12 +251,12 @@
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-tree</artifactId>
-                <version>7.0</version>
+                <version>7.2</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-analysis</artifactId>
-                <version>7.0</version>
+                <version>7.2</version>
             </dependency>
 
             <dependency>

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -18,6 +19,7 @@ public class MottattdokumentMapper {
     private static LocalDate finnSøknadDokument(Behandling behandling, List<MottattDokument> mottatteDokumer) {
         return mottatteDokumer.stream()
                 .filter(dok -> BehandlingMapper.gjelderEndringsøknad(behandling) ? velgEndringssøknad(dok) : velgSøknad(dok))
+                .sorted(Comparator.comparing(MottattDokument::getMottattDato).reversed())
                 .findFirst()
                 .map(MottattDokument::getMottattDato).orElse(LocalDate.now());
     }

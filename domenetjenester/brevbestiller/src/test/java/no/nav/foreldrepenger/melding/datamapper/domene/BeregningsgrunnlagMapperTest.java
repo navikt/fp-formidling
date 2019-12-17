@@ -35,6 +35,7 @@ public class BeregningsgrunnlagMapperTest {
         return BeregningsgrunnlagPeriode.ny()
                 .medDagsats(STANDARD_PERIODE_DAGSATS)
                 .medBruttoPrÅr(BRUTTO_PR_ÅR)
+                .medAvkortetPrÅr(AVKORTET_PR_ÅR)
                 .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListe())
                 .build();
     }
@@ -74,6 +75,11 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_finne_brutto() {
         assertThat(BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag)).isEqualTo(BRUTTO_PR_ÅR.add(AVKORTET_PR_ÅR).longValue());
+    }
+
+    @Test
+    public void skal_finne_avkortetPrÅr_SVP() {
+        assertThat(BeregningsgrunnlagMapper.getAvkortetPrAarSVP(beregningsgrunnlag)).isEqualTo(AVKORTET_PR_ÅR);
     }
 
     @Test

@@ -60,7 +60,7 @@ public class SvpMapper {
         Map<String, Object> map = new HashMap<>(mapAtFlSnForholdFra(beregningsgrunnlag));
         map.putAll(mapAktiviteter(svpUttaksresultat, beregningsresultat, beregningsgrunnlag));
         map.put("nyEllerEndretBeregning", erNyEllerEndretBeregning(behandling));
-        map.put("bruttoBeregningsgrunnlag", BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag));
+        map.put("bruttoBeregningsgrunnlag", BeregningsgrunnlagMapper.getAvkortetPrAarSVP(beregningsgrunnlag));
         map.put("militarSivil", BeregningsgrunnlagMapper.militærEllerSivilTjeneste(beregningsgrunnlag));
         map.put("inntektOver6G", BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag));
         map.put("seksG", BeregningsgrunnlagMapper.finnSeksG(beregningsgrunnlag).intValue());

@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
-import no.nav.foreldrepenger.melding.dokumentdata.BaseEntitet;
+import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
 
 
 @Entity(name = "eventmottakFeillogg")

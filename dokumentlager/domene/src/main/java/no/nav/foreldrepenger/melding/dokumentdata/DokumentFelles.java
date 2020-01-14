@@ -23,6 +23,7 @@ import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;

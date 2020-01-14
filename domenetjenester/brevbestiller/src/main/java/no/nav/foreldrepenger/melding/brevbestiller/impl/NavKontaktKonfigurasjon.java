@@ -21,13 +21,13 @@ public class NavKontaktKonfigurasjon {
 
     @Inject
     public NavKontaktKonfigurasjon(
-            @KonfigVerdi(value = "norg2.kontakt.telefonnummer") String norg2KontaktTelefonNummer,
-            @KonfigVerdi(value = "norg2.kontakt.klageinstans.telefonnummer") String norg2NavKlageinstansTelefon,
-            @KonfigVerdi("brev.avsender.enhet.navn") String brevAvsenderEnhetNavn,
-            @KonfigVerdi("brev.avsender.klage.enhet.navn") String brevAvsenderKlageEnhet,
-            @KonfigVerdi("brev.returadresse.adresselinje1") String brevReturadresseAdresselinje1,
-            @KonfigVerdi("brev.returadresse.postnummer") String brevReturadressePostnummer,
-            @KonfigVerdi("brev.returadresse.poststed") String brevReturadressePoststed) {
+            @KonfigVerdi(value = "norg2.kontakt.telefonnummer", defaultVerdi = "55553333") String norg2KontaktTelefonNummer,
+            @KonfigVerdi(value = "norg2.kontakt.klageinstans.telefonnummer", defaultVerdi = "21 07 17 30") String norg2NavKlageinstansTelefon,
+            @KonfigVerdi(value = "brev.avsender.enhet.navn", defaultVerdi = "NAV Familie- og pensjonsytelser") String brevAvsenderEnhetNavn,
+            @KonfigVerdi(value = "brev.avsender.klage.enhet.navn", defaultVerdi = "NAV Klageinstans") String brevAvsenderKlageEnhet,
+            @KonfigVerdi(value = "brev.returadresse.adresselinje1", defaultVerdi = "Postboks 6600 Etterstad") String brevReturadresseAdresselinje1,
+            @KonfigVerdi(value = "brev.returadresse.postnummer", defaultVerdi = "0607") String brevReturadressePostnummer,
+            @KonfigVerdi(value = "brev.returadresse.poststed", defaultVerdi = "OSLO") String brevReturadressePoststed) {
         this.norg2KontaktTelefonNummer = norg2KontaktTelefonNummer;
         this.norg2NavKlageinstansTelefon = norg2NavKlageinstansTelefon;
         this.brevAvsenderEnhetNavn = brevAvsenderEnhetNavn;

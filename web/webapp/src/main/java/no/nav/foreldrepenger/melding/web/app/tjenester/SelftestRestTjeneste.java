@@ -12,10 +12,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
 import no.nav.foreldrepenger.melding.web.app.selftest.SelftestService;
 
-@Api(tags = {"selftest"})
 @Path("/selftest")
 @RequestScoped
 public class SelftestRestTjeneste {
@@ -33,9 +32,8 @@ public class SelftestRestTjeneste {
 
     @GET
     @Produces({TEXT_HTML, APPLICATION_JSON})
+    @Operation(description = "Sjekker systemavhengigheter", tags = "selftest", hidden = true)
     public Response doSelftest(@HeaderParam("Content-Type") String contentType, @QueryParam("json") boolean writeJsonAsHtml) {
         return selftestService.doSelftest(contentType, writeJsonAsHtml);
     }
-
-
 }

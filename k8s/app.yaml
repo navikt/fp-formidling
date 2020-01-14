@@ -10,7 +10,7 @@ spec:
   port: 8080 # Required. The port number which is exposed by the container and should receive HTTP traffic.
   team: teamforeldrepenger # Required. Set to the team that owns this application.
   liveness: # HTTP endpoint that signals 200 OK when the application is running.
-    path: /fpformidling/internal/isAlive
+    path: /fpformidling/internal/health/isAlive
     initialDelay: 30
     timeout: 5
     periodSeconds: 10     # How often (in seconds) to perform the probe. Default to 10 seconds
@@ -18,18 +18,21 @@ spec:
     # nais will try failureThreshold times before giving up and restarting the Pod
     # Defaults to 3
   readiness: # HTTP endpoint that signals 200 OK when it is okay to start routing traffic to the application.
-    path: /fpformidling/internal/isReady
+    path: /fpformidling/internal/health/isReady
     initialDelay: 30
     timeout: 5
     periodSeconds: 10
     failureThreshold: 27
+  prometheus:
+    enabled: true
+    path: /fpformidling/internal/metrics/prometheus
   replicas: # Optional. Set min = max to disable autoscaling.
     min: 1 # minimum number of replicas.
     max: 3 # maximum number of replicas.
     cpuThresholdPercentage: 80 # total cpu percentage threshold on deployment, at which point it will increase number of pods if current < max
   leaderElection: false # Optional. If true, a http endpoint will be available at $ELECTOR_PATH that return the current leader
   # Compare this value with the $HOSTNAME to see if the current instance is the leader
-  preStopHookPath: /fpformidling/internal/preStop # Optional. A HTTP GET will be issued to this endpoint at least once before the pod is terminated.
+  preStopHookPath: /fpformidling/internal/health/preStop # Optional. A HTTP GET will be issued to this endpoint at least once before the pod is terminated.
   # See https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
   #prometheus: # Optional.
   #  enabled: false # if true the pod will be scraped for metrics by prometheus

@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.melding.web.server.jetty;
 
 public class JettyWebKonfigurasjon implements AppKonfigurasjon {
     private static final String CONTEXT_PATH = "/fpformidling";
-    private static final String SWAGGER_HASH = "sha256-vqozJlvzx6Uic+A8h1SZiG7tT3e1S/sBPYV1EfRQLa4=";
+    private static final String SWAGGER_HASH = "sha256-TxvXP6LyJEmi4uLFpxv96Wc8HJ28MOJtMXV+/vEae4g=";
 
     private Integer serverPort;
 

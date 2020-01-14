@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 public class DatabaseHealthCheck extends ExtHealthCheck {
 
     private static final String JDBC_DEFAULT_DS = "jdbc/defaultDS";
-    private static final String SQL_QUERY = "select sysdate from DUAL";
+    private static final String SQL_QUERY = "select count(1) from KODEVERK";
     private String jndiName;
     // må være rask, og bruke et stabilt tabell-navn
     private String endpoint = null; // ukjent frem til første gangs test

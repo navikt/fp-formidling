@@ -66,15 +66,6 @@ public class PeriodeBeregner {
         //for sonar
     }
 
-    public static List<UttakResultatPeriode> finnPerioderMedStønadskontoType(List<UttakResultatPeriode> perioder, StønadskontoType stønadskontoType) {
-        return
-                perioder.stream()
-                        .filter(uttakPeriode -> uttakPeriode.getAktiviteter().stream()
-                                .map(UttakResultatPeriodeAktivitet::getTrekkonto)
-                                .anyMatch(stønadskontoType::equals))
-                        .collect(Collectors.toList());
-    }
-
     public static BeregningsgrunnlagPeriode finnBeregninsgrunnlagperiode(BeregningsresultatPeriode periode,
                                                                          List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
         for (BeregningsgrunnlagPeriode beregningsgrunnlagPeriode : beregningsgrunnlagPerioder) {
@@ -161,30 +152,6 @@ public class PeriodeBeregner {
             }
         }
         return Optional.empty();
-    }
-
-    public static int beregnTapteDagerFørTermin(List<UttakResultatPeriode> perioder, Optional<Stønadskonto> stønadsKontoForeldrepengerFørFødsel) {
-        int totaltAntallDager = stønadsKontoForeldrepengerFørFødsel.map(Stønadskonto::getMaxDager).orElse(0);
-        if (totaltAntallDager <= 0) {
-            return 0;
-        }
-        List<UttakResultatPeriode> perioderMedForeldrepengerFørFødsel = finnPerioderMedStønadskontoType(perioder, StønadskontoType.FORELDREPENGER_FØR_FØDSEL);
-        BigDecimal brukteDager = BigDecimal.ZERO;
-        for (UttakResultatPeriode periode : perioderMedForeldrepengerFørFødsel) {
-            brukteDager = brukteDager.add(periode.getAktiviteter().stream()
-                    .filter(aktivitet -> StønadskontoType.FORELDREPENGER_FØR_FØDSEL.equals(aktivitet.getTrekkonto()))
-                    .filter(aktivitet -> aktivitet.getUtbetalingsprosent().compareTo(BigDecimal.ZERO) > 0) //Hvis utbetaling er over 0, er det ikke tapte dager
-                    .map(UttakResultatPeriodeAktivitet::getTrekkdager)
-                    .filter(Objects::nonNull)
-                    .max(BigDecimal::compareTo)
-                    .orElse(BigDecimal.ZERO));
-        }
-        //brukte dager burde aldri være mindre enn total..
-        if (brukteDager.intValue() > totaltAntallDager) {
-            throw new IllegalStateException(String.format("Brukt %d av totalt %d antall dager", brukteDager.intValue(), totaltAntallDager));
-        }
-        //Resultat skal aldri være et desimaltall her
-        return totaltAntallDager - brukteDager.intValue();
     }
 
     public static Optional<Stønadskonto> finnStønadsKontoMedType(Set<Stønadskonto> stønadskontoer, StønadskontoType stønadskontoType) {

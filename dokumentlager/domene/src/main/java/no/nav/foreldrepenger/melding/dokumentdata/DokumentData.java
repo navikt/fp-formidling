@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
 import no.nav.foreldrepenger.melding.kodeverk.diff.IndexKey;
 
 @Entity(name = "DokumentData")

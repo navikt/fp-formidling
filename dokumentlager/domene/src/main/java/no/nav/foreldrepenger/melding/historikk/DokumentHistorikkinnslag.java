@@ -17,8 +17,8 @@ import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
+import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
-import no.nav.vedtak.felles.jpa.BaseEntitet;
 
 @Entity(name = "DokumentHistorikkinnslag")
 @Table(name = "DOKUMENT_HISTORIKKINNSLAG")

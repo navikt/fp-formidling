@@ -11,21 +11,21 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 
 @ApplicationScoped
-@ProsessTask(RekjørFeiledeTasksBatchTask.TASKTYPE)
-public class RekjørFeiledeTasksBatchTask implements ProsessTaskHandler {
+@ProsessTask(CleanNextBucketBatchTask.TASKTYPE)
+public class CleanNextBucketBatchTask implements ProsessTaskHandler {
 
-    public static final String TASKTYPE = "retry.feilendeTasks";
-    private static final Logger log = LoggerFactory.getLogger(RekjørFeiledeTasksBatchTask.class);
+    public static final String TASKTYPE = "partition.cleanBucket";
+    private static final Logger log = LoggerFactory.getLogger(CleanNextBucketBatchTask.class);
     private BatchProsessTaskRepository taskRepository;
 
     @Inject
-    public RekjørFeiledeTasksBatchTask(BatchProsessTaskRepository taskRepository) {
+    public CleanNextBucketBatchTask(BatchProsessTaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
-        int rekjørAlleFeiledeTasks = taskRepository.rekjørAlleFeiledeTasks();
-        log.info("Rekjører alle feilende tasks, oppdaterte {} tasks", rekjørAlleFeiledeTasks);
+        int antallSlettet = taskRepository.tømNestePartisjon();
+        log.info("Tømmer neste partisjon med ferdige tasks, slettet {}", antallSlettet);
     }
 }

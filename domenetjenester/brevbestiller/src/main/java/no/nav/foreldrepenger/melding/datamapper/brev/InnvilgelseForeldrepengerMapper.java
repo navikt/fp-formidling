@@ -153,7 +153,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, fagType);
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType, behandling);
         mapFelterRelatertTilSøknadOgRettighet(søknad, uttakResultatPerioder, aksjonspunkter, fagType);
-        mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, fagsak);
+        mapFelterRelatertTilStønadskontoer(fagType, saldoer, fagsak);
         mapFelterRelatertTilFamiliehendelse(behandling, familieHendelse, originalFamiliehendelse, fagType);
         mapLovhjemmel(fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling, uttakResultatPerioder);
         mapFelterRelatertTilDagsats(fagType, beregningsresultatFP);
@@ -210,8 +210,8 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         fagType.setAnnenForelderHarRett(uttakResultatPerioder.isAnnenForelderHarRett());
     }
 
-    private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Fagsak fagsak) {
-        fagType.setDagerTaptFørTermin(StønadskontoMapper.finnTapteDagerFørTermin(uttakResultatPerioder, saldoer, familieHendelse));
+    private void mapFelterRelatertTilStønadskontoer(FagType fagType, Saldoer saldoer, Fagsak fagsak) {
+        fagType.setDagerTaptFørTermin(BigInteger.valueOf(saldoer.getTapteDagerFpff()));
         fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()));
         fagType.setDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer));
         StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);

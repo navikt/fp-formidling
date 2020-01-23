@@ -6,7 +6,7 @@ Applikasjonen bestiller brev basert på hendelser fra en kafka-kø, eller via et
 ## Henvendelser
 
 Spørsmål knyttet til koden eller prosjektet kan rettes til:
-* Ramesh Shiraddi (ramesh.shiraddi@nav.no)
+* Per Jørgen Vigdal (per.jorgen.vigdal@nav.no)
 * Aleksander Andresen (aleksander.andresen@nav.no)
 * Tor Nærland (tor.nerland@nav.no)
 

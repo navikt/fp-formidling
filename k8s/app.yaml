@@ -57,7 +57,7 @@ spec:
   sidecar: true # refresh token
   env:
     - name: APP_VERSION
-      value: RELEASE_VERSION
+      value: "RELEASE_VERSION"
     - name: APP_NAME
       value: fpformidling
     - name: APP_ENVIRONMENT

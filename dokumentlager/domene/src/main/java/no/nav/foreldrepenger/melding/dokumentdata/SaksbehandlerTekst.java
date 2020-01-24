@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinFormula;
 
+import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 
 @Entity(name = "SaksbehandlerTekst")

@@ -4,20 +4,17 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 
-import io.swagger.jaxrs.listing.ApiListingResource;
 import no.nav.vedtak.felles.integrasjon.felles.ws.SoapWebService;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
 public class SoapApiTester {
 
-    static final List<Class<?>> UNNTATT = Collections.singletonList(ApiListingResource.class);
 
     static Collection<Method> finnAlleSoapMetoder() {
         List<Method> liste = new ArrayList<>();

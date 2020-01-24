@@ -170,6 +170,7 @@ public class JettyDevServer extends JettyServer {
     @Override
     protected ResourceCollection createResourceCollection() {
         return new ResourceCollection(
+                Resource.newClassPathResource("META-INF/resources/webjars/"),
                 Resource.newClassPathResource("/web")
         );
     }

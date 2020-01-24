@@ -1,20 +1,15 @@
 package no.nav.foreldrepenger.melding.web.app.tjenester;
 
-import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
-
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
 
-@Api(tags = {"nais"})
-@Path("/")
-@Produces(TEXT_PLAIN)
-@RequestScoped
+@Path("/health")
+@ApplicationScoped
 public class NaisRestTjeneste {
 
     private static final String RESPONSE_CACHE_KEY = "Cache-Control";
@@ -33,8 +28,9 @@ public class NaisRestTjeneste {
     }
 
     @GET
-    @Path("isAlive")
-    public Response isAlive() {
+    @Path("isReady")
+    @Operation(description = "sjekker om poden er klar", tags = "nais", hidden = true)
+    public Response isReady() {
         if (starterService.isKafkaAlive()) {
             return Response
                     .ok(RESPONSE_OK)
@@ -49,14 +45,18 @@ public class NaisRestTjeneste {
     }
 
     @GET
-    @Path("isReady")
-    public Response isReady() {
-        return Response.ok(RESPONSE_OK).header(RESPONSE_CACHE_KEY, RESPONSE_CACHE_VAL).build();
-
+    @Path("isAlive")
+    @Operation(description = "sjekker om poden lever", tags = "nais", hidden = true)
+    public Response isAlive() {
+        return Response
+                .ok(RESPONSE_OK)
+                .header(RESPONSE_CACHE_KEY, RESPONSE_CACHE_VAL)
+                .build();
     }
 
     @GET
     @Path("preStop")
+    @Operation(description = "kalles på før stopp", tags = "nais", hidden = true)
     public Response preStop() {
         starterService.stopServices();
         return Response.ok(RESPONSE_OK).build();

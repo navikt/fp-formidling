@@ -73,17 +73,20 @@
             <artifactId>prosesstask</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav.vedtak.prosesstask</groupId>
+            <artifactId>prosesstask-legacy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.vedtak.prosesstask</groupId>
+            <artifactId>prosesstask-rest-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-util</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>dokumenthendelse</artifactId>
-        </dependency>
-        <!-- NAV interne 3djepart avhengigheter til kontrakter og bibliotek -->
-        <dependency>
-            <groupId>no.nav.abac.policies</groupId>
-            <artifactId>abac-foreldrepenger-policies-alfa</artifactId>
         </dependency>
         <!-- Database håndtering -->
         <dependency>
@@ -177,23 +180,7 @@
         <!-- Metrics, logging, helse- og selftest -->
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-servlets</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
             <artifactId>metrics-healthchecks</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-annotation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.astefanutti.metrics.cdi</groupId>
-            <artifactId>metrics-cdi</artifactId>
         </dependency>
         <dependency>
             <groupId>io.prometheus</groupId>
@@ -202,6 +189,18 @@
         <dependency>
             <groupId>io.prometheus</groupId>
             <artifactId>simpleclient_servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_hotspot</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_common</artifactId>
         </dependency>
         <dependency>
             <groupId>net.logstash.logback</groupId>
@@ -278,6 +277,25 @@
             <groupId>org.owasp.encoder</groupId>
             <artifactId>encoder</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-jaxrs2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>swagger-ui</artifactId>
+            <version>3.24.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.12</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Må gjenta her for å få riktig scope (kolliderer ellers med dependencyManagement -->
         <dependency>
@@ -310,28 +328,6 @@
                 <configuration>
                     <addOutputDirectoryToResources>true</addOutputDirectoryToResources>
                     <timestampFormat>dd.MM.yyyy HH.mm.ss</timestampFormat>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>only-allowed-deps</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <rules>
-                        <bannedDependencies>
-                            <searchTransitive>true</searchTransitive>
-                            <excludes>
-                                <exclude>commons-logging:commons-logging</exclude>
-                            </excludes>
-                        </bannedDependencies>
-                    </rules>
                 </configuration>
             </plugin>
             <plugin>

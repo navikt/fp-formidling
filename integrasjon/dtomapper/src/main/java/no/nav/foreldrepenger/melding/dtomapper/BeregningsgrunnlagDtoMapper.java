@@ -83,6 +83,7 @@ public class BeregningsgrunnlagDtoMapper {
         return BeregningsgrunnlagPeriode.ny()
                 .medBruttoPrÅr(dto.getBruttoPrAar())
                 .medRedusertPrÅr(dto.getRedusertPrAar())
+                .medAvkortetPrÅr(dto.getAvkortetPrAar())
                 .medDagsats(dto.getDagsats())
                 .medPeriode(intervall)
                 .medperiodeÅrsaker(dto.getPeriodeAarsaker().stream().map(KodeDto::getKode).collect(Collectors.toList()))

@@ -7,6 +7,7 @@ import java.util.Optional;
 public class SaldoerDto {
     private Optional<LocalDate> maksDatoUttak;
     private Map<String, StønadskontoDto> stonadskontoer;
+    private int tapteDagerFpff;
 
     public SaldoerDto() {
     }
@@ -17,5 +18,9 @@ public class SaldoerDto {
 
     public Map<String, StønadskontoDto> getStonadskontoer() {
         return stonadskontoer;
+    }
+
+    public int getTapteDagerFpff() {
+        return tapteDagerFpff;
     }
 }

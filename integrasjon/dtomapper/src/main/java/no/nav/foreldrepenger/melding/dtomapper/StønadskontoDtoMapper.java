@@ -30,7 +30,7 @@ public class StønadskontoDtoMapper {
         return new Saldoer(dto.getStonadskontoer().values()
                 .stream()
                 .map(this::mapStønadskontoFradto)
-                .collect(Collectors.toSet()));
+                .collect(Collectors.toSet()), dto.getTapteDagerFpff());
     }
 
     Stønadskonto mapStønadskontoFradto(StønadskontoDto dto) {

@@ -17,6 +17,7 @@
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-streams</artifactId>
+            <version>${kafkastreams.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>

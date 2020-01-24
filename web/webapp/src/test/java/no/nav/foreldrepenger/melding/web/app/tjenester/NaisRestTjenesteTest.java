@@ -24,7 +24,7 @@ public class NaisRestTjenesteTest {
     @Test
     public void test_isAlive_skal_ikke_returnere_status_200_når_kafka_feiler() {
         doReturn(false).when(serviceStarterMock).isKafkaAlive();
-        Response response = restTjeneste.isAlive();
+        Response response = restTjeneste.isReady();
 
         assertThat(response.getStatus()).isNotEqualTo(Response.Status.OK.getStatusCode());
     }
@@ -32,7 +32,7 @@ public class NaisRestTjenesteTest {
     @Test
     public void test_isAlive_skal_returnere_status_200() {
         doReturn(true).when(serviceStarterMock).isKafkaAlive();
-        Response response = restTjeneste.isAlive();
+        Response response = restTjeneste.isReady();
 
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }

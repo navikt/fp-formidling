@@ -31,8 +31,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <felles.version>1.5.0-20200116143541-6449112</felles.version>
-        <prosesstask.version>2.0.0-20200118083448-d87fd6d</prosesstask.version>
+        <felles.version>1.4.2-20200113113007-04ca61b</felles.version>
+        <!-- Kafka-problem <felles.version>1.5.0-20200116143541-6449112</felles.version>
+        <prosesstask.version>2.0.0-20200118083448-d87fd6d</prosesstask.version> -->
         <kontrakter.version>5.1_20200117132228_47cdf2f</kontrakter.version>
 
         <!-- Eksterne -->
@@ -87,13 +88,17 @@
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>no.nav.vedtak.prosesstask</groupId>
-                <artifactId>prosesstask-root</artifactId>
-                <version>${prosesstask.version}</version>
+                <groupId>no.nav.foreldrepenger.felles</groupId>
+                <artifactId>felles-prosesstask</artifactId>
+                <version>${felles.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
             <dependency>
+                <groupId>no.nav.foreldrepenger.felles</groupId>
+                <artifactId>felles-prosesstask</artifactId>
+                <version>${felles.version}</version>
+            </dependency><dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>dokumentlager</artifactId>
                 <version>${project.version}</version>

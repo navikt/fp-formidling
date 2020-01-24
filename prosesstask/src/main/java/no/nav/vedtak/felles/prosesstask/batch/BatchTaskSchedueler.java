@@ -5,10 +5,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.control.ActivateRequestContext;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import no.nav.vedtak.apptjeneste.AppServiceHandler;
-import no.nav.vedtak.felles.AktiverContextOgTransaksjon;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
@@ -21,7 +22,8 @@ import no.nav.vedtak.felles.prosesstask.impl.cron.CronExpression;
  * Starter tasks med cron-expression hvis disse ikke har noen status fra før av.
  */
 @ApplicationScoped
-@AktiverContextOgTransaksjon
+@ActivateRequestContext
+@Transactional
 public class BatchTaskSchedueler implements AppServiceHandler {
 
     private ProsessTaskRepository taskRepository;

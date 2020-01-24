@@ -34,13 +34,13 @@
         <!-- felles artifakter -->
         <felles.version>1.5.0-20200116143541-6449112</felles.version>
         <prosesstask.version>2.0.0-20200118083448-d87fd6d</prosesstask.version>
-        <kontrakter.version>5.1_20200117132228_47cdf2f</kontrakter.version>
+        <kontrakter.version>5.1_20191210141010_6a7f399</kontrakter.version>
 
         <!-- Eksterne -->
         <metrics.version>4.1.2</metrics.version>
         <prometheus.version>0.8.0</prometheus.version>
         <swagger.version>2.1.1</swagger.version>
-        <kafkastreams.version>2.3.1</kafkastreams.version>
+        <kafkastreams.version>2.2.0</kafkastreams.version>
         
     </properties>
 

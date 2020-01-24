@@ -4,7 +4,9 @@ import java.time.Duration;
 import java.util.Properties;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.control.ActivateRequestContext;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -20,10 +22,10 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.melding.kodeverk.kafka.KafkaIntegration;
 import no.nav.vedtak.apptjeneste.AppServiceHandler;
-import no.nav.vedtak.felles.cdi.AktiverRequestContext;
 
 @ApplicationScoped
-@AktiverRequestContext
+@ActivateRequestContext
+@Transactional
 public class DokumentbestillingConsumer implements AppServiceHandler, KafkaIntegration {
 
     private static final Logger log = LoggerFactory.getLogger(DokumentbestillingConsumer.class);

@@ -17,6 +17,7 @@
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>

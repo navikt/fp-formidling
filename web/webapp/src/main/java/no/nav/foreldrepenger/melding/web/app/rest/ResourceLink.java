@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -39,7 +38,6 @@ public class ResourceLink {
     private HttpMethod type;
 
     @JsonProperty("requestPayload")
-    @Nullable
     private Object requestPayload;
 
     @SuppressWarnings("unused")

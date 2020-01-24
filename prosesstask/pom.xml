@@ -33,6 +33,10 @@
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-feil</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.vedtak.prosesstask</groupId>
+            <artifactId>prosesstask-legacy</artifactId>
+        </dependency>
 
         <!-- trengs for workaround for HHH-11020 for å kunne kalle EntityManager.unwrap -->
         <dependency>
@@ -47,16 +51,6 @@
             <groupId>no.nav.foreldrepenger.felles.sikkerhet</groupId>
             <artifactId>felles-sikkerhet</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.weld.module</groupId>
-            <artifactId>weld-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.spec.javax.annotation</groupId>
-                    <artifactId>jboss-annotations-api_1.3_spec</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <!-- Trengs for REST grensesnitt -->
@@ -74,12 +68,6 @@
                     <groupId>org.jboss.spec.javax.xml.bind</groupId>
                 </exclusion>
             </exclusions>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <!-- Trengs for REST grensesnitt -->
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-jaxrs</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -120,6 +108,12 @@
             <groupId>io.github.swagger2markup</groupId>
             <artifactId>markup-document-builder</artifactId>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>nl.jworks.markdown_to_asciidoc</groupId>
+                    <artifactId>markdown_to_asciidoc</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <!-- for å generere prosesstask doc fra db -->

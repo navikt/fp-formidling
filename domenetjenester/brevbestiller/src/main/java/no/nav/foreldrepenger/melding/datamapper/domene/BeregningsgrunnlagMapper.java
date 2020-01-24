@@ -195,6 +195,10 @@ public class BeregningsgrunnlagMapper {
     public static boolean inntektOverSeksG(Beregningsgrunnlag beregningsgrunnlag) {
         return finnFørstePeriode(beregningsgrunnlag).getBruttoPrÅr().compareTo(finnSeksG(beregningsgrunnlag)) > 0;
     }
+    //kun SVP: avkortetPerÅr gir faktisk beregningsgrunnlag for alle arbeidsforhold, og ikke bare arbeidsforholdet det søkes om - en verdi kun på dto
+    public static BigDecimal getAvkortetPrAarSVP(Beregningsgrunnlag beregningsgrunnlag) {
+        return finnFørstePeriode(beregningsgrunnlag).getAvkortetPrÅr();
+    }
 
     static StatusTypeKode tilStatusTypeKode(AktivitetStatus statuskode) {
         if (aktivitetStatusKodeStatusTypeKodeMap.containsKey(statuskode)) {

@@ -12,6 +12,7 @@ public class BeregningsgrunnlagPeriode {
     private Long dagsats;
     private BigDecimal bruttoPrÅr;
     private BigDecimal redusertPrÅr;
+    private BigDecimal avkortetPrÅr;
     private List<String> periodeÅrsakKoder;
     private DatoIntervall periode;
     private List<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagPrStatusOgAndelList = new ArrayList<>();
@@ -23,6 +24,7 @@ public class BeregningsgrunnlagPeriode {
         dagsats = builder.dagsats;
         bruttoPrÅr = builder.bruttoPrÅr;
         redusertPrÅr = builder.redusertPrÅr;
+        avkortetPrÅr = builder.avkortetPrÅr;
         periodeÅrsakKoder = builder.periodeÅrsaker;
         periode = builder.periode;
         beregningsgrunnlagPrStatusOgAndelList = builder.beregningsgrunnlagPrStatusOgAndelList;
@@ -48,6 +50,8 @@ public class BeregningsgrunnlagPeriode {
         return redusertPrÅr;
     }
 
+    public BigDecimal getAvkortetPrÅr() { return avkortetPrÅr;
+    }
     public LocalDate getBeregningsgrunnlagPeriodeFom() {
         return periode.getFomDato();
     }
@@ -64,6 +68,7 @@ public class BeregningsgrunnlagPeriode {
         private Long dagsats;
         private BigDecimal bruttoPrÅr;
         private BigDecimal redusertPrÅr;
+        private BigDecimal avkortetPrÅr;
         private List<String> periodeÅrsaker;
         private DatoIntervall periode;
         private List<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagPrStatusOgAndelList;
@@ -83,6 +88,11 @@ public class BeregningsgrunnlagPeriode {
 
         public Builder medRedusertPrÅr(BigDecimal val) {
             redusertPrÅr = val;
+            return this;
+        }
+
+        public Builder medAvkortetPrÅr(BigDecimal val) {
+            avkortetPrÅr = val;
             return this;
         }
 

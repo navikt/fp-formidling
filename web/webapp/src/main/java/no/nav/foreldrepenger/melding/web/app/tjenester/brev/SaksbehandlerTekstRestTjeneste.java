@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -16,20 +17,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.TekstFraSaksbehandlerDto;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.SaksbehandlerTekstMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.SaksbehandlerTekst;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.vedtak.felles.jpa.Transaction;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
-@Api(tags = "saksbehandlertekst")
 @Path("/saksbehandlertekst")
 @ApplicationScoped
-@Transaction
+@Transactional
 public class SaksbehandlerTekstRestTjeneste {
     private SaksbehandlerTekstMapper saksbehandlerTekstMapper;
     private DokumentRepository dokumentRepository;
@@ -47,11 +45,11 @@ public class SaksbehandlerTekstRestTjeneste {
     @POST
     @Path("/lagre-saksbehandler-tekst")
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Lagrer tekst fra saksbehandler")
+    @Operation(description = "Lagrer tekst fra saksbehandler", tags = "saksbehandlertekst")
     @BeskyttetRessurs(action = UPDATE, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public void lagreTekstFraSaksbehandler(
-            @ApiParam("Inneholder tekst saksbehandler fylt ut")
+            @Parameter(description = "Inneholder tekst saksbehandler fylt ut")
             @Valid AbacTekstFraSaksbehandlerDto tekstFraSaksbehandlerDto) { // NOSONAR
 
         final Optional<SaksbehandlerTekst> formidlingDataOptional = dokumentRepository.hentSaksbehandlerTekstHvisEksisterer(tekstFraSaksbehandlerDto.getBehandlingUuid());
@@ -79,7 +77,7 @@ public class SaksbehandlerTekstRestTjeneste {
     @Path("/hent-saksbehandler-tekst")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "hent tekst fra saksbehandler")
+    @Operation(description = "hent tekst fra saksbehandler", tags = "saksbehandlertekst")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public TekstFraSaksbehandlerDto hentTekstFraSaksbehandler(@Valid AbacBehandlingUuidDto dto) { // NOSONAR
@@ -91,7 +89,7 @@ public class SaksbehandlerTekstRestTjeneste {
     @Path("/hent-saksbehandler-tekst-dummy")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "hent tekst fra saksbehandler retunerer altid null")
+    @Operation(description = "hent tekst fra saksbehandler retunerer altid null", tags = "saksbehandlertekst")
     @BeskyttetRessurs(action = READ, ressurs = FAGSAK, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public TekstFraSaksbehandlerDto hentTekstFraSaksbehandlerDummy(@Valid AbacBehandlingUuidDummyDto dto) { // NOSONAR

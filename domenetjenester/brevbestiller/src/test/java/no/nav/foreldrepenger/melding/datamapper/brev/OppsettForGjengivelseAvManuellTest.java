@@ -130,6 +130,11 @@ public abstract class OppsettForGjengivelseAvManuellTest {
                     public List<AktoerIder> hentAktørIdForPersonIdentSet(Set<String> set) {
                         return Collections.emptyList();
                     }
+
+                    @Override
+                    public List<AktoerIder> hentPersonIdenterForAktørIder(Set<String> set) {
+                        return Collections.emptyList();
+                    }
                 }),
                 Mockito.mock(PersonConsumer.class),
                 Mockito.mock(TpsOversetter.class)));

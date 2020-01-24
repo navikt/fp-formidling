@@ -153,7 +153,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, fagType);
         mapFelterRelatertTilPerioder(beregningsresultatFP, beregningsgrunnlag, uttakResultatPerioder, fagType, behandling);
         mapFelterRelatertTilSøknadOgRettighet(søknad, uttakResultatPerioder, aksjonspunkter, fagType);
-        mapFelterRelatertTilStønadskontoer(fagType, uttakResultatPerioder, saldoer, familieHendelse, fagsak);
+        mapFelterRelatertTilStønadskontoer(fagType, saldoer, fagsak);
         mapFelterRelatertTilFamiliehendelse(behandling, familieHendelse, originalFamiliehendelse, fagType);
         mapLovhjemmel(fagType, beregningsgrunnlag, konsekvensForYtelsen, behandling, uttakResultatPerioder);
         mapFelterRelatertTilDagsats(fagType, beregningsresultatFP);
@@ -196,7 +196,6 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         }
         fagType.setAleneomsorg(aleneomsorg);
 
-        //Nytt felt for å angi ikke vurdert når saksbehandler aldri har vurdert rettighet for annen part. I dette tilfellet skal ikke tekst vises
         VurderingsstatusKode annenForelderHarRettVurdert;
         if (aksjonspunkter.stream().
                 filter(ap -> Objects.equals(ap.getAksjonspunktDefinisjon(), AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT)).
@@ -206,11 +205,13 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         else {
             annenForelderHarRettVurdert = VurderingsstatusKode.IKKE_VURDERT;
         }
+        //Begge felt brukes for å skille på overstyrt rettighet og ikke
         fagType.setAnnenForelderHarRettVurdert(annenForelderHarRettVurdert);
+        fagType.setAnnenForelderHarRett(uttakResultatPerioder.isAnnenForelderHarRett());
     }
 
-    private void mapFelterRelatertTilStønadskontoer(FagType fagType, UttakResultatPerioder uttakResultatPerioder, Saldoer saldoer, FamilieHendelse familieHendelse, Fagsak fagsak) {
-        fagType.setDagerTaptFørTermin(StønadskontoMapper.finnTapteDagerFørTermin(uttakResultatPerioder, saldoer, familieHendelse));
+    private void mapFelterRelatertTilStønadskontoer(FagType fagType, Saldoer saldoer, Fagsak fagsak) {
+        fagType.setDagerTaptFørTermin(BigInteger.valueOf(saldoer.getTapteDagerFpff()));
         fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()));
         fagType.setDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer));
         StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);

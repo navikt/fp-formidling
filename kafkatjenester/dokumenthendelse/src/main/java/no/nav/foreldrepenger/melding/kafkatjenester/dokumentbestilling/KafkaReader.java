@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.control.ActivateRequestContext;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +20,11 @@ import no.nav.foreldrepenger.melding.eventmottak.EventmottakStatus;
 import no.nav.foreldrepenger.melding.hendelse.HendelseHandler;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
-import no.nav.vedtak.felles.AktiverContextOgTransaksjon;
 import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 
 @ApplicationScoped
-@AktiverContextOgTransaksjon
+@ActivateRequestContext
+@Transactional
 public class KafkaReader {
     private static final Logger log = LoggerFactory.getLogger(KafkaReader.class);
     private HendelseHandler hendelseHandler;

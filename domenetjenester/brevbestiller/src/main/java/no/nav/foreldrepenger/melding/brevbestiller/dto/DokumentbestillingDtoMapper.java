@@ -41,6 +41,7 @@ public class DokumentbestillingDtoMapper {
                 .medDokumentMalType(utleddokumentMalType(brevDto.getDokumentMal()))
                 .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(brevDto.getArsakskode()))
                 .medGjelderVedtak(brevDto.isGjelderVedtak())
+                .medVedtaksbrev(VedtaksbrevMapper.tilEntitet(brevDto.getVedtaksbrev()))
                 .build();
     }
 

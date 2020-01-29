@@ -1,0 +1,14 @@
+{{#eq ytelseType "SVP"}}
+{{i18n "ikkeRettTilSVPVedtak"}}
+{{else}}
+    {{#eq ytelseType "FP"}}
+{{i18n "ikkeRettTilFPVedtak"}}
+    {{else}}
+{{i18n "ikkeRettTilESVedtak"}}
+    {{/eq}}
+{{/eq}}
+{{i18n "vurderingVedtak"}}
+{{i18n "fritekst" mintekst}}
+{{i18n "fasttekst" klageFristUker}}
+
+{{> felles}}

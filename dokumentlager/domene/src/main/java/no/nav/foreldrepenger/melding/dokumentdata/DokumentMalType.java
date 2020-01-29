@@ -44,6 +44,10 @@ public class DokumentMalType extends KodeverkTabell {
     public static final String INNVILGELSE_SVANGERSKAPSPENGER_DOK = "INNSVP";
     public static final String ANKEBREV_BESLUTNING_OM_OPPHEVING = "ANKEBO";
     public static final String ANKE_VEDTAK_OMGJORING_DOK = "VEDOGA";
+    public static final String KLAGE_STADFESTET = "KSTADF";
+    public static final String KLAGE_AVVIST = "KAVVIS";
+    public static final String KLAGE_OMGJØRING = "KOMGJO";
+    public static final String KLAGE_OVERSENDT_KLAGEINSTANS = "KOVKLA";
 
     @Convert(converter = BooleanToStringConverter.class)
     @Column(name = "tilgjengelig_manuell_utsendelse", nullable = false)

@@ -33,7 +33,7 @@
 
         <!-- felles artifakter -->
         <felles.version>1.5.0-20200116143541-6449112</felles.version>
-        <prosesstask.version>2.0.0-20200118083448-d87fd6d</prosesstask.version>
+        <prosesstask.version>2.1.0-20200131125706-62fdd0f</prosesstask.version>
         <kontrakter.version>5.1_20191210141010_6a7f399</kontrakter.version>
 
         <!-- Eksterne -->

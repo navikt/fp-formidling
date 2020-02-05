@@ -1,0 +1,21 @@
+{{#eq behandling.behandlingType.kode "BT-007"}}
+      {{#eq dokumentHendelse.ytelseType.kode "SVP"}}
+{{i18n "overskrift_NAV_Klageinstans_har_avvist_klagen_din_paa_TILBAKEBETALING_av_SVP"}}
+      {{else}}
+            {{#eq dokumentHendelse.ytelseType.kode "FP"}}
+{{i18n "overskrift_NAV_Klageinstans_har_avvist_klagen_din_paa_TILBAKEBETALING_av_FP"}}
+            {{else}}
+{{i18n "overskrift_NAV_Klageinstans_har_avvist_klagen_din_paa_TILBAKEBETALING_av_ES"}}
+            {{/eq}}
+      {{/eq}}
+{{else}}
+      {{#eq dokumentHendelse.ytelseType.kode "SVP"}}
+{{i18n "overskrift_NAV_Klageinstans_har_avvist_klagen_din_paa_SVP"}}
+      {{else}}
+         {{#eq dokumentHendelse.ytelseType.kode "FP"}}
+{{i18n "overskrift_NAV_Klageinstans_har_avvist_klagen_din_paa_FP"}}
+         {{else}}
+{{i18n "overskrift_NAV_Klageinstans_har_avvist_klagen_din_paa_ES"}}
+         {{/eq}}
+     {{/eq}}
+{{/eq}}

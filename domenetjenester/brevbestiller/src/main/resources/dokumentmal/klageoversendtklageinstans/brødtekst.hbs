@@ -1,0 +1,31 @@
+{{#eq behandling.behandlingType.kode "BT-007"}}
+      {{#eq dokumentHendelse.ytelseType.kode "SVP"}}
+{{i18n "fast_tekst_TB_SVP" mottatDato}}
+      {{else}}
+            {{#eq dokumentHendelse.ytelseType.kode "FP"}}
+{{i18n "fast_tekst_TB_FP" mottatDato}}
+            {{else}}
+{{i18n "fast_tekst_TB_ES" mottatDato}}
+            {{/eq}}
+      {{/eq}}
+{{else}}
+      {{#eq dokumentHendelse.ytelseType.kode "SVP"}}
+{{i18n "fast_tekst_SVP" mottatDato}}
+      {{else}}
+         {{#eq dokumentHendelse.ytelseType.kode "FP"}}
+{{i18n "fast_tekst_FP" mottatDato}}
+         {{else}}
+{{i18n "fast_tekst_ES" mottatDato}}
+         {{/eq}}
+     {{/eq}}
+{{/eq}}
+
+{{i18n "saksbehandlingstid" behandlingsfrist}}
+
+{{i18n "Dette_har_vi_lagt_vekt_paa_i_vurderingen_vaar"}}
+
+{{i18n "fritekst" mintekst}}
+
+{{i18n "nye_opplysninger"}}
+
+{{> felles}}

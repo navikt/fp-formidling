@@ -1,0 +1,67 @@
+kind: Application
+apiVersion: nais.io/v1alpha1
+metadata:
+  name: fpformidling
+  namespace: {{namespace}}
+  labels:
+    team: teamforeldrepenger
+spec:
+  image:  {{image}}
+  ingresses:
+  {{#each ingresses as |url|}}
+     - {{url}}
+  {{/each}}
+  liveness:
+    path: /fpformidling/internal/health/isAlive
+    initialDelay: 30
+    periodSeconds: 10
+    failureThreshold: 27
+    timeout: 5
+  port: 8080
+  preStopHookPath: /fpformidling/internal/health/preStop
+  prometheus:
+    enabled: true
+    path: /fpformidling/internal/metrics/prometheus
+  readiness:
+    path: /fpformidling/internal/health/isReady
+    initialDelay: 30
+    timeout: 5
+    periodSeconds: 10
+    failureThreshold: 27
+  replicas:
+    {{#if minReplicas}}
+      min: {{minReplicas}}
+    {{else}}
+    min: 1
+    {{/if}}
+    {{#if maxReplicas}}
+      max: {{maxReplicas}}
+    {{else}}
+    max: 3
+    {{/if}}
+    cpuThresholdPercentage: 80
+  leaderElection: false
+  istio:
+    enabled: false
+  resources:
+    limits:
+      cpu: "2000m"
+      memory: "2048Mi"
+    requests:
+      cpu: "100m"
+      memory: "1024Mi"
+  logformat: accesslog
+  logtransform: dns_loglevel
+  webproxy: false
+  vault:
+    enabled: true
+    paths:
+      - kvPath: {{serviceuserkv}}
+        mountPath: /var/run/secrets/nais.io/srvfpformidling
+      - kvPath: /kv/{{cluster}}/fss/fpformidling/{{namespace}}
+        mountPath: /var/run/secrets/nais.io/vault
+  env:
+    {{#each env}}
+       - name: {{@key}}
+  value: "{{this}}"
+    {{/each}}

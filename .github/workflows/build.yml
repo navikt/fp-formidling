@@ -47,7 +47,6 @@ jobs:
       - name: Kompiler
         run: |
           echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
-          echo "$GITHUB_TOKEN" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
           mvn jacoco:prepare-agent install -e --batch-mode --settings .github/.m2/settings.xml   -Djacoco.destFile=$(pwd)/target/jacoco.exec
           mvn jacoco:report sonar:sonar -e --batch-mode --settings .github/.m2/settings.xml -Djacoco.dataFile=$(pwd)/target/jacoco.exec  -Dsonar.login=${SONAR_TOKEN} -Dsonar.projectKey=navikt_fpformidling
         env:

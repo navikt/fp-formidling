@@ -20,25 +20,23 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - name: Sjekk ut kode
-        uses: actions/checkout@v2
-      - run:  git fetch --prune --unshallow
-
-      - name: Cache maven repository
-        uses: actions/cache@v1
+      - uses: actions/checkout@v1
+      - uses: actions/cache@v1
         with:
-          path: ~/.github/.m2/repository
+          path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven-
-
-      - name: Setup Java 11
-        uses: actions/setup-java@v1
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - uses: actions/setup-java@v1
         with:
           java-version: 1.11
-
-      - name: Kompiler
+      - name: Build
+        shell: bash
         run: |
-          echo "$GITHUB_TOKEN" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
-          mvn --quiet clean install --batch-mode --settings .github/workflows/.m2/settings.xml
+          echo "Building $(echo $GITHUB_SHA | cut -c1-7)"
+          mvn package --batch-mode --settings ./.m2/settings.xml --file pom.xml -Dchangelist= -Dsha1=-$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USERNAME: x-access-token
+          GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          DATASOURCE_HOST: localhost
+          DATASOURCE_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port

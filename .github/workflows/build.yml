@@ -25,62 +25,39 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/cache@v1
+      - name: Sjekk ut kode
+        uses: actions/checkout@v2
+      - run:  git fetch --prune --unshallow
+
+      - name: Cache maven repository
+        uses: actions/cache@v1
         with:
           path: ~/.github/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-      - uses: actions/setup-java@v1
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Setup Java 11
+        uses: actions/setup-java@v1
         with:
           java-version: 1.11
-      - name: Build artifacts & deploy
-        shell: bash
+
+      - name: Hent tag
+        run: echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
+
+      - name: Kompiler
         run: |
-          echo "Building artifacts $(echo $GITHUB_SHA | cut -c1-7)"
-          mvn jacoco:prepare-agent deploy -e --batch-mode --settings ./.github/.m2/settings.xml -Dmaven.wagon.http.pool=false --file pom.xml -Dchangelist= -Dsha1=-$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7) -Dfile.encoding=UTF-8 -DinstallAtEnd=true -DdeployAtEnd=true  -Djacoco.destFile=$(pwd)/target/jacoco.exec
-          mvn jacoco:report sonar:sonar -e --batch-mode --settings ./.github/.m2/settings.xml --file pom.xml -Djacoco.dataFile=$(pwd)/target/jacoco.exec -Dsonar.projectKey="navikt_fp-formidling" -Dsonar.host.url='https://sonarcloud.io' -Dsonar.organization=navit -Dsonar.login=${SONAR_TOKEN}
-          echo "Deployed artifacts"
-          echo ::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)
-          echo ::set-env name=IMAGE::$IMAGE_BASE:$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)
+          echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
+          echo "$GITHUB_TOKEN" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
+          mvn jacoco:prepare-agent install -e --batch-mode --settings .github/.m2/settings.xml   -Djacoco.destFile=$(pwd)/target/jacoco.exec
+          mvn jacoco:report sonar:sonar -e --batch-mode --settings .github/.m2/settings.xml -Djacoco.dataFile=$(pwd)/target/jacoco.exec  -Dsonar.login=${SONAR_TOKEN} -Dsonar.projectKey=navikt_fpformidling
         env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          DATASOURCE_HOST: localhost
-          DATASOURCE_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
 
-      - name: Bygg og push docker-image
-        env:
-          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+      - name: Bygg, tag og push Docker image
         run: |
-          docker build --pull --tag ${IMAGE} --tag ${IMAGE_BASE}:latest .
-          echo "$GITHUB_ACCESS_TOKEN" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
-          docker push ${IMAGE_BASE}:latest
-          docker push $IMAGE
+          docker build  --tag $IMAGE .
+          echo "$GITHUB_TOKEN" | docker login --username "x-access-token" --password-stdin https://docker.pkg.github.com
+          docker push $IMAGE_BASE
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Opprett deployment issue
-        if: success()
-        uses: maxkomarychev/oction-create-issue@v0.7.1
-        id: createdeployissue
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: Deploy av ${{ env.TAG }}
-          labels: deployment
-          body: |
-            Kommenter med <b>/promote ${{ env.TAG }} env namespace</b>, hvor <b>env</b> er et gyldig clusternavn og <b>namespace</b> et eksisterende namespace i det clusteret.
-
-            <table>
-            <tr><th>Cluster</th><th>Namespace</th></tr>
-            <tr><td>dev-fss</td><td>t4, q0, q1</td></tr>
-            <tr><td>prod-fss</td><td>default</td></tr>
-            </table>
-      - name: Trigg deploy til dev
-        if: success()
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          issue-number: ${{ steps.createdeployissue.outputs.number }}
-          body: /promote ${{ env.TAG }} dev-fss t4

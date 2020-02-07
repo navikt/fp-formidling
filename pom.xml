@@ -41,7 +41,7 @@
         <prometheus.version>0.8.0</prometheus.version>
         <swagger.version>2.1.1</swagger.version>
         <kafkastreams.version>2.2.0</kafkastreams.version>
-        
+
     </properties>
 
     <prerequisites>
@@ -204,7 +204,7 @@
                 <artifactId>postgresql</artifactId>
                 <version>42.2.5</version>
             </dependency>
-                 
+
             <!-- Kontrakter -->
             <dependency>
                 <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
@@ -464,6 +464,18 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-remote-resources-plugin</artifactId>
                     <version>1.7.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.5</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>prepare-agent</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>

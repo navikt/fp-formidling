@@ -40,7 +40,7 @@
         <metrics.version>4.1.2</metrics.version>
         <prometheus.version>0.8.0</prometheus.version>
         <swagger.version>2.1.1</swagger.version>
-        <kafkastreams.version>2.2.0</kafkastreams.version>
+        <kafkastreams.version>2.4.0</kafkastreams.version>
 
     </properties>
 

@@ -2,6 +2,8 @@
   "cluster": "preprod",
   "serviceuserkv": "/serviceuser/data/test/srvfpformidling",
   "namespace": "t4",
+  "minReplicas": "1",
+  "maxReplicas": "3",
   "ingresses": [
     "https://app-t4.adeo.no/fpformidling",
     "https://fpformidling-t4.nais.preprod.local/"

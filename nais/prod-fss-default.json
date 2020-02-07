@@ -2,6 +2,8 @@
   "cluster": "prod",
   "serviceuserkv": "/serviceuser/data/prod/srvfpformidling",
   "namespace": "default",
+  "minReplicas": "1",
+  "maxReplicas": "3",
   "ingresses": [
     "https://app.adeo.no/fpformidling",
     "https://fpformidling.nais.adeo.no/"

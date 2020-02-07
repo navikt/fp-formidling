@@ -29,16 +29,8 @@ spec:
     periodSeconds: 10
     failureThreshold: 27
   replicas:
-  {{#if minReplicas}}
     min: {{minReplicas}}
-  {{else}}
-    min: 1
-  {{/if}}
-  {{#if maxReplicas}}
     max: {{maxReplicas}}
-  {{else}}
-    max: 3
-  {{/if}}
     cpuThresholdPercentage: 80
   leaderElection: false
   istio:

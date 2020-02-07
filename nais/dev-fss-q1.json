@@ -2,6 +2,8 @@
   "cluster": "preprod",
   "serviceuserkv": "/serviceuser/data/dev/srvfpformidling",
   "namespace": "q1",
+  "minReplicas": "1",
+  "maxReplicas": "3",
   "ingresses": [
     "https://app-q1.adeo.no/fpformidling",
     "https://fpformidling-q1.nais.preprod.local/"

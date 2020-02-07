@@ -19,7 +19,7 @@ For å kjøre lokalt trenger du app-local.properties med riktige verdier i web\w
 
 #### Sertifikater
 For å kunne kjøre mot miljø fra lokalt, må man oppgi testsertfikater i HOME mappen.
- I windows blir det slik "c:\Users\<bruker navn>\.modig"
+I windows blir det slik "c:\Users\<bruker navn>\.modig"
 
 #### Database
 Du trenger postgresql installert lokalt, helst 11+ (se F:\programvare\postgreSql på utviklerimage, eller last ned fra https://www.enterprisedb.com/downloads/postgres-postgresql-downloads og kjør igjennom PostgreSQL Setup Wizard).

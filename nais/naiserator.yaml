@@ -29,16 +29,16 @@ spec:
     periodSeconds: 10
     failureThreshold: 27
   replicas:
-    {{#if minReplicas}}
-      min: {{minReplicas}}
-    {{else}}
+  {{#if minReplicas}}
+    min: {{minReplicas}}
+  {{else}}
     min: 1
-    {{/if}}
-    {{#if maxReplicas}}
-      max: {{maxReplicas}}
-    {{else}}
+  {{/if}}
+  {{#if maxReplicas}}
+    max: {{maxReplicas}}
+  {{else}}
     max: 3
-    {{/if}}
+  {{/if}}
     cpuThresholdPercentage: 80
   leaderElection: false
   istio:
@@ -61,7 +61,7 @@ spec:
       - kvPath: /kv/{{cluster}}/fss/fpformidling/{{namespace}}
         mountPath: /var/run/secrets/nais.io/vault
   env:
-    {{#each env}}
-       - name: {{@key}}
-  value: "{{this}}"
-    {{/each}}
+  {{#each env}}
+   - name: {{@key}}
+     value: "{{this}}"
+  {{/each}}

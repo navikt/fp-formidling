@@ -13,3 +13,4 @@ then
    export  SYSTEMBRUKER_PASSWORD=$(cat /var/run/secrets/nais.io/srvfpformidling/password)
    echo "Setter SYSTEMBRUKER_PASSWORD"
 fi
+#Eksporterer vault verdier.

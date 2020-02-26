@@ -1,27 +1,34 @@
 package no.nav.foreldrepenger.melding.web.server.jetty;
 
+import no.nav.foreldrepenger.melding.web.app.konfig.ApplicationConfig;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatabaseScript;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceRole;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceUtil;
+import no.nav.vedtak.isso.IssoApplication;
+import no.nav.vedtak.util.env.Environment;
+import org.eclipse.jetty.plus.jndi.EnvEntry;
+import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.eclipse.jetty.webapp.MetaData;
+import org.eclipse.jetty.webapp.WebAppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.sql.DataSource;
-
-import org.eclipse.jetty.plus.jndi.EnvEntry;
-import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.resource.ResourceCollection;
-import org.eclipse.jetty.webapp.MetaData;
-import org.eclipse.jetty.webapp.WebAppContext;
-
-import no.nav.foreldrepenger.melding.web.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatabaseScript;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceRole;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceUtil;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.EnvironmentClass;
-import no.nav.vedtak.isso.IssoApplication;
+import static no.nav.vedtak.util.env.Cluster.LOCAL;
+import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
 
 public class JettyServer extends AbstractJettyServer {
+
+    private static final Environment ENV = Environment.current();
+
+    private static final Logger log = LoggerFactory.getLogger(JettyServer.class);
 
     public JettyServer() {
         this(new JettyWebKonfigurasjon());
@@ -36,6 +43,7 @@ public class JettyServer extends AbstractJettyServer {
     }
 
     public static void main(String[] args) throws Exception {
+        System.setProperty(NAIS_CLUSTER_NAME, ENV.clusterName());
         JettyServer jettyServer;
         if (args.length > 0) {
             int serverPort = Integer.parseUnsignedInt(args[0]);
@@ -81,24 +89,27 @@ public class JettyServer extends AbstractJettyServer {
 
     @Override
     protected void konfigurerJndi() throws Exception {
-        new EnvEntry("jdbc/defaultDS", DatasourceUtil.createDatasource("defaultDS", DatasourceRole.USER, getEnvironmentClass(), 4));
+        new EnvEntry("jdbc/defaultDS",
+                DatasourceUtil.createDatasource("defaultDS", DatasourceRole.USER, ENV.getCluster(), 4));
     }
 
     @Override
-    protected void migrerDatabaser() throws IOException {
-        EnvironmentClass environmentClass = getEnvironmentClass();
+    protected void migrerDatabaser() {
         String initSql = String.format("SET ROLE \"%s\"", DatasourceUtil.getDbRole("defaultDS", DatasourceRole.ADMIN));
-        DataSource migratateDS = DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass, 1);
-        DatabaseScript.migrate(migratateDS, initSql, false);
-        try {
-            migratateDS.getConnection().close();
-        } catch (SQLException e) {
-            throw new RuntimeException("Klarte ikke stenge databaseconnection");
+        if (LOCAL.equals(ENV.getCluster())) {
+            // TODO: Ønsker egentlig ikke dette, men har ikke satt opp skjema lokalt
+            // til å ha en admin bruker som gjør migrering og en annen som gjør CRUD
+            // operasjoner
+            initSql = null;
         }
-    }
-
-    protected EnvironmentClass getEnvironmentClass() {
-        return EnvironmentUtil.getEnvironmentClass();
+        DataSource migreringDs = DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, ENV.getCluster(),
+                1);
+        try {
+            DatabaseScript.migrate(migreringDs, initSql,false);
+            migreringDs.getConnection().close();
+        } catch (SQLException e) {
+            log.warn("Klarte ikke stenge connection etter migrering", e);
+        }
     }
 
     @Override

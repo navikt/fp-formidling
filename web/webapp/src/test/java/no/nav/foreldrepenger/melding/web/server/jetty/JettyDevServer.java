@@ -1,13 +1,10 @@
 package no.nav.foreldrepenger.melding.web.server.jetty;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.sql.DataSource;
-
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.StatusPrinter;
+import no.nav.foreldrepenger.melding.sikkerhet.TestSertifikater;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -21,15 +18,10 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.core.joran.spi.JoranException;
-import ch.qos.logback.core.util.StatusPrinter;
-import no.nav.foreldrepenger.melding.sikkerhet.TestSertifikater;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatabaseScript;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceRole;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceUtil;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.EnvironmentClass;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JettyDevServer extends JettyServer {
     /**
@@ -42,7 +34,6 @@ public class JettyDevServer extends JettyServer {
 
     private static final String VTP_ARGUMENT = "--vtp";
     private static boolean vtp;
-    String schema;
 
     public JettyDevServer() {
         super(new JettyDevKonfigurasjon());
@@ -65,10 +56,6 @@ public class JettyDevServer extends JettyServer {
         super.konfigurer();
     }
 
-    @Override
-    protected EnvironmentClass getEnvironmentClass() {
-        return EnvironmentClass.LOCALHOST;
-    }
 
     protected void konfigurerLogback() throws IOException {
         new File("./logs").mkdirs();
@@ -112,22 +99,6 @@ public class JettyDevServer extends JettyServer {
 
 
     @Override
-    protected void migrerDatabaser() {
-        EnvironmentClass environmentClass = getEnvironmentClass();
-        String initSql = String.format("SET ROLE \"%s\"", DatasourceUtil.getDbRole("defaultDS", DatasourceRole.ADMIN));
-        if (EnvironmentClass.LOCALHOST.equals(environmentClass)) {
-            initSql = null;
-        }
-        DataSource migratateDS = DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, environmentClass, 1);
-        DatabaseScript.migrate(migratateDS, initSql, true);
-        try {
-            migratateDS.getConnection().close();
-        } catch (SQLException e) {
-            throw new RuntimeException("Klarte ikke stenge databaseconnection");
-        }
-    }
-
-    @Override
     protected void konfigurerSikkerhet() throws IOException {
         System.setProperty("conf", "src/main/resources/jetty/");
         super.konfigurerSikkerhet();
@@ -142,7 +113,7 @@ public class JettyDevServer extends JettyServer {
     protected List<Connector> createConnectors(AppKonfigurasjon appKonfigurasjon, Server server) {
         List<Connector> connectors = super.createConnectors(appKonfigurasjon, server);
 
-        SslContextFactory sslContextFactory = new SslContextFactory();
+        SslContextFactory sslContextFactory = new SslContextFactory.Server();
         sslContextFactory.setKeyStorePath(System.getProperty(KEYSTORE_PATH_PROP));
         sslContextFactory.setKeyStorePassword(System.getProperty(KEYSTORE_PASSW_PROP));
         sslContextFactory.setKeyManagerPassword(System.getProperty(KEYSTORE_PASSW_PROP));

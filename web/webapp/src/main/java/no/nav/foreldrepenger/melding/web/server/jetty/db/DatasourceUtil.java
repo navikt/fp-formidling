@@ -1,28 +1,33 @@
 package no.nav.foreldrepenger.melding.web.server.jetty.db;
 
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-
 import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil;
 import no.nav.vault.jdbc.hikaricp.VaultError;
 import no.nav.vedtak.konfig.PropertyUtil;
+import no.nav.vedtak.util.env.Cluster;
+
+import javax.sql.DataSource;
+import java.util.Properties;
+
+import static no.nav.vedtak.util.env.Cluster.LOCAL;
 
 public class DatasourceUtil {
 
-    public static DataSource createDatasource(String datasourceName, DatasourceRole role, EnvironmentClass environmentClass, int maxPoolSize) {
+    private static final String VAULT_PREPROD_NAVN = "preprod-fss";
+
+    public static DataSource createDatasource(String datasourceName, DatasourceRole role, Cluster cluster, int maxPoolSize) {
         String rolePrefix = getRolePrefix(datasourceName);
         HikariConfig config = initConnectionPoolConfig(datasourceName, maxPoolSize);
-        if (EnvironmentClass.LOCALHOST.equals(environmentClass)) {
-            String password = PropertyUtil.getProperty(datasourceName + ".password");
-            return createLocalDatasource(config, "public", rolePrefix, password);
-        } else {
-            String dbRole = getRole(rolePrefix, role);
-            return createVaultDatasource(config, environmentClass.mountPath(), dbRole);
+        if (LOCAL.equals(cluster)) {
+            return createLocalDatasource(config, "public", rolePrefix,
+                    PropertyUtil.getProperty(datasourceName + ".password"));
         }
+        return createVaultDatasource(config, mountPath(cluster), getRole(rolePrefix, role));
+    }
+
+    private static String mountPath(Cluster cluster) {
+        return "postgresql/" + (cluster.isProd() ? cluster.clusterName() : VAULT_PREPROD_NAVN);
     }
 
     private static String getRole(String rolePrefix, DatasourceRole role) {

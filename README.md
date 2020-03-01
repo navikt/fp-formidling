@@ -13,6 +13,7 @@ Spørsmål knyttet til koden eller prosjektet kan rettes til:
 ### For NAV-ansatte
 Interne henvendelser kan sendes via Slack i kanalen #fp-fomidling.
 
+
 ### Oppsett
 #### Konfigfiler
 For å kjøre lokalt trenger du app-local.properties med riktige verdier i web\webapp

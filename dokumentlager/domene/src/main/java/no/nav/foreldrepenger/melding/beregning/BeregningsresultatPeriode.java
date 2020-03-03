@@ -12,17 +12,17 @@ public class BeregningsresultatPeriode {
 
     private Long dagsats;
     private DatoIntervall periode;
-    private Integer utbetaltTilSoker;
+    private Long utbetaltTilSoker;
     private List<BeregningsresultatAndel> beregningsresultatAndelList;
 
     private BeregningsresultatPeriode(Builder builder) {
         dagsats = builder.dagsats;
         periode = builder.periode;
         beregningsresultatAndelList = builder.beregningsresultatAndelList;
-        utbetaltTilSoker = beregningsresultatAndelList.stream().filter(x -> x.erBrukerMottaker())
+        Integer sum = beregningsresultatAndelList.stream().filter(x -> x.erBrukerMottaker())
                 .map(x -> x.getDagsats())
                 .collect(Collectors.summingInt(Integer::intValue));
-
+        utbetaltTilSoker = Long.valueOf(sum);
     }
 
     public static Builder ny() {
@@ -32,7 +32,7 @@ public class BeregningsresultatPeriode {
     public Long getDagsats() {
         return dagsats;
     }
-    public Integer getUtbetaltTilSoker() {
+    public Long getUtbetaltTilSoker() {
         return utbetaltTilSoker;
     }
 

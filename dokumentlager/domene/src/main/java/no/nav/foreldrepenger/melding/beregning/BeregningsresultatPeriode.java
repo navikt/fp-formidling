@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 
@@ -11,12 +12,17 @@ public class BeregningsresultatPeriode {
 
     private Long dagsats;
     private DatoIntervall periode;
+    private Long utbetaltTilSoker;
     private List<BeregningsresultatAndel> beregningsresultatAndelList;
 
     private BeregningsresultatPeriode(Builder builder) {
         dagsats = builder.dagsats;
         periode = builder.periode;
         beregningsresultatAndelList = builder.beregningsresultatAndelList;
+        Integer sum = beregningsresultatAndelList.stream().filter(x -> x.erBrukerMottaker())
+                .map(x -> x.getDagsats())
+                .collect(Collectors.summingInt(Integer::intValue));
+        utbetaltTilSoker = Long.valueOf(sum);
     }
 
     public static Builder ny() {
@@ -25,6 +31,9 @@ public class BeregningsresultatPeriode {
 
     public Long getDagsats() {
         return dagsats;
+    }
+    public Long getUtbetaltTilSoker() {
+        return utbetaltTilSoker;
     }
 
     public LocalDate getBeregningsresultatPeriodeFom() {

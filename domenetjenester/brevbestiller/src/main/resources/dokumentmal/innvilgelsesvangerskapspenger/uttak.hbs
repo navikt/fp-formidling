@@ -6,10 +6,11 @@
         {{/unless}}
         {{#each perioder}}
 {{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" fom tom}}
-            {{~#and (lt utbetalingsgrad 100) (gt utbetalingsgrad 0)~}}
-{{i18n "far_du_x_prosent_svp" utbetalingsgrad}}
-            {{/and}}
-{{#if @last}}-*{{/if}}
+{{~#lt utbetalingsgrad 100}}
+{{~i18n "far_du_x_prosent_svp" utbetalingsgrad}}{{#if @last}}-*{{/if}}
+        {{else}}
+{{~i18n "far_du_100_prosent_svp"}}{{#if @last}}-*{{/if}}
+            {{/lt}}
         {{/each}}
     {{/each}}
 {{else}}
@@ -17,11 +18,11 @@
     {{#each uttakPerioder}}
         {{#each perioder}}
 {{i18n "fra_og_med_til_og_med" fom tom}}
-        {{~#and (lt utbetalingsgrad 100) (gt utbetalingsgrad 0)}}
-{{i18n "far_du_x_prosent_svp" utbetalingsgrad}}
+        {{~#lt utbetalingsgrad 100}}
+{{~i18n "far_du_x_prosent_svp" utbetalingsgrad}}
         {{else}}
-
-        {{/and}}
+{{~i18n "far_du_100_prosent_svp"}}
+        {{/lt}}
         {{/each}}
     {{/each}}
 {{/gt}}

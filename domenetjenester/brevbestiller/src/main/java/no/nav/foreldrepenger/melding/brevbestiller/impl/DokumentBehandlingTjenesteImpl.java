@@ -63,12 +63,6 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
         return sorterte;
     }
 
-    @Override
-    public boolean erDokumentProdusert(UUID behandlingUuid, String dokumentMalTypeKode) {
-        return sjekkDokumentTilgjengelig
-                .erDokumentBestilt(behandlingUuid, dokumentMalTypeKode);
-    }
-
     // Fjerner dokumentmaler som aldri er relevante for denne behandlingstypen
     private List<DokumentMalType> filtrerUtilgjengeligBrevmaler(Behandling behandling, List<DokumentMalType> kandidater, boolean automatiskOpprettet, List<Aksjonspunkt> aksjonspunkter) {
         List<DokumentMalType> fjernes = kandidater.stream()

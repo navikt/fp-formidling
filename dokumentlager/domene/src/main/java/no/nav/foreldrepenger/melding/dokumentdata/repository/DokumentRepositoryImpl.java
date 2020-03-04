@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.melding.dokumentdata.repository;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,7 +13,6 @@ import org.hibernate.jpa.QueryHints;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dokumentdata.SaksbehandlerTekst;
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
 import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
 
@@ -56,29 +53,5 @@ public class DokumentRepositoryImpl implements DokumentRepository {
         return entityManager.createQuery("SELECT d FROM DokumentMalType d", DokumentMalType.class) //$NON-NLS-1$
                 .setHint(QueryHints.HINT_READONLY, "true") //$NON-NLS-1$
                 .getResultList();
-    }
-
-    @Override
-    public List<DokumentData> hentDokumentDataListe(UUID behandlingUuid, String dokumentmal) {
-        TypedQuery<DokumentData> query = entityManager
-                .createQuery("from DokumentData dd where dd.behandlingUuid = :behandlingUuid and dd.dokumentMalType.kode = :dokumentmal", DokumentData.class)
-                .setParameter("behandlingUuid", behandlingUuid)
-                .setParameter("dokumentmal", dokumentmal);
-
-        return query.getResultList();
-    }
-
-    @Override
-    public void lagre(SaksbehandlerTekst saksbehandlerTekst) {
-        entityManager.persist(saksbehandlerTekst);
-        entityManager.flush();
-    }
-
-    @Override
-    public Optional<SaksbehandlerTekst> hentSaksbehandlerTekstHvisEksisterer(UUID behandlingUuid) {
-        TypedQuery<SaksbehandlerTekst> query = entityManager
-                .createQuery("from SaksbehandlerTekst s where s.behandlingUuid = :behandlingUuid", SaksbehandlerTekst.class)
-                .setParameter("behandlingUuid", behandlingUuid);
-        return HibernateVerktøy.hentUniktResultat(query);
     }
 }

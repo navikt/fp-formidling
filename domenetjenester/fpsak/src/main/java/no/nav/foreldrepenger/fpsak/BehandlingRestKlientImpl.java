@@ -17,7 +17,6 @@ import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.finn.unleash.Unleash;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
@@ -56,10 +55,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     private OidcRestClient oidcRestClient;
     private String endpointFpsakRestBase;
 
-    private Unleash unleash;
-
     Map<URI, String> rel = new HashMap<>();
-    Map<String, String> responseData = new HashMap<>();
 
     public BehandlingRestKlientImpl() {
         //CDI
@@ -67,11 +63,9 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
 
     @Inject
     public BehandlingRestKlientImpl(OidcRestClient oidcRestClient,
-                                    @KonfigVerdi(FPSAK_REST_BASE_URL) String endpointFpsakRestBase,
-                                    Unleash unleash) {
+                                    @KonfigVerdi(FPSAK_REST_BASE_URL) String endpointFpsakRestBase) {
         this.oidcRestClient = oidcRestClient;
         this.endpointFpsakRestBase = endpointFpsakRestBase;
-        this.unleash = unleash;
     }
 
     @Override

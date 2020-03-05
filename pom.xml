@@ -32,16 +32,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- felles artifakter -->
-        <felles.version>1.5.0-20200116143541-6449112</felles.version>
-        <prosesstask.version>2.0.0-20200118083448-d87fd6d</prosesstask.version>
-        <kontrakter.version>5.1_20191210141010_6a7f399</kontrakter.version>
+        <felles.version>1.6-20200224081214-a6a9149</felles.version>
+        <prosesstask.version>2.1.0-20200210093848-e657dd0</prosesstask.version>
+        <kontrakter.version>5.1-20200304111028-d29b5ec</kontrakter.version>
 
         <!-- Eksterne -->
         <metrics.version>4.1.2</metrics.version>
-        <prometheus.version>0.8.0</prometheus.version>
+        <prometheus.version>0.8.1</prometheus.version>
         <swagger.version>2.1.1</swagger.version>
-        <kafkastreams.version>2.2.0</kafkastreams.version>
-
+        <kafka.version>2.4.0</kafka.version>
     </properties>
 
     <prerequisites>
@@ -197,7 +196,12 @@
             <dependency>
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka-streams</artifactId>
-                <version>${kafkastreams.version}</version>
+                <version>${kafka.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
@@ -305,7 +309,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.12</version>
+                <version>4.13</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
@@ -417,7 +421,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -480,7 +484,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.2.1</version>
                 </plugin>
                 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
                 <plugin>

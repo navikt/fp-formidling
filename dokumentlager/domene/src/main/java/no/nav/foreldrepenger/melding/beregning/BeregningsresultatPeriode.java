@@ -20,7 +20,7 @@ public class BeregningsresultatPeriode {
         periode = builder.periode;
         beregningsresultatAndelList = builder.beregningsresultatAndelList;
         utbetaltTilSoker = beregningsresultatAndelList.stream().filter(x -> x.erBrukerMottaker())
-                .map(x -> x.getDagsats())
+                .map(x -> x.getTilSoker())
                 .collect(Collectors.summingInt(Integer::intValue)).longValue();
 
     }

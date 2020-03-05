@@ -15,6 +15,7 @@ public class BeregningsresultatAndel {
     private ArbeidsforholdRef arbeidsforholdRef;
     private boolean brukerErMottaker;
     private boolean arbeidsgiverErMottaker;
+    private int tilSoker;
 
     private BeregningsresultatAndel(Builder builder) {
         dagsats = builder.dagsats;
@@ -24,6 +25,7 @@ public class BeregningsresultatAndel {
         arbeidsforholdRef = builder.arbeidsforholdRef;
         brukerErMottaker = builder.brukerErMottaker;
         arbeidsgiverErMottaker = builder.arbeidsgiverErMottaker;
+        tilSoker = builder.tilSoker;
     }
 
     public static Builder ny() {
@@ -32,6 +34,10 @@ public class BeregningsresultatAndel {
 
     public int getDagsats() {
         return dagsats;
+    }
+
+    public int getTilSoker() {
+        return tilSoker;
     }
 
     public BigDecimal getStillingsprosent() {
@@ -66,6 +72,7 @@ public class BeregningsresultatAndel {
         private ArbeidsforholdRef arbeidsforholdRef;
         private boolean brukerErMottaker;
         private boolean arbeidsgiverErMottaker;
+        private int tilSoker;
 
         private Builder() {
         }
@@ -74,6 +81,12 @@ public class BeregningsresultatAndel {
             this.dagsats = dagsats;
             return this;
         }
+
+        public Builder medTilSoker(int tilSoker) {
+            this.tilSoker = tilSoker;
+            return this;
+        }
+
 
         public Builder medStillingsprosent(BigDecimal stillingsprosent) {
             this.stillingsprosent = stillingsprosent;

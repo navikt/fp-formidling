@@ -10,7 +10,6 @@
     <sequence-generator name="SEQ_DOKUMENT_HENDELSE" allocation-size="50" sequence-name="SEQ_DOKUMENT_HENDELSE"/>
     <sequence-generator name="SEQ_EVENTMOTTAK_FEILLOGG" allocation-size="50" sequence-name="SEQ_EVENTMOTTAK_FEILLOGG"/>
     <sequence-generator name="SEQ_DOKUMENT_HISTORIKK" allocation-size="50" sequence-name="SEQ_DOKUMENT_HISTORIKK"/>
-    <sequence-generator name="SEQ_SAKSBEHANDLER_TEKST" allocation-size="50" sequence-name="SEQ_SAKSBEHANDLER_TEKST"/>
 
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentData"/>
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles"/>
@@ -20,6 +19,5 @@
     <entity class="no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg"/>
     <entity class="no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag"/>
     <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentKategori"/>
-    <entity class="no.nav.foreldrepenger.melding.dokumentdata.SaksbehandlerTekst"/>
 
 </entity-mappings>

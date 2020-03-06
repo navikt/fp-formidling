@@ -147,7 +147,6 @@ public class DomeneobjektProvider {
         return beregningsresultatDtoMapper.mapBeregningsresultatFPFraDto(behandlingRestKlient.hentBeregningsresultatForeldrepenger(behandling.getResourceLinker()));
     }
 
-
     public Optional<BeregningsresultatFP> hentBeregningsresultatFPHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentBeregningsresultatForeldrepengerHvisFinnes(behandling.getResourceLinker()).map(beregningsresultatDtoMapper::mapBeregningsresultatFPFraDto);
     }
@@ -194,10 +193,6 @@ public class DomeneobjektProvider {
 
     public UttakResultatPerioder hentUttaksresultat(Behandling behandling) {
         return uttakDtoMapper.mapUttaksresultatPerioderFraDto(behandlingRestKlient.hentUttaksresultat(behandling.getResourceLinker()));
-    }
-
-    public Optional<SvpUttaksresultat> hentUttakresultatSvpHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentUttaksresultatSvpHvisFinnes(behandling.getResourceLinker()).map(uttakSvpDtoMapper::mapSvpUttaksresultatFraDto);
     }
 
     public SvpUttaksresultat hentUttaksresultatSvp(Behandling behandling) {

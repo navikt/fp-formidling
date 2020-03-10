@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
-
+import no.nav.foreldrepenger.melding.typer.Dato;
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_OVERSENDT_KLAGEINSTANS)
 public class KlageOversendtTilKlageinstansBrevMapper extends FritekstmalBrevMapper {
@@ -49,15 +49,19 @@ public class KlageOversendtTilKlageinstansBrevMapper extends FritekstmalBrevMapp
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
 
         final LocalDate mottatDato = utledMottattDato(klageDokument, behandling);
-        final LocalDate svarFrist = BrevMapperUtil.getSvarFrist(brevParametere);
+
 
         return new Brevdata()
-                .leggTil("mottatDato", mottatDato)
+                .leggTil("mottatDato", Dato.formaterDato(mottatDato))
                 .leggTil("mintekst",  klage.getGjeldendeKlageVurderingsresultat().getFritekstTilBrev())
                 .leggTil("behandlingsfrist", BEHANDLINGSFRIST_UKER_KA)
                 .leggTil("saksbehandler", behandling.getAnsvarligSaksbehandler())
                 .leggTil("medunderskriver",behandling.getAnsvarligBeslutter())
+                .leggTil("dokumentHendelseYtelseTypeKode",hendelse.getYtelseType().getKode())
                 .leggTil("behandlingtype",behandling.getBehandlingType().getKode());
+
+
+
 
     }
     private LocalDate utledMottattDato(KlageDokument klageDokument, Behandling behandling) {

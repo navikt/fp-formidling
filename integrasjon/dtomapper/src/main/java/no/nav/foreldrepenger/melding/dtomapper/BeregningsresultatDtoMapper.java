@@ -78,6 +78,7 @@ public class BeregningsresultatDtoMapper {
                 .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                 .medArbeidsgiver(mapArbeidsgiverFraDto(dto))
                 .medStillingsprosent(dto.getStillingsprosent())
+                .medUtbetalingsgrad(dto.getUtbetalingsgrad())
                 .medBrukerErMottaker(dto.getTilSoker() != null && dto.getTilSoker() != 0)
                 .medArbeidsgiverErMottaker(dto.getRefusjon() != null && dto.getRefusjon() != 0)
                 .medDagsats(summerDagsats(dto))

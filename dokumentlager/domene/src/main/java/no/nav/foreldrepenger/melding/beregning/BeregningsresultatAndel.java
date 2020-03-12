@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 public class BeregningsresultatAndel {
     private int dagsats;
     private BigDecimal stillingsprosent;
+    private BigDecimal utbetalingsgrad;
     private AktivitetStatus aktivitetStatus;
     private Arbeidsgiver arbeidsgiver;
     private ArbeidsforholdRef arbeidsforholdRef;
@@ -19,6 +20,7 @@ public class BeregningsresultatAndel {
     private BeregningsresultatAndel(Builder builder) {
         dagsats = builder.dagsats;
         stillingsprosent = builder.stillingsprosent;
+        utbetalingsgrad = builder.utbetalingsgrad;;
         aktivitetStatus = builder.aktivitetStatus;
         arbeidsgiver = builder.arbeidsgiver;
         arbeidsforholdRef = builder.arbeidsforholdRef;
@@ -36,6 +38,10 @@ public class BeregningsresultatAndel {
 
     public BigDecimal getStillingsprosent() {
         return stillingsprosent;
+    }
+
+    public BigDecimal getUtbetalingsgrad() {
+        return utbetalingsgrad;
     }
 
     public AktivitetStatus getAktivitetStatus() {
@@ -61,6 +67,7 @@ public class BeregningsresultatAndel {
     public static final class Builder {
         private int dagsats;
         private BigDecimal stillingsprosent;
+        private BigDecimal utbetalingsgrad;
         private AktivitetStatus aktivitetStatus;
         private Arbeidsgiver arbeidsgiver;
         private ArbeidsforholdRef arbeidsforholdRef;
@@ -77,6 +84,11 @@ public class BeregningsresultatAndel {
 
         public Builder medStillingsprosent(BigDecimal stillingsprosent) {
             this.stillingsprosent = stillingsprosent;
+            return this;
+        }
+
+        public Builder medUtbetalingsgrad(BigDecimal utbetalingsgrad) {
+            this.utbetalingsgrad = utbetalingsgrad;
             return this;
         }
 

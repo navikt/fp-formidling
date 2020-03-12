@@ -1,16 +1,14 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.math.RoundingMode;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import no.finn.unleash.Unleash;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
@@ -73,7 +71,11 @@ public class AktivitetsMapper {
         if (uttakAktivitet.isPresent()) {
             arbeidsforhold.setUttaksgrad(uttakAktivitet.get().getUtbetalingsprosent().toBigInteger());
             arbeidsforhold.setProsentArbeid(uttakAktivitet.get().getArbeidsprosent().toBigInteger());
-            arbeidsforhold.setUtbetalingsgrad(uttakAktivitet.get().getUtbetalingsprosent().toBigInteger());
+       //   arbeidsforhold.setUtbetalingsgrad(uttakAktivitet.get().getUtbetalingsprosent().toBigInteger());
+        //    Double sum =   beregningsresultatPeriode.getBeregningsresultatAndelList().stream().map(x -> x.getUtbetalingsgrad()).collect(Collectors.summingDouble(BigDecimal::doubleValue));
+            arbeidsforhold.setUtbetalingsgrad(beregningsresultatAndel.getUtbetalingsgrad().toBigInteger());
+            arbeidsforhold.setUtbetalingsprosent(beregningsresultatAndel.getUtbetalingsgrad().setScale(1, RoundingMode.HALF_DOWN));
+
             arbeidsforhold.setGradering(uttakAktivitet.get().getGraderingInnvilget());
         }
         arbeidsforhold.setStillingsprosent(beregningsresultatAndel.getStillingsprosent().toBigInteger());

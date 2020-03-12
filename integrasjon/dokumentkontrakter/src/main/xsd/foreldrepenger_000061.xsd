@@ -120,7 +120,8 @@
             <xs:element type="xs:integer" name="uttaksgrad"/>
             <xs:element type="xs:integer" name="prosentArbeid"/>
             <xs:element type="xs:integer" name="stillingsprosent"/>
-            <xs:element type="xs:integer" name="utbetalingsgrad"/>
+            <xs:element type="xs:integer" name="utbetalingsgrad" minOccurs="0"/>
+            <xs:element type="xs:decimal" name="utbetalingsprosent" minOccurs="0"/>
             <xs:element type="naturalytelseEndringTypeKode" name="naturalytelseEndringType" minOccurs="0"/>
             <xs:element type="xs:date" name="naturalytelseEndringDato" minOccurs="0"/>
             <xs:element type="xs:long" name="naturalytelseNyDagsats" minOccurs="0"/>

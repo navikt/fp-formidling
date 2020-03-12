@@ -32,8 +32,8 @@ public class AktivitetsMapperTest {
     public void gradert_alltid_øverst_på_lista_med_arbeidsforhold() {
 
         List<BeregningsresultatAndel> andelList = new ArrayList<>();
-        addResultatAndel(andelList, "1234", "STIFTELSEN FRISCHSENTERET FOR SAMFUNNSØKONOMISK FORSKNING", "123452234", 350, 19, AktivitetStatus.ARBEIDSTAKER);
-        addResultatAndel(andelList, "5678", "UNIVERSITETET I OSLO", "999887666655", 1563, 100, AktivitetStatus.ARBEIDSTAKER);
+        addResultatAndel(andelList, "1234", "STIFTELSEN FRISCHSENTERET FOR SAMFUNNSØKONOMISK FORSKNING", "123452234", 350, 19, AktivitetStatus.ARBEIDSTAKER,100);
+        addResultatAndel(andelList, "5678", "UNIVERSITETET I OSLO", "999887666655", 1563, 100, AktivitetStatus.ARBEIDSTAKER,80);
 
         BeregningsresultatPeriode beregningsresultatPeriode = BeregningsresultatPeriode.ny()
                 .medDagsats(1913L)
@@ -78,9 +78,9 @@ public class AktivitetsMapperTest {
     public void gradert_alltid_øverst_på_lista_med_annen_aktivetsliste() {
 
         List<BeregningsresultatAndel> andelList = new ArrayList<>();
-        addResultatAndel(andelList, null, "", "", 350, 0, AktivitetStatus.ARBEIDSAVKLARINGSPENGER );
-        addResultatAndel(andelList, null, "", "", 400, 0, AktivitetStatus.FRILANSER);
-        addResultatAndel(andelList, null, "", "", 600, 0, AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+        addResultatAndel(andelList, null, "", "", 350, 0, AktivitetStatus.ARBEIDSAVKLARINGSPENGER,100 );
+        addResultatAndel(andelList, null, "", "", 400, 0, AktivitetStatus.FRILANSER,70);
+        addResultatAndel(andelList, null, "", "", 600, 0, AktivitetStatus.ARBEIDSAVKLARINGSPENGER,100);
 
         BeregningsresultatPeriode beregningsresultatPeriode = BeregningsresultatPeriode.ny()
                 .medDagsats(1350L)
@@ -122,13 +122,14 @@ public class AktivitetsMapperTest {
                 .build());
     }
 
-    private boolean addResultatAndel(List<BeregningsresultatAndel> andelList, String arbForhold, String arbNavn, String orgNr, int dagsats, int stillingsprosent, AktivitetStatus aktivitetStatus) {
+    private boolean addResultatAndel(List<BeregningsresultatAndel> andelList, String arbForhold, String arbNavn, String orgNr, int dagsats, int stillingsprosent, AktivitetStatus aktivitetStatus,double utbetalingsgrad ) {
         return andelList.add(BeregningsresultatAndel.ny()
                 .medAktivitetStatus(aktivitetStatus)
                 .medArbeidsforholdRef(ArbeidsforholdRef.ref(arbForhold))
                 .medArbeidsgiver(new Arbeidsgiver(arbNavn, new Virksomhet(arbNavn, orgNr), null))
                 .medDagsats(dagsats)
                 .medStillingsprosent(BigDecimal.valueOf(stillingsprosent))
+                .medUtbetalingsgrad(BigDecimal.valueOf(utbetalingsgrad))
                 .build());
     }
 }

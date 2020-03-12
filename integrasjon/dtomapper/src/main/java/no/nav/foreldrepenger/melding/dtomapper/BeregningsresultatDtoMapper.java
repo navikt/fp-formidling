@@ -81,6 +81,7 @@ public class BeregningsresultatDtoMapper {
                 .medBrukerErMottaker(dto.getTilSoker() != null && dto.getTilSoker() != 0)
                 .medArbeidsgiverErMottaker(dto.getRefusjon() != null && dto.getRefusjon() != 0)
                 .medDagsats(summerDagsats(dto))
+                .medTilSoker(dto.getTilSoker())
                 .build();
     }
 

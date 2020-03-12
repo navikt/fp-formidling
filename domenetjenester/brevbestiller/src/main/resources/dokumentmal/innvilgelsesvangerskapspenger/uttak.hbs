@@ -30,12 +30,21 @@
 {{~i18n "Dette_far_du" (i18n "periodene")}}
     {{#each periodeDagsats}}
 {{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" periode.fom periode.tom}}
-{{~i18n "x_kroner_pr_dag" dagsats }}{{#if @last}}-*{{/if}}
+{{~#eq dagsats utbetaltTilSoker}}
+{{~i18n "x_kroner_pr_dag_lik" dagsats utbetaltTilSoker }}{{#if @last}}-*{{/if}}
+{{else}}
+{{~i18n "x_kroner_pr_dag_ulik" dagsats utbetaltTilSoker }}{{#if @last}}-*{{/if}}
+{{/eq}}
     {{/each}}
 {{else}}
 {{~i18n "Dette_far_du" (i18n "perioden")}}
     {{#each periodeDagsats}}
-{{i18n "fra_og_med_til_og_med" periode.fom periode.tom}}{{i18n "x_kroner_pr_dag" dagsats }}
+{{i18n "fra_og_med_til_og_med" periode.fom periode.tom}}
+{{~#eq dagsats utbetaltTilSoker}}
+{{~i18n "x_kroner_pr_dag_lik" dagsats utbetaltTilSoker }}
+{{else}}
+{{~i18n "x_kroner_pr_dag_ulik" dagsats utbetaltTilSoker }}
+{{/eq}}
     {{/each}}
 {{/gt}}
 {{> avslagArbeidsforhold}}

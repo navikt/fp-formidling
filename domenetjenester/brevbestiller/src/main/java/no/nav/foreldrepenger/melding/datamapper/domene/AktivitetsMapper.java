@@ -71,11 +71,10 @@ public class AktivitetsMapper {
         if (uttakAktivitet.isPresent()) {
             arbeidsforhold.setUttaksgrad(uttakAktivitet.get().getUtbetalingsprosent().toBigInteger());
             arbeidsforhold.setProsentArbeid(uttakAktivitet.get().getArbeidsprosent().toBigInteger());
-       //   arbeidsforhold.setUtbetalingsgrad(uttakAktivitet.get().getUtbetalingsprosent().toBigInteger());
-        //    Double sum =   beregningsresultatPeriode.getBeregningsresultatAndelList().stream().map(x -> x.getUtbetalingsgrad()).collect(Collectors.summingDouble(BigDecimal::doubleValue));
+            //   arbeidsforhold.setUtbetalingsgrad(uttakAktivitet.get().getUtbetalingsprosent().toBigInteger());
             arbeidsforhold.setUtbetalingsgrad(beregningsresultatAndel.getUtbetalingsgrad().toBigInteger());
-            arbeidsforhold.setUtbetalingsprosent(beregningsresultatAndel.getUtbetalingsgrad().setScale(1, RoundingMode.HALF_DOWN));
-
+        //    Double sum =   beregningsresultatPeriode.getBeregningsresultatAndelList().stream().map(x -> x.getUtbetalingsgrad()).collect(Collectors.summingDouble(BigDecimal::doubleValue));
+            arbeidsforhold.setUtbetalingsprosent(beregningsresultatAndel.getUtbetalingsgrad().setScale(2, RoundingMode.HALF_DOWN));
             arbeidsforhold.setGradering(uttakAktivitet.get().getGraderingInnvilget());
         }
         arbeidsforhold.setStillingsprosent(beregningsresultatAndel.getStillingsprosent().toBigInteger());

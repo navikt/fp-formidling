@@ -21,7 +21,6 @@ import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.aktør.PersonstatusType;
 import no.nav.foreldrepenger.melding.geografisk.Landkoder;
 import no.nav.foreldrepenger.melding.geografisk.Region;
-import no.nav.foreldrepenger.melding.geografisk.SpråkKodeverkRepository;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.personopplysning.SivilstandType;
@@ -38,14 +37,12 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.Personstatus;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Spraak;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Statsborgerskap;
 import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
-import no.nav.vedtak.log.util.LoggerUtils;
 
 @ApplicationScoped
 public class TpsOversetter {
     private static final Logger log = LoggerFactory.getLogger(TpsOversetter.class);
 
     private PersonInfoKodeverkRepository personInfoKodeverkRepository;
-    private SpråkKodeverkRepository språkKodeverkRepository;
     private TpsAdresseOversetter tpsAdresseOversetter;
 
     TpsOversetter() {
@@ -54,10 +51,8 @@ public class TpsOversetter {
 
     @Inject
     public TpsOversetter(PersonInfoKodeverkRepository personInfoKodeverkRepository,
-                         SpråkKodeverkRepository språkKodeverkRepository,
                          TpsAdresseOversetter tpsAdresseOversetter) {
         this.personInfoKodeverkRepository = personInfoKodeverkRepository;
-        this.språkKodeverkRepository = språkKodeverkRepository;
         this.tpsAdresseOversetter = tpsAdresseOversetter;
     }
 
@@ -148,14 +143,7 @@ public class TpsOversetter {
         if (språk == null || "NO".equals(språk.getValue())) {
             return defaultSpråk;
         }
-        Optional<Språkkode> kode = språkKodeverkRepository.finnSpråkMedKodeverkEiersKode(språk.getValue());
-        if (kode.isPresent()) {
-            return kode.get();
-        }
-        if (log.isInfoEnabled()) {
-            log.info("Mottok ukjent språkkode: '{}'. Defaulter til '{}'", LoggerUtils.removeLineBreaks(språk.getValue()), defaultSpråk.getKode()); //NOSONAR
-        }
-        return defaultSpråk;
+        return Språkkode.defaultNorsk(språk.getValue());
     }
 
     private Familierelasjon tilRelasjon(no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon familierelasjon) {

@@ -84,7 +84,7 @@ public class BehandlingDtoMapper {
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()))
                 .medEndretAv(dto.getEndretAvBrukernavn())
-                .medSpråkkode(kodeverkRepository.finn(Språkkode.class, dto.getSprakkode().getKode()))
+                .medSpråkkode(Språkkode.defaultNorsk(dto.getSprakkode().getKode()))
                 .medOriginalVedtaksDato(dto.getOriginalVedtaksDato());
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(behandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));

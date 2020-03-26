@@ -12,9 +12,9 @@ public class UttakResultatPeriode {
     private PeriodeResultatÅrsak periodeResultatÅrsak;
     private DatoIntervall tidsperiode;
     private PeriodeResultatÅrsak graderingAvslagÅrsak;
-    private UttakUtsettelseType uttakUtsettelseType; //Kodeliste.UttakUtsettelseType
-    private PeriodeResultatType periodeResultatType; //Kodeliste.PeriodeResultatType
-    private List<UttakResultatPeriodeAktivitet> aktiviteter = new ArrayList<>();
+    private UttakUtsettelseType uttakUtsettelseType;
+    private PeriodeResultatType periodeResultatType;
+    private List<UttakResultatPeriodeAktivitet> aktiviteter;
 
     private UttakResultatPeriode(Builder builder) {
         periodeResultatÅrsak = builder.periodeResultatÅrsak;
@@ -72,7 +72,7 @@ public class UttakResultatPeriode {
         private PeriodeResultatÅrsak graderingAvslagÅrsak;
         private UttakUtsettelseType uttakUtsettelseType;
         private PeriodeResultatType periodeResultatType;
-        private List<UttakResultatPeriodeAktivitet> aktiviteter;
+        private List<UttakResultatPeriodeAktivitet> aktiviteter = new ArrayList<>();
 
         private Builder() {
         }

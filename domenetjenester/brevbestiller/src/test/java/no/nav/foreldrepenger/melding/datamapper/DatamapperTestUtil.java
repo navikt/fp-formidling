@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametereImpl;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 
@@ -63,7 +64,7 @@ public class DatamapperTestUtil {
         BehandlingType førstegangssøknad = Mockito.mock(BehandlingType.class);
         when(førstegangssøknad.getBehandlingstidFristUker()).thenReturn(BEHANDLINGSFRIST);
         when(førstegangssøknad.getKode()).thenReturn(BehandlingType.FØRSTEGANGSSØKNAD.getKode());
-        return Behandling.builder().medId(123L).medBehandlingType(førstegangssøknad);
+        return Behandling.builder().medId(123L).medBehandlingType(førstegangssøknad).medSpråkkode(Språkkode.nb);
     }
 
     public static Behandling standardBehandling() {

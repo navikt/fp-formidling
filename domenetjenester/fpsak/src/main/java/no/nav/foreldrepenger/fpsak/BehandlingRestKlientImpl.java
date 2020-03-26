@@ -230,7 +230,7 @@ public class BehandlingRestKlientImpl implements BehandlingRestKlient {
     @Override
     public Optional<UttakResultatPerioderDto> hentUttaksresultatHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
-                .filter(dto -> "uttaksresultat-perioder".equals(dto.getRel()))
+                .filter(dto -> "uttaksresultat-perioder-formidling".equals(dto.getRel()))
                 .findFirst().flatMap(link -> hentDtoFraLink(link, UttakResultatPerioderDto.class));
 
     }

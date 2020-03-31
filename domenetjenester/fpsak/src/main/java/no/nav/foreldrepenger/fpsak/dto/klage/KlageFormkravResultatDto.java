@@ -6,6 +6,7 @@ import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
 public class KlageFormkravResultatDto {
     private Long paKlagdBehandlingId;
+    private KodeDto paklagdBehandlingType;
     private String begrunnelse;
     private boolean erKlagerPart;
     private boolean erKlageKonkret;
@@ -31,6 +32,14 @@ public class KlageFormkravResultatDto {
 
     public void setPaKlagdBehandlingId(Long paKlagdBehandlingId) {
         this.paKlagdBehandlingId = paKlagdBehandlingId;
+    }
+
+    public KodeDto getPaklagdBehandlingType() {
+        return paklagdBehandlingType;
+    }
+
+    public void setPaklagdBehandlingType(KodeDto paklagdBehandlingType) {
+        this.paklagdBehandlingType = paklagdBehandlingType;
     }
 
     public String getBegrunnelse() {

@@ -1,0 +1,1 @@
+update KONFIG_VERDI set KONFIG_VERDI = '55 55 33 33' where KONFIG_KODE = 'norg2.kontakt.telefonnummer';

@@ -1,12 +1,16 @@
 package no.nav.foreldrepenger.melding.klage;
 
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+
 public class Klage {
+    private BehandlingType påklagdBehandlingType;
     private KlageVurderingResultat klageVurderingResultatNFP;
     private KlageVurderingResultat klageVurderingResultatNK;
     private KlageFormkravResultat formkravKA;
     private KlageFormkravResultat formkravNFP;
 
     private Klage(Builder builder) {
+        påklagdBehandlingType = builder.påklagdBehandlingType;
         klageVurderingResultatNFP = builder.klageVurderingResultatNFP;
         klageVurderingResultatNK = builder.klageVurderingResultatNK;
         formkravKA = builder.formkravKA;
@@ -15,6 +19,10 @@ public class Klage {
 
     public static Builder ny() {
         return new Builder();
+    }
+
+    public BehandlingType getPåklagdBehandlingType() {
+        return påklagdBehandlingType;
     }
 
     public KlageFormkravResultat getFormkravKA() {
@@ -34,7 +42,6 @@ public class Klage {
     }
 
     public KlageVurderingResultat getGjeldendeKlageVurderingsresultat() {
-
         if (klageVurderingResultatNK != null) {
             return klageVurderingResultatNK;
         } else if (klageVurderingResultatNFP != null) {
@@ -44,6 +51,7 @@ public class Klage {
     }
 
     public static final class Builder {
+        private BehandlingType påklagdBehandlingType;
         private KlageVurderingResultat klageVurderingResultatNFP;
         private KlageVurderingResultat klageVurderingResultatNK;
         private KlageFormkravResultat formkravKA;
@@ -69,6 +77,11 @@ public class Klage {
 
         public Builder medFormkravNFP(KlageFormkravResultat val) {
             formkravNFP = val;
+            return this;
+        }
+
+        public Builder medPåklagdBehandlingType(BehandlingType val) {
+            påklagdBehandlingType = val;
             return this;
         }
 

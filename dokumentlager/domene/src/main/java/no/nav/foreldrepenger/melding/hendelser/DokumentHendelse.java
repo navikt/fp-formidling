@@ -138,6 +138,10 @@ public class DokumentHendelse extends BaseEntitet {
         return behandlendeEnhetNavn;
     }
 
+    public boolean behandlesAvKlageinstans() {
+        return behandlendeEnhetNavn != null && behandlendeEnhetNavn.startsWith("NAV Klageinstans");
+    }
+
     public Vedtaksbrev getVedtaksbrev() {
         return vedtaksbrev;
     }

@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
@@ -40,9 +41,11 @@ public class KlageDtoMapper {
         Klage.Builder builder = Klage.ny();
         if (dto.getKlageFormkravResultatNFP() != null) {
             builder.medFormkravNFP(mapKlageFormkravResultatfraDto(dto.getKlageFormkravResultatNFP()));
+            builder.medPåklagdBehandlingType(finnBehandlingType(dto.getKlageFormkravResultatNFP().getPaklagdBehandlingType().getKode()));
         }
         if (dto.getKlageFormkravResultatKA() != null) {
             builder.medFormkravKA(mapKlageFormkravResultatfraDto(dto.getKlageFormkravResultatKA()));
+            builder.medPåklagdBehandlingType(finnBehandlingType(dto.getKlageFormkravResultatKA().getPaklagdBehandlingType().getKode()));
         }
         if (dto.getKlageVurderingResultatNFP() != null) {
             builder.medKlageVurderingResultatNFP(mapKlageVurderingResultatfraDto(dto.getKlageVurderingResultatNFP()));
@@ -72,4 +75,7 @@ public class KlageDtoMapper {
         return builder.build();
     }
 
+    private BehandlingType finnBehandlingType(String behandlingType) {
+        return kodeverkRepository.finn(BehandlingType.class, behandlingType);
+    }
 }

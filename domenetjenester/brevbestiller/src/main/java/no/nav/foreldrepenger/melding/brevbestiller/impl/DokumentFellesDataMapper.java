@@ -221,7 +221,7 @@ public class DokumentFellesDataMapper {
                 .medSakspartPersonStatus(getPersonstatusVerdi(personstatusBruker));
 
 
-        if (behandling.isToTrinnsBehandling()) {
+        if (behandling.isToTrinnsBehandling() || behandling.erKlage()) {
             builder.medAutomatiskBehandlet(Boolean.FALSE)
                     .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
                     .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter());
@@ -259,7 +259,7 @@ public class DokumentFellesDataMapper {
                 .medSpråkkode(behandling.getSpråkkode())
                 .medSakspartPersonStatus(getPersonstatusVerdi(personstatusBruker));
 
-        if (behandling.isToTrinnsBehandling()) {
+        if (behandling.isToTrinnsBehandling() || behandling.erKlage()) {
             builder.medAutomatiskBehandlet(Boolean.FALSE)
                     .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
                     .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter());

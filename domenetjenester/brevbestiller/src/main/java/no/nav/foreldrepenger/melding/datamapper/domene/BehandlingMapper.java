@@ -56,10 +56,12 @@ public class BehandlingMapper {
         return gjelderEndringsøknad(behandling) ?
                 ENDRINGSSØKNAD :
                 behandling.getBehandlingType().getKode();
-    }
+        }
+
 
     public static boolean gjelderEndringsøknad(Behandling behandling) {
-        return getBehandlingÅrsakStringListe(behandling)
+        // endringssøknad kan være satt ved førstegangsbehandling og henleggelse pga håndtering av tapte dager
+        return behandling.erRevurdering() && getBehandlingÅrsakStringListe(behandling)
                 .contains(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode());
     }
 

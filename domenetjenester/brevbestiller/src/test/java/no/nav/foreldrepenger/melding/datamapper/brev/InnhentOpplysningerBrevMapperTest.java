@@ -53,6 +53,7 @@ public class InnhentOpplysningerBrevMapperTest {
     public void setup() {
         brevMapper = new InnhentOpplysningerBrevMapper(DatamapperTestUtil.getBrevParametere(), null);
         doReturn(BehandlingType.FØRSTEGANGSSØKNAD).when(behandling).getBehandlingType();
+
     }
 
     @Test
@@ -98,6 +99,7 @@ public class InnhentOpplysningerBrevMapperTest {
 
     @Test
     public void skal_velge_siste_mottatt_dato_fra_endringssøknad_når_endring() {
+        doReturn(Boolean.TRUE).when(behandling).erRevurdering();
         doReturn(List.of(opprettBehandlingsårsak(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode()))).when(behandling).getBehandlingÅrsaker();
         LocalDate andreJanuar = LocalDate.of(2019, 1, 2);
         LocalDate fjerdeJanuar = LocalDate.of(2019, 1, 4);

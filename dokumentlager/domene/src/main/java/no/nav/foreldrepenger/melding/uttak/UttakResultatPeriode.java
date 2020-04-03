@@ -12,7 +12,6 @@ public class UttakResultatPeriode {
     private PeriodeResultatÅrsak periodeResultatÅrsak;
     private DatoIntervall tidsperiode;
     private PeriodeResultatÅrsak graderingAvslagÅrsak;
-    private UttakUtsettelseType uttakUtsettelseType;
     private PeriodeResultatType periodeResultatType;
     private List<UttakResultatPeriodeAktivitet> aktiviteter;
 
@@ -20,7 +19,6 @@ public class UttakResultatPeriode {
         periodeResultatÅrsak = builder.periodeResultatÅrsak;
         tidsperiode = builder.tidsperiode;
         graderingAvslagÅrsak = builder.graderingAvslagÅrsak;
-        uttakUtsettelseType = builder.uttakUtsettelseType;
         periodeResultatType = builder.periodeResultatType;
         aktiviteter = builder.aktiviteter;
     }
@@ -45,10 +43,6 @@ public class UttakResultatPeriode {
         return graderingAvslagÅrsak == null ? PeriodeResultatÅrsak.UKJENT : graderingAvslagÅrsak;
     }
 
-    public UttakUtsettelseType getUttakUtsettelseType() {
-        return uttakUtsettelseType;
-    }
-
     public PeriodeResultatType getPeriodeResultatType() {
         return periodeResultatType;
     }
@@ -70,7 +64,6 @@ public class UttakResultatPeriode {
         private PeriodeResultatÅrsak periodeResultatÅrsak;
         private DatoIntervall tidsperiode;
         private PeriodeResultatÅrsak graderingAvslagÅrsak;
-        private UttakUtsettelseType uttakUtsettelseType;
         private PeriodeResultatType periodeResultatType;
         private List<UttakResultatPeriodeAktivitet> aktiviteter = new ArrayList<>();
 
@@ -89,11 +82,6 @@ public class UttakResultatPeriode {
 
         public Builder medGraderingAvslagÅrsak(PeriodeResultatÅrsak graderingAvslagÅrsak) {
             this.graderingAvslagÅrsak = graderingAvslagÅrsak;
-            return this;
-        }
-
-        public Builder medUttakUtsettelseType(UttakUtsettelseType uttakUtsettelseType) {
-            this.uttakUtsettelseType = uttakUtsettelseType;
             return this;
         }
 

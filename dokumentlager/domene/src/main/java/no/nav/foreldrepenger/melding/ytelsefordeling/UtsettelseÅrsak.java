@@ -13,7 +13,7 @@ public class UtsettelseÅrsak extends Årsak {
     public static final UtsettelseÅrsak SYKDOM = new UtsettelseÅrsak("SYKDOM");
     public static final UtsettelseÅrsak INSTITUSJON_SØKER = new UtsettelseÅrsak("INSTITUSJONSOPPHOLD_SØKER");
     public static final UtsettelseÅrsak INSTITUSJON_BARN = new UtsettelseÅrsak("INSTITUSJONSOPPHOLD_BARNET");
-    public static final UtsettelseÅrsak HV = new UtsettelseÅrsak("HV");
+    public static final UtsettelseÅrsak HV_OVELSE = new UtsettelseÅrsak("HV_OVELSE");
     public static final UtsettelseÅrsak NAV_TILTAK = new UtsettelseÅrsak("NAV_TILTAK");
     public static final UtsettelseÅrsak UDEFINERT = new UtsettelseÅrsak("-");
 

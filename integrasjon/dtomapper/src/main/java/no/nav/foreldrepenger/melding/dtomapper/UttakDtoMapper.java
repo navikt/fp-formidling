@@ -23,7 +23,6 @@ import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
-import no.nav.foreldrepenger.melding.uttak.UttakUtsettelseType;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.util.StringUtils;
@@ -67,7 +66,6 @@ public class UttakDtoMapper {
                 .medPeriodeResultatType(kodeverkRepository.finn(PeriodeResultatType.class, dto.getPeriodeResultatType().getKode()))
                 .medPeriodeResultatÅrsak(velgPerioderesultatÅrsak(dto))
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
-                .medUttakUtsettelseType(kodeverkRepository.finn(UttakUtsettelseType.class, dto.getUtsettelseType().getKode()))
                 .medAktiviteter(aktiviteter)
                 .build();
         aktiviteter.forEach(aktivitet -> aktivitet.leggTilPeriode(mappetPeriode));

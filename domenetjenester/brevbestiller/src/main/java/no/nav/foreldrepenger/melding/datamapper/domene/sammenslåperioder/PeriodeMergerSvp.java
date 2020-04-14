@@ -30,7 +30,8 @@ public class PeriodeMergerSvp {
 
     public static boolean erPerioderSammenhengendeOgSkalSlåSammen(BeregningsresultatPeriode periodeEn, BeregningsresultatPeriode periodeTo) {
         boolean sammeDagsats = Objects.equals(periodeEn.getDagsats(), periodeTo.getDagsats());
-        return sammeDagsats &&
+        boolean sammeUtbetaltTilSoker = Objects.equals(periodeEn.getUtbetaltTilSoker(), periodeTo.getUtbetaltTilSoker());
+        return sammeDagsats && sammeUtbetaltTilSoker &&
                 erFomRettEtterTomDato(periodeEn.getPeriode().getTomDato(), periodeTo.getPeriode().getFomDato());
     }
 }

@@ -134,6 +134,14 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
 
     abstract Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling);
 
+    protected boolean behandlesAvKlageinstans(DokumentHendelse hendelse, Behandling behandling) {
+        // Behandlende enhet vil være angitt på DokumentHendelse ved bestilling av brev,
+        // og dette skal overstyre behandlende enhet på Behandling, da denne kan ha endret seg
+        // siden brevet ble bestilt. Ved forhåndsvisning må det hentes fra Behandling.
+        return (hendelse.getBehandlendeEnhetNavn() != null && hendelse.behandlesAvKlageinstans())
+                || (behandling.getBehandlendeEnhetNavn() != null && behandling.behandlesAvKlageinstans());
+    }
+
     public class Brevdata {
         private Map<String, Object> map = new HashMap<>();
 

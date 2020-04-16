@@ -34,12 +34,12 @@
         <!-- felles artifakter -->
         <felles.version>1.6-20200224081214-a6a9149</felles.version>
         <prosesstask.version>2.1.0-20200210093848-e657dd0</prosesstask.version>
-        <kontrakter.version>5.1-20200304111028-d29b5ec</kontrakter.version>
+        <kontrakter.version>5.1-20200401094249-8828af7</kontrakter.version>
 
         <!-- Eksterne -->
-        <metrics.version>4.1.5</metrics.version>
+        <metrics.version>4.1.6</metrics.version>
         <prometheus.version>0.8.1</prometheus.version>
-        <swagger.version>2.1.1</swagger.version>
+        <swagger.version>2.1.2</swagger.version>
         <kafka.version>2.4.1</kafka.version>
     </properties>
 
@@ -206,7 +206,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.2.5</version>
+                <version>42.2.12.jre7</version>
             </dependency>
 
             <!-- Kontrakter -->
@@ -245,17 +245,17 @@
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-tree</artifactId>
-                <version>8.0</version>
+                <version>8.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-analysis</artifactId>
-                <version>8.0</version>
+                <version>8.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-validator-provider</artifactId>
-                <version>3.11.1.Final</version>
+                <version>3.11.2.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld.module</groupId>
@@ -383,7 +383,7 @@
                 <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.66</version>
+                <version>4.8.69</version>
             </dependency>
             <!-- Java11 -->
             <dependency>
@@ -484,7 +484,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
-                    <version>1.2.1</version>
+                    <version>1.2.2</version>
                 </plugin>
                 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
                 <plugin>

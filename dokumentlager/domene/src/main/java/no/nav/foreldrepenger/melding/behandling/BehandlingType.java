@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.behandling;
 
+import java.util.Set;
+
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
@@ -21,6 +23,9 @@ public class BehandlingType extends Kodeliste {
     public static final BehandlingType KLAGE = new BehandlingType("BT-003"); //$NON-NLS-1$
     public static final BehandlingType REVURDERING = new BehandlingType("BT-004"); //$NON-NLS-1$
     public static final BehandlingType INNSYN = new BehandlingType("BT-006"); //$NON-NLS-1$
+    public static final BehandlingType TILBAKEBETALING_ENDRING = new BehandlingType("BT-005"); //$NON-NLS-1$
+    public static final BehandlingType TILBAKEKREVING = new BehandlingType("BT-007"); //$NON-NLS-1$
+    public static final BehandlingType TILBAKEKREVING_REVURDERING = new BehandlingType("BT-009"); //$NON-NLS-1$
 
     /**
      * Alle kodeverk må ha en verdi, det kan ikke være null i databasen. Denne koden gjør samme nytten.
@@ -31,6 +36,8 @@ public class BehandlingType extends Kodeliste {
     private Integer behandlingstidFristUker;
     @Transient
     private Boolean behandlingstidVarselbrev;
+
+    private static final Set<BehandlingType> TILBAKEKREVING_TYPER = Set.of(TILBAKEBETALING_ENDRING, TILBAKEKREVING, TILBAKEKREVING_REVURDERING);
 
     protected BehandlingType() {
         // Hibernate trenger den
@@ -43,7 +50,6 @@ public class BehandlingType extends Kodeliste {
         }
         return behandlingstidFristUker;
     }
-
 
     public boolean isBehandlingstidVarselbrev() {
         if (behandlingstidVarselbrev == null) {
@@ -58,5 +64,9 @@ public class BehandlingType extends Kodeliste {
 
     protected BehandlingType(String kode) {
         super(kode, DISCRIMINATOR);
+    }
+
+    public boolean erTilbakekrevingBehandlingType() {
+        return TILBAKEKREVING_TYPER.contains(this);
     }
 }

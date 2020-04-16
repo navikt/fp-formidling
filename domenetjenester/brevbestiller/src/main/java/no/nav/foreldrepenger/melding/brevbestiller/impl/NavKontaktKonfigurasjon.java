@@ -7,8 +7,8 @@ import no.nav.vedtak.konfig.KonfigVerdi;
 
 @ApplicationScoped
 public class NavKontaktKonfigurasjon {
-    private String norg2KontaktTelefonNummer = "55553333";
-    private String norg2NavKlageinstansTelefon = "21071730";
+    private String norg2KontaktTelefonNummer = "55 55 33 33";
+    private String norg2NavKlageinstansTelefon = "21 07 17 30";
     private String brevAvsenderEnhetNavn = "NAV Familie- og pensjonsytelser";
     private String brevAvsenderKlageEnhet = "NAV Klageinstans";
     private String brevReturadresseAdresselinje1 = "Postboks 6600 Etterstad";
@@ -21,7 +21,7 @@ public class NavKontaktKonfigurasjon {
 
     @Inject
     public NavKontaktKonfigurasjon(
-            @KonfigVerdi(value = "norg2.kontakt.telefonnummer", defaultVerdi = "55553333") String norg2KontaktTelefonNummer,
+            @KonfigVerdi(value = "norg2.kontakt.telefonnummer", defaultVerdi = "55 55 33 33") String norg2KontaktTelefonNummer,
             @KonfigVerdi(value = "norg2.kontakt.klageinstans.telefonnummer", defaultVerdi = "21 07 17 30") String norg2NavKlageinstansTelefon,
             @KonfigVerdi(value = "brev.avsender.enhet.navn", defaultVerdi = "NAV Familie- og pensjonsytelser") String brevAvsenderEnhetNavn,
             @KonfigVerdi(value = "brev.avsender.klage.enhet.navn", defaultVerdi = "NAV Klageinstans") String brevAvsenderKlageEnhet,

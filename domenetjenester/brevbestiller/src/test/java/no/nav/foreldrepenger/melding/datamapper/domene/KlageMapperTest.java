@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.datamapper.domene;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,8 +65,7 @@ public class KlageMapperTest {
     }
 
     @Test
-    public void formaterLovhjemlerKlageAvvistTest() throws IOException {
-
+    public void formaterLovhjemlerKlageAvvistTest() {
         Klage klage = lagKlageNFP(false, List.of(KlageAvvistÅrsak.KLAGET_FOR_SENT, KlageAvvistÅrsak.IKKE_KONKRET));
         assertLovFormateringKlage(KlageMapper.hentKlageHjemler(klage), false, "forvaltningsloven §§ 31, 32 og 33");
 
@@ -89,6 +87,7 @@ public class KlageMapperTest {
     private KlageFormkravResultatDto lagFormkravResultatDto(List<KlageAvvistÅrsak> avvistÅrsaker) {
         KlageFormkravResultatDto dto = new KlageFormkravResultatDto();
         dto.setAvvistArsaker(kodeverkTilDto(avvistÅrsaker));
+        dto.setPaklagdBehandlingType(new KodeDto("BEHANDLING_TYPE", "BT-002", null));
         return dto;
     }
 

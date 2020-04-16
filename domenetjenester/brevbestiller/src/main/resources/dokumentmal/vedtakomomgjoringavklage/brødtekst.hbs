@@ -1,7 +1,32 @@
-{{i18n "omgjortklage"}}
+{{#if paaklagdBehandlingErTilbakekreving}}
+    {{#if behandlesAvKlageinstans}}
+{{i18n "omgjortklage_KA_TILBAKEBETALING"}}
 
 {{i18n "fritekst" mintekst}}
 
-{{i18n "fasttekst" klageFristUker}}
+{{i18n "fasttekst_KA_TILBAKEBETALING" klageFristUker}}
+    {{else}}
+{{i18n "omgjortklage_NFP_TILBAKEBETALING"}}
+
+{{i18n "fritekst" mintekst}}
+
+{{i18n "fasttekst_NFP_TILBAKEBETALING" klageFristUker}}
+    {{/if}}
+
+{{else}}
+    {{#if behandlesAvKlageinstans}}
+{{i18n "omgjortklage_KA"}}
+
+{{i18n "fritekst" mintekst}}
+
+{{i18n "fasttekst_KA" klageFristUker}}
+    {{else}}
+{{i18n "omgjortklage_NFP"}}
+
+{{i18n "fritekst" mintekst}}
+
+{{i18n "fasttekst_NFP" klageFristUker}}
+    {{/if}}
+{{/if}}
 
 {{> felles}}

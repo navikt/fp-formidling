@@ -40,7 +40,7 @@
         <metrics.version>4.1.6</metrics.version>
         <prometheus.version>0.8.1</prometheus.version>
         <swagger.version>2.1.2</swagger.version>
-        <kafka.version>2.4.1</kafka.version>
+        <kafka.version>2.5.0</kafka.version>
     </properties>
 
     <prerequisites>

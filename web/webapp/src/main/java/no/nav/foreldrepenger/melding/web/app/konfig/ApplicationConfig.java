@@ -35,9 +35,9 @@ public class ApplicationConfig extends Application {
 
         OpenAPI oas = new OpenAPI();
         Info info = new Info()
-                .title("Foreldrepenger risikoklassifisering")
+                .title("Foreldrepenger formidling")
                 .version("1.0")
-                .description("REST grensesnitt for risikoklassifisering.");
+                .description("REST grensesnitt for formidling.");
 
         oas.info(info)
                 .addServersItem(new Server()

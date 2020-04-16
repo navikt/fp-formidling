@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
+import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
@@ -41,11 +42,11 @@ public class KlageDtoMapper {
         Klage.Builder builder = Klage.ny();
         if (dto.getKlageFormkravResultatNFP() != null) {
             builder.medFormkravNFP(mapKlageFormkravResultatfraDto(dto.getKlageFormkravResultatNFP()));
-            builder.medPåklagdBehandlingType(finnBehandlingType(dto.getKlageFormkravResultatNFP().getPaklagdBehandlingType().getKode()));
+            leggTilPåklagdBehandlingType(builder, dto.getKlageFormkravResultatNFP());
         }
         if (dto.getKlageFormkravResultatKA() != null) {
             builder.medFormkravKA(mapKlageFormkravResultatfraDto(dto.getKlageFormkravResultatKA()));
-            builder.medPåklagdBehandlingType(finnBehandlingType(dto.getKlageFormkravResultatKA().getPaklagdBehandlingType().getKode()));
+            leggTilPåklagdBehandlingType(builder, dto.getKlageFormkravResultatKA());
         }
         if (dto.getKlageVurderingResultatNFP() != null) {
             builder.medKlageVurderingResultatNFP(mapKlageVurderingResultatfraDto(dto.getKlageVurderingResultatNFP()));
@@ -54,6 +55,13 @@ public class KlageDtoMapper {
             builder.medKlageVurderingResultatNK(mapKlageVurderingResultatfraDto(dto.getKlageVurderingResultatNK()));
         }
         return builder.build();
+    }
+
+    private void leggTilPåklagdBehandlingType(Klage.Builder builder, KlageFormkravResultatDto klageFormkravResultat) {
+        KodeDto paklagdBehandlingType = klageFormkravResultat.getPaklagdBehandlingType();
+        if (paklagdBehandlingType != null) {
+            builder.medPåklagdBehandlingType(finnBehandlingType(paklagdBehandlingType.getKode()));
+        }
     }
 
 

@@ -51,7 +51,7 @@ public class Klage {
     }
 
     public static final class Builder {
-        private BehandlingType påklagdBehandlingType;
+        private BehandlingType påklagdBehandlingType = BehandlingType.UDEFINERT;
         private KlageVurderingResultat klageVurderingResultatNFP;
         private KlageVurderingResultat klageVurderingResultatNK;
         private KlageFormkravResultat formkravKA;

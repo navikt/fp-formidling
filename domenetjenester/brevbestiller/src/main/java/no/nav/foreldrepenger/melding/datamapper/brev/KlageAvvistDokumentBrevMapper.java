@@ -52,12 +52,12 @@ public class KlageAvvistDokumentBrevMapper extends DokumentTypeMapper {
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
-        FagType fagType = mapFagType(dokumentHendelse, klage);
+        FagType fagType = mapFagType(dokumentHendelse, klage, behandling);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(KlageAvvistConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    private FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage) {
+    private FagType mapFagType(DokumentHendelse dokumentHendelse, Klage klage, Behandling behandling) {
         FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
@@ -67,7 +67,7 @@ public class KlageAvvistDokumentBrevMapper extends DokumentTypeMapper {
         if (!avvistÅrsaker.isEmpty()) {
             fagType.setAvvistGrunnListe(avvistGrunnListeFra(
                     avvistÅrsaker.stream().map(KlageAvvistÅrsak::getKode).collect(Collectors.toList())));
-            KlageMapper.hentOgFormaterLovhjemlerForAvvistKlage(klage).ifPresent(fagType::setLovhjemler);
+            KlageMapper.hentOgFormaterLovhjemlerForAvvistKlage(klage, behandling.getSpråkkode()).ifPresent(fagType::setLovhjemler);
         }
         return fagType;
     }

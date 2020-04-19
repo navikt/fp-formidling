@@ -1,9 +1,11 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static java.util.List.of;
 import static no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder.ROTMAPPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -28,12 +30,14 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
+import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
+import no.nav.foreldrepenger.melding.klage.KlageFormkravResultat;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
+import no.nav.vedtak.felles.testutilities.Whitebox;
 
-public class KlageOmgjøringBrevMapperTest {
+public class KlageAvvistBrevMapperTest {
     private static final long ID = 123L;
     private static final String NFP = "NAV Familie- og pensjonsytelser Drammen";
-    private static final String KA = "NAV Klageinstans Midt-Norge";
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
@@ -48,89 +52,76 @@ public class KlageOmgjøringBrevMapperTest {
     private DomeneobjektProvider domeneobjektProvider;
 
     @InjectMocks
-    private KlageOmgjøringBrevMapper mapper;
+    private KlageAvvistBrevMapper mapper;
 
     @Before
     public void before() {
-        mapper = new KlageOmgjøringBrevMapper(brevParametere, domeneobjektProvider);
+        mapper = new KlageAvvistBrevMapper(brevParametere, domeneobjektProvider);
         MockitoAnnotations.initMocks(this);
         when(brevParametere.getKlagefristUker()).thenReturn(6);
-    }
-
-    @Test
-    public void skal_mappe_brev_om_omgjøring_av_førstegangsbehandling_fra_NFP() {
-        // Arrange
-        Behandling behandling = opprettBehandling();
-        DokumentHendelse dokumentHendelse = opprettDokumentHendelse(NFP);
         when(dokumentFelles.getNavnAvsenderEnhet()).thenReturn(NFP);
-        ResourceBundle expectedValues = ResourceBundle.getBundle(
-                String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
-                new Locale("nb", "NO"));
-        mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD);
-
-        // Act
-        FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
-
-        // Assert
-        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift_NFP"));
-        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst_NFP"));
     }
 
     @Test
-    public void skal_mappe_brev_om_omgjøring_av_førstegangsbehandling_fra_KA() {
+    public void skal_mappe_brev_om_avvist_klage_med_en_årsak_på_førstegangsbehandling() {
         // Arrange
         Behandling behandling = opprettBehandling();
-        DokumentHendelse dokumentHendelse = opprettDokumentHendelse(KA);
-        when(dokumentFelles.getNavnAvsenderEnhet()).thenReturn(KA);
+        DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
         ResourceBundle expectedValues = ResourceBundle.getBundle(
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
                 new Locale("nb", "NO"));
-        mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD);
+        KlageAvvistÅrsak klageAvvistÅrsak = KlageAvvistÅrsak.KLAGET_FOR_SENT;
+        Whitebox.setInternalState(klageAvvistÅrsak, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"31\", \"33\"]},\"KA\": {\"lovreferanser\": [\"31\", \"34\"]}}}");
+        mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, of(klageAvvistÅrsak));
 
         // Act
         FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
 
         // Assert
-        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift_KA"));
-        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst_KA"));
+        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift"));
+        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst"));
     }
 
     @Test
-    public void skal_mappe_brev_om_omgjøring_av_tilbakekreving_fra_NFP() {
+    public void skal_mappe_brev_om_avvist_klage_med_flere_årsaker_i_punktliste_på_førstegangsbehandling() {
         // Arrange
         Behandling behandling = opprettBehandling();
-        DokumentHendelse dokumentHendelse = opprettDokumentHendelse(NFP);
-        when(dokumentFelles.getNavnAvsenderEnhet()).thenReturn(NFP);
+        DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
         ResourceBundle expectedValues = ResourceBundle.getBundle(
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
                 new Locale("nb", "NO"));
-        mockKlage(behandling, BehandlingType.TILBAKEKREVING);
+        KlageAvvistÅrsak klageAvvistÅrsak1 = KlageAvvistÅrsak.KLAGET_FOR_SENT;
+        Whitebox.setInternalState(klageAvvistÅrsak1, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"31\", \"33\"]},\"KA\": {\"lovreferanser\": [\"31\", \"34\"]}}}");
+        KlageAvvistÅrsak klageAvvistÅrsak2 = KlageAvvistÅrsak.KLAGER_IKKE_PART;
+        Whitebox.setInternalState(klageAvvistÅrsak2, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"28\", \"33\"]},\"KA\": {\"lovreferanser\": [\"28\", \"34\"]}}}");
+        mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, of(klageAvvistÅrsak1, klageAvvistÅrsak2));
 
         // Act
         FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
 
         // Assert
-        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift_NFP_TILBAKEBETALING"));
-        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst_NFP_TILBAKEBETALING"));
+        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift"));
+        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst_to_aarsaker"));
     }
 
     @Test
-    public void skal_mappe_brev_om_omgjøring_av_tilbakekreving_fra_KA() {
+    public void skal_mappe_brev_om_avvist_klage_med_en_årsak_på_tilbakekreving() {
         // Arrange
         Behandling behandling = opprettBehandling();
-        DokumentHendelse dokumentHendelse = opprettDokumentHendelse(KA);
-        when(dokumentFelles.getNavnAvsenderEnhet()).thenReturn(KA);
+        DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
         ResourceBundle expectedValues = ResourceBundle.getBundle(
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
                 new Locale("nb", "NO"));
-        mockKlage(behandling, BehandlingType.TILBAKEKREVING);
+        KlageAvvistÅrsak klageAvvistÅrsak = KlageAvvistÅrsak.KLAGET_FOR_SENT;
+        Whitebox.setInternalState(klageAvvistÅrsak, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"31\", \"33\"]},\"KA\": {\"lovreferanser\": [\"31\", \"34\"]}}}");
+        mockKlage(behandling, BehandlingType.TILBAKEKREVING, of(klageAvvistÅrsak));
 
         // Act
         FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
 
         // Assert
-        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift_KA_TILBAKEBETALING"));
-        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst_KA_TILBAKEBETALING"));
+        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift_TILBAKEBETALING"));
+        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst"));
     }
 
     private Behandling opprettBehandling() {
@@ -140,22 +131,26 @@ public class KlageOmgjøringBrevMapperTest {
                 .build();
     }
 
-    private DokumentHendelse opprettDokumentHendelse(String behandlendeEnhetNavn) {
+    private DokumentHendelse opprettDokumentHendelse() {
         return DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
-                .medBehandlendeEnhetNavn(behandlendeEnhetNavn)
+                .medBehandlendeEnhetNavn(NFP)
                 .build();
     }
 
-    private void mockKlage(Behandling behandling, BehandlingType behandlingType) {
+    private void mockKlage(Behandling behandling, BehandlingType behandlingType, List<KlageAvvistÅrsak> avvistÅrsaker) {
         KlageVurderingResultat klageVurderingResultat = KlageVurderingResultat.ny()
                 .medFritekstTilbrev("FRITEKST")
+                .build();
+        KlageFormkravResultat klageFormkravResultat = KlageFormkravResultat.ny()
+                .medAvvistÅrsaker(avvistÅrsaker)
                 .build();
         Klage klage = Klage.ny()
                 .medPåklagdBehandlingType(behandlingType)
                 .medKlageVurderingResultatNK(klageVurderingResultat)
+                .medFormkravNFP(klageFormkravResultat)
                 .build();
         when(domeneobjektProvider.hentKlagebehandling(behandling)).thenReturn(klage);
     }

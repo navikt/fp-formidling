@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.AvvistGrunnKode;
 import no.nav.foreldrepenger.melding.klage.Klage;
@@ -45,11 +46,11 @@ public class KlageMapper {
         return Collections.emptyList();
     }
 
-    public static Optional<String> hentOgFormaterLovhjemlerForAvvistKlage(Klage klage) {
+    public static Optional<String> hentOgFormaterLovhjemlerForAvvistKlage(Klage klage, Språkkode språkkode) {
         Set<String> klagehjemler = hentKlageHjemler(klage);
         boolean klagetEtterKlagefrist = listeAvAvvisteÅrsaker(klage).stream()
                 .anyMatch(KLAGET_FOR_SENT::equals);
-        return formaterLovhjemlerForAvvistKlage(klagehjemler, klagetEtterKlagefrist);
+        return formaterLovhjemlerForAvvistKlage(klagehjemler, klagetEtterKlagefrist, språkkode);
     }
 
     static Set<String> hentKlageHjemler(Klage klage) {
@@ -59,9 +60,15 @@ public class KlageMapper {
         return klageHjemler;
     }
 
-    static Optional<String> formaterLovhjemlerForAvvistKlage(Set<String> hjemler, boolean klagetEtterKlagefrist) {
-        String startTillegg = klagetEtterKlagefrist ?
-                "folketrygdloven § 21-12 og forvaltningsloven" : "forvaltningsloven";
+    static Optional<String> formaterLovhjemlerForAvvistKlage(Set<String> hjemler, boolean klagetEtterKlagefrist, Språkkode språkkode) {
+        String startTillegg;
+        if (Språkkode.nn.equals(språkkode)) {
+            startTillegg = klagetEtterKlagefrist ?
+                    "folketrygdlova § 21-12 og forvaltningslova" : "forvaltningslova";
+        } else {
+            startTillegg = klagetEtterKlagefrist ?
+                    "folketrygdloven § 21-12 og forvaltningsloven" : "forvaltningsloven";
+        }
         StringBuilder lovhjemmelBuiloer = new StringBuilder();
         int antallLovreferanser = formaterLovhjemler(hjemler, lovhjemmelBuiloer, startTillegg, null);
         if (antallLovreferanser == 0) {
@@ -69,7 +76,6 @@ public class KlageMapper {
         }
         return Optional.of(lovhjemmelBuiloer.toString());
     }
-
 
     public static Optional<String> avklarFritekstKlage(DokumentHendelse dokumentHendelse, Klage klage) {
         if (!StringUtils.nullOrEmpty(dokumentHendelse.getFritekst())) {

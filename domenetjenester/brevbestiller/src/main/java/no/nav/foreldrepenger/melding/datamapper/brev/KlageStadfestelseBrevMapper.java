@@ -1,17 +1,21 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.Optional;
 
 @ApplicationScoped
 @Named(DokumentMalType.KLAGE_STADFESTET)
@@ -37,11 +41,28 @@ public class KlageStadfestelseBrevMapper extends FritekstmalBrevMapper {
     }
 
     @Override
+    protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
+        initHandlebars(behandling.getSpråkkode());
+
+        Map<String, Object> hovedoverskriftFelter = new HashMap<>();
+        hovedoverskriftFelter.put("behandling", behandling);
+        hovedoverskriftFelter.put("dokumentHendelse", hendelse);
+
+        Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
+        if (klage != null) {
+            hovedoverskriftFelter.put("paaklagdBehandlingErTilbakekreving", klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType());
+        }
+
+        FagType fagType = new FagType();
+        fagType.setHovedoverskrift(tryApply(hovedoverskriftFelter, getOverskriftMal()));
+        fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling).getMap(), getBrødtekstMal()));
+        return fagType;
+    }
+
+    @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
 
         Brevdata brevdata = new Brevdata()
-                .leggTil("saksbehandler", behandling.getAnsvarligSaksbehandler())
-                .leggTil("medunderskriver", behandling.getAnsvarligBeslutter())
                 .leggTil("ytelseType", hendelse.getYtelseType().getKode());
 
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);

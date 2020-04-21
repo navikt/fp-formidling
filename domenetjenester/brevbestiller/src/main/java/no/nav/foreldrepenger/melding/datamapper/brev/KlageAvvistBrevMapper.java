@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,7 +11,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import no.nav.foreldrepenger.melding.anke.Anke;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.AvvistGrunn;
@@ -49,27 +49,48 @@ public class KlageAvvistBrevMapper extends FritekstmalBrevMapper {
     }
 
     @Override
-    Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
+    protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
+        initHandlebars(behandling.getSpråkkode());
+
+        Map<String, Object> hovedoverskriftFelter = new HashMap<>();
+        hovedoverskriftFelter.put("behandling", behandling);
+        hovedoverskriftFelter.put("dokumentHendelse", hendelse);
 
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
-        Optional<String>  lovhjemler = KlageMapper.hentOgFormaterLovhjemlerForAvvistKlage(klage);
+        if (klage != null) {
+            hovedoverskriftFelter.put("paaklagdBehandlingErTilbakekreving", klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType());
+        }
 
-        Brevdata brevdata =new Brevdata()
-                .leggTil("lovhjemler",  lovhjemler.get())
-                .leggTil("saksbehandler", behandling.getAnsvarligSaksbehandler())
-                .leggTil("medunderskriver",behandling.getAnsvarligBeslutter())
-                .leggTil("behandlingtype",behandling.getBehandlingType().getKode());
+        FagType fagType = new FagType();
+        fagType.setHovedoverskrift(tryApply(hovedoverskriftFelter, getOverskriftMal()));
+        fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling).getMap(), getBrødtekstMal()));
+        return fagType;
+    }
+
+    @Override
+    Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
+        Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
+        Optional<String> lovhjemler = KlageMapper.hentOgFormaterLovhjemlerForAvvistKlage(klage, behandling.getSpråkkode());
+
+        Brevdata brevdata = new Brevdata()
+                .leggTil("lovhjemler", lovhjemler.get());
 
         List<KlageAvvistÅrsak> avvistÅrsaker = KlageMapper.listeAvAvvisteÅrsaker(klage);
 
         if (!avvistÅrsaker.isEmpty()) {
-            AvvistGrunnListeType avvistGrunnListeType  =  avvistGrunnListeFra(avvistÅrsaker.stream().map(KlageAvvistÅrsak::getKode).collect(Collectors.toList()));
-            List<AvvistGrunnType>  avvistGrunnTypeListe =   avvistGrunnListeType.getAvvistGrunn();
-            HashSet<AvvistGrunn> avvistGrunnListe = new HashSet<AvvistGrunn>();
-            for (int i=0;i<avvistGrunnTypeListe.size();i++){
+            AvvistGrunnListeType avvistGrunnListeType = avvistGrunnListeFra(avvistÅrsaker.stream().map(KlageAvvistÅrsak::getKode).collect(Collectors.toList()));
+            List<AvvistGrunnType> avvistGrunnTypeListe = avvistGrunnListeType.getAvvistGrunn();
+            List<AvvistGrunn> avvistGrunnListe = new ArrayList<>();
+            for (int i=0; i<avvistGrunnTypeListe.size(); i++) {
                 avvistGrunnListe.add(new AvvistGrunn(avvistGrunnListeType.getAvvistGrunn().get(i).getAvvistGrunnKode().value()));
             }
-            brevdata.leggTil("avvistGrunnListe",avvistGrunnListe);
+            brevdata.leggTil("avvistGrunnListe", avvistGrunnListe);
+
+            if (avvistGrunnListe.size() == 1) {
+                brevdata.leggTil("bareEnGrunn", true);
+            } else {
+                brevdata.leggTil("bareEnGrunn", false);
+            }
         }
 
         return brevdata;

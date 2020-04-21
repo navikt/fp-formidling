@@ -1,3 +1,6 @@
+{{#if bareEnGrunn}}
+{{i18n "avvistklage"}} {{#each avvistGrunnListe}}{{#if @first}}{{#eq avvistGrunn "ETTER6UKER"}}{{i18n "ETTER6UKER_tekst"}}{{/eq}}{{#eq avvistGrunn "KLAGEUGYLDIG"}}{{i18n "KLAGEUGYLDIG_tekst"}}{{/eq}}{{#eq avvistGrunn "KLAGEIKKEVEDTAK"}}{{i18n "KLAGEIKKEVEDTAK_tekst"}}{{/eq}}{{#eq avvistGrunn "KLAGEIKKEPART"}}{{i18n "KLAGEIKKEPART_tekst"}}{{/eq}}{{#eq avvistGrunn "KLAGEIKKEKONKRET"}}{{i18n "KLAGEIKKEKONKRET_tekst"}}{{/eq}}{{/if}}{{/each}}.
+{{else}}
 {{i18n "avvistklage"}}
 {{#each avvistGrunnListe }}
 {{~#if @first~}}*-{{~/if~}}
@@ -18,10 +21,11 @@
 {{/eq}}
 {{~#if @last~}}-*{{~/if~}}
 {{/each}}
+{{/if}}
 
-{{i18n "vedtak_er_gjort_etter"}} {{i18n "lovhjemlertekst" lovhjemler}}
+{{i18n "vedtak_er_gjort_etter"}} {{i18n "lovhjemlertekst" lovhjemler}}.
 
-{{i18n "Klagerett" klageFristUker}}
+{{i18n "klagerett" klageFristUker}}
 
 {{> felles}}
 

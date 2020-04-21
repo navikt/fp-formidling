@@ -45,7 +45,7 @@ public class DokumentMalUtlederTest {
     @Before
     public void setup() {
         dokumentRepository = new DokumentRepositoryImpl(repositoryRule.getEntityManager());
-        dokumentMalUtleder = new DokumentMalUtleder(kodeverkTabellRepository, domeneobjektProvider, null, null);
+        dokumentMalUtleder = new DokumentMalUtleder(kodeverkTabellRepository, domeneobjektProvider, null, null, null);
     }
 
     @Test

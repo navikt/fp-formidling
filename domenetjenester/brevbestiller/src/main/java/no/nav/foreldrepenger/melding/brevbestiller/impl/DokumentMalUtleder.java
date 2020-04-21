@@ -7,6 +7,7 @@ import java.util.Objects;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.finn.unleash.Unleash;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
@@ -30,11 +31,13 @@ import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 class DokumentMalUtleder {
 
     private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingUuid: ";
+    private static final String FPSAK_FRITEKST_BREV_FOR_KLAGE = "fpsak.benytte.fritekstbrevmal.for.klage";
 
     private KodeverkTabellRepository kodeverkTabellRepository;
     private DomeneobjektProvider domeneobjektProvider;
     private HistorikkRepository historikkRepository;
     private BehandlingRestKlient behandlingRestKlient;
+    private Unleash unleash;
 
     public DokumentMalUtleder() {
         //CDI
@@ -44,11 +47,13 @@ class DokumentMalUtleder {
     public DokumentMalUtleder(KodeverkTabellRepository kodeverkTabellRepository,
                               DomeneobjektProvider domeneobjektProvider,
                               HistorikkRepository historikkRepository,
-                              BehandlingRestKlient behandlingRestKlient) {
+                              BehandlingRestKlient behandlingRestKlient,
+                              Unleash unleash) {
         this.kodeverkTabellRepository = kodeverkTabellRepository;
         this.domeneobjektProvider = domeneobjektProvider;
         this.historikkRepository = historikkRepository;
         this.behandlingRestKlient = behandlingRestKlient;
+        this.unleash = unleash;
     }
 
     private static boolean erKunEndringIFordelingAvYtelsen(Behandlingsresultat behandlingsresultat) {
@@ -163,6 +168,19 @@ class DokumentMalUtleder {
             throw DokumentBestillerFeil.FACTORY.behandlingManglerKlageVurderingResultat(behandling.getUuid().toString()).toException();
         }
         KlageVurdering klagevurdering = klageVurderingResultat.getKlageVurdering();
+
+        if (unleash != null && unleash.isEnabled(FPSAK_FRITEKST_BREV_FOR_KLAGE, false)) {
+            if (KlageVurdering.AVVIS_KLAGE.equals(klagevurdering)) {
+                return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_AVVIST);
+            } else if (Arrays.asList(KlageVurdering.OPPHEVE_YTELSESVEDTAK, KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE).contains(klagevurdering)) {
+                return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_YTELSESVEDTAK_OPPHEVET_DOK);
+            } else if (KlageVurdering.MEDHOLD_I_KLAGE.equals(klagevurdering)) {
+                return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_OMGJØRING);
+            } else if (KlageVurdering.STADFESTE_YTELSESVEDTAK.equals(klagevurdering)) {
+                return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_STADFESTET);
+            }
+        }
+
         if (KlageVurdering.AVVIS_KLAGE.equals(klagevurdering)) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_AVVIST_DOK);
         } else if (Arrays.asList(KlageVurdering.OPPHEVE_YTELSESVEDTAK, KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE).contains(klagevurdering)) {

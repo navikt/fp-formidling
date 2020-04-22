@@ -1,27 +1,28 @@
-{{#eq behandling.behandlingType.kode "BT-007"}}
-      {{#eq dokumentHendelseYtelseTypeKode "SVP"}}
+{{#if paaklagdBehandlingErTilbakekreving}}
+    {{#eq dokumentHendelseYtelseTypeKode "SVP"}}
 {{i18n "fast_tekst_TB_SVP" mottatDato}}
-      {{else}}
-            {{#eq dokumentHendelseYtelseTypeKode "FP"}}
+    {{else}}
+        {{#eq dokumentHendelseYtelseTypeKode "FP"}}
 {{i18n "fast_tekst_TB_FP" mottatDato}}
-            {{else}}
+        {{else}}
 {{i18n "fast_tekst_TB_ES" mottatDato}}
-            {{/eq}}
-     {{/eq}}
+        {{/eq}}
+    {{/eq}}
 {{else}}
-      {{#eq dokumentHendelseYtelseTypeKode "SVP"}}
+    {{#eq dokumentHendelseYtelseTypeKode "SVP"}}
 {{i18n "fast_tekst_SVP" mottatDato}}
-      {{else}}
-         {{#eq dokumentHendelseYtelseTypeKode "FP"}}
+    {{else}}
+        {{#eq dokumentHendelseYtelseTypeKode "FP"}}
 {{i18n "fast_tekst_FP" mottatDato}}
-         {{else}}
+        {{else}}
 {{i18n "fast_tekst_ES" mottatDato}}
-         {{/eq}}
-     {{/eq}}
-{{/eq}}
+        {{/eq}}
+    {{/eq}}
+{{/if}}
 
 {{i18n "saksbehandlingstid" behandlingsfrist}}
 {{i18n "Dette_har_vi_lagt_vekt_paa_i_vurderingen_vaar"}}
+
 {{i18n "fritekst" mintekst}}
 
 {{i18n "nye_opplysninger"}}

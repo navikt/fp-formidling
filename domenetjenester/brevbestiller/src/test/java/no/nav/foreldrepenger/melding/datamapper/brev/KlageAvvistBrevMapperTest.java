@@ -60,6 +60,7 @@ public class KlageAvvistBrevMapperTest {
         MockitoAnnotations.initMocks(this);
         when(brevParametere.getKlagefristUker()).thenReturn(6);
         when(dokumentFelles.getNavnAvsenderEnhet()).thenReturn(NFP);
+        when(dokumentFelles.getKontaktTlf()).thenReturn("55 55 33 33");
     }
 
     @Test

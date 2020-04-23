@@ -1,11 +1,10 @@
 package no.nav.foreldrepenger.melding.web.app.selftest.checks;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
+import no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling.DokumentbestillingConsumer;
 import org.apache.kafka.streams.KafkaStreams;
 
-import no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling.DokumentbestillingConsumer;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 @ApplicationScoped
 public class DokumentbestillingConsumerHealthCheck extends ExtHealthCheck {
@@ -36,7 +35,7 @@ public class DokumentbestillingConsumerHealthCheck extends ExtHealthCheck {
 
         KafkaStreams.State tilstand = consumer.getTilstand();
         intTestRes.setMessage("Consumer is in state [" + tilstand.name() + "].");
-        if (tilstand.isRunning() || KafkaStreams.State.CREATED.equals(tilstand)) {
+        if (tilstand.isRunningOrRebalancing() || KafkaStreams.State.CREATED.equals(tilstand)) {
             intTestRes.setOk(true);
         } else {
             intTestRes.setOk(false);

@@ -73,7 +73,3 @@ public class KlageStadfestelseBrevMapper extends FritekstmalBrevMapper {
         return brevdata;
     }
 }
-
-
-
-

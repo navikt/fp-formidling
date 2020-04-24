@@ -55,6 +55,7 @@ public class KlageAvvistBrevMapper extends FritekstmalBrevMapper {
         Map<String, Object> hovedoverskriftFelter = new HashMap<>();
         hovedoverskriftFelter.put("behandling", behandling);
         hovedoverskriftFelter.put("dokumentHendelse", hendelse);
+        hovedoverskriftFelter.put("behandlesAvKlageinstans", behandlesAvKlageinstans(hendelse, behandling));
 
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
         if (klage != null) {

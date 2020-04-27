@@ -89,8 +89,8 @@ public class SelftestServiceTest {
         Response response = service.doSelftest(TEXT_HTML, false);
 
         assertThat(response).isNotNull();
-        assertThat(response.getHeaders()).containsKeys("Content-Type");
-        assertThat(response.getHeaders().get("Content-Type")).contains(TEXT_HTML);
+        assertThat(response.getStringHeaders()).containsKeys("Content-Type");
+        assertThat(response.getStringHeaders().get("Content-Type")).contains(TEXT_HTML);
         assertThat(response.getEntity()).isNotNull();
     }
 
@@ -102,8 +102,8 @@ public class SelftestServiceTest {
         Response response = service.doSelftest(TEXT_HTML, true);
 
         assertThat(response).isNotNull();
-        assertThat(response.getHeaders()).containsKeys("Content-Type");
-        assertThat(response.getHeaders().get("Content-Type")).contains(TEXT_HTML);
+        assertThat(response.getStringHeaders()).containsKeys("Content-Type");
+        assertThat(response.getStringHeaders().get("Content-Type")).contains(TEXT_HTML);
         assertThat(response.getEntity()).isNotNull();
     }
 

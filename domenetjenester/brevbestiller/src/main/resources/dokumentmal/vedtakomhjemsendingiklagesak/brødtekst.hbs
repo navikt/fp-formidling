@@ -1,0 +1,30 @@
+{{#if opphevet}}
+    {{#eq ytelseType "SVP"}}
+{{i18n "hjemsendtklage_opphevet_SVP"}}
+    {{else}}
+        {{#eq ytelseType "FP"}}
+{{i18n "hjemsendtklage_opphevet_FP"}}
+        {{else}}
+{{i18n "hjemsendtklage_opphevet_ES"}}
+        {{/eq}}
+    {{/eq}}
+{{else}}
+    {{#eq ytelseType "SVP"}}
+{{i18n "hjemsendtklage_SVP"}}
+    {{else}}
+        {{#eq ytelseType "FP"}}
+{{i18n "hjemsendtklage_FP"}}
+        {{else}}
+{{i18n "hjemsendtklage_ES"}}
+        {{/eq}}
+    {{/eq}}
+{{/if}}
+
+{{i18n "hjemsendtklage_felles" saksbehandlingstid}}
+
+{{i18n "fritekst" mintekst}}
+
+{{i18n "klage"}}
+
+{{i18n "nyeopplysninger" ettersendelsesfrist}}
+{{> felles}}

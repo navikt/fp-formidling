@@ -42,6 +42,7 @@ public class DokumentbestillingDtoMapper {
                 .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(brevDto.getArsakskode()))
                 .medGjelderVedtak(brevDto.isGjelderVedtak())
                 .medVedtaksbrev(VedtaksbrevMapper.tilEntitet(brevDto.getVedtaksbrev()))
+                .medErOpphevetKlage(brevDto.isErOpphevetKlage())
                 .build();
     }
 

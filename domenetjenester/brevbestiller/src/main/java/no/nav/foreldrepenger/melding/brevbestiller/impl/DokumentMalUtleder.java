@@ -173,7 +173,7 @@ class DokumentMalUtleder {
             if (KlageVurdering.AVVIS_KLAGE.equals(klagevurdering)) {
                 return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_AVVIST);
             } else if (Arrays.asList(KlageVurdering.OPPHEVE_YTELSESVEDTAK, KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE).contains(klagevurdering)) {
-                return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_YTELSESVEDTAK_OPPHEVET_DOK);
+                return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_HJEMSENDT);
             } else if (KlageVurdering.MEDHOLD_I_KLAGE.equals(klagevurdering)) {
                 return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_OMGJØRING);
             } else if (KlageVurdering.STADFESTE_YTELSESVEDTAK.equals(klagevurdering)) {

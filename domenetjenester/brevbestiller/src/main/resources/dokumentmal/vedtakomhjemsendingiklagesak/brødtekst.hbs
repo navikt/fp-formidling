@@ -1,27 +1,50 @@
-{{#if opphevet}}
-    {{#eq ytelseType "SVP"}}
-{{i18n "hjemsendtklage_opphevet_SVP"}}
-    {{else}}
-        {{#eq ytelseType "FP"}}
-{{i18n "hjemsendtklage_opphevet_FP"}}
+{{#if paaklagdBehandlingErTilbakekreving}}
+    {{#if opphevet}}
+        {{#eq ytelseType "SVP"}}
+{{i18n "hjemsendtklage_opphevet_TILBAKEBETALING_SVP"}}
         {{else}}
-{{i18n "hjemsendtklage_opphevet_ES"}}
+            {{#eq ytelseType "FP"}}
+{{i18n "hjemsendtklage_opphevet_TILBAKEBETALING_FP"}}
+            {{else}}
+{{i18n "hjemsendtklage_opphevet_TILBAKEBETALING_ES"}}
+            {{/eq}}
         {{/eq}}
-    {{/eq}}
+    {{else}}
+        {{#eq ytelseType "SVP"}}
+{{i18n "hjemsendtklage_TILBAKEBETALING_SVP"}}
+        {{else}}
+            {{#eq ytelseType "FP"}}
+{{i18n "hjemsendtklage_TILBAKEBETALING_FP"}}
+            {{else}}
+{{i18n "hjemsendtklage_TILBAKEBETALING_ES"}}
+            {{/eq}}
+        {{/eq}}
+    {{/if}}
 {{else}}
-    {{#eq ytelseType "SVP"}}
-{{i18n "hjemsendtklage_SVP"}}
-    {{else}}
-        {{#eq ytelseType "FP"}}
-{{i18n "hjemsendtklage_FP"}}
+    {{#if opphevet}}
+        {{#eq ytelseType "SVP"}}
+{{i18n "hjemsendtklage_opphevet_SVP"}}
         {{else}}
-{{i18n "hjemsendtklage_ES"}}
+            {{#eq ytelseType "FP"}}
+{{i18n "hjemsendtklage_opphevet_FP"}}
+            {{else}}
+{{i18n "hjemsendtklage_opphevet_ES"}}
+            {{/eq}}
         {{/eq}}
-    {{/eq}}
+    {{else}}
+        {{#eq ytelseType "SVP"}}
+{{i18n "hjemsendtklage_SVP"}}
+        {{else}}
+            {{#eq ytelseType "FP"}}
+{{i18n "hjemsendtklage_FP"}}
+            {{else}}
+{{i18n "hjemsendtklage_ES"}}
+            {{/eq}}
+        {{/eq}}
+    {{/if}}
 {{/if}}
 
 {{i18n "hjemsendtklage_felles" saksbehandlingstid}}
-
 {{i18n "fritekst" mintekst}}
 
 {{i18n "klage"}}

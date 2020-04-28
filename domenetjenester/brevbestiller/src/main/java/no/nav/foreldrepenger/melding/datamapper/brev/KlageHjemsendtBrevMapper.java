@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -14,6 +16,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.typer.Dato;
 
@@ -38,6 +41,28 @@ public class KlageHjemsendtBrevMapper extends FritekstmalBrevMapper {
     @Override
     public String templateFolder() {
         return "vedtakomhjemsendingiklagesak";
+    }
+
+    @Override
+    protected FagType mapFagType(DokumentHendelse hendelse, Behandling behandling) {
+        initHandlebars(behandling.getSpråkkode());
+
+        Map<String, Object> hovedoverskriftFelter = new HashMap<>();
+        hovedoverskriftFelter.put("behandling", behandling);
+        hovedoverskriftFelter.put("dokumentHendelse", hendelse);
+
+        Map<String, Object> brødtekstFelter = mapTilBrevfelter(hendelse, behandling).getMap();
+
+        Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
+        if (klage != null) {
+            hovedoverskriftFelter.put("paaklagdBehandlingErTilbakekreving", klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType());
+            brødtekstFelter.put("paaklagdBehandlingErTilbakekreving", klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType());
+        }
+
+        FagType fagType = new FagType();
+        fagType.setHovedoverskrift(tryApply(hovedoverskriftFelter, getOverskriftMal()));
+        fagType.setBrødtekst(tryApply(brødtekstFelter, getBrødtekstMal()));
+        return fagType;
     }
 
     @Override

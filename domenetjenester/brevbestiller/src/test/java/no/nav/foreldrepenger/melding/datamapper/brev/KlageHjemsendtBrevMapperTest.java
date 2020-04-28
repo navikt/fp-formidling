@@ -67,14 +67,14 @@ public class KlageHjemsendtBrevMapperTest {
     }
 
     @Test
-    public void skal_mappe_brev_om_hjemsendt_vedtak_uten_oppheving() {
+    public void skal_mappe_brev_om_hjemsendt_klage_på_førstegangsbehandling_uten_oppheving() {
         // Arrange
         Behandling behandling = opprettBehandling();
         DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
         ResourceBundle expectedValues = ResourceBundle.getBundle(
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
                 new Locale("nb", "NO"));
-        mockKlage(behandling, KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE);
+        mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE);
 
         // Act
         FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
@@ -85,14 +85,32 @@ public class KlageHjemsendtBrevMapperTest {
     }
 
     @Test
-    public void skal_mappe_brev_om_hjemsendt_vedtak_med_oppheving() {
+    public void skal_mappe_brev_om_hjemsendt_klage_på_tilbakekreving_uten_oppheving() {
         // Arrange
         Behandling behandling = opprettBehandling();
         DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
         ResourceBundle expectedValues = ResourceBundle.getBundle(
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
                 new Locale("nb", "NO"));
-        mockKlage(behandling, KlageVurdering.OPPHEVE_YTELSESVEDTAK);
+        mockKlage(behandling, BehandlingType.TILBAKEKREVING, KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE);
+
+        // Act
+        FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
+
+        // Assert
+        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift_TILBAKEBETALING"));
+        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst_ikke_opphevet_TILBAKEBETALING"));
+    }
+
+    @Test
+    public void skal_mappe_brev_om_hjemsendt_klage_på_førstegangsbehandling_med_oppheving() {
+        // Arrange
+        Behandling behandling = opprettBehandling();
+        DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
+        ResourceBundle expectedValues = ResourceBundle.getBundle(
+                String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
+                new Locale("nb", "NO"));
+        mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, KlageVurdering.OPPHEVE_YTELSESVEDTAK);
 
         // Act
         FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
@@ -100,6 +118,24 @@ public class KlageHjemsendtBrevMapperTest {
         // Assert
         assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift"));
         assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst_opphevet"));
+    }
+
+    @Test
+    public void skal_mappe_brev_om_hjemsendt_klage_på_tilbakekreving_med_oppheving() {
+        // Arrange
+        Behandling behandling = opprettBehandling();
+        DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
+        ResourceBundle expectedValues = ResourceBundle.getBundle(
+                String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
+                new Locale("nb", "NO"));
+        mockKlage(behandling, BehandlingType.TILBAKEKREVING, KlageVurdering.OPPHEVE_YTELSESVEDTAK);
+
+        // Act
+        FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
+
+        // Assert
+        assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(expectedValues.getString("overskrift_TILBAKEBETALING"));
+        assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(expectedValues.getString("brødtekst_opphevet_TILBAKEBETALING"));
     }
 
     private Behandling opprettBehandling() {
@@ -120,12 +156,13 @@ public class KlageHjemsendtBrevMapperTest {
                 .build();
     }
 
-    private void mockKlage(Behandling behandling, KlageVurdering klageVurdering) {
+    private void mockKlage(Behandling behandling, BehandlingType behandlingType, KlageVurdering klageVurdering) {
         KlageVurderingResultat klageVurderingResultat = KlageVurderingResultat.ny()
                 .medFritekstTilbrev("FRITEKST")
                 .medKlageVurdering(klageVurdering)
                 .build();
         Klage klage = Klage.ny()
+                .medPåklagdBehandlingType(behandlingType)
                 .medKlageVurderingResultatNK(klageVurderingResultat)
                 .build();
         when(domeneobjektProvider.hentKlagebehandling(behandling)).thenReturn(klage);

@@ -18,7 +18,7 @@ spec:
     failureThreshold: 27
     timeout: 5
   port: 8080
-  preStopHookPath: /fpformidling/internal/health/preStop
+  preStopHookPath: fpformidling/internal/health/preStop
   prometheus:
     enabled: true
     path: /fpformidling/internal/metrics/prometheus

@@ -11,30 +11,39 @@ jobs:
     steps:
       - name: Test success
         if: github.event.client_payload.success == 'true' && github.event.client_payload.issue-number != null
+        id: success
         uses: peter-evans/create-or-update-comment@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           issue-number: ${{ github.event.client_payload.issue-number }}
           body: |
             Alle autotestene gikk grønt!
-            Deployer fpformidling til t4!
+            Deployer fpsak til t4 og q1!
 
       - name: Trigger deploy til t4
-        if: github.event.client_payload.success == 'true' && github.event.client_payload.issue-number != null
+        if: steps.success.outcome == 'success'
         uses: peter-evans/create-or-update-comment@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           issue-number: ${{ github.event.client_payload.issue-number }}
           body: /promote dev-fss t4
 
+      - name: Trigger deploy til q1
+        if: steps.success.outcome == 'success'
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          issue-number: ${{ github.event.client_payload.issue-number }}
+          body: /promote dev-fss q1
+
       - name: Test failure
-        if: github.event.client_payload.success == 'false' && github.event.client_payload.issue-number != null
+        if: steps.success.outcome != 'success'
         uses: peter-evans/create-or-update-comment@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           issue-number: ${{ github.event.client_payload.issue-number }}
           body: |
-            Testene kjørt av Github action feilet!
-            Resultatet kan være falsk negativt!
-            Sammenlign resultatet med Jenkins før eventuell promote!
-            Deployer derfor IKKE fpformidling til t4!
+            Testene kjørt av fpsak-autotest i Github Action feilet!
+            Resultatet kan være falsk negativt! Sammenlign resultatet med Jenkins før eventuell promote!
+            Ønsker du å rekjøre testene kan du gå til fpsak-autotest på github, finn jobben, og trykk rerun.
+            Deployer derfor IKKE fpsak til hverken t4 eller q1!

@@ -25,7 +25,8 @@ jobs:
         run: |
           echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"
           echo "::set-env name=PREVIOUS_CACHE_KEY::$(expr $(date +%V) - 1)"
-      - uses: actions/cache@v1.1.2
+      - name: Henter maven avhengigheter som er cachet
+        uses: actions/cache@v1.1.2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}

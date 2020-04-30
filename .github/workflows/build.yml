@@ -30,7 +30,8 @@ jobs:
         run: |
           echo "::set-env name=CACHE_KEY::$(expr $(date +%V) - 1 + 1)"
           echo "::set-env name=PREVIOUS_CACHE_KEY::$(expr $(date +%V) - 1)"
-      - uses: actions/cache@v1.1.2
+      - name: Henter maven avhengigheter som er cachet
+        uses: actions/cache@v1.1.2
         with:
           path: ~/.m2
           key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
@@ -87,11 +88,11 @@ jobs:
             <tr><td>prod-fss</td><td>default</td></tr>
             </table>
 
-      - name: Trigger fpsak-autotest til å kjøre tester med fpformidling
+      - name: Trigger verdikjedetestene i fpsak-autotest prosjektet
         if: success()
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
           repository: navikt/fpsak-autotest
-          event-type: fpsak-autotest
+          event-type: fpformidling-verdikjede
           client-payload: '{ "trigger": "${{ github.repository }}", "version": "${{ env.TAG }}", "issue-number": "${{ steps.createdeployissue.outputs.number }}" }'

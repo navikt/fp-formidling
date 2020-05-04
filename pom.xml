@@ -37,7 +37,7 @@
         <kontrakter.version>5.1-20200401094249-8828af7</kontrakter.version>
 
         <!-- Eksterne -->
-        <metrics.version>4.1.6</metrics.version>
+        <metrics.version>4.1.7</metrics.version>
         <prometheus.version>0.8.1</prometheus.version>
         <swagger.version>2.1.2</swagger.version>
         <kafka.version>2.5.0</kafka.version>
@@ -383,13 +383,13 @@
                 <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.77</version>
+                <version>4.8.78</version>
             </dependency>
             <!-- Java11 -->
             <dependency>
                 <groupId>com.sun.xml.ws</groupId>
                 <artifactId>jaxws-rt</artifactId>
-                <version>2.3.2-1</version>
+                <version>2.3.3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

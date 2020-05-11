@@ -13,6 +13,7 @@ public class Hjemmel extends Kodeliste {
 
     public static final Hjemmel F_14_7 = new Hjemmel("F_14_7"); //$NON-NLS-1$
     public static final Hjemmel F_14_7_8_30 = new Hjemmel("F_14_7_8_30"); //$NON-NLS-1$
+    public static final Hjemmel F_14_7_8_28_8_30 = new Hjemmel("F_14_7_8_28_8_30"); //$NON-NLS-1$
     public static final Hjemmel F_14_7_8_35 = new Hjemmel("F_14_7_8_35"); //$NON-NLS-1$
     public static final Hjemmel F_14_7_8_38 = new Hjemmel("F_14_7_8_38"); //$NON-NLS-1$
     public static final Hjemmel F_14_7_8_40 = new Hjemmel("F_14_7_8_40"); //$NON-NLS-1$

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.melding.typer.AktørId;
 
 public class BeregningsgrunnlagArbeidsforholdDto {
 
@@ -13,7 +14,7 @@ public class BeregningsgrunnlagArbeidsforholdDto {
     private LocalDate opphoersdato;
     private String arbeidsforholdId;
     private KodeDto arbeidsforholdType;
-    private Long aktørId;
+    private AktørId aktørId;
     private BigDecimal naturalytelseBortfaltPrÅr;
     private BigDecimal naturalytelseTilkommetPrÅr;
 
@@ -69,11 +70,11 @@ public class BeregningsgrunnlagArbeidsforholdDto {
         this.arbeidsforholdType = arbeidsforholdType;
     }
 
-    public void setAktørId(Long aktørId) {
+    public void setAktørId(AktørId aktørId) {
         this.aktørId = aktørId;
     }
 
-    public Long getAktørId() {
+    public AktørId getAktørId() {
         return aktørId;
     }
 

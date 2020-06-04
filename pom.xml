@@ -33,12 +33,12 @@
 
         <!-- felles artifakter -->
         <felles.version>1.6-20200224081214-a6a9149</felles.version>
-        <prosesstask.version>2.1.0-20200210093848-e657dd0</prosesstask.version>
+        <prosesstask.version>2.1.0-20200521175422-c07e072</prosesstask.version>
         <kontrakter.version>5.1-20200401094249-8828af7</kontrakter.version>
 
         <!-- Eksterne -->
-        <metrics.version>4.1.7</metrics.version>
-        <prometheus.version>0.8.1</prometheus.version>
+        <metrics.version>4.1.9</metrics.version>
+        <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.2</swagger.version>
         <kafka.version>2.5.0</kafka.version>
     </properties>
@@ -255,7 +255,7 @@
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-validator-provider</artifactId>
-                <version>3.11.2.Final</version>
+                <version>3.12.1.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld.module</groupId>
@@ -304,7 +304,7 @@
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.7.0</version>
+                <version>3.16.1</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -321,7 +321,7 @@
             <dependency>
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>
-                <version>6.3</version>
+                <version>6.4</version>
             </dependency>
             <dependency>
                 <groupId>com.papertrailapp</groupId>
@@ -356,7 +356,7 @@
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-compat-spec-parser</artifactId>
-                <version>1.0.50</version>
+                <version>1.0.51</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>

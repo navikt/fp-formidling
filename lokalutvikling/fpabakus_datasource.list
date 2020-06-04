@@ -1,3 +1,0 @@
-DEFAULTDS_USERNAME=fpabakus
-DEFAULTDS_PASSWORD=fpabakus
-DEFAULTDS_URL=jdbc:postgresql://postgres:5432/fpabakus

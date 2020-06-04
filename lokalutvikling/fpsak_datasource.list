@@ -1,8 +1,0 @@
-APP_NAME=fpsak
-NAIS_APP_NAME=fpsak
-DEFAULTDS_URL=jdbc:oracle:thin:@oracle:1521/xe
-DEFAULTDS_USERNAME=FPSAK
-DEFAULTDS_PASSWORD=fpsak
-DVHDS_URL=jdbc:oracle:thin:@oracle:1521/xe
-DVHDS_USERNAME=FPSAK_HIST
-DVHDS_PASSWORD=fpsak_hist

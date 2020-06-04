@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.svp;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -169,12 +169,12 @@ public class SvpSlåSammenAvslagPerioderTest {
 
         // Assert
         assertThat(sammenslåttePerioder).hasSize(2);
-        assertThat(sammenslåttePerioder.iterator()).anySatisfy(p -> {
+        assertThat(sammenslåttePerioder).anySatisfy(p -> {
             assertThat(p.getFom().toLocalDate()).isEqualTo(FØRSTE_OKTOBER);
             assertThat(p.getTom().toLocalDate()).isEqualTo(tomP1);
             assertThat(p.getAarsakskode()).isEqualTo(Integer.valueOf(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT.getKode()));
         });
-        assertThat(sammenslåttePerioder.iterator()).anySatisfy(p -> {
+        assertThat(sammenslåttePerioder).anySatisfy(p -> {
             assertThat(p.getFom().toLocalDate()).isEqualTo(fomP2);
             assertThat(p.getTom().toLocalDate()).isEqualTo(tomP2);
             assertThat(p.getAarsakskode()).isEqualTo(Integer.valueOf(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT.getKode()));
@@ -205,12 +205,12 @@ public class SvpSlåSammenAvslagPerioderTest {
 
         // Assert
         assertThat(sammenslåttePerioder).hasSize(2);
-        assertThat(sammenslåttePerioder.iterator()).anySatisfy(p -> {
+        assertThat(sammenslåttePerioder).anySatisfy(p -> {
             assertThat(p.getFom().toLocalDate()).isEqualTo(FØRSTE_OKTOBER);
             assertThat(p.getTom().toLocalDate()).isEqualTo(FØRSTE_OKTOBER.plusWeeks(1));
             assertThat(p.getAarsakskode()).isEqualTo(Integer.valueOf(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT.getKode()));
         });
-        assertThat(sammenslåttePerioder.iterator()).anySatisfy(p -> {
+        assertThat(sammenslåttePerioder).anySatisfy(p -> {
             assertThat(p.getFom().toLocalDate()).isEqualTo(FØRSTE_OKTOBER);
             assertThat(p.getTom().toLocalDate()).isEqualTo(FØRSTE_OKTOBER.plusWeeks(1));
             assertThat(p.getAarsakskode()).isEqualTo(Integer.valueOf(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE.getKode()));
@@ -286,22 +286,22 @@ public class SvpSlåSammenAvslagPerioderTest {
 
         // Assert
         assertThat(sammenslåttePerioder).hasSize(4);
-        assertThat(sammenslåttePerioder.iterator()).anySatisfy(p -> {
+        assertThat(sammenslåttePerioder).anySatisfy(p -> {
             assertThat(p.getFom().toLocalDate()).isEqualTo(fomP1);
             assertThat(p.getTom().toLocalDate()).isEqualTo(tomP7);
             assertThat(p.getAarsakskode()).isEqualTo(Integer.valueOf(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE.getKode()));
         });
-        assertThat(sammenslåttePerioder.iterator()).anySatisfy(p -> {
+        assertThat(sammenslåttePerioder).anySatisfy(p -> {
             assertThat(p.getFom().toLocalDate()).isEqualTo(fomP5);
             assertThat(p.getTom().toLocalDate()).isEqualTo(tomP5);
             assertThat(p.getAarsakskode()).isEqualTo(Integer.valueOf(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE.getKode()));
         });
-        assertThat(sammenslåttePerioder.iterator()).anySatisfy(p -> {
+        assertThat(sammenslåttePerioder).anySatisfy(p -> {
             assertThat(p.getFom().toLocalDate()).isEqualTo(fomP2);
             assertThat(p.getTom().toLocalDate()).isEqualTo(tomP3);
             assertThat(p.getAarsakskode()).isEqualTo(Integer.valueOf(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE.getKode()));
         });
-        assertThat(sammenslåttePerioder.iterator()).anySatisfy(p -> {
+        assertThat(sammenslåttePerioder).anySatisfy(p -> {
             assertThat(p.getFom().toLocalDate()).isEqualTo(fomP6);
             assertThat(p.getTom().toLocalDate()).isEqualTo(tomP6);
             assertThat(p.getAarsakskode()).isEqualTo(Integer.valueOf(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT.getKode()));

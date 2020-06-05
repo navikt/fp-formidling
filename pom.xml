@@ -383,7 +383,7 @@
                 <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.78</version>
+                <version>4.8.80</version>
             </dependency>
             <!-- Java11 -->
             <dependency>

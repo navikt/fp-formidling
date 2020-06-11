@@ -7,7 +7,6 @@
 
     <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.Venteårsak"/>
     <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.VurderÅrsak"/>
-    <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.ReaktiveringStatus"/>
     <entity class="no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktType"/>
 
     <entity class="no.nav.foreldrepenger.melding.aktør.AdresseType"/>

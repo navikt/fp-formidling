@@ -55,9 +55,9 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepositoryImpl;
-import no.nav.foreldrepenger.tps.impl.TpsAdapterImpl;
-import no.nav.foreldrepenger.tps.impl.TpsOversetter;
-import no.nav.foreldrepenger.tps.impl.TpsTjenesteImpl;
+import no.nav.foreldrepenger.tps.TpsAdapter;
+import no.nav.foreldrepenger.tps.TpsOversetter;
+import no.nav.foreldrepenger.tps.TpsTjeneste;
 import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.AktoerIder;
 import no.nav.vedtak.felles.integrasjon.aktør.klient.AktørConsumer;
 import no.nav.vedtak.felles.integrasjon.aktør.klient.AktørConsumerMedCache;
@@ -113,8 +113,8 @@ public abstract class OppsettForGjengivelseAvManuellTest {
             new FagsakDtoMapper(kodeverkRepository, mockTpsTjeneste())
     );
 
-    private TpsTjenesteImpl mockTpsTjeneste() {
-        return new TpsTjenesteImpl(new TpsAdapterImpl(
+    private TpsTjeneste mockTpsTjeneste() {
+        return new TpsTjeneste(new TpsAdapter(
                 new AktørConsumerMedCache(new AktørConsumer() {
                     @Override
                     public Optional<String> hentAktørIdForPersonIdent(String s) {

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
-import static no.nav.foreldrepenger.melding.datamapper.mal.DokumentType.DEFAULT_PERSON_STATUS;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -12,7 +11,6 @@ import org.mockito.Mockito;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametereImpl;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
@@ -31,7 +29,7 @@ public class DatamapperTestUtil {
     private static final int KLAGEFRIST_INNSYN = 14;
     private static final Period SØK_ANTALL_UKER = Period.ofWeeks(6);
 
-    private static BrevParametereImpl brevParametere = new BrevParametereImpl(KLAGEFRIST, KLAGEFRIST_INNSYN, SVARFRIST, SØK_ANTALL_UKER);
+    private static BrevParametere brevParametere = new BrevParametere(KLAGEFRIST, KLAGEFRIST_INNSYN, SVARFRIST, SØK_ANTALL_UKER);
 
     public static BrevParametere getBrevParametere() {
         return brevParametere;
@@ -40,7 +38,7 @@ public class DatamapperTestUtil {
     public static DokumentFelles getDokumentFelles() {
         DokumentFelles dokumentFelles = Mockito.mock(DokumentFelles.class);
         when(dokumentFelles.getSakspartNavn()).thenReturn(SOEKERS_NAVN);
-        when(dokumentFelles.getSakspartPersonStatus()).thenReturn(DEFAULT_PERSON_STATUS);
+        when(dokumentFelles.getSakspartPersonStatus()).thenReturn("ANNET");
         return dokumentFelles;
     }
 

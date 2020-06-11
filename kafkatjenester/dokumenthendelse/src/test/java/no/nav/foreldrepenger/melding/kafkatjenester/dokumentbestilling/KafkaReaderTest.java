@@ -18,12 +18,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
 import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.melding.hendelse.HendelseHandler;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
-import no.nav.foreldrepenger.melding.hendelser.HendelseRepositoryImpl;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.kafkatjenester.felles.util.Serialiseringsverktøy;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
@@ -49,9 +47,9 @@ public class KafkaReaderTest {
 
     @Before
     public void setup() {
-        hendelseRepository = new HendelseRepositoryImpl(entityManager);
+        hendelseRepository = new HendelseRepository(entityManager);
         kodeverkRepository = new KodeverkRepositoryImpl(entityManager);
-        dokumentRepository = new DokumentRepositoryImpl(entityManager);
+        dokumentRepository = new DokumentRepository(entityManager);
         dtoTilDomeneobjektMapper = new DokumentHendelseDtoMapper(kodeverkRepository, dokumentRepository);
         hendelseHandler = new HendelseHandler(hendelseRepository, prosessTaskRepository);
         this.kafkaReader = new KafkaReader(hendelseHandler, hendelseRepository, dtoTilDomeneobjektMapper);

@@ -20,14 +20,12 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepository;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepositoryImpl;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.VLException;
 
@@ -35,7 +33,7 @@ public class DokumentMalUtlederTest {
     @Rule
     public UnittestRepositoryRule repositoryRule = new UnittestRepositoryRule();
 
-    private KodeverkTabellRepository kodeverkTabellRepository = new KodeverkTabellRepositoryImpl(repositoryRule.getEntityManager());
+    private KodeverkTabellRepository kodeverkTabellRepository = new KodeverkTabellRepository(repositoryRule.getEntityManager());
     private DokumentRepository dokumentRepository;
 
     private DomeneobjektProvider domeneobjektProvider = Mockito.mock(DomeneobjektProvider.class);
@@ -44,7 +42,7 @@ public class DokumentMalUtlederTest {
 
     @Before
     public void setup() {
-        dokumentRepository = new DokumentRepositoryImpl(repositoryRule.getEntityManager());
+        dokumentRepository = new DokumentRepository(repositoryRule.getEntityManager());
         dokumentMalUtleder = new DokumentMalUtleder(kodeverkTabellRepository, domeneobjektProvider, null, null, null);
     }
 

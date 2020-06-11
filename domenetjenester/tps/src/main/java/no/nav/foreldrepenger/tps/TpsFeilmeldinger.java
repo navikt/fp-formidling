@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.tps.impl;
+package no.nav.foreldrepenger.tps;
 
 import static no.nav.vedtak.feil.LogLevel.ERROR;
 import static no.nav.vedtak.feil.LogLevel.WARN;

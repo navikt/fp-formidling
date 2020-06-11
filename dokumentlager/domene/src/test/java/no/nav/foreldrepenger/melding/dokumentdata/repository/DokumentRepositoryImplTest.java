@@ -18,7 +18,7 @@ public class DokumentRepositoryImplTest {
 
     @Before
     public void setUp() {
-        this.dokumentRepository = new DokumentRepositoryImpl(repositoryRule.getEntityManager());
+        this.dokumentRepository = new DokumentRepository(repositoryRule.getEntityManager());
     }
 
     @Test

@@ -3,12 +3,46 @@ package no.nav.foreldrepenger.melding.historikk;
 import java.util.List;
 import java.util.UUID;
 
-public interface HistorikkRepository {
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 
-    void lagre(DokumentHistorikkinnslag dokumentHistorikkinnslag);
+import no.nav.vedtak.felles.jpa.HibernateVerktøy;
+import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
 
-    List<DokumentHistorikkinnslag> hentInnslagForBehandling(UUID behandlingUUID);
+@ApplicationScoped
+public class HistorikkRepository {
 
-    DokumentHistorikkinnslag hentInnslagMedId(long historikkinnslagId);
+    private EntityManager entityManager;
 
+    public HistorikkRepository() {
+        //CDI
+    }
+
+    @Inject
+    public HistorikkRepository(@VLPersistenceUnit EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    public void lagre(DokumentHistorikkinnslag dokumentHistorikkinnslag) {
+        lagreOgFlush(dokumentHistorikkinnslag);
+    }
+
+    public List<DokumentHistorikkinnslag> hentInnslagForBehandling(UUID behandlingUuid) {
+        TypedQuery<DokumentHistorikkinnslag> query = entityManager.createQuery("from DokumentHistorikkinnslag where behandlingUuid=:behandlingUuid", DokumentHistorikkinnslag.class);
+        query.setParameter("behandlingUuid", behandlingUuid);
+        return query.getResultList();
+    }
+
+    public DokumentHistorikkinnslag hentInnslagMedId(long historikkinnslagId) {
+        TypedQuery<DokumentHistorikkinnslag> query = entityManager.createQuery("from DokumentHistorikkinnslag where id=:historikkinnslagId", DokumentHistorikkinnslag.class);
+        query.setParameter("historikkinnslagId", historikkinnslagId);
+        return HibernateVerktøy.hentEksaktResultat(query);
+    }
+
+    private void lagreOgFlush(Object objektTilLagring) {
+        entityManager.persist(objektTilLagring);
+        entityManager.flush();
+    }
 }

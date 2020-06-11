@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
@@ -34,7 +33,7 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
     @Rule
     public UnittestRepositoryRule repoRule = new UnittestRepositoryRule();
 
-    private DokumentRepository dokumentRepository = new DokumentRepositoryImpl(repoRule.getEntityManager());
+    private DokumentRepository dokumentRepository = new DokumentRepository(repoRule.getEntityManager());
     private ForlengetSaksbehandlingstidBrevMapper forlengetSaksbehandlingstidBrevMapper = new ForlengetSaksbehandlingstidBrevMapper();
     private DokumentFelles dokumentFelles = DatamapperTestUtil.getDokumentFelles();
     private FellesType fellesType = DatamapperTestUtil.getFellesType();

@@ -21,7 +21,7 @@ public class HendelseRepositoryImplTest {
 
     @Before
     public void setup() {
-        hendelseRepository = new HendelseRepositoryImpl(repositoryRule.getEntityManager());
+        hendelseRepository = new HendelseRepository(repositoryRule.getEntityManager());
     }
 
     @Test

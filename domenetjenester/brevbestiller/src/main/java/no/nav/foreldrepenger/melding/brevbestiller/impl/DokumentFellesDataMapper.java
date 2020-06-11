@@ -12,7 +12,6 @@ import no.nav.foreldrepenger.melding.aktør.PersonstatusType;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.LandkodeOversetter;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
-import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
@@ -26,8 +25,6 @@ import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.foreldrepenger.organisasjon.Virksomhet;
 import no.nav.foreldrepenger.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.tps.TpsTjeneste;
-import no.nav.tjeneste.virksomhet.organisasjon.v4.binding.HentOrganisasjonOrganisasjonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.organisasjon.v4.binding.HentOrganisasjonUgyldigInput;
 import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
@@ -132,21 +129,8 @@ public class DokumentFellesDataMapper {
     }
 
     private Virksomhet getVirksomhet(Verge verge) {
-        Virksomhet virksomhet;
-        try {
-            virksomhet = virksomhetTjeneste.getOrganisasjon(verge.getOrganisasjonsnummer());
-            var builder = new Virksomhet.Builder(virksomhet);
-            builder.medLandkode(landkodeOversetter.tilIso2(virksomhet.getLandkode()));
-        } catch (
-                HentOrganisasjonOrganisasjonIkkeFunnet e) {
-            throw DokumentMapperFeil.FACTORY.organisasjonIkkeFunnet(verge.getOrganisasjonsnummer(), e).toException();
-        } catch (
-                HentOrganisasjonUgyldigInput e) {
-            throw DokumentMapperFeil.FACTORY.ugyldigInput("Organisasjon", verge.getOrganisasjonsnummer(), e).toException();
-        }
-        return virksomhet;
+        return virksomhetTjeneste.getOrganisasjon(verge.getOrganisasjonsnummer(), landkodeOversetter::tilIso2);
     }
-
 
     private void opprettDokumentDataForMottaker(Behandling behandling,
                                                 DokumentData dokumentData,

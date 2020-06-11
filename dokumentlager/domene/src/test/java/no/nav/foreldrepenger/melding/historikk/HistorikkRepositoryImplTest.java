@@ -12,11 +12,9 @@ import org.junit.Test;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
-import no.nav.foreldrepenger.melding.hendelser.HendelseRepositoryImpl;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
 public class HistorikkRepositoryImplTest {
@@ -29,9 +27,9 @@ public class HistorikkRepositoryImplTest {
 
     @Before
     public void setup() {
-        dokumentRepository = new DokumentRepositoryImpl(repositoryRule.getEntityManager());
-        historikkRepository = new HistorikkRepositoryImpl(repositoryRule.getEntityManager());
-        hendelseRepository = new HendelseRepositoryImpl(repositoryRule.getEntityManager());
+        dokumentRepository = new DokumentRepository(repositoryRule.getEntityManager());
+        historikkRepository = new HistorikkRepository(repositoryRule.getEntityManager());
+        hendelseRepository = new HendelseRepository(repositoryRule.getEntityManager());
     }
 
     @Test

@@ -17,12 +17,11 @@ import org.junit.Test;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametereImpl;
+import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
@@ -38,7 +37,7 @@ public class InfoTilAnnenForelderBrevMapperDatoTest {
     @Rule
     public UnittestRepositoryRule repoRule = new UnittestRepositoryRule();
 
-    private DokumentRepository dokumentRepository = new DokumentRepositoryImpl(repoRule.getEntityManager());
+    private DokumentRepository dokumentRepository = new DokumentRepository(repoRule.getEntityManager());
     private InfoTilAnnenForelderBrevMapper mapper;
     private DokumentFelles dokumentFelles = DatamapperTestUtil.getDokumentFelles();
     private FellesType fellesType = DatamapperTestUtil.getFellesType();
@@ -46,7 +45,7 @@ public class InfoTilAnnenForelderBrevMapperDatoTest {
 
     @Before
     public void before() {
-        mapper = new InfoTilAnnenForelderBrevMapper(new BrevParametereImpl(), domeneobjektProvider);
+        mapper = new InfoTilAnnenForelderBrevMapper(new BrevParametere(), domeneobjektProvider);
     }
 
     @Test

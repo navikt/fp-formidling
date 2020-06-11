@@ -13,7 +13,7 @@ public class KodeverkTabellRepositoryImplTest {
     @Rule
     public UnittestRepositoryRule repositoryRule = new UnittestRepositoryRule();
 
-    private KodeverkTabellRepository repository = new KodeverkTabellRepositoryImpl(repositoryRule.getEntityManager());
+    private KodeverkTabellRepository repository = new KodeverkTabellRepository(repositoryRule.getEntityManager());
 
     @Test
     public void skal_hente_en_dokumentmal() {

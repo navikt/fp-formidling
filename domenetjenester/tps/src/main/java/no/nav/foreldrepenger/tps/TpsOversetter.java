@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.tps.impl;
+package no.nav.foreldrepenger.tps;
 
 import static java.util.stream.Collectors.toSet;
 

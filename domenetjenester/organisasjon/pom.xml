@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-            <artifactId>organisasjon-klient</artifactId>
+            <artifactId>ereg-klient</artifactId>
         </dependency>
         <!-- test -->
         <dependency>

@@ -17,11 +17,9 @@ import org.mockito.junit.MockitoRule;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepositoryImpl;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
-import no.nav.foreldrepenger.melding.hendelser.HendelseRepositoryImpl;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
@@ -43,8 +41,8 @@ public class DokumentHistorikkTjenesteTest {
 
     @Before
     public void setup() {
-        dokumentRepository = new DokumentRepositoryImpl(repositoryRule.getEntityManager());
-        hendelseRepository = new HendelseRepositoryImpl(repositoryRule.getEntityManager());
+        dokumentRepository = new DokumentRepository(repositoryRule.getEntityManager());
+        hendelseRepository = new HendelseRepository(repositoryRule.getEntityManager());
         historikkTjeneste = new DokumentHistorikkTjeneste(historikkMeldingProducer);
         doAnswer((i) -> null).when(historikkMeldingProducer).sendJson(Mockito.any());
     }

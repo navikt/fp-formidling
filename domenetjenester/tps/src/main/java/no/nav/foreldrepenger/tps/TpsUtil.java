@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.tps.impl;
+package no.nav.foreldrepenger.tps;
 
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Aktoer;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker;

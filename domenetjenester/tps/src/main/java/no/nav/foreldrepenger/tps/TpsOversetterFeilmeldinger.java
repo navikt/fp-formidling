@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.tps.impl;
+package no.nav.foreldrepenger.tps;
 
 import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.feil.Feil;

@@ -3,7 +3,12 @@ name: Bygg og deploy
 on:
   push:
     branches:
-      - master    # Push events on master branch
+      - master
+    paths-ignore:
+      - '**.md'
+      - '**.MD'
+      - '.gitignore'
+      - '.github/workflows/build-pr.yml'
 env:
   IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/fpformidling
 

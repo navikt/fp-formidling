@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
-import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
 
 @ApplicationScoped
 public class HistorikkRepository {
@@ -21,7 +20,7 @@ public class HistorikkRepository {
     }
 
     @Inject
-    public HistorikkRepository(@VLPersistenceUnit EntityManager entityManager) {
+    public HistorikkRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 

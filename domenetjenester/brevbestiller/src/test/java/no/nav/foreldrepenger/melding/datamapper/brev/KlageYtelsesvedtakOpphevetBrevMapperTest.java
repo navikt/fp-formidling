@@ -31,13 +31,12 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
-import no.nav.vedtak.util.FPDateUtil;
 
 public class KlageYtelsesvedtakOpphevetBrevMapperTest {
 
     private static final String FRITEKST = "FRITEKST";
     private static final String KLAGE_FRITEKST = "KLAGE FRITEKST";
-    private static final LocalDate FRIST_DATO = FPDateUtil.iDag().plusDays(SVARFRIST.getDays());
+    private static final LocalDate FRIST_DATO = LocalDate.now().plusDays(SVARFRIST.getDays());
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule().silent();

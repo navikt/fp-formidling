@@ -90,7 +90,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)
-                .orElse(UttakResultatPerioder.ny().build()); // bestående av tomme lister.
+                .orElseGet(() -> UttakResultatPerioder.ny().build()); // bestående av tomme lister.
         Optional<UttakResultatPerioder> originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).flatMap(domeneobjektProvider::hentUttaksresultatHvisFinnes);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         long grunnbeløp = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);

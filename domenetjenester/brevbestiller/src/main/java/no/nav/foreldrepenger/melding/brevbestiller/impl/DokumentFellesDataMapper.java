@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -25,7 +26,6 @@ import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.foreldrepenger.organisasjon.Virksomhet;
 import no.nav.foreldrepenger.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.tps.TpsTjeneste;
-import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
 public class DokumentFellesDataMapper {
@@ -188,7 +188,7 @@ public class DokumentFellesDataMapper {
 
         DokumentFelles.Builder builder = DokumentFelles.builder(dokumentData)
                 .medAutomatiskBehandlet(Boolean.TRUE)
-                .medDokumentDato(FPDateUtil.iDag())
+                .medDokumentDato(LocalDate.now())
                 .medKontaktTelefonNummer(norg2KontaktTelefonnummer(avsenderEnhet))
                 .medMottakerAdresse(adresse)
                 .medNavnAvsenderEnhet(norg2NavnAvsenderEnhet(avsenderEnhet))
@@ -227,7 +227,7 @@ public class DokumentFellesDataMapper {
 
         DokumentFelles.Builder builder = DokumentFelles.builder(dokumentData)
                 .medAutomatiskBehandlet(Boolean.TRUE)
-                .medDokumentDato(FPDateUtil.iDag())
+                .medDokumentDato(LocalDate.now())
                 .medKontaktTelefonNummer(norg2KontaktTelefonnummer(avsenderEnhet))
                 .medMottakerAdresse(adresse)
                 .medNavnAvsenderEnhet(norg2NavnAvsenderEnhet(avsenderEnhet))

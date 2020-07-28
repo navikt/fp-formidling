@@ -10,8 +10,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerVerktøy;
+import no.nav.foreldrepenger.melding.jpa.DatoIntervallEntitet;
 import no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak;
-import no.nav.vedtak.felles.jpa.tid.DatoIntervallEntitet;
+
 
 final class SvpSlåSammenAvslagPerioder {
 

@@ -10,7 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import no.nav.vedtak.felles.jpa.tid.DatoIntervallEntitet;
+import no.nav.foreldrepenger.melding.jpa.DatoIntervallEntitet;
+
 
 @Entity(name = "KodelisteRelasjon")
 @Table(name = "KODELISTE_RELASJON")

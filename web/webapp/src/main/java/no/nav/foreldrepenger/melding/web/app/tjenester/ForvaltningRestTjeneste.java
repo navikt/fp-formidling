@@ -4,6 +4,8 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.CREATE;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.DRIFT;
 
+import java.util.function.Function;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -22,7 +24,9 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
 import no.nav.vedtak.felles.prosesstask.rest.dto.ProsessTaskIdDto;
+import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
+import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 
 @Path("/forvaltning")
 @ApplicationScoped
@@ -53,7 +57,8 @@ public class ForvaltningRestTjeneste {
             })
     @BeskyttetRessurs(action = CREATE, ressurs = DRIFT)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response setTaskFerdig(@Parameter(description = "Task som skal settes ferdig") @NotNull @Valid ProsessTaskIdDto taskId) {
+    public Response setTaskFerdig(@TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacDataSupplier.class)
+                                  @Parameter(description = "Task som skal settes ferdig") @NotNull @Valid ProsessTaskIdDto taskId) {
         ProsessTaskData data = prosessTaskRepository.finn(taskId.getProsessTaskId());
         if (data != null) {
             data.setStatus(ProsessTaskStatus.FERDIG);
@@ -63,5 +68,12 @@ public class ForvaltningRestTjeneste {
             return Response.ok().build();
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    public static class AbacDataSupplier implements Function<Object, AbacDataAttributter> {
+        @Override
+        public AbacDataAttributter apply(Object obj) {
+            return AbacDataAttributter.opprett();
+        }
     }
 }

@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.melding.kodeverk.KodelisteRelasjon;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepositoryImpl;
 import no.nav.foreldrepenger.melding.personopplysning.SivilstandType;
-import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
 
 @ApplicationScoped
 public class PersonInfoKodeverkRepository {
@@ -34,7 +33,7 @@ public class PersonInfoKodeverkRepository {
     }
 
     @Inject
-    public PersonInfoKodeverkRepository(@VLPersistenceUnit EntityManager entityManager,
+    public PersonInfoKodeverkRepository(EntityManager entityManager,
                                         KodeverkRepository kodeverkRepository) {
         Objects.requireNonNull(entityManager, "entityManager"); //$NON-NLS-1$
         this.entityManager = entityManager;

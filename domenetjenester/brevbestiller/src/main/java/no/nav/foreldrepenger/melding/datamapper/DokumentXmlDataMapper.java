@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
 import java.io.StringReader;
+import java.time.LocalDate;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -26,10 +27,8 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.IdKodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerAdresseType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerType;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
-import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.vedtak.feil.FeilFactory;
 import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
-import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
 public class DokumentXmlDataMapper {
@@ -91,7 +90,7 @@ public class DokumentXmlDataMapper {
         fellesType.setNavnAvsenderEnhet(dokumentFelles.getNavnAvsenderEnhet());
         fellesType.setKontaktInformasjon(DokumentBestillerTjenesteUtil.lageKontaktInformasjonType(dokumentFelles));
 
-        fellesType.setDokumentDato(DateUtil.convertToXMLGregorianCalendarRemoveTimezone(FPDateUtil.iDag()));
+        fellesType.setDokumentDato(DateUtil.convertToXMLGregorianCalendarRemoveTimezone(LocalDate.now()));
 
         return fellesType;
     }

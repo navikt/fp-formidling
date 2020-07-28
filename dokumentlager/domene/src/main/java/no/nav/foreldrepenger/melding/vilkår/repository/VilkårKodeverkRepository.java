@@ -11,7 +11,6 @@ import javax.persistence.Query;
 
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
-import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
 
 @ApplicationScoped
 public class VilkårKodeverkRepository {
@@ -24,7 +23,7 @@ public class VilkårKodeverkRepository {
     }
 
     @Inject
-    public VilkårKodeverkRepository(@VLPersistenceUnit EntityManager entityManager, KodeverkRepository kodeverkRepository) {
+    public VilkårKodeverkRepository(EntityManager entityManager, KodeverkRepository kodeverkRepository) {
         this.entityManager = entityManager;
         this.kodeverkRepository = kodeverkRepository;
     }

@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import no.nav.vedtak.felles.jpa.tid.DatoIntervallEntitet;
+import no.nav.foreldrepenger.melding.jpa.DatoIntervallEntitet;
+
 
 /**
  * Hjelpemetoder for å raskere sette sammen en IndexKey fra flere deler.

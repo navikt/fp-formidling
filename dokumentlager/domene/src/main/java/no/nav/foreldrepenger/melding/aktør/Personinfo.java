@@ -9,13 +9,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.foreldrepenger.melding.personopplysning.SivilstandType;
 import no.nav.foreldrepenger.melding.geografisk.Landkoder;
 import no.nav.foreldrepenger.melding.geografisk.Region;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.personopplysning.SivilstandType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
-import no.nav.vedtak.util.FPDateUtil;
 
 public class Personinfo {
     private AktørId aktørId;
@@ -69,7 +68,7 @@ public class Personinfo {
     }
 
     public int getAlder() {
-        return (int) ChronoUnit.YEARS.between(fødselsdato, FPDateUtil.iDag());
+        return (int) ChronoUnit.YEARS.between(fødselsdato, LocalDate.now());
     }
 
     public Set<Familierelasjon> getFamilierelasjoner() {

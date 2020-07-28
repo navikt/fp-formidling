@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -50,7 +51,6 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
-import no.nav.vedtak.util.FPDateUtil;
 
 @ApplicationScoped
 public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplikasjonTjeneste {
@@ -244,7 +244,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         return DokumentData.builder()
                 .medDokumentMalType(dokumentMalType)
                 .medBehandlingUuid(behandling.getUuid())
-                .medBestiltTid(FPDateUtil.nå())
+                .medBestiltTid(LocalDateTime.now())
                 .medBestillingType(bestillingType.name())
                 .build();
     }

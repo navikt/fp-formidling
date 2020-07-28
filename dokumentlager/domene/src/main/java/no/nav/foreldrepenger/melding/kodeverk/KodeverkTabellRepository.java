@@ -10,7 +10,6 @@ import javax.persistence.TypedQuery;
 import org.hibernate.jpa.QueryHints;
 
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
 
 @ApplicationScoped
 public class KodeverkTabellRepository {
@@ -22,7 +21,7 @@ public class KodeverkTabellRepository {
     }
 
     @Inject
-    public KodeverkTabellRepository(@VLPersistenceUnit EntityManager entityManager) {
+    public KodeverkTabellRepository(EntityManager entityManager) {
         Objects.requireNonNull(entityManager, "entityManager"); //$NON-NLS-1$
         this.entityManager = entityManager;
     }

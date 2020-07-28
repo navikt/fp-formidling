@@ -32,7 +32,6 @@ import javax.persistence.criteria.Root;
 import org.hibernate.jpa.QueryHints;
 
 import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.felles.jpa.VLPersistenceUnit;
 import no.nav.vedtak.util.LRUCache;
 
 @ApplicationScoped
@@ -47,7 +46,7 @@ public class KodeverkRepositoryImpl implements KodeverkRepository {
     }
 
     @Inject
-    public KodeverkRepositoryImpl(@VLPersistenceUnit EntityManager entityManager) {
+    public KodeverkRepositoryImpl(EntityManager entityManager) {
         Objects.requireNonNull(entityManager, "entityManager"); //$NON-NLS-1$
         this.entityManager = entityManager;
     }

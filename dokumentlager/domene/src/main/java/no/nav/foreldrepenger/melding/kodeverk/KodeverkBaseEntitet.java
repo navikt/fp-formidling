@@ -11,7 +11,6 @@ import javax.persistence.PreUpdate;
 
 import no.nav.foreldrepenger.melding.kodeverk.diff.DiffIgnore;
 import no.nav.vedtak.sikkerhet.context.SubjectHandler;
-import no.nav.vedtak.util.FPDateUtil;
 
 /**
  * En basis {@link Entity} klasse som håndtere felles standarder for utformign av tabeller (eks. sporing av hvem som har
@@ -46,13 +45,13 @@ public class KodeverkBaseEntitet implements Serializable {
     @PrePersist
     protected void onCreate() {
         this.opprettetAv = finnBrukernavn();
-        this.opprettetTidspunkt = FPDateUtil.nå();
+        this.opprettetTidspunkt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
         endretAv = finnBrukernavn();
-        endretTidspunkt = FPDateUtil.nå();
+        endretTidspunkt = LocalDateTime.now();
     }
 
     public String getOpprettetAv() {

@@ -29,14 +29,13 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
-import no.nav.vedtak.util.FPDateUtil;
 
 public class KlageOversendtKlageinstansBrevMapperTest {
 
     private static final String FRITEKST = "FRITEKST";
     private static final String KLAGE_FRITEKST = "KLAGE FRITEKST";
-    private static final LocalDate FRIST_DATO = FPDateUtil.iDag().plusDays(SVARFRIST.getDays());
-    private static final LocalDate MOTTATT_DATO = FPDateUtil.iDag();
+    private static final LocalDate FRIST_DATO = LocalDate.now().plusDays(SVARFRIST.getDays());
+    private static final LocalDate MOTTATT_DATO = LocalDate.now();
     private static final int BEHANDLINGSFRIST_UKER_KA = 14;
 
     private Klage klage = Mockito.mock(Klage.class);

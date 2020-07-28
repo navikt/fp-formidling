@@ -38,7 +38,6 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.feil.FeilFactory;
-import no.nav.vedtak.util.FPDateUtil;
 
 public class PeriodeBeregner {
     private static List<String> manglendeEllerForSenSøknadOmGraderingÅrsaker = List.of(
@@ -198,7 +197,7 @@ public class PeriodeBeregner {
     }
 
     private static boolean erInnvilgetUtsettelseInneværendeMånedEllerTidligere(LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
-        LocalDate iDag = vedtaksdato != null ? vedtaksdato : FPDateUtil.iDag();
+        LocalDate iDag = vedtaksdato != null ? vedtaksdato : LocalDate.now();
         return innvilgetUtsettelseFOM.isBefore(iDag.plusMonths(1).withDayOfMonth(1));
     }
 

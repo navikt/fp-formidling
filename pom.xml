@@ -37,7 +37,7 @@
         <kontrakter.version>5.1-20200401094249-8828af7</kontrakter.version>
 
         <!-- Eksterne -->
-        <metrics.version>4.1.11</metrics.version>
+        <metrics.version>4.1.12.1</metrics.version>
         <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.4</swagger.version>
         <kafka.version>2.5.0</kafka.version>

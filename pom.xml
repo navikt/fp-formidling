@@ -37,10 +37,10 @@
         <kontrakter.version>5.1-20200401094249-8828af7</kontrakter.version>
 
         <!-- Eksterne -->
-        <metrics.version>4.1.11</metrics.version>
+        <metrics.version>4.1.12.1</metrics.version>
         <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.4</swagger.version>
-        <kafka.version>2.5.0</kafka.version>
+        <kafka.version>2.6.0</kafka.version>
     </properties>
 
     <prerequisites>
@@ -206,7 +206,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.2.14</version>
+                <version>42.2.15</version>
             </dependency>
 
             <!-- Kontrakter -->
@@ -260,7 +260,7 @@
             <dependency>
                 <groupId>org.jboss.weld.module</groupId>
                 <artifactId>weld-web</artifactId>
-                <version>3.1.4.Final</version>
+                <version>3.1.5.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
@@ -314,7 +314,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>3.4.4</version>
+                <version>3.5.0</version>
             </dependency>
 
             <!-- Log -->

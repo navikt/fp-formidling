@@ -31,3 +31,4 @@ dep.txt
 /.mvn/
 /.java-version
 /logback.xml
+.DS_Store

@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.melding.web.server.jetty;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.core.joran.spi.JoranException;
-import ch.qos.logback.core.util.StatusPrinter;
-import no.nav.foreldrepenger.melding.sikkerhet.TestSertifikater;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -18,10 +18,10 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.StatusPrinter;
 
 public class JettyDevServer extends JettyServer {
     /**
@@ -32,20 +32,11 @@ public class JettyDevServer extends JettyServer {
     private static final String KEYSTORE_PASSW_PROP = "no.nav.modig.security.appcert.password";
     private static final String KEYSTORE_PATH_PROP = "no.nav.modig.security.appcert.keystore";
 
-    private static final String VTP_ARGUMENT = "--vtp";
-    private static boolean vtp;
-
     public JettyDevServer() {
         super(new JettyDevKonfigurasjon());
     }
 
     public static void main(String[] args) throws Exception {
-        for (String arg : args) {
-            if (arg.equals(VTP_ARGUMENT)) {
-                vtp = true;
-            }
-        }
-
         JettyDevServer devServer = new JettyDevServer();
         devServer.bootStrap();
     }
@@ -55,7 +46,6 @@ public class JettyDevServer extends JettyServer {
         konfigurerLogback();
         super.konfigurer();
     }
-
 
     protected void konfigurerLogback() throws IOException {
         new File("./logs").mkdirs();
@@ -80,8 +70,7 @@ public class JettyDevServer extends JettyServer {
     @Override
     protected void konfigurerMiljø() throws Exception {
         System.setProperty("develop-local", "true");
-        PropertiesUtils.lagPropertiesFilFraTemplate();
-        PropertiesUtils.initProperties(JettyDevServer.vtp);
+        PropertiesUtils.initProperties();
 
         List<JettyDevDbKonfigurasjon> konfigs = PropertiesUtils.getDBConnectionProperties()
                 .stream()
@@ -97,15 +86,47 @@ public class JettyDevServer extends JettyServer {
         }
     }
 
-
     @Override
-    protected void konfigurerSikkerhet() throws IOException {
+    protected void konfigurerSikkerhet() {
         System.setProperty("conf", "src/main/resources/jetty/");
         super.konfigurerSikkerhet();
-        //Oppsett for å koble mot miljø fra lokalt, uten å ha avhengighet til modig.
-        //Krever at man har tilgang til sertifikater og passord
-        TestSertifikater.setupTemporaryTrustStore(TRUSTSTORE_PATH_PROP, TRUSTSTORE_PASSW_PROP);
-        TestSertifikater.setupTemporaryKeyStore(KEYSTORE_PATH_PROP, KEYSTORE_PASSW_PROP);
+
+        // truststore avgjør hva vi stoler på av sertifikater når vi gjør utadgående TLS kall
+        initCryptoStoreConfig("truststore", TRUSTSTORE_PATH_PROP, TRUSTSTORE_PASSW_PROP, "changeit");
+
+        // keystore genererer sertifikat og TLS for innkommende kall. Bruker standard prop hvis definert, ellers faller tilbake på modig props
+        var keystoreProp = System.getProperty("javax.net.ssl.keyStore")!=null? "javax.net.ssl.keyStore" : KEYSTORE_PATH_PROP;
+        var keystorePasswProp = System.getProperty("javax.net.ssl.keyStorePassword")!=null? "javax.net.ssl.keyStorePassword" : KEYSTORE_PASSW_PROP;
+        initCryptoStoreConfig("keystore", keystoreProp, keystorePasswProp, "devillokeystore1234");
+    }
+
+    private static String initCryptoStoreConfig(String storeName, String storeProperty, String storePasswordProperty, String defaultPassword) {
+        String defaultLocation = getProperty("user.home", ".") + "/.modig/" + storeName + ".jks";
+
+        String storePath = getProperty(storeProperty, defaultLocation);
+        File storeFile = new File(storePath);
+        if (!storeFile.exists()) {
+            throw new IllegalStateException("Finner ikke " + storeName + " i " + storePath
+                    + "\n\tKonfigurer enten som System property \'" + storeProperty + "\' eller environment variabel \'"
+                    + storeProperty.toUpperCase().replace('.', '_') + "\'");
+        }
+        String password = getProperty(storePasswordProperty, defaultPassword);
+        if(password==null) {
+            throw new IllegalStateException("Passord for å aksessere store "+storeName + " i " + storePath + " er null");
+        }
+
+        System.setProperty(storeProperty, storeFile.getAbsolutePath());
+        System.setProperty(storePasswordProperty, password);
+        return storePath;
+    }
+
+    private static String getProperty(String key, String defaultValue) {
+        String val = System.getProperty(key, defaultValue);
+        if (val == null) {
+            val = System.getenv(key.toUpperCase().replace('.', '_'));
+            val = val == null ? defaultValue : val;
+        }
+        return val;
     }
 
     @SuppressWarnings("resource")

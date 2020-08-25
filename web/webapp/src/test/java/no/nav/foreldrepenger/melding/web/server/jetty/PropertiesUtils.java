@@ -16,8 +16,6 @@ class PropertiesUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesUtils.class);
 
     private static String JETTY_SCHEMAS_LOCAL = "jetty_web_server.json";
-    private static String DEV_FILNAVN = "app.properties";
-    private static String DEV_FILNAVN_LOCAL = "app-local.properties";
     private static String VTP_FILNAVN_LOCAL = "app-vtp.properties";
 
     private PropertiesUtils() {
@@ -27,17 +25,6 @@ class PropertiesUtils {
         ClassLoader classLoader = PropertiesUtils.class.getClassLoader();
         File file = new File(classLoader.getResource(JETTY_SCHEMAS_LOCAL).getFile());
         return JettyDevDbKonfigurasjon.fraFil(file);
-    }
-
-    static void lagPropertiesFilFraTemplate() throws IOException {
-        // create local file
-        File localProps = new File(DEV_FILNAVN_LOCAL);
-        if (!localProps.exists()) {
-            boolean fileCreated = localProps.createNewFile();
-            if (!fileCreated) {
-                LOGGER.error("Kunne ikke opprette properties-fil");
-            }
-        }
     }
 
     private static void copyTemplateFile(File templateFil, File targetFil, boolean backup) throws IOException {
@@ -52,13 +39,8 @@ class PropertiesUtils {
         }
     }
 
-    static void initProperties(boolean vtp) {
-        File devFil = new File(DEV_FILNAVN);
-        loadPropertyFile(devFil);
-        loadPropertyFile(new File(DEV_FILNAVN_LOCAL));
-        if (vtp) {
-            loadPropertyFile(new File(VTP_FILNAVN_LOCAL));
-        }
+    static void initProperties() {
+        loadPropertyFile(new File(VTP_FILNAVN_LOCAL));
     }
 
     private static void loadPropertyFile(File devFil) {
@@ -82,6 +64,5 @@ class PropertiesUtils {
         copyTemplateFile(templateFil, logbackConfig, false);
 
         return logbackConfig;
-
     }
 }

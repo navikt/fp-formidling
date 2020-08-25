@@ -9,8 +9,6 @@ public interface AppKonfigurasjon {
 
     String getContextPath();
 
-    String getSwaggerHash();
-
     default int getSslPort() {
         throw new IllegalStateException("SSL port should only be used locally");
     }

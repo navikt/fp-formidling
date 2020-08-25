@@ -32,14 +32,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- felles artifakter -->
-        <felles.version>2.0.0-20200702160706-bb063e2</felles.version>
-        <prosesstask.version>2.4.2-20200703105213-95d753a</prosesstask.version>
+        <felles.version>2.1.0-20200821125413-7c8cc89</felles.version>
+        <prosesstask.version>2.4.3-20200821080802-12519de</prosesstask.version>
         <kontrakter.version>5.1-20200401094249-8828af7</kontrakter.version>
 
         <!-- Eksterne -->
         <metrics.version>4.1.12.1</metrics.version>
         <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.4</swagger.version>
+        <swagger-ui.version>3.32.3</swagger-ui.version>
         <kafka.version>2.6.0</kafka.version>
     </properties>
 
@@ -206,7 +207,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.2.15</version>
+                <version>42.2.16</version>
             </dependency>
 
             <!-- Kontrakter -->
@@ -304,7 +305,7 @@
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.16.1</version>
+                <version>3.17.0</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -314,7 +315,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>3.5.0</version>
+                <version>3.5.7</version>
             </dependency>
 
             <!-- Log -->
@@ -383,7 +384,7 @@
                 <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.87</version>
+                <version>4.8.89</version>
             </dependency>
             <!-- Java11 -->
             <dependency>
@@ -395,6 +396,23 @@
     </dependencyManagement>
 
     <build>
+        <resources>
+            <!-- filtrerer for å sette opp swagger versjon korrekt -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.html</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/*.html</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
         <pluginManagement>
             <plugins>
                 <plugin>

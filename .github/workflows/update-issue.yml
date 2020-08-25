@@ -18,15 +18,7 @@ jobs:
           issue-number: ${{ github.event.client_payload.issue-number }}
           body: |
             Alle autotestene gikk grønt!
-            Deployer fpformidling til t4 og q1!
-
-      - name: Trigger deploy til t4
-        if: steps.success.outcome == 'success'
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-          issue-number: ${{ github.event.client_payload.issue-number }}
-          body: /promote dev-fss t4
+            Deployer fpformidling til q1!
 
       - name: Trigger deploy til q1
         if: steps.success.outcome == 'success'
@@ -46,4 +38,4 @@ jobs:
             Testene kjørt av fpsak-autotest i Github Action feilet!
             Resultatet kan være falsk negativt! Sammenlign resultatet med Jenkins før eventuell promote!
             Ønsker du å rekjøre testene kan du gå til fpsak-autotest på github, finn jobben, og trykk rerun.
-            Deployer derfor IKKE fpformidling til hverken t4 eller q1!
+            Deployer derfor IKKE fpformidling til q1!

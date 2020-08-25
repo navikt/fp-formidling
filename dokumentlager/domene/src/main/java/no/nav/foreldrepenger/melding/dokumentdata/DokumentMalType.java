@@ -45,7 +45,7 @@ public class DokumentMalType extends KodeverkTabell {
     public static final String KLAGE_OVERSENDT_KLAGEINSTANS = "KOVKLA";
     public static final String KLAGE_HJEMSENDT = "KHJEMS";
 
-    // Disse beholdes her grunnet gamle brev i databasen:
+    // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
     public static final String KLAGE_OVERSENDT_KLAGEINSTANS_DOK = "KLAGOV";
     @Deprecated

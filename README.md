@@ -6,25 +6,19 @@ Applikasjonen bestiller brev basert på hendelser fra en kafka-kø, eller via et
 ## Henvendelser
 
 Spørsmål knyttet til koden eller prosjektet kan rettes til:
-* Per Jørgen Vigdal (per.jorgen.vigdal@nav.no)
-* Aleksander Andresen (aleksander.andresen@nav.no)
-* Tor Nærland (tor.nerland@nav.no)
+* Anja Gøtesen Aalerud (anja.gotesen.aalerud@nav.no)
+* Jan Erik Johnsen (jan.erik.johnsen@nav.no)
 
 ### Henvendelser for NAV-ansatte
-Interne henvendelser kan sendes via Slack i kanalen #fp-fomidling.
+Interne henvendelser kan sendes via Slack i kanalen #fp-formidling.
 
 
 ## Oppsett
-### Konfigfiler
-For å kjøre lokalt trenger du app-local.properties med riktige verdier i web\webapp
-
-### Sertifikater
-For å kunne kjøre mot miljø fra lokalt, må man oppgi testsertfikater i HOME mappen.
-I windows blir det slik "c:\Users\<bruker navn>\.modig"
-
 ### Run Config
-Set $MODULE_DIR$ som working directory, og bruk classpath til webapp. 
-Kjører på java 11. Kan korte ned classpathen med jar manifest.
+For å kjøre lokalt må du å ha VTP kjørende på forhånd.
+Konfigurasjonen i app-vtp.properties skal du ikke trenge å endre.
+Sett $MODULE_DIR$ som working directory, og bruk classpath til webapp.
+Kjører på Java 11. Kan korte ned classpathen med jar manifest.
 
 ### Database 
 NB. Skal du bruke Docker Compose for lokal utvikling kan du hoppe over både dette avsnittet og neste "Lokale databaser". Se Lokal utvikling nedenfor.

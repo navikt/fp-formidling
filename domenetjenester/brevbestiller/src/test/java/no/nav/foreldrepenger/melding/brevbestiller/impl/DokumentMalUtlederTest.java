@@ -43,14 +43,14 @@ public class DokumentMalUtlederTest {
     @Before
     public void setup() {
         dokumentRepository = new DokumentRepository(repositoryRule.getEntityManager());
-        dokumentMalUtleder = new DokumentMalUtleder(kodeverkTabellRepository, domeneobjektProvider, null, null, null);
+        dokumentMalUtleder = new DokumentMalUtleder(kodeverkTabellRepository, domeneobjektProvider, null, null);
     }
 
     @Test
     public void utledfra_input_mal() {
         sjekkAtVelgerValgtMal(DokumentMalType.UENDRETUTFALL_DOK);
         sjekkAtVelgerValgtMal(DokumentMalType.FRITEKST_DOK);
-        sjekkAtVelgerValgtMal(DokumentMalType.KLAGE_AVVIST_DOK);
+        sjekkAtVelgerValgtMal(DokumentMalType.KLAGE_AVVIST);
         sjekkAtVelgerValgtMal(DokumentMalType.FORLENGET_DOK);
         sjekkAtVelgerValgtMal(DokumentMalType.AVSLAGSVEDTAK_DOK);
     }
@@ -227,12 +227,12 @@ public class DokumentMalUtlederTest {
 
     @Test
     public void utled_klage() {
-        sjekkKlageDokument(KlageVurdering.AVVIS_KLAGE, DokumentMalType.KLAGE_AVVIST_DOK);
-        sjekkKlageDokument(KlageVurdering.STADFESTE_YTELSESVEDTAK, DokumentMalType.KLAGE_YTELSESVEDTAK_STADFESTET_DOK);
-        sjekkKlageDokument(KlageVurdering.MEDHOLD_I_KLAGE, DokumentMalType.VEDTAK_MEDHOLD);
-        sjekkKlageDokument(KlageVurdering.OPPHEVE_YTELSESVEDTAK, DokumentMalType.KLAGE_YTELSESVEDTAK_OPPHEVET_DOK);
-        sjekkKlageDokument(KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE, DokumentMalType.KLAGE_YTELSESVEDTAK_OPPHEVET_DOK);
-        assertThatThrownBy(() -> sjekkKlageDokument(KlageVurdering.UDEFINERT, DokumentMalType.KLAGE_AVVIST_DOK)).isInstanceOf(VLException.class);
+        sjekkKlageDokument(KlageVurdering.AVVIS_KLAGE, DokumentMalType.KLAGE_AVVIST);
+        sjekkKlageDokument(KlageVurdering.STADFESTE_YTELSESVEDTAK, DokumentMalType.KLAGE_STADFESTET);
+        sjekkKlageDokument(KlageVurdering.MEDHOLD_I_KLAGE, DokumentMalType.KLAGE_OMGJØRING);
+        sjekkKlageDokument(KlageVurdering.OPPHEVE_YTELSESVEDTAK, DokumentMalType.KLAGE_HJEMSENDT);
+        sjekkKlageDokument(KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE, DokumentMalType.KLAGE_HJEMSENDT);
+        assertThatThrownBy(() -> sjekkKlageDokument(KlageVurdering.UDEFINERT, DokumentMalType.KLAGE_AVVIST)).isInstanceOf(VLException.class);
     }
 
     @Test

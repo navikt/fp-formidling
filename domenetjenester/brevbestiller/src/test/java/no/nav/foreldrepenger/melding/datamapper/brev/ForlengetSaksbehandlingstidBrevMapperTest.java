@@ -106,7 +106,7 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         when(behandlingTypeMock.getKode()).thenReturn(BehandlingType.KLAGE.getKode());
         when(behandlingTypeMock.getKodeverk()).thenReturn(BehandlingType.KLAGE.getKodeverk());
         Behandling behandling = Behandling.builder().medBehandlingType(behandlingTypeMock).build();
-        DokumentHendelse dokumentHendelse = byggHendelse(DokumentMalType.VEDTAK_MEDHOLD, FagsakYtelseType.SVANGERSKAPSPENGER);
+        DokumentHendelse dokumentHendelse = byggHendelse(DokumentMalType.KLAGE_OMGJØRING, FagsakYtelseType.SVANGERSKAPSPENGER);
         // Act
         String xml = forlengetSaksbehandlingstidBrevMapper.mapTilBrevXML(fellesType, dokumentFelles, dokumentHendelse, behandling);
         // Assert

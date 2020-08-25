@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingsresultatDto;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
-import no.nav.foreldrepenger.melding.behandling.BehandlingResultatType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
@@ -37,7 +37,8 @@ public class BehandlingsresultatDtoMapper {
             builder.medAvslagsårsak(kodeverkRepository.finn(Avslagsårsak.class, dto.getAvslagsarsak().getKode()));
         }
         if (dto.getType() != null) {
-            builder.medBehandlingResultatType(kodeverkRepository.finn(BehandlingResultatType.class, dto.getType().getKode()));
+            //Enum i stedet for å hente fra kodeliste
+            builder.medBehandlingResultatType(BehandlingResultatType.fraKode(dto.getType().getKode()));
         }
         builder.medFritekstbrev(dto.getFritekstbrev())
                 .medOverskrift(dto.getOverskrift())

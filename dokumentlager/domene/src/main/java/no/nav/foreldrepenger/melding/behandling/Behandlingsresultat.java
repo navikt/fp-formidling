@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import no.nav.foreldrepenger.melding.beregning.BeregningResultat;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.melding.vilkår.VilkårResultat;

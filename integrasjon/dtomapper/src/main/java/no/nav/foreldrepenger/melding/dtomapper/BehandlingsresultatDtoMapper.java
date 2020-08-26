@@ -37,7 +37,6 @@ public class BehandlingsresultatDtoMapper {
             builder.medAvslagsårsak(kodeverkRepository.finn(Avslagsårsak.class, dto.getAvslagsarsak().getKode()));
         }
         if (dto.getType() != null) {
-            //Enum i stedet for å hente fra kodeliste
             builder.medBehandlingResultatType(BehandlingResultatType.fraKode(dto.getType().getKode()));
         }
         builder.medFritekstbrev(dto.getFritekstbrev())

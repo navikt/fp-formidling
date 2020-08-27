@@ -56,10 +56,8 @@ public enum BehandlingResultatType implements Kodeverdi {
     private static final Set<BehandlingResultatType> HENLEGGELSESKODER_FOR_INNSYN = Set.of(HENLAGT_INNSYN_TRUKKET, HENLAGT_FEILOPPRETTET);
     private static final Set<BehandlingResultatType> ALLE_HENLEGGELSESKODER = Set.of(HENLAGT_SØKNAD_TRUKKET, HENLAGT_FEILOPPRETTET, HENLAGT_BRUKER_DØD, HENLAGT_KLAGE_TRUKKET, MERGET_OG_HENLAGT, HENLAGT_SØKNAD_MANGLER, HENLAGT_INNSYN_TRUKKET, MANGLER_BEREGNINGSREGLER);
     private static final Set<BehandlingResultatType> KLAGE_KODER = Set.of(KLAGE_MEDHOLD, KLAGE_YTELSESVEDTAK_STADFESTET, KLAGE_YTELSESVEDTAK_OPPHEVET, KLAGE_AVVIST, DELVIS_MEDHOLD_I_KLAGE, HJEMSENDE_UTEN_OPPHEVE, UGUNST_MEDHOLD_I_KLAGE);
-//    private static final Set<BehandlingResultatType> ANKE_KODER = Set.of(ANKE_AVVIST, ANKE_OMGJOER, ANKE_OPPHEVE_OG_HJEMSENDE, ANKE_YTELSESVEDTAK_STADFESTET, ANKE_DELVIS_OMGJOERING_TIL_GUNST, ANKE_TIL_UGUNST);
     private static final Set<BehandlingResultatType> INNSYN_KODER = Set.of(INNSYN_INNVILGET, INNSYN_DELVIS_INNVILGET, INNSYN_AVVIST);
     private static final Set<BehandlingResultatType> INNVILGET_KODER = Set.of(INNVILGET, FORELDREPENGER_ENDRET);
-//    private static final Set<BehandlingResultatType> ALLE_INNVILGET_KODER = Set.of(INNVILGET, FORELDREPENGER_ENDRET, INGEN_ENDRING);
 
     private static final Map<String, BehandlingResultatType> KODER = new LinkedHashMap<>();
 
@@ -78,10 +76,6 @@ public enum BehandlingResultatType implements Kodeverdi {
 
     private String kode;
 
-    private BehandlingResultatType(String kode) {
-        this.kode = kode;
-    }
-
     private BehandlingResultatType(String kode, String navn) {
         this.kode = kode;
         this.navn = navn;
@@ -97,10 +91,6 @@ public enum BehandlingResultatType implements Kodeverdi {
             throw new IllegalArgumentException("Ukjent BehandlingResultatType: " + kode);
         }
         return ad;
-    }
-
-    public static Map<String, BehandlingResultatType> kodeMap() {
-        return Collections.unmodifiableMap(KODER);
     }
 
     @Override

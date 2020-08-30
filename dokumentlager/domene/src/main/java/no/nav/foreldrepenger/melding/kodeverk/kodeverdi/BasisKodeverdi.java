@@ -7,8 +7,6 @@ public interface BasisKodeverdi extends IndexKey {
 
     String getKodeverk();
 
-    String getNavn();
-
     @Override
     default String getIndexKey() {
         return getKode();

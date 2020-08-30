@@ -142,7 +142,7 @@ public abstract class Kodeliste extends KodeverkBaseEntitet implements Comparabl
      * Returnerer språk i standard ISO 639-1-alpha2 lower case.
      */
     public String getSpråk() {
-        return språk;
+        throw new UnsupportedOperationException("Utvikler-feil konverter til kodeliste");
     }
 
     public LocalDate getGyldigFraOgMed() {

@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
 /** Kodeverk der man trenger kode fra Felles Kodeverk. */
-public interface KodeverdiOffisiellKode {
+public interface KodeverdiMedOffisiellKode {
 
     String getOffisiellKode();
 

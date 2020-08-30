@@ -9,11 +9,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.typer.Dato;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;

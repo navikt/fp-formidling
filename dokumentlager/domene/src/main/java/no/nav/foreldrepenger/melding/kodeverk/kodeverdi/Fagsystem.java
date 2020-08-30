@@ -13,23 +13,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(shape = Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
-public enum Fagsystem implements Kodeverdi, KodeverdiOffisiellKode {
+public enum Fagsystem implements Kodeverdi, KodeverdiMedOffisiellKode {
 
-    FPSAK("FPSAK", "Vedtaksløsning Foreldrepenger", "FS36"),
-    GOSYS("GOSYS", "Gosys", "FS22"),
+    FPSAK("FPSAK", "FS36"),
+    GOSYS("GOSYS", "FS22"),
 
     /**
      * Alle kodeverk må ha en verdi, det kan ikke være null i databasen. Denne koden gjør samme nytten.
      */
-    UDEFINERT("-", "Ikke definert", null),
+    UDEFINERT("-", null),
     ;
 
     public static final String KODEVERK = "FAGSYSTEM";
 
     private static final Map<String, Fagsystem> KODER = new LinkedHashMap<>();
-
-    @JsonIgnore
-    private String navn;
 
     @JsonIgnore
     private String offisiellKode;
@@ -40,9 +37,8 @@ public enum Fagsystem implements Kodeverdi, KodeverdiOffisiellKode {
         // Hibernate trenger den
     }
 
-    private Fagsystem(String kode, String navn, String offisiellKode) {
+    private Fagsystem(String kode, String offisiellKode) {
         this.kode = kode;
-        this.navn = navn;
         this.offisiellKode = offisiellKode;
     }
 
@@ -56,11 +52,6 @@ public enum Fagsystem implements Kodeverdi, KodeverdiOffisiellKode {
             throw new IllegalArgumentException("Ukjent Fagsystem: " + kode);
         }
         return ad;
-    }
-
-    @Override
-    public String getNavn() {
-        return navn;
     }
 
     @Override

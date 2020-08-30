@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import no.nav.foreldrepenger.melding.fagsak.Fagsystem;
 import no.nav.foreldrepenger.melding.kodeverk.diff.IndexKey;
 
 /**
@@ -34,12 +33,6 @@ public class Saksnummer implements SakId, IndexKey {
                     "Ugyldig saksnummer, støtter kun A-Z/0-9/:/-/_ tegn. Var: " + saksnummer.replaceAll(INVALID.pattern(), "?") + " (vasket)");
         }
         this.saksnummer = saksnummer;
-    }
-
-    @SuppressWarnings("unused")
-    public Saksnummer(String sakId, Fagsystem fagsystem) { // NOSONAR
-        this(sakId);
-        // FIXME (FC): Set fagsystem
     }
 
     @Override
@@ -72,15 +65,4 @@ public class Saksnummer implements SakId, IndexKey {
         return getClass().getSimpleName() + "<" + saksnummer + ">";
     }
 
-    public static Saksnummer infotrygd(String sakId) {
-        if (sakId != null) {
-            String vasketId = sakId.replaceAll(INVALID.pattern(), "").trim();
-            return vasketId.length() == 0 ? null : new Saksnummer(vasketId, Fagsystem.INFOTRYGD);
-        }
-        return null;
-    }
-
-    public static Saksnummer arena(String sakId) {
-        return sakId == null ? null : new Saksnummer(sakId, Fagsystem.ARENA);
-    }
 }

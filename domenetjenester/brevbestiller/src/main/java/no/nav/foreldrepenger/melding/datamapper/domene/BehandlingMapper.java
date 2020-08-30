@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
@@ -24,6 +23,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsT
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsResultatKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.KonsekvensForYtelseKode;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.vedtak.util.StringUtils;
 
 public class BehandlingMapper {
@@ -83,10 +83,7 @@ public class BehandlingMapper {
         boolean kunEndringIBeregning = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING) &&
                 konsekvenserForYtelsen.size() == 1;
 
-        List<String> behandlingÅrsakStringListe = getBehandlingÅrsakStringListe(revurdering);
-        return behandlingÅrsakStringListe.contains(BehandlingÅrsakType.RE_ENDRING_BEREGNINGSGRUNNLAG.getKode()) &&
-                behandlingÅrsakStringListe.size() == 1 ||
-                kunEndringIBeregning;
+        return kunEndringIBeregning;
     }
 
     public static boolean erRevurderingPgaFødselshendelse(Behandling behandling, FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse) {

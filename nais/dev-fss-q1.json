@@ -6,7 +6,8 @@
   "maxReplicas": "3",
   "ingresses": [
     "https://app-q1.adeo.no/fpformidling",
-    "https://fpformidling-q1.nais.preprod.local/"
+    "https://fpformidling-q1.nais.preprod.local/",
+    "https://fpformidling.nais.preprod.local/"
   ],
   "env": {
     "ABAC_PDP_ENDPOINT_URL": "https://wasapp-q1.adeo.no/asm-pdp/authorize",
@@ -19,7 +20,7 @@
     "DEFAULTDS_USERNAME": "fpformidling-q1",
     "DEFAULTDS_URL": "jdbc:postgresql://B27DBVL007.preprod.local:5432/fpformidling-q1",
     "DOKUMENTPRODUKSJON_V2_URL": "https://app-q1.adeo.no/dokprod/ws/dokumentproduksjon/v2",
-    "FPSAK_REST_BASE_URL": "https://fpsak-q1.nais.preprod.local",
+    "FPSAK_REST_BASE_URL": "http://fpsak/",
     "KAFKA_BOOTSTRAP_SERVERS": "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443",
     "KAFKA_DOKUMENTBESTILLING_TOPIC": "privat-foreldrepenger-dokumenthendelse-q1",
     "KAFKA_HISTORIKKINNSLAG_TOPIC": "privat-foreldrepenger-historikkinnslag-q1",

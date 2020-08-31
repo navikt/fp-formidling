@@ -1,53 +1,55 @@
 package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
-import com.fasterxml.jackson.annotation.*;
-
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public enum BehandlingResultatType implements Kodeverdi {
 
-    IKKE_FASTSATT("IKKE_FASTSATT", "Ikke fastsatt"),
-    INNVILGET("INNVILGET", "Innvilget"),
-    AVSLÅTT("AVSLÅTT", "Avslått"),
-    OPPHØR("OPPHØR", "Opphør"),
-    HENLAGT_SØKNAD_TRUKKET("HENLAGT_SØKNAD_TRUKKET", "Henlagt, søknaden er trukket"),
-    HENLAGT_FEILOPPRETTET("HENLAGT_FEILOPPRETTET", "Henlagt, søknaden er feilopprettet"),
-    HENLAGT_BRUKER_DØD("HENLAGT_BRUKER_DØD", "Henlagt, brukeren er død"),
-    MERGET_OG_HENLAGT("MERGET_OG_HENLAGT", "Mottatt ny søknad"),
-    HENLAGT_SØKNAD_MANGLER("HENLAGT_SØKNAD_MANGLER", "Henlagt søknad mangler"),
-    FORELDREPENGER_ENDRET("FORELDREPENGER_ENDRET", "Sak er endret"),
-    INGEN_ENDRING("INGEN_ENDRING", "Ingen endring"),
-    MANGLER_BEREGNINGSREGLER("MANGLER_BEREGNINGSREGLER", "Mangler beregningsregler"),
+    IKKE_FASTSATT("IKKE_FASTSATT"),
+    INNVILGET("INNVILGET"),
+    AVSLÅTT("AVSLÅTT"),
+    OPPHØR("OPPHØR"),
+    HENLAGT_SØKNAD_TRUKKET("HENLAGT_SØKNAD_TRUKKET"),
+    HENLAGT_FEILOPPRETTET("HENLAGT_FEILOPPRETTET"),
+    HENLAGT_BRUKER_DØD("HENLAGT_BRUKER_DØD"),
+    MERGET_OG_HENLAGT("MERGET_OG_HENLAGT"),
+    HENLAGT_SØKNAD_MANGLER("HENLAGT_SØKNAD_MANGLER"),
+    FORELDREPENGER_ENDRET("FORELDREPENGER_ENDRET"),
+    INGEN_ENDRING("INGEN_ENDRING"),
+    MANGLER_BEREGNINGSREGLER("MANGLER_BEREGNINGSREGLER"),
 
     // Klage
-    KLAGE_AVVIST("KLAGE_AVVIST", "Klage er avvist"),
-    KLAGE_MEDHOLD("KLAGE_MEDHOLD", "Medhold"),
-    KLAGE_YTELSESVEDTAK_OPPHEVET("KLAGE_YTELSESVEDTAK_OPPHEVET", "Ytelsesvedtak opphevet"),
-    KLAGE_YTELSESVEDTAK_STADFESTET("KLAGE_YTELSESVEDTAK_STADFESTET", "Ytelsesvedtak stadfestet"),
-    KLAGE_TILBAKEKREVING_VEDTAK_STADFESTET("KLAGE_TILBAKEKREVING_VEDTAK_STADFESTET", "Vedtak tilbakekreving stadfestet"), // Brukes av kun Tilbakekreving eller Tilbakekreving Revurdering
-    HENLAGT_KLAGE_TRUKKET("HENLAGT_KLAGE_TRUKKET", "Henlagt, klagen er trukket"),
-    DELVIS_MEDHOLD_I_KLAGE("DELVIS_MEDHOLD_I_KLAGE", "Delvis medhold i klage"),
-    HJEMSENDE_UTEN_OPPHEVE("HJEMSENDE_UTEN_OPPHEVE", "Behandlingen er hjemsendt"),
-    UGUNST_MEDHOLD_I_KLAGE("UGUNST_MEDHOLD_I_KLAGE", "Ugunst medhold i klage"),
+    KLAGE_AVVIST("KLAGE_AVVIST"),
+    KLAGE_MEDHOLD("KLAGE_MEDHOLD"),
+    KLAGE_YTELSESVEDTAK_OPPHEVET("KLAGE_YTELSESVEDTAK_OPPHEVET"),
+    KLAGE_YTELSESVEDTAK_STADFESTET("KLAGE_YTELSESVEDTAK_STADFESTET"),
+    KLAGE_TILBAKEKREVING_VEDTAK_STADFESTET("KLAGE_TILBAKEKREVING_VEDTAK_STADFESTET"), // Brukes av kun Tilbakekreving eller Tilbakekreving Revurdering
+    HENLAGT_KLAGE_TRUKKET("HENLAGT_KLAGE_TRUKKET"),
+    DELVIS_MEDHOLD_I_KLAGE("DELVIS_MEDHOLD_I_KLAGE"),
+    HJEMSENDE_UTEN_OPPHEVE("HJEMSENDE_UTEN_OPPHEVE"),
+    UGUNST_MEDHOLD_I_KLAGE("UGUNST_MEDHOLD_I_KLAGE"),
 
     // Anke
-    ANKE_AVVIST("ANKE_AVVIST", "Anke er avvist"),
-    ANKE_OMGJOER("ANKE_OMGJOER", "Bruker har fått omgjøring i anke"),
-    ANKE_OPPHEVE_OG_HJEMSENDE("ANKE_OPPHEVE_OG_HJEMSENDE", "Bruker har fått vedtaket opphevet og hjemsendt i anke"),
-    ANKE_YTELSESVEDTAK_STADFESTET("ANKE_YTELSESVEDTAK_STADFESTET", "Anken er stadfestet/opprettholdt"),
-    ANKE_DELVIS_OMGJOERING_TIL_GUNST("ANKE_DELVIS_OMGJOERING_TIL_GUNST", "Anke er delvis omgjøring, til gunst"),
-    ANKE_TIL_UGUNST("ANKE_TIL_UGUNST", "Gunst omgjør i anke"),
+    ANKE_AVVIST("ANKE_AVVIST"),
+    ANKE_OMGJOER("ANKE_OMGJOER"),
+    ANKE_OPPHEVE_OG_HJEMSENDE("ANKE_OPPHEVE_OG_HJEMSENDE"),
+    ANKE_YTELSESVEDTAK_STADFESTET("ANKE_YTELSESVEDTAK_STADFESTET"),
+    ANKE_DELVIS_OMGJOERING_TIL_GUNST("ANKE_DELVIS_OMGJOERING_TIL_GUNST"),
+    ANKE_TIL_UGUNST("ANKE_TIL_UGUNST"),
 
     // Innsyn
-    INNSYN_INNVILGET("INNSYN_INNVILGET", "Innsynskrav er innvilget"),
-    INNSYN_DELVIS_INNVILGET("INNSYN_DELVIS_INNVILGET", "Innsynskrav er delvis innvilget"),
-    INNSYN_AVVIST("INNSYN_AVVIST", "Innsynskrav er avvist"),
-    HENLAGT_INNSYN_TRUKKET("HENLAGT_INNSYN_TRUKKET", "Henlagt, innsynskrav er trukket"),
+    INNSYN_INNVILGET("INNSYN_INNVILGET"),
+    INNSYN_DELVIS_INNVILGET("INNSYN_DELVIS_INNVILGET"),
+    INNSYN_AVVIST("INNSYN_AVVIST"),
+    HENLAGT_INNSYN_TRUKKET("HENLAGT_INNSYN_TRUKKET"),
 
     ;
 
@@ -71,14 +73,10 @@ public enum BehandlingResultatType implements Kodeverdi {
         }
     }
 
-    @JsonIgnore
-    private String navn;
-
     private String kode;
 
-    private BehandlingResultatType(String kode, String navn) {
+    private BehandlingResultatType(String kode) {
         this.kode = kode;
-        this.navn = navn;
     }
 
     @JsonCreator
@@ -93,20 +91,10 @@ public enum BehandlingResultatType implements Kodeverdi {
         return ad;
     }
 
-    @Override
-    public String getNavn() {
-        return navn;
-    }
-
     @JsonProperty
     @Override
     public String getKode() {
         return kode;
-    }
-
-    @Override
-    public String getOffisiellKode() {
-        return getKode();
     }
 
     @JsonProperty

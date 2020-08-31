@@ -89,7 +89,7 @@ jobs:
 
             <table>
             <tr><th>Cluster</th><th>Namespace</th></tr>
-            <tr><td>dev-fss</td><td>q0, q1</td></tr>
+            <tr><td>dev-fss</td><td>q1</td></tr>
             <tr><td>prod-fss</td><td>default</td></tr>
             </table>
 

@@ -1,17 +1,14 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
-import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
+import static no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder.ROTMAPPE;
+import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.UUID;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -20,15 +17,15 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.UUID;
-
-import static no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder.ROTMAPPE;
-import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
-import static org.assertj.core.api.Assertions.assertThat;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 
 public class EtterlysInntektsmeldingBrevMapperTest {
     private Behandling behandling;

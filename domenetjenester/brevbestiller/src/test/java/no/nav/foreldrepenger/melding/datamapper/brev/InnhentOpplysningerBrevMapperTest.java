@@ -20,8 +20,6 @@ import org.mockito.junit.MockitoRule;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -34,6 +32,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.Fa
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.YtelseTypeKode;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 
 public class InnhentOpplysningerBrevMapperTest {
@@ -100,7 +99,7 @@ public class InnhentOpplysningerBrevMapperTest {
     @Test
     public void skal_velge_siste_mottatt_dato_fra_endringssøknad_når_endring() {
         doReturn(Boolean.TRUE).when(behandling).erRevurdering();
-        doReturn(List.of(opprettBehandlingsårsak(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode()))).when(behandling).getBehandlingÅrsaker();
+        doReturn(Boolean.TRUE).when(behandling).harBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER);
         LocalDate andreJanuar = LocalDate.of(2019, 1, 2);
         LocalDate fjerdeJanuar = LocalDate.of(2019, 1, 4);
         mottatteDokumenter.add(new MottattDokument(andreJanuar, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD));
@@ -118,12 +117,6 @@ public class InnhentOpplysningerBrevMapperTest {
         DokumentHendelse dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build();
         FagType fagType = brevMapper.mapFagType(dokumentFelles, dokumentHendelse, behandling, mottatteDokumenter, klageDokument);
         assertThat(fagType.getYtelseType()).isEqualTo(YtelseTypeKode.SVP);
-    }
-
-    private BehandlingÅrsak opprettBehandlingsårsak(String årsakType) {
-        return BehandlingÅrsak.builder()
-                .medBehandlingÅrsakType(årsakType)
-                .build();
     }
 
 }

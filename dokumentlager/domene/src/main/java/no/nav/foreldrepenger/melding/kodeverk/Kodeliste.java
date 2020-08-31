@@ -53,8 +53,9 @@ public abstract class Kodeliste extends KodeverkBaseEntitet implements Comparabl
     private String kode;
 
     /**
-     * Kode bestemt av kodeeier. Kan avvike fra intern kodebruk
+     * Konverter til kodeverdienum hvis du har bruk for denne
      */
+    @Deprecated
     @Column(name = "offisiell_kode", updatable = false, insertable = false)
     private String offisiellKode;
 
@@ -122,7 +123,7 @@ public abstract class Kodeliste extends KodeverkBaseEntitet implements Comparabl
     }
 
     public String getBeskrivelse() {
-        return beskrivelse;
+        throw new UnsupportedOperationException("Utvikler-feil konverter til kodeliste");
     }
 
     public String getKode() {
@@ -130,14 +131,7 @@ public abstract class Kodeliste extends KodeverkBaseEntitet implements Comparabl
     }
 
     public String getOffisiellKode() {
-        return offisiellKode;
-    }
-
-    public boolean erLikOffisiellKode(String annenOffisiellKode) {
-        if (offisiellKode == null) {
-            throw new IllegalArgumentException("Har ikke offisiellkode for, Kodeverk=" + getKodeverk() + ", kode=" + getKode()); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return offisiellKode.equals(annenOffisiellKode);
+        throw new UnsupportedOperationException("Utvikler-feil konverter til kodeliste");
     }
 
     public String getNavn() {
@@ -148,15 +142,15 @@ public abstract class Kodeliste extends KodeverkBaseEntitet implements Comparabl
      * Returnerer språk i standard ISO 639-1-alpha2 lower case.
      */
     public String getSpråk() {
-        return språk;
+        throw new UnsupportedOperationException("Utvikler-feil konverter til kodeliste");
     }
 
     public LocalDate getGyldigFraOgMed() {
-        return gyldigFraOgMed;
+        throw new UnsupportedOperationException("Utvikler-feil konverter til kodeliste");
     }
 
     public LocalDate getGyldigTilOgMed() {
-        return gyldigTilOgMed;
+        throw new UnsupportedOperationException("Utvikler-feil konverter til kodeliste");
     }
 
     protected String getEkstraData() {

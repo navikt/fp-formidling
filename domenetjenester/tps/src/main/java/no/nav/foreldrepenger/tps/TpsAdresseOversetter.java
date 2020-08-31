@@ -2,10 +2,6 @@ package no.nav.foreldrepenger.tps;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -34,8 +30,6 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.PostboksadresseNorsk;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.StedsadresseNorge;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.StrukturertAdresse;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.UstrukturertAdresse;
-import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.exception.VLException;
 
 @ApplicationScoped
 public class TpsAdresseOversetter {
@@ -58,39 +52,6 @@ public class TpsAdresseOversetter {
                                 PoststedKodeverkRepository poststedKodeverkRepository) {
         this.personInfoKodeverkRepository = personInfoKodeverkRepository;
         this.poststedKodeverkRepository = poststedKodeverkRepository;
-    }
-
-    List<Adresseinfo> lagListeMedAdresseInfo(Bruker person) {
-        Optional<AdresseType> gjeldende = finnGjeldendePostadressetype(person);
-        if (gjeldende.isPresent() && Objects.equals(AdresseType.UKJENT_ADRESSE, gjeldende.get())) {
-            return Collections.singletonList(byggUkjentAdresse(person));
-        }
-
-        List<Adresseinfo> adresseInfoList = new ArrayList<>();
-        if (person.getBostedsadresse() != null) {
-            StrukturertAdresse adresseStruk = person.getBostedsadresse().getStrukturertAdresse();
-            adresseInfoList.add(konverterStrukturertAdresse(person, adresseStruk, AdresseType.BOSTEDSADRESSE));
-        }
-        if (person.getPostadresse() != null) {
-            UstrukturertAdresse adresseUstruk = person.getPostadresse().getUstrukturertAdresse();
-            adresseInfoList.add(konverterUstrukturertAdresse(person, adresseUstruk, AdresseType.POSTADRESSE));
-            Landkoder landkode = adresseUstruk.getLandkode();
-            if (NORGE.equals(landkode.getValue())) {
-                adresseInfoList.add(konverterUstrukturertAdresse(person, adresseUstruk, AdresseType.POSTADRESSE));
-            } else {
-                adresseInfoList.add(konverterUstrukturertAdresse(person, adresseUstruk, AdresseType.POSTADRESSE_UTLAND));
-            }
-        }
-        if (person.getMidlertidigPostadresse() != null) {
-            if (person.getMidlertidigPostadresse() instanceof MidlertidigPostadresseNorge) {
-                StrukturertAdresse adresseStruk = ((MidlertidigPostadresseNorge) person.getMidlertidigPostadresse()).getStrukturertAdresse();
-                adresseInfoList.add(konverterStrukturertAdresse(person, adresseStruk, AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE));
-            } else if (person.getMidlertidigPostadresse() instanceof MidlertidigPostadresseUtland) {
-                UstrukturertAdresse adresseUstruk = ((MidlertidigPostadresseUtland) person.getMidlertidigPostadresse()).getUstrukturertAdresse();
-                adresseInfoList.add(konverterUstrukturertAdresse(person, adresseUstruk, AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND));
-            }
-        }
-        return adresseInfoList;
     }
 
     private Adresseinfo finnGjeldendeAdresseFor(Bruker bruker) {
@@ -280,16 +241,6 @@ public class TpsAdresseOversetter {
         return adresse;
     }
 
-    String finnAdresseLandkodeFor(Bruker bruker) {
-        try {
-            Adresseinfo adresseinfo = tilAdresseInfo(bruker);
-            return adresseinfo.getLand();
-        } catch (VLException e) {
-            TpsOversetterFeilmeldinger.FACTORY.manglerLandBrukerNorge(e).log(log);
-            return NORGE;
-        }
-    }
-
     public String finnUtlandsadresseFor(Bruker bruker) {
         MidlertidigPostadresse midlertidigPostadresse = bruker.getMidlertidigPostadresse();
         if (midlertidigPostadresse instanceof MidlertidigPostadresseUtland) {
@@ -299,18 +250,6 @@ public class TpsAdresseOversetter {
                     AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND));
         }
         return null;
-    }
-
-    String finnAdresseFor(Person person) {
-        if (person instanceof Bruker) {
-            try {
-                Adresseinfo adresseinfo = tilAdresseInfo(person);
-                return byggOppAdresse(adresseinfo);
-            } catch (TekniskException tps) { //NOSONAR
-                //Ukjent adresse eller adresse som ikke kan oversettes.
-            }
-        }
-        return "UKJENT ADRESSE";
     }
 
     private String byggOppAdresse(Adresseinfo adresseinfo) {

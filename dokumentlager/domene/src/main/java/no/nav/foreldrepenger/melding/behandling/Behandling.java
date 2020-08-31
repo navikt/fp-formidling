@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 
 public class Behandling {
     private Behandlingsresultat behandlingsresultat;
@@ -118,10 +119,9 @@ public class Behandling {
     }
 
     public boolean harBehandlingÅrsak(BehandlingÅrsakType behandlingÅrsak) {
-        var behandlingÅsrakString = behandlingÅrsak.getKode();
         return getBehandlingÅrsaker().stream()
                 .map(BehandlingÅrsak::getBehandlingÅrsakType)
-                .anyMatch(behandlingÅsrakString::equals);
+                .anyMatch(behandlingÅrsak::equals);
     }
     
     public boolean erFørstegangssøknad() {

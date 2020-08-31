@@ -9,14 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -24,6 +19,8 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsT
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsResultatKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.KonsekvensForYtelseKode;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.vedtak.util.StringUtils;
 
 public class BehandlingMapper {
@@ -61,8 +58,7 @@ public class BehandlingMapper {
 
     public static boolean gjelderEndringsøknad(Behandling behandling) {
         // endringssøknad kan være satt ved førstegangsbehandling og henleggelse pga håndtering av tapte dager
-        return behandling.erRevurdering() && getBehandlingÅrsakStringListe(behandling)
-                .contains(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER.getKode());
+        return behandling.erRevurdering() && behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER);
     }
 
     public static boolean erTermindatoEndret(FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse) {
@@ -83,22 +79,12 @@ public class BehandlingMapper {
         boolean kunEndringIBeregning = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING) &&
                 konsekvenserForYtelsen.size() == 1;
 
-        List<String> behandlingÅrsakStringListe = getBehandlingÅrsakStringListe(revurdering);
-        return behandlingÅrsakStringListe.contains(BehandlingÅrsakType.RE_ENDRING_BEREGNINGSGRUNNLAG.getKode()) &&
-                behandlingÅrsakStringListe.size() == 1 ||
-                kunEndringIBeregning;
+        return kunEndringIBeregning;
     }
 
     public static boolean erRevurderingPgaFødselshendelse(Behandling behandling, FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse) {
-        return getBehandlingÅrsakStringListe(behandling)
-                .contains(BehandlingÅrsakType.RE_HENDELSE_FØDSEL.getKode()) ||
+        return behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_HENDELSE_FØDSEL) ||
                 familieHendelse.isBarnErFødt() && originalFamiliehendelse.map(fh -> !fh.isBarnErFødt()).orElse(false);
-    }
-
-    static List<String> getBehandlingÅrsakStringListe(Behandling behandling) {
-        return behandling.getBehandlingÅrsaker().stream()
-                .map(BehandlingÅrsak::getBehandlingÅrsakType)
-                .collect(Collectors.toList());
     }
 
     public static BehandlingsTypeKode utledBehandlingsTypeInnvilgetFP(Behandling behandling) {
@@ -107,9 +93,7 @@ public class BehandlingMapper {
     }
 
     public static BehandlingsTypeType utledBehandlingsTypeInnvilgetES(Behandling behandling) {
-        Stream<String> årsaker = behandling.getBehandlingÅrsaker().stream()
-                .map(BehandlingÅrsak::getBehandlingÅrsakType);
-        boolean etterKlage = årsaker.anyMatch(BehandlingÅrsakType.årsakerEtterKlageBehandling()::contains);
+        boolean etterKlage = BehandlingÅrsakType.årsakerEtterKlageBehandling().stream().anyMatch(behandling::harBehandlingÅrsak);
         if (etterKlage) {
             return BehandlingsTypeType.MEDHOLD;
         }
@@ -127,11 +111,7 @@ public class BehandlingMapper {
 
     public static boolean erEndringMedEndretInntektsmelding(Behandling behandling) {
         return erEndring(behandling.getBehandlingType())
-                && getBehandlingÅrsakTypeListe(behandling).contains((BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING.getKode()));
-    }
-
-    private static List<String> getBehandlingÅrsakTypeListe(Behandling behandling) {
-        return behandling.getBehandlingÅrsaker().stream().map(BehandlingÅrsak::getBehandlingÅrsakType).collect(Collectors.toList());
+                && behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING);
     }
 
     private static boolean erEndring(BehandlingType behandlingType) {

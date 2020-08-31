@@ -10,6 +10,5 @@
 
     <entity class="no.nav.foreldrepenger.melding.kodeverk.Kodeliste"/>
     <entity class="no.nav.foreldrepenger.melding.kodeverk.Kodeverk"/>
-    <entity class="no.nav.foreldrepenger.melding.kodeverk.KodelisteRelasjon"/>
 
 </entity-mappings>

@@ -251,7 +251,7 @@ public class DokumentFellesDataMapper {
         builder.build();
     }
 
-
+//Todo når vi har koblet oss fra team CCM bør denne bruke faktiske koder og ikke gjøre om
     private String getPersonstatusVerdi(PersonstatusType personstatus) {
         return PersonstatusType.erDød(personstatus) ? DOD_PERSON_STATUS : DEFAULT_PERSON_STATUS;
     }

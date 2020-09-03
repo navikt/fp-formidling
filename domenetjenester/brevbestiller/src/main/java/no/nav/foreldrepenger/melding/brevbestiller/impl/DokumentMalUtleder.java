@@ -7,6 +7,7 @@ import java.util.Objects;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.finn.unleash.Unleash;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
@@ -30,11 +31,12 @@ import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 class DokumentMalUtleder {
 
     private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingUuid: ";
-
+    private static final String FPSAK_FRITEKSTBREV_FOR_INNV_ENGANGSSTONAD = "fpsak.fritekstForInnvilgelseEngangsstonad";
     private KodeverkTabellRepository kodeverkTabellRepository;
     private DomeneobjektProvider domeneobjektProvider;
     private HistorikkRepository historikkRepository;
     private BehandlingRestKlient behandlingRestKlient;
+    private Unleash unleash;
 
     public DokumentMalUtleder() {
         //CDI
@@ -44,11 +46,13 @@ class DokumentMalUtleder {
     public DokumentMalUtleder(KodeverkTabellRepository kodeverkTabellRepository,
                               DomeneobjektProvider domeneobjektProvider,
                               HistorikkRepository historikkRepository,
-                              BehandlingRestKlient behandlingRestKlient) {
+                              BehandlingRestKlient behandlingRestKlient,
+                              Unleash unleash) {
         this.kodeverkTabellRepository = kodeverkTabellRepository;
         this.domeneobjektProvider = domeneobjektProvider;
         this.historikkRepository = historikkRepository;
         this.behandlingRestKlient = behandlingRestKlient;
+        this.unleash = unleash;
     }
 
     private static boolean erKunEndringIFordelingAvYtelsen(Behandlingsresultat behandlingsresultat) {
@@ -59,7 +63,12 @@ class DokumentMalUtleder {
     private DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (behandlingsresultat.erInnvilget()) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.POSITIVT_VEDTAK_DOK);
+            if (unleash != null && unleash.isEnabled(FPSAK_FRITEKSTBREV_FOR_INNV_ENGANGSSTONAD, false)) {
+                return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD);
+            }
+            else {
+                return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.POSITIVT_VEDTAK_DOK);
+            }
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
             return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.AVSLAGSVEDTAK_DOK);
         }

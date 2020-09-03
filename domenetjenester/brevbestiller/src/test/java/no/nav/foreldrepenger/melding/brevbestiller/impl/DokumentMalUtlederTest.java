@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.List;
 import java.util.UUID;
 
+import no.finn.unleash.Unleash;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class DokumentMalUtlederTest {
     @Before
     public void setup() {
         dokumentRepository = new DokumentRepository(repositoryRule.getEntityManager());
-        dokumentMalUtleder = new DokumentMalUtleder(kodeverkTabellRepository, domeneobjektProvider, null, null);
+        dokumentMalUtleder = new DokumentMalUtleder(kodeverkTabellRepository, domeneobjektProvider, null, null, null);
     }
 
     @Test

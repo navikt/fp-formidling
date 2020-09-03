@@ -44,6 +44,7 @@ public class DokumentMalType extends KodeverkTabell {
     public static final String KLAGE_OMGJØRING = "KOMGJO";
     public static final String KLAGE_OVERSENDT_KLAGEINSTANS = "KOVKLA";
     public static final String KLAGE_HJEMSENDT = "KHJEMS";
+    public static final String INNVILGELSE_ENGANGSSTØNAD = "INNVES";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated

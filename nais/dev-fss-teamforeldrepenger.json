@@ -5,9 +5,9 @@
   "minReplicas": "1",
   "maxReplicas": "3",
   "ingresses": [
-    "https://fpformidling-teamforeldrepenger.nais.preprod.local",
-    "https://fpformidling.nais.preprod.local",
-    "https://fpformidling.dev.adeo.no"
+    "https://app-q1.adeo.no/fpformidling",
+    "https://fpformidling-q1.nais.preprod.local/",
+    "https://fpformidling-q1.dev.adeo.no/"
   ],
   "env": {
     "ABAC_PDP_ENDPOINT_URL": "https://wasapp-q1.adeo.no/asm-pdp/authorize",
@@ -20,11 +20,11 @@
     "DEFAULTDS_USERNAME": "fpformidling-q1",
     "DEFAULTDS_URL": "jdbc:postgresql://B27DBVL007.preprod.local:5432/fpformidling-q1",
     "DOKUMENTPRODUKSJON_V2_URL": "https://app-q1.adeo.no/dokprod/ws/dokumentproduksjon/v2",
-    "FPSAK_REST_BASE_URL": "http://fpsak/",
+    "FPSAK_REST_BASE_URL": "https://fpsak-q1.nais.preprod.local",
     "KAFKA_BOOTSTRAP_SERVERS": "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443",
     "KAFKA_DOKUMENTBESTILLING_TOPIC": "privat-foreldrepenger-dokumenthendelse-q1",
     "KAFKA_HISTORIKKINNSLAG_TOPIC": "privat-foreldrepenger-historikkinnslag-q1",
-    "LOADBALANCER_URL": "https://fpformidling.nais.preprod.local",
+    "LOADBALANCER_FQDN": "fpformidling-q1.nais.preprod.local",
     "OIDC_AAD_B2C_HOSTURL": "https://not.used.in.fss",
     "OIDC_AAD_B2C_JWKSURL": "https://login.microsoftonline.com/navtestb2c.onmicrosoft.com/discovery/v2.0/keys?p=b2c_1a_idporten_ver1",
     "OIDC_AAD_B2C_PASSWORD": "not.used.in.fss",

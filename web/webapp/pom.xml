@@ -98,6 +98,11 @@
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>dokumenthendelse</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>dokgen-klient</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!-- Database håndtering -->
         <dependency>
             <groupId>com.zaxxer</groupId>

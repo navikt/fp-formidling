@@ -1,16 +1,18 @@
 package no.nav.foreldrepenger.melding.web.server.jetty.db;
 
+import static no.nav.vedtak.util.env.Cluster.LOCAL;
+
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+
 import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil;
 import no.nav.vault.jdbc.hikaricp.VaultError;
 import no.nav.vedtak.util.env.Cluster;
 import no.nav.vedtak.util.env.Environment;
-
-import javax.sql.DataSource;
-import java.util.Properties;
-
-import static no.nav.vedtak.util.env.Cluster.LOCAL;
 
 public class DatasourceUtil {
     private static final Environment ENV = Environment.current();

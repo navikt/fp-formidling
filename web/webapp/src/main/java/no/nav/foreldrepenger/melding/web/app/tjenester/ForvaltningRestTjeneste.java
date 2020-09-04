@@ -4,6 +4,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.CREATE;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.DRIFT;
 
+import java.time.LocalDate;
 import java.util.function.Function;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -19,7 +20,12 @@ import javax.ws.rs.core.Response;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.TestDokumentdata;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
@@ -34,14 +40,16 @@ import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 public class ForvaltningRestTjeneste {
 
     private ProsessTaskRepository prosessTaskRepository;
+    private DokgenRestKlient dokgenRestKlient;
 
     public ForvaltningRestTjeneste() {
         // CDI
     }
 
     @Inject
-    public ForvaltningRestTjeneste(ProsessTaskRepository prosessTaskRepository) {
+    public ForvaltningRestTjeneste(ProsessTaskRepository prosessTaskRepository, DokgenRestKlient dokgenRestKlient) {
         this.prosessTaskRepository = prosessTaskRepository;
+        this.dokgenRestKlient = dokgenRestKlient;
     }
 
     @POST
@@ -75,5 +83,33 @@ public class ForvaltningRestTjeneste {
         public AbacDataAttributter apply(Object obj) {
             return AbacDataAttributter.opprett();
         }
+    }
+
+    //TODO(JEJ): Fjerne når vi ikke lengre trenger til testing:
+    @POST
+    @Path("/teste-dokgen")
+    @Consumes(APPLICATION_JSON)
+    @Produces("application/pdf")
+    @Operation(description = "Tester brev med Dokgen",
+            tags = "forvaltning",
+            responses = {
+                    @ApiResponse(responseCode = "200",
+                            description = "Returnerer PDF",
+                            content = @Content(
+                                    mediaType = "application/pdf",
+                                    schema = @Schema(type = "string", format = "byte")
+                            )
+                    )
+            })
+    @BeskyttetRessurs(action = CREATE, ressurs = DRIFT)
+    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
+    public Response testeDokgen() {
+        String malType = "test_template";
+        FellesDokumentdata fellesDokumentdata = new FellesDokumentdata("Hans", "11111111111", "", LocalDate.now());
+        byte[] resultat = dokgenRestKlient.genererPdf(malType, new TestDokumentdata(fellesDokumentdata, "Foreldrepenger", "§1", true, false));
+        Response.ResponseBuilder responseBuilder = Response.ok(resultat);
+        responseBuilder.type("application/pdf");
+        responseBuilder.header("Content-Disposition", "attachment; filename=dokument.pdf");
+        return responseBuilder.build();
     }
 }

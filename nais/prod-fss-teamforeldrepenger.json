@@ -19,7 +19,7 @@
     "DEFAULTDS_USERNAME": "fpformidling",
     "DEFAULTDS_URL": "jdbc:postgresql://a01dbfl039.adeo.no:5432/fpformidling",
     "DOKUMENTPRODUKSJON_V2_URL": "https://dokprod.nais.adeo.no/dokprod/ws/dokumentproduksjon/v2",
-    "FPSAK_REST_BASE_URL": "https://fpsak.nais.adeo.no/",
+    "FPSAK_REST_BASE_URL": "http://fpsak/",
     "KAFKA_BOOTSTRAP_SERVERS": "a01apvl00145.adeo.no:8443,a01apvl00146.adeo.no:8443,a01apvl00147.adeo.no:8443,a01apvl00148.adeo.no:8443,a01apvl00149.adeo.no:8443,a01apvl00150.adeo.no:8443",
     "KAFKA_DOKUMENTBESTILLING_TOPIC": "privat-foreldrepenger-dokumenthendelse",
     "KAFKA_HISTORIKKINNSLAG_TOPIC": "privat-foreldrepenger-historikkinnslag",

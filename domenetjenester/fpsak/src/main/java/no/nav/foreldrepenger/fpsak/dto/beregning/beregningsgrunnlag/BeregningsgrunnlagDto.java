@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class BeregningsgrunnlagDto {
     private String ledetekstBrutto;
     private String ledetekstAvkortet;
     private String ledetekstRedusert;
-    private Double halvG;
+    private BigDecimal grunnbeløp;
     private FaktaOmBeregningDto faktaOmBeregning;
     private List<BeregningsgrunnlagPrStatusOgAndelDto> andelerMedGraderingUtenBG;
     private KodeDto hjemmel;
@@ -51,8 +52,8 @@ public class BeregningsgrunnlagDto {
         return sammenligningsgrunnlag;
     }
 
-    public Double getHalvG() {
-        return halvG;
+    public BigDecimal getGrunnbeløp() {
+        return grunnbeløp;
     }
 
     public FaktaOmBeregningDto getFaktaOmBeregning() {
@@ -91,9 +92,7 @@ public class BeregningsgrunnlagDto {
         this.ledetekstRedusert = ledetekstRedusert;
     }
 
-    public void setHalvG(Double halvG) {
-        this.halvG = halvG;
-    }
+    public void setGrunnbeløp(BigDecimal grunnbeløp) { this.grunnbeløp = grunnbeløp; }
 
     public void setFaktaOmBeregning(FaktaOmBeregningDto faktaOmBeregning) {
         this.faktaOmBeregning = faktaOmBeregning;

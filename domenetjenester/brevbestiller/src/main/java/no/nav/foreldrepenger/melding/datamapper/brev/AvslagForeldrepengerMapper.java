@@ -82,14 +82,14 @@ public class AvslagForeldrepengerMapper extends DokumentTypeMapper {
         Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         Optional<BeregningsresultatFP> beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFPHvisFinnes(behandling);
         Optional<UttakResultatPerioder> uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling);
-        long grunnbeløp = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
+        long halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
         List<MottattDokument> mottattDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
         FagType fagType = mapFagType(behandling,
                 mottattDokumenter,
                 dokumentHendelse,
                 familiehendelse,
-                grunnbeløp,
+                halvG,
                 beregningsresultatFP,
                 uttakResultatPerioder,
                 fagsak);
@@ -101,7 +101,7 @@ public class AvslagForeldrepengerMapper extends DokumentTypeMapper {
                                List<MottattDokument> mottatteDokumenter,
                                DokumentHendelse dokumentHendelse,
                                FamilieHendelse familiehendelse,
-                               long grunnbeløp,
+                               long halvG,
                                Optional<BeregningsresultatFP> beregningsresultatFP,
                                Optional<UttakResultatPerioder> uttakResultatPerioder, Fagsak fagsak) {
         FagType fagType = new FagType();
@@ -110,7 +110,7 @@ public class AvslagForeldrepengerMapper extends DokumentTypeMapper {
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());
         fagType.setBarnErFødt(familiehendelse.isBarnErFødt());
-        fagType.setHalvG(grunnbeløp);
+        fagType.setHalvG(halvG);
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
 
         mapFelterRelatertTilAvslagårsaker(behandling.getBehandlingsresultat(),

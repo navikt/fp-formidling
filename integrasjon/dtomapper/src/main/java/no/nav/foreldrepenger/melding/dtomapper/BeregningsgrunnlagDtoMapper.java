@@ -66,7 +66,7 @@ public class BeregningsgrunnlagDtoMapper {
 
     public Beregningsgrunnlag mapBeregningsgrunnlagFraDto(BeregningsgrunnlagDto dto) {
         Beregningsgrunnlag.Builder builder = Beregningsgrunnlag.ny();
-        builder.medGrunnbeløp(new Beløp(BigDecimal.valueOf(dto.getHalvG()).multiply(BigDecimal.valueOf(2))));
+        builder.medGrunnbeløp(new Beløp(dto.getGrunnbeløp()));
         dto.getAktivitetStatus().stream().map(this::mapBeregningsgrunnlagAktivitetStatusFraDto).forEach(builder::leggTilBeregningsgrunnlagAktivitetStatus);
         dto.getBeregningsgrunnlagPeriode().stream()
                 .map(this::mapBeregningsgrunnlagPeriodeFraDto)

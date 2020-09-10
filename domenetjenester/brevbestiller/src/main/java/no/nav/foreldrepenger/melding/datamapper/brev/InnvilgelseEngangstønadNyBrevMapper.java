@@ -44,6 +44,7 @@ public class InnvilgelseEngangstønadNyBrevMapper extends FritekstmalBrevMapper 
         BeregningsresultatES beregningsresultat = domeneobjektProvider.hentBeregningsresultatES(behandling);
 
         brevdata.leggTil("revurdering",(behandling.erRevurdering()))
+                .leggTil("førstegangsBehandling",(behandling.erFørstegangssøknad()))
                 .leggTil("medhold", BehandlingMapper.erMedhold(behandling))
                 .leggTil("innvilgetbeløp",beregningsresultat.getBeløp())
                 .leggTil("klageFristUker", brevParametere.getKlagefristUker())

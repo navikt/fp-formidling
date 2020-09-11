@@ -93,12 +93,12 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
                 .orElseGet(() -> UttakResultatPerioder.ny().build()); // bestående av tomme lister.
         Optional<UttakResultatPerioder> originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).flatMap(domeneobjektProvider::hentUttaksresultatHvisFinnes);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
-        long grunnbeløp = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
+        long halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
         Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
         FagType fagType = mapFagType(behandlingstype, behandling,
                 dokumentFelles,
                 familiehendelse,
-                grunnbeløp,
+                halvG,
                 uttakResultatPerioder,
                 originaltUttakResultat,
                 fagsak
@@ -110,7 +110,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
     private FagType mapFagType(String behandlingstypeKode, Behandling behandling,
                                DokumentFelles dokumentFelles,
                                FamilieHendelse familiehendelse,
-                               long grunnbeløp,
+                               long halvG,
                                UttakResultatPerioder uttakResultatPerioder,
                                Optional<UttakResultatPerioder> originaltUttakResultat,
                                Fagsak fagsak) {
@@ -121,7 +121,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
         fagType.setRelasjonskode(fra(fagsak));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());
-        fagType.setHalvG(grunnbeløp);
+        fagType.setHalvG(halvG);
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
 
         mapFelterRelatertTilAvslagårsaker(behandling.getBehandlingsresultat(),

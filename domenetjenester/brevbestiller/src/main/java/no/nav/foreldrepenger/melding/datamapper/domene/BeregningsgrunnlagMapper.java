@@ -209,6 +209,6 @@ public class BeregningsgrunnlagMapper {
 
     public static long getHalvGOrElseZero(Optional<Beregningsgrunnlag> beregningsgrunnlag) {
         return beregningsgrunnlag.map(Beregningsgrunnlag::getGrunnbeløp).map(Beløp::getVerdi).orElse(BigDecimal.ZERO)
-                .divide(BigDecimal.valueOf(2), RoundingMode.UNNECESSARY).longValue();
+                .divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP).longValue();
     }
 }

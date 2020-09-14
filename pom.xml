@@ -256,7 +256,7 @@
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-validator-provider</artifactId>
-                <version>3.13.0.Final</version>
+                <version>3.13.1.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld.module</groupId>

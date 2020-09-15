@@ -4,8 +4,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil;
 import no.nav.vault.jdbc.hikaricp.VaultError;
-import no.nav.vedtak.konfig.PropertyUtil;
 import no.nav.vedtak.util.env.Cluster;
+import no.nav.vedtak.util.env.Environment;
 
 import javax.sql.DataSource;
 import java.util.Properties;
@@ -13,6 +13,7 @@ import java.util.Properties;
 import static no.nav.vedtak.util.env.Cluster.LOCAL;
 
 public class DatasourceUtil {
+    private static final Environment ENV = Environment.current();
 
     private static final String VAULT_PREPROD_NAVN = "preprod-fss";
 
@@ -21,7 +22,7 @@ public class DatasourceUtil {
         HikariConfig config = initConnectionPoolConfig(datasourceName, maxPoolSize);
         if (LOCAL.equals(cluster)) {
             return createLocalDatasource(config, "public", rolePrefix,
-                    PropertyUtil.getProperty(datasourceName + ".password"));
+                    ENV.getProperty(datasourceName + ".password"));
         }
         return createVaultDatasource(config, mountPath(cluster), getRole(rolePrefix, role));
     }
@@ -39,12 +40,12 @@ public class DatasourceUtil {
     }
 
     private static String getRolePrefix(String datasourceName) {
-        return PropertyUtil.getProperty(datasourceName + ".username");
+        return ENV.getProperty(datasourceName + ".username");
     }
 
     private static HikariConfig initConnectionPoolConfig(String dataSourceName, int maxPoolSize) {
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(PropertyUtil.getProperty(dataSourceName + ".url"));
+        config.setJdbcUrl(ENV.getProperty(dataSourceName + ".url"));
 
         config.setMinimumIdle(0);
         config.setMaximumPoolSize(maxPoolSize);

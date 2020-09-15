@@ -11,11 +11,11 @@ import javax.inject.Named;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeVerktøy;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
@@ -24,13 +24,18 @@ import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 @Named(DokumentMalType.ETTERLYS_INNTEKTSMELDING_DOK)
 public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
 
+    private BrevMapperUtil brevMapperUtil;
+
     public EtterlysInntektsmeldingBrevMapper() {
         //CDI
     }
 
     @Inject
-    public EtterlysInntektsmeldingBrevMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
+    public EtterlysInntektsmeldingBrevMapper(BrevParametere brevParametere,
+                                             DomeneobjektProvider domeneobjektProvider,
+                                             BrevMapperUtil brevMapperUtil) {
         super(brevParametere, domeneobjektProvider);
+        this.brevMapperUtil = brevMapperUtil;
     }
 
     @Override
@@ -46,7 +51,7 @@ public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
         LocalDate soknadDato = getSøknadsdato(behandling);
-        LocalDate fristDato = BrevMapperUtil.getSvarFrist(brevParametere);
+        LocalDate fristDato = brevMapperUtil.getSvarFrist();
 
         return new Brevdata()
                 .leggTil("ytelse", hendelse.getYtelseType().getKode())

@@ -17,9 +17,8 @@ import org.mockito.junit.MockitoRule;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
-import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
@@ -39,7 +38,7 @@ public class RevurderingBrevMapperTest {
     private Behandling behandling;
     @Mock
     private FamilieHendelse familieHendelse;
-    private BrevParametere brevParametere;
+    private BrevMapperUtil brevMapperUtil;
 
 
     @Before
@@ -47,8 +46,8 @@ public class RevurderingBrevMapperTest {
         dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medRevurderingVarslingÅrsak(RevurderingVarslingÅrsak.MOR_AKTIVITET_IKKE_OPPFYLT).build();
         doReturn(BigInteger.TWO).when(familieHendelse).getAntallBarn();
         doReturn(Optional.empty()).when(familieHendelse).getTermindato();
-        brevParametere = DatamapperTestUtil.getBrevParametere();
-        brevMapper = new RevurderingBrevMapper(null, brevParametere);
+        brevMapperUtil = new BrevMapperUtil(DatamapperTestUtil.getBrevParametere());
+        brevMapper = new RevurderingBrevMapper(null, brevMapperUtil);
     }
 
     @Test
@@ -61,7 +60,7 @@ public class RevurderingBrevMapperTest {
         assertThat(fagType.getFritekst()).isEqualTo(DatamapperTestUtil.FRITEKST);
         assertThat(fagType.getTerminDato()).isNull();
         assertThat(fagType.getYtelseType()).isEqualTo(YtelseTypeKode.FP);
-        assertThat(fagType.getFristDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
+        assertThat(fagType.getFristDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(brevMapperUtil.getSvarFrist()));
         assertThat(fellesType.isAutomatiskBehandlet()).isFalse();
     }
 

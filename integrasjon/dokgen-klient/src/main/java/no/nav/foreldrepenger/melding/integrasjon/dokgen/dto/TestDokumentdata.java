@@ -1,32 +1,51 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
 public class TestDokumentdata extends Dokumentdata {
-    private String ytelse;
-    private String hjemler;
-    private boolean enBoolean1;
-    private boolean enBoolean2;
+    private boolean revurdering;
+    private boolean førstegangsbehandling;
+    private boolean medhold;
+    private double innvilgetBeløp;
+    private int klagefristUker;
+    private boolean død;
+    private String søkersNavn;
+    private boolean fbEllerMedhold;
+    private String kontaktTelefonnummer;
+    private double endretSats;
 
-    public TestDokumentdata(FellesDokumentdata felles, String ytelse, String hjemler, boolean enBoolean1, boolean enBoolean2) {
+    public TestDokumentdata(FellesDokumentdata felles, boolean revurdering, boolean førstegangsbehandling, boolean medhold, double innvilgetBeløp, int klagefristUker,
+                            boolean død, String søkersNavn, boolean fbEllerMedhold, String kontaktTelefonnummer, double endretSats) {
         this.felles = felles;
-        this.ytelse = ytelse;
-        this.hjemler = hjemler;
-        this.enBoolean1 = enBoolean1;
-        this.enBoolean2 = enBoolean2;
+        this.revurdering = revurdering;
+        this.førstegangsbehandling =førstegangsbehandling;
+        this.medhold = medhold;
+        this.innvilgetBeløp = innvilgetBeløp;
+        this.klagefristUker = klagefristUker;
+        this.død = død;
+        this.søkersNavn = søkersNavn;
+        this.fbEllerMedhold = fbEllerMedhold;
+        this.kontaktTelefonnummer = kontaktTelefonnummer;
+        this.endretSats = endretSats;
     }
 
-    public String getYtelse() {
-        return ytelse;
+    public boolean getRevurdering() { return revurdering; }
+
+    public boolean getFørstegangsbehandling() { return førstegangsbehandling;  }
+
+    public boolean getMedhold() { return medhold; }
+
+    public double getInnvilgetBeløp() {
+        return innvilgetBeløp;
     }
 
-    public String getHjemler() {
-        return hjemler;
-    }
+    public int getKlagefristUker() { return klagefristUker; }
 
-    public boolean isEnBoolean1() {
-        return enBoolean1;
-    }
+    public boolean getDød() { return død; }
 
-    public boolean isEnBoolean2() {
-        return enBoolean2;
-    }
+    public String getSøkersNavn() { return søkersNavn; }
+
+    public boolean getFbEllerMedhold() { return fbEllerMedhold; }
+
+    public String getKontaktTelefonnummer() { return kontaktTelefonnummer; }
+
+    public double getEndretSats() { return endretSats; }
 }

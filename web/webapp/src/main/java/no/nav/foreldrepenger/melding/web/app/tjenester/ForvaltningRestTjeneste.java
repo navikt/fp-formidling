@@ -105,8 +105,9 @@ public class ForvaltningRestTjeneste {
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response testeDokgen() {
         String malType = "test_template";
-        FellesDokumentdata fellesDokumentdata = new FellesDokumentdata("Hans", "11111111111", "", LocalDate.now());
-        byte[] resultat = dokgenRestKlient.genererPdf(malType, new TestDokumentdata(fellesDokumentdata, "Foreldrepenger", "§1", true, false));
+        FellesDokumentdata fellesDokumentdata = new FellesDokumentdata("Dolly Duck", "11111111111", LocalDate.now());
+        byte[] resultat = dokgenRestKlient.genererPdf(malType, new TestDokumentdata(fellesDokumentdata, true, true, false,85000,
+                6, false, "Dolly duck", true, "22 55 55 55", 0));
         Response.ResponseBuilder responseBuilder = Response.ok(resultat);
         responseBuilder.type("application/pdf");
         responseBuilder.header("Content-Disposition", "attachment; filename=dokument.pdf");

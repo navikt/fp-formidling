@@ -5,13 +5,13 @@ import java.time.LocalDate;
 public class FellesDokumentdata {
     private String søkerNavn;
     private String søkerPersonnummer;
-    private String fritekst;
+//    private String fritekst;
     private LocalDate brevDato;
 
-    public FellesDokumentdata(String søkerNavn, String søkerPersonnummer, String fritekst, LocalDate brevDato) {
+    public FellesDokumentdata(String søkerNavn, String søkerPersonnummer, LocalDate brevDato) {
         this.søkerNavn = søkerNavn;
         this.søkerPersonnummer = søkerPersonnummer;
-        this.fritekst = fritekst;
+//        this.fritekst = fritekst;
         this.brevDato = brevDato;
     }
 
@@ -23,9 +23,9 @@ public class FellesDokumentdata {
         return søkerPersonnummer;
     }
 
-    public String getFritekst() {
+/*    public String getFritekst() {
         return fritekst;
-    }
+    }*/
 
     public LocalDate getBrevDato() {
         return brevDato;

@@ -34,7 +34,7 @@ public class DokgenRestKlient {
         this.endpointDokgenRestBase = endpointDokgenRestBase;
     }
 
-    public byte[] genererPdf(String maltype, Dokumentdata dokumentdata) {
+    public Optional<byte[]> genererPdf(String maltype, Dokumentdata dokumentdata) {
         Optional<byte[]> pdf = Optional.empty();
         try {
             URIBuilder uriBuilder = new URIBuilder(endpointDokgenRestBase + String.format("/template/%s", maltype.toLowerCase()) + CREATE_PDF);
@@ -42,8 +42,6 @@ public class DokgenRestKlient {
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);
         }
-        return pdf.orElseThrow(() -> {
-            throw new IllegalStateException("Klarte ikke generere PDF for mal: " + maltype);
-        });
+        return pdf;
     }
 }

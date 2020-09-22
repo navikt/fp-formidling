@@ -45,6 +45,10 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>dokgen-klient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>organisasjon</artifactId>
         </dependency>
         <!-- Integrasjon avhengigheter -->

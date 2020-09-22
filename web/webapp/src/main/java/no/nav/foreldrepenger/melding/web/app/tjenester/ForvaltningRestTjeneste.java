@@ -5,6 +5,7 @@ import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.CREAT
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.DRIFT;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.function.Function;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -24,8 +25,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.TestDokumentdata;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskStatus;
@@ -104,11 +105,29 @@ public class ForvaltningRestTjeneste {
     @BeskyttetRessurs(action = CREATE, ressurs = DRIFT)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response testeDokgen() {
-        String malType = "test_template";
-        FellesDokumentdata fellesDokumentdata = new FellesDokumentdata("Dolly Duck", "11111111111", LocalDate.now());
-        byte[] resultat = dokgenRestKlient.genererPdf(malType, new TestDokumentdata(fellesDokumentdata, true, true, false,85000,
-                6, false, "Dolly duck", true, "22 55 55 55", 0));
-        Response.ResponseBuilder responseBuilder = Response.ok(resultat);
+        String malType = "engangsstonad-innvilgelse";
+
+        FellesDokumentdata fellesDokumentdata = new FellesDokumentdata.Builder()
+                .søkerNavn("Dolly Duck")
+                .søkerPersonnummer("11111111111")
+                .brevDato(LocalDate.now())
+                .build();
+
+        EngangsstønadInnvilgelseDokumentdata dokumentdata = new EngangsstønadInnvilgelseDokumentdata.Builder()
+                .felles(fellesDokumentdata)
+                .revurdering(true)
+                .førstegangsbehandling(true)
+                .medhold(false)
+                .innvilgetBeløp(85000)
+                .klagefristUker(6)
+                .død(false)
+                .fbEllerMedhold(true)
+                .kontaktTelefonnummer("22 55 55 55")
+                .endretSats(0)
+                .build();
+
+        Optional<byte[]> resultat = dokgenRestKlient.genererPdf(malType, dokumentdata);
+        Response.ResponseBuilder responseBuilder = Response.ok(resultat.get());
         responseBuilder.type("application/pdf");
         responseBuilder.header("Content-Disposition", "attachment; filename=dokument.pdf");
         return responseBuilder.build();

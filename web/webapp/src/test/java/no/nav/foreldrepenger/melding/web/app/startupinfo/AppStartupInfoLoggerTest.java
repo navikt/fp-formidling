@@ -51,7 +51,6 @@ public class AppStartupInfoLoggerTest {
         logger.logAppStartupInfo();
 
         logSniffer.assertHasInfoMessage("OPPSTARTSINFO start");
-        logSniffer.assertHasInfoMessage("System property");
         logSniffer.assertHasInfoMessage("OPPSTARTSINFO slutt");
         logSniffer.assertNoErrorsOrWarnings();
     }

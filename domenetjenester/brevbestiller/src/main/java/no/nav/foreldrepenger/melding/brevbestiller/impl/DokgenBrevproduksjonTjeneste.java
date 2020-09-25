@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -54,7 +55,8 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
 
         DokumentdataMapper dokumentdataMapper = velgDokumentMapper(dokumentMal);
-        Optional<byte[]> brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), dokumentdataMapper.mapTilDokumentdata(førsteDokumentFelles, dokumentHendelse, behandling));
+        Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(førsteDokumentFelles, dokumentHendelse, behandling);
+        Optional<byte[]> brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
         if (brev.isEmpty()) {
             throw BrevbestillerFeil.FACTORY.klarteIkkeForhåndvise(dokumentMal.getKode(), behandling.getUuid().toString()).toException();
         }
@@ -70,7 +72,8 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
             DokumentdataMapper dokumentdataMapper = velgDokumentMapper(dokumentMal);
-            Optional<byte[]> brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling));
+            Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+            Optional<byte[]> brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
         }
         // TODO: Journalføring, distribuering, historikkinnslag, støtte for vedlegg, lagre JSON-serialisert info i "brev_data" eller liknende der XML er lagret i dag?
         return Collections.emptyList();

@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.nav.foreldrepenger.melding.geografisk.PoststedKodeverkRepository;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
@@ -91,7 +92,7 @@ public class ForvaltningRestTjeneste {
                 .endretSats(0)
                 .build();
 
-        Optional<byte[]> resultat = dokgenRestKlient.genererPdf(malType, dokumentdata);
+        Optional<byte[]> resultat = dokgenRestKlient.genererPdf(malType, Språkkode.nb, dokumentdata);
         Response.ResponseBuilder responseBuilder = Response.ok(resultat.get());
         responseBuilder.type("application/pdf");
         responseBuilder.header("Content-Disposition", "attachment; filename=dokument.pdf");

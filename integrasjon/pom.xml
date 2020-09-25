@@ -16,6 +16,7 @@
 
     <modules>
         <module>dokumentkontrakter</module>
+        <module>dokgen-klient</module>
         <module>dtomapper</module>
     </modules>
 

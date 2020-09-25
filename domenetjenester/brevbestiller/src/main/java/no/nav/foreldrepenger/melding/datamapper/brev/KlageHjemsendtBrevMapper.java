@@ -9,11 +9,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
@@ -24,13 +24,18 @@ import no.nav.foreldrepenger.melding.typer.Dato;
 @Named(DokumentMalType.KLAGE_HJEMSENDT)
 public class KlageHjemsendtBrevMapper extends FritekstmalBrevMapper {
 
+    private BrevMapperUtil brevMapperUtil;
+
     public KlageHjemsendtBrevMapper() {
         //CDI
     }
 
     @Inject
-    public KlageHjemsendtBrevMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
+    public KlageHjemsendtBrevMapper(BrevParametere brevParametere,
+                                    DomeneobjektProvider domeneobjektProvider,
+                                    BrevMapperUtil brevMapperUtil) {
         super(brevParametere, domeneobjektProvider);
+        this.brevMapperUtil = brevMapperUtil;
     }
 
     @Override
@@ -76,7 +81,7 @@ public class KlageHjemsendtBrevMapper extends FritekstmalBrevMapper {
         brevdata.leggTil("ytelseType", hendelse.getYtelseType().getKode());
         brevdata.leggTil("opphevet", KlageMapper.erOpphevet(klage, hendelse));
         brevdata.leggTil("saksbehandlingstid", BehandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType()));
-        brevdata.leggTil("ettersendelsesfrist", Dato.formaterDato(BrevMapperUtil.getSvarFrist(brevParametere)));
+        brevdata.leggTil("ettersendelsesfrist", Dato.formaterDato(brevMapperUtil.getSvarFrist()));
 
         return brevdata;
     }

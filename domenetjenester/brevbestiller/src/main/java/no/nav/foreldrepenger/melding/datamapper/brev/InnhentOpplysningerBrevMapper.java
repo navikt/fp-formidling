@@ -20,15 +20,14 @@ import org.xml.sax.SAXException;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
-import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.InnhentingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter;
+import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -55,16 +54,16 @@ public class InnhentOpplysningerBrevMapper extends DokumentTypeMapper {
             BehandlingTypeKonstanter.ENDRINGSSØKNAD
     ));
 
-    private BrevParametere brevParametere;
+    private BrevMapperUtil brevMapperUtil;
 
     public InnhentOpplysningerBrevMapper() {
         //CDI
     }
 
     @Inject
-    public InnhentOpplysningerBrevMapper(BrevParametere brevParametere,
+    public InnhentOpplysningerBrevMapper(BrevMapperUtil brevMapperUtil,
                                          DomeneobjektProvider domeneobjektProvider) {
-        this.brevParametere = brevParametere;
+        this.brevMapperUtil = brevMapperUtil;
         this.domeneobjektProvider = domeneobjektProvider;
     }
 
@@ -85,7 +84,7 @@ public class InnhentOpplysningerBrevMapper extends DokumentTypeMapper {
         fagType.setBehandlingsType(mapBehandlingType(behandling));
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         fagType.setSoknadDato(klageDokument.map(kd -> hentMottattDatoFraKlage(kd, behandling)).orElseGet(() -> MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter)));
-        fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
+        fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(brevMapperUtil.getSvarFrist()));
         fagType.setPersonstatus(PersonstatusKode.fromValue(dokumentFelles.getSakspartPersonStatus()));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
         fagType.setFritekst(dokumentHendelse.getFritekst());

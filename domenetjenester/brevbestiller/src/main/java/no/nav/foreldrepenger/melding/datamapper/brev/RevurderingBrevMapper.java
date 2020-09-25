@@ -12,10 +12,9 @@ import org.xml.sax.SAXException;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
-import no.nav.foreldrepenger.melding.datamapper.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
@@ -34,7 +33,7 @@ import no.nav.vedtak.util.StringUtils;
 @Named(DokumentMalType.REVURDERING_DOK)
 public class RevurderingBrevMapper extends DokumentTypeMapper {
 
-    private BrevParametere brevParametere;
+    private BrevMapperUtil brevMapperUtil;
 
     public RevurderingBrevMapper() {
         //CDI
@@ -42,9 +41,9 @@ public class RevurderingBrevMapper extends DokumentTypeMapper {
 
     @Inject
     public RevurderingBrevMapper(DomeneobjektProvider domeneobjektProvider,
-                                 BrevParametere brevParametere) {
+                                 BrevMapperUtil brevMapperUtil) {
         this.domeneobjektProvider = domeneobjektProvider;
-        this.brevParametere = brevParametere;
+        this.brevMapperUtil = brevMapperUtil;
     }
 
     @Override
@@ -58,7 +57,7 @@ public class RevurderingBrevMapper extends DokumentTypeMapper {
     FagType mapFagType(FellesType fellesType, DokumentHendelse hendelse, Behandling behandling, FamilieHendelse familieHendelse) {
         final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
-        fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(BrevMapperUtil.getSvarFrist(brevParametere)));
+        fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(brevMapperUtil.getSvarFrist()));
         fagType.setAdvarselKode(utledAdvarselkode(hendelse));
         fagType.setFritekst(hendelse.getFritekst());
         fagType.setAntallBarn(familieHendelse.getAntallBarn());

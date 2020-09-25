@@ -4,7 +4,7 @@ import static no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilde
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -22,6 +22,7 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
@@ -31,7 +32,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
-import no.nav.vedtak.felles.testutilities.StillTid;
 import no.nav.vedtak.felles.testutilities.Whitebox;
 
 public class KlageHjemsendtBrevMapperTest {
@@ -41,9 +41,6 @@ public class KlageHjemsendtBrevMapperTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
 
-    @Rule
-    public StillTid stillTid = new StillTid().medTid(LocalDateTime.of(2020, 1, 1, 12, 0));
-
     @Mock
     private DokumentFelles dokumentFelles;
     @Mock
@@ -52,16 +49,18 @@ public class KlageHjemsendtBrevMapperTest {
     private BrevParametere brevParametere;
     @Mock
     private DomeneobjektProvider domeneobjektProvider;
+    @Mock
+    private BrevMapperUtil brevMapperUtil;
 
     @InjectMocks
     private KlageHjemsendtBrevMapper mapper;
 
     @Before
     public void before() {
-        mapper = new KlageHjemsendtBrevMapper(brevParametere, domeneobjektProvider);
-        MockitoAnnotations.initMocks(this);
+        mapper = new KlageHjemsendtBrevMapper(brevParametere, domeneobjektProvider, brevMapperUtil);
+        MockitoAnnotations.openMocks(this);
 
-        when(brevParametere.getSvarfristDager()).thenReturn(21); // Skal gi 22.01.2020 når klokken er stilt
+        when(brevMapperUtil.getSvarFrist()).thenReturn(LocalDate.of(2020, 1, 1).plusDays(21));
         when(dokumentFelles.getNavnAvsenderEnhet()).thenReturn(KA);
         when(dokumentFelles.getKontaktTlf()).thenReturn("21 07 17 30");
     }

@@ -32,7 +32,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- felles artifakter -->
-        <felles.version>2.1.0-20200821125413-7c8cc89</felles.version>
+        <felles.version>2.3.0-20200921124341-8611713</felles.version>
         <prosesstask.version>2.4.3-20200821080802-12519de</prosesstask.version>
         <kontrakter.version>5.1-20200401094249-8828af7</kontrakter.version>
 
@@ -40,7 +40,7 @@
         <metrics.version>4.1.12.1</metrics.version>
         <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.4</swagger.version>
-        <swagger-ui.version>3.32.5</swagger-ui.version>
+        <swagger-ui.version>3.34.0</swagger-ui.version>
         <kafka.version>2.6.0</kafka.version>
     </properties>
 
@@ -154,6 +154,11 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>dokgen-klient</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>migreringer</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>
@@ -246,12 +251,12 @@
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-tree</artifactId>
-                <version>8.0.1</version>
+                <version>9.0</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-analysis</artifactId>
-                <version>8.0.1</version>
+                <version>9.0</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
@@ -315,7 +320,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>3.5.10</version>
+                <version>3.5.11</version>
             </dependency>
 
             <!-- Log -->
@@ -490,7 +495,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.5</version>
+                    <version>0.8.6</version>
                     <executions>
                         <execution>
                             <goals>

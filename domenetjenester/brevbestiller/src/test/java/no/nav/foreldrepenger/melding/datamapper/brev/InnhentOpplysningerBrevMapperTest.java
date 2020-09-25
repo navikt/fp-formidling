@@ -22,6 +22,7 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
 import no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil;
+import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeId;
@@ -50,7 +51,7 @@ public class InnhentOpplysningerBrevMapperTest {
 
     @Before
     public void setup() {
-        brevMapper = new InnhentOpplysningerBrevMapper(DatamapperTestUtil.getBrevParametere(), null);
+        brevMapper = new InnhentOpplysningerBrevMapper(new BrevMapperUtil(DatamapperTestUtil.getBrevParametere()), null);
         doReturn(BehandlingType.FØRSTEGANGSSØKNAD).when(behandling).getBehandlingType();
 
     }

@@ -33,11 +33,10 @@
 
         <!-- felles artifakter -->
         <felles.version>2.3.0-20200921124341-8611713</felles.version>
-        <prosesstask.version>2.4.3-20200821080802-12519de</prosesstask.version>
+        <prosesstask.version>2.4.4-20200918181003-4bc2a52</prosesstask.version>
         <kontrakter.version>5.1-20200401094249-8828af7</kontrakter.version>
 
         <!-- Eksterne -->
-        <metrics.version>4.1.12.1</metrics.version>
         <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.4</swagger.version>
         <swagger-ui.version>3.34.0</swagger-ui.version>
@@ -275,16 +274,6 @@
             </dependency>
 
             <!-- Metrics -->
-            <dependency>
-                <groupId>io.dropwizard.metrics</groupId>
-                <artifactId>metrics-healthchecks</artifactId>
-                <version>${metrics.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.prometheus</groupId>
-                <artifactId>simpleclient_dropwizard</artifactId>
-                <version>${prometheus.version}</version>
-            </dependency>
             <dependency>
                 <groupId>io.prometheus</groupId>
                 <artifactId>simpleclient_servlet</artifactId>

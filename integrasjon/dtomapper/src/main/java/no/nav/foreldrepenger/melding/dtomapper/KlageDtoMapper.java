@@ -69,16 +69,14 @@ public class KlageDtoMapper {
         KlageFormkravResultat.Builder builder = KlageFormkravResultat.ny();
         builder.medBegrunnelse(dto.getBegrunnelse());
         List<KlageAvvistÅrsak> avvistÅrsaker = new ArrayList<>();
-        dto.getAvvistArsaker().forEach(årsak -> {
-            avvistÅrsaker.add(kodeverkRepository.finn(KlageAvvistÅrsak.class, årsak.getKode()));
-        });
+        dto.getAvvistArsaker().forEach(årsak -> avvistÅrsaker.add(KlageAvvistÅrsak.fraKode(årsak.getKode())));
         builder.medAvvistÅrsaker(avvistÅrsaker);
         return builder.build();
     }
 
     private KlageVurderingResultat mapKlageVurderingResultatfraDto(KlageVurderingResultatDto dto) {
         KlageVurderingResultat.Builder builder = KlageVurderingResultat.ny();
-        builder.medKlageVurdering(kodeverkRepository.finn(KlageVurdering.class, dto.getKlageVurdering()));
+        builder.medKlageVurdering(KlageVurdering.fraKode(dto.getKlageVurdering()));
         builder.medFritekstTilbrev(dto.getFritekstTilBrev());
         return builder.build();
     }

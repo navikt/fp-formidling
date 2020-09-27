@@ -1,52 +1,84 @@
 package no.nav.foreldrepenger.melding.opptjening;
 
-import java.util.Set;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-/**
- * <h3>Internt kodeverk</h3>
- * Definerer aktiviteter benyttet til å vurdere Opptjening.
- * <p>
- * Kodeverket sammenstiller data fra {@link ArbeidType} og {@link RelatertYtelseType}.<br>
- * Senere benyttes dette i mapping til bla. Beregningsgrunnlag.
- */
-@Entity(name = "OpptjeningAktivitetType")
-@DiscriminatorValue(OpptjeningAktivitetType.DISCRIMINATOR)
-public class OpptjeningAktivitetType extends Kodeliste {
 
-    public static final String DISCRIMINATOR = "OPPTJENING_AKTIVITET_TYPE";
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum OpptjeningAktivitetType implements Kodeverdi {
 
-    public static final OpptjeningAktivitetType ARBEIDSAVKLARING = new OpptjeningAktivitetType("AAP"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType ARBEID = new OpptjeningAktivitetType("ARBEID"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType DAGPENGER = new OpptjeningAktivitetType("DAGPENGER"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType FORELDREPENGER = new OpptjeningAktivitetType("FORELDREPENGER"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType FRILANS = new OpptjeningAktivitetType("FRILANS"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType MILITÆR_ELLER_SIVILTJENESTE = new OpptjeningAktivitetType("MILITÆR_ELLER_SIVILTJENESTE"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType NÆRING = new OpptjeningAktivitetType("NÆRING"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType OMSORGSPENGER = new OpptjeningAktivitetType("OMSORGSPENGER"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType OPPLÆRINGSPENGER = new OpptjeningAktivitetType("OPPLÆRINGSPENGER"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType PLEIEPENGER = new OpptjeningAktivitetType("PLEIEPENGER"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType ETTERLØNN_SLUTTPAKKE = new OpptjeningAktivitetType("ETTERLØNN_SLUTTPAKKE"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType SVANGERSKAPSPENGER = new OpptjeningAktivitetType("SVANGERSKAPSPENGER"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType SYKEPENGER = new OpptjeningAktivitetType("SYKEPENGER"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType UTDANNINGSPERMISJON = new OpptjeningAktivitetType("UTDANNINGSPERMISJON"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType VENTELØNN_VARTPENGER = new OpptjeningAktivitetType("VENTELØNN_VARTPENGER"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType VIDERE_ETTERUTDANNING = new OpptjeningAktivitetType("VIDERE_ETTERUTDANNING"); //$NON-NLS-1$
-    public static final OpptjeningAktivitetType UTENLANDSK_ARBEIDSFORHOLD = new OpptjeningAktivitetType("UTENLANDSK_ARBEIDSFORHOLD"); //$NON-NLS-1$
+    ARBEIDSAVKLARING("AAP"),
+    ARBEID("ARBEID"),
+    DAGPENGER("DAGPENGER"),
+    FORELDREPENGER("FORELDREPENGER"),
+    FRILANS("FRILANS"),
+    MILITÆR_ELLER_SIVILTJENESTE("MILITÆR_ELLER_SIVILTJENESTE"),
+    NÆRING("NÆRING"),
+    OMSORGSPENGER("OMSORGSPENGER"),
+    OPPLÆRINGSPENGER("OPPLÆRINGSPENGER"),
+    PLEIEPENGER("PLEIEPENGER"),
+    FRISINN("FRISINN"),
+    ETTERLØNN_SLUTTPAKKE("ETTERLØNN_SLUTTPAKKE"),
+    SVANGERSKAPSPENGER("SVANGERSKAPSPENGER"),
+    SYKEPENGER("SYKEPENGER"),
+    VENTELØNN_VARTPENGER("VENTELØNN_VARTPENGER"),
+    VIDERE_ETTERUTDANNING("VIDERE_ETTERUTDANNING"),
+    UTENLANDSK_ARBEIDSFORHOLD("UTENLANDSK_ARBEIDSFORHOLD"),
+    UTDANNINGSPERMISJON("UTDANNINGSPERMISJON"),
+    UDEFINERT("-"),
+            ;
 
-    public static final OpptjeningAktivitetType UDEFINERT = new OpptjeningAktivitetType("-"); //$NON-NLS-1$
+    private static final Map<String, OpptjeningAktivitetType> KODER = new LinkedHashMap<>();
 
-    public static final Set<OpptjeningAktivitetType> ANNEN_OPPTJENING = Set.of(VENTELØNN_VARTPENGER, MILITÆR_ELLER_SIVILTJENESTE, ETTERLØNN_SLUTTPAKKE, VIDERE_ETTERUTDANNING, UTENLANDSK_ARBEIDSFORHOLD, FRILANS);
+    public static final String KODEVERK = "OPPTJENING_AKTIVITET_TYPE";
 
-    public OpptjeningAktivitetType() {
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
 
-    public OpptjeningAktivitetType(String kode) {
-        super(kode, DISCRIMINATOR);
+    private String kode;
+
+    private OpptjeningAktivitetType(String kode) {
+        this.kode = kode;
     }
+
+    @JsonCreator
+    public static OpptjeningAktivitetType fraKode(@JsonProperty(value = "kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent OpptjeningAktivitetType: " + kode);
+        }
+        return ad;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
 
 }

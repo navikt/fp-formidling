@@ -1,44 +1,89 @@
 package no.nav.foreldrepenger.melding.personopplysning;
 
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-@Entity(name = "RelasjonsRolleType")
-@DiscriminatorValue(RelasjonsRolleType.DISCRIMINATOR)
-public class RelasjonsRolleType extends Kodeliste {
-    public static final String DISCRIMINATOR = "RELASJONSROLLE_TYPE";
 
-    public static final RelasjonsRolleType EKTE = new RelasjonsRolleType("EKTE");  //$NON-NLS-1$
-    public static final RelasjonsRolleType BARN = new RelasjonsRolleType("BARN");  //$NON-NLS-1$
-    public static final RelasjonsRolleType FARA = new RelasjonsRolleType("FARA");  //$NON-NLS-1$
-    public static final RelasjonsRolleType MORA = new RelasjonsRolleType("MORA");  //$NON-NLS-1$
-    public static final RelasjonsRolleType REGISTRERT_PARTNER = new RelasjonsRolleType("REPA");  //$NON-NLS-1$
-    public static final RelasjonsRolleType SAMBOER = new RelasjonsRolleType("SAMB");  //$NON-NLS-1$
-    public static final RelasjonsRolleType MEDMOR = new RelasjonsRolleType("MMOR");  //$NON-NLS-1$
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum RelasjonsRolleType implements Kodeverdi {
 
-    public static final RelasjonsRolleType UDEFINERT = new RelasjonsRolleType("-");  //$NON-NLS-1$
-    private static final Set<RelasjonsRolleType> FORELDRE_ROLLER = Stream.of(RelasjonsRolleType.MORA, RelasjonsRolleType.FARA, RelasjonsRolleType.MEDMOR).collect(Collectors.toCollection(LinkedHashSet::new));
+    EKTE("EKTE"),
+    BARN("BARN"),
+    FARA("FARA"),
+    MORA("MORA"),
+    REGISTRERT_PARTNER("REPA"),
+    SAMBOER("SAMB"),
+    MEDMOR("MMOR"),
 
-    public RelasjonsRolleType() {
+    UDEFINERT("-"),
+    ;
+
+    private static final Map<String, RelasjonsRolleType> KODER = new LinkedHashMap<>();
+
+    public static final String KODEVERK = "RELASJONSROLLE_TYPE";
+
+    private static final Set<RelasjonsRolleType> FORELDRE_ROLLER = Set.of(RelasjonsRolleType.MORA, RelasjonsRolleType.FARA, RelasjonsRolleType.MEDMOR);
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
 
-    public RelasjonsRolleType(String kode) {
-        super(kode, DISCRIMINATOR);
+    private String kode;
+
+    private RelasjonsRolleType(String kode) {
+        this.kode = kode;
     }
 
+    @JsonCreator
+    public static RelasjonsRolleType fraKode(@JsonProperty("kode") String kode) {
+        var ad = fraKodeOptional(kode);
+        if (ad.isEmpty()) {
+            throw new IllegalArgumentException("Ukjent RelasjonsRolleType: " + kode);
+        }
+        return ad.get();
+    }
+
+    public static Optional<RelasjonsRolleType> fraKodeOptional(String kode) {
+        if (kode == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(KODER.get(kode));
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+    
     public static boolean erFar(RelasjonsRolleType relasjon) {
-        return FARA.equals(relasjon);
+        return FARA.getKode().equals(relasjon.getKode());
     }
 
     public static boolean erMedmor(RelasjonsRolleType relasjon) {
-        return MEDMOR.equals(relasjon);
+        return MEDMOR.getKode().equals(relasjon.getKode());
     }
 
     public static boolean erFarEllerMedmor(RelasjonsRolleType relasjon) {
@@ -46,10 +91,11 @@ public class RelasjonsRolleType extends Kodeliste {
     }
 
     public static boolean erMor(RelasjonsRolleType relasjon) {
-        return MORA.equals(relasjon);
+        return MORA.getKode().equals(relasjon.getKode());
     }
 
     public static boolean erRegistrertForeldre(RelasjonsRolleType type) {
         return FORELDRE_ROLLER.contains(type);
     }
+
 }

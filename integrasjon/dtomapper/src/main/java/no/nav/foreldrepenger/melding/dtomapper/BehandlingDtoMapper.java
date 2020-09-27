@@ -72,11 +72,10 @@ public class BehandlingDtoMapper {
         Behandling.Builder builder = Behandling.builder();
         Supplier<Stream<BehandlingResourceLink>> behandlingResourceLinkStreamSupplier = () -> dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
-        List<BehandlingResourceLink> linkListe = behandlingResourceLinkStreamSupplier.get().collect(Collectors.toList());
         builder.medId(dto.getId())
                 .medUuid(dto.getUuid())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
-                .medStatus(kodeverkRepository.finn(BehandlingStatus.class, dto.getStatus().getKode()))
+                .medStatus(BehandlingStatus.fraKode(dto.getStatus().getKode()))
                 .medOpprettetDato(dto.getOpprettet())
                 .medAvsluttet(dto.getAvsluttet())
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())

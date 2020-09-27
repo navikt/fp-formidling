@@ -63,7 +63,7 @@ public class UttakDtoMapper {
         List<UttakResultatPeriodeAktivitet> aktiviteter = dto.getAktiviteter().stream().map(this::aktivitetFraDto).collect(Collectors.toList());
         UttakResultatPeriode mappetPeriode = UttakResultatPeriode.ny()
                 .medGraderingAvslagÅrsak(velgGraderingsavslagÅrsak(dto))
-                .medPeriodeResultatType(kodeverkRepository.finn(PeriodeResultatType.class, dto.getPeriodeResultatType().getKode()))
+                .medPeriodeResultatType(PeriodeResultatType.fraKode(dto.getPeriodeResultatType().getKode()))
                 .medPeriodeResultatÅrsak(velgPerioderesultatÅrsak(dto))
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
                 .medAktiviteter(aktiviteter)
@@ -86,11 +86,11 @@ public class UttakDtoMapper {
                 .medTrekkdager(dto.getTrekkdagerDesimaler())
                 .medUtbetalingsprosent(dto.getUtbetalingsgrad())
                 .medGraderingInnvilget(dto.isGradering())
-                .medTrekkonto(kodeverkRepository.finn(StønadskontoType.class, dto.getStønadskontoType().getKode()))
+                .medTrekkonto(StønadskontoType.fraKode(dto.getStønadskontoType().getKode()))
                 .medUttakAktivitet(UttakAktivitet.ny()
                         .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                         .medArbeidsgiver(mapArbeidsgiver(dto.getArbeidsgiver()))
-                        .medUttakArbeidType(kodeverkRepository.finn(UttakArbeidType.class, dto.getUttakArbeidType().getKode()))
+                        .medUttakArbeidType(UttakArbeidType.fraKode(dto.getUttakArbeidType().getKode()))
                         .build())
                 .build();
     }

@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
+import no.nav.foreldrepenger.melding.personopplysning.PersonstatusType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 

@@ -10,10 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
-import no.nav.foreldrepenger.melding.aktør.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
-import no.nav.foreldrepenger.melding.aktør.PersonstatusType;
-import no.nav.foreldrepenger.melding.repository.PersonInfoKodeverkRepository;
+import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
+import no.nav.foreldrepenger.melding.personopplysning.PersonstatusType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Aktoer;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker;
@@ -28,7 +27,6 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
 public class TpsOversetter {
     private static final Logger log = LoggerFactory.getLogger(TpsOversetter.class);
 
-    private PersonInfoKodeverkRepository personInfoKodeverkRepository;
     private TpsAdresseOversetter tpsAdresseOversetter;
 
     TpsOversetter() {
@@ -36,9 +34,7 @@ public class TpsOversetter {
     }
 
     @Inject
-    public TpsOversetter(PersonInfoKodeverkRepository personInfoKodeverkRepository,
-                         TpsAdresseOversetter tpsAdresseOversetter) {
-        this.personInfoKodeverkRepository = personInfoKodeverkRepository;
+    public TpsOversetter(TpsAdresseOversetter tpsAdresseOversetter) {
         this.tpsAdresseOversetter = tpsAdresseOversetter;
     }
 
@@ -79,12 +75,12 @@ public class TpsOversetter {
     private NavBrukerKjønn tilBrukerKjønn(Kjoenn kjoenn) {
         return Optional.ofNullable(kjoenn)
                 .map(Kjoenn::getKjoenn)
-                .map(kj -> personInfoKodeverkRepository.finnBrukerKjønn(kj.getValue()))
+                .map(kj -> NavBrukerKjønn.fraKode(kj.getValue()))
                 .orElse(NavBrukerKjønn.UDEFINERT);
     }
 
     private PersonstatusType tilPersonstatusType(Personstatus personstatus) {
-        return personInfoKodeverkRepository.finnPersonstatus(personstatus.getPersonstatus().getValue());
+        return PersonstatusType.fraKode(personstatus.getPersonstatus().getValue());
     }
 
 }

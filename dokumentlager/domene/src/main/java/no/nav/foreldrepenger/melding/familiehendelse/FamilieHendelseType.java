@@ -1,28 +1,69 @@
 package no.nav.foreldrepenger.melding.familiehendelse;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-@Entity(name = "FamilieHendelseType")
-@DiscriminatorValue(FamilieHendelseType.DISCRIMINATOR)
-public class FamilieHendelseType extends Kodeliste {
 
-    public static final String DISCRIMINATOR = "FAMILIE_HENDELSE_TYPE";
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum FamilieHendelseType implements Kodeverdi {
 
-    public static final FamilieHendelseType ADOPSJON = new FamilieHendelseType("ADPSJN"); //$NON-NLS-1$   Adopsjon
-    public static final FamilieHendelseType OMSORG = new FamilieHendelseType("OMSRGO"); //$NON-NLS-1$  Omsorgoverdragelse
-    public static final FamilieHendelseType FØDSEL = new FamilieHendelseType("FODSL"); //$NON-NLS-1$  fodsel
-    public static final FamilieHendelseType TERMIN = new FamilieHendelseType("TERM"); //$NON-NLS-1$  termin
-    public static final FamilieHendelseType UDEFINERT = new FamilieHendelseType("-"); //$NON-NLS-1$
+    ADOPSJON("ADPSJN"),
+    OMSORG("OMSRGO"),
+    FØDSEL("FODSL"),
+    TERMIN("TERM"),
+    UDEFINERT("-"),
+    ;
 
-    public FamilieHendelseType() {
+    private static final Map<String, FamilieHendelseType> KODER = new LinkedHashMap<>();
+
+    public static final String KODEVERK = "FAMILIE_HENDELSE_TYPE";
+
+    private String kode;
+
+    private FamilieHendelseType(String kode) {
+        this.kode = kode;
     }
 
-    public FamilieHendelseType(String kode) {
-        super(kode, DISCRIMINATOR);
+    @JsonCreator
+    public static FamilieHendelseType fraKode(@JsonProperty(value = "kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent FamilieHendelseType: " + kode);
+        }
+        return ad;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
 
 }

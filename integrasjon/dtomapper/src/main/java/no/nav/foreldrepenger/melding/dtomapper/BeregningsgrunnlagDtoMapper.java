@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
-import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -121,7 +120,7 @@ public class BeregningsgrunnlagDtoMapper {
     private BGAndelArbeidsforhold mapBgAndelArbeidsforholdfraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
         return new BGAndelArbeidsforhold(mapArbeidsgiverFraDto(dto),
                 ArbeidsforholdRef.ref(dto.getArbeidsforholdId()),
-                kodeverkRepository.finn(OpptjeningAktivitetType.class, dto.getArbeidsforholdType().getKode()),
+                OpptjeningAktivitetType.fraKode(dto.getArbeidsforholdType().getKode()),
                 dto.getNaturalytelseBortfaltPrÅr(),
                 dto.getNaturalytelseTilkommetPrÅr()
         );

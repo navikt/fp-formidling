@@ -8,7 +8,6 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import no.nav.foreldrepenger.melding.kodeverk.diff.ChangeTracked;
 import no.nav.foreldrepenger.melding.kodeverk.diff.IndexKey;
 
 /**
@@ -20,7 +19,6 @@ public class Beløp implements Serializable, IndexKey {
     private static final RoundingMode AVRUNDINGSMODUS = RoundingMode.HALF_EVEN;
 
     @Column(name = "beloep", scale = 2)
-    @ChangeTracked
     private BigDecimal verdi;
 
     protected Beløp() {

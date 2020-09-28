@@ -34,7 +34,7 @@ public class StønadskontoDtoMapper {
     }
 
     Stønadskonto mapStønadskontoFradto(StønadskontoDto dto) {
-        return new Stønadskonto(dto.getMaxDager(), kodeverkRepository.finn(StønadskontoType.class, dto.getStonadskontotype()), dto.getSaldo(), mapPrematurDager(dto), mapFlerbarnsdager(dto));
+        return new Stønadskonto(dto.getMaxDager(), StønadskontoType.fraKode(dto.getStonadskontotype()), dto.getSaldo(), mapPrematurDager(dto), mapFlerbarnsdager(dto));
     }
 
     private int mapPrematurDager(StønadskontoDto dto) {

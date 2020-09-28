@@ -24,9 +24,9 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepositoryImpl;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
 public class KlageMapperTest {
 
@@ -88,13 +88,13 @@ public class KlageMapperTest {
     private KlageFormkravResultatDto lagFormkravResultatDto(List<KlageAvvistÅrsak> avvistÅrsaker) {
         KlageFormkravResultatDto dto = new KlageFormkravResultatDto();
         dto.setAvvistArsaker(kodeverkTilDto(avvistÅrsaker));
-        dto.setPaklagdBehandlingType(new KodeDto("BEHANDLING_TYPE", "BT-002", null));
+        dto.setPaklagdBehandlingType(new KodeDto("BEHANDLING_TYPE", "BT-002"));
         return dto;
     }
 
-    private List<KodeDto> kodeverkTilDto(List<? extends Kodeliste> kodeliste) {
+    private List<KodeDto> kodeverkTilDto(List<? extends Kodeverdi> kodeliste) {
         List<KodeDto> dtoListe = new ArrayList<>();
-        kodeliste.forEach(k -> dtoListe.add(new KodeDto(k.getKodeverk(), k.getKode(), k.getNavn())));
+        kodeliste.forEach(k -> dtoListe.add(new KodeDto(k.getKodeverk(), k.getKode())));
         return dtoListe;
     }
 

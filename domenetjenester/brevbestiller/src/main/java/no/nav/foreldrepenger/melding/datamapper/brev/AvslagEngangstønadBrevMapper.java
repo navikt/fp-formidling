@@ -16,7 +16,6 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
-import no.nav.foreldrepenger.melding.aktør.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
@@ -36,6 +35,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.RelasjonskodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.VilkaartypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
+import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;

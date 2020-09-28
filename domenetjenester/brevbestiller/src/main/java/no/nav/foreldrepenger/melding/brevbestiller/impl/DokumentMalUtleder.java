@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import no.finn.unleash.Unleash;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
@@ -25,6 +24,7 @@ import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepository;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 
 @ApplicationScoped

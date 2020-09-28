@@ -10,10 +10,10 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingsresultatDto;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 
@@ -45,7 +45,7 @@ public class BehandlingsresultatDtoMapper {
                 .medAvslagarsakFritekst(dto.getAvslagsarsakFritekst());
         List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>();
         for (KodeDto kodeDto : dto.getKonsekvenserForYtelsen()) {
-            konsekvenserForYtelsen.add(kodeverkRepository.finn(KonsekvensForYtelsen.class, kodeDto.getKode()));
+            konsekvenserForYtelsen.add(KonsekvensForYtelsen.fraKode(kodeDto.getKode()));
         }
         builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);
         builder.medErRevurderingMedUendretUtfall(dto.getErRevurderingMedUendretUtfall());

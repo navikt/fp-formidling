@@ -8,9 +8,6 @@ public class FamilieHendelse {
 
     private FamilieHendelseType familieHendelseType; //Kodeliste.FamilieHendelseType
     private BigInteger antallBarn;
-    private String barna;
-    private String UidentifisertBarn;
-    private String terminbekreftelse;
 
     private Optional<LocalDate> skjæringstidspunkt;
     private Optional<LocalDate> termindato;
@@ -66,17 +63,6 @@ public class FamilieHendelse {
         return antallBarn;
     }
 
-    public String getBarna() {
-        return barna;
-    }
-
-    public String getUidentifisertBarn() {
-        return UidentifisertBarn;
-    }
-
-    public String getTerminbekreftelse() {
-        return terminbekreftelse;
-    }
 
     public static final class OptionalDatoer {
         private Optional<LocalDate> skjæringstidspunkt;

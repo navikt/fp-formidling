@@ -29,7 +29,7 @@ public class InnsynDtoMapper {
     }
 
     public Innsyn mapInnsynFraDto(InnsynsbehandlingDto dto) {
-        return new Innsyn(kodeverkRepository.finn(InnsynResultatType.class, dto.getInnsynResultatType().getKode()),
+        return new Innsyn(InnsynResultatType.fraKode(dto.getInnsynResultatType().getKode()),
                 mapInnsyndokumenterFraDto(dto.getDokumenter()));
     }
 

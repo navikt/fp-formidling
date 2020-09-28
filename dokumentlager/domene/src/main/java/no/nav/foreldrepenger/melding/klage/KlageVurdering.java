@@ -1,28 +1,75 @@
 package no.nav.foreldrepenger.melding.klage;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity(name = "KlageVurdering")
-@DiscriminatorValue(KlageVurdering.DISCRIMINATOR)
-public class KlageVurdering extends Kodeliste {
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-    public static final String DISCRIMINATOR = "KLAGEVURDERING";
-    public static final KlageVurdering OPPHEVE_YTELSESVEDTAK = new KlageVurdering("OPPHEVE_YTELSESVEDTAK"); //$NON-NLS-1$
-    public static final KlageVurdering STADFESTE_YTELSESVEDTAK = new KlageVurdering("STADFESTE_YTELSESVEDTAK"); //$NON-NLS-1$
-    public static final KlageVurdering MEDHOLD_I_KLAGE = new KlageVurdering("MEDHOLD_I_KLAGE"); //$NON-NLS-1$
-    public static final KlageVurdering AVVIS_KLAGE = new KlageVurdering("AVVIS_KLAGE"); //$NON-NLS-1$
-    public static final KlageVurdering HJEMSENDE_UTEN_Å_OPPHEVE = new KlageVurdering("HJEMSENDE_UTEN_Å_OPPHEVE"); //$NON-NLS-1$
-    public static final KlageVurdering UDEFINERT = new KlageVurdering("-"); //$NON-NLS-1$
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum KlageVurdering implements Kodeverdi {
 
-    public KlageVurdering() {
-        // for hibernate
+    OPPHEVE_YTELSESVEDTAK("OPPHEVE_YTELSESVEDTAK"),
+    STADFESTE_YTELSESVEDTAK("STADFESTE_YTELSESVEDTAK"),
+    MEDHOLD_I_KLAGE("MEDHOLD_I_KLAGE"),
+    AVVIS_KLAGE("AVVIS_KLAGE"),
+    HJEMSENDE_UTEN_Å_OPPHEVE("HJEMSENDE_UTEN_Å_OPPHEVE"),
+    UDEFINERT("-"),
+    ;
+
+    private static final Map<String, KlageVurdering> KODER = new LinkedHashMap<>();
+
+    public static final String KODEVERK = "KLAGEVURDERING";
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
+
+    private String kode;
 
     private KlageVurdering(String kode) {
-        super(kode, DISCRIMINATOR);
+        this.kode = kode;
     }
+
+    @JsonCreator
+    public static KlageVurdering fraKode(@JsonProperty("kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent KlageVurdering: " + kode);
+        }
+        return ad;
+    }
+
+    public static Map<String, KlageVurdering> kodeMap() {
+        return Collections.unmodifiableMap(KODER);
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
 
 }

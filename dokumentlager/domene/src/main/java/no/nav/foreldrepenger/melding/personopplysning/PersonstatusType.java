@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.uttak;
+package no.nav.foreldrepenger.melding.personopplysning;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,43 +14,48 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
 @JsonFormat(shape = Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
-public enum StønadskontoType implements Kodeverdi {
+public enum PersonstatusType implements Kodeverdi {
 
-    FELLESPERIODE("FELLESPERIODE"),
-    MØDREKVOTE("MØDREKVOTE"),
-    FEDREKVOTE("FEDREKVOTE"),
-    FORELDREPENGER("FORELDREPENGER"),
-    FLERBARNSDAGER("FLERBARNSDAGER"),
-    FORELDREPENGER_FØR_FØDSEL("FORELDREPENGER_FØR_FØDSEL"),
+    ABNR("ABNR"),
+    ADNR("ADNR"),
+    BOSA("BOSA"),
+    DØD("DØD"),
+    DØDD("DØDD"),
+    FOSV("FOSV"),
+    FØDR("FØDR"),
+    UFUL("UFUL"),
+    UREG("UREG"),
+    UTAN("UTAN"),
+    UTPE("UTPE"),
+    UTVA("UTVA"),
+    
     UDEFINERT("-"),
+    
     ;
 
-    private static final Map<String, StønadskontoType> KODER = new LinkedHashMap<>();
-
-    public static final String KODEVERK = "STOENADSKONTOTYPE";
-
-    static {
-        for (var v : values()) {
-            if (KODER.putIfAbsent(v.kode, v) != null) {
-                throw new IllegalArgumentException("Duplikat : " + v.kode);
-            }
-        }
-    }
-
+    private static final Map<String, PersonstatusType> KODER = new LinkedHashMap<>();
+    
+    public static final String KODEVERK = "PERSONSTATUS_TYPE";
+    
     private String kode;
 
-    private StønadskontoType(String kode) {
+    private PersonstatusType(String kode) {
         this.kode = kode;
     }
 
+    public static boolean erDød(PersonstatusType personstatus) {
+        return DØD.equals(personstatus) || DØDD.equals(personstatus);
+    }
+    
+
     @JsonCreator
-    public static StønadskontoType fraKode(@JsonProperty(value = "kode") String kode) {
+    public static PersonstatusType fraKode(@JsonProperty("kode") String kode) {
         if (kode == null) {
             return null;
         }
         var ad = KODER.get(kode);
         if (ad == null) {
-            throw new IllegalArgumentException("Ukjent StønadskontoType: " + kode);
+            throw new IllegalArgumentException("Ukjent PersonstatusType: " + kode);
         }
         return ad;
     }
@@ -65,6 +70,14 @@ public enum StønadskontoType implements Kodeverdi {
     @Override
     public String getKode() {
         return kode;
+    }
+    
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
 
 }

@@ -1,30 +1,70 @@
 package no.nav.foreldrepenger.melding.behandling;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity(name = "KonsekvensForYtelsen")
-@DiscriminatorValue(KonsekvensForYtelsen.DISCRIMINATOR)
-public class KonsekvensForYtelsen extends Kodeliste {
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-    public static final String DISCRIMINATOR = "KONSEKVENS_FOR_YTELSEN";
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum KonsekvensForYtelsen implements Kodeverdi {
 
-    public static final KonsekvensForYtelsen FORELDREPENGER_OPPHØRER = new KonsekvensForYtelsen("FORELDREPENGER_OPPHØRER"); //$NON-NLS-1$
-    public static final KonsekvensForYtelsen ENDRING_I_BEREGNING = new KonsekvensForYtelsen("ENDRING_I_BEREGNING"); //$NON-NLS-1$
-    public static final KonsekvensForYtelsen ENDRING_I_UTTAK = new KonsekvensForYtelsen("ENDRING_I_UTTAK"); //$NON-NLS-1$
-    public static final KonsekvensForYtelsen ENDRING_I_FORDELING_AV_YTELSEN = new KonsekvensForYtelsen("ENDRING_I_FORDELING_AV_YTELSEN"); //$NON-NLS-1$
-    public static final KonsekvensForYtelsen INGEN_ENDRING = new KonsekvensForYtelsen("INGEN_ENDRING"); //$NON-NLS-1$
 
-    public static final KonsekvensForYtelsen UDEFINERT = new KonsekvensForYtelsen("-"); //$NON-NLS-1$
+    FORELDREPENGER_OPPHØRER("FORELDREPENGER_OPPHØRER"),
+    ENDRING_I_BEREGNING("ENDRING_I_BEREGNING"),
+    ENDRING_I_UTTAK("ENDRING_I_UTTAK"),
+    ENDRING_I_FORDELING_AV_YTELSEN("ENDRING_I_FORDELING_AV_YTELSEN"),
+    INGEN_ENDRING("INGEN_ENDRING"),
+    ENDRING_I_BEREGNING_OG_UTTAK("ENDRING_I_BEREGNING_OG_UTTAK"),
+    UDEFINERT("-"),
+    ;
+    
+    private static final Map<String, KonsekvensForYtelsen> KODER = new LinkedHashMap<>();
+    
+    public static final String KODEVERK = "KONSEKVENS_FOR_YTELSEN";
 
-    public KonsekvensForYtelsen() {
-        //
-    }
+    private String kode;
 
     private KonsekvensForYtelsen(String kode) {
-        super(kode, DISCRIMINATOR);
+        this.kode = kode;
+    }
+    @JsonCreator
+    public static KonsekvensForYtelsen fraKode(@JsonProperty("kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent KonsekvensForYtelsen: " + kode);
+        }
+        return ad;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+    
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
 
 }

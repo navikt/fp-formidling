@@ -6,15 +6,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class KodeDto {
     private String kodeverk;
     private String kode;
-    private String navn;
 
     public KodeDto() {
     }
 
-    public KodeDto(String kodeverk, String kode, String navn) {
+    public KodeDto(String kodeverk, String kode) {
         this.kodeverk = kodeverk;
         this.kode = kode;
-        this.navn = navn;
     }
 
     public String getKode() {
@@ -30,7 +28,6 @@ public class KodeDto {
         return "Kode{" +
                 "kodeverk='" + kodeverk + '\'' +
                 ", kode='" + kode + '\'' +
-                ", navn='" + navn + '\'' +
                 '}';
     }
 }

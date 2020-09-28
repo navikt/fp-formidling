@@ -46,7 +46,6 @@ public class Fagsak {
     public static final class Builder {
         private Long id;
         private RelasjonsRolleType brukerRolle;
-        private FagsakYtelseType ytelseType;
         private Saksnummer saksnummer;
         private Personinfo personinfo;
         private String fagsakStatus;

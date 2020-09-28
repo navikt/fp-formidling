@@ -4,7 +4,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
-import no.nav.foreldrepenger.melding.aktør.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.personopplysning.Personopplysning;
 
@@ -22,7 +21,6 @@ public class PersonopplysningDtoMapper {
 
 
     public Personopplysning mapPersonopplysningFraDto(PersonopplysningDto dto) {
-        return new Personopplysning(dto.getFnr(), dto.getAktoerId(), kodeverkRepository.finn(NavBrukerKjønn.class,
-                dto.getNavBrukerKjonn().getKode()), dto.getNavn(), dto.getHarVerge());
+        return new Personopplysning(dto.getFnr(), dto.getAktoerId(), dto.getNavn(), dto.getHarVerge());
     }
 }

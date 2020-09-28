@@ -6,14 +6,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.List;
 import java.util.UUID;
 
-import no.finn.unleash.Unleash;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
@@ -27,6 +25,7 @@ import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepository;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.VLException;
 

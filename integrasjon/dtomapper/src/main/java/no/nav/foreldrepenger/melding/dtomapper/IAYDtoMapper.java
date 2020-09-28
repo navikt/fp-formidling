@@ -46,6 +46,6 @@ public class IAYDtoMapper {
     }
 
     public UtsettelsePeriode mapUtsettelsesPeriodeFraDto(UtsettelsePeriodeDto dto) {
-        return new UtsettelsePeriode(dto.getFom(), dto.getTom(), kodeverkRepository.finn(UtsettelseÅrsak.class, dto.getUtsettelseArsak().getKode()));
+        return new UtsettelsePeriode(dto.getFom(), dto.getTom(), UtsettelseÅrsak.fraKode(dto.getUtsettelseArsak().getKode()));
     }
 }

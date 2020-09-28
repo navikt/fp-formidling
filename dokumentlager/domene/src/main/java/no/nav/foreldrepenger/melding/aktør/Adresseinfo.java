@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.aktør;
 
 import java.util.Objects;
 
+import no.nav.foreldrepenger.melding.personopplysning.PersonstatusType;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 
 public class Adresseinfo {

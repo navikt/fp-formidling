@@ -1,25 +1,21 @@
 package no.nav.foreldrepenger.melding.ytelsefordeling;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-@Entity(name = "Årsak")
-@DiscriminatorValue(Årsak.DISCRIMINATOR)
-public class Årsak extends Kodeliste {
-    public static final String DISCRIMINATOR = "AARSAK_TYPE";
+public interface Årsak extends Kodeverdi {
 
-    public static final Årsak UDEFINERT = new Årsak("-");
+    Årsak UKJENT = new Årsak() {
 
-    Årsak() {
-    }
+        @Override
+        public String getKodeverk() {
+            return "AARSAK_TYPE";
+        }
 
-    Årsak(String kode) {
-        super(kode, DISCRIMINATOR);
-    }
+        @Override
+        public String getKode() {
+            return "-";
+        }
 
-    Årsak(String kode, String discriminator) {
-        super(kode, discriminator);
-    }
+    };
 }

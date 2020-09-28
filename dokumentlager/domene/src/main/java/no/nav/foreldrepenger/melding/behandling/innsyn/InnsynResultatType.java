@@ -1,28 +1,69 @@
 package no.nav.foreldrepenger.melding.behandling.innsyn;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity(name = "InnsynResultatType")
-@DiscriminatorValue(InnsynResultatType.DISCRIMINATOR)
-public class InnsynResultatType extends Kodeliste {
-
-    public static final String DISCRIMINATOR = "INNSYN_RESULTAT_TYPE";
-
-    public static final InnsynResultatType INNVILGET = new InnsynResultatType("INNV"); //$NON-NLS-1$
-    public static final InnsynResultatType DELVIS_INNVILGET = new InnsynResultatType("DELV"); //$NON-NLS-1$
-    public static final InnsynResultatType AVVIST = new InnsynResultatType("AVVIST"); //$NON-NLS-1$
-    public static final InnsynResultatType UDEFINERT = new InnsynResultatType("-"); //$NON-NLS-1$
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
 
-    InnsynResultatType() {
-        // Hibernate trenger en
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum InnsynResultatType implements Kodeverdi {
+
+    INNVILGET("INNV"),
+    DELVIS_INNVILGET("DELV"),
+    AVVIST("AVVIST"),
+    UDEFINERT("-"),
+    ;
+
+    private static final Map<String, InnsynResultatType> KODER = new LinkedHashMap<>();
+
+    public static final String KODEVERK = "INNSYN_RESULTAT_TYPE";
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
+
+    private String kode;
 
     private InnsynResultatType(String kode) {
-        super(kode, DISCRIMINATOR);
+        this.kode = kode;
     }
+
+    @JsonCreator
+    public static InnsynResultatType fraKode(@JsonProperty(value = "kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent InnsynResultatType: " + kode);
+        }
+        return ad;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
 
 }

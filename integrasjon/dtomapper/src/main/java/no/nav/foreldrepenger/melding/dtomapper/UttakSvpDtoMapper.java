@@ -40,7 +40,7 @@ public class UttakSvpDtoMapper {
         emptyIfNull(uttaksResultatArbeidsforhold).forEach(arbeidsforhold -> {
             final var uttakResultatArbeidsforholdBuild = SvpUttakResultatArbeidsforhold.Builder.ny();
             final var arbeidsforholdIkkeOppfyltÅrsak = kodeverkRepository.finn(ArbeidsforholdIkkeOppfyltÅrsak.class, arbeidsforhold.getArbeidsforholdIkkeOppfyltÅrsak().getKode());
-            final var uttakArbeidType = kodeverkRepository.finn(UttakArbeidType.class, arbeidsforhold.getArbeidType().getKode());
+            final var uttakArbeidType =UttakArbeidType.fraKode(arbeidsforhold.getArbeidType().getKode());
             uttakResultatArbeidsforholdBuild.medArbeidsgiver(mapArbeidsgiver(arbeidsforhold.getArbeidsgiver()));
             uttakResultatArbeidsforholdBuild.medUttakArbeidType(uttakArbeidType);
             uttakResultatArbeidsforholdBuild.medArbeidsforholdIkkeOppfyltÅrsak(arbeidsforholdIkkeOppfyltÅrsak);

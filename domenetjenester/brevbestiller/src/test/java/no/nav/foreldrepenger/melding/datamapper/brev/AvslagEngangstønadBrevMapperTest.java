@@ -4,8 +4,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import org.junit.Test;
 
-import no.nav.foreldrepenger.melding.aktør.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.RelasjonskodeType;
+import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 
 public class AvslagEngangstønadBrevMapperTest {

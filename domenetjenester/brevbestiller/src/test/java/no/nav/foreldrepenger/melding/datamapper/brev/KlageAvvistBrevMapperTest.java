@@ -33,7 +33,6 @@ import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.melding.klage.KlageFormkravResultat;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
-import no.nav.vedtak.felles.testutilities.Whitebox;
 
 public class KlageAvvistBrevMapperTest {
     private static final long ID = 123L;
@@ -75,7 +74,6 @@ public class KlageAvvistBrevMapperTest {
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
                 new Locale("nb", "NO"));
         KlageAvvistÅrsak klageAvvistÅrsak = KlageAvvistÅrsak.KLAGET_FOR_SENT;
-        Whitebox.setInternalState(klageAvvistÅrsak, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"31\", \"33\"]},\"KA\": {\"lovreferanser\": [\"31\", \"34\"]}}}");
         mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, of(klageAvvistÅrsak));
 
         // Act
@@ -97,7 +95,6 @@ public class KlageAvvistBrevMapperTest {
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
                 new Locale("nb", "NO"));
         KlageAvvistÅrsak klageAvvistÅrsak = KlageAvvistÅrsak.KLAGET_FOR_SENT;
-        Whitebox.setInternalState(klageAvvistÅrsak, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"31\", \"33\"]},\"KA\": {\"lovreferanser\": [\"31\", \"34\"]}}}");
         mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, of(klageAvvistÅrsak));
 
         // Act
@@ -119,9 +116,7 @@ public class KlageAvvistBrevMapperTest {
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
                 new Locale("nb", "NO"));
         KlageAvvistÅrsak klageAvvistÅrsak1 = KlageAvvistÅrsak.KLAGET_FOR_SENT;
-        Whitebox.setInternalState(klageAvvistÅrsak1, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"31\", \"33\"]},\"KA\": {\"lovreferanser\": [\"31\", \"34\"]}}}");
         KlageAvvistÅrsak klageAvvistÅrsak2 = KlageAvvistÅrsak.KLAGER_IKKE_PART;
-        Whitebox.setInternalState(klageAvvistÅrsak2, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"28\", \"33\"]},\"KA\": {\"lovreferanser\": [\"28\", \"34\"]}}}");
         mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, of(klageAvvistÅrsak1, klageAvvistÅrsak2));
 
         // Act
@@ -143,9 +138,7 @@ public class KlageAvvistBrevMapperTest {
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
                 new Locale("nb", "NO"));
         KlageAvvistÅrsak klageAvvistÅrsak1 = KlageAvvistÅrsak.KLAGET_FOR_SENT;
-        Whitebox.setInternalState(klageAvvistÅrsak1, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"31\", \"33\"]},\"KA\": {\"lovreferanser\": [\"31\", \"34\"]}}}");
         KlageAvvistÅrsak klageAvvistÅrsak2 = KlageAvvistÅrsak.KLAGER_IKKE_PART;
-        Whitebox.setInternalState(klageAvvistÅrsak2, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"28\", \"33\"]},\"KA\": {\"lovreferanser\": [\"28\", \"34\"]}}}");
         mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, of(klageAvvistÅrsak1, klageAvvistÅrsak2));
 
         // Act
@@ -167,7 +160,6 @@ public class KlageAvvistBrevMapperTest {
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
                 new Locale("nb", "NO"));
         KlageAvvistÅrsak klageAvvistÅrsak = KlageAvvistÅrsak.KLAGET_FOR_SENT;
-        Whitebox.setInternalState(klageAvvistÅrsak, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"31\", \"33\"]},\"KA\": {\"lovreferanser\": [\"31\", \"34\"]}}}");
         mockKlage(behandling, BehandlingType.TILBAKEKREVING, of(klageAvvistÅrsak));
 
         // Act
@@ -189,7 +181,6 @@ public class KlageAvvistBrevMapperTest {
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
                 new Locale("nb", "NO"));
         KlageAvvistÅrsak klageAvvistÅrsak = KlageAvvistÅrsak.KLAGET_FOR_SENT;
-        Whitebox.setInternalState(klageAvvistÅrsak, "ekstraData", "{\"klageAvvistAarsak\":{\"NFP\": {\"lovreferanser\": [\"31\", \"33\"]},\"KA\": {\"lovreferanser\": [\"31\", \"34\"]}}}");
         mockKlage(behandling, BehandlingType.TILBAKEKREVING, of(klageAvvistÅrsak));
 
         // Act

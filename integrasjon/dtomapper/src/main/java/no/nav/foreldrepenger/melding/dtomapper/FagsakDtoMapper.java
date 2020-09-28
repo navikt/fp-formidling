@@ -29,7 +29,7 @@ public class FagsakDtoMapper {
     public Fagsak mapFagsakFraDto(FagsakDto fagsakDto) {
         return Fagsak.ny()
                 .medSaksnummer(String.valueOf(fagsakDto.getSaksnummer()))
-                .medBrukerRolle(kodeverkRepository.finn(RelasjonsRolleType.class, fagsakDto.getRelasjonsRolleType().getKode()))
+                .medBrukerRolle(RelasjonsRolleType.fraKode(fagsakDto.getRelasjonsRolleType().getKode()))
                 .medPersoninfo(tpsTjeneste.hentBrukerForFnr(PersonIdent.fra(fagsakDto.getPerson().getPersonnummer())).orElseThrow(IllegalStateException::new))
                 .medFagsakStatus(fagsakDto.getStatus().getKode())
                 .build();

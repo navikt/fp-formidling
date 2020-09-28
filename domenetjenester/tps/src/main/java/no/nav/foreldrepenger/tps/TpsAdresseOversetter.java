@@ -12,10 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.melding.aktør.AdresseType;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
-import no.nav.foreldrepenger.melding.aktør.PersonstatusType;
 import no.nav.foreldrepenger.melding.geografisk.Poststed;
 import no.nav.foreldrepenger.melding.geografisk.PoststedKodeverkRepository;
-import no.nav.foreldrepenger.melding.repository.PersonInfoKodeverkRepository;
+import no.nav.foreldrepenger.melding.personopplysning.PersonstatusType;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Gateadresse;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Kodeverdi;
@@ -40,7 +39,6 @@ public class TpsAdresseOversetter {
     private static final String HARDKODET_POSTSTED = "UKJENT";
     private static final String POSTNUMMER_POSTSTED = "^\\d{4} \\D*";  // Mønster for postnummer og poststed, f.eks. "0034 OSLO"
 
-    private PersonInfoKodeverkRepository personInfoKodeverkRepository;
     private PoststedKodeverkRepository poststedKodeverkRepository;
 
     TpsAdresseOversetter() {
@@ -48,9 +46,7 @@ public class TpsAdresseOversetter {
     }
 
     @Inject
-    public TpsAdresseOversetter(PersonInfoKodeverkRepository personInfoKodeverkRepository,
-                                PoststedKodeverkRepository poststedKodeverkRepository) {
-        this.personInfoKodeverkRepository = personInfoKodeverkRepository;
+    public TpsAdresseOversetter(PoststedKodeverkRepository poststedKodeverkRepository) {
         this.poststedKodeverkRepository = poststedKodeverkRepository;
     }
 
@@ -287,7 +283,7 @@ public class TpsAdresseOversetter {
     }
 
     private PersonstatusType tilPersonstatusType(Personstatus personstatus) {
-        return personInfoKodeverkRepository.finnPersonstatus(personstatus.getPersonstatus().getValue());
+        return PersonstatusType.fraKode(personstatus.getPersonstatus().getValue());
     }
 
     private String hvisfinnes(Object object) {

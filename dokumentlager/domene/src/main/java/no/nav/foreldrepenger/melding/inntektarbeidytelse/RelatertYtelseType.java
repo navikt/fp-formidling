@@ -1,32 +1,83 @@
 package no.nav.foreldrepenger.melding.inntektarbeidytelse;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity(name = "RelatertYtelseType")
-@DiscriminatorValue(RelatertYtelseType.DISCRIMINATOR)
-public class RelatertYtelseType extends Kodeliste {
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-    public static final String DISCRIMINATOR = "RELATERT_YTELSE_TYPE";
-    public static final RelatertYtelseType ENSLIG_FORSØRGER = new RelatertYtelseType("ENSLIG_FORSØRGER");
-    public static final RelatertYtelseType SYKEPENGER = new RelatertYtelseType("SYKEPENGER");
-    public static final RelatertYtelseType SVANGERSKAPSPENGER = new RelatertYtelseType("SVANGERSKAPSPENGER");
-    public static final RelatertYtelseType FORELDREPENGER = new RelatertYtelseType("FORELDREPENGER");
-    public static final RelatertYtelseType ENGANGSSTØNAD = new RelatertYtelseType("ENGANGSSTØNAD");
-    public static final RelatertYtelseType PÅRØRENDESYKDOM = new RelatertYtelseType("PÅRØRENDESYKDOM");
 
-    public static final RelatertYtelseType ARBEIDSAVKLARINGSPENGER = new RelatertYtelseType("ARBEIDSAVKLARINGSPENGER");
-    public static final RelatertYtelseType DAGPENGER = new RelatertYtelseType("DAGPENGER");
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum RelatertYtelseType implements Kodeverdi {
 
-    public static final RelatertYtelseType UDEFINERT = new RelatertYtelseType("-");
+    ENSLIG_FORSØRGER("ENSLIG_FORSØRGER"),
+    SYKEPENGER("SYKEPENGER"),
+    SVANGERSKAPSPENGER("SVANGERSKAPSPENGER"),
+    FORELDREPENGER("FORELDREPENGER"),
+    ENGANGSSTØNAD("ENGANGSSTØNAD"),
+    PÅRØRENDESYKDOM("PÅRØRENDESYKDOM"),
+    FRISINN("FRISINN"),
+    PLEIEPENGER_SYKT_BARN("PSB"),
+    PLEIEPENGER_NÆRSTÅENDE("PPN"),
+    OMSORGSPENGER("OMP"),
+    OPPLÆRINGSPENGER("OLP"),
+    ARBEIDSAVKLARINGSPENGER("ARBEIDSAVKLARINGSPENGER"),
+    DAGPENGER("DAGPENGER"),
+    UDEFINERT("-"),
+    ;
 
-    public RelatertYtelseType() {
-        // Hibernate trenger den
+    private static final Map<String, RelatertYtelseType> KODER = new LinkedHashMap<>();
+
+    public static final String KODEVERK = "RELATERT_YTELSE_TYPE";
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
+
+    private String kode;
 
     private RelatertYtelseType(String kode) {
-        super(kode, DISCRIMINATOR);
+        this.kode = kode;
     }
+
+    @JsonCreator
+    public static RelatertYtelseType fraKode(@JsonProperty("kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent RelatertYtelseType: " + kode);
+        }
+        return ad;
+    }
+
+    public static Map<String, RelatertYtelseType> kodeMap() {
+        return Collections.unmodifiableMap(KODER);
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
 }

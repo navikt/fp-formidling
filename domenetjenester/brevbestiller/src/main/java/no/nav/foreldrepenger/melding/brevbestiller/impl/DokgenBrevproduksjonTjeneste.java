@@ -8,7 +8,6 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +24,9 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.OppretteJournalpost;
+import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.Dokument;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -33,6 +35,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DokumentRepository dokumentRepository;
     private DokgenRestKlient dokgenRestKlient;
+    private OppretteJournalpost oppretteJournalpost;
 
     DokgenBrevproduksjonTjeneste() {
         // CDI
@@ -41,10 +44,12 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     @Inject
     public DokgenBrevproduksjonTjeneste(DokumentFellesDataMapper dokumentFellesDataMapper,
                                         DokumentRepository dokumentRepository,
-                                        DokgenRestKlient dokgenRestKlient) {
+                                        DokgenRestKlient dokgenRestKlient,
+                                        OppretteJournalpost oppretteJournalpost) {
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.dokumentRepository = dokumentRepository;
         this.dokgenRestKlient = dokgenRestKlient;
+        this.oppretteJournalpost = oppretteJournalpost;
     }
 
     @Override
@@ -74,8 +79,14 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             DokumentdataMapper dokumentdataMapper = velgDokumentMapper(dokumentMal);
             Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
             Optional<byte[]> brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
+
+            brev.ifPresent(b -> {
+                Dokument generertBrev = new Dokument(dokumentHendelse.getTittel(), dokumentMal.getKode(), null, b);
+                String journalpostId = oppretteJournalpost.journalFørUtsendelse(generertBrev, dokumentFelles, dokumentHendelse, behandling.getFagsak().getId());
+            });
         }
-        // TODO: Journalføring, distribuering, historikkinnslag, støtte for vedlegg, lagre JSON-serialisert info i "brev_data" eller liknende der XML er lagret i dag?
+        // TODO: distribuering, historikkinnslag, støtte for vedlegg, lagre JSON-serialisert info i "brev_data" eller liknende der XML er lagret i dag?
+
         return Collections.emptyList();
     }
 

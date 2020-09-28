@@ -12,10 +12,10 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 @ApplicationScoped
-public class DatabaseHealthCheck extends ExtHealthCheck {
+public class DatabaseHealthCheck {
 
     private static final String JDBC_DEFAULT_DS = "jdbc/defaultDS";
-    private static final String SQL_QUERY = "select count(1) from KODEVERK";
+    private static final String SQL_QUERY = "select count(1) from PROSESS_TASK_TYPE";
     private String jndiName;
     // må være rask, og bruke et stabilt tabell-navn
     private String endpoint = null; // ukjent frem til første gangs test
@@ -28,28 +28,13 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
         this.jndiName = dsJndiName;
     }
 
-    @Override
-    protected String getDescription() {
-        return "Test av databaseforbindelse (" + jndiName + ")";
-    }
-
-    @Override
-    protected String getEndpoint() {
-        return endpoint;
-    }
-
-    @Override
-    protected InternalResult performCheck() {
-
-        InternalResult intTestRes = new InternalResult();
+    private boolean performCheck() {
 
         DataSource dataSource = null;
         try {
             dataSource = (DataSource) new InitialContext().lookup(jndiName);
         } catch (NamingException e) {
-            intTestRes.setMessage("Feil ved JNDI-oppslag for " + jndiName + " - " + e);
-            intTestRes.setException(e);
-            return intTestRes;
+            return false;
         }
 
         try (Connection connection = dataSource.getConnection()) {
@@ -62,14 +47,10 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
                 }
             }
         } catch (SQLException e) {
-            intTestRes.setMessage("Feil ved SQL-spørring (" + SQL_QUERY + ") mot databasen");
-            intTestRes.setException(e);
-            return intTestRes;
+            return false;
         }
 
-        intTestRes.noteResponseTime();
-        intTestRes.setOk(true);
-        return intTestRes;
+        return true;
     }
 
     private String extractEndpoint(Connection connection) {
@@ -90,6 +71,6 @@ public class DatabaseHealthCheck extends ExtHealthCheck {
     }
 
     public boolean isReady() {
-        return performCheck().isOk();
+        return performCheck();
     }
 }

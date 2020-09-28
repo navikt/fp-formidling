@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.melding.web.app.selftest.checks;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import javax.naming.NameNotFoundException;
-
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,21 +18,18 @@ public class DatabaseHealthCheckTest {
     public void test_check_healthy() {
         DatabaseHealthCheck dbCheck = new DatabaseHealthCheck();
 
-        ExtHealthCheck.InternalResult result = dbCheck.performCheck();
+        boolean result = dbCheck.isReady();
 
-        assertThat(result.isOk()).isTrue();
-        assertThat(result.getResponseTimeMs()).isNotNull();
+        assertThat(result).isTrue();
     }
 
     @Test
     public void skal_feile_pga_ukjent_jndi_name() {
         DatabaseHealthCheck dbCheck = new DatabaseHealthCheck("jndi/ukjent");
 
-        ExtHealthCheck.InternalResult result = dbCheck.performCheck();
+        boolean result = dbCheck.isReady();
 
-        assertThat(result.isOk()).isFalse();
-        assertThat(result.getMessage()).contains("Feil ved JNDI-oppslag for jndi/ukjent");
-        assertThat(result.getException()).isInstanceOf(NameNotFoundException.class);
+        assertThat(result).isFalse();
     }
 
 }

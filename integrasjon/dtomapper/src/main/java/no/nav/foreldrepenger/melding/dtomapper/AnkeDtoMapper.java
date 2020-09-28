@@ -25,6 +25,7 @@ public class AnkeDtoMapper {
         AnkeVurderingResultatDto ankeResultat = dto.getAnkeVurderingResultat();
 
         var builder = Anke.ny()
+                .medAnkeVurdering(ankeResultat.getAnkeVurdering())
                 .medFritekstTilBrev(ankeResultat.getFritekstTilBrev())
                 .medAnkeVurderingOmgjoer(ankeResultat.getAnkeVurderingOmgjoer())
                 .medPaAnketBehandlingUuid(ankeResultat.getPaAnketBehandlingUuid());

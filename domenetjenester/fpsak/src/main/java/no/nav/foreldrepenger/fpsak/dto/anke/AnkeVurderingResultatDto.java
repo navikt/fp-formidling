@@ -5,13 +5,15 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import no.nav.foreldrepenger.melding.anke.AnkeVurdering;
 import no.nav.foreldrepenger.melding.anke.AnkeVurderingOmgjør;
 
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.NONE, setterVisibility= JsonAutoDetect.Visibility.NONE, fieldVisibility= JsonAutoDetect.Visibility.ANY)
 public class AnkeVurderingResultatDto {
 
     // Er skrelt ned til minimum. Se fpsak for fullt innholt. Ta inn mer ved behov.
-
+    @JsonProperty("ankeVurdering")
+    private AnkeVurdering ankeVurdering;
     @JsonProperty("fritekstTilBrev")
     private String fritekstTilBrev;
     @JsonProperty("ankeVurderingOmgjoer")
@@ -21,6 +23,10 @@ public class AnkeVurderingResultatDto {
 
 
     public AnkeVurderingResultatDto() {
+    }
+
+    public AnkeVurdering getAnkeVurdering() {
+        return ankeVurdering;
     }
 
     public String getFritekstTilBrev() {

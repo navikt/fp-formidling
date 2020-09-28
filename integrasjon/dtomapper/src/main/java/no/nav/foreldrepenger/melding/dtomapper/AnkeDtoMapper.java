@@ -3,12 +3,10 @@ package no.nav.foreldrepenger.melding.dtomapper;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkeVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.melding.anke.Anke;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 
 @ApplicationScoped
 public class AnkeDtoMapper {
@@ -19,26 +17,16 @@ public class AnkeDtoMapper {
     }
 
     public Optional<Anke> mapAnkeFraDto(AnkebehandlingDto dto) {
-        Anke.Builder builder = Anke.ny();
 
-        AnkeVurderingResultatDto ankeResultat = dto.getAnkeVurderingResultat();
-
-        if(ankeResultat == null){
+        if (dto.getAnkeVurderingResultat() == null) {
             return Optional.empty();
         }
 
-        builder.medFritekstTilBrev(ankeResultat.getFritekstTilBrev())
-                .medAnkeOmgjoerArsak(ankeResultat.getAnkeOmgjoerArsak())
-                .medAnkeOmgjoerArsakNavn(ankeResultat.getAnkeOmgjoerArsakNavn())
-                .medAnkeVurdering(ankeResultat.getAnkeVurdering())
+        AnkeVurderingResultatDto ankeResultat = dto.getAnkeVurderingResultat();
+
+        var builder = Anke.ny()
+                .medFritekstTilBrev(ankeResultat.getFritekstTilBrev())
                 .medAnkeVurderingOmgjoer(ankeResultat.getAnkeVurderingOmgjoer())
-                .medBegrunnelse(ankeResultat.getBegrunnelse())
-                .medErAnkerIkkePart(ankeResultat.isErAnkerIkkePart())
-                .medErFristIkkeOverholdt(ankeResultat.isErFristIkkeOverholdt())
-                .medErIkkeKonkret(ankeResultat.isErIkkeKonkret())
-                .medErIkkeSignert(ankeResultat.isErIkkeSignert())
-                .medErSubsidiartRealitetsbehandles(ankeResultat.isErSubsidiartRealitetsbehandles())
-                .medGodkjentAvMedunderskriver(ankeResultat.isGodkjentAvMedunderskriver())
                 .medPaAnketBehandlingUuid(ankeResultat.getPaAnketBehandlingUuid());
 
         return Optional.of(builder.build());

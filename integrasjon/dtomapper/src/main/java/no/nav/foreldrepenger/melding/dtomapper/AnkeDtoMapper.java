@@ -7,6 +7,8 @@ import javax.enterprise.context.ApplicationScoped;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkeVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.melding.anke.Anke;
+import no.nav.foreldrepenger.melding.anke.AnkeVurdering;
+import no.nav.foreldrepenger.melding.anke.AnkeVurderingOmgjør;
 
 @ApplicationScoped
 public class AnkeDtoMapper {
@@ -25,9 +27,9 @@ public class AnkeDtoMapper {
         AnkeVurderingResultatDto ankeResultat = dto.getAnkeVurderingResultat();
 
         var builder = Anke.ny()
-                .medAnkeVurdering(ankeResultat.getAnkeVurdering())
+                .medAnkeVurdering(AnkeVurdering.fraKode(ankeResultat.getAnkeVurdering().getKode()))
                 .medFritekstTilBrev(ankeResultat.getFritekstTilBrev())
-                .medAnkeVurderingOmgjoer(ankeResultat.getAnkeVurderingOmgjoer())
+                .medAnkeVurderingOmgjoer(AnkeVurderingOmgjør.fraKode(ankeResultat.getAnkeVurderingOmgjoer().getKode()))
                 .medPaAnketBehandlingUuid(ankeResultat.getPaAnketBehandlingUuid());
 
         return Optional.of(builder.build());

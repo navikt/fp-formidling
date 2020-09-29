@@ -101,9 +101,9 @@ public class KlageMapperTest {
     private KlageVurderingResultatDto lagKlagevurderingResultatDto(boolean opphevet) {
         KlageVurderingResultatDto resultatDto = new KlageVurderingResultatDto();
         if (opphevet) {
-            resultatDto.setKlageVurdering(KlageVurdering.OPPHEVE_YTELSESVEDTAK.getKode());
+            resultatDto.setKlageVurdering(KlageVurdering.OPPHEVE_YTELSESVEDTAK);
         } else {
-            resultatDto.setKlageVurdering(KlageVurdering.AVVIS_KLAGE.getKode());
+            resultatDto.setKlageVurdering(KlageVurdering.AVVIS_KLAGE);
         }
         return resultatDto;
     }

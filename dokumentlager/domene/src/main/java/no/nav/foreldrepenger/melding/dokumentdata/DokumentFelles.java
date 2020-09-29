@@ -117,8 +117,8 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "sakspart_person_status", nullable = false)
     private String sakspartPersonStatus;
 
-    @Column
-    private String xml;
+    @Column(name = "xml")
+    private String brevData;
 
     @Transient
     private Optional<Kopi> erKopi;
@@ -219,12 +219,12 @@ public class DokumentFelles extends BaseEntitet {
 
     public MottakerType getMottakerType() { return mottakerType; }
 
-    public String getXml() {
-        return xml;
+    public String getBrevData() {
+        return brevData;
     }
 
-    public void setXml(String xml) {
-        this.xml = xml;
+    public void setBrevData(String brevData) {
+        this.brevData = brevData;
     }
 
     @Override
@@ -366,8 +366,8 @@ public class DokumentFelles extends BaseEntitet {
             return this;
         }
 
-        public DokumentFelles.Builder medXml(String xml) {
-            this.dokumentFelles.xml = xml;
+        public DokumentFelles.Builder medBrevData(String brevData) {
+            this.dokumentFelles.brevData = brevData;
             return this;
         }
 

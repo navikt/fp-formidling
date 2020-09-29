@@ -1,17 +1,16 @@
 package no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class JournalPostData {
+public class OpprettJournalpostRequest {
     @JsonProperty("journalpostType")
     private String journalpostType = "UTGAAENDE";
     @JsonProperty("avsenderMottaker")
@@ -33,16 +32,16 @@ public class JournalPostData {
     @JsonProperty("sak")
     private Sak sak;
     @JsonProperty("generertDokumenter")
-    private List <Dokument> generertDokumenter;
+    private List <DokumentOpprettRequest> generertDokumenter;
 
-    public JournalPostData(@JsonProperty("avsenderMottaker")AvsenderMottaker avsenderMottaker,
-                           @JsonProperty("bruker")Bruker bruker,
-                           @JsonProperty("tema")String tema,
-                           @JsonProperty("behandlingstema")String behandlingstema,
-                           @JsonProperty("tittel")String tittel,
-                           @JsonProperty("journalfoerendeEnhet")String journalfoerendeEnhet,
-                           @JsonProperty("sak")Sak sak,
-                           @JsonProperty("generertDokumenter")List<Dokument> generertDokumenter) {
+    public OpprettJournalpostRequest(@JsonProperty("avsenderMottaker")AvsenderMottaker avsenderMottaker,
+                                     @JsonProperty("bruker")Bruker bruker,
+                                     @JsonProperty("tema")String tema,
+                                     @JsonProperty("behandlingstema")String behandlingstema,
+                                     @JsonProperty("tittel")String tittel,
+                                     @JsonProperty("journalfoerendeEnhet")String journalfoerendeEnhet,
+                                     @JsonProperty("sak")Sak sak,
+                                     @JsonProperty("generertDokumenter")List<DokumentOpprettRequest> generertDokumenter) {
         this.avsenderMottaker = avsenderMottaker;
         this.bruker = bruker;
         this.tema = tema;
@@ -89,7 +88,7 @@ public class JournalPostData {
         return avsenderMottaker;
     }
 
-    public List<Dokument> getgenerertDokumenter() {
+    public List<DokumentOpprettRequest> getgenerertDokumenter() {
         return generertDokumenter;
     }
 

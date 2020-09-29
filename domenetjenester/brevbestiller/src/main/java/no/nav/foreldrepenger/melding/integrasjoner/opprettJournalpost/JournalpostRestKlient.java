@@ -1,22 +1,24 @@
 package no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost;
 
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.JournalPostData;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.OpprettetJournalpostResponse;
-import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
-import no.nav.vedtak.konfig.KonfigVerdi;
-import org.apache.http.client.utils.URIBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.net.URI;
+
+import org.apache.http.client.utils.URIBuilder;
+
+import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.FerdigstillJournalpostRequest;
+import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.OpprettJournalpostRequest;
+import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.OpprettJournalpostResponse;
+import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.TilknyttVedleggRequest;
+import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
+import no.nav.vedtak.konfig.KonfigVerdi;
 
 @ApplicationScoped
 public class JournalpostRestKlient {
     private static final String DEFAULT_URI = "http://dokarkiv.default/rest/journalpostapi/v1/journalpost";
-
-    private static final Logger LOG = LoggerFactory.getLogger(JournalpostRestKlient.class);
 
     private URI endpoint;
     private OidcRestClient restKlient;
@@ -31,13 +33,32 @@ public class JournalpostRestKlient {
         this.restKlient = restKlient;
     }
 
-    public OpprettetJournalpostResponse opprettJournalpost(JournalPostData request, boolean ferdigstill) {
+    public OpprettJournalpostResponse opprettJournalpost(OpprettJournalpostRequest request, boolean ferdigstill) {
         try {
-            var opprett = new URIBuilder(endpoint).addParameter("forsoekFerdigstill", "true").build();
-            return restKlient.post(opprett, request, OpprettetJournalpostResponse.class);
-        } catch (Exception e) {
-            LOG.info("Fpformidling JournalpostRestKlient feilet å journalføre for {}", request, e);
-            return null;
+            var uri = new URIBuilder(endpoint).addParameter("forsoekFerdigstill", ""+ferdigstill).build();
+            return restKlient.post(uri, request, OpprettJournalpostResponse.class);
+        } catch (URISyntaxException e) {
+            throw JournalpostFeil.FACTORY.klarteIkkeOppretteUriForNyJournalpost(request.getSak().getFagsakId(), e).toException();
+        }
+    }
+
+    public void tilknyttVedlegg(TilknyttVedleggRequest request, JournalpostId journalpostIdTil) {
+        try {
+            String tilknyttPath = String.format("/%s/tilknyttVedlegg", journalpostIdTil.getVerdi());
+            var uri = new URIBuilder(endpoint + tilknyttPath).build();
+            restKlient.post(uri, request); //TODO(JEJ): Se hva HTTP-koden er og logge feil hvis ikke-OK
+        } catch (URISyntaxException e) {
+            throw JournalpostFeil.FACTORY.klarteIkkeOppretteUriForTilknytningAvVedlegg(journalpostIdTil, request.toString(), e).toException();
+        }
+    }
+
+    public void ferdigstillJournalpost(FerdigstillJournalpostRequest request, JournalpostId journalpostId) {
+        try {
+            String tilknyttPath = String.format("/%s/ferdigstill", journalpostId.getVerdi());
+            var uri = new URIBuilder(endpoint + tilknyttPath).build();
+            restKlient.post(uri, request); //TODO(JEJ): Se hva HTTP-koden er og logge feil hvis ikke-OK
+        } catch (URISyntaxException e) {
+            throw JournalpostFeil.FACTORY.klarteIkkeOppretteUriForFerdigstillingAvJournalpost(journalpostId, request.toString(), e).toException();
         }
     }
 }

@@ -90,7 +90,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
             Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling);
-            dokumentFelles.setXml(elementTilString(brevXmlElement));
+            dokumentFelles.setBrevData(elementTilString(brevXmlElement));
 
             final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
                     dokumentFelles, harVedlegg);
@@ -200,13 +200,13 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
         Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, dokumentHendelse, behandling);
 
-        førsteDokumentFelles.setXml(elementTilString(brevXmlElement));
+        førsteDokumentFelles.setBrevData(elementTilString(brevXmlElement));
         dokumentRepository.lagre(dokumentData);
 
         dokument = forhåndsvis(dokumentMal, brevXmlElement);
         if (dokument == null) {
             LOGGER.error("Klarte ikke hente behandling: {}", behandling.getId());
-            throw BrevbestillerFeil.FACTORY.klarteIkkeForhåndvise(dokumentMal.getKode(), behandling.getUuid().toString()).toException();
+            throw BrevbestillerFeil.FACTORY.klarteIkkeForhåndviseDokprodbrev(dokumentMal.getKode(), behandling.getUuid().toString()).toException();
         }
         LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getUuid().toString());
         return dokument;

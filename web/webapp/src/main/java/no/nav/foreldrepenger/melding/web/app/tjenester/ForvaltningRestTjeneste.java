@@ -5,7 +5,6 @@ import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.CREAT
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.DRIFT;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -92,8 +91,8 @@ public class ForvaltningRestTjeneste {
                 .endretSats(0)
                 .build();
 
-        Optional<byte[]> resultat = dokgenRestKlient.genererPdf(malType, Språkkode.nb, dokumentdata);
-        Response.ResponseBuilder responseBuilder = Response.ok(resultat.get());
+        byte[] resultat = dokgenRestKlient.genererPdf(malType, Språkkode.nb, dokumentdata);
+        Response.ResponseBuilder responseBuilder = Response.ok(resultat);
         responseBuilder.type("application/pdf");
         responseBuilder.header("Content-Disposition", "attachment; filename=dokument.pdf");
         return responseBuilder.build();

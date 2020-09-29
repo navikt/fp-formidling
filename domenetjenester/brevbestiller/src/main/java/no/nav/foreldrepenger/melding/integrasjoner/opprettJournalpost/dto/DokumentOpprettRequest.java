@@ -1,18 +1,16 @@
 package no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javassist.bytecode.ByteArray;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class Dokument {
+public class DokumentOpprettRequest {
     @JsonProperty("tittel")
     private String tittel;
     @JsonProperty("brevkode")
@@ -22,7 +20,7 @@ public class Dokument {
     @JsonProperty("dokumentVariantPDF")
     private List<DokumentVariantPDF> dokumentVariantPDF;
 
-    public Dokument(String tittel, String brevkode, String dokumentKategori, byte[] brev) {
+    public DokumentOpprettRequest(String tittel, String brevkode, String dokumentKategori, byte[] brev) {
         DokumentVariantPDF dokumentVariantPDF = new DokumentVariantPDF(brev);
         this.tittel = tittel;
         this.brevkode = brevkode;
@@ -30,10 +28,10 @@ public class Dokument {
         this.dokumentVariantPDF = List.of(dokumentVariantPDF);
     }
 
-    public Dokument(@JsonProperty("tittel")String tittel,
-                    @JsonProperty("brevkode")String brevkode,
-                    @JsonProperty("dokumentKategori")String dokumentKategori,
-                    @JsonProperty("dokumentVariantPDF")List<DokumentVariantPDF> dokumentVariantPDF) {
+    public DokumentOpprettRequest(@JsonProperty("tittel")String tittel,
+                                  @JsonProperty("brevkode")String brevkode,
+                                  @JsonProperty("dokumentKategori")String dokumentKategori,
+                                  @JsonProperty("dokumentVariantPDF")List<DokumentVariantPDF> dokumentVariantPDF) {
         this.tittel = tittel;
         this.brevkode = brevkode;
         this.dokumentKategori = dokumentKategori;
@@ -58,7 +56,7 @@ public class Dokument {
 
     @Override
     public String toString() {
-        return "DokumentInfo{" +
+        return "DokumentOpprettRequest{" +
                 ", tittel='" + tittel + '\'' +
                 ", brevkode='" + brevkode + '\'' +
                 ", dokumentKategori=" + dokumentKategori +

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen;
 
-import java.net.URISyntaxException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -37,16 +36,19 @@ public class DokgenRestKlient {
         this.endpointDokgenRestBase = endpointDokgenRestBase;
     }
 
-    public Optional<byte[]> genererPdf(String maltype, Språkkode språkKode, Dokumentdata dokumentdata) {
-        Optional<byte[]> pdf = Optional.empty();
+    public byte[] genererPdf(String maltype, Språkkode språkKode, Dokumentdata dokumentdata) {
+        Optional<byte[]> pdf;
         try {
             String templatePath = String.format("/template/%s/template_%s", maltype.toLowerCase(), getSpråkkode(språkKode));
             URIBuilder uriBuilder = new URIBuilder(endpointDokgenRestBase + templatePath + CREATE_PDF);
             pdf = oidcRestClient.postReturnsOptionalOfByteArray(uriBuilder.build(), dokumentdata);
-        } catch (URISyntaxException e) {
-            LOGGER.error("Feil ved oppretting av URI.", e);
+        } catch (Exception e) {
+            throw DokgenFeil.FACTORY.feilVedKallTilDokgen(maltype, språkKode.getKode(), e).toException();
         }
-        return pdf;
+        if (pdf.isEmpty()) {
+            throw DokgenFeil.FACTORY.tomtSvarFraDokgen(maltype, språkKode.getKode()).toException();
+        }
+        return pdf.get();
     }
 
     private String getSpråkkode(Språkkode språkkode) {

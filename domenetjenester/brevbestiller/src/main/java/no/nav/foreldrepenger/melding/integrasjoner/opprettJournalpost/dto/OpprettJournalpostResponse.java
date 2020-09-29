@@ -1,25 +1,28 @@
 package no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto;
 
-import com.fasterxml.jackson.annotation.*;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-
-public class OpprettetJournalpostResponse {
+public class OpprettJournalpostResponse {
     @JsonProperty("journalpostId")
     private String journalpostId;
     @JsonProperty("journalpostferdigstilt")
     private boolean journalpostferdigstilt;
     @JsonProperty("dokumenter")
-    private List<Dokument> dokumenter;
+    private List<DokumentOpprettResponse> dokumenter;
 
     @JsonCreator
-    public OpprettetJournalpostResponse(@JsonProperty("journalpostId") String journalpostId,
-                                        @JsonProperty("journalpostferdigstilt") boolean journalpostferdigstilt,
-                                        @JsonProperty("dokumenter") List<Dokument> dokumenter) {
+    public OpprettJournalpostResponse(@JsonProperty("journalpostId") String journalpostId,
+                                      @JsonProperty("journalpostferdigstilt") boolean journalpostferdigstilt,
+                                      @JsonProperty("dokumenter") List<DokumentOpprettResponse> dokumenter) {
         this.journalpostId = journalpostId;
         this.journalpostferdigstilt = journalpostferdigstilt;
         this.dokumenter = dokumenter;
@@ -33,13 +36,13 @@ public class OpprettetJournalpostResponse {
         return journalpostferdigstilt;
     }
 
-    public List<Dokument> getDokumenter() {
+    public List<DokumentOpprettResponse> getDokumenter() {
         return dokumenter;
     }
 
     @Override
     public String toString() {
-        return "OpprettetJournalpostResponse{" +
+        return "OpprettJournalpostResponse{" +
                 "journalpostId='" + journalpostId + '\'' +
                 ", journalpostferdigstilt='" + journalpostferdigstilt + '\'' +
                 ", dokumenter=" + dokumenter +

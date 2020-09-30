@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import no.nav.foreldrepenger.melding.anke.Anke;
+import no.nav.foreldrepenger.melding.anke.AnkeVurderingOmgjør;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -74,7 +75,7 @@ public class AnkeOmgjøreVedtakBrevMapper  extends FritekstmalBrevMapper {
             UUID klageBehandlingUuid =  anke.get().getPaAnketBehandlingUuid();
             Behandling klageBehandling = domeneobjektProvider.hentBehandling(klageBehandlingUuid);
             vedtaksDato = klageBehandling.getOriginalVedtaksDato()!=null?medFormatering(klageBehandling.getOriginalVedtaksDato()):null;
-            if( "ANKE_TIL_GUNST".equals(anke.get().getAnkeVurderingOmgjoer())){
+            if(AnkeVurderingOmgjør.ANKE_TIL_GUNST.equals(anke.get().getAnkeVurderingOmgjoer())){
                 gunst= true;
             }
         }

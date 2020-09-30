@@ -211,9 +211,7 @@ public class KlageAvvistBrevMapperTest {
         KlageVurderingResultat klageVurderingResultat = KlageVurderingResultat.ny()
                 .medFritekstTilbrev("FRITEKST")
                 .build();
-        KlageFormkravResultat klageFormkravResultat = KlageFormkravResultat.ny()
-                .medAvvistÅrsaker(avvistÅrsaker)
-                .build();
+        KlageFormkravResultat klageFormkravResultat = new KlageFormkravResultat(avvistÅrsaker);
         Klage klage = Klage.ny()
                 .medPåklagdBehandlingType(behandlingType)
                 .medKlageVurderingResultatNK(klageVurderingResultat)

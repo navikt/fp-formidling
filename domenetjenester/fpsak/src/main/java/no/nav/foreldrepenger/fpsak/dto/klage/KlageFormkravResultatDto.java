@@ -2,16 +2,17 @@ package no.nav.foreldrepenger.fpsak.dto.klage;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
+@JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.NONE, setterVisibility= JsonAutoDetect.Visibility.NONE, fieldVisibility= JsonAutoDetect.Visibility.ANY)
 public class KlageFormkravResultatDto {
-    private Long paKlagdBehandlingId;
+
+    @JsonProperty("paklagdBehandlingType")
     private KodeDto paklagdBehandlingType;
-    private String begrunnelse;
-    private boolean erKlagerPart;
-    private boolean erKlageKonkret;
-    private boolean erKlagefirstOverholdt;
-    private boolean erSignert;
+    @JsonProperty("avvistArsaker")
     private List<KodeDto> avvistArsaker;
 
 
@@ -26,14 +27,6 @@ public class KlageFormkravResultatDto {
         this.avvistArsaker = avvistArsaker;
     }
 
-    public Long getPaKlagdBehandlingId() {
-        return paKlagdBehandlingId;
-    }
-
-    public void setPaKlagdBehandlingId(Long paKlagdBehandlingId) {
-        this.paKlagdBehandlingId = paKlagdBehandlingId;
-    }
-
     public KodeDto getPaklagdBehandlingType() {
         return paklagdBehandlingType;
     }
@@ -42,43 +35,5 @@ public class KlageFormkravResultatDto {
         this.paklagdBehandlingType = paklagdBehandlingType;
     }
 
-    public String getBegrunnelse() {
-        return begrunnelse;
-    }
 
-    public void setBegrunnelse(String begrunnelse) {
-        this.begrunnelse = begrunnelse;
-    }
-
-    public boolean isErKlagerPart() {
-        return erKlagerPart;
-    }
-
-    public void setErKlagerPart(boolean erKlagerPart) {
-        this.erKlagerPart = erKlagerPart;
-    }
-
-    public boolean isErKlageKonkret() {
-        return erKlageKonkret;
-    }
-
-    public void setErKlageKonkret(boolean erKlageKonkret) {
-        this.erKlageKonkret = erKlageKonkret;
-    }
-
-    public boolean isErKlagefirstOverholdt() {
-        return erKlagefirstOverholdt;
-    }
-
-    public void setErKlagefirstOverholdt(boolean erKlagefirstOverholdt) {
-        this.erKlagefirstOverholdt = erKlagefirstOverholdt;
-    }
-
-    public boolean isErSignert() {
-        return erSignert;
-    }
-
-    public void setErSignert(boolean erSignert) {
-        this.erSignert = erSignert;
-    }
 }

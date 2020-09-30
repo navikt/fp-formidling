@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -66,19 +66,18 @@ public class KlageDtoMapper {
 
 
     private KlageFormkravResultat mapKlageFormkravResultatfraDto(KlageFormkravResultatDto dto) {
-        KlageFormkravResultat.Builder builder = KlageFormkravResultat.ny();
-        builder.medBegrunnelse(dto.getBegrunnelse());
-        List<KlageAvvistÅrsak> avvistÅrsaker = new ArrayList<>();
-        dto.getAvvistArsaker().forEach(årsak -> avvistÅrsaker.add(KlageAvvistÅrsak.fraKode(årsak.getKode())));
-        builder.medAvvistÅrsaker(avvistÅrsaker);
-        return builder.build();
+        List<KlageAvvistÅrsak> avvistÅrsaker = dto.getAvvistArsaker().stream()
+                .map(KodeDto::getKode)
+                .map(KlageAvvistÅrsak::fraKode)
+                .collect(Collectors.toList());
+        return new KlageFormkravResultat(avvistÅrsaker);
     }
 
     private KlageVurderingResultat mapKlageVurderingResultatfraDto(KlageVurderingResultatDto dto) {
-        KlageVurderingResultat.Builder builder = KlageVurderingResultat.ny();
-        builder.medKlageVurdering(KlageVurdering.fraKode(dto.getKlageVurdering()));
-        builder.medFritekstTilbrev(dto.getFritekstTilBrev());
-        return builder.build();
+        return KlageVurderingResultat.ny()
+                .medKlageVurdering(KlageVurdering.fraKode(dto.getKlageVurdering().getKode()))
+                .medFritekstTilbrev(dto.getFritekstTilBrev())
+                .build();
     }
 
     private BehandlingType finnBehandlingType(String behandlingType) {

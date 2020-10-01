@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
@@ -16,7 +7,6 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsresultatType;
@@ -25,10 +15,19 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.InnvilgetConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.PersonstatusKodeType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import org.xml.sax.SAXException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
 
 @ApplicationScoped
-@Named(DokumentMalType.POSITIVT_VEDTAK_DOK)
+@Named(DokumentMalTypeKode.POSITIVT_VEDTAK_DOK)
 public class InnvilgelseEngangstønadBrevMapper extends DokumentTypeMapper {
 
     private BrevParametere brevParametere;

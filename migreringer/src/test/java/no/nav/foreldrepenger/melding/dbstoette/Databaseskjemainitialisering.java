@@ -1,16 +1,15 @@
 package no.nav.foreldrepenger.melding.dbstoette;
 
+import no.nav.vedtak.felles.lokal.dbstoette.DBConnectionProperties;
+import no.nav.vedtak.felles.lokal.dbstoette.DatabaseStøtte;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import no.nav.vedtak.felles.lokal.dbstoette.DBConnectionProperties;
-import no.nav.vedtak.felles.lokal.dbstoette.DatabaseStøtte;
 
 /**
  * Initielt skjemaoppsett + migrering av unittest-skjemaer

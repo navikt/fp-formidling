@@ -1,17 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import java.math.BigInteger;
-import java.util.Objects;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
@@ -21,7 +9,6 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.IAYMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.InntektArbeidYtelse;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.Inntektsmelding;
@@ -34,11 +21,22 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.inntektsmeldingfortidl
 import no.nav.foreldrepenger.melding.integrasjon.dokument.inntektsmeldingfortidlig.PeriodeListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.inntektsmeldingfortidlig.PeriodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.inntektsmeldingfortidlig.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.ytelsefordeling.UtsettelseÅrsak;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import org.xml.sax.SAXException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.math.BigInteger;
+import java.util.Objects;
 
 @ApplicationScoped
-@Named(DokumentMalType.INNTEKTSMELDING_FOR_TIDLIG_DOK)
+@Named(DokumentMalTypeKode.INNTEKTSMELDING_FOR_TIDLIG_DOK)
 public class InntektsmeldingFørSøknadBrevMapper extends DokumentTypeMapper {
 
     private ObjectFactory objectFactory = new ObjectFactory();

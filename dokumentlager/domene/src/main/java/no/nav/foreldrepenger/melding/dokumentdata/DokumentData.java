@@ -1,24 +1,23 @@
 package no.nav.foreldrepenger.melding.dokumentdata;
 
+import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
+import no.nav.foreldrepenger.melding.kodeverk.diff.IndexKey;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Version;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Version;
-
-import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
-import no.nav.foreldrepenger.melding.kodeverk.diff.IndexKey;
 
 @Entity(name = "DokumentData")
 @Table(name = "DOKUMENT_DATA")
@@ -31,9 +30,9 @@ public class DokumentData extends BaseEntitet implements IndexKey {
     @Column(name = "versjon", nullable = false)
     private long versjon;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "dokument_mal_navn", nullable = false)
-    private DokumentMalType dokumentMalType;
+    @Convert(converter = DokumentMalType.KodeverdiConverter.class)
+    @Column(name = "dokument_mal_navn", nullable = false)
+    private DokumentMalType dokumentMalType = DokumentMalType.UDEFINERT;
 
     @OneToMany(mappedBy = "dokumentData")
     private Set<DokumentFelles> dokumentFelles = new HashSet<>(1);

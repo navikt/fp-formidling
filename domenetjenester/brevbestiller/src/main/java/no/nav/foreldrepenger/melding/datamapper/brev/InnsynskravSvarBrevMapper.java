@@ -1,16 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import java.math.BigInteger;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
@@ -18,7 +7,6 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.InnsynMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.BrevdataType;
@@ -26,10 +14,20 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.InnsynConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import org.xml.sax.SAXException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.math.BigInteger;
 
 @ApplicationScoped
-@Named(DokumentMalType.INNSYNSKRAV_SVAR)
+@Named(DokumentMalTypeKode.INNSYNSKRAV_SVAR)
 public class InnsynskravSvarBrevMapper extends DokumentTypeMapper {
 
     private BrevParametere brevParametere;

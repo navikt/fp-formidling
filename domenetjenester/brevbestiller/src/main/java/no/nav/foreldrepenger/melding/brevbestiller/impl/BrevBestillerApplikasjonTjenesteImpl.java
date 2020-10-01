@@ -11,16 +11,16 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingDtoMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.util.env.Cluster;
 import no.nav.vedtak.util.env.Environment;
 
 @ApplicationScoped
 public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplikasjonTjeneste {
 
-    private static final Set<String> DOKGEN_MALER = Set.of(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD);
+    private static final Set<String> DOKGEN_MALER = Set.of(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD.getKode());
     private static final Environment ENV = Environment.current();
 
     private DokumentMalUtleder dokumentMalUtleder;

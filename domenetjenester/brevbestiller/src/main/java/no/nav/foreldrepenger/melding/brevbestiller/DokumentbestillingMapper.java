@@ -5,7 +5,7 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerTjenesteUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Adresse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Dokumentbestillingsinformasjon;
@@ -33,7 +33,7 @@ public class DokumentbestillingMapper {
 
     public Dokumentbestillingsinformasjon mapFraBehandling(DokumentMalType dokumentMal, DokumentFelles dokumentFelles, boolean harVedlegg) {
         final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = new Dokumentbestillingsinformasjon();
-        dokumentbestillingsinformasjon.setDokumenttypeId(dokumentMal.getDoksysKode());
+        dokumentbestillingsinformasjon.setDokumenttypeId(dokumentMal.getDokSysKode().getKode());
         Fagsystemer vlfp = new Fagsystemer();
         vlfp.setKodeRef(Fagsystem.FPSAK.getOffisiellKode());
         vlfp.setValue(Fagsystem.FPSAK.getOffisiellKode());

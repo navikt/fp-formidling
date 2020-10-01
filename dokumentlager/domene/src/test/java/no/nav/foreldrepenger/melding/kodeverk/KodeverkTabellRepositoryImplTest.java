@@ -6,19 +6,17 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 public class KodeverkTabellRepositoryImplTest {
 
     @Rule
     public UnittestRepositoryRule repositoryRule = new UnittestRepositoryRule();
 
-    private KodeverkTabellRepository repository = new KodeverkTabellRepository(repositoryRule.getEntityManager());
-
     @Test
     public void skal_hente_en_dokumentmal() {
-        DokumentMalType resultat = repository.finnDokumentMalType(DokumentMalType.AVSLAGSVEDTAK_DOK);
-        assertThat(resultat.getKode()).isEqualTo(DokumentMalType.AVSLAGSVEDTAK_DOK);
+        DokumentMalType resultat = DokumentMalType.AVSLAGSVEDTAK_DOK;
+        assertThat(resultat.getKode()).isEqualTo(DokumentMalType.AVSLAGSVEDTAK_DOK.getKode());
     }
 
 }

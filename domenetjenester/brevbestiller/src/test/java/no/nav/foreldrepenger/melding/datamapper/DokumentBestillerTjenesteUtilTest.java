@@ -1,11 +1,10 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.SpraakkodeType;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class DokumentBestillerTjenesteUtilTest {
 

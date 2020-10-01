@@ -1,9 +1,16 @@
 package no.nav.foreldrepenger.melding.hendelser;
 
-import java.util.Objects;
-import java.util.UUID;
+import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
+import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinFormula;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,16 +19,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.JoinColumnOrFormula;
-import org.hibernate.annotations.JoinFormula;
-
-import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
-import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
-import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity(name = "DokumentHendelse")
 @Table(name = "DOKUMENT_HENDELSE")
@@ -37,8 +36,8 @@ public class DokumentHendelse extends BaseEntitet {
     @Column(name = "bestilling_uuid")
     private UUID bestillingUuid;
 
-    @ManyToOne
-    @JoinColumn(name = "dokument_mal_navn")
+    @Convert(converter = DokumentMalType.KodeverdiConverter.class)
+    @Column(name = "dokument_mal_navn")
     private DokumentMalType dokumentMalType;
 
     @ManyToOne

@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
@@ -10,7 +7,6 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
@@ -18,9 +14,13 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadInnvil
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD)
+@DokumentMalTypeRef(DokumentMalTypeKode.INNVILGELSE_ENGANGSSTØNAD)
 public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataMapper {
 
     private BrevParametere brevParametere;

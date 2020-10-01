@@ -1,22 +1,7 @@
 package no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.UUID;
-
-import javax.persistence.EntityManager;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
@@ -26,9 +11,21 @@ import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.kafkatjenester.felles.util.Serialiseringsverktøy;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepositoryImpl;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.felles.dokumentbestilling.kodeverk.FagsakYtelseType;
 import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+
+import javax.persistence.EntityManager;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class KafkaReaderTest {
     @Rule
@@ -40,7 +37,6 @@ public class KafkaReaderTest {
     @Mock
     private ProsessTaskRepository prosessTaskRepository;
     private KodeverkRepository kodeverkRepository;
-    private DokumentRepository dokumentRepository;
     private HendelseHandler hendelseHandler;
     private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
     private KafkaReader kafkaReader;
@@ -49,8 +45,7 @@ public class KafkaReaderTest {
     public void setup() {
         hendelseRepository = new HendelseRepository(entityManager);
         kodeverkRepository = new KodeverkRepositoryImpl(entityManager);
-        dokumentRepository = new DokumentRepository(entityManager);
-        dtoTilDomeneobjektMapper = new DokumentHendelseDtoMapper(kodeverkRepository, dokumentRepository);
+        dtoTilDomeneobjektMapper = new DokumentHendelseDtoMapper(kodeverkRepository);
         hendelseHandler = new HendelseHandler(hendelseRepository, prosessTaskRepository);
         this.kafkaReader = new KafkaReader(hendelseHandler, hendelseRepository, dtoTilDomeneobjektMapper);
     }
@@ -81,7 +76,7 @@ public class KafkaReaderTest {
         DokumentbestillingV1 dto = new DokumentbestillingV1();
         dto.setBehandlingUuid(UUID.randomUUID());
         dto.setDokumentbestillingUuid(UUID.randomUUID());
-        dto.setDokumentMal(DokumentMalType.AVSLAGSVEDTAK_DOK);
+        dto.setDokumentMal(DokumentMalType.AVSLAGSVEDTAK_DOK.getKode());
         dto.setFritekst("123");
         dto.setHistorikkAktør(HistorikkAktør.BESLUTTER.getKode());
         dto.setYtelseType(FagsakYtelseType.FORELDREPENGER);

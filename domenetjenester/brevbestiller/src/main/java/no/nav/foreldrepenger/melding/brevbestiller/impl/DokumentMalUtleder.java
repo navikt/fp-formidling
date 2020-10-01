@@ -15,7 +15,6 @@ import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
@@ -23,8 +22,8 @@ import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkTabellRepository;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 
 @ApplicationScoped
@@ -32,7 +31,6 @@ class DokumentMalUtleder {
 
     private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingUuid: ";
     private static final String FPSAK_FRITEKSTBREV_FOR_INNV_ENGANGSSTONAD = "fpsak.fritekstForInnvilgelseEngangsstonad";
-    private KodeverkTabellRepository kodeverkTabellRepository;
     private DomeneobjektProvider domeneobjektProvider;
     private HistorikkRepository historikkRepository;
     private BehandlingRestKlient behandlingRestKlient;
@@ -43,12 +41,10 @@ class DokumentMalUtleder {
     }
 
     @Inject
-    public DokumentMalUtleder(KodeverkTabellRepository kodeverkTabellRepository,
-                              DomeneobjektProvider domeneobjektProvider,
+    public DokumentMalUtleder(DomeneobjektProvider domeneobjektProvider,
                               HistorikkRepository historikkRepository,
                               BehandlingRestKlient behandlingRestKlient,
                               Unleash unleash) {
-        this.kodeverkTabellRepository = kodeverkTabellRepository;
         this.domeneobjektProvider = domeneobjektProvider;
         this.historikkRepository = historikkRepository;
         this.behandlingRestKlient = behandlingRestKlient;
@@ -64,13 +60,13 @@ class DokumentMalUtleder {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (behandlingsresultat.erInnvilget()) {
             if (unleash != null && unleash.isEnabled(FPSAK_FRITEKSTBREV_FOR_INNV_ENGANGSSTONAD, false)) {
-                return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD);
+                return DokumentMalType.INNVILGELSE_ENGANGSSTØNAD;
             }
             else {
-                return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.POSITIVT_VEDTAK_DOK);
+                return DokumentMalType.POSITIVT_VEDTAK_DOK;
             }
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.AVSLAGSVEDTAK_DOK);
+            return DokumentMalType.AVSLAGSVEDTAK_DOK;
         }
         throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
     }
@@ -78,11 +74,11 @@ class DokumentMalUtleder {
     private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK);
+            return DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK;
         } else if (behandlingsresultat.erAvslått()) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.AVSLAG_FORELDREPENGER_DOK);
+            return DokumentMalType.AVSLAG_FORELDREPENGER_DOK;
         } else if (behandlingsresultat.erOpphørt()) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.OPPHØR_DOK);
+            return DokumentMalType.OPPHØR_DOK;
         }
         throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
     }
@@ -90,7 +86,7 @@ class DokumentMalUtleder {
     private DokumentMalType mapSvangerskapspengerVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK);
+            return DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK;
         }
         throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
     }
@@ -113,12 +109,12 @@ class DokumentMalUtleder {
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
         if (!Objects.equals(hendelse.getVedtaksbrev(), Vedtaksbrev.AUTOMATISK) &&
                 Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST)) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.FRITEKST_DOK);
+            return DokumentMalType.FRITEKST_DOK;
         }
         if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {
             return mapKlageBrev(behandling);
         } else if (erRevurderingMedUendretUtfall(behandling)) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK);
+            return DokumentMalType.UENDRETUTFALL_DOK;
         } else if (FagsakYtelseType.FORELDREPENGER.equals(hendelse.getYtelseType())) {
             return mapForeldrepengerVedtaksbrev(behandling);
         } else if (FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType())) {
@@ -157,7 +153,7 @@ class DokumentMalUtleder {
     private boolean harSendtVarselOmRevurdering(Behandling behandling) {
         return historikkRepository.hentInnslagForBehandling(behandling.getUuid())
                 .stream().map(DokumentHistorikkinnslag::getDokumentMalType)
-                .anyMatch(mal -> mal.getKode().equals(DokumentMalType.REVURDERING_DOK))
+                .anyMatch(mal -> mal.getKode().equals(DokumentMalType.REVURDERING_DOK.getKode()))
                 || Boolean.TRUE.equals(behandlingRestKlient.harSendtVarselOmRevurdering(behandling.getResourceLinker()).orElse(false));
     }
 
@@ -174,13 +170,13 @@ class DokumentMalUtleder {
         KlageVurdering klagevurdering = klageVurderingResultat.getKlageVurdering();
 
         if (KlageVurdering.AVVIS_KLAGE.equals(klagevurdering)) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_AVVIST);
+            return DokumentMalType.KLAGE_AVVIST;
         } else if (Arrays.asList(KlageVurdering.OPPHEVE_YTELSESVEDTAK, KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE).contains(klagevurdering)) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_HJEMSENDT);
+            return DokumentMalType.KLAGE_HJEMSENDT;
         } else if (KlageVurdering.MEDHOLD_I_KLAGE.equals(klagevurdering)) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_OMGJØRING);
+            return DokumentMalType.KLAGE_OMGJØRING;
         } else if (KlageVurdering.STADFESTE_YTELSESVEDTAK.equals(klagevurdering)) {
-            return kodeverkTabellRepository.finnDokumentMalType(DokumentMalType.KLAGE_STADFESTET);
+            return DokumentMalType.KLAGE_STADFESTET;
         }
 
         throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();

@@ -1,26 +1,23 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjeneste;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalRestriksjon;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalRestriksjon;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjeneste {
-    private DokumentRepository dokumentRepository;
     private DomeneobjektProvider domeneobjektProvider;
     private SjekkDokumentTilgjengelig sjekkDokumentTilgjengelig;
 
@@ -29,10 +26,8 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
     }
 
     @Inject
-    public DokumentBehandlingTjenesteImpl(DokumentRepository dokumentRepository,
-                                          DomeneobjektProvider domeneobjektProvider,
+    public DokumentBehandlingTjenesteImpl(DomeneobjektProvider domeneobjektProvider,
                                           SjekkDokumentTilgjengelig sjekkDokumentTilgjengelig) {
-        this.dokumentRepository = dokumentRepository;
         this.domeneobjektProvider = domeneobjektProvider;
         this.sjekkDokumentTilgjengelig = sjekkDokumentTilgjengelig;
     }
@@ -42,7 +37,7 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
         Behandling behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
         final List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
 
-        List<DokumentMalType> kandidater = new ArrayList<>(dokumentRepository.hentAlleDokumentMalTyper());
+        List<DokumentMalType> kandidater = new ArrayList<>(DokumentMalType.hentAlle());
         List<DokumentMalType> fjernes = filtrerUtilgjengeligBrevmaler(behandling, kandidater, automatiskOpprettet(behandling), aksjonspunkter);
         kandidater.removeAll(fjernes);
         return tilBrevmalDto(behandling, sorterte(kandidater));
@@ -55,10 +50,10 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
     private List<DokumentMalType> sorterte(List<DokumentMalType> kandidater) {
         List<DokumentMalType> sorterte = new ArrayList<>();
         kandidater.stream()
-                .filter(dm -> DokumentMalRestriksjon.INGEN.equals(dm.getDokumentMalRestriksjon()))
+                .filter(dm -> DokumentMalRestriksjon.INGEN.equals(dm.getDokumentmalRestriksjon()))
                 .forEach(sorterte::add);
         kandidater.stream()
-                .filter(dm -> !(DokumentMalRestriksjon.INGEN.equals(dm.getDokumentMalRestriksjon())))
+                .filter(dm -> !(DokumentMalRestriksjon.INGEN.equals(dm.getDokumentmalRestriksjon())))
                 .forEach(sorterte::add);
         return sorterte;
     }
@@ -72,19 +67,19 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
 //            fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.ETTERLYS_INNTEKTSMELDING_DOK));
 //        }
         if (harBehandledeAksjonspunktVarselOmRevurdering(aksjonspunkter)) {
-            fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.FORLENGET_DOK));
-            fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.FORLENGET_MEDL_DOK));
-            fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.REVURDERING_DOK));
+            fjernes.add(DokumentMalType.FORLENGET_DOK);
+            fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);
+            fjernes.add(DokumentMalType.REVURDERING_DOK);
         } else if (behandling.erKlage()) {
-            fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.FORLENGET_MEDL_DOK));
-            fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.REVURDERING_DOK));
+            fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);
+            fjernes.add(DokumentMalType.REVURDERING_DOK);
         } else if (behandling.erRevurdering()) {
             if (!automatiskOpprettet) {
-                fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.FORLENGET_DOK));
-                fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.FORLENGET_MEDL_DOK));
+                fjernes.add(DokumentMalType.FORLENGET_DOK);
+                fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);
             }
         } else {
-            fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.REVURDERING_DOK));
+            fjernes.add(DokumentMalType.REVURDERING_DOK);
         }
         return fjernes;
     }
@@ -100,7 +95,7 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
         List<BrevmalDto> brevmalDtoList = new ArrayList<>(dmtList.size());
         for (DokumentMalType dmt : dmtList) {
             boolean tilgjengelig = sjekkDokumentTilgjengelig.sjekkOmTilgjengelig(behandling, dmt);
-            brevmalDtoList.add(new BrevmalDto(dmt.getKode(), dmt.getNavn(), mapKontraktDokumentMalRestriksjon(dmt.getDokumentMalRestriksjon()), tilgjengelig));
+            brevmalDtoList.add(new BrevmalDto(dmt.getKode(), dmt.getNavn(), mapKontraktDokumentMalRestriksjon(dmt.getDokumentmalRestriksjon()), tilgjengelig));
         }
         return brevmalDtoList;
     }

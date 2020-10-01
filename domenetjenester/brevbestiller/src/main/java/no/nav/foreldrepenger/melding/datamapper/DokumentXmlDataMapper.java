@@ -1,25 +1,8 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
-import java.io.StringReader;
-import java.time.LocalDate;
-import java.util.Set;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.jboss.weld.literal.NamedLiteral;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.geografisk.Landkoder;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
@@ -27,17 +10,28 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.IdKodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerAdresseType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerType;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.feil.FeilFactory;
 import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
+import org.jboss.weld.literal.NamedLiteral;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.CDI;
+import javax.inject.Inject;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringReader;
+import java.time.LocalDate;
+import java.util.Set;
 
 @ApplicationScoped
 public class DokumentXmlDataMapper {
     private KodeverkRepository kodeverkRepository;
 
-    private Set<String> forlengetBrevMaler = Set.of(DokumentMalType.FORLENGET_MEDL_DOK,
-            DokumentMalType.FORLENGET_TIDLIG_SOK,
-            DokumentMalType.FORLENGET_OPPTJENING,
-            DokumentMalType.FORLENGET_DOK);
 
     public DokumentXmlDataMapper() {
         //CDI
@@ -68,8 +62,8 @@ public class DokumentXmlDataMapper {
 
     public DokumentTypeMapper velgDokumentMapper(DokumentMalType dokumentMalType) {
         String faktiskDokumentmal = dokumentMalType.getKode();
-        if (forlengetBrevMaler.contains(dokumentMalType.getKode())) {
-            faktiskDokumentmal = DokumentMalType.FORLENGET_DOK;
+        if (DokumentMalType.FORLENGET_BREVMALER.contains(dokumentMalType.getKode())) {
+            faktiskDokumentmal = DokumentMalType.FORLENGET_DOK.getKode();
         }
         return CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(faktiskDokumentmal)).get();
     }

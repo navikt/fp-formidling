@@ -10,6 +10,7 @@ import java.util.UUID;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,7 +21,6 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -117,12 +117,12 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SOEKERS_NAVN));
     }
 
-    private DokumentHendelse byggHendelse(String mal, FagsakYtelseType ytelseType) {
+    private DokumentHendelse byggHendelse(DokumentMalType mal, FagsakYtelseType ytelseType) {
         return DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(ytelseType)
-                .medDokumentMalType(dokumentRepository.hentDokumentMalType(mal))
+                .medDokumentMalType(mal)
                 .build();
     }
 

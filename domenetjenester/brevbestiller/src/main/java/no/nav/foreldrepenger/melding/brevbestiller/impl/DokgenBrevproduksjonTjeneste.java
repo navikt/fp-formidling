@@ -34,11 +34,11 @@ import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokdist.DokdistRestKlient;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.FerdigstillJournalpostTjeneste;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.OpprettJournalpostTjeneste;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.TilknyttVedleggTjeneste;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.DokumentOpprettRequest;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.OpprettJournalpostResponse;
+import no.nav.foreldrepenger.melding.integrasjon.journal.FerdigstillJournalpostTjeneste;
+import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
+import no.nav.foreldrepenger.melding.integrasjon.journal.TilknyttVedleggTjeneste;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettRequest;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
@@ -109,12 +109,12 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
             DokumentdataMapper dokumentdataMapper = velgDokumentMapper(dokumentMal);
             Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
-            dokumentFelles.setBrevData(JsonMapper.toJson(dokumentData));
+            dokumentFelles.setBrevData(JsonMapper.toJson(dokumentdata));
 
             byte[] brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
 
             DokumentOpprettRequest generertBrev = new DokumentOpprettRequest(dokumentHendelse.getTittel(), dokumentMal.getKode(), null, brev);
-            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(generertBrev, dokumentFelles, dokumentHendelse, behandling.getFagsak().getId(), !harVedlegg);
+            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(generertBrev, dokumentFelles, dokumentHendelse, behandling.getFagsak().getSaksnummer(), !harVedlegg);
             JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
             dokdistRestKlient.distribuerJournalpost(journalpostId);
 

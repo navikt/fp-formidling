@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost;
+package no.nav.foreldrepenger.melding.integrasjon.journal;
 
 import java.util.List;
 
@@ -11,16 +11,17 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.AvsenderMottaker;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.AvsenderMottakerIdType;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.Bruker;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.BrukerIdType;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.DokumentOpprettRequest;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.OpprettJournalpostRequest;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.OpprettJournalpostResponse;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.Sak;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.AvsenderMottaker;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.AvsenderMottakerIdType;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.Bruker;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.BrukerIdType;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettRequest;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostRequest;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.Sak;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingTema;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 @ApplicationScoped
 public class OpprettJournalpostTjeneste {
@@ -39,11 +40,11 @@ public class OpprettJournalpostTjeneste {
         this.journalpostRestKlient = journalpostRestKlient;
     }
 
-    public OpprettJournalpostResponse journalførUtsendelse(DokumentOpprettRequest generertBrev, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Long fagsakId, boolean ferdigstill) {
+    public OpprettJournalpostResponse journalførUtsendelse(DokumentOpprettRequest generertBrev, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill) {
         LOG.info("Starter journalføring av brev sendt for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), generertBrev.getBrevkode());
 
         try {
-            OpprettJournalpostResponse response = journalpostRestKlient.opprettJournalpost(lagRequest(generertBrev, dokumentFelles, dokumentHendelse, fagsakId), ferdigstill);
+            OpprettJournalpostResponse response = journalpostRestKlient.opprettJournalpost(lagRequest(generertBrev, dokumentFelles, dokumentHendelse, saksnummer), ferdigstill);
 
             if (ferdigstill && !response.erFerdigstilt()) {
                 LOG.warn("Journalpost {} ble ikke ferdigstilt", response.getJournalpostId());
@@ -55,10 +56,10 @@ public class OpprettJournalpostTjeneste {
         }
     }
 
-    private OpprettJournalpostRequest lagRequest(DokumentOpprettRequest generertBrev, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Long fagsakId) {
+    private OpprettJournalpostRequest lagRequest(DokumentOpprettRequest generertBrev, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Saksnummer saksnummer) {
         AvsenderMottaker avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), dokumentFelles.getMottakerNavn(), AvsenderMottakerIdType.FØDSELSNUMMER);
         Bruker bruker = new Bruker(dokumentFelles.getSakspartId(),BrukerIdType.FNR);
-        Sak sak = new Sak(fagsakId.toString(), Fagsystem.FPSAK.getOffisiellKode(), FAGSAK);
+        Sak sak = new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), FAGSAK);
 
         return new OpprettJournalpostRequest(
                 avsenderMottaker,

@@ -22,7 +22,7 @@
     </modules>
 
     <properties>
-        <revision>1.1</revision>
+        <revision>1.2</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <java.version>11</java.version>
@@ -160,6 +160,11 @@
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>dokdist-klient</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>journal-klient</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost;
+package no.nav.foreldrepenger.melding.integrasjon.journal;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -8,10 +8,10 @@ import javax.inject.Inject;
 
 import org.apache.http.client.utils.URIBuilder;
 
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.FerdigstillJournalpostRequest;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.OpprettJournalpostRequest;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.OpprettJournalpostResponse;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.TilknyttVedleggRequest;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.FerdigstillJournalpostRequest;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostRequest;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.TilknyttVedleggRequest;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 import no.nav.vedtak.konfig.KonfigVerdi;

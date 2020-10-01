@@ -1,11 +1,11 @@
-package no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto;
+package no.nav.foreldrepenger.melding.integrasjon.journal.dto;
+
+import java.util.Base64;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.Base64;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)

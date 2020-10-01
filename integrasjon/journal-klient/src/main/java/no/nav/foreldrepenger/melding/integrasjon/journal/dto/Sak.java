@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto;
+package no.nav.foreldrepenger.melding.integrasjon.journal.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

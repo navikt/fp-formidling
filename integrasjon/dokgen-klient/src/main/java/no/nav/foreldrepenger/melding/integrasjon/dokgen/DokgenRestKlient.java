@@ -36,17 +36,18 @@ public class DokgenRestKlient {
         this.endpointDokgenRestBase = endpointDokgenRestBase;
     }
 
-    public byte[] genererPdf(String maltype, Språkkode språkKode, Dokumentdata dokumentdata) {
+    public byte[] genererPdf(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
         Optional<byte[]> pdf;
         try {
-            String templatePath = String.format("/template/%s/template_%s", maltype.toLowerCase(), getSpråkkode(språkKode));
+            String templatePath = String.format("/template/%s/template_%s", maltype.toLowerCase(), getSpråkkode(språkkode));
             URIBuilder uriBuilder = new URIBuilder(endpointDokgenRestBase + templatePath + CREATE_PDF);
+            LOGGER.info("Kaller Dokgen for generering av mal {} på språk {}", maltype, språkkode.getKode());
             pdf = oidcRestClient.postReturnsOptionalOfByteArray(uriBuilder.build(), dokumentdata);
         } catch (Exception e) {
-            throw DokgenFeil.FACTORY.feilVedKallTilDokgen(maltype, språkKode.getKode(), e).toException();
+            throw DokgenFeil.FACTORY.feilVedKallTilDokgen(maltype, språkkode.getKode(), e).toException();
         }
         if (pdf.isEmpty()) {
-            throw DokgenFeil.FACTORY.tomtSvarFraDokgen(maltype, språkKode.getKode()).toException();
+            throw DokgenFeil.FACTORY.tomtSvarFraDokgen(maltype, språkkode.getKode()).toException();
         }
         return pdf.get();
     }

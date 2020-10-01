@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost;
+package no.nav.foreldrepenger.melding.integrasjon.journal;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.FerdigstillJournalpostRequest;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.FerdigstillJournalpostRequest;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
 @ApplicationScoped

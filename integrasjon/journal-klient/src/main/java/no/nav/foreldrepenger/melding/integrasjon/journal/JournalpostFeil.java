@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost;
+package no.nav.foreldrepenger.melding.integrasjon.journal;
 
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.vedtak.feil.Feil;

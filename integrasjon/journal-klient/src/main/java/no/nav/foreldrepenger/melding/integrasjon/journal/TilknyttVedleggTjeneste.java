@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost;
+package no.nav.foreldrepenger.melding.integrasjon.journal;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.DokumentTilknytt;
-import no.nav.foreldrepenger.melding.integrasjoner.opprettJournalpost.dto.TilknyttVedleggRequest;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentTilknytt;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.TilknyttVedleggRequest;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
 @ApplicationScoped

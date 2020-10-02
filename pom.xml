@@ -38,7 +38,7 @@
 
         <!-- Eksterne -->
         <prometheus.version>0.9.0</prometheus.version>
-        <swagger.version>2.1.4</swagger.version>
+        <swagger.version>2.1.5</swagger.version>
         <swagger-ui.version>3.34.0</swagger-ui.version>
         <kafka.version>2.6.0</kafka.version>
     </properties>

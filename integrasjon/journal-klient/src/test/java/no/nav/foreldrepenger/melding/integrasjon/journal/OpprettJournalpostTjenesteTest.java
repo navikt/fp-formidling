@@ -1,35 +1,34 @@
 package no.nav.foreldrepenger.melding.integrasjon.journal;
 
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettRequest;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettResponse;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostRequest;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.util.List;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.UUID;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettRequest;
-import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostRequest;
-import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
-import no.nav.foreldrepenger.melding.typer.Saksnummer;
-
 public class OpprettJournalpostTjenesteTest {
-    private static final String SAK_ID = "456";
-    private static final String AVSENDER_ID = "3000";
-    private static final String BRUKER_ID = "1234";
+    private static final String MOTTAKER_ID = "1234";
     private static final String JOURNALPOST_ID = "234567";
-    private static final String SOEKERS_NAVN = "SOEKERS_NAVN";
+    private static final String MOTTAKER_NAVN = "SOEKERS_NAVN";
     private static final String FRITEKST = "FRITEKST";
-    private static final LocalDateTime FORSENDELSE_MOTTATT = LocalDateTime.now();
     private static final byte[] GEN_BREV = "Dette er et lite testbrev med lite innhold".getBytes();
+    private static final String FNR = "99999999899";
 
     private OpprettJournalpostTjeneste opprettJournalpost; // objektet vi tester
 
@@ -38,24 +37,28 @@ public class OpprettJournalpostTjenesteTest {
 
     @Before
     public void setup()  {
-        OpprettJournalpostResponse response = new OpprettJournalpostResponse(JOURNALPOST_ID, true, Collections.emptyList());
-        when(journalpostRestKlient.opprettJournalpost(any(OpprettJournalpostRequest.class), eq(true))).thenReturn(response);
         opprettJournalpost = new OpprettJournalpostTjeneste(journalpostRestKlient);
+
+        OpprettJournalpostResponse response = new OpprettJournalpostResponse(JOURNALPOST_ID, true, List.of(new DokumentOpprettResponse("1111")));
+        when(journalpostRestKlient.opprettJournalpost(any(OpprettJournalpostRequest.class), eq(true))).thenReturn(response);
+
     }
 
     @Test
     public void skal_journalføre_generert_brev() {
         DokumentFelles dokumentFelles = getDokumentFelles();
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder()
-                .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medTittel("Innvilget Engangsstønad")
                 .build();
 
         Saksnummer saksnummer = new Saksnummer("123456789");
 
-        DokumentOpprettRequest generertBrev = lagDokumentOpprettRequest(dokumentHendelse.getTittel(), "", "");
-        OpprettJournalpostResponse response = opprettJournalpost.journalførUtsendelse(generertBrev, dokumentFelles, dokumentHendelse, saksnummer, true);
-        //TODO(Anja): Fullføre testen - jeg har gjort det som skal til for at det kompilerer :-)
+        DokumentOpprettRequest generertBrev = lagDokumentOpprettRequest(dokumentHendelse.getTittel(), DokumentMalType.UDEFINERT.getKode(), "");
+
+        OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(generertBrev, dokumentFelles, dokumentHendelse, saksnummer, true);
+
+        assertThat(responseMocked.erFerdigstilt()).isTrue();
+        assertThat(!responseMocked.getJournalpostId().isEmpty());
     }
 
     private DokumentOpprettRequest lagDokumentOpprettRequest(String tittel, String brevkode, String dokumentKategori) {
@@ -64,8 +67,9 @@ public class OpprettJournalpostTjenesteTest {
 
     private DokumentFelles getDokumentFelles() {
         DokumentFelles dokumentFelles = Mockito.mock(DokumentFelles.class);
-        when(dokumentFelles.getSakspartNavn()).thenReturn(SOEKERS_NAVN);
-        when(dokumentFelles.getSakspartPersonStatus()).thenReturn("ANNET");
+        when(dokumentFelles.getMottakerNavn()).thenReturn(MOTTAKER_NAVN);
+        when(dokumentFelles.getSakspartId()).thenReturn(FNR);
+        when(dokumentFelles.getMottakerId()).thenReturn(MOTTAKER_ID);
         return dokumentFelles;
     }
 
@@ -74,6 +78,6 @@ public class OpprettJournalpostTjenesteTest {
                 .medBestillingUuid(UUID.randomUUID())
                 .medBehandlingUuid(UUID.randomUUID())
                 .medFritekst(FRITEKST)
-                .medYtelseType(FagsakYtelseType.FORELDREPENGER);
+                .medYtelseType(FagsakYtelseType.ENGANGSTØNAD);
     }
 }

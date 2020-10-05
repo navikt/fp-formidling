@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,7 +21,6 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -114,12 +114,12 @@ public class InfoTilAnnenForelderBrevMapperDatoTest {
         assertThat(xml).contains(Dato.formaterDato(LocalDate.now().minusDays(4)));
     }
 
-    private DokumentHendelse byggHendelse(String mal, FagsakYtelseType ytelseType) {
+    private DokumentHendelse byggHendelse(DokumentMalType malType, FagsakYtelseType ytelseType) {
         return DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(ytelseType)
-                .medDokumentMalType(dokumentRepository.hentDokumentMalType(mal))
+                .medDokumentMalType(malType)
                 .build();
     }
 }

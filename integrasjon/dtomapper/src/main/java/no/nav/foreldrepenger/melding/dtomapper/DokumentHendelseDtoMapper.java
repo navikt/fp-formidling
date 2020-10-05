@@ -4,12 +4,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 import no.nav.vedtak.util.StringUtils;
 
@@ -17,17 +16,14 @@ import no.nav.vedtak.util.StringUtils;
 public class DokumentHendelseDtoMapper {
 
     private KodeverkRepository kodeverkRepository;
-    private DokumentRepository dokumentRepository;
 
     public DokumentHendelseDtoMapper() {
         //CDI
     }
 
     @Inject
-    public DokumentHendelseDtoMapper(KodeverkRepository kodeverkRepository,
-                                     DokumentRepository dokumentRepository) {
+    public DokumentHendelseDtoMapper(KodeverkRepository kodeverkRepository) {
         this.kodeverkRepository = kodeverkRepository;
-        this.dokumentRepository = dokumentRepository;
     }
 
     private RevurderingVarslingÅrsak utledRevurderingVarslingsårsak(String varslingsårsak) {
@@ -48,7 +44,7 @@ public class DokumentHendelseDtoMapper {
         if (StringUtils.nullOrEmpty(dokumentmal)) {
             return null;
         }
-        return dokumentRepository.hentDokumentMalType(dokumentmal);
+        return DokumentMalType.fraKode(dokumentmal);
     }
 
     private HistorikkAktør utledHistorikkAktør(String historikkAktør) {

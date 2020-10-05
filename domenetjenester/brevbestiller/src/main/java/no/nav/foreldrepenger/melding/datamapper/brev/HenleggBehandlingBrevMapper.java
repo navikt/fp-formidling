@@ -1,22 +1,11 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import java.util.Objects;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.AvbruttbehandlingConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.BehandlingsTypeKode;
@@ -26,10 +15,19 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.Obje
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.OpphavTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.YtelseTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import org.xml.sax.SAXException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.util.Objects;
 
 @ApplicationScoped
-@Named(DokumentMalType.HENLEGG_BEHANDLING_DOK)
+@Named(DokumentMalTypeKode.HENLEGG_BEHANDLING_DOK)
 public class HenleggBehandlingBrevMapper extends DokumentTypeMapper {
 
     static final String FAMPEN = "NAV Familie- og pensjonsytelser";

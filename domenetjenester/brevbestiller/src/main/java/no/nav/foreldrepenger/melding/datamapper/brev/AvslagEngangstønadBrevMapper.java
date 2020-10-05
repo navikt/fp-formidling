@@ -1,21 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
@@ -23,7 +7,6 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -35,15 +18,30 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.RelasjonskodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.VilkaartypeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 import no.nav.foreldrepenger.melding.vilkår.repository.VilkårKodeverkRepository;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import org.xml.sax.SAXException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 
 @ApplicationScoped
-@Named(DokumentMalType.AVSLAGSVEDTAK_DOK)
+@Named(DokumentMalTypeKode.AVSLAGSVEDTAK_DOK)
 public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
     private static final Map<RelasjonsRolleType, RelasjonskodeType> relasjonskodeTypeMap;
     private static final Map<String, VilkaartypeType> vilkaartypeMap;

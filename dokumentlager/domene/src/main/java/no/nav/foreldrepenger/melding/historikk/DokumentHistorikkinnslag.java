@@ -1,9 +1,13 @@
 package no.nav.foreldrepenger.melding.historikk;
 
-import java.util.Objects;
-import java.util.UUID;
+import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinFormula;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,13 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.JoinColumnOrFormula;
-import org.hibernate.annotations.JoinFormula;
-
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
-import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity(name = "DokumentHistorikkinnslag")
 @Table(name = "DOKUMENT_HISTORIKKINNSLAG")
@@ -52,9 +51,9 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
     @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + HistorikkinnslagType.DISCRIMINATOR + "'"))
     private HistorikkinnslagType historikkinnslagType;
 
-    @ManyToOne
-    @JoinColumn(name = "dokument_mal_navn", nullable = false)
-    private DokumentMalType dokumentMalType;
+    @Convert(converter = DokumentMalType.KodeverdiConverter.class)
+    @Column(name = "dokument_mal_navn", nullable = false)
+    private DokumentMalType dokumentMalType = DokumentMalType.UDEFINERT;
 
     public DokumentHistorikkinnslag() {
         //Hibernate

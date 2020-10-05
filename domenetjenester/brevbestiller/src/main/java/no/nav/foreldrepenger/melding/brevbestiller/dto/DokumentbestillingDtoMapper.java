@@ -7,27 +7,24 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 public class DokumentbestillingDtoMapper {
     private KodeverkRepository kodeverkRepository;
-    private DokumentRepository dokumentRepository;
 
     public DokumentbestillingDtoMapper() {
         //CDI
     }
 
     @Inject
-    public DokumentbestillingDtoMapper(KodeverkRepository kodeverkRepository, DokumentRepository dokumentRepository) {
+    public DokumentbestillingDtoMapper(KodeverkRepository kodeverkRepository) {
         this.kodeverkRepository = kodeverkRepository;
-        this.dokumentRepository = dokumentRepository;
     }
 
     public DokumentHendelse mapDokumentbestillingFraDtoForEndepunkt(DokumentbestillingDto brevDto) {
@@ -64,7 +61,7 @@ public class DokumentbestillingDtoMapper {
         if (StringUtils.nullOrEmpty(dokumentmal)) {
             return null;
         }
-        return dokumentRepository.hentDokumentMalType(dokumentmal);
+        return DokumentMalType.fraKode(dokumentmal);
     }
 
     private HistorikkAktør utledHistorikkAktør(String historikkAktør) {

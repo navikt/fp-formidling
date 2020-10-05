@@ -22,4 +22,5 @@ public class DokumentMalRestriksjon extends Kodeliste {
     private DokumentMalRestriksjon(String kode) {
         super(kode, DISCRIMINATOR);
     }
+
 }

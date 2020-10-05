@@ -1,24 +1,11 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import java.math.BigInteger;
-import java.util.Map;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.BrevdataType;
@@ -28,16 +15,27 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.ObjectFactor
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.VariantKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import org.xml.sax.SAXException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.math.BigInteger;
+import java.util.Map;
 
 @ApplicationScoped
-@Named(DokumentMalType.FORLENGET_DOK)
+@Named(DokumentMalTypeKode.FORLENGET_DOK)
 public class ForlengetSaksbehandlingstidBrevMapper extends DokumentTypeMapper {
 
     private Map<String, VariantKode> malTilVariantMap = Map.of(
-            DokumentMalType.FORLENGET_MEDL_DOK, VariantKode.MEDLEM,
-            DokumentMalType.FORLENGET_TIDLIG_SOK, VariantKode.FORTIDLIG,
-            DokumentMalType.FORLENGET_OPPTJENING, VariantKode.OPPTJENING
+            DokumentMalTypeKode.FORLENGET_MEDL_DOK, VariantKode.MEDLEM,
+            DokumentMalTypeKode.FORLENGET_TIDLIG_SOK, VariantKode.FORTIDLIG,
+            DokumentMalTypeKode.FORLENGET_OPPTJENING, VariantKode.OPPTJENING
     );
 
     public ForlengetSaksbehandlingstidBrevMapper() {

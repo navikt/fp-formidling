@@ -1,25 +1,24 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.typer.Dato;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
 @ApplicationScoped
-@Named(DokumentMalType.KLAGE_OVERSENDT_KLAGEINSTANS)
+@Named(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS)
 public class KlageOversendtTilKlageinstansBrevMapper extends FritekstmalBrevMapper {
 
     private static final int BEHANDLINGSFRIST_UKER_KA = 14;

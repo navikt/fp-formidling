@@ -1,17 +1,8 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.BrevdataType;
@@ -19,10 +10,18 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.UendretutfallConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.YtelseTypeKode;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import org.xml.sax.SAXException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
 
 @ApplicationScoped
-@Named(DokumentMalType.UENDRETUTFALL_DOK)
+@Named(DokumentMalTypeKode.UENDRETUTFALL_DOK)
 public class UendretutfallBrevMapper extends DokumentTypeMapper {
 
     public UendretutfallBrevMapper() {

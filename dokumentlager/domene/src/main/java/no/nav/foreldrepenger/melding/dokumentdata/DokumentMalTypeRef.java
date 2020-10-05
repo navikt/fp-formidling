@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.dokumentdata;
 
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

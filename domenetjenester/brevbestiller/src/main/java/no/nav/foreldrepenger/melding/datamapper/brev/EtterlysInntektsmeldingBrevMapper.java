@@ -16,12 +16,12 @@ import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeVerktøy;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 
 @ApplicationScoped
-@Named(DokumentMalType.ETTERLYS_INNTEKTSMELDING_DOK)
+@Named(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_DOK)
 public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
 
     private BrevMapperUtil brevMapperUtil;

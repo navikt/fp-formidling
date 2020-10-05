@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.UUID;
 
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,8 +16,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
@@ -36,12 +35,10 @@ public class DokumentHistorikkTjenesteTest {
     private DokumentHistorikkTjeneste historikkTjeneste;
     @Spy
     private DokumentHistorikkinnslagProducer historikkMeldingProducer;
-    private DokumentRepository dokumentRepository;
     private HendelseRepository hendelseRepository;
 
     @Before
     public void setup() {
-        dokumentRepository = new DokumentRepository(repositoryRule.getEntityManager());
         hendelseRepository = new HendelseRepository(repositoryRule.getEntityManager());
         historikkTjeneste = new DokumentHistorikkTjeneste(historikkMeldingProducer);
         doAnswer((i) -> null).when(historikkMeldingProducer).sendJson(Mockito.any());
@@ -59,7 +56,7 @@ public class DokumentHistorikkTjenesteTest {
                 .medBehandlingUuid(UUID.randomUUID())
                 .medHistorikkUuid(UUID.randomUUID())
                 .medHendelseId(hendelse.getId())
-                .medDokumentMalType(dokumentRepository.hentDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK))
+                .medDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK)
                 .medJournalpostId(new JournalpostId("123"))
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)
                 .medDokumentId("123")

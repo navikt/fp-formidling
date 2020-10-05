@@ -5,10 +5,10 @@ import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ import javax.inject.Named;
 import java.util.Optional;
 
 @ApplicationScoped
-@Named(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD)
+@Named(DokumentMalTypeKode.INNVILGELSE_ENGANGSSTØNAD)
 public class InnvilgelseEngangstønadNyBrevMapper extends FritekstmalBrevMapper {
 
     public InnvilgelseEngangstønadNyBrevMapper() {

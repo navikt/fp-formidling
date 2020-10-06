@@ -23,7 +23,7 @@ public class DokumentOpprettResponse {
     @Override
     public String toString() {
         return "DokumentOpprettResponse{" +
-                ", dokumentInfoId='" + dokumentInfoId + '\'' +
+                "dokumentInfoId='" + dokumentInfoId + '\'' +
                 '}';
     }
 }

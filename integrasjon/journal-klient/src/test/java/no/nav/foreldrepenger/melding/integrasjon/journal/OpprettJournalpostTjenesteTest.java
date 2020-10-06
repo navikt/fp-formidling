@@ -1,26 +1,26 @@
 package no.nav.foreldrepenger.melding.integrasjon.journal;
 
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettRequest;
-import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettResponse;
-import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostRequest;
-import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.melding.typer.Saksnummer;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-
-import java.util.List;
-import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettResponse;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostRequest;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 public class OpprettJournalpostTjenesteTest {
     private static final String MOTTAKER_ID = "1234";
@@ -41,7 +41,6 @@ public class OpprettJournalpostTjenesteTest {
 
         OpprettJournalpostResponse response = new OpprettJournalpostResponse(JOURNALPOST_ID, true, List.of(new DokumentOpprettResponse("1111")));
         when(journalpostRestKlient.opprettJournalpost(any(OpprettJournalpostRequest.class), eq(true))).thenReturn(response);
-
     }
 
     @Test
@@ -53,16 +52,10 @@ public class OpprettJournalpostTjenesteTest {
 
         Saksnummer saksnummer = new Saksnummer("123456789");
 
-        DokumentOpprettRequest generertBrev = lagDokumentOpprettRequest(dokumentHendelse.getTittel(), DokumentMalType.UDEFINERT.getKode(), "");
-
-        OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(generertBrev, dokumentFelles, dokumentHendelse, saksnummer, true);
+        OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.UDEFINERT, dokumentFelles, dokumentHendelse, saksnummer, true);
 
         assertThat(responseMocked.erFerdigstilt()).isTrue();
         assertThat(!responseMocked.getJournalpostId().isEmpty());
-    }
-
-    private DokumentOpprettRequest lagDokumentOpprettRequest(String tittel, String brevkode, String dokumentKategori) {
-        return new DokumentOpprettRequest(tittel, brevkode, dokumentKategori, GEN_BREV);
     }
 
     private DokumentFelles getDokumentFelles() {

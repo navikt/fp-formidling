@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostR
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.Sak;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingTema;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
@@ -40,11 +41,11 @@ public class OpprettJournalpostTjeneste {
         this.journalpostRestKlient = journalpostRestKlient;
     }
 
-    public OpprettJournalpostResponse journalførUtsendelse(DokumentOpprettRequest generertBrev, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill) {
-        LOG.info("Starter journalføring av brev sendt for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), generertBrev.getBrevkode());
+    public OpprettJournalpostResponse journalførUtsendelse(byte[] brev, DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill) {
+        LOG.info("Starter journalføring av brev sendt for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode());
 
         try {
-            OpprettJournalpostResponse response = journalpostRestKlient.opprettJournalpost(lagRequest(generertBrev, dokumentFelles, dokumentHendelse, saksnummer), ferdigstill);
+            OpprettJournalpostResponse response = journalpostRestKlient.opprettJournalpost(lagRequest(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer), ferdigstill);
 
             if (ferdigstill && !response.erFerdigstilt()) {
                 LOG.warn("Journalpost {} ble ikke ferdigstilt", response.getJournalpostId());
@@ -52,13 +53,15 @@ public class OpprettJournalpostTjeneste {
 
             return response;
         } catch (Exception e) {
-            throw JournalpostFeil.FACTORY.klarteIkkeOppretteJournalpost(dokumentHendelse.getBehandlingUuid().toString(), generertBrev.getBrevkode(), e).toException();
+            throw JournalpostFeil.FACTORY.klarteIkkeOppretteJournalpost(dokumentHendelse.getBehandlingUuid().toString(), dokumentMalType.getKode(), e).toException();
         }
     }
 
-    private OpprettJournalpostRequest lagRequest(DokumentOpprettRequest generertBrev, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Saksnummer saksnummer) {
-        AvsenderMottaker avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), dokumentFelles.getMottakerNavn(), AvsenderMottakerIdType.FØDSELSNUMMER);
-        Bruker bruker = new Bruker(dokumentFelles.getSakspartId(),BrukerIdType.FNR);
+    private OpprettJournalpostRequest lagRequest(byte[] brev, DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Saksnummer saksnummer) {
+        DokumentOpprettRequest dokument = new DokumentOpprettRequest(getTittel(dokumentHendelse, dokumentMalType), dokumentMalType.getKode(), null, brev);
+
+        AvsenderMottaker avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), dokumentFelles.getMottakerNavn(), AvsenderMottakerIdType.FNR);
+        Bruker bruker = new Bruker(dokumentFelles.getSakspartId(), BrukerIdType.FNR);
         Sak sak = new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), FAGSAK);
 
         return new OpprettJournalpostRequest(
@@ -66,10 +69,14 @@ public class OpprettJournalpostTjeneste {
                 bruker,
                 TEMA_FORELDREPENGER,
                 mapBehandlingsTema(dokumentHendelse.getYtelseType()),
-                dokumentHendelse.getTittel(),
+                getTittel(dokumentHendelse, dokumentMalType),
                 AUTOMATISK_JOURNALFØRENDE_ENHET,
                 sak,
-                List.of(generertBrev));
+                List.of(dokument));
+    }
+
+    private String getTittel(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMalType) {
+        return dokumentHendelse.getTittel() != null ? dokumentHendelse.getTittel() : dokumentMalType.getNavn();
     }
 
     private String mapBehandlingsTema(FagsakYtelseType ytelseType) {

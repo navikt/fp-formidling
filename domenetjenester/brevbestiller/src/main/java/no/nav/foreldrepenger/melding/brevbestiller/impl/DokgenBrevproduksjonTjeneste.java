@@ -21,11 +21,11 @@ import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.JsonMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevproduksjonTjeneste;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
+import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapperProvider;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
@@ -37,7 +37,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.journal.FerdigstillJournalpostTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.TilknyttVedleggTjeneste;
-import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettRequest;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
@@ -54,6 +53,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private TilknyttVedleggTjeneste tilknyttVedleggTjeneste;
     private FerdigstillJournalpostTjeneste ferdigstillJournalpostTjeneste;
     private DokdistRestKlient dokdistRestKlient;
+    private DokumentdataMapperProvider dokumentdataMapperProvider;
 
     DokgenBrevproduksjonTjeneste() {
         // CDI
@@ -67,7 +67,8 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                                         OpprettJournalpostTjeneste opprettJournalpostTjeneste,
                                         TilknyttVedleggTjeneste tilknyttVedleggTjeneste,
                                         FerdigstillJournalpostTjeneste ferdigstillJournalpostTjeneste,
-                                        DokdistRestKlient dokdistRestKlient) {
+                                        DokdistRestKlient dokdistRestKlient,
+                                        DokumentdataMapperProvider dokumentdataMapperProvider) {
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentRepository = dokumentRepository;
@@ -76,6 +77,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         this.tilknyttVedleggTjeneste = tilknyttVedleggTjeneste;
         this.ferdigstillJournalpostTjeneste = ferdigstillJournalpostTjeneste;
         this.dokdistRestKlient = dokdistRestKlient;
+        this.dokumentdataMapperProvider = dokumentdataMapperProvider;
     }
 
     @Override
@@ -85,7 +87,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         dokumentRepository.lagre(dokumentData);
         DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
 
-        DokumentdataMapper dokumentdataMapper = velgDokumentMapper(dokumentMal);
+        DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
         Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(førsteDokumentFelles, dokumentHendelse, behandling);
         byte[] brev;
         try {
@@ -107,14 +109,12 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         List<DokumentHistorikkinnslag> historikkinnslag = new ArrayList<>();
 
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
-            DokumentdataMapper dokumentdataMapper = velgDokumentMapper(dokumentMal);
+            DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
             Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
             dokumentFelles.setBrevData(JsonMapper.toJson(dokumentdata));
 
             byte[] brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
-
-            DokumentOpprettRequest generertBrev = new DokumentOpprettRequest(dokumentHendelse.getTittel(), dokumentMal.getKode(), null, brev);
-            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(generertBrev, dokumentFelles, dokumentHendelse, behandling.getFagsak().getSaksnummer(), !harVedlegg);
+            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse, behandling.getFagsak().getSaksnummer(), !harVedlegg);
             JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
             dokdistRestKlient.distribuerJournalpost(journalpostId);
 
@@ -136,10 +136,6 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                 .medBestiltTid(LocalDateTime.now())
                 .medBestillingType(bestillingType.name())
                 .build();
-    }
-
-    private DokumentdataMapper velgDokumentMapper(DokumentMalType dokumentMalType) {
-        return DokumentMalTypeRef.Lookup.find(DokumentdataMapper.class, dokumentMalType.getKode()).orElseThrow();
     }
 
     private Collection<InnsynDokument> finnEventuelleVedlegg(Behandling behandling, DokumentMalType dokumentMal) {

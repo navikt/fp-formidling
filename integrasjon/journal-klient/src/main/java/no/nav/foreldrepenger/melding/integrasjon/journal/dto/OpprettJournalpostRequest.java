@@ -31,8 +31,8 @@ public class OpprettJournalpostRequest {
     private String eksternReferanseId = null;
     @JsonProperty("sak")
     private Sak sak;
-    @JsonProperty("generertDokumenter")
-    private List <DokumentOpprettRequest> generertDokumenter;
+    @JsonProperty("dokumenter")
+    private List<DokumentOpprettRequest> dokumenter;
 
     public OpprettJournalpostRequest(@JsonProperty("avsenderMottaker")AvsenderMottaker avsenderMottaker,
                                      @JsonProperty("bruker")Bruker bruker,
@@ -41,7 +41,7 @@ public class OpprettJournalpostRequest {
                                      @JsonProperty("tittel")String tittel,
                                      @JsonProperty("journalfoerendeEnhet")String journalfoerendeEnhet,
                                      @JsonProperty("sak")Sak sak,
-                                     @JsonProperty("generertDokumenter")List<DokumentOpprettRequest> generertDokumenter) {
+                                     @JsonProperty("dokumenter")List<DokumentOpprettRequest> dokumenter) {
         this.avsenderMottaker = avsenderMottaker;
         this.bruker = bruker;
         this.tema = tema;
@@ -49,7 +49,7 @@ public class OpprettJournalpostRequest {
         this.tittel = tittel;
         this.journalfoerendeEnhet = journalfoerendeEnhet;
         this.sak = sak;
-        this.generertDokumenter = generertDokumenter;
+        this.dokumenter = dokumenter;
     }
 
     public String getTittel() {
@@ -88,15 +88,14 @@ public class OpprettJournalpostRequest {
         return avsenderMottaker;
     }
 
-    public List<DokumentOpprettRequest> getgenerertDokumenter() {
-        return generertDokumenter;
+    public List<DokumentOpprettRequest> getDokumenter() {
+        return dokumenter;
     }
-
 
     @Override
     public String toString() {
         return "OpprettJournalpostRequest{" +
-                ", journalpostType='" + journalpostType + '\'' +
+                "journalpostType='" + journalpostType + '\'' +
                 ", avsenderMottaker=" + avsenderMottaker +
                 ", bruker=" + bruker +
                 ", tema='" + tema + '\'' +
@@ -106,7 +105,7 @@ public class OpprettJournalpostRequest {
                 ", journalfoerendeEnhet='" + journalfoerendeEnhet + '\'' +
                 ", eksternReferanseId='" + eksternReferanseId + '\'' +
                 ", sak=" + sak +
-                ", generertDokumenter=" + generertDokumenter +
+                ", dokumenter=" + dokumenter +
                 '}';
     }
 }

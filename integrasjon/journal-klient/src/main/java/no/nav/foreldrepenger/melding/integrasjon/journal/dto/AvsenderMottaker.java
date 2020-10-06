@@ -45,7 +45,7 @@ public class AvsenderMottaker {
     public String toString() {
         return "AvsenderMottaker{" +
                 "idType=" + idType +
-                "navn" + navn +
+                ", navn=" + navn +
                 '}';
     }
 }

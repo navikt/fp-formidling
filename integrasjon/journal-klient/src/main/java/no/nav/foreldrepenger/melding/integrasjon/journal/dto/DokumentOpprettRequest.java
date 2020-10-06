@@ -17,25 +17,25 @@ public class DokumentOpprettRequest {
     private String brevkode;
     @JsonProperty("dokumentKategori")
     private String dokumentKategori;
-    @JsonProperty("dokumentVariantPDF")
-    private List<DokumentVariantPDF> dokumentVariantPDF;
+    @JsonProperty("dokumentvarianter")
+    private List<DokumentVariantPDF> dokumentvarianter;
 
     public DokumentOpprettRequest(String tittel, String brevkode, String dokumentKategori, byte[] brev) {
         DokumentVariantPDF dokumentVariantPDF = new DokumentVariantPDF(brev);
         this.tittel = tittel;
         this.brevkode = brevkode;
         this.dokumentKategori = dokumentKategori;
-        this.dokumentVariantPDF = List.of(dokumentVariantPDF);
+        this.dokumentvarianter = List.of(dokumentVariantPDF);
     }
 
     public DokumentOpprettRequest(@JsonProperty("tittel")String tittel,
                                   @JsonProperty("brevkode")String brevkode,
                                   @JsonProperty("dokumentKategori")String dokumentKategori,
-                                  @JsonProperty("dokumentVariantPDF")List<DokumentVariantPDF> dokumentVariantPDF) {
+                                  @JsonProperty("dokumentvarianter")List<DokumentVariantPDF> dokumentvarianter) {
         this.tittel = tittel;
         this.brevkode = brevkode;
         this.dokumentKategori = dokumentKategori;
-        this.dokumentVariantPDF = dokumentVariantPDF;
+        this.dokumentvarianter = dokumentvarianter;
     }
 
     public String getTittel() {
@@ -51,16 +51,16 @@ public class DokumentOpprettRequest {
     }
 
     public List<DokumentVariantPDF> getDokumentvarianter() {
-        return dokumentVariantPDF;
+        return dokumentvarianter;
     }
 
     @Override
     public String toString() {
         return "DokumentOpprettRequest{" +
-                ", tittel='" + tittel + '\'' +
+                "tittel='" + tittel + '\'' +
                 ", brevkode='" + brevkode + '\'' +
                 ", dokumentKategori=" + dokumentKategori +
-                ", dokumentVariantPDF=" + dokumentVariantPDF +
+                ", dokumentvarianter=" + dokumentvarianter +
                 '}';
     }
 }

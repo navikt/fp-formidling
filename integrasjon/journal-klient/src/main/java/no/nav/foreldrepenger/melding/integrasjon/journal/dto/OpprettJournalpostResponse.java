@@ -48,8 +48,4 @@ public class OpprettJournalpostResponse {
                 ", dokumenter=" + dokumenter +
                 '}';
     }
-// json anotering - kan man angi for alle et sted, fant dette forslaget:
-// ObjectMapper mapper = new ObjectMapper();
-//mapper.setVisibility(PropertyAccessor.ALL, Visibility.NONE);
-//mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
 }

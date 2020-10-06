@@ -48,9 +48,9 @@ public class DistribuerJournalpostRequest {
     public String toString() {
         return "DistribuerJournalpostRequest{" +
                 "journalpostId=" + journalpostId +
-                "batchId=" + batchId +
-                "bestillendeFagsystem=" + bestillendeFagsystem +
-                "dokumentProdApp=" + dokumentProdApp +
+                ", batchId=" + batchId +
+                ", bestillendeFagsystem=" + bestillendeFagsystem +
+                ", dokumentProdApp=" + dokumentProdApp +
                 '}';
     }
 }

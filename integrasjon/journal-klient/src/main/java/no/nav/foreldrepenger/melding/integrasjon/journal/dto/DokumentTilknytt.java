@@ -31,7 +31,7 @@ public class DokumentTilknytt {
     @Override
     public String toString() {
         return "DokumentTilknytt{" +
-                ", kildeJournalpostId='" + kildeJournalpostId + '\'' +
+                "kildeJournalpostId='" + kildeJournalpostId + '\'' +
                 ", dokumentInfoId='" + dokumentInfoId + '\'' +
                 '}';
     }

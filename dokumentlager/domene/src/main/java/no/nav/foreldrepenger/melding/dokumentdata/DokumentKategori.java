@@ -1,28 +1,65 @@
 package no.nav.foreldrepenger.melding.dokumentdata;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity(name = "DokumentKategori")
-@DiscriminatorValue(DokumentKategori.DISCRIMINATOR)
-public class DokumentKategori extends Kodeliste {
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-    public static final String DISCRIMINATOR = "DOKUMENT_KATEGORI";
 
-    public static final DokumentKategori UDEFINERT = new DokumentKategori("-"); //$NON-NLS-1$
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum DokumentKategori implements Kodeverdi {
 
-    public static final DokumentKategori KLAGE_ELLER_ANKE = new DokumentKategori("KLGA"); //$NON-NLS-1$
-    public static final DokumentKategori IKKE_TOLKBART_SKJEMA = new DokumentKategori("ITSKJ"); //$NON-NLS-1$
-    public static final DokumentKategori SØKNAD = new DokumentKategori("SOKN"); //$NON-NLS-1$
-    public static final DokumentKategori ELEKTRONISK_SKJEMA = new DokumentKategori("ESKJ"); //$NON-NLS-1$
+    UDEFINERT("-"),
+    KLAGE_ELLER_ANKE("KLGA"),
+    SØKNAD("SOKN"),
+    ;
 
-    public DokumentKategori() {
-        // Hibernate trenger en
+    public static final String KODEVERK = "DOKUMENT_KATEGORI";
+
+    private static final Map<String, DokumentKategori> KODER = new LinkedHashMap<>();
+
+    private String kode;
+
+    DokumentKategori(String kode) {
+        this.kode = kode;
     }
 
-    private DokumentKategori(String kode) {
-        super(kode, DISCRIMINATOR);
+    @JsonCreator
+    public static DokumentKategori fraKode(@JsonProperty("kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        return KODER.getOrDefault(kode, DokumentKategori.UDEFINERT);
     }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
+    }
+
+
 }

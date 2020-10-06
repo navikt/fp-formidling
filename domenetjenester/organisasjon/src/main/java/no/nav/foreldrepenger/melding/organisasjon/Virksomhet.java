@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.organisasjon;
+package no.nav.foreldrepenger.melding.organisasjon;
 
 import java.util.Objects;
 

@@ -8,6 +8,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 
 public class MottattdokumentMapper {
@@ -30,6 +31,6 @@ public class MottattdokumentMapper {
     }
 
     private static boolean velgSøknad(MottattDokument dok) {
-        return dok.getDokumentTypeId() != null && dok.getDokumentTypeId().erSøknadType();
+        return dok.getDokumentTypeId() != null && (dok.getDokumentTypeId().erSøknadType() || DokumentKategori.SØKNAD.equals(dok.getDokumentKategori()));
     }
 }

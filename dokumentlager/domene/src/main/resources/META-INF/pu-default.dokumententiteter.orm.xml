@@ -16,6 +16,6 @@
     <entity class="no.nav.foreldrepenger.melding.hendelser.DokumentHendelse"/>
     <entity class="no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg"/>
     <entity class="no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag"/>
-    <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentKategori"/>
+    <entity class="no.nav.foreldrepenger.melding.geografisk.Postnummer"/>
 
 </entity-mappings>

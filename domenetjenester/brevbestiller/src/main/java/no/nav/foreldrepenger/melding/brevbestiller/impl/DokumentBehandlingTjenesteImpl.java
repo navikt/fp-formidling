@@ -37,7 +37,7 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
         Behandling behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
         final List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
 
-        List<DokumentMalType> kandidater = new ArrayList<>(DokumentMalType.hentAlle());
+        List<DokumentMalType> kandidater = new ArrayList<>(DokumentMalType.hentAlleGyldige());
         List<DokumentMalType> fjernes = filtrerUtilgjengeligBrevmaler(behandling, kandidater, automatiskOpprettet(behandling), aksjonspunkter);
         kandidater.removeAll(fjernes);
         return tilBrevmalDto(behandling, sorterte(kandidater));

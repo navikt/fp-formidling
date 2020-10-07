@@ -25,6 +25,13 @@ public enum DoksysKode implements Kodeverdi{
     AVSLFP("000080"),
     FRITKS("000096"),
 
+    @Deprecated
+    KLAGOV("000060"),
+    @Deprecated
+    KLAGNY("000059"),
+    @Deprecated
+    KLAGVE("000055"),
+
     UDEFINERT("-")
     ;
 

@@ -18,6 +18,7 @@
         <module>fpsak</module>
         <module>tps</module>
         <module>organisasjon</module>
+        <module>poststed</module>
         <module>hendelse</module>
     </modules>
 

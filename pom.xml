@@ -41,6 +41,7 @@
         <swagger.version>2.1.5</swagger.version>
         <swagger-ui.version>3.34.0</swagger-ui.version>
         <kafka.version>2.6.0</kafka.version>
+        <cxf.version>3.3.6</cxf.version>
     </properties>
 
     <prerequisites>
@@ -271,6 +272,11 @@
                 <groupId>org.glassfish</groupId>
                 <artifactId>javax.el</artifactId>
                 <version>3.0.1-b11</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxf.version}</version>
             </dependency>
 
             <!-- Metrics -->

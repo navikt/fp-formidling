@@ -8,8 +8,8 @@ public class DokumentTypeIdTest {
 
     @Test
     public void skal_mappe_enkelt_objekt() {
-        assertThat(new DokumentTypeId(DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD.getKode()).erEndringsøknadType()).isTrue();
-        assertThat(new DokumentTypeId(DokumentTypeId.SØKNAD_ENGANGSSTØNAD_FØDSEL.getKode()).erSøknadType()).isTrue();
+        assertThat(new DokumentTypeId("I000050").erEndringsøknadType()).isTrue();
+        assertThat(new DokumentTypeId("SØKNAD_ENGANGSSTØNAD_FØDSEL").erSøknadType()).isTrue();
     }
 
 }

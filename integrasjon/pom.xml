@@ -18,6 +18,7 @@
         <module>dokumentkontrakter</module>
         <module>dokgen-klient</module>
         <module>dtomapper</module>
+        <module>kodeverk-klient</module>
     </modules>
 
     <dependencies>

@@ -100,6 +100,11 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>poststed</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>dokgen-klient</artifactId>
             <version>${project.version}</version>
         </dependency>

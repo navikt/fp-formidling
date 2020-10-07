@@ -109,7 +109,7 @@ public abstract class OppsettForGjengivelseAvManuellTest {
             new FamiliehendelseDtoMapper(),
             new StønadskontoDtoMapper(kodeverkRepository),
             new AksjonspunktDtoMapper(),
-            new MottattDokumentDtoMapper(kodeverkRepository),
+            new MottattDokumentDtoMapper(),
             new FagsakDtoMapper(kodeverkRepository, mockTpsTjeneste())
     );
 

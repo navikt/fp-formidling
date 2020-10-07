@@ -18,13 +18,13 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.Fagsak;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.organisasjon.Virksomhet;
+import no.nav.foreldrepenger.melding.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.melding.personopplysning.PersonstatusType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.melding.verge.Verge;
-import no.nav.foreldrepenger.organisasjon.Virksomhet;
-import no.nav.foreldrepenger.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.tps.TpsTjeneste;
 
 @ApplicationScoped

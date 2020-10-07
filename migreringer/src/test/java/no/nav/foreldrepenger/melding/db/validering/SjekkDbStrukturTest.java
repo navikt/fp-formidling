@@ -65,6 +65,7 @@ public class SjekkDbStrukturTest {
         assertThat(avvik).isEmpty();
     }
 
+    @Ignore("venter til KL_ kolonner er fjernet")
     @Test
     public void sjekk_at_alle_relevant_kolonner_er_dokumentert() throws Exception {
         List<String> avvik = new ArrayList<>();
@@ -109,7 +110,7 @@ public class SjekkDbStrukturTest {
         assertThat(avvik).withFailMessage("Mangler dokumentasjon for %s kolonner. %s\n %s", avvik.size(), avvik, HJELP).isEmpty();
     }
 
-
+    @Ignore("venter til KL_ kolonner er fjernet")
     @Test
     public void sjekk_alle_KL_kolonner_har_FK_referanser_til_Kodeliste() throws Exception {
         String sql = "select c.table_name, c.column_name from information_schema.columns c\n" +
@@ -504,3 +505,4 @@ public class SjekkDbStrukturTest {
     }
 
 }
+

@@ -33,7 +33,7 @@ public class KodeverkTjeneste {
 
     private static final String NORSK_BOKMÅL = "nb";
 
-    protected KodeverkTjeneste() {
+    KodeverkTjeneste() {
         // for CDI proxy
     }
 

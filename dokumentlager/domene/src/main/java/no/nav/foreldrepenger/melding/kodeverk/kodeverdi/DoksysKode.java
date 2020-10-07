@@ -11,8 +11,8 @@ import java.util.Map;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public enum DoksysKode implements Kodeverdi{
-    POSVED("000049"),
-    INNHEN("000048"),
+    POSVED("000048"),
+    INNHEN("000049"),
     HENLEG("000050"),
     AVSLAG("000051"),
     UENDRE("000052"),
@@ -31,6 +31,11 @@ public enum DoksysKode implements Kodeverdi{
     KLAGNY("000059"),
     @Deprecated
     KLAGVE("000055"),
+    @Deprecated
+    KLAGAV("000054"),
+    @Deprecated
+    VEDMED("000114"),
+
 
     UDEFINERT("-")
     ;

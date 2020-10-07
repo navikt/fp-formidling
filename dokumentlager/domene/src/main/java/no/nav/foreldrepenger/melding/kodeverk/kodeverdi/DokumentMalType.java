@@ -20,16 +20,16 @@ import java.util.stream.Collectors;
 public enum DokumentMalType implements Kodeverdi {
 
     //Mal hos team dokument
-    POSITIVT_VEDTAK_DOK(DokumentMalTypeKode.POSITIVT_VEDTAK_DOK, "Positivt vedtaksbrev",TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.POSVED ),
     INNHENT_DOK(DokumentMalTypeKode.INNHENT_DOK, "Innhent dokumentasjon", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNHEN),
+    POSITIVT_VEDTAK_DOK(DokumentMalTypeKode.POSITIVT_VEDTAK_DOK, "Positivt vedtaksbrev",TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.POSVED ),
     HENLEGG_BEHANDLING_DOK(DokumentMalTypeKode.HENLEGG_BEHANDLING_DOK, "Behandling henlagt", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.HENLEG),
     AVSLAGSVEDTAK_DOK(DokumentMalTypeKode.AVSLAGSVEDTAK_DOK, "Avslagsbrev", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.AVSLAG),
     UENDRETUTFALL_DOK(DokumentMalTypeKode.UENDRETUTFALL_DOK, "Uendret utfall", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.UENDRE),
+    REVURDERING_DOK(DokumentMalTypeKode.REVURDERING_DOK, "Varsel om revurdering", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.REVURDERING, DoksysKode.REVURD),
     FORLENGET_DOK(DokumentMalTypeKode.FORLENGET_DOK, "Forlenget saksbehandlingstid", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FORLEN),
     FORLENGET_MEDL_DOK(DokumentMalTypeKode.FORLENGET_MEDL_DOK, "Forlenget saksbehandlingstid - medlemskap", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING_IKKE_SENDT, DoksysKode.FORLEN),
     FORLENGET_TIDLIG_SOK(DokumentMalTypeKode.FORLENGET_TIDLIG_SOK, "Forlenget saksbehandlingstid - Tidlig søknad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FORLEN),
     FORLENGET_OPPTJENING(DokumentMalTypeKode.FORLENGET_OPPTJENING, "Forlenget saksbehandlingstid - Venter Opptjening",TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FORLEN),
-    REVURDERING_DOK(DokumentMalTypeKode.REVURDERING_DOK, "Varsel om revurdering", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.REVURDERING, DoksysKode.REVURD),
     INNSYNSKRAV_SVAR(DokumentMalTypeKode.INNSYNSKRAV_SVAR, "Svar på innsynskrav", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INSSKR),
     INNVILGELSE_FORELDREPENGER_DOK(DokumentMalTypeKode.INNVILGELSE_FORELDREPENGER_DOK, "Innvilgelsesbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNVFP),
     OPPHØR_DOK(DokumentMalTypeKode.OPPHØR_DOK, "Opphør brev", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
@@ -46,19 +46,19 @@ public enum DokumentMalType implements Kodeverdi {
     KLAGE_STADFESTET(DokumentMalTypeKode.KLAGE_STADFESTET, "Vedtak om stadfestelse i klagesak", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     KLAGE_AVVIST(DokumentMalTypeKode.KLAGE_AVVIST, "Vedtak om avvist klage",TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     KLAGE_OMGJØRING(DokumentMalTypeKode.KLAGE_OMGJØRING, "Vedtak om omgjøring av klage", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
-    KLAGE_OVERSENDT_KLAGEINSTANS(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS, "", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
-    KLAGE_HJEMSENDT(DokumentMalTypeKode.KLAGE_HJEMSENDT, "Klage oversendt til klageinstans", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    KLAGE_OVERSENDT_KLAGEINSTANS(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS, "Klage oversendt til klageinstans", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    KLAGE_HJEMSENDT(DokumentMalTypeKode.KLAGE_HJEMSENDT, "Klage hjemsendt/opphevet", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     INNVILGELSE_ENGANGSSTØNAD(DokumentMalTypeKode.INNVILGELSE_ENGANGSSTØNAD, "Innvilget engangsstønad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
     KLAGE_OVERSENDT_KLAGEINSTANS_DOK(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS_DOK,"Overføring til NAV Klageinstans", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGOV),
     @Deprecated
-    KLAGE_AVVIST_DOK(DokumentMalTypeKode.KLAGE_AVVIST_DOK, "Opphør brev", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
+    KLAGE_AVVIST_DOK(DokumentMalTypeKode.KLAGE_AVVIST_DOK, "Vedtak om avvist klage", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGAV),
     @Deprecated
     KLAGE_YTELSESVEDTAK_OPPHEVET_DOK(DokumentMalTypeKode.KLAGE_YTELSESVEDTAK_OPPHEVET_DOK, "Vedtak opphevet, sendt til ny behandling", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGNY),
     @Deprecated
-    VEDTAK_MEDHOLD(DokumentMalTypeKode.VEDTAK_MEDHOLD, "Vedtak opphevet, sendt til ny behandling", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGNY),
+    VEDTAK_MEDHOLD(DokumentMalTypeKode.VEDTAK_MEDHOLD, "Vedtak om medhold", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.VEDMED),
     @Deprecated
     KLAGE_YTELSESVEDTAK_STADFESTET_DOK(DokumentMalTypeKode.KLAGE_YTELSESVEDTAK_STADFESTET_DOK, "Vedtak om stadfestelse", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGVE),
 

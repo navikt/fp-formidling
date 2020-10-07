@@ -8,8 +8,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,15 +52,15 @@ public enum DokumentMalType implements Kodeverdi {
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
-    KLAGE_OVERSENDT_KLAGEINSTANS_DOK(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS_DOK),
+    KLAGE_OVERSENDT_KLAGEINSTANS_DOK(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS_DOK,"Overføring til NAV Klageinstans", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGOV),
     @Deprecated
-    KLAGE_AVVIST_DOK(DokumentMalTypeKode.KLAGE_AVVIST_DOK),
+    KLAGE_AVVIST_DOK(DokumentMalTypeKode.KLAGE_AVVIST_DOK, "Opphør brev", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
     @Deprecated
-    KLAGE_YTELSESVEDTAK_OPPHEVET_DOK(DokumentMalTypeKode.KLAGE_YTELSESVEDTAK_OPPHEVET_DOK),
+    KLAGE_YTELSESVEDTAK_OPPHEVET_DOK(DokumentMalTypeKode.KLAGE_YTELSESVEDTAK_OPPHEVET_DOK, "Vedtak opphevet, sendt til ny behandling", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGNY),
     @Deprecated
-    VEDTAK_MEDHOLD(DokumentMalTypeKode.VEDTAK_MEDHOLD),
+    VEDTAK_MEDHOLD(DokumentMalTypeKode.VEDTAK_MEDHOLD, "Vedtak opphevet, sendt til ny behandling", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGNY),
     @Deprecated
-    KLAGE_YTELSESVEDTAK_STADFESTET_DOK(DokumentMalTypeKode.KLAGE_YTELSESVEDTAK_STADFESTET_DOK),
+    KLAGE_YTELSESVEDTAK_STADFESTET_DOK(DokumentMalTypeKode.KLAGE_YTELSESVEDTAK_STADFESTET_DOK, "Vedtak om stadfestelse", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGVE),
 
     UDEFINERT("-"),
 
@@ -170,8 +171,12 @@ public enum DokumentMalType implements Kodeverdi {
         }
     }
 
-    public static Set<DokumentMalType> hentAlle() {
-        return new HashSet<>(DokumentMalType.KODER.values());
+    public static List <DokumentMalType> hentAlleGyldige() {
+        List<DokumentMalType> gyldigeMaler = new ArrayList<>(DokumentMalType.KODER.values());
+
+        gyldigeMaler.remove(DokumentMalType.UDEFINERT);
+
+        return gyldigeMaler;
     }
 
     public boolean erTilgjengeligForManuellUtsendelse() {

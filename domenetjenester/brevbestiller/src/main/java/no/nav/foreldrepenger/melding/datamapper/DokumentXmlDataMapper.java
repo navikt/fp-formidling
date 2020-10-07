@@ -62,7 +62,7 @@ public class DokumentXmlDataMapper {
 
     public DokumentTypeMapper velgDokumentMapper(DokumentMalType dokumentMalType) {
         String faktiskDokumentmal = dokumentMalType.getKode();
-        if (DokumentMalType.FORLENGET_BREVMALER.contains(dokumentMalType.getKode())) {
+        if (DokumentMalType.FORLENGET_BREVMALER.contains(dokumentMalType)) {
             faktiskDokumentmal = DokumentMalType.FORLENGET_DOK.getKode();
         }
         return CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(faktiskDokumentmal)).get();

@@ -96,7 +96,7 @@ public class BeregningsgrunnlagDtoMapper {
         if (dto.getArbeidsforhold() != null) {
             bgAndelArbeidsforhold = mapBgAndelArbeidsforholdfraDto(dto.getArbeidsforhold());
         }
-        builder.medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().getKode()))
+        builder.medAktivitetStatus(AktivitetStatus.fraKode(dto.getAktivitetStatus().getKode()))
                 .medBruttoPrÅr(dto.getBruttoPrAar())
                 .medAvkortetPrÅr(dto.getAvkortetPrAar())
                 .medBesteberegningPrÅr(dto.getBesteberegningPrAar())
@@ -127,6 +127,6 @@ public class BeregningsgrunnlagDtoMapper {
     }
 
     private BeregningsgrunnlagAktivitetStatus mapBeregningsgrunnlagAktivitetStatusFraDto(KodeDto kodedto) {
-        return new BeregningsgrunnlagAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, kodedto.getKode()));
+        return new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.fraKode(kodedto.getKode()));
     }
 }

@@ -1,5 +1,20 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
+import java.io.StringReader;
+import java.time.LocalDate;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.CDI;
+import javax.inject.Inject;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.jboss.weld.literal.NamedLiteral;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -13,20 +28,6 @@ import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.feil.FeilFactory;
 import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
-import org.jboss.weld.literal.NamedLiteral;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.StringReader;
-import java.time.LocalDate;
-import java.util.Set;
 
 @ApplicationScoped
 public class DokumentXmlDataMapper {
@@ -107,8 +108,8 @@ public class DokumentXmlDataMapper {
         mottakerAdresseType.setAdresselinje3(mottakerAdresse.getAdresselinje3());
         mottakerAdresseType.setPostNr(mottakerAdresse.getPostnummer());
         mottakerAdresseType.setPoststed(mottakerAdresse.getPoststed());
-        Landkoder land = mottakerAdresse.getLand() == null ? kodeverkRepository.finn(Landkoder.class, Landkoder.NOR) :
-                kodeverkRepository.finn(Landkoder.class, mottakerAdresse.getLand());
+        Landkoder land = mottakerAdresse.getLand() == null ? Landkoder.NOR :
+                Landkoder.fraKodeDefaultNorge(mottakerAdresse.getLand());
         mottakerAdresseType.setLand(land.getNavn());
         mottakerType.setMottakerAdresse(mottakerAdresseType);
         return mottakerType;

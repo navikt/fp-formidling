@@ -3,16 +3,12 @@ package no.nav.foreldrepenger.melding.eventmottak;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.JoinColumnOrFormula;
-import org.hibernate.annotations.JoinFormula;
 
 import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
 
@@ -27,9 +23,8 @@ public class EventmottakFeillogg extends BaseEntitet {
     @Column(name = "melding", nullable = false, columnDefinition = "text")
     private String melding;
 
-    @ManyToOne(optional = false)
-    @JoinColumnOrFormula(column = @JoinColumn(name = "status", referencedColumnName = "kode", nullable = false))
-    @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + EventmottakStatus.DISCRIMINATOR + "'"))
+    @Convert(converter = EventmottakStatus.KodeverdiConverter.class)
+    @Column(name = "status", nullable = false)
     private EventmottakStatus status;
 
 

@@ -19,9 +19,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import org.hibernate.annotations.JoinColumnOrFormula;
-import org.hibernate.annotations.JoinFormula;
-
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
@@ -53,9 +50,8 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "versjon", nullable = false)
     private long versjon;
 
-    @ManyToOne(optional = false)
-    @JoinColumnOrFormula(column = @JoinColumn(name = "sprak_kode", referencedColumnName = "kode", nullable = false))
-    @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + Språkkode.DISCRIMINATOR + "'"))
+    @Convert(converter = Språkkode.KodeverdiConverter.class)
+    @Column(name = "sprak_kode", nullable = false)
     private Språkkode språkkode = Språkkode.UDEFINERT;
 
     /**

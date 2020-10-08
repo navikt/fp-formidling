@@ -17,9 +17,6 @@ public class FaktaOmBeregningAndelDto {
     @JsonProperty("arbeidsforhold")
     private BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
 
-    @JsonProperty("inntektskategori")
-    private KodeDto inntektskategori;
-
     @JsonProperty("aktivitetStatus")
     private KodeDto aktivitetStatus;
 
@@ -52,14 +49,6 @@ public class FaktaOmBeregningAndelDto {
         this.arbeidsforhold = arbeidsforhold;
     }
 
-    public KodeDto getInntektskategori() {
-        return inntektskategori;
-    }
-
-    public void setInntektskategori(KodeDto inntektskategori) {
-        this.inntektskategori = inntektskategori;
-    }
-
     public KodeDto getAktivitetStatus() {
         return aktivitetStatus;
     }
@@ -88,11 +77,4 @@ public class FaktaOmBeregningAndelDto {
         return andelIArbeid;
     }
 
-    public void setAndelIArbeid(List<BigDecimal> andelIArbeid) {
-        this.andelIArbeid = andelIArbeid;
-    }
-
-    public void leggTilAndelIArbeid(BigDecimal andelIArbeid) {
-        this.andelIArbeid.add(andelIArbeid);
-    }
 }

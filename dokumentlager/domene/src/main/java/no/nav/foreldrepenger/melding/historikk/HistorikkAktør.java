@@ -1,28 +1,86 @@
 package no.nav.foreldrepenger.melding.historikk;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
-@Entity(name = "HistorikkAktør")
-@DiscriminatorValue(HistorikkAktør.DISCRIMINATOR)
-public class HistorikkAktør extends Kodeliste {
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public static final String DISCRIMINATOR = "HISTORIKK_AKTOER"; //$NON-NLS-1$
-    public static final HistorikkAktør BESLUTTER = new HistorikkAktør("BESL"); //$NON-NLS-1$
-    public static final HistorikkAktør SAKSBEHANDLER = new HistorikkAktør("SBH"); //$NON-NLS-1$
-    public static final HistorikkAktør SØKER = new HistorikkAktør("SOKER"); //$NON-NLS-1$
-    public static final HistorikkAktør ARBEIDSGIVER = new HistorikkAktør("ARBEIDSGIVER"); //$NON-NLS-1$
-    public static final HistorikkAktør VEDTAKSLØSNINGEN = new HistorikkAktør("VL"); //$NON-NLS-1$
-    public static final HistorikkAktør UDEFINERT = new HistorikkAktør("-"); //$NON-NLS-1$
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-    public HistorikkAktør() {
-        //
+
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum HistorikkAktør implements Kodeverdi {
+
+    BESLUTTER("BESL"),
+    SAKSBEHANDLER("SBH"),
+    SØKER("SOKER"),
+    ARBEIDSGIVER("ARBEIDSGIVER"),
+    VEDTAKSLØSNINGEN("VL"),
+    UDEFINERT("-"),
+    ;
+
+    private static final Map<String, HistorikkAktør> KODER = new LinkedHashMap<>();
+
+    public static final String KODEVERK = "HISTORIKK_AKTOER";
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
 
-    public HistorikkAktør(String kode) {
-        super(kode, DISCRIMINATOR);
+    private String kode;
+
+    private HistorikkAktør(String kode) {
+        this.kode = kode;
     }
 
+    @JsonCreator
+    public static HistorikkAktør fraKode(@JsonProperty("kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent HistorikkAktør: " + kode);
+        }
+        return ad;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
+
+    @Converter(autoApply = true)
+    public static class KodeverdiConverter implements AttributeConverter<HistorikkAktør, String> {
+        @Override
+        public String convertToDatabaseColumn(HistorikkAktør attribute) {
+            return attribute == null ? null : attribute.getKode();
+        }
+
+        @Override
+        public HistorikkAktør convertToEntityAttribute(String dbData) {
+            return dbData == null ? null : fraKode(dbData);
+        }
+    }
 }

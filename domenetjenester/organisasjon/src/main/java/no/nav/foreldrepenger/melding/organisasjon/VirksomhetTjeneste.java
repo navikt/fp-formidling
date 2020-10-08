@@ -42,7 +42,7 @@ public class VirksomhetTjeneste {
                 .medPoststed(adresse.getPoststed());
         var antaNorsk = adresse.getLandkode() == null || Landkoder.NOR.getKode().equals(adresse.getLandkode()) || "NO".equals(adresse.getLandkode());
         if (antaNorsk && adresse.getPostnummer() != null) {
-            kodeverkRepository.finnPoststed(adresse.getPostnummer()).map(Poststed::getNavn).ifPresent(builder::medPoststed);
+            kodeverkRepository.finnPostnummer(adresse.getPostnummer()).map(Poststed::getPoststednavn).ifPresent(builder::medPoststed);
         }
         return builder.build();
     }

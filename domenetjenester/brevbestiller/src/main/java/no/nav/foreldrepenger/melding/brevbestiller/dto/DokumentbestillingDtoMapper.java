@@ -3,32 +3,24 @@ package no.nav.foreldrepenger.melding.brevbestiller.dto;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 public class DokumentbestillingDtoMapper {
-    private KodeverkRepository kodeverkRepository;
 
     public DokumentbestillingDtoMapper() {
         //CDI
     }
 
-    @Inject
-    public DokumentbestillingDtoMapper(KodeverkRepository kodeverkRepository) {
-        this.kodeverkRepository = kodeverkRepository;
-    }
-
     public DokumentHendelse mapDokumentbestillingFraDtoForEndepunkt(DokumentbestillingDto brevDto) {
-        return new DokumentHendelse.Builder()
+        return DokumentHendelse.builder()
                 .medBehandlingUuid(brevDto.getBehandlingUuid())
                 .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(utledYtelseType(brevDto.getYtelseType().getKode()))
@@ -47,14 +39,14 @@ public class DokumentbestillingDtoMapper {
         if (StringUtils.nullOrEmpty(varslingsårsak)) {
             return RevurderingVarslingÅrsak.UDEFINERT;
         }
-        return kodeverkRepository.finn(RevurderingVarslingÅrsak.class, varslingsårsak);
+        return RevurderingVarslingÅrsak.fraKode(varslingsårsak);
     }
 
     private FagsakYtelseType utledYtelseType(String ytelseType) {
         if (StringUtils.nullOrEmpty(ytelseType)) {
             return null;
         }
-        return kodeverkRepository.finn(FagsakYtelseType.class, ytelseType);
+        return FagsakYtelseType.fraKode(ytelseType);
     }
 
     private DokumentMalType utleddokumentMalType(String dokumentmal) {
@@ -68,6 +60,6 @@ public class DokumentbestillingDtoMapper {
         if (StringUtils.nullOrEmpty(historikkAktør)) {
             return HistorikkAktør.UDEFINERT;
         }
-        return kodeverkRepository.finn(HistorikkAktør.class, historikkAktør);
+        return HistorikkAktør.fraKode(historikkAktør);
     }
 }

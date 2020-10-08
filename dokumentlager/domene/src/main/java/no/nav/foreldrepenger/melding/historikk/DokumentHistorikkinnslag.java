@@ -1,10 +1,7 @@
 package no.nav.foreldrepenger.melding.historikk;
 
-import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.melding.typer.JournalpostId;
-import org.hibernate.annotations.JoinColumnOrFormula;
-import org.hibernate.annotations.JoinFormula;
+import java.util.Objects;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -13,11 +10,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Objects;
-import java.util.UUID;
+
+import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
 @Entity(name = "DokumentHistorikkinnslag")
 @Table(name = "DOKUMENT_HISTORIKKINNSLAG")
@@ -41,14 +38,12 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
     @Embedded
     private JournalpostId journalpostId;
 
-    @ManyToOne
-    @JoinColumnOrFormula(column = @JoinColumn(name = "historikk_aktoer", referencedColumnName = "kode", nullable = false))
-    @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + HistorikkAktør.DISCRIMINATOR + "'"))
+    @Convert(converter = HistorikkAktør.KodeverdiConverter.class)
+    @Column(name = "historikk_aktoer", nullable = false)
     private HistorikkAktør historikkAktør;
 
-    @ManyToOne
-    @JoinColumnOrFormula(column = @JoinColumn(name = "historikkinnslag_type", referencedColumnName = "kode", nullable = false))
-    @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + HistorikkinnslagType.DISCRIMINATOR + "'"))
+    @Convert(converter = HistorikkinnslagType.KodeverdiConverter.class)
+    @Column(name = "historikkinnslag_type", nullable = false)
     private HistorikkinnslagType historikkinnslagType;
 
     @Convert(converter = DokumentMalType.KodeverdiConverter.class)

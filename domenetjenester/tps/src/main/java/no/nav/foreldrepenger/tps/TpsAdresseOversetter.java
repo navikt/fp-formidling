@@ -82,7 +82,7 @@ public class TpsAdresseOversetter {
     }
 
     Optional<AdresseType> finnGjeldendePostadressetype(Bruker bruker) {
-        return poststedKodeverkRepository.finnAdresseType(bruker.getGjeldendePostadressetype().getValue());
+        return AdresseType.fraKodeOptional(bruker.getGjeldendePostadressetype().getValue());
     }
 
     Adresseinfo konverterStrukturertAdresse(Bruker bruker,
@@ -271,11 +271,7 @@ public class TpsAdresseOversetter {
         if (HARDKODET_POSTNR.equals(postnummer)) {
             return HARDKODET_POSTSTED;
         }
-        Optional<Poststed> poststed = poststedKodeverkRepository.finnPoststed(postnummer);
-        if (poststed.isPresent()) {
-            return poststed.get().getNavn();
-        }
-        return HARDKODET_POSTSTED;
+        return poststedKodeverkRepository.finnPostnummer(postnummer).map(Poststed::getPoststednavn).orElse(HARDKODET_POSTSTED);
     }
 
     private String tilLand(Landkoder landkoder) {

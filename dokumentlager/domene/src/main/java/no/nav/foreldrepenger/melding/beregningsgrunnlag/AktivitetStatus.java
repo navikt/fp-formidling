@@ -1,59 +1,78 @@
 package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-@Entity(name = "AktivitetStatus")
-@DiscriminatorValue(AktivitetStatus.DISCRIMINATOR)
-public class AktivitetStatus extends Kodeliste {
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public enum AktivitetStatus implements Kodeverdi {
+    ARBEIDSAVKLARINGSPENGER("AAP"),
+    ARBEIDSTAKER("AT"),
+    DAGPENGER("DP"),
+    FRILANSER("FL"),
+    MILITÆR_ELLER_SIVIL("MS"),
+    SELVSTENDIG_NÆRINGSDRIVENDE("SN"),
+    KOMBINERT_AT_FL("AT_FL"),
+    KOMBINERT_AT_SN("AT_SN"),
+    KOMBINERT_FL_SN("FL_SN"),
+    KOMBINERT_AT_FL_SN("AT_FL_SN"),
+    BRUKERS_ANDEL("BA"),
+    KUN_YTELSE("KUN_YTELSE"),
 
-    public static final String DISCRIMINATOR = "AKTIVITET_STATUS";
+    TTLSTØTENDE_YTELSE("TY"),
+    VENTELØNN_VARTPENGER("VENTELØNN_VARTPENGER"),
 
-    public static final AktivitetStatus ARBEIDSTAKER = new AktivitetStatus("AT"); //$NON-NLS-1$
-    public static final AktivitetStatus FRILANSER = new AktivitetStatus("FL"); //$NON-NLS-1$
-    public static final AktivitetStatus TILSTØTENDE_YTELSE = new AktivitetStatus("TY"); //$NON-NLS-1$
-    public static final AktivitetStatus SELVSTENDIG_NÆRINGSDRIVENDE = new AktivitetStatus("SN"); //$NON-NLS-1$
-    // Kombinert arbeidstaker og frilanser
-    public static final AktivitetStatus KOMBINERT_AT_FL = new AktivitetStatus("AT_FL"); //$NON-NLS-1$
-    // Kombinert arbeidstaker og selvstendig næringsdrivende
-    public static final AktivitetStatus KOMBINERT_AT_SN = new AktivitetStatus("AT_SN"); //$NON-NLS-1$
-    // Kombinert frilanser og selvstendig næringsdrivende
-    public static final AktivitetStatus KOMBINERT_FL_SN = new AktivitetStatus("FL_SN"); //$NON-NLS-1$
-    // Kombinert arbeidstaker, frilanser og selvstendig næringsdrivende
-    public static final AktivitetStatus KOMBINERT_AT_FL_SN = new AktivitetStatus("AT_FL_SN"); //$NON-NLS-1$
-    public static final AktivitetStatus DAGPENGER = new AktivitetStatus("DP"); //$NON-NLS-1$
-    public static final AktivitetStatus ARBEIDSAVKLARINGSPENGER = new AktivitetStatus("AAP"); //$NON-NLS-1$
-    public static final AktivitetStatus MILITÆR_ELLER_SIVIL = new AktivitetStatus("MS"); //$NON-NLS-1$
-    // Bare ved tilstøtende ytelse
-    public static final AktivitetStatus BRUKERS_ANDEL = new AktivitetStatus("BA"); //$NON-NLS-1$
-    public static final AktivitetStatus KUN_YTELSE = new AktivitetStatus("KUN_YTELSE");
-    public static final AktivitetStatus UDEFINERT = new AktivitetStatus("-"); //$NON-NLS-1$
+    UDEFINERT("-");
 
-    private static final Set<AktivitetStatus> AT_STATUSER = new HashSet<>(Arrays.asList(ARBEIDSTAKER,
-            KOMBINERT_AT_FL_SN, KOMBINERT_AT_SN, KOMBINERT_AT_FL));
+    public static final String KODEVERK = "AKTIVITET_STATUS";
 
-    private static final Set<AktivitetStatus> SN_STATUSER = new HashSet<>(Arrays.asList(SELVSTENDIG_NÆRINGSDRIVENDE,
-            KOMBINERT_AT_FL_SN, KOMBINERT_AT_SN, KOMBINERT_FL_SN));
+    private static final Map<String, AktivitetStatus> KODER = new LinkedHashMap<>();
 
-    private static final Set<AktivitetStatus> FL_STATUSER = new HashSet<>(Arrays.asList(FRILANSER,
-            KOMBINERT_AT_FL_SN, KOMBINERT_AT_FL, KOMBINERT_FL_SN));
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
+    }
 
-    public static final Set<AktivitetStatus> KOMBINERTE_STATUSER =
+    private String kode;
+
+    AktivitetStatus(String kode) {
+        this.kode = kode;
+    }
+
+    @JsonCreator
+    public static AktivitetStatus fraKode(@JsonProperty("kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent AktivitetStatus: " + kode);
+        }
+        return ad;
+    }
+
+    private static final Set<AktivitetStatus> AT_STATUSER = Set.of(ARBEIDSTAKER,
+            KOMBINERT_AT_FL_SN, KOMBINERT_AT_SN, KOMBINERT_AT_FL);
+
+    private static final Set<AktivitetStatus> SN_STATUSER = Set.of(SELVSTENDIG_NÆRINGSDRIVENDE,
+            KOMBINERT_AT_FL_SN, KOMBINERT_AT_SN, KOMBINERT_FL_SN);
+
+    private static final Set<AktivitetStatus> FL_STATUSER = Set.of(FRILANSER,
+            KOMBINERT_AT_FL_SN, KOMBINERT_AT_FL, KOMBINERT_FL_SN);
+
+    private static final Set<AktivitetStatus> KOMBINERTE_STATUSER =
             Set.of(KOMBINERT_AT_FL_SN, KOMBINERT_AT_FL, KOMBINERT_AT_SN, KOMBINERT_FL_SN);
-
-    public AktivitetStatus() {
-        // for hibernate
-    }
-
-    private AktivitetStatus(String kode) {
-        super(kode, DISCRIMINATOR);
-    }
 
     public boolean erArbeidstaker() {
         return AT_STATUSER.contains(this);
@@ -66,4 +85,21 @@ public class AktivitetStatus extends Kodeliste {
     public boolean erFrilanser() {
         return FL_STATUSER.contains(this);
     }
+
+    public boolean harKombinertStatus() {
+        return KOMBINERTE_STATUSER.contains(this);
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
 }

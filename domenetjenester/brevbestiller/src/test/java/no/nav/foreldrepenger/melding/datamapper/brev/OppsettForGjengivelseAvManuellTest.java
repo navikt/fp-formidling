@@ -39,7 +39,6 @@ import no.nav.foreldrepenger.melding.dtomapper.AnkeDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingsresultatDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BeregningsgrunnlagDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.BeregningsresultatDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.FagsakDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.FamiliehendelseDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.IAYDtoMapper;
@@ -97,8 +96,6 @@ public abstract class OppsettForGjengivelseAvManuellTest {
     protected DomeneobjektProvider domeneobjektProvider = new DomeneobjektProvider(behandlingRestKlient,
             new BeregningsgrunnlagDtoMapper(kodeverkRepository),
             this.behandlingDtoMapper,
-            new BeregningsresultatDtoMapper(behandlingRestKlient,
-                    kodeverkRepository),
             new KlageDtoMapper(kodeverkRepository),
             new AnkeDtoMapper(),
             new UttakDtoMapper(kodeverkRepository),

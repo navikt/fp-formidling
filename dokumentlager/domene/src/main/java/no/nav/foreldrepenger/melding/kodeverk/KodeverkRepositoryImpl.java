@@ -55,11 +55,6 @@ public class KodeverkRepositoryImpl implements KodeverkRepository {
     }
 
     @Override
-    public <V extends Kodeliste> V finn(Class<V> cls, V kodelisteKonstant) {
-        return finn(cls, kodelisteKonstant.getKode());
-    }
-
-    @Override
     public <V extends Kodeliste> List<V> finnListe(Class<V> cls, List<String> koder) {
         List<String> koderIkkeICache = new ArrayList<>();
         List<V> result = new ArrayList<>();

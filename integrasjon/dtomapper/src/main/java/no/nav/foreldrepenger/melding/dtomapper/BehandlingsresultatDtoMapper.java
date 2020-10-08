@@ -41,7 +41,7 @@ public class BehandlingsresultatDtoMapper {
         }
         builder.medFritekstbrev(dto.getFritekstbrev())
                 .medOverskrift(dto.getOverskrift())
-                .medVedtaksbrev(kodeverkRepository.finn(Vedtaksbrev.class, dto.getVedtaksbrev().getKode()))
+                .medVedtaksbrev(Vedtaksbrev.fraKode(dto.getVedtaksbrev().getKode()))
                 .medAvslagarsakFritekst(dto.getAvslagsarsakFritekst());
         List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>();
         for (KodeDto kodeDto : dto.getKonsekvenserForYtelsen()) {

@@ -1,37 +1,30 @@
 package no.nav.foreldrepenger.melding.brevbestiller;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.melding.geografisk.Landkoder;
 
 @ApplicationScoped
 public class LandkodeOversetter {
 
-    public static final String UOPPGITT = "???";
-
-    private KodeverkRepository kodeRepo;
-    private Map<String, String> landkoder = new HashMap<>();
+    // Tar med begge veier for illustrasjonen
+    private static final Map<String, String> LANDKODER = Map.ofEntries(
+            Map.entry("NO", Landkoder.NOR.getKode()),
+            Map.entry("SE", Landkoder.SWE.getKode())
+            //Map.entry(Landkoder.NOR.getKode(), "NO"),
+            //Map.entry(Landkoder.SWE.getKode(), "NO")
+    );
 
     public LandkodeOversetter() { /* for cdi proxy */ }
 
-    @Inject
-    public LandkodeOversetter(KodeverkRepository kodeRepo) {
-        this.kodeRepo = kodeRepo;
-    }
-
+    // Dette er tullete navngivning. Se kommentar i KodeverkRepositoryImplTest. Eksisterende kode mapper fra NO -> NOR, ikke omvendt
     public String tilIso2(String iso3) {
-        if (landkoder.isEmpty()) {
-            landkoder.putAll(kodeRepo.hentLandkodeISO2TilLandkoderMap());
-        }
-
         return Optional.ofNullable(iso3)
-                .map(iso2 -> landkoder.get(iso2))
-                .orElse(UOPPGITT);
+                .map(LANDKODER::get)
+                .orElse(Landkoder.UOPPGITT.getKode());
     }
 
 }

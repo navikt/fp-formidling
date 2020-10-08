@@ -27,4 +27,15 @@ public class DokumentVariantPDF {
                 ", filtype='" + filtype + '\'' +
                 '}';
     }
+    public byte[] getFysiskDokument() {
+        return fysiskDokument;
+    }
+
+    public String getFiltype() {
+        return filtype;
+    }
+
+    public String getVariantformat() {
+        return variantformat;
+    }
 }

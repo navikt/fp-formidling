@@ -41,7 +41,7 @@
         <swagger.version>2.1.5</swagger.version>
         <swagger-ui.version>3.34.0</swagger-ui.version>
         <kafka.version>2.6.0</kafka.version>
-        <cxf.version>3.3.6</cxf.version>
+        <cxf.version>3.4.0</cxf.version>
     </properties>
 
     <prerequisites>

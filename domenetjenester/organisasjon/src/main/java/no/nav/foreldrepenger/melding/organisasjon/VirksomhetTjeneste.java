@@ -30,7 +30,8 @@ public class VirksomhetTjeneste {
     public Virksomhet getOrganisasjon(String orgNummer, UnaryOperator<String> landKodeOversetter)  {
         var response = eregRestKlient.hentOrganisasjonAdresse(orgNummer);
         var adresse = response.getKorrespondanseadresse();
-        var oversattLandkode = landKodeOversetter.apply(adresse.getLandkode());
+        var antaNorsk = adresse.getLandkode() == null || Landkoder.NOR.getKode().equals(adresse.getLandkode()) || "NO".equals(adresse.getLandkode());
+        var oversattLandkode = antaNorsk ? Landkoder.NOR.getKode() : landKodeOversetter.apply(adresse.getLandkode());
         var builder = new Virksomhet.Builder()
                 .medOrgnr(orgNummer)
                 .medNavn(response.getNavn())
@@ -40,7 +41,7 @@ public class VirksomhetTjeneste {
                 .medLandkode(oversattLandkode)
                 .medPostNr(adresse.getPostnummer())
                 .medPoststed(adresse.getPoststed());
-        var antaNorsk = adresse.getLandkode() == null || Landkoder.NOR.getKode().equals(adresse.getLandkode()) || "NO".equals(adresse.getLandkode());
+
         if (antaNorsk && adresse.getPostnummer() != null) {
             kodeverkRepository.finnPostnummer(adresse.getPostnummer()).map(Poststed::getPoststednavn).ifPresent(builder::medPoststed);
         }

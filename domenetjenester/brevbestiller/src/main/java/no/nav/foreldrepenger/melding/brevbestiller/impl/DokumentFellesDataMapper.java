@@ -35,7 +35,6 @@ public class DokumentFellesDataMapper {
     private DomeneobjektProvider domeneobjektProvider;
     private TpsTjeneste tpsTjeneste;
     private VirksomhetTjeneste virksomhetTjeneste;
-    private LandkodeOversetter landkodeOversetter;
 
     public DokumentFellesDataMapper() {
         //CDI
@@ -45,13 +44,11 @@ public class DokumentFellesDataMapper {
     public DokumentFellesDataMapper(TpsTjeneste tpsTjeneste,
                                     DomeneobjektProvider domeneobjektProvider,
                                     NavKontaktKonfigurasjon navKontaktKonfigurasjon,
-                                    VirksomhetTjeneste virksomhetTjeneste,
-                                    LandkodeOversetter landkodeOversetter) {
+                                    VirksomhetTjeneste virksomhetTjeneste) {
         this.tpsTjeneste = tpsTjeneste;
         this.domeneobjektProvider = domeneobjektProvider;
         this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
         this.virksomhetTjeneste = virksomhetTjeneste;
-        this.landkodeOversetter = landkodeOversetter;
     }
 
     void opprettDokumentDataForBehandling(Behandling behandling, DokumentData dokumentData, DokumentHendelse dokumentHendelse) {
@@ -129,7 +126,7 @@ public class DokumentFellesDataMapper {
     }
 
     private Virksomhet getVirksomhet(Verge verge) {
-        return virksomhetTjeneste.getOrganisasjon(verge.getOrganisasjonsnummer(), landkodeOversetter::tilIso2);
+        return virksomhetTjeneste.getOrganisasjon(verge.getOrganisasjonsnummer(), LandkodeOversetter::tilLandkoder);
     }
 
     private void opprettDokumentDataForMottaker(Behandling behandling,

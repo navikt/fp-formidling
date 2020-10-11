@@ -310,7 +310,7 @@ public enum Landkoder implements Kodeverdi, KodeverdiMedNavn {
         }
         var ad = KODER.get(kode);
         if (ad == null) {
-            throw new IllegalArgumentException("Ukjent Region: " + kode);
+            throw new IllegalArgumentException("Ukjent Landkode: " + kode);
         }
         return ad;
     }
@@ -320,6 +320,13 @@ public enum Landkoder implements Kodeverdi, KodeverdiMedNavn {
             return null;
         }
         return KODER.getOrDefault(kode, NOR);
+    }
+
+    public static Landkoder fraKodeDefaultUoppgitt(String kode) {
+        if (kode == null) {
+            return UOPPGITT;
+        }
+        return KODER.getOrDefault(kode, UOPPGITT);
     }
 
     @Override

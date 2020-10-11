@@ -69,10 +69,5 @@ public class KodeverkTestHelper {
             lazyLoadKodeliste(cls);
             return kodelistePrKodePrKlasse.get(cls);
         }
-
-        @Override
-        public Map<String, String> hentLandkodeISO2TilLandkoderMap() {
-            throw new UnsupportedOperationException();
-        }
     }
 }

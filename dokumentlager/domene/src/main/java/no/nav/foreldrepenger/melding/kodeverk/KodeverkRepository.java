@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.melding.kodeverk;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Få tilgang til kodeverk.
@@ -17,7 +16,5 @@ public interface KodeverkRepository {
      * Hent alle innslag for en gitt kodeliste og gitte koder.
      */
     <V extends Kodeliste> List<V> finnListe(Class<V> cls, List<String> koder);
-
-    Map<String, String> hentLandkodeISO2TilLandkoderMap();
 
 }

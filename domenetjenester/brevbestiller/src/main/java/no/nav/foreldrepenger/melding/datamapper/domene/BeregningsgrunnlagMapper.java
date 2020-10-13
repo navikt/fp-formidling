@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BeregningsgrunnlagRegelType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.StatusTypeKode;
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
@@ -107,7 +106,7 @@ public class BeregningsgrunnlagMapper {
         if (AktivitetStatus.KUN_YTELSE.equals(bgAktivitetStatus.getAktivitetStatus())) {
             return bgpsaListe;
         }
-        if (AktivitetStatus.KOMBINERTE_STATUSER.contains(bgAktivitetStatus.getAktivitetStatus())) {
+        if (bgAktivitetStatus.getAktivitetStatus().harKombinertStatus()) {
             List<AktivitetStatus> relevanteStatuser = kombinerteRegelStatuserMap.get(bgAktivitetStatus.getAktivitetStatus());
             resultatListe = bgpsaListe.stream().filter(andel -> relevanteStatuser.contains(andel.getAktivitetStatus())).collect(Collectors.toList());
         } else {
@@ -115,7 +114,7 @@ public class BeregningsgrunnlagMapper {
         }
         if (resultatListe.isEmpty()) {
             StringBuilder sb = new StringBuilder();
-            bgpsaListe.stream().map(BeregningsgrunnlagPrStatusOgAndel::getAktivitetStatus).map(Kodeliste::getKode).forEach(sb::append);
+            bgpsaListe.stream().map(BeregningsgrunnlagPrStatusOgAndel::getAktivitetStatus).map(AktivitetStatus::getKode).forEach(sb::append);
             throw new IllegalStateException(String.format("Fant ingen andeler for status: %s, andeler: %s", bgAktivitetStatus.getAktivitetStatus(), sb));
         }
         return resultatListe;

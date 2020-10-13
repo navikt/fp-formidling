@@ -1,31 +1,72 @@
 package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity(name = "PeriodeÅrsak")
-@DiscriminatorValue(PeriodeÅrsak.DISCRIMINATOR)
-public class PeriodeÅrsak extends Kodeliste {
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-    public static final String DISCRIMINATOR = "PERIODE_AARSAK";
 
-    public static final PeriodeÅrsak NATURALYTELSE_BORTFALT = new PeriodeÅrsak("NATURALYTELSE_BORTFALT"); //$NON-NLS-1$
-    public static final PeriodeÅrsak ARBEIDSFORHOLD_AVSLUTTET = new PeriodeÅrsak("ARBEIDSFORHOLD_AVSLUTTET"); //$NON-NLS-1$
-    public static final PeriodeÅrsak NATURALYTELSE_TILKOMMER = new PeriodeÅrsak("NATURALYTELSE_TILKOMMER"); //$NON-NLS-1$
-    public static final PeriodeÅrsak ENDRING_I_REFUSJONSKRAV = new PeriodeÅrsak("ENDRING_I_REFUSJONSKRAV"); //$NON-NLS-1$
-    public static final PeriodeÅrsak REFUSJON_OPPHØRER = new PeriodeÅrsak("REFUSJON_OPPHØRER"); //$NON-NLS-1$
-    public static final PeriodeÅrsak GRADERING = new PeriodeÅrsak("GRADERING"); //$NON-NLS-1$
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public enum PeriodeÅrsak implements Kodeverdi {
 
-    public static final PeriodeÅrsak UDEFINERT = new PeriodeÅrsak("-"); //$NON-NLS-1$
+    NATURALYTELSE_BORTFALT("NATURALYTELSE_BORTFALT"),
+    ARBEIDSFORHOLD_AVSLUTTET("ARBEIDSFORHOLD_AVSLUTTET"),
+    NATURALYTELSE_TILKOMMER("NATURALYTELSE_TILKOMMER"),
+    ENDRING_I_REFUSJONSKRAV("ENDRING_I_REFUSJONSKRAV"),
+    REFUSJON_OPPHØRER("REFUSJON_OPPHØRER"),
+    GRADERING("GRADERING"),
+    GRADERING_OPPHØRER("GRADERING_OPPHØRER"),
+    ENDRING_I_AKTIVITETER_SØKT_FOR("ENDRING_I_AKTIVITETER_SØKT_FOR"),
 
-    PeriodeÅrsak() {
-        // Hibernate trenger en
+    UDEFINERT("-"),
+    ;
+
+    private static final Map<String, PeriodeÅrsak> KODER = new LinkedHashMap<>();
+
+    public static final String KODEVERK = "PERIODE_AARSAK";
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
 
+    private String kode;
+
     private PeriodeÅrsak(String kode) {
-        super(kode, DISCRIMINATOR);
+        this.kode = kode;
+    }
+
+    @JsonCreator
+    public static PeriodeÅrsak fraKode(@JsonProperty("kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent PeriodeÅrsak: " + kode);
+        }
+        return ad;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
     }
 
 }

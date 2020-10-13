@@ -1,25 +1,80 @@
 package no.nav.foreldrepenger.melding.eventmottak;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
-@Entity(name = "EventmottakStatus")
-@DiscriminatorValue(EventmottakStatus.DISCRIMINATOR)
-public class EventmottakStatus extends Kodeliste {
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public static final String DISCRIMINATOR = "EVENTMOTTAK_STATUS"; //$NON-NLS-1$
-    public static final EventmottakStatus FEILET = new EventmottakStatus("FEILET"); //$NON-NLS-1$
-    public static final EventmottakStatus FERDIG = new EventmottakStatus("FERDIG"); //$NON-NLS-1$
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-    EventmottakStatus() {
-        // Hibernate trenger den
+
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum EventmottakStatus implements Kodeverdi {
+
+    FEILET("FEILET"),
+    FERDIG("FERDIG"),
+    ;
+
+    public static final String KODEVERK = "EVENTMOTTAK_STATUS"; //$NON-NLS-1$
+
+    private static final Map<String, EventmottakStatus> KODER = new LinkedHashMap<>();
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
 
-    protected EventmottakStatus(String kode) {
-        super(kode, DISCRIMINATOR);
+    private String kode;
+
+    private EventmottakStatus(String kode) {
+        this.kode = kode;
+    }
+
+    @JsonCreator
+    public static EventmottakStatus fraKode(@JsonProperty(value = "kode") String kode) {
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent FagsakYtelseType: " + kode);
+        }
+        return ad;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+
+    @Converter(autoApply = true)
+    public static class KodeverdiConverter implements AttributeConverter<EventmottakStatus, String> {
+        @Override
+        public String convertToDatabaseColumn(EventmottakStatus attribute) {
+            return attribute == null ? null : attribute.getKode();
+        }
+
+        @Override
+        public EventmottakStatus convertToEntityAttribute(String dbData) {
+            return dbData == null ? null : fraKode(dbData);
+        }
     }
 
 }
-

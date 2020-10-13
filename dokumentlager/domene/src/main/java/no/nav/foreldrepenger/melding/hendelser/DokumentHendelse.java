@@ -1,13 +1,7 @@
 package no.nav.foreldrepenger.melding.hendelser;
 
-import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
-import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
-import org.hibernate.annotations.JoinColumnOrFormula;
-import org.hibernate.annotations.JoinFormula;
+import java.util.Objects;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -15,12 +9,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.util.Objects;
-import java.util.UUID;
+
+import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
+import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 
 @Entity(name = "DokumentHendelse")
 @Table(name = "DOKUMENT_HENDELSE")
@@ -40,9 +37,8 @@ public class DokumentHendelse extends BaseEntitet {
     @Column(name = "dokument_mal_navn")
     private DokumentMalType dokumentMalType;
 
-    @ManyToOne
-    @JoinColumnOrFormula(column = @JoinColumn(name = "ytelse_type", referencedColumnName = "kode", nullable = false))
-    @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + FagsakYtelseType.DISCRIMINATOR + "'"))
+    @Convert(converter = FagsakYtelseType.KodeverdiConverter.class)
+    @Column(name = "ytelse_type", nullable = false)
     private FagsakYtelseType ytelseType;
 
     @Column(name = "gjelder_vedtak")
@@ -54,22 +50,19 @@ public class DokumentHendelse extends BaseEntitet {
     @Column
     private String fritekst;
 
-    @ManyToOne
-    @JoinColumnOrFormula(column = @JoinColumn(name = "historikk_aktoer", referencedColumnName = "kode", nullable = false))
-    @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + HistorikkAktør.DISCRIMINATOR + "'"))
-    private HistorikkAktør historikkAktør = HistorikkAktør.UDEFINERT;
+    @Convert(converter = HistorikkAktør.KodeverdiConverter.class)
+    @Column(name = "historikk_aktoer", nullable = false)
+    private HistorikkAktør historikkAktør = HistorikkAktør.UDEFINERT;  // TODO bør det ikke stå VL som default???
 
-    @ManyToOne
-    @JoinColumnOrFormula(column = @JoinColumn(name = "revurdering_varsling_arsak", referencedColumnName = "kode"))
-    @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + RevurderingVarslingÅrsak.DISCRIMINATOR + "'"))
-    private RevurderingVarslingÅrsak revurderingVarslingÅrsak;
+    @Convert(converter = RevurderingVarslingÅrsak.KodeverdiConverter.class)
+    @Column(name = "revurdering_varsling_arsak", nullable = false)
+    private RevurderingVarslingÅrsak revurderingVarslingÅrsak = RevurderingVarslingÅrsak.UDEFINERT;
 
     @Column(name = "behandlende_enhet_navn")
     private String behandlendeEnhetNavn;
 
-    @ManyToOne
-    @JoinColumnOrFormula(column = @JoinColumn(name = "vedtaksbrev", referencedColumnName = "kode", nullable = false))
-    @JoinColumnOrFormula(formula = @JoinFormula(referencedColumnName = "kodeverk", value = "'" + Vedtaksbrev.DISCRIMINATOR + "'"))
+    @Convert(converter = Vedtaksbrev.KodeverdiConverter.class)
+    @Column(name = "vedtaksbrev", nullable = false)
     private Vedtaksbrev vedtaksbrev = Vedtaksbrev.UDEFINERT;
 
     //Brukes KUN til forhåndsvisning
@@ -190,100 +183,83 @@ public class DokumentHendelse extends BaseEntitet {
                 '}';
     }
 
+
     public static class Builder {
-        private DokumentMalType dokumentMalType;
-        private UUID behandlingUuid;
-        private UUID bestillingUuid;
-        private FagsakYtelseType ytelseType;
-        private String tittel;
-        private String fritekst;
-        private Boolean gjelderVedtak;
-        private HistorikkAktør historikkAktør;
-        private RevurderingVarslingÅrsak revurderingVarslingÅrsak;
-        private String behandlendeEnhetNavn;
-        private Vedtaksbrev vedtaksbrev = Vedtaksbrev.UDEFINERT;
-        private boolean erOpphevetKlage;
+        private DokumentHendelse kladd;
+
+        Builder() {
+            this.kladd = new DokumentHendelse();
+        }
 
         public DokumentHendelse.Builder medErOpphevetKlage(boolean erOpphevetKlage) {
-            this.erOpphevetKlage = erOpphevetKlage;
+            this.kladd.erOpphevetKlage = erOpphevetKlage;
             return this;
         }
 
         public DokumentHendelse.Builder medDokumentMalType(DokumentMalType dokumentMalType) {
-            this.dokumentMalType = dokumentMalType;
+            this.kladd.dokumentMalType = dokumentMalType;
             return this;
         }
 
         public DokumentHendelse.Builder medBehandlingUuid(UUID behandlingUuid) {
-            this.behandlingUuid = behandlingUuid;
+            this.kladd.behandlingUuid = behandlingUuid;
             return this;
         }
 
         public DokumentHendelse.Builder medBestillingUuid(UUID bestillingUuid) {
-            this.bestillingUuid = bestillingUuid;
+            this.kladd.bestillingUuid = bestillingUuid;
             return this;
         }
 
         public DokumentHendelse.Builder medYtelseType(FagsakYtelseType ytelseType) {
-            this.ytelseType = ytelseType;
+            this.kladd.ytelseType = ytelseType;
             return this;
         }
 
         public DokumentHendelse.Builder medTittel(String tittel) {
-            this.tittel = tittel;
+            this.kladd.tittel = tittel;
             return this;
         }
 
         public DokumentHendelse.Builder medFritekst(String fritekst) {
-            this.fritekst = fritekst;
+            this.kladd.fritekst = fritekst;
             return this;
         }
 
         public DokumentHendelse.Builder medGjelderVedtak(Boolean gjelderVedtak) {
-            this.gjelderVedtak = gjelderVedtak;
+            this.kladd.gjelderVedtak = gjelderVedtak;
             return this;
         }
 
         public DokumentHendelse.Builder medHistorikkAktør(HistorikkAktør historikkAktør) {
-            this.historikkAktør = historikkAktør;
+            this.kladd.historikkAktør = historikkAktør;
             return this;
         }
 
         public DokumentHendelse.Builder medRevurderingVarslingÅrsak(RevurderingVarslingÅrsak revurderingVarslingÅrsak) {
-            this.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
+            this.kladd.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
             return this;
         }
 
         public DokumentHendelse.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {
-            this.behandlendeEnhetNavn = behandlendeEnhetNavn;
+            this.kladd.behandlendeEnhetNavn = behandlendeEnhetNavn;
             return this;
         }
 
         public DokumentHendelse.Builder medVedtaksbrev(Vedtaksbrev vedtaksbrev) {
-            this.vedtaksbrev = vedtaksbrev;
+            this.kladd.vedtaksbrev = vedtaksbrev;
             return this;
         }
 
         public DokumentHendelse build() {
             verifyStateForBuild();
-            DokumentHendelse dokumentHendelse = new DokumentHendelse(behandlingUuid, ytelseType);
-            dokumentHendelse.bestillingUuid = bestillingUuid;
-            dokumentHendelse.erOpphevetKlage = erOpphevetKlage;
-            dokumentHendelse.gjelderVedtak = gjelderVedtak;
-            dokumentHendelse.fritekst = fritekst;
-            dokumentHendelse.tittel = tittel;
-            dokumentHendelse.dokumentMalType = dokumentMalType;
-            dokumentHendelse.historikkAktør = historikkAktør;
-            dokumentHendelse.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
-            dokumentHendelse.behandlendeEnhetNavn = behandlendeEnhetNavn;
-            dokumentHendelse.vedtaksbrev = vedtaksbrev;
-            return dokumentHendelse;
+            return kladd;
         }
 
         private void verifyStateForBuild() {
-            Objects.requireNonNull(behandlingUuid, "behandlingUuid");
-            Objects.requireNonNull(bestillingUuid, "bestillingUuid");
-            Objects.requireNonNull(ytelseType, "ytelseType");
+            Objects.requireNonNull(kladd.behandlingUuid, "behandlingUuid");
+            Objects.requireNonNull(kladd.bestillingUuid, "bestillingUuid");
+            Objects.requireNonNull(kladd.ytelseType, "ytelseType");
         }
 
     }

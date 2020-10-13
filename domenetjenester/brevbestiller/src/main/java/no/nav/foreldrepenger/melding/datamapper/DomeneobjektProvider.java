@@ -56,7 +56,6 @@ public class DomeneobjektProvider {
     private BehandlingRestKlient behandlingRestKlient;
     private BeregningsgrunnlagDtoMapper beregningsgrunnlagDtoMapper;
     private BehandlingDtoMapper behandlingDtoMapper;
-    private BeregningsresultatDtoMapper beregningsresultatDtoMapper;
     private KlageDtoMapper klageDtoMapper;
     private AnkeDtoMapper ankeDtoMapper;
     private UttakDtoMapper uttakDtoMapper;
@@ -74,7 +73,6 @@ public class DomeneobjektProvider {
     public DomeneobjektProvider(BehandlingRestKlient behandlingRestKlient,
                                 BeregningsgrunnlagDtoMapper beregningsgrunnlagDtoMapper,
                                 BehandlingDtoMapper behandlingDtoMapper,
-                                BeregningsresultatDtoMapper beregningsresultatDtoMapper,
                                 KlageDtoMapper klageDtoMapper,
                                 AnkeDtoMapper ankeDtoMapper,
                                 UttakDtoMapper uttakDtoMapper,
@@ -90,7 +88,6 @@ public class DomeneobjektProvider {
         this.behandlingRestKlient = behandlingRestKlient;
         this.beregningsgrunnlagDtoMapper = beregningsgrunnlagDtoMapper;
         this.behandlingDtoMapper = behandlingDtoMapper;
-        this.beregningsresultatDtoMapper = beregningsresultatDtoMapper;
         this.klageDtoMapper = klageDtoMapper;
         this.ankeDtoMapper = ankeDtoMapper;
         this.uttakDtoMapper = uttakDtoMapper;
@@ -144,11 +141,11 @@ public class DomeneobjektProvider {
     }
 
     public BeregningsresultatFP hentBeregningsresultatFP(Behandling behandling) {
-        return beregningsresultatDtoMapper.mapBeregningsresultatFPFraDto(behandlingRestKlient.hentBeregningsresultatForeldrepenger(behandling.getResourceLinker()));
+        return BeregningsresultatDtoMapper.mapBeregningsresultatFPFraDto(behandlingRestKlient.hentBeregningsresultatForeldrepenger(behandling.getResourceLinker()));
     }
 
     public Optional<BeregningsresultatFP> hentBeregningsresultatFPHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentBeregningsresultatForeldrepengerHvisFinnes(behandling.getResourceLinker()).map(beregningsresultatDtoMapper::mapBeregningsresultatFPFraDto);
+        return behandlingRestKlient.hentBeregningsresultatForeldrepengerHvisFinnes(behandling.getResourceLinker()).map(BeregningsresultatDtoMapper::mapBeregningsresultatFPFraDto);
     }
 
     public FamilieHendelse hentFamiliehendelse(Behandling behandling) {

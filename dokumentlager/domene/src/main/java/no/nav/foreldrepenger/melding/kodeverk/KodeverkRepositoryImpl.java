@@ -4,9 +4,7 @@ import static no.nav.foreldrepenger.melding.kodeverk.KodeverkFeil.FEILFACTORY;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +14,6 @@ import javax.inject.Inject;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -55,11 +52,6 @@ public class KodeverkRepositoryImpl implements KodeverkRepository {
     }
 
     @Override
-    public <V extends Kodeliste> V finn(Class<V> cls, V kodelisteKonstant) {
-        return finn(cls, kodelisteKonstant.getKode());
-    }
-
-    @Override
     public <V extends Kodeliste> List<V> finnListe(Class<V> cls, List<String> koder) {
         List<String> koderIkkeICache = new ArrayList<>();
         List<V> result = new ArrayList<>();
@@ -77,36 +69,6 @@ public class KodeverkRepositoryImpl implements KodeverkRepository {
         return result;
     }
 
-
-    private Query getLandkodeMappingQuery() {
-        return entityManager.createNativeQuery(
-                "SELECT k3.kode AS land_3bokstav, " +
-                        "(SELECT k2.kode FROM kodeliste k2 " +
-                        "WHERE k2.kodeverk = 'LANDKODE_ISO2' " +
-                        "AND k2.navn = k3.navn ) AS land_2bokstav " +
-                        "FROM kodeliste k3 " +
-                        "WHERE k3.kodeverk = 'LANDKODER' " +
-                        "AND EXISTS (SELECT k2.kode " +
-                        "FROM kodeliste k2 " +
-                        "WHERE k2.kodeverk = 'LANDKODE_ISO2' " +
-                        "AND k2.navn = k3.navn)");
-    }
-
-    @Override
-    public Map<String, String> hentLandkodeISO2TilLandkoderMap() {
-        Query query = getLandkodeMappingQuery();
-
-        int land3BokstavNr = 0;
-        int land2BokstavNr = 1;
-
-        HashMap<String, String> retval = new HashMap<>();
-        @SuppressWarnings("unchecked")
-        List<Object[]> koder = query.getResultList();
-        for (Object[] k : koder) {
-            retval.put((String) k[land2BokstavNr], (String) k[land3BokstavNr]);
-        }
-        return retval;
-    }
 
     private <V extends Kodeliste> List<V> finnListeFraEm(Class<V> cls, List<String> koder) {
         CriteriaQuery<V> criteria = createCriteria(cls, koder);

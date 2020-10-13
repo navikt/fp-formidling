@@ -52,9 +52,6 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
     @JsonProperty("besteberegningPrAar")
     private BigDecimal besteberegningPrAar;
 
-    @JsonProperty("inntektskategori")
-    private KodeDto inntektskategori;
-
     @JsonProperty("arbeidsforhold")
     private BeregningsgrunnlagArbeidsforholdDto arbeidsforhold;
 
@@ -184,14 +181,6 @@ public class BeregningsgrunnlagPrStatusOgAndelDto {
 
     public void setErNyIArbeidslivet(Boolean erNyIArbeidslivet) {
         this.erNyIArbeidslivet = erNyIArbeidslivet;
-    }
-
-    public KodeDto getInntektskategori() {
-        return inntektskategori;
-    }
-
-    public void setInntektskategori(KodeDto inntektskategori) {
-        this.inntektskategori = inntektskategori;
     }
 
     public Boolean getFastsattAvSaksbehandler() {

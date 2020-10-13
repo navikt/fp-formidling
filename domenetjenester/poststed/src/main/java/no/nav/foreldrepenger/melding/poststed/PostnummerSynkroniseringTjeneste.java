@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.melding.geografisk.Postnummer;
+import no.nav.foreldrepenger.melding.geografisk.Poststed;
 import no.nav.foreldrepenger.melding.geografisk.PoststedKodeverkRepository;
 import no.nav.vedtak.exception.IntegrasjonException;
 
@@ -56,14 +56,14 @@ class PostnummerSynkroniseringTjeneste {
     }
 
     private void lagreNyVersjon(KodeverkInfo pnrInfo) {
-        Map<String, Postnummer> eksisterendeMap = poststedKodeverkRepository.hentAllePostnummer().stream()
-                .collect(Collectors.toMap(Postnummer::getPoststednummer, p -> p));
+        Map<String, Poststed> eksisterendeMap = poststedKodeverkRepository.hentAllePostnummer().stream()
+                .collect(Collectors.toMap(Poststed::getPoststednummer, p -> p));
         Map<String, KodeverkKode> masterKoderMap = kodeverkTjeneste.hentKodeverk(KODEVERK_POSTNUMMER, pnrInfo.getVersjon());
         masterKoderMap.forEach((key, value) -> synkroniserNyEllerEksisterendeKode(eksisterendeMap, value));
         poststedKodeverkRepository.setPostnummerKodeverksDato(pnrInfo.getVersjon(), pnrInfo.getVersjonDato());
     }
 
-    private void synkroniserNyEllerEksisterendeKode(Map<String, Postnummer> eksisterendeKoderMap, KodeverkKode masterKode) {
+    private void synkroniserNyEllerEksisterendeKode(Map<String, Poststed> eksisterendeKoderMap, KodeverkKode masterKode) {
         if (eksisterendeKoderMap.containsKey(masterKode.getKode())) {
             synkroniserEksisterendeKode(masterKode, eksisterendeKoderMap.get(masterKode.getKode()));
         } else {
@@ -72,11 +72,11 @@ class PostnummerSynkroniseringTjeneste {
     }
 
     private void synkroniserNyKode(KodeverkKode kodeverkKode) {
-        Postnummer nytt = new Postnummer(kodeverkKode.getKode(), kodeverkKode.getNavn(), kodeverkKode.getGyldigFom(), kodeverkKode.getGyldigTom());
+        Poststed nytt = new Poststed(kodeverkKode.getKode(), kodeverkKode.getNavn(), kodeverkKode.getGyldigFom(), kodeverkKode.getGyldigTom());
         poststedKodeverkRepository.lagrePostnummer(nytt);
     }
 
-    private void synkroniserEksisterendeKode(KodeverkKode kodeverkKode, Postnummer postnummer) {
+    private void synkroniserEksisterendeKode(KodeverkKode kodeverkKode, Poststed postnummer) {
         if (!erLike(kodeverkKode, postnummer)) {
             postnummer.setPoststednavn(kodeverkKode.getNavn());
             postnummer.setGyldigFom(kodeverkKode.getGyldigFom());
@@ -85,7 +85,7 @@ class PostnummerSynkroniseringTjeneste {
         }
     }
 
-    private static boolean erLike(KodeverkKode kodeverkKode, Postnummer postnummer) {
+    private static boolean erLike(KodeverkKode kodeverkKode, Poststed postnummer) {
         return Objects.equals(kodeverkKode.getGyldigFom(), postnummer.getGyldigFom())
                 && Objects.equals(kodeverkKode.getGyldigTom(), postnummer.getGyldigTom())
                 && Objects.equals(kodeverkKode.getNavn(), postnummer.getPoststednavn());

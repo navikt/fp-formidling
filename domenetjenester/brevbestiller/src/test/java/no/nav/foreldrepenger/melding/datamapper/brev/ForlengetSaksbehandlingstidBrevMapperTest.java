@@ -10,7 +10,6 @@ import java.util.UUID;
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -27,6 +26,7 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.VariantKode;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 public class ForlengetSaksbehandlingstidBrevMapperTest {
 

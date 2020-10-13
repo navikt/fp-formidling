@@ -7,10 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatMedUttaksplanDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatPeriodeAndelDto;
@@ -21,26 +17,15 @@ import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.dtomapper.sortering.PeriodeComparator;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.util.StringUtils;
 
-@ApplicationScoped
 public class BeregningsresultatDtoMapper {
-    private BehandlingRestKlient behandlingRestKlient;
-    private KodeverkRepository kodeverkRepository;
 
     public BeregningsresultatDtoMapper() {
         //CDI
-    }
-
-    @Inject
-    public BeregningsresultatDtoMapper(BehandlingRestKlient behandlingRestKlient,
-                                       KodeverkRepository kodeverkRepository) {
-        this.behandlingRestKlient = behandlingRestKlient;
-        this.kodeverkRepository = kodeverkRepository;
     }
 
 
@@ -48,9 +33,9 @@ public class BeregningsresultatDtoMapper {
         return new BeregningsresultatES(dto.getBeregnetTilkjentYtelse());
     }
 
-    public BeregningsresultatFP mapBeregningsresultatFPFraDto(BeregningsresultatMedUttaksplanDto dto) {
+    public static BeregningsresultatFP mapBeregningsresultatFPFraDto(BeregningsresultatMedUttaksplanDto dto) {
         List<BeregningsresultatPeriode> beregningsresultatPerioder = Arrays.stream(dto.getPerioder())
-                .map(this::mapPeriodeFraDto)
+                .map(BeregningsresultatDtoMapper::mapPeriodeFraDto)
                 .sorted(PeriodeComparator.BEREGNINGSRESULTAT)
                 .collect(Collectors.toList());
         return BeregningsresultatFP.ny()
@@ -59,7 +44,7 @@ public class BeregningsresultatDtoMapper {
     }
 
 
-    private BeregningsresultatPeriode mapPeriodeFraDto(BeregningsresultatPeriodeDto dto) {
+    private static BeregningsresultatPeriode mapPeriodeFraDto(BeregningsresultatPeriodeDto dto) {
         List<BeregningsresultatAndel> andelListe = new ArrayList<>();
         for (BeregningsresultatPeriodeAndelDto beregningsresultatPeriodeAndelDto : dto.getAndeler()) {
             andelListe.add(mapAndelFraDto(beregningsresultatPeriodeAndelDto));
@@ -72,9 +57,9 @@ public class BeregningsresultatDtoMapper {
     }
 
     //Fpsak slår sammen andeler i dto, så vi må eventuelt splitte dem opp igjen
-    private BeregningsresultatAndel mapAndelFraDto(BeregningsresultatPeriodeAndelDto dto) {
+    private static BeregningsresultatAndel mapAndelFraDto(BeregningsresultatPeriodeAndelDto dto) {
         return BeregningsresultatAndel.ny()
-                .medAktivitetStatus(kodeverkRepository.finn(AktivitetStatus.class, dto.getAktivitetStatus().getKode()))
+                .medAktivitetStatus(AktivitetStatus.fraKode(dto.getAktivitetStatus().getKode()))
                 .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                 .medArbeidsgiver(mapArbeidsgiverFraDto(dto))
                 .medStillingsprosent(dto.getStillingsprosent())
@@ -85,7 +70,7 @@ public class BeregningsresultatDtoMapper {
                 .build();
     }
 
-    private Arbeidsgiver mapArbeidsgiverFraDto(BeregningsresultatPeriodeAndelDto dto) {
+    private static Arbeidsgiver mapArbeidsgiverFraDto(BeregningsresultatPeriodeAndelDto dto) {
         if (!AktivitetStatus.ARBEIDSTAKER.getKode().equals(dto.getAktivitetStatus().getKode())
                 || (dto.getArbeidsgiverOrgnr() == null && dto.getAktørId() == null)) {
             return null;
@@ -93,7 +78,7 @@ public class BeregningsresultatDtoMapper {
         return finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getAktørId() != null ? dto.getAktørId() : dto.getArbeidsgiverOrgnr());
     }
 
-    private int summerDagsats(BeregningsresultatPeriodeAndelDto dto) {
+    private static int summerDagsats(BeregningsresultatPeriodeAndelDto dto) {
         int sum = 0;
         if (dto.getTilSoker() != null) {
             sum += dto.getTilSoker();

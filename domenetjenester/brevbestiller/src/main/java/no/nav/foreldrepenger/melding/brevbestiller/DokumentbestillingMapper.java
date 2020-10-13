@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.melding.brevbestiller;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerTjenesteUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -20,15 +19,9 @@ public class DokumentbestillingMapper {
     private static final String FAGOMRÅDE_KODE = "FOR";
     private static final String JOURNALFØRENDE_ENHET_KODE = "9999";
     private static final String UKJENT_ADRESSE = "Ukjent adresse";
-    private LandkodeOversetter landkodeOversetter;
 
     public DokumentbestillingMapper() {
         //CDI
-    }
-
-    @Inject
-    public DokumentbestillingMapper(LandkodeOversetter landkodeOversetter) {
-        this.landkodeOversetter = landkodeOversetter;
     }
 
     public Dokumentbestillingsinformasjon mapFraBehandling(DokumentMalType dokumentMal, DokumentFelles dokumentFelles, boolean harVedlegg) {
@@ -95,7 +88,7 @@ public class DokumentbestillingMapper {
         adresse.setAdresselinje2(dokumentFelles.getMottakerAdresse().getAdresselinje2());
         adresse.setAdresselinje3(dokumentFelles.getMottakerAdresse().getAdresselinje3());
         no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Landkoder landkode = new no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Landkoder();
-        landkode.setValue(landkodeOversetter.tilIso2(dokumentFelles.getMottakerAdresse().getLand()));
+        landkode.setValue(LandkodeOversetter.tilLandkoder(dokumentFelles.getMottakerAdresse().getLand()));
         adresse.setLand(landkode);
         return adresse;
     }

@@ -1,28 +1,82 @@
 package no.nav.foreldrepenger.melding.vedtak;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
-@Entity(name = "Vedtaksbrev")
-@DiscriminatorValue(Vedtaksbrev.DISCRIMINATOR)
-public class Vedtaksbrev extends Kodeliste {
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public static final String DISCRIMINATOR = "VEDTAKSBREV";
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-    public static final Vedtaksbrev AUTOMATISK = new Vedtaksbrev("AUTOMATISK"); //$NON-NLS-1$
-    public static final Vedtaksbrev FRITEKST = new Vedtaksbrev("FRITEKST"); //$NON-NLS-1$
-    public static final Vedtaksbrev INGEN = new Vedtaksbrev("INGEN"); //$NON-NLS-1$
 
-    public static final Vedtaksbrev UDEFINERT = new Vedtaksbrev("-"); //$NON-NLS-1$
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public enum Vedtaksbrev implements Kodeverdi {
 
-    public Vedtaksbrev() {
-        //
-    }
+    AUTOMATISK("AUTOMATISK"),
+    FRITEKST("FRITEKST"),
+    INGEN("INGEN"),
+    UDEFINERT("-"),
+    ;
+
+    private static final Map<String, Vedtaksbrev> KODER = new LinkedHashMap<>();
+
+
+    public static final String KODEVERK = "VEDTAKSBREV";
+
+    private String kode;
 
     private Vedtaksbrev(String kode) {
-        super(kode, DISCRIMINATOR);
+        this.kode = kode;
     }
 
+    @JsonCreator
+    public static Vedtaksbrev fraKode(@JsonProperty("kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent Vedtaksbrev: " + kode);
+        }
+        return ad;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
+    }
+
+    @Converter(autoApply = true)
+    public static class KodeverdiConverter implements AttributeConverter<Vedtaksbrev, String> {
+        @Override
+        public String convertToDatabaseColumn(Vedtaksbrev attribute) {
+            return attribute == null ? null : attribute.getKode();
+        }
+
+        @Override
+        public Vedtaksbrev convertToEntityAttribute(String dbData) {
+            return dbData == null ? null : fraKode(dbData);
+        }
+    }
 }

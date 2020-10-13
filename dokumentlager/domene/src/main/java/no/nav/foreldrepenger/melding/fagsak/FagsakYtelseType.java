@@ -1,29 +1,70 @@
 package no.nav.foreldrepenger.melding.fagsak;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
-@Entity(name = "FagsakYtelseType")
-@DiscriminatorValue(FagsakYtelseType.DISCRIMINATOR)
-public class FagsakYtelseType extends Kodeliste {
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public static final String DISCRIMINATOR = "FAGSAK_YTELSE"; //$NON-NLS-1$
-    public static final FagsakYtelseType ENGANGSTØNAD = new FagsakYtelseType("ES"); //$NON-NLS-1$
-    public static final FagsakYtelseType FORELDREPENGER = new FagsakYtelseType("FP"); //$NON-NLS-1$
-    public static final FagsakYtelseType ENDRING_FORELDREPENGER = new FagsakYtelseType("ENDRING_FP"); //$NON-NLS-1$
-    public static final FagsakYtelseType SVANGERSKAPSPENGER = new FagsakYtelseType("SVP"); //$NON-NLS-1$
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-    public static final FagsakYtelseType UDEFINERT = new FagsakYtelseType("-"); //$NON-NLS-1$
 
-    FagsakYtelseType() {
-        // Hibernate trenger den
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum FagsakYtelseType implements Kodeverdi {
+
+    ENGANGSTØNAD("ES"),
+    FORELDREPENGER("FP"),
+    SVANGERSKAPSPENGER("SVP"),
+    UDEFINERT("-"),
+    ;
+
+    public static final String KODEVERK = "FAGSAK_YTELSE"; //$NON-NLS-1$
+
+    private static final Map<String, FagsakYtelseType> KODER = new LinkedHashMap<>();
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
 
-    public FagsakYtelseType(String kode) {
-        super(kode, DISCRIMINATOR);
+    private String kode;
+
+    private FagsakYtelseType(String kode) {
+        this.kode = kode;
     }
+
+    @JsonCreator
+    public static FagsakYtelseType fraKode(@JsonProperty(value = "kode") String kode) {
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent FagsakYtelseType: " + kode);
+        }
+        return ad;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
 
     public final boolean gjelderEngangsstønad() {
         return ENGANGSTØNAD.equals(this);
@@ -31,6 +72,19 @@ public class FagsakYtelseType extends Kodeliste {
 
     public final boolean gjelderForeldrepenger() {
         return FORELDREPENGER.equals(this);
+    }
+
+    @Converter(autoApply = true)
+    public static class KodeverdiConverter implements AttributeConverter<FagsakYtelseType, String> {
+        @Override
+        public String convertToDatabaseColumn(FagsakYtelseType attribute) {
+            return attribute == null ? null : attribute.getKode();
+        }
+
+        @Override
+        public FagsakYtelseType convertToEntityAttribute(String dbData) {
+            return dbData == null ? null : fraKode(dbData);
+        }
     }
 
 }

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.verify;
 
 import java.util.UUID;
 
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,6 +23,7 @@ import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkTjeneste;
 import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkinnslagProducer;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
 public class DokumentHistorikkTjenesteTest {

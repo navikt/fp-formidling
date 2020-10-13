@@ -56,11 +56,6 @@ public class KodeverkTestHelper {
         }
 
         @Override
-        public <V extends Kodeliste> V finn(Class<V> cls, V kodelisteKonstant) {
-            return finn(cls, kodelisteKonstant.getKode());
-        }
-
-        @Override
         public <V extends Kodeliste> List<V> finnListe(Class<V> cls, List<String> koder) {
             Map<String, Kodeliste> kodelisterForKlasse = getKodelistePrKodePrKlasse(cls);
             @SuppressWarnings("unchecked")
@@ -73,11 +68,6 @@ public class KodeverkTestHelper {
         public synchronized Map<String, Kodeliste> getKodelistePrKodePrKlasse(Class<? extends Kodeliste> cls) {
             lazyLoadKodeliste(cls);
             return kodelistePrKodePrKlasse.get(cls);
-        }
-
-        @Override
-        public Map<String, String> hentLandkodeISO2TilLandkoderMap() {
-            throw new UnsupportedOperationException();
         }
     }
 }

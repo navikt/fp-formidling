@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.geografisk;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -43,11 +44,7 @@ public enum Språkkode implements Kodeverdi {
 
     @JsonCreator
     public static Språkkode fraKode(@JsonProperty(value = "kode") String kode) {
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent Språkkode: " + kode);
-        }
-        return ad;
+        return finnSpråkIgnoreCase(kode).orElseThrow(() -> new IllegalArgumentException("Ukjent Språkkode: " + kode));
     }
 
     @JsonProperty
@@ -75,9 +72,14 @@ public enum Språkkode implements Kodeverdi {
         }
     }
 
-    private static final Map<String, Språkkode> VERDIER = Map.of(nb.getKode(), nb, nn.getKode(), nn, en.getKode(), en);
-
     public static final Språkkode defaultNorsk(String kode) {
-        return kode == null ? Språkkode.nb : VERDIER.getOrDefault(kode, Språkkode.nb);
+        return finnSpråkIgnoreCase(kode).orElse(Språkkode.nb);
+    }
+
+    private static Optional<Språkkode> finnSpråkIgnoreCase(String kode) {
+        if (kode == null) {
+            return Optional.empty();
+        }
+        return KODER.entrySet().stream().filter(e -> kode.equalsIgnoreCase(e.getKey())).findFirst().map(Map.Entry::getValue);
     }
 }

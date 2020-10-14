@@ -7,7 +7,6 @@ import java.util.Objects;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.finn.unleash.Unleash;
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -25,16 +24,16 @@ import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
+import no.nav.vedtak.util.env.Environment;
 
 @ApplicationScoped
 class DokumentMalUtleder {
 
     private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingUuid: ";
-    private static final String FPSAK_FRITEKSTBREV_FOR_INNV_ENGANGSSTONAD = "fpsak.fritekstForInnvilgelseEngangsstonad";
     private DomeneobjektProvider domeneobjektProvider;
     private HistorikkRepository historikkRepository;
     private BehandlingRestKlient behandlingRestKlient;
-    private Unleash unleash;
+    private static final Environment ENV = Environment.current();
 
     public DokumentMalUtleder() {
         //CDI
@@ -43,12 +42,10 @@ class DokumentMalUtleder {
     @Inject
     public DokumentMalUtleder(DomeneobjektProvider domeneobjektProvider,
                               HistorikkRepository historikkRepository,
-                              BehandlingRestKlient behandlingRestKlient,
-                              Unleash unleash) {
+                              BehandlingRestKlient behandlingRestKlient) {
         this.domeneobjektProvider = domeneobjektProvider;
         this.historikkRepository = historikkRepository;
         this.behandlingRestKlient = behandlingRestKlient;
-        this.unleash = unleash;
     }
 
     private static boolean erKunEndringIFordelingAvYtelsen(Behandlingsresultat behandlingsresultat) {
@@ -59,10 +56,9 @@ class DokumentMalUtleder {
     private DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (behandlingsresultat.erInnvilget()) {
-            if (unleash != null && unleash.isEnabled(FPSAK_FRITEKSTBREV_FOR_INNV_ENGANGSSTONAD, false)) {
+            if (!ENV.isProd()) {
                 return DokumentMalType.INNVILGELSE_ENGANGSSTØNAD;
-            }
-            else {
+            } else {
                 return DokumentMalType.POSITIVT_VEDTAK_DOK;
             }
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {

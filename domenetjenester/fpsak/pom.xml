@@ -19,10 +19,6 @@
             <artifactId>felles-integrasjon-rest-klient</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-            <artifactId>unleash-klient</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>domene</artifactId>
         </dependency>

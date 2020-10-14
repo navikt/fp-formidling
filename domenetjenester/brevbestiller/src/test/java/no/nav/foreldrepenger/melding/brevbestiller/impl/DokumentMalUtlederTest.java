@@ -37,7 +37,7 @@ public class DokumentMalUtlederTest {
 
     @Before
     public void setup() {
-        dokumentMalUtleder = new DokumentMalUtleder(domeneobjektProvider, null, null, null);
+        dokumentMalUtleder = new DokumentMalUtleder(domeneobjektProvider, null, null);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class DokumentMalUtlederTest {
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.POSITIVT_VEDTAK_DOK.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD.getKode());
     }
 
     @Test

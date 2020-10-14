@@ -16,8 +16,10 @@
 
     <modules>
         <module>dokumentkontrakter</module>
+        <module>dokdist-klient</module>
         <module>dokgen-klient</module>
         <module>dtomapper</module>
+        <module>journal-klient</module>
         <module>kodeverk-klient</module>
     </modules>
 

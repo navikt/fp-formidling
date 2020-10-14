@@ -6,7 +6,7 @@ public class Verge {
     private String navn;
     private String fnr;
 
-    public Verge(String fnr, String organisasjonsnummer,String navn) {
+    public Verge(String fnr, String organisasjonsnummer, String navn) {
         this.organisasjonsnummer = organisasjonsnummer;
         this.fnr = fnr;
         this.navn = navn;

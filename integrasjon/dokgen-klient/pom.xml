@@ -14,6 +14,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>domene</artifactId>
+        </dependency>
+        <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>felles-integrasjon-rest-klient</artifactId>
         </dependency>

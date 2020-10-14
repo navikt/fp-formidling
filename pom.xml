@@ -22,7 +22,7 @@
     </modules>
 
     <properties>
-        <revision>1.1</revision>
+        <revision>1.2</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
         <java.version>11</java.version>
@@ -39,7 +39,7 @@
         <!-- Eksterne -->
         <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.5</swagger.version>
-        <swagger-ui.version>3.34.0</swagger-ui.version>
+        <swagger-ui.version>3.35.1</swagger-ui.version>
         <kafka.version>2.6.0</kafka.version>
         <cxf.version>3.3.6</cxf.version>
     </properties>
@@ -159,6 +159,16 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>dokdist-klient</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>journal-klient</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>migreringer</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>
@@ -212,7 +222,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.2.16</version>
+                <version>42.2.17</version>
             </dependency>
 
             <!-- Kontrakter -->
@@ -271,7 +281,7 @@
             <dependency>
                 <groupId>org.glassfish</groupId>
                 <artifactId>javax.el</artifactId>
-                <version>3.0.1-b11</version>
+                <version>3.0.1-b12</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
@@ -310,7 +320,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.13</version>
+                <version>4.13.1</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>

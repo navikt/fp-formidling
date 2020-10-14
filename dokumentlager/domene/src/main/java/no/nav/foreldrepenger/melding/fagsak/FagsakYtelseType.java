@@ -74,6 +74,8 @@ public enum FagsakYtelseType implements Kodeverdi {
         return FORELDREPENGER.equals(this);
     }
 
+    public final boolean gjelderSvangerskapspenger() { return SVANGERSKAPSPENGER.equals(this);}
+
     @Converter(autoApply = true)
     public static class KodeverdiConverter implements AttributeConverter<FagsakYtelseType, String> {
         @Override
@@ -86,5 +88,4 @@ public enum FagsakYtelseType implements Kodeverdi {
             return dbData == null ? null : fraKode(dbData);
         }
     }
-
 }

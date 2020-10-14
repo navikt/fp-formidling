@@ -4,6 +4,7 @@ package no.nav.foreldrepenger.melding.geografisk;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -80,6 +81,6 @@ public enum Språkkode implements Kodeverdi {
         if (kode == null) {
             return Optional.empty();
         }
-        return KODER.entrySet().stream().filter(e -> kode.equalsIgnoreCase(e.getKey())).findFirst().map(Map.Entry::getValue);
+        return Stream.of(nb, nn, en).filter(sp -> kode.equalsIgnoreCase(sp.getKode())).findFirst();
     }
 }

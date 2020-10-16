@@ -114,7 +114,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             dokumentFelles.setBrevData(JsonMapper.toJson(dokumentdata));
 
             byte[] brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
-            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse, behandling.getFagsak().getSaksnummer(), !harVedlegg);
+            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse, behandling.getFagsakBackend().getSaksnummer(), !harVedlegg);
             JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
             dokdistRestKlient.distribuerJournalpost(journalpostId);
 

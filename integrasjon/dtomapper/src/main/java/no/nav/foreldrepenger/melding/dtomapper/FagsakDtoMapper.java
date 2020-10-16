@@ -1,37 +1,20 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakDto;
-import no.nav.foreldrepenger.melding.fagsak.Fagsak;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
+import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakBackendDto;
+import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.melding.typer.PersonIdent;
-import no.nav.foreldrepenger.tps.TpsTjeneste;
+import no.nav.foreldrepenger.melding.typer.AktørId;
 
-@ApplicationScoped
 public class FagsakDtoMapper {
-
-    private KodeverkRepository kodeverkRepository;
-    private TpsTjeneste tpsTjeneste;
-
-    @Inject
-    public FagsakDtoMapper(KodeverkRepository kodeverkRepository,
-                           TpsTjeneste tpsTjeneste) {
-        this.kodeverkRepository = kodeverkRepository;
-        this.tpsTjeneste = tpsTjeneste;
-    }
 
     public FagsakDtoMapper() {
     }
 
-    public Fagsak mapFagsakFraDto(FagsakDto fagsakDto) {
-        return Fagsak.ny()
+    public static FagsakBackend mapFagsakBackendFraDto(FagsakBackendDto fagsakDto) {
+        return FagsakBackend.ny()
                 .medSaksnummer(String.valueOf(fagsakDto.getSaksnummer()))
                 .medBrukerRolle(RelasjonsRolleType.fraKode(fagsakDto.getRelasjonsRolleType().getKode()))
-                .medPersoninfo(tpsTjeneste.hentBrukerForFnr(PersonIdent.fra(fagsakDto.getPerson().getPersonnummer())).orElseThrow(IllegalStateException::new))
-                .medFagsakStatus(fagsakDto.getStatus().getKode())
+                .medAktørId(new AktørId(fagsakDto.getAktoerId()))
                 .build();
     }
 

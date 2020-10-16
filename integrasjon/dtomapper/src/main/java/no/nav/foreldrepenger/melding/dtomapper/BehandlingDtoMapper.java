@@ -28,7 +28,6 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 public class BehandlingDtoMapper {
     private KodeverkRepository kodeverkRepository;
     private BehandlingRestKlient behandlingRestKlient;
-    private FagsakDtoMapper fagsakDtoMapper;
     private BehandlingsresultatDtoMapper behandlingsresultatDtoMapper;
 
     public BehandlingDtoMapper() {
@@ -38,11 +37,9 @@ public class BehandlingDtoMapper {
     @Inject
     public BehandlingDtoMapper(KodeverkRepository kodeverkRepository,
                                BehandlingRestKlient behandlingRestKlient,
-                               FagsakDtoMapper fagsakDtoMapper,
                                BehandlingsresultatDtoMapper behandlingsresultatDtoMapper) {
         this.kodeverkRepository = kodeverkRepository;
         this.behandlingRestKlient = behandlingRestKlient;
-        this.fagsakDtoMapper = fagsakDtoMapper;
         this.behandlingsresultatDtoMapper = behandlingsresultatDtoMapper;
     }
 

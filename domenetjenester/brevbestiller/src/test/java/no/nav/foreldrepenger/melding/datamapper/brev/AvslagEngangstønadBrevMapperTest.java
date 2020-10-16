@@ -32,4 +32,12 @@ public class AvslagEngangstønadBrevMapperTest {
                 .isEqualTo(RelasjonskodeType.MEDMOR);
     }
 
+    // Denne oppstår ved avslag/dokumentasjon før man har registrert ferdig papirsøknad. 14 tilfelle i P
+    @Test
+    public void skal_mappe_relasjonsrolle_ukjent() {
+        assertThat(AvslagEngangstønadBrevMapper
+                .tilRelasjonskodeType(RelasjonsRolleType.UDEFINERT, NavBrukerKjønn.KVINNE))
+                .isEqualTo(RelasjonskodeType.MEDMOR);
+    }
+
 }

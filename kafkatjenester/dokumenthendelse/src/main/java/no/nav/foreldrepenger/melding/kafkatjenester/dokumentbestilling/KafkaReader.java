@@ -30,15 +30,12 @@ public class KafkaReader {
     private HendelseHandler hendelseHandler;
     private StringBuilder feilmelding;
     private HendelseRepository hendelseRepository;
-    private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
 
     @Inject
     public KafkaReader(HendelseHandler jsonOppgaveHandler,
-                       HendelseRepository hendelseRepository,
-                       DokumentHendelseDtoMapper dtoTilDomeneobjektMapper) {
+                       HendelseRepository hendelseRepository) {
         this.hendelseHandler = jsonOppgaveHandler;
         this.hendelseRepository = hendelseRepository;
-        this.dtoTilDomeneobjektMapper = dtoTilDomeneobjektMapper;
     }
 
     public KafkaReader() {
@@ -50,7 +47,7 @@ public class KafkaReader {
         try {
             DokumentbestillingV1 jsonHendelse = deserialiser(melding, DokumentbestillingV1.class);
             if (jsonHendelse != null) {
-                DokumentHendelse hendelse = dtoTilDomeneobjektMapper.mapDokumentHendelseFraDtoForKafka(jsonHendelse);
+                DokumentHendelse hendelse = DokumentHendelseDtoMapper.mapDokumentHendelseFraDtoForKafka(jsonHendelse);
                 hendelseHandler.prosesser(hendelse);
                 return;
             }

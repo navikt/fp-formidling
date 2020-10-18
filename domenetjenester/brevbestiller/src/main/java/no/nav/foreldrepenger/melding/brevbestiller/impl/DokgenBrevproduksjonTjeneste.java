@@ -139,7 +139,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     }
 
     private Collection<InnsynDokument> finnEventuelleVedlegg(Behandling behandling, DokumentMalType dokumentMal) {
-        if (!DokumentMalType.INNSYNSKRAV_SVAR.equals(dokumentMal.getKode())) {
+        if (!DokumentMalType.INNSYNSKRAV_SVAR.equals(dokumentMal)) {
             return Collections.emptyList();
         }
         return filtrerUtDuplikater(domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter());

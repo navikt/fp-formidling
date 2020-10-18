@@ -32,7 +32,6 @@ import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakBackendDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
-import no.nav.foreldrepenger.fpsak.dto.personopplysning.PersonopplysningDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
@@ -91,16 +90,6 @@ public class BehandlingRestKlient {
         return resourceLinker.stream()
                 .filter(dto -> "original-behandling".equals(dto.getRel()))
                 .findFirst().flatMap(link -> hentDtoFraLink(link, BehandlingDto.class));
-    }
-
-    
-    public PersonopplysningDto hentPersonopplysninger(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker.stream()
-                .filter(dto -> "soeker-personopplysninger".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, PersonopplysningDto.class))
-                .orElseThrow(() -> {
-                    throw new IllegalStateException("Klarte ikke hente Personopplysning for behandling: " + hentBehandlingId(resourceLinker));
-                });
     }
 
     

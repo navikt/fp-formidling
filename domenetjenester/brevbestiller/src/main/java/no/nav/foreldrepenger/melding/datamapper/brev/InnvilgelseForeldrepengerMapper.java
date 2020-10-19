@@ -1,8 +1,25 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
+
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktStatus;
+import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
@@ -18,7 +35,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.StønadskontoMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
@@ -39,21 +56,8 @@ import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
+import no.nav.foreldrepenger.tps.TpsTjeneste;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
-import org.xml.sax.SAXException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-import java.math.BigInteger;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.INNVILGELSE_FORELDREPENGER_DOK)
@@ -61,6 +65,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
 
     private ObjectFactory objectFactory = new ObjectFactory();
     private BrevParametere brevParametere;
+    private TpsTjeneste tpsTjeneste;
 
     public InnvilgelseForeldrepengerMapper() {
         //CDI
@@ -68,9 +73,11 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
 
     @Inject
     public InnvilgelseForeldrepengerMapper(DomeneobjektProvider domeneobjektProvider,
-                                           BrevParametere brevParametere) {
+                                           BrevParametere brevParametere,
+                                           TpsTjeneste tpsTjeneste) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
+        this.tpsTjeneste = tpsTjeneste;
     }
 
     @Override
@@ -87,7 +94,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
         Saldoer saldoer = domeneobjektProvider.hentSaldoer(behandling);
         List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
-        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
+        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         FagType fagType = mapFagType(dokumentHendelse,
                 behandling,
                 beregningsresultatFP,
@@ -134,10 +141,10 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
                                YtelseFordeling ytelseFordeling,
                                Saldoer saldoer,
                                List<Aksjonspunkt> aksjonspunkter,
-                               Fagsak fagsak) {
+                               FagsakBackend fagsak) {
         final FagType fagType = objectFactory.createFagType();
 
-        fagType.setRelasjonskode(tilRelasjonskode(fagsak.getRelasjonsRolleType(), fagsak.getPersoninfo().getKjønn()));
+        fagType.setRelasjonskode(utledRelasjonsrolle(fagsak));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));
         fagType.setBehandlingsResultat(BehandlingMapper.tilBehandlingsResultatKode(behandling.getBehandlingsresultat().getBehandlingResultatType()));
         String konsekvensForYtelsen = BehandlingMapper.kodeFra(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
@@ -208,7 +215,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         fagType.setAnnenForelderHarRett(uttakResultatPerioder.isAnnenForelderHarRett());
     }
 
-    private void mapFelterRelatertTilStønadskontoer(FagType fagType, Saldoer saldoer, Fagsak fagsak) {
+    private void mapFelterRelatertTilStønadskontoer(FagType fagType, Saldoer saldoer, FagsakBackend fagsak) {
         fagType.setDagerTaptFørTermin(BigInteger.valueOf(saldoer.getTapteDagerFpff()));
         fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()));
         fagType.setDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer));
@@ -263,6 +270,10 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         return objectFactory.createBrevdata(brevdataType);
     }
 
+    private RelasjonskodeKode utledRelasjonsrolle(FagsakBackend fagsak) {
+        var kjønn = tpsTjeneste.hentBrukerForAktør(fagsak.getAktørId()).map(Personinfo::getKjønn).orElseThrow();
+        return tilRelasjonskode(fagsak.getRelasjonsRolleType(), kjønn);
+    }
 
     private RelasjonskodeKode tilRelasjonskode(RelasjonsRolleType brukerRolle, NavBrukerKjønn navBrukerKjønn) {
         if (RelasjonsRolleType.MORA.equals(brukerRolle)) {

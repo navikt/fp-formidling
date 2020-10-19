@@ -1,5 +1,24 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
@@ -30,23 +49,6 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
 @ApplicationScoped
 public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -54,7 +56,6 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DokumentproduksjonConsumer dokumentproduksjonProxyService;
-    private DokumentXmlDataMapper dokumentXmlDataMapper;
     private DokumentbestillingMapper dokumentbestillingMapper;
     private DomeneobjektProvider domeneobjektProvider;
     private DokumentRepository dokumentRepository;
@@ -65,13 +66,11 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Inject
     public DokprodBrevproduksjonTjeneste(DokumentproduksjonConsumer dokumentproduksjonProxyService,
-                                         DokumentXmlDataMapper dokumentXmlDataMapper,
                                          DokumentbestillingMapper dokumentbestillingMapper,
                                          DokumentFellesDataMapper dokumentFellesDataMapper,
                                          DomeneobjektProvider domeneobjektProvider,
                                          DokumentRepository dokumentRepository) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
-        this.dokumentXmlDataMapper = dokumentXmlDataMapper;
         this.dokumentbestillingMapper = dokumentbestillingMapper;
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.domeneobjektProvider = domeneobjektProvider;
@@ -89,12 +88,12 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         dokumentRepository.lagre(dokumentData);
 
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
-            Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling);
+            Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling);
             dokumentFelles.setBrevData(elementTilString(brevXmlElement));
 
             final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
                     dokumentFelles, harVedlegg);
-            hentJournalpostTittel(dokumentXmlDataMapper.velgDokumentMapper(dokumentMal)).ifPresent(dokumentbestillingsinformasjon::setUstrukturertTittel);
+            hentJournalpostTittel(DokumentXmlDataMapper.velgDokumentMapper(dokumentMal)).ifPresent(dokumentbestillingsinformasjon::setUstrukturertTittel);
 
             ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = produserIkkeredigerbartDokument(brevXmlElement, dokumentbestillingsinformasjon);
             if (harVedlegg) {
@@ -147,7 +146,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     }
 
     private Collection<InnsynDokument> finnEventuelleVedlegg(Behandling behandling, DokumentMalType dokumentMal) {
-        if (!DokumentMalType.INNSYNSKRAV_SVAR.equals(dokumentMal.getKode())) {
+        if (!DokumentMalType.INNSYNSKRAV_SVAR.equals(dokumentMal)) {
             return Collections.emptyList();
         }
         return filtrerUtDuplikater(domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter());
@@ -198,7 +197,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
         final DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
 
-        Element brevXmlElement = dokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, dokumentHendelse, behandling);
+        Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, dokumentHendelse, behandling);
 
         førsteDokumentFelles.setBrevData(elementTilString(brevXmlElement));
         dokumentRepository.lagre(dokumentData);

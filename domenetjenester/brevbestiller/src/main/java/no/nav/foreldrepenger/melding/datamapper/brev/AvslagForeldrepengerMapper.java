@@ -1,5 +1,23 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
+
+import java.math.BigInteger;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
@@ -11,12 +29,11 @@ import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.ÅrsakMapperAvslag;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.AarsakListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.AvslagForeldrepengerConstants;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.BrevdataType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.ObjectFactory;
@@ -28,24 +45,6 @@ import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 import no.nav.vedtak.util.Tuple;
-import org.xml.sax.SAXException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-import java.math.BigInteger;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.AVSLAG_FORELDREPENGER_DOK)
@@ -82,7 +81,7 @@ public class AvslagForeldrepengerMapper extends DokumentTypeMapper {
         Optional<UttakResultatPerioder> uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling);
         long halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
         List<MottattDokument> mottattDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
-        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
+        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         FagType fagType = mapFagType(behandling,
                 mottattDokumenter,
                 dokumentHendelse,
@@ -101,7 +100,7 @@ public class AvslagForeldrepengerMapper extends DokumentTypeMapper {
                                FamilieHendelse familiehendelse,
                                long halvG,
                                Optional<BeregningsresultatFP> beregningsresultatFP,
-                               Optional<UttakResultatPerioder> uttakResultatPerioder, Fagsak fagsak) {
+                               Optional<UttakResultatPerioder> uttakResultatPerioder, FagsakBackend fagsak) {
         FagType fagType = new FagType();
         fagType.setRelasjonskode(fra(fagsak));
         fagType.setMottattDato(MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter));
@@ -136,21 +135,11 @@ public class AvslagForeldrepengerMapper extends DokumentTypeMapper {
         fagType.setLovhjemmelForAvslag(AarsakListeOgLovhjemmel.getElement2());
     }
 
-    private RelasjonskodeKode fra(Fagsak fagsak) {
+    private RelasjonskodeKode fra(FagsakBackend fagsak) {
         if (RelasjonsRolleType.erRegistrertForeldre(fagsak.getRelasjonsRolleType())) {
             return relasjonskodeTypeMap.get(fagsak.getRelasjonsRolleType());
         }
         return RelasjonskodeKode.ANNET;
-    }
-
-    private BehandlingsTypeKode fra(String behandlingsType) {
-        if (REVURDERING.equals(behandlingsType)) {
-            return BehandlingsTypeKode.REVURDERING;
-        }
-        if (SØKNAD.equals(behandlingsType)) {
-            return BehandlingsTypeKode.SØKNAD;
-        }
-        return BehandlingsTypeKode.FOERSTEGANGSBEHANDLING;
     }
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {

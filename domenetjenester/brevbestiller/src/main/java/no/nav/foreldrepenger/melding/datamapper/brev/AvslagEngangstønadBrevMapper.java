@@ -1,5 +1,22 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
+import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
@@ -7,7 +24,7 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.AvslagConstants;
@@ -24,21 +41,8 @@ import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 import no.nav.foreldrepenger.melding.vilkår.repository.VilkårKodeverkRepository;
+import no.nav.foreldrepenger.tps.TpsTjeneste;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
-import org.xml.sax.SAXException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.AVSLAGSVEDTAK_DOK)
@@ -65,6 +69,7 @@ public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
 
     private BrevParametere brevParametere;
     private VilkårKodeverkRepository vilkårKodeverkRepository;
+    private TpsTjeneste tpsTjeneste;
 
     public AvslagEngangstønadBrevMapper() {
     }
@@ -72,10 +77,12 @@ public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
     @Inject
     public AvslagEngangstønadBrevMapper(BrevParametere brevParametere,
                                         DomeneobjektProvider domeneobjektProvider,
+                                        TpsTjeneste tpsTjeneste,
                                         VilkårKodeverkRepository vilkårKodeverkRepository) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
         this.vilkårKodeverkRepository = vilkårKodeverkRepository;
+        this.tpsTjeneste = tpsTjeneste;
     }
 
     @Override
@@ -84,7 +91,7 @@ public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
+        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         List<Vilkår> vilkår = domeneobjektProvider.hentVilkår(behandling);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         FagType fagType = mapFagType(behandling, behandlingstype, dokumentHendelse, familiehendelse, vilkår, fagsak);
@@ -97,7 +104,7 @@ public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
                                DokumentHendelse dokumentHendelse,
                                FamilieHendelse familiehendelse,
                                List<Vilkår> vilkårene,
-                               Fagsak fagsak) {
+                               FagsakBackend fagsak) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(REVURDERING.equals(behandlingstype) ? BehandlingstypeType.REVURDERING : BehandlingstypeType.SØKNAD);
         fagType.setRelasjonsKode(utledRelasjonsrolle(fagsak));
@@ -110,8 +117,9 @@ public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
         return fagType;
     }
 
-    static RelasjonskodeType utledRelasjonsrolle(Fagsak fagsak) {
-        return tilRelasjonskodeType(fagsak.getRelasjonsRolleType(), fagsak.getPersoninfo().getKjønn());
+    private RelasjonskodeType utledRelasjonsrolle(FagsakBackend fagsak) {
+        var kjønn = tpsTjeneste.hentBrukerForAktør(fagsak.getAktørId()).map(Personinfo::getKjønn).orElseThrow();
+        return tilRelasjonskodeType(fagsak.getRelasjonsRolleType(), kjønn);
     }
 
     static RelasjonskodeType tilRelasjonskodeType(RelasjonsRolleType brukerRolle, NavBrukerKjønn navBrukerKjønn) {

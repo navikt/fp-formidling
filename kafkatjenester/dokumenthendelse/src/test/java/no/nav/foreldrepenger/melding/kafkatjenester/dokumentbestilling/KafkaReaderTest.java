@@ -16,7 +16,6 @@ import org.mockito.junit.MockitoRule;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
-import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.melding.hendelse.HendelseHandler;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
@@ -37,15 +36,13 @@ public class KafkaReaderTest {
     @Mock
     private ProsessTaskRepository prosessTaskRepository;
     private HendelseHandler hendelseHandler;
-    private DokumentHendelseDtoMapper dtoTilDomeneobjektMapper;
     private KafkaReader kafkaReader;
 
     @Before
     public void setup() {
         hendelseRepository = new HendelseRepository(entityManager);
-        dtoTilDomeneobjektMapper = new DokumentHendelseDtoMapper();
         hendelseHandler = new HendelseHandler(hendelseRepository, prosessTaskRepository);
-        this.kafkaReader = new KafkaReader(hendelseHandler, hendelseRepository, dtoTilDomeneobjektMapper);
+        this.kafkaReader = new KafkaReader(hendelseHandler, hendelseRepository);
     }
 
     @Test

@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
-import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -210,17 +210,17 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     }
 
     private Behandling mockDomeneobjektProvider(Personinfo personinfo, boolean harVerge) {
-        Fagsak fagsak = Fagsak.ny()
+        FagsakBackend fagsakBackend = FagsakBackend.ny()
                 .medSaksnummer(SAKSNUMMER.getVerdi())
-                .medPersoninfo(personinfo)
+                .medAktørId(personinfo.getAktørId())
                 .build();
         Behandling behandling = Behandling.builder()
                 .medUuid(BEHANDLING_UUID)
-                .medFagsak(fagsak)
+                .medFagsakBackend(fagsakBackend)
                 .medSpråkkode(Språkkode.nb)
                 .leggTilResourceLink(harVerge ? BehandlingResourceLink.ny().medRel("soeker-verge").build() : BehandlingResourceLink.ny().medRel("annet").build())
                 .build();
-        when(domeneobjektProvider.hentFagsak(eq(behandling))).thenReturn(fagsak);
+        when(domeneobjektProvider.hentFagsakBackend(eq(behandling))).thenReturn(fagsakBackend);
         when(domeneobjektProvider.hentBehandling(any(UUID.class))).thenReturn(behandling);
         if (harVerge) {
             Verge verge = new Verge(VERGE_FNR.getIdent(), "", "");

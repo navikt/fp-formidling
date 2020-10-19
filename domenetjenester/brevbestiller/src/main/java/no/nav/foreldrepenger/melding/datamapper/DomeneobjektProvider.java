@@ -36,7 +36,7 @@ import no.nav.foreldrepenger.melding.dtomapper.UttakSvpDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.VergeDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.VilkårDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.YtelseFordelingDtoMapper;
-import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.InntektArbeidYtelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
@@ -57,49 +57,22 @@ public class DomeneobjektProvider {
     private BeregningsgrunnlagDtoMapper beregningsgrunnlagDtoMapper;
     private BehandlingDtoMapper behandlingDtoMapper;
     private KlageDtoMapper klageDtoMapper;
-    private AnkeDtoMapper ankeDtoMapper;
-    private UttakDtoMapper uttakDtoMapper;
     private UttakSvpDtoMapper uttakSvpDtoMapper;
-    private IAYDtoMapper iayDtoMapper;
-    private InnsynDtoMapper innsynDtoMapper;
     private VilkårDtoMapper vilkårDtoMapper;
-    private FamiliehendelseDtoMapper familiehendelseDtoMapper;
-    private StønadskontoDtoMapper stønadskontoDtoMapper;
-    private AksjonspunktDtoMapper aksjonspunktDtoMapper;
-    private MottattDokumentDtoMapper mottattDokumentDtoMapper;
-    private FagsakDtoMapper fagsakDtoMapper;
 
     @Inject
     public DomeneobjektProvider(BehandlingRestKlient behandlingRestKlient,
                                 BeregningsgrunnlagDtoMapper beregningsgrunnlagDtoMapper,
                                 BehandlingDtoMapper behandlingDtoMapper,
                                 KlageDtoMapper klageDtoMapper,
-                                AnkeDtoMapper ankeDtoMapper,
-                                UttakDtoMapper uttakDtoMapper,
                                 UttakSvpDtoMapper uttakSvpDtoMapper,
-                                IAYDtoMapper iayDtoMapper,
-                                InnsynDtoMapper innsynDtoMapper,
-                                VilkårDtoMapper vilkårDtoMapper,
-                                FamiliehendelseDtoMapper familiehendelseDtoMapper,
-                                StønadskontoDtoMapper stønadskontoDtoMapper,
-                                AksjonspunktDtoMapper aksjonspunktDtoMapper,
-                                MottattDokumentDtoMapper mottattDokumentDtoMapper,
-                                FagsakDtoMapper fagsakDtoMapper) {
+                                VilkårDtoMapper vilkårDtoMapper) {
         this.behandlingRestKlient = behandlingRestKlient;
         this.beregningsgrunnlagDtoMapper = beregningsgrunnlagDtoMapper;
         this.behandlingDtoMapper = behandlingDtoMapper;
         this.klageDtoMapper = klageDtoMapper;
-        this.ankeDtoMapper = ankeDtoMapper;
-        this.uttakDtoMapper = uttakDtoMapper;
         this.uttakSvpDtoMapper = uttakSvpDtoMapper;
-        this.iayDtoMapper = iayDtoMapper;
-        this.innsynDtoMapper = innsynDtoMapper;
         this.vilkårDtoMapper = vilkårDtoMapper;
-        this.familiehendelseDtoMapper = familiehendelseDtoMapper;
-        this.stønadskontoDtoMapper = stønadskontoDtoMapper;
-        this.aksjonspunktDtoMapper = aksjonspunktDtoMapper;
-        this.mottattDokumentDtoMapper = mottattDokumentDtoMapper;
-        this.fagsakDtoMapper = fagsakDtoMapper;
     }
 
     public DomeneobjektProvider() {
@@ -107,12 +80,12 @@ public class DomeneobjektProvider {
     }
 
 
-    public Fagsak hentFagsak(Behandling behandling) {
-        if (behandling.harFagsak()) {
-            return behandling.getFagsak();
+    public FagsakBackend hentFagsakBackend(Behandling behandling) {
+        if (behandling.harFagsakBackend()) {
+            return behandling.getFagsakBackend();
         }
-        Fagsak fagsak = fagsakDtoMapper.mapFagsakFraDto(behandlingRestKlient.hentFagsak(behandling.getResourceLinker()));
-        behandling.leggtilFagsak(fagsak);
+        var fagsak = FagsakDtoMapper.mapFagsakBackendFraDto(behandlingRestKlient.hentFagsakBackend(behandling.getResourceLinker()));
+        behandling.leggtilFagsakBackend(fagsak);
         return fagsak;
     }
 
@@ -149,15 +122,15 @@ public class DomeneobjektProvider {
     }
 
     public FamilieHendelse hentFamiliehendelse(Behandling behandling) {
-        return familiehendelseDtoMapper.mapFamiliehendelsefraDto(behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinker()));
+        return FamiliehendelseDtoMapper.mapFamiliehendelsefraDto(behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinker()));
     }
 
     public InntektArbeidYtelse hentInntektArbeidYtelse(Behandling behandling) {
-        return iayDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektArbeidYtelseDto(behandling.getResourceLinker()));
+        return IAYDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektArbeidYtelseDto(behandling.getResourceLinker()));
     }
 
     public Innsyn hentInnsyn(Behandling behandling) {
-        return innsynDtoMapper.mapInnsynFraDto(behandlingRestKlient.hentInnsynsbehandling(behandling.getResourceLinker()));
+        return InnsynDtoMapper.mapInnsynFraDto(behandlingRestKlient.hentInnsynsbehandling(behandling.getResourceLinker()));
     }
 
     public Klage hentKlagebehandling(Behandling behandling) {
@@ -167,7 +140,7 @@ public class DomeneobjektProvider {
 
     public Optional<Anke> hentAnkebehandling(Behandling behandling) {
         AnkebehandlingDto ankebehandlingDto = behandlingRestKlient.hentAnkebehandling(behandling.getResourceLinker());
-        return ankeDtoMapper.mapAnkeFraDto(ankebehandlingDto);
+        return AnkeDtoMapper.mapAnkeFraDto(ankebehandlingDto);
     }
 
     public KlageDokument hentKlageDokument(Behandling behandling) {
@@ -185,11 +158,11 @@ public class DomeneobjektProvider {
 
 
     public Optional<UttakResultatPerioder> hentUttaksresultatHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentUttaksresultatHvisFinnes(behandling.getResourceLinker()).map(uttakDtoMapper::mapUttaksresultatPerioderFraDto);
+        return behandlingRestKlient.hentUttaksresultatHvisFinnes(behandling.getResourceLinker()).map(UttakDtoMapper::mapUttaksresultatPerioderFraDto);
     }
 
     public UttakResultatPerioder hentUttaksresultat(Behandling behandling) {
-        return uttakDtoMapper.mapUttaksresultatPerioderFraDto(behandlingRestKlient.hentUttaksresultat(behandling.getResourceLinker()));
+        return UttakDtoMapper.mapUttaksresultatPerioderFraDto(behandlingRestKlient.hentUttaksresultat(behandling.getResourceLinker()));
     }
 
     public SvpUttaksresultat hentUttaksresultatSvp(Behandling behandling) {
@@ -201,11 +174,11 @@ public class DomeneobjektProvider {
     }
 
     public Saldoer hentSaldoer(Behandling behandling) {
-        return stønadskontoDtoMapper.mapSaldoerFraDto(behandlingRestKlient.hentSaldoer(behandling.getResourceLinker()));
+        return StønadskontoDtoMapper.mapSaldoerFraDto(behandlingRestKlient.hentSaldoer(behandling.getResourceLinker()));
     }
 
     public List<Aksjonspunkt> hentAksjonspunkter(Behandling behandling) {
-        return aksjonspunktDtoMapper.mapAksjonspunktFraDto(behandlingRestKlient.hentAksjonspunkter(behandling.getResourceLinker()));
+        return AksjonspunktDtoMapper.mapAksjonspunktFraDto(behandlingRestKlient.hentAksjonspunkter(behandling.getResourceLinker()));
     }
 
     public Optional<Verge> hentVerge(Behandling behandling) {
@@ -213,7 +186,7 @@ public class DomeneobjektProvider {
     }
 
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {
-        return mottattDokumentDtoMapper.mapMottattedokumenterFraDto(behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
+        return MottattDokumentDtoMapper.mapMottattedokumenterFraDto(behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
     }
 
     public String getJsonTestdata() {

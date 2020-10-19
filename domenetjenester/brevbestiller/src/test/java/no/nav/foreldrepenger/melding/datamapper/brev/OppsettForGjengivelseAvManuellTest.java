@@ -26,27 +26,17 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlientImpl;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.dto.AksjonspunktDtoMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dtomapper.AnkeDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingsresultatDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.BeregningsgrunnlagDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.FagsakDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.FamiliehendelseDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.IAYDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.InnsynDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.KlageDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.MottattDokumentDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.StønadskontoDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.UttakDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.UttakSvpDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.VilkårDtoMapper;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
@@ -90,24 +80,14 @@ public abstract class OppsettForGjengivelseAvManuellTest {
     private BehandlingRestKlient behandlingRestKlient = new RedirectedToJsonResource();
     private  BehandlingDtoMapper behandlingDtoMapper = new BehandlingDtoMapper(kodeverkRepository,
             behandlingRestKlient,
-            null,
             new BehandlingsresultatDtoMapper(kodeverkRepository));
 
     protected DomeneobjektProvider domeneobjektProvider = new DomeneobjektProvider(behandlingRestKlient,
             new BeregningsgrunnlagDtoMapper(kodeverkRepository),
             this.behandlingDtoMapper,
             new KlageDtoMapper(kodeverkRepository),
-            new AnkeDtoMapper(),
-            new UttakDtoMapper(kodeverkRepository),
             new UttakSvpDtoMapper(kodeverkRepository),
-            new IAYDtoMapper(kodeverkRepository),
-            new InnsynDtoMapper(kodeverkRepository),
-            new VilkårDtoMapper(kodeverkRepository),
-            new FamiliehendelseDtoMapper(),
-            new StønadskontoDtoMapper(kodeverkRepository),
-            new AksjonspunktDtoMapper(),
-            new MottattDokumentDtoMapper(),
-            new FagsakDtoMapper(kodeverkRepository, mockTpsTjeneste())
+            new VilkårDtoMapper(kodeverkRepository)
     );
 
     private TpsTjeneste mockTpsTjeneste() {
@@ -149,7 +129,8 @@ public abstract class OppsettForGjengivelseAvManuellTest {
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne ikke deserialiser fra json til BehandlingDto", e);
         }
-        behandling = Behandling.builder(behandlingDtoMapper.mapBehandlingFraDto(dto)).build();
+        //behandling = Behandling.builder(behandlingDtoMapper.mapBehandlingFraDto(dto)).build();
+        behandling = behandlingDtoMapper.mapBehandlingFraDto(dto);
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
@@ -159,7 +140,7 @@ public abstract class OppsettForGjengivelseAvManuellTest {
 
     abstract String mappenHvorFilenMedLoggetTestdataLigger();
 
-    private class RedirectedToJsonResource extends BehandlingRestKlientImpl {
+    private class RedirectedToJsonResource extends BehandlingRestKlient {
 
         @Override
         protected <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {

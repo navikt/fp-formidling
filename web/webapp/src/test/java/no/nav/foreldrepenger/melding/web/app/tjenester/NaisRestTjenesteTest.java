@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
 
+import no.nav.foreldrepenger.melding.dokumentproduksjon.v2.DokumentproduksjonConsumerProducer;
 import no.nav.foreldrepenger.melding.web.app.selftest.checks.DatabaseHealthCheck;
 
 public class NaisRestTjenesteTest {
@@ -18,10 +19,11 @@ public class NaisRestTjenesteTest {
 
     private ApplicationServiceStarter serviceStarterMock = mock(ApplicationServiceStarter.class);
     private DatabaseHealthCheck databaseHealthCheckMock = mock(DatabaseHealthCheck.class);
+    private DokumentproduksjonConsumerProducer dokumentproduksjonConsumerProducer = mock(DokumentproduksjonConsumerProducer.class);
 
     @Before
     public void setup() {
-        restTjeneste = new NaisRestTjeneste(serviceStarterMock, databaseHealthCheckMock);
+        restTjeneste = new NaisRestTjeneste(serviceStarterMock, databaseHealthCheckMock, dokumentproduksjonConsumerProducer);
     }
 
     @Test

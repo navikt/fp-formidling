@@ -5,15 +5,11 @@ import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpsak.dto.uttak.ArbeidsgiverDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeAktivitetDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.melding.dtomapper.sortering.PeriodeComparator;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
@@ -27,28 +23,15 @@ import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.util.StringUtils;
 
-@ApplicationScoped
 public class UttakDtoMapper {
 
-    private KodeverkRepository kodeverkRepository;
-
-    public UttakDtoMapper() {
-        //CDI
-    }
-
-    @Inject
-    public UttakDtoMapper(KodeverkRepository kodeverkRepository) {
-        this.kodeverkRepository = kodeverkRepository;
-    }
-
-
-    public UttakResultatPerioder mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto) {
+    public static UttakResultatPerioder mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto) {
         List<UttakResultatPeriode> uttakResultatPerioder = emptyIfNull(resultatPerioderDto.getPerioderSøker()).stream()
-                .map(this::periodeFraDto)
+                .map(UttakDtoMapper::periodeFraDto)
                 .sorted(PeriodeComparator.UTTAKRESULTAT)
                 .collect(Collectors.toList());
         List<UttakResultatPeriode> perioderAnnenPart = emptyIfNull(resultatPerioderDto.getPerioderAnnenpart()).stream()
-                .map(this::periodeFraDto)
+                .map(UttakDtoMapper::periodeFraDto)
                 .sorted(PeriodeComparator.UTTAKRESULTAT)
                 .collect(Collectors.toList());
         return UttakResultatPerioder.ny()
@@ -59,8 +42,8 @@ public class UttakDtoMapper {
                 .build();
     }
 
-    public UttakResultatPeriode periodeFraDto(UttakResultatPeriodeDto dto) {
-        List<UttakResultatPeriodeAktivitet> aktiviteter = dto.getAktiviteter().stream().map(this::aktivitetFraDto).collect(Collectors.toList());
+    public static UttakResultatPeriode periodeFraDto(UttakResultatPeriodeDto dto) {
+        List<UttakResultatPeriodeAktivitet> aktiviteter = dto.getAktiviteter().stream().map(UttakDtoMapper::aktivitetFraDto).collect(Collectors.toList());
         UttakResultatPeriode mappetPeriode = UttakResultatPeriode.ny()
                 .medGraderingAvslagÅrsak(velgGraderingsavslagÅrsak(dto))
                 .medPeriodeResultatType(PeriodeResultatType.fraKode(dto.getPeriodeResultatType().getKode()))
@@ -72,15 +55,15 @@ public class UttakDtoMapper {
         return mappetPeriode;
     }
 
-    private PeriodeResultatÅrsak velgPerioderesultatÅrsak(UttakResultatPeriodeDto dto) {
+    private static PeriodeResultatÅrsak velgPerioderesultatÅrsak(UttakResultatPeriodeDto dto) {
         return dto.getPeriodeResultatÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getPeriodeResultatÅrsak().getKode(), dto.getPeriodeResultatÅrsak().getKodeverk(), dto.getPeriodeResultatÅrsakLovhjemmel());
     }
 
-    private PeriodeResultatÅrsak velgGraderingsavslagÅrsak(UttakResultatPeriodeDto dto) {
+    private static PeriodeResultatÅrsak velgGraderingsavslagÅrsak(UttakResultatPeriodeDto dto) {
         return dto.getGraderingAvslagÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getGraderingAvslagÅrsak().getKode(), dto.getGraderingAvslagÅrsak().getKodeverk(), dto.getGraderingsAvslagÅrsakLovhjemmel());
     }
 
-    UttakResultatPeriodeAktivitet aktivitetFraDto(UttakResultatPeriodeAktivitetDto dto) {
+    static UttakResultatPeriodeAktivitet aktivitetFraDto(UttakResultatPeriodeAktivitetDto dto) {
         return UttakResultatPeriodeAktivitet.ny()
                 .medArbeidsprosent(dto.getProsentArbeid())
                 .medTrekkdager(dto.getTrekkdagerDesimaler())

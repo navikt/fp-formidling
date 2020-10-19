@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.organisasjon.Virksomhet;
 import no.nav.foreldrepenger.melding.organisasjon.VirksomhetTjeneste;
@@ -53,9 +53,7 @@ public class DokumentFellesDataMapper {
 
     void opprettDokumentDataForBehandling(Behandling behandling, DokumentData dokumentData, DokumentHendelse dokumentHendelse) {
 
-        Personinfo personinfo = domeneobjektProvider.hentFagsak(behandling).getPersoninfo();
-
-        final AktørId søkersAktørId = personinfo.getAktørId();
+        final AktørId søkersAktørId = domeneobjektProvider.hentFagsakBackend(behandling).getAktørId();
 
         if (!harLenkeForVerge(behandling)) {
             opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId, Optional.empty());
@@ -181,7 +179,7 @@ public class DokumentFellesDataMapper {
                                      String avsenderEnhet,
                                      Optional<DokumentFelles.Kopi> erKopi) {
 
-        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
+        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
 
         DokumentFelles.Builder builder = DokumentFelles.builder(dokumentData)
                 .medAutomatiskBehandlet(Boolean.TRUE)
@@ -220,7 +218,7 @@ public class DokumentFellesDataMapper {
                                      String avsenderEnhet,
                                      Optional<DokumentFelles.Kopi> erKopi) {
 
-        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
+        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
 
         DokumentFelles.Builder builder = DokumentFelles.builder(dokumentData)
                 .medAutomatiskBehandlet(Boolean.TRUE)

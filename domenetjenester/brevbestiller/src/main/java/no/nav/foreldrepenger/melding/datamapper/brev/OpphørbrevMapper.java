@@ -1,5 +1,28 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
+
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -13,7 +36,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.ÅrsakMapperOpphør;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.fagsak.Fagsak;
+import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
@@ -31,30 +54,10 @@ import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.tps.TpsTjeneste;
 import no.nav.vedtak.feil.Feil;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 import no.nav.vedtak.util.Tuple;
-import org.xml.sax.SAXException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.OPPHØR_DOK)
@@ -69,15 +72,18 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
     }
 
     private BrevParametere brevParametere;
+    private TpsTjeneste tpsTjeneste;
 
     public OpphørbrevMapper() {
     }
 
     @Inject
     public OpphørbrevMapper(BrevParametere brevParametere,
-                            DomeneobjektProvider domeneobjektProvider) {
+                            DomeneobjektProvider domeneobjektProvider,
+                            TpsTjeneste tpsTjeneste) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
+        this.tpsTjeneste = tpsTjeneste;
     }
 
     @Override
@@ -92,7 +98,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
         Optional<UttakResultatPerioder> originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).flatMap(domeneobjektProvider::hentUttaksresultatHvisFinnes);
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         long halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
-        Fagsak fagsak = domeneobjektProvider.hentFagsak(behandling);
+        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         FagType fagType = mapFagType(behandlingstype, behandling,
                 dokumentFelles,
                 familiehendelse,
@@ -111,7 +117,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
                                long halvG,
                                UttakResultatPerioder uttakResultatPerioder,
                                Optional<UttakResultatPerioder> originaltUttakResultat,
-                               Fagsak fagsak) {
+                               FagsakBackend fagsak) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(fra(behandlingstypeKode));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());
@@ -126,7 +132,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
                 uttakResultatPerioder,
                 fagType);
 
-        finnDødsdatoHvisFinnes(fagsak.getPersoninfo(), familiehendelse, fagType.getAarsakListe()).map(XmlUtil::finnDatoVerdiAvUtenTidSone)
+        finnDødsdatoHvisFinnes(fagsak, familiehendelse, fagType.getAarsakListe()).map(XmlUtil::finnDatoVerdiAvUtenTidSone)
                 .ifPresent(fagType::setDodsdato);
         finnOpphørsdatoHvisFinnes(uttakResultatPerioder, familiehendelse).map(XmlUtil::finnDatoVerdiAvUtenTidSone)
                 .ifPresent(fagType::setOpphorDato);
@@ -149,7 +155,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
         fagType.setLovhjemmelForAvslag(AarsakListeOgLovhjemmel.getElement2());
     }
 
-    private RelasjonskodeKode fra(Fagsak fagsak) {
+    private RelasjonskodeKode fra(FagsakBackend fagsak) {
         if (RelasjonsRolleType.erRegistrertForeldre(fagsak.getRelasjonsRolleType())) {
             return relasjonskodeTypeMap.get(fagsak.getRelasjonsRolleType());
         }
@@ -166,11 +172,12 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
         return BehandlingsTypeKode.FOERSTEGANGSBEHANDLING;
     }
 
-    private Optional<LocalDate> finnDødsdatoHvisFinnes(final Personinfo personinfo, final FamilieHendelse familieHendelse, AarsakListeType årsakListe) {
+    private Optional<LocalDate> finnDødsdatoHvisFinnes(FagsakBackend fagsak, final FamilieHendelse familieHendelse, AarsakListeType årsakListe) {
         Optional<LocalDate> dødsdato = Optional.empty();
         List<String> avslagsArsaker = hentAvslagsårsaker(årsakListe);
         if (avslagsArsaker.contains(PeriodeResultatÅrsak.SØKER_ER_DØD.getKode())) {
-            dødsdato = Optional.ofNullable(personinfo.getDødsdato());
+            var dødsdatoFREG = tpsTjeneste.hentBrukerForAktør(fagsak.getAktørId()).map(Personinfo::getDødsdato).orElse(null);
+            dødsdato = Optional.ofNullable(dødsdatoFREG);
         }
         if (avslagsArsaker.contains(PeriodeResultatÅrsak.BARNET_ER_DØD.getKode())) {
             dødsdato = familieHendelse.getDødsdato();

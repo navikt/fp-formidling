@@ -114,7 +114,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             dokumentFelles.setBrevData(JsonMapper.toJson(dokumentdata));
 
             byte[] brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
-            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse, behandling.getFagsak().getSaksnummer(), !harVedlegg);
+            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse, behandling.getFagsakBackend().getSaksnummer(), !harVedlegg);
             JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
             dokdistRestKlient.distribuerJournalpost(journalpostId);
 
@@ -139,7 +139,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     }
 
     private Collection<InnsynDokument> finnEventuelleVedlegg(Behandling behandling, DokumentMalType dokumentMal) {
-        if (!DokumentMalType.INNSYNSKRAV_SVAR.equals(dokumentMal.getKode())) {
+        if (!DokumentMalType.INNSYNSKRAV_SVAR.equals(dokumentMal)) {
             return Collections.emptyList();
         }
         return filtrerUtDuplikater(domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter());

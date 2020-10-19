@@ -3,9 +3,7 @@ package no.nav.foreldrepenger.melding.datamapper;
 import java.io.StringReader;
 import java.time.LocalDate;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.spi.CDI;
-import javax.inject.Inject;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,26 +22,13 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.IdKodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerAdresseType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerType;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.feil.FeilFactory;
 import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
 
-@ApplicationScoped
 public class DokumentXmlDataMapper {
-    private KodeverkRepository kodeverkRepository;
 
-
-    public DokumentXmlDataMapper() {
-        //CDI
-    }
-
-    @Inject
-    public DokumentXmlDataMapper(KodeverkRepository kodeverkRepository) {
-        this.kodeverkRepository = kodeverkRepository;
-    }
-
-    public Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
+    public static Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
         Element brevXmlElement;
         FellesType fellesType = mapFellesType(dokumentFelles);
         try (DokumentTypeMapper dokumentTypeMapper = velgDokumentMapper(dokumentMalType)) {
@@ -61,7 +46,7 @@ public class DokumentXmlDataMapper {
         return brevXmlElement;
     }
 
-    public DokumentTypeMapper velgDokumentMapper(DokumentMalType dokumentMalType) {
+    public static DokumentTypeMapper velgDokumentMapper(DokumentMalType dokumentMalType) {
         String faktiskDokumentmal = dokumentMalType.getKode();
         if (DokumentMalType.FORLENGET_BREVMALER.contains(dokumentMalType)) {
             faktiskDokumentmal = DokumentMalType.FORLENGET_DOK.getKode();
@@ -69,7 +54,7 @@ public class DokumentXmlDataMapper {
         return CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(faktiskDokumentmal)).get();
     }
 
-    private FellesType mapFellesType(final DokumentFelles dokumentFelles) {
+    private static FellesType mapFellesType(final DokumentFelles dokumentFelles) {
         final FellesType fellesType = new FellesType();
         fellesType.setSpraakkode(DokumentBestillerTjenesteUtil.mapSpråkkode(dokumentFelles.getSpråkkode()));
         fellesType.setFagsaksnummer(dokumentFelles.getSaksnummer().getVerdi());
@@ -90,7 +75,7 @@ public class DokumentXmlDataMapper {
         return fellesType;
     }
 
-    private MottakerType lageMottakerType(DokumentFelles dokumentFelles) {
+    private static MottakerType lageMottakerType(DokumentFelles dokumentFelles) {
         MottakerType mottakerType = new MottakerType();
         mottakerType.setMottakerId(dokumentFelles.getMottakerId());
         if(dokumentFelles.getMottakerType()==DokumentFelles.MottakerType.PERSON) {

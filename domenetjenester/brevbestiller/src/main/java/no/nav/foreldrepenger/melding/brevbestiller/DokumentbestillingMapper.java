@@ -88,7 +88,7 @@ public class DokumentbestillingMapper {
         adresse.setAdresselinje2(dokumentFelles.getMottakerAdresse().getAdresselinje2());
         adresse.setAdresselinje3(dokumentFelles.getMottakerAdresse().getAdresselinje3());
         no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Landkoder landkode = new no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Landkoder();
-        landkode.setValue(LandkodeOversetter.tilLandkoder(dokumentFelles.getMottakerAdresse().getLand()));
+        landkode.setValue(LandkodeOversetter.tilLandkoderToBokstav(dokumentFelles.getMottakerAdresse().getLand()));
         adresse.setLand(landkode);
         return adresse;
     }

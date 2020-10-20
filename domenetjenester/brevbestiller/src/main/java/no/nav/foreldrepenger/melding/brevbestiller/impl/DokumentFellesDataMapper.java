@@ -124,7 +124,7 @@ public class DokumentFellesDataMapper {
     }
 
     private Virksomhet getVirksomhet(Verge verge) {
-        return virksomhetTjeneste.getOrganisasjon(verge.getOrganisasjonsnummer(), LandkodeOversetter::tilLandkoder);
+        return virksomhetTjeneste.getOrganisasjon(verge.getOrganisasjonsnummer(), LandkodeOversetter::tilLandkoderToBokstav);
     }
 
     private void opprettDokumentDataForMottaker(Behandling behandling,

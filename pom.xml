@@ -39,7 +39,7 @@
         <!-- Eksterne -->
         <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.5</swagger.version>
-        <swagger-ui.version>3.35.1</swagger-ui.version>
+        <swagger-ui.version>3.35.2</swagger-ui.version>
         <kafka.version>2.6.0</kafka.version>
         <cxf.version>3.3.6</cxf.version>
     </properties>
@@ -222,7 +222,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.2.17</version>
+                <version>42.2.18</version>
             </dependency>
 
             <!-- Kontrakter -->
@@ -367,7 +367,7 @@
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-compat-spec-parser</artifactId>
-                <version>1.0.51</version>
+                <version>1.0.52</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>

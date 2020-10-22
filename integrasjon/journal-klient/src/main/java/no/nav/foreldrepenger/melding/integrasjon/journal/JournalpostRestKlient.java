@@ -38,7 +38,7 @@ public class JournalpostRestKlient {
             var uri = new URIBuilder(endpoint).addParameter("forsoekFerdigstill", ""+ferdigstill).build();
             return restKlient.post(uri, request, OpprettJournalpostResponse.class);
         } catch (URISyntaxException e) {
-            throw JournalpostFeil.FACTORY.klarteIkkeOppretteUriForNyJournalpost(request.getSak().getFagsakId(), e).toException();
+            throw JournalpostFeil.FACTORY.klarteIkkeOppretteUriForNyJournalpost(request.getSak().getArkivsaksnummer(), e).toException();
         }
     }
 

@@ -14,6 +14,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class OpprettJournalpostResponse {
     @JsonProperty("journalpostId")
     private String journalpostId;
+    @JsonProperty("melding")
+    private String melding;
     @JsonProperty("journalpostferdigstilt")
     private boolean journalpostferdigstilt;
     @JsonProperty("dokumenter")
@@ -21,15 +23,21 @@ public class OpprettJournalpostResponse {
 
     @JsonCreator
     public OpprettJournalpostResponse(@JsonProperty("journalpostId") String journalpostId,
+                                      @JsonProperty("melding") String melding,
                                       @JsonProperty("journalpostferdigstilt") boolean journalpostferdigstilt,
                                       @JsonProperty("dokumenter") List<DokumentOpprettResponse> dokumenter) {
         this.journalpostId = journalpostId;
+        this.melding = melding;
         this.journalpostferdigstilt = journalpostferdigstilt;
         this.dokumenter = dokumenter;
     }
 
     public String getJournalpostId() {
         return journalpostId;
+    }
+
+    public String getMelding() {
+        return melding;
     }
 
     public boolean erFerdigstilt() {
@@ -44,6 +52,7 @@ public class OpprettJournalpostResponse {
     public String toString() {
         return "OpprettJournalpostResponse{" +
                 "journalpostId='" + journalpostId + '\'' +
+                ", melding='" + melding + '\'' +
                 ", journalpostferdigstilt='" + journalpostferdigstilt + '\'' +
                 ", dokumenter=" + dokumenter +
                 '}';

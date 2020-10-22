@@ -4,24 +4,14 @@ public class EngangsstønadInnvilgelseDokumentdata extends Dokumentdata {
     private boolean revurdering;
     private boolean førstegangsbehandling;
     private boolean medhold;
-    private double innvilgetBeløp;
+    private Long innvilgetBeløp;
     private int klagefristUker;
     private boolean død;
     private boolean fbEllerMedhold;
-    private String kontaktTelefonnummer;
-    private double endretSats;
+    private boolean erEndretSats;
 
-    private EngangsstønadInnvilgelseDokumentdata(Builder builder) {
-        this.felles = builder.felles;
-        this.revurdering = builder.revurdering;
-        this.førstegangsbehandling = builder.førstegangsbehandling;
-        this.medhold = builder.medhold;
-        this.innvilgetBeløp = builder.innvilgetBeløp;
-        this.klagefristUker = builder.klagefristUker;
-        this.død = builder.død;
-        this.fbEllerMedhold = builder.fbEllerMedhold;
-        this.kontaktTelefonnummer = builder.kontaktTelefonnummer;
-        this.endretSats = builder.endretSats;
+    public static Builder ny() {
+        return new Builder();
     }
 
     public boolean getRevurdering() { return revurdering; }
@@ -30,7 +20,7 @@ public class EngangsstønadInnvilgelseDokumentdata extends Dokumentdata {
 
     public boolean getMedhold() { return medhold; }
 
-    public double getInnvilgetBeløp() {
+    public Long getInnvilgetBeløp() {
         return innvilgetBeløp;
     }
 
@@ -40,74 +30,63 @@ public class EngangsstønadInnvilgelseDokumentdata extends Dokumentdata {
 
     public boolean getFbEllerMedhold() { return fbEllerMedhold; }
 
-    public String getKontaktTelefonnummer() { return kontaktTelefonnummer; }
 
-    public double getEndretSats() { return endretSats; }
+    public boolean getErEndretSats() { return erEndretSats; }
 
     public static class Builder {
-        public FellesDokumentdata felles;
-        private boolean revurdering;
-        private boolean førstegangsbehandling;
-        private boolean medhold;
-        private double innvilgetBeløp;
-        private int klagefristUker;
-        private boolean død;
-        private boolean fbEllerMedhold;
-        private String kontaktTelefonnummer;
-        private double endretSats;
+        private EngangsstønadInnvilgelseDokumentdata kladd;
 
-        public Builder felles(FellesDokumentdata felles) {
-            this.felles = felles;
+        private Builder() {
+            this.kladd = new EngangsstønadInnvilgelseDokumentdata();
+        }
+
+        public Builder medFelles(FellesDokumentdata felles) {
+            this.kladd.felles = felles;
             return this;
         }
 
-        public Builder revurdering(boolean revurdering) {
-            this.revurdering = revurdering;
+        public Builder medRevurdering(boolean revurdering) {
+            this.kladd.revurdering= revurdering;
             return this;
         }
 
-        public Builder førstegangsbehandling(boolean førstegangsbehandling) {
-            this.førstegangsbehandling = førstegangsbehandling;
+        public Builder medFørstegangsbehandling(boolean førstegangsbehandling) {
+            this.kladd.førstegangsbehandling = førstegangsbehandling;
             return this;
         }
 
-        public Builder medhold(boolean medhold) {
-            this.medhold = medhold;
+        public Builder medMedhold(boolean medhold) {
+            this.kladd.medhold = medhold;
             return this;
         }
 
-        public Builder innvilgetBeløp(double innvilgetBeløp) {
-            this.innvilgetBeløp = innvilgetBeløp;
+        public Builder medInnvilgetBeløp(Long innvilgetBeløp) {
+            this.kladd.innvilgetBeløp = innvilgetBeløp;
             return this;
         }
 
-        public Builder klagefristUker(int klagefristUker) {
-            this.klagefristUker = klagefristUker;
+        public Builder medKlagefristUker(int klagefristUker) {
+            this.kladd.klagefristUker = klagefristUker;
             return this;
         }
 
-        public Builder død(boolean død) {
-            this.død = død;
+        public Builder medDød(boolean død) {
+            this.kladd.død = død;
             return this;
         }
 
-        public Builder fbEllerMedhold(boolean fbEllerMedhold) {
-            this.fbEllerMedhold = fbEllerMedhold;
+        public Builder medFbEllerMedhold(boolean fbEllerMedhold) {
+            this.kladd.fbEllerMedhold = fbEllerMedhold;
             return this;
         }
 
-        public Builder kontaktTelefonnummer(String kontaktTelefonnummer) {
-            this.kontaktTelefonnummer = kontaktTelefonnummer;
-            return this;
-        }
-
-        public Builder endretSats(double endretSats) {
-            this.endretSats = endretSats;
+        public Builder medErEndretSats(boolean erEndretSats) {
+            this.kladd.erEndretSats = erEndretSats;
             return this;
         }
 
         public EngangsstønadInnvilgelseDokumentdata build() {
-            return new EngangsstønadInnvilgelseDokumentdata(this);
+            return this.kladd;
         }
     }
 }

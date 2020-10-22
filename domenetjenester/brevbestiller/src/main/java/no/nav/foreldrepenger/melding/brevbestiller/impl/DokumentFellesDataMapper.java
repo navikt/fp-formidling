@@ -72,8 +72,8 @@ public class DokumentFellesDataMapper {
         Verge verge = vergeOpt.get();
 
 
-        if (verge.getFnr() != null) {
-            AktørId vergesAktørId = tpsTjeneste.hentAktørForFnr(PersonIdent.fra(verge.getFnr())).orElseThrow(IllegalStateException::new);
+        if (verge.getAktoerId() != null) {
+            AktørId vergesAktørId = new AktørId(verge.getAktoerId());
             opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, vergesAktørId, søkersAktørId, Optional.of( DokumentFelles.Kopi.NEI)); // orginalen går til verge
         } else if (verge.getOrganisasjonsnummer() != null) {
             opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, dokumentHendelse, verge, søkersAktørId, Optional.of( DokumentFelles.Kopi.NEI));// orginalen går til verge

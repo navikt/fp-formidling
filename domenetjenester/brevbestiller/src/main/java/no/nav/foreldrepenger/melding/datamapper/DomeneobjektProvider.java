@@ -33,7 +33,6 @@ import no.nav.foreldrepenger.melding.dtomapper.StønadskontoDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.SøknadDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.UttakDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.UttakSvpDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.VergeDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.VilkårDtoMapper;
 import no.nav.foreldrepenger.melding.dtomapper.YtelseFordelingDtoMapper;
 import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
@@ -182,7 +181,7 @@ public class DomeneobjektProvider {
     }
 
     public Optional<Verge> hentVerge(Behandling behandling) {
-        return behandlingRestKlient.hentVergeHvisfinnes(behandling.getResourceLinker()).map(VergeDtoMapper::mapVergeFraDto);
+        return behandlingRestKlient.hentVergeHvisfinnes(behandling.getResourceLinker()).map(v -> new Verge(v.getAktoerId(), v.getOrganisasjonsnummer(), v.getNavn()));
     }
 
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {

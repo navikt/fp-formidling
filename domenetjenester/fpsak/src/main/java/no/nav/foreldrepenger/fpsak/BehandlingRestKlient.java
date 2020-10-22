@@ -95,7 +95,7 @@ public class BehandlingRestKlient {
     
     public Optional<VergeDto> hentVergeHvisfinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
-                .filter(dto -> "soeker-verge".equals(dto.getRel()))
+                .filter(dto -> "verge-backend".equals(dto.getRel()))
                 .findFirst().flatMap(link -> hentDtoFraLink(link, VergeDto.class));
     }
 

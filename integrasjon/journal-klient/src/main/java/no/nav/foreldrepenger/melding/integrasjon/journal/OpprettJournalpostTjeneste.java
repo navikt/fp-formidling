@@ -21,7 +21,6 @@ import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostR
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.Sak;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingTema;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 @ApplicationScoped
@@ -30,7 +29,8 @@ public class OpprettJournalpostTjeneste {
     private JournalpostRestKlient journalpostRestKlient;
     private static final String AUTOMATISK_JOURNALFØRENDE_ENHET = "9999";
     private static final String TEMA_FORELDREPENGER = "FOR";
-    private static final String FAGSAK = "FAGSAK";
+    private static final String SAKSTYPE = "ARKIVSAK";
+    private static final String ARKIVSAKSYSTEM = "GSAK";
 
     OpprettJournalpostTjeneste() {
         //CDI
@@ -51,6 +51,7 @@ public class OpprettJournalpostTjeneste {
                 LOG.warn("Journalpost {} ble ikke ferdigstilt", response.getJournalpostId());
             }
 
+            LOG.info("Journalføring for behandling {} med malkode {} ferdig med response: {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode(), response.toString());
             return response;
         } catch (Exception e) {
             throw JournalpostFeil.FACTORY.klarteIkkeOppretteJournalpost(dokumentHendelse.getBehandlingUuid().toString(), dokumentMalType.getKode(), e).toException();
@@ -62,7 +63,7 @@ public class OpprettJournalpostTjeneste {
 
         AvsenderMottaker avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), dokumentFelles.getMottakerNavn(), AvsenderMottakerIdType.FNR);
         Bruker bruker = new Bruker(dokumentFelles.getSakspartId(), BrukerIdType.FNR);
-        Sak sak = new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), FAGSAK);
+        Sak sak = new Sak(SAKSTYPE, saksnummer.getVerdi(), ARKIVSAKSYSTEM);
 
         return new OpprettJournalpostRequest(
                 avsenderMottaker,

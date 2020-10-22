@@ -124,7 +124,9 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                 //TODO kanseller forsendelse hvis det feiler
             }
 
-            historikkinnslag.add(lagHistorikkinnslag(dokumentHendelse, response, dokumentMal));
+            DokumentHistorikkinnslag nyttHistorikkinnslag = lagHistorikkinnslag(dokumentHendelse, response, dokumentMal);
+            LOGGER.info("Opprettet historikkinnslag for bestilt brev: {}", nyttHistorikkinnslag.toString());
+            historikkinnslag.add(nyttHistorikkinnslag);
         }
         return historikkinnslag;
     }

@@ -243,7 +243,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
 
     private void mockJournal(DokumentHendelse dokumentHendelse) {
         DokumentOpprettResponse dokumentOpprettResponse = new DokumentOpprettResponse(DOKUMENT_INFO_ID);
-        OpprettJournalpostResponse opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), true, List.of(dokumentOpprettResponse));
+        OpprettJournalpostResponse opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), "", true, List.of(dokumentOpprettResponse));
         when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true)))
                 .thenReturn(opprettJournalpostResponse);
     }

@@ -41,14 +41,14 @@ public class OpprettJournalpostTjenesteTest {
     public void setup()  {
         opprettJournalpost = new OpprettJournalpostTjeneste(journalpostRestKlient);
 
-        OpprettJournalpostResponse response = new OpprettJournalpostResponse(JOURNALPOST_ID, true, List.of(new DokumentOpprettResponse("1111")));
+        OpprettJournalpostResponse response = new OpprettJournalpostResponse(JOURNALPOST_ID, "", true, List.of(new DokumentOpprettResponse("1111")));
         when(journalpostRestKlient.opprettJournalpost(any(OpprettJournalpostRequest.class), eq(true))).thenReturn(response);
     }
 
     @Test
     public void skal_journalføre_generert_INNVES_brev() {
-
-        ArgumentCaptor<OpprettJournalpostRequest> captorR = ArgumentCaptor.forClass(OpprettJournalpostRequest.class);
+        // Arrange
+        ArgumentCaptor<OpprettJournalpostRequest> requestCaptor = ArgumentCaptor.forClass(OpprettJournalpostRequest.class);
 
         DokumentFelles dokumentFelles = getDokumentFelles();
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder()
@@ -57,14 +57,18 @@ public class OpprettJournalpostTjenesteTest {
 
         Saksnummer saksnummer = new Saksnummer("123456789");
 
+        // Act
         OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.INNVILGELSE_ENGANGSSTØNAD, dokumentFelles, dokumentHendelse, saksnummer, true);
 
-        Mockito.verify(journalpostRestKlient).opprettJournalpost(captorR.capture(), eq(true));
+        // Assert
+        Mockito.verify(journalpostRestKlient).opprettJournalpost(requestCaptor.capture(), eq(true));
 
-        OpprettJournalpostRequest genRequest = captorR.getValue();
+        OpprettJournalpostRequest genRequest = requestCaptor.getValue();
         assertThat(genRequest.getTema()).isEqualTo("FOR");
         assertThat(genRequest.getBehandlingstema()).isEqualTo(BehandlingTema.ENGANGSSTØNAD.getOffisiellKode());
-        assertThat(genRequest.getSak().getFagsakId()).isEqualTo(saksnummer.getVerdi());
+        assertThat(genRequest.getSak().getSakstype()).isEqualTo("ARKIVSAK");
+        assertThat(genRequest.getSak().getArkivsaksnummer()).isEqualTo(saksnummer.getVerdi());
+        assertThat(genRequest.getSak().getArkivsaksystem()).isEqualTo("GSAK");
         assertThat(genRequest.getAvsenderMottaker().getId()).isEqualTo(MOTTAKER_ID);
         assertThat(genRequest.getAvsenderMottaker().getNavn()).isEqualTo(MOTTAKER_NAVN);
         assertThat(genRequest.getJournalfoerendeEnhet()).isEqualTo("9999");

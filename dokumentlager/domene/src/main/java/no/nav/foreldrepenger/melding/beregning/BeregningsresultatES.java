@@ -10,4 +10,5 @@ public class BeregningsresultatES {
     public Long getBeløp() {
         return beløp;
     }
+
 }

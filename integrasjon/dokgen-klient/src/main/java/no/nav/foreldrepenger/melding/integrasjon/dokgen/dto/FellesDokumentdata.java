@@ -1,18 +1,22 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
-import java.time.LocalDate;
-
 public class FellesDokumentdata {
     private String søkerNavn;
     private String søkerPersonnummer;
     private String fritekst;
-    private LocalDate brevDato;
+    private String brevDato;
+    private boolean erAutomatiskBehandlet;
+    private boolean erKopi;
+    private boolean harVerge;
 
     public FellesDokumentdata(Builder builder) {
         this.søkerNavn = builder.søkerNavn;
         this.søkerPersonnummer = builder.søkerPersonnummer;
         this.fritekst = builder.fritekst;
         this.brevDato = builder.brevDato;
+        this.erAutomatiskBehandlet = builder.erAutomatiskBehandlet;
+        this.erKopi = builder.erKopi;
+        this.harVerge = builder.harVerge;
     }
 
     public String getSøkerNavn() {
@@ -27,15 +31,24 @@ public class FellesDokumentdata {
         return fritekst;
     }
 
-    public LocalDate getBrevDato() {
+    public String getBrevDato() {
         return brevDato;
     }
+
+    public boolean getErAutomatiskBehandlet () { return erAutomatiskBehandlet; }
+
+    public boolean getErKopi() { return erKopi; }
+
+    public boolean harVerge() { return harVerge; }
 
     public static class Builder {
         private String søkerNavn;
         private String søkerPersonnummer;
         private String fritekst;
-        private LocalDate brevDato;
+        private String brevDato;
+        private boolean erAutomatiskBehandlet;
+        private boolean erKopi;
+        private boolean harVerge;
 
         public FellesDokumentdata.Builder søkerNavn(String søkerNavn) {
             this.søkerNavn = søkerNavn;
@@ -52,8 +65,23 @@ public class FellesDokumentdata {
             return this;
         }
 
-        public FellesDokumentdata.Builder brevDato(LocalDate brevDato) {
+        public FellesDokumentdata.Builder brevDato(String brevDato) {
             this.brevDato = brevDato;
+            return this;
+        }
+
+        public FellesDokumentdata.Builder erAutomatiskBehandlet(boolean erAutomatiskBehandlet) {
+            this.erAutomatiskBehandlet = erAutomatiskBehandlet;
+            return this;
+        }
+
+        public FellesDokumentdata.Builder erKopi(boolean erKopi) {
+            this.erKopi = erKopi;
+            return this;
+        }
+
+        public FellesDokumentdata.Builder harVerge(boolean harVerge) {
+            this.harVerge = harVerge;
             return this;
         }
 

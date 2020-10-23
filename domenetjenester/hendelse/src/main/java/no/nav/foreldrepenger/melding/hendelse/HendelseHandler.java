@@ -6,7 +6,8 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.melding.brevbestiller.task.ProduserBrevTaskProperties;
+import no.nav.foreldrepenger.melding.brevbestiller.task.BrevTaskProperties;
+import no.nav.foreldrepenger.melding.brevbestiller.task.ProduserBrevTask;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
@@ -40,9 +41,9 @@ public class HendelseHandler {
     }
 
     private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {
-        ProsessTaskData prosessTaskData = new ProsessTaskData(ProduserBrevTaskProperties.TASKTYPE);
-        prosessTaskData.setProperty(ProduserBrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
-        prosessTaskData.setProperty(ProduserBrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
+        ProsessTaskData prosessTaskData = new ProsessTaskData(ProduserBrevTask.TASKTYPE);
+        prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
+        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
         prosessTaskData.setGruppe("FORMIDLING");
         prosessTaskRepository.lagre(prosessTaskData);
     }

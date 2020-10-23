@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.task;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.task.ProduserBrevTask.TASKTYPE;
+
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,8 +18,10 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 
 @ApplicationScoped
-@ProsessTask(ProduserBrevTaskProperties.TASKTYPE)
+@ProsessTask(TASKTYPE)
 public class ProduserBrevTask implements ProsessTaskHandler {
+
+    public static final String TASKTYPE = "formidling.bestillBrev";
 
     private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
     private HendelseRepository hendelseRepository;
@@ -41,7 +45,7 @@ public class ProduserBrevTask implements ProsessTaskHandler {
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
-        long hendelseId = Long.valueOf(prosessTaskData.getPropertyValue(ProduserBrevTaskProperties.HENDELSE_ID));
+        long hendelseId = Long.parseLong(prosessTaskData.getPropertyValue(BrevTaskProperties.HENDELSE_ID));
         List<DokumentHistorikkinnslag> historikkinnslagList = brevBestillerApplikasjonTjeneste.bestillBrev(hendelseRepository.hentDokumentHendelseMedId(hendelseId));
         for (DokumentHistorikkinnslag historikkinnslag : historikkinnslagList) {
             historikkRepository.lagre(historikkinnslag);

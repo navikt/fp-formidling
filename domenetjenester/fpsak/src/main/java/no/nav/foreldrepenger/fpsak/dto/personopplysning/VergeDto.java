@@ -1,41 +1,34 @@
 package no.nav.foreldrepenger.fpsak.dto.personopplysning;
 
-import java.time.LocalDate;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VergeDto {
     private String navn;
-    private String fnr;
+    private String aktoerId;
     private String organisasjonsnummer;
 
-    public VergeDto() { //NOSONAR
+    public String getNavn() {
+        return navn;
     }
 
     public void setNavn(String navn) {
         this.navn = navn;
     }
 
-    public void setOrganisasjonsnummer(String organisasjonsnummer) {
-        this.organisasjonsnummer = organisasjonsnummer;
+    public String getAktoerId() {
+        return aktoerId;
     }
 
-    public String getNavn() {
-        return navn;
-    }
-
-    public String getFnr() {
-        return fnr;
-    }
-
-    public void setFnr(String fnr) {
-        this.fnr = fnr;
+    public void setAktoerId(String aktoerId) {
+        this.aktoerId = aktoerId;
     }
 
     public String getOrganisasjonsnummer() {
         return organisasjonsnummer;
+    }
+
+    public void setOrganisasjonsnummer(String organisasjonsnummer) {
+        this.organisasjonsnummer = organisasjonsnummer;
     }
 }

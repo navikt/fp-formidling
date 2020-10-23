@@ -4,16 +4,16 @@ public class Verge {
 
     private String organisasjonsnummer;
     private String navn;
-    private String fnr;
+    private String aktoerId;
 
-    public Verge(String fnr, String organisasjonsnummer, String navn) {
+    public Verge(String aktoerId, String organisasjonsnummer, String navn) {
         this.organisasjonsnummer = organisasjonsnummer;
-        this.fnr = fnr;
+        this.aktoerId = aktoerId;
         this.navn = navn;
     }
 
-    public String getFnr() {
-        return fnr;
+    public String getAktoerId() {
+        return aktoerId;
     }
 
     public String getOrganisasjonsnummer() {

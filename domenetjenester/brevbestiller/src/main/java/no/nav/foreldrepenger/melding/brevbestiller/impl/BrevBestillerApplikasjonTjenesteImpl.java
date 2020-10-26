@@ -1,7 +1,8 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.malSkalBrukeDokgen;
+
 import java.util.List;
-import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -14,14 +15,9 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.vedtak.util.env.Cluster;
-import no.nav.vedtak.util.env.Environment;
 
 @ApplicationScoped
 public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplikasjonTjeneste {
-
-    private static final Set<String> DOKGEN_MALER = Set.of(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD.getKode());
-    private static final Environment ENV = Environment.current();
 
     private DokumentMalUtleder dokumentMalUtleder;
     private DomeneobjektProvider domeneobjektProvider;
@@ -52,7 +48,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
 
-        if (DOKGEN_MALER.contains(dokumentMal.getKode()) && !Cluster.PROD_FSS.equals(ENV.getCluster())) {
+        if (malSkalBrukeDokgen(dokumentMal)) {
             return dokgenBrevproduksjonTjeneste.forhandsvisBrev(dokumentHendelse, behandling, dokumentMal);
         } else {
             return dokprodBrevproduksjonTjeneste.forhandsvisBrev(dokumentHendelse, behandling, dokumentMal);
@@ -64,7 +60,7 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
 
-        if (DOKGEN_MALER.contains(dokumentMal.getKode()) && !Cluster.PROD_FSS.equals(ENV.getCluster())) {
+        if (malSkalBrukeDokgen(dokumentMal)) {
             return dokgenBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, dokumentMal);
         } else {
             return dokprodBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, dokumentMal);

@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.melding.typer.Dato;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.ANKE_VEDTAK_OMGJORING_DOK)
-public class AnkeOmgjøreVedtakBrevMapper  extends FritekstmalBrevMapper {
+public class AnkeOmgjøreVedtakBrevMapper extends FritekstmalBrevMapper {
 
 
     public AnkeOmgjøreVedtakBrevMapper() {
@@ -48,7 +48,7 @@ public class AnkeOmgjøreVedtakBrevMapper  extends FritekstmalBrevMapper {
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
         Optional<Anke> anke  = domeneobjektProvider.hentAnkebehandling(behandling);
-        if( anke.isPresent()) {
+        if (anke.isPresent()) {
             return new Brevdata()
                     .leggTil("mintekst",  anke.get().getFritekstTilBrev())
                     .leggTil("saksbehandler", behandling.getAnsvarligSaksbehandler())
@@ -77,17 +77,16 @@ public class AnkeOmgjøreVedtakBrevMapper  extends FritekstmalBrevMapper {
                 Behandling klageBehandling = domeneobjektProvider.hentBehandling(klageBehandlingUuid);
                 vedtaksDato = klageBehandling.getOriginalVedtaksDato() != null ? medFormatering(klageBehandling.getOriginalVedtaksDato()) : null;
             }
-            if(AnkeVurderingOmgjør.ANKE_TIL_GUNST.equals(anke.get().getAnkeVurderingOmgjoer())){
+            if (AnkeVurderingOmgjør.ANKE_TIL_GUNST.equals(anke.get().getAnkeVurderingOmgjoer())) {
                 gunst= true;
             }
         }
 
         FagType fagType = new FagType();
         fagType.setBrødtekst(tryApply(mapTilBrevfelter(hendelse, behandling).leggTil("vedtaksDato",vedtaksDato).leggTil("gunst",gunst).getMap(), getBrødtekstMal()));
-        if(vedtaksDato== null){
+        if (vedtaksDato== null) {
             fagType.setHovedoverskrift(tryApply(Map.of("behandling", behandling, "dokumentHendelse", hendelse), getOverskriftMal()));
-        }
-        else{
+        } else {
             fagType.setHovedoverskrift(tryApply(Map.of("behandling", behandling, "dokumentHendelse", hendelse,"vedtaksDato",vedtaksDato), getOverskriftMal()));
         }
         return fagType;

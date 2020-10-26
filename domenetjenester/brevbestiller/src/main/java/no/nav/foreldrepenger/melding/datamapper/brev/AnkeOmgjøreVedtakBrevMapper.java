@@ -1,6 +1,16 @@
 
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import no.nav.foreldrepenger.melding.anke.Anke;
 import no.nav.foreldrepenger.melding.anke.AnkeVurderingOmgjør;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -10,15 +20,6 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.typer.Dato;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-
-import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.ANKE_VEDTAK_OMGJORING_DOK)
@@ -70,10 +71,12 @@ public class AnkeOmgjøreVedtakBrevMapper  extends FritekstmalBrevMapper {
         initHandlebars(behandling.getSpråkkode());
 
         Optional<Anke> anke = domeneobjektProvider.hentAnkebehandling(behandling);
-        if(anke.isPresent()){
-            UUID klageBehandlingUuid =  anke.get().getPaAnketBehandlingUuid();
-            Behandling klageBehandling = domeneobjektProvider.hentBehandling(klageBehandlingUuid);
-            vedtaksDato = klageBehandling.getOriginalVedtaksDato()!=null?medFormatering(klageBehandling.getOriginalVedtaksDato()):null;
+        if (anke.isPresent()) {
+            UUID klageBehandlingUuid = anke.map(Anke::getPaAnketBehandlingUuid).orElse(null);
+            if (klageBehandlingUuid != null) {
+                Behandling klageBehandling = domeneobjektProvider.hentBehandling(klageBehandlingUuid);
+                vedtaksDato = klageBehandling.getOriginalVedtaksDato() != null ? medFormatering(klageBehandling.getOriginalVedtaksDato()) : null;
+            }
             if(AnkeVurderingOmgjør.ANKE_TIL_GUNST.equals(anke.get().getAnkeVurderingOmgjoer())){
                 gunst= true;
             }

@@ -48,6 +48,8 @@ public enum DokumentMalType implements Kodeverdi {
     KLAGE_OMGJØRING(DokumentMalTypeKode.KLAGE_OMGJØRING, "Vedtak om omgjøring av klage", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     KLAGE_OVERSENDT_KLAGEINSTANS(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS, "Klage oversendt til klageinstans", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     KLAGE_HJEMSENDT(DokumentMalTypeKode.KLAGE_HJEMSENDT, "Klage hjemsendt/opphevet", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+
+    //Dokgen
     INNVILGELSE_ENGANGSSTØNAD(DokumentMalTypeKode.INNVILGELSE_ENGANGSSTØNAD, "Vedtak om innvilgelse av engangsstønad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:

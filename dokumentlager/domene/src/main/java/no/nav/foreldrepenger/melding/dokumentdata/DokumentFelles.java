@@ -29,8 +29,7 @@ import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
 @Table(name = "DOKUMENT_FELLES")
 public class DokumentFelles extends BaseEntitet {
 
-    public enum Kopi
-    {
+    public enum Kopi {
         JA,
         NEI;
     }
@@ -40,9 +39,7 @@ public class DokumentFelles extends BaseEntitet {
         ORGANISASJON;
     }
 
-
-
-        @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_DOKUMENT_FELLES")
     private Long id;
 

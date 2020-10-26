@@ -17,6 +17,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -27,6 +28,7 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingDtoMapper;
+import no.nav.foreldrepenger.melding.brevbestiller.task.DistribuerBrevTask;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapperProvider;
 import no.nav.foreldrepenger.melding.brevmapper.brev.InnvilgelseEngangstønadDokumentdataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
@@ -38,6 +40,7 @@ import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
+import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokdist.DokdistRestKlient;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
@@ -47,6 +50,7 @@ import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjene
 import no.nav.foreldrepenger.melding.integrasjon.journal.TilknyttVedleggTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettResponse;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
+import no.nav.foreldrepenger.melding.kafkatjenester.historikk.task.PubliserHistorikkTaskProperties;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
@@ -57,6 +61,8 @@ import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.foreldrepenger.tps.TpsTjeneste;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 import no.nav.vedtak.felles.testutilities.Whitebox;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,7 +73,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     private static final PersonIdent SØKER_FNR = new PersonIdent("11111111111");
     private static final AktørId SØKER = new AktørId("2222222222222");
     private static final PersonIdent VERGE_FNR = new PersonIdent("77777777777");
-    private static final AktørId VERGE = new AktørId("888888888888");
+    private static final AktørId VERGE = new AktørId("8888888888888");
     private static final Saksnummer SAKSNUMMER = new Saksnummer("123456");
     private static final byte[] BREVET = "BREV".getBytes();
     private static final JournalpostId JOURNALPOST = new JournalpostId("7654321");
@@ -99,6 +105,10 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     private DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste;
     @Mock
     private DokumentdataMapperProvider dokumentdataMapperProvider;
+    @Mock
+    private ProsessTaskRepository prosessTaskRepository;
+    @Mock
+    private HistorikkRepository historikkRepository;
 
     private InnvilgelseEngangstønadDokumentdataMapper dokumentdataMapper;
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
@@ -113,7 +123,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         navKontaktKonfigurasjon = new NavKontaktKonfigurasjon("1", "2", "3", "4", "5", "6", "7");
         dokumentbestillingDtoMapper = new DokumentbestillingDtoMapper();
         dokumentFellesDataMapper = new DokumentFellesDataMapper(tpsTjeneste, domeneobjektProvider, navKontaktKonfigurasjon, virksomhetTjeneste);
-        dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository, dokgenRestKlient, opprettJournalpostTjeneste, tilknyttVedleggTjeneste, ferdigstillJournalpostTjeneste, dokdistRestKlient, dokumentdataMapperProvider);
+        dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository, dokgenRestKlient, opprettJournalpostTjeneste, tilknyttVedleggTjeneste, ferdigstillJournalpostTjeneste, dokumentdataMapperProvider, prosessTaskRepository, historikkRepository);
         tjeneste = new BrevBestillerApplikasjonTjenesteImpl(dokumentMalUtleder, domeneobjektProvider, dokumentbestillingDtoMapper, dokprodBrevproduksjonTjeneste, dokgenBrevproduksjonTjeneste);
     }
 
@@ -127,22 +137,28 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(eq(DOKUMENT_MAL_TYPE))).thenReturn(dokumentdataMapper);
+        ArgumentCaptor<DokumentHistorikkinnslag> historikkCaptor = ArgumentCaptor.forClass(DokumentHistorikkinnslag.class);
+        ArgumentCaptor<ProsessTaskGruppe> taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
 
         // Act
-        List<DokumentHistorikkinnslag> historikkinnslag = tjeneste.bestillBrev(dokumentHendelse);
+        tjeneste.bestillBrev(dokumentHendelse);
 
         // Assert
-        assertThat(historikkinnslag).hasSize(2);
-        assertThat(historikkinnslag.get(0).getBehandlingUuid()).isEqualTo(BEHANDLING_UUID);
-        assertThat(historikkinnslag.get(0).getHendelseId()).isEqualTo(HENDELSE_ID);
-        assertThat(historikkinnslag.get(0).getDokumentId()).isEqualTo(DOKUMENT_INFO_ID);
-        assertThat(historikkinnslag.get(0).getJournalpostId()).isEqualTo(JOURNALPOST);
-        assertThat(historikkinnslag.get(0).getHistorikkinnslagType()).isEqualTo(HistorikkinnslagType.BREV_SENT);
-        assertThat(historikkinnslag.get(0).getDokumentMalType()).isEqualTo(DOKUMENT_MAL_TYPE);
         verify(dokgenRestKlient, times(2)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(2))
                 .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true));
-        verify(dokdistRestKlient, times(2)).distribuerJournalpost(JOURNALPOST);
+        verify(historikkRepository, times(2)).lagre(historikkCaptor.capture());
+        DokumentHistorikkinnslag historikkinnslag = historikkCaptor.getAllValues().get(0);
+        assertThat(historikkinnslag.getBehandlingUuid()).isEqualTo(BEHANDLING_UUID);
+        assertThat(historikkinnslag.getHendelseId()).isEqualTo(HENDELSE_ID);
+        assertThat(historikkinnslag.getDokumentId()).isEqualTo(DOKUMENT_INFO_ID);
+        assertThat(historikkinnslag.getJournalpostId()).isEqualTo(JOURNALPOST);
+        assertThat(historikkinnslag.getHistorikkinnslagType()).isEqualTo(HistorikkinnslagType.BREV_SENT);
+        assertThat(historikkinnslag.getDokumentMalType()).isEqualTo(DOKUMENT_MAL_TYPE);
+        verify(prosessTaskRepository, times(2)).lagre(taskCaptor.capture());
+        assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
+        assertThat(taskCaptor.getValue().getTasks().get(0).getTask().getTaskType()).isEqualTo(DistribuerBrevTask.TASKTYPE);
+        assertThat(taskCaptor.getValue().getTasks().get(1).getTask().getTaskType()).isEqualTo(PubliserHistorikkTaskProperties.TASKTYPE);
     }
 
     @Test
@@ -155,16 +171,20 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(eq(DOKUMENT_MAL_TYPE))).thenReturn(dokumentdataMapper);
+        ArgumentCaptor<ProsessTaskGruppe> taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
 
         // Act
-        List<DokumentHistorikkinnslag> historikkinnslag = tjeneste.bestillBrev(dokumentHendelse);
+        tjeneste.bestillBrev(dokumentHendelse);
 
         // Assert
-        assertThat(historikkinnslag).hasSize(1);
         verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(1))
                 .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true));
-        verify(dokdistRestKlient, times(1)).distribuerJournalpost(JOURNALPOST);
+        verify(historikkRepository, times(1)).lagre(any(DokumentHistorikkinnslag.class));
+        verify(prosessTaskRepository, times(1)).lagre(taskCaptor.capture());
+        assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
+        assertThat(taskCaptor.getValue().getTasks().get(0).getTask().getTaskType()).isEqualTo(DistribuerBrevTask.TASKTYPE);
+        assertThat(taskCaptor.getValue().getTasks().get(1).getTask().getTaskType()).isEqualTo(PubliserHistorikkTaskProperties.TASKTYPE);
     }
 
     @Test
@@ -204,7 +224,6 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
             when(tpsTjeneste.hentBrukerForAktør(eq(VERGE))).thenReturn(Optional.of(personinfoVerge));
             Adresseinfo adresseVerge = new Adresseinfo.Builder(AdresseType.BOSTEDSADRESSE, VERGE_FNR, NAVN, PersonstatusType.BOSA).build();
             when(tpsTjeneste.hentAdresseinformasjon(eq(VERGE_FNR))).thenReturn(adresseVerge);
-            when(tpsTjeneste.hentAktørForFnr(VERGE_FNR)).thenReturn(Optional.of(VERGE));
         }
         return personinfoSøker;
     }
@@ -223,7 +242,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         when(domeneobjektProvider.hentFagsakBackend(eq(behandling))).thenReturn(fagsakBackend);
         when(domeneobjektProvider.hentBehandling(any(UUID.class))).thenReturn(behandling);
         if (harVerge) {
-            Verge verge = new Verge(VERGE_FNR.getIdent(), "", "");
+            Verge verge = new Verge(VERGE.getId(), "", "");
             when(domeneobjektProvider.hentVerge(eq(behandling))).thenReturn(Optional.of(verge));
         }
         when(domeneobjektProvider.hentBeregningsresultatES(eq(behandling))).thenReturn(new BeregningsresultatES(1L));

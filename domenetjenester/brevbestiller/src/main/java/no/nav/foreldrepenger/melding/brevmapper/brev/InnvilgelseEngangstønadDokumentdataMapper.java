@@ -1,5 +1,12 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
+
+import java.util.Optional;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
@@ -14,12 +21,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.Optional;
-
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.INNVILGELSE_ENGANGSSTØNAD)
@@ -90,10 +91,10 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
 
     private Long sjekkOmDifferanseHvisRevurdering(Behandling behandling, BeregningsresultatES beregningsresultat) {
         Optional<Behandling> originalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling);
-        BeregningsresultatES originaltBeregningsresultat = originalBehandling.map(domeneobjektProvider::hentBeregningsresultatES)
+        Optional<BeregningsresultatES> originaltBeregningsresultat = originalBehandling.map(domeneobjektProvider::hentBeregningsresultatESHvisFinnes)
                 .orElseThrow(() -> new IllegalArgumentException("Utviklerfeil:Finner ikke informasjon om orginal behandling for revurdering "));
-
-         return Math.abs( beregningsresultat.getBeløp() - originaltBeregningsresultat.getBeløp());
+        return originaltBeregningsresultat.map(orgBeregningsresultat -> Math.abs(beregningsresultat.getBeløp() - orgBeregningsresultat.getBeløp()))
+                .orElse(0L);
     }
 
     private boolean erKopi(DokumentFelles.Kopi kopi) {

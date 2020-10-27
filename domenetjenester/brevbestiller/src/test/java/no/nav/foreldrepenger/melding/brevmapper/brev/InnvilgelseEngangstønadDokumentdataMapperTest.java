@@ -1,5 +1,22 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -15,22 +32,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadInnvil
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class InnvilgelseEngangstønadDokumentdataMapperTest {
@@ -49,7 +50,6 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
     @BeforeEach
     public void setup() {
         dokumentdataMapperTest = new InnvilgelseEngangstønadDokumentdataMapper(brevParametere, domeneobjektProvider);
-
     }
 
     @Test
@@ -61,7 +61,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(innvilgetES))).thenReturn(Optional.of(orgBehES));
-        when(domeneobjektProvider.hentBeregningsresultatES(eq(orgBehES))).thenReturn(new BeregningsresultatES(86000L));
+        when(domeneobjektProvider.hentBeregningsresultatESHvisFinnes(eq(orgBehES))).thenReturn(Optional.of(new BeregningsresultatES(86000L)));
 
         //Act
         EngangsstønadInnvilgelseDokumentdata innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES);
@@ -75,8 +75,26 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         assertThat(innvilgelseDokumentdata.getRevurdering()).isTrue();
         assertThat(innvilgelseDokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(innvilgelseDokumentdata.getFelles().harVerge()).isTrue();
+    }
 
-}
+    @Test
+    public void skal_ikke_flagge_endret_sats_hvis_forrige_behandling_manglet_beregningsresultat() {
+       //Arrange
+        Behandling orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
+        Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
+        dokumentFelles = lagDokumentFelles();
+
+        when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(innvilgetES))).thenReturn(Optional.of(orgBehES));
+        when(domeneobjektProvider.hentBeregningsresultatESHvisFinnes(eq(orgBehES))).thenReturn(Optional.empty());
+
+        //Act
+        EngangsstønadInnvilgelseDokumentdata innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES);
+
+        //Assert
+        assertThat(innvilgelseDokumentdata.getErEndretSats()).isFalse();
+        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp()).isEqualTo(85000L);
+    }
 
     private Behandling opprettBehandling(BehandlingType behType, long id) {
         return Behandling.builder().medId(id)

@@ -68,7 +68,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
 
         //Assert
         assertThat(innvilgelseDokumentdata.getErEndretSats()).isTrue();
-        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp()).isEqualTo(1000L);
+        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp().equals("1 000"));
         assertThat(innvilgelseDokumentdata.getDød()).isFalse();
         assertThat(innvilgelseDokumentdata.getFbEllerMedhold()).isFalse();
         assertThat(innvilgelseDokumentdata.getMedhold()).isFalse();
@@ -93,7 +93,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
 
         //Assert
         assertThat(innvilgelseDokumentdata.getErEndretSats()).isFalse();
-        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp()).isEqualTo(85000L);
+        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp().equals("85 000"));
     }
 
     private Behandling opprettBehandling(BehandlingType behType, long id) {

@@ -55,6 +55,7 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
                 .erAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet())
                 .harVerge(dokumentFelles.getErKopi().isPresent())
                 .erKopi(dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
+                .saksnummer(dokumentFelles.getSaksnummer().getVerdi())
                 .build();
 
         var innvilgelseDokumentDataBuilder = EngangsstønadInnvilgelseDokumentdata.ny()
@@ -62,7 +63,7 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
                 .medRevurdering(behandling.erRevurdering())
                 .medFørstegangsbehandling(behandling.erFørstegangssøknad())
                 .medMedhold(BehandlingMapper.erMedhold(behandling))
-                .medInnvilgetBeløp(beregningsresultat.getBeløp())
+                .medInnvilgetBeløp(formaterBeløp(beregningsresultat.getBeløp()))
                 .medKlagefristUker(brevParametere.getKlagefristUker())
                 .medDød(erDød(dokumentFelles))
                 .medFbEllerMedhold(erFBellerMedhold(behandling))
@@ -73,7 +74,7 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
 
             if (differanse != 0) {
                 innvilgelseDokumentDataBuilder.medErEndretSats(true);
-                innvilgelseDokumentDataBuilder.medInnvilgetBeløp(differanse);
+                innvilgelseDokumentDataBuilder.medInnvilgetBeløp(formaterBeløp(differanse));
             }
         }
 
@@ -95,6 +96,10 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
                 .orElseThrow(() -> new IllegalArgumentException("Utviklerfeil:Finner ikke informasjon om orginal behandling for revurdering "));
         return originaltBeregningsresultat.map(orgBeregningsresultat -> Math.abs(beregningsresultat.getBeløp() - orgBeregningsresultat.getBeløp()))
                 .orElse(0L);
+    }
+
+    private String formaterBeløp(Long beløp) {
+        return String.format("%,d", beløp);
     }
 
     private boolean erKopi(DokumentFelles.Kopi kopi) {

@@ -4,7 +4,7 @@ public class EngangsstønadInnvilgelseDokumentdata extends Dokumentdata {
     private boolean revurdering;
     private boolean førstegangsbehandling;
     private boolean medhold;
-    private Long innvilgetBeløp;
+    private String innvilgetBeløp;
     private int klagefristUker;
     private boolean død;
     private boolean fbEllerMedhold;
@@ -20,7 +20,7 @@ public class EngangsstønadInnvilgelseDokumentdata extends Dokumentdata {
 
     public boolean getMedhold() { return medhold; }
 
-    public Long getInnvilgetBeløp() {
+    public String getInnvilgetBeløp() {
         return innvilgetBeløp;
     }
 
@@ -60,7 +60,7 @@ public class EngangsstønadInnvilgelseDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medInnvilgetBeløp(Long innvilgetBeløp) {
+        public Builder medInnvilgetBeløp(String innvilgetBeløp) {
             this.kladd.innvilgetBeløp = innvilgetBeløp;
             return this;
         }

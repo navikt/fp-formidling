@@ -52,6 +52,9 @@ public enum RelasjonsRolleType implements Kodeverdi {
 
     @JsonCreator
     public static RelasjonsRolleType fraKode(@JsonProperty("kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
         var ad = fraKodeOptional(kode);
         if (ad.isEmpty()) {
             throw new IllegalArgumentException("Ukjent RelasjonsRolleType: " + kode);

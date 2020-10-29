@@ -69,6 +69,9 @@ public enum BehandlingType implements Kodeverdi {
 
     @JsonCreator
     public static BehandlingType fraKode(@JsonProperty(value = "kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
         var ad = KODER.get(kode);
         if (ad == null) {
             throw new IllegalArgumentException("Ukjent BehandlingType: " + kode);

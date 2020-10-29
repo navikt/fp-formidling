@@ -10,13 +10,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
 
 @JsonFormat(shape = Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
-public enum ArbeidsforholdIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse {
+public enum ArbeidsforholdIkkeOppfyltÅrsak implements Kodeverdi {
 
     INGEN("-" ),
     HELE_UTTAKET_ER_ETTER_3_UKER_FØR_TERMINDATO("8301"),
@@ -65,11 +64,6 @@ public enum ArbeidsforholdIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovRe
     @Override
     public String getKode() {
         return kode;
-    }
-
-    @Override
-    public String getLovHjemmelData() {
-        return null;
     }
 
 }

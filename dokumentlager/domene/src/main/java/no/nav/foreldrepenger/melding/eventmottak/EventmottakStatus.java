@@ -44,6 +44,9 @@ public enum EventmottakStatus implements Kodeverdi {
 
     @JsonCreator
     public static EventmottakStatus fraKode(@JsonProperty(value = "kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
         var ad = KODER.get(kode);
         if (ad == null) {
             throw new IllegalArgumentException("Ukjent FagsakYtelseType: " + kode);

@@ -8,6 +8,7 @@ public class FellesDokumentdata {
     private boolean erAutomatiskBehandlet;
     private boolean erKopi;
     private boolean harVerge;
+    private String saksnummer;
 
     public FellesDokumentdata(Builder builder) {
         this.søkerNavn = builder.søkerNavn;
@@ -17,6 +18,7 @@ public class FellesDokumentdata {
         this.erAutomatiskBehandlet = builder.erAutomatiskBehandlet;
         this.erKopi = builder.erKopi;
         this.harVerge = builder.harVerge;
+        this.saksnummer = builder.saksnummer;
     }
 
     public String getSøkerNavn() {
@@ -41,6 +43,8 @@ public class FellesDokumentdata {
 
     public boolean harVerge() { return harVerge; }
 
+    public String getSaksnummer() { return saksnummer; }
+
     public static class Builder {
         private String søkerNavn;
         private String søkerPersonnummer;
@@ -49,6 +53,7 @@ public class FellesDokumentdata {
         private boolean erAutomatiskBehandlet;
         private boolean erKopi;
         private boolean harVerge;
+        private String saksnummer;
 
         public FellesDokumentdata.Builder søkerNavn(String søkerNavn) {
             this.søkerNavn = søkerNavn;
@@ -82,6 +87,11 @@ public class FellesDokumentdata {
 
         public FellesDokumentdata.Builder harVerge(boolean harVerge) {
             this.harVerge = harVerge;
+            return this;
+        }
+
+        public FellesDokumentdata.Builder saksnummer(String saksnummer) {
+            this.saksnummer = saksnummer;
             return this;
         }
 

@@ -1,35 +1,75 @@
 package no.nav.foreldrepenger.melding.uttak.svp;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
 
-@Entity(name = "ArbeidsforholdIkkeOppfyltÅrsak")
-@DiscriminatorValue(ArbeidsforholdIkkeOppfyltÅrsak.DISCRIMINATOR)
-public class ArbeidsforholdIkkeOppfyltÅrsak extends Kodeliste implements ÅrsakMedLovReferanse {
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum ArbeidsforholdIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse {
 
-    public static final String DISCRIMINATOR = "SVP_ARBEIDSFORHOLD_IKKE_OPPFYLT_AARSAK";
+    INGEN("-" ),
+    HELE_UTTAKET_ER_ETTER_3_UKER_FØR_TERMINDATO("8301"),
+    UTTAK_KUN_PÅ_HELG("8302"),
+    ARBEIDSGIVER_KAN_TILRETTELEGGE("8303"),
+    ARBEIDSGIVER_KAN_TILRETTELEGGE_FREM_TIL_3_UKER_FØR_TERMIN("8312"),
+    ;
 
-    public static final ArbeidsforholdIkkeOppfyltÅrsak INGEN = new ArbeidsforholdIkkeOppfyltÅrsak("-");
-    public static final ArbeidsforholdIkkeOppfyltÅrsak HELE_UTTAKET_ER_ETTER_3_UKER_FØR_TERMINDATO = new ArbeidsforholdIkkeOppfyltÅrsak("8301");
-    public static final ArbeidsforholdIkkeOppfyltÅrsak UTTAK_KUN_PÅ_HELG = new ArbeidsforholdIkkeOppfyltÅrsak("8302");
-    public static final ArbeidsforholdIkkeOppfyltÅrsak ARBEIDSGIVER_KAN_TILRETTELEGGE = new ArbeidsforholdIkkeOppfyltÅrsak("8303");
-    public static final ArbeidsforholdIkkeOppfyltÅrsak ARBEIDSGIVER_KAN_TILRETTELEGGE_FREM_TIL_3_UKER_FØR_TERMIN = new ArbeidsforholdIkkeOppfyltÅrsak("8312");
+    private static final Map<String, ArbeidsforholdIkkeOppfyltÅrsak> KODER = new LinkedHashMap<>();
 
-    ArbeidsforholdIkkeOppfyltÅrsak() {
-        //For Hibernate
+    public static final String KODEVERK = "SVP_ARBEIDSFORHOLD_IKKE_OPPFYLT_AARSAK";
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+        }
     }
 
-    ArbeidsforholdIkkeOppfyltÅrsak(String kode) {
-        super(kode, DISCRIMINATOR);
+    private String kode;
+
+    private ArbeidsforholdIkkeOppfyltÅrsak(String kode) {
+        this.kode = kode;
+    }
+
+    @JsonCreator
+    public static ArbeidsforholdIkkeOppfyltÅrsak fraKode(@JsonProperty("kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent ArbeidsforholdIkkeOppfyltÅrsak: " + kode);
+        }
+        return ad;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
     }
 
     @Override
     public String getLovHjemmelData() {
-        return getEkstraData();
+        return null;
     }
 
 }

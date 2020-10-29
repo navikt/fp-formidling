@@ -9,14 +9,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -32,14 +29,10 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
-import no.nav.vedtak.felles.testutilities.Whitebox;
 
 public class KlageHjemsendtBrevMapperTest {
     private static final long ID = 123L;
     private static final String KA = "NAV Klageinstans Midt-Norge";
-
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
 
     @Mock
     private DokumentFelles dokumentFelles;
@@ -55,7 +48,7 @@ public class KlageHjemsendtBrevMapperTest {
     @InjectMocks
     private KlageHjemsendtBrevMapper mapper;
 
-    @Before
+    @BeforeEach
     public void before() {
         mapper = new KlageHjemsendtBrevMapper(brevParametere, domeneobjektProvider, brevMapperUtil);
         MockitoAnnotations.openMocks(this);
@@ -139,7 +132,6 @@ public class KlageHjemsendtBrevMapperTest {
 
     private Behandling opprettBehandling() {
         BehandlingType behandlingType = BehandlingType.KLAGE;
-        Whitebox.setInternalState(behandlingType, "ekstraData", "{ \"behandlingstidFristUker\" : 12, \"behandlingstidVarselbrev\" : \"N\" }");
         return Behandling.builder().medId(ID)
                 .medBehandlingType(behandlingType)
                 .medSpråkkode(Språkkode.nb)

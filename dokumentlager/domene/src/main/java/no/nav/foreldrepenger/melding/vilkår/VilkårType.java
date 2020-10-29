@@ -1,84 +1,200 @@
 package no.nav.foreldrepenger.melding.vilkår;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-@Entity(name = "VilkarType")
-@DiscriminatorValue(VilkårType.DISCRIMINATOR)
-public class VilkårType extends Kodeliste {
 
-    public static final String DISCRIMINATOR = "VILKAR_TYPE"; //$NON-NLS-1$
+@JsonFormat(shape = Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
+public enum VilkårType implements Kodeverdi {
 
-    /**
-     * statisk koder, kun for konfigurasjon. Bruk VilkårType konstanter for API'er og skriving.
-     */
-    public static final String FP_VK_1 = "FP_VK_1"; //$NON-NLS-1$
-    public static final String FP_VK_2 = "FP_VK_2"; //$NON-NLS-1$
-    public static final String FP_VK_3 = "FP_VK_3"; //$NON-NLS-1$
-    public static final String FP_VK_4 = "FP_VK_4"; //$NON-NLS-1$
-    public static final String FP_VK_5 = "FP_VK_5"; //$NON-NLS-1$
-
-    public static final String FP_VK_8 = "FP_VK_8"; //$NON-NLS-1$
-    public static final String FP_VK_11 = "FP_VK_11"; //$NON-NLS-1$
-    public static final String FP_VK_16 = "FP_VK_16"; //$NON-NLS-1$
-    public static final String FP_VK_21 = "FP_VK_21"; //$NON-NLS-1$
-    public static final String FP_VK_23 = "FP_VK_23"; //$NON-NLS-1$
-    public static final String FP_VK_33 = "FP_VK_33"; //$NON-NLS-1$
-    public static final String FP_VK_34 = "FP_VK_34"; //$NON-NLS-1$
-
-    public static final String FP_VK_41 = "FP_VK_41"; //$NON-NLS-1$
-
-    public static final String FP_VK_2_L = "FP_VK_2_L"; //$NON-NLS-1$
-
-    public static final VilkårType FØDSELSVILKÅRET_MOR = new VilkårType(FP_VK_1);
-    public static final VilkårType MEDLEMSKAPSVILKÅRET = new VilkårType(FP_VK_2);
-    public static final VilkårType MEDLEMSKAPSVILKÅRET_LØPENDE = new VilkårType(FP_VK_2_L);
-    public static final VilkårType SØKNADSFRISTVILKÅRET = new VilkårType(FP_VK_3);
-    public static final VilkårType ADOPSJONSVILKÅRET_ENGANGSSTØNAD = new VilkårType(FP_VK_4);
-    public static final VilkårType ADOPSJONSVILKARET_FORELDREPENGER = new VilkårType(FP_VK_16);
-    public static final VilkårType OMSORGSVILKÅRET = new VilkårType(FP_VK_5);
-    public static final VilkårType FORELDREANSVARSVILKÅRET_2_LEDD = new VilkårType(FP_VK_8);
-    public static final VilkårType FØDSELSVILKÅRET_FAR_MEDMOR = new VilkårType(FP_VK_11);
-    public static final VilkårType FORELDREANSVARSVILKÅRET_4_LEDD = new VilkårType(FP_VK_33);
-    public static final VilkårType SØKERSOPPLYSNINGSPLIKT = new VilkårType(FP_VK_34);
-    public static final VilkårType OPPTJENINGSPERIODEVILKÅR = new VilkårType(FP_VK_21);
-    public static final VilkårType OPPTJENINGSVILKÅRET = new VilkårType(FP_VK_23);
-    public static final VilkårType BEREGNINGSGRUNNLAGVILKÅR = new VilkårType(FP_VK_41);
+    FØDSELSVILKÅRET_MOR(VilkårTypeKoder.FP_VK_1,
+        Map.of(FagsakYtelseType.ENGANGSTØNAD, "§ 14-17, 1. ledd", FagsakYtelseType.FORELDREPENGER, "§ 14-5, 1. ledd"),
+        Avslagsårsak.SØKT_FOR_TIDLIG,
+        Avslagsårsak.SØKER_ER_MEDMOR,
+        Avslagsårsak.SØKER_ER_FAR,
+        Avslagsårsak.FØDSELSDATO_IKKE_OPPGITT_ELLER_REGISTRERT,
+        Avslagsårsak.ENGANGSTØNAD_ER_ALLEREDE_UTBETAL_TIL_MOR,
+        Avslagsårsak.FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_MOR),
+    FØDSELSVILKÅRET_FAR_MEDMOR(VilkårTypeKoder.FP_VK_11,
+        Map.of(FagsakYtelseType.FORELDREPENGER, "§ 14-5, 1. ledd"),
+        Avslagsårsak.INGEN_BARN_DOKUMENTERT_PÅ_FAR_MEDMOR,
+        Avslagsårsak.MOR_FYLLER_IKKE_VILKÅRET_FOR_SYKDOM,
+        Avslagsårsak.BRUKER_ER_IKKE_REGISTRERT_SOM_FAR_MEDMOR_TIL_BARNET),
+    ADOPSJONSVILKARET_FORELDREPENGER(VilkårTypeKoder.FP_VK_16,
+        Map.of(FagsakYtelseType.FORELDREPENGER, "§ 14-5, første ledd eller tredje ledd"),
+        Avslagsårsak.BARN_OVER_15_ÅR,
+        Avslagsårsak.STEBARNSADOPSJON_IKKE_FLERE_DAGER_IGJEN),
+    MEDLEMSKAPSVILKÅRET(VilkårTypeKoder.FP_VK_2,
+        Map.of(FagsakYtelseType.ENGANGSTØNAD, "§ 14-2", FagsakYtelseType.FORELDREPENGER, "§ 14-2"),
+        Avslagsårsak.SØKER_ER_IKKE_MEDLEM,
+        Avslagsårsak.SØKER_ER_UTVANDRET,
+        Avslagsårsak.SØKER_HAR_IKKE_LOVLIG_OPPHOLD,
+        Avslagsårsak.SØKER_HAR_IKKE_OPPHOLDSRETT,
+        Avslagsårsak.SØKER_ER_IKKE_BOSATT),
+    MEDLEMSKAPSVILKÅRET_LØPENDE(VilkårTypeKoder.FP_VK_2_L,
+        Map.of(FagsakYtelseType.ENGANGSTØNAD, "§ 14-2", FagsakYtelseType.FORELDREPENGER, "§ 14-2"),
+        Avslagsårsak.SØKER_ER_IKKE_MEDLEM,
+        Avslagsårsak.SØKER_ER_UTVANDRET,
+        Avslagsårsak.SØKER_HAR_IKKE_LOVLIG_OPPHOLD,
+        Avslagsårsak.SØKER_HAR_IKKE_OPPHOLDSRETT,
+        Avslagsårsak.SØKER_ER_IKKE_BOSATT),
+    SØKNADSFRISTVILKÅRET(VilkårTypeKoder.FP_VK_3,
+        Map.of(FagsakYtelseType.ENGANGSTØNAD, "§ 22-13, 2. ledd"),
+        Avslagsårsak.SØKT_FOR_SENT),
+    ADOPSJONSVILKÅRET_ENGANGSSTØNAD(VilkårTypeKoder.FP_VK_4,
+        Map.of(FagsakYtelseType.ENGANGSTØNAD, "§ 14-17, 1. ledd"),
+        Avslagsårsak.BARN_OVER_15_ÅR,
+        Avslagsårsak.EKTEFELLES_SAMBOERS_BARN,
+        Avslagsårsak.MANN_ADOPTERER_IKKE_ALENE,
+        Avslagsårsak.ENGANGSSTØNAD_ALLEREDE_UTBETALT_TIL_MOR,
+        Avslagsårsak.FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_MOR,
+        Avslagsårsak.ENGANGSSTØNAD_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR,
+        Avslagsårsak.FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR),
+    OMSORGSVILKÅRET(VilkårTypeKoder.FP_VK_5,
+        Map.of(FagsakYtelseType.ENGANGSTØNAD, "§ 14-17, 3. ledd"),
+        Avslagsårsak.SØKER_ER_IKKE_BARNETS_FAR_O,
+        Avslagsårsak.MOR_IKKE_DØD,
+        Avslagsårsak.MOR_IKKE_DØD_VED_FØDSEL_OMSORG,
+        Avslagsårsak.ENGANGSSTØNAD_ALLEREDE_UTBETALT_TIL_MOR,
+        Avslagsårsak.FAR_HAR_IKKE_OMSORG_FOR_BARNET,
+        Avslagsårsak.FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_MOR,
+        Avslagsårsak.ENGANGSSTØNAD_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR,
+        Avslagsårsak.FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR),
+    FORELDREANSVARSVILKÅRET_2_LEDD(VilkårTypeKoder.FP_VK_8,
+        Map.of(FagsakYtelseType.ENGANGSTØNAD, "§ 14-17, 2. ledd", FagsakYtelseType.FORELDREPENGER, "§ 14-5, 2. ledd"),
+        Avslagsårsak.BARN_IKKE_UNDER_15_ÅR,
+        Avslagsårsak.SØKER_HAR_IKKE_FORELDREANSVAR,
+        Avslagsårsak.SØKER_HAR_HATT_VANLIG_SAMVÆR_MED_BARNET,
+        Avslagsårsak.ENGANGSSTØNAD_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR,
+        Avslagsårsak.FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR),
+    FORELDREANSVARSVILKÅRET_4_LEDD(VilkårTypeKoder.FP_VK_33,
+        Map.of(FagsakYtelseType.ENGANGSTØNAD, "§ 14-17, 4. ledd"),
+        Avslagsårsak.SØKER_ER_IKKE_BARNETS_FAR_F,
+        Avslagsårsak.OMSORGSOVERTAKELSE_ETTER_56_UKER,
+        Avslagsårsak.IKKE_FORELDREANSVAR_ALENE_ETTER_BARNELOVA,
+        Avslagsårsak.ENGANGSSTØNAD_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR,
+        Avslagsårsak.FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR),
+    SØKERSOPPLYSNINGSPLIKT(VilkårTypeKoder.FP_VK_34,
+        Map.of(FagsakYtelseType.ENGANGSTØNAD, "§§ 21-3", FagsakYtelseType.FORELDREPENGER, "§§ 21-3"),
+        Avslagsårsak.MANGLENDE_DOKUMENTASJON),
+    OPPTJENINGSPERIODEVILKÅR(VilkårTypeKoder.FP_VK_21,
+        Map.of(FagsakYtelseType.FORELDREPENGER, "§ 14-6 og 14-10"),
+        Avslagsårsak.IKKE_TILSTREKKELIG_OPPTJENING),
+    OPPTJENINGSVILKÅRET(VilkårTypeKoder.FP_VK_23,
+        Map.of(FagsakYtelseType.FORELDREPENGER, "§ 14-6"),
+        Avslagsårsak.IKKE_TILSTREKKELIG_OPPTJENING),
+    BEREGNINGSGRUNNLAGVILKÅR(VilkårTypeKoder.FP_VK_41,
+        Map.of(FagsakYtelseType.FORELDREPENGER, "§ 14-7"),
+        Avslagsårsak.FOR_LAVT_BEREGNINGSGRUNNLAG),
+    SVANGERSKAPSPENGERVILKÅR(VilkårTypeKoder.SVP_VK_1,
+        Map.of(FagsakYtelseType.SVANGERSKAPSPENGER, "§ 14-4"),
+        Avslagsårsak.SØKER_IKKE_GRAVID_KVINNE,
+        Avslagsårsak.SØKER_ER_IKKE_I_ARBEID,
+        Avslagsårsak.SØKER_SKULLE_IKKE_SØKT_SVP,
+        Avslagsårsak.ARBEIDSTAKER_HAR_IKKE_DOKUMENTERT_RISIKOFAKTORER,
+        Avslagsårsak.ARBEIDSTAKER_KAN_OMPLASSERES,
+        Avslagsårsak.SN_FL_HAR_IKKE_DOKUMENTERT_RISIKOFAKTORER,
+        Avslagsårsak.SN_FL_HAR_MULIGHET_TIL_Å_TILRETTELEGGE_SITT_VIRKE),
 
     /**
      * Brukes i stedet for null der det er optional.
      */
-    public static final VilkårType UDEFINERT = new VilkårType("-"); //$NON-NLS-1$
+    UDEFINERT("-", Map.of()),
 
-    @Transient
-    private String lovReferanse;
+    ;
 
-    VilkårType() {
-        // Hibernate trenger den
+    private static final Map<String, VilkårType> KODER = new LinkedHashMap<>();
+    private static final Map<VilkårType, Set<Avslagsårsak>> INDEKS_VILKÅR_AVSLAGSÅRSAKER = new LinkedHashMap<>(); // NOSONAR
+    private static final Map<Avslagsårsak, Set<VilkårType>> INDEKS_AVSLAGSÅRSAK_VILKÅR = new LinkedHashMap<>(); // NOSONAR
+    public static final String KODEVERK = "VILKAR_TYPE";
+
+    @JsonIgnore
+    private Map<FagsakYtelseType, String> lovReferanser = Map.of();
+
+    @JsonIgnore
+    private Set<Avslagsårsak> avslagsårsaker;
+
+    private String kode;
+
+    VilkårType(String kode) {
+        this.kode = kode;
     }
 
-    public VilkårType(String kode) {
-        super(kode, DISCRIMINATOR);
+    VilkårType(String kode,
+               Map<FagsakYtelseType, String> lovReferanser,
+               Avslagsårsak... avslagsårsaker) {
+        this.kode = kode;
+        this.lovReferanser = lovReferanser;
+        this.avslagsårsaker = Set.of(avslagsårsaker);
+
     }
 
     public String getLovReferanse(FagsakYtelseType fagsakYtelseType) {
-        if (lovReferanse == null) {
-            if (fagsakYtelseType.gjelderEngangsstønad()) {
-                lovReferanse = getJsonField("fagsakYtelseType", "ES", "lovreferanse"); //$NON-NLS-1$
-            } else if (fagsakYtelseType.gjelderForeldrepenger()) {
-                lovReferanse = getJsonField("fagsakYtelseType", "FP", "lovreferanse"); //$NON-NLS-1$
-            }
-        }
-        return lovReferanse;
+        return lovReferanser.get(fagsakYtelseType);
     }
 
     @Override
     public String toString() {
-        return super.toString() + "<lovReferanse ES=" + getLovReferanse(FagsakYtelseType.ENGANGSTØNAD) + ">"
-                + "<lovReferanse FP=" + getLovReferanse(FagsakYtelseType.FORELDREPENGER) + ">"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return super.toString() + lovReferanser;
     }
+
+
+    @JsonCreator
+    public static VilkårType fraKode(@JsonProperty(value = "kode") String kode) {
+        if (kode == null) {
+            return null;
+        }
+        var ad = KODER.get(kode);
+        if (ad == null) {
+            throw new IllegalArgumentException("Ukjent VilkårType: " + kode);
+        }
+        return ad;
+    }
+
+
+    public Set<Avslagsårsak> getAvslagsårsaker() {
+        return avslagsårsaker;
+    }
+
+    public static Set<VilkårType> getVilkårTyper(Avslagsårsak avslagsårsak) {
+        return INDEKS_AVSLAGSÅRSAK_VILKÅR.get(avslagsårsak);
+    }
+
+    @JsonProperty
+    @Override
+    public String getKodeverk() {
+        return KODEVERK;
+    }
+
+    @JsonProperty
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
+    static {
+        for (var v : values()) {
+            if (KODER.putIfAbsent(v.kode, v) != null) {
+                throw new IllegalArgumentException("Duplikat : " + v.kode);
+            }
+
+            INDEKS_VILKÅR_AVSLAGSÅRSAKER.put(v, v.avslagsårsaker);
+            v.avslagsårsaker.forEach(a -> INDEKS_AVSLAGSÅRSAK_VILKÅR.computeIfAbsent(a, (k) -> new HashSet<>(4)).add(v));
+        }
+    }
+
 }

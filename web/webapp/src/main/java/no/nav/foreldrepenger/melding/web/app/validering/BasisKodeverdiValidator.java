@@ -4,12 +4,12 @@ import java.util.Objects;
 
 import javax.validation.ConstraintValidatorContext;
 
-import no.nav.foreldrepenger.melding.kodeverk.Kodeliste;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BasisKodeverdi;
 
-public class KodelisteValidator extends KodeverkValidator<Kodeliste> {
+public class BasisKodeverdiValidator extends KodeverkValidator<BasisKodeverdi> {
 
     @Override
-    public boolean isValid(Kodeliste kodeliste, ConstraintValidatorContext context) {
+    public boolean isValid(BasisKodeverdi kodeliste, ConstraintValidatorContext context) {
         if (Objects.equals(null, kodeliste)) {
             return true;
         }

@@ -2,9 +2,6 @@ package no.nav.foreldrepenger.melding.dtomapper;
 
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagArbeidsforholdDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
@@ -19,7 +16,6 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriod
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.melding.dtomapper.sortering.PeriodeComparator;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
@@ -28,19 +24,7 @@ import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.melding.virksomhet.Virksomhet;
 
-@ApplicationScoped
 public class BeregningsgrunnlagDtoMapper {
-
-    private KodeverkRepository kodeverkRepository;
-
-    @Inject
-    public BeregningsgrunnlagDtoMapper(KodeverkRepository kodeverkRepository) {
-        this.kodeverkRepository = kodeverkRepository;
-    }
-
-    public BeregningsgrunnlagDtoMapper() {
-        //CDI
-    }
 
     private static DatoIntervall avklarBeregningsperiode(BeregningsgrunnlagPrStatusOgAndelDto dto) {
         if (dto.getBeregningsgrunnlagTom() == null) {
@@ -63,19 +47,19 @@ public class BeregningsgrunnlagDtoMapper {
         return new Arbeidsgiver(dto.getArbeidsgiverNavn(), virksomhet, aktørId);
     }
 
-    public Beregningsgrunnlag mapBeregningsgrunnlagFraDto(BeregningsgrunnlagDto dto) {
+    public static Beregningsgrunnlag mapBeregningsgrunnlagFraDto(BeregningsgrunnlagDto dto) {
         Beregningsgrunnlag.Builder builder = Beregningsgrunnlag.ny();
         builder.medGrunnbeløp(new Beløp(dto.getGrunnbeløp()));
-        dto.getAktivitetStatus().stream().map(this::mapBeregningsgrunnlagAktivitetStatusFraDto).forEach(builder::leggTilBeregningsgrunnlagAktivitetStatus);
+        dto.getAktivitetStatus().stream().map(BeregningsgrunnlagDtoMapper::mapBeregningsgrunnlagAktivitetStatusFraDto).forEach(builder::leggTilBeregningsgrunnlagAktivitetStatus);
         dto.getBeregningsgrunnlagPeriode().stream()
-                .map(this::mapBeregningsgrunnlagPeriodeFraDto)
+                .map(BeregningsgrunnlagDtoMapper::mapBeregningsgrunnlagPeriodeFraDto)
                 .sorted(PeriodeComparator.BEREGNINGSGRUNNLAG)
                 .forEach(builder::leggTilBeregningsgrunnlagPeriode);
-        builder.medhHjemmel(kodeverkRepository.finn(Hjemmel.class, dto.getHjemmel().getKode()));
+        builder.medhHjemmel(Hjemmel.fraKode(dto.getHjemmel().getKode()));
         return builder.build();
     }
 
-    private BeregningsgrunnlagPeriode mapBeregningsgrunnlagPeriodeFraDto(BeregningsgrunnlagPeriodeDto dto) {
+    private static BeregningsgrunnlagPeriode mapBeregningsgrunnlagPeriodeFraDto(BeregningsgrunnlagPeriodeDto dto) {
         DatoIntervall intervall = dto.getBeregningsgrunnlagPeriodeTom() != null ?
                 DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagPeriodeFom(), dto.getBeregningsgrunnlagPeriodeTom()) :
                 DatoIntervall.fraOgMed(dto.getBeregningsgrunnlagPeriodeFom());
@@ -86,11 +70,11 @@ public class BeregningsgrunnlagDtoMapper {
                 .medDagsats(dto.getDagsats())
                 .medPeriode(intervall)
                 .medperiodeÅrsaker(dto.getPeriodeAarsaker().stream().map(KodeDto::getKode).collect(Collectors.toList()))
-                .medBeregningsgrunnlagPrStatusOgAndelList(dto.getBeregningsgrunnlagPrStatusOgAndel().stream().map(this::mapBgpsaFraDto).collect(Collectors.toList()))
+                .medBeregningsgrunnlagPrStatusOgAndelList(dto.getBeregningsgrunnlagPrStatusOgAndel().stream().map(BeregningsgrunnlagDtoMapper::mapBgpsaFraDto).collect(Collectors.toList()))
                 .build();
     }
 
-    private BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagPrStatusOgAndelDto dto) {
+    private static BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagPrStatusOgAndelDto dto) {
         BeregningsgrunnlagPrStatusOgAndel.Builder builder = BeregningsgrunnlagPrStatusOgAndel.ny();
         BGAndelArbeidsforhold bgAndelArbeidsforhold = null;
         if (dto.getArbeidsforhold() != null) {
@@ -117,7 +101,7 @@ public class BeregningsgrunnlagDtoMapper {
         return builder.build();
     }
 
-    private BGAndelArbeidsforhold mapBgAndelArbeidsforholdfraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
+    private static BGAndelArbeidsforhold mapBgAndelArbeidsforholdfraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
         return new BGAndelArbeidsforhold(mapArbeidsgiverFraDto(dto),
                 ArbeidsforholdRef.ref(dto.getArbeidsforholdId()),
                 OpptjeningAktivitetType.fraKode(dto.getArbeidsforholdType().getKode()),
@@ -126,7 +110,7 @@ public class BeregningsgrunnlagDtoMapper {
         );
     }
 
-    private BeregningsgrunnlagAktivitetStatus mapBeregningsgrunnlagAktivitetStatusFraDto(KodeDto kodedto) {
+    private static BeregningsgrunnlagAktivitetStatus mapBeregningsgrunnlagAktivitetStatusFraDto(KodeDto kodedto) {
         return new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.fraKode(kodedto.getKode()));
     }
 }

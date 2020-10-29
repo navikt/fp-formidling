@@ -5,36 +5,21 @@ import static no.nav.foreldrepenger.melding.behandling.Behandlingsresultat.build
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingsresultatDto;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 
-@ApplicationScoped
 public class BehandlingsresultatDtoMapper {
 
-    private KodeverkRepository kodeverkRepository;
 
-    public BehandlingsresultatDtoMapper() {
-        //CDI
-    }
-
-    @Inject
-    public BehandlingsresultatDtoMapper(KodeverkRepository kodeverkRepository) {
-        this.kodeverkRepository = kodeverkRepository;
-    }
-
-    public Behandlingsresultat mapBehandlingsresultatFraDto(BehandlingsresultatDto dto) {
+    public static Behandlingsresultat mapBehandlingsresultatFraDto(BehandlingsresultatDto dto) {
         Behandlingsresultat.Builder builder = builder();
         if (dto.getAvslagsarsak() != null) {
-            builder.medAvslagsårsak(kodeverkRepository.finn(Avslagsårsak.class, dto.getAvslagsarsak().getKode()));
+            builder.medAvslagsårsak(Avslagsårsak.fraKode(dto.getAvslagsarsak().getKode()));
         }
         if (dto.getType() != null) {
             builder.medBehandlingResultatType(BehandlingResultatType.fraKode(dto.getType().getKode()));

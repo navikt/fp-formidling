@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstan
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -38,9 +39,10 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
-import no.nav.foreldrepenger.melding.vilkår.repository.VilkårKodeverkRepository;
+import no.nav.foreldrepenger.melding.vilkår.VilkårTypeKoder;
 import no.nav.foreldrepenger.tps.TpsTjeneste;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
@@ -57,18 +59,17 @@ public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
         relasjonskodeTypeMap.put(RelasjonsRolleType.MEDMOR, RelasjonskodeType.MEDMOR);
 
         vilkaartypeMap = new HashMap<>();
-        vilkaartypeMap.put(VilkårType.FP_VK_1, VilkaartypeType.FP_VK_1);
-        vilkaartypeMap.put(VilkårType.FP_VK_2, VilkaartypeType.FP_VK_2);
-        vilkaartypeMap.put(VilkårType.FP_VK_3, VilkaartypeType.FP_VK_3);
-        vilkaartypeMap.put(VilkårType.FP_VK_4, VilkaartypeType.FP_VK_4);
-        vilkaartypeMap.put(VilkårType.FP_VK_5, VilkaartypeType.FP_VK_5);
-        vilkaartypeMap.put(VilkårType.FP_VK_8, VilkaartypeType.FP_VK_8);
-        vilkaartypeMap.put(VilkårType.FP_VK_33, VilkaartypeType.FP_VK_33);
-        vilkaartypeMap.put(VilkårType.FP_VK_34, VilkaartypeType.FP_VK_34);
+        vilkaartypeMap.put(VilkårTypeKoder.FP_VK_1, VilkaartypeType.FP_VK_1);
+        vilkaartypeMap.put(VilkårTypeKoder.FP_VK_2, VilkaartypeType.FP_VK_2);
+        vilkaartypeMap.put(VilkårTypeKoder.FP_VK_3, VilkaartypeType.FP_VK_3);
+        vilkaartypeMap.put(VilkårTypeKoder.FP_VK_4, VilkaartypeType.FP_VK_4);
+        vilkaartypeMap.put(VilkårTypeKoder.FP_VK_5, VilkaartypeType.FP_VK_5);
+        vilkaartypeMap.put(VilkårTypeKoder.FP_VK_8, VilkaartypeType.FP_VK_8);
+        vilkaartypeMap.put(VilkårTypeKoder.FP_VK_33, VilkaartypeType.FP_VK_33);
+        vilkaartypeMap.put(VilkårTypeKoder.FP_VK_34, VilkaartypeType.FP_VK_34);
     }
 
     private BrevParametere brevParametere;
-    private VilkårKodeverkRepository vilkårKodeverkRepository;
     private TpsTjeneste tpsTjeneste;
 
     public AvslagEngangstønadBrevMapper() {
@@ -77,11 +78,9 @@ public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
     @Inject
     public AvslagEngangstønadBrevMapper(BrevParametere brevParametere,
                                         DomeneobjektProvider domeneobjektProvider,
-                                        TpsTjeneste tpsTjeneste,
-                                        VilkårKodeverkRepository vilkårKodeverkRepository) {
+                                        TpsTjeneste tpsTjeneste) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
-        this.vilkårKodeverkRepository = vilkårKodeverkRepository;
         this.tpsTjeneste = tpsTjeneste;
     }
 
@@ -113,7 +112,7 @@ public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
         fagType.setAvslagsAarsak(behandling.getBehandlingsresultat().getAvslagsårsak().getKode());
         avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
         fagType.setKlageFristUker(brevParametere.getKlagefristUker());
-        fagType.setVilkaarType(utledVilkårTypeFra(vilkårene, fagType.getAvslagsAarsak()));
+        fagType.setVilkaarType(utledVilkårTypeFra(vilkårene, behandling.getBehandlingsresultat().getAvslagsårsak()));
         return fagType;
     }
 
@@ -132,8 +131,8 @@ public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
         }
     }
 
-    private VilkaartypeType utledVilkårTypeFra(List<Vilkår> vilkårene, String avslagsÅrsakKode) {
-        List<VilkårType> vilkårTyper = vilkårKodeverkRepository.finnVilkårTypeListe(avslagsÅrsakKode);
+    private VilkaartypeType utledVilkårTypeFra(List<Vilkår> vilkårene, Avslagsårsak avslagsÅrsakKode) {
+        Set<VilkårType> vilkårTyper = VilkårType.getVilkårTyper(avslagsÅrsakKode);
         return vilkårene.stream()
                 .filter(v -> vilkårTyper.contains(v.getVilkårType()))
                 .map(Vilkår::getVilkårType)

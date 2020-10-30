@@ -6,12 +6,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -21,27 +16,9 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingStatus;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 
-@ApplicationScoped
 public class BehandlingDtoMapper {
-    private KodeverkRepository kodeverkRepository;
-    private BehandlingRestKlient behandlingRestKlient;
-    private BehandlingsresultatDtoMapper behandlingsresultatDtoMapper;
-
-    public BehandlingDtoMapper() {
-        //CDI
-    }
-
-    @Inject
-    public BehandlingDtoMapper(KodeverkRepository kodeverkRepository,
-                               BehandlingRestKlient behandlingRestKlient,
-                               BehandlingsresultatDtoMapper behandlingsresultatDtoMapper) {
-        this.kodeverkRepository = kodeverkRepository;
-        this.behandlingRestKlient = behandlingRestKlient;
-        this.behandlingsresultatDtoMapper = behandlingsresultatDtoMapper;
-    }
 
     private static BehandlingResourceLink mapResourceLinkFraDto(BehandlingResourceLinkDto dto) {
         BehandlingResourceLink.Builder linkBuilder = BehandlingResourceLink.ny()
@@ -58,14 +35,7 @@ public class BehandlingDtoMapper {
                 .build();
     }
 
-    /**
-     * Vi får en forenklet versjon av dtoen når vi kaller på den via revurdering..
-     */
-    public Behandling mapOriginalBehandlingFraDto(BehandlingDto dto) {
-        return mapBehandlingFraDto(behandlingRestKlient.hentBehandling(new BehandlingIdDto(dto.getId()))); //TODO - Endre til UUID..
-    }
-
-    public Behandling mapBehandlingFraDto(BehandlingDto dto) {
+    public static Behandling mapBehandlingFraDto(BehandlingDto dto) {
         Behandling.Builder builder = Behandling.builder();
         Supplier<Stream<BehandlingResourceLink>> behandlingResourceLinkStreamSupplier = () -> dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
@@ -84,29 +54,29 @@ public class BehandlingDtoMapper {
                 .medSpråkkode(Språkkode.defaultNorsk(dto.getSprakkode().getKode()))
                 .medOriginalVedtaksDato(dto.getOriginalVedtaksDato());
         if (dto.getBehandlingsresultat() != null) {
-            builder.medBehandlingsresultat(behandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));
+            builder.medBehandlingsresultat(BehandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));
         }
 
         return builder.build();
     }
 
-    private List<BehandlingÅrsak> mapBehandlingÅrsakListe(List<BehandlingÅrsakDto> behandlingÅrsakDtoer) {
+    private static List<BehandlingÅrsak> mapBehandlingÅrsakListe(List<BehandlingÅrsakDto> behandlingÅrsakDtoer) {
         if (!behandlingÅrsakDtoer.isEmpty()) {
             return behandlingÅrsakDtoer.stream()
-                    .map(this::mapBehandlingÅrsakFraDto)
+                    .map(BehandlingDtoMapper::mapBehandlingÅrsakFraDto)
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();
     }
 
-    private BehandlingÅrsak mapBehandlingÅrsakFraDto(BehandlingÅrsakDto dto) {
+    private static BehandlingÅrsak mapBehandlingÅrsakFraDto(BehandlingÅrsakDto dto) {
         return BehandlingÅrsak.builder()
                 .medBehandlingÅrsakType(BehandlingÅrsakType.fraKodeDefaultUdefinert(dto.getBehandlingArsakType().getKode()))
                 .medManueltOpprettet(dto.getManueltOpprettet())
                 .build();
     }
 
-    private BehandlingType finnBehandlingType(String behandlingType) {
-        return kodeverkRepository.finn(BehandlingType.class, behandlingType);
+    private static BehandlingType finnBehandlingType(String behandlingType) {
+        return BehandlingType.fraKode(behandlingType);
     }
 }

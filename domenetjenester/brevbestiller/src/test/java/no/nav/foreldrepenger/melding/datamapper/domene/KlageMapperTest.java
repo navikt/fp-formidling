@@ -24,8 +24,6 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepositoryImpl;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
 public class KlageMapperTest {
@@ -33,14 +31,10 @@ public class KlageMapperTest {
     @Rule
     public final UnittestRepositoryRule repositoryRule = new UnittestRepositoryRule();
 
-    private KlageDtoMapper klageDtoMapper;
-    private KodeverkRepository kodeverkRepository;
     private DokumentHendelse dokumentHendelse;
 
     @Before
     public void setup() {
-        kodeverkRepository = new KodeverkRepositoryImpl(repositoryRule.getEntityManager());
-        klageDtoMapper = new KlageDtoMapper(kodeverkRepository);
         dokumentHendelse = new DokumentHendelse();
     }
 
@@ -75,7 +69,7 @@ public class KlageMapperTest {
     }
 
     private Klage lagKlageNFP(boolean opphevet, List<KlageAvvistÅrsak> avvistÅrsaker) {
-        return klageDtoMapper.mapKlagefraDto(lagKlageDto(opphevet, avvistÅrsaker));
+        return KlageDtoMapper.mapKlagefraDto(lagKlageDto(opphevet, avvistÅrsaker));
     }
 
     private KlagebehandlingDto lagKlageDto(boolean opphevet, List<KlageAvvistÅrsak> avvistÅrsaker) {

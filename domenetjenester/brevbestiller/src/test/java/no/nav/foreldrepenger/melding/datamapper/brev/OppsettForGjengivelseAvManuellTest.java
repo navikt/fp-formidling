@@ -3,22 +3,13 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 import static no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder.ROTMAPPE;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.EntityManager;
-
 import org.json.JSONObject;
-import org.junit.Rule;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,39 +22,15 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
-import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.BehandlingsresultatDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.BeregningsgrunnlagDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.KlageDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.UttakSvpDtoMapper;
-import no.nav.foreldrepenger.melding.dtomapper.VilkårDtoMapper;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepository;
-import no.nav.foreldrepenger.melding.kodeverk.KodeverkRepositoryImpl;
-import no.nav.foreldrepenger.tps.TpsAdapter;
-import no.nav.foreldrepenger.tps.TpsOversetter;
-import no.nav.foreldrepenger.tps.TpsTjeneste;
-import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.AktoerIder;
-import no.nav.vedtak.felles.integrasjon.aktør.klient.AktørConsumer;
-import no.nav.vedtak.felles.integrasjon.aktør.klient.AktørConsumerMedCache;
-import no.nav.vedtak.felles.integrasjon.person.PersonConsumer;
 import no.nav.vedtak.util.StringUtils;
 
 public abstract class OppsettForGjengivelseAvManuellTest {
-    @Rule
-    public UnittestRepositoryRule repoRule = new UnittestRepositoryRule();
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
+
     @Mock
     BrevParametere brevParametere;
-    @Mock
-    DokumentFelles dokumentFelles;
-    @Mock
-    FellesType fellesType;
 
     private JSONObject testdata;
     private ObjectMapper jsonMapper = new ObjectMapper();
@@ -74,48 +41,10 @@ public abstract class OppsettForGjengivelseAvManuellTest {
     protected Behandling behandling;
     protected DokumentHendelse dokumentHendelse;
 
-    private EntityManager entityManager = repoRule.getEntityManager();
-
-    private KodeverkRepository kodeverkRepository = new KodeverkRepositoryImpl(entityManager);
     private BehandlingRestKlient behandlingRestKlient = new RedirectedToJsonResource();
-    private  BehandlingDtoMapper behandlingDtoMapper = new BehandlingDtoMapper(kodeverkRepository,
-            behandlingRestKlient,
-            new BehandlingsresultatDtoMapper(kodeverkRepository));
 
-    protected DomeneobjektProvider domeneobjektProvider = new DomeneobjektProvider(behandlingRestKlient,
-            new BeregningsgrunnlagDtoMapper(kodeverkRepository),
-            this.behandlingDtoMapper,
-            new KlageDtoMapper(kodeverkRepository),
-            new UttakSvpDtoMapper(kodeverkRepository),
-            new VilkårDtoMapper(kodeverkRepository)
-    );
+    protected DomeneobjektProvider domeneobjektProvider = new DomeneobjektProvider(behandlingRestKlient);
 
-    private TpsTjeneste mockTpsTjeneste() {
-        return new TpsTjeneste(new TpsAdapter(
-                new AktørConsumerMedCache(new AktørConsumer() {
-                    @Override
-                    public Optional<String> hentAktørIdForPersonIdent(String s) {
-                        return Optional.of("123456");
-                    }
-
-                    @Override
-                    public Optional<String> hentPersonIdentForAktørId(String s) {
-                        return Optional.of("654321");
-                    }
-
-                    @Override
-                    public List<AktoerIder> hentAktørIdForPersonIdentSet(Set<String> set) {
-                        return Collections.emptyList();
-                    }
-
-                    @Override
-                    public List<AktoerIder> hentPersonIdenterForAktørIder(Set<String> set) {
-                        return Collections.emptyList();
-                    }
-                }),
-                Mockito.mock(PersonConsumer.class),
-                Mockito.mock(TpsOversetter.class)));
-    }
 
     protected void setup(String scenario) {
         jsonMapper.registerModule(new Jdk8Module());
@@ -130,7 +59,7 @@ public abstract class OppsettForGjengivelseAvManuellTest {
             throw new IllegalArgumentException("Kunne ikke deserialiser fra json til BehandlingDto", e);
         }
         //behandling = Behandling.builder(behandlingDtoMapper.mapBehandlingFraDto(dto)).build();
-        behandling = behandlingDtoMapper.mapBehandlingFraDto(dto);
+        behandling = BehandlingDtoMapper.mapBehandlingFraDto(dto);
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())

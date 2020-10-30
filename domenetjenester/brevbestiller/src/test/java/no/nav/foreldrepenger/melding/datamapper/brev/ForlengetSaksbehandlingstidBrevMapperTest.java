@@ -1,26 +1,20 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.BEHANDLINGSFRIST;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SOEKERS_NAVN;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil;
-import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
@@ -30,10 +24,7 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 public class ForlengetSaksbehandlingstidBrevMapperTest {
 
-    @Rule
-    public UnittestRepositoryRule repoRule = new UnittestRepositoryRule();
 
-    private DokumentRepository dokumentRepository = new DokumentRepository(repoRule.getEntityManager());
     private ForlengetSaksbehandlingstidBrevMapper forlengetSaksbehandlingstidBrevMapper = new ForlengetSaksbehandlingstidBrevMapper();
     private DokumentFelles dokumentFelles = DatamapperTestUtil.getDokumentFelles();
     private FellesType fellesType = DatamapperTestUtil.getFellesType();
@@ -49,7 +40,7 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         assertThat(xml).containsOnlyOnce(String.format("<ytelseType>%s</ytelseType>", FagsakYtelseType.FORELDREPENGER.getKode()));
         assertThat(xml).containsOnlyOnce(String.format("<variant>%s</variant>", VariantKode.OPPTJENING.value()));
         assertThat(xml).containsOnlyOnce(String.format("<personstatus>%s</personstatus>", PersonstatusKode.ANNET.value()));
-        assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BEHANDLINGSFRIST));
+        assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BehandlingType.FØRSTEGANGSSØKNAD.getBehandlingstidFristUker()));
         assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SOEKERS_NAVN));
     }
 
@@ -64,7 +55,7 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         assertThat(xml).containsOnlyOnce(String.format("<ytelseType>%s</ytelseType>", FagsakYtelseType.ENGANGSTØNAD.getKode()));
         assertThat(xml).containsOnlyOnce(String.format("<variant>%s</variant>", VariantKode.FORLENGET.value()));
         assertThat(xml).containsOnlyOnce(String.format("<personstatus>%s</personstatus>", PersonstatusKode.ANNET.value()));
-        assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BEHANDLINGSFRIST));
+        assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BehandlingType.FØRSTEGANGSSØKNAD.getBehandlingstidFristUker()));
         assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SOEKERS_NAVN));
     }
 
@@ -79,7 +70,7 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         assertThat(xml).containsOnlyOnce(String.format("<ytelseType>%s</ytelseType>", FagsakYtelseType.SVANGERSKAPSPENGER.getKode()));
         assertThat(xml).containsOnlyOnce(String.format("<variant>%s</variant>", VariantKode.FORTIDLIG.value()));
         assertThat(xml).containsOnlyOnce(String.format("<personstatus>%s</personstatus>", PersonstatusKode.ANNET.value()));
-        assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BEHANDLINGSFRIST));
+        assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BehandlingType.FØRSTEGANGSSØKNAD.getBehandlingstidFristUker()));
         assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SOEKERS_NAVN));
     }
 
@@ -94,18 +85,14 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         assertThat(xml).containsOnlyOnce(String.format("<ytelseType>%s</ytelseType>", FagsakYtelseType.SVANGERSKAPSPENGER.getKode()));
         assertThat(xml).containsOnlyOnce(String.format("<variant>%s</variant>", VariantKode.MEDLEM.value()));
         assertThat(xml).containsOnlyOnce(String.format("<personstatus>%s</personstatus>", PersonstatusKode.ANNET.value()));
-        assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BEHANDLINGSFRIST));
+        assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BehandlingType.FØRSTEGANGSSØKNAD.getBehandlingstidFristUker()));
         assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SOEKERS_NAVN));
     }
 
     @Test
     public void skal_mappe_forlengelse_brev_for_SVP_med_klagebehandling() throws JAXBException, SAXException, XMLStreamException {
         // Arrange
-        BehandlingType behandlingTypeMock = Mockito.mock(BehandlingType.class);
-        when(behandlingTypeMock.getBehandlingstidFristUker()).thenReturn(BEHANDLINGSFRIST);
-        when(behandlingTypeMock.getKode()).thenReturn(BehandlingType.KLAGE.getKode());
-        when(behandlingTypeMock.getKodeverk()).thenReturn(BehandlingType.KLAGE.getKodeverk());
-        Behandling behandling = Behandling.builder().medBehandlingType(behandlingTypeMock).build();
+        Behandling behandling = Behandling.builder().medBehandlingType(BehandlingType.KLAGE).build();
         DokumentHendelse dokumentHendelse = byggHendelse(DokumentMalType.KLAGE_OMGJØRING, FagsakYtelseType.SVANGERSKAPSPENGER);
         // Act
         String xml = forlengetSaksbehandlingstidBrevMapper.mapTilBrevXML(fellesType, dokumentFelles, dokumentHendelse, behandling);
@@ -113,7 +100,7 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         assertThat(xml).containsOnlyOnce(String.format("<ytelseType>%s</ytelseType>", FagsakYtelseType.SVANGERSKAPSPENGER.getKode()));
         assertThat(xml).containsOnlyOnce(String.format("<variant>%s</variant>", VariantKode.KLAGE.value()));
         assertThat(xml).containsOnlyOnce(String.format("<personstatus>%s</personstatus>", PersonstatusKode.ANNET.value()));
-        assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BEHANDLINGSFRIST));
+        assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BehandlingType.KLAGE.getBehandlingstidFristUker()));
         assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SOEKERS_NAVN));
     }
 

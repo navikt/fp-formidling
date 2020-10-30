@@ -22,7 +22,6 @@ public class DatamapperTestUtil {
     public static final String SOEKERS_NAVN = "SOEKERS_NAVN";
     public static final String FRITEKST = "FRITEKST";
     public static final LocalDate FØRSTE_JANUAR_TJUENITTEN = LocalDate.of(2019, 1, 1);
-    public static final int BEHANDLINGSFRIST = 4;
     public static final Period SVARFRIST = Period.ofWeeks(6);
 
     private static final int KLAGEFRIST = 14;
@@ -59,10 +58,7 @@ public class DatamapperTestUtil {
     }
 
     public static Behandling.Builder standardBehandlingBuilder() {
-        BehandlingType førstegangssøknad = Mockito.mock(BehandlingType.class);
-        when(førstegangssøknad.getBehandlingstidFristUker()).thenReturn(BEHANDLINGSFRIST);
-        when(førstegangssøknad.getKode()).thenReturn(BehandlingType.FØRSTEGANGSSØKNAD.getKode());
-        return Behandling.builder().medId(123L).medBehandlingType(førstegangssøknad).medSpråkkode(Språkkode.nb);
+        return Behandling.builder().medId(123L).medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD).medSpråkkode(Språkkode.nb);
     }
 
     public static Behandling standardBehandling() {

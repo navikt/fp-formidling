@@ -53,25 +53,10 @@ import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 public class DomeneobjektProvider {
 
     private BehandlingRestKlient behandlingRestKlient;
-    private BeregningsgrunnlagDtoMapper beregningsgrunnlagDtoMapper;
-    private BehandlingDtoMapper behandlingDtoMapper;
-    private KlageDtoMapper klageDtoMapper;
-    private UttakSvpDtoMapper uttakSvpDtoMapper;
-    private VilkårDtoMapper vilkårDtoMapper;
 
     @Inject
-    public DomeneobjektProvider(BehandlingRestKlient behandlingRestKlient,
-                                BeregningsgrunnlagDtoMapper beregningsgrunnlagDtoMapper,
-                                BehandlingDtoMapper behandlingDtoMapper,
-                                KlageDtoMapper klageDtoMapper,
-                                UttakSvpDtoMapper uttakSvpDtoMapper,
-                                VilkårDtoMapper vilkårDtoMapper) {
+    public DomeneobjektProvider(BehandlingRestKlient behandlingRestKlient) {
         this.behandlingRestKlient = behandlingRestKlient;
-        this.beregningsgrunnlagDtoMapper = beregningsgrunnlagDtoMapper;
-        this.behandlingDtoMapper = behandlingDtoMapper;
-        this.klageDtoMapper = klageDtoMapper;
-        this.uttakSvpDtoMapper = uttakSvpDtoMapper;
-        this.vilkårDtoMapper = vilkårDtoMapper;
     }
 
     public DomeneobjektProvider() {
@@ -89,19 +74,21 @@ public class DomeneobjektProvider {
     }
 
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        return beregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinker()));
+        return BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinker()));
     }
 
     public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentBeregningsgrunnlagHvisFinnes(behandling.getResourceLinker()).map(beregningsgrunnlagDtoMapper::mapBeregningsgrunnlagFraDto);
+        return behandlingRestKlient.hentBeregningsgrunnlagHvisFinnes(behandling.getResourceLinker()).map(BeregningsgrunnlagDtoMapper::mapBeregningsgrunnlagFraDto);
     }
 
     public Behandling hentBehandling(UUID behandlingUuid) {
-        return behandlingDtoMapper.mapBehandlingFraDto((behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingUuid))));
+        return BehandlingDtoMapper.mapBehandlingFraDto((behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingUuid))));
     }
 
     public Optional<Behandling> hentOriginalBehandlingHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentOriginalBehandling(behandling.getResourceLinker()).map(behandlingDtoMapper::mapOriginalBehandlingFraDto);
+        return behandlingRestKlient.hentOriginalBehandling(behandling.getResourceLinker())
+                .map(dto -> behandlingRestKlient.hentBehandling(new BehandlingIdDto(dto.getId()))) //TODO - Endre til UUID..
+                .map(BehandlingDtoMapper::mapBehandlingFraDto);
     }
 
     public BeregningsresultatES hentBeregningsresultatES(Behandling behandling) {
@@ -134,7 +121,7 @@ public class DomeneobjektProvider {
 
     public Klage hentKlagebehandling(Behandling behandling) {
         KlagebehandlingDto klagebehandlingDto = behandlingRestKlient.hentKlagebehandling(behandling.getResourceLinker());
-        return klageDtoMapper.mapKlagefraDto(klagebehandlingDto);
+        return KlageDtoMapper.mapKlagefraDto(klagebehandlingDto);
     }
 
     public Optional<Anke> hentAnkebehandling(Behandling behandling) {
@@ -143,7 +130,7 @@ public class DomeneobjektProvider {
     }
 
     public KlageDokument hentKlageDokument(Behandling behandling) {
-        return klageDtoMapper.mapKlagedokumentFraDto(behandlingRestKlient.hentKlagedokument(behandling.getResourceLinker()));
+        return KlageDtoMapper.mapKlagedokumentFraDto(behandlingRestKlient.hentKlagedokument(behandling.getResourceLinker()));
     }
 
     @Deprecated
@@ -152,7 +139,7 @@ public class DomeneobjektProvider {
     }
 
     public List<Vilkår> hentVilkår(Behandling behandling) {
-        return vilkårDtoMapper.mapVilkårFraDto(behandlingRestKlient.hentVilkår(behandling.getResourceLinker()));
+        return VilkårDtoMapper.mapVilkårFraDto(behandlingRestKlient.hentVilkår(behandling.getResourceLinker()));
     }
 
 
@@ -165,7 +152,7 @@ public class DomeneobjektProvider {
     }
 
     public SvpUttaksresultat hentUttaksresultatSvp(Behandling behandling) {
-        return uttakSvpDtoMapper.mapSvpUttaksresultatFraDto(behandlingRestKlient.hentUttaksresultatSvp(behandling.getResourceLinker()));
+        return UttakSvpDtoMapper.mapSvpUttaksresultatFraDto(behandlingRestKlient.hentUttaksresultatSvp(behandling.getResourceLinker()));
     }
 
     public YtelseFordeling hentYtelseFordeling(Behandling behandling) {

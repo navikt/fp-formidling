@@ -11,7 +11,7 @@ import javax.validation.Payload;
 
 @Target({ElementType.TYPE_USE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = {KodeverkTabellValidator.class, KodelisteValidator.class})
+@Constraint(validatedBy = {BasisKodeverdiValidator.class})
 @Documented
 public @interface ValidKodeverk {
 

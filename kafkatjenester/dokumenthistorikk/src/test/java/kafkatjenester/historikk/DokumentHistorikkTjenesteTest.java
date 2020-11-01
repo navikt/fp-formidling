@@ -1,23 +1,18 @@
 package kafkatjenester.historikk;
 
-import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
@@ -26,36 +21,26 @@ import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikki
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
+@ExtendWith(MockitoExtension.class)
 public class DokumentHistorikkTjenesteTest {
 
-    @Rule
-    public final UnittestRepositoryRule repositoryRule = new UnittestRepositoryRule();
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
     private DokumentHistorikkTjeneste historikkTjeneste;
     @Spy
     private DokumentHistorikkinnslagProducer historikkMeldingProducer;
-    private HendelseRepository hendelseRepository;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        hendelseRepository = new HendelseRepository(repositoryRule.getEntityManager());
         historikkTjeneste = new DokumentHistorikkTjeneste(historikkMeldingProducer);
-        doAnswer((i) -> null).when(historikkMeldingProducer).sendJson(Mockito.any());
+        lenient().doNothing().when(historikkMeldingProducer).sendJson(Mockito.any());
     }
 
     @Test
     public void publiserHistorikk() {
-        DokumentHendelse hendelse = DokumentHendelse.builder()
-                .medBehandlingUuid(UUID.randomUUID())
-                .medBestillingUuid(UUID.randomUUID())
-                .medYtelseType(FagsakYtelseType.FORELDREPENGER)
-                .build();
-        hendelseRepository.lagre(hendelse);
+
         DokumentHistorikkinnslag historikk = DokumentHistorikkinnslag.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medHistorikkUuid(UUID.randomUUID())
-                .medHendelseId(hendelse.getId())
+                .medHendelseId(1L)
                 .medDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK)
                 .medJournalpostId(new JournalpostId("123"))
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)

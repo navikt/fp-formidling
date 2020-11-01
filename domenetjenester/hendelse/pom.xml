@@ -22,21 +22,21 @@
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>brevbestiller</artifactId>
         </dependency>
-
-        <!-- NAV -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-cdi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.vedtak.prosesstask</groupId>
+            <artifactId>prosesstask-legacy</artifactId>
+        </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>prosesstask</artifactId>
         </dependency>
 
+        <!-- NAV -->
+
         <!-- Eksterne -->
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
     </dependencies>
 </project>

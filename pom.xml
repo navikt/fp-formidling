@@ -32,8 +32,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- felles artifakter -->
-        <felles.version>2.3.0-20200921124341-8611713</felles.version>
-        <prosesstask.version>2.4.4-20200918181003-4bc2a52</prosesstask.version>
+        <felles.version>2.4.0-20201030150500-a194147</felles.version>
+        <prosesstask.version>2.4.4-20201029071156-ebb43cc</prosesstask.version>
         <kontrakter.version>5.1-20200401094249-8828af7</kontrakter.version>
 
         <!-- Eksterne -->
@@ -42,6 +42,8 @@
         <swagger-ui.version>3.35.2</swagger-ui.version>
         <kafka.version>2.6.0</kafka.version>
         <cxf.version>3.3.6</cxf.version>
+        <jupiter.version>5.7.0</jupiter.version>
+        <resteasy.version>4.5.8.Final</resteasy.version>
     </properties>
 
     <prerequisites>
@@ -115,6 +117,11 @@
                 <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>migreringer</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.vedtak.prosesstask</groupId>
+                <artifactId>prosesstask-legacy</artifactId>
+                <version>${prosesstask.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
@@ -258,6 +265,55 @@
                 <version>3.3.4</version>
                 <classifier>jaxws</classifier>
             </dependency>
+
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-servlet-initializer</artifactId>
+                <version>${resteasy.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jboss.spec.javax.ws.rs</groupId>
+                        <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jboss.spec.javax.servlet</groupId>
+                        <artifactId>jboss-servlet-api_3.1_spec</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-bom</artifactId>
+                <version>${resteasy.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-core</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-cdi</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jaxb-provider</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jackson2-provider</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-validator-provider</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-tree</artifactId>
@@ -269,11 +325,6 @@
                 <version>9.0</version>
             </dependency>
             <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-validator-provider</artifactId>
-                <version>3.13.2.Final</version>
-            </dependency>
-            <dependency>
                 <groupId>org.jboss.weld.module</groupId>
                 <artifactId>weld-web</artifactId>
                 <version>3.1.5.Final</version>
@@ -282,6 +333,12 @@
                 <groupId>org.glassfish</groupId>
                 <artifactId>javax.el</artifactId>
                 <version>3.0.1-b12</version>
+            </dependency>
+            <dependency>
+                <!-- velger en transitiv avhengighet - felles ikke enig med seg selv -->
+                <groupId>com.sun.activation</groupId>
+                <artifactId>jakarta.activation</artifactId>
+                <version>1.2.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
@@ -321,6 +378,11 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.13.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${jupiter.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>

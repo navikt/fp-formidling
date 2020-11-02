@@ -22,7 +22,19 @@
         <!-- test -->
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>dokumenthistorikk</artifactId>
+            <artifactId>domene</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-cdi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.vedtak.prosesstask</groupId>
+            <artifactId>prosesstask-legacy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>prosesstask</artifactId>
         </dependency>
     </dependencies>
 </project>

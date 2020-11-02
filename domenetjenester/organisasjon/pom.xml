@@ -18,10 +18,10 @@
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>ereg-klient</artifactId>
         </dependency>
-        <!-- test -->
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>dokumenthistorikk</artifactId>
+            <artifactId>domene</artifactId>
         </dependency>
+        <!-- test -->
     </dependencies>
 </project>

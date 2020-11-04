@@ -1,5 +1,10 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.brevSendesTilVerge;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erDød;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterBeløp;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import java.util.Optional;
@@ -18,7 +23,6 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.PersonstatusKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 
@@ -50,15 +54,14 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
 
         var fellesbuilder = FellesDokumentdata.ny()
                 .medSøkerNavn(dokumentFelles.getSakspartNavn())
-                .medSøkerPersonnummer(dokumentFelles.getSakspartId())
+                .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
                 .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDato(dokumentFelles.getDokumentDato()) : null)
                 .medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet())
                 .medHarVerge(dokumentFelles.getErKopi().isPresent())
                 .medErKopi(dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
                 .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi());
 
-        // brev sendes verge og da skal verges navn vises i brev
-        if (!dokumentFelles.getMottakerId().equals(dokumentFelles.getSakspartId())) {
+        if (brevSendesTilVerge(dokumentFelles)) {
             fellesbuilder.medMottakerNavn(dokumentFelles.getMottakerNavn());
         }
 
@@ -85,10 +88,6 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
         return innvilgelseDokumentDataBuilder.build();
     }
 
-    private boolean erDød(DokumentFelles dokumentFelles) {
-        return PersonstatusKode.DOD.toString().equalsIgnoreCase(dokumentFelles.getSakspartPersonStatus());
-    }
-
     private boolean erFBellerMedhold(Behandling behandling) {
         return BehandlingMapper.utledBehandlingsTypeInnvilgetES(behandling).equals(BehandlingsTypeType.FOERSTEGANGSBEHANDLING)
                 || BehandlingMapper.utledBehandlingsTypeInnvilgetES(behandling).equals(BehandlingsTypeType.MEDHOLD);
@@ -100,13 +99,5 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
                 .orElseThrow(() -> new IllegalArgumentException("Utviklerfeil:Finner ikke informasjon om orginal behandling for revurdering "));
         return originaltBeregningsresultat.map(orgBeregningsresultat -> Math.abs(beregningsresultat.getBeløp() - orgBeregningsresultat.getBeløp()))
                 .orElse(0L);
-    }
-
-    private String formaterBeløp(Long beløp) {
-        return String.format("%,d", beløp);
-    }
-
-    private boolean erKopi(DokumentFelles.Kopi kopi) {
-        return DokumentFelles.Kopi.JA.equals(kopi);
     }
 }

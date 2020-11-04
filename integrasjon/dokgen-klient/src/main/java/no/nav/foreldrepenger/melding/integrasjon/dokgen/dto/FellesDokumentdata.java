@@ -10,9 +10,9 @@ public class FellesDokumentdata {
     private boolean harVerge;
     private String saksnummer;
     private String mottakerNavn;
+    private String ytelseType;
 
     public static Builder ny() { return new Builder(); }
-
 
     public String getSøkerNavn() { return søkerNavn; }
 
@@ -31,6 +31,10 @@ public class FellesDokumentdata {
     public String getSaksnummer() { return saksnummer; }
 
     public String getMottakerNavn() { return mottakerNavn; }
+
+    public String getYtelseType() {
+        return ytelseType;
+    }
 
     public static class Builder {
         private FellesDokumentdata kladd;
@@ -81,6 +85,11 @@ public class FellesDokumentdata {
 
         public Builder medMottakerNavn(String mottakerNavn) {
             this.kladd.mottakerNavn = mottakerNavn;
+            return this;
+        }
+
+        public FellesDokumentdata.Builder medYtelseType(String ytelseType) {
+            this.kladd.ytelseType = ytelseType;
             return this;
         }
 

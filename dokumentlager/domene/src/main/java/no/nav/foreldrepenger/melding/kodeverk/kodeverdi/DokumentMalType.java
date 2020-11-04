@@ -1,10 +1,11 @@
 package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
-import java.util.ArrayList;
+import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -51,6 +52,7 @@ public enum DokumentMalType implements Kodeverdi {
 
     //Dokgen
     INNVILGELSE_ENGANGSSTØNAD(DokumentMalTypeKode.INNVILGELSE_ENGANGSSTØNAD, "Vedtak om innvilgelse av engangsstønad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    INNHENTE_OPPLYSNINGER(DokumentMalTypeKode.INNHENTE_OPPLYSNINGER, "Innhent dokumentasjon", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
@@ -76,6 +78,18 @@ public enum DokumentMalType implements Kodeverdi {
 
     private static final Map<String, DokumentMalType> KODER = new LinkedHashMap<>();
 
+    private static final Set<DokumentMalType> GYLDIGE_MALER;
+
+    static {
+        GYLDIGE_MALER = Arrays.stream(DokumentMalType.values()).filter(mal -> {
+            try {
+                Field field = DokumentMalType.class.getField(mal.name());
+                return !UDEFINERT.equals(mal) && !field.isAnnotationPresent(Deprecated.class);
+            } catch (NoSuchFieldException | SecurityException e) {
+                return false;
+            }
+        }).collect(Collectors.toSet());
+    }
 
     private String kode;
     @JsonIgnore
@@ -173,12 +187,8 @@ public enum DokumentMalType implements Kodeverdi {
         }
     }
 
-    public static List <DokumentMalType> hentAlleGyldige() {
-        List<DokumentMalType> gyldigeMaler = new ArrayList<>(DokumentMalType.KODER.values());
-
-        gyldigeMaler.remove(DokumentMalType.UDEFINERT);
-
-        return gyldigeMaler;
+    public static Set<DokumentMalType> hentAlleGyldige() {
+        return GYLDIGE_MALER;
     }
 
     public boolean erTilgjengeligForManuellUtsendelse() {

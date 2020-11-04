@@ -13,18 +13,17 @@ import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 
 public class MottattdokumentMapper {
 
-    public static XMLGregorianCalendar finnSøknadsDatoFraMottatteDokumenter(Behandling behandling, List<MottattDokument> mottatteDokumer) {
-        return XmlUtil.finnDatoVerdiAvUtenTidSone(finnSøknadDokument(behandling, mottatteDokumer));
+    public static XMLGregorianCalendar finnSøknadsdatoFraMottatteDokumenterXml(Behandling behandling, List<MottattDokument> mottatteDokumenter) {
+        return XmlUtil.finnDatoVerdiAvUtenTidSone(finnSøknadsdatoFraMottatteDokumenter(behandling, mottatteDokumenter));
     }
 
-    private static LocalDate finnSøknadDokument(Behandling behandling, List<MottattDokument> mottatteDokumer) {
-        return mottatteDokumer.stream()
+    public static LocalDate finnSøknadsdatoFraMottatteDokumenter(Behandling behandling, List<MottattDokument> mottatteDokumenter) {
+        return mottatteDokumenter.stream()
                 .filter(dok -> BehandlingMapper.gjelderEndringsøknad(behandling) ? velgEndringssøknad(dok) : velgSøknad(dok))
                 .sorted(Comparator.comparing(MottattDokument::getMottattDato).reversed())
                 .findFirst()
                 .map(MottattDokument::getMottattDato).orElse(LocalDate.now());
     }
-
 
     private static boolean velgEndringssøknad(MottattDokument dok) {
         return dok.getDokumentTypeId() != null && dok.getDokumentTypeId().erEndringsøknadType();

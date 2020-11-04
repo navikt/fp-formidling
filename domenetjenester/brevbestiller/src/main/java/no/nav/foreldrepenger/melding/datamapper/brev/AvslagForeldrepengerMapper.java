@@ -103,7 +103,7 @@ public class AvslagForeldrepengerMapper extends DokumentTypeMapper {
                                Optional<UttakResultatPerioder> uttakResultatPerioder, FagsakBackend fagsak) {
         FagType fagType = new FagType();
         fagType.setRelasjonskode(fra(fagsak));
-        fagType.setMottattDato(MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter));
+        fagType.setMottattDato(MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenterXml(behandling, mottatteDokumenter));
         fagType.setGjelderFoedsel(familiehendelse.isGjelderFødsel());
         fagType.setAntallBarn(familiehendelse.getAntallBarn());
         fagType.setBarnErFødt(familiehendelse.isBarnErFødt());

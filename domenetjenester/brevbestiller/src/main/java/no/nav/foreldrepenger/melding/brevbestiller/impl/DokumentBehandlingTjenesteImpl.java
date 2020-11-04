@@ -1,5 +1,15 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.malSkalIkkeTilgjengeliggjøresForManuellUtsendelse;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
@@ -8,13 +18,6 @@ import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjenest
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalRestriksjon;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjeneste {
@@ -61,7 +64,7 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
     // Fjerner dokumentmaler som aldri er relevante for denne behandlingstypen
     private List<DokumentMalType> filtrerUtilgjengeligBrevmaler(Behandling behandling, List<DokumentMalType> kandidater, boolean automatiskOpprettet, List<Aksjonspunkt> aksjonspunkter) {
         List<DokumentMalType> fjernes = kandidater.stream()
-                .filter(dm -> !dm.erTilgjengeligForManuellUtsendelse())
+                .filter(dm -> !dm.erTilgjengeligForManuellUtsendelse() || malSkalIkkeTilgjengeliggjøresForManuellUtsendelse(dm))
                 .collect(Collectors.toList());
 //        if (!behandling.gjelderForeldrepenger) { // TODO, men ikke en blocker.
 //            fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.ETTERLYS_INNTEKTSMELDING_DOK));

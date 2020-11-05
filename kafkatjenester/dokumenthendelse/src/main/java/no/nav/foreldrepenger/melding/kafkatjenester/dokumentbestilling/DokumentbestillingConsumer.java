@@ -1,7 +1,13 @@
 package no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling;
 
-import no.nav.foreldrepenger.melding.kodeverk.kafka.KafkaIntegration;
-import no.nav.vedtak.apptjeneste.AppServiceHandler;
+import java.time.Duration;
+import java.util.Properties;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.control.ActivateRequestContext;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
+
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.config.SaslConfigs;
@@ -14,12 +20,8 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.control.ActivateRequestContext;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import java.time.Duration;
-import java.util.Properties;
+import no.nav.foreldrepenger.melding.kodeverk.kafka.KafkaIntegration;
+import no.nav.vedtak.apptjeneste.AppServiceHandler;
 
 @ApplicationScoped
 @ActivateRequestContext
@@ -45,7 +47,7 @@ public class DokumentbestillingConsumer implements AppServiceHandler, KafkaInteg
 
         final StreamsBuilder builder = new StreamsBuilder();
 
-        Consumed<String, String> stringStringConsumed = Consumed.with(Topology.AutoOffsetReset.EARLIEST);
+        Consumed<String, String> stringStringConsumed = Consumed.with(Topology.AutoOffsetReset.LATEST);
         builder.stream(this.topic, stringStringConsumed)
                 .foreach(this::handleMessage);
 

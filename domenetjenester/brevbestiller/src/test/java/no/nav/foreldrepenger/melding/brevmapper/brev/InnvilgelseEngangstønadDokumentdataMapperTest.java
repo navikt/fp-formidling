@@ -74,7 +74,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         assertThat(innvilgelseDokumentdata.getMedhold()).isFalse();
         assertThat(innvilgelseDokumentdata.getRevurdering()).isTrue();
         assertThat(innvilgelseDokumentdata.getFelles().getErKopi()).isFalse();
-        assertThat(innvilgelseDokumentdata.getFelles().harVerge()).isTrue();
+        assertThat(innvilgelseDokumentdata.getFelles().getHarVerge()).isTrue();
     }
 
     @Test

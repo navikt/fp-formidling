@@ -41,7 +41,7 @@ public class FellesDokumentdata {
 
     public boolean getErKopi() { return erKopi; }
 
-    public boolean harVerge() { return harVerge; }
+    public boolean getHarVerge() { return harVerge; }
 
     public String getSaksnummer() { return saksnummer; }
 

@@ -32,7 +32,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- felles artifakter -->
-        <felles.version>2.4.0-20201030150500-a194147</felles.version>
+        <felles.version>2.4.0-20201103095947-cd9cca7</felles.version>
         <prosesstask.version>2.4.4-20201029071156-ebb43cc</prosesstask.version>
         <kontrakter.version>5.1-20200401094249-8828af7</kontrakter.version>
 

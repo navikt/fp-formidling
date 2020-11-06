@@ -8,15 +8,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
-import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dtomapper.KlageDtoMapper;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
@@ -28,12 +26,9 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
 public class KlageMapperTest {
 
-    @Rule
-    public final UnittestRepositoryRule repositoryRule = new UnittestRepositoryRule();
-
     private DokumentHendelse dokumentHendelse;
 
-    @Before
+    @BeforeEach
     public void setup() {
         dokumentHendelse = new DokumentHendelse();
     }

@@ -2,20 +2,18 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.tps.TpsTjeneste;
 
@@ -23,27 +21,23 @@ public class InnvilgelseForeldrepengerMapperTest {
 
     InnvilgelseForeldrepengerMapper mapper;
 
-    private DomeneobjektProvider domeneobjektProvider = Mockito.mock(DomeneobjektProvider.class);
-    private BrevParametere brevParametere;
+    private final DomeneobjektProvider domeneobjektProvider = Mockito.mock(DomeneobjektProvider.class);
+    private final Behandling behandling = Mockito.mock(Behandling.class);
+    private final Behandling annenBehandling = Mockito.mock(Behandling.class);
+    private final Behandling tredjeBehandling = Mockito.mock(Behandling.class);
+    private final Behandling fjerdeBehandling = Mockito.mock(Behandling.class);
+    private final Behandling femteBehandling = Mockito.mock(Behandling.class);
+    private final Søknad søknad = Mockito.mock(Søknad.class);
 
-    private Behandling behandling = Mockito.mock(Behandling.class);
-    private Behandling annenBehandling = Mockito.mock(Behandling.class);
-    private Behandling tredjeBehandling = Mockito.mock(Behandling.class);
-    private Behandling fjerdeBehandling = Mockito.mock(Behandling.class);
-    private Behandling femteBehandling = Mockito.mock(Behandling.class);
-
-    private Søknad søknad = Mockito.mock(Søknad.class);
-
-
-    @Before
+    @BeforeEach
     public void setup() {
-        doReturn(UUID.fromString("EACD223A-B0F9-4CB4-A9FE-39EFB52A0C50")).when(behandling).getUuid();
-        doReturn(UUID.fromString("EBCD223A-B0F9-4CB4-A9FE-39EFB52A0C50")).when(annenBehandling).getUuid();
-        doReturn(UUID.fromString("ECCD223A-B0F9-4CB4-A9FE-39EFB52A0C50")).when(tredjeBehandling).getUuid();
-        doReturn(UUID.fromString("EDCD223A-B0F9-4CB4-A9FE-39EFB52A0C50")).when(fjerdeBehandling).getUuid();
-        doReturn(UUID.fromString("EECD223A-B0F9-4CB4-A9FE-39EFB52A0C50")).when(femteBehandling).getUuid();
+        when(behandling.getUuid()).thenReturn(UUID.fromString("EACD223A-B0F9-4CB4-A9FE-39EFB52A0C50"));
+        when(annenBehandling.getUuid()).thenReturn(UUID.fromString("EBCD223A-B0F9-4CB4-A9FE-39EFB52A0C50"));
+        when(tredjeBehandling.getUuid()).thenReturn(UUID.fromString("ECCD223A-B0F9-4CB4-A9FE-39EFB52A0C50"));
+        when(fjerdeBehandling.getUuid()).thenReturn(UUID.fromString("EDCD223A-B0F9-4CB4-A9FE-39EFB52A0C50"));
+        when(femteBehandling.getUuid()).thenReturn(UUID.fromString("EECD223A-B0F9-4CB4-A9FE-39EFB52A0C50"));
         when(domeneobjektProvider.hentSøknad(Mockito.any())).thenReturn(Optional.empty());
-        mapper = new InnvilgelseForeldrepengerMapper(domeneobjektProvider, brevParametere, mock(TpsTjeneste.class));
+        mapper = new InnvilgelseForeldrepengerMapper(domeneobjektProvider, null, mock(TpsTjeneste.class));
     }
 
     @Test
@@ -52,7 +46,6 @@ public class InnvilgelseForeldrepengerMapperTest {
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(annenBehandling)).thenReturn(Optional.of(behandling));
         assertThatThrownBy(() -> mapper.hentSøknadUansett(behandling)).isInstanceOf(IllegalStateException.class);
     }
-
 
     @Test
     public void skalHenteSøknadDypt() {

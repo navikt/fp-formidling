@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -9,8 +10,8 @@ import static org.mockito.Mockito.when;
 import java.net.URI;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
@@ -28,8 +29,8 @@ public class DokgenRestKlientTest {
     private OidcRestClient oidcRestClient;
     private DokgenRestKlient dokgenRestKlient;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void setUp() {
         oidcRestClient = mock(OidcRestClient.class);
         dokgenRestKlient = new DokgenRestKlient(oidcRestClient, BASE_URL);
     }
@@ -62,16 +63,16 @@ public class DokgenRestKlientTest {
         assertThat(uriCaptor.getValue().toURL().toString()).isEqualTo(BASE_URL + "/template/" + MAL_TYPE + "/template_" + Språkkode.nb.getKode().toLowerCase() + "/create-pdf-variation");
     }
 
-    @Test(expected = VLException.class)
+    @Test
     public void skal_kaste_exception_hvis_svaret_er_tomt() {
         // Arrange
         TestDokumentdata dokumentdata = new TestDokumentdata();
         when(oidcRestClient.postReturnsOptionalOfByteArray(any(URI.class), eq(dokumentdata))).thenReturn(Optional.empty());
 
         // Act
-        dokgenRestKlient.genererPdf(MAL_TYPE, SPRÅKKODE, dokumentdata);
+        assertThrows(VLException.class, () -> dokgenRestKlient.genererPdf(MAL_TYPE, SPRÅKKODE, dokumentdata));
     }
 
-    private class TestDokumentdata extends Dokumentdata {
+    private static class TestDokumentdata extends Dokumentdata {
     }
 }

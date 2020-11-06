@@ -2,13 +2,13 @@ package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -16,7 +16,6 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
@@ -28,14 +27,12 @@ import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.VLException;
 
 public class DokumentMalUtlederTest {
-    @Rule
-    public UnittestRepositoryRule repositoryRule = new UnittestRepositoryRule();
 
-    private DomeneobjektProvider domeneobjektProvider = Mockito.mock(DomeneobjektProvider.class);
+    private final DomeneobjektProvider domeneobjektProvider = Mockito.mock(DomeneobjektProvider.class);
     private DokumentMalUtleder dokumentMalUtleder;
     private DokumentHendelse hendelse;
 
-    @Before
+    @BeforeEach
     public void setup() {
         dokumentMalUtleder = new DokumentMalUtleder(domeneobjektProvider, null, null);
     }
@@ -277,7 +274,7 @@ public class DokumentMalUtlederTest {
         Klage klage = Klage.ny()
                 .medKlageVurderingResultatNK(KlageVurderingResultat.ny().medKlageVurdering(klageVurdering).build())
                 .build();
-        Mockito.doReturn(klage).when(domeneobjektProvider).hentKlagebehandling(behandling);
+        when(domeneobjektProvider.hentKlagebehandling(behandling)).thenReturn(klage);
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(dokumentmal.getKode());
     }
 

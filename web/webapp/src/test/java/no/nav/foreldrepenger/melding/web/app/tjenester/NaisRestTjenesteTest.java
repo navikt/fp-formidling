@@ -7,8 +7,8 @@ import static org.mockito.Mockito.when;
 
 import javax.ws.rs.core.Response;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.melding.dokumentproduksjon.v2.DokumentproduksjonConsumerProducer;
 import no.nav.foreldrepenger.melding.web.app.selftest.checks.DatabaseHealthCheck;
@@ -21,7 +21,7 @@ public class NaisRestTjenesteTest {
     private DatabaseHealthCheck databaseHealthCheckMock = mock(DatabaseHealthCheck.class);
     private DokumentproduksjonConsumerProducer dokumentproduksjonConsumerProducer = mock(DokumentproduksjonConsumerProducer.class);
 
-    @Before
+    @BeforeEach
     public void setup() {
         restTjeneste = new NaisRestTjeneste(serviceStarterMock, databaseHealthCheckMock, dokumentproduksjonConsumerProducer);
     }

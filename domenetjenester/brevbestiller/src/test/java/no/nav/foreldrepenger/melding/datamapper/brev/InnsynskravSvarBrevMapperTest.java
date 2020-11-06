@@ -2,16 +2,15 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 import java.math.BigInteger;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.melding.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynResultatType;
@@ -23,25 +22,23 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.InnsynResultatTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.YtelseTypeKode;
 
+@ExtendWith(MockitoExtension.class)
 public class InnsynskravSvarBrevMapperTest {
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule();
-
     private InnsynskravSvarBrevMapper innsynskravSvarBrevMapper;
-    private BrevParametere brevParametere = DatamapperTestUtil.getBrevParametere();
+    private final BrevParametere brevParametere = DatamapperTestUtil.getBrevParametere();
 
     @Mock
     private Innsyn innsyn;
 
-    @Before
+    @BeforeEach
     public void setup() {
         innsynskravSvarBrevMapper = new InnsynskravSvarBrevMapper(brevParametere, null);
     }
 
     @Test
     public void skal_mappe_innvilget_innsyn() {
-        doReturn(InnsynResultatType.INNVILGET).when(innsyn).getInnsynResultatType();
+        when(innsyn.getInnsynResultatType()).thenReturn(InnsynResultatType.INNVILGET);
         FagType fagtype = innsynskravSvarBrevMapper.mapFagType(DatamapperTestUtil.standardDokumenthendelse(), innsyn);
         assertThat(fagtype.getFritekst()).isEqualTo(FRITEKST);
         assertThat(fagtype.getInnsynResultatType()).isEqualTo(InnsynResultatTypeKode.INNVILGET);
@@ -54,7 +51,7 @@ public class InnsynskravSvarBrevMapperTest {
         DokumentHendelse dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder()
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .build();
-        doReturn(InnsynResultatType.AVVIST).when(innsyn).getInnsynResultatType();
+        when(innsyn.getInnsynResultatType()).thenReturn(InnsynResultatType.AVVIST);
         FagType fagtype = innsynskravSvarBrevMapper.mapFagType(dokumentHendelse, innsyn);
         assertThat(fagtype.getFritekst()).isEqualTo(FRITEKST);
         assertThat(fagtype.getInnsynResultatType()).isEqualTo(InnsynResultatTypeKode.AVVIST);

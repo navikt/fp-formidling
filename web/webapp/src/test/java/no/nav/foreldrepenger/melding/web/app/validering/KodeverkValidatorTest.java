@@ -1,42 +1,34 @@
 package no.nav.foreldrepenger.melding.web.app.validering;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
 public class KodeverkValidatorTest {
 
-    private static Validator validator;
-
-    @BeforeClass
-    public static void setUp() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+    private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @Test
     public void testSkalFeilePåTomInput() {
         var kl = new TestKodeverdi("", "");
         Set<ConstraintViolation<TestKodeverdi>> violations = validator.validate(kl);
-        assertEquals(1, violations.size());
-        assertEquals("kodeverk kode feilet validering", violations.iterator().next().getMessage());
+        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations.iterator().next().getMessage()).isEqualTo("kodeverk kode feilet validering");
     }
 
     @Test
     public void testSkalFeilePåUgyldigeTegnIKodeverk() {
         var kl = new TestKodeverdi("#¤#2aS", "RE-MF");
         Set<ConstraintViolation<TestKodeverdi>> violations = validator.validate(kl);
-        assertEquals(1, violations.size());
+        assertThat(violations.size()).isEqualTo(1);
     }
 
     @Test
@@ -46,8 +38,8 @@ public class KodeverkValidatorTest {
                         "jjjjjjjjjjjjjasdfghjklqwertyuiasdfgdsfasjjjfhsjhkjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj"
         );
         Set<ConstraintViolation<TestKodeverdi>> violations = validator.validate(kl);
-        assertEquals(1, violations.size());
-        assertEquals("kodeverk kode feilet validering", violations.iterator().next().getMessage());
+        assertThat(violations.size()).isEqualTo(1);
+        assertThat(violations.iterator().next().getMessage()).isEqualTo("kodeverk kode feilet validering");
     }
 
     static class KodeverdiValidatorTest implements Kodeverdi {

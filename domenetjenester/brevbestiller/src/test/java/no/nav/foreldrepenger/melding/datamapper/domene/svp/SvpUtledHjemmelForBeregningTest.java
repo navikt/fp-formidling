@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.datamapper.domene.svp;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;

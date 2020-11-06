@@ -10,17 +10,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
-import no.nav.foreldrepenger.melding.dbstoette.UnittestRepositoryRule;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
@@ -34,17 +31,13 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 
 public class InfoTilAnnenForelderBrevMapperDatoTest {
 
-    @Rule
-    public UnittestRepositoryRule repoRule = new UnittestRepositoryRule();
-
-    private DokumentRepository dokumentRepository = new DokumentRepository(repoRule.getEntityManager());
     private InfoTilAnnenForelderBrevMapper mapper;
-    private DokumentFelles dokumentFelles = DatamapperTestUtil.getDokumentFelles();
-    private FellesType fellesType = DatamapperTestUtil.getFellesType();
-    private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
+    private final DokumentFelles dokumentFelles = DatamapperTestUtil.getDokumentFelles();
+    private final FellesType fellesType = DatamapperTestUtil.getFellesType();
+    private final DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void setUp() {
         mapper = new InfoTilAnnenForelderBrevMapper(new BrevParametere(), domeneobjektProvider);
     }
 

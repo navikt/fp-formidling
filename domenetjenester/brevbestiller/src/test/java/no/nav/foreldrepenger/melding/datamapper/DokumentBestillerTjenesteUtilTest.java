@@ -1,25 +1,26 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.SpraakkodeType;
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 public class DokumentBestillerTjenesteUtilTest {
 
     @Test
     public void mapSpråkkode() {
         SpraakkodeType spraakkode = DokumentBestillerTjenesteUtil.mapSpråkkode(Språkkode.nb);
-        assertEquals(SpraakkodeType.NB, spraakkode);
+        assertThat(spraakkode).isEqualTo(SpraakkodeType.NB);
 
         spraakkode = DokumentBestillerTjenesteUtil.mapSpråkkode(Språkkode.nn);
-        assertEquals(SpraakkodeType.NN, spraakkode);
+        assertThat(spraakkode).isEqualTo(SpraakkodeType.NN);
 
         spraakkode = DokumentBestillerTjenesteUtil.mapSpråkkode(Språkkode.en);
-        assertEquals(SpraakkodeType.EN, spraakkode);
+        assertThat(spraakkode).isEqualTo(SpraakkodeType.EN);
 
         spraakkode = DokumentBestillerTjenesteUtil.mapSpråkkode(Språkkode.UDEFINERT);
-        assertEquals(SpraakkodeType.NB, spraakkode);
+        assertThat(spraakkode).isEqualTo(SpraakkodeType.NB);
     }
 }

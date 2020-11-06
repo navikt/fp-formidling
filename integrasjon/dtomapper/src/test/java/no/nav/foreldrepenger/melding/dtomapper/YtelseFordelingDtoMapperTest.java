@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.melding.dtomapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;

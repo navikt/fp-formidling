@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -31,7 +31,7 @@ public class InntektsmeldingFørSøknadBrevMapperTest {
     private InntektArbeidYtelse iay;
     private Inntektsmelding inntektsmelding;
 
-    @Before
+    @BeforeEach
     public void setup() {
         dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
         inntektsmelding = new Inntektsmelding(ARBEIDSGIVER, "123", FØRSTE_JANUAR, Collections.emptyList(), FØRSTE_JANUAR);

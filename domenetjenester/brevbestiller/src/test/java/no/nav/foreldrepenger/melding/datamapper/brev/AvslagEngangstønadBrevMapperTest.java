@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.RelasjonskodeType;
 import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;

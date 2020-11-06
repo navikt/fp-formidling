@@ -1,13 +1,12 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.svp;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
@@ -16,9 +15,6 @@ import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.melding.virksomhet.Virksomhet;
 
 public class SvpUtledAvslagArbeidsforholdTest {
-
-    @Rule
-    public final ExpectedException expectedException = ExpectedException.none();
 
     private static final String VIRKSOMHET_NAVN = "VIRKSOMHET";
     private static final String ARBEIDSGIVER_NAVN = "ARBEIDSGIVER";
@@ -167,13 +163,10 @@ public class SvpUtledAvslagArbeidsforholdTest {
 
         List<SvpUttakResultatArbeidsforhold> uraList = List.of(ura);
 
-        // Expect
-        expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage(
-                "Kan ikke opprette avslått arbeidsforhold for ukjent arbeidsgiver og/eller UttakArbeidType");
-
         // Act
-        SvpUtledAvslagArbeidsforhold.utled(uraList);
+        assertThatThrownBy(() -> SvpUtledAvslagArbeidsforhold.utled(uraList))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("Kan ikke opprette avslått arbeidsforhold for ukjent arbeidsgiver og/eller UttakArbeidType");
 
     }
 

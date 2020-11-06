@@ -10,9 +10,9 @@ import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import no.nav.vedtak.isso.config.ServerInfo;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
@@ -25,12 +25,12 @@ public class RestApiAbacTest {
 
     private static String PREV_LB_URL;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         PREV_LB_URL = System.setProperty(ServerInfo.PROPERTY_KEY_LOADBALANCER_URL, "http://localhost:8090");
     }
 
-    @AfterClass
+    @AfterAll
     public static void teardown() {
         if (PREV_LB_URL != null) {
             System.setProperty(ServerInfo.PROPERTY_KEY_LOADBALANCER_URL, PREV_LB_URL);

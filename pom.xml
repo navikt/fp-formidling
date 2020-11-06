@@ -18,7 +18,6 @@
         <module>prosesstask</module>
         <module>domenetjenester</module>
         <module>dokumentproduksjon-klient</module>
-        <module>test-sikkerhet</module>
     </modules>
 
     <properties>
@@ -126,12 +125,6 @@
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>prosesstask</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>test-sikkerhet</artifactId>
-                <type>test-jar</type>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -67,12 +67,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>test-sikkerhet</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>brevbestiller</artifactId>
         </dependency>
         <dependency>

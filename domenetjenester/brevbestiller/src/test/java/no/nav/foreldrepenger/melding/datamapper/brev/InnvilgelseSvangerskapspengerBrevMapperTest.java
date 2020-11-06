@@ -30,7 +30,7 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjeng
     @BeforeEach
     public void setup() {
         mapper = new InnvilgelseSvangerskapspengerBrevMapper(brevParametere, domeneobjektProvider);
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjeng
     @Test
     public void revurdering_fra_avslag_til_innvilget_tekst() {
         mapper = medRevurderingData(true, true, false);
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         setup("scenario_AT_FN_2");
         Behandling revurdering = spy(behandling);
         when(revurdering.getBehandlingType()).thenReturn(BehandlingType.REVURDERING);
@@ -73,7 +73,7 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjeng
     @Test
     public void revurdering_med_endret_utbetaling_og_termindato_tekst() {
         mapper = medRevurderingData(false, true, true);
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         setup("scenario_AT_FN_2");
         Behandling revurdering = spy(behandling);
         when(revurdering.getBehandlingType()).thenReturn(BehandlingType.REVURDERING);

@@ -49,7 +49,7 @@ public class KlageHjemsendtBrevMapperTest {
     private KlageHjemsendtBrevMapper mapper;
 
     @BeforeEach
-    public void before() {
+    void setUp() {
         mapper = new KlageHjemsendtBrevMapper(brevParametere, domeneobjektProvider, brevMapperUtil);
         MockitoAnnotations.openMocks(this);
 

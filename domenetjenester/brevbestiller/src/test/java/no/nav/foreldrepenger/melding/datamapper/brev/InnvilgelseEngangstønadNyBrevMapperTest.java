@@ -1,5 +1,17 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder.ROTMAPPE;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
@@ -10,33 +22,17 @@ import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.UUID;
-
-import static no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder.ROTMAPPE;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class InnvilgelseEngangstønadNyBrevMapperTest {
     private Behandling behandling;
     private DokumentHendelse dokumentHendelse;
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
     @Mock
-    DokumentFelles dokumentFelles;
+    private DokumentFelles dokumentFelles;
     @Mock
-    FellesType fellesType;
+    private FellesType fellesType;
     @Mock
-    BrevParametere brevParametere;
+    private BrevParametere brevParametere;
 
     @InjectMocks
     private InnvilgelseEngangstønadNyBrevMapper mapper;
@@ -72,7 +68,7 @@ public class InnvilgelseEngangstønadNyBrevMapperTest {
                 return brevdata;
             }
         };
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

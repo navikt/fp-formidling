@@ -50,9 +50,9 @@ public class KlageOversendtTilKlageinstansBrevMapperTest {
     private KlageOversendtTilKlageinstansBrevMapper mapper;
 
     @BeforeEach
-    public void before() {
+    void setUp() {
         mapper = new KlageOversendtTilKlageinstansBrevMapper(brevParametere, domeneobjektProvider);
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(brevParametere.getKlagefristUker()).thenReturn(6);
         when(dokumentFelles.getNavnAvsenderEnhet()).thenReturn(NFP);

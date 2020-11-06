@@ -10,14 +10,13 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -33,12 +32,10 @@ import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 
+@ExtendWith(MockitoExtension.class)
 public class KlageOversendtTilKlageinstansBrevMapperTest {
     private static final long ID = 123L;
     private static final String NFP = "NAV Familie- og pensjonsytelser";
-
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
 
     @Mock
     private DokumentFelles dokumentFelles;
@@ -52,7 +49,7 @@ public class KlageOversendtTilKlageinstansBrevMapperTest {
     @InjectMocks
     private KlageOversendtTilKlageinstansBrevMapper mapper;
 
-    @Before
+    @BeforeEach
     public void before() {
         mapper = new KlageOversendtTilKlageinstansBrevMapper(brevParametere, domeneobjektProvider);
         MockitoAnnotations.initMocks(this);

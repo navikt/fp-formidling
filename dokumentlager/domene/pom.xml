@@ -13,11 +13,6 @@
     <name>FP-FORMIDLING :: Domene</name>
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>migreringer</artifactId>
             <scope>test</scope>

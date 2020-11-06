@@ -43,7 +43,8 @@ public class GeneralRestExceptionMapperTest {
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
         FeilDto feilDto = (FeilDto) response.getEntity();
 
-        assertThat(feilDto.getFeilmelding()).isEqualTo("Det oppstod en valideringsfeil på felt [Et feltnavn]. Vennligst kontroller at alle feltverdier er korrekte.");
+        assertThat(feilDto.getFeilmelding()).isEqualTo(
+                "Det oppstod en valideringsfeil på felt [Et feltnavn]. Vennligst kontroller at alle feltverdier er korrekte.");
         assertThat(feilDto.getFeltFeil()).hasSize(1);
         assertThat(feilDto.getFeltFeil().iterator().next()).isEqualTo(feltFeilDto);
     }
@@ -59,7 +60,8 @@ public class GeneralRestExceptionMapperTest {
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
         FeilDto feilDto = (FeilDto) response.getEntity();
 
-        assertThat(feilDto.getFeilmelding()).isEqualTo("Det oppstod en valideringsfeil på felt [feltnavn]. Vennligst kontroller at alle feltverdier er korrekte.");
+        assertThat(feilDto.getFeilmelding()).isEqualTo(
+                "Det oppstod en valideringsfeil på felt [feltnavn]. Vennligst kontroller at alle feltverdier er korrekte.");
         assertThat(feilDto.getFeltFeil()).hasSize(1);
         assertThat(feilDto.getFeltFeil().iterator().next()).isEqualTo(feltFeilDto);
     }
@@ -68,7 +70,8 @@ public class GeneralRestExceptionMapperTest {
     public void skalMappeManglerTilgangFeil() {
         Feil manglerTilgangFeil = TestFeil.FACTORY.manglerTilgangFeil();
 
-        Response response = generalRestExceptionMapper.toResponse(new ApplicationException(manglerTilgangFeil.toException()));
+        Response response = generalRestExceptionMapper.toResponse(
+                new ApplicationException(manglerTilgangFeil.toException()));
 
         assertThat(response.getStatus()).isEqualTo(403);
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
@@ -83,7 +86,8 @@ public class GeneralRestExceptionMapperTest {
     public void skalMappeFunksjonellFeil() {
         Feil funksjonellFeil = TestFeil.FACTORY.funksjonellFeil();
 
-        Response response = generalRestExceptionMapper.toResponse(new ApplicationException(funksjonellFeil.toException()));
+        Response response = generalRestExceptionMapper.toResponse(
+                new ApplicationException(funksjonellFeil.toException()));
 
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
         FeilDto feilDto = (FeilDto) response.getEntity();

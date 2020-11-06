@@ -9,8 +9,8 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -37,7 +37,7 @@ public class OpprettJournalpostTjenesteTest {
     // Mocks
     private JournalpostRestKlient journalpostRestKlient = mock(JournalpostRestKlient.class);
 
-    @Before
+    @BeforeEach
     public void setup()  {
         opprettJournalpost = new OpprettJournalpostTjeneste(journalpostRestKlient);
 

@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokdist;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -9,8 +10,8 @@ import static org.mockito.Mockito.when;
 import java.net.URI;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import no.nav.foreldrepenger.melding.integrasjon.dokdist.dto.DistribuerJournalpostRequest;
@@ -28,8 +29,8 @@ public class DokdistRestKlientTest {
     private OidcRestClient oidcRestClient;
     private DokdistRestKlient dokdistRestKlient;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void setUp() {
         oidcRestClient = mock(OidcRestClient.class);
         dokdistRestKlient = new DokdistRestKlient(oidcRestClient, BASE_URL);
     }
@@ -38,9 +39,11 @@ public class DokdistRestKlientTest {
     public void skal_kalle_dokdist_med_url_og_request_basert_på_journalpostId() throws Exception {
         // Arrange
         ArgumentCaptor<URI> uriCaptor = ArgumentCaptor.forClass(URI.class);
-        ArgumentCaptor<DistribuerJournalpostRequest> requestCaptor = ArgumentCaptor.forClass(DistribuerJournalpostRequest.class);
+        ArgumentCaptor<DistribuerJournalpostRequest> requestCaptor = ArgumentCaptor.forClass(
+                DistribuerJournalpostRequest.class);
         DistribuerJournalpostResponse response = new DistribuerJournalpostResponse("123");
-        when(oidcRestClient.postReturnsOptional(uriCaptor.capture(), requestCaptor.capture(), eq(DistribuerJournalpostResponse.class))).thenReturn(Optional.of(response));
+        when(oidcRestClient.postReturnsOptional(uriCaptor.capture(), requestCaptor.capture(),
+                eq(DistribuerJournalpostResponse.class))).thenReturn(Optional.of(response));
 
         // Act
         dokdistRestKlient.distribuerJournalpost(JOURNALPOST_ID);
@@ -53,12 +56,13 @@ public class DokdistRestKlientTest {
         assertThat(requestCaptor.getValue().getDokumentProdApp()).isEqualTo(Fagsystem.FPSAK.getKode());
     }
 
-    @Test(expected = VLException.class)
+    @Test
     public void skal_kaste_exception_hvis_svaret_er_tomt() {
         // Arrange
-        when(oidcRestClient.postReturnsOptional(any(URI.class), any(DistribuerJournalpostRequest.class), eq(DistribuerJournalpostResponse.class))).thenReturn(Optional.empty());
+        when(oidcRestClient.postReturnsOptional(any(URI.class), any(DistribuerJournalpostRequest.class),
+                eq(DistribuerJournalpostResponse.class))).thenReturn(Optional.empty());
 
         // Act
-        dokdistRestKlient.distribuerJournalpost(JOURNALPOST_ID);
+        assertThrows(VLException.class, () -> dokdistRestKlient.distribuerJournalpost(JOURNALPOST_ID));
     }
 }

@@ -2,17 +2,16 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FØRSTE_JANUAR_TJUENITTEN;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
 import java.math.BigInteger;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
@@ -26,10 +25,8 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.revurdering.AdvarselKo
 import no.nav.foreldrepenger.melding.integrasjon.dokument.revurdering.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.revurdering.YtelseTypeKode;
 
+@ExtendWith(MockitoExtension.class)
 public class RevurderingBrevMapperTest {
-
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
 
     private RevurderingBrevMapper brevMapper;
 
@@ -40,12 +37,13 @@ public class RevurderingBrevMapperTest {
     private FamilieHendelse familieHendelse;
     private BrevMapperUtil brevMapperUtil;
 
-
-    @Before
+    @BeforeEach
     public void setup() {
-        dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medRevurderingVarslingÅrsak(RevurderingVarslingÅrsak.MOR_AKTIVITET_IKKE_OPPFYLT).build();
-        doReturn(BigInteger.TWO).when(familieHendelse).getAntallBarn();
-        doReturn(Optional.empty()).when(familieHendelse).getTermindato();
+        dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder()
+                .medRevurderingVarslingÅrsak(RevurderingVarslingÅrsak.MOR_AKTIVITET_IKKE_OPPFYLT)
+                .build();
+        when(familieHendelse.getAntallBarn()).thenReturn(BigInteger.TWO);
+        when(familieHendelse.getTermindato()).thenReturn(Optional.empty());
         brevMapperUtil = new BrevMapperUtil(DatamapperTestUtil.getBrevParametere());
         brevMapper = new RevurderingBrevMapper(null, brevMapperUtil);
     }
@@ -66,8 +64,9 @@ public class RevurderingBrevMapperTest {
 
     @Test
     public void skal_mappe_varsel_om_revurdering_med_termindato() {
-        doReturn(Optional.of(FØRSTE_JANUAR_TJUENITTEN)).when(familieHendelse).getTermindato();
-        FagType fagType = brevMapper.mapFagType(DatamapperTestUtil.getFellesType(), dokumentHendelse, behandling, familieHendelse);
+        when(familieHendelse.getTermindato()).thenReturn(Optional.of(FØRSTE_JANUAR_TJUENITTEN));
+        FagType fagType = brevMapper.mapFagType(DatamapperTestUtil.getFellesType(), dokumentHendelse, behandling,
+                familieHendelse);
         assertThat(fagType.getTerminDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(FØRSTE_JANUAR_TJUENITTEN));
     }
 

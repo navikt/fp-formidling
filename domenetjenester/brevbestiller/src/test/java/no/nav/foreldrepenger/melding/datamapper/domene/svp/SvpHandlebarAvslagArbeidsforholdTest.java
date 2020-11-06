@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.helper.ConditionalHelpers;
@@ -27,7 +27,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
 
     private Handlebars handlebars;
 
-    @Before
+    @BeforeEach
     public void oppsett() {
         handlebars = new Handlebars();
         handlebars.setCharset(Charset.forName("latin1"));

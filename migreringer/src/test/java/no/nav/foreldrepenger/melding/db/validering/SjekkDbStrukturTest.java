@@ -12,9 +12,9 @@ import java.util.Locale;
 
 import javax.sql.DataSource;
 
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.melding.dbstoette.DatasourceConfiguration;
 import no.nav.vedtak.felles.lokal.dbstoette.ConnectionHandler;
@@ -32,7 +32,7 @@ public class SjekkDbStrukturTest {
 
     private static String schema;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws FileNotFoundException {
         List<DBConnectionProperties> connectionProperties = DatasourceConfiguration.UNIT_TEST.get();
 
@@ -65,7 +65,7 @@ public class SjekkDbStrukturTest {
         assertThat(avvik).isEmpty();
     }
 
-    @Ignore("venter til KL_ kolonner er fjernet")
+    @Disabled("venter til KL_ kolonner er fjernet")
     @Test
     public void sjekk_at_alle_relevant_kolonner_er_dokumentert() throws Exception {
         List<String> avvik = new ArrayList<>();
@@ -110,7 +110,7 @@ public class SjekkDbStrukturTest {
         assertThat(avvik).withFailMessage("Mangler dokumentasjon for %s kolonner. %s\n %s", avvik.size(), avvik, HJELP).isEmpty();
     }
 
-    @Ignore("venter til KL_ kolonner er fjernet")
+    @Disabled("venter til KL_ kolonner er fjernet")
     @Test
     public void sjekk_alle_KL_kolonner_har_FK_referanser_til_Kodeliste() throws Exception {
         String sql = "select c.table_name, c.column_name from information_schema.columns c\n" +
@@ -143,7 +143,7 @@ public class SjekkDbStrukturTest {
     }
 
     @Test
-    @Ignore // TODO
+    @Disabled // TODO
     public void sjekk_at_alle_FK_kolonner_har_fornuftig_indekser() throws Exception {
         String sql = "SELECT "
                 + "  uc.table_name, uc.constraint_name, LISTAGG(dcc.column_name, ',') WITHIN GROUP (ORDER BY dcc.position) as columns" +
@@ -232,7 +232,7 @@ public class SjekkDbStrukturTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void skal_ha_virtual_column_definisjon_for_kodeverk_kolonne_i_source_tabell() throws Exception {
         String sql = "SELECT T.TABLE_NAME, T.CONSTRAINT_NAME, LISTAGG(COLC.COLUMN_NAME, ',') WITHIN GROUP (ORDER BY COLC.POSITION) AS COLUMNS FROM ALL_CONSTRAINTS T\n" +
                 "INNER JOIN ALL_CONS_COLUMNS COLC ON COLC.CONSTRAINT_NAME=T.CONSTRAINT_NAME AND COLC.TABLE_NAME = T.TABLE_NAME AND COLC.OWNER=T.OWNER \n" +

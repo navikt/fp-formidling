@@ -9,18 +9,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.helper.ConditionalHelpers;
 import com.github.jknack.handlebars.helper.I18nHelper;
 
 import no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder;
+import no.nav.foreldrepenger.melding.dbstoette.EntityManagerAwareExtension;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.typer.Dato;
 import no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 
+@ExtendWith(EntityManagerAwareExtension.class)
 public class SvpHandlebarAvslagPerioderTest {
 
     private static final LocalDate AUGUST_1 = LocalDate.of(2019, 8, 1);
@@ -30,7 +33,7 @@ public class SvpHandlebarAvslagPerioderTest {
 
     private Handlebars handlebars;
 
-    @Before
+    @BeforeEach
     public void oppsett() {
         handlebars = new Handlebars();
         handlebars.setCharset(Charset.forName("latin1"));

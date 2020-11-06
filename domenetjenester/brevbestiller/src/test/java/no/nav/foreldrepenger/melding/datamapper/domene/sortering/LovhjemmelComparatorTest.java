@@ -7,14 +7,14 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class LovhjemmelComparatorTest {
 
     Set<String> lovhjemler = new HashSet<>();
 
-    @Before
+    @BeforeEach
     public void setup() {
         lovhjemler.add("1-1");
         lovhjemler.add("1-3");

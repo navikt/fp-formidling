@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.web.app.startupinfo;
 import java.util.HashMap;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SystemPropertiesHelperTest {
     @Test

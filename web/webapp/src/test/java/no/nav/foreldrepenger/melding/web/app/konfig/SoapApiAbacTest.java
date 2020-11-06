@@ -4,8 +4,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Collection;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
@@ -13,12 +12,7 @@ import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 
 public class SoapApiAbacTest {
 
-    private static Collection<Method> soapMethods;
-
-    @BeforeClass
-    public static void init() {
-        soapMethods = SoapApiTester.finnAlleSoapMetoder();
-    }
+    private static final Collection<Method> soapMethods = SoapApiTester.finnAlleSoapMetoder();
 
     /**
      * IKKE ignorer denne testen, sikrer at SOAP-endepunkter får tilgangskontroll
@@ -26,7 +20,7 @@ public class SoapApiAbacTest {
      * Kontakt Team Humle hvis du trenger hjelp til å endre koden din slik at den går igjennom her     *
      */
     @Test
-    public void test_at_alle_soapmetoder_er_annotert_med_BeskyttetRessurs() throws Exception {
+    public void test_at_alle_soapmetoder_er_annotert_med_BeskyttetRessurs() {
         for (Method soapMethod : SoapApiTester.finnAlleSoapMetoder()) {
             if (soapMethod.getAnnotation(BeskyttetRessurs.class) == null) {
                 throw new AssertionError("Mangler @" + BeskyttetRessurs.class.getSimpleName() + "-annotering på " + soapMethod);

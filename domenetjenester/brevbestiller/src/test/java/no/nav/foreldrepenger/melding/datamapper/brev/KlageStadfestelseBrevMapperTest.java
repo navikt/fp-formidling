@@ -8,14 +8,11 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -34,9 +31,6 @@ public class KlageStadfestelseBrevMapperTest {
     private static final long ID = 123L;
     private static final String KA = "NAV Klageinstans";
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
-
     @Mock
     private DokumentFelles dokumentFelles;
     @Mock
@@ -49,10 +43,10 @@ public class KlageStadfestelseBrevMapperTest {
     @InjectMocks
     private KlageStadfestelseBrevMapper mapper;
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void setUp() {
         mapper = new KlageStadfestelseBrevMapper(brevParametere, domeneobjektProvider);
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(brevParametere.getKlagefristUker()).thenReturn(6);
         when(dokumentFelles.getNavnAvsenderEnhet()).thenReturn(KA);
         when(dokumentFelles.getKontaktTlf()).thenReturn("21 07 17 30");

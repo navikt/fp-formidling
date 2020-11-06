@@ -8,13 +8,10 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -33,14 +30,12 @@ public class InfoTilAnnenForelderBrevMapperTest {
     private Behandling behandling;
     private DokumentHendelse dokumentHendelse;
 
-    @Rule
-    public MockitoRule mockitoRule = MockitoJUnit.rule().silent();
     @Mock
-    DokumentFelles dokumentFelles;
+    private DokumentFelles dokumentFelles;
     @Mock
-    FellesType fellesType;
+    private FellesType fellesType;
     @Mock
-    BrevParametere brevParametere;
+    private BrevParametere brevParametere;
 
     @InjectMocks
     private InfoTilAnnenForelderBrevMapper mapper;
@@ -70,7 +65,7 @@ public class InfoTilAnnenForelderBrevMapperTest {
                         .leggTil("behandlingsAarsak", behandling.getBehandlingÅrsaker().get(0).getBehandlingÅrsakType().getKode());
             }
         };
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

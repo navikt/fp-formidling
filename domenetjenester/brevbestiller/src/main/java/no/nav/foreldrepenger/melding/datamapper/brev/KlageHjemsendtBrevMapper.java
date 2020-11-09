@@ -1,8 +1,15 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
@@ -11,13 +18,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.typer.Dato;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.KLAGE_HJEMSENDT)
@@ -79,7 +79,6 @@ public class KlageHjemsendtBrevMapper extends FritekstmalBrevMapper {
 
         brevdata.leggTil("ytelseType", hendelse.getYtelseType().getKode());
         brevdata.leggTil("opphevet", KlageMapper.erOpphevet(klage, hendelse));
-        brevdata.leggTil("saksbehandlingstid", BehandlingMapper.finnAntallUkerBehandlingsfrist(behandling.getBehandlingType()));
         brevdata.leggTil("ettersendelsesfrist", Dato.formaterDato(brevMapperUtil.getSvarFrist()));
 
         return brevdata;

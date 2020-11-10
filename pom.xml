@@ -40,7 +40,7 @@
         <swagger.version>2.1.5</swagger.version>
         <swagger-ui.version>3.36.2</swagger-ui.version>
         <kafka.version>2.6.0</kafka.version>
-        <cxf.version>3.3.6</cxf.version>
+        <cxf.version>3.4.1</cxf.version>
         <jupiter.version>5.7.0</jupiter.version>
         <resteasy.version>4.5.8.Final</resteasy.version>
     </properties>

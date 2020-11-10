@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.AvsenderMottakerIdType;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -71,6 +72,7 @@ public class OpprettJournalpostTjenesteTest {
         assertThat(genRequest.getSak().getArkivsaksystem()).isEqualTo("GSAK");
         assertThat(genRequest.getAvsenderMottaker().getId()).isEqualTo(MOTTAKER_ID);
         assertThat(genRequest.getAvsenderMottaker().getNavn()).isEqualTo(MOTTAKER_NAVN);
+        assertThat(genRequest.getAvsenderMottaker().getIdType()).isEqualByComparingTo(AvsenderMottakerIdType.FNR);
         assertThat(genRequest.getJournalfoerendeEnhet()).isEqualTo("9999");
         assertThat(genRequest.getBruker().getId()).isEqualTo(FNR);
         assertThat(genRequest.getEksternReferanseId()).isEqualTo(null);
@@ -91,6 +93,7 @@ public class OpprettJournalpostTjenesteTest {
         when(dokumentFelles.getMottakerNavn()).thenReturn(MOTTAKER_NAVN);
         when(dokumentFelles.getSakspartId()).thenReturn(FNR);
         when(dokumentFelles.getMottakerId()).thenReturn(MOTTAKER_ID);
+        when(dokumentFelles.getMottakerType()).thenReturn(DokumentFelles.MottakerType.PERSON);
         return dokumentFelles;
     }
 

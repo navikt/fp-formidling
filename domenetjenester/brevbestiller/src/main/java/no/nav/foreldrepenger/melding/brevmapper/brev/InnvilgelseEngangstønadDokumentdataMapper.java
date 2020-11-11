@@ -48,18 +48,22 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
     public EngangsstønadInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
         BeregningsresultatES beregningsresultat = domeneobjektProvider.hentBeregningsresultatES(behandling);
 
-        FellesDokumentdata felles = new FellesDokumentdata.Builder()
-                .søkerNavn(dokumentFelles.getMottakerNavn())
-                .søkerPersonnummer(dokumentFelles.getMottakerId())
-                .brevDato(dokumentFelles.getDokumentDato()!= null ? formaterDato(dokumentFelles.getDokumentDato()) : null)
-                .erAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet())
-                .harVerge(dokumentFelles.getErKopi().isPresent())
-                .erKopi(dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
-                .saksnummer(dokumentFelles.getSaksnummer().getVerdi())
-                .build();
+        var fellesbuilder = FellesDokumentdata.ny()
+                .medSøkerNavn(dokumentFelles.getSakspartNavn())
+                .medSøkerPersonnummer(dokumentFelles.getSakspartId())
+                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDato(dokumentFelles.getDokumentDato()) : null)
+                .medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet())
+                .medHarVerge(dokumentFelles.getErKopi().isPresent())
+                .medErKopi(dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
+                .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi());
+
+        // brev sendes verge og da skal verges navn vises i brev
+        if (!dokumentFelles.getMottakerId().equals(dokumentFelles.getSakspartId())) {
+            fellesbuilder.medMottakerNavn(dokumentFelles.getMottakerNavn());
+        }
 
         var innvilgelseDokumentDataBuilder = EngangsstønadInnvilgelseDokumentdata.ny()
-                .medFelles(felles)
+                .medFelles(fellesbuilder.build())
                 .medRevurdering(behandling.erRevurdering())
                 .medFørstegangsbehandling(behandling.erFørstegangssøknad())
                 .medMedhold(BehandlingMapper.erMedhold(behandling))

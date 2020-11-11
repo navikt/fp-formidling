@@ -39,6 +39,8 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
     private BrevParametere brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
     private static final long ID = 123L;
     private static final long ID_REV = 124L;
+    private static final String SØKER_NAVN = "Guri Malla";
+    private static final String VERGE_NAVN = "Finn Verge";
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
@@ -57,7 +59,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
        //Arrange
         Behandling orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
-        dokumentFelles = lagDokumentFelles();
+        dokumentFelles = lagDokumentFelles(SØKER_NAVN, DokumentFelles.Kopi.JA);
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(innvilgetES))).thenReturn(Optional.of(orgBehES));
@@ -73,7 +75,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         assertThat(innvilgelseDokumentdata.getFbEllerMedhold()).isFalse();
         assertThat(innvilgelseDokumentdata.getMedhold()).isFalse();
         assertThat(innvilgelseDokumentdata.getRevurdering()).isTrue();
-        assertThat(innvilgelseDokumentdata.getFelles().getErKopi()).isFalse();
+        assertThat(innvilgelseDokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(innvilgelseDokumentdata.getFelles().getHarVerge()).isTrue();
     }
 
@@ -82,7 +84,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
        //Arrange
         Behandling orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
-        dokumentFelles = lagDokumentFelles();
+        dokumentFelles = lagDokumentFelles(SØKER_NAVN, DokumentFelles.Kopi.NEI);
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(innvilgetES))).thenReturn(Optional.of(orgBehES));
@@ -96,6 +98,24 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         assertThat(innvilgelseDokumentdata.getInnvilgetBeløp().equals("85 000"));
     }
 
+    @Test
+    public void case_med_verge_sender_MottakerNavn() {
+        //Arrange
+        Behandling innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV);
+        dokumentFelles = lagDokumentFelles(VERGE_NAVN, DokumentFelles.Kopi.JA);
+
+        when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
+
+        //Act
+        EngangsstønadInnvilgelseDokumentdata innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES);
+
+        //Assert
+        assertThat(innvilgelseDokumentdata.getRevurdering()).isFalse();
+        assertThat(innvilgelseDokumentdata.getFelles().getErKopi()).isTrue();
+        assertThat(innvilgelseDokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(innvilgelseDokumentdata.felles.getMottakerNavn().equals(VERGE_NAVN));
+    }
+
     private Behandling opprettBehandling(BehandlingType behType, long id) {
         return Behandling.builder().medId(id)
                 .medBehandlingType(behType)
@@ -103,12 +123,12 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
                 .build();
     }
 
-    private DokumentFelles lagDokumentFelles() {
+    private DokumentFelles lagDokumentFelles( String mottakerNavn, DokumentFelles.Kopi kopi) {
         DokumentAdresse dokumentAdresse = new DokumentAdresse.Builder()
                 .medAdresselinje1("Adresse 1")
                 .medPostNummer("0491")
                 .medPoststed("OSLO")
-                .medMottakerNavn("Guri Malla")
+                .medMottakerNavn(mottakerNavn)
                 .build();
 
         DokumentData dokumentData = DokumentData.builder()
@@ -131,7 +151,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
                 .medSaksnummer(new Saksnummer("123456"))
                 .medSakspartId("99999999999")
                 .medSakspartNavn("Guri Malla")
-                .medErKopi(Optional.of(DokumentFelles.Kopi.NEI))
+                .medErKopi(Optional.of(kopi))
                 .medMottakerType(DokumentFelles.MottakerType.PERSON)
                 .medSpråkkode(Språkkode.nb)
                 .medSakspartPersonStatus("ANNET")

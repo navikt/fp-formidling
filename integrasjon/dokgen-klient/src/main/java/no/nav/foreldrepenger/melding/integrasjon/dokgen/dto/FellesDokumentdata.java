@@ -9,33 +9,18 @@ public class FellesDokumentdata {
     private boolean erKopi;
     private boolean harVerge;
     private String saksnummer;
+    private String mottakerNavn;
 
-    public FellesDokumentdata(Builder builder) {
-        this.søkerNavn = builder.søkerNavn;
-        this.søkerPersonnummer = builder.søkerPersonnummer;
-        this.fritekst = builder.fritekst;
-        this.brevDato = builder.brevDato;
-        this.erAutomatiskBehandlet = builder.erAutomatiskBehandlet;
-        this.erKopi = builder.erKopi;
-        this.harVerge = builder.harVerge;
-        this.saksnummer = builder.saksnummer;
-    }
+    public static Builder ny() { return new Builder(); }
 
-    public String getSøkerNavn() {
-        return søkerNavn;
-    }
 
-    public String getSøkerPersonnummer() {
-        return søkerPersonnummer;
-    }
+    public String getSøkerNavn() { return søkerNavn; }
 
-    public String getFritekst() {
-        return fritekst;
-    }
+    public String getSøkerPersonnummer() { return søkerPersonnummer; }
 
-    public String getBrevDato() {
-        return brevDato;
-    }
+    public String getFritekst() { return fritekst; }
+
+    public String getBrevDato() { return brevDato; }
 
     public boolean getErAutomatiskBehandlet () { return erAutomatiskBehandlet; }
 
@@ -45,58 +30,62 @@ public class FellesDokumentdata {
 
     public String getSaksnummer() { return saksnummer; }
 
+    public String getMottakerNavn() { return mottakerNavn; }
+
     public static class Builder {
-        private String søkerNavn;
-        private String søkerPersonnummer;
-        private String fritekst;
-        private String brevDato;
-        private boolean erAutomatiskBehandlet;
-        private boolean erKopi;
-        private boolean harVerge;
-        private String saksnummer;
+        private FellesDokumentdata kladd;
 
-        public FellesDokumentdata.Builder søkerNavn(String søkerNavn) {
-            this.søkerNavn = søkerNavn;
+       private Builder() {
+            this.kladd = new FellesDokumentdata();
+        }
+
+        public Builder medSøkerNavn(String søkerNavn) {
+            this.kladd.søkerNavn = søkerNavn;
             return this;
         }
 
-        public FellesDokumentdata.Builder søkerPersonnummer(String søkerPersonnummer) {
-            this.søkerPersonnummer = søkerPersonnummer;
+        public Builder medSøkerPersonnummer(String søkerPersonnummer) {
+            this.kladd.søkerPersonnummer = søkerPersonnummer;
             return this;
         }
 
-        public FellesDokumentdata.Builder fritekst(String fritekst) {
-            this.fritekst = fritekst;
+        public Builder medFritekst(String fritekst) {
+            this.kladd.fritekst = fritekst;
             return this;
         }
 
-        public FellesDokumentdata.Builder brevDato(String brevDato) {
-            this.brevDato = brevDato;
+        public Builder medBrevDato(String brevDato) {
+            this.kladd.brevDato = brevDato;
             return this;
         }
 
-        public FellesDokumentdata.Builder erAutomatiskBehandlet(boolean erAutomatiskBehandlet) {
-            this.erAutomatiskBehandlet = erAutomatiskBehandlet;
+        public Builder medErAutomatiskBehandlet(boolean erAutomatiskBehandlet) {
+            this.kladd.erAutomatiskBehandlet = erAutomatiskBehandlet;
             return this;
         }
 
-        public FellesDokumentdata.Builder erKopi(boolean erKopi) {
-            this.erKopi = erKopi;
+        public Builder medErKopi(boolean erKopi) {
+            this.kladd.erKopi = erKopi;
             return this;
         }
 
-        public FellesDokumentdata.Builder harVerge(boolean harVerge) {
-            this.harVerge = harVerge;
+        public Builder medHarVerge(boolean harVerge) {
+            this.kladd.harVerge = harVerge;
             return this;
         }
 
-        public FellesDokumentdata.Builder saksnummer(String saksnummer) {
-            this.saksnummer = saksnummer;
+        public Builder medSaksnummer(String saksnummer) {
+            this.kladd.saksnummer = saksnummer;
+            return this;
+        }
+
+        public Builder medMottakerNavn(String mottakerNavn) {
+            this.kladd.mottakerNavn = mottakerNavn;
             return this;
         }
 
         public FellesDokumentdata build() {
-            return new FellesDokumentdata(this);
+            return this.kladd;
         }
     }
 }

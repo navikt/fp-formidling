@@ -8,12 +8,10 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeVerktøy;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -62,7 +60,6 @@ public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
 
     private LocalDate getSøknadsdato(Behandling behandling) {
         List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
-        XMLGregorianCalendar søknadsDato = MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter);
-        return PeriodeVerktøy.xmlGregorianTilLocalDate(søknadsDato);
+        return MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter(behandling, mottatteDokumenter);
     }
 }

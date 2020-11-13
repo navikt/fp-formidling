@@ -1,12 +1,25 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erEndretFraAvslått;
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erTermindatoEndret;
+import static no.nav.foreldrepenger.melding.datamapper.domene.svp.SvpMapper.mapFra;
+import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeVerktøy;
 import no.nav.foreldrepenger.melding.datamapper.domene.svp.SvpMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
@@ -14,19 +27,6 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.util.List;
-import java.util.Optional;
-
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erEndretFraAvslått;
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erTermindatoEndret;
-import static no.nav.foreldrepenger.melding.datamapper.domene.svp.SvpMapper.mapFra;
-import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.INNVILGELSE_SVANGERSKAPSPENGER_DOK)
@@ -59,10 +59,10 @@ public class InnvilgelseSvangerskapspengerBrevMapper extends FritekstmalBrevMapp
         SvpUttaksresultat svpUttaksresultat = domeneobjektProvider.hentUttaksresultatSvp(behandling);
         List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
 
-        XMLGregorianCalendar søknadsDato = MottattdokumentMapper.finnSøknadsDatoFraMottatteDokumenter(behandling, mottatteDokumenter);
+        LocalDate søknadsdato = MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter(behandling, mottatteDokumenter);
         brevdata.leggTilAlle(mapFra(svpUttaksresultat, hendelse, beregningsgrunnlag, beregningsresultatFP, behandling))
                 .leggTil("manedsbelop", BeregningsresultatMapper.finnMånedsbeløp(beregningsresultatFP))
-                .leggTil("mottattDato", medFormatering(PeriodeVerktøy.xmlGregorianTilLocalDate(søknadsDato)))
+                .leggTil("mottattDato", medFormatering(søknadsdato))
                 .leggTil("refusjonTilBruker", 0 < BeregningsresultatMapper.finnTotalBrukerAndel(beregningsresultatFP))
                 .leggTil("refusjonerTilArbeidsgivere", SvpMapper.finnAntallRefusjonerTilArbeidsgivere(beregningsresultatFP));
 

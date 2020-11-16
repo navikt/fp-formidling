@@ -20,6 +20,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
@@ -77,14 +78,23 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
                 .medErEndretSats(false);
 
         if (behandling.erRevurdering()) {
-            Long differanse = sjekkOmDifferanseHvisRevurdering(behandling, beregningsresultat);
+            Behandling originalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
+                    .orElseThrow(()-> new IllegalArgumentException("Utviklerfeil:Finner ikke informasjon om orginal behandling for revurdering "));
 
-            if (differanse != 0) {
-                innvilgelseDokumentDataBuilder.medErEndretSats(true);
-                innvilgelseDokumentDataBuilder.medInnvilgetBeløp(formaterBeløp(differanse));
+            Long differanse = sjekkOmDifferanseHvisRevurdering(originalBehandling, beregningsresultat);
+
+            if (differanse != 0L) {
+                FamilieHendelse famHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+                FamilieHendelse orgFamHendelse = domeneobjektProvider.hentFamiliehendelse(originalBehandling);
+                //dersom årsaken til differanse er økning av antall barn er det ikke endret sats
+                if (!antallBarnEndret(famHendelse, orgFamHendelse)) {
+                    innvilgelseDokumentDataBuilder.medErEndretSats(true);
+                    innvilgelseDokumentDataBuilder.medInnvilgetBeløp(formaterBeløp(differanse));
+                } else {
+                    innvilgelseDokumentDataBuilder.medInnvilgetBeløp(formaterBeløp(differanse));
+                }
             }
         }
-
         return innvilgelseDokumentDataBuilder.build();
     }
 
@@ -93,11 +103,14 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
                 || BehandlingMapper.utledBehandlingsTypeInnvilgetES(behandling).equals(BehandlingsTypeType.MEDHOLD);
     }
 
-    private Long sjekkOmDifferanseHvisRevurdering(Behandling behandling, BeregningsresultatES beregningsresultat) {
-        Optional<Behandling> originalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling);
-        Optional<BeregningsresultatES> originaltBeregningsresultat = originalBehandling.map(domeneobjektProvider::hentBeregningsresultatESHvisFinnes)
-                .orElseThrow(() -> new IllegalArgumentException("Utviklerfeil:Finner ikke informasjon om orginal behandling for revurdering "));
+    private Long sjekkOmDifferanseHvisRevurdering(Behandling originalBehandling, BeregningsresultatES beregningsresultat) {
+        Optional<BeregningsresultatES> originaltBeregningsresultat = domeneobjektProvider.hentBeregningsresultatESHvisFinnes(originalBehandling);
+
         return originaltBeregningsresultat.map(orgBeregningsresultat -> Math.abs(beregningsresultat.getBeløp() - orgBeregningsresultat.getBeløp()))
                 .orElse(0L);
+    }
+
+    private boolean antallBarnEndret(FamilieHendelse famHendelse, FamilieHendelse orgFamhendelse) {
+        return famHendelse.getAntallBarn().intValue()!= orgFamhendelse.getAntallBarn().intValue();
     }
 }

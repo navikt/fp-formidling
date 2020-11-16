@@ -5,12 +5,15 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Optional;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,11 +62,17 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
        //Arrange
         Behandling orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
+        FamilieHendelse familieHendelse = lagFamHendelse(BigInteger.ONE);
+        FamilieHendelse orgfamilieHendelse = lagFamHendelse(BigInteger.ONE);
+
         dokumentFelles = lagDokumentFelles(SØKER_NAVN, DokumentFelles.Kopi.JA);
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(innvilgetES))).thenReturn(Optional.of(orgBehES));
         when(domeneobjektProvider.hentBeregningsresultatESHvisFinnes(eq(orgBehES))).thenReturn(Optional.of(new BeregningsresultatES(86000L)));
+
+        when(domeneobjektProvider.hentFamiliehendelse(eq(innvilgetES))).thenReturn(familieHendelse);
+        when(domeneobjektProvider.hentFamiliehendelse(eq(orgBehES))).thenReturn(orgfamilieHendelse);
 
         //Act
         EngangsstønadInnvilgelseDokumentdata innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES);
@@ -84,6 +93,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
        //Arrange
         Behandling orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
+
         dokumentFelles = lagDokumentFelles(SØKER_NAVN, DokumentFelles.Kopi.NEI);
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
@@ -116,11 +126,40 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         assertThat(innvilgelseDokumentdata.felles.getMottakerNavn().equals(VERGE_NAVN));
     }
 
+    @Test
+    public void endring_antall_barn_ikke_endretSats() {
+        //Arrange
+        Behandling orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
+        Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
+        FamilieHendelse familieHendelse = lagFamHendelse(BigInteger.TWO);
+        FamilieHendelse orgfamilieHendelse = lagFamHendelse(BigInteger.ONE);
+        dokumentFelles = lagDokumentFelles(SØKER_NAVN, DokumentFelles.Kopi.NEI);
+
+        when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(innvilgetES))).thenReturn(Optional.of(orgBehES));
+        when(domeneobjektProvider.hentBeregningsresultatESHvisFinnes(eq(orgBehES))).thenReturn(Optional.of(new BeregningsresultatES(86000L)));
+
+        when(domeneobjektProvider.hentFamiliehendelse(eq(innvilgetES))).thenReturn(familieHendelse);
+        when(domeneobjektProvider.hentFamiliehendelse(eq(orgBehES))).thenReturn(orgfamilieHendelse);
+        //Act
+        EngangsstønadInnvilgelseDokumentdata innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES);
+
+        //Assert
+        assertThat(innvilgelseDokumentdata.getRevurdering()).isTrue();
+        assertThat(innvilgelseDokumentdata.getErEndretSats()).isFalse();
+        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp().equals("1 000"));
+    }
+
     private Behandling opprettBehandling(BehandlingType behType, long id) {
         return Behandling.builder().medId(id)
                 .medBehandlingType(behType)
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
                 .build();
+    }
+
+    private FamilieHendelse lagFamHendelse(BigInteger antallBarn) {
+        return new FamilieHendelse(antallBarn, true, true, FamilieHendelseType.TERMIN,
+                new FamilieHendelse.OptionalDatoer(Optional.of(LocalDate.now()), Optional.empty(), Optional.empty(), Optional.empty()));
     }
 
     private DokumentFelles lagDokumentFelles( String mottakerNavn, DokumentFelles.Kopi kopi) {

@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -188,7 +189,7 @@ public enum DokumentMalType implements Kodeverdi {
     }
 
     public static Set<DokumentMalType> hentAlleGyldige() {
-        return GYLDIGE_MALER;
+        return Collections.unmodifiableSet(GYLDIGE_MALER);
     }
 
     public boolean erTilgjengeligForManuellUtsendelse() {

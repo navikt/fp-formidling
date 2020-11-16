@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
 import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,6 +48,9 @@ import no.nav.foreldrepenger.melding.typer.Saksnummer;
 public class InnhenteOpplysningerDokumentdataMapperTest {
 
     private static final String SØKERS_NAVN = "Bruker Brukersen";
+    private static final String SØKERS_FNR = "11111111111";
+    private static final String VERGES_NAVN = "Verge Vergesen";
+    private static final String VERGES_FNR = "99999999999";
     private static final String SAKSNUMMER = "123456";
     private static final String FRITEKST_INN = "Element1\nElement2";
     private static final List<String> FRITEKST_UT = List.of("Element1", "Element2");
@@ -70,10 +74,10 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter() {
+    public void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         Behandling behandling = opprettBehandling();
-        DokumentFelles dokumentFelles = lagDokumentFelles();
+        DokumentFelles dokumentFelles = lagDokumentFelles(false);
         DokumentHendelse dokumentHendelse = lagDokumentHendelse();
 
         // Act
@@ -82,7 +86,8 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getFelles()).isNotNull();
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSøkerNavn()).isEqualTo(SØKERS_NAVN);
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo("111111 11111");
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getBrevDato()).isEqualTo(Dato.formaterDato(LocalDate.now()));
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isEqualTo(true);
@@ -99,6 +104,25 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getDokumentListe()).containsAll(FRITEKST_UT);
     }
 
+    @Test
+    public void skal_mappe_felter_for_brev_til_verge() {
+        // Arrange
+        Behandling behandling = opprettBehandling();
+        DokumentFelles dokumentFelles = lagDokumentFelles(true);
+        DokumentHendelse dokumentHendelse = lagDokumentHendelse();
+
+        // Act
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+
+        // Assert
+        assertThat(innhenteOpplysningerDokumentdata.getFelles()).isNotNull();
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getSøkerNavn()).isEqualTo(SØKERS_NAVN);
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getMottakerNavn()).isEqualTo(VERGES_NAVN);
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isEqualTo(false);
+    }
+
     private Behandling opprettBehandling() {
         return Behandling.builder()
                 .medId(1L)
@@ -109,7 +133,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
                 .build();
     }
 
-    private DokumentFelles lagDokumentFelles() {
+    private DokumentFelles lagDokumentFelles(boolean tilVerge) {
         DokumentAdresse dokumentAdresse = new DokumentAdresse.Builder()
                 .medAdresselinje1("Adresse 1")
                 .medPostNummer("0491")
@@ -132,12 +156,12 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
                 .medNavnAvsenderEnhet("NAV Familie og pensjonsytelser")
                 .medPostadresse(dokumentAdresse)
                 .medReturadresse(dokumentAdresse)
-                .medMottakerId("11111111111")
-                .medMottakerNavn(SØKERS_NAVN)
+                .medMottakerId(tilVerge ? VERGES_FNR : SØKERS_FNR)
+                .medMottakerNavn(tilVerge ? VERGES_NAVN : SØKERS_NAVN)
                 .medSaksnummer(new Saksnummer(SAKSNUMMER))
-                .medSakspartId("99999999999")
+                .medSakspartId(SØKERS_FNR)
                 .medSakspartNavn(SØKERS_NAVN)
-                .medErKopi(Optional.of(DokumentFelles.Kopi.JA))
+                .medErKopi(tilVerge ? Optional.of(DokumentFelles.Kopi.NEI) : Optional.of(DokumentFelles.Kopi.JA))
                 .medMottakerType(DokumentFelles.MottakerType.PERSON)
                 .medSpråkkode(Språkkode.nb)
                 .medSakspartPersonStatus("ANNET")

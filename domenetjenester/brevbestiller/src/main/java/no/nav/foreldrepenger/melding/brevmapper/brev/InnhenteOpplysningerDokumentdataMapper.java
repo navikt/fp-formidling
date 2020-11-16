@@ -55,8 +55,8 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
     public InnhenteOpplysningerDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
 
         var felles = FellesDokumentdata.ny()
-                .medSøkerNavn(dokumentFelles.getMottakerNavn())
-                .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getMottakerId()))
+                .medSøkerNavn(dokumentFelles.getSakspartNavn())
+                .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
                 .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDato(dokumentFelles.getDokumentDato()) : null)
                 .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
                 .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))

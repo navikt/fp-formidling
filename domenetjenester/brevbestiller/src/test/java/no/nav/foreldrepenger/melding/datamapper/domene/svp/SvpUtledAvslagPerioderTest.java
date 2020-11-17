@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.svp;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;

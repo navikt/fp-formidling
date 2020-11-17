@@ -2,22 +2,20 @@ package no.nav.foreldrepenger.melding.web.app.exceptions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.jboss.resteasy.spi.ApplicationException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.vedtak.felles.testutilities.Whitebox;
 import no.nav.vedtak.sikkerhet.ContextPathHolder;
 
-@Ignore
-@SuppressWarnings("deprecation")
+@ExtendWith(MockitoExtension.class)
 public class RedirectExceptionMapperTest {
 
     @Mock
@@ -26,13 +24,8 @@ public class RedirectExceptionMapperTest {
     private RedirectExceptionMapper exceptionMapper;
 
     @BeforeEach
-    public void setUp() throws Exception {
-        initMocks(this);
-
-        exceptionMapper = new RedirectExceptionMapper();
-        Whitebox.setInternalState(exceptionMapper, "loadBalancerUrl", "https://erstatter.nav.no");
-        Whitebox.setInternalState(exceptionMapper, "generalRestExceptionMapper", generalRestExceptionMapper);
-
+    public void setUp() {
+        exceptionMapper = new RedirectExceptionMapper("https://erstatter.nav.no", generalRestExceptionMapper);
         ContextPathHolder.instance("/fpformidling");
     }
 
@@ -58,7 +51,6 @@ public class RedirectExceptionMapperTest {
         assertThat(response.getMetadata().get("Content-Encoding").get(0))
                 .isEqualTo("UTF-8");
         assertThat(response.getMetadata().get("Location").get(0).toString())
-                .isEqualTo("https://erstatter.nav.no/fpsak/#?errorcode=feilmelding");
+                .isEqualTo("https://erstatter.nav.no/fpformidling/#?errorcode=feilmelding");
     }
-
 }

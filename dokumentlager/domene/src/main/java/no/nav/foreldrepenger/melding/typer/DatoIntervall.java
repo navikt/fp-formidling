@@ -9,10 +9,8 @@ public interface DatoIntervall extends Comparable<DatoIntervall> {
 
     Dato getTom();
 
-    @Deprecated
     LocalDate getFomDato();
 
-    @Deprecated
     LocalDate getTomDato();
 
     static DatoIntervall fraOgMedTilOgMed(Dato fomDato, Dato tomDato) {

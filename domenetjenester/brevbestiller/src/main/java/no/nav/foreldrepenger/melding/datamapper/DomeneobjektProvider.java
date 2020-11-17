@@ -133,7 +133,6 @@ public class DomeneobjektProvider {
         return KlageDtoMapper.mapKlagedokumentFraDto(behandlingRestKlient.hentKlagedokument(behandling.getResourceLinker()));
     }
 
-    @Deprecated
     public Optional<Søknad> hentSøknad(Behandling behandling) {
         return behandlingRestKlient.hentSoknadHvisFinnes(behandling.getResourceLinker()).map(SøknadDtoMapper::mapSøknadFraDto);
     }
@@ -141,7 +140,6 @@ public class DomeneobjektProvider {
     public List<Vilkår> hentVilkår(Behandling behandling) {
         return VilkårDtoMapper.mapVilkårFraDto(behandlingRestKlient.hentVilkår(behandling.getResourceLinker()));
     }
-
 
     public Optional<UttakResultatPerioder> hentUttaksresultatHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentUttaksresultatHvisFinnes(behandling.getResourceLinker()).map(UttakDtoMapper::mapUttaksresultatPerioderFraDto);

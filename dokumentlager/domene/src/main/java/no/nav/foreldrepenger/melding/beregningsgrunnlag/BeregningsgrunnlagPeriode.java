@@ -50,8 +50,10 @@ public class BeregningsgrunnlagPeriode {
         return redusertPrÅr;
     }
 
-    public BigDecimal getAvkortetPrÅr() { return avkortetPrÅr;
+    public BigDecimal getAvkortetPrÅr() {
+        return avkortetPrÅr;
     }
+
     public LocalDate getBeregningsgrunnlagPeriodeFom() {
         return periode.getFomDato();
     }

@@ -50,8 +50,8 @@ public class DatoIntervallImpl implements DatoIntervall {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DatoIntervall that = (DatoIntervall) o;
-        return Objects.equals(getFomDato(), that.getFomDato()) &&
-                Objects.equals(getTomDato(), that.getTomDato());
+        return Objects.equals(getFom(), that.getFom()) &&
+                Objects.equals(getTom(), that.getTom());
     }
 
     @Override

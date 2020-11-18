@@ -26,16 +26,6 @@ public class StringSerializer extends StdScalarSerializer<Object> {
         super(String.class, false);
     }
 
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    @Override
-    public boolean isEmpty(Object value) {
-        String str = (String) value;
-        return str == null || str.length() == 0;
-    }
-
     @Override
     public boolean isEmpty(SerializerProvider prov, Object value) {
         String str = (String) value;

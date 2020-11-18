@@ -138,7 +138,6 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         return nyIArbeidslivet;
     }
 
-
     public static final class Builder {
         private Long dagsats;
         private AktivitetStatus aktivitetStatus;

@@ -1,21 +1,26 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.UUID;
-
-import org.mockito.Mockito;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
+import org.mockito.Mockito;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.mockito.Mockito.when;
 
 public class DatamapperTestUtil {
 
@@ -39,6 +44,43 @@ public class DatamapperTestUtil {
         when(dokumentFelles.getSakspartNavn()).thenReturn(SOEKERS_NAVN);
         when(dokumentFelles.getSakspartPersonStatus()).thenReturn("ANNET");
         return dokumentFelles;
+    }
+
+    public static DokumentFelles lagStandardDokumentFelles(DokumentData dokumentdata, String mottakerNavn, DokumentFelles.Kopi kopi) {
+        DokumentAdresse dokumentAdresse = new DokumentAdresse.Builder()
+                .medAdresselinje1("Adresse 1")
+                .medPostNummer("0491")
+                .medPoststed("OSLO")
+                .medMottakerNavn(SOEKERS_NAVN)
+                .build();
+
+        return DokumentFelles.builder(dokumentdata)
+                .medAutomatiskBehandlet(Boolean.TRUE)
+                .medDokumentDato(LocalDate.now())
+                .medKontaktTelefonNummer("22222222")
+                .medMottakerAdresse(dokumentAdresse)
+                .medNavnAvsenderEnhet("NAV Familie og pensjonsytelser")
+                .medPostadresse(dokumentAdresse)
+                .medReturadresse(dokumentAdresse)
+                .medMottakerId("123456789")
+                .medMottakerNavn(mottakerNavn == null ? SOEKERS_NAVN : mottakerNavn)
+                .medSaksnummer(new Saksnummer("123456"))
+                .medSakspartId("99999999999")
+                .medSakspartNavn(SOEKERS_NAVN)
+                .medErKopi(kopi == null ? Optional.empty() : Optional.of(kopi))
+                .medMottakerType(DokumentFelles.MottakerType.PERSON)
+                .medSpråkkode(Språkkode.nb)
+                .medSakspartPersonStatus("ANNET")
+                .build();
+    }
+
+    public static DokumentData lagDokumentData() {
+        return   DokumentData.builder()
+                .medDokumentMalType(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD)
+                .medBehandlingUuid(UUID.randomUUID())
+                .medBestillingType("B")
+                .medBestiltTid(LocalDateTime.now())
+                .build();
     }
 
     public static FellesType getFellesType() {

@@ -62,7 +62,11 @@ class DokumentMalUtleder {
                 return DokumentMalType.POSITIVT_VEDTAK_DOK;
             }
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
-            return DokumentMalType.AVSLAGSVEDTAK_DOK;
+            if (!ENV.isProd()) {
+                return DokumentMalType.AVSLAG_ENGANGSSTØNAD;
+            } else {
+                return DokumentMalType.AVSLAGSVEDTAK_DOK;
+            }
         }
         throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
     }

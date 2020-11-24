@@ -82,14 +82,13 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
     public static final String KODEVERK = "AVSLAGSARSAK"; //$NON-NLS-1$
 
     public static final Set<Avslagsårsak> ALLEREDE_UTBETALT_ENGANGSSTØNAD = Collections.unmodifiableSet(new LinkedHashSet<>(
-            Arrays.asList(ENGANGSSTØNAD_ALLEREDE_UTBETALT_TIL_MOR, ENGANGSTØNAD_ER_ALLEREDE_UTBETAL_TIL_MOR,
-                    ENGANGSSTØNAD_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR)));
+            Arrays.asList(ENGANGSTØNAD_ER_ALLEREDE_UTBETAL_TIL_MOR, ENGANGSSTØNAD_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR)));
 
     public static final Set<Avslagsårsak> ALLEREDE_UTBETALT_FORELDREPENGER = Collections.unmodifiableSet(new LinkedHashSet<>(
             Arrays.asList(FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_MOR, FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR )));
 
     public static final Set<Avslagsårsak> IKKE_ALENEOMSORG = Collections.unmodifiableSet(new LinkedHashSet<>(
-            Arrays.asList(SØKER_ER_MEDMOR, SØKER_ER_FAR )));
+            Arrays.asList(SØKER_ER_MEDMOR, SØKER_ER_FAR, MOR_IKKE_DØD, MANN_ADOPTERER_IKKE_ALENE )));
 
     public static final Set<Avslagsårsak> BARN_IKKE_RIKTIG_ALDER = Collections.unmodifiableSet(new LinkedHashSet<>(
             Arrays.asList(BARN_OVER_15_ÅR, BARN_IKKE_UNDER_15_ÅR)));

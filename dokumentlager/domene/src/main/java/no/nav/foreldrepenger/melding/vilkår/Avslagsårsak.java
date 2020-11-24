@@ -1,7 +1,11 @@
 package no.nav.foreldrepenger.melding.vilkår;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -77,6 +81,20 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
 
     public static final String KODEVERK = "AVSLAGSARSAK"; //$NON-NLS-1$
 
+    public static final Set<Avslagsårsak> ALLEREDE_UTBETALT_ENGANGSSTØNAD = Collections.unmodifiableSet(new LinkedHashSet<>(
+            Arrays.asList(ENGANGSTØNAD_ER_ALLEREDE_UTBETAL_TIL_MOR, ENGANGSSTØNAD_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR)));
+
+    public static final Set<Avslagsårsak> ALLEREDE_UTBETALT_FORELDREPENGER = Collections.unmodifiableSet(new LinkedHashSet<>(
+            Arrays.asList(FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_MOR, FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR )));
+
+    public static final Set<Avslagsårsak> IKKE_ALENEOMSORG = Collections.unmodifiableSet(new LinkedHashSet<>(
+            Arrays.asList(SØKER_ER_MEDMOR, SØKER_ER_FAR, MOR_IKKE_DØD, MANN_ADOPTERER_IKKE_ALENE )));
+
+    public static final Set<Avslagsårsak> BARN_IKKE_RIKTIG_ALDER = Collections.unmodifiableSet(new LinkedHashSet<>(
+            Arrays.asList(BARN_OVER_15_ÅR, BARN_IKKE_UNDER_15_ÅR)));
+
+    public static final Set<Avslagsårsak> IKKE_BARNETS_FAR = Collections.unmodifiableSet(new LinkedHashSet<>(
+            Arrays.asList(SØKER_ER_IKKE_BARNETS_FAR_F, SØKER_ER_IKKE_BARNETS_FAR_O)));
 
     // TODO endre fra raw json
     @JsonIgnore
@@ -84,7 +102,7 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
 
     private String kode;
 
-    private Avslagsårsak(String kode, String lovReferanse) {
+    Avslagsårsak(String kode, String lovReferanse) {
         this.kode = kode;
         this.lovReferanse = lovReferanse;
     }
@@ -113,12 +131,28 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
         return KODEVERK;
     }
 
-
     @Override
     public String getLovHjemmelData() {
         return lovReferanse;
     }
 
+    public static boolean erAlleredeUtbetaltEngangsstønad(Avslagsårsak avslagsårsak) {
+        return ALLEREDE_UTBETALT_ENGANGSSTØNAD.contains(avslagsårsak);
+    }
 
+    public static boolean erAlleredeUtbetaltForeldrepenger(Avslagsårsak avslagsårsak) {
+        return ALLEREDE_UTBETALT_FORELDREPENGER.contains(avslagsårsak);
+    }
 
+    public static boolean farHarIkkeAleneomsorg(Avslagsårsak avslagsårsak) {
+        return IKKE_ALENEOMSORG.contains(avslagsårsak);
+    }
+
+    public static boolean barnIkkeRiktigAlder(Avslagsårsak avslagsårsak) {
+        return BARN_IKKE_RIKTIG_ALDER.contains(avslagsårsak);
+    }
+
+    public static boolean ikkeBarnetsFar(Avslagsårsak avslagsårsak) {
+        return IKKE_BARNETS_FAR.contains(avslagsårsak);
+    }
 }

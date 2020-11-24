@@ -76,17 +76,23 @@ jobs:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
 
-      - name: Opprett deployment issue
-        if: success()
-        uses: maxkomarychev/oction-create-issue@v0.7.1
-        id: createdeployissue
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: Deploy av ${{ env.TAG }}
-          labels: deployment
-          body: |
-            Kommenter med <b>/promote dev-fss</b> eller <b>/promote prod-fss</b>, evt andre gyldige clusternavn.
-
+      -  name: Opprett deployment issue
+         id: createdeployissue
+         if: success()
+         uses: actions/github-script@v3
+         with:
+           github-token: ${{secrets.GITHUB_TOKEN}}
+           script: |
+               github.issues.create( {
+                 owner: context.issue.owner,
+                 repo: context.issue.repo,
+                 labels: ['deployment'],
+                 body: 'Kommenter med <b>/promote dev-fss</b> eller <b>/promote prod-fss</b>, evt andre gyldige clusternavn.
+                 title: 'Deploy av ${{ env.TAG }}'})
+               .then(response => {
+                       core.setOutput('number', response.data.number);
+                });    
+            
       - name: Trigger verdikjedetestene i fpsak-autotest prosjektet
         if: success()
         uses: peter-evans/repository-dispatch@v1

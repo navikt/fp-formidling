@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class OpprettJournalpostRequest {
-    @JsonProperty("journalpostType")
+    @JsonProperty("journalposttype")
     private String journalpostType = "UTGAAENDE";
     @JsonProperty("avsenderMottaker")
     private AvsenderMottaker avsenderMottaker;

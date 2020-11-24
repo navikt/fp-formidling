@@ -105,7 +105,7 @@ public class DokumentMalUtlederTest {
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.AVSLAGSVEDTAK_DOK.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.AVSLAG_ENGANGSSTØNAD.getKode());
     }
 
     @Test
@@ -120,7 +120,7 @@ public class DokumentMalUtlederTest {
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.OPPHØR).build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.AVSLAGSVEDTAK_DOK.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.AVSLAG_ENGANGSSTØNAD.getKode());
     }
 
     @Test

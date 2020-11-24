@@ -87,11 +87,10 @@ jobs:
                  owner: context.issue.owner,
                  repo: context.issue.repo,
                  labels: ['deployment'],
-                 body: 'Kommenter med <b>/promote dev-fss</b> eller <b>/promote prod-fss</b>, evt andre gyldige clusternavn.'
                  title: 'Deploy av ${{ env.TAG }}'})
                .then(response => {
                        core.setOutput('number', response.data.number);
-                });    
+                });      
             
       - name: Trigger verdikjedetestene i fpsak-autotest prosjektet
         if: success()

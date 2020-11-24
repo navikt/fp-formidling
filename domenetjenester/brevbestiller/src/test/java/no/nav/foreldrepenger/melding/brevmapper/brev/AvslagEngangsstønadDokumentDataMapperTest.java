@@ -31,6 +31,7 @@ import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentData;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
@@ -55,7 +56,7 @@ class AvslagEngangsstønadDokumentDataMapperTest {
     @BeforeEach
     void setUp() {
         avslagEngangsstønadDokumentDataMapper = new AvslagEngangsstønadDokumentDataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider, tpsTjeneste);
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagDokumentData(), null, null);
+        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.AVSLAG_ENGANGSSTØNAD));
         Personinfo personinfo = Personinfo.getbuilder(AKTØR_ID)
                 .medPersonIdent( new PersonIdent("9999999999"))
                 .medNavn("Nav Navesen")
@@ -90,12 +91,10 @@ class AvslagEngangsstønadDokumentDataMapperTest {
         assertThat(avslagDokumentData.getvilkårTyper()).hasSize(1);
         assertThat(avslagDokumentData.getvilkårTyper()).containsExactly("FP_VK_3");
         assertThat(avslagDokumentData.felles.getFritekst().equals(avslagsfritekst));
-
     }
 
     @Test
     void mapAvslagsårsakerBrev_mapper_riktig() {
-
         String avslagsårsak = avslagEngangsstønadDokumentDataMapper.mapAvslagsårsakerBrev(Avslagsårsak.SØKER_ER_MEDMOR);
 
         assertThat(avslagsårsak).isEqualTo("IKKE_ALENEOMSORG");
@@ -119,6 +118,7 @@ class AvslagEngangsstønadDokumentDataMapperTest {
 
         assertThat(rolle).isEqualTo(RelasjonsRolleType.MEDMOR.getKode());
     }
+
     private Behandling opprettBehandling(Avslagsårsak avslagsårsak, String avslagsfritekst, FagsakBackend fagsak) {
         var behandlingresultat = Behandlingsresultat.builder()
                 .medAvslagsårsak(avslagsårsak)
@@ -132,7 +132,7 @@ class AvslagEngangsstønadDokumentDataMapperTest {
                 .medBehandlingsresultat(behandlingresultat.build())
                 .medFagsakBackend(fagsak);
 
-        if(fagsak != null) {
+        if (fagsak != null) {
             behandlingBuilder.medFagsakBackend(fagsak);
         }
 

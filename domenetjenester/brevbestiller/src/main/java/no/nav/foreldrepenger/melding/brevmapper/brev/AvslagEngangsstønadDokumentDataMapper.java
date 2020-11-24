@@ -69,8 +69,8 @@ public class AvslagEngangsstønadDokumentDataMapper implements DokumentdataMappe
                 .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
                 .medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato()) : null)
                 .medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet())
-                .medHarVerge(dokumentFelles.getErKopi().isPresent())
-                .medErKopi(dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
+                .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
+                .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
                 .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi());
 
         avklarFritekst(hendelse, behandling).ifPresent(fellesDataBuilder::medFritekst);

@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -94,7 +96,7 @@ class DokumentMalUtleder {
 
     DokumentMalType utledDokumentmal(Behandling behandling, DokumentHendelse hendelse) {
         if (hendelse.getDokumentMalType() != null) {
-            return hendelse.getDokumentMalType();
+            return overstyrMalHvisNødvendig(hendelse.getDokumentMalType());
         }
         if (Boolean.TRUE.equals(hendelse.isGjelderVedtak())) {
             return utledVedtaksbrev(behandling, hendelse);

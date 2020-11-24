@@ -1,6 +1,13 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
 import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.VERGES_NAVN;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -9,11 +16,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,13 +32,11 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles.Kopi;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeId;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.InnhenteOpplysningerDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
@@ -42,16 +44,10 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.typer.Dato;
-import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 @ExtendWith(MockitoExtension.class)
 public class InnhenteOpplysningerDokumentdataMapperTest {
 
-    private static final String SØKERS_NAVN = "Bruker Brukersen";
-    private static final String SØKERS_FNR = "11111111111";
-    private static final String VERGES_NAVN = "Verge Vergesen";
-    private static final String VERGES_FNR = "99999999999";
-    private static final String SAKSNUMMER = "123456";
     private static final String FRITEKST_INN = "Element1\nElement2";
     private static final List<String> FRITEKST_UT = List.of("Element1", "Element2");
     private static final LocalDate SØKNAD_DATO = LocalDate.now().minusDays(1);
@@ -61,12 +57,15 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
 
     private BrevMapperUtil brevMapperUtil;
 
+    private DokumentData dokumentData;
+
     private InnhenteOpplysningerDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     public void before() {
         BrevParametere brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         brevMapperUtil = new BrevMapperUtil(brevParametere);
+        dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new InnhenteOpplysningerDokumentdataMapper(brevMapperUtil, domeneobjektProvider);
 
         MottattDokument mottattDokument = new MottattDokument(SØKNAD_DATO, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD);
@@ -77,7 +76,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     public void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         Behandling behandling = opprettBehandling();
-        DokumentFelles dokumentFelles = lagDokumentFelles(false);
+        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
         DokumentHendelse dokumentHendelse = lagDokumentHendelse();
 
         // Act
@@ -108,7 +107,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     public void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
         Behandling behandling = opprettBehandling();
-        DokumentFelles dokumentFelles = lagDokumentFelles(true);
+        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, true);
         DokumentHendelse dokumentHendelse = lagDokumentHendelse();
 
         // Act
@@ -133,46 +132,8 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
                 .build();
     }
 
-    private DokumentFelles lagDokumentFelles(boolean tilVerge) {
-        DokumentAdresse dokumentAdresse = new DokumentAdresse.Builder()
-                .medAdresselinje1("Adresse 1")
-                .medPostNummer("0491")
-                .medPoststed("OSLO")
-                .medMottakerNavn(SØKERS_NAVN)
-                .build();
-
-        DokumentData dokumentData = DokumentData.builder()
-                .medDokumentMalType(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD)
-                .medBehandlingUuid(UUID.randomUUID())
-                .medBestillingType("B")
-                .medBestiltTid(LocalDateTime.now())
-                .build();
-
-        return DokumentFelles.builder(dokumentData)
-                .medAutomatiskBehandlet(Boolean.TRUE)
-                .medDokumentDato(LocalDate.now())
-                .medKontaktTelefonNummer("22222222")
-                .medMottakerAdresse(dokumentAdresse)
-                .medNavnAvsenderEnhet("NAV Familie og pensjonsytelser")
-                .medPostadresse(dokumentAdresse)
-                .medReturadresse(dokumentAdresse)
-                .medMottakerId(tilVerge ? VERGES_FNR : SØKERS_FNR)
-                .medMottakerNavn(tilVerge ? VERGES_NAVN : SØKERS_NAVN)
-                .medSaksnummer(new Saksnummer(SAKSNUMMER))
-                .medSakspartId(SØKERS_FNR)
-                .medSakspartNavn(SØKERS_NAVN)
-                .medErKopi(tilVerge ? Optional.of(DokumentFelles.Kopi.NEI) : Optional.of(DokumentFelles.Kopi.JA))
-                .medMottakerType(DokumentFelles.MottakerType.PERSON)
-                .medSpråkkode(Språkkode.nb)
-                .medSakspartPersonStatus("ANNET")
-                .build();
-    }
-
     private DokumentHendelse lagDokumentHendelse() {
-        return DokumentHendelse.builder()
-                .medBehandlingUuid(UUID.randomUUID())
-                .medBestillingUuid(UUID.randomUUID())
-                .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+        return lagStandardHendelseBuilder()
                 .medFritekst(FRITEKST_INN)
                 .build();
     }

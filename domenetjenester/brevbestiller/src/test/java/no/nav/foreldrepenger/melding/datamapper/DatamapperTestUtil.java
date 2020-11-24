@@ -1,18 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
-import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.melding.typer.Saksnummer;
-import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,11 +8,29 @@ import java.time.Period;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.mockito.Mockito.when;
+import org.mockito.Mockito;
+
+import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles.Kopi;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 public class DatamapperTestUtil {
 
-    public static final String SOEKERS_NAVN = "SOEKERS_NAVN";
+    public static final String SØKERS_NAVN = "Bruker Brukersen";
+    public static final String SØKERS_FNR = "11111111111";
+    public static final String VERGES_NAVN = "Verge Vergesen";
+    public static final String VERGES_FNR = "99999999999";
+    public static final String SAKSNUMMER = "123456";
     public static final String FRITEKST = "FRITEKST";
     public static final LocalDate FØRSTE_JANUAR_TJUENITTEN = LocalDate.of(2019, 1, 1);
     public static final Period SVARFRIST = Period.ofWeeks(6);
@@ -41,17 +47,21 @@ public class DatamapperTestUtil {
 
     public static DokumentFelles getDokumentFelles() {
         DokumentFelles dokumentFelles = Mockito.mock(DokumentFelles.class);
-        when(dokumentFelles.getSakspartNavn()).thenReturn(SOEKERS_NAVN);
+        when(dokumentFelles.getSakspartNavn()).thenReturn(SØKERS_NAVN);
         when(dokumentFelles.getSakspartPersonStatus()).thenReturn("ANNET");
         return dokumentFelles;
     }
 
-    public static DokumentFelles lagStandardDokumentFelles(DokumentData dokumentdata, String mottakerNavn, DokumentFelles.Kopi kopi) {
+    public static DokumentFelles lagStandardDokumentFelles(DokumentData dokumentdata) {
+        return lagStandardDokumentFelles(dokumentdata, null, false);
+    }
+
+    public static DokumentFelles lagStandardDokumentFelles(DokumentData dokumentdata, Kopi kopi, boolean tilVerge) {
         DokumentAdresse dokumentAdresse = new DokumentAdresse.Builder()
                 .medAdresselinje1("Adresse 1")
                 .medPostNummer("0491")
                 .medPoststed("OSLO")
-                .medMottakerNavn(SOEKERS_NAVN)
+                .medMottakerNavn(SØKERS_NAVN)
                 .build();
 
         return DokumentFelles.builder(dokumentdata)
@@ -62,21 +72,21 @@ public class DatamapperTestUtil {
                 .medNavnAvsenderEnhet("NAV Familie og pensjonsytelser")
                 .medPostadresse(dokumentAdresse)
                 .medReturadresse(dokumentAdresse)
-                .medMottakerId("123456789")
-                .medMottakerNavn(mottakerNavn == null ? SOEKERS_NAVN : mottakerNavn)
-                .medSaksnummer(new Saksnummer("123456"))
-                .medSakspartId("99999999999")
-                .medSakspartNavn(SOEKERS_NAVN)
-                .medErKopi(kopi == null ? Optional.empty() : Optional.of(kopi))
+                .medMottakerId(tilVerge ? VERGES_FNR : SØKERS_FNR)
+                .medMottakerNavn(tilVerge ? VERGES_NAVN : SØKERS_NAVN)
+                .medSaksnummer(new Saksnummer(SAKSNUMMER))
+                .medSakspartId(SØKERS_FNR)
+                .medSakspartNavn(SØKERS_NAVN)
+                .medErKopi(kopi != null ? Optional.of(kopi) : null)
                 .medMottakerType(DokumentFelles.MottakerType.PERSON)
                 .medSpråkkode(Språkkode.nb)
                 .medSakspartPersonStatus("ANNET")
                 .build();
     }
 
-    public static DokumentData lagDokumentData() {
-        return   DokumentData.builder()
-                .medDokumentMalType(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD)
+    public static DokumentData lagStandardDokumentData(DokumentMalType dokumentMalType) {
+        return DokumentData.builder()
+                .medDokumentMalType(dokumentMalType)
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingType("B")
                 .medBestiltTid(LocalDateTime.now())

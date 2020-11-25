@@ -1,10 +1,9 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
-import static no.nav.foreldrepenger.melding.dtomapper.ArbeidsgiverMapper.finnArbeidsgiver;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
@@ -33,9 +32,9 @@ public class BeregningsresultatDtoMapper {
         return new BeregningsresultatES(dto.getBeregnetTilkjentYtelse());
     }
 
-    public static BeregningsresultatFP mapBeregningsresultatFPFraDto(BeregningsresultatMedUttaksplanDto dto) {
+    public static BeregningsresultatFP mapBeregningsresultatFPFraDto(BeregningsresultatMedUttaksplanDto dto, UnaryOperator<String> hentNavn) {
         List<BeregningsresultatPeriode> beregningsresultatPerioder = Arrays.stream(dto.getPerioder())
-                .map(BeregningsresultatDtoMapper::mapPeriodeFraDto)
+                .map(p -> mapPeriodeFraDto(p, hentNavn))
                 .sorted(PeriodeComparator.BEREGNINGSRESULTAT)
                 .collect(Collectors.toList());
         return BeregningsresultatFP.ny()
@@ -44,10 +43,10 @@ public class BeregningsresultatDtoMapper {
     }
 
 
-    private static BeregningsresultatPeriode mapPeriodeFraDto(BeregningsresultatPeriodeDto dto) {
+    private static BeregningsresultatPeriode mapPeriodeFraDto(BeregningsresultatPeriodeDto dto, UnaryOperator<String> hentNavn) {
         List<BeregningsresultatAndel> andelListe = new ArrayList<>();
         for (BeregningsresultatPeriodeAndelDto beregningsresultatPeriodeAndelDto : dto.getAndeler()) {
-            andelListe.add(mapAndelFraDto(beregningsresultatPeriodeAndelDto));
+            andelListe.add(mapAndelFraDto(beregningsresultatPeriodeAndelDto, hentNavn));
         }
         return BeregningsresultatPeriode.ny()
                 .medDagsats((long) dto.getDagsats())
@@ -57,11 +56,11 @@ public class BeregningsresultatDtoMapper {
     }
 
     //Fpsak slår sammen andeler i dto, så vi må eventuelt splitte dem opp igjen
-    private static BeregningsresultatAndel mapAndelFraDto(BeregningsresultatPeriodeAndelDto dto) {
+    private static BeregningsresultatAndel mapAndelFraDto(BeregningsresultatPeriodeAndelDto dto, UnaryOperator<String> hentNavn) {
         return BeregningsresultatAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.fraKode(dto.getAktivitetStatus().getKode()))
                 .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
-                .medArbeidsgiver(mapArbeidsgiverFraDto(dto))
+                .medArbeidsgiver(mapArbeidsgiverFraDto(dto, hentNavn))
                 .medStillingsprosent(dto.getStillingsprosent())
                 .medBrukerErMottaker(dto.getTilSoker() != null && dto.getTilSoker() != 0)
                 .medArbeidsgiverErMottaker(dto.getRefusjon() != null && dto.getRefusjon() != 0)
@@ -70,12 +69,12 @@ public class BeregningsresultatDtoMapper {
                 .build();
     }
 
-    private static Arbeidsgiver mapArbeidsgiverFraDto(BeregningsresultatPeriodeAndelDto dto) {
+    private static Arbeidsgiver mapArbeidsgiverFraDto(BeregningsresultatPeriodeAndelDto dto, UnaryOperator<String> hentNavn) {
         if (!AktivitetStatus.ARBEIDSTAKER.getKode().equals(dto.getAktivitetStatus().getKode())
-                || (dto.getArbeidsgiverOrgnr() == null && dto.getAktørId() == null)) {
+                || dto.getArbeidsgiverReferanse() == null) {
             return null;
         }
-        return finnArbeidsgiver(dto.getArbeidsgiverNavn(), dto.getAktørId() != null ? dto.getAktørId() : dto.getArbeidsgiverOrgnr());
+        return new Arbeidsgiver(dto.getArbeidsgiverReferanse(), hentNavn.apply(dto.getArbeidsgiverReferanse()));
     }
 
     private static int summerDagsats(BeregningsresultatPeriodeAndelDto dto) {

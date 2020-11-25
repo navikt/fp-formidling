@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.organisasjon;
 
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -46,5 +47,10 @@ public class VirksomhetTjeneste {
             kodeverkRepository.finnPostnummer(adresse.getPostnummer()).map(Poststed::getPoststednavn).ifPresent(builder::medPoststed);
         }
         return builder.build();
+    }
+
+    public Optional<String> getNavnFor(String orgNummer)  {
+        var response = eregRestKlient.hentOrganisasjonAdresse(orgNummer);
+        return Optional.ofNullable(response.getNavn());
     }
 }

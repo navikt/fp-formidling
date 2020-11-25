@@ -3,9 +3,9 @@ package no.nav.foreldrepenger.melding.dtomapper;
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.fpsak.dto.uttak.ArbeidsgiverDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeAktivitetDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
@@ -25,13 +25,13 @@ import no.nav.vedtak.util.StringUtils;
 
 public class UttakDtoMapper {
 
-    public static UttakResultatPerioder mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto) {
+    public static UttakResultatPerioder mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto, UnaryOperator<String> hentNavn) {
         List<UttakResultatPeriode> uttakResultatPerioder = emptyIfNull(resultatPerioderDto.getPerioderSøker()).stream()
-                .map(UttakDtoMapper::periodeFraDto)
+                .map(p -> periodeFraDto(p, hentNavn))
                 .sorted(PeriodeComparator.UTTAKRESULTAT)
                 .collect(Collectors.toList());
         List<UttakResultatPeriode> perioderAnnenPart = emptyIfNull(resultatPerioderDto.getPerioderAnnenpart()).stream()
-                .map(UttakDtoMapper::periodeFraDto)
+                .map(p -> periodeFraDto(p, hentNavn))
                 .sorted(PeriodeComparator.UTTAKRESULTAT)
                 .collect(Collectors.toList());
         return UttakResultatPerioder.ny()
@@ -42,8 +42,8 @@ public class UttakDtoMapper {
                 .build();
     }
 
-    public static UttakResultatPeriode periodeFraDto(UttakResultatPeriodeDto dto) {
-        List<UttakResultatPeriodeAktivitet> aktiviteter = dto.getAktiviteter().stream().map(UttakDtoMapper::aktivitetFraDto).collect(Collectors.toList());
+    public static UttakResultatPeriode periodeFraDto(UttakResultatPeriodeDto dto, UnaryOperator<String> hentNavn) {
+        List<UttakResultatPeriodeAktivitet> aktiviteter = dto.getAktiviteter().stream().map(a -> aktivitetFraDto(a, hentNavn)).collect(Collectors.toList());
         UttakResultatPeriode mappetPeriode = UttakResultatPeriode.ny()
                 .medGraderingAvslagÅrsak(velgGraderingsavslagÅrsak(dto))
                 .medPeriodeResultatType(PeriodeResultatType.fraKode(dto.getPeriodeResultatType().getKode()))
@@ -63,7 +63,7 @@ public class UttakDtoMapper {
         return dto.getGraderingAvslagÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getGraderingAvslagÅrsak().getKode(), dto.getGraderingAvslagÅrsak().getKodeverk(), dto.getGraderingsAvslagÅrsakLovhjemmel());
     }
 
-    static UttakResultatPeriodeAktivitet aktivitetFraDto(UttakResultatPeriodeAktivitetDto dto) {
+    static UttakResultatPeriodeAktivitet aktivitetFraDto(UttakResultatPeriodeAktivitetDto dto, UnaryOperator<String> hentNavn) {
         return UttakResultatPeriodeAktivitet.ny()
                 .medArbeidsprosent(dto.getProsentArbeid())
                 .medTrekkdager(dto.getTrekkdagerDesimaler())
@@ -72,17 +72,13 @@ public class UttakDtoMapper {
                 .medTrekkonto(StønadskontoType.fraKode(dto.getStønadskontoType().getKode()))
                 .medUttakAktivitet(UttakAktivitet.ny()
                         .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
-                        .medArbeidsgiver(mapArbeidsgiver(dto.getArbeidsgiver()))
+                        .medArbeidsgiver(mapArbeidsgiver(dto.getArbeidsgiverReferanse(), hentNavn))
                         .medUttakArbeidType(UttakArbeidType.fraKode(dto.getUttakArbeidType().getKode()))
                         .build())
                 .build();
     }
 
-    static  Arbeidsgiver mapArbeidsgiver(ArbeidsgiverDto arbeidsgiverDto) {
-        if (arbeidsgiverDto == null || (arbeidsgiverDto.getIdentifikator() == null && arbeidsgiverDto.getAktørId() == null)) {
-            return null;
-        }
-        String id = arbeidsgiverDto.getAktørId() != null ? arbeidsgiverDto.getAktørId() : arbeidsgiverDto.getIdentifikator();
-        return ArbeidsgiverMapper.finnArbeidsgiver(arbeidsgiverDto.getNavn(), id);
+    static  Arbeidsgiver mapArbeidsgiver(String arbeidsgiverReferanse, UnaryOperator<String> hentNavn) {
+        return arbeidsgiverReferanse != null ? new Arbeidsgiver(arbeidsgiverReferanse, hentNavn.apply(arbeidsgiverReferanse)) : null;
     }
 }

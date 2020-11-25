@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.melding.datamapper.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
@@ -31,6 +32,8 @@ public abstract class OppsettForGjengivelseAvManuellTest {
 
     @Mock
     BrevParametere brevParametere;
+    @Mock
+    ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     private JSONObject testdata;
     private ObjectMapper jsonMapper = new ObjectMapper();
@@ -43,7 +46,7 @@ public abstract class OppsettForGjengivelseAvManuellTest {
 
     private BehandlingRestKlient behandlingRestKlient = new RedirectedToJsonResource();
 
-    protected DomeneobjektProvider domeneobjektProvider = new DomeneobjektProvider(behandlingRestKlient);
+    protected DomeneobjektProvider domeneobjektProvider = new DomeneobjektProvider(behandlingRestKlient, arbeidsgiverTjeneste);
 
 
     protected void setup(String scenario) {

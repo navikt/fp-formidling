@@ -48,7 +48,7 @@ public final class BeregningsresultatMapper {
                 .filter(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus()))
                 .map(BeregningsresultatAndel::getArbeidsgiver)
                 .flatMap(Optional::stream)
-                .map(Arbeidsgiver::getNavn)
+                .map(Arbeidsgiver::getArbeidsgiverReferanse)
                 .distinct()
                 .count());
 

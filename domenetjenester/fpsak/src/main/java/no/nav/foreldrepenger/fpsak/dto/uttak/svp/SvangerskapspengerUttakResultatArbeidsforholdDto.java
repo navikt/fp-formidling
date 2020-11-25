@@ -3,11 +3,10 @@ package no.nav.foreldrepenger.fpsak.dto.uttak.svp;
 import java.util.List;
 
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
-import no.nav.foreldrepenger.fpsak.dto.uttak.ArbeidsgiverDto;
 
 public class SvangerskapspengerUttakResultatArbeidsforholdDto {
     private KodeDto arbeidsforholdIkkeOppfyltÅrsak;
-    private ArbeidsgiverDto arbeidsgiver;
+    private String arbeidsgiverReferanse;
     private KodeDto  arbeidType;
 
     private List<SvangerskapspengerUttakResultatPeriodeDto> perioder;
@@ -19,8 +18,8 @@ public class SvangerskapspengerUttakResultatArbeidsforholdDto {
         return arbeidsforholdIkkeOppfyltÅrsak;
     }
 
-    public ArbeidsgiverDto getArbeidsgiver() {
-        return arbeidsgiver;
+    public String getArbeidsgiverReferanse() {
+        return arbeidsgiverReferanse;
     }
 
     public KodeDto getArbeidType() {

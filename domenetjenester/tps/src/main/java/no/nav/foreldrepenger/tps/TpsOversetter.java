@@ -17,6 +17,7 @@ import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Aktoer;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Doedsdato;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Foedselsdato;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Kjoenn;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Person;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent;
@@ -46,6 +47,7 @@ public class TpsOversetter {
         String navn = bruker.getPersonnavn().getSammensattNavn();
 
         LocalDate dødsdato = finnDødsdato(bruker);
+        LocalDate fødselsdato = finnFødselsdato(bruker);
 
         Aktoer aktoer = bruker.getAktoer();
         PersonIdent pi = (PersonIdent) aktoer;
@@ -58,6 +60,7 @@ public class TpsOversetter {
                 .medPersonIdent(no.nav.foreldrepenger.melding.typer.PersonIdent.fra(ident))
                 .medNavn(navn)
                 .medDødsdato(dødsdato)
+                .medFødselsdato(fødselsdato)
                 .medNavBrukerKjønn(kjønn)
                 .medPersonstatusType(personstatus)
                 .build();
@@ -70,6 +73,15 @@ public class TpsOversetter {
             dødsdato = DateUtil.convertToLocalDate(dødsdatoJaxb.getDoedsdato());
         }
         return dødsdato;
+    }
+
+    private LocalDate finnFødselsdato(Bruker person) {
+        LocalDate fødselsdato = null;
+        Foedselsdato fødselsdatoJaxb = person.getFoedselsdato();
+        if (fødselsdatoJaxb != null) {
+            fødselsdato = DateUtil.convertToLocalDate(fødselsdatoJaxb.getFoedselsdato());
+        }
+        return fødselsdato;
     }
 
     private NavBrukerKjønn tilBrukerKjønn(Kjoenn kjoenn) {

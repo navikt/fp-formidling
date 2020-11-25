@@ -1,20 +1,12 @@
 package no.nav.foreldrepenger.melding.virksomhet;
 
-import no.nav.foreldrepenger.melding.typer.AktørId;
-
 public class Arbeidsgiver {
     private String navn;
-    private Virksomhet virksomhet;
-    private AktørId arbeidsgiverAktørId;
+    private String arbeidsgiverReferanse;
 
-    public Virksomhet getVirksomhet() {
-        return virksomhet;
-    }
-
-    public Arbeidsgiver(String navn, Virksomhet virksomhet, AktørId arbeidsgiverAktørId) {
+    public Arbeidsgiver(String arbeidsgiverReferanse, String navn) {
         this.navn = navn;
-        this.virksomhet = virksomhet;
-        this.arbeidsgiverAktørId = arbeidsgiverAktørId;
+        this.arbeidsgiverReferanse = arbeidsgiverReferanse;
     }
 
     /**
@@ -22,28 +14,14 @@ public class Arbeidsgiver {
      * f.eks. for Frilans el.)
      */
     public String getIdentifikator() {
-        if (arbeidsgiverAktørId != null) {
-            return arbeidsgiverAktørId.getId();
-        }
-        if (virksomhet != null) {
-            return virksomhet.getOrgnr();
-        }
-        return null;
-    }
-
-    public boolean erAktørId() {
-        return this.arbeidsgiverAktørId != null;
-    }
-
-    public AktørId getAktørId() {
-        return arbeidsgiverAktørId;
-    }
-
-    public boolean getErVirksomhet() {
-        return this.virksomhet != null;
+        return arbeidsgiverReferanse;
     }
 
     public String getNavn() {
         return navn;
+    }
+
+    public String getArbeidsgiverReferanse() {
+        return arbeidsgiverReferanse;
     }
 }

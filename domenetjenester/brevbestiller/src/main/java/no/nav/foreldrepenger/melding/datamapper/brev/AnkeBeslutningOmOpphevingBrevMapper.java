@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import no.nav.foreldrepenger.melding.anke.Anke;
+import no.nav.foreldrepenger.melding.anke.AnkeVurdering;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -38,14 +39,14 @@ public class AnkeBeslutningOmOpphevingBrevMapper extends FritekstmalBrevMapper {
     @Override
     Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {
         Optional<Anke> anke  = domeneobjektProvider.hentAnkebehandling(behandling);
-       if( anke.isPresent()) {
-           return new Brevdata()
-                   .leggTil("ytelseType", hendelse.getYtelseType().getKode())
-                   .leggTil("fritekst", anke.get().getFritekstTilBrev());
-       }
-       else{
-           return new Brevdata()
-                   .leggTil("ytelseType", hendelse.getYtelseType().getKode());
-       }
+
+        return new Brevdata()
+               .leggTil("ytelseType", hendelse.getYtelseType().getKode())
+               .leggTil("fritekst", anke.map(Anke::getFritekstTilBrev).orElse(""))
+               .leggTil("utenOppheve", erAnkeHjemsendUtenOpphev(anke.map(Anke::getAnkeVurdering).orElse(AnkeVurdering.UDEFINERT)));
+    }
+
+    boolean erAnkeHjemsendUtenOpphev(AnkeVurdering ankeVurdering) {
+        return AnkeVurdering.ANKE_HJEMSEND_UTEN_OPPHEV.equals(ankeVurdering);
     }
 }

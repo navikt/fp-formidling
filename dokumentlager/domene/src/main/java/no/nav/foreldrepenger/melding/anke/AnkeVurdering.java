@@ -18,6 +18,7 @@ public enum AnkeVurdering implements Kodeverdi {
 
     ANKE_STADFESTE_YTELSESVEDTAK("ANKE_STADFESTE_YTELSESVEDTAK"),
     ANKE_OPPHEVE_OG_HJEMSENDE("ANKE_OPPHEVE_OG_HJEMSENDE"),
+    ANKE_HJEMSEND_UTEN_OPPHEV("ANKE_HJEMSENDE_UTEN_OPPHEV"),
     ANKE_OMGJOER("ANKE_OMGJOER"),
     ANKE_AVVIS("ANKE_AVVIS"),
     UDEFINERT("-"),
@@ -38,7 +39,7 @@ public enum AnkeVurdering implements Kodeverdi {
 
     private String kode;
 
-    private AnkeVurdering(String kode) {
+    AnkeVurdering(String kode) {
         this.kode = kode;
     }
 

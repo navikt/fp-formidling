@@ -11,6 +11,7 @@ import no.nav.foreldrepenger.melding.typer.PersonIdent;
 
 public class Personinfo {
     private AktørId aktørId;
+    private LocalDate fødselsdato;
     private LocalDate dødsdato;
 
     //Brukt for mapping
@@ -40,6 +41,10 @@ public class Personinfo {
 
     public PersonstatusType getPersonstatus() {
         return personstatus;
+    }
+
+    public LocalDate getFødselsdato() {
+        return fødselsdato;
     }
 
     public LocalDate getDødsdato() {
@@ -84,6 +89,11 @@ public class Personinfo {
 
         public Builder medDødsdato(LocalDate dødsdato) {
             personinfoMal.dødsdato = dødsdato;
+            return this;
+        }
+
+        public Builder medFødselsdato(LocalDate dato) {
+            personinfoMal.fødselsdato = dato;
             return this;
         }
 

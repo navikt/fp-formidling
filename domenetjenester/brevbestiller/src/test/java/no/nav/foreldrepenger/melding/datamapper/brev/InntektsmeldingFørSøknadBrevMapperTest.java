@@ -34,7 +34,7 @@ public class InntektsmeldingFørSøknadBrevMapperTest {
     @BeforeEach
     public void setup() {
         dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
-        inntektsmelding = new Inntektsmelding(ARBEIDSGIVER, "123", FØRSTE_JANUAR, Collections.emptyList(), FØRSTE_JANUAR);
+        inntektsmelding = new Inntektsmelding(ARBEIDSGIVER, "123", Collections.emptyList(), FØRSTE_JANUAR);
         iay = InntektArbeidYtelse.ny().medInntektsmeldinger(List.of(inntektsmelding)).build();
     }
 

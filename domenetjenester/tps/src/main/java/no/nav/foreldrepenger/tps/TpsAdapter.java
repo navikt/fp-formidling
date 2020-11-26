@@ -45,9 +45,6 @@ public class TpsAdapter {
     public Personinfo hentKjerneinformasjon(PersonIdent personIdent, AktørId aktørId) {
         HentPersonRequest request = new HentPersonRequest();
         request.setAktoer(TpsUtil.lagPersonIdent(personIdent.getIdent()));
-        request.getInformasjonsbehov().add(Informasjonsbehov.ADRESSE);
-        request.getInformasjonsbehov().add(Informasjonsbehov.KOMMUNIKASJON);
-        request.getInformasjonsbehov().add(Informasjonsbehov.FAMILIERELASJONER);
         try {
             return håndterPersoninfoRespons(aktørId, request);
         } catch (HentPersonPersonIkkeFunnet e) {

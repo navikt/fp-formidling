@@ -17,12 +17,10 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStat
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.melding.dtomapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
-import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-import no.nav.foreldrepenger.melding.virksomhet.Virksomhet;
 
 public class BeregningsgrunnlagDtoMapper {
 
@@ -37,14 +35,13 @@ public class BeregningsgrunnlagDtoMapper {
     }
 
     private static Arbeidsgiver mapArbeidsgiverFraDto(BeregningsgrunnlagArbeidsforholdDto dto) {
-        AktørId aktørId = null;
-        Virksomhet virksomhet = null;
+        String arbeidsgiverReferanse;
         if (dto.getAktørId() != null) {
-            aktørId = dto.getAktørId();
+            arbeidsgiverReferanse = dto.getAktørId().getId();
         } else {
-            virksomhet = new Virksomhet(dto.getArbeidsgiverNavn(), dto.getArbeidsgiverId());
+            arbeidsgiverReferanse = dto.getArbeidsgiverId();
         }
-        return new Arbeidsgiver(dto.getArbeidsgiverNavn(), virksomhet, aktørId);
+        return new Arbeidsgiver(arbeidsgiverReferanse, dto.getArbeidsgiverNavn());
     }
 
     public static Beregningsgrunnlag mapBeregningsgrunnlagFraDto(BeregningsgrunnlagDto dto) {

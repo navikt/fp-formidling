@@ -24,7 +24,6 @@ import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-import no.nav.foreldrepenger.melding.virksomhet.Virksomhet;
 
 public class AktivitetsMapperTest {
 
@@ -116,7 +115,7 @@ public class AktivitetsMapperTest {
                 .medUtbetalingsprosent(BigDecimal.valueOf(utbetalingsprosent))
                 .medGraderingInnvilget(isGradering)
                 .medUttakAktivitet(UttakAktivitet.ny()
-                        .medArbeidsgiver(new Arbeidsgiver(arbNavn, new Virksomhet(arbNavn, orgNr), null))
+                        .medArbeidsgiver(new Arbeidsgiver(orgNr, arbNavn))
                         .medUttakArbeidType(arbType)
                         .medArbeidsforholdRef(ArbeidsforholdRef.ref(arbForhold)).build())
                 .build());
@@ -126,7 +125,7 @@ public class AktivitetsMapperTest {
         return andelList.add(BeregningsresultatAndel.ny()
                 .medAktivitetStatus(aktivitetStatus)
                 .medArbeidsforholdRef(ArbeidsforholdRef.ref(arbForhold))
-                .medArbeidsgiver(new Arbeidsgiver(arbNavn, new Virksomhet(arbNavn, orgNr), null))
+                .medArbeidsgiver(new Arbeidsgiver(orgNr, arbNavn))
                 .medDagsats(dagsats)
                 .medStillingsprosent(BigDecimal.valueOf(stillingsprosent))
                 .build());

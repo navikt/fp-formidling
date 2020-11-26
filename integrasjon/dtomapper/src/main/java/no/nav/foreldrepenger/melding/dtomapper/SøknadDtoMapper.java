@@ -6,10 +6,7 @@ import no.nav.foreldrepenger.melding.ytelsefordeling.OppgittRettighet;
 
 public class SøknadDtoMapper {
     public static Søknad mapSøknadFraDto(SoknadDto dto) {
-        boolean aleneomsorgForBarnet = false;
-        if (dto.getOppgittRettighet() != null) {
-            aleneomsorgForBarnet = dto.getOppgittRettighet().isAleneomsorgForBarnet();
-        }
+        boolean aleneomsorgForBarnet = dto.getOppgittRettighet() != null && dto.getOppgittRettighet().isAleneomsorgForBarnet();
         return new Søknad(dto.getMottattDato(), dto.getSoknadsdato(), new OppgittRettighet(aleneomsorgForBarnet));
     }
 }

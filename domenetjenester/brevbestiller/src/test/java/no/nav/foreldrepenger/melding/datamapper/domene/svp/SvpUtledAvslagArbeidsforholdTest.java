@@ -12,16 +12,13 @@ import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.melding.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-import no.nav.foreldrepenger.melding.virksomhet.Virksomhet;
 
 public class SvpUtledAvslagArbeidsforholdTest {
 
-    private static final String VIRKSOMHET_NAVN = "VIRKSOMHET";
     private static final String ARBEIDSGIVER_NAVN = "ARBEIDSGIVER";
     private static final String ORGNR = "123";
 
-    private static final Virksomhet VIRKSOMHET = new Virksomhet(VIRKSOMHET_NAVN, ORGNR);
-    private static final Arbeidsgiver ARBEIDSGIVER = new Arbeidsgiver(ARBEIDSGIVER_NAVN, VIRKSOMHET, null);
+    private static final Arbeidsgiver ARBEIDSGIVER = new Arbeidsgiver(ORGNR, ARBEIDSGIVER_NAVN);
 
     @Test
     public void skal_filtrere_bort_URAer_med_urelevant_årsak() {

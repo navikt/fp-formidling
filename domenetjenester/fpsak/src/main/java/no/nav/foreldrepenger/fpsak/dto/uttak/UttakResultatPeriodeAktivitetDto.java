@@ -10,7 +10,7 @@ public class UttakResultatPeriodeAktivitetDto {
     private BigDecimal trekkdagerDesimaler;
     private BigDecimal prosentArbeid;
     private String arbeidsforholdId;
-    private ArbeidsgiverDto arbeidsgiver;
+    private String arbeidsgiverReferanse;
     private BigDecimal utbetalingsgrad;
     private KodeDto uttakArbeidType;
     private boolean gradering;
@@ -42,8 +42,8 @@ public class UttakResultatPeriodeAktivitetDto {
         return uttakArbeidType;
     }
 
-    public ArbeidsgiverDto getArbeidsgiver() {
-        return arbeidsgiver;
+    public String getArbeidsgiverReferanse() {
+        return arbeidsgiverReferanse;
     }
 
     public boolean isGradering() {

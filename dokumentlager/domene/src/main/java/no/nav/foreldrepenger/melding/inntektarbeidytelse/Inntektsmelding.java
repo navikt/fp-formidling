@@ -5,31 +5,24 @@ import java.util.List;
 
 
 public class Inntektsmelding {
-
-    private String arbeidsgiver;
-    private String arbeidsgiverOrgnr;
-    private LocalDate arbeidsgiverStartdato;
+    private String arbeidsgiverReferanse;
+    private String arbeidsgiverNavn;
     private List<UtsettelsePeriode> utsettelsePerioder;
     private LocalDate innsendingstidspunkt;
 
-    public Inntektsmelding(String arbeidsgiver, String arbeidsgiverOrgnr, LocalDate arbeidsgiverStartdato, List<UtsettelsePeriode> utsettelsePerioder, LocalDate innsendingstidspunkt) {
-        this.arbeidsgiver = arbeidsgiver;
-        this.arbeidsgiverOrgnr = arbeidsgiverOrgnr;
-        this.arbeidsgiverStartdato = arbeidsgiverStartdato;
+    public Inntektsmelding(String arbeidsgiverNavn, String arbeidsgiverOrgnr, List<UtsettelsePeriode> utsettelsePerioder, LocalDate innsendingstidspunkt) {
+        this.arbeidsgiverNavn = arbeidsgiverNavn;
+        this.arbeidsgiverReferanse = arbeidsgiverOrgnr;
         this.utsettelsePerioder = utsettelsePerioder;
         this.innsendingstidspunkt = innsendingstidspunkt;
     }
 
-    public String getArbeidsgiver() {
-        return arbeidsgiver;
+    public String getArbeidsgiverReferanse() {
+        return arbeidsgiverReferanse;
     }
 
-    public String getArbeidsgiverOrgnr() {
-        return arbeidsgiverOrgnr;
-    }
-
-    public LocalDate getArbeidsgiverStartdato() {
-        return arbeidsgiverStartdato;
+    public String getArbeidsgiverNavn() {
+        return arbeidsgiverNavn;
     }
 
     public List<UtsettelsePeriode> getUtsettelsePerioder() {
@@ -38,5 +31,9 @@ public class Inntektsmelding {
 
     public LocalDate getInnsendingstidspunkt() {
         return innsendingstidspunkt;
+    }
+
+    public void setArbeidsgiverNavn(String arbeidsgiverNavn) {
+        this.arbeidsgiverNavn = arbeidsgiverNavn;
     }
 }

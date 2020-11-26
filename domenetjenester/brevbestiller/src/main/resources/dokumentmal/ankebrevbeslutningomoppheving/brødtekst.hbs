@@ -1,3 +1,6 @@
+{{#if utenOppheve}}
+{{i18n "Send_tilbake_til_NFP_Uten_oppheve"}}
+{{else}}
 {{#eq ytelseType "SVP"}}
 {{i18n "Vi_har_opphevet_vedtaket_ditt_paa_svangerskapspenger"}}
 {{else}}
@@ -7,6 +10,7 @@
 {{i18n "Vi_har_opphevet_vedtaket_ditt_paa_engangsstonad"}}
     {{/eq}}
 {{/eq}}
+{{/if}}
 {{i18n "Dette_har_vi_lagt_vekt_paa_i_vurderingen_vaar"}}
 {{fritekst}}
 {{i18n "generell_ankebrev_tekst" kontaktTelefonnummer navnAvsenderEnhet}}

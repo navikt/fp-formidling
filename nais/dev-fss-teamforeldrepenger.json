@@ -40,6 +40,7 @@
     "OPENIDCONNECT_USERNAME": "fpformidling-q1",
     "ORGANISASJON_RS_URL": "https://modapp-q1.adeo.no/ereg/api/v1/organisasjon",
     "PERSON_V3_URL": "https://service-gw-q1.preprod.local/",
+    "PDL_BASE_URL" : "http://pdl-api.default",
     "KODEVERK_V2_URL": "https://kodeverk.nais.preprod.local/ws/kodeverk/v2",
     "SCHEMA_REGISTRY_URL": "https://kafka-test-schema-registry.nais.preprod.local",
     "SECURITYTOKENSERVICE_URL": "https://sts-q1.preprod.local/SecurityTokenServiceProvider/",

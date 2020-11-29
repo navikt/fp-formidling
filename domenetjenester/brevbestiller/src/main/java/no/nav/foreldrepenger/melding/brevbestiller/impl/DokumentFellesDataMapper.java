@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.PersonTjeneste;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -20,12 +21,9 @@ import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.organisasjon.Virksomhet;
 import no.nav.foreldrepenger.melding.organisasjon.VirksomhetTjeneste;
-import no.nav.foreldrepenger.melding.personopplysning.PersonstatusType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
-import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.melding.verge.Verge;
-import no.nav.foreldrepenger.tps.TpsTjeneste;
 
 @ApplicationScoped
 public class DokumentFellesDataMapper {
@@ -33,7 +31,7 @@ public class DokumentFellesDataMapper {
     private final String DEFAULT_PERSON_STATUS = "ANNET";
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private DomeneobjektProvider domeneobjektProvider;
-    private TpsTjeneste tpsTjeneste;
+    private PersonTjeneste tpsTjeneste;
     private VirksomhetTjeneste virksomhetTjeneste;
 
     public DokumentFellesDataMapper() {
@@ -41,7 +39,7 @@ public class DokumentFellesDataMapper {
     }
 
     @Inject
-    public DokumentFellesDataMapper(TpsTjeneste tpsTjeneste,
+    public DokumentFellesDataMapper(PersonTjeneste tpsTjeneste,
                                     DomeneobjektProvider domeneobjektProvider,
                                     NavKontaktKonfigurasjon navKontaktKonfigurasjon,
                                     VirksomhetTjeneste virksomhetTjeneste) {
@@ -96,16 +94,9 @@ public class DokumentFellesDataMapper {
         Virksomhet virksomhet = getVirksomhet(verge);
 
         DokumentAdresse adresseVerge = fra(virksomhet);
-        PersonIdent fnrBruker;
-        String navnBruker;
-        PersonstatusType personstatusBruker;
 
-
-        Personinfo personinfo = tpsTjeneste.hentBrukerForAktør(aktørIdBruker)
+        Personinfo personinfoBruker = tpsTjeneste.hentBrukerForAktør(aktørIdBruker)
                 .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeFnrForAktørId(aktørIdBruker).toException());
-        fnrBruker = personinfo.getPersonIdent();
-        navnBruker = personinfo.getNavn();
-        personstatusBruker = personinfo.getPersonstatus();
 
 
         String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
@@ -114,9 +105,7 @@ public class DokumentFellesDataMapper {
         buildDokumentFellesVirksomhet(behandling,
                 dokumentData,
                 adresseVerge,
-                fnrBruker,
-                navnBruker,
-                personstatusBruker,
+                personinfoBruker,
                 virksomhet,
                 verge.getNavn(),
                 avsenderEnhet,
@@ -130,28 +119,16 @@ public class DokumentFellesDataMapper {
     private void opprettDokumentDataForMottaker(Behandling behandling,
                                                 DokumentData dokumentData,
                                                 DokumentHendelse dokumentHendelse,
-                                                AktørId aktørId,
+                                                AktørId aktørIdMottaker,
                                                 AktørId aktørIdBruker,Optional<DokumentFelles.Kopi> erKopi) {
 
-        Adresseinfo adresseinfo = innhentAdresseopplysningerForDokumentsending(aktørId)
-                .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeAdresse(aktørId).toException());
+        Adresseinfo adresseinfo = innhentAdresseopplysningerForDokumentsending(aktørIdMottaker)
+                .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeAdresse(aktørIdMottaker).toException());
 
         DokumentAdresse adresse = fra(adresseinfo);
-        PersonIdent fnrBruker;
-        String navnBruker;
-        PersonstatusType personstatusBruker;
 
-        if (Objects.equals(aktørId, aktørIdBruker)) {
-            fnrBruker = adresseinfo.getPersonIdent();
-            navnBruker = adresseinfo.getMottakerNavn();
-            personstatusBruker = adresseinfo.getPersonstatus();
-        } else {
-            Personinfo personinfo = tpsTjeneste.hentBrukerForAktør(aktørIdBruker)
-                    .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeFnrForAktørId(aktørIdBruker).toException());
-            fnrBruker = personinfo.getPersonIdent();
-            navnBruker = personinfo.getNavn();
-            personstatusBruker = personinfo.getPersonstatus();
-        }
+        var personinfoBruker = Objects.equals(aktørIdMottaker, aktørIdBruker) ? fraAdresseinfo(aktørIdBruker, adresseinfo) :
+                tpsTjeneste.hentBrukerForAktør(aktørIdBruker).orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeFnrForAktørId(aktørIdBruker).toException());
 
         String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
                 dokumentHendelse.getBehandlendeEnhetNavn() : behandling.getBehandlendeEnhetNavn();
@@ -159,9 +136,7 @@ public class DokumentFellesDataMapper {
         buildDokumentFellesPerson(behandling,
                 dokumentData,
                 adresse,
-                fnrBruker,
-                navnBruker,
-                personstatusBruker,
+                personinfoBruker,
                 adresseinfo,
                 avsenderEnhet,
                 erKopi);
@@ -171,9 +146,7 @@ public class DokumentFellesDataMapper {
     private void buildDokumentFellesVirksomhet(Behandling behandling,
                                      DokumentData dokumentData,
                                      DokumentAdresse adresse,
-                                     PersonIdent fnrBruker,
-                                     String navnBruker,
-                                     PersonstatusType personstatusBruker,
+                                     Personinfo personinfoBruker,
                                      Virksomhet virksomhet,
                                      String vergeNavn,
                                      String avsenderEnhet,
@@ -192,12 +165,12 @@ public class DokumentFellesDataMapper {
                 .medMottakerId(virksomhet.getOrgnr())
                 .medMottakerNavn(virksomhet.getNavn() + (vergeNavn == null || "".equals(vergeNavn) ? "" : " c/o " + vergeNavn))
                 .medSaksnummer(new Saksnummer(fagsak.getSaksnummer().getVerdi()))
-                .medSakspartId(fnrBruker)
-                .medSakspartNavn(navnBruker)
+                .medSakspartId(personinfoBruker.getPersonIdent())
+                .medSakspartNavn(personinfoBruker.getNavn())
                 .medErKopi(erKopi)
                 .medMottakerType(DokumentFelles.MottakerType.ORGANISASJON)
                 .medSpråkkode(behandling.getSpråkkode())
-                .medSakspartPersonStatus(getPersonstatusVerdi(personstatusBruker));
+                .medSakspartPersonStatus(getPersonstatusVerdi(personinfoBruker));
 
 
         if (behandling.isToTrinnsBehandling() || behandling.erKlage()) {
@@ -211,9 +184,7 @@ public class DokumentFellesDataMapper {
     private void buildDokumentFellesPerson(Behandling behandling,
                                      DokumentData dokumentData,
                                      DokumentAdresse adresse,
-                                     PersonIdent fnrBruker,
-                                     String navnBruker,
-                                     PersonstatusType personstatusBruker,
+                                     Personinfo personinfoBruker,
                                      Adresseinfo adresseinfo,
                                      String avsenderEnhet,
                                      Optional<DokumentFelles.Kopi> erKopi) {
@@ -231,12 +202,12 @@ public class DokumentFellesDataMapper {
                 .medMottakerId(adresseinfo.getPersonIdent())
                 .medMottakerNavn(adresseinfo.getMottakerNavn())
                 .medSaksnummer(new Saksnummer(fagsak.getSaksnummer().getVerdi()))
-                .medSakspartId(fnrBruker)
-                .medSakspartNavn(navnBruker)
+                .medSakspartId(personinfoBruker.getPersonIdent())
+                .medSakspartNavn(personinfoBruker.getNavn())
                 .medErKopi(erKopi)
                 .medMottakerType(DokumentFelles.MottakerType.PERSON)
                 .medSpråkkode(behandling.getSpråkkode())
-                .medSakspartPersonStatus(getPersonstatusVerdi(personstatusBruker));
+                .medSakspartPersonStatus(getPersonstatusVerdi(personinfoBruker));
 
         if (behandling.isToTrinnsBehandling() || behandling.erKlage()) {
             builder.medAutomatiskBehandlet(Boolean.FALSE)
@@ -247,13 +218,12 @@ public class DokumentFellesDataMapper {
     }
 
 //Todo når vi har koblet oss fra team CCM bør denne bruke faktiske koder og ikke gjøre om
-    private String getPersonstatusVerdi(PersonstatusType personstatus) {
-        return PersonstatusType.erDød(personstatus) ? DOD_PERSON_STATUS : DEFAULT_PERSON_STATUS;
+    private String getPersonstatusVerdi(Personinfo personinfo) {
+        return personinfo.isRegistrertDød() ? DOD_PERSON_STATUS : DEFAULT_PERSON_STATUS;
     }
 
     private Optional<Adresseinfo> innhentAdresseopplysningerForDokumentsending(AktørId aktørId) {
-        Optional<Personinfo> optFnr = tpsTjeneste.hentBrukerForAktør(aktørId);
-        return optFnr.map(s -> tpsTjeneste.hentAdresseinformasjon(s.getPersonIdent()));
+        return tpsTjeneste.hentAdresseinformasjon(aktørId);
     }
 
     private DokumentAdresse fra(Adresseinfo adresseinfo) {
@@ -309,6 +279,14 @@ public class DokumentFellesDataMapper {
                 .medAdresselinje1(navKontaktKonfigurasjon.getBrevReturadresseAdresselinje1())
                 .medPostNummer(navKontaktKonfigurasjon.getBrevReturadressePostnummer())
                 .medPoststed(navKontaktKonfigurasjon.getBrevReturadressePoststed())
+                .build();
+    }
+
+    private static Personinfo fraAdresseinfo(AktørId aktørId, Adresseinfo adresseinfo) {
+        return Personinfo.getbuilder(aktørId)
+                .medPersonIdent(adresseinfo.getPersonIdent())
+                .medNavn(adresseinfo.getMottakerNavn())
+                .medRegistrertDød(adresseinfo.isRegistrertDød())
                 .build();
     }
 }

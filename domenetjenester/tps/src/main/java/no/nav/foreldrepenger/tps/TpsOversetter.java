@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
-import no.nav.foreldrepenger.melding.personopplysning.PersonstatusType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Aktoer;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker;
@@ -21,12 +20,12 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.Foedselsdato;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Kjoenn;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Person;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Personstatus;
 import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
 
 @ApplicationScoped
 public class TpsOversetter {
     private static final Logger log = LoggerFactory.getLogger(TpsOversetter.class);
+
 
     private TpsAdresseOversetter tpsAdresseOversetter;
 
@@ -53,16 +52,15 @@ public class TpsOversetter {
         PersonIdent pi = (PersonIdent) aktoer;
         String ident = pi.getIdent().getIdent();
         NavBrukerKjønn kjønn = tilBrukerKjønn(bruker.getKjoenn());
-        PersonstatusType personstatus = tilPersonstatusType(bruker.getPersonstatus());
+        boolean registrertDød = TpsUtil.harPersonstatusDød(bruker);
 
-        return new Personinfo.Builder()
-                .medAktørId(aktørId)
+        return Personinfo.getbuilder(aktørId)
                 .medPersonIdent(no.nav.foreldrepenger.melding.typer.PersonIdent.fra(ident))
                 .medNavn(navn)
                 .medDødsdato(dødsdato)
                 .medFødselsdato(fødselsdato)
                 .medNavBrukerKjønn(kjønn)
-                .medPersonstatusType(personstatus)
+                .medRegistrertDød(registrertDød)
                 .build();
     }
 
@@ -91,8 +89,6 @@ public class TpsOversetter {
                 .orElse(NavBrukerKjønn.UDEFINERT);
     }
 
-    private PersonstatusType tilPersonstatusType(Personstatus personstatus) {
-        return PersonstatusType.fraKode(personstatus.getPersonstatus().getValue());
-    }
+
 
 }

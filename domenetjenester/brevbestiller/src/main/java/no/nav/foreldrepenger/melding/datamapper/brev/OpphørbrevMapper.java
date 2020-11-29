@@ -23,6 +23,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
+import no.nav.foreldrepenger.PersonTjeneste;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -54,7 +55,6 @@ import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.tps.TpsTjeneste;
 import no.nav.vedtak.feil.Feil;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 import no.nav.vedtak.util.Tuple;
@@ -72,7 +72,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
     }
 
     private BrevParametere brevParametere;
-    private TpsTjeneste tpsTjeneste;
+    private PersonTjeneste tpsTjeneste;
 
     public OpphørbrevMapper() {
     }
@@ -80,7 +80,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
     @Inject
     public OpphørbrevMapper(BrevParametere brevParametere,
                             DomeneobjektProvider domeneobjektProvider,
-                            TpsTjeneste tpsTjeneste) {
+                            PersonTjeneste tpsTjeneste) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
         this.tpsTjeneste = tpsTjeneste;

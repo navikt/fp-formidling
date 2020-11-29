@@ -14,7 +14,6 @@ import no.nav.foreldrepenger.melding.aktør.AdresseType;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.geografisk.Poststed;
 import no.nav.foreldrepenger.melding.geografisk.PoststedKodeverkRepository;
-import no.nav.foreldrepenger.melding.personopplysning.PersonstatusType;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Gateadresse;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Kodeverdi;
@@ -24,7 +23,6 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.MidlertidigPostadresse;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.MidlertidigPostadresseNorge;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.MidlertidigPostadresseUtland;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Person;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Personstatus;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.PostboksadresseNorsk;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.StedsadresseNorge;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.StrukturertAdresse;
@@ -120,7 +118,7 @@ public class TpsAdresseOversetter {
         return new Adresseinfo.Builder(AdresseType.UKJENT_ADRESSE,
                 TpsUtil.getPersonIdent(bruker),
                 bruker.getPersonnavn().getSammensattNavn(),
-                tilPersonstatusType(bruker.getPersonstatus())).build();
+                TpsUtil.harPersonstatusDød(bruker)).build();
     }
 
     private Adresseinfo konverterStrukturertAdresse(Bruker bruker,
@@ -140,11 +138,10 @@ public class TpsAdresseOversetter {
 
     private Adresseinfo.Builder adresseBuilderForPerson(Bruker bruker,
                                                         AdresseType gjeldende) {
-        Personstatus personstatus = bruker.getPersonstatus();
         return new Adresseinfo.Builder(gjeldende,
                 TpsUtil.getPersonIdent(bruker),
                 TpsUtil.getPersonnavn(bruker),
-                personstatus == null ? null : tilPersonstatusType(personstatus));
+                TpsUtil.harPersonstatusDød(bruker));
     }
 
     private String postboksadresselinje(PostboksadresseNorsk postboksadresseNorsk) {
@@ -276,10 +273,6 @@ public class TpsAdresseOversetter {
 
     private String tilLand(Landkoder landkoder) {
         return null == landkoder ? null : landkoder.getValue();
-    }
-
-    private PersonstatusType tilPersonstatusType(Personstatus personstatus) {
-        return PersonstatusType.fraKode(personstatus.getPersonstatus().getValue());
     }
 
     private String hvisfinnes(Object object) {

@@ -17,6 +17,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
+import no.nav.foreldrepenger.PersonTjeneste;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
@@ -43,7 +44,6 @@ import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 import no.nav.foreldrepenger.melding.vilkår.VilkårTypeKoder;
-import no.nav.foreldrepenger.tps.TpsTjeneste;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -70,7 +70,7 @@ public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
     }
 
     private BrevParametere brevParametere;
-    private TpsTjeneste tpsTjeneste;
+    private PersonTjeneste tpsTjeneste;
 
     public AvslagEngangstønadBrevMapper() {
     }
@@ -78,7 +78,7 @@ public class AvslagEngangstønadBrevMapper extends DokumentTypeMapper {
     @Inject
     public AvslagEngangstønadBrevMapper(BrevParametere brevParametere,
                                         DomeneobjektProvider domeneobjektProvider,
-                                        TpsTjeneste tpsTjeneste) {
+                                        PersonTjeneste tpsTjeneste) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
         this.tpsTjeneste = tpsTjeneste;

@@ -1,17 +1,16 @@
 package no.nav.foreldrepenger.melding.datamapper.arbeidsgiver;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.PersonTjeneste;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.OrganisasjonsNummerValidator;
 import no.nav.foreldrepenger.melding.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.melding.typer.AktørId;
-import no.nav.foreldrepenger.tps.TpsTjeneste;
 import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.util.LRUCache;
 
@@ -22,7 +21,7 @@ public class ArbeidsgiverTjeneste {
 
     private static final long CACHE_ELEMENT_LIVE_TIME_MS = TimeUnit.MILLISECONDS.convert(12, TimeUnit.HOURS);
     private static final long SHORT_CACHE_ELEMENT_LIVE_TIME_MS = TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
-    private TpsTjeneste tpsTjeneste;
+    private PersonTjeneste tpsTjeneste;
     private LRUCache<String, ArbeidsgiverOpplysninger> cache = new LRUCache<>(1000, CACHE_ELEMENT_LIVE_TIME_MS);
     private LRUCache<String, ArbeidsgiverOpplysninger> failBackoffCache = new LRUCache<>(100, SHORT_CACHE_ELEMENT_LIVE_TIME_MS);
     private VirksomhetTjeneste virksomhetTjeneste;
@@ -32,7 +31,7 @@ public class ArbeidsgiverTjeneste {
     }
 
     @Inject
-    public ArbeidsgiverTjeneste(TpsTjeneste tpsTjeneste, VirksomhetTjeneste virksomhetTjeneste) {
+    public ArbeidsgiverTjeneste(PersonTjeneste tpsTjeneste, VirksomhetTjeneste virksomhetTjeneste) {
         this.tpsTjeneste = tpsTjeneste;
         this.virksomhetTjeneste = virksomhetTjeneste;
     }
@@ -64,8 +63,7 @@ public class ArbeidsgiverTjeneste {
             Optional<Personinfo> personinfo = hentInformasjonFraTps(arbeidsgiver);
             if (personinfo.isPresent()) {
                 Personinfo info = personinfo.get();
-                String fødselsdato = info.getFødselsdato().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-                ArbeidsgiverOpplysninger nyOpplysninger = new ArbeidsgiverOpplysninger(new AktørId(arbeidsgiver), fødselsdato, info.getNavn(), info.getFødselsdato());
+                ArbeidsgiverOpplysninger nyOpplysninger = new ArbeidsgiverOpplysninger(new AktørId(arbeidsgiver), info.getNavn());
                 cache.put(arbeidsgiver, nyOpplysninger);
                 return nyOpplysninger;
             } else {

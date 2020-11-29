@@ -41,6 +41,7 @@ public enum BehandlingResultatType implements Kodeverdi {
     ANKE_AVVIST("ANKE_AVVIST"),
     ANKE_OMGJOER("ANKE_OMGJOER"),
     ANKE_OPPHEVE_OG_HJEMSENDE("ANKE_OPPHEVE_OG_HJEMSENDE"),
+    ANKE_HJEMSENDE_UTEN_OPPHEV("ANKE_HJEMSENDE_UTEN_OPPHEV"),
     ANKE_YTELSESVEDTAK_STADFESTET("ANKE_YTELSESVEDTAK_STADFESTET"),
     ANKE_DELVIS_OMGJOERING_TIL_GUNST("ANKE_DELVIS_OMGJOERING_TIL_GUNST"),
     ANKE_TIL_UGUNST("ANKE_TIL_UGUNST"),
@@ -53,13 +54,7 @@ public enum BehandlingResultatType implements Kodeverdi {
 
     ;
 
-    private static final Set<BehandlingResultatType> HENLEGGELSESKODER_FOR_SØKNAD = Set.of(HENLAGT_SØKNAD_TRUKKET, HENLAGT_FEILOPPRETTET, HENLAGT_BRUKER_DØD, HENLAGT_SØKNAD_MANGLER, MANGLER_BEREGNINGSREGLER);
-    private static final Set<BehandlingResultatType> HENLEGGELSESKODER_FOR_KLAGE = Set.of(HENLAGT_KLAGE_TRUKKET, HENLAGT_FEILOPPRETTET);
-    private static final Set<BehandlingResultatType> HENLEGGELSESKODER_FOR_INNSYN = Set.of(HENLAGT_INNSYN_TRUKKET, HENLAGT_FEILOPPRETTET);
     private static final Set<BehandlingResultatType> ALLE_HENLEGGELSESKODER = Set.of(HENLAGT_SØKNAD_TRUKKET, HENLAGT_FEILOPPRETTET, HENLAGT_BRUKER_DØD, HENLAGT_KLAGE_TRUKKET, MERGET_OG_HENLAGT, HENLAGT_SØKNAD_MANGLER, HENLAGT_INNSYN_TRUKKET, MANGLER_BEREGNINGSREGLER);
-    private static final Set<BehandlingResultatType> KLAGE_KODER = Set.of(KLAGE_MEDHOLD, KLAGE_YTELSESVEDTAK_STADFESTET, KLAGE_YTELSESVEDTAK_OPPHEVET, KLAGE_AVVIST, DELVIS_MEDHOLD_I_KLAGE, HJEMSENDE_UTEN_OPPHEVE, UGUNST_MEDHOLD_I_KLAGE);
-    private static final Set<BehandlingResultatType> INNSYN_KODER = Set.of(INNSYN_INNVILGET, INNSYN_DELVIS_INNVILGET, INNSYN_AVVIST);
-    private static final Set<BehandlingResultatType> INNVILGET_KODER = Set.of(INNVILGET, FORELDREPENGER_ENDRET);
 
     private static final Map<String, BehandlingResultatType> KODER = new LinkedHashMap<>();
 
@@ -109,30 +104,6 @@ public enum BehandlingResultatType implements Kodeverdi {
 
     public static Set<BehandlingResultatType> getAlleHenleggelseskoder() {
         return ALLE_HENLEGGELSESKODER;
-    }
-
-    public static Set<BehandlingResultatType> getHenleggelseskoderForKlage() {
-        return HENLEGGELSESKODER_FOR_KLAGE;
-    }
-
-    public static Set<BehandlingResultatType> getHenleggelseskoderForInnsyn() {
-        return HENLEGGELSESKODER_FOR_INNSYN;
-    }
-
-    public static Set<BehandlingResultatType> getHenleggelseskoderForSøknad() {
-        return HENLEGGELSESKODER_FOR_SØKNAD;
-    }
-
-    public static Set<BehandlingResultatType> getKlageKoder() {
-        return KLAGE_KODER;
-    }
-
-    public static Set<BehandlingResultatType> getInnsynKoder() {
-        return INNSYN_KODER;
-    }
-
-    public static Set<BehandlingResultatType> getInnvilgetKoder() {
-        return INNVILGET_KODER;
     }
 
     public boolean erHenlagt() {

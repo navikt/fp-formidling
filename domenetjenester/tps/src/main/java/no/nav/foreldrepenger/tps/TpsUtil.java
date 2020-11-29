@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.tps;
 
+import java.util.Objects;
+
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Aktoer;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent;
@@ -8,6 +10,8 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Personidenter;
 
 public final class TpsUtil {
+
+    private static final String PERSONSTATUS_DØD = "DØD";
 
     private TpsUtil() {
         //for å hindre instanser av util klasse
@@ -64,5 +68,9 @@ public final class TpsUtil {
 
     public static String getPersonnavn(Person person) {
         return person.getPersonnavn().getSammensattNavn();
+    }
+
+    public static boolean harPersonstatusDød(Bruker bruker) {
+        return bruker != null && bruker.getPersonstatus() != null && Objects.equals(PERSONSTATUS_DØD, bruker.getPersonstatus().getPersonstatus().getValue());
     }
 }

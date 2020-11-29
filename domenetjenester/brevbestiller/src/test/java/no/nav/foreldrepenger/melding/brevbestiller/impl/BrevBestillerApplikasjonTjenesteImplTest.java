@@ -21,6 +21,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import no.nav.foreldrepenger.PersonTjeneste;
 import no.nav.foreldrepenger.melding.aktør.AdresseType;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
@@ -54,13 +55,11 @@ import no.nav.foreldrepenger.melding.kafkatjenester.historikk.task.PubliserHisto
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
-import no.nav.foreldrepenger.melding.personopplysning.PersonstatusType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.melding.verge.Verge;
-import no.nav.foreldrepenger.tps.TpsTjeneste;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 import no.nav.vedtak.felles.testutilities.Whitebox;
@@ -82,7 +81,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     private static final String DOKUMENT_INFO_ID = "987";
 
     @Mock
-    private TpsTjeneste tpsTjeneste;
+    private PersonTjeneste tpsTjeneste;
     @Mock
     private VirksomhetTjeneste virksomhetTjeneste;
     @Mock
@@ -204,26 +203,24 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     }
 
     private Personinfo mockTps(boolean harVerge) {
-        Personinfo personinfoSøker = new Personinfo.Builder()
+        Personinfo personinfoSøker = Personinfo.getbuilder(SØKER)
                 .medPersonIdent(SØKER_FNR)
-                .medAktørId(SØKER)
                 .medNavn(NAVN)
                 .medNavBrukerKjønn(NavBrukerKjønn.MANN)
                 .build();
         when(tpsTjeneste.hentBrukerForAktør(eq(SØKER))).thenReturn(Optional.of(personinfoSøker));
-        Adresseinfo adresseSøker = new Adresseinfo.Builder(AdresseType.BOSTEDSADRESSE, SØKER_FNR, NAVN, PersonstatusType.BOSA).build();
-        when(tpsTjeneste.hentAdresseinformasjon(eq(SØKER_FNR))).thenReturn(adresseSøker);
+        Adresseinfo adresseSøker = new Adresseinfo.Builder(AdresseType.BOSTEDSADRESSE, SØKER_FNR, NAVN, false).build();
+        when(tpsTjeneste.hentAdresseinformasjon(eq(SØKER))).thenReturn(Optional.of(adresseSøker));
 
         if (harVerge) {
-            Personinfo personinfoVerge = new Personinfo.Builder()
+            Personinfo personinfoVerge = Personinfo.getbuilder(VERGE)
                     .medPersonIdent(VERGE_FNR)
-                    .medAktørId(VERGE)
                     .medNavn("Verge Vergesen")
                     .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
                     .build();
             when(tpsTjeneste.hentBrukerForAktør(eq(VERGE))).thenReturn(Optional.of(personinfoVerge));
-            Adresseinfo adresseVerge = new Adresseinfo.Builder(AdresseType.BOSTEDSADRESSE, VERGE_FNR, NAVN, PersonstatusType.BOSA).build();
-            when(tpsTjeneste.hentAdresseinformasjon(eq(VERGE_FNR))).thenReturn(adresseVerge);
+            Adresseinfo adresseVerge = new Adresseinfo.Builder(AdresseType.BOSTEDSADRESSE, VERGE_FNR, NAVN, false).build();
+            when(tpsTjeneste.hentAdresseinformasjon(eq(VERGE))).thenReturn(Optional.of(adresseVerge));
         }
         return personinfoSøker;
     }

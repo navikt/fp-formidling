@@ -17,7 +17,6 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.Person;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import no.nav.vedtak.felles.integrasjon.aktør.klient.AktørConsumerMedCache;
-import no.nav.vedtak.felles.integrasjon.aktør.klient.DetFinnesFlereAktørerMedSammePersonIdentException;
 import no.nav.vedtak.felles.integrasjon.person.PersonConsumer;
 
 @ApplicationScoped
@@ -66,19 +65,6 @@ public class TpsAdapter {
             throw TpsFeilmeldinger.FACTORY.fantIkkePerson(e).toException();
         } catch (HentPersonSikkerhetsbegrensning e) {
             throw TpsFeilmeldinger.FACTORY.tpsUtilgjengeligSikkerhetsbegrensning(e).toException();
-        }
-    }
-
-    public Optional<AktørId> hentAktørIdForPersonIdent(PersonIdent personIdent) {
-        if (personIdent.erFdatNummer()) {
-            // har ikke tildelt personnr
-            return Optional.empty();
-        }
-        try {
-            return aktørConsumer.hentAktørIdForPersonIdent(personIdent.getIdent()).map(AktørId::new);
-        } catch (DetFinnesFlereAktørerMedSammePersonIdentException e) { // NOSONAR
-            // Her sorterer vi ut dødfødte barn
-            return Optional.empty();
         }
     }
 

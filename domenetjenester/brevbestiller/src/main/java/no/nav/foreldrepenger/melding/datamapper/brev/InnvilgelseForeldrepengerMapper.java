@@ -16,6 +16,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
+import no.nav.foreldrepenger.PersonTjeneste;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktStatus;
@@ -56,7 +57,6 @@ import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
-import no.nav.foreldrepenger.tps.TpsTjeneste;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 
 @ApplicationScoped
@@ -65,7 +65,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
 
     private ObjectFactory objectFactory = new ObjectFactory();
     private BrevParametere brevParametere;
-    private TpsTjeneste tpsTjeneste;
+    private PersonTjeneste tpsTjeneste;
 
     public InnvilgelseForeldrepengerMapper() {
         //CDI
@@ -74,7 +74,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
     @Inject
     public InnvilgelseForeldrepengerMapper(DomeneobjektProvider domeneobjektProvider,
                                            BrevParametere brevParametere,
-                                           TpsTjeneste tpsTjeneste) {
+                                           PersonTjeneste tpsTjeneste) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
         this.tpsTjeneste = tpsTjeneste;

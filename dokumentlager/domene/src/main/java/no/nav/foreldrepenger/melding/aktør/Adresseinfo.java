@@ -2,12 +2,11 @@ package no.nav.foreldrepenger.melding.aktør;
 
 import java.util.Objects;
 
-import no.nav.foreldrepenger.melding.personopplysning.PersonstatusType;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
 
 public class Adresseinfo {
 
-    private PersonstatusType personstatus;
+    private boolean registrertDød;
     private AdresseType gjeldendePostadresseType;
 
     //For mapping
@@ -64,90 +63,65 @@ public class Adresseinfo {
         return gjeldendePostadresseType;
     }
 
-    public PersonstatusType getPersonstatus() {
-        return personstatus;
-    }
-
-    public void setPersonstatus(PersonstatusType personstatus) {
-        this.personstatus = personstatus;
+    public boolean isRegistrertDød() {
+        return registrertDød;
     }
 
     public static class Builder {
-        private final AdresseType gjeldendePostadresseType;
-        private final String mottakerNavn;
-        private final PersonIdent fnr;
-        private String adresselinje1;
-        private String adresselinje2;
-        private String adresselinje3;
-        private String adresselinje4;
-        private String postNr;
-        private String poststed;
-        private String land;
-        private PersonstatusType personstatus;
+        private Adresseinfo kladd;
 
-        public Builder(AdresseType gjeldende, PersonIdent fnr, String mottakerNavn, PersonstatusType personstatus) {
-            this.gjeldendePostadresseType = gjeldende;
-            this.fnr = fnr;
-            this.mottakerNavn = mottakerNavn;
-            this.personstatus = personstatus;
+        public Builder(AdresseType gjeldende, PersonIdent fnr, String mottakerNavn, boolean registrertDød) {
+            this.kladd = new Adresseinfo();
+            this.kladd.gjeldendePostadresseType = gjeldende;
+            this.kladd.personIdent = fnr;
+            this.kladd.mottakerNavn = mottakerNavn;
+            this.kladd.registrertDød = registrertDød;
         }
 
         public Builder medAdresselinje1(String adresselinje1) {
-            this.adresselinje1 = adresselinje1;
+            this.kladd.adresselinje1 = adresselinje1;
             return this;
         }
 
         public Builder medAdresselinje2(String adresselinje2) {
-            this.adresselinje2 = adresselinje2;
+            this.kladd.adresselinje2 = adresselinje2;
             return this;
         }
 
         public Builder medAdresselinje3(String adresselinje3) {
-            this.adresselinje3 = adresselinje3;
+            this.kladd.adresselinje3 = adresselinje3;
             return this;
         }
 
         public Builder medAdresselinje4(String adresselinje4) {
-            this.adresselinje4 = adresselinje4;
+            this.kladd.adresselinje4 = adresselinje4;
             return this;
         }
 
         public Builder medPostNr(String postNr) {
-            this.postNr = postNr;
+            this.kladd.postNr = postNr;
             return this;
         }
 
         public Builder medPoststed(String poststed) {
-            this.poststed = poststed;
+            this.kladd.poststed = poststed;
             return this;
         }
 
         public Builder medLand(String land) {
-            this.land = land;
+            this.kladd.land = land;
             return this;
         }
 
         public Adresseinfo build() {
             verifyStateForBuild();
-            Adresseinfo adresseinfo = new Adresseinfo();
-            adresseinfo.gjeldendePostadresseType = this.gjeldendePostadresseType;
-            adresseinfo.mottakerNavn = this.mottakerNavn;
-            adresseinfo.personIdent = this.fnr;
-            adresseinfo.adresselinje1 = this.adresselinje1;
-            adresseinfo.adresselinje2 = this.adresselinje2;
-            adresseinfo.adresselinje3 = this.adresselinje3;
-            adresseinfo.adresselinje4 = this.adresselinje4;
-            adresseinfo.postNr = this.postNr;
-            adresseinfo.poststed = this.poststed;
-            adresseinfo.land = this.land;
-            adresseinfo.personstatus = this.personstatus;
-            return adresseinfo;
+            return this.kladd;
         }
 
         private void verifyStateForBuild() {
-            Objects.requireNonNull(mottakerNavn, "mottakerNavn");
-            Objects.requireNonNull(fnr, "fnr");
-            Objects.requireNonNull(gjeldendePostadresseType, "gjeldendePostadresseType");
+            Objects.requireNonNull(this.kladd.mottakerNavn, "mottakerNavn");
+            Objects.requireNonNull(this.kladd.personIdent, "fnr");
+            Objects.requireNonNull(this.kladd.gjeldendePostadresseType, "gjeldendePostadresseType");
         }
     }
 }

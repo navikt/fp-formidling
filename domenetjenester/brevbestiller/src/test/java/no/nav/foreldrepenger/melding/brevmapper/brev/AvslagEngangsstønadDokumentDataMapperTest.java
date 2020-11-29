@@ -1,5 +1,23 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import no.nav.foreldrepenger.PersonTjeneste;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -20,23 +38,6 @@ import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
-import no.nav.foreldrepenger.tps.TpsTjeneste;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class AvslagEngangsstønadDokumentDataMapperTest {
@@ -49,15 +50,14 @@ class AvslagEngangsstønadDokumentDataMapperTest {
     @Mock
     private DokumentHendelse dokumentHendelse = mock(DokumentHendelse.class);
     @Mock
-    private TpsTjeneste tpsTjeneste = mock(TpsTjeneste.class);
+    private PersonTjeneste tpsTjeneste = mock(PersonTjeneste.class);
 
     @BeforeEach
     void setUp() {
         avslagEngangsstønadDokumentDataMapper = new AvslagEngangsstønadDokumentDataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider, tpsTjeneste);
         dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagDokumentData(), null, null);
-        Personinfo personinfo = new Personinfo.Builder()
+        Personinfo personinfo = Personinfo.getbuilder(AKTØR_ID)
                 .medPersonIdent( new PersonIdent("9999999999"))
-                .medAktørId(AKTØR_ID)
                 .medNavn("Nav Navesen")
                 .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
                 .build();

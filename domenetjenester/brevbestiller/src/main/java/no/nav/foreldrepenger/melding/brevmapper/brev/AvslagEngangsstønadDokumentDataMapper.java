@@ -1,5 +1,21 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.brevSendesTilVerge;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import no.nav.foreldrepenger.PersonTjeneste;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
@@ -19,35 +35,20 @@ import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
-import no.nav.foreldrepenger.tps.TpsTjeneste;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.brevSendesTilVerge;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.AVSLAG_ENGANGSSTØNAD)
 public class AvslagEngangsstønadDokumentDataMapper implements DokumentdataMapper {
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
-    private TpsTjeneste tpsTjeneste;
+    private PersonTjeneste tpsTjeneste;
 
     AvslagEngangsstønadDokumentDataMapper() {
         //CDI
     }
 
     @Inject
-    public AvslagEngangsstønadDokumentDataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider, TpsTjeneste tpsTjeneste) {
+    public AvslagEngangsstønadDokumentDataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider, PersonTjeneste tpsTjeneste) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
         this.tpsTjeneste = tpsTjeneste;

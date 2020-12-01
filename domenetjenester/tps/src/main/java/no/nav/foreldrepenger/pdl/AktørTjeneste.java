@@ -209,6 +209,9 @@ public class AktørTjeneste {
                     .findFirst().map(AktørTjeneste::harPersonstatusDød).orElse(false);
             var adresser = mapAdresser(person.getBostedsadresse(), person.getKontaktadresse(), person.getOppholdsadresse());
             var antattGjeldende = velgAdresse(adresser);
+            if (!Objects.equals(antattGjeldende, nyesteAdresse(adresser))) {
+                LOG.info("FPFORMIDLING PDL ADRESSE: nyeste ulik gjeldende {}", antattGjeldende.getGjeldendePostadresseType());
+            }
             var fraPDL = new Adresseinfo.Builder(antattGjeldende.getGjeldendePostadresseType(), personIdent, navn, pdlStatusDød)
                     .medAdresselinje1(antattGjeldende.getAdresselinje1())
                     .medAdresselinje2(antattGjeldende.getAdresselinje2())
@@ -414,6 +417,10 @@ public class AktørTjeneste {
                             .orElse(Adresseinfo.builder(AdresseType.UKJENT_ADRESSE).buildTemporary())
 
                 ))));
+    }
+
+    private static Adresseinfo nyesteAdresse(List<Adresseinfo> alleAdresser) {
+        return alleAdresser.stream().max(Comparator.comparing(Adresseinfo::getGyldigFom)).orElse(null);
     }
 
     private static boolean erLikeAdresse(Adresseinfo pdl, Adresseinfo tps) {

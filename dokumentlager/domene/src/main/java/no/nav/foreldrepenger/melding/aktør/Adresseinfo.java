@@ -12,6 +12,7 @@ public class Adresseinfo {
     //For mapping
     private PersonIdent personIdent;
     private String mottakerNavn;
+    private String matrikkelId;
     private String adresselinje1;
     private String adresselinje2;
     private String adresselinje3;
@@ -25,6 +26,10 @@ public class Adresseinfo {
 
     public String getMottakerNavn() {
         return mottakerNavn;
+    }
+
+    public String getMatrikkelId() {
+        return matrikkelId;
     }
 
     public String getAdresselinje1() {
@@ -67,8 +72,38 @@ public class Adresseinfo {
         return registrertDød;
     }
 
+    public static Adresseinfo.Builder builder(AdresseType adresseType) {
+        return new Adresseinfo.Builder(adresseType);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Adresseinfo that = (Adresseinfo) o;
+        return gjeldendePostadresseType == that.gjeldendePostadresseType &&
+                Objects.equals(matrikkelId, that.matrikkelId) &&
+                Objects.equals(adresselinje1, that.adresselinje1) &&
+                Objects.equals(adresselinje2, that.adresselinje2) &&
+                Objects.equals(adresselinje3, that.adresselinje3) &&
+                Objects.equals(adresselinje4, that.adresselinje4) &&
+                Objects.equals(postNr, that.postNr) &&
+                Objects.equals(poststed, that.poststed) &&
+                Objects.equals(land, that.land);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gjeldendePostadresseType, matrikkelId, adresselinje1, adresselinje2, adresselinje3, adresselinje4, postNr, poststed, land);
+    }
+
     public static class Builder {
         private Adresseinfo kladd;
+
+        public Builder(AdresseType gjeldende) {
+            this.kladd = new Adresseinfo();
+            this.kladd.gjeldendePostadresseType = gjeldende;
+        }
 
         public Builder(AdresseType gjeldende, PersonIdent fnr, String mottakerNavn, boolean registrertDød) {
             this.kladd = new Adresseinfo();
@@ -76,6 +111,12 @@ public class Adresseinfo {
             this.kladd.personIdent = fnr;
             this.kladd.mottakerNavn = mottakerNavn;
             this.kladd.registrertDød = registrertDød;
+        }
+
+
+        public Builder medMatrikkelId(String matrikkelId) {
+            this.kladd.matrikkelId = matrikkelId;
+            return this;
         }
 
         public Builder medAdresselinje1(String adresselinje1) {
@@ -115,6 +156,10 @@ public class Adresseinfo {
 
         public Adresseinfo build() {
             verifyStateForBuild();
+            return this.kladd;
+        }
+
+        public Adresseinfo buildTemporary() {
             return this.kladd;
         }
 

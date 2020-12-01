@@ -29,17 +29,17 @@ public class PersonTjeneste {
     }
 
     public Optional<Personinfo> hentBrukerForAktør(AktørId aktørId) {
-        Optional<PersonIdent> funnetFnr = tpsAdapter.hentIdentForAktørId(aktørId);
-        aktørTjeneste.hentPersonIdentForAktørId(aktørId, funnetFnr);
+        Optional<PersonIdent> funnetFnr = aktørTjeneste.hentPersonIdentForAktørId(aktørId);
         var pinfo = funnetFnr.map(fnr -> tpsAdapter.hentKjerneinformasjon(fnr, aktørId));
         funnetFnr.ifPresent(pi -> aktørTjeneste.hentPersoninfo(aktørId,pi, pinfo.orElse(null)));
         return pinfo;
     }
 
     public Optional<Adresseinfo> hentAdresseinformasjon(AktørId aktørId) {
-        Optional<PersonIdent> funnetFnr = tpsAdapter.hentIdentForAktørId(aktørId);
-        aktørTjeneste.hentPersonIdentForAktørId(aktørId, funnetFnr);
-        return funnetFnr.map(pi -> tpsAdapter.hentAdresseinformasjon(pi));
+        Optional<PersonIdent> funnetFnr = aktørTjeneste.hentPersonIdentForAktørId(aktørId);
+        var adresse = funnetFnr.map(pi -> tpsAdapter.hentAdresseinformasjon(pi));
+        funnetFnr.ifPresent(pi -> adresse.ifPresent(adr -> aktørTjeneste.hentAdresseinformasjon(aktørId, pi, adr)));
+        return adresse;
     }
 
 }

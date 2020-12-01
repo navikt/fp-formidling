@@ -1,8 +1,12 @@
 package no.nav.foreldrepenger.pdl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -67,6 +71,7 @@ import no.nav.pdl.VegadresseResponseProjection;
 import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.felles.integrasjon.pdl.PdlKlient;
 import no.nav.vedtak.felles.integrasjon.pdl.Tema;
+import no.nav.vedtak.konfig.Tid;
 import no.nav.vedtak.util.LRUCache;
 
 @ApplicationScoped
@@ -267,27 +272,34 @@ public class AktørTjeneste {
 
     private List<Adresseinfo> mapAdresser(List<Bostedsadresse> bostedsadresser, List<Kontaktadresse> kontaktadresser, List<Oppholdsadresse> oppholdsadresser) {
         List<Adresseinfo> resultat = new ArrayList<>();
-        bostedsadresser.stream().map(Bostedsadresse::getVegadresse).map(a -> mapVegadresse(AdresseType.BOSTEDSADRESSE, a)).filter(Objects::nonNull).forEach(resultat::add);
-        bostedsadresser.stream().map(Bostedsadresse::getMatrikkeladresse).map(a -> mapMatrikkeladresse(AdresseType.BOSTEDSADRESSE, a)).filter(Objects::nonNull).forEach(resultat::add);
-        bostedsadresser.stream().map(Bostedsadresse::getUkjentBosted).filter(Objects::nonNull).map(AktørTjeneste::mapUkjentadresse).forEach(resultat::add);
-        bostedsadresser.stream().map(Bostedsadresse::getUtenlandskAdresse).map(a -> mapUtenlandskadresse(AdresseType.BOSTEDSADRESSE, a)).filter(Objects::nonNull).forEach(resultat::add);
+        var bostFom = bostedsadresser.stream().map(Bostedsadresse::getGyldigFraOgMed).map(AktørTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
+        bostedsadresser.stream().map(Bostedsadresse::getVegadresse).map(a -> mapVegadresse(AdresseType.BOSTEDSADRESSE, a, bostFom)).filter(Objects::nonNull).forEach(resultat::add);
+        bostedsadresser.stream().map(Bostedsadresse::getMatrikkeladresse).map(a -> mapMatrikkeladresse(AdresseType.BOSTEDSADRESSE, a, bostFom)).filter(Objects::nonNull).forEach(resultat::add);
+        bostedsadresser.stream().map(Bostedsadresse::getUkjentBosted).filter(Objects::nonNull).map(a -> mapUkjentadresse(a, bostFom)).forEach(resultat::add);
+        bostedsadresser.stream().map(Bostedsadresse::getUtenlandskAdresse).map(a -> mapUtenlandskadresse(AdresseType.BOSTEDSADRESSE, a, bostFom)).filter(Objects::nonNull).forEach(resultat::add);
 
-        oppholdsadresser.stream().map(Oppholdsadresse::getVegadresse).map(a -> mapVegadresse(AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE, a)).filter(Objects::nonNull).forEach(resultat::add);
-        oppholdsadresser.stream().map(Oppholdsadresse::getMatrikkeladresse).map(a -> mapMatrikkeladresse(AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE, a)).filter(Objects::nonNull).forEach(resultat::add);
-        oppholdsadresser.stream().map(Oppholdsadresse::getUtenlandskAdresse).map(a -> mapUtenlandskadresse(AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND, a)).filter(Objects::nonNull).forEach(resultat::add);
+        var oppFom = oppholdsadresser.stream().map(Oppholdsadresse::getGyldigFraOgMed).map(AktørTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
+        oppholdsadresser.stream().map(Oppholdsadresse::getVegadresse).map(a -> mapVegadresse(AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE, a, oppFom)).filter(Objects::nonNull).forEach(resultat::add);
+        oppholdsadresser.stream().map(Oppholdsadresse::getMatrikkeladresse).map(a -> mapMatrikkeladresse(AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE, a, oppFom)).filter(Objects::nonNull).forEach(resultat::add);
+        oppholdsadresser.stream().map(Oppholdsadresse::getUtenlandskAdresse).map(a -> mapUtenlandskadresse(AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND, a, oppFom)).filter(Objects::nonNull).forEach(resultat::add);
 
-        kontaktadresser.stream().map(Kontaktadresse::getVegadresse).map(a -> mapVegadresse(AdresseType.POSTADRESSE, a)).filter(Objects::nonNull).forEach(resultat::add);
-        kontaktadresser.stream().map(Kontaktadresse::getPostboksadresse).map(a -> mapPostboksadresse(AdresseType.POSTADRESSE, a)).filter(Objects::nonNull).forEach(resultat::add);
-        kontaktadresser.stream().map(Kontaktadresse::getPostadresseIFrittFormat).map(a -> mapFriAdresseNorsk(AdresseType.POSTADRESSE, a)).filter(Objects::nonNull).forEach(resultat::add);
-        kontaktadresser.stream().map(Kontaktadresse::getUtenlandskAdresse).map(a -> mapUtenlandskadresse(AdresseType.POSTADRESSE_UTLAND, a)).filter(Objects::nonNull).forEach(resultat::add);
-        kontaktadresser.stream().map(Kontaktadresse::getUtenlandskAdresseIFrittFormat).map(a -> mapFriAdresseUtland(AdresseType.POSTADRESSE_UTLAND, a)).filter(Objects::nonNull).forEach(resultat::add);
+        var konFom = kontaktadresser.stream().map(Kontaktadresse::getGyldigFraOgMed).map(AktørTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
+        kontaktadresser.stream().map(Kontaktadresse::getVegadresse).map(a -> mapVegadresse(AdresseType.POSTADRESSE, a, konFom)).filter(Objects::nonNull).forEach(resultat::add);
+        kontaktadresser.stream().map(Kontaktadresse::getPostboksadresse).map(a -> mapPostboksadresse(AdresseType.POSTADRESSE, a, konFom)).filter(Objects::nonNull).forEach(resultat::add);
+        kontaktadresser.stream().map(Kontaktadresse::getPostadresseIFrittFormat).map(a -> mapFriAdresseNorsk(AdresseType.POSTADRESSE, a, konFom)).filter(Objects::nonNull).forEach(resultat::add);
+        kontaktadresser.stream().map(Kontaktadresse::getUtenlandskAdresse).map(a -> mapUtenlandskadresse(AdresseType.POSTADRESSE_UTLAND, a, konFom)).filter(Objects::nonNull).forEach(resultat::add);
+        kontaktadresser.stream().map(Kontaktadresse::getUtenlandskAdresseIFrittFormat).map(a -> mapFriAdresseUtland(AdresseType.POSTADRESSE_UTLAND, a, konFom)).filter(Objects::nonNull).forEach(resultat::add);
         if (resultat.isEmpty()) {
-            resultat.add(mapUkjentadresse(null));
+            resultat.add(mapUkjentadresse(null, Tid.TIDENES_BEGYNNELSE));
         }
         return resultat;
     }
 
-    private Adresseinfo mapVegadresse(AdresseType type, Vegadresse vegadresse) {
+    private static LocalDate tilLocalDate(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).toLocalDate();
+    }
+
+    private Adresseinfo mapVegadresse(AdresseType type, Vegadresse vegadresse, LocalDate fom) {
         if (vegadresse == null)
             return null;
         String postnummer = Optional.ofNullable(vegadresse.getPostnummer()).orElse(HARDKODET_POSTNR);
@@ -299,10 +311,11 @@ public class AktørTjeneste {
                 .medPostNr(postnummer)
                 .medPoststed(tilPoststed(postnummer))
                 .medLand(Landkoder.NOR.getKode())
+                .medGyldigFom(fom)
                 .buildTemporary();
     }
 
-    private Adresseinfo mapMatrikkeladresse(AdresseType type, Matrikkeladresse matrikkeladresse) {
+    private Adresseinfo mapMatrikkeladresse(AdresseType type, Matrikkeladresse matrikkeladresse, LocalDate fom) {
         if (matrikkeladresse == null)
             return null;
         String postnummer = Optional.ofNullable(matrikkeladresse.getPostnummer()).orElse(HARDKODET_POSTNR);
@@ -313,10 +326,11 @@ public class AktørTjeneste {
                 .medPostNr(postnummer)
                 .medPoststed(tilPoststed(postnummer))
                 .medLand(Landkoder.NOR.getKode())
+                .medGyldigFom(fom)
                 .buildTemporary();
     }
 
-    private Adresseinfo mapPostboksadresse(AdresseType type, Postboksadresse postboksadresse) {
+    private Adresseinfo mapPostboksadresse(AdresseType type, Postboksadresse postboksadresse, LocalDate fom) {
         if (postboksadresse == null)
             return null;
         String postnummer = Optional.ofNullable(postboksadresse.getPostnummer()).orElse(HARDKODET_POSTNR);
@@ -327,10 +341,11 @@ public class AktørTjeneste {
                 .medPostNr(postnummer)
                 .medPoststed(tilPoststed(postnummer))
                 .medLand(Landkoder.NOR.getKode())
+                .medGyldigFom(fom)
                 .buildTemporary();
     }
 
-    private Adresseinfo mapFriAdresseNorsk(AdresseType type, PostadresseIFrittFormat postadresse) {
+    private Adresseinfo mapFriAdresseNorsk(AdresseType type, PostadresseIFrittFormat postadresse, LocalDate fom) {
         if (postadresse == null)
             return null;
         String postnummer = Optional.ofNullable(postadresse.getPostnummer()).orElse(HARDKODET_POSTNR);
@@ -341,14 +356,15 @@ public class AktørTjeneste {
                 .medPostNr(postnummer)
                 .medPoststed(tilPoststed(postnummer))
                 .medLand(Landkoder.NOR.getKode())
+                .medGyldigFom(fom)
                 .buildTemporary();
     }
 
-    private static Adresseinfo mapUkjentadresse(UkjentBosted ukjentBosted) {
-        return Adresseinfo.builder(AdresseType.UKJENT_ADRESSE).buildTemporary();
+    private static Adresseinfo mapUkjentadresse(UkjentBosted ukjentBosted, LocalDate fom) {
+        return Adresseinfo.builder(AdresseType.UKJENT_ADRESSE).medGyldigFom(fom).buildTemporary();
     }
 
-    private static Adresseinfo mapUtenlandskadresse(AdresseType type, UtenlandskAdresse utenlandskAdresse) {
+    private static Adresseinfo mapUtenlandskadresse(AdresseType type, UtenlandskAdresse utenlandskAdresse, LocalDate fom) {
         if (utenlandskAdresse == null)
             return null;
         var linje1 = hvisfinnes(utenlandskAdresse.getAdressenavnNummer()) + hvisfinnes(utenlandskAdresse.getBygningEtasjeLeilighet()) + hvisfinnes(utenlandskAdresse.getPostboksNummerNavn());
@@ -358,10 +374,11 @@ public class AktørTjeneste {
                 .medAdresselinje2(linje2)
                 .medAdresselinje3(utenlandskAdresse.getLandkode())
                 .medLand(utenlandskAdresse.getLandkode())
+                .medGyldigFom(fom)
                 .buildTemporary();
     }
 
-    private static Adresseinfo mapFriAdresseUtland(AdresseType type, UtenlandskAdresseIFrittFormat utenlandskAdresse) {
+    private static Adresseinfo mapFriAdresseUtland(AdresseType type, UtenlandskAdresseIFrittFormat utenlandskAdresse, LocalDate fom) {
         if (utenlandskAdresse == null)
             return null;
         var postlinje = hvisfinnes(utenlandskAdresse.getPostkode()) + hvisfinnes(utenlandskAdresse.getByEllerStedsnavn());
@@ -373,6 +390,7 @@ public class AktørTjeneste {
                 .medAdresselinje3(utenlandskAdresse.getAdresselinje3() != null ? utenlandskAdresse.getAdresselinje3().toUpperCase() : (utenlandskAdresse.getAdresselinje2() != null ? postlinje : utenlandskAdresse.getLandkode()))
                 .medAdresselinje4(sisteline)
                 .medLand(utenlandskAdresse.getLandkode())
+                .medGyldigFom(fom)
                 .buildTemporary();
     }
 
@@ -416,7 +434,9 @@ public class AktørTjeneste {
         String adresse3 = Objects.equals(tps.getLand(), pdl.getLand()) ? "" : " land " + tps.getLand() + " PDL " + pdl.getLand();
         String typer = Objects.equals(tps.getGjeldendePostadresseType(), pdl.getGjeldendePostadresseType()) ? "" :
                 " typer " + alle.stream().map(Adresseinfo::getGjeldendePostadresseType).collect(Collectors.toList());
-        return "Avvik" + navn + status + adresse + adresse2 + adresse3 + typer;
+        String typer2 = Objects.equals(tps.getGjeldendePostadresseType(), pdl.getGjeldendePostadresseType()) ? "" :
+                " gyldig " + alle.stream().map(Adresseinfo::getGyldigFom).collect(Collectors.toList());
+        return "Avvik" + navn + status + adresse + adresse2 + adresse3 + typer + typer2;
     }
 
 }

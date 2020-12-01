@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.aktør;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
@@ -20,6 +21,8 @@ public class Adresseinfo {
     private String land;
     private String postNr;
     private String poststed;
+
+    private LocalDate gyldigFom;
 
     private Adresseinfo() {
     }
@@ -70,6 +73,10 @@ public class Adresseinfo {
 
     public boolean isRegistrertDød() {
         return registrertDød;
+    }
+
+    public LocalDate getGyldigFom() {
+        return gyldigFom;
     }
 
     public static Adresseinfo.Builder builder(AdresseType adresseType) {
@@ -151,6 +158,11 @@ public class Adresseinfo {
 
         public Builder medLand(String land) {
             this.kladd.land = land;
+            return this;
+        }
+
+        public Builder medGyldigFom(LocalDate gyldigFom) {
+            this.kladd.gyldigFom = gyldigFom;
             return this;
         }
 

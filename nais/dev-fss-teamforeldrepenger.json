@@ -13,7 +13,6 @@
   "env": {
     "ABAC_PDP_ENDPOINT_URL": "http://abac-foreldrepenger.default/application/authorize",
     "ABAC_ATTRIBUTT_DRIFT": "no.nav.abac.attributter.foreldrepenger.drift",
-    "AKTOER_V2_URL": "https://app-q1.adeo.no/aktoerregister/ws/Aktoer/v2",
     "APPDYNAMICS_AGENT_ACCOUNT_NAME": "non-prod",
     "DEFAULTDS_VAULT_ENABLE": "true",
     "DEFAULTDS_VAULT_MOUNTPATH": "postgresql/preprod-fss",

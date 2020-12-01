@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.tps;
 
-import java.util.Optional;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -16,12 +14,10 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Person;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
-import no.nav.vedtak.felles.integrasjon.aktør.klient.AktørConsumerMedCache;
 import no.nav.vedtak.felles.integrasjon.person.PersonConsumer;
 
 @ApplicationScoped
 public class TpsAdapter {
-    private AktørConsumerMedCache aktørConsumer;
     private PersonConsumer personConsumer;
     private TpsOversetter tpsOversetter;
 
@@ -29,16 +25,10 @@ public class TpsAdapter {
     }
 
     @Inject
-    public TpsAdapter(AktørConsumerMedCache aktørConsumer,
-                      PersonConsumer personConsumer,
+    public TpsAdapter(PersonConsumer personConsumer,
                       TpsOversetter tpsOversetter) {
-        this.aktørConsumer = aktørConsumer;
         this.personConsumer = personConsumer;
         this.tpsOversetter = tpsOversetter;
-    }
-
-    public Optional<PersonIdent> hentIdentForAktørId(AktørId aktørId) {
-        return aktørConsumer.hentPersonIdentForAktørId(aktørId.getId()).map(f -> new PersonIdent(f));
     }
 
     public Personinfo hentKjerneinformasjon(PersonIdent personIdent, AktørId aktørId) {

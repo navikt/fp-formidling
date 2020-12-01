@@ -275,18 +275,18 @@ public class AktørTjeneste {
 
     private List<Adresseinfo> mapAdresser(List<Bostedsadresse> bostedsadresser, List<Kontaktadresse> kontaktadresser, List<Oppholdsadresse> oppholdsadresser) {
         List<Adresseinfo> resultat = new ArrayList<>();
-        var bostFom = bostedsadresser.stream().map(Bostedsadresse::getGyldigFraOgMed).map(AktørTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
+        var bostFom = bostedsadresser.stream().map(Bostedsadresse::getGyldigFraOgMed).filter(Objects::nonNull).map(AktørTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
         bostedsadresser.stream().map(Bostedsadresse::getVegadresse).map(a -> mapVegadresse(AdresseType.BOSTEDSADRESSE, a, bostFom)).filter(Objects::nonNull).forEach(resultat::add);
         bostedsadresser.stream().map(Bostedsadresse::getMatrikkeladresse).map(a -> mapMatrikkeladresse(AdresseType.BOSTEDSADRESSE, a, bostFom)).filter(Objects::nonNull).forEach(resultat::add);
         bostedsadresser.stream().map(Bostedsadresse::getUkjentBosted).filter(Objects::nonNull).map(a -> mapUkjentadresse(a, bostFom)).forEach(resultat::add);
         bostedsadresser.stream().map(Bostedsadresse::getUtenlandskAdresse).map(a -> mapUtenlandskadresse(AdresseType.BOSTEDSADRESSE, a, bostFom)).filter(Objects::nonNull).forEach(resultat::add);
 
-        var oppFom = oppholdsadresser.stream().map(Oppholdsadresse::getGyldigFraOgMed).map(AktørTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
+        var oppFom = oppholdsadresser.stream().map(Oppholdsadresse::getGyldigFraOgMed).filter(Objects::nonNull).map(AktørTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
         oppholdsadresser.stream().map(Oppholdsadresse::getVegadresse).map(a -> mapVegadresse(AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE, a, oppFom)).filter(Objects::nonNull).forEach(resultat::add);
         oppholdsadresser.stream().map(Oppholdsadresse::getMatrikkeladresse).map(a -> mapMatrikkeladresse(AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE, a, oppFom)).filter(Objects::nonNull).forEach(resultat::add);
         oppholdsadresser.stream().map(Oppholdsadresse::getUtenlandskAdresse).map(a -> mapUtenlandskadresse(AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND, a, oppFom)).filter(Objects::nonNull).forEach(resultat::add);
 
-        var konFom = kontaktadresser.stream().map(Kontaktadresse::getGyldigFraOgMed).map(AktørTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
+        var konFom = kontaktadresser.stream().map(Kontaktadresse::getGyldigFraOgMed).filter(Objects::nonNull).map(AktørTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
         kontaktadresser.stream().map(Kontaktadresse::getVegadresse).map(a -> mapVegadresse(AdresseType.POSTADRESSE, a, konFom)).filter(Objects::nonNull).forEach(resultat::add);
         kontaktadresser.stream().map(Kontaktadresse::getPostboksadresse).map(a -> mapPostboksadresse(AdresseType.POSTADRESSE, a, konFom)).filter(Objects::nonNull).forEach(resultat::add);
         kontaktadresser.stream().map(Kontaktadresse::getPostadresseIFrittFormat).map(a -> mapFriAdresseNorsk(AdresseType.POSTADRESSE, a, konFom)).filter(Objects::nonNull).forEach(resultat::add);

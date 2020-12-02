@@ -8,7 +8,7 @@ import no.nav.vedtak.util.env.Environment;
 public class DokgenLanseringTjeneste {
 
     private static final Environment ENV = Environment.current();
-    private static final Set<DokumentMalType> DOKGEN_MALER_PROD = Set.of();
+    private static final Set<DokumentMalType> DOKGEN_MALER_PROD = Set.of(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
             DokumentMalType.INNHENTE_OPPLYSNINGER, DokumentMalType.AVSLAG_ENGANGSSTØNAD);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(DokumentMalType.INNHENTE_OPPLYSNINGER);

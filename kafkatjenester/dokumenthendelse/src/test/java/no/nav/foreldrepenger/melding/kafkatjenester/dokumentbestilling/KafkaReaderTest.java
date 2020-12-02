@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import no.nav.foreldrepenger.melding.dbstoette.EntityManagerAwareExtension;
+import no.nav.foreldrepenger.melding.dbstoette.JpaExtension;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.melding.hendelse.HendelseHandler;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
@@ -27,7 +27,7 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 import no.nav.vedtak.felles.testutilities.db.Repository;
 
 @ExtendWith(MockitoExtension.class)
-@ExtendWith(EntityManagerAwareExtension.class)
+@ExtendWith(JpaExtension.class)
 public class KafkaReaderTest {
 
     @Mock

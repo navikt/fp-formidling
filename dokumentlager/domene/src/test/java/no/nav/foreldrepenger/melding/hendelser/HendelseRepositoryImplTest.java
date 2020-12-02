@@ -11,10 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import no.nav.foreldrepenger.melding.dbstoette.EntityManagerAwareExtension;
+import no.nav.foreldrepenger.melding.dbstoette.JpaExtension;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 
-@ExtendWith(EntityManagerAwareExtension.class)
+@ExtendWith(JpaExtension.class)
 public class HendelseRepositoryImplTest {
 
     private HendelseRepository hendelseRepository;

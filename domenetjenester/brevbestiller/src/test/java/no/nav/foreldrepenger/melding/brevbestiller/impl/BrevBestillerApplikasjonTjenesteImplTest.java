@@ -62,7 +62,6 @@ import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
-import no.nav.vedtak.felles.testutilities.Whitebox;
 
 @ExtendWith(MockitoExtension.class)
 public class BrevBestillerApplikasjonTjenesteImplTest {
@@ -253,7 +252,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .medBehandlendeEnhetNavn("Navkontoret")
                 .build();
-        Whitebox.setInternalState(dokumentHendelse, "id", HENDELSE_ID);
+        dokumentHendelse.setId(HENDELSE_ID);
         return dokumentHendelse;
     }
 

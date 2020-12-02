@@ -11,14 +11,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import no.nav.foreldrepenger.melding.dbstoette.EntityManagerAwareExtension;
+import no.nav.foreldrepenger.melding.dbstoette.JpaExtension;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
-@ExtendWith(EntityManagerAwareExtension.class)
+@ExtendWith(JpaExtension.class)
 public class HistorikkRepositoryImplTest {
 
     private HistorikkRepository historikkRepository;

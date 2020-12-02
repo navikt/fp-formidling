@@ -31,8 +31,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!-- felles artifakter -->
-        <felles.version>2.4.0-20201125100519-780282a</felles.version>
-        <prosesstask.version>2.4.5-20201119115019-68b00fb</prosesstask.version>
+        <felles.version>2.5.0-20201202101058-9865681</felles.version>
+        <prosesstask.version>2.4.5-20201201124158-df37102</prosesstask.version>
         <kontrakter.version>5.1-20201112050232-45aa18d</kontrakter.version>
 
         <!-- Eksterne -->
@@ -54,6 +54,12 @@
     over arv) da de overstyrer andre scope definisjoner. Sett det heller der det brukes. -->
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <!-- overstyrer her sålenge fp-felles inkluderer eldre versjon. -->
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-core</artifactId>
+                <version>7.3.0</version>
+            </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.kontrakter</groupId>
                 <artifactId>fp-kontrakter-root</artifactId>

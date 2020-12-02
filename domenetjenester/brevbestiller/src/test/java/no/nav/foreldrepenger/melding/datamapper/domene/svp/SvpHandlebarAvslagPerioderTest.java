@@ -18,12 +18,12 @@ import com.github.jknack.handlebars.helper.ConditionalHelpers;
 import com.github.jknack.handlebars.helper.I18nHelper;
 
 import no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder;
-import no.nav.foreldrepenger.melding.dbstoette.EntityManagerAwareExtension;
+import no.nav.foreldrepenger.melding.dbstoette.JpaExtension;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.typer.Dato;
 import no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 
-@ExtendWith(EntityManagerAwareExtension.class)
+@ExtendWith(JpaExtension.class)
 public class SvpHandlebarAvslagPerioderTest {
 
     private static final LocalDate AUGUST_1 = LocalDate.of(2019, 8, 1);

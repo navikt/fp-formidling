@@ -131,45 +131,37 @@ public class AktørTjeneste {
         return ident;
     }
 
-    public void hentPersoninfo(AktørId aktørId, PersonIdent personIdent, Personinfo fraTPS) {
-        try {
-            var query = new HentPersonQueryRequest();
-            query.setIdent(aktørId.getId());
-            var projection = new PersonResponseProjection()
-                .navn(new NavnResponseProjection().forkortetNavn().fornavn().mellomnavn().etternavn())
-                .foedsel(new FoedselResponseProjection().foedselsdato())
-                .doedsfall(new DoedsfallResponseProjection().doedsdato())
-                .kjoenn(new KjoennResponseProjection().kjoenn())
-                .folkeregisterpersonstatus(new FolkeregisterpersonstatusResponseProjection().forenkletStatus());
+    public Personinfo hentPersoninfo(AktørId aktørId, PersonIdent personIdent) {
 
-            var person = pdlKlient.hentPerson(query, projection, Tema.FOR);
+        var query = new HentPersonQueryRequest();
+        query.setIdent(aktørId.getId());
+        var projection = new PersonResponseProjection()
+            .navn(new NavnResponseProjection().forkortetNavn().fornavn().mellomnavn().etternavn())
+            .foedsel(new FoedselResponseProjection().foedselsdato())
+            .doedsfall(new DoedsfallResponseProjection().doedsdato())
+            .kjoenn(new KjoennResponseProjection().kjoenn())
+            .folkeregisterpersonstatus(new FolkeregisterpersonstatusResponseProjection().forenkletStatus());
 
-            var fødselsdato = person.getFoedsel().stream()
-                .map(Foedsel::getFoedselsdato)
-                .filter(Objects::nonNull)
-                .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
-            var dødssdato = person.getDoedsfall().stream()
-                .map(Doedsfall::getDoedsdato)
-                .filter(Objects::nonNull)
-                .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
-            var pdlStatusDød = person.getFolkeregisterpersonstatus().stream()
-                .map(Folkeregisterpersonstatus::getForenkletStatus)
-                .findFirst().map(AktørTjeneste::harPersonstatusDød).orElse(false);
-            var fraPDL = Personinfo.getbuilder(aktørId).medPersonIdent(personIdent)
-                .medNavn(person.getNavn().stream().map(AktørTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN"))
-                .medFødselsdato(fødselsdato)
-                .medDødsdato(dødssdato)
-                .medNavBrukerKjønn(mapKjønn(person))
-                .medRegistrertDød(pdlStatusDød)
-                .build();
+        var person = pdlKlient.hentPerson(query, projection, Tema.FOR);
 
-            if (!erLike(fraPDL, fraTPS)) {
-                var avvik = finnAvvik(fraTPS, fraPDL);
-                LOG.info("FPFORMIDLING PDL PERSON: avvik {}", avvik);
-            }
-        } catch (Exception e) {
-            LOG.info("FPFORMIDLING PDL PERSON: error", e);
-        }
+        var fødselsdato = person.getFoedsel().stream()
+            .map(Foedsel::getFoedselsdato)
+            .filter(Objects::nonNull)
+            .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
+        var dødssdato = person.getDoedsfall().stream()
+            .map(Doedsfall::getDoedsdato)
+            .filter(Objects::nonNull)
+            .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
+        var pdlStatusDød = person.getFolkeregisterpersonstatus().stream()
+            .map(Folkeregisterpersonstatus::getForenkletStatus)
+            .findFirst().map(AktørTjeneste::harPersonstatusDød).orElse(false);
+        return Personinfo.getbuilder(aktørId).medPersonIdent(personIdent)
+            .medNavn(person.getNavn().stream().map(AktørTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN"))
+            .medFødselsdato(fødselsdato)
+            .medDødsdato(dødssdato)
+            .medNavBrukerKjønn(mapKjønn(person))
+            .medRegistrertDød(pdlStatusDød)
+            .build();
     }
 
     public Optional<Adresseinfo> hentAdresseinformasjon(AktørId aktørId, PersonIdent personIdent, Adresseinfo fraTPS) {
@@ -209,8 +201,11 @@ public class AktørTjeneste {
                     .findFirst().map(AktørTjeneste::harPersonstatusDød).orElse(false);
             var adresser = mapAdresser(person.getBostedsadresse(), person.getKontaktadresse(), person.getOppholdsadresse());
             var antattGjeldende = velgAdresse(adresser);
-            if (!Objects.equals(antattGjeldende, nyesteAdresse(adresser))) {
-                LOG.info("FPFORMIDLING PDL ADRESSE: nyeste ulik gjeldende {}", antattGjeldende.getGjeldendePostadresseType());
+            var nyesteAdresse = nyesteAdresse(adresser);
+            if (!Objects.equals(antattGjeldende, nyesteAdresse)) {
+                LOG.info("FPFORMIDLING PDL ADRESSE: nyeste ulik gjeldende {} nyeste {} alle {}", antattGjeldende.getGjeldendePostadresseType(),
+                nyesteAdresse != null ? nyesteAdresse.getGjeldendePostadresseType() : "mangler nyeste",
+                        adresser.stream().map(Adresseinfo::getGjeldendePostadresseType).collect(Collectors.toList()));
             }
             var fraPDL = new Adresseinfo.Builder(antattGjeldende.getGjeldendePostadresseType(), personIdent, navn, pdlStatusDød)
                     .medAdresselinje1(antattGjeldende.getAdresselinje1())
@@ -251,26 +246,6 @@ public class AktørTjeneste {
         if (KjoennType.MANN.equals(kode))
             return NavBrukerKjønn.MANN;
         return KjoennType.KVINNE.equals(kode) ? NavBrukerKjønn.KVINNE : NavBrukerKjønn.UDEFINERT;
-    }
-
-    private static boolean erLike(Personinfo pdl, Personinfo tps) {
-        if (tps == null && pdl == null) return true;
-        if (pdl == null || tps == null || tps.getClass() != pdl.getClass()) return false;
-        return // Objects.equals(pdl.getNavn(), tps.getNavn()) && - avvik skyldes tegnsett
-            Objects.equals(pdl.getFødselsdato(), tps.getFødselsdato()) &&
-                Objects.equals(pdl.getDødsdato(), tps.getDødsdato()) &&
-                pdl.getKjønn() == tps.getKjønn() &&
-                pdl.isRegistrertDød() == tps.isRegistrertDød();
-    }
-
-    private static String finnAvvik(Personinfo tps, Personinfo pdl) {
-        //String navn = Objects.equals(tps.getNavn(), pdl.getNavn()) ? "" : " navn ";
-        String kjonn = Objects.equals(tps.getKjønn(), pdl.getKjønn()) ? "" : " kjønn ";
-        String fdato = Objects.equals(tps.getFødselsdato(), pdl.getFødselsdato()) ? "" : " fødsel ";
-        String ddato = Objects.equals(tps.getDødsdato(), pdl.getDødsdato()) ? "" : " dødato ";
-        String ddreg = Objects.equals(tps.isRegistrertDød(), pdl.isRegistrertDød()) ? "" : " dødreg ";
-
-        return "Avvik" + kjonn + fdato + ddato + ddreg;
     }
 
     private List<Adresseinfo> mapAdresser(List<Bostedsadresse> bostedsadresser, List<Kontaktadresse> kontaktadresser, List<Oppholdsadresse> oppholdsadresser) {
@@ -426,7 +401,7 @@ public class AktørTjeneste {
     private static boolean erLikeAdresse(Adresseinfo pdl, Adresseinfo tps) {
         if (tps == null && pdl == null) return true;
         if (pdl == null || tps == null || tps.getClass() != pdl.getClass()) return false;
-        return Objects.equals(pdl.getMottakerNavn(), tps.getMottakerNavn()) &&
+        return //Objects.equals(pdl.getMottakerNavn(), tps.getMottakerNavn()) &&
             pdl.isRegistrertDød() == tps.isRegistrertDød() &&
             Objects.equals(pdl,tps) ;
     }
@@ -437,13 +412,17 @@ public class AktørTjeneste {
         String status = Objects.equals(tps.isRegistrertDød(), pdl.isRegistrertDød()) ? "" : " status " + tps.isRegistrertDød() + " PDL " + pdl.isRegistrertDød();
         String adresse = Objects.equals(tps.getGjeldendePostadresseType(), pdl.getGjeldendePostadresseType()) ? "" :
                 " type " + tps.getGjeldendePostadresseType() + " PDL " + pdl.getGjeldendePostadresseType();
-        String adresse2 = Objects.equals(tps.getPostNr(), pdl.getPostNr()) ? "" : " land " + tps.getPostNr() + " PDL " + pdl.getPostNr();
+        String adresse2 = Objects.equals(tps.getPostNr(), pdl.getPostNr()) ? "" : " postnr " + tps.getPostNr() + " PDL " + pdl.getPostNr();
         String adresse3 = Objects.equals(tps.getLand(), pdl.getLand()) ? "" : " land " + tps.getLand() + " PDL " + pdl.getLand();
+        var feilvalg = "";
+        if (alle.contains(tps)) {
+            feilvalg = " feil type valgt ";
+        }
         String typer = Objects.equals(tps.getGjeldendePostadresseType(), pdl.getGjeldendePostadresseType()) ? "" :
                 " typer " + alle.stream().map(Adresseinfo::getGjeldendePostadresseType).collect(Collectors.toList());
         String typer2 = Objects.equals(tps.getGjeldendePostadresseType(), pdl.getGjeldendePostadresseType()) ? "" :
                 " gyldig " + alle.stream().map(Adresseinfo::getGyldigFom).collect(Collectors.toList());
-        return "Avvik" + navn + status + adresse + adresse2 + adresse3 + typer + typer2;
+        return "Avvik" + navn + status + adresse + adresse2 + adresse3 + feilvalg + typer + typer2;
     }
 
 }

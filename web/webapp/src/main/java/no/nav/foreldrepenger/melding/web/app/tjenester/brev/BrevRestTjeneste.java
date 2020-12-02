@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.melding.web.app.tjenester.brev;
 
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
-import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursResourceAttributt.FAGSAK;
 
 import java.util.List;
 
@@ -24,6 +23,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjeneste;
+import no.nav.foreldrepenger.melding.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
 @Path("/brev")
@@ -49,7 +49,7 @@ public class BrevRestTjeneste {
     @Path("/maler")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Henter liste over tilgjengelige brevtyper", tags = "brev")
-    @BeskyttetRessurs(action = READ, ressurs = FAGSAK, sporingslogg = false)
+    @BeskyttetRessurs(action = READ, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public List<BrevmalDto> hentMaler(@NotNull @QueryParam(AbacBehandlingUuidDto.NAME) @Parameter(description = AbacBehandlingUuidDto.DESC) @Valid AbacBehandlingUuidDto uuidDto) {
         return dokumentBehandlingTjeneste.hentBrevmalerFor(uuidDto.getBehandlingUuid()); // NOSONAR
@@ -59,7 +59,7 @@ public class BrevRestTjeneste {
     @Path("/forhaandsvis")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Returnerer en pdf som er en forhåndsvisning av brevet", tags = "brev")
-    @BeskyttetRessurs(action = READ, ressurs = FAGSAK)
+    @BeskyttetRessurs(action = READ, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response forhaandsvisDokument(
             @Parameter(description = "Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid AbacDokumentbestillingDto dokumentbestillingDto) { // NOSONAR

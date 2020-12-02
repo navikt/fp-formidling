@@ -30,9 +30,7 @@ public class PersonTjeneste {
 
     public Optional<Personinfo> hentBrukerForAktør(AktørId aktørId) {
         Optional<PersonIdent> funnetFnr = aktørTjeneste.hentPersonIdentForAktørId(aktørId);
-        var pinfo = funnetFnr.map(fnr -> tpsAdapter.hentKjerneinformasjon(fnr, aktørId));
-        funnetFnr.ifPresent(pi -> aktørTjeneste.hentPersoninfo(aktørId,pi, pinfo.orElse(null)));
-        return pinfo;
+        return funnetFnr.map(pi -> aktørTjeneste.hentPersoninfo(aktørId,pi));
     }
 
     public Optional<Adresseinfo> hentAdresseinformasjon(AktørId aktørId) {

@@ -263,4 +263,9 @@ public class DokumentHendelse extends BaseEntitet {
         }
 
     }
+
+    // TEST USE ONLY
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

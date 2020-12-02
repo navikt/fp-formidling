@@ -16,9 +16,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.melding.dbstoette.DatasourceConfiguration;
-import no.nav.vedtak.felles.lokal.dbstoette.ConnectionHandler;
-import no.nav.vedtak.felles.lokal.dbstoette.DBConnectionProperties;
+import no.nav.foreldrepenger.melding.dbstoette.Databaseskjemainitialisering;
 
 /**
  * Tester at alle migreringer følger standarder for navn og god praksis.
@@ -30,15 +28,11 @@ public class SjekkDbStrukturTest {
 
     private static DataSource ds;
 
-    private static String schema;
+    private static String schema = "public";
 
     @BeforeAll
     public static void setup() throws FileNotFoundException {
-        List<DBConnectionProperties> connectionProperties = DatasourceConfiguration.UNIT_TEST.get();
-
-        DBConnectionProperties dbconp = DBConnectionProperties.finnDefault(connectionProperties).get();
-        ds = ConnectionHandler.opprettFra(dbconp);
-        schema = dbconp.getSchema();
+        ds = Databaseskjemainitialisering.initUnitTestDataSource();
     }
 
     @Test

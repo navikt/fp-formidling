@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SOEKERS_NAVN;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.UUID;
@@ -41,7 +41,7 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         assertThat(xml).containsOnlyOnce(String.format("<variant>%s</variant>", VariantKode.OPPTJENING.value()));
         assertThat(xml).containsOnlyOnce(String.format("<personstatus>%s</personstatus>", PersonstatusKode.ANNET.value()));
         assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BehandlingType.FØRSTEGANGSSØKNAD.getBehandlingstidFristUker()));
-        assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SOEKERS_NAVN));
+        assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SØKERS_NAVN));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         assertThat(xml).containsOnlyOnce(String.format("<variant>%s</variant>", VariantKode.FORLENGET.value()));
         assertThat(xml).containsOnlyOnce(String.format("<personstatus>%s</personstatus>", PersonstatusKode.ANNET.value()));
         assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BehandlingType.FØRSTEGANGSSØKNAD.getBehandlingstidFristUker()));
-        assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SOEKERS_NAVN));
+        assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SØKERS_NAVN));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         assertThat(xml).containsOnlyOnce(String.format("<variant>%s</variant>", VariantKode.FORTIDLIG.value()));
         assertThat(xml).containsOnlyOnce(String.format("<personstatus>%s</personstatus>", PersonstatusKode.ANNET.value()));
         assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BehandlingType.FØRSTEGANGSSØKNAD.getBehandlingstidFristUker()));
-        assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SOEKERS_NAVN));
+        assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SØKERS_NAVN));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         assertThat(xml).containsOnlyOnce(String.format("<variant>%s</variant>", VariantKode.MEDLEM.value()));
         assertThat(xml).containsOnlyOnce(String.format("<personstatus>%s</personstatus>", PersonstatusKode.ANNET.value()));
         assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BehandlingType.FØRSTEGANGSSØKNAD.getBehandlingstidFristUker()));
-        assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SOEKERS_NAVN));
+        assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SØKERS_NAVN));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class ForlengetSaksbehandlingstidBrevMapperTest {
         assertThat(xml).containsOnlyOnce(String.format("<variant>%s</variant>", VariantKode.KLAGE.value()));
         assertThat(xml).containsOnlyOnce(String.format("<personstatus>%s</personstatus>", PersonstatusKode.ANNET.value()));
         assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BehandlingType.KLAGE.getBehandlingstidFristUker()));
-        assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SOEKERS_NAVN));
+        assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SØKERS_NAVN));
     }
 
     private DokumentHendelse byggHendelse(DokumentMalType mal, FagsakYtelseType ytelseType) {

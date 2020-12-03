@@ -38,7 +38,7 @@
         <!-- Eksterne -->
         <prometheus.version>0.9.0</prometheus.version>
         <swagger.version>2.1.5</swagger.version>
-        <swagger-ui.version>3.37.0</swagger-ui.version>
+        <swagger-ui.version>3.37.2</swagger-ui.version>
         <kafka.version>2.6.0</kafka.version>
         <cxf.version>3.4.1</cxf.version>
         <jupiter.version>5.7.0</jupiter.version>
@@ -386,14 +386,14 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.28</version>
             </dependency>
 
             <!-- Log -->
             <dependency>
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>
-                <version>6.4</version>
+                <version>6.5</version>
             </dependency>
             <dependency>
                 <groupId>com.papertrailapp</groupId>
@@ -428,7 +428,7 @@
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-compat-spec-parser</artifactId>
-                <version>1.0.52</version>
+                <version>1.0.53</version>
             </dependency>
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
@@ -455,7 +455,7 @@
                 <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.90</version>
+                <version>4.8.93</version>
             </dependency>
             <!-- Java11 -->
             <dependency>

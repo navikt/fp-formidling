@@ -1,5 +1,23 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.VERGES_NAVN;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -12,27 +30,13 @@ import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
 class InnvilgelseEngangstønadDokumentdataMapperTest {
     private InnvilgelseEngangstønadDokumentdataMapper dokumentdataMapperTest;
     private static final long ID = 123L;
     private static final long ID_REV = 124L;
-    private static final String VERGE_NAVN = "Finn Verge";
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
@@ -52,7 +56,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         Behandling orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
 
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagDokumentData(), null, null);
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD));
 
         FamilieHendelse familieHendelse = lagFamHendelse(BigInteger.ONE);
         FamilieHendelse orgfamilieHendelse = lagFamHendelse(BigInteger.ONE);
@@ -74,8 +78,8 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         assertThat(innvilgelseDokumentdata.getFbEllerMedhold()).isFalse();
         assertThat(innvilgelseDokumentdata.getMedhold()).isFalse();
         assertThat(innvilgelseDokumentdata.getRevurdering()).isTrue();
-        assertThat(innvilgelseDokumentdata.felles.getErKopi()).isFalse();
-        assertThat(innvilgelseDokumentdata.felles.getHarVerge()).isFalse();
+        assertThat(innvilgelseDokumentdata.getFelles().getErKopi()).isFalse();
+        assertThat(innvilgelseDokumentdata.getFelles().getHarVerge()).isFalse();
     }
 
     @Test
@@ -83,7 +87,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         //Arrange
         Behandling orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagDokumentData(), null, null);
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD));
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(innvilgetES))).thenReturn(Optional.of(orgBehES));
@@ -98,9 +102,27 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
     }
 
     @Test
-    public void case_med_verge_sender_MottakerNavn() {
+    public void skal_sende_original_til_verge() {
         //Arrange
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagDokumentData(), VERGE_NAVN, DokumentFelles.Kopi.JA);
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD), DokumentFelles.Kopi.NEI, true);
+        Behandling innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV);
+
+        when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
+
+        //Act
+        EngangsstønadInnvilgelseDokumentdata innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES);
+
+        //Assert
+        assertThat(innvilgelseDokumentdata.getRevurdering()).isFalse();
+        assertThat(innvilgelseDokumentdata.getFelles().getErKopi()).isFalse();
+        assertThat(innvilgelseDokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(innvilgelseDokumentdata.getFelles().getMottakerNavn().equals(VERGES_NAVN));
+    }
+
+    @Test
+    public void skal_sende_kopi_til_søker() {
+        //Arrange
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD), DokumentFelles.Kopi.JA, false);
         Behandling innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV);
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
@@ -112,7 +134,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         assertThat(innvilgelseDokumentdata.getRevurdering()).isFalse();
         assertThat(innvilgelseDokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(innvilgelseDokumentdata.getFelles().getHarVerge()).isTrue();
-        assertThat(innvilgelseDokumentdata.felles.getMottakerNavn().equals(VERGE_NAVN));
+        assertThat(innvilgelseDokumentdata.getFelles().getMottakerNavn()).isNull();
     }
 
     @Test
@@ -122,7 +144,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
         FamilieHendelse familieHendelse = lagFamHendelse(BigInteger.TWO);
         FamilieHendelse orgfamilieHendelse = lagFamHendelse(BigInteger.ONE);
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagDokumentData(), null, DokumentFelles.Kopi.NEI);
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD));
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(innvilgetES))).thenReturn(Optional.of(orgBehES));

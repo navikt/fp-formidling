@@ -55,6 +55,7 @@ public enum DokumentMalType implements Kodeverdi {
     INNVILGELSE_ENGANGSSTØNAD(DokumentMalTypeKode.INNVILGELSE_ENGANGSSTØNAD, "Vedtak om innvilgelse av engangsstønad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     INNHENTE_OPPLYSNINGER(DokumentMalTypeKode.INNHENTE_OPPLYSNINGER, "Innhent dokumentasjon", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     AVSLAG_ENGANGSSTØNAD(DokumentMalTypeKode.AVSLAG_ENGANGSSTØNAD, "Avslag engangsstønad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    VARSEL_OM_REVURDERING(DokumentMalTypeKode.VARSEL_OM_REVURDERING, "Varsel om revurdering", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.REVURDERING, DoksysKode.FRITKS),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -207,9 +208,9 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
                 .medNavn(NAVN)
                 .medNavBrukerKjønn(NavBrukerKjønn.MANN)
                 .build();
-        when(tpsTjeneste.hentBrukerForAktør(eq(SØKER))).thenReturn(Optional.of(personinfoSøker));
+        lenient().when(tpsTjeneste.hentBrukerForAktør(eq(SØKER))).thenReturn(Optional.of(personinfoSøker));
         Adresseinfo adresseSøker = new Adresseinfo.Builder(AdresseType.BOSTEDSADRESSE, SØKER_FNR, NAVN, false).build();
-        when(tpsTjeneste.hentAdresseinformasjon(eq(SØKER))).thenReturn(Optional.of(adresseSøker));
+        lenient().when(tpsTjeneste.hentAdresseinformasjon(eq(SØKER))).thenReturn(Optional.of(adresseSøker));
 
         if (harVerge) {
             Personinfo personinfoVerge = Personinfo.getbuilder(VERGE)
@@ -217,9 +218,9 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
                     .medNavn("Verge Vergesen")
                     .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
                     .build();
-            when(tpsTjeneste.hentBrukerForAktør(eq(VERGE))).thenReturn(Optional.of(personinfoVerge));
+            lenient().when(tpsTjeneste.hentBrukerForAktør(eq(VERGE))).thenReturn(Optional.of(personinfoVerge));
             Adresseinfo adresseVerge = new Adresseinfo.Builder(AdresseType.BOSTEDSADRESSE, VERGE_FNR, NAVN, false).build();
-            when(tpsTjeneste.hentAdresseinformasjon(eq(VERGE))).thenReturn(Optional.of(adresseVerge));
+            lenient().when(tpsTjeneste.hentAdresseinformasjon(eq(VERGE))).thenReturn(Optional.of(adresseVerge));
         }
         return personinfoSøker;
     }

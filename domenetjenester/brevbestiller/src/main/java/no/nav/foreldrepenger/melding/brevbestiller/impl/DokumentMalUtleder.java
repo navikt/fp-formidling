@@ -56,11 +56,7 @@ class DokumentMalUtleder {
     private DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (behandlingsresultat.erInnvilget()) {
-            if (!ENV.isProd()) {
-                return DokumentMalType.INNVILGELSE_ENGANGSSTØNAD;
-            } else {
-                return DokumentMalType.POSITIVT_VEDTAK_DOK;
-            }
+            return DokumentMalType.INNVILGELSE_ENGANGSSTØNAD;
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
             if (!ENV.isProd()) {
                 return DokumentMalType.AVSLAG_ENGANGSSTØNAD;

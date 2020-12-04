@@ -37,6 +37,7 @@ public class DokumentMalTypeKode {
     public static final String INNHENTE_OPPLYSNINGER = "INNOPP";
     public static final String AVSLAG_ENGANGSSTØNAD = "AVSLES";
     public static final String VARSEL_OM_REVURDERING = "VARREV";
+    public static final String INFO_OM_HENLEGGELSE = "IOHENL";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated

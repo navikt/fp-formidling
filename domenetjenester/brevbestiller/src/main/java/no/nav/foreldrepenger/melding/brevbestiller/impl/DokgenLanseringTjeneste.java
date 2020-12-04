@@ -15,7 +15,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
             DokumentMalType.INNHENTE_OPPLYSNINGER,
             DokumentMalType.AVSLAG_ENGANGSSTØNAD,
-            DokumentMalType.VARSEL_OM_REVURDERING);
+            DokumentMalType.VARSEL_OM_REVURDERING,
+            DokumentMalType.INFO_OM_HENLEGGELSE);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
             DokumentMalType.INNHENTE_OPPLYSNINGER,
             DokumentMalType.VARSEL_OM_REVURDERING);
@@ -23,7 +24,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.INNHENT_DOK,
             DokumentMalType.REVURDERING_DOK);
     private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_DEV = Map.of(
-            DokumentMalType.REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING);
+            DokumentMalType.REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING,
+            DokumentMalType.HENLEGG_BEHANDLING_DOK, DokumentMalType.INFO_OM_HENLEGGELSE);
     private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_PROD = Map.of();
 
     public static boolean malSkalBrukeDokgen(DokumentMalType dokumentMalType) {

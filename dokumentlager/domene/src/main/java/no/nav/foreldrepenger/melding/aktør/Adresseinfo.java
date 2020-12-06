@@ -99,6 +99,14 @@ public class Adresseinfo {
                 Objects.equals(land, that.land);
     }
 
+
+    public static boolean erLikeNokAdresser(Adresseinfo a1, Adresseinfo a2) {
+        return a1.gjeldendePostadresseType == a2.gjeldendePostadresseType &&
+                Objects.equals(a1.matrikkelId, a2.matrikkelId) &&
+                Objects.equals(a1.postNr, a2.postNr) &&
+                (Objects.equals(a1.land, a2.land) || a1.land == null || a2.land == null);
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(gjeldendePostadresseType, matrikkelId, adresselinje1, adresselinje2, adresselinje3, adresselinje4, postNr, poststed, land);

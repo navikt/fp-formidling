@@ -172,16 +172,16 @@ public class AktørTjeneste {
                     .navn(new NavnResponseProjection().forkortetNavn().fornavn().mellomnavn().etternavn())
                     .doedsfall(new DoedsfallResponseProjection().doedsdato())
                     .folkeregisterpersonstatus(new FolkeregisterpersonstatusResponseProjection().forenkletStatus().status())
-                    .bostedsadresse(new BostedsadresseResponseProjection()
+                    .bostedsadresse(new BostedsadresseResponseProjection().gyldigFraOgMed().angittFlyttedato()
                             .vegadresse(new VegadresseResponseProjection().matrikkelId().adressenavn().husnummer().husbokstav().tilleggsnavn().postnummer())
                             .matrikkeladresse(new MatrikkeladresseResponseProjection().matrikkelId().bruksenhetsnummer().tilleggsnavn().postnummer())
                             .ukjentBosted(new UkjentBostedResponseProjection().bostedskommune())
                             .utenlandskAdresse(new UtenlandskAdresseResponseProjection().adressenavnNummer().bygningEtasjeLeilighet().postboksNummerNavn().bySted().regionDistriktOmraade().postkode().landkode()))
-                    .oppholdsadresse(new OppholdsadresseResponseProjection()
+                    .oppholdsadresse(new OppholdsadresseResponseProjection().gyldigFraOgMed()
                             .vegadresse(new VegadresseResponseProjection().matrikkelId().adressenavn().husnummer().husbokstav().tilleggsnavn().postnummer())
                             .matrikkeladresse(new MatrikkeladresseResponseProjection().matrikkelId().bruksenhetsnummer().tilleggsnavn().postnummer())
                             .utenlandskAdresse(new UtenlandskAdresseResponseProjection().adressenavnNummer().bygningEtasjeLeilighet().postboksNummerNavn().bySted().regionDistriktOmraade().postkode().landkode()))
-                    .kontaktadresse(new KontaktadresseResponseProjection().type()
+                    .kontaktadresse(new KontaktadresseResponseProjection().type().gyldigFraOgMed()
                             .vegadresse(new VegadresseResponseProjection().matrikkelId().adressenavn().husnummer().husbokstav().tilleggsnavn().postnummer())
                             .postboksadresse(new PostboksadresseResponseProjection().postboks().postbokseier().postnummer())
                             .postadresseIFrittFormat(new PostadresseIFrittFormatResponseProjection().adresselinje1().adresselinje2().adresselinje3().postnummer())
@@ -250,7 +250,7 @@ public class AktørTjeneste {
 
     private List<Adresseinfo> mapAdresser(List<Bostedsadresse> bostedsadresser, List<Kontaktadresse> kontaktadresser, List<Oppholdsadresse> oppholdsadresser) {
         List<Adresseinfo> resultat = new ArrayList<>();
-        var bostFom = bostedsadresser.stream().map(Bostedsadresse::getGyldigFraOgMed).filter(Objects::nonNull).map(AktørTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
+        var bostFom = bostedsadresser.stream().map(AktørTjeneste::bostedAdresseFom).filter(Objects::nonNull).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
         bostedsadresser.stream().map(Bostedsadresse::getVegadresse).map(a -> mapVegadresse(AdresseType.BOSTEDSADRESSE, a, bostFom)).filter(Objects::nonNull).forEach(resultat::add);
         bostedsadresser.stream().map(Bostedsadresse::getMatrikkeladresse).map(a -> mapMatrikkeladresse(AdresseType.BOSTEDSADRESSE, a, bostFom)).filter(Objects::nonNull).forEach(resultat::add);
         bostedsadresser.stream().map(Bostedsadresse::getUkjentBosted).filter(Objects::nonNull).map(a -> mapUkjentadresse(a, bostFom)).forEach(resultat::add);
@@ -271,6 +271,13 @@ public class AktørTjeneste {
             resultat.add(mapUkjentadresse(null, Tid.TIDENES_BEGYNNELSE));
         }
         return resultat;
+    }
+
+    // TODO: Sjekke best match med TPS om man bruker flyttedato eller gyldigdato
+    private static LocalDate bostedAdresseFom(Bostedsadresse bostedsadresse) {
+        if (bostedsadresse.getAngittFlyttedato() != null)
+            return LocalDate.parse(bostedsadresse.getAngittFlyttedato(), DateTimeFormatter.ISO_LOCAL_DATE);
+        return bostedsadresse.getGyldigFraOgMed() == null ? null : tilLocalDate(bostedsadresse.getGyldigFraOgMed());
     }
 
     private static LocalDate tilLocalDate(Date date) {
@@ -384,6 +391,9 @@ public class AktørTjeneste {
     }
 
     private static Adresseinfo velgAdresse(List<Adresseinfo> alleAdresser) {
+        var nyesteAdresse = nyesteAdresse(alleAdresser);
+        if (nyesteAdresse != null && AdresseType.BOSTEDSADRESSE.equals(nyesteAdresse.getGjeldendePostadresseType()))
+            return nyesteAdresse;
         return alleAdresser.stream().filter(a -> AdresseType.POSTADRESSE.equals(a.getGjeldendePostadresseType())).findFirst()
             .orElseGet(() -> alleAdresser.stream().filter(a -> AdresseType.POSTADRESSE_UTLAND.equals(a.getGjeldendePostadresseType())).findFirst()
                 .orElseGet(() -> alleAdresser.stream().filter(a -> AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE.equals(a.getGjeldendePostadresseType())).findFirst()
@@ -403,11 +413,11 @@ public class AktørTjeneste {
         if (pdl == null || tps == null || tps.getClass() != pdl.getClass()) return false;
         return //Objects.equals(pdl.getMottakerNavn(), tps.getMottakerNavn()) &&
             pdl.isRegistrertDød() == tps.isRegistrertDød() &&
-            Objects.equals(pdl,tps) ;
+            Adresseinfo.erLikeNokAdresser(pdl,tps) ;
     }
 
     private static String finnAvvikAdresse(Adresseinfo tps, Adresseinfo pdl, List<Adresseinfo> alle) {
-        String navn = Objects.equals(tps.getMottakerNavn(), pdl.getMottakerNavn()) ? "" : " navn ";
+        //String navn = Objects.equals(tps.getMottakerNavn(), pdl.getMottakerNavn()) ? "" : " navn ";
         //String ddato = Objects.equals(tps.getDødsdato(), pdl.getDødsdato()) ? "" : " død ";
         String status = Objects.equals(tps.isRegistrertDød(), pdl.isRegistrertDød()) ? "" : " status " + tps.isRegistrertDød() + " PDL " + pdl.isRegistrertDød();
         String adresse = Objects.equals(tps.getGjeldendePostadresseType(), pdl.getGjeldendePostadresseType()) ? "" :
@@ -422,7 +432,7 @@ public class AktørTjeneste {
                 " typer " + alle.stream().map(Adresseinfo::getGjeldendePostadresseType).collect(Collectors.toList());
         String typer2 = Objects.equals(tps.getGjeldendePostadresseType(), pdl.getGjeldendePostadresseType()) ? "" :
                 " gyldig " + alle.stream().map(Adresseinfo::getGyldigFom).collect(Collectors.toList());
-        return "Avvik" + navn + status + adresse + adresse2 + adresse3 + feilvalg + typer + typer2;
+        return "Avvik" + status + adresse + adresse2 + adresse3 + feilvalg + typer + typer2;
     }
 
 }

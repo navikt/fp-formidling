@@ -432,7 +432,7 @@ public class AktørTjeneste {
                 " typer " + alle.stream().map(Adresseinfo::getGjeldendePostadresseType).collect(Collectors.toList());
         String typer2 = Objects.equals(tps.getGjeldendePostadresseType(), pdl.getGjeldendePostadresseType()) ? "" :
                 " gyldig " + alle.stream().map(Adresseinfo::getGyldigFom).collect(Collectors.toList());
-        return "Avvik" + navn + status + adresse + adresse2 + adresse3 + feilvalg + typer + typer2;
+        return "Avvik" + status + adresse + adresse2 + adresse3 + feilvalg + typer + typer2;
     }
 
 }

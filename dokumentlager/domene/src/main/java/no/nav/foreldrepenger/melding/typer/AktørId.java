@@ -50,13 +50,13 @@ public class AktørId implements Serializable, Comparable<AktørId>, IndexKey {
     }
 
     @Override
-    public String getIndexKey() {
+    public String getIndexKey() { //NOSONAR
         return aktørId;
-    } //NOSONAR
+    }
 
-    public String getId() {
+    public String getId() { //NOSONAR
         return aktørId;
-    } //NOSONAR
+    }
 
     @Override
     public boolean equals(Object obj) {

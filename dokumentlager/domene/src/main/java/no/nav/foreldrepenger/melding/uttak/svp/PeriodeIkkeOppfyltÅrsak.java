@@ -16,10 +16,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
-
+@SuppressWarnings("java:S115")
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse { //NOSONAR
+public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse {
 
     INGEN("-", null),
 
@@ -36,7 +36,6 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse
     _8310("8310", null),
     PERIODE_SAMTIDIG_SOM_FERIE("8311", null),
     _8313("8313", null),
-
             ;
 
     private static final Map<String, PeriodeIkkeOppfyltÅrsak> KODER = new LinkedHashMap<>();

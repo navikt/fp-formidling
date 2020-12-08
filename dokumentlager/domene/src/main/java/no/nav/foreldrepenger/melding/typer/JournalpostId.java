@@ -44,13 +44,13 @@ public class JournalpostId implements Serializable, IndexKey {
     }
 
     @Override
-    public String getIndexKey() {
+    public String getIndexKey() { //NOSONAR
         return journalpostId;
-    } //NOSONAR
+    }
 
-    public String getVerdi() {
+    public String getVerdi() { //NOSONAR
         return journalpostId;
-    } //NOSONAR
+    }
 
     @Override
     public boolean equals(Object obj) {

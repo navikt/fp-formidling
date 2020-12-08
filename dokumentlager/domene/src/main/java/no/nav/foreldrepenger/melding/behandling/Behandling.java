@@ -123,6 +123,14 @@ public class Behandling {
         return BehandlingType.KLAGE.equals(getBehandlingType());
     }
 
+    public boolean erAnke() {
+        return BehandlingType.ANKE.equals(getBehandlingType());
+    }
+
+    public boolean erInnsyn() {
+        return BehandlingType.INNSYN.equals(getBehandlingType());
+    }
+
     public FagsakBackend getFagsakBackend() {
         return fagsakBackend;
     }

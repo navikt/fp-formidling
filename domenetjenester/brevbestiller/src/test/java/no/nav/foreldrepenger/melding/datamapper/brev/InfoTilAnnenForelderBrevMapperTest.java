@@ -43,7 +43,7 @@ public class InfoTilAnnenForelderBrevMapperTest {
     public void setup(BehandlingÅrsakType behandlingÅrsakType, long ID) {
         behandling = Behandling.builder().medId(ID)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medSpråkkode(Språkkode.nb)
+                .medSpråkkode(Språkkode.NB)
                 .medBehandlingÅrsaker(List.of(BehandlingÅrsak.builder()
                     .medBehandlingÅrsakType(behandlingÅrsakType)
                     .build()))

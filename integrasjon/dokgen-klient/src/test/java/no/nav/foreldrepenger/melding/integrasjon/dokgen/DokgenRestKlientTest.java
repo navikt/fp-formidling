@@ -23,7 +23,7 @@ public class DokgenRestKlientTest {
 
     private static final String BASE_URL = "https://base.url";
     private static final String MAL_TYPE = "testmal";
-    private static final Språkkode SPRÅKKODE = Språkkode.nn;
+    private static final Språkkode SPRÅKKODE = Språkkode.NN;
     private static final byte[] RESPONSE = "SVAR".getBytes();
 
     private OidcRestClient oidcRestClient;
@@ -60,7 +60,7 @@ public class DokgenRestKlientTest {
         dokgenRestKlient.genererPdf(MAL_TYPE, Språkkode.UDEFINERT, dokumentdata);
 
         // Assert
-        assertThat(uriCaptor.getValue().toURL().toString()).isEqualTo(BASE_URL + "/template/" + MAL_TYPE + "/template_" + Språkkode.nb.getKode().toLowerCase() + "/create-pdf-variation");
+        assertThat(uriCaptor.getValue().toURL().toString()).isEqualTo(BASE_URL + "/template/" + MAL_TYPE + "/template_" + Språkkode.NB.getKode().toLowerCase() + "/create-pdf-variation");
     }
 
     @Test

@@ -64,7 +64,6 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
         this.journalpostId = journalpostId;
         this.dokumentMalType = dokumentMalType;
         this.historikkinnslagType = historikkinnslagType;
-        this.dokumentMalType = dokumentMalType;
     }
 
     public static Builder builder() {

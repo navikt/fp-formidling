@@ -40,7 +40,7 @@ public class InnvilgelseEngangstønadNyBrevMapperTest {
     public void setup(FagsakYtelseType ytelseType, BehandlingType behandlingType, long ID) {
         behandling = Behandling.builder().medId(ID)
                 .medBehandlingType(behandlingType)
-                .medSpråkkode(Språkkode.nb)
+                .medSpråkkode(Språkkode.NB)
                 .build();
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())

@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.dokumentdata;
 
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -21,6 +19,8 @@ import javax.enterprise.inject.spi.CDI;
 import javax.enterprise.util.AnnotationLiteral;
 import javax.inject.Qualifier;
 
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+
 @Qualifier
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
@@ -30,7 +30,7 @@ public @interface DokumentMalTypeRef {
 
     String value();
 
-    class DokumentMalTypeRefLiteral extends AnnotationLiteral<DokumentMalTypeRef> implements DokumentMalTypeRef {
+    class DokumentMalTypeRefLiteral extends AnnotationLiteral<DokumentMalTypeRef> implements DokumentMalTypeRef { //NOSONAR
 
         private String navn;
 

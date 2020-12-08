@@ -38,11 +38,11 @@ public class Saksnummer implements SakId, IndexKey {
     @Override
     public String getIndexKey() {
         return saksnummer;
-    }
+    } //NOSONAR
 
     public String getVerdi() {
         return saksnummer;
-    }
+    } //NOSONAR
 
     @Override
     public boolean equals(Object obj) {

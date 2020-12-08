@@ -98,10 +98,6 @@ public enum BehandlingResultatType implements Kodeverdi {
         return KODEVERK;
     }
 
-    public static void main(String[] args) {
-        System.out.println(KODER.keySet());
-    }
-
     public static Set<BehandlingResultatType> getAlleHenleggelseskoder() {
         return ALLE_HENLEGGELSESKODER;
     }

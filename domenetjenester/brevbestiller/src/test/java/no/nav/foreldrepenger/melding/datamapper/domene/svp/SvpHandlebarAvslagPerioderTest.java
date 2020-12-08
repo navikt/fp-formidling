@@ -53,7 +53,7 @@ public class SvpHandlebarAvslagPerioderTest {
                 .build();
         Set<SvpAvslagPeriode> perioder = Set.of(periode);
 
-        registrerTestSpesifikkeHandlebars(perioder, Språkkode.nb);
+        registrerTestSpesifikkeHandlebars(perioder, Språkkode.NB);
 
         String mottattDato = new Dato(OKTOBER_1).toString();
         Map<String, Object> map = new HashMap<>();
@@ -96,7 +96,7 @@ public class SvpHandlebarAvslagPerioderTest {
 
         Set<SvpAvslagPeriode> perioder = Set.of(periode_1, periode_2);
 
-        registrerTestSpesifikkeHandlebars(perioder, Språkkode.nb);
+        registrerTestSpesifikkeHandlebars(perioder, Språkkode.NB);
 
         String mottattDato = new Dato(OKTOBER_1).toString();
         Map<String, Object> map = new HashMap<>();
@@ -136,7 +136,7 @@ public class SvpHandlebarAvslagPerioderTest {
 
         Set<SvpAvslagPeriode> perioder = Set.of(periode);
 
-        registrerTestSpesifikkeHandlebars(perioder, Språkkode.nn);
+        registrerTestSpesifikkeHandlebars(perioder, Språkkode.NN);
 
         String mottattDato = new Dato(OKTOBER_1).toString();
         Map<String, Object> map = new HashMap<>();
@@ -179,7 +179,7 @@ public class SvpHandlebarAvslagPerioderTest {
 
         Set<SvpAvslagPeriode> perioder = Set.of(periode_1, periode_2);
 
-        registrerTestSpesifikkeHandlebars(perioder, Språkkode.nn);
+        registrerTestSpesifikkeHandlebars(perioder, Språkkode.NN);
 
         String mottattDato = new Dato(OKTOBER_1).toString();
         Map<String, Object> map = new HashMap<>();

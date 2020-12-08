@@ -394,9 +394,7 @@ public class AktørTjeneste {
 
     private static Adresseinfo velgAdresse(List<Adresseinfo> alleAdresser) {
         var nyesteAdresse = nyesteAdresse(alleAdresser);
-        if (nyesteAdresse != null && AdresseType.BOSTEDSADRESSE.equals(nyesteAdresse.getGjeldendePostadresseType()))
-            return nyesteAdresse;
-        return alleAdresser.stream().filter(a -> AdresseType.POSTADRESSE.equals(a.getGjeldendePostadresseType())).findFirst()
+        var rangertAdresse = alleAdresser.stream().filter(a -> AdresseType.POSTADRESSE.equals(a.getGjeldendePostadresseType())).findFirst()
             .orElseGet(() -> alleAdresser.stream().filter(a -> AdresseType.POSTADRESSE_UTLAND.equals(a.getGjeldendePostadresseType())).findFirst()
                 .orElseGet(() -> alleAdresser.stream().filter(a -> AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE.equals(a.getGjeldendePostadresseType())).findFirst()
                     .orElseGet(() -> alleAdresser.stream().filter(a -> AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND.equals(a.getGjeldendePostadresseType())).findFirst()
@@ -404,6 +402,9 @@ public class AktørTjeneste {
                             .orElse(Adresseinfo.builder(AdresseType.UKJENT_ADRESSE).buildTemporary())
 
                 ))));
+        if (nyesteAdresse != null && AdresseType.BOSTEDSADRESSE.equals(nyesteAdresse.getGjeldendePostadresseType()) && nyesteAdresse.getGyldigFom().isAfter(rangertAdresse.getGyldigFom()))
+            return nyesteAdresse;
+        return rangertAdresse;
     }
 
     private static Adresseinfo nyesteAdresse(List<Adresseinfo> alleAdresser) {

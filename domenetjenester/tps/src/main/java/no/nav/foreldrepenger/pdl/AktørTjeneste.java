@@ -203,9 +203,11 @@ public class AktørTjeneste {
             var antattGjeldende = velgAdresse(adresser);
             var nyesteAdresse = nyesteAdresse(adresser);
             if (!Objects.equals(antattGjeldende, nyesteAdresse)) {
-                LOG.info("FPFORMIDLING PDL ADRESSE: nyeste ulik gjeldende {} nyeste {} alle {}", antattGjeldende.getGjeldendePostadresseType(),
+                LOG.info("FPFORMIDLING PDL ADRESSE: nyeste ulik gjeldende {} nyeste {} alle {} {} {}", antattGjeldende.getGjeldendePostadresseType(),
                 nyesteAdresse != null ? nyesteAdresse.getGjeldendePostadresseType() : "mangler nyeste",
-                        adresser.stream().map(Adresseinfo::getGjeldendePostadresseType).collect(Collectors.toList()));
+                        adresser.stream().map(Adresseinfo::getGjeldendePostadresseType).collect(Collectors.toList()),
+                        adresser.stream().map(Adresseinfo::getPostNr).collect(Collectors.toList()),
+                        adresser.stream().map(Adresseinfo::getGyldigFom).collect(Collectors.toList()));
             }
             var fraPDL = new Adresseinfo.Builder(antattGjeldende.getGjeldendePostadresseType(), personIdent, navn, pdlStatusDød)
                     .medAdresselinje1(antattGjeldende.getAdresselinje1())
@@ -275,9 +277,9 @@ public class AktørTjeneste {
 
     // TODO: Sjekke best match med TPS om man bruker flyttedato eller gyldigdato
     private static LocalDate bostedAdresseFom(Bostedsadresse bostedsadresse) {
-        if (bostedsadresse.getAngittFlyttedato() != null)
-            return LocalDate.parse(bostedsadresse.getAngittFlyttedato(), DateTimeFormatter.ISO_LOCAL_DATE);
-        return bostedsadresse.getGyldigFraOgMed() == null ? null : tilLocalDate(bostedsadresse.getGyldigFraOgMed());
+        if (bostedsadresse.getGyldigFraOgMed() != null)
+            return tilLocalDate(bostedsadresse.getGyldigFraOgMed());
+        return bostedsadresse.getAngittFlyttedato() != null ? LocalDate.parse(bostedsadresse.getAngittFlyttedato(), DateTimeFormatter.ISO_LOCAL_DATE) : null;
     }
 
     private static LocalDate tilLocalDate(Date date) {
@@ -430,9 +432,11 @@ public class AktørTjeneste {
         }
         String typer = Objects.equals(tps.getGjeldendePostadresseType(), pdl.getGjeldendePostadresseType()) ? "" :
                 " typer " + alle.stream().map(Adresseinfo::getGjeldendePostadresseType).collect(Collectors.toList());
+        String typer1 = Objects.equals(tps.getGjeldendePostadresseType(), pdl.getGjeldendePostadresseType()) ? "" :
+                " nummer " + alle.stream().map(Adresseinfo::getPostNr).collect(Collectors.toList());
         String typer2 = Objects.equals(tps.getGjeldendePostadresseType(), pdl.getGjeldendePostadresseType()) ? "" :
                 " gyldig " + alle.stream().map(Adresseinfo::getGyldigFom).collect(Collectors.toList());
-        return "Avvik" + status + adresse + adresse2 + adresse3 + feilvalg + typer + typer2;
+        return "Avvik" + status + adresse + adresse2 + adresse3 + feilvalg + typer + typer1 +  typer2;
     }
 
 }

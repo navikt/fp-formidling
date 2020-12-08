@@ -52,11 +52,11 @@ public class AktørId implements Serializable, Comparable<AktørId>, IndexKey {
     @Override
     public String getIndexKey() {
         return aktørId;
-    }
+    } //NOSONAR
 
     public String getId() {
         return aktørId;
-    }
+    } //NOSONAR
 
     @Override
     public boolean equals(Object obj) {
@@ -77,14 +77,6 @@ public class AktørId implements Serializable, Comparable<AktørId>, IndexKey {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "<" + aktørId + ">";
-    }
-
-    /**
-     * @deprecated unngå bruk bytter til String internt
-     */
-    @Deprecated
-    public Long longValue() {
-        return Long.parseLong(aktørId);
     }
 
     @Override

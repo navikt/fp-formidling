@@ -49,7 +49,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nb);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NB);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -77,7 +77,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nn);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NN);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -104,7 +104,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nb);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NB);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -130,7 +130,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nn);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NN);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -155,7 +155,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nb);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NB);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -180,7 +180,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nn);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NN);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -204,7 +204,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nb);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NB);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -229,7 +229,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nn);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NN);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -258,7 +258,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nb);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NB);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -286,7 +286,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nn);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NN);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -313,7 +313,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nb);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NB);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -339,7 +339,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nn);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NN);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -364,7 +364,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nb);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NB);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -389,7 +389,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nn);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NN);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);
@@ -433,7 +433,7 @@ public class SvpHandlebarAvslagArbeidsforholdTest {
         Set<SvpAvslagArbeidsforhold> avslagArbeidsforhold = Set.of(arb1, arb2, arb3, arb4, arb5);
         map.put("avslagArbeidsforhold", avslagArbeidsforhold);
 
-        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.nb);
+        registrerTestSpesifikkeHandlebars(avslagArbeidsforhold, Språkkode.NB);
 
         // Act
         String templateString = handlebars.compile(HANDLEBAR_FILE_LOCATION).apply(map);

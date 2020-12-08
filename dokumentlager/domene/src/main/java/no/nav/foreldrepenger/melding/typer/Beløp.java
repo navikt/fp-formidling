@@ -46,7 +46,8 @@ public class Beløp implements Serializable, IndexKey {
 
     @Override
     public String getIndexKey() {
-        return skalertVerdi().toString();
+        BigDecimal skalertVerdi = skalertVerdi();
+        return skalertVerdi != null ? skalertVerdi.toString() : null;
     }
 
     public BigDecimal getVerdi() {

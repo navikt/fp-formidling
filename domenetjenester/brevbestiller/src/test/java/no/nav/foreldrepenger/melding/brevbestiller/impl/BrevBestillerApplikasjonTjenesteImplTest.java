@@ -233,7 +233,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         Behandling behandling = Behandling.builder()
                 .medUuid(BEHANDLING_UUID)
                 .medFagsakBackend(fagsakBackend)
-                .medSpråkkode(Språkkode.nb)
+                .medSpråkkode(Språkkode.NB)
                 .leggTilResourceLink(harVerge ? BehandlingResourceLink.ny().medRel("soeker-verge").build() : BehandlingResourceLink.ny().medRel("annet").build())
                 .build();
         when(domeneobjektProvider.hentFagsakBackend(eq(behandling))).thenReturn(fagsakBackend);

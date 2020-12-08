@@ -41,13 +41,13 @@ public class DokumentMalTypeKode {
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
-    public static final String KLAGE_OVERSENDT_KLAGEINSTANS_DOK = "KLAGOV";
+    public static final String KLAGE_OVERSENDT_KLAGEINSTANS_DOK = "KLAGOV"; //NOSONAR
     @Deprecated
-    public static final String KLAGE_AVVIST_DOK = "KLAGAV";
+    public static final String KLAGE_AVVIST_DOK = "KLAGAV"; //NOSONAR
     @Deprecated
-    public static final String KLAGE_YTELSESVEDTAK_OPPHEVET_DOK = "KLAGNY";
+    public static final String KLAGE_YTELSESVEDTAK_OPPHEVET_DOK = "KLAGNY"; //NOSONAR
     @Deprecated
-    public static final String VEDTAK_MEDHOLD = "VEDMED";
+    public static final String VEDTAK_MEDHOLD = "VEDMED"; //NOSONAR
     @Deprecated
-    public static final String KLAGE_YTELSESVEDTAK_STADFESTET_DOK = "KLAGVE";
+    public static final String KLAGE_YTELSESVEDTAK_STADFESTET_DOK = "KLAGVE"; //NOSONAR
 }

@@ -188,7 +188,7 @@ public class KlageAvvistBrevMapperTest {
     private Behandling opprettBehandling() {
         return Behandling.builder().medId(ID)
                 .medBehandlingType(BehandlingType.KLAGE)
-                .medSpråkkode(Språkkode.nb)
+                .medSpråkkode(Språkkode.NB)
                 .build();
     }
 

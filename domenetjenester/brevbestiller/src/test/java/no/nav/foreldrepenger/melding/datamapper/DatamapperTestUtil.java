@@ -79,7 +79,7 @@ public class DatamapperTestUtil {
                 .medSakspartNavn(SØKERS_NAVN)
                 .medErKopi(kopi != null ? Optional.of(kopi) : null)
                 .medMottakerType(DokumentFelles.MottakerType.PERSON)
-                .medSpråkkode(Språkkode.nb)
+                .medSpråkkode(Språkkode.NB)
                 .medSakspartPersonStatus("ANNET")
                 .build();
     }
@@ -110,7 +110,7 @@ public class DatamapperTestUtil {
     }
 
     public static Behandling.Builder standardBehandlingBuilder() {
-        return Behandling.builder().medId(123L).medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD).medSpråkkode(Språkkode.nb);
+        return Behandling.builder().medId(123L).medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD).medSpråkkode(Språkkode.NB);
     }
 
     public static Behandling standardBehandling() {

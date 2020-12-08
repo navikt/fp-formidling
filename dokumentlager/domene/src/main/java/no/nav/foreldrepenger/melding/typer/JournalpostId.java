@@ -46,11 +46,11 @@ public class JournalpostId implements Serializable, IndexKey {
     @Override
     public String getIndexKey() {
         return journalpostId;
-    }
+    } //NOSONAR
 
     public String getVerdi() {
         return journalpostId;
-    }
+    } //NOSONAR
 
     @Override
     public boolean equals(Object obj) {

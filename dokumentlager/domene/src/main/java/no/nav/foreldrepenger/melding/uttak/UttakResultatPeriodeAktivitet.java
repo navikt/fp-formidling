@@ -3,6 +3,9 @@ package no.nav.foreldrepenger.melding.uttak;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+
 public class UttakResultatPeriodeAktivitet {
     private StønadskontoType trekkonto;
     private BigDecimal trekkdager;
@@ -57,11 +60,11 @@ public class UttakResultatPeriodeAktivitet {
     }
 
     public String getArbeidsgiverIdentifikator() {
-        return uttakAktivitet.getArbeidsgiver().isPresent() ? uttakAktivitet.getArbeidsgiver().get().getIdentifikator() : null;
+        return uttakAktivitet.getArbeidsgiver().map(Arbeidsgiver::getIdentifikator).orElse(null);
     }
 
     public String getArbeidsforholdId() {
-        return uttakAktivitet.getArbeidsforholdRef().isPresent() ? uttakAktivitet.getArbeidsforholdRef().get().getReferanse() : null;
+        return uttakAktivitet.getArbeidsforholdRef().map(ArbeidsforholdRef::getReferanse).orElse(null);
     }
 
     public LocalDate getFom() {
@@ -76,7 +79,6 @@ public class UttakResultatPeriodeAktivitet {
     public static final class Builder {
         private StønadskontoType trekkonto;
         private BigDecimal trekkdager;
-        private String tidsperiode;
         private BigDecimal utbetalingsprosent;
         private boolean graderingInnvilget;
         private BigDecimal arbeidsprosent;

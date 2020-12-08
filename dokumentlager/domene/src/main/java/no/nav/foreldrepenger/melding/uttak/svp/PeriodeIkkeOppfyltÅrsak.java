@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse {
+public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse { //NOSONAR
 
     INGEN("-", null),
 
@@ -56,11 +56,7 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse
     @JsonIgnore
     private String lovHjemmel;
 
-    private PeriodeIkkeOppfyltÅrsak(String kode) {
-        this.kode = kode;
-    }
-
-    private PeriodeIkkeOppfyltÅrsak(String kode, String lovHjemmel) {
+    PeriodeIkkeOppfyltÅrsak(String kode, String lovHjemmel) {
         this.kode = kode;
         this.lovHjemmel = lovHjemmel;
     }

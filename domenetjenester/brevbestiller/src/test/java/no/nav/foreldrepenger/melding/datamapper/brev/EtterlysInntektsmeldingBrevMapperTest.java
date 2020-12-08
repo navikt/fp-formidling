@@ -41,7 +41,7 @@ public class EtterlysInntektsmeldingBrevMapperTest {
     public void setup(FagsakYtelseType ytelseType, long ID) {
         behandling = Behandling.builder().medId(ID)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medSpråkkode(Språkkode.nb)
+                .medSpråkkode(Språkkode.NB)
                 .build();
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())

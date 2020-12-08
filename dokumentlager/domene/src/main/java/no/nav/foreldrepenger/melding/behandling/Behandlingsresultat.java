@@ -22,7 +22,7 @@ public class Behandlingsresultat {
     //Objekter
     private String beregning; //BeregningResultat
     private VilkårResultat vilkårResultat; //VilkårResultat
-    private String Periode; //Uttaksperiodegrense
+    private String periode; //Uttaksperiodegrense
     private BeregningResultat beregningResultat;
     private Behandling behandling;
 
@@ -37,7 +37,7 @@ public class Behandlingsresultat {
         erRevurderingMedUendretUtfall = builder.erRevurderingMedUendretUtfall;
         beregning = builder.beregning;
         vilkårResultat = builder.vilkårResultat;
-        Periode = builder.Periode;
+        periode = builder.periode;
         beregningResultat = builder.beregningResultat;
         behandling = builder.behandling;
     }
@@ -83,7 +83,7 @@ public class Behandlingsresultat {
     }
 
     public String getPeriode() {
-        return Periode;
+        return periode;
     }
 
     public List<KonsekvensForYtelsen> getKonsekvenserForYtelsen() {
@@ -150,7 +150,7 @@ public class Behandlingsresultat {
         private Boolean erRevurderingMedUendretUtfall;
         private String beregning;
         private VilkårResultat vilkårResultat;
-        private String Periode;
+        private String periode;
         private BeregningResultat beregningResultat;
         private Behandling behandling;
 
@@ -207,8 +207,8 @@ public class Behandlingsresultat {
             return this;
         }
 
-        public Builder Periode(String Periode) {
-            this.Periode = Periode;
+        public Builder Periode(String periode) {
+            this.periode = periode;
             return this;
         }
 

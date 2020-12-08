@@ -20,9 +20,9 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public enum Språkkode implements Kodeverdi {
 
-    nb("NB"),
-    nn("NN"),
-    en("EN"),
+    NB("NB"),
+    NN("NN"),
+    EN("EN"),
     UDEFINERT("-"),
     ;
 
@@ -74,13 +74,13 @@ public enum Språkkode implements Kodeverdi {
     }
 
     public static final Språkkode defaultNorsk(String kode) {
-        return finnSpråkIgnoreCase(kode).orElse(Språkkode.nb);
+        return finnSpråkIgnoreCase(kode).orElse(Språkkode.NB);
     }
 
     private static Optional<Språkkode> finnSpråkIgnoreCase(String kode) {
         if (kode == null) {
             return Optional.empty();
         }
-        return Stream.of(nb, nn, en).filter(sp -> kode.equalsIgnoreCase(sp.getKode())).findFirst();
+        return Stream.of(NB, NN, EN).filter(sp -> kode.equalsIgnoreCase(sp.getKode())).findFirst();
     }
 }

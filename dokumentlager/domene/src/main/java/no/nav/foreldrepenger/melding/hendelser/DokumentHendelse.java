@@ -114,10 +114,6 @@ public class DokumentHendelse extends BaseEntitet {
         return fritekst;
     }
 
-    public Boolean getGjelderVedtak() {
-        return gjelderVedtak;
-    }
-
     public HistorikkAktør getHistorikkAktør() {
         return historikkAktør;
     }

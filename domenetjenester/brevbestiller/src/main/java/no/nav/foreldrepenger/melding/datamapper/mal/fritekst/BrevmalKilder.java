@@ -25,15 +25,15 @@ public interface BrevmalKilder {
     }
 
     static String getLocaleSuffixFor(Språkkode språkkode) {
-        return Språkkode.nn.getKode().equals(språkkode.getKode()) ?
-                "nn_NO" : Språkkode.en.getKode().equals(språkkode.getKode()) ?
+        return Språkkode.NN.getKode().equals(språkkode.getKode()) ?
+                "nn_NO" : Språkkode.EN.getKode().equals(språkkode.getKode()) ?
                 "en_GB" :
                 "nb_NO";
     }
 
     static Locale getLocale(Språkkode språkkode) {
-        return Språkkode.nn.getKode().equals(språkkode.getKode()) ?
-                new Locale("nn", "NO") : Språkkode.en.getKode().equals(språkkode.getKode()) ?
+        return Språkkode.NN.getKode().equals(språkkode.getKode()) ?
+                new Locale("nn", "NO") : Språkkode.EN.getKode().equals(språkkode.getKode()) ?
                 new Locale("en", "GB") :
                 new Locale("nb", "NO");
     }

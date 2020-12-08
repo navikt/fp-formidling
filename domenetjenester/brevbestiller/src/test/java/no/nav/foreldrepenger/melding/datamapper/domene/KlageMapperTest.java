@@ -98,7 +98,7 @@ public class KlageMapperTest {
     }
 
     private void assertLovFormateringKlage(Set<String> input, boolean klagetEtterKlagefrist, String forventetOutput) {
-        String lovhjemler = KlageMapper.formaterLovhjemlerForAvvistKlage(input, klagetEtterKlagefrist, Språkkode.nb).get();
+        String lovhjemler = KlageMapper.formaterLovhjemlerForAvvistKlage(input, klagetEtterKlagefrist, Språkkode.NB).get();
         assertThat(lovhjemler).isEqualTo(forventetOutput);
     }
 }

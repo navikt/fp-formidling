@@ -49,11 +49,7 @@ public enum KlageAvvistÅrsak implements Kodeverdi, ÅrsakMedLovReferanse {
     @JsonIgnore
     private String lovHjemmel;
 
-    private KlageAvvistÅrsak(String kode) {
-        this.kode = kode;
-    }
-
-    private KlageAvvistÅrsak(String kode, String lovHjemmel) {
+    KlageAvvistÅrsak(String kode, String lovHjemmel) {
         this.kode = kode;
         this.lovHjemmel = lovHjemmel;
     }

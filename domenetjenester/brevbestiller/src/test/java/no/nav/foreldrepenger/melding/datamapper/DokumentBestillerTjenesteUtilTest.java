@@ -11,13 +11,13 @@ public class DokumentBestillerTjenesteUtilTest {
 
     @Test
     public void mapSpråkkode() {
-        SpraakkodeType spraakkode = DokumentBestillerTjenesteUtil.mapSpråkkode(Språkkode.nb);
+        SpraakkodeType spraakkode = DokumentBestillerTjenesteUtil.mapSpråkkode(Språkkode.NB);
         assertThat(spraakkode).isEqualTo(SpraakkodeType.NB);
 
-        spraakkode = DokumentBestillerTjenesteUtil.mapSpråkkode(Språkkode.nn);
+        spraakkode = DokumentBestillerTjenesteUtil.mapSpråkkode(Språkkode.NN);
         assertThat(spraakkode).isEqualTo(SpraakkodeType.NN);
 
-        spraakkode = DokumentBestillerTjenesteUtil.mapSpråkkode(Språkkode.en);
+        spraakkode = DokumentBestillerTjenesteUtil.mapSpråkkode(Språkkode.EN);
         assertThat(spraakkode).isEqualTo(SpraakkodeType.EN);
 
         spraakkode = DokumentBestillerTjenesteUtil.mapSpråkkode(Språkkode.UDEFINERT);

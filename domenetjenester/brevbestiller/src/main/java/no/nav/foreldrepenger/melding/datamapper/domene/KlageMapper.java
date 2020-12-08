@@ -62,7 +62,7 @@ public class KlageMapper {
 
     static Optional<String> formaterLovhjemlerForAvvistKlage(Set<String> hjemler, boolean klagetEtterKlagefrist, Språkkode språkkode) {
         String startTillegg;
-        if (Språkkode.nn.equals(språkkode)) {
+        if (Språkkode.NN.equals(språkkode)) {
             startTillegg = klagetEtterKlagefrist ?
                     "folketrygdlova § 21-12 og forvaltningslova" : "forvaltningslova";
         } else {

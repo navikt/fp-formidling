@@ -134,7 +134,7 @@ public class KlageHjemsendtBrevMapperTest {
         BehandlingType behandlingType = BehandlingType.KLAGE;
         return Behandling.builder().medId(ID)
                 .medBehandlingType(behandlingType)
-                .medSpråkkode(Språkkode.nb)
+                .medSpråkkode(Språkkode.NB)
                 .build();
     }
 

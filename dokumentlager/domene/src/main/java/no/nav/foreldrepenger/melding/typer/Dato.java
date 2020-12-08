@@ -16,21 +16,21 @@ import java.util.Objects;
  * Gjør den praktisk å bruke som dato-input til Handelbars templates.
  */
 public class Dato implements ChronoLocalDate {
-    static Map<Integer, String> månedMap;
+    static Map<Integer, String> måneder;
     static {
-        månedMap = new HashMap<>();
-        månedMap.put(1, "januar");
-        månedMap.put(2, "februar");
-        månedMap.put(3, "mars");
-        månedMap.put(4, "april");
-        månedMap.put(5, "mai");
-        månedMap.put(6, "juni");
-        månedMap.put(7, "juli");
-        månedMap.put(8, "august");
-        månedMap.put(9, "september");
-        månedMap.put(10, "oktober");
-        månedMap.put(11, "november");
-        månedMap.put(12, "desember");
+        måneder = new HashMap<>();
+        måneder.put(1, "januar");
+        måneder.put(2, "februar");
+        måneder.put(3, "mars");
+        måneder.put(4, "april");
+        måneder.put(5, "mai");
+        måneder.put(6, "juni");
+        måneder.put(7, "juli");
+        måneder.put(8, "august");
+        måneder.put(9, "september");
+        måneder.put(10, "oktober");
+        måneder.put(11, "november");
+        måneder.put(12, "desember");
     }
 
     private LocalDate localDate;
@@ -60,7 +60,7 @@ public class Dato implements ChronoLocalDate {
     }
 
     public static String formaterDato(LocalDate dato) {
-        return dato.getDayOfMonth() + ". " + månedMap.get(dato.getMonthValue()) + " " + dato.getYear();
+        return dato.getDayOfMonth() + ". " + måneder.get(dato.getMonthValue()) + " " + dato.getYear();
     }
 
     @Override

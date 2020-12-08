@@ -60,15 +60,15 @@ public enum DokumentMalType implements Kodeverdi {
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
-    KLAGE_OVERSENDT_KLAGEINSTANS_DOK(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS_DOK,"Overføring til NAV Klageinstans", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGOV),
+    KLAGE_OVERSENDT_KLAGEINSTANS_DOK(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS_DOK,"Overføring til NAV Klageinstans", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGOV), //NOSONAR
     @Deprecated
-    KLAGE_AVVIST_DOK(DokumentMalTypeKode.KLAGE_AVVIST_DOK, "Vedtak om avvist klage", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGAV),
+    KLAGE_AVVIST_DOK(DokumentMalTypeKode.KLAGE_AVVIST_DOK, "Vedtak om avvist klage", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGAV), //NOSONAR
     @Deprecated
-    KLAGE_YTELSESVEDTAK_OPPHEVET_DOK(DokumentMalTypeKode.KLAGE_YTELSESVEDTAK_OPPHEVET_DOK, "Vedtak opphevet, sendt til ny behandling", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGNY),
+    KLAGE_YTELSESVEDTAK_OPPHEVET_DOK(DokumentMalTypeKode.KLAGE_YTELSESVEDTAK_OPPHEVET_DOK, "Vedtak opphevet, sendt til ny behandling", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGNY), //NOSONAR
     @Deprecated
-    VEDTAK_MEDHOLD(DokumentMalTypeKode.VEDTAK_MEDHOLD, "Vedtak om medhold", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.VEDMED),
+    VEDTAK_MEDHOLD(DokumentMalTypeKode.VEDTAK_MEDHOLD, "Vedtak om medhold", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.VEDMED), //NOSONAR
     @Deprecated
-    KLAGE_YTELSESVEDTAK_STADFESTET_DOK(DokumentMalTypeKode.KLAGE_YTELSESVEDTAK_STADFESTET_DOK, "Vedtak om stadfestelse", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGVE),
+    KLAGE_YTELSESVEDTAK_STADFESTET_DOK(DokumentMalTypeKode.KLAGE_YTELSESVEDTAK_STADFESTET_DOK, "Vedtak om stadfestelse", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGVE), //NOSONAR
 
     UDEFINERT("-"),
 

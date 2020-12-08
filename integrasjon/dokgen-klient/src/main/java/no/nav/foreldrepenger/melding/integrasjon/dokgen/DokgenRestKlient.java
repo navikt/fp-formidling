@@ -20,7 +20,7 @@ public class DokgenRestKlient {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokgenRestKlient.class);
     private static final String DOKGEN_REST_BASE_URL = "dokgen_rest_base.url";
     private static final String CREATE_PDF = "/create-pdf-variation";
-    private static final Set<Språkkode> STØTTEDE_SPRÅK = Set.of(Språkkode.nb, Språkkode.nn, Språkkode.en);
+    private static final Set<Språkkode> STØTTEDE_SPRÅK = Set.of(Språkkode.NB, Språkkode.NN, Språkkode.EN);
 
     private OidcRestClient oidcRestClient;
     private String endpointDokgenRestBase;
@@ -53,6 +53,6 @@ public class DokgenRestKlient {
     }
 
     private String getSpråkkode(Språkkode språkkode) {
-        return STØTTEDE_SPRÅK.contains(språkkode) ? språkkode.getKode().toLowerCase() : Språkkode.nb.getKode().toLowerCase();
+        return STØTTEDE_SPRÅK.contains(språkkode) ? språkkode.getKode().toLowerCase() : Språkkode.NB.getKode().toLowerCase();
     }
 }

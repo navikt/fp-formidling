@@ -85,11 +85,7 @@ public class PersonIdent implements Comparable<PersonIdent>, IndexKey {
 
     @Override
     public String getIndexKey() {
-        return ident + "(" + getIdentType() + ")";
-    }
-
-    private String getIdentType() {
-        return erDnr() ? "DNR" : erFdatNummer() ? "FDAT" : "FNR";
+        return ident + "(" + (erDnr() ? "DNR" : erFdatNummer() ? "FDAT" : "FNR") + ")"; //NOSONAR
     }
 
     @Override

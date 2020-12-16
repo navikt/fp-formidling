@@ -44,9 +44,9 @@ public abstract class OppsettForGjengivelseAvManuellTest {
     protected Behandling behandling;
     protected DokumentHendelse dokumentHendelse;
 
-    private BehandlingRestKlient behandlingRestKlient = new RedirectedToJsonResource();
+    protected BehandlingRestKlient behandlingRestKlient;
 
-    protected DomeneobjektProvider domeneobjektProvider = new DomeneobjektProvider(behandlingRestKlient, arbeidsgiverTjeneste);
+    protected DomeneobjektProvider domeneobjektProvider;
 
 
     protected void setup(String scenario) {
@@ -72,7 +72,7 @@ public abstract class OppsettForGjengivelseAvManuellTest {
 
     abstract String mappenHvorFilenMedLoggetTestdataLigger();
 
-    private class RedirectedToJsonResource extends BehandlingRestKlient {
+    protected class RedirectedToJsonResource extends BehandlingRestKlient {
 
         @Override
         protected <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {

@@ -1,22 +1,28 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 
+@ExtendWith(MockitoExtension.class)
 public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjengivelseAvManuellTest {
 
     @Mock
@@ -29,6 +35,10 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjeng
 
     @BeforeEach
     public void setup() {
+        lenient().when(arbeidsgiverTjeneste.hentArbeidsgiverNavn(eq("973861778"))).thenReturn("EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET");
+        lenient().when(arbeidsgiverTjeneste.hentArbeidsgiverNavn(eq("973135678"))).thenReturn("COLOR LINE CREW AS");
+        behandlingRestKlient = new RedirectedToJsonResource();
+        domeneobjektProvider = new DomeneobjektProvider(behandlingRestKlient, arbeidsgiverTjeneste);
         mapper = new InnvilgelseSvangerskapspengerBrevMapper(brevParametere, domeneobjektProvider);
         MockitoAnnotations.openMocks(this);
     }

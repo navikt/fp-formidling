@@ -8,10 +8,10 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
-import org.json.JSONObject;
 import org.mockito.Mock;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -35,7 +35,7 @@ public abstract class OppsettForGjengivelseAvManuellTest {
     @Mock
     ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
-    private JSONObject testdata;
+    private JsonNode testdata;
     private ObjectMapper jsonMapper = new ObjectMapper();
     protected ResourceBundle testScenario = ResourceBundle.getBundle(
             String.join("/", ROTMAPPE, mappenHvorFilenMedLoggetTestdataLigger(), "testdata"),
@@ -53,11 +53,10 @@ public abstract class OppsettForGjengivelseAvManuellTest {
         jsonMapper.registerModule(new Jdk8Module());
         jsonMapper.registerModule(new JavaTimeModule());
         jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        testdata = new JSONObject(testScenario.getString(scenario));
-        String behandlingJson = testdata.getString("null");
         BehandlingDto dto;
         try {
-            dto = jsonMapper.readValue(behandlingJson, BehandlingDto.class);
+            testdata = jsonMapper.readTree(testScenario.getString(scenario)) ;
+            dto = jsonMapper.readValue(testdata.get("null").textValue(), BehandlingDto.class);
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne ikke deserialiser fra json til BehandlingDto", e);
         }
@@ -76,7 +75,7 @@ public abstract class OppsettForGjengivelseAvManuellTest {
 
         @Override
         protected <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
-            String entity = testdata.getString(link.getRel());
+            String entity = testdata.get(link.getRel()).textValue();
             if (StringUtils.nullOrEmpty(entity)) {
                 return Optional.empty();
             }

@@ -32,8 +32,6 @@ public class RevurderingBrevMapperTest {
 
     private DokumentHendelse dokumentHendelse;
     @Mock
-    private Behandling behandling;
-    @Mock
     private FamilieHendelse familieHendelse;
     private BrevMapperUtil brevMapperUtil;
 
@@ -52,7 +50,7 @@ public class RevurderingBrevMapperTest {
     public void skal_mappe_varsel_om_revurdering() {
         FellesType fellesType = DatamapperTestUtil.getFellesType();
         fellesType.setAutomatiskBehandlet(true);
-        FagType fagType = brevMapper.mapFagType(fellesType, dokumentHendelse, behandling, familieHendelse);
+        FagType fagType = brevMapper.mapFagType(fellesType, dokumentHendelse, familieHendelse);
         assertThat(fagType.getAdvarselKode()).isEqualTo(AdvarselKodeKode.AKTIVITET);
         assertThat(fagType.getAntallBarn()).isEqualTo(BigInteger.TWO);
         assertThat(fagType.getFritekst()).isEqualTo(DatamapperTestUtil.FRITEKST);
@@ -65,7 +63,7 @@ public class RevurderingBrevMapperTest {
     @Test
     public void skal_mappe_varsel_om_revurdering_med_termindato() {
         when(familieHendelse.getTermindato()).thenReturn(Optional.of(FØRSTE_JANUAR_TJUENITTEN));
-        FagType fagType = brevMapper.mapFagType(DatamapperTestUtil.getFellesType(), dokumentHendelse, behandling,
+        FagType fagType = brevMapper.mapFagType(DatamapperTestUtil.getFellesType(), dokumentHendelse,
                 familieHendelse);
         assertThat(fagType.getTerminDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(FØRSTE_JANUAR_TJUENITTEN));
     }

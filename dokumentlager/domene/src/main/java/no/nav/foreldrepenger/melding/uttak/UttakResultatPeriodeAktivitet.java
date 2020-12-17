@@ -60,7 +60,7 @@ public class UttakResultatPeriodeAktivitet {
     }
 
     public String getArbeidsgiverIdentifikator() {
-        return uttakAktivitet.getArbeidsgiver().map(Arbeidsgiver::getIdentifikator).orElse(null);
+        return uttakAktivitet.getArbeidsgiver().map(Arbeidsgiver::getArbeidsgiverReferanse).orElse(null);
     }
 
     public String getArbeidsforholdId() {

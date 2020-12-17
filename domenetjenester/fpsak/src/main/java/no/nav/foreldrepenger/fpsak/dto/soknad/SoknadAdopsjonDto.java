@@ -29,7 +29,7 @@ public class SoknadAdopsjonDto extends SoknadDto {
     }
 
     public boolean erOmsorgsovertakelse() {
-        return farSokerType != null && !farSokerType.equals("ADOPTERER_ALENE");
+        return farSokerType != null && !farSokerType.getKode().equals("ADOPTERER_ALENE");
     }
 
     public void setOmsorgsovertakelseDato(LocalDate omsorgsovertakelseDato) {

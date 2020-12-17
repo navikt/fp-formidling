@@ -23,6 +23,7 @@ import no.nav.foreldrepenger.melding.sikkerhet.pdp.AppAbacAttributtType;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.web.app.pdp.dto.PipDto;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
+import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.PdpKlient;
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
 import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
@@ -54,23 +55,17 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
     public PdpRequest lagPdpRequest(AbacAttributtSamling attributter) {
         PdpRequest pdpRequest = new PdpRequest();
         List<String> aktørIder = new ArrayList<>();
+        Set<UUID> uuids = attributter.getVerdier(AppAbacAttributtType.BEHANDLING_UUID);
 
-        Set<String> uuids = attributter.getVerdier(StandardAbacAttributtType.BEHANDLING_UUID);
+        Optional<Behandling> behandling = uuids.stream().findFirst().map(domeneobjektProvider::hentBehandling);
 
-
-        for (String uuidStr : uuids) {
-            UUID uuid = UUID.fromString(uuidStr);
-            Optional<Behandling> behandling = Optional.of(domeneobjektProvider.hentBehandling(uuid));
-
-            behandling.ifPresent(b -> {
-                        PipDto dto = pipRestKlient.hentPipdataForBehandling(b.getUuid().toString());
-                        aktørIder.addAll(dto.getAktørIder().stream().map(AktørId::getId).collect(Collectors.toList()));
-                        pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_SAKSSTATUS, dto.getFagsakStatus());
-                        pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_BEHANDLINGSSTATUS, dto.getBehandlingStatus());
-                    }
-            );
-           break;
-        }
+        behandling.ifPresent(b -> {
+                    PipDto dto = pipRestKlient.hentPipdataForBehandling(b.getUuid().toString());
+                    aktørIder.addAll(dto.getAktørIder().stream().map(AktørId::getId).collect(Collectors.toList()));
+                    pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_SAKSSTATUS, dto.getFagsakStatus());
+                    pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_BEHANDLINGSSTATUS, dto.getBehandlingStatus());
+                }
+        );
         pdpRequest.put(PdpKlient.ENVIRONMENT_AUTH_TOKEN, attributter.getIdToken());
         pdpRequest.put(XACML10_ACTION_ACTION_ID, attributter.getActionType().getEksternKode());
         pdpRequest.put(RESOURCE_FELLES_DOMENE, ABAC_DOMAIN);
@@ -78,6 +73,5 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
         pdpRequest.put(RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE, aktørIder);
         return pdpRequest;
     }
-
 }
 

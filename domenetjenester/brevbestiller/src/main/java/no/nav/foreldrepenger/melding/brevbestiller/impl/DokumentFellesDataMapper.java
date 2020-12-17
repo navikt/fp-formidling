@@ -27,8 +27,8 @@ import no.nav.foreldrepenger.melding.verge.Verge;
 
 @ApplicationScoped
 public class DokumentFellesDataMapper {
-    private final String DOD_PERSON_STATUS = "DOD";
-    private final String DEFAULT_PERSON_STATUS = "ANNET";
+    private static final String DOD_PERSON_STATUS = "DOD";
+    private static final String DEFAULT_PERSON_STATUS = "ANNET";
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private DomeneobjektProvider domeneobjektProvider;
     private PersonTjeneste tpsTjeneste;

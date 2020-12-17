@@ -9,14 +9,6 @@ public class Arbeidsgiver {
         this.arbeidsgiverReferanse = arbeidsgiverReferanse;
     }
 
-    /**
-     * Returneer ident for arbeidsgiver. Kan være Org nummer eller Aktør id (dersom arbeidsgiver er en enkelt person -
-     * f.eks. for Frilans el.)
-     */
-    public String getIdentifikator() {
-        return arbeidsgiverReferanse;
-    }
-
     public String getNavn() {
         return navn;
     }

@@ -48,12 +48,12 @@ public class RevurderingBrevMapper extends DokumentTypeMapper {
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) throws JAXBException, XMLStreamException, SAXException {
         FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        FagType fagType = mapFagType(fellesType, hendelse, behandling, familieHendelse);
+        FagType fagType = mapFagType(fellesType, hendelse, familieHendelse);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(RevurderingConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
 
-    FagType mapFagType(FellesType fellesType, DokumentHendelse hendelse, Behandling behandling, FamilieHendelse familieHendelse) {
+    FagType mapFagType(FellesType fellesType, DokumentHendelse hendelse, FamilieHendelse familieHendelse) {
         final FagType fagType = new FagType();
         fagType.setYtelseType(YtelseTypeKode.fromValue(hendelse.getYtelseType().getKode()));
         fagType.setFristDato(XmlUtil.finnDatoVerdiAvUtenTidSone(brevMapperUtil.getSvarFrist()));

@@ -143,7 +143,7 @@ public class PeriodeBeregner {
 
         for (UttakResultatPeriodeAktivitet aktivitet : uttakAktiviteter) {
             if (uttakAktivitetStatusMap.getOrDefault(andel.getAktivitetStatus(), UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType())) {
-                if (arbeidsgiver.isEmpty() || Objects.equals(arbeidsgiver.get().getIdentifikator(), aktivitet.getArbeidsgiverIdentifikator())) {
+                if (arbeidsgiver.isEmpty() || Objects.equals(arbeidsgiver.get().getArbeidsgiverReferanse(), aktivitet.getArbeidsgiverIdentifikator())) {
                     if (arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold() && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId()))) {
                         return Optional.of(aktivitet);
                     }

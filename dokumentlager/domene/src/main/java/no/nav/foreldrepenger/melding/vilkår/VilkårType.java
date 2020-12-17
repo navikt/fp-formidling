@@ -1,10 +1,5 @@
 package no.nav.foreldrepenger.melding.vilkår;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -12,11 +7,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
+@SuppressWarnings("java:S1192")
 @JsonFormat(shape = Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public enum VilkårType implements Kodeverdi {
@@ -123,16 +122,12 @@ public enum VilkårType implements Kodeverdi {
     public static final String KODEVERK = "VILKAR_TYPE";
 
     @JsonIgnore
-    private Map<FagsakYtelseType, String> lovReferanser = Map.of();
+    private Map<FagsakYtelseType, String> lovReferanser;
 
     @JsonIgnore
     private Set<Avslagsårsak> avslagsårsaker;
 
     private String kode;
-
-    VilkårType(String kode) {
-        this.kode = kode;
-    }
 
     VilkårType(String kode,
                Map<FagsakYtelseType, String> lovReferanser,
@@ -193,7 +188,7 @@ public enum VilkårType implements Kodeverdi {
             }
 
             INDEKS_VILKÅR_AVSLAGSÅRSAKER.put(v, v.avslagsårsaker);
-            v.avslagsårsaker.forEach(a -> INDEKS_AVSLAGSÅRSAK_VILKÅR.computeIfAbsent(a, (k) -> new HashSet<>(4)).add(v));
+            v.avslagsårsaker.forEach(a -> INDEKS_AVSLAGSÅRSAK_VILKÅR.computeIfAbsent(a, k-> new HashSet<>(4)).add(v));
         }
     }
 

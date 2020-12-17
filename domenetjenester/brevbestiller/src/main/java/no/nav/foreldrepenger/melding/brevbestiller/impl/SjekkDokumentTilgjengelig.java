@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalRestriksjon;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;

@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.vedtak.util.StringUtils;
 
 public class KlageMapper {
-    public static Map<String, AvvistGrunnKode> avvistGrunnMap;
+    public static final Map<String, AvvistGrunnKode> avvistGrunnMap;
 
     static {
         avvistGrunnMap = new HashMap<>();

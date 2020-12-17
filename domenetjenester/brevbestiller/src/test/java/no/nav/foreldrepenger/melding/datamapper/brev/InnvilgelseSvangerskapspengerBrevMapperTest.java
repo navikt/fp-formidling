@@ -1,22 +1,26 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjengivelseAvManuellTest {
 
     @Mock
@@ -29,13 +33,17 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjeng
 
     @BeforeEach
     public void setup() {
+        lenient().when(arbeidsgiverTjeneste.hentArbeidsgiverNavn("973135678")).thenReturn("COLOR LINE CREW AS" );
+        lenient().when(arbeidsgiverTjeneste.hentArbeidsgiverNavn("973861778")).thenReturn("EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET" );
+        behandlingRestKlient = new RedirectedToJsonResource();
+        domeneobjektProvider = new DomeneobjektProvider(behandlingRestKlient, arbeidsgiverTjeneste);
         mapper = new InnvilgelseSvangerskapspengerBrevMapper(brevParametere, domeneobjektProvider);
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void scenario_med_to_arbeidsforhold() {
-        setup("scenario");
+    public void scenario_med_to_arbeidsforhold() throws Exception {
+        setup("scenario_to_arbforhold");
         FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
         assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(testScenario.getString("forventet_brødtekst"));
         assertThat(fagType.getHovedoverskrift()).isEqualToIgnoringWhitespace(
@@ -43,18 +51,18 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjeng
     }
 
     @Test
-    public void scenario_AT_FL_med_refusjon_til_arbeidsgiver() {
-        setup("scenario_AT_FN_2");
+    public void scenario_AT_FL_med_refusjon_til_arbeidsgiver() throws Exception {
+        setup("scenario_at_fn_2");
         FagType fagType = mapper.mapFagType(dokumentHendelse, behandling);
         assertThat(fagType.getBrødtekst()).isEqualToNormalizingNewlines(
                 testScenario.getString("forventet_brødtekst_2"));
     }
 
     @Test
-    public void revurdering_fra_avslag_til_innvilget_tekst() {
+    public void revurdering_fra_avslag_til_innvilget_tekst() throws Exception {
         mapper = medRevurderingData(true, true, false);
         MockitoAnnotations.openMocks(this);
-        setup("scenario_AT_FN_2");
+        setup("scenario_at_fn_2");
         Behandling revurdering = spy(behandling);
         when(revurdering.getBehandlingType()).thenReturn(BehandlingType.REVURDERING);
         when(revurdering.erRevurdering()).thenReturn(false); // hack for å omgå mangler i næværende testdata-sett
@@ -71,10 +79,10 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjeng
     }
 
     @Test
-    public void revurdering_med_endret_utbetaling_og_termindato_tekst() {
+    public void revurdering_med_endret_utbetaling_og_termindato_tekst() throws Exception {
         mapper = medRevurderingData(false, true, true);
         MockitoAnnotations.openMocks(this);
-        setup("scenario_AT_FN_2");
+        setup("scenario_at_fn_2");
         Behandling revurdering = spy(behandling);
         when(revurdering.getBehandlingType()).thenReturn(BehandlingType.REVURDERING);
         when(revurdering.erRevurdering()).thenReturn(false); // hack for å omgå mangler i næværende testdata-sett

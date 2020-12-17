@@ -15,15 +15,10 @@ import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 public class SvpUttakResultatPerioder implements Comparable<SvpUttakResultatPerioder> {
     private long utbetalingsgrad;
     private Optional<String> arbeidsgiverNavn;
-    private Optional<ArbeidsforholdIkkeOppfyltÅrsak> arbeidsforholdIkkeOppfyltÅrsak;
 
     public String getArbeidsgiverNavn() {
         return arbeidsgiverNavn.orElse("arbeidsgiver");
     }
-
-    private long dagsats;
-
-    private AktivitetStatus aktivitetStatus;
 
     private PeriodeResultatType periodeResultatType;
 
@@ -36,13 +31,10 @@ public class SvpUttakResultatPerioder implements Comparable<SvpUttakResultatPeri
     private SvpUttakResultatPerioder(Builder builder) {
         utbetalingsgrad = builder.utbetalingsgrad;
         arbeidsgiverNavn = builder.arbeidsgiverNavn;
-        arbeidsforholdIkkeOppfyltÅrsak = builder.arbeidsforholdIkkeOppfyltÅrsak;
-        aktivitetStatus = builder.aktivitetStatus;
         periodeResultatType = builder.periodeResultatType;
         periodeIkkeOppfyltÅrsak = builder.periodeIkkeOppfyltÅrsak;
         tidsperiode = builder.tidsperiode;
         perioder = builder.perioder;
-        dagsats = builder.dagsats;
     }
 
     public DatoIntervall getTidsperiode() {
@@ -91,10 +83,7 @@ public class SvpUttakResultatPerioder implements Comparable<SvpUttakResultatPeri
 
     public static final class Builder {
         private long utbetalingsgrad;
-        private long dagsats;
         private Optional<String> arbeidsgiverNavn = Optional.empty();
-        private Optional<ArbeidsforholdIkkeOppfyltÅrsak> arbeidsforholdIkkeOppfyltÅrsak = Optional.empty();
-        private AktivitetStatus aktivitetStatus;
         private PeriodeResultatType periodeResultatType = PeriodeResultatType.IKKE_FASTSATT;
         private PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak = PeriodeIkkeOppfyltÅrsak.INGEN;
         private DatoIntervall tidsperiode;
@@ -108,22 +97,7 @@ public class SvpUttakResultatPerioder implements Comparable<SvpUttakResultatPeri
             return this;
         }
 
-        public Builder medDagsats(long dagsats) {
-            this.dagsats = dagsats;
-            return this;
-        }
-
-        public Builder medArbeidsforholdIkkeOppfyltÅrsak(ArbeidsforholdIkkeOppfyltÅrsak arbeidsforholdIkkeOppfyltÅrsak) {
-            this.arbeidsforholdIkkeOppfyltÅrsak = Optional.ofNullable(arbeidsforholdIkkeOppfyltÅrsak);
-            return this;
-        }
-
-        public Builder medAktivitetStatus(AktivitetStatus aktivitetStatus) {
-            this.aktivitetStatus = aktivitetStatus;
-            return this;
-        }
-
-        public Builder medPeriodeResultatType(PeriodeResultatType periodeResultatType) {
+         public Builder medPeriodeResultatType(PeriodeResultatType periodeResultatType) {
             this.periodeResultatType = periodeResultatType;
             return this;
         }

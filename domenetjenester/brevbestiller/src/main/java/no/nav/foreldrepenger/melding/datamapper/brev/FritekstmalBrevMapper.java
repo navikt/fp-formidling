@@ -1,17 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Options;
 import com.github.jknack.handlebars.Template;
@@ -20,7 +8,6 @@ import com.github.jknack.handlebars.helper.I18nHelper;
 import com.github.jknack.handlebars.io.ClassPathTemplateLoader;
 import com.github.jknack.handlebars.io.CompositeTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -30,10 +17,19 @@ import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
+import org.xml.sax.SAXException;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implements BrevmalKilder {
 
-    private CompositeTemplateLoader templateLoader;
     private Handlebars handlebars;
     private Template overskriftMal;
     private Template brødtekstMal;
@@ -74,7 +70,7 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
     protected void initHandlebars(Språkkode språkkode) {
         TemplateLoader folder = new ClassPathTemplateLoader(getTemplateClassPath());
         TemplateLoader felles = new ClassPathTemplateLoader(getFellesClassPath());
-        templateLoader = new CompositeTemplateLoader(folder, felles);
+        CompositeTemplateLoader templateLoader = new CompositeTemplateLoader(folder, felles);
         handlebars = new Handlebars(templateLoader).setCharset(Charset.forName("latin1"));
         handlebars.setInfiniteLoops(false);
         handlebars.setPrettyPrint(true);
@@ -164,11 +160,16 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
             map.put("navnAvsenderEnhet", dokumentFelles.getNavnAvsenderEnhet());
             map.put("erAutomatiskVedtak", fellesType.isAutomatiskBehandlet());
             map.put("klageFristUker", brevParametere.getKlagefristUker());
-            map.put("erKopi", dokumentFelles.getErKopi().isPresent() ? (dokumentFelles.getErKopi().get()==DokumentFelles.Kopi.JA?"JA":"NEI"):"");
+            map.put("erKopi", dokumentFelles.getErKopi().map(this::erKopiTilString).orElse(""));
+
         }
 
         public Map<String, Object> getMap(){
             return map;
+        }
+
+        private String erKopiTilString(DokumentFelles.Kopi kopi) {
+            return kopi == DokumentFelles.Kopi.JA ? "JA" : "NEI";
         }
     }
 }

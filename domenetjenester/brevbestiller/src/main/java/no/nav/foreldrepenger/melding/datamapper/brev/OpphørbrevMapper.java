@@ -23,7 +23,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
-import no.nav.foreldrepenger.PersonTjeneste;
+import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -72,7 +72,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
     }
 
     private BrevParametere brevParametere;
-    private PersonTjeneste tpsTjeneste;
+    private PersonAdapter tpsTjeneste;
 
     public OpphørbrevMapper() {
     }
@@ -80,7 +80,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
     @Inject
     public OpphørbrevMapper(BrevParametere brevParametere,
                             DomeneobjektProvider domeneobjektProvider,
-                            PersonTjeneste tpsTjeneste) {
+                            PersonAdapter tpsTjeneste) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
         this.tpsTjeneste = tpsTjeneste;

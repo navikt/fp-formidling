@@ -17,7 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.PersonTjeneste;
+import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -51,7 +51,7 @@ class AvslagEngangsstønadDokumentDataMapperTest {
     @Mock
     private DokumentHendelse dokumentHendelse = mock(DokumentHendelse.class);
     @Mock
-    private PersonTjeneste tpsTjeneste = mock(PersonTjeneste.class);
+    private PersonAdapter tpsTjeneste = mock(PersonAdapter.class);
 
     @BeforeEach
     void setUp() {

@@ -13,7 +13,6 @@ public class Adresseinfo {
     //For mapping
     private PersonIdent personIdent;
     private String mottakerNavn;
-    private String matrikkelId;
     private String adresselinje1;
     private String adresselinje2;
     private String adresselinje3;
@@ -29,10 +28,6 @@ public class Adresseinfo {
 
     public String getMottakerNavn() {
         return mottakerNavn;
-    }
-
-    public String getMatrikkelId() {
-        return matrikkelId;
     }
 
     public String getAdresselinje1() {
@@ -89,7 +84,6 @@ public class Adresseinfo {
         if (o == null || getClass() != o.getClass()) return false;
         Adresseinfo that = (Adresseinfo) o;
         return gjeldendePostadresseType == that.gjeldendePostadresseType &&
-                Objects.equals(matrikkelId, that.matrikkelId) &&
                 Objects.equals(adresselinje1, that.adresselinje1) &&
                 Objects.equals(adresselinje2, that.adresselinje2) &&
                 Objects.equals(adresselinje3, that.adresselinje3) &&
@@ -99,17 +93,9 @@ public class Adresseinfo {
                 Objects.equals(land, that.land);
     }
 
-
-    public static boolean erLikeNokAdresser(Adresseinfo a1, Adresseinfo a2) {
-        return a1.gjeldendePostadresseType == a2.gjeldendePostadresseType &&
-                Objects.equals(a1.matrikkelId, a2.matrikkelId) &&
-                Objects.equals(a1.postNr, a2.postNr) &&
-                (Objects.equals(a1.land, a2.land) || a1.land == null || a2.land == null);
-    }
-
     @Override
     public int hashCode() {
-        return Objects.hash(gjeldendePostadresseType, matrikkelId, adresselinje1, adresselinje2, adresselinje3, adresselinje4, postNr, poststed, land);
+        return Objects.hash(gjeldendePostadresseType, adresselinje1, adresselinje2, adresselinje3, adresselinje4, postNr, poststed, land);
     }
 
     public static class Builder {
@@ -128,11 +114,6 @@ public class Adresseinfo {
             this.kladd.registrertDød = registrertDød;
         }
 
-
-        public Builder medMatrikkelId(String matrikkelId) {
-            this.kladd.matrikkelId = matrikkelId;
-            return this;
-        }
 
         public Builder medAdresselinje1(String adresselinje1) {
             this.kladd.adresselinje1 = adresselinje1;

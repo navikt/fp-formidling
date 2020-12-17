@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import no.nav.foreldrepenger.PersonTjeneste;
+import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
@@ -37,7 +37,7 @@ public class InnvilgelseForeldrepengerMapperTest {
         when(fjerdeBehandling.getUuid()).thenReturn(UUID.fromString("EDCD223A-B0F9-4CB4-A9FE-39EFB52A0C50"));
         when(femteBehandling.getUuid()).thenReturn(UUID.fromString("EECD223A-B0F9-4CB4-A9FE-39EFB52A0C50"));
         when(domeneobjektProvider.hentSøknad(Mockito.any())).thenReturn(Optional.empty());
-        mapper = new InnvilgelseForeldrepengerMapper(domeneobjektProvider, null, mock(PersonTjeneste.class));
+        mapper = new InnvilgelseForeldrepengerMapper(domeneobjektProvider, null, mock(PersonAdapter.class));
     }
 
     @Test

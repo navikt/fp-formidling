@@ -31,28 +31,28 @@ public class FamiliehendelseDtoMapper {
     }
 
     static Optional<LocalDate> finnTermindato(FamiliehendelseDto dto) {
-        if (dto instanceof AvklartDataFodselDto) {
-            if (((AvklartDataFodselDto) dto).getTermindato() != null) {
-                return Optional.of(((AvklartDataFodselDto) dto).getTermindato());
-            }
+        if (dto instanceof AvklartDataFodselDto && ((AvklartDataFodselDto) dto).getTermindato() != null) {
+            return Optional.of(((AvklartDataFodselDto) dto).getTermindato());
         }
         return Optional.empty();
     }
 
     private static Optional<LocalDate> finnFødselsdatoFraDto(FamiliehendelseDto dto) {
-        if (dto instanceof AvklartDataFodselDto) {
-            if (((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
-                return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().filter(avklartBarnDto -> avklartBarnDto.getFodselsdato() != null).map(AvklartBarnDto::getFodselsdato).min(LocalDate::compareTo);
-            }
+        if (dto instanceof AvklartDataFodselDto && ((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
+            return ((AvklartDataFodselDto) dto).getAvklartBarn().stream()
+                    .filter(avklartBarnDto -> avklartBarnDto.getFodselsdato() != null)
+                    .map(AvklartBarnDto::getFodselsdato)
+                    .min(LocalDate::compareTo);
         }
         return Optional.empty();
     }
 
     private static Optional<LocalDate> finnDødsdatoFraDto(FamiliehendelseDto dto) {
-        if (dto instanceof AvklartDataFodselDto) {
-            if (((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
-                return ((AvklartDataFodselDto) dto).getAvklartBarn().stream().filter(avklartBarnDto -> avklartBarnDto.getDodsdato() != null).map(AvklartBarnDto::getDodsdato).min(LocalDate::compareTo);
-            }
+        if (dto instanceof AvklartDataFodselDto && ((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
+            return ((AvklartDataFodselDto) dto).getAvklartBarn().stream()
+                    .filter(avklartBarnDto -> avklartBarnDto.getDodsdato() != null)
+                    .map(AvklartBarnDto::getDodsdato)
+                    .min(LocalDate::compareTo);
         }
         return Optional.empty();
     }
@@ -145,8 +145,7 @@ public class FamiliehendelseDtoMapper {
         return gjeldendeHendelseDto.getAvklartBarn() != null && !gjeldendeHendelseDto.getAvklartBarn().isEmpty();
     }
 
-
-    private static boolean erBarnFraDto(AvklartDataAdopsjonDto gjeldendeHendelseDto) {
+    private static boolean erBarnFraDto(AvklartDataAdopsjonDto gjeldendeHendelseDto) { //NOSONAR - denne er ikke unused...
         return gjeldendeHendelseDto.getAdopsjonFodelsedatoer() != null && !gjeldendeHendelseDto.getAdopsjonFodelsedatoer().isEmpty();
     }
 

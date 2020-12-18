@@ -39,7 +39,7 @@ import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "java:S1192"})
 public class SvpMapper {
 
     private SvpMapper() {

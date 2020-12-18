@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.web.app.tjenester;
 
+import static java.lang.String.format;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -49,7 +51,7 @@ public class NaisRestTjeneste {
             try {
                 dokumentproduksjonConsumerProducer.dokumentproduksjonSelftestConsumer().ping();
             } catch (Exception e) {
-                LOGGER.info("Kall til dokprod-selftest feilet: " + e.getMessage(), e);
+                LOGGER.info(format("Kall til dokprod-selftest feilet: %s", e.getMessage()), e);
             }
             harInitDokprod = true;
         }

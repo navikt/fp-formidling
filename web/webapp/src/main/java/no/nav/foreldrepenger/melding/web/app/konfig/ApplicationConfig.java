@@ -55,17 +55,8 @@ public class ApplicationConfig extends Application {
                     .buildContext(true)
                     .read();
         } catch (OpenApiConfigurationException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new IllegalStateException(e.getMessage(), e);
         }
-    }
-
-    /**
-     * Finner ut av om vi kjører utviklingsserver. Settes i JettyDevServer#konfigurerMiljø()
-     *
-     * @return true dersom utviklingsserver.
-     */
-    private boolean utviklingServer() {
-        return Boolean.getBoolean("develop-local");
     }
 
     @Override

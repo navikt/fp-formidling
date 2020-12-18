@@ -49,7 +49,7 @@ public class BehandlingRestKlient {
     private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
     private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/behandlinger";
     private static final String SAKSNUMMER = "saksnummer";
-    private static final String BEHANDLINGID = "behandlingId";
+    private static final String BEHANDLING_ID = "behandlingId";
 
     private OidcRestClient oidcRestClient;
     private String endpointFpsakRestBase;
@@ -72,7 +72,7 @@ public class BehandlingRestKlient {
         Optional<BehandlingDto> behandling = Optional.empty();
         try {
             URIBuilder behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + HENT_BEHANLDING_ENDPOINT);
-            behandlingUriBuilder.setParameter("behandlingId", velgRiktigBehandlingIdfraDto(behandlingIdDto));
+            behandlingUriBuilder.setParameter(BEHANDLING_ID, velgRiktigBehandlingIdfraDto(behandlingIdDto));
             behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);
@@ -327,7 +327,7 @@ public class BehandlingRestKlient {
                     uriBuilder.addParameter(SAKSNUMMER, String.valueOf(payload.getSaksnummer()));
                 }
                 if (payload.getBehandlingId() != null) {
-                    uriBuilder.addParameter(BEHANDLINGID, String.valueOf(payload.getBehandlingId()));
+                    uriBuilder.addParameter(BEHANDLING_ID, String.valueOf(payload.getBehandlingId()));
                 }
             }
             return uriBuilder

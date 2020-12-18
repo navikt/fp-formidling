@@ -73,7 +73,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
 
         //Assert
         assertThat(innvilgelseDokumentdata.getErEndretSats()).isTrue();
-        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp().equals("1 000"));
+        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp()).isEqualTo(formaterBeløp(1000L));
         assertThat(innvilgelseDokumentdata.getDød()).isFalse();
         assertThat(innvilgelseDokumentdata.getFbEllerMedhold()).isFalse();
         assertThat(innvilgelseDokumentdata.getMedhold()).isFalse();
@@ -98,7 +98,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
 
         //Assert
         assertThat(innvilgelseDokumentdata.getErEndretSats()).isFalse();
-        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp().equals("85 000"));
+        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp()).isEqualTo(formaterBeløp(85000L));
     }
 
     @Test
@@ -116,7 +116,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         assertThat(innvilgelseDokumentdata.getRevurdering()).isFalse();
         assertThat(innvilgelseDokumentdata.getFelles().getErKopi()).isFalse();
         assertThat(innvilgelseDokumentdata.getFelles().getHarVerge()).isTrue();
-        assertThat(innvilgelseDokumentdata.getFelles().getMottakerNavn().equals(VERGES_NAVN));
+        assertThat(innvilgelseDokumentdata.getFelles().getMottakerNavn()).isEqualTo(VERGES_NAVN);
     }
 
     @Test
@@ -158,7 +158,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         //Assert
         assertThat(innvilgelseDokumentdata.getRevurdering()).isTrue();
         assertThat(innvilgelseDokumentdata.getErEndretSats()).isFalse();
-        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp().equals("1 000"));
+        assertThat(innvilgelseDokumentdata.getInnvilgetBeløp()).isEqualTo(formaterBeløp(1000L));
     }
 
     private Behandling opprettBehandling(BehandlingType behType, long id) {
@@ -171,5 +171,9 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
     private FamilieHendelse lagFamHendelse(BigInteger antallBarn) {
         return new FamilieHendelse(antallBarn, true, true, FamilieHendelseType.TERMIN,
                 new FamilieHendelse.OptionalDatoer(Optional.of(LocalDate.now()), Optional.empty(), Optional.empty(), Optional.empty()));
+    }
+
+    private String formaterBeløp(long beløp) {
+        return String.format("%,d", beløp);
     }
 }

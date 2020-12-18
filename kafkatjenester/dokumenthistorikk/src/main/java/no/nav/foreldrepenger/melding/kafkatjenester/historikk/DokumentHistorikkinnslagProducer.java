@@ -45,23 +45,16 @@ public class DokumentHistorikkinnslagProducer {
 
         this.producer = createProducer(properties);
         this.topic = topic;
-
-    }
-
-    public void flushAndClose() {
-        producer.flush();
-        producer.close();
-    }
-
-    public void flush() {
-        producer.flush();
     }
 
     void runProducerWithSingleJson(ProducerRecord<String, String> record) {
         try {
             producer.send(record)
                     .get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (ExecutionException e) {
+            throw KafkaProducerFeil.FACTORY.uventetFeil(topic, e).toException();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw KafkaProducerFeil.FACTORY.uventetFeil(topic, e).toException();
         } catch (AuthenticationException | AuthorizationException e) {
             throw KafkaProducerFeil.FACTORY.feilIPålogging(topic, e).toException();
@@ -95,9 +88,5 @@ public class DokumentHistorikkinnslagProducer {
 
     public void sendJson(String json) {
         runProducerWithSingleJson(new ProducerRecord<>(topic, json));
-    }
-
-    public void sendJsonMedNøkkel(String nøkkel, String json) {
-        runProducerWithSingleJson(new ProducerRecord<>(topic, nøkkel, json));
     }
 }

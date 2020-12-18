@@ -13,6 +13,7 @@ import no.nav.vedtak.felles.integrasjon.felles.ws.CallIdOutInterceptor;
 import no.nav.vedtak.konfig.KonfigVerdi;
 
 @Dependent
+@SuppressWarnings("java:S1874") //Dokprod-koden blir etterhvert fjernet helt
 public class DokumentproduksjonConsumerConfig {
     private static final String WSDL = "wsdl/no/nav/tjeneste/virksomhet/dokumentproduksjon/v2/Binding.wsdl";
     private static final String NAMESPACE = "http://nav.no/tjeneste/virksomhet/dokumentproduksjon/v2/Binding";

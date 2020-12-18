@@ -70,7 +70,7 @@ public class ÅrsakMapperAvslag {
         return avslagsAarsaker;
     }
 
-    private static List<AvslagsAarsakType> årsakerFra(Behandlingsresultat behandlingsresultat,
+    private static List<AvslagsAarsakType> årsakerFra(Behandlingsresultat behandlingsresultat, //NOSONAR - denne er i bruk...
                                                       Optional<UttakResultatPerioder> uttakResultatPerioder) {
         List<AvslagsAarsakType> avslagsAarsaker = new ArrayList<>();
 

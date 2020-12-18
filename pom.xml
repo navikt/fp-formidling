@@ -41,8 +41,8 @@
 
         <!-- Eksterne -->
         <prometheus.version>0.9.0</prometheus.version>
-        <swagger.version>2.1.5</swagger.version>
-        <swagger-ui.version>3.37.2</swagger-ui.version>
+        <swagger.version>2.1.6</swagger.version>
+        <swagger-ui.version>3.38.0</swagger-ui.version>
         <kafka.version>2.6.0</kafka.version>
         <cxf.version>3.4.1</cxf.version>
         <jupiter.version>5.7.0</jupiter.version>
@@ -62,7 +62,7 @@
                 <!-- overstyrer her sålenge fp-felles inkluderer eldre versjon. -->
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
-                <version>7.3.0</version>
+                <version>7.3.2</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.kontrakter</groupId>
@@ -459,7 +459,7 @@
                 <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.93</version>
+                <version>4.8.95</version>
             </dependency>
             <!-- Java11 -->
             <dependency>

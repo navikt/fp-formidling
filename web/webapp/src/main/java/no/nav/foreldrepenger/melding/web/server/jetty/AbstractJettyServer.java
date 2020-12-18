@@ -54,14 +54,6 @@ abstract class AbstractJettyServer {
         this.appKonfigurasjon = appKonfigurasjon;
     }
 
-    private static void setFileProperty(String property, String filePath) {
-        File file = new File(filePath);
-        if (!file.exists()) { // NOSONAR
-            throw new IllegalArgumentException("Missing required file: " + file.getAbsolutePath());
-        }
-        System.setProperty(property, file.getAbsolutePath());
-    }
-
     protected void bootStrap() throws Exception {
         konfigurer();
         migrerDatabaser();
@@ -74,7 +66,7 @@ abstract class AbstractJettyServer {
         konfigurerJndi();
     }
 
-    protected abstract void konfigurerMiljø() throws Exception;
+    protected abstract void konfigurerMiljø() throws Exception; //NOSONAR
 
     protected void konfigurerSikkerhet() {
         Security.setProperty(AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY, AuthConfigFactoryImpl.class.getCanonicalName());
@@ -85,7 +77,7 @@ abstract class AbstractJettyServer {
         System.setProperty("org.apache.geronimo.jaspic.configurationFile", jaspiConf.getAbsolutePath());
     }
 
-    protected abstract void konfigurerJndi() throws Exception;
+    protected abstract void konfigurerJndi() throws Exception; //NOSONAR
 
     protected abstract void migrerDatabaser() throws IOException;
 
@@ -113,7 +105,10 @@ abstract class AbstractJettyServer {
         webAppContext.setParentLoaderPriority(true);
 
         // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra filsystem.
-        String descriptor = Resource.newClassPathResource("/WEB-INF/web.xml").getURI().toURL().toExternalForm();
+        String descriptor;
+        try (var resource = Resource.newClassPathResource("/WEB-INF/web.xml")) {
+            descriptor = resource.getURI().toURL().toExternalForm();
+        }
         webAppContext.setDescriptor(descriptor);
         webAppContext.setBaseResource(createResourceCollection());
         webAppContext.setContextPath(appKonfigurasjon.getContextPath());

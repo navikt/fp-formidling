@@ -51,7 +51,7 @@ public class PeriodeMergerVerktøy {
         return erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
     }
 
-    private static boolean erFomRettEtterTomDato(XMLGregorianCalendar periodeEnTom, XMLGregorianCalendar periodeToFom) {
+    private static boolean erFomRettEtterTomDato(XMLGregorianCalendar periodeEnTom, XMLGregorianCalendar periodeToFom) { //NOSONAR - denne er i bruk...
         return erFomRettEtterTomDato(DateUtil.convertToLocalDate(periodeEnTom), DateUtil.convertToLocalDate(periodeToFom));
     }
 
@@ -158,7 +158,7 @@ public class PeriodeMergerVerktøy {
         return match;
     }
 
-    private static boolean finnesMatch(ArbeidsforholdType arb, PeriodeType periode) {
+    private static boolean finnesMatch(ArbeidsforholdType arb, PeriodeType periode) { //NOSONAR - denne er i bruk...
         boolean match = false;
         for (ArbeidsforholdType arb2 : periode.getArbeidsforholdListe().getArbeidsforhold()) {
             if (likArbeidsforholdType(arb, arb2)) {

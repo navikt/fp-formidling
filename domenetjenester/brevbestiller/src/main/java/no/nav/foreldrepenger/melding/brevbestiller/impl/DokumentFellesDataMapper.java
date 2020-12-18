@@ -237,8 +237,7 @@ public class DokumentFellesDataMapper {
                 .build();
     }
 
-
-    private DokumentAdresse fra(Virksomhet virksomhet) {
+    private DokumentAdresse fra(Virksomhet virksomhet) { //NOSONAR - denne er i bruk...
         return new DokumentAdresse.Builder()
                 .medAdresselinje1(virksomhet.getAdresselinje1())
                 .medAdresselinje2(virksomhet.getAdresselinje2())

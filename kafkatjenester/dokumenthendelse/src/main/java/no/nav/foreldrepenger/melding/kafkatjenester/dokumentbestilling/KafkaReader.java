@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling;
 
+import static java.lang.String.format;
+
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -67,7 +69,7 @@ public class KafkaReader {
             mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
             return mapper.readValue(melding, klassetype);
         } catch (IOException e) {
-            log.info("Klarte ikke å deserialisere basert på Objektet med klassetype " + klassetype + " melding: " + melding, e);
+            log.info(format("Klarte ikke å deserialisere basert på Objektet med klassetype %s melding: %s", klassetype, melding), e);
             feilmelding.append(e.getMessage());
             return null;
         }

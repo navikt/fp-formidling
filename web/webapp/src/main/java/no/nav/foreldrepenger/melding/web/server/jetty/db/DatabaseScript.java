@@ -8,12 +8,12 @@ import org.flywaydb.core.api.configuration.ClassicConfiguration;
 
 public class DatabaseScript {
 
-    private static final String location = "classpath:/db/migration/";
+    private static final String LOCATION = "classpath:/db/migration/";
 
     public static void migrate(final DataSource dataSource, String initSql, boolean clean) {
         ClassicConfiguration conf = new ClassicConfiguration();
         conf.setDataSource(dataSource);
-        conf.setLocationsAsStrings(location);
+        conf.setLocationsAsStrings(LOCATION);
         conf.setBaselineOnMigrate(true);
         if (initSql != null) {
             conf.setInitSql(initSql);

@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 
+@SuppressWarnings("java:S3358")
 public interface BrevmalKilder {
     String ROTMAPPE = "dokumentmal/";
     String FELLES = "felles";

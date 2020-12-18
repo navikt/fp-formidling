@@ -62,7 +62,7 @@ public class ÅrsakMapperOpphør {
         return avslagsAarsak;
     }
 
-    private static AvslagsAarsakType årsaktypeFra(ÅrsakMedLovReferanse årsakKode) {
+    private static AvslagsAarsakType årsaktypeFra(ÅrsakMedLovReferanse årsakKode) { //NOSONAR - denne er i bruk...
         AvslagsAarsakType avslagsAarsak = objectFactory.createAvslagsAarsakType();
         avslagsAarsak.setAvslagsAarsakKode(årsakKode.getKode());
         lovReferanser.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(årsakKode, "FP"));

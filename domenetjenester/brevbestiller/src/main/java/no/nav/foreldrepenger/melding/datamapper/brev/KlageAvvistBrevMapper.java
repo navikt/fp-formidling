@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.AvvistGrunn;
@@ -13,16 +24,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.ObjectFac
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.KLAGE_AVVIST)
@@ -85,12 +86,7 @@ public class KlageAvvistBrevMapper extends FritekstmalBrevMapper {
                 avvistGrunnListe.add(new AvvistGrunn(avvistGrunnListeType.getAvvistGrunn().get(i).getAvvistGrunnKode().value()));
             }
             brevdata.leggTil("avvistGrunnListe", avvistGrunnListe);
-
-            if (avvistGrunnListe.size() == 1) {
-                brevdata.leggTil("bareEnGrunn", true);
-            } else {
-                brevdata.leggTil("bareEnGrunn", false);
-            }
+            brevdata.leggTil("bareEnGrunn", avvistGrunnListe.size() == 1);
         }
 
         return brevdata;

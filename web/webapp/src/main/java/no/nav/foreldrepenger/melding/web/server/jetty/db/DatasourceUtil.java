@@ -66,7 +66,7 @@ public class DatasourceUtil {
         try {
             return HikariCPVaultUtil.createHikariDataSourceWithVaultIntegration(config, mountPath, role);
         } catch (VaultError vaultError) {
-            throw new RuntimeException("Vault feil ved opprettelse av databaseforbindelse", vaultError);
+            throw new IllegalStateException("Vault feil ved opprettelse av databaseforbindelse", vaultError);
         }
     }
 

@@ -29,7 +29,7 @@ import no.nav.vedtak.util.env.Environment;
 public class JettyServer extends AbstractJettyServer {
 
     private static final Environment ENV = Environment.current();
-
+    private static final String DATASOURCE_NAME = "defaultDS";
     private static final Logger log = LoggerFactory.getLogger(JettyServer.class);
 
     public JettyServer() {
@@ -92,19 +92,19 @@ public class JettyServer extends AbstractJettyServer {
     @Override
     protected void konfigurerJndi() throws Exception {
         new EnvEntry("jdbc/defaultDS",
-                DatasourceUtil.createDatasource("defaultDS", DatasourceRole.USER, ENV.getCluster(), 4));
+                DatasourceUtil.createDatasource(DATASOURCE_NAME, DatasourceRole.USER, ENV.getCluster(), 4));
     }
 
     @Override
     protected void migrerDatabaser() {
-        String initSql = String.format("SET ROLE \"%s\"", DatasourceUtil.getDbRole("defaultDS", DatasourceRole.ADMIN));
+        String initSql = String.format("SET ROLE \"%s\"", DatasourceUtil.getDbRole(DATASOURCE_NAME, DatasourceRole.ADMIN));
         if (LOCAL.equals(ENV.getCluster())) {
             // TODO: Ønsker egentlig ikke dette, men har ikke satt opp skjema lokalt
             // til å ha en admin bruker som gjør migrering og en annen som gjør CRUD
             // operasjoner
             initSql = null;
         }
-        DataSource migreringDs = DatasourceUtil.createDatasource("defaultDS", DatasourceRole.ADMIN, ENV.getCluster(),
+        DataSource migreringDs = DatasourceUtil.createDatasource(DATASOURCE_NAME, DatasourceRole.ADMIN, ENV.getCluster(),
                 1);
         try {
             DatabaseScript.migrate(migreringDs, initSql,false);

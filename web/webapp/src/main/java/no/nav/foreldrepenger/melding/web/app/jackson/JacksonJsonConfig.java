@@ -30,11 +30,7 @@ public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        // TODO (u139158): PK-44270 Diskutere med Front-end, ønsker i utgangpunktet å fjerne null, men hva med Javascript
-        // KodelisteSerializer og KodeverkSerializer bør i tilfelle også støtte JsonInclude.Include.*
-        // objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         objectMapper.registerModule(SER_DESER);
-
         objectMapper.registerSubtypes(getJsonTypeNameClasses());
     }
 

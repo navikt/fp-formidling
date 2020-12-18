@@ -60,7 +60,6 @@ import no.nav.pdl.PostadresseIFrittFormat;
 import no.nav.pdl.PostadresseIFrittFormatResponseProjection;
 import no.nav.pdl.Postboksadresse;
 import no.nav.pdl.PostboksadresseResponseProjection;
-import no.nav.pdl.UkjentBosted;
 import no.nav.pdl.UkjentBostedResponseProjection;
 import no.nav.pdl.UtenlandskAdresse;
 import no.nav.pdl.UtenlandskAdresseIFrittFormat;
@@ -192,10 +191,6 @@ public class AktørTjeneste {
             var person = pdlKlient.hentPerson(query, projection, Tema.FOR);
 
             var navn = person.getNavn().stream().map(AktørTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN");
-            var dødssdato = person.getDoedsfall().stream()
-                    .map(Doedsfall::getDoedsdato)
-                    .filter(Objects::nonNull)
-                    .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
             var pdlStatusDød = person.getFolkeregisterpersonstatus().stream()
                     .map(Folkeregisterpersonstatus::getForenkletStatus)
                     .findFirst().map(AktørTjeneste::harPersonstatusDød).orElse(false);
@@ -255,7 +250,7 @@ public class AktørTjeneste {
         var bostFom = bostedsadresser.stream().map(AktørTjeneste::bostedAdresseFom).filter(Objects::nonNull).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
         bostedsadresser.stream().map(Bostedsadresse::getVegadresse).map(a -> mapVegadresse(AdresseType.BOSTEDSADRESSE, a, bostFom)).filter(Objects::nonNull).forEach(resultat::add);
         bostedsadresser.stream().map(Bostedsadresse::getMatrikkeladresse).map(a -> mapMatrikkeladresse(AdresseType.BOSTEDSADRESSE, a, bostFom)).filter(Objects::nonNull).forEach(resultat::add);
-        bostedsadresser.stream().map(Bostedsadresse::getUkjentBosted).filter(Objects::nonNull).map(a -> mapUkjentadresse(a, bostFom)).forEach(resultat::add);
+        bostedsadresser.stream().map(Bostedsadresse::getUkjentBosted).filter(Objects::nonNull).map(a -> mapUkjentadresse(bostFom)).forEach(resultat::add);
         bostedsadresser.stream().map(Bostedsadresse::getUtenlandskAdresse).map(a -> mapUtenlandskadresse(AdresseType.BOSTEDSADRESSE, a, bostFom)).filter(Objects::nonNull).forEach(resultat::add);
 
         var oppFom = oppholdsadresser.stream().map(Oppholdsadresse::getGyldigFraOgMed).filter(Objects::nonNull).map(AktørTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
@@ -270,7 +265,7 @@ public class AktørTjeneste {
         kontaktadresser.stream().map(Kontaktadresse::getUtenlandskAdresse).map(a -> mapUtenlandskadresse(AdresseType.POSTADRESSE_UTLAND, a, konFom)).filter(Objects::nonNull).forEach(resultat::add);
         kontaktadresser.stream().map(Kontaktadresse::getUtenlandskAdresseIFrittFormat).map(a -> mapFriAdresseUtland(AdresseType.POSTADRESSE_UTLAND, a, konFom)).filter(Objects::nonNull).forEach(resultat::add);
         if (resultat.isEmpty()) {
-            resultat.add(mapUkjentadresse(null, Tid.TIDENES_BEGYNNELSE));
+            resultat.add(mapUkjentadresse(Tid.TIDENES_BEGYNNELSE));
         }
         return resultat;
     }
@@ -347,7 +342,7 @@ public class AktørTjeneste {
                 .buildTemporary();
     }
 
-    private static Adresseinfo mapUkjentadresse(UkjentBosted ukjentBosted, LocalDate fom) {
+    private static Adresseinfo mapUkjentadresse(LocalDate fom) {
         return Adresseinfo.builder(AdresseType.UKJENT_ADRESSE).medGyldigFom(fom).buildTemporary();
     }
 

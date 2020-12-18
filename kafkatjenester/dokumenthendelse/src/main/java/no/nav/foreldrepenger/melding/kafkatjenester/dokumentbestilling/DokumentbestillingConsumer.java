@@ -1,7 +1,13 @@
 package no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling;
 
-import no.nav.foreldrepenger.melding.kodeverk.kafka.KafkaIntegration;
-import no.nav.vedtak.apptjeneste.AppServiceHandler;
+import java.time.Duration;
+import java.util.Properties;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.control.ActivateRequestContext;
+import javax.inject.Inject;
+import javax.transaction.Transactional;
+
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.config.SaslConfigs;
@@ -14,12 +20,8 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.control.ActivateRequestContext;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import java.time.Duration;
-import java.util.Properties;
+import no.nav.foreldrepenger.melding.kodeverk.kafka.KafkaIntegration;
+import no.nav.vedtak.apptjeneste.AppServiceHandler;
 
 @ApplicationScoped
 @ActivateRequestContext
@@ -57,13 +59,13 @@ public class DokumentbestillingConsumer implements AppServiceHandler, KafkaInteg
         Properties props = new Properties();
 
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, streamProperties.getApplicationId());
-        log.info("Bruker applicationID: " + streamProperties.getApplicationId());
+        log.info("Bruker applicationID: {}", streamProperties.getApplicationId());
         props.put(StreamsConfig.CLIENT_ID_CONFIG, streamProperties.getClientId());
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, streamProperties.getBootstrapServers());
 
         // Sikkerhet
         if (streamProperties.harSattBrukernavn()) {
-            log.info("Using user name {} to authenticate against Kafka brokers ", streamProperties.getUsername());
+            log.info("Using user name {} to authenticate against Kafka brokers", streamProperties.getUsername());
             props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
             props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
             String jaasTemplate = "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"%s\" password=\"%s\";";

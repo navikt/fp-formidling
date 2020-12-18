@@ -136,8 +136,8 @@ public class SjekkDbStrukturTest {
         assertThat(avvik).withFailMessage(beskrivelse + sz + " foreign keys\n" + tekst).isEmpty();
     }
 
+    @Disabled("Denne må tilpasses til Postgresql")
     @Test
-    @Disabled // TODO
     public void sjekk_at_alle_FK_kolonner_har_fornuftig_indekser() throws Exception {
         String sql = "SELECT "
                 + "  uc.table_name, uc.constraint_name, LISTAGG(dcc.column_name, ',') WITHIN GROUP (ORDER BY dcc.position) as columns" +
@@ -225,8 +225,8 @@ public class SjekkDbStrukturTest {
 
     }
 
+    @Disabled("venter til KL_ kolonner er fjernet")
     @Test
-    @Disabled
     public void skal_ha_virtual_column_definisjon_for_kodeverk_kolonne_i_source_tabell() throws Exception {
         String sql = "SELECT T.TABLE_NAME, T.CONSTRAINT_NAME, LISTAGG(COLC.COLUMN_NAME, ',') WITHIN GROUP (ORDER BY COLC.POSITION) AS COLUMNS FROM ALL_CONSTRAINTS T\n" +
                 "INNER JOIN ALL_CONS_COLUMNS COLC ON COLC.CONSTRAINT_NAME=T.CONSTRAINT_NAME AND COLC.TABLE_NAME = T.TABLE_NAME AND COLC.OWNER=T.OWNER \n" +

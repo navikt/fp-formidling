@@ -32,7 +32,7 @@ public class KodeverkConsumer {
     private static final QName SERVICE = new QName(NAMESPACE, "Kodeverk_v2");
     private static final QName PORT = new QName(NAMESPACE, "Kodeverk_v2");
 
-    private KodeverkPortType port;
+    private KodeverkPortType kodeverkPortType;
 
     KodeverkConsumer() {
         // CDI
@@ -40,12 +40,12 @@ public class KodeverkConsumer {
 
     @Inject
     public KodeverkConsumer(@KonfigVerdi("Kodeverk.v2.url") String endpointUrl) {
-        this.port = getPort(endpointUrl);
+        this.kodeverkPortType = getPort(endpointUrl);
     }
 
     public FinnKodeverkListeResponse finnKodeverkListe(FinnKodeverkListeRequest finnKodeverkListeRequest) {
         try {
-            return port.finnKodeverkListe(finnKodeverkListeRequest);
+            return kodeverkPortType.finnKodeverkListe(finnKodeverkListeRequest);
         } catch (SOAPFaultException e) { // NOSONAR
             throw KodeverkWebServiceFeil.FACTORY.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e).toException();
         }
@@ -53,7 +53,7 @@ public class KodeverkConsumer {
 
     public HentKodeverkResponse hentKodeverk(HentKodeverkRequest hentKodeverkRequest) throws HentKodeverkHentKodeverkKodeverkIkkeFunnet {
         try {
-            return port.hentKodeverk(hentKodeverkRequest);
+            return kodeverkPortType.hentKodeverk(hentKodeverkRequest);
         } catch (SOAPFaultException e) { // NOSONAR
             throw KodeverkWebServiceFeil.FACTORY.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e).toException();
         }

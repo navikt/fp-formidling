@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.web.app.konfig;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Collection;
@@ -9,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 
-
 public class SoapApiAbacTest {
 
     private static final Collection<Method> soapMethods = SoapApiTester.finnAlleSoapMetoder();
@@ -17,21 +18,25 @@ public class SoapApiAbacTest {
     /**
      * IKKE ignorer denne testen, sikrer at SOAP-endepunkter får tilgangskontroll
      * <p>
-     * Kontakt Team Humle hvis du trenger hjelp til å endre koden din slik at den går igjennom her     *
+     * Spør på Slack hvis du trenger hjelp til å endre koden din slik at den går igjennom her
      */
     @Test
     public void test_at_alle_soapmetoder_er_annotert_med_BeskyttetRessurs() {
+        String feilmelding = "Mangler @%s-annotering på %s";
+        StringBuilder feilmeldinger = new StringBuilder();
         for (Method soapMethod : SoapApiTester.finnAlleSoapMetoder()) {
             if (soapMethod.getAnnotation(BeskyttetRessurs.class) == null) {
-                throw new AssertionError("Mangler @" + BeskyttetRessurs.class.getSimpleName() + "-annotering på " + soapMethod);
+                feilmeldinger.append(String.format(feilmelding, BeskyttetRessurs.class.getSimpleName(), soapMethod));
             }
         }
+
+        assertThat(feilmeldinger).as("Følgende SOAP-tjenester passerte ikke validering:\n" + feilmeldinger).hasSize(0);
     }
 
     /**
      * IKKE ignorer denne testen, helper til med at input til tilgangskontroll blir riktig
      * <p>
-     * Kontakt Team Humle hvis du trenger hjelp til å endre koden din slik at den går igjennom her
+     * Spør på Slack hvis du trenger hjelp til å endre koden din slik at den går igjennom her
      */
     @Test
     public void test_at_alle_input_parametre_til_soapmetoder_er_annotert_med_TilpassetAbacAttributt() {
@@ -45,9 +50,6 @@ public class SoapApiAbacTest {
             }
         }
 
-        if (feilmeldinger.length() > 0) {
-            throw new AssertionError("Følgende inputparametre til SOAP-tjenester passerte ikke validering\n" + feilmeldinger);
-        }
-
+        assertThat(feilmeldinger).as("Følgende inputparametre til SOAP-tjenester passerte ikke validering:\n" + feilmeldinger).hasSize(0);
     }
 }

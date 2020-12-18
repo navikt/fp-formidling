@@ -16,7 +16,6 @@ public class AksjonspunktDto {
     private Boolean toTrinnsBehandlingGodkjent;
     private Set<KodeDto> vurderPaNyttArsaker;
     private String besluttersBegrunnelse;
-    private KodeDto KodeDto;
     private Boolean kanLoses;
     private Boolean erAktivt;
 
@@ -53,10 +52,6 @@ public class AksjonspunktDto {
 
     public void setBesluttersBegrunnelse(String besluttersBegrunnelse) {
         this.besluttersBegrunnelse = besluttersBegrunnelse;
-    }
-
-    public void setKodeDto(KodeDto KodeDto) {
-        this.KodeDto = KodeDto;
     }
 
     public void setKanLoses(Boolean kanLoses) {
@@ -97,10 +92,6 @@ public class AksjonspunktDto {
 
     public Boolean getToTrinnsBehandlingGodkjent() {
         return toTrinnsBehandlingGodkjent;
-    }
-
-    public KodeDto getKodeDto() {
-        return KodeDto;
     }
 
     public Boolean getKanLoses() {

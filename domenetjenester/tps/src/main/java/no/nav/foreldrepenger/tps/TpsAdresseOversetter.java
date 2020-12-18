@@ -7,9 +7,6 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.melding.aktør.AdresseType;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.geografisk.Poststed;
@@ -31,8 +28,6 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.UstrukturertAdresse;
 @ApplicationScoped
 public class TpsAdresseOversetter {
 
-    private static final String NORGE = "NOR";
-    private static final Logger log = LoggerFactory.getLogger(TpsAdresseOversetter.class);
     private static final String HARDKODET_POSTNR = "XXXX";
     private static final String HARDKODET_POSTSTED = "UKJENT";
     private static final String POSTNUMMER_POSTSTED = "^\\d{4} \\D*";  // Mønster for postnummer og poststed, f.eks. "0034 OSLO"

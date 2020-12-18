@@ -81,7 +81,6 @@ public class KodeverkTjeneste {
     }
 
     private Map<String, KodeverkKode> oversettFraHentKodeverkResponse(HentKodeverkResponse response) {
-        String kodeverkNavn = response.getKodeverk().getNavn();
         if (response.getKodeverk() instanceof EnkeltKodeverk) {
             return ((EnkeltKodeverk) response.getKodeverk()).getKode().stream()
                     .map(KodeverkTjeneste::oversettFraKode)

@@ -40,7 +40,7 @@ import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.feil.FeilFactory;
 
 public class PeriodeBeregner {
-    private static List<String> manglendeEllerForSenSøknadOmGraderingÅrsaker = List.of(
+    private static List<String> manglendeEllerForSenSøknadOmGraderingÅrsaker = List.of( //NOSONAR
             ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT.getKode(),
             AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD.getKode(),
             FOR_SEN_SØKNAD.getKode());
@@ -142,12 +142,10 @@ public class PeriodeBeregner {
         ArbeidsforholdRef arbeidsforholdRef = andel.getArbeidsforholdRef();
 
         for (UttakResultatPeriodeAktivitet aktivitet : uttakAktiviteter) {
-            if (uttakAktivitetStatusMap.getOrDefault(andel.getAktivitetStatus(), UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType())) {
-                if (arbeidsgiver.isEmpty() || Objects.equals(arbeidsgiver.get().getArbeidsgiverReferanse(), aktivitet.getArbeidsgiverIdentifikator())) {
-                    if (arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold() && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId()))) {
-                        return Optional.of(aktivitet);
-                    }
-                }
+            if (uttakAktivitetStatusMap.getOrDefault(andel.getAktivitetStatus(), UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType())
+                && (arbeidsgiver.isEmpty() || Objects.equals(arbeidsgiver.get().getArbeidsgiverReferanse(), aktivitet.getArbeidsgiverIdentifikator()))
+                && (arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold() && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId())))) {
+                    return Optional.of(aktivitet);
             }
         }
         return Optional.empty();
@@ -189,9 +187,10 @@ public class PeriodeBeregner {
             return UtbetaltKode.GENERELL;
         }
         if ((ferie || jobb) && erInnvilgetUtsettelseInneværendeMånedEllerTidligere(innvilgetUtsettelseFOM, vedtaksdato)) {
-            return ferie && jobb ? UtbetaltKode.GENERELL
-                    : ferie ? UtbetaltKode.FERIE
-                    : UtbetaltKode.JOBB;
+            if (ferie && jobb) {
+                return UtbetaltKode.GENERELL;
+            }
+            return ferie ? UtbetaltKode.FERIE : UtbetaltKode.JOBB;
         }
         return UtbetaltKode.INGEN;
     }

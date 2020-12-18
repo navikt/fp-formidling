@@ -145,14 +145,14 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
 
     private void mapFelterRelatertTilAvslagårsaker(Behandlingsresultat behandlingsresultat,
                                                    UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
-        Tuple<AarsakListeType, String> AarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapAarsakListeOgLovhjemmelFra(
+        Tuple<AarsakListeType, String> aarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapAarsakListeOgLovhjemmelFra(
                 behandlingsresultat,
                 uttakResultatPerioder);
-        AarsakListeType aarsakListe = AarsakListeOgLovhjemmel.getElement1();
+        AarsakListeType aarsakListe = aarsakListeOgLovhjemmel.getElement1();
 
         fagType.setAntallAarsaker(BigInteger.valueOf(aarsakListe.getAvslagsAarsak().size()));
         fagType.setAarsakListe(aarsakListe);
-        fagType.setLovhjemmelForAvslag(AarsakListeOgLovhjemmel.getElement2());
+        fagType.setLovhjemmelForAvslag(aarsakListeOgLovhjemmel.getElement2());
     }
 
     private RelasjonskodeKode fra(FagsakBackend fagsak) {

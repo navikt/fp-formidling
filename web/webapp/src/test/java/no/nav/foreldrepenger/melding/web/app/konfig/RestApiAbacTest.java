@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.web.app.konfig;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 
 import java.lang.reflect.Method;
@@ -39,15 +40,19 @@ public class RestApiAbacTest {
     /**
      * IKKE ignorer denne testen, sikrer at REST-endepunkter får tilgangskontroll
      * <p>
-     * Kontakt Team Humle hvis du trenger hjelp til å endre koden din slik at den går igjennom her     *
+     * Spør på Slack hvis du trenger hjelp til å endre koden din slik at den går igjennom her
      */
     @Test
-    public void test_at_alle_restmetoder_er_annotert_med_BeskyttetRessurs() throws Exception {
+    public void test_at_alle_restmetoder_er_annotert_med_BeskyttetRessurs() {
+        String feilmelding = "Mangler @%s-annotering på %s";
+        StringBuilder feilmeldinger = new StringBuilder();
         for (Method restMethod : RestApiTester.finnAlleRestMetoder()) {
             if (restMethod.getAnnotation(BeskyttetRessurs.class) == null) {
-                throw new AssertionError("Mangler @" + BeskyttetRessurs.class.getSimpleName() + "-annotering på " + restMethod);
+                feilmeldinger.append(String.format(feilmelding, BeskyttetRessurs.class.getSimpleName(), restMethod));
             }
         }
+
+        assertThat(feilmeldinger).as("Følgende REST-tjenester passerte ikke validering:\n" + feilmeldinger).hasSize(0);
     }
 
     @Test
@@ -60,10 +65,10 @@ public class RestApiAbacTest {
     /**
      * IKKE ignorer denne testen, helper til med at input til tilgangskontroll blir riktig
      * <p>
-     * Kontakt Team Humle hvis du trenger hjelp til å endre koden din slik at den går igjennom her     *
+     * Spør på Slack hvis du trenger hjelp til å endre koden din slik at den går igjennom her
      */
     @Test
-    public void test_at_alle_input_parametre_til_restmetoder_implementer_AbacDto() throws Exception {
+    public void test_at_alle_input_parametre_til_restmetoder_implementer_AbacDto() {
         String feilmelding = "Parameter på %s.%s av type %s må implementere " + AbacDto.class.getSimpleName() + ".\n";
         StringBuilder feilmeldinger = new StringBuilder();
 
@@ -87,9 +92,8 @@ public class RestApiAbacTest {
                 }
             }
         }
-        if (feilmeldinger.length() > 0) {
-            throw new AssertionError("Følgende inputparametre til REST-tjenester mangler AbacDto-impl\n" + feilmeldinger);
-        }
+
+        assertThat(feilmeldinger).as("Følgende inputparametre til REST-tjenester mangler AbacDto-impl:\n" + feilmeldinger).hasSize(0);
     }
 
     private void assertAtIngenBrukerDummyVerdierPåBeskyttetRessurs(Method metode) {

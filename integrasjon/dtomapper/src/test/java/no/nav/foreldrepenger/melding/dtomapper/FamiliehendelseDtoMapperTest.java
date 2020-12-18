@@ -22,7 +22,6 @@ public class FamiliehendelseDtoMapperTest {
         assertThat(FamiliehendelseDtoMapper.finnTermindato(lagDtoMedTermindato(FØRSTE_JANUAR)).get()).isEqualTo(FØRSTE_JANUAR);
     }
 
-
     @Test
     public void finnAntallbarnFødt() {
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 1, 2))).isEqualTo(2);
@@ -30,7 +29,6 @@ public class FamiliehendelseDtoMapperTest {
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 3, 3))).isEqualTo(3);
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 3, 1))).isEqualTo(1);
     }
-
 
     @Test
     public void finnTermindato() {
@@ -40,7 +38,7 @@ public class FamiliehendelseDtoMapperTest {
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, false, antallBarnFødsel))).isEqualTo(antallBarnFødsel);
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, true, antallBarnFødsel))).isEqualTo(antallBarnFødsel);
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagAdopsjonsDtoMedAntallBarn(antallBarnAdopsjon))).isEqualTo(antallBarnAdopsjon);
-        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagOmsorgDtoMedAntallBarn(antallBarnOmsorg)));
+        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagOmsorgDtoMedAntallBarn(antallBarnOmsorg))).isEqualTo(antallBarnOmsorg);
     }
 
     private FamiliehendelseDto lagAdopsjonsDtoMedAntallBarn(int antallBarn) {
@@ -58,7 +56,6 @@ public class FamiliehendelseDtoMapperTest {
         dto.setAntallBarnTilBeregning(antallBarn);
         return dto;
     }
-
 
     private FamiliehendelseDto lagFødselDtoMedBarnTerminOgFødsel(LocalDate termindato, int antallBarnTermin, int antallbarnFødsel) {
         AvklartDataFodselDto dto = new AvklartDataFodselDto();
@@ -80,7 +77,6 @@ public class FamiliehendelseDtoMapperTest {
         }
         return dto;
     }
-
 
     private FamiliehendelseDto lagDtoMedTermindato(LocalDate termindato) {
         return lagFødselDtoMedBarnOgTermindato(termindato, false, 0);

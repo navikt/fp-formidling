@@ -241,14 +241,6 @@ public class BehandlingDto {
         this.behandlingArsaker = behandlingArsaker;
     }
 
-    public Boolean getErAktivPapirsoknad() {
-        return erAktivPapirsoknad;
-    }
-
-    public void setErAktivPapirsoknad(Boolean erAktivPapirsoknad) {
-        this.erAktivPapirsoknad = erAktivPapirsoknad;
-    }
-
     public String getEndretAvBrukernavn() {
         return endretAvBrukernavn;
     }

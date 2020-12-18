@@ -83,28 +83,22 @@ public class DokumentFellesDataMapper {
                 .anyMatch(link -> "soeker-verge".equals(link.getRel()));
     }
 
-
     private void opprettDokumentDataForOrganisasjonsMottaker(Behandling behandling,
                                                              DokumentData dokumentData,
                                                              DokumentHendelse dokumentHendelse,
                                                              Verge verge,
                                                              AktørId aktørIdBruker,
                                                              Optional<DokumentFelles.Kopi> erKopi) {
-
         Virksomhet virksomhet = getVirksomhet(verge);
-
-        DokumentAdresse adresseVerge = fra(virksomhet);
 
         Personinfo personinfoBruker = tpsTjeneste.hentBrukerForAktør(aktørIdBruker)
                 .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeFnrForAktørId(aktørIdBruker).toException());
-
 
         String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
                 dokumentHendelse.getBehandlendeEnhetNavn() : behandling.getBehandlendeEnhetNavn();
 
         buildDokumentFellesVirksomhet(behandling,
                 dokumentData,
-                adresseVerge,
                 personinfoBruker,
                 virksomhet,
                 verge.getNavn(),
@@ -142,10 +136,8 @@ public class DokumentFellesDataMapper {
                 erKopi);
     }
 
-
     private void buildDokumentFellesVirksomhet(Behandling behandling,
                                      DokumentData dokumentData,
-                                     DokumentAdresse adresse,
                                      Personinfo personinfoBruker,
                                      Virksomhet virksomhet,
                                      String vergeNavn,
@@ -158,7 +150,7 @@ public class DokumentFellesDataMapper {
                 .medAutomatiskBehandlet(Boolean.TRUE)
                 .medDokumentDato(LocalDate.now())
                 .medKontaktTelefonNummer(norg2KontaktTelefonnummer(avsenderEnhet))
-                .medMottakerAdresse(adresse)
+                .medMottakerAdresse(fra(virksomhet))
                 .medNavnAvsenderEnhet(norg2NavnAvsenderEnhet(avsenderEnhet))
                 .medPostadresse(norg2Postadresse())
                 .medReturadresse(norg2Returadresse())

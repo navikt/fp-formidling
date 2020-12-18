@@ -1,5 +1,13 @@
 package no.nav.foreldrepenger.melding.integrasjon.journal;
 
+import java.util.List;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -14,12 +22,6 @@ import no.nav.foreldrepenger.melding.integrasjon.journal.dto.Sak;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingTema;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.List;
 
 @ApplicationScoped
 public class OpprettJournalpostTjeneste {
@@ -49,7 +51,7 @@ public class OpprettJournalpostTjeneste {
                 LOG.warn("Journalpost {} ble ikke ferdigstilt", response.getJournalpostId());
             }
 
-            LOG.info("Journalføring for behandling {} med malkode {} ferdig med response: {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode(), response.toString());
+            LOG.info("Journalføring for behandling {} med malkode {} ferdig med response: {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode(), response.toString()); //NOSONAR
             return response;
         } catch (Exception e) {
             throw JournalpostFeil.FACTORY.klarteIkkeOppretteJournalpost(dokumentHendelse.getBehandlingUuid().toString(), dokumentMalType.getKode(), e).toException();
@@ -80,8 +82,9 @@ public class OpprettJournalpostTjeneste {
 
     private String mapBehandlingsTema(FagsakYtelseType ytelseType) {
         return ytelseType.gjelderEngangsstønad() ? BehandlingTema.ENGANGSSTØNAD.getOffisiellKode() :
-               ytelseType.gjelderForeldrepenger() ? BehandlingTema.FORELDREPENGER.getOffisiellKode():
-               ytelseType.gjelderSvangerskapspenger() ? BehandlingTema.SVANGERSKAPSPENGER.getOffisiellKode() : BehandlingTema.UDEFINERT.getOffisiellKode();
+               ytelseType.gjelderForeldrepenger() ? BehandlingTema.FORELDREPENGER.getOffisiellKode() :
+               ytelseType.gjelderSvangerskapspenger() ? BehandlingTema.SVANGERSKAPSPENGER.getOffisiellKode() :
+                       BehandlingTema.UDEFINERT.getOffisiellKode(); //NOSONAR
     }
     private AvsenderMottakerIdType hentAvsenderMotakkerType(DokumentFelles.MottakerType mottakerType) {
         return mottakerType.equals(DokumentFelles.MottakerType.PERSON) ? AvsenderMottakerIdType.FNR : AvsenderMottakerIdType.ORGNR;

@@ -85,28 +85,8 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
                                 DokumentFelles dokumentFelles,
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
-        UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
-        BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
-        Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
-        FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        Søknad søknad = hentSøknadUansett(behandling);
-        Optional<FamilieHendelse> originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).map(domeneobjektProvider::hentFamiliehendelse);
-        YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
-        Saldoer saldoer = domeneobjektProvider.hentSaldoer(behandling);
-        List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
-        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
-        FagType fagType = mapFagType(dokumentHendelse,
-                behandling,
-                beregningsresultatFP,
-                familieHendelse,
-                originalFamiliehendelse,
-                beregningsgrunnlag,
-                søknad,
-                uttakResultatPerioder,
-                ytelseFordeling,
-                saldoer,
-                aksjonspunkter,
-                fagsak);
+
+        FagType fagType = mapFagType(dokumentHendelse, behandling);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(InnvilgetForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
     }
@@ -130,19 +110,19 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         return søknad.orElseThrow(IllegalStateException::new);
     }
 
-    private FagType mapFagType(DokumentHendelse dokumentHendelse,
-                               Behandling behandling,
-                               BeregningsresultatFP beregningsresultatFP,
-                               FamilieHendelse familieHendelse,
-                               Optional<FamilieHendelse> originalFamiliehendelse,
-                               Beregningsgrunnlag beregningsgrunnlag,
-                               Søknad søknad,
-                               UttakResultatPerioder uttakResultatPerioder,
-                               YtelseFordeling ytelseFordeling,
-                               Saldoer saldoer,
-                               List<Aksjonspunkt> aksjonspunkter,
-                               FagsakBackend fagsak) {
+    private FagType mapFagType(DokumentHendelse dokumentHendelse, Behandling behandling) {
         final FagType fagType = objectFactory.createFagType();
+
+        UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
+        BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
+        Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
+        FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        Søknad søknad = hentSøknadUansett(behandling);
+        Optional<FamilieHendelse> originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).map(domeneobjektProvider::hentFamiliehendelse);
+        YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
+        Saldoer saldoer = domeneobjektProvider.hentSaldoer(behandling);
+        List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
+        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
 
         fagType.setRelasjonskode(utledRelasjonsrolle(fagsak));
         fagType.setKlageFristUker(BigInteger.valueOf(brevParametere.getKlagefristUker()));

@@ -1,24 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
@@ -49,6 +30,23 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
 @ApplicationScoped
 public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -203,7 +201,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         dokumentRepository.lagre(dokumentData);
 
         dokument = forhåndsvis(dokumentMal, brevXmlElement);
-        if (dokument == null) {
+        if (dokument.length == 0) {
             LOGGER.error("Klarte ikke hente behandling: {}", behandling.getId());
             throw BrevbestillerFeil.FACTORY.klarteIkkeForhåndviseDokprodbrev(dokumentMal.getKode(), behandling.getUuid().toString()).toException();
         }
@@ -220,7 +218,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         if (produserDokumentutkastResponse != null && produserDokumentutkastResponse.getDokumentutkast() != null) {
             return produserDokumentutkastResponse.getDokumentutkast();//$NON-NLS-1$
         }
-        return null;
+        return new byte[0];
     }
 
     private DokumentData lagDokumentData(Behandling behandling, DokumentMalType dokumentMalType, BestillingType bestillingType) {

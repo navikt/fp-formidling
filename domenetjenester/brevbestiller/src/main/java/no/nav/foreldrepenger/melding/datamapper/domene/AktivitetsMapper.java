@@ -112,7 +112,6 @@ public class AktivitetsMapper {
                 .findFirst()
                 .ifPresent(næringListe::setNæring);
         return næringListe.getNæring() != null ? næringListe : null;
-        //Optional<UttakResultatPeriodeAktivitet>;
     }
 
     private static NæringType mapNæringsandel(BeregningsresultatAndel beregingsresultatAndel,

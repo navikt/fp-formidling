@@ -73,7 +73,7 @@ public class KlageAvvistBrevMapper extends FritekstmalBrevMapper {
         Optional<String> lovhjemler = KlageMapper.hentOgFormaterLovhjemlerForAvvistKlage(klage, behandling.getSpråkkode());
 
         Brevdata brevdata = new Brevdata()
-                .leggTil("lovhjemler", lovhjemler.get());
+                .leggTil("lovhjemler", lovhjemler.map(String::toString).orElse(null));
 
         List<KlageAvvistÅrsak> avvistÅrsaker = KlageMapper.listeAvAvvisteÅrsaker(klage);
 

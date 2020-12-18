@@ -1,6 +1,16 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.svp;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.helper.ConditionalHelpers;
+import com.github.jknack.handlebars.helper.I18nHelper;
+import no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder;
+import no.nav.foreldrepenger.melding.dbstoette.JpaExtension;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.typer.Dato;
+import no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -9,19 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
-import com.github.jknack.handlebars.Handlebars;
-import com.github.jknack.handlebars.helper.ConditionalHelpers;
-import com.github.jknack.handlebars.helper.I18nHelper;
-
-import no.nav.foreldrepenger.melding.datamapper.mal.fritekst.BrevmalKilder;
-import no.nav.foreldrepenger.melding.dbstoette.JpaExtension;
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.typer.Dato;
-import no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(JpaExtension.class)
 public class SvpHandlebarAvslagPerioderTest {

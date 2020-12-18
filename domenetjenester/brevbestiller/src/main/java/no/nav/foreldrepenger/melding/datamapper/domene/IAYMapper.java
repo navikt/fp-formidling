@@ -10,7 +10,4 @@ public class IAYMapper {
             throw new IllegalStateException("Finner ingen inntektsmelding");
         });
     }
-
-    ;
-
 }

@@ -1,0 +1,787 @@
+{
+  "beregningsresultat-foreldrepenger": {
+    "sokerErMor": true,
+    "opphoersdato": null,
+    "perioder": [
+      {
+        "fom": "2019-05-07",
+        "tom": "2019-06-12",
+        "dagsats": 1939,
+        "andeler": [
+          {
+            "arbeidsgiverReferanse": "973135678",
+            "refusjon": 0,
+            "tilSoker": 554,
+            "uttak": {
+              "stonadskontoType": null,
+              "periodeResultatType": null,
+              "gradering": false
+            },
+            "utbetalingsgrad": 100,
+            "sisteUtbetalingsdato": "2019-09-12",
+            "aktivitetStatus": {
+              "kode": "AT",
+              "kodeverk": "AKTIVITET_STATUS"
+            },
+            "arbeidsforholdId": null,
+            "aktørId": null,
+            "arbeidsforholdType": {
+              "kode": "-",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            },
+            "stillingsprosent": 20
+          },
+          {
+            "arbeidsgiverReferanse": "973861778",
+            "refusjon": 0,
+            "tilSoker": 1385,
+            "uttak": {
+              "stonadskontoType": null,
+              "periodeResultatType": null,
+              "gradering": false
+            },
+            "utbetalingsgrad": 100,
+            "sisteUtbetalingsdato": "2019-09-12",
+            "aktivitetStatus": {
+              "kode": "AT",
+              "kodeverk": "AKTIVITET_STATUS"
+            },
+            "arbeidsforholdId": null,
+            "aktørId": null,
+            "arbeidsforholdType": {
+              "kode": "-",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            },
+            "stillingsprosent": 80
+          }
+        ]
+      },
+      {
+        "fom": "2019-06-13",
+        "tom": "2019-09-12",
+        "dagsats": 1592,
+        "andeler": [
+          {
+            "arbeidsgiverReferanse": "973135678",
+            "refusjon": 0,
+            "tilSoker": 554,
+            "uttak": {
+              "stonadskontoType": null,
+              "periodeResultatType": null,
+              "gradering": false
+            },
+            "utbetalingsgrad": 100,
+            "sisteUtbetalingsdato": "2019-09-12",
+            "aktivitetStatus": {
+              "kode": "AT",
+              "kodeverk": "AKTIVITET_STATUS"
+            },
+            "arbeidsforholdId": null,
+            "aktørId": null,
+            "arbeidsforholdType": {
+              "kode": "-",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            },
+            "stillingsprosent": 20
+          },
+          {
+            "arbeidsgiverReferanse": "973861778",
+            "refusjon": 0,
+            "tilSoker": 1038,
+            "uttak": {
+              "stonadskontoType": null,
+              "periodeResultatType": null,
+              "gradering": false
+            },
+            "utbetalingsgrad": 75,
+            "sisteUtbetalingsdato": "2019-09-12",
+            "aktivitetStatus": {
+              "kode": "AT",
+              "kodeverk": "AKTIVITET_STATUS"
+            },
+            "arbeidsforholdId": null,
+            "aktørId": null,
+            "arbeidsforholdType": {
+              "kode": "-",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            },
+            "stillingsprosent": 80
+          }
+        ]
+      }
+    ],
+    "skalHindreTilbaketrekk": null
+  },
+  "behandling": {
+    "id": 1157823,
+    "uuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80",
+    "versjon": 44,
+    "type": {
+      "kode": "BT-002",
+      "kodeverk": "BEHANDLING_TYPE"
+    },
+    "status": {
+      "kode": "UTRED",
+      "kodeverk": "BEHANDLING_STATUS"
+    },
+    "fagsakId": 1053862,
+    "opprettet": "2019-06-25T17:47:11",
+    "avsluttet": null,
+    "endret": "2019-06-25T17:48:04.283",
+    "endretAvBrukernavn": "srvengangsstonad",
+    "behandlendeEnhetId": "4833",
+    "behandlendeEnhetNavn": "NAV Familie- og pensjonsytelser Oslo 1",
+    "erAktivPapirsoknad": false,
+    "førsteÅrsak": {
+      "erAutomatiskRevurdering": false,
+      "behandlingArsakType": {
+        "kode": "RE-END-INNTEKTSMELD",
+        "kodeverk": "BEHANDLING_AARSAK"
+      },
+      "manueltOpprettet": false
+    },
+    "behandlingsfristTid": "2019-08-06",
+    "gjeldendeVedtak": false,
+    "links": [
+      {
+        "href": "/fpsak/api/behandling/aksjonspunkt?behandlingId=1157823",
+        "rel": "aksjonspunkter",
+        "type": "GET",
+        "requestPayload": null
+      },
+      {
+        "href": "/fpsak/api/behandling/vilkar?behandlingId=1157823",
+        "rel": "vilkar",
+        "type": "GET",
+        "requestPayload": null
+      },
+      {
+        "href": "/fpsak/api/behandling/svangerskapspenger/tilrettelegging?behandlingId=1157823",
+        "rel": "svangerskapspenger-tilrettelegging",
+        "type": "GET",
+        "requestPayload": null
+      },
+      {
+        "href": "/fpsak/api/fagsak",
+        "rel": "fagsak",
+        "type": "GET",
+        "requestPayload": {
+          "saksnummer": "139020668"
+        }
+      },
+      {
+        "href": "/fpsak/api/brev/maler",
+        "rel": "brev-maler",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/soknad",
+        "rel": "soknad",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/dokument/hent-mottattdokumentliste",
+        "rel": "mottattdokument",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/totrinnskontroll/arsaker_read_only",
+        "rel": "totrinnskontroll-arsaker-readOnly",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/familiehendelse",
+        "rel": "familiehendelse",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/familiehendelse/v2",
+        "rel": "familiehendelse-v2",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/person/personopplysninger",
+        "rel": "soeker-personopplysninger",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/person/medlemskap-v2",
+        "rel": "soeker-medlemskap-v2",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/person/medlemskap",
+        "rel": "soeker-medlemskap",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/inntekt-arbeid-ytelse",
+        "rel": "inntekt-arbeid-ytelse",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/ytelsefordeling",
+        "rel": "ytelsefordeling",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/opptjening",
+        "rel": "opptjening",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/beregningsgrunnlag",
+        "rel": "beregningsgrunnlag",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/uttak/fakta-arbeidsforhold",
+        "rel": "fakta-arbeidsforhold",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/uttak/periode-grense",
+        "rel": "uttak-periode-grense",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/uttak/kontroller-fakta-perioder",
+        "rel": "uttak-kontroller-fakta-perioder",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/uttak/resultat-svangerskapspenger",
+        "rel": "uttaksresultat-svangerskapspenger",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpsak/api/behandling/beregningsresultat/foreldrepenger",
+        "rel": "beregningsresultat-foreldrepenger",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      },
+      {
+        "href": "/fpoppdrag/api/simulering/resultat-uten-inntrekk",
+        "rel": "simuleringResultat",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      }
+    ],
+    "behandlingKoet": false,
+    "behandlingPaaVent": false,
+    "ansvarligSaksbehandler": "z991188",
+    "ansvarligBeslutter": null,
+    "fristBehandlingPaaVent": null,
+    "venteArsakKode": null,
+    "sprakkode": {
+      "kode": "NB",
+      "kodeverk": "SPRAAK_KODE"
+    },
+    "behandlingHenlagt": false,
+    "toTrinnsBehandling": true,
+    "behandlingsresultat": {
+      "id": 1058771,
+      "type": {
+        "kode": "INNVILGET",
+        "kodeverk": "BEHANDLING_RESULTAT_TYPE"
+      },
+      "avslagsarsak": null,
+      "avslagsarsakFritekst": null,
+      "rettenTil": {
+        "kode": "-",
+        "kodeverk": "RETTEN_TIL"
+      },
+      "konsekvenserForYtelsen": [],
+      "vedtaksbrev": {
+        "kode": "-",
+        "kodeverk": "VEDTAKSBREV"
+      },
+      "overskrift": null,
+      "fritekstbrev": null,
+      "skjaeringstidspunktForeldrepenger": "2019-05-07"
+    },
+    "taskStatus": null,
+    "behandlingArsaker": [
+      {
+        "erAutomatiskRevurdering": false,
+        "behandlingArsakType": {
+          "kode": "RE-END-INNTEKTSMELD",
+          "kodeverk": "BEHANDLING_AARSAK"
+        },
+        "manueltOpprettet": false
+      }
+    ]
+  },
+  "fagsak": {
+    "saksnummer": 139020668,
+    "sakstype": {
+      "kode": "SVP",
+      "kodeverk": "FAGSAK_YTELSE"
+    },
+    "relasjonsRolleType": {
+      "kode": "MORA",
+      "kodeverk": "RELASJONSROLLE_TYPE"
+    },
+    "status": {
+      "kode": "UBEH",
+      "kodeverk": "FAGSAK_STATUS"
+    },
+    "barnFodt": null,
+    "person": {
+      "erDod": false,
+      "navn": "SKILPADDE RASK",
+      "alder": 46,
+      "personnummer": "18017320463",
+      "erKvinne": true,
+      "personstatusType": {
+        "kode": "BOSA",
+        "kodeverk": "PERSONSTATUS_TYPE"
+      },
+      "diskresjonskode": null,
+      "dodsdato": null
+    },
+    "opprettet": "2019-06-25T17:47:05.322",
+    "endret": "2019-06-25T17:47:47.164",
+    "antallBarn": 0,
+    "kanRevurderingOpprettes": false,
+    "skalBehandlesAvInfotrygd": false
+  },
+  "aksjonspunkter": [
+    {
+      "definisjon": {
+        "kode": "7008"
+      },
+      "status": {
+        "kode": "UTFO",
+        "kodeverk": "AKSJONSPUNKT_STATUS"
+      },
+      "begrunnelse": null,
+      "vilkarType": null,
+      "toTrinnsBehandling": false,
+      "toTrinnsBehandlingGodkjent": null,
+      "vurderPaNyttArsaker": null,
+      "besluttersBegrunnelse": null,
+      "aksjonspunktType": {
+        "kode": "AUTO",
+        "kodeverk": "AKSJONSPUNKT_TYPE"
+      },
+      "kanLoses": false,
+      "erAktivt": true,
+      "fristTid": "2019-03-25T00:00:00"
+    },
+    {
+      "definisjon": {
+        "kode": "5001"
+      },
+      "status": {
+        "kode": "UTFO",
+        "kodeverk": "AKSJONSPUNKT_STATUS"
+      },
+      "begrunnelse": null,
+      "vilkarType": {
+        "kode": "FP_VK_1",
+        "kodeverk": "VILKAR_TYPE"
+      },
+      "toTrinnsBehandling": false,
+      "toTrinnsBehandlingGodkjent": null,
+      "vurderPaNyttArsaker": null,
+      "besluttersBegrunnelse": null,
+      "aksjonspunktType": {
+        "kode": "MANU",
+        "kodeverk": "AKSJONSPUNKT_TYPE"
+      },
+      "kanLoses": false,
+      "erAktivt": true,
+      "fristTid": null
+    }
+  ],
+  "uttaksresultat-svangerskapspenger": {
+    "uttaksResultatArbeidsforhold": [
+      {
+        "arbeidsforholdIkkeOppfyltÅrsak": {
+          "kode": "-",
+          "kodeverk": "SVP_ARBEIDSFORHOLD_IKKE_OPPFYLT_AARSAK"
+        },
+        "arbeidsgiverReferanse": "973861778",
+        "arbeidType": {
+          "kode": "ORDINÆRT_ARBEID",
+          "kodeverk": "UTTAK_ARBEID_TYPE"
+        },
+        "perioder": [
+          {
+            "utbetalingsgrad": 100,
+            "periodeResultatType": {
+              "kode": "INNVILGET",
+              "kodeverk": "PERIODE_RESULTAT_TYPE"
+            },
+            "periodeIkkeOppfyltÅrsak": {
+              "kode": "-",
+              "kodeverk": "SVP_PERIODE_IKKE_OPPFYLT_AARSAK"
+            },
+            "fom": "2019-05-07",
+            "tom": "2019-06-12"
+          },
+          {
+            "utbetalingsgrad": 75,
+            "periodeResultatType": {
+              "kode": "INNVILGET",
+              "kodeverk": "PERIODE_RESULTAT_TYPE"
+            },
+            "periodeIkkeOppfyltÅrsak": {
+              "kode": "-",
+              "kodeverk": "SVP_PERIODE_IKKE_OPPFYLT_AARSAK"
+            },
+            "fom": "2019-06-13",
+            "tom": "2019-09-12"
+          }
+        ]
+      },
+      {
+        "arbeidsforholdIkkeOppfyltÅrsak": {
+          "kode": "-",
+          "kodeverk": "SVP_ARBEIDSFORHOLD_IKKE_OPPFYLT_AARSAK"
+        },
+        "arbeidsgiverReferanse": "973135678",
+        "arbeidType": {
+          "kode": "ORDINÆRT_ARBEID",
+          "kodeverk": "UTTAK_ARBEID_TYPE"
+        },
+        "perioder": [
+          {
+            "utbetalingsgrad": 100,
+            "periodeResultatType": {
+              "kode": "INNVILGET",
+              "kodeverk": "PERIODE_RESULTAT_TYPE"
+            },
+            "periodeIkkeOppfyltÅrsak": {
+              "kode": "-",
+              "kodeverk": "SVP_PERIODE_IKKE_OPPFYLT_AARSAK"
+            },
+            "fom": "2019-05-07",
+            "tom": "2019-09-12"
+          }
+        ]
+      }
+    ]
+  },
+  "beregningsgrunnlag": {
+    "skjaeringstidspunktBeregning": "2019-05-07",
+    "aktivitetStatus": [
+      {
+        "kode": "AT",
+        "kodeverk": "AKTIVITET_STATUS"
+      }
+    ],
+    "beregningsgrunnlagPeriode": [
+      {
+        "beregningsgrunnlagPeriodeFom": "2019-05-07",
+        "beregningsgrunnlagPeriodeTom": null,
+        "beregnetPrAar": 504000,
+        "bruttoPrAar": 504000,
+        "bruttoInkludertBortfaltNaturalytelsePrAar": 504000,
+        "avkortetPrAar": 504000,
+        "redusertPrAar": 504000,
+        "periodeAarsaker": [],
+        "dagsats": 1939,
+        "beregningsgrunnlagPrStatusOgAndel": [
+          {
+            "beregningsgrunnlagFom": "2019-02-01",
+            "beregningsgrunnlagTom": "2019-04-30",
+            "aktivitetStatus": {
+              "kode": "AT",
+              "kodeverk": "AKTIVITET_STATUS"
+            },
+            "beregningsperiodeFom": "2019-02-01",
+            "beregningsperiodeTom": "2019-04-30",
+            "beregnetPrAar": 360000,
+            "fastsattForrigePrAar": null,
+            "overstyrtPrAar": null,
+            "bruttoPrAar": 360000,
+            "avkortetPrAar": 360000,
+            "redusertPrAar": 360000,
+            "erTidsbegrensetArbeidsforhold": null,
+            "erNyIArbeidslivet": null,
+            "lonnsendringIBeregningsperioden": null,
+            "andelsnr": 2,
+            "besteberegningPrAar": null,
+            "inntektskategori": {
+              "kode": "ARBEIDSTAKER",
+              "kodeverk": "INNTEKTSKATEGORI"
+            },
+            "arbeidsforhold": {
+              "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
+              "arbeidsgiverId": "973861778",
+              "startdato": "2017-01-01",
+              "opphoersdato": null,
+              "arbeidsforholdId": null,
+              "arbeidsforholdType": {
+                "kode": "ARBEID",
+                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+              },
+              "aktørId": null,
+              "refusjonPrAar": 0,
+              "belopFraInntektsmeldingPrMnd": 30000,
+              "organisasjonstype": {
+                "kode": "VIRKSOMHET",
+                "kodeverk": "ORGANISASJONSTYPE"
+              },
+              "naturalytelseBortfaltPrÅr": null,
+              "naturalytelseTilkommetPrÅr": null
+            },
+            "fastsattAvSaksbehandler": null,
+            "lagtTilAvSaksbehandler": false,
+            "belopPrMndEtterAOrdningen": 30000.0000000000,
+            "belopPrAarEtterAOrdningen": 360000.0000000000,
+            "dagsats": 1385,
+            "originalDagsatsFraTilstøtendeYtelse": null,
+            "fordeltPrAar": null
+          },
+          {
+            "beregningsgrunnlagFom": "2019-02-01",
+            "beregningsgrunnlagTom": "2019-04-30",
+            "aktivitetStatus": {
+              "kode": "AT",
+              "kodeverk": "AKTIVITET_STATUS"
+            },
+            "beregningsperiodeFom": "2019-02-01",
+            "beregningsperiodeTom": "2019-04-30",
+            "beregnetPrAar": 144000,
+            "fastsattForrigePrAar": null,
+            "overstyrtPrAar": null,
+            "bruttoPrAar": 144000,
+            "avkortetPrAar": 144000,
+            "redusertPrAar": 144000,
+            "erTidsbegrensetArbeidsforhold": null,
+            "erNyIArbeidslivet": null,
+            "lonnsendringIBeregningsperioden": null,
+            "andelsnr": 1,
+            "besteberegningPrAar": null,
+            "inntektskategori": {
+              "kode": "ARBEIDSTAKER",
+              "kodeverk": "INNTEKTSKATEGORI"
+            },
+            "arbeidsforhold": {
+              "arbeidsgiverNavn": "COLOR LINE CREW AS",
+              "arbeidsgiverId": "973135678",
+              "startdato": "2017-01-01",
+              "opphoersdato": null,
+              "arbeidsforholdId": null,
+              "arbeidsforholdType": {
+                "kode": "ARBEID",
+                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+              },
+              "aktørId": null,
+              "refusjonPrAar": 0,
+              "belopFraInntektsmeldingPrMnd": 12000,
+              "organisasjonstype": {
+                "kode": "VIRKSOMHET",
+                "kodeverk": "ORGANISASJONSTYPE"
+              },
+              "naturalytelseBortfaltPrÅr": null,
+              "naturalytelseTilkommetPrÅr": null
+            },
+            "fastsattAvSaksbehandler": null,
+            "lagtTilAvSaksbehandler": false,
+            "belopPrMndEtterAOrdningen": 10000.0000000000,
+            "belopPrAarEtterAOrdningen": 120000.0000000000,
+            "dagsats": 554,
+            "originalDagsatsFraTilstøtendeYtelse": null,
+            "fordeltPrAar": null
+          }
+        ],
+        "andelerLagtTilManueltIForrige": []
+      }
+    ],
+    "sammenligningsgrunnlag": {
+      "sammenligningsgrunnlagFom": "2018-05-01",
+      "sammenligningsgrunnlagTom": "2019-04-30",
+      "rapportertPrAar": 480000,
+      "avvikPromille": 50
+    },
+    "ledetekstBrutto": "Brutto beregningsgrunnlag",
+    "ledetekstAvkortet": "Avkortet beregningsgrunnlag (6G=599148)",
+    "ledetekstRedusert": "Redusert beregningsgrunnlag (100%)",
+    "grunnbeløp": 99858.0,
+    "faktaOmBeregning": {
+      "endringBeregningsgrunnlag": null,
+      "kortvarigeArbeidsforhold": null,
+      "frilansAndel": null,
+      "kunYtelse": null,
+      "faktaOmBeregningTilfeller": null,
+      "arbeidstakerOgFrilanserISammeOrganisasjonListe": null,
+      "arbeidsforholdMedLønnsendringUtenIM": null,
+      "besteberegningAndeler": null,
+      "vurderMottarYtelse": null,
+      "avklarAktiviteter": {
+        "aktiviteterTomDatoMapping": [
+          {
+            "tom": "2019-05-07",
+            "aktiviteter": [
+              {
+                "arbeidsgiverNavn": "COLOR LINE CREW AS",
+                "arbeidsgiverId": "973135678",
+                "fom": "2017-01-01",
+                "tom": "9999-12-31",
+                "arbeidsforholdId": null,
+                "arbeidsforholdType": {
+                  "kode": "ARBEID",
+                  "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+                },
+                "aktørId": null,
+                "skalBrukes": null
+              },
+              {
+                "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
+                "arbeidsgiverId": "973861778",
+                "fom": "2017-01-01",
+                "tom": "9999-12-31",
+                "arbeidsforholdId": null,
+                "arbeidsforholdType": {
+                  "kode": "ARBEID",
+                  "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+                },
+                "aktørId": null,
+                "skalBrukes": null
+              }
+            ]
+          }
+        ]
+      },
+      "vurderBesteberegning": null
+    },
+    "andelerMedGraderingUtenBG": null,
+    "hjemmel": {
+      "kode": "F_14_7_8_30",
+      "kodeverk": "BG_HJEMMEL"
+    },
+    "faktaOmFordeling": null
+  },
+  "mottattdokument": [
+    {
+      "mottattDato": "2019-06-25",
+      "dokumentTypeId": {
+        "kode": "SØKNAD_SVANGERSKAPSPENGER",
+        "kodeverk": "DOKUMENT_TYPE_ID"
+      },
+      "dokumentKategori": {
+        "kode": "SOKN",
+        "kodeverk": "DOKUMENT_KATEGORI"
+      }
+    },
+    {
+      "mottattDato": "2019-06-25",
+      "dokumentTypeId": {
+        "kode": "INNTEKTSMELDING",
+        "kodeverk": "DOKUMENT_TYPE_ID"
+      },
+      "dokumentKategori": {
+        "kode": "ITSKJ",
+        "kodeverk": "DOKUMENT_KATEGORI"
+      }
+    },
+    {
+      "mottattDato": "2019-06-25",
+      "dokumentTypeId": {
+        "kode": "INNTEKTSMELDING",
+        "kodeverk": "DOKUMENT_TYPE_ID"
+      },
+      "dokumentKategori": {
+        "kode": "ITSKJ",
+        "kodeverk": "DOKUMENT_KATEGORI"
+      }
+    }
+  ]
+}

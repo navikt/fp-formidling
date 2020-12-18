@@ -86,7 +86,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         this.dokumentdataMapperProvider = dokumentdataMapperProvider;
         this.prosessTaskRepository = prosessTaskRepository;
         this.historikkRepository = historikkRepository;
-    }
+    } //NOSONAR
 
     @Override
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {

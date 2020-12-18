@@ -61,14 +61,12 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
         return sorterte;
     }
 
-    // Fjerner dokumentmaler som aldri er relevante for denne behandlingstypen
+    // Fjerner dokumentmaler som ikke er tilgjengelig for manuell utsendelse, og for ulike behandlingstyper
+    //Todo Dokumentmaltype Etterlys inntekstmelding skal kun være tilgjengelig for manuell utsendelse når foreldrepenger - men vi vet ikke at en behandling er FP, SVP, eller ES
     private List<DokumentMalType> filtrerUtilgjengeligBrevmaler(Behandling behandling, List<DokumentMalType> kandidater, boolean automatiskOpprettet, List<Aksjonspunkt> aksjonspunkter) {
         List<DokumentMalType> fjernes = kandidater.stream()
                 .filter(dm -> !dm.erTilgjengeligForManuellUtsendelse() || malSkalIkkeTilgjengeliggjøresForManuellUtsendelse(dm))
                 .collect(Collectors.toList());
-//        if (!behandling.gjelderForeldrepenger) { // TODO, men ikke en blocker.
-//            fjernes.add(dokumentRepository.hentDokumentMalType(DokumentMalType.ETTERLYS_INNTEKTSMELDING_DOK));
-//        }
         if (harBehandledeAksjonspunktVarselOmRevurdering(aksjonspunkter)) {
             fjernes.add(DokumentMalType.FORLENGET_DOK);
             fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);

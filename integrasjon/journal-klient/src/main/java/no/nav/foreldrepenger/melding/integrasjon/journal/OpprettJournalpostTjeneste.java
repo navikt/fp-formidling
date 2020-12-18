@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 @ApplicationScoped
+@SuppressWarnings("java:S3358")
 public class OpprettJournalpostTjeneste {
     private static final Logger LOG = LoggerFactory.getLogger(OpprettJournalpostTjeneste.class);
     private JournalpostRestKlient journalpostRestKlient;
@@ -84,7 +85,7 @@ public class OpprettJournalpostTjeneste {
         return ytelseType.gjelderEngangsstønad() ? BehandlingTema.ENGANGSSTØNAD.getOffisiellKode() :
                ytelseType.gjelderForeldrepenger() ? BehandlingTema.FORELDREPENGER.getOffisiellKode() :
                ytelseType.gjelderSvangerskapspenger() ? BehandlingTema.SVANGERSKAPSPENGER.getOffisiellKode() :
-                       BehandlingTema.UDEFINERT.getOffisiellKode(); //NOSONAR
+                       BehandlingTema.UDEFINERT.getOffisiellKode();
     }
     private AvsenderMottakerIdType hentAvsenderMotakkerType(DokumentFelles.MottakerType mottakerType) {
         return mottakerType.equals(DokumentFelles.MottakerType.PERSON) ? AvsenderMottakerIdType.FNR : AvsenderMottakerIdType.ORGNR;

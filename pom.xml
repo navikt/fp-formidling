@@ -687,93 +687,12 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
-
-
-    <profiles>
-        <profile>
-            <id>runSonar</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <!-- maven.root bør overstyres fra cmdline -->
-                <maven.root>${project.basedir}</maven.root>
-
-                <sonar.language/>
-                <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-                <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-                <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
-                <sonar.java.source>1.8</sonar.java.source>
-                <sonar.sources>.</sonar.sources>
-                <sonar.inclusions>src/main/java/**</sonar.inclusions>
-                <sonar.exclusions>
-                    **/test/**,
-                    **/testutilities/**,
-                    **/*mock*/**,
-                    **/fitnesse/**,
-                    **/coverage/**,
-                    **/swagger/**,
-                    **/target/**,
-                    **/testdata/**,
-                    **/docs/**,
-                    **/apidoc/**,
-                    **/test-helpers/**,
-                    **/static/**,
-                    **/jetty/**
-                </sonar.exclusions>
-                <sonar.coverage.exclusions>${sonar.exclusions}</sonar.coverage.exclusions>
-                <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-                <sonar.jacoco.reportPaths>${maven.root}/target/jacoco.exec</sonar.jacoco.reportPaths>
-                <sonar.javascript.lcov.reportPath>${maven.root}/web/klient/coverage/lcov.info
-                </sonar.javascript.lcov.reportPath>
-                <sonar.javascript.file.suffixes>.js,.jsx</sonar.javascript.file.suffixes>
-                <sonar.leak.period>previous_analysis</sonar.leak.period>
-            </properties>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                                <configuration>
-                                    <propertyName>jacoco.agent.argLine</propertyName>
-                                    <destFile>${sonar.jacoco.reportPath}</destFile>
-                                    <append>true</append>
-                                    <excludes>${sonar.coverage.exclusions}</excludes>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>agent-it</id>
-                                <goals>
-                                    <goal>prepare-agent-integration</goal>
-                                </goals>
-                                <configuration>
-                                    <propertyName>jacoco.agent.argLine</propertyName>
-                                    <destFile>${sonar.jacoco.reportPaths}</destFile>
-                                    <append>true</append>
-                                    <excludes>${sonar.coverage.exclusions}</excludes>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                    </plugin>
-
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <scm>
         <connection>scm:git:https://github.com/navikt/fp-formidling.git</connection>

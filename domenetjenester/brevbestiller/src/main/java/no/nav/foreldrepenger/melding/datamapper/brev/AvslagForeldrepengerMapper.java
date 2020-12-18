@@ -75,32 +75,21 @@ public class AvslagForeldrepengerMapper extends DokumentTypeMapper {
                                 DokumentFelles dokumentFelles,
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
+        FagType fagType = mapFagType(behandling, dokumentHendelse);
+        JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
+        return JaxbHelper.marshalNoNamespaceXML(AvslagForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
+    }
+
+    private FagType mapFagType(Behandling behandling, DokumentHendelse dokumentHendelse) {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         Optional<BeregningsresultatFP> beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFPHvisFinnes(behandling);
         Optional<UttakResultatPerioder> uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling);
         long halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
-        List<MottattDokument> mottattDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
-        FagType fagType = mapFagType(behandling,
-                mottattDokumenter,
-                dokumentHendelse,
-                familiehendelse,
-                halvG,
-                beregningsresultatFP,
-                uttakResultatPerioder,
-                fagsak);
-        JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
-        return JaxbHelper.marshalNoNamespaceXML(AvslagForeldrepengerConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
-    }
 
-    private FagType mapFagType(Behandling behandling,
-                               List<MottattDokument> mottatteDokumenter,
-                               DokumentHendelse dokumentHendelse,
-                               FamilieHendelse familiehendelse,
-                               long halvG,
-                               Optional<BeregningsresultatFP> beregningsresultatFP,
-                               Optional<UttakResultatPerioder> uttakResultatPerioder, FagsakBackend fagsak) {
+        List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
+
         FagType fagType = new FagType();
         fagType.setRelasjonskode(fra(fagsak));
         fagType.setMottattDato(MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenterXml(behandling, mottatteDokumenter));
@@ -114,7 +103,6 @@ public class AvslagForeldrepengerMapper extends DokumentTypeMapper {
                 beregningsresultatFP,
                 uttakResultatPerioder,
                 fagType);
-
 
         avklarFritekst(dokumentHendelse, behandling)
                 .ifPresent(fagType::setFritekst);

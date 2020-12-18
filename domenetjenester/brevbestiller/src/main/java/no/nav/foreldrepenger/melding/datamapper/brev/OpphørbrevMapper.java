@@ -91,33 +91,22 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
                                 DokumentFelles dokumentFelles,
                                 DokumentHendelse dokumentHendelse,
                                 Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
+
+        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
+        FagType fagType = mapFagType(behandlingstype, behandling, dokumentFelles);
+        JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
+        return JaxbHelper.marshalNoNamespaceXML(OpphørConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
+    }
+
+    private FagType mapFagType(String behandlingstypeKode, Behandling behandling, DokumentFelles dokumentFelles) {
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)
                 .orElseGet(() -> UttakResultatPerioder.ny().build()); // bestående av tomme lister.
         Optional<UttakResultatPerioder> originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).flatMap(domeneobjektProvider::hentUttaksresultatHvisFinnes);
-        String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         long halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
         FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
-        FagType fagType = mapFagType(behandlingstype, behandling,
-                dokumentFelles,
-                familiehendelse,
-                halvG,
-                uttakResultatPerioder,
-                originaltUttakResultat,
-                fagsak
-        );
-        JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
-        return JaxbHelper.marshalNoNamespaceXML(OpphørConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
-    }
 
-    private FagType mapFagType(String behandlingstypeKode, Behandling behandling,
-                               DokumentFelles dokumentFelles,
-                               FamilieHendelse familiehendelse,
-                               long halvG,
-                               UttakResultatPerioder uttakResultatPerioder,
-                               Optional<UttakResultatPerioder> originaltUttakResultat,
-                               FagsakBackend fagsak) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(fra(behandlingstypeKode));
         fagType.setSokersNavn(dokumentFelles.getSakspartNavn());

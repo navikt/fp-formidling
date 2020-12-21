@@ -261,7 +261,7 @@ public class PersondataTjeneste {
         kontaktadresser.stream().map(a -> mapUtenlandskadresse(AdresseType.POSTADRESSE_UTLAND, a.getUtenlandskAdresse(), a.getCoAdressenavn(), kontaktFom)).filter(Objects::nonNull).forEach(resultat::add);
         kontaktadresser.stream().map(a -> mapFriAdresseUtland(AdresseType.POSTADRESSE_UTLAND, a.getUtenlandskAdresseIFrittFormat(), a.getCoAdressenavn(), kontaktFom)).filter(Objects::nonNull).forEach(resultat::add);
         if (resultat.isEmpty()) {
-            resultat.add(Adresseinfo.builder(AdresseType.UKJENT_ADRESSE).medGyldigFom(Tid.TIDENES_BEGYNNELSE).build());
+            resultat.add(Adresseinfo.builder(AdresseType.UKJENT_ADRESSE).medGyldigFom(Tid.TIDENES_BEGYNNELSE).buildTemporary());
         }
         return resultat;
     }

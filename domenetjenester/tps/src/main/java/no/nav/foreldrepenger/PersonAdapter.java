@@ -9,22 +9,19 @@ import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
-import no.nav.foreldrepenger.pdl.AktørTjeneste;
-import no.nav.foreldrepenger.tps.TpsAdapter;
+import no.nav.foreldrepenger.pdl.PersondataTjeneste;
 
 @ApplicationScoped
-public class PersonTjeneste {
+public class PersonAdapter {
 
-    private TpsAdapter tpsAdapter;
-    private AktørTjeneste aktørTjeneste;
+    private PersondataTjeneste aktørTjeneste;
 
-    public PersonTjeneste() {
+    public PersonAdapter() {
         // for CDI proxy
     }
 
     @Inject
-    public PersonTjeneste(TpsAdapter tpsAdapter, AktørTjeneste aktørTjeneste) {
-        this.tpsAdapter = tpsAdapter;
+    public PersonAdapter(PersondataTjeneste aktørTjeneste) {
         this.aktørTjeneste = aktørTjeneste;
     }
 
@@ -35,9 +32,7 @@ public class PersonTjeneste {
 
     public Optional<Adresseinfo> hentAdresseinformasjon(AktørId aktørId) {
         Optional<PersonIdent> funnetFnr = aktørTjeneste.hentPersonIdentForAktørId(aktørId);
-        var adresse = funnetFnr.map(pi -> tpsAdapter.hentAdresseinformasjon(pi));
-        funnetFnr.ifPresent(pi -> adresse.ifPresent(adr -> aktørTjeneste.hentAdresseinformasjon(aktørId, pi, adr)));
-        return adresse;
+        return funnetFnr.map(pi -> aktørTjeneste.hentAdresseinformasjon(aktørId, pi));
     }
 
 }

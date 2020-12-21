@@ -15,7 +15,7 @@ import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.PersonTjeneste;
+import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
@@ -41,14 +41,14 @@ import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 public class AvslagEngangsstønadDokumentDataMapper implements DokumentdataMapper {
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
-    private PersonTjeneste tpsTjeneste;
+    private PersonAdapter tpsTjeneste;
 
     AvslagEngangsstønadDokumentDataMapper() {
         //CDI
     }
 
     @Inject
-    public AvslagEngangsstønadDokumentDataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider, PersonTjeneste tpsTjeneste) {
+    public AvslagEngangsstønadDokumentDataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider, PersonAdapter tpsTjeneste) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
         this.tpsTjeneste = tpsTjeneste;

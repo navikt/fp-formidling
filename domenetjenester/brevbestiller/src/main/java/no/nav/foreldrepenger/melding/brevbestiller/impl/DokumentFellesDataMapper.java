@@ -7,7 +7,7 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.PersonTjeneste;
+import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -31,7 +31,7 @@ public class DokumentFellesDataMapper {
     private static final String DEFAULT_PERSON_STATUS = "ANNET";
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private DomeneobjektProvider domeneobjektProvider;
-    private PersonTjeneste tpsTjeneste;
+    private PersonAdapter tpsTjeneste;
     private VirksomhetTjeneste virksomhetTjeneste;
 
     public DokumentFellesDataMapper() {
@@ -39,7 +39,7 @@ public class DokumentFellesDataMapper {
     }
 
     @Inject
-    public DokumentFellesDataMapper(PersonTjeneste tpsTjeneste,
+    public DokumentFellesDataMapper(PersonAdapter tpsTjeneste,
                                     DomeneobjektProvider domeneobjektProvider,
                                     NavKontaktKonfigurasjon navKontaktKonfigurasjon,
                                     VirksomhetTjeneste virksomhetTjeneste) {

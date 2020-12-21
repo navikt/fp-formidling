@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.PersonTjeneste;
+import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.OrganisasjonsNummerValidator;
 import no.nav.foreldrepenger.melding.organisasjon.VirksomhetTjeneste;
@@ -21,7 +21,7 @@ public class ArbeidsgiverTjeneste {
 
     private static final long CACHE_ELEMENT_LIVE_TIME_MS = TimeUnit.MILLISECONDS.convert(12, TimeUnit.HOURS);
     private static final long SHORT_CACHE_ELEMENT_LIVE_TIME_MS = TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
-    private PersonTjeneste tpsTjeneste;
+    private PersonAdapter tpsTjeneste;
     private LRUCache<String, ArbeidsgiverOpplysninger> cache = new LRUCache<>(1000, CACHE_ELEMENT_LIVE_TIME_MS);
     private LRUCache<String, ArbeidsgiverOpplysninger> failBackoffCache = new LRUCache<>(100, SHORT_CACHE_ELEMENT_LIVE_TIME_MS);
     private VirksomhetTjeneste virksomhetTjeneste;
@@ -31,7 +31,7 @@ public class ArbeidsgiverTjeneste {
     }
 
     @Inject
-    public ArbeidsgiverTjeneste(PersonTjeneste tpsTjeneste, VirksomhetTjeneste virksomhetTjeneste) {
+    public ArbeidsgiverTjeneste(PersonAdapter tpsTjeneste, VirksomhetTjeneste virksomhetTjeneste) {
         this.tpsTjeneste = tpsTjeneste;
         this.virksomhetTjeneste = virksomhetTjeneste;
     }

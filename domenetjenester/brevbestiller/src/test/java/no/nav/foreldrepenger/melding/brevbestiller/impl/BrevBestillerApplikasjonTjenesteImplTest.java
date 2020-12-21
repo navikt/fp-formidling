@@ -22,7 +22,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.PersonTjeneste;
+import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.aktør.AdresseType;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
@@ -81,7 +81,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     private static final String DOKUMENT_INFO_ID = "987";
 
     @Mock
-    private PersonTjeneste tpsTjeneste;
+    private PersonAdapter tpsTjeneste;
     @Mock
     private VirksomhetTjeneste virksomhetTjeneste;
     @Mock

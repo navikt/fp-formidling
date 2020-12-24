@@ -459,7 +459,7 @@
                 <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.97</version>
+                <version>4.8.98</version>
             </dependency>
             <!-- Java11 -->
             <dependency>

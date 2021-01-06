@@ -1,23 +1,5 @@
 package no.nav.foreldrepenger.pdl;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.melding.aktør.AdresseType;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
@@ -73,6 +55,20 @@ import no.nav.vedtak.felles.integrasjon.pdl.Tema;
 import no.nav.vedtak.konfig.Tid;
 import no.nav.vedtak.util.LRUCache;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
 @ApplicationScoped
 public class PersondataTjeneste {
 
@@ -81,7 +77,6 @@ public class PersondataTjeneste {
      * Det er brukt TPS-kompatible forretningsregler - se kommentar i bunn av fil for gjeldendeAdresse
      */
 
-    private static final Logger LOG = LoggerFactory.getLogger(PersondataTjeneste.class);
     private static final String HARDKODET_POSTNR = "XXXX";
     private static final String HARDKODET_POSTSTED = "UKJENT";
 
@@ -195,10 +190,6 @@ public class PersondataTjeneste {
         var person = pdlKlient.hentPerson(query, projection, Tema.FOR);
 
         var navn = person.getNavn().stream().map(PersondataTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN");
-        var dødsdato = person.getDoedsfall().stream()
-                .map(Doedsfall::getDoedsdato)
-                .filter(Objects::nonNull)
-                .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
         // TODO: Avklar om man skal sette personstatus død hvis det foreligger dødsdato !
         var pdlStatusDød = person.getFolkeregisterpersonstatus().stream()
                 .map(Folkeregisterpersonstatus::getForenkletStatus)

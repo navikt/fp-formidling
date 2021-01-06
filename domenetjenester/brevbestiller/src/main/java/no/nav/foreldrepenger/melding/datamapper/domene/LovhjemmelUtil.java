@@ -1,6 +1,13 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
+import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
+import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -8,14 +15,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
-import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
-import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 
 public class LovhjemmelUtil {
 
@@ -28,7 +27,7 @@ public class LovhjemmelUtil {
         if (jsonData != null) {
             JsonNode hjemmelNode = jsonData.findValue(key);
             if (hjemmelNode != null) {
-                List<JsonNode> hjemmelListe = hjemmelNode.findValues("lovreferanse").size() > 0 ?
+                List<JsonNode> hjemmelListe = !hjemmelNode.findValues("lovreferanse").isEmpty() ?
                         hjemmelNode.findValues("lovreferanse") :
                         hjemmelNode.findValues("lovreferanser");
                 return hjemmelListe.stream()

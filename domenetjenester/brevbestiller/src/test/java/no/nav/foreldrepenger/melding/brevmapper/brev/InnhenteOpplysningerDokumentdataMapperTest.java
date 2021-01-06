@@ -9,7 +9,7 @@ import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagSta
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -43,7 +43,6 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
-import no.nav.foreldrepenger.melding.typer.Dato;
 
 @ExtendWith(MockitoExtension.class)
 public class InnhenteOpplysningerDokumentdataMapperTest {
@@ -87,7 +86,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSøkerNavn()).isEqualTo(SØKERS_NAVN);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getMottakerNavn()).isNull();
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBrevDato()).isEqualTo(Dato.formaterDato(LocalDate.now()));
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isEqualTo(true);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
@@ -98,8 +97,8 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getEndringssøknad()).isTrue();
         assertThat(innhenteOpplysningerDokumentdata.getDød()).isFalse();
         assertThat(innhenteOpplysningerDokumentdata.getKlage()).isFalse();
-        assertThat(innhenteOpplysningerDokumentdata.getSøknadDato()).isEqualTo(formaterDato(SØKNAD_DATO));
-        assertThat(innhenteOpplysningerDokumentdata.getFristDato()).isEqualTo(formaterDato(brevMapperUtil.getSvarFrist()));
+        assertThat(innhenteOpplysningerDokumentdata.getSøknadDato()).isEqualTo(formaterDatoNorsk(SØKNAD_DATO));
+        assertThat(innhenteOpplysningerDokumentdata.getFristDato()).isEqualTo(formaterDatoNorsk(brevMapperUtil.getSvarFrist()));
         assertThat(innhenteOpplysningerDokumentdata.getDokumentListe()).containsAll(FRITEKST_UT);
     }
 

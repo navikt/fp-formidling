@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +18,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.foreldrepenger.melding.typer.Dato;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS)
@@ -70,7 +71,7 @@ public class KlageOversendtTilKlageinstansBrevMapper extends FritekstmalBrevMapp
         LocalDate mottatDato = utledMottattDato(klageDokument, behandling);
 
         Brevdata brevdata = new Brevdata()
-                .leggTil("mottatDato", Dato.formaterDato(mottatDato))
+                .leggTil("mottatDato", formaterDatoNorsk(mottatDato))
                 .leggTil("dokumentHendelseYtelseTypeKode", hendelse.getYtelseType().getKode());
 
         if (hendelse.getFritekst() != null) { // Forhåndsvisning

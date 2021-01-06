@@ -6,7 +6,8 @@ import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erEnd
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.konverterFritekstTilListe;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoEngelsk;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +23,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
 import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.InnhenteOpplysningerDokumentdata;
@@ -57,7 +59,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
         var felles = FellesDokumentdata.ny()
                 .medSøkerNavn(dokumentFelles.getSakspartNavn())
                 .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDato(dokumentFelles.getDokumentDato()) : null)
+                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null)
                 .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
                 .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
                 .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
@@ -75,7 +77,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
                 .medDød(erDød(dokumentFelles))
                 .medKlage(behandling.erKlage())
                 .medSøknadDato(finnSøknadDato(behandling))
-                .medFristDato(formaterDato(brevMapperUtil.getSvarFrist()))
+                .medFristDato(Språkkode.EN.equals(behandling.getSpråkkode()) ? formaterDatoEngelsk(brevMapperUtil.getSvarFrist()) : formaterDatoNorsk(brevMapperUtil.getSvarFrist()))
                 .medDokumentListe(konverterFritekstTilListe(hendelse.getFritekst()));
 
         return innhenteOpplysningerDokumentDataBuilder.build();
@@ -91,7 +93,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
 
         LocalDate mottattDato = klageDokument.map(kd -> hentMottattDatoFraKlage(kd, behandling))
                 .orElseGet(() -> MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter(behandling, mottatteDokumenter));
-        return formaterDato(mottattDato);
+        return formaterDatoNorsk(mottattDato);
     }
 
     private LocalDate hentMottattDatoFraKlage(KlageDokument klageDokument, Behandling behandling) {

@@ -5,7 +5,7 @@ import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erDø
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterBeløp;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 
 import java.util.Optional;
 
@@ -56,7 +56,7 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
         var fellesbuilder = FellesDokumentdata.ny()
                 .medSøkerNavn(dokumentFelles.getSakspartNavn())
                 .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDato(dokumentFelles.getDokumentDato()) : null)
+                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null)
                 .medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet())
                 .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
                 .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))

@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.brevmapper.brev;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.brevSendesTilVerge;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -51,7 +51,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         var felles = FellesDokumentdata.ny()
                 .medSøkerNavn(dokumentFelles.getSakspartNavn())
                 .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDato(dokumentFelles.getDokumentDato()) : null)
+                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null)
                 .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
                 .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
                 .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
@@ -68,7 +68,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         var varselOmRevurderingDokumentdataBuilder = VarselOmRevurderingDokumentdata.ny()
                 .medFelles(felles.build())
                 .medTerminDato(finnTermindato(familieHendelse))
-                .medFristDato(formaterDato(brevMapperUtil.getSvarFrist()))
+                .medFristDato(formaterDatoNorsk(brevMapperUtil.getSvarFrist()))
                 .medAntallBarn(familieHendelse.getAntallBarn().intValue())
                 .medAdvarselKode(advarselKode)
                 .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode));
@@ -78,7 +78,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
 
     private String finnTermindato(FamilieHendelse familieHendelse) {
         if (familieHendelse.getTermindato() != null && familieHendelse.getTermindato().isPresent()) {
-            return formaterDato(familieHendelse.getTermindato().get());
+            return formaterDatoNorsk(familieHendelse.getTermindato().get());
         }
         return null;
     }

@@ -4,11 +4,11 @@ import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoPeriod;
 import java.time.chrono.Chronology;
+import java.time.format.TextStyle;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalField;
 import java.time.temporal.TemporalUnit;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -16,22 +16,6 @@ import java.util.Objects;
  * Gjør den praktisk å bruke som dato-input til Handelbars templates.
  */
 public class Dato implements ChronoLocalDate {
-    static Map<Integer, String> månedMap; //NOSONAR
-    static {
-        månedMap = new HashMap<>();
-        månedMap.put(1, "januar");
-        månedMap.put(2, "februar");
-        månedMap.put(3, "mars");
-        månedMap.put(4, "april");
-        månedMap.put(5, "mai");
-        månedMap.put(6, "juni");
-        månedMap.put(7, "juli");
-        månedMap.put(8, "august");
-        månedMap.put(9, "september");
-        månedMap.put(10, "oktober");
-        månedMap.put(11, "november");
-        månedMap.put(12, "desember");
-    }
 
     private LocalDate localDate;
 
@@ -59,13 +43,17 @@ public class Dato implements ChronoLocalDate {
         return new Dato(localDate);
     }
 
-    public static String formaterDato(LocalDate dato) {
-        return dato.getDayOfMonth() + ". " + månedMap.get(dato.getMonthValue()) + " " + dato.getYear();
+    public static String formaterDatoNorsk(LocalDate dato) {
+        return dato.getDayOfMonth() + ". " + dato.getMonth().getDisplayName(TextStyle.FULL, Locale.forLanguageTag("NO")) + " " + dato.getYear();
+    }
+
+    public static String formaterDatoEngelsk(LocalDate dato) {
+        return dato.getDayOfMonth() + "th of " + dato.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + dato.getYear();
     }
 
     @Override
     public String toString() {
-        return formaterDato(localDate);
+        return formaterDatoNorsk(localDate);
     }
 
     @Override

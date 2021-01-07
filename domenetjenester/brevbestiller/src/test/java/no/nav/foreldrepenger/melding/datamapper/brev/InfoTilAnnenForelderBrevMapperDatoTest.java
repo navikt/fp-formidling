@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,7 +23,6 @@ import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.melding.typer.Dato;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
@@ -67,7 +67,7 @@ public class InfoTilAnnenForelderBrevMapperDatoTest {
         String xml = mapper.mapTilBrevXML(fellesType, dokumentFelles, dokumentHendelse, behandling);
 
         // Assert
-        assertThat(xml).contains(Dato.formaterDato(LocalDate.now().minusDays(4)));
+        assertThat(xml).contains(formaterDatoNorsk(LocalDate.now().minusDays(4)));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class InfoTilAnnenForelderBrevMapperDatoTest {
         String xml = mapper.mapTilBrevXML(fellesType, dokumentFelles, dokumentHendelse, behandling);
 
         // Assert
-        assertThat(xml).contains(Dato.formaterDato(LocalDate.now().minusDays(4)));
+        assertThat(xml).contains(formaterDatoNorsk(LocalDate.now().minusDays(4)));
     }
 
     private DokumentHendelse byggHendelse(DokumentMalType malType, FagsakYtelseType ytelseType) {

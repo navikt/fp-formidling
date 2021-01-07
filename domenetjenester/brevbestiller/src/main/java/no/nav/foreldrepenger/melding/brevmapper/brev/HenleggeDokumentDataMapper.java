@@ -1,5 +1,11 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -8,12 +14,6 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.HenleggelseDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.INFO_OM_HENLEGGELSE)
@@ -34,7 +34,7 @@ public class HenleggeDokumentDataMapper implements DokumentdataMapper {
         var fellesDataBuilder = FellesDokumentdata.ny()
                 .medSøkerNavn(dokumentFelles.getSakspartNavn())
                 .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato()) : null)
+                .medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null)
                 .medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet())
                 .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
                 .medYtelseType(hendelse.getYtelseType().getKode());

@@ -1,5 +1,13 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Optional;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -10,13 +18,6 @@ import no.nav.foreldrepenger.melding.typer.Dato;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Optional;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.INFO_TIL_ANNEN_FORELDER_DOK)
@@ -57,7 +58,7 @@ public class InfoTilAnnenForelderBrevMapper extends FritekstmalBrevMapper {
                 .filter(up -> PeriodeResultatType.INNVILGET.equals(up.getPeriodeResultatType()) ||
                     up.getAktiviteter().stream().anyMatch(upa -> upa.getTrekkdager().compareTo(BigDecimal.ZERO) > 0))
                 .map(UttakResultatPeriode::getTom).max(LocalDate::compareTo)
-                .map(Dato::formaterDato)
+                .map(Dato::formaterDatoNorsk)
                 .orElse(null);
         }
 

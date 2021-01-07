@@ -10,7 +10,7 @@ import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagSta
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -45,7 +45,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.VarselOmRevurderingD
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.melding.typer.Dato;
 
 @ExtendWith(MockitoExtension.class)
 public class VarselOmRevurderingDokumentdataMapperTest {
@@ -88,15 +87,15 @@ public class VarselOmRevurderingDokumentdataMapperTest {
         assertThat(varselOmRevurderingDokumentdata.getFelles().getSøkerNavn()).isEqualTo(SØKERS_NAVN);
         assertThat(varselOmRevurderingDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(varselOmRevurderingDokumentdata.getFelles().getMottakerNavn()).isNull();
-        assertThat(varselOmRevurderingDokumentdata.getFelles().getBrevDato()).isEqualTo(Dato.formaterDato(LocalDate.now()));
+        assertThat(varselOmRevurderingDokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
         assertThat(varselOmRevurderingDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
         assertThat(varselOmRevurderingDokumentdata.getFelles().getErKopi()).isEqualTo(true);
         assertThat(varselOmRevurderingDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(varselOmRevurderingDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(varselOmRevurderingDokumentdata.getFelles().getFritekst()).isEqualTo(FRITEKST);
 
-        assertThat(varselOmRevurderingDokumentdata.getTerminDato()).isEqualTo(formaterDato(TERMINDATO));
-        assertThat(varselOmRevurderingDokumentdata.getFristDato()).isEqualTo(formaterDato(brevMapperUtil.getSvarFrist()));
+        assertThat(varselOmRevurderingDokumentdata.getTerminDato()).isEqualTo(formaterDatoNorsk(TERMINDATO));
+        assertThat(varselOmRevurderingDokumentdata.getFristDato()).isEqualTo(formaterDatoNorsk(brevMapperUtil.getSvarFrist()));
         assertThat(varselOmRevurderingDokumentdata.getAntallBarn()).isEqualTo(ANTALL_BARN);
         assertThat(varselOmRevurderingDokumentdata.getAdvarselKode()).isEqualTo(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN.getKode());
         assertThat(varselOmRevurderingDokumentdata.isFlereOpplysninger()).isFalse();

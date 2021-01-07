@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -17,7 +19,6 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.foreldrepenger.melding.typer.Dato;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.KLAGE_HJEMSENDT)
@@ -79,7 +80,7 @@ public class KlageHjemsendtBrevMapper extends FritekstmalBrevMapper {
 
         brevdata.leggTil("ytelseType", hendelse.getYtelseType().getKode());
         brevdata.leggTil("opphevet", KlageMapper.erOpphevet(klage, hendelse));
-        brevdata.leggTil("ettersendelsesfrist", Dato.formaterDato(brevMapperUtil.getSvarFrist()));
+        brevdata.leggTil("ettersendelsesfrist", formaterDatoNorsk(brevMapperUtil.getSvarFrist()));
 
         return brevdata;
     }

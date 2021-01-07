@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -34,12 +34,12 @@ public class HenleggeDokumentDataMapper implements DokumentdataMapper {
         var fellesDataBuilder = FellesDokumentdata.ny()
                 .medSøkerNavn(dokumentFelles.getSakspartNavn())
                 .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null)
+                .medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null)
                 .medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet())
                 .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
                 .medYtelseType(hendelse.getYtelseType().getKode());
 
-        return  HenleggelseDokumentdata.ny()
+        return HenleggelseDokumentdata.ny()
                 .medFelles(fellesDataBuilder.build())
                 .medVanligBehandling(behandling.getBehandlingType().erYtelseBehandlingType())
                 .medAnke(behandling.erAnke())

@@ -6,6 +6,8 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+
 public class DatoTest {
 
     @Test
@@ -54,5 +56,19 @@ public class DatoTest {
 
         // Assert
         assertThat(resultat).isEqualTo("10th of February 2021");
+    }
+
+    @Test
+    public void skal_formatere_dato_med_formatet_som_er_angitt_eksplisitt() {
+        // Arrange
+        LocalDate dato = LocalDate.of(2021, 9, 14);
+
+        // Act
+        String resultatNo = Dato.formaterDato(dato, Språkkode.NB);
+        String resultatEn = Dato.formaterDato(dato, Språkkode.EN);
+
+        // Assert
+        assertThat(resultatNo).isEqualTo("14. september 2021");
+        assertThat(resultatEn).isEqualTo("14th of September 2021");
     }
 }

@@ -9,6 +9,7 @@ import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagSta
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoEngelsk;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -37,6 +38,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles.Kopi;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeId;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.InnhenteOpplysningerDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
@@ -74,7 +76,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
-        Behandling behandling = opprettBehandling();
+        Behandling behandling = opprettBehandling(Språkkode.NB);
         DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
         DokumentHendelse dokumentHendelse = lagDokumentHendelse();
 
@@ -105,7 +107,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
-        Behandling behandling = opprettBehandling();
+        Behandling behandling = opprettBehandling(Språkkode.NB);
         DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, true);
         DokumentHendelse dokumentHendelse = lagDokumentHendelse();
 
@@ -121,13 +123,31 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isEqualTo(false);
     }
 
-    private Behandling opprettBehandling() {
+    @Test
+    public void skal_mappe_datoer_med_engelsk_format() {
+        // Arrange
+        Behandling behandling = opprettBehandling(Språkkode.EN);
+        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
+        DokumentHendelse dokumentHendelse = lagDokumentHendelse();
+
+        // Act
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+
+        // Assert
+        assertThat(innhenteOpplysningerDokumentdata.getFelles()).isNotNull();
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoEngelsk(LocalDate.now()));
+        assertThat(innhenteOpplysningerDokumentdata.getSøknadDato()).isEqualTo(formaterDatoEngelsk(SØKNAD_DATO));
+        assertThat(innhenteOpplysningerDokumentdata.getFristDato()).isEqualTo(formaterDatoEngelsk(brevMapperUtil.getSvarFrist()));
+    }
+
+    private Behandling opprettBehandling(Språkkode språkkode) {
         return Behandling.builder()
                 .medId(1L)
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
                 .medBehandlingsresultat(Behandlingsresultat.builder()
                         .medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+                .medSpråkkode(språkkode)
                 .build();
     }
 

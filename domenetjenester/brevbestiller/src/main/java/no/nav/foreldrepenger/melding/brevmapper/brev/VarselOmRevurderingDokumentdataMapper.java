@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.brevmapper.brev;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.brevSendesTilVerge;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,6 +17,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.VarselOmRevurderingDokumentdata;
@@ -51,7 +52,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         var felles = FellesDokumentdata.ny()
                 .medSøkerNavn(dokumentFelles.getSakspartNavn())
                 .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null)
+                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null)
                 .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
                 .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
                 .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
@@ -67,8 +68,8 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         String advarselKode = utledAdvarselkode(hendelse);
         var varselOmRevurderingDokumentdataBuilder = VarselOmRevurderingDokumentdata.ny()
                 .medFelles(felles.build())
-                .medTerminDato(finnTermindato(familieHendelse))
-                .medFristDato(formaterDatoNorsk(brevMapperUtil.getSvarFrist()))
+                .medTerminDato(finnTermindato(familieHendelse, behandling.getSpråkkode()))
+                .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()))
                 .medAntallBarn(familieHendelse.getAntallBarn().intValue())
                 .medAdvarselKode(advarselKode)
                 .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode));
@@ -76,9 +77,9 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         return varselOmRevurderingDokumentdataBuilder.build();
     }
 
-    private String finnTermindato(FamilieHendelse familieHendelse) {
+    private String finnTermindato(FamilieHendelse familieHendelse, Språkkode språkkode) {
         if (familieHendelse.getTermindato() != null && familieHendelse.getTermindato().isPresent()) {
-            return formaterDatoNorsk(familieHendelse.getTermindato().get());
+            return formaterDato(familieHendelse.getTermindato().get(), språkkode);
         }
         return null;
     }

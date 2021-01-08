@@ -11,6 +11,8 @@ import java.time.temporal.TemporalUnit;
 import java.util.Locale;
 import java.util.Objects;
 
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+
 /**
  * En wrapper-klasse for LocalDate hvor toString() returnerer datoen formatert.
  * Gjør den praktisk å bruke som dato-input til Handelbars templates.
@@ -41,6 +43,10 @@ public class Dato implements ChronoLocalDate {
 
     public static Dato medFormatering(LocalDate localDate) {
         return new Dato(localDate);
+    }
+
+    public static String formaterDato(LocalDate dato, Språkkode språkkode) {
+        return Språkkode.EN.equals(språkkode) ? formaterDatoEngelsk(dato) : formaterDatoNorsk(dato);
     }
 
     public static String formaterDatoNorsk(LocalDate dato) {

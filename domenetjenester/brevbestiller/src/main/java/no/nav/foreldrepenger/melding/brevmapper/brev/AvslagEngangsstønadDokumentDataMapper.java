@@ -4,7 +4,7 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.a
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.brevSendesTilVerge;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class AvslagEngangsstønadDokumentDataMapper implements DokumentdataMappe
         var fellesDataBuilder = FellesDokumentdata.ny()
                 .medSøkerNavn(dokumentFelles.getSakspartNavn())
                 .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null)
+                .medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null)
                 .medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet())
                 .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
                 .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))

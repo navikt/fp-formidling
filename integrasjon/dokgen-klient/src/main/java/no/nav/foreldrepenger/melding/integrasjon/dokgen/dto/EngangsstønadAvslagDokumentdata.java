@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
 import java.util.List;
 
-public class EngangsstønadAvslagDokumentData extends Dokumentdata {
+public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
     private String avslagÅrsak;
     private boolean førstegangsbehandling;
     private int antallBarn;
@@ -45,58 +45,58 @@ public class EngangsstønadAvslagDokumentData extends Dokumentdata {
     public String getAvslagMedlemskap() { return avslagMedlemskap; }
 
     public static class Builder {
-        private EngangsstønadAvslagDokumentData kladd;
+        private EngangsstønadAvslagDokumentdata kladd;
 
         private Builder() {
-            this.kladd = new EngangsstønadAvslagDokumentData();
+            this.kladd = new EngangsstønadAvslagDokumentdata();
         }
 
-        public EngangsstønadAvslagDokumentData.Builder medFelles(FellesDokumentdata felles) {
+        public EngangsstønadAvslagDokumentdata.Builder medFelles(FellesDokumentdata felles) {
             this.kladd.felles = felles;
             return this;
         }
 
-        public EngangsstønadAvslagDokumentData.Builder medAvslagsÅrsaker(String avslagsÅrsak) {
+        public EngangsstønadAvslagDokumentdata.Builder medAvslagsÅrsaker(String avslagsÅrsak) {
             this.kladd.avslagÅrsak = avslagsÅrsak;
             return this;
         }
 
-        public EngangsstønadAvslagDokumentData.Builder medFørstegangBehandling(boolean førstegangsbehandling) {
+        public EngangsstønadAvslagDokumentdata.Builder medFørstegangBehandling(boolean førstegangsbehandling) {
             this.kladd.førstegangsbehandling = førstegangsbehandling;
             return this;
         }
 
-        public EngangsstønadAvslagDokumentData.Builder medAntallBarn(int antallBarn) {
+        public EngangsstønadAvslagDokumentdata.Builder medAntallBarn(int antallBarn) {
             this.kladd.antallBarn = antallBarn;
             return this;
         }
 
-        public EngangsstønadAvslagDokumentData.Builder medRelasjonsRolle(String relasjonsRolle) {
+        public EngangsstønadAvslagDokumentdata.Builder medRelasjonsRolle(String relasjonsRolle) {
             this.kladd.relasjonsRolle = relasjonsRolle;
             return this;
         }
 
-        public EngangsstønadAvslagDokumentData.Builder medGjelderFødsel(boolean gjelderFødsel) {
+        public EngangsstønadAvslagDokumentdata.Builder medGjelderFødsel(boolean gjelderFødsel) {
             this.kladd.gjelderFødsel = gjelderFødsel;
             return this;
         }
 
-        public EngangsstønadAvslagDokumentData.Builder medVilkårTyper(List<String> vilkårTyper) {
+        public EngangsstønadAvslagDokumentdata.Builder medVilkårTyper(List<String> vilkårTyper) {
             this.kladd.vilkårTyper = vilkårTyper;
             return this;
         }
 
-        public EngangsstønadAvslagDokumentData.Builder medKlagefristUker(int klagefristUker) {
+        public EngangsstønadAvslagDokumentdata.Builder medKlagefristUker(int klagefristUker) {
             this.kladd.klagefristUker = klagefristUker;
             return this;
         }
 
-        public EngangsstønadAvslagDokumentData.Builder medAvslagMedlemskap(String avslagMedlemskap) {
+        public EngangsstønadAvslagDokumentdata.Builder medAvslagMedlemskap(String avslagMedlemskap) {
             this.kladd.avslagMedlemskap = avslagMedlemskap;
             return this;
         }
 
-        public EngangsstønadAvslagDokumentData build() {
+        public EngangsstønadAvslagDokumentdata build() {
             return this.kladd;
         }
     }

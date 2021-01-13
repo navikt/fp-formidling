@@ -1,11 +1,9 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.brevSendesTilVerge;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erDød;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erEndringssøknad;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.konverterFritekstTilListe;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesDokumentdataBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
@@ -23,7 +21,6 @@ import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.InnhenteOpplysningerDokumentdata;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
@@ -54,21 +51,11 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
     @Override
     public InnhenteOpplysningerDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
 
-        var felles = FellesDokumentdata.ny()
-                .medSøkerNavn(dokumentFelles.getSakspartNavn())
-                .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null)
-                .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
-                .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
-                .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
-                .medYtelseType(hendelse.getYtelseType().getKode());
+        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
+        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
-        if (brevSendesTilVerge(dokumentFelles)) {
-            felles.medMottakerNavn(dokumentFelles.getMottakerNavn());
-        }
-
-        var innhenteOpplysningerDokumentDataBuilder = InnhenteOpplysningerDokumentdata.ny()
-                .medFelles(felles.build())
+        var dokumentdataBuilder = InnhenteOpplysningerDokumentdata.ny()
+                .medFelles(fellesBuilder.build())
                 .medFørstegangsbehandling(behandling.erFørstegangssøknad())
                 .medRevurdering(behandling.erRevurdering())
                 .medEndringssøknad(erEndringssøknad(behandling))
@@ -78,7 +65,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
                 .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()))
                 .medDokumentListe(konverterFritekstTilListe(hendelse.getFritekst()));
 
-        return innhenteOpplysningerDokumentDataBuilder.build();
+        return dokumentdataBuilder.build();
     }
 
     private String finnSøknadDato(Behandling behandling) {

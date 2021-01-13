@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.brevmapper.brev;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.VERGES_NAVN;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -40,13 +41,14 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
-    @Mock
-    private DokumentHendelse dokumentHendelse = mock(DokumentHendelse.class);
+
+    private DokumentHendelse dokumentHendelse;
 
     private DokumentFelles dokumentFelles;
 
     @BeforeEach
     public void setup() {
+        dokumentHendelse = lagStandardHendelseBuilder().build();
         dokumentdataMapperTest = new InnvilgelseEngangstønadDokumentdataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider);
     }
 

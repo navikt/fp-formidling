@@ -19,16 +19,16 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.HenleggelseDokumentd
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
-class HenleggeDokumentDataMapperTest {
+class HenleggeDokumentdataMapperTest {
 
     private DokumentData dokumentData;
 
-    private HenleggeDokumentDataMapper mapper;
+    private HenleggeDokumentdataMapper mapper;
 
     @BeforeEach
     void setUp() {
         dokumentData = lagStandardDokumentData(DokumentMalType.INFO_OM_HENLEGGELSE);
-        mapper = new HenleggeDokumentDataMapper();
+        mapper = new HenleggeDokumentdataMapper();
     }
 
     @Test

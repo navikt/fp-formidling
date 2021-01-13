@@ -66,7 +66,7 @@ public class InntektsmeldingFørSøknadBrevMapper extends DokumentTypeMapper {
     FagType mapFagType(Behandling behandling, InntektArbeidYtelse iay, DokumentHendelse dokumentHendelse) {
         FagType fagType = new FagType();
         fagType.setBehandlingsType(mapToXmlBehandlingsType(behandling.getBehandlingType()));
-        Inntektsmelding inntektsmelding = IAYMapper.hentVillkårligInntektsmelding(iay);
+        Inntektsmelding inntektsmelding = IAYMapper.hentNyesteInntektsmelding(iay);
         fagType.setSokAntallUkerFor(BigInteger.valueOf(brevParametere.getSøkAntallUker()));
         fagType.setArbeidsgiverNavn(inntektsmelding.getArbeidsgiverNavn());
         fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(inntektsmelding.getInnsendingstidspunkt()));

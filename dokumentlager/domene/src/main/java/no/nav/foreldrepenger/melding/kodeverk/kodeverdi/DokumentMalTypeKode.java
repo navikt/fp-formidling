@@ -38,6 +38,7 @@ public class DokumentMalTypeKode {
     public static final String AVSLAG_ENGANGSSTØNAD = "AVSLES";
     public static final String VARSEL_OM_REVURDERING = "VARREV";
     public static final String INFO_OM_HENLEGGELSE = "IOHENL";
+    public static final String IKKE_SØKT = "IKKESO";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated

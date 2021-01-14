@@ -11,6 +11,8 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.PersonstatusKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 
@@ -66,5 +68,21 @@ public class BrevMapperUtil {
     public static boolean brevSendesTilVerge(DokumentFelles dokumentFelles) {
         // Hvis brevet sendes til verge skal verges navn vises i brevet
         return !dokumentFelles.getMottakerId().equals(dokumentFelles.getSakspartId());
+    }
+
+    public static FellesDokumentdata.Builder opprettFellesDokumentdataBuilder(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse) {
+        FellesDokumentdata.Builder fellesBuilder = FellesDokumentdata.ny()
+                .medSøkerNavn(dokumentFelles.getSakspartNavn())
+                .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
+                .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
+                .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
+                .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
+                .medYtelseType(dokumentHendelse.getYtelseType().getKode());
+
+        if (brevSendesTilVerge(dokumentFelles)) {
+            fellesBuilder.medMottakerNavn(dokumentFelles.getMottakerNavn());
+        }
+
+        return fellesBuilder;
     }
 }

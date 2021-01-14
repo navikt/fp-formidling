@@ -1,10 +1,8 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.brevSendesTilVerge;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erDød;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterBeløp;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesDokumentdataBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import java.util.Optional;
@@ -23,7 +21,6 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadInnvilgelseDokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 
@@ -53,21 +50,12 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
     public EngangsstønadInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
         BeregningsresultatES beregningsresultat = domeneobjektProvider.hentBeregningsresultatES(behandling);
 
-        var fellesbuilder = FellesDokumentdata.ny()
-                .medSøkerNavn(dokumentFelles.getSakspartNavn())
-                .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null)
-                .medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet())
-                .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
-                .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
-                .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi());
+        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
+        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
 
-        if (brevSendesTilVerge(dokumentFelles)) {
-            fellesbuilder.medMottakerNavn(dokumentFelles.getMottakerNavn());
-        }
-
-        var innvilgelseDokumentDataBuilder = EngangsstønadInnvilgelseDokumentdata.ny()
-                .medFelles(fellesbuilder.build())
+        var dokumentdataBuilder = EngangsstønadInnvilgelseDokumentdata.ny()
+                .medFelles(fellesBuilder.build())
                 .medRevurdering(behandling.erRevurdering())
                 .medFørstegangsbehandling(behandling.erFørstegangssøknad())
                 .medMedhold(BehandlingMapper.erMedhold(behandling))
@@ -88,14 +76,14 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
                 FamilieHendelse orgFamHendelse = domeneobjektProvider.hentFamiliehendelse(originalBehandling);
                 //dersom årsaken til differanse er økning av antall barn er det ikke endret sats
                 if (!antallBarnEndret(famHendelse, orgFamHendelse)) {
-                    innvilgelseDokumentDataBuilder.medErEndretSats(true);
-                    innvilgelseDokumentDataBuilder.medInnvilgetBeløp(formaterBeløp(differanse));
+                    dokumentdataBuilder.medErEndretSats(true);
+                    dokumentdataBuilder.medInnvilgetBeløp(formaterBeløp(differanse));
                 } else {
-                    innvilgelseDokumentDataBuilder.medInnvilgetBeløp(formaterBeløp(differanse));
+                    dokumentdataBuilder.medInnvilgetBeløp(formaterBeløp(differanse));
                 }
             }
         }
-        return innvilgelseDokumentDataBuilder.build();
+        return dokumentdataBuilder.build();
     }
 
     private boolean erFBellerMedhold(Behandling behandling) {

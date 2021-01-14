@@ -1,9 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.brevSendesTilVerge;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesDokumentdataBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
@@ -26,8 +24,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentData;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
@@ -38,17 +35,17 @@ import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.AVSLAG_ENGANGSSTØNAD)
-public class AvslagEngangsstønadDokumentDataMapper implements DokumentdataMapper {
+public class AvslagEngangsstønadDokumentdataMapper implements DokumentdataMapper {
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
     private PersonAdapter tpsTjeneste;
 
-    AvslagEngangsstønadDokumentDataMapper() {
+    AvslagEngangsstønadDokumentdataMapper() {
         //CDI
     }
 
     @Inject
-    public AvslagEngangsstønadDokumentDataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider, PersonAdapter tpsTjeneste) {
+    public AvslagEngangsstønadDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider, PersonAdapter tpsTjeneste) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
         this.tpsTjeneste = tpsTjeneste;
@@ -60,29 +57,19 @@ public class AvslagEngangsstønadDokumentDataMapper implements DokumentdataMappe
     }
 
     @Override
-    public EngangsstønadAvslagDokumentData mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
+    public EngangsstønadAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
+
+        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
+        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
+        avklarFritekst(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
+
         FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         List<Vilkår> vilkår = domeneobjektProvider.hentVilkår(behandling);
 
-        var fellesDataBuilder = FellesDokumentdata.ny()
-                .medSøkerNavn(dokumentFelles.getSakspartNavn())
-                .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null)
-                .medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet())
-                .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
-                .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
-                .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi());
-
-        avklarFritekst(hendelse, behandling).ifPresent(fellesDataBuilder::medFritekst);
-
-        if (brevSendesTilVerge(dokumentFelles)) {
-            fellesDataBuilder.medMottakerNavn(dokumentFelles.getMottakerNavn());
-        }
-
-
-        var avslagsBuilder = EngangsstønadAvslagDokumentData.ny()
+        var dokumentdataBuilder = EngangsstønadAvslagDokumentdata.ny()
                 .medAvslagsÅrsaker(mapAvslagsårsakerBrev(behandling.getBehandlingsresultat().getAvslagsårsak()))
-                .medFelles(fellesDataBuilder.build())
+                .medFelles(fellesBuilder.build())
                 .medFørstegangBehandling(behandling.erFørstegangssøknad())
                 .medGjelderFødsel(familieHendelse.isGjelderFødsel())
                 .medRelasjonsRolle(utledRelasjonsRolle(behandling.getFagsakBackend()))
@@ -90,9 +77,9 @@ public class AvslagEngangsstønadDokumentDataMapper implements DokumentdataMappe
                 .medAntallBarn(familieHendelse.getAntallBarn().intValue())
                 .medKlagefristUker(brevParametere.getKlagefristUker());
 
-        utledAvslagsgrunnHvisMedlVilkår(behandling.getBehandlingsresultat().getAvslagsårsak(), isSkjæringstidspunktPassert(familieHendelse),familieHendelse.isGjelderFødsel()).ifPresent(avslagsBuilder::medAvslagMedlemskap);
+        utledAvslagsgrunnHvisMedlVilkår(behandling.getBehandlingsresultat().getAvslagsårsak(), isSkjæringstidspunktPassert(familieHendelse),familieHendelse.isGjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
 
-        return avslagsBuilder.build();
+        return dokumentdataBuilder.build();
     }
     private boolean isSkjæringstidspunktPassert(FamilieHendelse familieHendelse){
         return familieHendelse.getSkjæringstidspunkt().isPresent() && familieHendelse.getSkjæringstidspunkt().get().isBefore(LocalDate.now());

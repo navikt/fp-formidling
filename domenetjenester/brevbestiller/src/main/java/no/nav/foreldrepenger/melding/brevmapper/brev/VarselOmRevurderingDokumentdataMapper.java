@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.brevSendesTilVerge;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erKopi;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesDokumentdataBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -19,7 +17,6 @@ import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.VarselOmRevurderingDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.vedtak.util.StringUtils;
@@ -49,32 +46,22 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
     @Override
     public VarselOmRevurderingDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
 
-        var felles = FellesDokumentdata.ny()
-                .medSøkerNavn(dokumentFelles.getSakspartNavn())
-                .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medBrevDato(dokumentFelles.getDokumentDato()!= null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null)
-                .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
-                .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
-                .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
-                .medYtelseType(hendelse.getYtelseType().getKode())
-                .medFritekst(hendelse.getFritekst());
-
-        if (brevSendesTilVerge(dokumentFelles)) {
-            felles.medMottakerNavn(dokumentFelles.getMottakerNavn());
-        }
+        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
+        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medFritekst(hendelse.getFritekst());
 
         FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
 
         String advarselKode = utledAdvarselkode(hendelse);
-        var varselOmRevurderingDokumentdataBuilder = VarselOmRevurderingDokumentdata.ny()
-                .medFelles(felles.build())
+        var dokumentdataBuilder = VarselOmRevurderingDokumentdata.ny()
+                .medFelles(fellesBuilder.build())
                 .medTerminDato(finnTermindato(familieHendelse, behandling.getSpråkkode()))
                 .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()))
                 .medAntallBarn(familieHendelse.getAntallBarn().intValue())
                 .medAdvarselKode(advarselKode)
                 .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode));
 
-        return varselOmRevurderingDokumentdataBuilder.build();
+        return dokumentdataBuilder.build();
     }
 
     private String finnTermindato(FamilieHendelse familieHendelse, Språkkode språkkode) {

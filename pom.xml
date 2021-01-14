@@ -62,7 +62,7 @@
                 <!-- overstyrer her sålenge fp-felles inkluderer eldre versjon. -->
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
-                <version>7.4.0</version>
+                <version>7.5.0</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.kontrakter</groupId>
@@ -330,7 +330,6 @@
             <dependency>
                 <groupId>org.jboss.weld.module</groupId>
                 <artifactId>weld-web</artifactId>
-                <version>3.1.5.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>

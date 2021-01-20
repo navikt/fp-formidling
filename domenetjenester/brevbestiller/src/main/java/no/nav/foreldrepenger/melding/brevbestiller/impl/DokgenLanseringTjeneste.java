@@ -17,7 +17,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.AVSLAG_ENGANGSSTØNAD,
             DokumentMalType.VARSEL_OM_REVURDERING,
             DokumentMalType.INFO_OM_HENLEGGELSE,
-            DokumentMalType.IKKE_SØKT);
+            DokumentMalType.IKKE_SØKT,
+            DokumentMalType.INGEN_ENDRING);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
             DokumentMalType.INNHENTE_OPPLYSNINGER,
             DokumentMalType.VARSEL_OM_REVURDERING);

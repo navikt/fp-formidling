@@ -71,9 +71,11 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
             fjernes.add(DokumentMalType.FORLENGET_DOK);
             fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);
             fjernes.add(DokumentMalType.REVURDERING_DOK);
+            fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING);
         } else if (behandling.erKlage()) {
             fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);
             fjernes.add(DokumentMalType.REVURDERING_DOK);
+            fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING);
         } else if (behandling.erRevurdering()) {
             if (!automatiskOpprettet) {
                 fjernes.add(DokumentMalType.FORLENGET_DOK);
@@ -81,6 +83,7 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
             }
         } else {
             fjernes.add(DokumentMalType.REVURDERING_DOK);
+            fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING);
         }
         return fjernes;
     }

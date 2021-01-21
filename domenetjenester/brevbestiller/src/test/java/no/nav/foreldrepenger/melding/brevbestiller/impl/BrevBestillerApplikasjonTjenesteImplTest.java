@@ -1,27 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-
-import java.time.Period;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.aktør.AdresseType;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
@@ -47,7 +25,7 @@ import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokdist.DokdistRestKlient;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.journal.FerdigstillJournalpostTjeneste;
+import no.nav.foreldrepenger.melding.integrasjon.journal.JournalpostRestKlient;
 import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.TilknyttVedleggTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettResponse;
@@ -63,6 +41,27 @@ import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.Period;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class BrevBestillerApplikasjonTjenesteImplTest {
@@ -95,7 +94,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     @Mock
     private TilknyttVedleggTjeneste tilknyttVedleggTjeneste;
     @Mock
-    private FerdigstillJournalpostTjeneste ferdigstillJournalpostTjeneste;
+    private JournalpostRestKlient journalpostRestKlient;
     @Mock
     private DokdistRestKlient dokdistRestKlient;
     @Mock
@@ -122,7 +121,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         navKontaktKonfigurasjon = new NavKontaktKonfigurasjon("1", "2", "3", "4", "5", "6", "7");
         dokumentbestillingDtoMapper = new DokumentbestillingDtoMapper();
         dokumentFellesDataMapper = new DokumentFellesDataMapper(tpsTjeneste, domeneobjektProvider, navKontaktKonfigurasjon, virksomhetTjeneste);
-        dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository, dokgenRestKlient, opprettJournalpostTjeneste, tilknyttVedleggTjeneste, ferdigstillJournalpostTjeneste, dokumentdataMapperProvider, prosessTaskRepository, historikkRepository);
+        dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository, dokgenRestKlient, opprettJournalpostTjeneste, tilknyttVedleggTjeneste, journalpostRestKlient, dokumentdataMapperProvider, prosessTaskRepository, historikkRepository);
         tjeneste = new BrevBestillerApplikasjonTjenesteImpl(dokumentMalUtleder, domeneobjektProvider, dokumentbestillingDtoMapper, dokprodBrevproduksjonTjeneste, dokgenBrevproduksjonTjeneste);
     }
 

@@ -1,13 +1,5 @@
 package no.nav.foreldrepenger.melding.integrasjon.journal;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.apache.http.client.utils.URIBuilder;
-
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.FerdigstillJournalpostRequest;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostRequest;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
@@ -15,10 +7,20 @@ import no.nav.foreldrepenger.melding.integrasjon.journal.dto.TilknyttVedleggRequ
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 import no.nav.vedtak.konfig.KonfigVerdi;
+import org.apache.http.client.utils.URIBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @ApplicationScoped
 public class JournalpostRestKlient {
     private static final String DEFAULT_URI = "http://dokarkiv.default/rest/journalpostapi/v1/journalpost";
+    private static final Logger LOG = LoggerFactory.getLogger(JournalpostRestKlient.class);
+    private static final String STATUS_OK = "OK";
 
     private URI endpoint;
     private OidcRestClient restKlient;
@@ -46,19 +48,30 @@ public class JournalpostRestKlient {
         try {
             String tilknyttPath = String.format("/%s/tilknyttVedlegg", journalpostIdTil.getVerdi());
             var uri = new URIBuilder(endpoint + tilknyttPath).build();
-            restKlient.post(uri, request); //TODO(JEJ): Se hva HTTP-koden er og logge feil hvis ikke-OK
+            String response = restKlient.put(uri, request);
+            if (!STATUS_OK.equals(response)) {
+                throw new IllegalStateException("Feilet å tilknytte vedlegg til journalpost" + journalpostIdTil + " med feilmelding '" + response + "'");
+            } else {
+                LOG.info("Vedlegg tilknyttet {} OK", journalpostIdTil);
+            }
         } catch (URISyntaxException e) {
             throw JournalpostFeil.FACTORY.klarteIkkeOppretteUriForTilknytningAvVedlegg(journalpostIdTil, request.toString(), e).toException();
         }
     }
 
-    public void ferdigstillJournalpost(FerdigstillJournalpostRequest request, JournalpostId journalpostId) {
+    public void ferdigstillJournalpost(JournalpostId journalpostId) {
         try {
+            LOG.info("Ferdigstiller journalpost {}", journalpostId);
             String tilknyttPath = String.format("/%s/ferdigstill", journalpostId.getVerdi());
             var uri = new URIBuilder(endpoint + tilknyttPath).build();
-            restKlient.post(uri, request); //TODO(JEJ): Se hva HTTP-koden er og logge feil hvis ikke-OK
-        } catch (URISyntaxException e) {
-            throw JournalpostFeil.FACTORY.klarteIkkeOppretteUriForFerdigstillingAvJournalpost(journalpostId, request.toString(), e).toException();
+            String response = restKlient.patch(uri, new FerdigstillJournalpostRequest("9999"));
+            if (!STATUS_OK.equals(response)) {
+                throw new IllegalStateException("Feilet å ferdigstille journalpost med id " + journalpostId + " med feilmelding '" + response + "'");
+            } else {
+                LOG.info("Journalpost med {} ferdigstilt", journalpostId);
+            }
+        } catch (Exception e) {
+            throw JournalpostFeil.FACTORY.klarteIkkeFerdigstilleJournalpost(journalpostId, e).toException();
         }
     }
 }

@@ -36,6 +36,7 @@ public class DokumentMalTypeKode {
     public static final String AVSLAG_ENGANGSSTØNAD = "AVSLES";
     public static final String VARSEL_OM_REVURDERING = "VARREV";
     public static final String INFO_OM_HENLEGGELSE = "IOHENL";
+    public static final String INNSYN_SVAR = "INNSYN";
     public static final String IKKE_SØKT = "IKKESO";
     public static final String INGEN_ENDRING = "INGEND";
 

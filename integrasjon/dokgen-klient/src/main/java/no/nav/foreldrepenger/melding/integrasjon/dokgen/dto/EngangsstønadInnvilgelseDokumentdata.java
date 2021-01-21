@@ -46,7 +46,7 @@ public class EngangsstønadInnvilgelseDokumentdata extends Dokumentdata {
         }
 
         public Builder medRevurdering(boolean revurdering) {
-            this.kladd.revurdering= revurdering;
+            this.kladd.revurdering = revurdering;
             return this;
         }
 

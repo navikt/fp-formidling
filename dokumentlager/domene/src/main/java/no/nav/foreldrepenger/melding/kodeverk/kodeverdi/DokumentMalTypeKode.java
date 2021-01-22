@@ -4,7 +4,6 @@ public class DokumentMalTypeKode {
 
     //Mal hos team dokument
     public static final String INNHENT_DOK = "INNHEN";
-    public static final String POSITIVT_VEDTAK_DOK = "POSVED";
     public static final String HENLEGG_BEHANDLING_DOK = "HENLEG";
     public static final String AVSLAGSVEDTAK_DOK = "AVSLAG";
     public static final String UENDRETUTFALL_DOK = "UENDRE";
@@ -16,7 +15,6 @@ public class DokumentMalTypeKode {
     public static final String INNSYNSKRAV_SVAR = "INSSKR";
     public static final String INNVILGELSE_FORELDREPENGER_DOK = "INNVFP";
     public static final String OPPHØR_DOK = "OPPHOR";
-    public static final String INNTEKTSMELDING_FOR_TIDLIG_DOK = "INNTID";
     public static final String AVSLAG_FORELDREPENGER_DOK = "AVSLFP";
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
@@ -52,4 +50,8 @@ public class DokumentMalTypeKode {
     public static final String VEDTAK_MEDHOLD = "VEDMED"; //NOSONAR
     @Deprecated
     public static final String KLAGE_YTELSESVEDTAK_STADFESTET_DOK = "KLAGVE"; //NOSONAR
+    @Deprecated
+    public static final String POSITIVT_VEDTAK_DOK = "POSVED"; //NOSONAR
+    @Deprecated
+    public static final String INNTEKTSMELDING_FOR_TIDLIG_DOK = "INNTID"; //NOSONAR
 }

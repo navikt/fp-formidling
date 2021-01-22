@@ -23,7 +23,6 @@ public enum DokumentMalType implements Kodeverdi {
 
     //Mal hos team dokument
     INNHENT_DOK(DokumentMalTypeKode.INNHENT_DOK, "Innhent dokumentasjon", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNHEN),
-    POSITIVT_VEDTAK_DOK(DokumentMalTypeKode.POSITIVT_VEDTAK_DOK, "Positivt vedtaksbrev",TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.POSVED ),
     HENLEGG_BEHANDLING_DOK(DokumentMalTypeKode.HENLEGG_BEHANDLING_DOK, "Behandling henlagt", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.HENLEG),
     AVSLAGSVEDTAK_DOK(DokumentMalTypeKode.AVSLAGSVEDTAK_DOK, "Avslagsbrev", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.AVSLAG),
     UENDRETUTFALL_DOK(DokumentMalTypeKode.UENDRETUTFALL_DOK, "Uendret utfall", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.UENDRE),
@@ -35,7 +34,6 @@ public enum DokumentMalType implements Kodeverdi {
     INNSYNSKRAV_SVAR(DokumentMalTypeKode.INNSYNSKRAV_SVAR, "Svar på innsynskrav", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INSSKR),
     INNVILGELSE_FORELDREPENGER_DOK(DokumentMalTypeKode.INNVILGELSE_FORELDREPENGER_DOK, "Innvilgelsesbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNVFP),
     OPPHØR_DOK(DokumentMalTypeKode.OPPHØR_DOK, "Opphør brev", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
-    INNTEKTSMELDING_FOR_TIDLIG_DOK(DokumentMalTypeKode.INNTEKTSMELDING_FOR_TIDLIG_DOK, "Ikke mottatt søknad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNTID),
     AVSLAG_FORELDREPENGER_DOK(DokumentMalTypeKode.AVSLAG_FORELDREPENGER_DOK, "Avslagsbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.AVSLFP ),
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
@@ -71,6 +69,10 @@ public enum DokumentMalType implements Kodeverdi {
     VEDTAK_MEDHOLD(DokumentMalTypeKode.VEDTAK_MEDHOLD, "Vedtak om medhold", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.VEDMED), //NOSONAR
     @Deprecated
     KLAGE_YTELSESVEDTAK_STADFESTET_DOK(DokumentMalTypeKode.KLAGE_YTELSESVEDTAK_STADFESTET_DOK, "Vedtak om stadfestelse", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.KLAGVE), //NOSONAR
+    @Deprecated
+    POSITIVT_VEDTAK_DOK(DokumentMalTypeKode.POSITIVT_VEDTAK_DOK, "Positivt vedtaksbrev",TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.POSVED ), //NOSONAR
+    @Deprecated
+    INNTEKTSMELDING_FOR_TIDLIG_DOK(DokumentMalTypeKode.INNTEKTSMELDING_FOR_TIDLIG_DOK, "Ikke mottatt søknad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNTID), //NOSONAR
 
     UDEFINERT("-"),
 

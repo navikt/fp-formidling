@@ -477,7 +477,7 @@
       "skjaeringstidspunktForeldrepenger": "2019-05-08"
     },
     "taskStatus": null,
-    "behandlingArsaker": [
+    "behandlingÅrsaker": [
       {
         "erAutomatiskRevurdering": false,
         "behandlingArsakType": {

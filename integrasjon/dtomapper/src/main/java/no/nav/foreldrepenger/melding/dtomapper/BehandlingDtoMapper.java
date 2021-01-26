@@ -49,7 +49,7 @@ public class BehandlingDtoMapper {
                 .medAnsvarligBeslutter(dto.getAnsvarligBeslutter())
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
-                .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingArsaker()))
+                .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingÅrsaker()))
                 .medEndretAv(dto.getEndretAvBrukernavn())
                 .medSpråkkode(Språkkode.defaultNorsk(dto.getSprakkode().getKode()))
                 .medOriginalVedtaksDato(dto.getOriginalVedtaksDato());

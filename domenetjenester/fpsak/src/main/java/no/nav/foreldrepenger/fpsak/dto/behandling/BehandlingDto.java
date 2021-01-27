@@ -38,7 +38,7 @@ public class BehandlingDto {
     private List<BehandlingResourceLinkDto> links = new ArrayList<>();
     private AsyncPollingStatus taskStatus;
     private String venteArsakKode;
-    private List<BehandlingÅrsakDto> behandlingArsaker = new ArrayList<>();
+    private List<BehandlingÅrsakDto> behandlingÅrsaker = new ArrayList<>();
     private LocalDate originalVedtaksDato;
 
     public Long getId() {
@@ -233,12 +233,12 @@ public class BehandlingDto {
         this.venteArsakKode = venteArsakKode;
     }
 
-    public List<BehandlingÅrsakDto> getBehandlingArsaker() {
-        return behandlingArsaker;
+    public List<BehandlingÅrsakDto> getBehandlingÅrsaker() {
+        return behandlingÅrsaker;
     }
 
-    public void setBehandlingArsaker(List<BehandlingÅrsakDto> behandlingArsaker) {
-        this.behandlingArsaker = behandlingArsaker;
+    public void setBehandlingÅrsaker(List<BehandlingÅrsakDto> behandlingÅrsaker) {
+        this.behandlingÅrsaker = behandlingÅrsaker;
     }
 
     public String getEndretAvBrukernavn() {
@@ -283,7 +283,7 @@ public class BehandlingDto {
                 ", links=" + links +
                 ", taskStatus='" + taskStatus + '\'' +
                 ", venteArsakKode='" + venteArsakKode + '\'' +
-                ", behandlingArsaker=" + behandlingArsaker + '\'' +
+                ", behandlingÅrsaker=" + behandlingÅrsaker + '\'' +
                 ", originalVedtaksDato=" + originalVedtaksDato +
                 '}';
     }

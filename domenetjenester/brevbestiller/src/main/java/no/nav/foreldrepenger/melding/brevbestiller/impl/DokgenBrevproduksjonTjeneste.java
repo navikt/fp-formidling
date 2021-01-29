@@ -51,8 +51,6 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private DokumentRepository dokumentRepository;
     private DokgenRestKlient dokgenRestKlient;
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
-    private TilknyttVedleggTjeneste tilknyttVedleggTjeneste;
-    private JournalpostRestKlient journalpostRestKlient;
     private DokumentdataMapperProvider dokumentdataMapperProvider;
     private ProsessTaskRepository prosessTaskRepository;
     private HistorikkRepository historikkRepository;
@@ -77,8 +75,6 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         this.dokumentRepository = dokumentRepository;
         this.dokgenRestKlient = dokgenRestKlient;
         this.opprettJournalpostTjeneste = opprettJournalpostTjeneste;
-        this.tilknyttVedleggTjeneste = tilknyttVedleggTjeneste;
-        this.journalpostRestKlient = journalpostRestKlient;
         this.dokumentdataMapperProvider = dokumentdataMapperProvider;
         this.prosessTaskRepository = prosessTaskRepository;
         this.historikkRepository = historikkRepository;

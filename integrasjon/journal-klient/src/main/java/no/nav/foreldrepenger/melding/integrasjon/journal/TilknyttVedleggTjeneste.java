@@ -1,18 +1,16 @@
 package no.nav.foreldrepenger.melding.integrasjon.journal;
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentTilknytt;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.TilknyttVedleggRequest;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 
 @ApplicationScoped
 public class TilknyttVedleggTjeneste {
@@ -42,7 +40,7 @@ public class TilknyttVedleggTjeneste {
     }
 
     private void tilknyttVedlegg(JournalpostId journalpostIdTil, JournalpostId journalpostIdFra, String dokumentInfoId) {
-        LOG.info("Starter tilknytning av vedlegg til journalpostId {} fra journalpostId {} med dokumentInfoId {}", journalpostIdTil.getVerdi(), journalpostIdFra.getVerdi(), dokumentInfoId);
+        LOG.info("Knytter vedlegget med journalpostid {} og dokumentInfoId {} til innsynsbrev med journalpostId {}", journalpostIdFra.getVerdi(), dokumentInfoId, journalpostIdTil.getVerdi());
         journalpostRestKlient.tilknyttVedlegg(lagRequest(journalpostIdFra, dokumentInfoId), journalpostIdTil);
     }
 

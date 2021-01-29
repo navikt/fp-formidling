@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import java.util.Map;
-import java.util.Set;
-
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.util.env.Environment;
+
+import java.util.Map;
+import java.util.Set;
 
 public class DokgenLanseringTjeneste {
 
@@ -19,7 +19,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.VARSEL_OM_REVURDERING,
             DokumentMalType.INFO_OM_HENLEGGELSE,
             DokumentMalType.IKKE_SØKT,
-            DokumentMalType.INGEN_ENDRING);
+            DokumentMalType.INGEN_ENDRING,
+            DokumentMalType.INNSYN_SVAR);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
             DokumentMalType.INNHENTE_OPPLYSNINGER,
             DokumentMalType.VARSEL_OM_REVURDERING);
@@ -28,7 +29,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.REVURDERING_DOK);
     private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_DEV = Map.of(
             DokumentMalType.REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING,
-            DokumentMalType.HENLEGG_BEHANDLING_DOK, DokumentMalType.INFO_OM_HENLEGGELSE);
+            DokumentMalType.HENLEGG_BEHANDLING_DOK, DokumentMalType.INFO_OM_HENLEGGELSE,
+            DokumentMalType.INNSYNSKRAV_SVAR, DokumentMalType.INNSYN_SVAR);
     private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_PROD = Map.of();
 
     public static boolean malSkalBrukeDokgen(DokumentMalType dokumentMalType) {

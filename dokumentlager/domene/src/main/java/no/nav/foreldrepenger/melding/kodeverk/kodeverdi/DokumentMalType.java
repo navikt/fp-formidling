@@ -23,7 +23,6 @@ public enum DokumentMalType implements Kodeverdi {
     //Mal hos team dokument
     INNHENT_DOK(DokumentMalTypeKode.INNHENT_DOK, "Innhent dokumentasjon", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNHEN),
     HENLEGG_BEHANDLING_DOK(DokumentMalTypeKode.HENLEGG_BEHANDLING_DOK, "Behandling henlagt", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.HENLEG),
-    AVSLAGSVEDTAK_DOK(DokumentMalTypeKode.AVSLAGSVEDTAK_DOK, "Avslagsbrev", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.AVSLAG),
     UENDRETUTFALL_DOK(DokumentMalTypeKode.UENDRETUTFALL_DOK, "Uendret utfall", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.UENDRE),
     REVURDERING_DOK(DokumentMalTypeKode.REVURDERING_DOK, "Varsel om revurdering", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.REVURDERING, DoksysKode.REVURD),
     FORLENGET_DOK(DokumentMalTypeKode.FORLENGET_DOK, "Forlenget saksbehandlingstid", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FORLEN),
@@ -73,6 +72,8 @@ public enum DokumentMalType implements Kodeverdi {
     POSITIVT_VEDTAK_DOK(DokumentMalTypeKode.POSITIVT_VEDTAK_DOK, "Positivt vedtaksbrev",TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.POSVED ), //NOSONAR
     @Deprecated
     INNTEKTSMELDING_FOR_TIDLIG_DOK(DokumentMalTypeKode.INNTEKTSMELDING_FOR_TIDLIG_DOK, "Ikke mottatt søknad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNTID), //NOSONAR
+    @Deprecated
+    AVSLAGSVEDTAK_DOK(DokumentMalTypeKode.AVSLAGSVEDTAK_DOK, "Avslagsbrev", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.AVSLAG), //NOSONAR
 
     UDEFINERT("-"),
 

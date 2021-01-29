@@ -5,7 +5,6 @@ public class DokumentMalTypeKode {
     //Mal hos team dokument
     public static final String INNHENT_DOK = "INNHEN";
     public static final String HENLEGG_BEHANDLING_DOK = "HENLEG";
-    public static final String AVSLAGSVEDTAK_DOK = "AVSLAG";
     public static final String UENDRETUTFALL_DOK = "UENDRE";
     public static final String REVURDERING_DOK = "REVURD";
     public static final String FORLENGET_DOK = "FORLEN";
@@ -55,4 +54,6 @@ public class DokumentMalTypeKode {
     public static final String POSITIVT_VEDTAK_DOK = "POSVED"; //NOSONAR
     @Deprecated
     public static final String INNTEKTSMELDING_FOR_TIDLIG_DOK = "INNTID"; //NOSONAR
+    @Deprecated
+    public static final String AVSLAGSVEDTAK_DOK = "AVSLAG"; //NOSONAR
 }

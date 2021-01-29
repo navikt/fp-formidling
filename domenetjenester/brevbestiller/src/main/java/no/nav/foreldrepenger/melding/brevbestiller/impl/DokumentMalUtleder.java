@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -27,6 +18,14 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.util.env.Environment;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
 
 @ApplicationScoped
 class DokumentMalUtleder {
@@ -60,11 +59,7 @@ class DokumentMalUtleder {
         if (behandlingsresultat.erInnvilget()) {
             return DokumentMalType.INNVILGELSE_ENGANGSSTØNAD;
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
-            if (!ENV.isProd()) {
                 return DokumentMalType.AVSLAG_ENGANGSSTØNAD;
-            } else {
-                return DokumentMalType.AVSLAGSVEDTAK_DOK;
-            }
         }
         throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
     }

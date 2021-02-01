@@ -1,13 +1,5 @@
 package no.nav.foreldrepenger.melding.integrasjon.journal;
 
-import java.util.List;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -22,6 +14,12 @@ import no.nav.foreldrepenger.melding.integrasjon.journal.dto.Sak;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingTema;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.List;
 
 @ApplicationScoped
 @SuppressWarnings("java:S3358")
@@ -46,7 +44,7 @@ public class OpprettJournalpostTjeneste {
         LOG.info("Starter journalføring av brev for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode());
 
         try {
-            OpprettJournalpostResponse response = journalpostRestKlient.opprettJournalpost(lagRequest(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer), ferdigstill);
+            OpprettJournalpostResponse response = journalpostRestKlient.opprettJournalpost(lagRequest(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer, ferdigstill), ferdigstill);
 
             if (ferdigstill && !response.erFerdigstilt()) {
                 LOG.warn("Journalpost {} ble ikke ferdigstilt", response.getJournalpostId());
@@ -59,7 +57,7 @@ public class OpprettJournalpostTjeneste {
         }
     }
 
-    private OpprettJournalpostRequest lagRequest(byte[] brev, DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Saksnummer saksnummer) {
+    private OpprettJournalpostRequest lagRequest(byte[] brev, DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill) {
         DokumentOpprettRequest dokument = new DokumentOpprettRequest(getTittel(dokumentHendelse, dokumentMalType), dokumentMalType.getKode(), null, brev);
 
         AvsenderMottaker avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), dokumentFelles.getMottakerNavn(), hentAvsenderMotakkerType(dokumentFelles.getMottakerType()));
@@ -72,7 +70,7 @@ public class OpprettJournalpostTjeneste {
                 TEMA_FORELDREPENGER,
                 mapBehandlingsTema(dokumentHendelse.getYtelseType()),
                 getTittel(dokumentHendelse, dokumentMalType),
-                AUTOMATISK_JOURNALFØRENDE_ENHET,
+                ferdigstill ? AUTOMATISK_JOURNALFØRENDE_ENHET : null,
                 sak,
                 List.of(dokument));
     }

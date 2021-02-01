@@ -11,14 +11,15 @@ public class DokgenLanseringTjeneste {
     private static final Environment ENV = Environment.current();
     private static final Set<DokumentMalType> DOKGEN_MALER_PROD = Set.of(
             DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
+            DokumentMalType.AVSLAG_ENGANGSSTØNAD,
             DokumentMalType.IKKE_SØKT);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(
             DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
-            DokumentMalType.INNHENTE_OPPLYSNINGER,
             DokumentMalType.AVSLAG_ENGANGSSTØNAD,
+            DokumentMalType.IKKE_SØKT,
+            DokumentMalType.INNHENTE_OPPLYSNINGER,
             DokumentMalType.VARSEL_OM_REVURDERING,
             DokumentMalType.INFO_OM_HENLEGGELSE,
-            DokumentMalType.IKKE_SØKT,
             DokumentMalType.INGEN_ENDRING,
             DokumentMalType.INNSYN_SVAR);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(

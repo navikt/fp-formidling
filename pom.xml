@@ -35,8 +35,8 @@
 
 
         <!-- felles artifakter -->
-        <felles.version>2.5.0-20201202101058-9865681</felles.version>
-        <prosesstask.version>2.4.5-20201201124158-df37102</prosesstask.version>
+        <felles.version>3.0.54</felles.version>
+        <prosesstask.version>2.5.10</prosesstask.version>
         <kontrakter.version>5.1-20201112050232-45aa18d</kontrakter.version>
 
         <!-- Eksterne -->

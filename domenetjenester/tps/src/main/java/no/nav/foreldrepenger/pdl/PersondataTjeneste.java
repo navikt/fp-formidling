@@ -117,7 +117,7 @@ public class PersondataTjeneste {
         final Identliste identliste;
 
         try {
-            identliste = pdlKlient.hentIdenter(request, projection, Tema.FOR);
+            identliste = pdlKlient.hentIdenter(request, projection);
         } catch (VLException v) {
             if (PdlKlient.PDL_KLIENT_NOT_FOUND_KODE.equals(v.getKode())) {
                 return Optional.empty();
@@ -141,7 +141,7 @@ public class PersondataTjeneste {
             .kjoenn(new KjoennResponseProjection().kjoenn())
             .folkeregisterpersonstatus(new FolkeregisterpersonstatusResponseProjection().forenkletStatus());
 
-        var person = pdlKlient.hentPerson(query, projection, Tema.FOR);
+        var person = pdlKlient.hentPerson(query, projection);
 
         var fødselsdato = person.getFoedsel().stream()
             .map(Foedsel::getFoedselsdato)
@@ -187,7 +187,7 @@ public class PersondataTjeneste {
                         .utenlandskAdresseIFrittFormat(new UtenlandskAdresseIFrittFormatResponseProjection().adresselinje1().adresselinje2().adresselinje3().byEllerStedsnavn().postkode().landkode()))
                 ;
 
-        var person = pdlKlient.hentPerson(query, projection, Tema.FOR);
+        var person = pdlKlient.hentPerson(query, projection);
 
         var navn = person.getNavn().stream().map(PersondataTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN");
         // TODO: Avklar om man skal sette personstatus død hvis det foreligger dødsdato !

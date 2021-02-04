@@ -27,6 +27,7 @@
     "KAFKA_DOKUMENTBESTILLING_TOPIC": "privat-foreldrepenger-dokumenthendelse-q1",
     "KAFKA_HISTORIKKINNSLAG_TOPIC": "privat-foreldrepenger-historikkinnslag-q1",
     "JOURNALPOST_REST_V1_URL": "https://dokarkiv-q1.nais.preprod.local/rest/journalpostapi/v1/journalpost",
+    "JOURNALPOST_REST_PROXY_V1_URL": "https://dokarkivproxy-q1.nais.preprod.local/rest/journalpostapi/v1/journalpost",
     "LOADBALANCER_FQDN": "fpformidling-q1.nais.preprod.local",
     "OIDC_AAD_B2C_HOSTURL": "https://not.used.in.fss",
     "OIDC_AAD_B2C_JWKSURL": "https://login.microsoftonline.com/navtestb2c.onmicrosoft.com/discovery/v2.0/keys?p=b2c_1a_idporten_ver1",

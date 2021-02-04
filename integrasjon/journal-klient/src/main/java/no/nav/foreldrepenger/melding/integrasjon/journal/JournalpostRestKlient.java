@@ -22,17 +22,20 @@ public class JournalpostRestKlient {
     private static final Logger LOG = LoggerFactory.getLogger(JournalpostRestKlient.class);
     private static final String STATUS_OK = "OK";
 
-    private URI endpoint;
-    private OidcRestClient restKlient;
+    private URI endpoint, endpointProxy;
+    private OidcRestClient restKlient, restKlientProxy;
 
     JournalpostRestKlient() {
         // CDI
     }
 
     @Inject
-    public JournalpostRestKlient(@KonfigVerdi(value = "journalpost_rest_v1.url", defaultVerdi = DEFAULT_URI) URI endpoint, OidcRestClient restKlient) {
+    public JournalpostRestKlient(@KonfigVerdi(value = "journalpost_rest_v1.url", defaultVerdi = DEFAULT_URI) URI endpoint, OidcRestClient restKlient,
+                                 @KonfigVerdi(value = "journalpost_rest_proxy_v1.url", defaultVerdi = DEFAULT_URI) URI endpointProxy, OidcRestClient restKlientProxy) {
         this.endpoint = endpoint;
         this.restKlient = restKlient;
+        this.endpointProxy = endpointProxy;
+        this.restKlientProxy = restKlientProxy;
     }
 
     public OpprettJournalpostResponse opprettJournalpost(OpprettJournalpostRequest request, boolean ferdigstill) {
@@ -47,8 +50,8 @@ public class JournalpostRestKlient {
     public void tilknyttVedlegg(TilknyttVedleggRequest request, JournalpostId journalpostIdTil) {
         try {
             String tilknyttPath = String.format("/%s/tilknyttVedlegg", journalpostIdTil.getVerdi());
-            var uri = new URIBuilder(endpoint + tilknyttPath).build();
-            String response = restKlient.put(uri, request);
+            var uri = new URIBuilder(endpointProxy + tilknyttPath).build();
+            String response = restKlientProxy.put(uri, request);
             if (!STATUS_OK.equals(response)) {
                 throw new IllegalStateException("Feilet å tilknytte vedlegg til journalpost" + journalpostIdTil + " med feilmelding '" + response + "'");
             } else {

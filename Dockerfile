@@ -20,8 +20,5 @@ COPY web/webapp/target/lib/*.jar /app/lib/
 
 # Export vault properties
 COPY export-vault.sh /init-scripts/export-vault.sh
-RUN chmod +x /init-scripts/*
 
-# Application Start Command
-COPY run-java.sh /
-RUN chmod +x /run-java.sh
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom -Duser.timezone=Europe/Oslo "

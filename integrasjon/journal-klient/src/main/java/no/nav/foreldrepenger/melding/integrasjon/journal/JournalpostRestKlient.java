@@ -55,11 +55,12 @@ public class JournalpostRestKlient {
             String tilknyttPath = String.format("/%s/tilknyttVedlegg", journalpostIdTil.getVerdi());
             var uri = new URIBuilder(endpointProxy + tilknyttPath).build();
             String response = restKlientProxy.put(uri, request);
-            if (!STATUS_OK.equals(response)) {
+            LOG.info("Response fra tilknyttVedleggtjenesten: {} ", response);
+/*            if (!STATUS_OK.equals(response)) {
                 throw new IllegalStateException("Feilet å tilknytte vedlegg til journalpost" + journalpostIdTil + " med feilmelding '" + response + "'");
             } else {
                 LOG.info("Vedlegg tilknyttet {} OK", journalpostIdTil);
-            }
+            }*/
         } catch (URISyntaxException e) {
             throw JournalpostFeil.FACTORY.klarteIkkeOppretteUriForTilknytningAvVedlegg(journalpostIdTil, request.toString(), e).toException();
         }
@@ -71,11 +72,12 @@ public class JournalpostRestKlient {
             String tilknyttPath = String.format("/%s/ferdigstill", journalpostId.getVerdi());
             var uri = new URIBuilder(endpoint + tilknyttPath).build();
             String response = restKlient.patch(uri, new FerdigstillJournalpostRequest("9999"));
-            if (!STATUS_OK.equals(response)) {
+            LOG.info("Response fra ferdigstilltjenesten: {} ", response);
+/*            if (!STATUS_OK.equals(response)) {
                 throw new IllegalStateException("Feilet å ferdigstille journalpost med id " + journalpostId + " med feilmelding '" + response + "'");
             } else {
                 LOG.info("Journalpost med {} ferdigstilt", journalpostId);
-            }
+            }*/
         } catch (Exception e) {
             throw JournalpostFeil.FACTORY.klarteIkkeFerdigstilleJournalpost(journalpostId, e).toException();
         }

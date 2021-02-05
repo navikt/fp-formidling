@@ -51,7 +51,6 @@ import no.nav.pdl.Vegadresse;
 import no.nav.pdl.VegadresseResponseProjection;
 import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.felles.integrasjon.pdl.PdlKlient;
-import no.nav.vedtak.felles.integrasjon.pdl.Tema;
 import no.nav.vedtak.konfig.Tid;
 import no.nav.vedtak.util.LRUCache;
 

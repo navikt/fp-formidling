@@ -19,11 +19,14 @@ import java.net.URISyntaxException;
 @ApplicationScoped
 public class JournalpostRestKlient {
     private static final String DEFAULT_URI = "http://dokarkiv.default/rest/journalpostapi/v1/journalpost";
+    private static final String DEFAULT_PROXY_URI = "http://dokarkivproxy.default/rest/journalpostapi/v1/journalpost";;
     private static final Logger LOG = LoggerFactory.getLogger(JournalpostRestKlient.class);
     private static final String STATUS_OK = "OK";
 
-    private URI endpoint, endpointProxy;
-    private OidcRestClient restKlient, restKlientProxy;
+    private URI endpoint;
+    private URI endpointProxy;
+    private OidcRestClient restKlient;
+    private OidcRestClient restKlientProxy;
 
     JournalpostRestKlient() {
         // CDI
@@ -31,7 +34,7 @@ public class JournalpostRestKlient {
 
     @Inject
     public JournalpostRestKlient(@KonfigVerdi(value = "journalpost_rest_v1.url", defaultVerdi = DEFAULT_URI) URI endpoint, OidcRestClient restKlient,
-                                 @KonfigVerdi(value = "journalpost_rest_proxy_v1.url", defaultVerdi = DEFAULT_URI) URI endpointProxy, OidcRestClient restKlientProxy) {
+                                 @KonfigVerdi(value = "journalpost_rest_proxy_v1.url", defaultVerdi = DEFAULT_PROXY_URI) URI endpointProxy, OidcRestClient restKlientProxy) {
         this.endpoint = endpoint;
         this.restKlient = restKlient;
         this.endpointProxy = endpointProxy;

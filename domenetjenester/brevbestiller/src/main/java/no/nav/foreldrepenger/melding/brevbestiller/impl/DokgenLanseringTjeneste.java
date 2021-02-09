@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.vedtak.util.env.Environment;
-
 import java.util.Map;
 import java.util.Set;
+
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.vedtak.util.env.Environment;
 
 public class DokgenLanseringTjeneste {
 
@@ -12,7 +12,9 @@ public class DokgenLanseringTjeneste {
     private static final Set<DokumentMalType> DOKGEN_MALER_PROD = Set.of(
             DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
             DokumentMalType.AVSLAG_ENGANGSSTØNAD,
-            DokumentMalType.IKKE_SØKT);
+            DokumentMalType.IKKE_SØKT,
+            DokumentMalType.VARSEL_OM_REVURDERING,
+            DokumentMalType.INGEN_ENDRING);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(
             DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
             DokumentMalType.AVSLAG_ENGANGSSTØNAD,
@@ -24,7 +26,7 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.INNSYN_SVAR);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
             DokumentMalType.INNHENTE_OPPLYSNINGER,
-            DokumentMalType.VARSEL_OM_REVURDERING);
+            DokumentMalType.REVURDERING_DOK);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_DEV = Set.of(
             DokumentMalType.INNHENT_DOK,
             DokumentMalType.REVURDERING_DOK);
@@ -32,7 +34,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING,
             DokumentMalType.HENLEGG_BEHANDLING_DOK, DokumentMalType.INFO_OM_HENLEGGELSE,
             DokumentMalType.INNSYNSKRAV_SVAR, DokumentMalType.INNSYN_SVAR);
-    private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_PROD = Map.of();
+    private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_PROD = Map.of(
+            DokumentMalType.REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING);
 
     public static boolean malSkalBrukeDokgen(DokumentMalType dokumentMalType) {
         if (ENV.isProd()) {

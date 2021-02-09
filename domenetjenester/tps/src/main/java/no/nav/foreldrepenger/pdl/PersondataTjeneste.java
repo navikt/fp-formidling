@@ -50,7 +50,8 @@ import no.nav.pdl.UtenlandskAdresseResponseProjection;
 import no.nav.pdl.Vegadresse;
 import no.nav.pdl.VegadresseResponseProjection;
 import no.nav.vedtak.exception.VLException;
-import no.nav.vedtak.felles.integrasjon.pdl.PdlKlient;
+import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
+import no.nav.vedtak.felles.integrasjon.pdl.Pdl;
 import no.nav.vedtak.konfig.Tid;
 import no.nav.vedtak.util.LRUCache;
 
@@ -87,7 +88,7 @@ public class PersondataTjeneste {
 
     private LRUCache<AktørId, PersonIdent> cacheAktørIdTilIdent;
 
-    private PdlKlient pdlKlient;
+    private Pdl pdlKlient;
     private PoststedKodeverkRepository poststedKodeverkRepository;
 
     PersondataTjeneste() {
@@ -95,7 +96,7 @@ public class PersondataTjeneste {
     }
 
     @Inject
-    public PersondataTjeneste(PdlKlient pdlKlient, PoststedKodeverkRepository repository) {
+    public PersondataTjeneste(@Jersey Pdl pdlKlient, PoststedKodeverkRepository repository) {
         this.pdlKlient = pdlKlient;
         this.poststedKodeverkRepository = repository;
         this.cacheAktørIdTilIdent = new LRUCache<>(DEFAULT_CACHE_SIZE, DEFAULT_CACHE_TIMEOUT);
@@ -118,7 +119,7 @@ public class PersondataTjeneste {
         try {
             identliste = pdlKlient.hentIdenter(request, projection);
         } catch (VLException v) {
-            if (PdlKlient.PDL_KLIENT_NOT_FOUND_KODE.equals(v.getKode())) {
+            if (Pdl.PDL_KLIENT_NOT_FOUND_KODE.equals(v.getKode())) {
                 return Optional.empty();
             }
             throw v;

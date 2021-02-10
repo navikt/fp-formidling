@@ -22,6 +22,8 @@ public class Sak {
                @JsonProperty("sakstype") String sakstype,
                @JsonProperty("arkivsaksnummer") String arkivsaksnummer,
                @JsonProperty("arkivsaksystem") String arkivsaksystem) {
+        this.fagsakId = fagsakId;
+        this.fagsaksystem = fagsaksystem;
         this.sakstype = sakstype;
         this.arkivsaksnummer = arkivsaksnummer;
         this.arkivsaksystem = arkivsaksystem;

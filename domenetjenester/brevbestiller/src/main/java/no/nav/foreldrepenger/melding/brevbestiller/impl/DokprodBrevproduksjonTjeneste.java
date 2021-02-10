@@ -52,7 +52,9 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
+import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 import no.nav.vedtak.felles.integrasjon.sak.v1.LegacySakRestKlient;
+import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
 
 @ApplicationScoped
@@ -61,7 +63,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DokumentproduksjonConsumer dokumentproduksjonProxyService;
-    private LegacySakRestKlient sakRestKlient;
+    private SakClient sakRestKlient;
     private DomeneobjektProvider domeneobjektProvider;
     private DokumentRepository dokumentRepository;
 
@@ -71,7 +73,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Inject
     public DokprodBrevproduksjonTjeneste(DokumentproduksjonConsumer dokumentproduksjonProxyService,
-                                         LegacySakRestKlient sakKlient,
+                                         @Jersey SakClient sakKlient,
                                          DokumentFellesDataMapper dokumentFellesDataMapper,
                                          DomeneobjektProvider domeneobjektProvider,
                                          DokumentRepository dokumentRepository) {
@@ -93,7 +95,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         dokumentRepository.lagre(dokumentData);
 
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
-            var saksnummer = bestemSaksnummer(dokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
+            var saksnummer = bestemSaksnummer(dokumentHendelse.getDokumentMalType(), dokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
             Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling, saksnummer);
             dokumentFelles.setBrevData(elementTilString(brevXmlElement));
 
@@ -115,13 +117,22 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         return historikkinnslagList;
     }
 
-    private Saksnummer bestemSaksnummer(Saksnummer saksnummer, AktørId aktørId) {
+    private Saksnummer bestemSaksnummer(DokumentMalType malType, Saksnummer saksnummer, AktørId aktørId) {
         if (Long.parseLong(saksnummer.getVerdi()) > 152000000L) {
             try {
-                var sak = sakRestKlient.finnForSaksnummer(saksnummer.getVerdi())
-                        .orElseGet(() -> opprettArkivsak(saksnummer, aktørId));
-                return new Saksnummer(String.valueOf(sak.getId()));
+                LOGGER.info("FPFORMIDLING SAK slår opp saksnummer {}", saksnummer.getVerdi());
+                var sak = sakRestKlient.finnForSaksnummer(saksnummer.getVerdi());
+                if (sak.isEmpty()) {
+                    LOGGER.info("FPFORMIDLING SAK ingen treff på saksnummer {}", saksnummer.getVerdi());
+                    if (DokumentMalType.INFO_TIL_ANNEN_FORELDER_DOK.equals(malType)) {
+                        sak = Optional.ofNullable(opprettArkivsak(saksnummer, aktørId));
+                    }
+                } else {
+                    LOGGER.info("FPFORMIDLING SAK fant {} for saksnummer {}", sak.get().getId(), saksnummer.getVerdi());
+                }
+                return sak.map(s -> new Saksnummer(String.valueOf(s.getId()))).orElseThrow();
             } catch (Exception e) {
+                LOGGER.info("FPFORMIDLING SAK feil for saksnummer ", e);
                 throw BrevbestillerFeil.FACTORY.feilFraSak(e).toException();
             }
         } else {
@@ -227,7 +238,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
 
         final DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
-        var saksnummer = bestemSaksnummer(førsteDokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
+        var saksnummer = bestemSaksnummer(dokumentHendelse.getDokumentMalType(), førsteDokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
         Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, dokumentHendelse, behandling, saksnummer);
 
         førsteDokumentFelles.setBrevData(elementTilString(brevXmlElement));

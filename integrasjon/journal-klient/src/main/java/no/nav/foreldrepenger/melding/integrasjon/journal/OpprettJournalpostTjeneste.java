@@ -1,5 +1,13 @@
 package no.nav.foreldrepenger.melding.integrasjon.journal;
 
+import java.util.List;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -13,13 +21,8 @@ import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostR
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.Sak;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingTema;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.List;
 
 @ApplicationScoped
 @SuppressWarnings("java:S3358")
@@ -28,7 +31,8 @@ public class OpprettJournalpostTjeneste {
     private JournalpostRestKlient journalpostRestKlient;
     private static final String AUTOMATISK_JOURNALFØRENDE_ENHET = "9999";
     private static final String TEMA_FORELDREPENGER = "FOR";
-    private static final String SAKSTYPE = "ARKIVSAK";
+    private static final String ARKIVSAKSTYPE = "ARKIVSAK";
+    private static final String FAGSAKSTYPE = "FAGSAK";
     private static final String ARKIVSAKSYSTEM = "GSAK";
 
     OpprettJournalpostTjeneste() {
@@ -62,7 +66,6 @@ public class OpprettJournalpostTjeneste {
 
         AvsenderMottaker avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), dokumentFelles.getMottakerNavn(), hentAvsenderMotakkerType(dokumentFelles.getMottakerType()));
         Bruker bruker = new Bruker(dokumentFelles.getSakspartId(), BrukerIdType.FNR);
-        Sak sak = new Sak(SAKSTYPE, saksnummer.getVerdi(), ARKIVSAKSYSTEM);
 
         return new OpprettJournalpostRequest(
                 avsenderMottaker,
@@ -71,8 +74,16 @@ public class OpprettJournalpostTjeneste {
                 mapBehandlingsTema(dokumentHendelse.getYtelseType()),
                 getTittel(dokumentHendelse, dokumentMalType),
                 ferdigstill ? AUTOMATISK_JOURNALFØRENDE_ENHET : null,
-                sak,
+                lagSak(saksnummer),
                 List.of(dokument));
+    }
+
+    private Sak lagSak(Saksnummer saksnummer) {
+        if (Long.parseLong(saksnummer.getVerdi()) > 152000000L) {
+            return new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getKode(), FAGSAKSTYPE, null, null);
+        } else {
+            return new Sak(null, null, ARKIVSAKSTYPE, saksnummer.getVerdi(), ARKIVSAKSYSTEM);
+        }
     }
 
     private String getTittel(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMalType) {

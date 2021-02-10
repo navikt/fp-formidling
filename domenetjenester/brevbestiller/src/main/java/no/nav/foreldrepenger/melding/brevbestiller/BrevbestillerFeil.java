@@ -18,6 +18,8 @@ public interface BrevbestillerFeil extends DeklarerteFeil {
     @TekniskFeil(feilkode = "FPFORMIDLING-210631", feilmelding = "Feilmelding fra DokProd", logLevel = LogLevel.ERROR)
     Feil feilFraDokumentProduksjon(Exception exception);
 
+    @TekniskFeil(feilkode = "FPFORMIDLING-210632", feilmelding = "Feilmelding fra Sak", logLevel = LogLevel.ERROR)
+    Feil feilFraSak(Exception exception);
 
 }
 

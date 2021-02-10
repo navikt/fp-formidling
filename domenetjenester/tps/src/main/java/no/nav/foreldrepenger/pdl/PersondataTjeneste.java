@@ -1,5 +1,20 @@
 package no.nav.foreldrepenger.pdl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.melding.aktør.AdresseType;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
@@ -50,23 +65,11 @@ import no.nav.pdl.UtenlandskAdresseResponseProjection;
 import no.nav.pdl.Vegadresse;
 import no.nav.pdl.VegadresseResponseProjection;
 import no.nav.vedtak.exception.VLException;
+import no.nav.vedtak.felles.integrasjon.pdl.Pdl;
 import no.nav.vedtak.felles.integrasjon.pdl.PdlKlient;
+import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 import no.nav.vedtak.konfig.Tid;
 import no.nav.vedtak.util.LRUCache;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @ApplicationScoped
 public class PersondataTjeneste {
@@ -87,7 +90,7 @@ public class PersondataTjeneste {
 
     private LRUCache<AktørId, PersonIdent> cacheAktørIdTilIdent;
 
-    private PdlKlient pdlKlient;
+    private Pdl pdlKlient;
     private PoststedKodeverkRepository poststedKodeverkRepository;
 
     PersondataTjeneste() {
@@ -95,7 +98,7 @@ public class PersondataTjeneste {
     }
 
     @Inject
-    public PersondataTjeneste(PdlKlient pdlKlient, PoststedKodeverkRepository repository) {
+    public PersondataTjeneste(@Jersey Pdl pdlKlient, PoststedKodeverkRepository repository) {
         this.pdlKlient = pdlKlient;
         this.poststedKodeverkRepository = repository;
         this.cacheAktørIdTilIdent = new LRUCache<>(DEFAULT_CACHE_SIZE, DEFAULT_CACHE_TIMEOUT);

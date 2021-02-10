@@ -80,7 +80,7 @@ public class OpprettJournalpostTjeneste {
 
     private Sak lagSak(Saksnummer saksnummer) {
         if (Long.parseLong(saksnummer.getVerdi()) > 152000000L) {
-            return new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getKode(), FAGSAKSTYPE, null, null);
+            return new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), FAGSAKSTYPE, null, null);
         } else {
             return new Sak(null, null, ARKIVSAKSTYPE, saksnummer.getVerdi(), ARKIVSAKSYSTEM);
         }

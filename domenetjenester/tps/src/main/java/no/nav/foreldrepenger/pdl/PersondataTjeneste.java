@@ -65,9 +65,8 @@ import no.nav.pdl.UtenlandskAdresseResponseProjection;
 import no.nav.pdl.Vegadresse;
 import no.nav.pdl.VegadresseResponseProjection;
 import no.nav.vedtak.exception.VLException;
-import no.nav.vedtak.felles.integrasjon.pdl.Pdl;
-import no.nav.vedtak.felles.integrasjon.pdl.PdlKlient;
 import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
+import no.nav.vedtak.felles.integrasjon.pdl.Pdl;
 import no.nav.vedtak.konfig.Tid;
 import no.nav.vedtak.util.LRUCache;
 
@@ -121,7 +120,7 @@ public class PersondataTjeneste {
         try {
             identliste = pdlKlient.hentIdenter(request, projection);
         } catch (VLException v) {
-            if (PdlKlient.PDL_KLIENT_NOT_FOUND_KODE.equals(v.getKode())) {
+            if (Pdl.PDL_KLIENT_NOT_FOUND_KODE.equals(v.getKode())) {
                 return Optional.empty();
             }
             throw v;

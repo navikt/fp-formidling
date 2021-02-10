@@ -1,11 +1,10 @@
 package no.nav.foreldrepenger.melding.brevbestiller;
 
-import javax.enterprise.context.ApplicationScoped;
-
 import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerTjenesteUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Adresse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Dokumentbestillingsinformasjon;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Fagomraader;
@@ -14,17 +13,12 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Organisasjon
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Person;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.UtenlandskPostadresse;
 
-@ApplicationScoped
 public class DokumentbestillingMapper {
     private static final String FAGOMRÅDE_KODE = "FOR";
     private static final String JOURNALFØRENDE_ENHET_KODE = "9999";
     private static final String UKJENT_ADRESSE = "Ukjent adresse";
 
-    public DokumentbestillingMapper() {
-        //CDI
-    }
-
-    public Dokumentbestillingsinformasjon mapFraBehandling(DokumentMalType dokumentMal, DokumentFelles dokumentFelles, boolean harVedlegg) {
+    public static Dokumentbestillingsinformasjon mapFraBehandling(DokumentMalType dokumentMal, DokumentFelles dokumentFelles, Saksnummer saksnummer, boolean harVedlegg) {
         final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = new Dokumentbestillingsinformasjon();
         dokumentbestillingsinformasjon.setDokumenttypeId(dokumentMal.getDokSysKode().getKode());
         Fagsystemer vlfp = new Fagsystemer();
@@ -47,7 +41,7 @@ public class DokumentbestillingMapper {
         // (bts) bruke 9999 hvis automatisk, ellers pålogget saksbehandlers enhetskode
         dokumentbestillingsinformasjon.setJournalfoerendeEnhet(JOURNALFØRENDE_ENHET_KODE);
 
-        dokumentbestillingsinformasjon.setJournalsakId(dokumentFelles.getSaksnummer().getVerdi());
+        dokumentbestillingsinformasjon.setJournalsakId(saksnummer.getVerdi());
 
 
         if(dokumentFelles.getMottakerType()==DokumentFelles.MottakerType.PERSON) {
@@ -72,7 +66,7 @@ public class DokumentbestillingMapper {
         return dokumentbestillingsinformasjon;
     }
 
-    private void setPostadresse(DokumentFelles dokumentFelles, Dokumentbestillingsinformasjon dokumentbestillingsinformasjon) {
+    private static void setPostadresse(DokumentFelles dokumentFelles, Dokumentbestillingsinformasjon dokumentbestillingsinformasjon) {
         Adresse adresse;
         if (DokumentBestillerTjenesteUtil.erNorskAdresse(dokumentFelles.getMottakerAdresse())) {
             adresse = DokumentBestillerTjenesteUtil.lagNorskPostadresse(dokumentFelles);
@@ -82,7 +76,7 @@ public class DokumentbestillingMapper {
         dokumentbestillingsinformasjon.setAdresse(adresse);
     }
 
-    private UtenlandskPostadresse lagUtenlandskPostadresse(DokumentFelles dokumentFelles) {
+    private static UtenlandskPostadresse lagUtenlandskPostadresse(DokumentFelles dokumentFelles) {
         UtenlandskPostadresse adresse = new UtenlandskPostadresse();
         adresse.setAdresselinje1(dokumentFelles.getMottakerAdresse().getAdresselinje1() == null ? UKJENT_ADRESSE : dokumentFelles.getMottakerAdresse().getAdresselinje1());
         adresse.setAdresselinje2(dokumentFelles.getMottakerAdresse().getAdresselinje2());

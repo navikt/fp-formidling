@@ -1,5 +1,20 @@
 package no.nav.foreldrepenger.pdl;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.melding.aktør.AdresseType;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
@@ -54,20 +69,6 @@ import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 import no.nav.vedtak.felles.integrasjon.pdl.Pdl;
 import no.nav.vedtak.konfig.Tid;
 import no.nav.vedtak.util.LRUCache;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @ApplicationScoped
 public class PersondataTjeneste {

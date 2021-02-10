@@ -626,6 +626,7 @@
             "arbeidsforhold": {
               "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
               "arbeidsgiverId": "973861778",
+              "arbeidsgiverIdent": "973861778",
               "startdato": "2018-01-01",
               "opphoersdato": null,
               "arbeidsforholdId": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
@@ -747,6 +748,7 @@
             "arbeidsforhold": {
               "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
               "arbeidsgiverId": "973861778",
+              "arbeidsgiverIdent": "973861778",
               "startdato": "2018-01-01",
               "opphoersdato": null,
               "arbeidsforholdId": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
@@ -868,6 +870,7 @@
             "arbeidsforhold": {
               "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
               "arbeidsgiverId": "973861778",
+              "arbeidsgiverIdent": "973861778",
               "startdato": "2018-01-01",
               "opphoersdato": null,
               "arbeidsforholdId": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
@@ -989,6 +992,7 @@
             "arbeidsforhold": {
               "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
               "arbeidsgiverId": "973861778",
+              "arbeidsgiverIdent": "973861778",
               "startdato": "2018-01-01",
               "opphoersdato": null,
               "arbeidsforholdId": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",

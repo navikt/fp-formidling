@@ -4,17 +4,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
-import no.nav.foreldrepenger.melding.typer.AktørId;
 
 public class BeregningsgrunnlagArbeidsforholdDto {
 
-    private String arbeidsgiverNavn;
-    private String arbeidsgiverId;
+    private String arbeidsgiverIdent;
     private LocalDate startdato;
     private LocalDate opphoersdato;
     private String arbeidsforholdId;
     private KodeDto arbeidsforholdType;
-    private AktørId aktørId;
     private BigDecimal naturalytelseBortfaltPrÅr;
     private BigDecimal naturalytelseTilkommetPrÅr;
 
@@ -30,20 +27,12 @@ public class BeregningsgrunnlagArbeidsforholdDto {
         this.arbeidsforholdId = arbeidsforholdId;
     }
 
-    public String getArbeidsgiverNavn() {
-        return arbeidsgiverNavn;
+    public String getArbeidsgiverIdent() {
+        return arbeidsgiverIdent;
     }
 
-    public void setArbeidsgiverNavn(String arbeidsgiverNavn) {
-        this.arbeidsgiverNavn = arbeidsgiverNavn;
-    }
-
-    public String getArbeidsgiverId() {
-        return arbeidsgiverId;
-    }
-
-    public void setArbeidsgiverId(String arbeidsgiverId) {
-        this.arbeidsgiverId = arbeidsgiverId;
+    public void setArbeidsgiverIdent(String arbeidsgiverIdent) {
+        this.arbeidsgiverIdent = arbeidsgiverIdent;
     }
 
     public LocalDate getStartdato() {
@@ -68,14 +57,6 @@ public class BeregningsgrunnlagArbeidsforholdDto {
 
     public void setArbeidsforholdType(KodeDto arbeidsforholdType) {
         this.arbeidsforholdType = arbeidsforholdType;
-    }
-
-    public void setAktørId(AktørId aktørId) {
-        this.aktørId = aktørId;
-    }
-
-    public AktørId getAktørId() {
-        return aktørId;
     }
 
     public BigDecimal getNaturalytelseBortfaltPrÅr() {

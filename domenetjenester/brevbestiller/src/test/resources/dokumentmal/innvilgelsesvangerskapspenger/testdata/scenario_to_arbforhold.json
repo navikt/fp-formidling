@@ -604,6 +604,7 @@
             "arbeidsforhold": {
               "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
               "arbeidsgiverId": "973861778",
+              "arbeidsgiverIdent": "973861778",
               "startdato": "2017-01-01",
               "opphoersdato": null,
               "arbeidsforholdId": null,
@@ -656,6 +657,7 @@
             "arbeidsforhold": {
               "arbeidsgiverNavn": "COLOR LINE CREW AS",
               "arbeidsgiverId": "973135678",
+              "arbeidsgiverIdent": "973135678",
               "startdato": "2017-01-01",
               "opphoersdato": null,
               "arbeidsforholdId": null,

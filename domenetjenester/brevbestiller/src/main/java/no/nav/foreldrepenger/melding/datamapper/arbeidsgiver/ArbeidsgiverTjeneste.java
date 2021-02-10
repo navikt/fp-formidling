@@ -37,7 +37,8 @@ public class ArbeidsgiverTjeneste {
     }
 
     public String hentArbeidsgiverNavn(String arbeidsgiverReferanse) {
-        return hent(arbeidsgiverReferanse).getNavn();
+        var arbeidsgiver = hent(arbeidsgiverReferanse);
+        return arbeidsgiver != null ? arbeidsgiver.getNavn() : null;
     }
 
     public ArbeidsgiverOpplysninger hent(String arbeidsgiver) {

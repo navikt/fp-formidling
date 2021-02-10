@@ -56,7 +56,7 @@ public class OpprettJournalpostTjenesteTest {
                 .medTittel("Innvilget Engangsstønad")
                 .build();
 
-        Saksnummer saksnummer = new Saksnummer("123456789");
+        Saksnummer saksnummer = new Saksnummer("153456789");
 
         // Act
         OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.INNVILGELSE_ENGANGSSTØNAD, dokumentFelles, dokumentHendelse, saksnummer, true);
@@ -67,9 +67,9 @@ public class OpprettJournalpostTjenesteTest {
         OpprettJournalpostRequest genRequest = requestCaptor.getValue();
         assertThat(genRequest.getTema()).isEqualTo("FOR");
         assertThat(genRequest.getBehandlingstema()).isEqualTo(BehandlingTema.ENGANGSSTØNAD.getOffisiellKode());
-        assertThat(genRequest.getSak().getSakstype()).isEqualTo("ARKIVSAK");
-        assertThat(genRequest.getSak().getArkivsaksnummer()).isEqualTo(saksnummer.getVerdi());
-        assertThat(genRequest.getSak().getArkivsaksystem()).isEqualTo("GSAK");
+        assertThat(genRequest.getSak().getSakstype()).isEqualTo("FAGSAK");
+        assertThat(genRequest.getSak().getFagsakId()).isEqualTo(saksnummer.getVerdi());
+        assertThat(genRequest.getSak().getFagsaksystem()).isEqualTo("FS36");
         assertThat(genRequest.getAvsenderMottaker().getId()).isEqualTo(MOTTAKER_ID);
         assertThat(genRequest.getAvsenderMottaker().getNavn()).isEqualTo(MOTTAKER_NAVN);
         assertThat(genRequest.getAvsenderMottaker().getIdType()).isEqualByComparingTo(AvsenderMottakerIdType.FNR);

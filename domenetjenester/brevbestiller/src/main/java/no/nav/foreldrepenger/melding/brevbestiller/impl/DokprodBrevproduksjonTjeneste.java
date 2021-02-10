@@ -1,5 +1,24 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
@@ -20,7 +39,10 @@ import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
+import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.binding.ProduserIkkeredigerbartDokumentDokumentErRedigerbart;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.binding.ProduserIkkeredigerbartDokumentDokumentErVedlegg;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.informasjon.Dokumentbestillingsinformasjon;
@@ -30,23 +52,8 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
+import no.nav.vedtak.felles.integrasjon.sak.v1.LegacySakRestKlient;
+import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
 
 @ApplicationScoped
 public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -54,7 +61,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DokumentproduksjonConsumer dokumentproduksjonProxyService;
-    private DokumentbestillingMapper dokumentbestillingMapper;
+    private LegacySakRestKlient sakRestKlient;
     private DomeneobjektProvider domeneobjektProvider;
     private DokumentRepository dokumentRepository;
 
@@ -64,12 +71,12 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Inject
     public DokprodBrevproduksjonTjeneste(DokumentproduksjonConsumer dokumentproduksjonProxyService,
-                                         DokumentbestillingMapper dokumentbestillingMapper,
+                                         LegacySakRestKlient sakKlient,
                                          DokumentFellesDataMapper dokumentFellesDataMapper,
                                          DomeneobjektProvider domeneobjektProvider,
                                          DokumentRepository dokumentRepository) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
-        this.dokumentbestillingMapper = dokumentbestillingMapper;
+        this.sakRestKlient = sakKlient;
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentRepository = dokumentRepository;
@@ -86,11 +93,12 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         dokumentRepository.lagre(dokumentData);
 
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
-            Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling);
+            var saksnummer = bestemSaksnummer(dokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
+            Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling, saksnummer);
             dokumentFelles.setBrevData(elementTilString(brevXmlElement));
 
-            final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = dokumentbestillingMapper.mapFraBehandling(dokumentMal,
-                    dokumentFelles, harVedlegg);
+            final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = DokumentbestillingMapper.mapFraBehandling(dokumentMal,
+                    dokumentFelles, saksnummer, harVedlegg);
             hentJournalpostTittel(DokumentXmlDataMapper.velgDokumentMapper(dokumentMal)).ifPresent(dokumentbestillingsinformasjon::setUstrukturertTittel);
 
             ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = produserIkkeredigerbartDokument(brevXmlElement, dokumentbestillingsinformasjon);
@@ -105,6 +113,31 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         }
 
         return historikkinnslagList;
+    }
+
+    private Saksnummer bestemSaksnummer(Saksnummer saksnummer, AktørId aktørId) {
+        if (Long.parseLong(saksnummer.getVerdi()) > 152000000L) {
+            try {
+                var sak = sakRestKlient.finnForSaksnummer(saksnummer.getVerdi())
+                        .orElseGet(() -> opprettArkivsak(saksnummer, aktørId));
+                return new Saksnummer(String.valueOf(sak.getId()));
+            } catch (Exception e) {
+                throw BrevbestillerFeil.FACTORY.feilFraSak(e).toException();
+            }
+        } else {
+            return saksnummer;
+        }
+    }
+
+    public SakJson opprettArkivsak(Saksnummer saksnummer, AktørId aktørId) {
+        var request = SakJson.getBuilder()
+                .medAktoerId(aktørId.getId())
+                .medFagsakNr(saksnummer.getVerdi())
+                .medApplikasjon(Fagsystem.FPSAK.getOffisiellKode())
+                .medTema("FOR");
+        var sak = sakRestKlient.opprettSak(request.build());
+        LOGGER.info("SAK REST opprettet sak {} for fagsakNr {}", sak.getId(), sak.getFagsakNr());
+        return sak;
     }
 
     private Optional<String> hentJournalpostTittel(DokumentTypeMapper dokumentTypeMapper) {
@@ -194,8 +227,8 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
 
         final DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
-
-        Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, dokumentHendelse, behandling);
+        var saksnummer = bestemSaksnummer(førsteDokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
+        Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, dokumentHendelse, behandling, saksnummer);
 
         førsteDokumentFelles.setBrevData(elementTilString(brevXmlElement));
         dokumentRepository.lagre(dokumentData);

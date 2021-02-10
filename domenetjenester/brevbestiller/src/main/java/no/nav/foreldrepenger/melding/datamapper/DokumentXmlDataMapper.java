@@ -23,14 +23,15 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.IdKodeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerAdresseType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.vedtak.feil.FeilFactory;
 import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
 
 public class DokumentXmlDataMapper {
 
-    public static Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
+    public static Element mapTilBrevXml(DokumentMalType dokumentMalType, DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling, Saksnummer saksnummer) {
         Element brevXmlElement;
-        FellesType fellesType = mapFellesType(dokumentFelles);
+        FellesType fellesType = mapFellesType(dokumentFelles, saksnummer);
         try (DokumentTypeMapper dokumentTypeMapper = velgDokumentMapper(dokumentMalType)) {
             String brevXml = dokumentTypeMapper.mapTilBrevXML(fellesType, dokumentFelles, hendelse, behandling);
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -54,10 +55,10 @@ public class DokumentXmlDataMapper {
         return CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(faktiskDokumentmal)).get();
     }
 
-    private static FellesType mapFellesType(final DokumentFelles dokumentFelles) {
+    private static FellesType mapFellesType(final DokumentFelles dokumentFelles, Saksnummer saksnummer) {
         final FellesType fellesType = new FellesType();
         fellesType.setSpraakkode(DokumentBestillerTjenesteUtil.mapSpråkkode(dokumentFelles.getSpråkkode()));
-        fellesType.setFagsaksnummer(dokumentFelles.getSaksnummer().getVerdi());
+        fellesType.setFagsaksnummer(saksnummer.getVerdi());
         if (dokumentFelles.getSignerendeSaksbehandlerNavn() != null) {
             fellesType.setSignerendeSaksbehandler(DokumentBestillerTjenesteUtil.lageSignerendeSaksbehandlerType(dokumentFelles));
         }

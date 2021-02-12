@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import java.util.Map;
-import java.util.Set;
-
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.util.env.Environment;
+
+import java.util.Map;
+import java.util.Set;
 
 public class DokgenLanseringTjeneste {
 
@@ -23,7 +23,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.VARSEL_OM_REVURDERING,
             DokumentMalType.INFO_OM_HENLEGGELSE,
             DokumentMalType.INGEN_ENDRING,
-            DokumentMalType.INNSYN_SVAR);
+            DokumentMalType.INNSYN_SVAR,
+            DokumentMalType.INFOBREV_TIL_ANNEN_FORELDER);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
             DokumentMalType.INNHENTE_OPPLYSNINGER,
             DokumentMalType.REVURDERING_DOK);

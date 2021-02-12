@@ -17,7 +17,6 @@ public class DokumentMalTypeKode {
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     public static final String FRITEKST_DOK = "FRITKS";
     public static final String ETTERLYS_INNTEKTSMELDING_DOK = "INNLYS";
-    public static final String INFO_TIL_ANNEN_FORELDER_DOK = "INAFOR";
     public static final String INNVILGELSE_SVANGERSKAPSPENGER_DOK = "INNSVP";
     public static final String ANKEBREV_BESLUTNING_OM_OPPHEVING = "ANKEBO";
     public static final String ANKE_VEDTAK_OMGJORING_DOK = "VEDOGA";
@@ -36,6 +35,7 @@ public class DokumentMalTypeKode {
     public static final String INNSYN_SVAR = "INNSYN";
     public static final String IKKE_SØKT = "IKKESO";
     public static final String INGEN_ENDRING = "INGEND";
+    public static final String INFO_TIL_ANNEN_FORELDER ="INFOAF";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
@@ -58,4 +58,6 @@ public class DokumentMalTypeKode {
     public static final String REVURDERING_DOK = "REVURD"; //NOSONAR
     @Deprecated
     public static final String UENDRETUTFALL_DOK = "UENDRE"; //NOSONAR
+    @Deprecated
+    public static final String INFO_TIL_ANNEN_FORELDER_DOK = "INAFOR"; //NOSONAR
 }

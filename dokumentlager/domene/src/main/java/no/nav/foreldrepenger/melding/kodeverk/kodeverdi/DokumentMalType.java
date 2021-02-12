@@ -1,5 +1,13 @@
 package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,15 +15,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -36,7 +35,6 @@ public enum DokumentMalType implements Kodeverdi {
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     FRITEKST_DOK(DokumentMalTypeKode.FRITEKST_DOK, "Fritekstbrev", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS ),
     ETTERLYS_INNTEKTSMELDING_DOK(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_DOK, "Etterlys inntektsmelding", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
-    INFO_TIL_ANNEN_FORELDER_DOK(DokumentMalTypeKode.INFO_TIL_ANNEN_FORELDER_DOK, "Informasjonsbrev til den andre forelderen", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     INNVILGELSE_SVANGERSKAPSPENGER_DOK(DokumentMalTypeKode.INNVILGELSE_SVANGERSKAPSPENGER_DOK, "Innvilgelsesbrev svangerskapspenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ANKEBREV_BESLUTNING_OM_OPPHEVING(DokumentMalTypeKode.ANKEBREV_BESLUTNING_OM_OPPHEVING, "Ankebrev om beslutning om oppheving", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ANKE_VEDTAK_OMGJORING_DOK(DokumentMalTypeKode.ANKE_VEDTAK_OMGJORING_DOK, "Vedtak om omgjøring i ankesak", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
@@ -55,6 +53,7 @@ public enum DokumentMalType implements Kodeverdi {
     INNSYN_SVAR(DokumentMalTypeKode.INNSYN_SVAR, "Svar på innsynskrav", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     IKKE_SØKT(DokumentMalTypeKode.IKKE_SØKT, "Ikke mottatt søknad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     INGEN_ENDRING(DokumentMalTypeKode.INGEN_ENDRING, "Uendret utfall", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    INFOBREV_TIL_ANNEN_FORELDER(DokumentMalTypeKode.INFO_TIL_ANNEN_FORELDER, "Informasjonsbrev til den andre forelderen", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
@@ -77,6 +76,8 @@ public enum DokumentMalType implements Kodeverdi {
     REVURDERING_DOK(DokumentMalTypeKode.REVURDERING_DOK, "Varsel om revurdering", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.REVURDERING, DoksysKode.REVURD), //NOSONAR
     @Deprecated
     UENDRETUTFALL_DOK(DokumentMalTypeKode.UENDRETUTFALL_DOK, "Uendret utfall", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.UENDRE), //NOSONAR
+    @Deprecated
+    INFO_TIL_ANNEN_FORELDER_DOK(DokumentMalTypeKode.INFO_TIL_ANNEN_FORELDER_DOK, "Informasjonsbrev til den andre forelderen", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
 
     UDEFINERT("-"),
 

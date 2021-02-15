@@ -31,9 +31,7 @@ public class OpprettJournalpostTjeneste {
     private JournalpostRestKlient journalpostRestKlient;
     private static final String AUTOMATISK_JOURNALFØRENDE_ENHET = "9999";
     private static final String TEMA_FORELDREPENGER = "FOR";
-    private static final String ARKIVSAKSTYPE = "ARKIVSAK";
     private static final String FAGSAKSTYPE = "FAGSAK";
-    private static final String ARKIVSAKSYSTEM = "GSAK";
 
     OpprettJournalpostTjeneste() {
         //CDI
@@ -79,11 +77,7 @@ public class OpprettJournalpostTjeneste {
     }
 
     private Sak lagSak(Saksnummer saksnummer) {
-        if (Long.parseLong(saksnummer.getVerdi()) > 152000000L) {
-            return new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), FAGSAKSTYPE, null, null);
-        } else {
-            return new Sak(null, null, ARKIVSAKSTYPE, saksnummer.getVerdi(), ARKIVSAKSYSTEM);
-        }
+        return new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), FAGSAKSTYPE, null, null);
     }
 
     private String getTittel(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMalType) {

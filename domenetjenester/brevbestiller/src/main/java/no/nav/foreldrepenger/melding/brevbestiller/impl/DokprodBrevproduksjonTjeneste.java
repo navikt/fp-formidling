@@ -53,7 +53,6 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
 import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
-import no.nav.vedtak.felles.integrasjon.sak.v1.LegacySakRestKlient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
 
@@ -118,25 +117,23 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     }
 
     private Saksnummer bestemSaksnummer(DokumentMalType malType, Saksnummer saksnummer, AktørId aktørId) {
-        if (Long.parseLong(saksnummer.getVerdi()) > 152000000L) {
-            try {
-                LOGGER.info("FPFORMIDLING SAK slår opp saksnummer {}", saksnummer.getVerdi());
-                var sak = sakRestKlient.finnForSaksnummer(saksnummer.getVerdi());
-                if (sak.isEmpty()) {
-                    LOGGER.info("FPFORMIDLING SAK ingen treff på saksnummer {}", saksnummer.getVerdi());
-                    if (DokumentMalType.INFO_TIL_ANNEN_FORELDER_DOK.equals(malType)) {
-                        sak = Optional.ofNullable(opprettArkivsak(saksnummer, aktørId));
-                    }
-                } else {
-                    LOGGER.info("FPFORMIDLING SAK fant {} for saksnummer {}", sak.get().getId(), saksnummer.getVerdi());
-                }
-                return sak.map(s -> new Saksnummer(String.valueOf(s.getId()))).orElseThrow();
-            } catch (Exception e) {
-                LOGGER.info("FPFORMIDLING SAK feil for saksnummer ", e);
-                throw BrevbestillerFeil.FACTORY.feilFraSak(e).toException();
-            }
-        } else {
+        if (Long.parseLong(saksnummer.getVerdi()) < 152000000L)
             return saksnummer;
+        try {
+            LOGGER.info("FPFORMIDLING SAK slår opp saksnummer {}", saksnummer.getVerdi());
+            var sak = sakRestKlient.finnForSaksnummer(saksnummer.getVerdi());
+            if (sak.isEmpty()) {
+                LOGGER.info("FPFORMIDLING SAK ingen treff på saksnummer {}", saksnummer.getVerdi());
+                if (DokumentMalType.INFO_TIL_ANNEN_FORELDER_DOK.equals(malType)) {
+                    sak = Optional.ofNullable(opprettArkivsak(saksnummer, aktørId));
+                }
+            } else {
+                LOGGER.info("FPFORMIDLING SAK fant {} for saksnummer {}", sak.get().getId(), saksnummer.getVerdi());
+            }
+            return sak.map(s -> new Saksnummer(String.valueOf(s.getId()))).orElseThrow();
+        } catch (Exception e) {
+            LOGGER.info("FPFORMIDLING SAK feil for saksnummer ", e);
+            throw BrevbestillerFeil.FACTORY.feilFraSak(e).toException();
         }
     }
 

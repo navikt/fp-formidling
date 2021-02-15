@@ -2,7 +2,6 @@
   "cluster": "prod",
   "namespace": "teamforeldrepenger",
   "serviceuserkv": "/serviceuser/data/prod/srvfpformidling",
-  "namespace": "teamforeldrepenger",
   "minReplicas": "2",
   "maxReplicas": "3",
   "ingresses": [

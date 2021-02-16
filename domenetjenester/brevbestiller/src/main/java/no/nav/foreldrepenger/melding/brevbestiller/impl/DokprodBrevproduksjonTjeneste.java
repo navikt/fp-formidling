@@ -52,7 +52,6 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
-import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
 
@@ -72,7 +71,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Inject
     public DokprodBrevproduksjonTjeneste(DokumentproduksjonConsumer dokumentproduksjonProxyService,
-                                         @Jersey SakClient sakKlient,
+                                         SakClient sakKlient, //TODO: Legg på @Jersey når opprettsak er borte
                                          DokumentFellesDataMapper dokumentFellesDataMapper,
                                          DomeneobjektProvider domeneobjektProvider,
                                          DokumentRepository dokumentRepository) {
@@ -137,13 +136,16 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         }
     }
 
+    // TODO: Fjern når infobrev er på dokgen
     public SakJson opprettArkivsak(Saksnummer saksnummer, AktørId aktørId) {
         var request = SakJson.getBuilder()
                 .medAktoerId(aktørId.getId())
                 .medFagsakNr(saksnummer.getVerdi())
                 .medApplikasjon(Fagsystem.FPSAK.getOffisiellKode())
-                .medTema("FOR");
-        var sak = sakRestKlient.opprettSak(request.build());
+                .medTema("FOR")
+                .build();
+        LOGGER.info("SAK REST oppretter sak {}", request);
+        var sak = sakRestKlient.opprettSak(request);
         LOGGER.info("SAK REST opprettet sak {} for fagsakNr {}", sak.getId(), sak.getFagsakNr());
         return sak;
     }

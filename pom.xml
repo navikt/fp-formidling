@@ -35,14 +35,14 @@
 
 
         <!-- felles artifakter -->
-        <felles.version>3.0.84</felles.version>
-        <prosesstask.version>2.5.10</prosesstask.version>
+        <felles.version>3.0.91</felles.version>
+        <prosesstask.version>2.5.15</prosesstask.version>
         <kontrakter.version>5.1-20201112050232-45aa18d</kontrakter.version>
 
         <!-- Eksterne -->
-        <prometheus.version>0.9.0</prometheus.version>
+        <prometheus.version>0.10.0</prometheus.version>
         <swagger.version>2.1.6</swagger.version>
-        <swagger-ui.version>3.42.0</swagger-ui.version>
+        <swagger-ui.version>3.43.0</swagger-ui.version>
         <kafka.version>2.7.0</kafka.version>
         <cxf.version>3.4.1</cxf.version>
         <jupiter.version>5.7.1</jupiter.version>
@@ -69,7 +69,7 @@
                 <!-- overstyrer her sålenge fp-felles inkluderer eldre versjon. -->
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
-                <version>7.5.0</version>
+                <version>7.5.3</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.kontrakter</groupId>
@@ -327,12 +327,12 @@
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-tree</artifactId>
-                <version>9.0</version>
+                <version>9.1</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-analysis</artifactId>
-                <version>9.0</version>
+                <version>9.1</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld.module</groupId>
@@ -425,12 +425,6 @@
 
             <dependency>
                 <!-- Transitive avhengighet resolution for å sikre bestemt versjon -->
-                <groupId>joda-time</groupId>
-                <artifactId>joda-time</artifactId>
-                <version>2.10.9</version>
-            </dependency>
-            <dependency>
-                <!-- Transitive avhengighet resolution for å sikre bestemt versjon -->
                 <groupId>org.owasp.encoder</groupId>
                 <artifactId>encoder</artifactId>
                 <version>1.2.3</version>
@@ -465,7 +459,7 @@
                 <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.98</version>
+                <version>4.8.102</version>
             </dependency>
             <!-- Java11 -->
             <dependency>

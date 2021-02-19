@@ -14,7 +14,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.AVSLAG_ENGANGSSTØNAD,
             DokumentMalType.IKKE_SØKT,
             DokumentMalType.VARSEL_OM_REVURDERING,
-            DokumentMalType.INGEN_ENDRING);
+            DokumentMalType.INGEN_ENDRING,
+            DokumentMalType.INFOBREV_TIL_ANNEN_FORELDER);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(
             DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
             DokumentMalType.AVSLAG_ENGANGSSTØNAD,

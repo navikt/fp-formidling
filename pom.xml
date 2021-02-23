@@ -69,7 +69,7 @@
                 <!-- overstyrer her sålenge fp-felles inkluderer eldre versjon. -->
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
-                <version>7.5.3</version>
+                <version>7.5.4</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.kontrakter</groupId>

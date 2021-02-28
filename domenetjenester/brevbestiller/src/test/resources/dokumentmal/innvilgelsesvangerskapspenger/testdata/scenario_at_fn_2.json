@@ -263,8 +263,8 @@
         }
       },
       {
-        "href": "/fpsak/api/behandling/soknad",
-        "rel": "soknad",
+        "href": "/fpsak/api/behandling/soknad-backend",
+        "rel": "soknad-backend",
         "type": "POST",
         "requestPayload": {
           "saksnummer": 139020607,

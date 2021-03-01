@@ -2,24 +2,16 @@ package no.nav.foreldrepenger.fpsak.dto.soknad;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.SøknadType;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = SoknadAdopsjonDto.class),
-        @JsonSubTypes.Type(value = SoknadFodselDto.class)
-})
-public abstract class SoknadDto {
+public class SoknadBackendDto {
 
     private SøknadType soknadType;
     private LocalDate mottattDato;
     private LocalDate soknadsdato;
     private OppgittRettighetDto oppgittRettighet;
 
-    protected SoknadDto() {
+    protected SoknadBackendDto() {
     }
 
     public SøknadType getSoknadType() {

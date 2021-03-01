@@ -12,7 +12,7 @@ public class FagsakDtoMapper {
 
     public static FagsakBackend mapFagsakBackendFraDto(FagsakBackendDto fagsakDto) {
         return FagsakBackend.ny()
-                .medSaksnummer(String.valueOf(fagsakDto.getSaksnummer()))
+                .medSaksnummer(fagsakDto.getSaksnummerString())
                 .medBrukerRolle(RelasjonsRolleType.fraKode(fagsakDto.getRelasjonsRolleType().getKode()))
                 .medAktørId(new AktørId(fagsakDto.getAktoerId()))
                 .build();

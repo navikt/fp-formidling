@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDt
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
-import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadDto;
+import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadBackendDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.saldo.SaldoerDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
@@ -139,10 +139,10 @@ public class BehandlingRestKlient {
     }
 
     
-    public Optional<SoknadDto> hentSoknadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
+    public Optional<SoknadBackendDto> hentSoknadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
-                .filter(dto -> "soknad".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, SoknadDto.class));
+                .filter(dto -> "soknad-backend".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, SoknadBackendDto.class));
     }
 
     

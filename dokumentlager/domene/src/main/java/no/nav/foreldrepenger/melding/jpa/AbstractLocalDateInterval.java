@@ -1,8 +1,7 @@
 package no.nav.foreldrepenger.melding.jpa;
 
-import static java.time.DayOfWeek.SATURDAY;
-import static java.time.DayOfWeek.SUNDAY;
-import static java.time.temporal.ChronoUnit.DAYS;
+import no.nav.vedtak.konfig.Tid;
+import org.threeten.extra.Interval;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -17,9 +16,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import org.threeten.extra.Interval;
-
-import no.nav.vedtak.konfig.Tid;
+import static java.time.DayOfWeek.SATURDAY;
+import static java.time.DayOfWeek.SUNDAY;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * Basis klasse for modellere et dato interval.
@@ -107,31 +106,23 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
     }
 
     public static LocalDate forrigeArbeidsdag(LocalDate dato) {
-        if (dato != TIDENES_BEGYNNELSE && dato != TIDENES_ENDE) {
-            switch (dato.getDayOfWeek()) {
-                case SATURDAY:
-                    return dato.minusDays(1);
-                case SUNDAY:
-                    return dato.minusDays(2);
-                default:
-                    break;
-            }
-        }
-        return dato;
+        if (dato == TIDENES_BEGYNNELSE || dato == TIDENES_ENDE) return dato;
+
+        return switch (dato.getDayOfWeek()) {
+            case SATURDAY -> dato.minusDays(1);
+            case SUNDAY -> dato.minusDays(2);
+            default -> dato;
+        };
     }
 
     public static LocalDate nesteArbeidsdag(LocalDate dato) {
-        if (dato != TIDENES_BEGYNNELSE && dato != TIDENES_ENDE) {
-            switch (dato.getDayOfWeek()) {
-                case SATURDAY:
-                    return dato.plusDays(2);
-                case SUNDAY:
-                    return dato.plusDays(1);
-                default:
-                    break;
-            }
-        }
-        return dato;
+        if (dato == TIDENES_BEGYNNELSE || dato == TIDENES_ENDE) return dato;
+
+        return  switch (dato.getDayOfWeek()) {
+            case SATURDAY -> dato.plusDays(2);
+            case SUNDAY -> dato.plusDays(1);
+             default -> dato;
+        };
     }
 
     public long antallDager() {

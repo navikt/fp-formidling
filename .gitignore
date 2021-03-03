@@ -29,6 +29,5 @@ dep.txt
 *.jts
 *.jks
 /.mvn/
-/.java-version
 /logback.xml
 .DS_Store

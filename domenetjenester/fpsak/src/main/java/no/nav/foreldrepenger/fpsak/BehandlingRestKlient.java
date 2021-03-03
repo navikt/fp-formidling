@@ -13,6 +13,7 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ import no.nav.vedtak.konfig.KonfigVerdi;
 public class BehandlingRestKlient {
     private static final Logger LOGGER = LoggerFactory.getLogger(BehandlingRestKlient.class);
     private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
-    private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/behandlinger";
+    private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/formidling/ressurser";
     private static final String SAKSNUMMER = "saksnummer";
     private static final String BEHANDLING_ID = "behandlingId";
 
@@ -197,6 +198,12 @@ public class BehandlingRestKlient {
         return resourceLinker.stream()
                 .filter(dto -> "beregningsgrunnlag".equals(dto.getRel()))
                 .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDto.class));
+    }
+
+    public Optional<BeregningsgrunnlagDtoV2> hentFormidlingBeregningsgrunnlagHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker.stream()
+                .filter(dto -> "beregningsgrunnlag".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDtoV2.class));
     }
 
     

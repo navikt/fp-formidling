@@ -15,6 +15,7 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 public class Behandling {
     private Behandlingsresultat behandlingsresultat;
     private List<BehandlingResourceLink> resourceLinker;
+    private List<BehandlingResourceLink> formidlingRessurser;
 
     //Felter brukt i brev
     private long id;
@@ -164,6 +165,14 @@ public class Behandling {
         }
     }
 
+    public List<BehandlingResourceLink> getFormidlingRessurser() {
+        return formidlingRessurser;
+    }
+
+    public boolean harFormidlingRessurs(String ressursRel) {
+        return formidlingRessurser.stream().anyMatch(lenk -> lenk.getRel().equals(ressursRel));
+    }
+
     public boolean harFagsakBackend() {
         return fagsakBackend != null;
     }
@@ -185,6 +194,7 @@ public class Behandling {
         public Builder() {
             this.kladd = new Behandling();
             this.kladd.resourceLinker = new ArrayList<>();
+            this.kladd.formidlingRessurser = new ArrayList<>();
             this.kladd.behandlingÅrsaker = new ArrayList<>();
         }
 
@@ -200,6 +210,11 @@ public class Behandling {
 
         public Behandling.Builder leggTilResourceLink(BehandlingResourceLink resourceLink) {
             this.kladd.resourceLinker.add(resourceLink);
+            return this;
+        }
+
+        public Behandling.Builder leggTilFormidlingResourceLink(BehandlingResourceLink resourceLink) {
+            this.kladd.formidlingRessurser.add(resourceLink);
             return this;
         }
 

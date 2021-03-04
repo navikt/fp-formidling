@@ -443,6 +443,18 @@
         }
       }
     ],
+    "formidlingRessurser": [
+      {
+        "href": "/fpsak/api/formidling/beregningsgrunnlag",
+        "rel": "beregningsgrunnlag",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020607,
+          "behandlingId": 1157620,
+          "behandlingUuid": "57e3ab23-24e9-4a38-8cf1-b221d290f773"
+        }
+      }
+    ],
     "behandlingKoet": false,
     "behandlingPaaVent": false,
     "ansvarligSaksbehandler": "Z991678",
@@ -580,602 +592,251 @@
     ]
   },
   "beregningsgrunnlag": {
-    "skjaeringstidspunktBeregning": "2019-05-08",
-    "aktivitetStatus": [
+    "aktivitetstatusListe": [
       {
         "kode": "AT_FL",
         "kodeverk": "AKTIVITET_STATUS"
       }
     ],
-    "beregningsgrunnlagPeriode": [
+    "beregningsgrunnlagperioder": [
       {
-        "beregningsgrunnlagPeriodeFom": "2019-05-08",
-        "beregningsgrunnlagPeriodeTom": "2019-06-19",
-        "beregnetPrAar": 672000,
-        "bruttoPrAar": 672000,
-        "bruttoInkludertBortfaltNaturalytelsePrAar": 672000,
-        "avkortetPrAar": 599148,
-        "redusertPrAar": 599148,
-        "periodeAarsaker": [],
+        "beregningsgrunnlagperiodeFom": "2019-05-08",
+        "beregningsgrunnlagperiodeTom": "2019-06-19",
+        "bruttoPrÅr": 672000,
+        "avkortetPrÅr": 599148,
+        "periodeårsaker": [],
         "dagsats": 2304,
-        "beregningsgrunnlagPrStatusOgAndel": [
+        "beregningsgrunnlagandeler": [
           {
-            "beregningsgrunnlagFom": "2019-02-01",
-            "beregningsgrunnlagTom": "2019-04-30",
             "aktivitetStatus": {
               "kode": "AT",
               "kodeverk": "AKTIVITET_STATUS"
             },
             "beregningsperiodeFom": "2019-02-01",
             "beregningsperiodeTom": "2019-04-30",
-            "beregnetPrAar": 540000,
-            "fastsattForrigePrAar": null,
-            "overstyrtPrAar": null,
-            "bruttoPrAar": 540000,
-            "avkortetPrAar": 540000,
-            "redusertPrAar": 540000,
-            "erTidsbegrensetArbeidsforhold": null,
+            "bruttoPrÅr": 540000,
+            "avkortetPrÅr": 540000,
             "erNyIArbeidslivet": null,
-            "lonnsendringIBeregningsperioden": null,
-            "andelsnr": 2,
-            "besteberegningPrAar": null,
-            "inntektskategori": {
-              "kode": "ARBEIDSTAKER",
-              "kodeverk": "INNTEKTSKATEGORI"
-            },
             "arbeidsforhold": {
-              "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
-              "arbeidsgiverId": "973861778",
               "arbeidsgiverIdent": "973861778",
-              "startdato": "2018-01-01",
-              "opphoersdato": null,
-              "arbeidsforholdId": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
-              "arbeidsforholdType": {
-                "kode": "ARBEID",
-                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-              },
-              "aktørId": null,
-              "refusjonPrAar": 540000,
-              "belopFraInntektsmeldingPrMnd": 45000,
-              "organisasjonstype": {
-                "kode": "VIRKSOMHET",
-                "kodeverk": "ORGANISASJONSTYPE"
-              },
+              "arbeidsforholdRef" : "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
               "naturalytelseBortfaltPrÅr": null,
               "naturalytelseTilkommetPrÅr": null
             },
-            "fastsattAvSaksbehandler": null,
-            "lagtTilAvSaksbehandler": false,
-            "belopPrMndEtterAOrdningen": 45000.0000000000,
-            "belopPrAarEtterAOrdningen": 540000.0000000000,
             "dagsats": 2077,
-            "originalDagsatsFraTilstøtendeYtelse": null,
-            "fordeltPrAar": null
+            "arbeidsforholdType": {
+              "kode": "ARBEID",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            }
           },
           {
-            "erNyoppstartet": null,
-            "beregningsgrunnlagFom": "2019-02-01",
-            "beregningsgrunnlagTom": "2019-04-30",
             "aktivitetStatus": {
               "kode": "FL",
               "kodeverk": "AKTIVITET_STATUS"
             },
             "beregningsperiodeFom": "2019-02-01",
             "beregningsperiodeTom": "2019-04-30",
-            "beregnetPrAar": 132000,
-            "fastsattForrigePrAar": null,
-            "overstyrtPrAar": null,
-            "bruttoPrAar": 132000,
-            "avkortetPrAar": 59148,
-            "redusertPrAar": 59148,
-            "erTidsbegrensetArbeidsforhold": null,
+            "bruttoPrÅr": 132000,
+            "avkortetPrÅr": 59148,
             "erNyIArbeidslivet": null,
-            "lonnsendringIBeregningsperioden": null,
-            "andelsnr": 1,
-            "besteberegningPrAar": null,
-            "inntektskategori": {
-              "kode": "FRILANSER",
-              "kodeverk": "INNTEKTSKATEGORI"
-            },
             "arbeidsforhold": {
-              "arbeidsgiverNavn": null,
-              "arbeidsgiverId": null,
-              "startdato": null,
-              "opphoersdato": null,
-              "arbeidsforholdId": null,
-              "arbeidsforholdType": {
-                "kode": "FRILANS",
-                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-              },
-              "aktørId": null,
-              "refusjonPrAar": null,
-              "belopFraInntektsmeldingPrMnd": null,
-              "organisasjonstype": null,
+              "arbeidsgiverIdent": null,
+              "arbeidsforholdRef" : null,
               "naturalytelseBortfaltPrÅr": null,
               "naturalytelseTilkommetPrÅr": null
             },
-            "fastsattAvSaksbehandler": true,
-            "lagtTilAvSaksbehandler": false,
-            "belopPrMndEtterAOrdningen": 3666.6666666667,
-            "belopPrAarEtterAOrdningen": null,
             "dagsats": 227,
-            "originalDagsatsFraTilstøtendeYtelse": null,
-            "fordeltPrAar": null
+            "arbeidsforholdType": {
+              "kode": "FRILANS",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            }
           }
-        ],
-        "andelerLagtTilManueltIForrige": []
+        ]
       },
       {
-        "beregningsgrunnlagPeriodeFom": "2019-06-20",
-        "beregningsgrunnlagPeriodeTom": "2019-06-24",
-        "beregnetPrAar": 672000,
-        "bruttoPrAar": 672000,
-        "bruttoInkludertBortfaltNaturalytelsePrAar": 672000,
-        "avkortetPrAar": 599148,
-        "redusertPrAar": 599148,
-        "periodeAarsaker": [
+        "beregningsgrunnlagperiodeFom": "2019-06-20",
+        "beregningsgrunnlagperiodeTom": "2019-06-24",
+        "bruttoPrÅr": 672000,
+        "avkortetPrÅr": 599148,
+        "periodeårsaker": [
           {
             "kode": "NATURALYTELSE_BORTFALT",
             "kodeverk": "PERIODE_AARSAK"
           }
         ],
         "dagsats": 2304,
-        "beregningsgrunnlagPrStatusOgAndel": [
+        "beregningsgrunnlagandeler": [
           {
-            "beregningsgrunnlagFom": "2019-02-01",
-            "beregningsgrunnlagTom": "2019-04-30",
             "aktivitetStatus": {
               "kode": "AT",
               "kodeverk": "AKTIVITET_STATUS"
             },
             "beregningsperiodeFom": "2019-02-01",
             "beregningsperiodeTom": "2019-04-30",
-            "beregnetPrAar": 540000,
-            "fastsattForrigePrAar": null,
-            "overstyrtPrAar": null,
-            "bruttoPrAar": 540000,
-            "avkortetPrAar": 540000,
-            "redusertPrAar": 540000,
-            "erTidsbegrensetArbeidsforhold": null,
+            "bruttoPrÅr": 540000,
+            "avkortetPrÅr": 540000,
             "erNyIArbeidslivet": null,
-            "lonnsendringIBeregningsperioden": null,
-            "andelsnr": 2,
-            "besteberegningPrAar": null,
-            "inntektskategori": {
-              "kode": "ARBEIDSTAKER",
-              "kodeverk": "INNTEKTSKATEGORI"
-            },
             "arbeidsforhold": {
-              "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
-              "arbeidsgiverId": "973861778",
               "arbeidsgiverIdent": "973861778",
-              "startdato": "2018-01-01",
-              "opphoersdato": null,
-              "arbeidsforholdId": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
-              "arbeidsforholdType": {
-                "kode": "ARBEID",
-                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-              },
-              "aktørId": null,
-              "refusjonPrAar": 540000,
-              "belopFraInntektsmeldingPrMnd": 45000,
-              "organisasjonstype": {
-                "kode": "VIRKSOMHET",
-                "kodeverk": "ORGANISASJONSTYPE"
-              },
+              "arbeidsforholdRef": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
               "naturalytelseBortfaltPrÅr": null,
               "naturalytelseTilkommetPrÅr": null
             },
-            "fastsattAvSaksbehandler": null,
-            "lagtTilAvSaksbehandler": false,
-            "belopPrMndEtterAOrdningen": 45000.0000000000,
-            "belopPrAarEtterAOrdningen": 540000.0000000000,
             "dagsats": 2077,
-            "originalDagsatsFraTilstøtendeYtelse": null,
-            "fordeltPrAar": null
+            "arbeidsforholdType": {
+              "kode": "ARBEID",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            }
           },
           {
-            "erNyoppstartet": null,
-            "beregningsgrunnlagFom": "2019-02-01",
-            "beregningsgrunnlagTom": "2019-04-30",
             "aktivitetStatus": {
               "kode": "FL",
               "kodeverk": "AKTIVITET_STATUS"
             },
             "beregningsperiodeFom": "2019-02-01",
             "beregningsperiodeTom": "2019-04-30",
-            "beregnetPrAar": 132000,
-            "fastsattForrigePrAar": null,
-            "overstyrtPrAar": null,
-            "bruttoPrAar": 132000,
-            "avkortetPrAar": 59148,
-            "redusertPrAar": 59148,
-            "erTidsbegrensetArbeidsforhold": null,
+            "bruttoPrÅr": 132000,
+            "avkortetPrÅr": 59148,
             "erNyIArbeidslivet": null,
-            "lonnsendringIBeregningsperioden": null,
-            "andelsnr": 1,
-            "besteberegningPrAar": null,
-            "inntektskategori": {
-              "kode": "FRILANSER",
-              "kodeverk": "INNTEKTSKATEGORI"
-            },
             "arbeidsforhold": {
-              "arbeidsgiverNavn": null,
-              "arbeidsgiverId": null,
-              "startdato": null,
-              "opphoersdato": null,
-              "arbeidsforholdId": null,
-              "arbeidsforholdType": {
-                "kode": "FRILANS",
-                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-              },
-              "aktørId": null,
-              "refusjonPrAar": null,
-              "belopFraInntektsmeldingPrMnd": null,
-              "organisasjonstype": null,
+              "arbeidsgiverIdent": null,
+              "arbeidsforholdRef": null,
               "naturalytelseBortfaltPrÅr": null,
               "naturalytelseTilkommetPrÅr": null
             },
-            "fastsattAvSaksbehandler": true,
-            "lagtTilAvSaksbehandler": false,
-            "belopPrMndEtterAOrdningen": 3666.6666666667,
-            "belopPrAarEtterAOrdningen": null,
             "dagsats": 227,
-            "originalDagsatsFraTilstøtendeYtelse": null,
-            "fordeltPrAar": null
+            "arbeidsforholdType": {
+              "kode": "FRILANS",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            }
           }
-        ],
-        "andelerLagtTilManueltIForrige": []
+        ]
       },
       {
-        "beregningsgrunnlagPeriodeFom": "2019-06-25",
-        "beregningsgrunnlagPeriodeTom": "2020-01-01",
-        "beregnetPrAar": 672000,
-        "bruttoPrAar": 672000,
-        "bruttoInkludertBortfaltNaturalytelsePrAar": 672000,
-        "avkortetPrAar": 599148,
-        "redusertPrAar": 599148,
-        "periodeAarsaker": [
+        "beregningsgrunnlagperiodeFom": "2019-06-25",
+        "beregningsgrunnlagperiodeTom": "2020-01-01",
+        "bruttoPrÅr": 672000,
+        "avkortetPrÅr": 599148,
+        "periodeårsaker": [
           {
             "kode": "NATURALYTELSE_TILKOMMER",
             "kodeverk": "PERIODE_AARSAK"
           }
         ],
         "dagsats": 2304,
-        "beregningsgrunnlagPrStatusOgAndel": [
+        "beregningsgrunnlagandeler": [
           {
-            "beregningsgrunnlagFom": "2019-02-01",
-            "beregningsgrunnlagTom": "2019-04-30",
             "aktivitetStatus": {
               "kode": "AT",
               "kodeverk": "AKTIVITET_STATUS"
             },
             "beregningsperiodeFom": "2019-02-01",
             "beregningsperiodeTom": "2019-04-30",
-            "beregnetPrAar": 540000,
-            "fastsattForrigePrAar": null,
-            "overstyrtPrAar": null,
-            "bruttoPrAar": 540000,
-            "avkortetPrAar": 540000,
-            "redusertPrAar": 540000,
-            "erTidsbegrensetArbeidsforhold": null,
+            "bruttoPrÅr": 540000,
+            "avkortetPrÅr": 540000,
             "erNyIArbeidslivet": null,
-            "lonnsendringIBeregningsperioden": null,
-            "andelsnr": 2,
-            "besteberegningPrAar": null,
-            "inntektskategori": {
-              "kode": "ARBEIDSTAKER",
-              "kodeverk": "INNTEKTSKATEGORI"
-            },
             "arbeidsforhold": {
-              "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
-              "arbeidsgiverId": "973861778",
               "arbeidsgiverIdent": "973861778",
-              "startdato": "2018-01-01",
-              "opphoersdato": null,
-              "arbeidsforholdId": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
-              "arbeidsforholdType": {
-                "kode": "ARBEID",
-                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-              },
-              "aktørId": null,
-              "refusjonPrAar": 540000,
-              "belopFraInntektsmeldingPrMnd": 45000,
-              "organisasjonstype": {
-                "kode": "VIRKSOMHET",
-                "kodeverk": "ORGANISASJONSTYPE"
-              },
+              "arbeidsforholdRef": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
               "naturalytelseBortfaltPrÅr": null,
               "naturalytelseTilkommetPrÅr": null
             },
-            "fastsattAvSaksbehandler": null,
-            "lagtTilAvSaksbehandler": false,
-            "belopPrMndEtterAOrdningen": 45000.0000000000,
-            "belopPrAarEtterAOrdningen": 540000.0000000000,
             "dagsats": 2077,
-            "originalDagsatsFraTilstøtendeYtelse": null,
-            "fordeltPrAar": null
+            "arbeidsforholdType": {
+              "kode": "ARBEID",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            }
           },
           {
-            "erNyoppstartet": null,
-            "beregningsgrunnlagFom": "2019-02-01",
-            "beregningsgrunnlagTom": "2019-04-30",
             "aktivitetStatus": {
               "kode": "FL",
               "kodeverk": "AKTIVITET_STATUS"
             },
             "beregningsperiodeFom": "2019-02-01",
             "beregningsperiodeTom": "2019-04-30",
-            "beregnetPrAar": 132000,
-            "fastsattForrigePrAar": null,
-            "overstyrtPrAar": null,
-            "bruttoPrAar": 132000,
-            "avkortetPrAar": 59148,
-            "redusertPrAar": 59148,
-            "erTidsbegrensetArbeidsforhold": null,
+            "bruttoPrÅr": 132000,
+            "avkortetPrÅr": 59148,
             "erNyIArbeidslivet": null,
-            "lonnsendringIBeregningsperioden": null,
-            "andelsnr": 1,
-            "besteberegningPrAar": null,
-            "inntektskategori": {
-              "kode": "FRILANSER",
-              "kodeverk": "INNTEKTSKATEGORI"
-            },
             "arbeidsforhold": {
-              "arbeidsgiverNavn": null,
-              "arbeidsgiverId": null,
-              "startdato": null,
-              "opphoersdato": null,
-              "arbeidsforholdId": null,
-              "arbeidsforholdType": {
-                "kode": "FRILANS",
-                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-              },
-              "aktørId": null,
-              "refusjonPrAar": null,
-              "belopFraInntektsmeldingPrMnd": null,
-              "organisasjonstype": null,
+              "arbeidsgiverIdent": null,
+              "arbeidsforholdRef": null,
               "naturalytelseBortfaltPrÅr": null,
               "naturalytelseTilkommetPrÅr": null
             },
-            "fastsattAvSaksbehandler": true,
-            "lagtTilAvSaksbehandler": false,
-            "belopPrMndEtterAOrdningen": 3666.6666666667,
-            "belopPrAarEtterAOrdningen": null,
             "dagsats": 227,
-            "originalDagsatsFraTilstøtendeYtelse": null,
-            "fordeltPrAar": null
+            "arbeidsforholdType": {
+              "kode": "FRILANS",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            }
           }
-        ],
-        "andelerLagtTilManueltIForrige": []
+        ]
       },
       {
-        "beregningsgrunnlagPeriodeFom": "2020-01-02",
-        "beregningsgrunnlagPeriodeTom": null,
-        "beregnetPrAar": 672000,
-        "bruttoPrAar": 672000,
-        "bruttoInkludertBortfaltNaturalytelsePrAar": 672000,
-        "avkortetPrAar": 599148,
-        "redusertPrAar": 599148,
-        "periodeAarsaker": [
+        "beregningsgrunnlagperiodeFom": "2020-01-02",
+        "beregningsgrunnlagperiodeTom": null,
+        "bruttoPrÅr": 672000,
+        "avkortetPrÅr": 599148,
+        "periodeårsaker": [
           {
             "kode": "REFUSJON_OPPHØRER",
             "kodeverk": "PERIODE_AARSAK"
           }
         ],
         "dagsats": 2304,
-        "beregningsgrunnlagPrStatusOgAndel": [
+        "beregningsgrunnlagandeler": [
           {
-            "beregningsgrunnlagFom": "2019-02-01",
-            "beregningsgrunnlagTom": "2019-04-30",
             "aktivitetStatus": {
               "kode": "AT",
               "kodeverk": "AKTIVITET_STATUS"
             },
             "beregningsperiodeFom": "2019-02-01",
             "beregningsperiodeTom": "2019-04-30",
-            "beregnetPrAar": 540000,
-            "fastsattForrigePrAar": null,
-            "overstyrtPrAar": null,
-            "bruttoPrAar": 540000,
-            "avkortetPrAar": 540000,
-            "redusertPrAar": 540000,
-            "erTidsbegrensetArbeidsforhold": null,
+            "bruttoPrÅr": 540000,
+            "avkortetPrÅr": 540000,
             "erNyIArbeidslivet": null,
-            "lonnsendringIBeregningsperioden": null,
-            "andelsnr": 2,
-            "besteberegningPrAar": null,
-            "inntektskategori": {
-              "kode": "ARBEIDSTAKER",
-              "kodeverk": "INNTEKTSKATEGORI"
-            },
             "arbeidsforhold": {
-              "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
-              "arbeidsgiverId": "973861778",
               "arbeidsgiverIdent": "973861778",
-              "startdato": "2018-01-01",
-              "opphoersdato": null,
-              "arbeidsforholdId": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
-              "arbeidsforholdType": {
-                "kode": "ARBEID",
-                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-              },
-              "aktørId": null,
-              "refusjonPrAar": null,
-              "belopFraInntektsmeldingPrMnd": 45000,
-              "organisasjonstype": {
-                "kode": "VIRKSOMHET",
-                "kodeverk": "ORGANISASJONSTYPE"
-              },
+              "arbeidsforholdRef": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
               "naturalytelseBortfaltPrÅr": null,
               "naturalytelseTilkommetPrÅr": null
             },
-            "fastsattAvSaksbehandler": null,
-            "lagtTilAvSaksbehandler": false,
-            "belopPrMndEtterAOrdningen": 45000.0000000000,
-            "belopPrAarEtterAOrdningen": 540000.0000000000,
             "dagsats": 2077,
-            "originalDagsatsFraTilstøtendeYtelse": null,
-            "fordeltPrAar": null
+            "arbeidsforholdType": {
+              "kode": "ARBEID",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            }
           },
           {
-            "erNyoppstartet": null,
-            "beregningsgrunnlagFom": "2019-02-01",
-            "beregningsgrunnlagTom": "2019-04-30",
             "aktivitetStatus": {
               "kode": "FL",
               "kodeverk": "AKTIVITET_STATUS"
             },
             "beregningsperiodeFom": "2019-02-01",
             "beregningsperiodeTom": "2019-04-30",
-            "beregnetPrAar": 132000,
-            "fastsattForrigePrAar": null,
-            "overstyrtPrAar": null,
-            "bruttoPrAar": 132000,
-            "avkortetPrAar": 59148,
-            "redusertPrAar": 59148,
-            "erTidsbegrensetArbeidsforhold": null,
+            "bruttoPrÅr": 132000,
+            "avkortetPrÅr": 59148,
             "erNyIArbeidslivet": null,
-            "lonnsendringIBeregningsperioden": null,
-            "andelsnr": 1,
-            "besteberegningPrAar": null,
-            "inntektskategori": {
-              "kode": "FRILANSER",
-              "kodeverk": "INNTEKTSKATEGORI"
-            },
             "arbeidsforhold": {
-              "arbeidsgiverNavn": null,
-              "arbeidsgiverId": null,
-              "startdato": null,
-              "opphoersdato": null,
-              "arbeidsforholdId": null,
-              "arbeidsforholdType": {
-                "kode": "FRILANS",
-                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-              },
-              "aktørId": null,
-              "refusjonPrAar": null,
-              "belopFraInntektsmeldingPrMnd": null,
-              "organisasjonstype": null,
+              "arbeidsgiverIdent": null,
+              "arbeidsforholdRef": null,
               "naturalytelseBortfaltPrÅr": null,
               "naturalytelseTilkommetPrÅr": null
             },
-            "fastsattAvSaksbehandler": true,
-            "lagtTilAvSaksbehandler": false,
-            "belopPrMndEtterAOrdningen": 3666.6666666667,
-            "belopPrAarEtterAOrdningen": null,
             "dagsats": 227,
-            "originalDagsatsFraTilstøtendeYtelse": null,
-            "fordeltPrAar": null
-          }
-        ],
-        "andelerLagtTilManueltIForrige": []
-      }
-    ],
-    "sammenligningsgrunnlag": {
-      "sammenligningsgrunnlagFom": "2018-05-01",
-      "sammenligningsgrunnlagTom": "2019-04-30",
-      "rapportertPrAar": 551000,
-      "avvikPromille": 220
-    },
-    "ledetekstBrutto": "Brutto beregningsgrunnlag",
-    "ledetekstAvkortet": "Avkortet beregningsgrunnlag (6G=599148)",
-    "ledetekstRedusert": "Redusert beregningsgrunnlag (100%)",
-    "grunnbeløp": 99858.0,
-    "faktaOmBeregning": {
-      "endringBeregningsgrunnlag": null,
-      "kortvarigeArbeidsforhold": null,
-      "frilansAndel": {
-        "andelsnr": 1,
-        "arbeidsforhold": {
-          "arbeidsgiverNavn": null,
-          "arbeidsgiverId": null,
-          "startdato": null,
-          "opphoersdato": null,
-          "arbeidsforholdId": null,
-          "arbeidsforholdType": {
-            "kode": "FRILANS",
-            "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-          },
-          "aktørId": null,
-          "refusjonPrAar": null,
-          "belopFraInntektsmeldingPrMnd": null,
-          "organisasjonstype": null,
-          "naturalytelseBortfaltPrÅr": null,
-          "naturalytelseTilkommetPrÅr": null
-        },
-        "inntektskategori": {
-          "kode": "FRILANSER",
-          "kodeverk": "INNTEKTSKATEGORI"
-        },
-        "aktivitetStatus": null,
-        "lagtTilAvSaksbehandler": false,
-        "fastsattAvSaksbehandler": false,
-        "andelIArbeid": []
-      },
-      "kunYtelse": null,
-      "faktaOmBeregningTilfeller": [
-        {
-          "kode": "VURDER_MOTTAR_YTELSE",
-          "kodeverk": "FAKTA_OM_BEREGNING_TILFELLE"
-        },
-        {
-          "kode": "FASTSETT_MAANEDSINNTEKT_FL",
-          "kodeverk": "FAKTA_OM_BEREGNING_TILFELLE"
-        }
-      ],
-      "arbeidstakerOgFrilanserISammeOrganisasjonListe": null,
-      "arbeidsforholdMedLønnsendringUtenIM": null,
-      "besteberegningAndeler": null,
-      "vurderMottarYtelse": {
-        "erFrilans": true,
-        "frilansMottarYtelse": true,
-        "frilansInntektPrMnd": 3666.6666666667,
-        "arbeidstakerAndelerUtenIM": []
-      },
-      "avklarAktiviteter": {
-        "aktiviteterTomDatoMapping": [
-          {
-            "tom": "2019-05-08",
-            "aktiviteter": [
-              {
-                "arbeidsgiverNavn": null,
-                "arbeidsgiverId": null,
-                "fom": "2015-06-23",
-                "tom": "9999-12-31",
-                "arbeidsforholdId": null,
-                "arbeidsforholdType": {
-                  "kode": "FRILANS",
-                  "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-                },
-                "aktørId": null,
-                "skalBrukes": null
-              },
-              {
-                "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
-                "arbeidsgiverId": "973861778",
-                "fom": "2018-01-01",
-                "tom": "9999-12-31",
-                "arbeidsforholdId": "a7ee3bb3-d119-4d76-8b45-8f8997783cd7",
-                "arbeidsforholdType": {
-                  "kode": "ARBEID",
-                  "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-                },
-                "aktørId": null,
-                "skalBrukes": null
-              }
-            ]
+            "arbeidsforholdType": {
+              "kode": "FRILANS",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            }
           }
         ]
-      },
-      "vurderBesteberegning": null
-    },
-    "andelerMedGraderingUtenBG": null,
+      }
+    ],
+    "grunnbeløp": 99858.0,
     "hjemmel": {
       "kode": "F_14_7_8_40",
       "kodeverk": "BG_HJEMMEL"
     },
-    "faktaOmFordeling": null
+    "erBesteberegnet": false
   },
   "mottattdokument": [
     {

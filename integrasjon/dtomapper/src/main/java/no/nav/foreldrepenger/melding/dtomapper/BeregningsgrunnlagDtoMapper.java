@@ -1,13 +1,9 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
-
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagArbeidsforholdDto;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagDto;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPeriodeDto;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelDto;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndelSNDto;
+import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagAndelDtoV2;
+import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
+import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDtoV2;
+import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BgAndelArbeidsforholdDtoV2;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
@@ -23,82 +19,74 @@ import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+
 public class BeregningsgrunnlagDtoMapper {
 
-    private static DatoIntervall avklarBeregningsperiode(BeregningsgrunnlagPrStatusOgAndelDto dto) {
-        if (dto.getBeregningsgrunnlagTom() == null) {
-            if (dto.getBeregningsgrunnlagFom() == null) {
+    private static DatoIntervall avklarBeregningsperiode(BeregningsgrunnlagAndelDtoV2 dto) {
+        if (dto.getBeregningsperiodeTom() == null) {
+            if (dto.getBeregningsperiodeFom() == null) {
                 return null;
             }
-            return DatoIntervall.fraOgMed(dto.getBeregningsgrunnlagFom());
+            return DatoIntervall.fraOgMed(dto.getBeregningsperiodeFom());
         }
-        return DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagFom(), dto.getBeregningsgrunnlagTom());
+        return DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsperiodeFom(), dto.getBeregningsperiodeTom());
     }
 
-    private static Arbeidsgiver mapArbeidsgiverFraDto(BeregningsgrunnlagArbeidsforholdDto dto, UnaryOperator<String> hentNavn) {
+    private static Arbeidsgiver mapArbeidsgiverFraDto(BgAndelArbeidsforholdDtoV2 dto, UnaryOperator<String> hentNavn) {
         return new Arbeidsgiver(dto.getArbeidsgiverIdent(), hentNavn.apply(dto.getArbeidsgiverIdent()));
     }
 
-    public static Beregningsgrunnlag mapBeregningsgrunnlagFraDto(BeregningsgrunnlagDto dto, UnaryOperator<String> hentNavn) {
+    public static Beregningsgrunnlag mapBeregningsgrunnlagFraDto(BeregningsgrunnlagDtoV2 dto, UnaryOperator<String> hentNavn) {
         Beregningsgrunnlag.Builder builder = Beregningsgrunnlag.ny();
         builder.medGrunnbeløp(new Beløp(dto.getGrunnbeløp()));
-        dto.getAktivitetStatus().stream().map(BeregningsgrunnlagDtoMapper::mapBeregningsgrunnlagAktivitetStatusFraDto).forEach(builder::leggTilBeregningsgrunnlagAktivitetStatus);
-        dto.getBeregningsgrunnlagPeriode().stream()
+        dto.getAktivitetstatusListe().stream().map(BeregningsgrunnlagDtoMapper::mapBeregningsgrunnlagAktivitetStatusFraDto).forEach(builder::leggTilBeregningsgrunnlagAktivitetStatus);
+        dto.getBeregningsgrunnlagperioder().stream()
                 .map(periode -> mapBeregningsgrunnlagPeriodeFraDto(periode, hentNavn))
                 .sorted(PeriodeComparator.BEREGNINGSGRUNNLAG)
                 .forEach(builder::leggTilBeregningsgrunnlagPeriode);
         builder.medhHjemmel(Hjemmel.fraKode(dto.getHjemmel().getKode()));
+        builder.medBesteberegnet(dto.isErBesteberegnet());
         return builder.build();
     }
 
-    private static BeregningsgrunnlagPeriode mapBeregningsgrunnlagPeriodeFraDto(BeregningsgrunnlagPeriodeDto dto, UnaryOperator<String> hentNavn) {
-        DatoIntervall intervall = dto.getBeregningsgrunnlagPeriodeTom() != null ?
-                DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagPeriodeFom(), dto.getBeregningsgrunnlagPeriodeTom()) :
-                DatoIntervall.fraOgMed(dto.getBeregningsgrunnlagPeriodeFom());
+    private static BeregningsgrunnlagPeriode mapBeregningsgrunnlagPeriodeFraDto(BeregningsgrunnlagPeriodeDtoV2 dto, UnaryOperator<String> hentNavn) {
+        DatoIntervall intervall = dto.getBeregningsgrunnlagperiodeTom() != null ?
+                DatoIntervall.fraOgMedTilOgMed(dto.getBeregningsgrunnlagperiodeFom(), dto.getBeregningsgrunnlagperiodeTom()) :
+                DatoIntervall.fraOgMed(dto.getBeregningsgrunnlagperiodeFom());
         return BeregningsgrunnlagPeriode.ny()
-                .medBruttoPrÅr(dto.getBruttoPrAar())
-                .medRedusertPrÅr(dto.getRedusertPrAar())
-                .medAvkortetPrÅr(dto.getAvkortetPrAar())
+                .medBruttoPrÅr(dto.getBruttoPrÅr())
+                .medAvkortetPrÅr(dto.getAvkortetPrÅr())
                 .medDagsats(dto.getDagsats())
                 .medPeriode(intervall)
-                .medperiodeÅrsaker(dto.getPeriodeAarsaker().stream().map(KodeDto::getKode).collect(Collectors.toList()))
-                .medBeregningsgrunnlagPrStatusOgAndelList(dto.getBeregningsgrunnlagPrStatusOgAndel().stream()
+                .medperiodeÅrsaker(dto.getPeriodeårsaker().stream().map(KodeDto::getKode).collect(Collectors.toList()))
+                .medBeregningsgrunnlagPrStatusOgAndelList(dto.getBeregningsgrunnlagandeler().stream()
                         .map(andel -> mapBgpsaFraDto(andel, hentNavn))
                         .collect(Collectors.toList()))
                 .build();
     }
 
-    private static BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagPrStatusOgAndelDto dto, UnaryOperator<String> hentNavn) {
+    private static BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagAndelDtoV2 dto, UnaryOperator<String> hentNavn) {
         BeregningsgrunnlagPrStatusOgAndel.Builder builder = BeregningsgrunnlagPrStatusOgAndel.ny();
         BGAndelArbeidsforhold bgAndelArbeidsforhold = null;
         if (dto.getArbeidsforhold() != null) {
             bgAndelArbeidsforhold = mapBgAndelArbeidsforholdfraDto(dto.getArbeidsforhold(), hentNavn);
         }
         builder.medAktivitetStatus(AktivitetStatus.fraKode(dto.getAktivitetStatus().getKode()))
-                .medBruttoPrÅr(dto.getBruttoPrAar())
-                .medAvkortetPrÅr(dto.getAvkortetPrAar())
-                .medBesteberegningPrÅr(dto.getBesteberegningPrAar())
-                .medOverstyrtPrÅr(dto.getOverstyrtPrAar())
+                .medBruttoPrÅr(dto.getBruttoPrÅr())
+                .medAvkortetPrÅr(dto.getAvkortetPrÅr())
                 .medNyIArbeidslivet(dto.getErNyIArbeidslivet())
-                .medOriginalDagsatsFraTilstøtendeYtelse(dto.getOriginalDagsatsFraTilstøtendeYtelse())
                 .medDagsats(dto.getDagsats())
                 .medBeregningsperiode(avklarBeregningsperiode(dto))
                 .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
-                .medArbeidsforholdType(bgAndelArbeidsforhold == null ? OpptjeningAktivitetType.UDEFINERT : bgAndelArbeidsforhold.getArbeidsforholdType());
-        if (dto instanceof BeregningsgrunnlagPrStatusOgAndelSNDto) {
-            BeregningsgrunnlagPrStatusOgAndelSNDto snDto = (BeregningsgrunnlagPrStatusOgAndelSNDto) dto;
-            builder.medPgi1(snDto.getPgi1())
-                    .medPgi2(snDto.getPgi2())
-                    .medPgi3(snDto.getPgi3())
-                    .medPgiSnitt(snDto.getPgiSnitt());
-        }
+                .medArbeidsforholdType(bgAndelArbeidsforhold == null ? OpptjeningAktivitetType.UDEFINERT : OpptjeningAktivitetType.fraKode(dto.getArbeidsforholdType().getKode()));
         return builder.build();
     }
 
-    private static BGAndelArbeidsforhold mapBgAndelArbeidsforholdfraDto(BeregningsgrunnlagArbeidsforholdDto dto, UnaryOperator<String> hentNavn) {
+    private static BGAndelArbeidsforhold mapBgAndelArbeidsforholdfraDto(BgAndelArbeidsforholdDtoV2 dto, UnaryOperator<String> hentNavn) {
         return new BGAndelArbeidsforhold(mapArbeidsgiverFraDto(dto, hentNavn),
-                ArbeidsforholdRef.ref(dto.getArbeidsforholdId()),
-                OpptjeningAktivitetType.fraKode(dto.getArbeidsforholdType().getKode()),
+                ArbeidsforholdRef.ref(dto.getArbeidsforholdRef()),
                 dto.getNaturalytelseBortfaltPrÅr(),
                 dto.getNaturalytelseTilkommetPrÅr()
         );

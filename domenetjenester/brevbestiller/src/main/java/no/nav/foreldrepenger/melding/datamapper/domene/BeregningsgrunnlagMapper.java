@@ -1,15 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
@@ -25,6 +15,16 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class BeregningsgrunnlagMapper {
     public BeregningsgrunnlagMapper() {
@@ -124,7 +124,7 @@ public class BeregningsgrunnlagMapper {
         ObjectFactory objectFactory = new ObjectFactory();
         AndelType andelType = objectFactory.createAndelType();
         andelType.setStatus(tilStatusTypeKode(andel.getAktivitetStatus()));
-        andelType.setDagsats(andel.getOriginalDagsatsFraTilstøtendeYtelse() == null ? andel.getDagsats() : andel.getOriginalDagsatsFraTilstøtendeYtelse());
+        andelType.setDagsats(andel.getDagsats());
         andelType.setEtterlønnSluttpakke(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(andel.getArbeidsforholdType()));
         BigDecimal bgBruttoPrÅr = getBgBruttoPrÅr(andel);
         if (bgBruttoPrÅr != null) {
@@ -159,11 +159,6 @@ public class BeregningsgrunnlagMapper {
                 .filter(bgpsa -> AktivitetStatus.ARBEIDSTAKER.equals(bgpsa.getAktivitetStatus()))
                 .filter(bgpsa -> !OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(bgpsa.getArbeidsforholdType()))
                 .count());
-    }
-
-    public static boolean harNoenAvAndeleneBesteberegning(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
-        return bgpsaListe.stream()
-                .anyMatch(andel -> andel.getBesteberegningPrÅr() != null);
     }
 
     static boolean nyoppstartetSelvstendingNæringsdrivende(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {

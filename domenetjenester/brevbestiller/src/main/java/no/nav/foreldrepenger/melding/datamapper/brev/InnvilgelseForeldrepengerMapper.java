@@ -1,21 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
-
-import java.math.BigInteger;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
 import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
@@ -58,6 +42,20 @@ import no.nav.foreldrepenger.melding.uttak.Saldoer;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import org.xml.sax.SAXException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.math.BigInteger;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.INNVILGELSE_FORELDREPENGER_DOK)
@@ -232,7 +230,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         fagType.setAntallBeregningsgrunnlagRegeler(BigInteger.valueOf(beregningsgrunnlagRegelListe.getBeregningsgrunnlagRegel().size()));
         fagType.setSeksG(BeregningsgrunnlagMapper.finnSeksG(beregningsgrunnlag).longValue());
         fagType.setInntektOverSeksG(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag));
-        fagType.setBesteBeregning(BeregningsgrunnlagMapper.harNoenAvAndeleneBesteberegning(BeregningsgrunnlagMapper.finnBgpsaListe(beregningsgrunnlag)));
+        fagType.setBesteBeregning(beregningsgrunnlag.getErBesteberegnet());
     }
 
     private void mapFelterRelatertTilFamiliehendelse(Behandling behandling, FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse, FagType fagType) {

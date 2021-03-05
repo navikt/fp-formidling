@@ -72,7 +72,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
     }
 
     private BrevParametere brevParametere;
-    private PersonAdapter tpsTjeneste;
+    private PersonAdapter personAdapter;
 
     public OpphørbrevMapper() {
     }
@@ -80,10 +80,10 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
     @Inject
     public OpphørbrevMapper(BrevParametere brevParametere,
                             DomeneobjektProvider domeneobjektProvider,
-                            PersonAdapter tpsTjeneste) {
+                            PersonAdapter personAdapter) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
-        this.tpsTjeneste = tpsTjeneste;
+        this.personAdapter = personAdapter;
     }
 
     @Override
@@ -165,7 +165,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
         Optional<LocalDate> dødsdato = Optional.empty();
         List<String> avslagsArsaker = hentAvslagsårsaker(årsakListe);
         if (avslagsArsaker.contains(PeriodeResultatÅrsak.SØKER_ER_DØD.getKode())) {
-            var dødsdatoFREG = tpsTjeneste.hentBrukerForAktør(fagsak.getAktørId()).map(Personinfo::getDødsdato).orElse(null);
+            var dødsdatoFREG = personAdapter.hentBrukerForAktør(fagsak.getAktørId()).map(Personinfo::getDødsdato).orElse(null);
             dødsdato = Optional.ofNullable(dødsdatoFREG);
         }
         if (avslagsArsaker.contains(PeriodeResultatÅrsak.BARNET_ER_DØD.getKode())) {

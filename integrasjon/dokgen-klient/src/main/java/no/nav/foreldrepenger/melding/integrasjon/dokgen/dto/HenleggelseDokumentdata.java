@@ -7,17 +7,29 @@ public class HenleggelseDokumentdata extends Dokumentdata {
     private boolean innsyn;
     private String opphavType;
 
-public static Builder ny() { return new Builder(); }
+    public static Builder ny() {
+        return new Builder();
+    }
 
-public boolean getVanligBehandling() { return vanligBehandling; }
+    public boolean getVanligBehandling() {
+        return vanligBehandling;
+    }
 
-public boolean getKlage() { return klage; }
+    public boolean getKlage() {
+        return klage;
+    }
 
-public boolean getAnke() { return anke; }
+    public boolean getAnke() {
+        return anke;
+    }
 
-public boolean getInnsyn() { return innsyn; }
+    public boolean getInnsyn() {
+        return innsyn;
+    }
 
-public String getOpphavType() { return opphavType; }
+    public String getOpphavType() {
+        return opphavType;
+    }
 
     public static class Builder {
         private HenleggelseDokumentdata kladd;

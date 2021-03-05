@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.JsonMapper;
@@ -22,9 +33,7 @@ import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.journal.JournalpostRestKlient;
 import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
-import no.nav.foreldrepenger.melding.integrasjon.journal.TilknyttVedleggTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
 import no.nav.foreldrepenger.melding.kafkatjenester.historikk.task.PubliserHistorikkTaskProperties;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
@@ -32,15 +41,6 @@ import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -65,8 +65,6 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                                         DokumentRepository dokumentRepository,
                                         DokgenRestKlient dokgenRestKlient,
                                         OpprettJournalpostTjeneste opprettJournalpostTjeneste,
-                                        TilknyttVedleggTjeneste tilknyttVedleggTjeneste,
-                                        JournalpostRestKlient journalpostRestKlient,
                                         DokumentdataMapperProvider dokumentdataMapperProvider,
                                         ProsessTaskRepository prosessTaskRepository,
                                         HistorikkRepository historikkRepository) {

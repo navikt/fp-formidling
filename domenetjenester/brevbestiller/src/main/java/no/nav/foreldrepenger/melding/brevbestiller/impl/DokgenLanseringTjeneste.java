@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.vedtak.util.env.Environment;
-
 import java.util.Map;
 import java.util.Set;
+
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.vedtak.util.env.Environment;
 
 public class DokgenLanseringTjeneste {
 
@@ -26,13 +26,20 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.INFO_OM_HENLEGGELSE,
             DokumentMalType.INGEN_ENDRING,
             DokumentMalType.INNSYN_SVAR,
-            DokumentMalType.INFOBREV_TIL_ANNEN_FORELDER);
+            DokumentMalType.INFOBREV_TIL_ANNEN_FORELDER,
+            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
+            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL,
+            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
             DokumentMalType.INNHENTE_OPPLYSNINGER,
-            DokumentMalType.REVURDERING_DOK);
+            DokumentMalType.REVURDERING_DOK,
+            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
+            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_DEV = Set.of(
             DokumentMalType.INNHENT_DOK,
-            DokumentMalType.REVURDERING_DOK);
+            DokumentMalType.REVURDERING_DOK,
+            DokumentMalType.FORLENGET_DOK,
+            DokumentMalType.FORLENGET_MEDL_DOK);
     private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_DEV = Map.of(
             DokumentMalType.REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING,
             DokumentMalType.HENLEGG_BEHANDLING_DOK, DokumentMalType.INFO_OM_HENLEGGELSE,

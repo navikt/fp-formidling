@@ -1,5 +1,12 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
@@ -42,12 +49,6 @@ import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @ApplicationScoped
 public class DomeneobjektProvider {
@@ -114,6 +115,10 @@ public class DomeneobjektProvider {
         return FamiliehendelseDtoMapper.mapFamiliehendelsefraDto(behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinker()));
     }
 
+    public Optional<FamilieHendelse> hentFamiliehendelseHvisFinnes(Behandling behandling) {
+        return behandlingRestKlient.hentFamiliehendelseHvisFinnes(behandling.getResourceLinker()).map(FamiliehendelseDtoMapper::mapFamiliehendelsefraDto);
+    }
+
     public InntektArbeidYtelse hentInntektArbeidYtelse(Behandling behandling) {
         return IAYDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektArbeidYtelseDto(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
@@ -169,7 +174,7 @@ public class DomeneobjektProvider {
     }
 
     public Optional<Verge> hentVerge(Behandling behandling) {
-        return behandlingRestKlient.hentVergeHvisfinnes(behandling.getResourceLinker()).map(v -> new Verge(v.getAktoerId(), v.getOrganisasjonsnummer(), v.getNavn()));
+        return behandlingRestKlient.hentVergeHvisFinnes(behandling.getResourceLinker()).map(v -> new Verge(v.getAktoerId(), v.getOrganisasjonsnummer(), v.getNavn()));
     }
 
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {

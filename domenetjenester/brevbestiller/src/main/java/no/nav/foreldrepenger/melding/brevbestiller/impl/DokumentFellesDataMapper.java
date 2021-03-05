@@ -31,7 +31,7 @@ public class DokumentFellesDataMapper {
     private static final String DEFAULT_PERSON_STATUS = "ANNET";
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private DomeneobjektProvider domeneobjektProvider;
-    private PersonAdapter tpsTjeneste;
+    private PersonAdapter personAdapter;
     private VirksomhetTjeneste virksomhetTjeneste;
 
     public DokumentFellesDataMapper() {
@@ -39,11 +39,11 @@ public class DokumentFellesDataMapper {
     }
 
     @Inject
-    public DokumentFellesDataMapper(PersonAdapter tpsTjeneste,
+    public DokumentFellesDataMapper(PersonAdapter personAdapter,
                                     DomeneobjektProvider domeneobjektProvider,
                                     NavKontaktKonfigurasjon navKontaktKonfigurasjon,
                                     VirksomhetTjeneste virksomhetTjeneste) {
-        this.tpsTjeneste = tpsTjeneste;
+        this.personAdapter = personAdapter;
         this.domeneobjektProvider = domeneobjektProvider;
         this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
         this.virksomhetTjeneste = virksomhetTjeneste;
@@ -91,7 +91,7 @@ public class DokumentFellesDataMapper {
                                                              Optional<DokumentFelles.Kopi> erKopi) {
         Virksomhet virksomhet = getVirksomhet(verge);
 
-        Personinfo personinfoBruker = tpsTjeneste.hentBrukerForAktør(aktørIdBruker)
+        Personinfo personinfoBruker = personAdapter.hentBrukerForAktør(aktørIdBruker)
                 .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeFnrForAktørId(aktørIdBruker).toException());
 
         String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
@@ -122,7 +122,7 @@ public class DokumentFellesDataMapper {
         DokumentAdresse adresse = fra(adresseinfo);
 
         var personinfoBruker = Objects.equals(aktørIdMottaker, aktørIdBruker) ? fraAdresseinfo(aktørIdBruker, adresseinfo) :
-                tpsTjeneste.hentBrukerForAktør(aktørIdBruker).orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeFnrForAktørId(aktørIdBruker).toException());
+                personAdapter.hentBrukerForAktør(aktørIdBruker).orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeFnrForAktørId(aktørIdBruker).toException());
 
         String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
                 dokumentHendelse.getBehandlendeEnhetNavn() : behandling.getBehandlendeEnhetNavn();
@@ -215,7 +215,7 @@ public class DokumentFellesDataMapper {
     }
 
     private Optional<Adresseinfo> innhentAdresseopplysningerForDokumentsending(AktørId aktørId) {
-        return tpsTjeneste.hentAdresseinformasjon(aktørId);
+        return personAdapter.hentAdresseinformasjon(aktørId);
     }
 
     private DokumentAdresse fra(Adresseinfo adresseinfo) {

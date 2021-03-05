@@ -24,25 +24,9 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 public class ForlengetSaksbehandlingstidBrevMapperTest {
 
-
     private ForlengetSaksbehandlingstidBrevMapper forlengetSaksbehandlingstidBrevMapper = new ForlengetSaksbehandlingstidBrevMapper();
     private DokumentFelles dokumentFelles = DatamapperTestUtil.getDokumentFelles();
     private FellesType fellesType = DatamapperTestUtil.getFellesType();
-
-    @Test
-    public void skal_mappe_forlengelse_brev_for_FP_med_FORLENGET_OPPTJENING() throws JAXBException, SAXException, XMLStreamException {
-        // Arrange
-        Behandling behandling = DatamapperTestUtil.standardBehandling();
-        DokumentHendelse dokumentHendelse = byggHendelse(DokumentMalType.FORLENGET_OPPTJENING, FagsakYtelseType.FORELDREPENGER);
-        // Act
-        String xml = forlengetSaksbehandlingstidBrevMapper.mapTilBrevXML(fellesType, dokumentFelles, dokumentHendelse, behandling);
-        // Assert
-        assertThat(xml).containsOnlyOnce(String.format("<ytelseType>%s</ytelseType>", FagsakYtelseType.FORELDREPENGER.getKode()));
-        assertThat(xml).containsOnlyOnce(String.format("<variant>%s</variant>", VariantKode.OPPTJENING.value()));
-        assertThat(xml).containsOnlyOnce(String.format("<personstatus>%s</personstatus>", PersonstatusKode.ANNET.value()));
-        assertThat(xml).containsOnlyOnce(String.format("<behandlingsfristUker>%s</behandlingsfristUker>", BehandlingType.FØRSTEGANGSSØKNAD.getBehandlingstidFristUker()));
-        assertThat(xml).containsOnlyOnce(String.format("<sokersNavn>%s</sokersNavn>", SØKERS_NAVN));
-    }
 
     @Test
     public void skal_mappe_forlengelse_brev_for_ES_med_FORLENGET_DOK() throws JAXBException, SAXException, XMLStreamException {

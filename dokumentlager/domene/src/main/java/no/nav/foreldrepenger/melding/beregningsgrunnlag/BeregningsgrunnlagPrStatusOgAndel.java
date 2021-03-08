@@ -1,28 +1,21 @@
 package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Optional;
-
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.RelatertYtelseType;
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
+
 public class BeregningsgrunnlagPrStatusOgAndel {
     private Long dagsats;
     private AktivitetStatus aktivitetStatus;
-    private Long originalDagsatsFraTilstøtendeYtelse;
     private BigDecimal bruttoPrÅr;
     private BigDecimal avkortetPrÅr;
-    private BigDecimal besteberegningPrÅr;
-    private BigDecimal overstyrtPrÅr;
-    private BigDecimal pgiSnitt;
-    private BigDecimal pgi1;
-    private BigDecimal pgi2;
-    private BigDecimal pgi3;
     private Boolean nyIArbeidslivet;
     private RelatertYtelseType ytelse;
     private OpptjeningAktivitetType arbeidsforholdType;
@@ -32,15 +25,8 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     private BeregningsgrunnlagPrStatusOgAndel(Builder builder) {
         dagsats = builder.dagsats;
         aktivitetStatus = builder.aktivitetStatus;
-        originalDagsatsFraTilstøtendeYtelse = builder.originalDagsatsFraTilstøtendeYtelse;
         bruttoPrÅr = builder.bruttoPrÅr;
         avkortetPrÅr = builder.avkortetPrÅr;
-        besteberegningPrÅr = builder.besteberegningPrÅr;
-        overstyrtPrÅr = builder.overstyrtPrÅr;
-        pgiSnitt = builder.pgiSnitt;
-        pgi1 = builder.pgi1;
-        pgi2 = builder.pgi2;
-        pgi3 = builder.pgi3;
         nyIArbeidslivet = builder.nyIArbeidslivet;
         ytelse = builder.ytelse;
         arbeidsforholdType = builder.arbeidsforholdType;
@@ -52,10 +38,6 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         return new Builder();
     }
 
-    public static Builder newBuilder() {
-        return new Builder();
-    }
-
     public Long getDagsats() {
         return dagsats;
     }
@@ -64,40 +46,12 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         return aktivitetStatus;
     }
 
-    public Long getOriginalDagsatsFraTilstøtendeYtelse() {
-        return originalDagsatsFraTilstøtendeYtelse;
-    }
-
     public BigDecimal getBruttoPrÅr() {
         return bruttoPrÅr;
     }
 
     public BigDecimal getAvkortetPrÅr() {
         return avkortetPrÅr;
-    }
-
-    public BigDecimal getBesteberegningPrÅr() {
-        return besteberegningPrÅr;
-    }
-
-    public BigDecimal getOverstyrtPrÅr() {
-        return overstyrtPrÅr;
-    }
-
-    public BigDecimal getPgiSnitt() {
-        return pgiSnitt;
-    }
-
-    public BigDecimal getPgi1() {
-        return pgi1;
-    }
-
-    public BigDecimal getPgi2() {
-        return pgi2;
-    }
-
-    public BigDecimal getPgi3() {
-        return pgi3;
     }
 
     public RelatertYtelseType getYtelse() {
@@ -141,15 +95,8 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     public static final class Builder {
         private Long dagsats;
         private AktivitetStatus aktivitetStatus;
-        private Long originalDagsatsFraTilstøtendeYtelse;
         private BigDecimal bruttoPrÅr;
         private BigDecimal avkortetPrÅr;
-        private BigDecimal besteberegningPrÅr;
-        private BigDecimal overstyrtPrÅr;
-        private BigDecimal pgiSnitt;
-        private BigDecimal pgi1;
-        private BigDecimal pgi2;
-        private BigDecimal pgi3;
         private Boolean nyIArbeidslivet;
         private RelatertYtelseType ytelse;
         private OpptjeningAktivitetType arbeidsforholdType;
@@ -169,11 +116,6 @@ public class BeregningsgrunnlagPrStatusOgAndel {
             return this;
         }
 
-        public Builder medOriginalDagsatsFraTilstøtendeYtelse(Long originalDagsatsFraTilstøtendeYtelse) {
-            this.originalDagsatsFraTilstøtendeYtelse = originalDagsatsFraTilstøtendeYtelse;
-            return this;
-        }
-
         public Builder medBruttoPrÅr(BigDecimal bruttoPrÅr) {
             this.bruttoPrÅr = bruttoPrÅr;
             return this;
@@ -181,36 +123,6 @@ public class BeregningsgrunnlagPrStatusOgAndel {
 
         public Builder medAvkortetPrÅr(BigDecimal avkortetPrÅr) {
             this.avkortetPrÅr = avkortetPrÅr;
-            return this;
-        }
-
-        public Builder medBesteberegningPrÅr(BigDecimal besteberegningPrÅr) {
-            this.besteberegningPrÅr = besteberegningPrÅr;
-            return this;
-        }
-
-        public Builder medOverstyrtPrÅr(BigDecimal overstyrtPrÅr) {
-            this.overstyrtPrÅr = overstyrtPrÅr;
-            return this;
-        }
-
-        public Builder medPgiSnitt(BigDecimal pgiSnitt) {
-            this.pgiSnitt = pgiSnitt;
-            return this;
-        }
-
-        public Builder medPgi1(BigDecimal pgi1) {
-            this.pgi1 = pgi1;
-            return this;
-        }
-
-        public Builder medPgi2(BigDecimal pgi2) {
-            this.pgi2 = pgi2;
-            return this;
-        }
-
-        public Builder medPgi3(BigDecimal pgi3) {
-            this.pgi3 = pgi3;
             return this;
         }
 

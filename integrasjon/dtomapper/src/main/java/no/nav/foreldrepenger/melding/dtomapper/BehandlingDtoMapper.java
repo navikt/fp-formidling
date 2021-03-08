@@ -38,7 +38,9 @@ public class BehandlingDtoMapper {
     public static Behandling mapBehandlingFraDto(BehandlingDto dto) {
         Behandling.Builder builder = Behandling.builder();
         Supplier<Stream<BehandlingResourceLink>> behandlingResourceLinkStreamSupplier = () -> dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
+        Supplier<Stream<BehandlingResourceLink>> behandlingFormidlingResourceLinkStreamSupplier = () -> dto.getFormidlingRessurser().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
+        behandlingFormidlingResourceLinkStreamSupplier.get().forEach(builder::leggTilFormidlingResourceLink);
         builder.medId(dto.getId())
                 .medUuid(dto.getUuid())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))

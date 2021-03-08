@@ -1,17 +1,16 @@
 package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 
+import no.nav.foreldrepenger.melding.typer.DatoIntervall;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import no.nav.foreldrepenger.melding.typer.DatoIntervall;
-
 public class BeregningsgrunnlagPeriode {
     private Long dagsats;
     private BigDecimal bruttoPrÅr;
-    private BigDecimal redusertPrÅr;
     private BigDecimal avkortetPrÅr;
     private List<String> periodeÅrsakKoder;
     private DatoIntervall periode;
@@ -23,7 +22,6 @@ public class BeregningsgrunnlagPeriode {
     private BeregningsgrunnlagPeriode(Builder builder) {
         dagsats = builder.dagsats;
         bruttoPrÅr = builder.bruttoPrÅr;
-        redusertPrÅr = builder.redusertPrÅr;
         avkortetPrÅr = builder.avkortetPrÅr;
         periodeÅrsakKoder = builder.periodeÅrsaker;
         periode = builder.periode;
@@ -46,10 +44,6 @@ public class BeregningsgrunnlagPeriode {
         return periodeÅrsakKoder;
     }
 
-    public BigDecimal getRedusertPrÅr() {
-        return redusertPrÅr;
-    }
-
     public BigDecimal getAvkortetPrÅr() {
         return avkortetPrÅr;
     }
@@ -69,7 +63,6 @@ public class BeregningsgrunnlagPeriode {
     public static final class Builder {
         private Long dagsats;
         private BigDecimal bruttoPrÅr;
-        private BigDecimal redusertPrÅr;
         private BigDecimal avkortetPrÅr;
         private List<String> periodeÅrsaker;
         private DatoIntervall periode;
@@ -85,11 +78,6 @@ public class BeregningsgrunnlagPeriode {
 
         public Builder medBruttoPrÅr(BigDecimal val) {
             bruttoPrÅr = val;
-            return this;
-        }
-
-        public Builder medRedusertPrÅr(BigDecimal val) {
-            redusertPrÅr = val;
             return this;
         }
 

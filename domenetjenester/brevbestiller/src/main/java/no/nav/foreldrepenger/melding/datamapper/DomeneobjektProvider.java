@@ -1,12 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
@@ -50,6 +43,12 @@ import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 @ApplicationScoped
 public class DomeneobjektProvider {
 
@@ -78,11 +77,11 @@ public class DomeneobjektProvider {
     }
 
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        return BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+             return BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getFormidlingRessurser()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentBeregningsgrunnlagHvisFinnes(behandling.getResourceLinker()).map(dto -> BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+        return behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getFormidlingRessurser()).map(dto -> BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public Behandling hentBehandling(UUID behandlingUuid) {

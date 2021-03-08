@@ -36,6 +36,7 @@ public class BehandlingDto {
     private KodeDto sprakkode;
     private boolean toTrinnsBehandling;
     private List<BehandlingResourceLinkDto> links = new ArrayList<>();
+    private List<BehandlingResourceLinkDto> formidlingRessurser = new ArrayList<>();
     private AsyncPollingStatus taskStatus;
     private String venteArsakKode;
     private List<BehandlingÅrsakDto> behandlingÅrsaker = new ArrayList<>();
@@ -255,6 +256,14 @@ public class BehandlingDto {
 
     public void setOriginalVedtaksDato(LocalDate originalVedtaksDato) {
         this.originalVedtaksDato = originalVedtaksDato;
+    }
+
+    public List<BehandlingResourceLinkDto> getFormidlingRessurser() {
+        return formidlingRessurser;
+    }
+
+    public void setFormidlingRessurser(List<BehandlingResourceLinkDto> formidlingRessurser) {
+        this.formidlingRessurser = formidlingRessurser;
     }
 
     @Override

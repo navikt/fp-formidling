@@ -1,16 +1,17 @@
 package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 
+import no.nav.foreldrepenger.melding.typer.Beløp;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import no.nav.foreldrepenger.melding.typer.Beløp;
 
 public class Beregningsgrunnlag {
     private Beløp grunnbeløp;
     private List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = new ArrayList<>();
     private List<BeregningsgrunnlagAktivitetStatus> aktivitetStatuser = new ArrayList<>();
     private Hjemmel hjemmel;
+    private boolean erBesteberegnet;
 
     private Beregningsgrunnlag() {
 
@@ -36,11 +37,14 @@ public class Beregningsgrunnlag {
         return hjemmel;
     }
 
+    public boolean getErBesteberegnet() { return erBesteberegnet; }
+
     public static class Builder {
         private Beløp grunnbeløp;
         private List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = new ArrayList<>();
         private List<BeregningsgrunnlagAktivitetStatus> aktivitetStatuser = new ArrayList<>();
         private Hjemmel hjemmel;
+        private boolean erBesteberegnet;
 
         public Builder medGrunnbeløp(Beløp grunnbeløp) {
             this.grunnbeløp = grunnbeløp;
@@ -62,12 +66,18 @@ public class Beregningsgrunnlag {
             return this;
         }
 
+        public Builder medBesteberegnet(boolean erBesteberegnet) {
+            this.erBesteberegnet = erBesteberegnet;
+            return this;
+        }
+
         public Beregningsgrunnlag build() {
             Beregningsgrunnlag beregningsgrunnlag = new Beregningsgrunnlag();
             beregningsgrunnlag.grunnbeløp = grunnbeløp;
             beregningsgrunnlag.beregningsgrunnlagPerioder = beregningsgrunnlagPerioder;
             beregningsgrunnlag.aktivitetStatuser = aktivitetStatuser;
             beregningsgrunnlag.hjemmel = hjemmel;
+            beregningsgrunnlag.erBesteberegnet = erBesteberegnet;
             return beregningsgrunnlag;
         }
 

@@ -1,22 +1,5 @@
 package no.nav.foreldrepenger.fpsak;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.apache.http.client.utils.URIBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
@@ -25,7 +8,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.BeregningsgrunnlagDto;
+import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatMedUttaksplanDto;
 import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakBackendDto;
@@ -42,12 +25,27 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 import no.nav.vedtak.konfig.KonfigVerdi;
+import org.apache.http.client.utils.URIBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 @ApplicationScoped
 public class BehandlingRestKlient {
     private static final Logger LOGGER = LoggerFactory.getLogger(BehandlingRestKlient.class);
     private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
-    private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/behandlinger";
+    private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/formidling/ressurser";
     private static final String SAKSNUMMER = "saksnummer";
     private static final String BEHANDLING_ID = "behandlingId";
 
@@ -185,18 +183,17 @@ public class BehandlingRestKlient {
                 });
     }
 
-    
-    public BeregningsgrunnlagDto hentBeregningsgrunnlag(List<BehandlingResourceLink> resourceLinker) {
-        return hentBeregningsgrunnlagHvisFinnes(resourceLinker).orElseThrow(() -> {
+    public BeregningsgrunnlagDtoV2 hentBeregningsgrunnlag(List<BehandlingResourceLink> resourceLinker) {
+        return hentFormidlingBeregningsgrunnlagHvisFinnes(resourceLinker).orElseThrow(() -> {
             throw new IllegalStateException("Klarte ikke hente beregningsgrunnlag for behandling: " + hentBehandlingId(resourceLinker));
         });
     }
 
-    
-    public Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
+
+    public Optional<BeregningsgrunnlagDtoV2> hentFormidlingBeregningsgrunnlagHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
                 .filter(dto -> "beregningsgrunnlag".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDto.class));
+                .findFirst().flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDtoV2.class));
     }
 
     

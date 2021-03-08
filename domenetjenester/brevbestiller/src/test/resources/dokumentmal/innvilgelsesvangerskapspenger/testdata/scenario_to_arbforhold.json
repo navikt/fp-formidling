@@ -360,6 +360,18 @@
         }
       }
     ],
+    "formidlingRessurser": [
+      {
+        "href": "/fpsak/api/formidling/beregningsgrunnlag",
+        "rel": "beregningsgrunnlag",
+        "type": "POST",
+        "requestPayload": {
+          "saksnummer": 139020668,
+          "behandlingId": 1157823,
+          "behandlingUuid": "75e6e2be-cc7d-44d9-8eaf-505c8299fe80"
+        }
+      }
+    ],
     "behandlingKoet": false,
     "behandlingPaaVent": false,
     "ansvarligSaksbehandler": "z991188",
@@ -558,198 +570,74 @@
     ]
   },
   "beregningsgrunnlag": {
-    "skjaeringstidspunktBeregning": "2019-05-07",
-    "aktivitetStatus": [
+    "aktivitetstatusListe": [
       {
         "kode": "AT",
         "kodeverk": "AKTIVITET_STATUS"
       }
     ],
-    "beregningsgrunnlagPeriode": [
+    "beregningsgrunnlagperioder": [
       {
-        "beregningsgrunnlagPeriodeFom": "2019-05-07",
-        "beregningsgrunnlagPeriodeTom": null,
-        "beregnetPrAar": 504000,
-        "bruttoPrAar": 504000,
-        "bruttoInkludertBortfaltNaturalytelsePrAar": 504000,
-        "avkortetPrAar": 504000,
-        "redusertPrAar": 504000,
-        "periodeAarsaker": [],
+        "beregningsgrunnlagperiodeFom": "2019-05-07",
+        "beregningsgrunnlagperiodeTom": null,
+        "bruttoPrÅr": 504000,
+        "avkortetPrÅr": 504000,
+        "periodeårsaker": [],
         "dagsats": 1939,
-        "beregningsgrunnlagPrStatusOgAndel": [
+        "beregningsgrunnlagandeler": [
           {
-            "beregningsgrunnlagFom": "2019-02-01",
-            "beregningsgrunnlagTom": "2019-04-30",
             "aktivitetStatus": {
               "kode": "AT",
               "kodeverk": "AKTIVITET_STATUS"
             },
             "beregningsperiodeFom": "2019-02-01",
             "beregningsperiodeTom": "2019-04-30",
-            "beregnetPrAar": 360000,
-            "fastsattForrigePrAar": null,
-            "overstyrtPrAar": null,
-            "bruttoPrAar": 360000,
-            "avkortetPrAar": 360000,
-            "redusertPrAar": 360000,
-            "erTidsbegrensetArbeidsforhold": null,
+            "bruttoPrÅr": 360000,
+            "avkortetPrÅr": 360000,
             "erNyIArbeidslivet": null,
-            "lonnsendringIBeregningsperioden": null,
-            "andelsnr": 2,
-            "besteberegningPrAar": null,
-            "inntektskategori": {
-              "kode": "ARBEIDSTAKER",
-              "kodeverk": "INNTEKTSKATEGORI"
-            },
             "arbeidsforhold": {
-              "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
-              "arbeidsgiverId": "973861778",
               "arbeidsgiverIdent": "973861778",
-              "startdato": "2017-01-01",
-              "opphoersdato": null,
-              "arbeidsforholdId": null,
-              "arbeidsforholdType": {
-                "kode": "ARBEID",
-                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-              },
-              "aktørId": null,
-              "refusjonPrAar": 0,
-              "belopFraInntektsmeldingPrMnd": 30000,
-              "organisasjonstype": {
-                "kode": "VIRKSOMHET",
-                "kodeverk": "ORGANISASJONSTYPE"
-              },
-              "naturalytelseBortfaltPrÅr": null,
+              "arbeidsforholdRef": null,
+             "naturalytelseBortfaltPrÅr": null,
               "naturalytelseTilkommetPrÅr": null
             },
-            "fastsattAvSaksbehandler": null,
-            "lagtTilAvSaksbehandler": false,
-            "belopPrMndEtterAOrdningen": 30000.0000000000,
-            "belopPrAarEtterAOrdningen": 360000.0000000000,
             "dagsats": 1385,
-            "originalDagsatsFraTilstøtendeYtelse": null,
-            "fordeltPrAar": null
+            "arbeidsforholdType": {
+              "kode": "ARBEID",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            }
           },
           {
-            "beregningsgrunnlagFom": "2019-02-01",
-            "beregningsgrunnlagTom": "2019-04-30",
             "aktivitetStatus": {
               "kode": "AT",
               "kodeverk": "AKTIVITET_STATUS"
             },
             "beregningsperiodeFom": "2019-02-01",
             "beregningsperiodeTom": "2019-04-30",
-            "beregnetPrAar": 144000,
-            "fastsattForrigePrAar": null,
-            "overstyrtPrAar": null,
-            "bruttoPrAar": 144000,
-            "avkortetPrAar": 144000,
-            "redusertPrAar": 144000,
-            "erTidsbegrensetArbeidsforhold": null,
+            "bruttoPrÅr": 144000,
+            "avkortetPrÅr": 144000,
             "erNyIArbeidslivet": null,
-            "lonnsendringIBeregningsperioden": null,
-            "andelsnr": 1,
-            "besteberegningPrAar": null,
-            "inntektskategori": {
-              "kode": "ARBEIDSTAKER",
-              "kodeverk": "INNTEKTSKATEGORI"
-            },
             "arbeidsforhold": {
-              "arbeidsgiverNavn": "COLOR LINE CREW AS",
-              "arbeidsgiverId": "973135678",
               "arbeidsgiverIdent": "973135678",
-              "startdato": "2017-01-01",
-              "opphoersdato": null,
-              "arbeidsforholdId": null,
-              "arbeidsforholdType": {
-                "kode": "ARBEID",
-                "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-              },
-              "aktørId": null,
-              "refusjonPrAar": 0,
-              "belopFraInntektsmeldingPrMnd": 12000,
-              "organisasjonstype": {
-                "kode": "VIRKSOMHET",
-                "kodeverk": "ORGANISASJONSTYPE"
-              },
+              "arbeidsforholdRef": null,
               "naturalytelseBortfaltPrÅr": null,
               "naturalytelseTilkommetPrÅr": null
             },
-            "fastsattAvSaksbehandler": null,
-            "lagtTilAvSaksbehandler": false,
-            "belopPrMndEtterAOrdningen": 10000.0000000000,
-            "belopPrAarEtterAOrdningen": 120000.0000000000,
             "dagsats": 554,
-            "originalDagsatsFraTilstøtendeYtelse": null,
-            "fordeltPrAar": null
-          }
-        ],
-        "andelerLagtTilManueltIForrige": []
-      }
-    ],
-    "sammenligningsgrunnlag": {
-      "sammenligningsgrunnlagFom": "2018-05-01",
-      "sammenligningsgrunnlagTom": "2019-04-30",
-      "rapportertPrAar": 480000,
-      "avvikPromille": 50
-    },
-    "ledetekstBrutto": "Brutto beregningsgrunnlag",
-    "ledetekstAvkortet": "Avkortet beregningsgrunnlag (6G=599148)",
-    "ledetekstRedusert": "Redusert beregningsgrunnlag (100%)",
-    "grunnbeløp": 99858.0,
-    "faktaOmBeregning": {
-      "endringBeregningsgrunnlag": null,
-      "kortvarigeArbeidsforhold": null,
-      "frilansAndel": null,
-      "kunYtelse": null,
-      "faktaOmBeregningTilfeller": null,
-      "arbeidstakerOgFrilanserISammeOrganisasjonListe": null,
-      "arbeidsforholdMedLønnsendringUtenIM": null,
-      "besteberegningAndeler": null,
-      "vurderMottarYtelse": null,
-      "avklarAktiviteter": {
-        "aktiviteterTomDatoMapping": [
-          {
-            "tom": "2019-05-07",
-            "aktiviteter": [
-              {
-                "arbeidsgiverNavn": "COLOR LINE CREW AS",
-                "arbeidsgiverId": "973135678",
-                "fom": "2017-01-01",
-                "tom": "9999-12-31",
-                "arbeidsforholdId": null,
-                "arbeidsforholdType": {
-                  "kode": "ARBEID",
-                  "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-                },
-                "aktørId": null,
-                "skalBrukes": null
-              },
-              {
-                "arbeidsgiverNavn": "EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET",
-                "arbeidsgiverId": "973861778",
-                "fom": "2017-01-01",
-                "tom": "9999-12-31",
-                "arbeidsforholdId": null,
-                "arbeidsforholdType": {
-                  "kode": "ARBEID",
-                  "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
-                },
-                "aktørId": null,
-                "skalBrukes": null
-              }
-            ]
+            "arbeidsforholdType": {
+              "kode": "ARBEID",
+              "kodeverk": "OPPTJENING_AKTIVITET_TYPE"
+            }
           }
         ]
-      },
-      "vurderBesteberegning": null
-    },
-    "andelerMedGraderingUtenBG": null,
+      }
+    ],
+    "grunnbeløp": 99858.0,
     "hjemmel": {
       "kode": "F_14_7_8_30",
       "kodeverk": "BG_HJEMMEL"
     },
-    "faktaOmFordeling": null
+    "erBestegeregnet": false
   },
   "mottattdokument": [
     {

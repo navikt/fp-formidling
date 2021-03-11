@@ -27,7 +27,6 @@ public enum DokumentMalType implements Kodeverdi {
     FORLENGET_MEDL_DOK(DokumentMalTypeKode.FORLENGET_MEDL_DOK, "Forlenget saksbehandlingstid - medlemskap", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING_IKKE_SENDT, DoksysKode.FORLEN),
     FORLENGET_TIDLIG_SOK(DokumentMalTypeKode.FORLENGET_TIDLIG_SOK, "Forlenget saksbehandlingstid - Tidlig søknad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FORLEN),
     FORLENGET_OPPTJENING(DokumentMalTypeKode.FORLENGET_OPPTJENING, "Forlenget saksbehandlingstid - Venter Opptjening",TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FORLEN),
-    INNSYNSKRAV_SVAR(DokumentMalTypeKode.INNSYNSKRAV_SVAR, "Svar på innsynskrav", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INSSKR),
     INNVILGELSE_FORELDREPENGER_DOK(DokumentMalTypeKode.INNVILGELSE_FORELDREPENGER_DOK, "Innvilgelsesbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNVFP),
     OPPHØR_DOK(DokumentMalTypeKode.OPPHØR_DOK, "Opphør brev", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
     AVSLAG_FORELDREPENGER_DOK(DokumentMalTypeKode.AVSLAG_FORELDREPENGER_DOK, "Avslagsbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.AVSLFP ),
@@ -78,6 +77,8 @@ public enum DokumentMalType implements Kodeverdi {
     UENDRETUTFALL_DOK(DokumentMalTypeKode.UENDRETUTFALL_DOK, "Uendret utfall", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.UENDRE), //NOSONAR
     @Deprecated
     INFO_TIL_ANNEN_FORELDER_DOK(DokumentMalTypeKode.INFO_TIL_ANNEN_FORELDER_DOK, "Informasjonsbrev til den andre forelderen", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
+    @Deprecated
+    INNSYNSKRAV_SVAR(DokumentMalTypeKode.INNSYNSKRAV_SVAR, "Svar på innsynskrav", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INSSKR), //NOSONAR
 
     UDEFINERT("-"),
 

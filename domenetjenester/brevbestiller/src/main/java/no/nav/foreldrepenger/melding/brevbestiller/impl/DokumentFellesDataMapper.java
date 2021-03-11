@@ -53,11 +53,6 @@ public class DokumentFellesDataMapper {
 
         final AktørId søkersAktørId = domeneobjektProvider.hentFagsakBackend(behandling).getAktørId();
 
-        if (!harLenkeForVerge(behandling)) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId, Optional.empty());
-            return;
-        }
-
         Optional<Verge> vergeOpt = domeneobjektProvider.hentVerge(behandling);
         if (vergeOpt.isEmpty()) {
             opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, søkersAktørId, søkersAktørId, Optional.empty());
@@ -76,11 +71,6 @@ public class DokumentFellesDataMapper {
         } else if (verge.getOrganisasjonsnummer() != null) {
             opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, dokumentHendelse, verge, søkersAktørId, Optional.of( DokumentFelles.Kopi.NEI));// orginalen går til verge
         }
-    }
-
-    private boolean harLenkeForVerge(Behandling behandling) {
-        return behandling.getResourceLinker().stream()
-                .anyMatch(link -> "soeker-verge".equals(link.getRel()));
     }
 
     private void opprettDokumentDataForOrganisasjonsMottaker(Behandling behandling,

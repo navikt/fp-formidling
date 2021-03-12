@@ -38,17 +38,17 @@ import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 public class AvslagEngangsstønadDokumentdataMapper implements DokumentdataMapper {
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
-    private PersonAdapter tpsTjeneste;
+    private PersonAdapter personAdapter;
 
     AvslagEngangsstønadDokumentdataMapper() {
         //CDI
     }
 
     @Inject
-    public AvslagEngangsstønadDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider, PersonAdapter tpsTjeneste) {
+    public AvslagEngangsstønadDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider, PersonAdapter personAdapter) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
-        this.tpsTjeneste = tpsTjeneste;
+        this.personAdapter = personAdapter;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class AvslagEngangsstønadDokumentdataMapper implements DokumentdataMappe
     }
 
     private String hentKjønnOgMapRelasjonsrolle(AktørId aktørId) {
-        var kjønn = tpsTjeneste.hentBrukerForAktør(aktørId).map(Personinfo::getKjønn).orElseThrow();
+        var kjønn = personAdapter.hentBrukerForAktør(aktørId).map(Personinfo::getKjønn).orElseThrow();
         return NavBrukerKjønn.MANN.equals(kjønn) ? RelasjonsRolleType.FARA.getKode() : RelasjonsRolleType.MEDMOR.getKode();
     }
 

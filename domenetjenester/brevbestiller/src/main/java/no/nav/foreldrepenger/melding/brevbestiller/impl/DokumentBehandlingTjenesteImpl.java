@@ -67,19 +67,24 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
         List<DokumentMalType> fjernes = kandidater.stream()
                 .filter(dm -> !dm.erTilgjengeligForManuellUtsendelse() || malSkalIkkeTilgjengeliggjøresForManuellUtsendelse(dm))
                 .collect(Collectors.toList());
-        if (harBehandledeAksjonspunktVarselOmRevurdering(aksjonspunkter)) {
+        if (harAksjonspunktVarselOmRevurdering(aksjonspunkter)) {
             fjernes.add(DokumentMalType.FORLENGET_DOK);
+            fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID);
             fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);
+            fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
             fjernes.add(DokumentMalType.REVURDERING_DOK);
             fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING);
         } else if (behandling.erKlage()) {
             fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);
+            fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
             fjernes.add(DokumentMalType.REVURDERING_DOK);
             fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING);
         } else if (behandling.erRevurdering()) {
             if (!automatiskOpprettet) {
                 fjernes.add(DokumentMalType.FORLENGET_DOK);
+                fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID);
                 fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);
+                fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
             }
         } else {
             fjernes.add(DokumentMalType.REVURDERING_DOK);
@@ -88,7 +93,7 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
         return fjernes;
     }
 
-    private static boolean harBehandledeAksjonspunktVarselOmRevurdering(List<Aksjonspunkt> aksjonspunkter) {
+    private static boolean harAksjonspunktVarselOmRevurdering(List<Aksjonspunkt> aksjonspunkter) {
         return aksjonspunkter.stream()
                 .anyMatch(ap -> ap.getAksjonspunktDefinisjon().equals(AksjonspunktDefinisjon.VARSEL_REVURDERING_ETTERKONTROLL) ||
                         ap.getAksjonspunktDefinisjon().equals(AksjonspunktDefinisjon.VARSEL_REVURDERING_MANUELL));

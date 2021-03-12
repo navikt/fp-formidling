@@ -63,7 +63,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
 
     private ObjectFactory objectFactory = new ObjectFactory();
     private BrevParametere brevParametere;
-    private PersonAdapter tpsTjeneste;
+    private PersonAdapter personAdapter;
 
     public InnvilgelseForeldrepengerMapper() {
         //CDI
@@ -72,10 +72,10 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
     @Inject
     public InnvilgelseForeldrepengerMapper(DomeneobjektProvider domeneobjektProvider,
                                            BrevParametere brevParametere,
-                                           PersonAdapter tpsTjeneste) {
+                                           PersonAdapter personAdapter) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
-        this.tpsTjeneste = tpsTjeneste;
+        this.personAdapter = personAdapter;
     }
 
     @Override
@@ -249,7 +249,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
     }
 
     private RelasjonskodeKode utledRelasjonsrolle(FagsakBackend fagsak) {
-        var kjønn = tpsTjeneste.hentBrukerForAktør(fagsak.getAktørId()).map(Personinfo::getKjønn).orElseThrow();
+        var kjønn = personAdapter.hentBrukerForAktør(fagsak.getAktørId()).map(Personinfo::getKjønn).orElseThrow();
         return tilRelasjonskode(fagsak.getRelasjonsRolleType(), kjønn);
     }
 

@@ -5,10 +5,6 @@ public class DokumentMalTypeKode {
     //Mal hos team dokument
     public static final String INNHENT_DOK = "INNHEN";
     public static final String HENLEGG_BEHANDLING_DOK = "HENLEG";
-    public static final String FORLENGET_DOK = "FORLEN";
-    public static final String FORLENGET_MEDL_DOK = "FORLME";
-    public static final String FORLENGET_TIDLIG_SOK = "FORLTS";
-    public static final String FORLENGET_OPPTJENING = "FOROPT";
     public static final String INNVILGELSE_FORELDREPENGER_DOK = "INNVFP";
     public static final String OPPHØR_DOK = "OPPHOR";
     public static final String AVSLAG_FORELDREPENGER_DOK = "AVSLFP";
@@ -35,6 +31,9 @@ public class DokumentMalTypeKode {
     public static final String IKKE_SØKT = "IKKESO";
     public static final String INGEN_ENDRING = "INGEND";
     public static final String INFO_TIL_ANNEN_FORELDER ="INFOAF";
+    public static final String FORLENGET_SAKSBEHANDLINGSTID = "FORSAK";
+    public static final String FORLENGET_SAKSBEHANDLINGSTID_MEDL = "FORMED";
+    public static final String FORLENGET_SAKSBEHANDLINGSTID_TIDLIG = "FORTID";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
@@ -61,4 +60,10 @@ public class DokumentMalTypeKode {
     public static final String INFO_TIL_ANNEN_FORELDER_DOK = "INAFOR"; //NOSONAR
     @Deprecated
     public static final String INNSYNSKRAV_SVAR = "INSSKR"; //NOSONAR
+    @Deprecated
+    public static final String FORLENGET_DOK = "FORLEN"; //NOSONAR
+    @Deprecated
+    public static final String FORLENGET_MEDL_DOK = "FORLME"; //NOSONAR
+    @Deprecated
+    public static final String FORLENGET_TIDLIG_SOK = "FORLTS"; //NOSONAR
 }

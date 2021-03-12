@@ -21,7 +21,7 @@ public class ArbeidsgiverTjeneste {
 
     private static final long CACHE_ELEMENT_LIVE_TIME_MS = TimeUnit.MILLISECONDS.convert(12, TimeUnit.HOURS);
     private static final long SHORT_CACHE_ELEMENT_LIVE_TIME_MS = TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
-    private PersonAdapter tpsTjeneste;
+    private PersonAdapter personAdapter;
     private LRUCache<String, ArbeidsgiverOpplysninger> cache = new LRUCache<>(1000, CACHE_ELEMENT_LIVE_TIME_MS);
     private LRUCache<String, ArbeidsgiverOpplysninger> failBackoffCache = new LRUCache<>(100, SHORT_CACHE_ELEMENT_LIVE_TIME_MS);
     private VirksomhetTjeneste virksomhetTjeneste;
@@ -31,8 +31,8 @@ public class ArbeidsgiverTjeneste {
     }
 
     @Inject
-    public ArbeidsgiverTjeneste(PersonAdapter tpsTjeneste, VirksomhetTjeneste virksomhetTjeneste) {
-        this.tpsTjeneste = tpsTjeneste;
+    public ArbeidsgiverTjeneste(PersonAdapter personAdapter, VirksomhetTjeneste virksomhetTjeneste) {
+        this.personAdapter = personAdapter;
         this.virksomhetTjeneste = virksomhetTjeneste;
     }
 
@@ -82,7 +82,7 @@ public class ArbeidsgiverTjeneste {
 
     private Optional<Personinfo> hentInformasjonFraTps(String arbeidsgiver) {
         try {
-            return tpsTjeneste.hentBrukerForAktør(new AktørId(arbeidsgiver));
+            return personAdapter.hentBrukerForAktør(new AktørId(arbeidsgiver));
         } catch (VLException|IllegalArgumentException feil) {
             // Ønsker ikke å gi GUI problemer ved å eksponere exceptions
             return Optional.empty();

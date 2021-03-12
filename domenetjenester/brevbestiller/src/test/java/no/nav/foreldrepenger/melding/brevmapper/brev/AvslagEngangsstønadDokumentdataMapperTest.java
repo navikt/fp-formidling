@@ -52,7 +52,7 @@ class AvslagEngangsstønadDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
     @Mock
-    private PersonAdapter tpsTjeneste = mock(PersonAdapter.class);
+    private PersonAdapter personAdapter = mock(PersonAdapter.class);
 
     private AvslagEngangsstønadDokumentdataMapper avslagEngangsstønadDokumentdataMapper;
 
@@ -66,9 +66,9 @@ class AvslagEngangsstønadDokumentdataMapperTest {
                 .medNavn("Nav Navesen")
                 .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
                 .build();
-        lenient().when(tpsTjeneste.hentBrukerForAktør(any())).thenReturn(Optional.of(personinfo));
+        lenient().when(personAdapter.hentBrukerForAktør(any())).thenReturn(Optional.of(personinfo));
 
-        avslagEngangsstønadDokumentdataMapper = new AvslagEngangsstønadDokumentdataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider, tpsTjeneste);
+        avslagEngangsstønadDokumentdataMapper = new AvslagEngangsstønadDokumentdataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider, personAdapter);
     }
 
     @Test

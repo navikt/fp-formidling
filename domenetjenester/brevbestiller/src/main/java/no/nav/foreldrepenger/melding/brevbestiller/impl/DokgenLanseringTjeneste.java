@@ -15,6 +15,7 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.IKKE_SØKT,
             DokumentMalType.VARSEL_OM_REVURDERING,
             DokumentMalType.INGEN_ENDRING,
+            DokumentMalType.INNSYN_SVAR,
             DokumentMalType.INFOBREV_TIL_ANNEN_FORELDER);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(
             DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
@@ -37,7 +38,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.HENLEGG_BEHANDLING_DOK, DokumentMalType.INFO_OM_HENLEGGELSE,
             DokumentMalType.INNSYNSKRAV_SVAR, DokumentMalType.INNSYN_SVAR);
     private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_PROD = Map.of(
-            DokumentMalType.REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING);
+            DokumentMalType.REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING,
+            DokumentMalType.INNSYNSKRAV_SVAR, DokumentMalType.INNSYN_SVAR);
 
     public static boolean malSkalBrukeDokgen(DokumentMalType dokumentMalType) {
         if (ENV.isProd()) {

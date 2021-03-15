@@ -4,7 +4,6 @@ public class DokumentMalTypeKode {
 
     //Mal hos team dokument
     public static final String INNHENT_DOK = "INNHEN";
-    public static final String HENLEGG_BEHANDLING_DOK = "HENLEG";
     public static final String INNVILGELSE_FORELDREPENGER_DOK = "INNVFP";
     public static final String OPPHØR_DOK = "OPPHOR";
     public static final String AVSLAG_FORELDREPENGER_DOK = "AVSLFP";
@@ -66,4 +65,7 @@ public class DokumentMalTypeKode {
     public static final String FORLENGET_MEDL_DOK = "FORLME"; //NOSONAR
     @Deprecated
     public static final String FORLENGET_TIDLIG_SOK = "FORLTS"; //NOSONAR
+    @Deprecated
+    public static final String HENLEGG_BEHANDLING_DOK = "HENLEG"; //NOSONAR
+
 }

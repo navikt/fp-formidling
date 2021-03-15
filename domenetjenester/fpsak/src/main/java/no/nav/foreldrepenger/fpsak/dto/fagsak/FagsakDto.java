@@ -2,18 +2,17 @@ package no.nav.foreldrepenger.fpsak.dto.fagsak;
 
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
-public class FagsakBackendDto {
-    //private Long saksnummer;
-    private String saksnummerString;
+public class FagsakDto {
+    private String saksnummer;
     private KodeDto relasjonsRolleType;
     private String aktoerId;
 
-    public FagsakBackendDto() {
+    public FagsakDto() {
         // Injiseres i test
     }
 
-    public String getSaksnummerString() {
-        return saksnummerString;
+    public String getSaksnummer() {
+        return saksnummer;
     }
 
     public KodeDto getRelasjonsRolleType() {

@@ -72,7 +72,7 @@ public class DomeneobjektProvider {
         if (behandling.harFagsakBackend()) {
             return behandling.getFagsakBackend();
         }
-        var fagsak = FagsakDtoMapper.mapFagsakBackendFraDto(behandlingRestKlient.hentFagsakBackend(behandling.getResourceLinker()));
+        var fagsak = FagsakDtoMapper.mapFagsakBackendFraDto(behandlingRestKlient.hentFagsak(behandling.getResourceLinker()));
         behandling.leggtilFagsakBackend(fagsak);
         return fagsak;
     }

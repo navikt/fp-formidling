@@ -28,7 +28,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatMedUttaksplanDto;
-import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakBackendDto;
+import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
@@ -223,10 +223,11 @@ public class BehandlingRestKlient {
                 .findFirst().flatMap(link -> hentDtoFraLink(link, SvangerskapspengerUttakResultatDto.class));
     }
 
-    public FagsakBackendDto hentFagsakBackend(List<BehandlingResourceLink> resourceLinker) {
+
+    public FagsakDto hentFagsak(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
-                .filter(dto -> "fagsak-backend".equals(dto.getRel()))
-                .findFirst().flatMap(link -> hentDtoFraLink(link, FagsakBackendDto.class))
+                .filter(dto -> "fagsak".equals(dto.getRel()))
+                .findFirst().flatMap(link -> hentDtoFraLink(link, FagsakDto.class))
                 .orElseThrow(() -> {
                     throw new IllegalStateException("Klarte ikke hente fagsak for behandling: " + hentBehandlingId(resourceLinker));
                 });

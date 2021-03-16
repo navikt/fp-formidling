@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import java.util.Map;
-import java.util.Set;
-
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.util.env.Environment;
+
+import java.util.Map;
+import java.util.Set;
 
 public class DokgenLanseringTjeneste {
 
@@ -14,6 +14,7 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.AVSLAG_ENGANGSSTØNAD,
             DokumentMalType.IKKE_SØKT,
             DokumentMalType.VARSEL_OM_REVURDERING,
+            DokumentMalType.INFO_OM_HENLEGGELSE,
             DokumentMalType.INGEN_ENDRING,
             DokumentMalType.INNSYN_SVAR,
             DokumentMalType.INFOBREV_TIL_ANNEN_FORELDER);
@@ -46,6 +47,7 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.INNSYNSKRAV_SVAR, DokumentMalType.INNSYN_SVAR);
     private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_PROD = Map.of(
             DokumentMalType.REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING,
+            DokumentMalType.HENLEGG_BEHANDLING_DOK, DokumentMalType.INFO_OM_HENLEGGELSE,
             DokumentMalType.INNSYNSKRAV_SVAR, DokumentMalType.INNSYN_SVAR);
 
     public static boolean malSkalBrukeDokgen(DokumentMalType dokumentMalType) {

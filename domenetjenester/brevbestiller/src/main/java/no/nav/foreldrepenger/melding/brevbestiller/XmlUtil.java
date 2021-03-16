@@ -1,18 +1,15 @@
 package no.nav.foreldrepenger.melding.brevbestiller;
 
-import java.time.LocalDate;
+import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
+import org.w3c.dom.Element;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
-
-import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
-import no.nav.vedtak.feil.FeilFactory;
+import java.time.LocalDate;
 
 public class XmlUtil {
     private XmlUtil() {
@@ -38,7 +35,7 @@ public class XmlUtil {
                     DatatypeConstants.FIELD_UNDEFINED,
                     DatatypeConstants.FIELD_UNDEFINED);
         } catch (DatatypeConfigurationException e) {
-            throw FeilFactory.create(DokumentBestillerFeil.class).datokonverteringsfeil(dato.toString(), e).toException();
+            throw DokumentBestillerFeil.datokonverteringsfeil(dato.toString(), e);
 
         }
     }

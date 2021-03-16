@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
-import java.util.Objects;
-
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.BehandlingsTypeKode;
+
+import java.util.Objects;
 
 public class InnhentingMapper {
 
@@ -22,6 +22,6 @@ public class InnhentingMapper {
         } else if (Objects.equals(vlKode, BehandlingTypeKonstanter.ENDRINGSSØKNAD)) {
             return BehandlingsTypeKode.ENDRINGSSØKNAD;
         }
-        throw DokumentMapperFeil.FACTORY.innhentDokumentasjonKreverGyldigBehandlingstype(vlKode).toException();
+        throw DokumentMapperFeil.innhentDokumentasjonKreverGyldigBehandlingstype(vlKode);
     }
 }

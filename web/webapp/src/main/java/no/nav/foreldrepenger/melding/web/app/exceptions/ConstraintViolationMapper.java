@@ -1,10 +1,8 @@
 package no.nav.foreldrepenger.melding.web.app.exceptions;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import org.hibernate.validator.internal.engine.path.PathImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -12,12 +10,11 @@ import javax.validation.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
-
-import org.hibernate.validator.internal.engine.path.PathImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import no.nav.vedtak.feil.Feil;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViolationException> {
 
@@ -32,13 +29,13 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
             String feltNavn = getFeltNavn(constraintViolation.getPropertyPath());
             feilene.add(new FeltFeilDto(feltNavn, constraintViolation.getMessage(), null));
         }
-        List<String> feltNavn = feilene.stream().map(felt -> felt.getNavn()).collect(Collectors.toList());
+        List<String> feltNavn = feilene.stream().map(FeltFeilDto::getNavn).collect(Collectors.toList());
 
-        Feil feil = FeltValideringFeil.FACTORY.feltverdiKanIkkeValideres(feltNavn);
-        feil.log(log);
+        var feil = FeltValideringFeil.feltverdiKanIkkeValideres(feltNavn);
+        log.warn(feil.getMessage());
         return Response
                 .status(Response.Status.BAD_REQUEST)
-                .entity(new FeilDto(feil.getFeilmelding(), feilene))
+                .entity(new FeilDto(feil.getMessage(), feilene))
                 .type(MediaType.APPLICATION_JSON)
                 .build();
     }

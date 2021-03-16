@@ -35,8 +35,8 @@
 
 
         <!-- felles artifakter -->
-        <felles.version>3.0.91</felles.version>
-        <prosesstask.version>2.5.15</prosesstask.version>
+        <felles.version>3.1.11</felles.version>
+        <prosesstask.version>2.5.16</prosesstask.version>
         <kontrakter.version>5.1-20201112050232-45aa18d</kontrakter.version>
 
         <!-- Eksterne -->
@@ -47,6 +47,8 @@
         <cxf.version>3.4.1</cxf.version>
         <jupiter.version>5.7.1</jupiter.version>
         <resteasy.version>4.6.0.Final</resteasy.version>
+        <hikari.version>4.0.1</hikari.version>
+        <threeten-extra.version>1.5.0</threeten-extra.version>
     </properties>
 
     <prerequisites>
@@ -59,17 +61,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.fasterxml.jackson</groupId>
-                <artifactId>jackson-bom</artifactId>
-                <version>2.12.1</version>
+                <groupId>no.nav.foreldrepenger.felles</groupId>
+                <artifactId>felles-root</artifactId>
+                <version>${felles.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
-            </dependency>
-            <dependency>
-                <!-- overstyrer her sålenge fp-felles inkluderer eldre versjon. -->
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-core</artifactId>
-                <version>7.6.0</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.kontrakter</groupId>
@@ -81,13 +77,6 @@
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>felles</artifactId>
-                <version>${felles.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.felles</groupId>
-                <artifactId>felles-bom</artifactId>
                 <version>${felles.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
@@ -226,6 +215,32 @@
                 <version>${project.version}</version>
                 <type>jar</type>
             </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>2.12.1</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.threeten</groupId>
+                <artifactId>threeten-extra</artifactId>
+                <version>${threeten-extra.version}</version>
+            </dependency>
+
+            <dependency>
+                <!-- overstyrer her sålenge fp-felles inkluderer eldre versjon. -->
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-core</artifactId>
+                <version>7.6.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka-streams</artifactId>
@@ -267,12 +282,6 @@
                 <groupId>no.nav.tjenester.fim</groupId>
                 <artifactId>nav-fim-dokumentproduksjon-v2-tjenestespesifikasjon</artifactId>
                 <version>2.1.8</version>
-                <classifier>jaxws</classifier>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.tjenester</groupId>
-                <artifactId>nav-dokumentproduksjon-v3-tjenestespesifikasjon</artifactId>
-                <version>3.3.4</version>
                 <classifier>jaxws</classifier>
             </dependency>
 
@@ -340,8 +349,7 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish</groupId>
-                <artifactId>javax.el</artifactId>
-                <version>3.0.1-b12</version>
+                <artifactId>jakarta.el</artifactId>
             </dependency>
             <dependency>
                 <!-- velger en transitiv avhengighet - felles ikke enig med seg selv -->

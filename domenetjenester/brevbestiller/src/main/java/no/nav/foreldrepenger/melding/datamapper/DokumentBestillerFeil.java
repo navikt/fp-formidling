@@ -1,40 +1,45 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
 import no.nav.foreldrepenger.melding.typer.AktørId;
-import no.nav.vedtak.feil.Feil;
-import no.nav.vedtak.feil.FeilFactory;
-import no.nav.vedtak.feil.LogLevel;
-import no.nav.vedtak.feil.deklarasjon.DeklarerteFeil;
-import no.nav.vedtak.feil.deklarasjon.FunksjonellFeil;
-import no.nav.vedtak.feil.deklarasjon.TekniskFeil;
+import no.nav.vedtak.exception.FunksjonellException;
+import no.nav.vedtak.exception.TekniskException;
 
-public interface DokumentBestillerFeil extends DeklarerteFeil {
-    DokumentBestillerFeil FACTORY = FeilFactory.create(DokumentBestillerFeil.class);
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-151666", feilmelding = "Kan ikke bestille dokument for behandling %s. Problemer ved generering av xml", logLevel = LogLevel.ERROR)
-    Feil xmlgenereringsfeil(String behandlingUuid, Exception cause);
+public class DokumentBestillerFeil {
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-151337", feilmelding = "Kan ikke konvertere dato %s til xmlformatert dato.", logLevel = LogLevel.ERROR)
-    Feil datokonverteringsfeil(String dokumentDataId, Exception cause);
+    public static TekniskException xmlgenereringsfeil(String behandlingUuid, Exception e) {
+        return new TekniskException("FPFORMIDLING-151666", String.format("Kan ikke bestille dokument for behandling %s. Problemer ved generering av xml", behandlingUuid), e);
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-220913", feilmelding = "Kan ikke produsere dokument, obligatorisk felt %s mangler innhold.", logLevel = LogLevel.ERROR)
-    Feil feltManglerVerdi(String feltnavn);
+    public static TekniskException datokonverteringsfeil(String dokumentDataId, Exception e) {
+        return new TekniskException("FPFORMIDLING-151337", String.format("Kan ikke konvertere dato %s til xmlformatert dato.", dokumentDataId), e);
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-368280", feilmelding = "Klarte ikke matche beregningsresultatperiode og %S for brev", logLevel = LogLevel.ERROR)
-    Feil kanIkkeMatchePerioder(String periode);
+    public static TekniskException feltManglerVerdi(String feltnavn, Exception e) {
+        return new TekniskException("FPFORMIDLING-220913", String.format("Kan ikke produsere dokument, obligatorisk felt %s mangler innhold", feltnavn), e);
+    }
 
-    @FunksjonellFeil(feilkode = "FPFORMIDLING-100507", feilmelding = "Klagebehandling med id %s mangler resultat av klagevurderingen", logLevel = LogLevel.WARN, løsningsforslag = "Fortsett saksbehandlingen")
-    Feil behandlingManglerKlageVurderingResultat(String behandlingUuid);
+    public static TekniskException kanIkkeMatchePerioder(String periode) {
+        return new TekniskException("FPFORMIDLING-368280", String.format("Klarte ikke matche beregningsresultatperiode og %S for brev", periode));
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-109013", feilmelding = "Fant ikke personinfo for aktørId: %s. Kan ikke bestille dokument", logLevel = LogLevel.WARN)
-    Feil fantIkkeFnrForAktørId(AktørId aktørId);
+    public static FunksjonellException behandlingManglerKlageVurderingResultat(String behandlingUuid) {
+        return new FunksjonellException("FPFORMIDLING-100507", String.format("Klagebehandling med id %s mangler resultat av klagevurderingen", behandlingUuid), "Fortsett saksbehandlingen" );
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-119013", feilmelding = "Fant ikke personinfo for aktørId: %s. Kan ikke bestille dokument", logLevel = LogLevel.WARN)
-    Feil fantIkkeAdresse(AktørId aktørId);
+    public static TekniskException fantIkkeFnrForAktørId(AktørId aktørId) {
+        return new TekniskException("FPFORMIDLING-109013", String.format("Fant ikke fødselsnummer for aktørId: %s. Kan ikke bestille dokument", aktørId));
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-666915", feilmelding = "Ingen brevmal konfigurert for denne type behandlingen %s.", logLevel = LogLevel.WARN)
-    Feil ingenBrevmalKonfigurert(String behandlingUuid);
+    public static TekniskException fantIkkeAdresse(AktørId aktørId) {
+        return new TekniskException("FPFORMIDLING-119013", String.format("Fant ikke adresse for aktørId: %s. Kan ikke bestille dokument", aktørId));
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-666915", feilmelding = "Kjenner ikke igjen ytelse %s for behandling %s.", logLevel = LogLevel.ERROR)
-    Feil kjennerIkkeYtelse(String ytelseType, String behandlingUuid);
+    public static TekniskException ingenBrevmalKonfigurert(String behandlingUuid) {
+        return new TekniskException("FPFORMIDLING-666915", String.format("Ingen brevmal konfigurert for denne type behandlingen %s.", behandlingUuid));
+    }
+
+    public static TekniskException kjennerIkkeYtelse(String ytelseType, String behandlingUuid) {
+        return new TekniskException("FPFORMIDLING-666915", String.format("Kjenner ikke igjen ytelse %s for behandling %s.", ytelseType, behandlingUuid));
+    }
 }

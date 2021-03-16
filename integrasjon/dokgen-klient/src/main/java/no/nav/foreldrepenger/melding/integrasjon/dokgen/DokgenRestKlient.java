@@ -1,19 +1,18 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen;
 
-import java.util.Optional;
-import java.util.Set;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
+import no.nav.vedtak.konfig.KonfigVerdi;
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
-import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
-import no.nav.vedtak.konfig.KonfigVerdi;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.Optional;
+import java.util.Set;
 
 @ApplicationScoped
 public class DokgenRestKlient {
@@ -44,10 +43,10 @@ public class DokgenRestKlient {
             LOGGER.info("Kaller Dokgen for generering av mal {} på språk {}", maltype, språkkode.getKode());
             pdf = oidcRestClient.postReturnsOptionalOfByteArray(uriBuilder.build(), dokumentdata);
         } catch (Exception e) {
-            throw DokgenFeil.FACTORY.feilVedKallTilDokgen(maltype, språkkode.getKode(), e).toException();
+            throw new TekniskException("FPFORMIDLING-946544", String.format("Fikk feil ved kall til dokgen for mal %s og språkkode %s", maltype, språkkode.getKode()), e);
         }
         if (pdf.isEmpty()) {
-            throw DokgenFeil.FACTORY.tomtSvarFraDokgen(maltype, språkkode.getKode()).toException();
+            throw new TekniskException("FPFORMIDLING-946543", String.format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", maltype, språkkode.getKode()));
         }
         return pdf.get();
     }

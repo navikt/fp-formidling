@@ -1,13 +1,5 @@
 package no.nav.foreldrepenger.melding.integrasjon.journal;
 
-import java.util.List;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -23,6 +15,13 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingTema;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
+import no.nav.vedtak.exception.TekniskException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.List;
 
 @ApplicationScoped
 @SuppressWarnings("java:S3358")
@@ -55,7 +54,7 @@ public class OpprettJournalpostTjeneste {
             LOG.info("Journalføring for behandling {} med malkode {} ferdig med response: {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode(), response.toString()); //NOSONAR
             return response;
         } catch (Exception e) {
-            throw JournalpostFeil.FACTORY.klarteIkkeOppretteJournalpost(dokumentHendelse.getBehandlingUuid().toString(), dokumentMalType.getKode(), e).toException();
+            throw new TekniskException("FPFORMIDLING-156533", String.format("Journalføring av brev for behandling %s med mal %s feilet.", dokumentHendelse.getBehandlingUuid().toString(), dokumentMalType.getKode()), e);
         }
     }
 

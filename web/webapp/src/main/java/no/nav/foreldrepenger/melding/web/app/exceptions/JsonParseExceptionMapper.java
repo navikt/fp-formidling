@@ -1,19 +1,12 @@
 package no.nav.foreldrepenger.melding.web.app.exceptions;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-
+import com.fasterxml.jackson.core.JsonParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonParseException;
-
-import no.nav.vedtak.feil.Feil;
-import no.nav.vedtak.feil.FeilFactory;
-import no.nav.vedtak.feil.LogLevel;
-import no.nav.vedtak.feil.deklarasjon.DeklarerteFeil;
-import no.nav.vedtak.feil.deklarasjon.TekniskFeil;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
 
 public class JsonParseExceptionMapper implements ExceptionMapper<JsonParseException> {
 
@@ -21,22 +14,12 @@ public class JsonParseExceptionMapper implements ExceptionMapper<JsonParseExcept
 
     @Override
     public Response toResponse(JsonParseException exception) {
-        Feil feil = JsonMappingFeil.FACTORY.jsonParseFeil(exception.getMessage(), exception);
-        feil.log(log);
+        var feil = String.format("FPFORMIDLING-299955: JSON-parsing feil: %s", exception.getMessage());
+        log.warn(feil);
         return Response
                 .status(Response.Status.BAD_REQUEST)
-                .entity(new FeilDto(feil.getFeilmelding()))
+                .entity(new FeilDto(feil))
                 .type(MediaType.APPLICATION_JSON)
                 .build();
     }
-
-
-    interface JsonMappingFeil extends DeklarerteFeil {
-
-        JsonMappingFeil FACTORY = FeilFactory.create(JsonMappingFeil.class);
-
-        @TekniskFeil(feilkode = "FPFORMIDLING-299955", feilmelding = "JSON-parsing feil: %s", logLevel = LogLevel.WARN)
-        Feil jsonParseFeil(String feilmelding, JsonParseException e);
-    }
-
 }

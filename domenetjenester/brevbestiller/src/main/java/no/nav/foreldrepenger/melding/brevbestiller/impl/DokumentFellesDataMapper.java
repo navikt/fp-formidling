@@ -1,12 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Optional;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
@@ -24,6 +17,12 @@ import no.nav.foreldrepenger.melding.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.melding.verge.Verge;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
 
 @ApplicationScoped
 public class DokumentFellesDataMapper {
@@ -82,7 +81,7 @@ public class DokumentFellesDataMapper {
         Virksomhet virksomhet = getVirksomhet(verge);
 
         Personinfo personinfoBruker = personAdapter.hentBrukerForAktør(aktørIdBruker)
-                .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeFnrForAktørId(aktørIdBruker).toException());
+                .orElseThrow(() -> DokumentBestillerFeil.fantIkkeFnrForAktørId(aktørIdBruker));
 
         String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
                 dokumentHendelse.getBehandlendeEnhetNavn() : behandling.getBehandlendeEnhetNavn();
@@ -107,12 +106,12 @@ public class DokumentFellesDataMapper {
                                                 AktørId aktørIdBruker,Optional<DokumentFelles.Kopi> erKopi) {
 
         Adresseinfo adresseinfo = innhentAdresseopplysningerForDokumentsending(aktørIdMottaker)
-                .orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeAdresse(aktørIdMottaker).toException());
+                .orElseThrow(() -> DokumentBestillerFeil.fantIkkeAdresse(aktørIdMottaker));
 
         DokumentAdresse adresse = fra(adresseinfo);
 
         var personinfoBruker = Objects.equals(aktørIdMottaker, aktørIdBruker) ? fraAdresseinfo(aktørIdBruker, adresseinfo) :
-                personAdapter.hentBrukerForAktør(aktørIdBruker).orElseThrow(() -> DokumentBestillerFeil.FACTORY.fantIkkeFnrForAktørId(aktørIdBruker).toException());
+                personAdapter.hentBrukerForAktør(aktørIdBruker).orElseThrow(() -> DokumentBestillerFeil.fantIkkeFnrForAktørId(aktørIdBruker));
 
         String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
                 dokumentHendelse.getBehandlendeEnhetNavn() : behandling.getBehandlendeEnhetNavn();

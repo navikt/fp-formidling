@@ -1,41 +1,41 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
-import no.nav.vedtak.feil.Feil;
-import no.nav.vedtak.feil.FeilFactory;
-import no.nav.vedtak.feil.LogLevel;
-import no.nav.vedtak.feil.deklarasjon.DeklarerteFeil;
-import no.nav.vedtak.feil.deklarasjon.TekniskFeil;
+import no.nav.vedtak.exception.TekniskException;
 
-public interface DokumentMapperFeil extends DeklarerteFeil {
-    DokumentMapperFeil FACTORY = FeilFactory.create(DokumentMapperFeil.class);
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-875839", feilmelding = "Ugyldig behandlingstype %s for bred med malkode INNHEN", logLevel = LogLevel.ERROR)
-    Feil innhentDokumentasjonKreverGyldigBehandlingstype(String behandlingstype);
+public class DokumentMapperFeil {
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-729430", feilmelding = "Ugyldig innsynsresultattype %s", logLevel = LogLevel.ERROR)
-    Feil innsynskravSvarHarUkjentResultatType(String type);
+    public static TekniskException innhentDokumentasjonKreverGyldigBehandlingstype(String behandlingstype) {
+        return new TekniskException("FPFORMIDLING-875839", String.format("Ugyldig behandlingstype %s for brev med malkode INNHEN.", behandlingstype));
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-782631", feilmelding = "Ugyldig vilkårtype %s", logLevel = LogLevel.ERROR)
-    Feil behandlingHarUkjentVilkårType(String type);
+    public static TekniskException innsynskravSvarHarUkjentResultatType(String type) {
+        return new TekniskException("FPFORMIDLING-729430", String.format("Ugyldig innsynsresultattype %s", type));
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-316712", feilmelding = "Feil i ferdigstilling av dokument med journalpostId %s", logLevel = LogLevel.ERROR)
-    Feil ferdigstillingAvDokumentFeil(JournalpostId journalpostId, Exception cause);
+    public static TekniskException ferdigstillingAvDokumentFeil(JournalpostId journalpostId, Exception e) {
+        return new TekniskException("FPFORMIDLING-316712", String.format("Feil i ferdigstilling av dokument med journalpostId %s", journalpostId), e );
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-795245", feilmelding = "Feil i knytting av vedlegg til dokument med id %s", logLevel = LogLevel.ERROR)
-    Feil knyttingAvVedleggFeil(String dokumentId, Exception cause);
+    public static TekniskException knyttingAvVedleggFeil(String dokumentId, Exception e) {
+        return new TekniskException("FPFORMIDLING-795245", String.format("Feil i knytting av vedlegg til dokument med id %s", dokumentId), e );
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-875835", feilmelding = "Ugyldig behandlingstype %s for brev med malkode HENLEG", logLevel = LogLevel.ERROR)
-    Feil HenleggBehandlingBrevKreverGyldigBehandlingstype(String behandlingstype);
+    public static TekniskException henleggBehandlingBrevKreverGyldigBehandlingstype(String behandlingstype) {
+        return new TekniskException("FPFORMIDLING-875835", String.format("Ugyldig behandlingstype %s for brev med malkode HENLEG", behandlingstype));
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-693339", feilmelding = "Mangler informasjon om lovhjemmel for avslagsårsak med kode %s.", logLevel = LogLevel.ERROR)
-    Feil manglerInfoOmLovhjemmelForAvslagsårsak(String avslagsårsakKode);
+    public static TekniskException manglerInfoOmLovhjemmelForAvslagsårsak(String avslagsårsakKode) {
+        return new TekniskException("FPFORMIDLING-693339", String.format("Mangler informasjon om lovhjemmel for avslagsårsak med kode %s.", avslagsårsakKode));
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-724872", feilmelding = "Feil ved produksjon av opphørdokument: Klarte ikke utlede opphørsdato fra uttaksplanen. Påkrevd når personstatus = 'DØD'", logLevel = LogLevel.ERROR)
-    Feil ingenOpphørsdatoVedPersonstatusDød();
+    public static TekniskException ingenOpphørsdatoVedPersonstatusDød() {
+        return new TekniskException("FPFORMIDLING-724872", "Feil ved produksjon av opphørdokument: Klarte ikke utlede opphørsdato fra uttaksplanen. Påkrevd når personstatus = 'DØD'");
+    }
 
-    @TekniskFeil(feilkode = "FPFORMIDLING-743452", feilmelding = "Feil ved produksjon av opphørdokument: Klarte ikke utlede startdato fra det opprinnelige vedtaket. Påkrevd når personstatus = 'DØD", logLevel = LogLevel.ERROR)
-    Feil ingenStartdatoVedPersonstatusDød();
-
+    public static TekniskException ingenStartdatoVedPersonstatusDød() {
+        return new TekniskException("FPFORMIDLING-743452", "Feil ved produksjon av opphørdokument: Klarte ikke utlede startdato fra det opprinnelige vedtaket. Påkrevd når personstatus = 'DØD'");
+    }
 }
 

@@ -1,26 +1,20 @@
 package no.nav.foreldrepenger.melding.integrasjon.kodeverk;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.xml.namespace.QName;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.SOAPFaultException;
-
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
-
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.FinnKodeverkListeRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.FinnKodeverkListeResponse;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkResponse;
-import no.nav.vedtak.feil.Feil;
-import no.nav.vedtak.feil.FeilFactory;
-import no.nav.vedtak.feil.LogLevel;
-import no.nav.vedtak.feil.deklarasjon.DeklarerteFeil;
-import no.nav.vedtak.feil.deklarasjon.IntegrasjonFeil;
+import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.konfig.KonfigVerdi;
+import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.cxf.ws.addressing.WSAddressingFeature;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.xml.namespace.QName;
+import javax.xml.ws.soap.SOAPFaultException;
 
 @ApplicationScoped
 public class KodeverkConsumer {
@@ -47,7 +41,7 @@ public class KodeverkConsumer {
         try {
             return kodeverkPortType.finnKodeverkListe(finnKodeverkListeRequest);
         } catch (SOAPFaultException e) { // NOSONAR
-            throw KodeverkWebServiceFeil.FACTORY.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e).toException();
+            throw new IntegrasjonException("FP-942048", String.format("SOAP tjenesten [ %s ] returnerte en SOAP Fault: %s", SERVICE_IDENTIFIER), e);
         }
     }
 
@@ -55,7 +49,7 @@ public class KodeverkConsumer {
         try {
             return kodeverkPortType.hentKodeverk(hentKodeverkRequest);
         } catch (SOAPFaultException e) { // NOSONAR
-            throw KodeverkWebServiceFeil.FACTORY.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e).toException();
+            throw new IntegrasjonException("FP-942048", String.format("SOAP tjenesten [ %s ] returnerte en SOAP Fault: %s", SERVICE_IDENTIFIER), e);
         }
     }
 
@@ -68,12 +62,5 @@ public class KodeverkConsumer {
         factoryBean.setAddress(endpointUrl);
         factoryBean.getFeatures().add(new WSAddressingFeature());
         return factoryBean.create(KodeverkPortType.class);
-    }
-
-    interface KodeverkWebServiceFeil extends DeklarerteFeil {
-        KodeverkWebServiceFeil FACTORY = FeilFactory.create(KodeverkWebServiceFeil.class);
-
-        @IntegrasjonFeil(feilkode = "FP-942048", feilmelding = "SOAP tjenesten [ %s ] returnerte en SOAP Fault: %s", logLevel = LogLevel.WARN)
-        Feil soapFaultIwebserviceKall(String webservice, WebServiceException soapException);
     }
 }

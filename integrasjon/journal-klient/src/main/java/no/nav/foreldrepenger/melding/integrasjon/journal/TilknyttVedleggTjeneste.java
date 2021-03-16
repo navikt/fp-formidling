@@ -4,6 +4,7 @@ import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentTilknytt;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.TilknyttVedleggRequest;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import no.nav.vedtak.exception.TekniskException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,7 @@ public class TilknyttVedleggTjeneste {
         try {
             tilknyttVedlegg(knyttesTilJournalpostId, knyttesFraJournalpostId, dokumentId);
         } catch (Exception e) {
-            throw JournalpostFeil.FACTORY.klarteIkkeKnytteVedleggTilJournalpost(knyttesFraJournalpostId, knyttesTilJournalpostId, dokumentId, e).toException();
+            throw new TekniskException("FPFORMIDLING-156534", String.format("Klarte ikke knytte %s til %s med dokumentId %s.", knyttesFraJournalpostId, knyttesTilJournalpostId,dokumentId ), e);
         }
     }
 

@@ -48,7 +48,7 @@ public class LovhjemmelUtil {
         } else if (fagsakYtelseType.gjelderForeldrepenger()) {
             return hentLovhjemlerFraJson(årsak, "FP");
         }
-        throw DokumentMapperFeil.FACTORY.manglerInfoOmLovhjemmelForAvslagsårsak(årsak.getKode()).toException();
+        throw DokumentMapperFeil.manglerInfoOmLovhjemmelForAvslagsårsak(årsak.getKode());
     }
 
     private static JsonNode parseLovDataFor(ÅrsakMedLovReferanse årsakKode) {

@@ -13,7 +13,6 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
             DokumentMalType.AVSLAG_ENGANGSSTØNAD,
             DokumentMalType.IKKE_SØKT,
-            DokumentMalType.INNHENTE_OPPLYSNINGER,
             DokumentMalType.VARSEL_OM_REVURDERING,
             DokumentMalType.INFO_OM_HENLEGGELSE,
             DokumentMalType.INGEN_ENDRING,
@@ -33,7 +32,7 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
-            DokumentMalType.INNHENT_DOK,
+            DokumentMalType.INNHENTE_OPPLYSNINGER,
             DokumentMalType.REVURDERING_DOK,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);

@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.melding.brevmapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erDød;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erEndringssøknad;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.konverterFritekstTilListe;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.ivaretaLinjeskiftIFritekst;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesDokumentdataBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
@@ -53,6 +53,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
 
         var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medFritekst(ivaretaLinjeskiftIFritekst(hendelse.getFritekst()));
 
         var dokumentdataBuilder = InnhenteOpplysningerDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
@@ -62,8 +63,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
                 .medDød(erDød(dokumentFelles))
                 .medKlage(behandling.erKlage())
                 .medSøknadDato(finnSøknadDato(behandling))
-                .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()))
-                .medDokumentListe(konverterFritekstTilListe(hendelse.getFritekst()));
+                .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()));
 
         return dokumentdataBuilder.build();
     }

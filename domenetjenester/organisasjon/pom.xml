@@ -2,26 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>no.nav.foreldrepenger.melding</groupId>
         <artifactId>domenetjenester</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>organisasjon</artifactId>
+    <name>FP-FORMIDLING :: Domenetjenester - Organisasjon</name>
     <packaging>jar</packaging>
-    <name>FP-FORMIDLING :: Domenetjenester - organisasjon</name>
 
     <dependencies>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-            <artifactId>ereg-klient</artifactId>
-        </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>domene</artifactId>
         </dependency>
-        <!-- test -->
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+            <artifactId>ereg-klient</artifactId>
+        </dependency>
     </dependencies>
 </project>

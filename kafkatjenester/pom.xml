@@ -1,29 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>no.nav.foreldrepenger.melding</groupId>
         <artifactId>fpformidling</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
-    <name>FP-FORMIDLING :: Kafkatjenester</name>
     <artifactId>kafkatjenester</artifactId>
+    <name>FP-FORMIDLING :: Kafkatjenester</name>
     <packaging>pom</packaging>
+
     <modules>
         <module>dokumenthistorikk</module>
         <module>dokumenthendelse</module>
         <module>kafkautil</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>kafkautil</artifactId>
-                <version>${revision}${sha1}${changelist}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 </project>

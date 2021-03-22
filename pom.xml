@@ -33,8 +33,7 @@
         <argLine>-Xms256m -Dlog.level.no.nav=WARN -Dfile.encoding=${project.build.sourceEncoding}</argLine>
         <jacoco.skip>true</jacoco.skip> <!-- default skip coverage -->
 
-
-        <!-- felles artifakter -->
+        <!-- Felles artefakter -->
         <felles.version>3.1.11</felles.version>
         <prosesstask.version>2.5.16</prosesstask.version>
         <kontrakter.version>5.1-20201112050232-45aa18d</kontrakter.version>
@@ -44,11 +43,25 @@
         <swagger.version>2.1.7</swagger.version>
         <swagger-ui.version>3.44.0</swagger-ui.version>
         <kafka.version>2.7.0</kafka.version>
-        <cxf.version>3.4.1</cxf.version>
-        <jupiter.version>5.7.1</jupiter.version>
+        <threeten-extra.version>1.5.0</threeten-extra.version>
+        <logstash.version>6.6</logstash.version>
+        <logback-syslog4j.version>1.0.0</logback-syslog4j.version>
+        <geronimo.jaspi.version>2.0.0</geronimo.jaspi.version>
+        <geronimo.osgi.version>1.1</geronimo.osgi.version>
+        <owaspencoder.version>1.2.3</owaspencoder.version>
+        <handlebars.version>4.2.0</handlebars.version>
+        <commons-collections.version>4.4</commons-collections.version>
+        <cxf.version>3.4.3</cxf.version>
         <resteasy.version>4.6.0.Final</resteasy.version>
         <hikari.version>4.0.1</hikari.version>
-        <threeten-extra.version>1.5.0</threeten-extra.version>
+        <flyway.version>7.6.0</flyway.version>
+        <postgresql.version>42.2.19</postgresql.version>
+        <vault-jdbc.version>1.3.7</vault-jdbc.version>
+        <vault-java-driver.version>3.1.0</vault-java-driver.version>
+        <assertj.version>3.19.0</assertj.version>
+        <jupiter.version>5.7.1</jupiter.version>
+        <mockito.version>3.8.0</mockito.version>
+        <reflections.version>0.9.12</reflections.version>
     </properties>
 
     <prerequisites>
@@ -68,16 +81,16 @@
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-                <artifactId>fp-kontrakter-root</artifactId>
-                <version>${kontrakter.version}</version>
+                <groupId>no.nav.foreldrepenger.felles</groupId>
+                <artifactId>felles</artifactId>
+                <version>${felles.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.felles</groupId>
-                <artifactId>felles</artifactId>
-                <version>${felles.version}</version>
+                <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+                <artifactId>fp-kontrakter-root</artifactId>
+                <version>${kontrakter.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -103,6 +116,12 @@
                 <type>pom</type>
             </dependency>
             <dependency>
+                <groupId>no.nav.vedtak.prosesstask</groupId>
+                <artifactId>prosesstask-legacy</artifactId>
+                <version>${prosesstask.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>dokumentlager</artifactId>
                 <version>${project.version}</version>
@@ -122,11 +141,6 @@
                 <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>migreringer</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.vedtak.prosesstask</groupId>
-                <artifactId>prosesstask-legacy</artifactId>
-                <version>${prosesstask.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
@@ -211,50 +225,24 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>kodeverk-klient</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>kafkautil</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <artifactId>poststed</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>webapp</artifactId>
                 <version>${project.version}</version>
                 <type>jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>com.fasterxml.jackson</groupId>
-                <artifactId>jackson-bom</artifactId>
-                <version>2.12.1</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.threeten</groupId>
-                <artifactId>threeten-extra</artifactId>
-                <version>${threeten-extra.version}</version>
-            </dependency>
-
-            <dependency>
-                <!-- overstyrer her sålenge fp-felles inkluderer eldre versjon. -->
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-core</artifactId>
-                <version>7.6.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.zaxxer</groupId>
-                <artifactId>HikariCP</artifactId>
-                <version>${hikari.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka-streams</artifactId>
-                <version>${kafka.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka-clients</artifactId>
-                <version>${kafka.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.postgresql</groupId>
-                <artifactId>postgresql</artifactId>
-                <version>42.2.19</version>
             </dependency>
 
             <!-- Kontrakter -->
@@ -285,27 +273,94 @@
                 <classifier>jaxws</classifier>
             </dependency>
 
+            <!-- Database -->
             <dependency>
-                <groupId>org.jboss.resteasy</groupId>
-                <artifactId>resteasy-servlet-initializer</artifactId>
-                <version>${resteasy.version}</version>
+                <!-- Må overstyre her så lenge fp-felles inkluderer en eldre versjon -->
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-core</artifactId>
+                <version>${flyway.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgresql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>vault-jdbc</artifactId>
+                <version>${vault-jdbc.version}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>org.jboss.spec.javax.ws.rs</groupId>
-                        <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.jboss.spec.javax.servlet</groupId>
-                        <artifactId>jboss-servlet-api_3.1_spec</artifactId>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-simple</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>com.bettercloud</groupId>
+                <artifactId>vault-java-driver</artifactId>
+                <version>${vault-java-driver.version}</version>
+            </dependency>
+
+            <!-- Diverse -->
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-streams</artifactId>
+                <version>${kafka.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${kafka.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.threeten</groupId>
+                <artifactId>threeten-extra</artifactId>
+                <version>${threeten-extra.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http-jetty</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.owasp.encoder</groupId>
+                <artifactId>encoder</artifactId>
+                <version>${owaspencoder.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jknack</groupId>
+                <artifactId>handlebars</artifactId>
+                <version>${handlebars.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections.version}</version>
+            </dependency>
+
+            <!-- Resteasy -->
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-bom</artifactId>
                 <version>${resteasy.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-servlet-initializer</artifactId>
+                <version>${resteasy.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
@@ -333,36 +388,6 @@
                 <version>${resteasy.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-tree</artifactId>
-                <version>9.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-analysis</artifactId>
-                <version>9.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.weld.module</groupId>
-                <artifactId>weld-web</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.el</artifactId>
-            </dependency>
-            <dependency>
-                <!-- velger en transitiv avhengighet - felles ikke enig med seg selv -->
-                <groupId>com.sun.activation</groupId>
-                <artifactId>jakarta.activation</artifactId>
-                <version>2.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
             <!-- Metrics -->
             <dependency>
                 <groupId>io.prometheus</groupId>
@@ -385,11 +410,52 @@
                 <version>${prometheus.version}</version>
             </dependency>
 
+            <!-- Logging -->
+            <dependency>
+                <groupId>net.logstash.logback</groupId>
+                <artifactId>logstash-logback-encoder</artifactId>
+                <version>${logstash.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.papertrailapp</groupId>
+                <artifactId>logback-syslog4j</artifactId>
+                <version>${logback-syslog4j.version}</version>
+            </dependency>
+
+            <!-- Sikkerhet: Geronimo -->
+            <dependency>
+                <groupId>org.apache.geronimo.components</groupId>
+                <artifactId>geronimo-jaspi</artifactId>
+                <version>${geronimo.jaspi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-osgi-locator</artifactId>
+                <version>${geronimo.osgi.version}</version>
+            </dependency>
+
+            <!-- Swagger -->
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-jaxrs2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-core</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.webjars</groupId>
+                <artifactId>swagger-ui</artifactId>
+                <version>${swagger-ui.version}</version>
+            </dependency>
+
             <!-- Test -->
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.19.0</version>
+                <version>${assertj.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
@@ -404,86 +470,20 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>3.8.0</version>
-            </dependency>
-
-            <!-- Log -->
-            <dependency>
-                <groupId>net.logstash.logback</groupId>
-                <artifactId>logstash-logback-encoder</artifactId>
-                <version>6.6</version>
+                <version>${mockito.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.papertrailapp</groupId>
-                <artifactId>logback-syslog4j</artifactId>
-                <version>1.0.0</version>
-            </dependency>
-
-            <!-- Sikkerhet: Geronimo -->
-            <dependency>
-                <groupId>org.apache.geronimo.components</groupId>
-                <artifactId>geronimo-jaspi</artifactId>
-                <version>2.0.0</version>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${mockito.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-osgi-locator</artifactId>
-                <version>1.1</version>
-            </dependency>
-
-            <dependency>
-                <!-- Transitive avhengighet resolution for å sikre bestemt versjon -->
-                <groupId>org.owasp.encoder</groupId>
-                <artifactId>encoder</artifactId>
-                <version>1.2.3</version>
-            </dependency>
-            <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-compat-spec-parser</artifactId>
-                <version>1.0.54</version>
-            </dependency>
-            <dependency>
-                <groupId>io.swagger.core.v3</groupId>
-                <artifactId>swagger-jaxrs2</artifactId>
-                <version>${swagger.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.swagger.core.v3</groupId>
-                <artifactId>swagger-core</artifactId>
-                <version>${swagger.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.swagger.core.v3</groupId>
-                <artifactId>swagger-annotations</artifactId>
-                <version>${swagger.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.javaslang</groupId>
-                <artifactId>javaslang</artifactId>
-                <version>2.0.6</version>
-            </dependency>
-
-            <dependency>
-                <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
-                <groupId>io.github.classgraph</groupId>
-                <artifactId>classgraph</artifactId>
-                <version>4.8.102</version>
-            </dependency>
-            <!-- Java11 -->
-            <dependency>
-                <groupId>com.sun.xml.ws</groupId>
-                <artifactId>jaxws-rt</artifactId>
-                <version>2.3.3</version>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-junit-jupiter</artifactId>
-        </dependency>
-    </dependencies>
 
     <build>
         <resources>

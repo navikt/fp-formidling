@@ -2,30 +2,21 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>dokumentlager</artifactId>
         <groupId>no.nav.foreldrepenger.melding</groupId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>domene</artifactId>
     <name>FP-FORMIDLING :: Domene</name>
+
     <dependencies>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>migreringer</artifactId>
-            <scope>test</scope>
-            <type>test-jar</type>
-        </dependency>
-        <!-- Foreldrepengeprosjektet -->
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-db</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-util</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.sikkerhet</groupId>
@@ -56,15 +47,12 @@
             <artifactId>felles-testutilities</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <!--- bibliotek som brukes for å finne alle instanser av interface med deklarerte feil -->
-            <groupId>io.github.classgraph</groupId>
-            <artifactId>classgraph</artifactId>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>migreringer</artifactId>
             <scope>test</scope>
+            <type>test-jar</type>
         </dependency>
-
-
     </dependencies>
 
     <build>
@@ -82,6 +70,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>

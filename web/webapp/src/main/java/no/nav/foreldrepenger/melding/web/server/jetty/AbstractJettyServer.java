@@ -1,5 +1,13 @@
 package no.nav.foreldrepenger.melding.web.server.jetty;
 
+import java.io.File;
+import java.io.IOException;
+import java.security.Security;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.security.auth.message.config.AuthConfigFactory;
+
 import org.apache.geronimo.components.jaspi.AuthConfigFactoryImpl;
 import org.eclipse.jetty.annotations.AnnotationConfiguration;
 import org.eclipse.jetty.jaas.JAASLoginService;
@@ -18,13 +26,8 @@ import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.Configuration;
 import org.eclipse.jetty.webapp.WebAppConfiguration;
 import org.eclipse.jetty.webapp.WebAppContext;
-
-import javax.security.auth.message.config.AuthConfigFactory;
-import java.io.File;
-import java.io.IOException;
-import java.security.Security;
-import java.util.ArrayList;
-import java.util.List;
+import org.eclipse.jetty.webapp.WebInfConfiguration;
+import org.eclipse.jetty.webapp.WebXmlConfiguration;
 
 abstract class AbstractJettyServer {
 
@@ -34,6 +37,8 @@ abstract class AbstractJettyServer {
      */
     protected static final Configuration[] CONFIGURATIONS = new Configuration[]{
             new WebAppConfiguration(),
+            new WebInfConfiguration(),
+            new WebXmlConfiguration(),
             new AnnotationConfiguration(),
             new EnvConfiguration(),
             new PlusConfiguration(),

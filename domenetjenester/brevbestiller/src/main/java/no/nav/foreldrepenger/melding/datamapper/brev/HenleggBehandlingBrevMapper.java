@@ -68,7 +68,7 @@ public class HenleggBehandlingBrevMapper extends DokumentTypeMapper {
         if (Objects.equals(vlKode, BehandlingType.INNSYN.getKode())) {
             return BehandlingsTypeKode.INNSYN;
         }
-        throw DokumentMapperFeil.FACTORY.HenleggBehandlingBrevKreverGyldigBehandlingstype(vlKode).toException();
+        throw DokumentMapperFeil.henleggBehandlingBrevKreverGyldigBehandlingstype(vlKode);
     }
 
     private OpphavTypeKode utledOpphavType(DokumentHendelse hendelse, Behandling behandling) {

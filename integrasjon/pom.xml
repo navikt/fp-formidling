@@ -11,8 +11,8 @@
     </parent>
 
     <artifactId>integrasjon</artifactId>
-    <packaging>pom</packaging>
     <name>FP-FORMIDLING :: Integrasjon</name>
+    <packaging>pom</packaging>
 
     <modules>
         <module>dokumentkontrakter</module>
@@ -22,16 +22,4 @@
         <module>journal-klient</module>
         <module>kodeverk-klient</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-db</artifactId>
-        </dependency>
-    </dependencies>
-
 </project>

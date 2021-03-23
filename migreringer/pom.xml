@@ -10,28 +10,27 @@
     </parent>
 
     <artifactId>migreringer</artifactId>
-    <packaging>jar</packaging>
     <name>FP-FORMIDLING :: Database migreringer</name>
+    <packaging>jar</packaging>
     <description>Inneholder migreringsfiler for alle datasources brukt i fp-formidling</description>
 
     <dependencies>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-db</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-db</artifactId>
-        </dependency>
-        <!-- NAV -->
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-testutilities</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
-
         <pluginManagement>
             <plugins>
                 <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->

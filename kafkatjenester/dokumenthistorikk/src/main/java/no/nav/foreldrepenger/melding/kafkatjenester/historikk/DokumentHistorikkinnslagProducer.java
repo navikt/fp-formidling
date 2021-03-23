@@ -1,11 +1,6 @@
 package no.nav.foreldrepenger.melding.kafkatjenester.historikk;
 
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
+import no.nav.vedtak.konfig.KonfigVerdi;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -16,7 +11,10 @@ import org.apache.kafka.common.errors.AuthorizationException;
 import org.apache.kafka.common.errors.RetriableException;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-import no.nav.vedtak.konfig.KonfigVerdi;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
 
 @ApplicationScoped
 public class DokumentHistorikkinnslagProducer {
@@ -52,16 +50,16 @@ public class DokumentHistorikkinnslagProducer {
             producer.send(record)
                     .get();
         } catch (ExecutionException e) {
-            throw KafkaProducerFeil.FACTORY.uventetFeil(topic, e).toException();
+            throw KafkaProducerFeil.uventetFeil(topic, e);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw KafkaProducerFeil.FACTORY.uventetFeil(topic, e).toException();
+            throw KafkaProducerFeil.uventetFeil(topic, e);
         } catch (AuthenticationException | AuthorizationException e) {
-            throw KafkaProducerFeil.FACTORY.feilIPålogging(topic, e).toException();
+            throw KafkaProducerFeil.feilIPålogging(topic, e);
         } catch (RetriableException e) {
-            throw KafkaProducerFeil.FACTORY.retriableExceptionMotKaka(topic, e).toException();
+            throw KafkaProducerFeil.retriableExceptionMotKaka(topic, e);
         } catch (KafkaException e) {
-            throw KafkaProducerFeil.FACTORY.annenExceptionMotKafka(topic, e).toException();
+            throw KafkaProducerFeil.annenExceptionMotKafka(topic, e);
         }
     }
 

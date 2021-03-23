@@ -13,87 +13,14 @@
     <name>FP-FORMIDLING :: Prosesstask</name>
     <packaging>jar</packaging>
 
-
     <dependencies>
         <dependency>
-            <!-- Trengs for implementasjon av TaskManager -->
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-db</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-log</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles</groupId>
-            <artifactId>felles-feil</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-cdi</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.vedtak.prosesstask</groupId>
             <artifactId>prosesstask-legacy</artifactId>
-        </dependency>
-
-
-        <!-- trengs for workaround for HHH-11020 for å kunne kalle EntityManager.unwrap -->
-        <dependency>
-            <groupId>org.jboss.weld.se</groupId>
-            <artifactId>weld-se-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- REST felles -->
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles.sikkerhet</groupId>
-            <artifactId>felles-sikkerhet</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-
-        <dependency>
-            <!-- Trengs for å generere doc -->
-            <groupId>ca.szc.thirdparty.nl.jworks.markdown_to_asciidoc</groupId>
-            <artifactId>markdown_to_asciidoc</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <!-- for å bygge markup for sysdoc -->
-            <groupId>io.github.swagger2markup</groupId>
-            <artifactId>markup-document-builder</artifactId>
-            <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>nl.jworks.markdown_to_asciidoc</groupId>
-                    <artifactId>markdown_to_asciidoc</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <!-- for å generere prosesstask doc fra db -->
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <!-- for å teste generere prosesstask doc fra db -->
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-plus</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <!-- Test -->
@@ -102,12 +29,6 @@
             <artifactId>felles-testutilities</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
 </project>

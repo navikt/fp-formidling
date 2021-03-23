@@ -2,16 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>no.nav.foreldrepenger.melding</groupId>
         <artifactId>domenetjenester</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hendelse</artifactId>
-    <packaging>jar</packaging>
     <name>FP-FORMIDLING :: Domenetjenester - Hendelse</name>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>
@@ -23,20 +24,8 @@
             <artifactId>brevbestiller</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-cdi</artifactId>
-        </dependency>
-        <dependency>
             <groupId>no.nav.vedtak.prosesstask</groupId>
             <artifactId>prosesstask-legacy</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>prosesstask</artifactId>
-        </dependency>
-
-        <!-- NAV -->
-
-        <!-- Eksterne -->
     </dependencies>
 </project>

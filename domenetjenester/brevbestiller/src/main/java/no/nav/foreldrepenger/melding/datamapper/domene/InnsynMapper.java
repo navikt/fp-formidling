@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
-import java.util.Objects;
-
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynResultatType;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innsyn.InnsynResultatTypeKode;
+
+import java.util.Objects;
 
 public class InnsynMapper {
 
@@ -16,7 +16,7 @@ public class InnsynMapper {
         } else if (Objects.equals(internResultatTypeKode, InnsynResultatType.AVVIST)) {
             return InnsynResultatTypeKode.AVVIST;
         }
-        throw DokumentMapperFeil.FACTORY.innsynskravSvarHarUkjentResultatType(internResultatTypeKode.getKode()).toException();
+        throw DokumentMapperFeil.innsynskravSvarHarUkjentResultatType(internResultatTypeKode.getKode());
     }
 
 

@@ -2,39 +2,34 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>no.nav.foreldrepenger.melding</groupId>
         <artifactId>domenetjenester</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>poststed</artifactId>
+    <name>FP-FORMIDLING :: Domenetjenester - Poststed</name>
     <packaging>jar</packaging>
-    <name>FP-FORMIDLING :: Domenetjenester - poststed</name>
 
     <dependencies>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>kodeverk-klient</artifactId>
-            <version>${project.version}</version>
         </dependency>
-        <!-- test -->
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>domene</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.resteasy</groupId>
-            <artifactId>resteasy-cdi</artifactId>
+            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <artifactId>prosesstask</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.vedtak.prosesstask</groupId>
             <artifactId>prosesstask-legacy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>prosesstask</artifactId>
         </dependency>
     </dependencies>
 </project>

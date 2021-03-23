@@ -1,17 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import java.math.BigInteger;
-import java.util.Objects;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-
-import org.xml.sax.SAXException;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
@@ -36,6 +24,16 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.inntektsmeldingfortidl
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.ytelsefordeling.UtsettelseÅrsak;
 import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import org.xml.sax.SAXException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.math.BigInteger;
+import java.util.Objects;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.INNTEKTSMELDING_FOR_TIDLIG_DOK)
@@ -81,7 +79,7 @@ public class InntektsmeldingFørSøknadBrevMapper extends DokumentTypeMapper {
         } else if (Objects.equals(behandlingType, BehandlingType.REVURDERING)) {
             return BehandlingsTypeKode.REVURDERING;
         }
-        throw DokumentMapperFeil.FACTORY.innhentDokumentasjonKreverGyldigBehandlingstype(behandlingType.getKode()).toException();
+        throw DokumentMapperFeil.innhentDokumentasjonKreverGyldigBehandlingstype(behandlingType.getKode());
     }
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {

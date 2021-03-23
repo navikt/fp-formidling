@@ -1,19 +1,17 @@
 package no.nav.foreldrepenger.melding.poststed;
 
+import no.nav.foreldrepenger.melding.geografisk.Poststed;
+import no.nav.foreldrepenger.melding.geografisk.PoststedKodeverkRepository;
+import no.nav.vedtak.exception.IntegrasjonException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import no.nav.foreldrepenger.melding.geografisk.Poststed;
-import no.nav.foreldrepenger.melding.geografisk.PoststedKodeverkRepository;
-import no.nav.vedtak.exception.IntegrasjonException;
 
 @ApplicationScoped
 public
@@ -51,7 +49,7 @@ class PostnummerSynkroniseringTjeneste {
                 LOGGER.info("Har allerede Postnummer: versjon {} med dato {}", pnrInfo.getVersjon(), pnrInfo.getVersjonDato());
             }
         } catch (IntegrasjonException ex) {
-            throw KodeverkFeil.FACTORY.synkronoseringAvKodeverkFeilet(ex).toException();
+            throw new IntegrasjonException("FP-563155", "Synkronisering med kodeverk feilet", ex);
         }
     }
 

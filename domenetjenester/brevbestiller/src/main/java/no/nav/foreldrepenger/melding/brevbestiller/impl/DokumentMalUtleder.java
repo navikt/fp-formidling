@@ -59,7 +59,7 @@ class DokumentMalUtleder {
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
                 return DokumentMalType.AVSLAG_ENGANGSSTØNAD;
         }
-        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
+        throw DokumentBestillerFeil.ingenBrevmalKonfigurert(behandling.getUuid().toString());
     }
 
     private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling) {
@@ -71,7 +71,7 @@ class DokumentMalUtleder {
         } else if (behandlingsresultat.erOpphørt()) {
             return DokumentMalType.OPPHØR_DOK;
         }
-        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
+        throw DokumentBestillerFeil.ingenBrevmalKonfigurert(behandling.getUuid().toString());
     }
 
     private DokumentMalType mapSvangerskapspengerVedtaksbrev(Behandling behandling) {
@@ -79,7 +79,7 @@ class DokumentMalUtleder {
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
             return DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK;
         }
-        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
+        throw DokumentBestillerFeil.ingenBrevmalKonfigurert(behandling.getUuid().toString());
     }
 
     private boolean skalBenytteInnvilgelsesbrev(Behandlingsresultat behandlingsresultat) {
@@ -94,7 +94,7 @@ class DokumentMalUtleder {
         if (Boolean.TRUE.equals(hendelse.isGjelderVedtak())) {
             return utledVedtaksbrev(behandling, hendelse);
         }
-        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
+        throw DokumentBestillerFeil.ingenBrevmalKonfigurert(behandling.getUuid().toString());
     }
 
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
@@ -113,7 +113,7 @@ class DokumentMalUtleder {
         } else if (FagsakYtelseType.SVANGERSKAPSPENGER.equals(hendelse.getYtelseType())) {
             return mapSvangerskapspengerVedtaksbrev(behandling);
         }
-        throw DokumentBestillerFeil.FACTORY.kjennerIkkeYtelse(hendelse.getYtelseType().getKode(), behandling.getUuid().toString()).toException();
+        throw DokumentBestillerFeil.kjennerIkkeYtelse(hendelse.getYtelseType().getKode(), behandling.getUuid().toString());
     }
 
     private boolean erRevurderingMedUendretUtfall(Behandling behandling) {
@@ -156,7 +156,7 @@ class DokumentMalUtleder {
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
         KlageVurderingResultat klageVurderingResultat = klage.getGjeldendeKlageVurderingsresultat();
         if (klageVurderingResultat == null) {
-            throw DokumentBestillerFeil.FACTORY.behandlingManglerKlageVurderingResultat(behandling.getUuid().toString()).toException();
+            throw DokumentBestillerFeil.behandlingManglerKlageVurderingResultat(behandling.getUuid().toString());
         }
         KlageVurdering klagevurdering = klageVurderingResultat.getKlageVurdering();
 
@@ -170,6 +170,6 @@ class DokumentMalUtleder {
             return DokumentMalType.KLAGE_STADFESTET;
         }
 
-        throw DokumentBestillerFeil.FACTORY.ingenBrevmalKonfigurert(behandling.getUuid().toString()).toException();
+        throw DokumentBestillerFeil.ingenBrevmalKonfigurert(behandling.getUuid().toString());
     }
 }

@@ -1,12 +1,11 @@
 package no.nav.foreldrepenger.melding.datamapper.mal;
 
+import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
+import no.nav.vedtak.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
-import no.nav.vedtak.feil.FeilFactory;
-import no.nav.vedtak.util.StringUtils;
 
 public final class DokumentMalFelles {
 
@@ -60,7 +59,7 @@ public final class DokumentMalFelles {
         try {
             return opprettFlettefelt(feltnavn, feltverdi.toString());
         } catch (RuntimeException e) { //NOSONAR
-            throw FeilFactory.create(DokumentBestillerFeil.class).feltManglerVerdi(feltnavn).toException();
+            throw DokumentBestillerFeil.feltManglerVerdi(feltnavn, e);
         }
     }
 
@@ -68,7 +67,7 @@ public final class DokumentMalFelles {
         try {
             return opprettStrukturertFlettefelt(feltnavn, feltverdi.toString());
         } catch (RuntimeException e) { //NOSONAR
-            throw FeilFactory.create(DokumentBestillerFeil.class).feltManglerVerdi(feltnavn).toException();
+            throw DokumentBestillerFeil.feltManglerVerdi(feltnavn, e);
         }
     }
 }

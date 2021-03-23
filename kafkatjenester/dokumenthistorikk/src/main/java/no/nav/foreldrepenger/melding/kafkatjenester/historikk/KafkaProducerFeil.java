@@ -1,30 +1,25 @@
 package no.nav.foreldrepenger.melding.kafkatjenester.historikk;
 
+import no.nav.vedtak.exception.IntegrasjonException;
+import no.nav.vedtak.exception.ManglerTilgangException;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.RetriableException;
 
-import no.nav.vedtak.feil.Feil;
-import no.nav.vedtak.feil.FeilFactory;
-import no.nav.vedtak.feil.LogLevel;
-import no.nav.vedtak.feil.deklarasjon.DeklarerteFeil;
-import no.nav.vedtak.feil.deklarasjon.IntegrasjonFeil;
-import no.nav.vedtak.feil.deklarasjon.ManglerTilgangFeil;
+public class KafkaProducerFeil {
 
-public interface KafkaProducerFeil extends DeklarerteFeil {
+    public static ManglerTilgangException feilIPålogging(String topic, Exception e) {
+        return new ManglerTilgangException("FPFORMIDLINGKAFKA-821005", String.format("Feil i pålogging mot Kafka, topic:%s", topic), e);
+    }
 
-    KafkaProducerFeil FACTORY = FeilFactory.create(KafkaProducerFeil.class);
+    public static IntegrasjonException uventetFeil(String topic, Exception e) {
+        return new IntegrasjonException("FPFORMIDLINGKAFKA-925469", String.format("Uventet feil ved sending til Kafka, topic:%s", topic), e);
+    }
 
-    @ManglerTilgangFeil(feilkode = "FPFORMIDLINGKAFKA-821005", feilmelding = "Feil i pålogging mot Kafka, topic:%s", logLevel = LogLevel.ERROR)
-    Feil feilIPålogging(String topic, Exception e);
+    public static IntegrasjonException retriableExceptionMotKaka(String topic, RetriableException e) {
+        return new IntegrasjonException("FPFORMIDLINGKAFKA-127608", String.format("Fikk transient feil mot Kafka, kan prøve igjen, topic:%s", topic), e);
+    }
 
-    @IntegrasjonFeil(feilkode = "FPFORMIDLINGKAFKA-925469", feilmelding = "Uventet feil ved sending til Kafka, topic:%s", logLevel = LogLevel.WARN)
-    Feil uventetFeil(String topic, Exception e);
-
-    @IntegrasjonFeil(feilkode = "FPFORMIDLINGKAFKA-127608", feilmelding = "Fikk transient feil mot Kafka, kan prøve igjen, topic:%s", logLevel = LogLevel.WARN)
-    Feil retriableExceptionMotKaka(String topic, RetriableException e);
-
-    @IntegrasjonFeil(feilkode = "FPFORMIDLINGKAFKA-811208", feilmelding = "Fikk feil mot Kafka, topic:%s", logLevel = LogLevel.WARN)
-    Feil annenExceptionMotKafka(String topic, KafkaException e);
-
-
+    public static IntegrasjonException annenExceptionMotKafka(String topic, KafkaException e) {
+        return new IntegrasjonException("FPFORMIDLINGKAFKA-811208", String.format("Fikk feil mot Kafka, topic:%s", topic), e);
+    }
 }

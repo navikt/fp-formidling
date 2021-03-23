@@ -8,6 +8,7 @@ import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostR
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.TilknyttVedleggRequest;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.TilknyttVedleggResponse;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 import no.nav.vedtak.konfig.KonfigVerdi;
 import org.apache.http.client.utils.URIBuilder;
@@ -49,7 +50,7 @@ public class JournalpostRestKlient {
             var uri = new URIBuilder(endpoint).addParameter("forsoekFerdigstill", ""+ferdigstill).build();
             return restKlient.post(uri, request, OpprettJournalpostResponse.class);
         } catch (URISyntaxException e) {
-            throw JournalpostFeil.FACTORY.klarteIkkeOppretteUriForNyJournalpost(request.getSak().getArkivsaksnummer(), e).toException();
+            throw new TekniskException("FPFORMIDLING-156530", String.format("Feil ved oppretting av URI for opprettelse av ny journalpost til fagsak %s.", request.getSak().getArkivsaksnummer()), e);
         }
     }
 
@@ -69,7 +70,7 @@ public class JournalpostRestKlient {
                 LOG.info("Vedlegg tilknyttet {} OK", journalpostIdTil);
             }
         } catch (URISyntaxException | JsonProcessingException e) {
-            throw JournalpostFeil.FACTORY.klarteIkkeOppretteUriForTilknytningAvVedlegg(journalpostIdTil, request.toString(), e).toException();
+            throw new TekniskException("FPFORMIDLING-156531", String.format("Feil ved oppretting av URI for tilknytning av vedlegg til %s: %s.", journalpostIdTil, request.toString()), e);
         }
     }
 
@@ -80,7 +81,7 @@ public class JournalpostRestKlient {
             var uri = new URIBuilder(endpoint + tilknyttPath).build();
             restKlient.patch(uri, new FerdigstillJournalpostRequest("9999"));
         } catch (Exception e) {
-            throw JournalpostFeil.FACTORY.klarteIkkeFerdigstilleJournalpost(journalpostId, e).toException();
+            throw new TekniskException("FPFORMIDLING-156535", String.format("Klarte ikke ferdigstille %s.", journalpostId ), e);
         }
     }
 }

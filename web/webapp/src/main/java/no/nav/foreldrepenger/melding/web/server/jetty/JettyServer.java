@@ -1,16 +1,11 @@
 package no.nav.foreldrepenger.melding.web.server.jetty;
 
-import static no.nav.vedtak.util.env.Cluster.LOCAL;
-import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.sql.DataSource;
-
+import no.nav.foreldrepenger.melding.web.app.konfig.ApplicationConfig;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatabaseScript;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceRole;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceUtil;
+import no.nav.vedtak.isso.IssoApplication;
+import no.nav.vedtak.util.env.Environment;
 import org.eclipse.jetty.plus.jndi.EnvEntry;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
@@ -19,12 +14,15 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.melding.web.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatabaseScript;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceRole;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceUtil;
-import no.nav.vedtak.isso.IssoApplication;
-import no.nav.vedtak.util.env.Environment;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static no.nav.vedtak.util.env.Cluster.LOCAL;
+import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
 
 public class JettyServer extends AbstractJettyServer {
 
@@ -128,7 +126,7 @@ public class JettyServer extends AbstractJettyServer {
 
         List<Resource> resources = appClasses.stream().map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation())).collect(Collectors.toList());
 
-        metaData.setWebInfClassesDirs(resources);
+        metaData.setWebInfClassesResources(resources);
     }
 
     @Override

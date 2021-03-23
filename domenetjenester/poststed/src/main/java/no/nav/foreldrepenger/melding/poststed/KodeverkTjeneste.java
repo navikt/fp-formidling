@@ -1,17 +1,5 @@
 package no.nav.foreldrepenger.melding.poststed;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import no.nav.foreldrepenger.melding.integrasjon.kodeverk.KodeverkConsumer;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.EnkeltKodeverk;
@@ -24,7 +12,19 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.FinnKodeverkListeRequest
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.FinnKodeverkListeResponse;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkResponse;
+import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.util.Tuple;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class KodeverkTjeneste {
@@ -75,7 +75,7 @@ public class KodeverkTjeneste {
                 kodeverkKodeMap = oversettFraHentKodeverkResponse(response);
             }
         } catch (HentKodeverkHentKodeverkKodeverkIkkeFunnet ex) {
-            throw KodeverkFeil.FACTORY.hentKodeverkKodeverkIkkeFunnet(ex).toException();
+            throw new IntegrasjonException("FP-868813", "Kodeverk ikke funnet", ex);
         }
         return kodeverkKodeMap;
     }
@@ -86,7 +86,7 @@ public class KodeverkTjeneste {
                     .map(KodeverkTjeneste::oversettFraKode)
                     .collect(Collectors.toMap(KodeverkKode::getKode, kodeverkKode -> kodeverkKode));
         } else {
-            throw KodeverkFeil.FACTORY.hentKodeverkKodeverkTypeIkkeStøttet(response.getKodeverk().getClass().getSimpleName()).toException();
+            throw new IntegrasjonException("FP-402870", String.format("Kodeverktype ikke støttet: %s", response.getKodeverk().getClass().getSimpleName()));
         }
     }
 
@@ -108,9 +108,8 @@ public class KodeverkTjeneste {
     private static Optional<String> finnTerm(List<Term> termList) {
         Comparator<Kodeverkselement> vedGyldigFom = (e1, e2) -> e1.getGyldighetsperiode().get(0).getFom()
                 .compare(e2.getGyldighetsperiode().get(0).getFom());
-        String språk = NORSK_BOKMÅL;
         return termList.stream()
-                .filter(term -> term.getSpraak().compareToIgnoreCase(språk) == 0)
+                .filter(term -> term.getSpraak().compareToIgnoreCase(NORSK_BOKMÅL) == 0)
                 .max(vedGyldigFom)
                 .map(IdentifiserbarEntitet::getNavn);
     }

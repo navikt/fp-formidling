@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.dokumentproduksjon.v2;
 
-import javax.xml.ws.WebServiceException;
-
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.binding.DokumentproduksjonV2;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.binding.FerdigstillForsendelseDokumentUnderRedigering;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.binding.FerdigstillForsendelseJournalpostIkkeFunnet;
@@ -21,7 +19,8 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
-import no.nav.vedtak.felles.integrasjon.felles.ws.SoapWebServiceFeil;
+
+import javax.xml.ws.WebServiceException;
 
 public class DokumentproduksjonConsumerImpl implements DokumentproduksjonConsumer {
     private static final String SERVICE_IDENTIFIER = "DokumentproduksjonV2";
@@ -37,7 +36,7 @@ public class DokumentproduksjonConsumerImpl implements DokumentproduksjonConsume
         try {
             return port.produserIkkeredigerbartDokument(request);
         } catch (WebServiceException e) { //NOSONAR
-            throw SoapWebServiceFeil.FACTORY.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e).toException();
+            throw SoapWebServiceFeil.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e);
         }
     }
 
@@ -46,7 +45,7 @@ public class DokumentproduksjonConsumerImpl implements DokumentproduksjonConsume
         try {
             return port.produserDokumentutkast(request);
         } catch (WebServiceException e) { //NOSONAR
-            throw SoapWebServiceFeil.FACTORY.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e).toException();
+            throw SoapWebServiceFeil.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e);
         }
     }
 
@@ -58,7 +57,7 @@ public class DokumentproduksjonConsumerImpl implements DokumentproduksjonConsume
         try {
             port.ferdigstillForsendelse(request);
         } catch (WebServiceException e) { //NOSONAR
-            throw SoapWebServiceFeil.FACTORY.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e).toException();
+            throw SoapWebServiceFeil.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e);
         }
     }
 
@@ -74,7 +73,7 @@ public class DokumentproduksjonConsumerImpl implements DokumentproduksjonConsume
         try {
             port.knyttVedleggTilForsendelse(request);
         } catch (WebServiceException e) { //NOSONAR
-            throw SoapWebServiceFeil.FACTORY.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e).toException();
+            throw SoapWebServiceFeil.soapFaultIwebserviceKall(SERVICE_IDENTIFIER, e);
         }
     }
 }

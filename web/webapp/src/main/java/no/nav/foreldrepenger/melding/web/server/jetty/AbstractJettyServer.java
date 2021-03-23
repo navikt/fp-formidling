@@ -24,24 +24,19 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.Configuration;
+import org.eclipse.jetty.webapp.WebAppConfiguration;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 import org.eclipse.jetty.webapp.WebXmlConfiguration;
 
 abstract class AbstractJettyServer {
 
-    /**
-     * AbstractNetworkConnector#getHost()
-     *
-     * @see ServerConnector#openAcceptChannel()
-     */
-    //TODO (u139158): Trenger vi egentlig å sette denne? Spec ser ut til å si at det er eq med null, settes den default til null eller binder den mot et interface?
-
     protected static final String SERVER_HOST = "0.0.0.0";
     /**
      * nedstrippet sett med Jetty configurations for raskere startup.
      */
     protected static final Configuration[] CONFIGURATIONS = new Configuration[]{
+            new WebAppConfiguration(),
             new WebInfConfiguration(),
             new WebXmlConfiguration(),
             new AnnotationConfiguration(),

@@ -1,21 +1,20 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokdist;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.apache.http.client.utils.URIBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.melding.integrasjon.dokdist.dto.DistribuerJournalpostRequest;
 import no.nav.foreldrepenger.melding.integrasjon.dokdist.dto.DistribuerJournalpostResponse;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 import no.nav.vedtak.konfig.KonfigVerdi;
+import org.apache.http.client.utils.URIBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.Optional;
+import java.util.UUID;
 
 @ApplicationScoped
 public class DokdistRestKlient {
@@ -45,10 +44,10 @@ public class DokdistRestKlient {
             if (response.isPresent()) {
                 LOGGER.info("Distribuert {} med bestillingsId {}", journalpostId, response);
             } else {
-                throw DokdistFeil.FACTORY.tomtSvarFraDokdist(journalpostId).toException();
+                throw new TekniskException("FPFORMIDLING-647352", String.format("Fikk tomt svar ved kall til dokdist for %s.", journalpostId));
             }
         } catch (Exception e) {
-            throw DokdistFeil.FACTORY.feilVedKallTilDokdist(journalpostId, e).toException();
+            throw new TekniskException("FPFORMIDLING-647353", String.format("Fikk feil ved kall til dokdist for %s.", journalpostId), e);
         }
     }
 

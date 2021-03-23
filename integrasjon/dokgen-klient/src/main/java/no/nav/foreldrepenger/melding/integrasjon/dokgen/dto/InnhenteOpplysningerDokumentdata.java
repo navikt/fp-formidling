@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
-import java.util.List;
-
 public class InnhenteOpplysningerDokumentdata extends Dokumentdata {
     private boolean førstegangsbehandling;
     private boolean revurdering;
@@ -10,7 +8,6 @@ public class InnhenteOpplysningerDokumentdata extends Dokumentdata {
     private boolean klage;
     private String søknadDato;
     private String fristDato;
-    private List<String> dokumentListe;
 
     public static Builder ny() {
         return new Builder();
@@ -30,10 +27,6 @@ public class InnhenteOpplysningerDokumentdata extends Dokumentdata {
 
     public String getFristDato() {
         return fristDato;
-    }
-
-    public List<String> getDokumentListe() {
-        return dokumentListe;
     }
 
     public static class Builder {
@@ -80,11 +73,6 @@ public class InnhenteOpplysningerDokumentdata extends Dokumentdata {
 
         public Builder medFristDato(String fristDato) {
             this.kladd.fristDato = fristDato;
-            return this;
-        }
-
-        public Builder medDokumentListe(List<String> dokumentListe) {
-            this.kladd.dokumentListe = dokumentListe;
             return this;
         }
 

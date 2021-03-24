@@ -44,7 +44,7 @@
         <swagger.version>2.1.7</swagger.version>
         <swagger-ui.version>3.45.0</swagger-ui.version>
         <kafka.version>2.7.0</kafka.version>
-        <threeten-extra.version>1.5.0</threeten-extra.version>
+        <threeten-extra.version>1.6.0</threeten-extra.version>
         <logstash.version>6.6</logstash.version>
         <logback-syslog4j.version>1.0.0</logback-syslog4j.version>
         <geronimo.jaspi.version>2.0.0</geronimo.jaspi.version>

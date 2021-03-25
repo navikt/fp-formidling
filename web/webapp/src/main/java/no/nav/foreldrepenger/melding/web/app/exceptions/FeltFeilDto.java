@@ -4,19 +4,12 @@ import java.io.Serializable;
 
 public class FeltFeilDto implements Serializable {
 
-    private String navn;
-    private String melding;
-    private String metainformasjon;
+    private final String navn;
+    private final String melding;
 
     public FeltFeilDto(String navn, String melding) {
         this.navn = navn;
         this.melding = melding;
-    }
-
-    public FeltFeilDto(String navn, String melding, String metainformasjon) {
-        this.navn = navn;
-        this.melding = melding;
-        this.metainformasjon = metainformasjon;
     }
 
     public String getNavn() {
@@ -25,9 +18,5 @@ public class FeltFeilDto implements Serializable {
 
     public String getMelding() {
         return melding;
-    }
-
-    public String getMetainformasjon() {
-        return metainformasjon;
     }
 }

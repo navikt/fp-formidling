@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.melding.web.app.exceptions;
 
-import ch.qos.logback.classic.Level;
-import no.nav.vedtak.exception.FunksjonellException;
-import no.nav.vedtak.exception.ManglerTilgangException;
-import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.exception.VLException;
-import no.nav.vedtak.log.util.MemoryAppender;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Collections;
+
+import javax.ws.rs.core.Response;
+
 import org.jboss.resteasy.spi.ApplicationException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,10 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
-import javax.ws.rs.core.Response;
-import java.util.Collections;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import ch.qos.logback.classic.Level;
+import no.nav.vedtak.exception.FunksjonellException;
+import no.nav.vedtak.exception.ManglerTilgangException;
+import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.exception.VLException;
+import no.nav.vedtak.log.util.MemoryAppender;
 
 @Execution(ExecutionMode.SAME_THREAD)
 public class GeneralRestExceptionMapperTest {
@@ -53,7 +55,7 @@ public class GeneralRestExceptionMapperTest {
 
     @Test
     public void skalMapperValideringsfeilMedMetainformasjon() {
-        FeltFeilDto feltFeilDto = new FeltFeilDto("feltnavn", "feilmelding", "metainformasjon");
+        FeltFeilDto feltFeilDto = new FeltFeilDto("feltnavn", "feilmelding");
         Valideringsfeil valideringsfeil = new Valideringsfeil(Collections.singleton(feltFeilDto));
 
         Response response = generalRestExceptionMapper.toResponse(new ApplicationException(valideringsfeil));

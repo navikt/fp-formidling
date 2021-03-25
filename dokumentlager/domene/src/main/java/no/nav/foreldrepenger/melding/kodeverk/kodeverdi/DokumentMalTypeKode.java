@@ -66,7 +66,7 @@ public class DokumentMalTypeKode {
     public static final String FORLENGET_TIDLIG_SOK = "FORLTS"; //NOSONAR
     @Deprecated
     public static final String HENLEGG_BEHANDLING_DOK = "HENLEG"; //NOSONAR
-    //TODO(JEJ): Sette Deprecated når INNHENTE_OPPLYSNINGER lanseres igjen:
+    @Deprecated
     public static final String INNHENT_DOK = "INNHEN"; //NOSONAR
 
 }

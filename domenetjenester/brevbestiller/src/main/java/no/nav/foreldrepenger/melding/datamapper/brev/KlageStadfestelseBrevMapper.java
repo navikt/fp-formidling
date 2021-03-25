@@ -66,9 +66,7 @@ public class KlageStadfestelseBrevMapper extends FritekstmalBrevMapper {
 
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
         Optional<String> fritekstOpt = KlageMapper.avklarFritekstKlage(hendelse, klage);
-        if (fritekstOpt.isPresent()) {
-            brevdata.leggTil("mintekst", fritekstOpt.get());
-        }
+        fritekstOpt.ifPresent(s -> brevdata.leggTil("mintekst", s));
         return brevdata;
     }
 }

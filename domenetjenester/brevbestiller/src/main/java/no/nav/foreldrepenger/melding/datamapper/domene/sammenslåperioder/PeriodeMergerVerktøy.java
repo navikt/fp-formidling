@@ -1,19 +1,17 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avslag.foreldrepenger.AvslagsAarsakType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.AnnenAktivitetType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Set;
 
 public class PeriodeMergerVerktøy {
 
@@ -75,11 +73,6 @@ public class PeriodeMergerVerktøy {
 
     static boolean likeAktiviteter(PeriodeType periodeEn, PeriodeType periodeTo) {
         return likeArbeidsforhold(periodeEn, periodeTo) && likNæring(periodeEn, periodeTo) && likeAndreAktiviteter(periodeEn, periodeTo);
-    }
-
-    static <T> boolean likOptionalStatusOgEqualsHvisFinnes(Optional<T> o1, Optional<T> o2) {
-        return o1.isPresent() == o2.isPresent() &&
-                (!o1.isPresent() || o1.equals(o2));
     }
 
     static boolean likeAndreAktiviteter(PeriodeType periodeEn, PeriodeType periodeTo) {

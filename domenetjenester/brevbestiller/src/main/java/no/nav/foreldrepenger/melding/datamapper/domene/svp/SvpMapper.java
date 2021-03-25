@@ -1,23 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.svp;
 
-import static java.lang.Boolean.TRUE;
-import static no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
-import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getMånedsinntekt;
-import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp.erPerioderSammenhengendeOgSkalSlåSammen;
-
-import java.time.chrono.ChronoLocalDate;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
@@ -38,6 +20,24 @@ import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+
+import java.time.chrono.ChronoLocalDate;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
+
+import static java.lang.Boolean.TRUE;
+import static no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
+import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getMånedsinntekt;
+import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp.erPerioderSammenhengendeOgSkalSlåSammen;
 
 @SuppressWarnings({"unchecked", "java:S1192"})
 public class SvpMapper {
@@ -194,7 +194,7 @@ public class SvpMapper {
                                 String arbeidsgiverNavn = utledArbeidsgiverNavn(andel, aktivitetStatus);
 
                                 Optional<SvpUttakResultatPeriode> matchetUttaksperiode = finnUttakPeriode(uttakPeriodeKandidater, arbeidsgiverNavn);
-                                if (!matchetUttaksperiode.isPresent()) {
+                                if (matchetUttaksperiode.isEmpty()) {
                                     return;
                                 }
 

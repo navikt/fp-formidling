@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
-public class DokdistRestKlient {
+public class DokdistRestKlient implements Dokdist{
     private static final Logger LOGGER = LoggerFactory.getLogger(DokdistRestKlient.class);
     private static final String DOKDIST_REST_BASE_URL = "dokdist_rest_base.url";
     private static final String DISTRIBUERJOURNALPOST = "/distribuerjournalpost";
@@ -26,7 +26,7 @@ public class DokdistRestKlient {
     private String endpointDokdistRestBase;
 
     public DokdistRestKlient() {
-        //CDI
+        // CDI
     }
 
     @Inject
@@ -40,7 +40,9 @@ public class DokdistRestKlient {
         DistribuerJournalpostRequest request = lagRequest(journalpostId);
         try {
             URIBuilder uriBuilder = new URIBuilder(endpointDokdistRestBase + DISTRIBUERJOURNALPOST);
+
             Optional<DistribuerJournalpostResponse> response = oidcRestClient.postReturnsOptional(uriBuilder.build(), request, DistribuerJournalpostResponse.class);
+
             if (response.isPresent()) {
                 LOGGER.info("Distribuert {} med bestillingsId {}", journalpostId, response);
             } else {

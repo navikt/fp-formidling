@@ -62,7 +62,8 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
     }
 
     // Fjerner dokumentmaler som ikke er tilgjengelig for manuell utsendelse, og for ulike behandlingstyper
-    //Todo Dokumentmaltype Etterlys inntekstmelding skal kun være tilgjengelig for manuell utsendelse når foreldrepenger - men vi vet ikke at en behandling er FP, SVP, eller ES
+    //TODO TFP-1084 Dokumentmaltype Etterlys inntekstmelding skal kun være tilgjengelig for manuell utsendelse når foreldrepenger
+    // - men vi vet ikke at en behandling er FP, SVP, eller ES. Mangler også noe på innsynsbehandling beskrevet i TFP-1084
     private List<DokumentMalType> filtrerUtilgjengeligBrevmaler(Behandling behandling, List<DokumentMalType> kandidater, boolean automatiskOpprettet, List<Aksjonspunkt> aksjonspunkter) {
         List<DokumentMalType> fjernes = kandidater.stream()
                 .filter(dm -> !dm.erTilgjengeligForManuellUtsendelse() || malSkalIkkeTilgjengeliggjøresForManuellUtsendelse(dm))

@@ -131,7 +131,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMal, OpprettJournalpostResponse response, JournalpostId journalpostId, boolean innsynMedVedlegg) {
         ProsessTaskGruppe taskGruppe = new ProsessTaskGruppe();
-        taskGruppe.addNesteSekvensiell(opprettDistribuerBrevTask(journalpostId, innsynMedVedlegg));
+        taskGruppe.addNesteSekvensiell(opprettDistribuerBrevTask(journalpostId, innsynMedVedlegg, dokumentHendelse.getBehandlingUuid()));
         DokumentHistorikkinnslag historikkinnslag = lagHistorikkinnslag(dokumentHendelse, response, dokumentMal);
         taskGruppe.addNesteSekvensiell(opprettPubliserHistorikkTask(historikkinnslag));
         prosessTaskRepository.lagre(taskGruppe);
@@ -156,9 +156,10 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         return prosessTaskData;
     }
-    private ProsessTaskData opprettDistribuerBrevTask(JournalpostId journalpostId, boolean innsynMedVedlegg) {
+    private ProsessTaskData opprettDistribuerBrevTask(JournalpostId journalpostId, boolean innsynMedVedlegg, UUID behandlingUuId) {
         ProsessTaskData prosessTaskData = new ProsessTaskData(DistribuerBrevTask.TASKTYPE);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
+        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID,(String.valueOf(behandlingUuId)));
         //må vente til vedlegg er knyttet og journalpost er ferdigstilt
         if (innsynMedVedlegg) {
             prosessTaskData.setNesteKjøringEtter(LocalDateTime.now().plusMinutes(1));

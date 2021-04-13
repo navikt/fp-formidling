@@ -10,7 +10,7 @@ on:
       - '.gitignore'
       - '.github/workflows/build-pr.yml'
 env:
-  IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/fpformidling
+  IMAGE_BASE: ghcr.io/${{ github.repository }}
 
 jobs:
   build:
@@ -42,16 +42,16 @@ jobs:
           key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
           restore-keys: |
             ${{ runner.os }}-maven-${{ env.PREVIOUS_CACHE_KEY }}
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v2
         with:
-          java-version: 1.15
+          distribution: 'adopt'
+          java-version: 15
 
       - name: Set build version
         run: |
           echo "BUILD_VERSION=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
       - name: Build artifacts & deploy
-        shell: bash
         run: |
           echo "Building artifacts $BUILD_VERSION"
           mvn jacoco:prepare-agent deploy -e --batch-mode --settings ./.m2/settings.xml -Dmaven.wagon.http.pool=false --file pom.xml -Dchangelist= -Dsha1=-${BUILD_VERSION} -Dfile.encoding=UTF-8 -DinstallAtEnd=true -DdeployAtEnd=true  -Djacoco.destFile=$(pwd)/target/jacoco.exec
@@ -61,48 +61,19 @@ jobs:
         env:
           GITHUB_USERNAME: x-access-token
           GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           DATASOURCE_HOST: localhost
           DATASOURCE_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
 
+      - name: Log into ghcr registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
       - name: Bygg, tag og push Docker image
         run: |
           docker build --pull --tag ${IMAGE_BASE}:${TAG} --tag ${IMAGE_BASE}:latest .
-          echo "$GITHUB_PASSWORD" | docker login --username "$GITHUB_USERNAME" --password-stdin https://docker.pkg.github.com
-          docker push ${IMAGE_BASE}:latest
-          docker push ${IMAGE_BASE}:${TAG}
-        env:
-          GITHUB_USERNAME: x-access-token
-          GITHUB_PASSWORD: ${{ secrets.GH_ACCESS_TOKEN }}
-
-      -  name: Opprett deployment issue
-         id: createdeployissue
-         if: success()
-         uses: actions/github-script@v3
-         with:
-           github-token: ${{secrets.GH_ACCESS_TOKEN}}
-           script: |
-               github.issues.create( {
-                 owner: context.issue.owner,
-                 repo: context.issue.repo,
-                 labels: ['deployment'],
-                 title: 'Deploy av ${{ env.TAG }}'})
-               .then(response => {
-                       core.setOutput('number', response.data.number);
-                });      
-            
-      - name: Trigger verdikjedetestene i fpsak-autotest prosjektet
-        if: success()
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          repository: navikt/fpsak-autotest
-          event-type: fpformidling-verdikjede
-          client-payload: '{ "trigger": "${{ github.repository }}", "version": "${{ env.TAG }}", "issue-number": "${{ steps.createdeployissue.outputs.number }}" }'
+          docker push ${IMAGE_BASE} --all-tags
 
       - name: Lukk gamle deployment-issues
-        if: success()
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -114,14 +85,45 @@ jobs:
               labels: ['deployment']
             }).then(response => {
               response.data.forEach(issue => {
-                if (issue.number != ${{ steps.createdeployissue.outputs.number }}) {
-                  github.issues.update({
-                    owner: context.repo.owner,
-                    repo: context.repo.repo,
-                    issue_number: issue.number,
-                    state: 'closed'
-                  });
-                }
+                github.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
               });
             });
 
+      -  name: Opprett deployment issue
+         id: createdeployissue
+         if: success()
+         uses: actions/github-script@v3
+         with:
+           github-token: ${{secrets.GITHUB_TOKEN}}
+           script: |
+             github.issues.create( {
+               owner: context.issue.owner,
+               repo: context.issue.repo,
+               labels: ['deployment'],
+               title: 'Deploy av ${{ env.TAG }}'})
+             .then(response => {
+                     core.setOutput('number', response.data.number);
+              });
+
+      - uses: navikt/github-app-token-generator@v1
+        id: get-token
+        with:
+          private-key: ${{ secrets.FP_PRIVATE_KEY }}
+          app-id: ${{ secrets.FP_APP_ID }}
+
+      - name: Trigger tester for FP
+        run: |
+          curl -XPOST -u "x-access-token:${{ steps.get-token.outputs.token }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/navikt/fpsak-autotest/actions/workflows/trigger.yml/dispatches \
+          -d '{"ref":"master",
+                  "inputs":{
+                      "trigger": "${{ github.repository }}",
+                      "version": "${{ env.TAG }}",
+                      "issue_number": "${{ steps.createdeployissue.outputs.number }}"
+                  }}'

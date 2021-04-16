@@ -1,16 +1,18 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Set;
+
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
 import no.nav.foreldrepenger.melding.uttak.Stønadskonto;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
-import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+public class StønadskontoMapperTest {
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-class StønadskontoMapperTest {
     @Test
     public void skal_finne_disponible_dager_mødrekvote() {
         Set<Stønadskonto> stønadskontoer = Set.of(new Stønadskonto(10, StønadskontoType.MØDREKVOTE, 5, 0, 0));

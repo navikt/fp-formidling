@@ -172,15 +172,18 @@ public final class UtbetalingsperiodeMapper {
         PeriodeResultatÅrsak periodeResultatÅrsak = utledÅrsakskode(uttakResultatPeriode);
 
         var utbetalingsPerioder = Utbetalingsperiode.ny()
-                .medAntallTapteDager(((mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter()))))
-                .medInnvilget((uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode)))
+                .medAntallTapteDager(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter()))
+                .medInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode))
                 .medPeriodeFom(fomDate)
                 .medPeriodeTom(beregningsresultatPeriode.getBeregningsresultatPeriodeTom())
-                .medÅrsak((periodeResultatÅrsak.getKode()))
-                .medPeriodeDagsats((beregningsresultatPeriode.getDagsats()))
-                .medArbeidsforhold((mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode)))
+                .medÅrsak(periodeResultatÅrsak.getKode())
+                .medArbeidsforhold(mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode))
                 .medNæring(mapNæring(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode))
                 .medAnnenAktivitet(mapAnnenAktivtetListe(beregningsresultatPeriode, uttakResultatPeriode));
+
+        if (beregningsresultatPeriode.getDagsats() != null) {
+            utbetalingsPerioder.medPeriodeDagsats(beregningsresultatPeriode.getDagsats());
+        }
         return utbetalingsPerioder.build();
     }
 
@@ -208,7 +211,6 @@ public final class UtbetalingsperiodeMapper {
     }
 
     private static AnnenAktivitet mapAnnenAktivitet(Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> tilkjentYtelseAndelMedTilhørendeUttaksaktivitet) {
-
         BeregningsresultatAndel beregningsresultatAndel = tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement1();
         var annenAktivitetBuilder = AnnenAktivitet.ny()
                 .medAktivitetStatus((beregningsresultatAndel.getAktivitetStatus()));

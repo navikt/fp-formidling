@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
-public class BeregningsresultatMapper {
+public final class BeregningsresultatMapper {
 
     public static long finnMånedsbeløp(BeregningsresultatFP beregningsresultat) {
         return finnFørsteInnvilgedePeriode(beregningsresultat).map(BeregningsresultatMapper::getMånedsbeløp).orElse(0L);

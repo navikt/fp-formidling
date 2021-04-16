@@ -1,18 +1,18 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import static no.nav.foreldrepenger.melding.uttak.StønadskontoType.FEDREKVOTE;
+import static no.nav.foreldrepenger.melding.uttak.StønadskontoType.FORELDREPENGER;
+import static no.nav.foreldrepenger.melding.uttak.StønadskontoType.MØDREKVOTE;
+
+import java.math.BigInteger;
+
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
 import no.nav.foreldrepenger.melding.uttak.Stønadskonto;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 
-import java.math.BigInteger;
-
-import static no.nav.foreldrepenger.melding.uttak.StønadskontoType.FEDREKVOTE;
-import static no.nav.foreldrepenger.melding.uttak.StønadskontoType.FORELDREPENGER;
-import static no.nav.foreldrepenger.melding.uttak.StønadskontoType.MØDREKVOTE;
-
-public class StønadskontoMapper {
+public final class StønadskontoMapper {
     public static int finnDisponibleDager(Saldoer saldoer, RelasjonsRolleType rolleType) {
         int saldoForeldrepenger = finnSaldo(saldoer, FORELDREPENGER);
 

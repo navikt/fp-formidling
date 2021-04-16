@@ -16,8 +16,6 @@ public class AnnenAktivitet {
         return aktivitetStatus;
     }
 
-
-
     public static Builder ny() {
         return new Builder();
     }
@@ -53,5 +51,4 @@ public class AnnenAktivitet {
             return this.kladd;
         }
     }
-
 }

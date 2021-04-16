@@ -10,6 +10,30 @@ public class BeregningsgrunnlagAndel {
     private long årsinntekt;
     private boolean etterlønnSluttpakke;
 
+    public AktivitetStatus getAktivitetStatus() {
+        return aktivitetStatus;
+    }
+
+    public String getArbeidsgiverNavn() {
+        return arbeidsgiverNavn;
+    }
+
+    public long getDagsats() {
+        return dagsats;
+    }
+
+    public long getMånedsinntekt() {
+        return månedsinntekt;
+    }
+
+    public long getÅrsinntekt() {
+        return årsinntekt;
+    }
+
+    public boolean isEtterlønnSluttpakke() {
+        return etterlønnSluttpakke;
+    }
+
     public static Builder ny() {
         return new Builder();
     }

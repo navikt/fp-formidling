@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.typer;
 
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoPeriod;
@@ -12,6 +10,8 @@ import java.time.temporal.TemporalField;
 import java.time.temporal.TemporalUnit;
 import java.util.Locale;
 import java.util.Objects;
+
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 
 /**
  * En wrapper-klasse for LocalDate hvor toString() returnerer datoen formatert.
@@ -50,14 +50,14 @@ public class Dato implements ChronoLocalDate {
     }
 
     public static String formaterDatoNorsk(LocalDate dato) {
-        if (dato==null) {
+        if (dato == null) {
             return null;
         }
         return dato.getDayOfMonth() + ". " + dato.getMonth().getDisplayName(TextStyle.FULL, Locale.forLanguageTag("NO")) + " " + dato.getYear();
     }
 
     public static String formaterDatoEngelsk(LocalDate dato) {
-        if (dato==null) {
+        if (dato == null) {
             return null;
         }
         return dato.getDayOfMonth() + "th of " + dato.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + dato.getYear();

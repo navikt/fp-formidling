@@ -10,9 +10,11 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Konsek
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 
-public class UndermalInkluderingMapper {
+/**
+ * Klassen utleder hvorvidt for forskjellige blokker / undermaler i innvilgelse foreldrepenger brevet skal inkluderes:
+ */
+public final class UndermalInkluderingMapper {
     private static final List<String> UTBETALING_ÅRSAKER = List.of("2010" , "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2030", "2031", "2032", "2033", "2034", "2038");
-    // TODO høre med Kristin om det er riktig at 2038 kan brukes på alle tre blokk-sjekkene, eller om vi må ha egen for innvilget som har denne
 
     public static boolean skalInkludereInfoOmUtbetaling(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder) {
         return behandling.getBehandlingsresultat().erInnvilget() && (utbetalingsperioder.size() > 1 || harKunEnPeriodeUtenGraderingOgUtenGitteÅrsaker(utbetalingsperioder));
@@ -22,16 +24,15 @@ public class UndermalInkluderingMapper {
         return behandling.getBehandlingsresultat().erInnvilget() && utbetalingsperioder.size() == 1 && periodeHarGitteÅrsakerEllerGradering(utbetalingsperioder.get(0));
     }
 
-    public static boolean skalInkludereInnvilget(KonsekvensForInnvilgetYtelse konsekvens, List<Utbetalingsperiode> utbetalingsperioder, Behandling behandling) {
+    public static boolean skalInkludereInnvilget(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder, KonsekvensForInnvilgetYtelse konsekvens) {
         return !KonsekvensForInnvilgetYtelse.ENDRING_I_BEREGNING.equals(konsekvens)
                 && (harMerEnnEnPeriodeOgMinstEnInnvilget(utbetalingsperioder)
                 || erRevurderingMedEndring(konsekvens, behandling)
                 || utbetalingsperioder.stream().anyMatch(UndermalInkluderingMapper::periodeHarGitteÅrsakerEllerGradering)); //TODO: Dobbeltsjekke med CCM at dette ble riktig
     }
 
-
-    public static boolean skalInkludereAvslag(List<Utbetalingsperiode> utbetalingsperioder, KonsekvensForInnvilgetYtelse konsekvensForInnvilgetYtelse) {
-        return utbetalingsperioder.stream().anyMatch(Utbetalingsperiode::isInnvilget);
+    public static boolean skalInkludereAvslag(List<Utbetalingsperiode> utbetalingsperioder, KonsekvensForInnvilgetYtelse konsekvens) {
+        return utbetalingsperioder.stream().anyMatch(periode -> !periode.isInnvilget()) && !KonsekvensForInnvilgetYtelse.ENDRING_I_BEREGNING.equals(konsekvens);
     }
 
     private static boolean harKunEnPeriodeUtenGraderingOgUtenGitteÅrsaker(List<Utbetalingsperiode> utbetalingsperioder) {
@@ -39,9 +40,9 @@ public class UndermalInkluderingMapper {
     }
 
     private static boolean ikkeHarGradering(Utbetalingsperiode utbetalingsperiode) {
-        return utbetalingsperiode.getArbeidsforholdsliste().size() > 0 && utbetalingsperiode.getArbeidsforholdsliste().stream().noneMatch(Arbeidsforhold::isGradering)
-                && utbetalingsperiode.getNæring() != null && !utbetalingsperiode.getNæring().isGradering()
-                && utbetalingsperiode.getAnnenAktivitetsliste().size() > 0 && utbetalingsperiode.getAnnenAktivitetsliste().stream().noneMatch(AnnenAktivitet::isGradering);
+        return (utbetalingsperiode.getArbeidsforholdsliste().size() == 0 || utbetalingsperiode.getArbeidsforholdsliste().stream().noneMatch(Arbeidsforhold::isGradering))
+                && (utbetalingsperiode.getNæring() == null || !utbetalingsperiode.getNæring().isGradering())
+                && (utbetalingsperiode.getAnnenAktivitetsliste().size() == 0 || utbetalingsperiode.getAnnenAktivitetsliste().stream().noneMatch(AnnenAktivitet::isGradering));
     }
 
     private static boolean harMerEnnEnPeriodeOgMinstEnInnvilget(List<Utbetalingsperiode> utbetalingsperioder) {

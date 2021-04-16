@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 
 public class Utbetalingsperiode {
     private boolean innvilget;
@@ -19,20 +19,20 @@ public class Utbetalingsperiode {
     private Næring næring;
     private List<AnnenAktivitet> annenAktivitetsliste = new ArrayList<>();
 
-    public int getAntallTapteDager() {
-        return antallTapteDager;
+    public boolean isInnvilget() {
+        return innvilget;
     }
 
-    public void setAntallTapteDager(int antallTapteDager) {
-        this.antallTapteDager = antallTapteDager;
-    }
-
-    public LocalDate getPeriodeTom() {
-        return periodeTomDate;
+    public String getÅrsak() {
+        return årsak;
     }
 
     public LocalDate getPeriodeFom() {
         return periodeFomDate;
+    }
+
+    public LocalDate getPeriodeTom() {
+        return periodeTomDate;
     }
 
     public void setPeriodeTom(LocalDate periodeTom) {
@@ -40,10 +40,17 @@ public class Utbetalingsperiode {
         this.periodeTomDate = periodeTom;
     }
 
-    public String getÅrsak() {
-        return årsak;
+    public long getPeriodeDagsats() {
+        return periodeDagsats;
     }
 
+    public int getAntallTapteDager() {
+        return antallTapteDager;
+    }
+
+    public void setAntallTapteDager(int antallTapteDager) {
+        this.antallTapteDager = antallTapteDager;
+    }
 
     public List<Arbeidsforhold> getArbeidsforholdsliste() {
         return arbeidsforholdsliste;
@@ -57,10 +64,6 @@ public class Utbetalingsperiode {
         return annenAktivitetsliste;
     }
 
-    public boolean isInnvilget() {
-        return innvilget;
-    }
-
     public static Builder ny() {
         return new Builder();
     }
@@ -72,8 +75,10 @@ public class Utbetalingsperiode {
             this.kladd = new Utbetalingsperiode();
         }
 
-        public Builder medInnvilget(boolean innvilget) {
-            this.kladd.innvilget = innvilget;
+        public Builder medInnvilget(Boolean innvilget) {
+            if (innvilget != null) {
+                this.kladd.innvilget = innvilget;
+            }
             return this;
         }
 

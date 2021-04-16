@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForMye
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 
-public class ForMyeUtbetaltMapper {
+public final class ForMyeUtbetaltMapper {
     private static List<String> manglendeEllerForSenSøknadOmGraderingÅrsaker = List.of(
             ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT.getKode(),
             AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD.getKode(),
@@ -34,7 +34,6 @@ public class ForMyeUtbetaltMapper {
     private static List<String> innvilgetUtsettelsePgaArbeidÅrsaker = List.of(
             UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID.getKode(),
             UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode());
-
 
     public static ForMyeUtbetalt forMyeUtbetalt(List<Utbetalingsperiode> periodeListe, Behandling behandling) {
         LocalDate vedtaksdato = behandling.getAvsluttet() != null ? behandling.getAvsluttet().toLocalDate() : null;
@@ -62,7 +61,7 @@ public class ForMyeUtbetaltMapper {
     }
 
     private static ForMyeUtbetalt forMyeUtbetaltKode(boolean generell, boolean ferie, boolean jobb,
-                                                   LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
+                                                     LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
         if (generell) {
             return ForMyeUtbetalt.GENERELL;
         }
@@ -87,14 +86,14 @@ public class ForMyeUtbetaltMapper {
         return innvilgetUtsettelseFOM;
     }
 
+    private static boolean periodeHarGradering(Utbetalingsperiode periodeType) {
+        return periodeStreamInneholderGradering(List.of(periodeType));
+    }
+
     private static Boolean periodeStreamInneholderGradering(List<Utbetalingsperiode> innvilgedePerioder) {
         return arbeidsforholdMedGraderingFinnes(innvilgedePerioder.stream()) ||
                 annenAktivtitetMedGraderingFinnes(innvilgedePerioder.stream()) ||
                 næringMedGraderingFinnes(innvilgedePerioder.stream());
-    }
-
-    private static boolean periodeHarGradering(Utbetalingsperiode periodeType) {
-        return periodeStreamInneholderGradering(List.of(periodeType));
     }
 
     private static boolean annenAktivtitetMedGraderingFinnes(Stream<Utbetalingsperiode> periodeStream) {

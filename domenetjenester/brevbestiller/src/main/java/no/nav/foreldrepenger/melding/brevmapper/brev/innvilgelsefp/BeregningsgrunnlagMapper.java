@@ -21,9 +21,9 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Beregn
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
-public class BeregningsgrunnlagMapper {
+public final class BeregningsgrunnlagMapper {
 
-    private static Map<AktivitetStatus, List<AktivitetStatus>> kombinerteRegelStatuserMap = new HashMap<>();
+    private static final Map<AktivitetStatus, List<AktivitetStatus>> kombinerteRegelStatuserMap = new HashMap<>();
 
     static {
         kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_AT_FL, List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER));
@@ -70,16 +70,11 @@ public class BeregningsgrunnlagMapper {
     }
 
     public static boolean harBruktBruttoBeregningsgrunnlag(List<BeregningsgrunnlagRegel> beregningsgrunnlagregler) {
-        return (beregningsgrunnlagregler.size() > 1 || (minstEnRegelHarKombinertAktivitetStatus(beregningsgrunnlagregler)))
-                && alleReglerHarMinstEnForekomstAvSammeAktivitetStatusIAndel(beregningsgrunnlagregler);
+        return (beregningsgrunnlagregler.size() > 1 || (minstEnRegelHarKombinertAktivitetStatus(beregningsgrunnlagregler)));
     }
 
     private static boolean minstEnRegelHarKombinertAktivitetStatus(List<BeregningsgrunnlagRegel> beregningsgrunnlagregler) {
         return beregningsgrunnlagregler.stream().anyMatch(regel -> regel.getAktivitetStatus().harKombinertStatus());
-    }
-
-    private static boolean alleReglerHarMinstEnForekomstAvSammeAktivitetStatusIAndel(List<BeregningsgrunnlagRegel> beregningsgrunnlagregler) {
-        return false; //TODO avklare med CCM
     }
 
     private static List<BeregningsgrunnlagPrStatusOgAndel> finnBgpsaListe(Beregningsgrunnlag beregningsgrunnlag) {

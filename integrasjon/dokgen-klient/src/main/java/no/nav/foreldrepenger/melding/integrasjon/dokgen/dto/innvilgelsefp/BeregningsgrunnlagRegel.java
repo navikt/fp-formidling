@@ -15,6 +15,10 @@ public class BeregningsgrunnlagRegel {
         return aktivitetStatus;
     }
 
+    public List<BeregningsgrunnlagAndel> getAndelListe() {
+        return andelListe;
+    }
+
     public static Builder ny() {
         return new Builder();
     }

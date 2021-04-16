@@ -51,10 +51,184 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     private boolean harBruktBruttoBeregningsgrunnlag;
     private List<BeregningsgrunnlagRegel> beregningsgrunnlagregler;
 
+    private int klagefristUker;
+
     private boolean inkludereInfoOmUtbetaling;
     private boolean inkludereUtbetaling;
     private boolean inkludereInnvilget;
     private boolean inkludereAvslag;
+
+    public BehandlingType getBehandlingType() {
+        return behandlingType;
+    }
+
+    public BehandlingResultatType getBehandlingResultatType() {
+        return behandlingResultatType;
+    }
+
+    public KonsekvensForInnvilgetYtelse getKonsekvensForInnvilgetYtelse() {
+        return konsekvensForInnvilgetYtelse;
+    }
+
+    public String getSøknadsdato() {
+        return søknadsdato;
+    }
+
+    public int getDekningsgrad() {
+        return dekningsgrad;
+    }
+
+    public long getDagsats() {
+        return dagsats;
+    }
+
+    public long getMånedsbeløp() {
+        return månedsbeløp;
+    }
+
+    public long getSeksG() {
+        return seksG;
+    }
+
+    public boolean isInntektOverSeksG() {
+        return inntektOverSeksG;
+    }
+
+    public ForMyeUtbetalt getForMyeUtbetalt() {
+        return forMyeUtbetalt;
+    }
+
+    public boolean isInntektMottattArbeidsgiver() {
+        return inntektMottattArbeidsgiver;
+    }
+
+    public boolean isAnnenForelderHarRett() {
+        return annenForelderHarRett;
+    }
+
+    public boolean isAnnenForelderHarRettVurdert() {
+        return annenForelderHarRettVurdert;
+    }
+
+    public AleneomsorgKode getAleneomsorgKode() {
+        return aleneomsorgKode;
+    }
+
+    public boolean isIkkeOmsorg() {
+        return ikkeOmsorg;
+    }
+
+    public boolean barnErFødt() {
+        return barnErFødt;
+    }
+
+    public boolean årsakErFødselshendelse() {
+        return årsakErFødselshendelse;
+    }
+
+    public boolean isGjelderMor() {
+        return gjelderMor;
+    }
+
+    public boolean isGjelderFødsel() {
+        return gjelderFødsel;
+    }
+
+    public boolean erBesteberegning() {
+        return erBesteberegning;
+    }
+
+    public boolean harBrukerAndel() {
+        return harBrukerAndel;
+    }
+
+    public boolean harArbeidsgiverAndel() {
+        return harArbeidsgiverAndel;
+    }
+
+    public int getAntallPerioder() {
+        return antallPerioder;
+    }
+
+    public boolean harInnvilgedePerioder() {
+        return harInnvilgedePerioder;
+    }
+
+    public int getAntallArbeidsgivere() {
+        return antallArbeidsgivere;
+    }
+
+    public int getDagerTaptFørTermin() {
+        return dagerTaptFørTermin;
+    }
+
+    public int getDisponibleDager() {
+        return disponibleDager;
+    }
+
+    public int getDisponibleFellesDager() {
+        return disponibleFellesDager;
+    }
+
+    public String getSisteDagAvSistePeriode() {
+        return sisteDagAvSistePeriode;
+    }
+
+    public String getStønadsperiodeFom() {
+        return stønadsperiodeFom;
+    }
+
+    public String getStønadsperiodeTom() {
+        return stønadsperiodeTom;
+    }
+
+    public int getForeldrepengeperiodenUtvidetUker() {
+        return foreldrepengeperiodenUtvidetUker;
+    }
+
+    public int getAntallBarn() {
+        return antallBarn;
+    }
+
+    public int getPrematurDager() {
+        return prematurDager;
+    }
+
+    public List<Utbetalingsperiode> getPerioder() {
+        return perioder;
+    }
+
+    public long getBruttoBeregningsgrunnlag() {
+        return bruttoBeregningsgrunnlag;
+    }
+
+    public boolean harBruktBruttoBeregningsgrunnlag() {
+        return harBruktBruttoBeregningsgrunnlag;
+    }
+
+    public List<BeregningsgrunnlagRegel> getBeregningsgrunnlagregler() {
+        return beregningsgrunnlagregler;
+    }
+
+    public int getKlagefristUker() {
+        return klagefristUker;
+    }
+
+    public boolean isInkludereInfoOmUtbetaling() {
+        return inkludereInfoOmUtbetaling;
+    }
+
+    public boolean isInkludereUtbetaling() {
+        return inkludereUtbetaling;
+    }
+
+    public boolean isInkludereInnvilget() {
+        return inkludereInnvilget;
+    }
+
+    public boolean isInkludereAvslag() {
+        return inkludereAvslag;
+    }
 
     public static Builder ny() {
         return new Builder();
@@ -259,6 +433,11 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
 
         public Builder medBeregningsgrunnlagregler(List<BeregningsgrunnlagRegel> beregningsgrunnlagregler) {
             this.kladd.beregningsgrunnlagregler = beregningsgrunnlagregler;
+            return this;
+        }
+
+        public Builder medKlagefristUker(int klagefristUker) {
+            this.kladd.klagefristUker = klagefristUker;
             return this;
         }
 

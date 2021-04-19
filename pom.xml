@@ -41,7 +41,7 @@
 
         <!-- Eksterne -->
         <prometheus.version>0.10.0</prometheus.version>
-        <swagger.version>2.1.7</swagger.version>
+        <swagger.version>2.1.8</swagger.version>
         <swagger-ui.version>3.45.0</swagger-ui.version>
         <kafka.version>2.7.0</kafka.version>
         <threeten-extra.version>1.5.0</threeten-extra.version>

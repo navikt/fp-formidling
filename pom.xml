@@ -24,13 +24,14 @@
         <revision>1.2</revision>
         <sha1/>
         <changelist>-SNAPSHOT</changelist>
-        <java.version>15</java.version>
+        <java.version>16</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- default argLine for surefire-plugin -->
-        <argLine>-Xms256m -Dlog.level.no.nav=WARN -Dfile.encoding=${project.build.sourceEncoding}</argLine>
+        <argLine>-Xms256m -Dlog.level.no.nav=WARN -Dfile.encoding=${project.build.sourceEncoding}
+            --illegal-access=permit</argLine>
         <jacoco.skip>true</jacoco.skip> <!-- default skip coverage -->
 
         <!-- Felles artefakter -->

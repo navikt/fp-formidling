@@ -55,7 +55,7 @@
         <commons-collections.version>4.4</commons-collections.version>
         <cxf.version>3.4.3</cxf.version>
         <resteasy.version>4.6.0.Final</resteasy.version>
-        <hikari.version>4.0.1</hikari.version>
+        <hikari.version>4.0.3</hikari.version>
         <flyway.version>7.7.0</flyway.version>
         <postgresql.version>42.2.19</postgresql.version>
         <vault-jdbc.version>1.3.7</vault-jdbc.version>

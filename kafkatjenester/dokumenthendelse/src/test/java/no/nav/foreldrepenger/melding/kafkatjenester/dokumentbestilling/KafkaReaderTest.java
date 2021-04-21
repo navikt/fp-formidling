@@ -48,14 +48,14 @@ public class KafkaReaderTest {
     public void normal_melding_skal_prossesseres_ok() {
         String json = serialiser(lagOkDto());
         kafkaReader.prosesser(json);
-        assertThat(hentAlle()).hasSize(0);
+        assertThat(hentAlleEventerFraFeillogg()).hasSize(0);
     }
 
     @Test
     public void ugyldig_melding_skal_logges() {
         kafkaReader.prosesser("Bare tull");
-        assertThat(hentAlle()).hasSize(1);
-        assertThat(hentAlle().get(0).getMelding()).isEqualToIgnoringCase("Bare tull");
+        assertThat(hentAlleEventerFraFeillogg()).hasSize(1);
+        assertThat(hentAlleEventerFraFeillogg().get(0).getMelding()).isEqualToIgnoringCase("Bare tull");
     }
 
     private String serialiser(DokumentbestillingV1 dto) {
@@ -77,7 +77,7 @@ public class KafkaReaderTest {
         return dto;
     }
 
-    private List<EventmottakFeillogg> hentAlle() {
+    private List<EventmottakFeillogg> hentAlleEventerFraFeillogg() {
         CriteriaQuery<EventmottakFeillogg> criteria = entityManager.getCriteriaBuilder().createQuery(EventmottakFeillogg.class);
         criteria.select(criteria.from(EventmottakFeillogg.class));
         return entityManager.createQuery(criteria).getResultList();

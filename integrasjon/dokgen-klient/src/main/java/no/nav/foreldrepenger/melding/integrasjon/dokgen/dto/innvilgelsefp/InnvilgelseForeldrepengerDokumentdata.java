@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     private BehandlingType behandlingType;
@@ -21,16 +21,18 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     private ForMyeUtbetalt forMyeUtbetalt;
     private boolean inntektMottattArbeidsgiver;
     private boolean annenForelderHarRett;
-    private boolean annenForelderHarRettVurdert;
-    private AleneomsorgKode aleneomsorgKode;
+    private VurderingsKode annenForelderHarRettVurdert;
+    private VurderingsKode vurderingsKode;
     private boolean ikkeOmsorg;
     private boolean barnErFødt;
     private boolean årsakErFødselshendelse;
     private boolean gjelderMor;
     private boolean gjelderFødsel;
     private boolean erBesteberegning;
-    private boolean harBrukerAndel;
-    private boolean harArbeidsgiverAndel;
+    private boolean ingenRefusjon;
+    private boolean delvisRefusjon;
+    private boolean fullRefusjon;
+    private boolean fbEllerRvInnvilget;
 
     private int antallPerioder;
     private boolean harInnvilgedePerioder;
@@ -53,8 +55,8 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
 
     private int klagefristUker;
 
-    private boolean inkludereInfoOmUtbetaling;
     private boolean inkludereUtbetaling;
+    private boolean inkludereGradering;
     private boolean inkludereInnvilget;
     private boolean inkludereAvslag;
 
@@ -106,12 +108,12 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
         return annenForelderHarRett;
     }
 
-    public boolean isAnnenForelderHarRettVurdert() {
+    public VurderingsKode isAnnenForelderHarRettVurdert() {
         return annenForelderHarRettVurdert;
     }
 
-    public AleneomsorgKode getAleneomsorgKode() {
-        return aleneomsorgKode;
+    public VurderingsKode getAleneomsorgKode() {
+        return vurderingsKode;
     }
 
     public boolean isIkkeOmsorg() {
@@ -138,12 +140,20 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
         return erBesteberegning;
     }
 
-    public boolean harBrukerAndel() {
-        return harBrukerAndel;
+    public boolean ingenRefusjon() {
+        return ingenRefusjon;
     }
 
-    public boolean harArbeidsgiverAndel() {
-        return harArbeidsgiverAndel;
+    public boolean delvisRefusjon() {
+        return delvisRefusjon;
+    }
+
+    public boolean fullRefusjon() {
+        return fullRefusjon;
+    }
+
+    public boolean erfbEllerRvInnvilget() {
+        return fbEllerRvInnvilget;
     }
 
     public int getAntallPerioder() {
@@ -214,12 +224,12 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
         return klagefristUker;
     }
 
-    public boolean isInkludereInfoOmUtbetaling() {
-        return inkludereInfoOmUtbetaling;
-    }
-
     public boolean isInkludereUtbetaling() {
         return inkludereUtbetaling;
+    }
+
+    public boolean isInkludereGradering() {
+        return inkludereGradering;
     }
 
     public boolean isInkludereInnvilget() {
@@ -306,13 +316,13 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medAnnenForelderHarRettVurdert(boolean annenForelderHarRettVurdert) {
+        public Builder medAnnenForelderHarRettVurdert(VurderingsKode annenForelderHarRettVurdert) {
             this.kladd.annenForelderHarRettVurdert = annenForelderHarRettVurdert;
             return this;
         }
 
-        public Builder medAleneomsorgKode(AleneomsorgKode aleneomsorgKode) {
-            this.kladd.aleneomsorgKode = aleneomsorgKode;
+        public Builder medAleneomsorgKode(VurderingsKode vurderingsKode) {
+            this.kladd.vurderingsKode = vurderingsKode;
             return this;
         }
 
@@ -346,23 +356,33 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medHarBrukerAndel(boolean harBrukerAndel) {
-            this.kladd.harBrukerAndel = harBrukerAndel;
+        public Builder medIngenRefusjon(boolean ingenRefusjon) {
+            this.kladd.ingenRefusjon = ingenRefusjon;
             return this;
         }
 
-        public Builder medHarArbeidsgiverAndel(boolean harArbeidsgiverAndel) {
-            this.kladd.harArbeidsgiverAndel = harArbeidsgiverAndel;
+        public Builder medDelvisRefusjon(boolean delvisRefusjon) {
+            this.kladd.delvisRefusjon = delvisRefusjon;
             return this;
         }
 
-        public Builder medHarInnvilgedePerioder(boolean harInnvilgedePerioder) {
-            this.kladd.harInnvilgedePerioder = harInnvilgedePerioder;
+        public Builder medFullRefusjon(boolean fullRefusjon) {
+            this.kladd.fullRefusjon = fullRefusjon;
+            return this;
+        }
+
+        public Builder medFbEllerRvInnvilget(boolean fbEllerRvInnvilget) {
+            this.kladd.fbEllerRvInnvilget = fbEllerRvInnvilget;
             return this;
         }
 
         public Builder medAntallPerioder(int antallPerioder) {
             this.kladd.antallPerioder = antallPerioder;
+            return this;
+        }
+
+        public Builder medHarInnvilgedePerioder(boolean harInnvilgedePerioder) {
+            this.kladd.harInnvilgedePerioder = harInnvilgedePerioder;
             return this;
         }
 
@@ -441,13 +461,13 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medInkludereInfoOmUtbetaling(boolean inkludereInfoOmUtbetaling) {
-            this.kladd.inkludereInfoOmUtbetaling = inkludereInfoOmUtbetaling;
+        public Builder medInkludereUtbetaling(boolean inkludereUtbetaling) {
+            this.kladd.inkludereUtbetaling = inkludereUtbetaling;
             return this;
         }
 
-        public Builder medInkludereUtbetaling(boolean inkludereUtbetaling) {
-            this.kladd.inkludereUtbetaling = inkludereUtbetaling;
+        public Builder medInkludereGradering(boolean inkludereGradering) {
+            this.kladd.inkludereGradering = inkludereGradering;
             return this;
         }
 

@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import java.util.List;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
@@ -10,17 +8,20 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Konsek
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 
+import java.util.List;
+
 /**
  * Klassen utleder hvorvidt for forskjellige blokker / undermaler i innvilgelse foreldrepenger brevet skal inkluderes:
  */
 public final class UndermalInkluderingMapper {
     private static final List<String> UTBETALING_ÅRSAKER = List.of("2010" , "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2030", "2031", "2032", "2033", "2034", "2038");
 
-    public static boolean skalInkludereInfoOmUtbetaling(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder) {
-        return behandling.getBehandlingsresultat().erInnvilget() && (utbetalingsperioder.size() > 1 || harKunEnPeriodeUtenGraderingOgUtenGitteÅrsaker(utbetalingsperioder));
+    public static boolean skalInkludereUtbetaling(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder) {
+        return behandling.getBehandlingsresultat().erInnvilget()
+                && (utbetalingsperioder.size() > 1 || harKunEnPeriodeUtenGraderingOgUtenGitteÅrsaker(utbetalingsperioder));
     }
 
-    public static boolean skalInkludereUtbetaling(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder) {
+    public static boolean skalInkludereGradering(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder) {
         return behandling.getBehandlingsresultat().erInnvilget() && utbetalingsperioder.size() == 1 && periodeHarGitteÅrsakerEllerGradering(utbetalingsperioder.get(0));
     }
 

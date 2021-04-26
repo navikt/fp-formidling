@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-public enum AleneomsorgKode {
+public enum VurderingsKode {
     JA,
     NEI,
     IKKE_VURDERT

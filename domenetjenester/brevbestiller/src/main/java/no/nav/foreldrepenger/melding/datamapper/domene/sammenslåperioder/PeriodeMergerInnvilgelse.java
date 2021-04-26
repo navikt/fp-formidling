@@ -11,12 +11,8 @@ import java.util.List;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
 
 public class PeriodeMergerInnvilgelse {
-
     static List<String> nonEqualKoderSomLikevelOppfyllerMerge =
             List.of("2001", "2002", "2003", "2004", "2005", "2006", "2007");
-
-    private PeriodeMergerInnvilgelse() {
-    }
 
     public static List<PeriodeType> mergePerioder(List<PeriodeType> perioder) {
         if (perioder.size() <= 1) {

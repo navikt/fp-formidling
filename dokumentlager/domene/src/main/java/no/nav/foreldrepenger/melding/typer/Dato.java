@@ -50,10 +50,16 @@ public class Dato implements ChronoLocalDate {
     }
 
     public static String formaterDatoNorsk(LocalDate dato) {
+        if (dato == null) {
+            return null;
+        }
         return dato.getDayOfMonth() + ". " + dato.getMonth().getDisplayName(TextStyle.FULL, Locale.forLanguageTag("NO")) + " " + dato.getYear();
     }
 
     public static String formaterDatoEngelsk(LocalDate dato) {
+        if (dato == null) {
+            return null;
+        }
         return dato.getDayOfMonth() + "th of " + dato.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + dato.getYear();
     }
 

@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 public class Arbeidsforhold {
     private String arbeidsgiverNavn;
     private boolean gradering;
-    private int uttaksgrad;
     private int prosentArbeid;
     private int stillingsprosent;
     private int utbetalingsgrad;
@@ -13,6 +12,10 @@ public class Arbeidsforhold {
 
     public boolean isGradering() {
         return gradering;
+    }
+
+    public int getUtbetalingsgrad() {
+        return utbetalingsgrad;
     }
 
     public NaturalytelseEndringType getNaturalytelseEndringType() {
@@ -45,11 +48,6 @@ public class Arbeidsforhold {
 
         public Builder medGradering(boolean gradering) {
             this.kladd.gradering = gradering;
-            return this;
-        }
-
-        public Builder medUttaksgrad(int uttaksgrad) {
-            this.kladd.uttaksgrad = uttaksgrad;
             return this;
         }
 

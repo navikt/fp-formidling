@@ -5,11 +5,15 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 public class AnnenAktivitet {
     private AktivitetStatus aktivitetStatus;
     private boolean gradering;
-    private int uttaksgrad;
+    private int utbetalingsgrad;
     private int prosentArbeid;
 
     public boolean isGradering() {
         return gradering;
+    }
+
+    public int getUtbetalingsgrad() {
+        return utbetalingsgrad;
     }
 
     public AktivitetStatus getAktivitetStatus() {
@@ -37,8 +41,8 @@ public class AnnenAktivitet {
             return this;
         }
 
-        public Builder medUttaksgrad(int uttaksgrad) {
-            this.kladd.uttaksgrad = uttaksgrad;
+        public Builder medUtbetalingsgrad(int utbetalingsgrad) {
+            this.kladd.utbetalingsgrad = utbetalingsgrad;
             return this;
         }
 

@@ -313,6 +313,21 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(finnesPeriodeMedIkkeOmsorg(of(utbetalingsperiode))).isFalse();
     }
 
+    @Test
+    public void skal_hente_prioritert_utbetalingsgrad_fra_arbeidsforholdet_med_høyest() {
+        //TODO(JEJ) når det evt. blir avklart at vi løser det slik
+    }
+
+    @Test
+    public void skal_hente_prioritert_utbetalingsgrad_fra_næring_når_arbeidsforhold_ikke_finnes() {
+        //TODO(JEJ) når det evt. blir avklart at vi løser det slik
+    }
+
+    @Test
+    public void skal_hente_prioritert_utbetalingsgrad_fra_annen_aktivitet_med_høyest_når_verken_arbeidsforhold_eller_næring_finnes() {
+        //TODO(JEJ) når det evt. blir avklart at vi løser det slik
+    }
+
     private void leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, List<Utbetalingsperiode> utbetalingsperioder) {
         utbetalingsperioder.add(Utbetalingsperiode.ny()
                 .medPeriodeFom(fom)

@@ -9,15 +9,11 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
-import no.nav.vedtak.sikkerhet.abac.AbacDto;
-import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
-
 /**
  * Referanse til en behandling.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BehandlingIdDto implements AbacDto {
+public class BehandlingIdDto {
 
     @Min(0)
     @Max(Long.MAX_VALUE)
@@ -66,12 +62,6 @@ public class BehandlingIdDto implements AbacDto {
 
     public UUID getBehandlingUuid() {
         return behandlingUuid;
-    }
-
-    @Override
-    public AbacDataAttributter abacAttributter() {
-        AbacDataAttributter abac = AbacDataAttributter.opprett();
-        return abac.leggTil(StandardAbacAttributtType.BEHANDLING_UUID, getBehandlingUuid().toString());
     }
 
     @Override

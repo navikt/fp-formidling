@@ -1,5 +1,18 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
+import java.io.StringReader;
+import java.time.LocalDate;
+
+import javax.enterprise.inject.spi.CDI;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.jboss.weld.literal.NamedLiteral;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -11,18 +24,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerAdresse
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
-import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
-import org.jboss.weld.literal.NamedLiteral;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
-
-import javax.enterprise.inject.spi.CDI;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.StringReader;
-import java.time.LocalDate;
+import no.nav.foreldrepenger.xmlutils.DateUtil;
 
 public class DokumentXmlDataMapper {
 

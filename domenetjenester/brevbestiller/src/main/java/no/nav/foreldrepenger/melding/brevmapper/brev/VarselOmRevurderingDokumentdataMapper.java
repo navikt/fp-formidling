@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.VarselOmRevurderingDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.vedtak.util.StringUtils;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.VARSEL_OM_REVURDERING)
@@ -87,6 +86,6 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
     }
 
     private boolean harFritekst(DokumentHendelse hendelse) {
-        return !StringUtils.nullOrEmpty(hendelse.getFritekst());
+        return hendelse.getFritekst() != null && !hendelse.getFritekst().isEmpty();
     }
 }

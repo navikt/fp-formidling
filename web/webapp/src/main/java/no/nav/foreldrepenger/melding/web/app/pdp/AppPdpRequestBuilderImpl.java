@@ -1,5 +1,20 @@
 package no.nav.foreldrepenger.melding.web.app.pdp;
 
+import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_DOMENE;
+import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE;
+import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE;
+import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.sikkerhet.pdp.AppAbacAttributtType;
@@ -11,29 +26,11 @@ import no.nav.vedtak.sikkerhet.abac.PdpRequest;
 import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
 import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 
-import javax.annotation.Priority;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Alternative;
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_DOMENE;
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_PERSON_AKTOERID_RESOURCE;
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.RESOURCE_FELLES_RESOURCE_TYPE;
-import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTION_ACTION_ID;
-
 
 /**
  * Implementasjon av PDP request for denne applikasjonen.
  */
 @Dependent
-@Alternative
-@Priority(2)
 public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
 
     public static final String ABAC_DOMAIN = "foreldrepenger";

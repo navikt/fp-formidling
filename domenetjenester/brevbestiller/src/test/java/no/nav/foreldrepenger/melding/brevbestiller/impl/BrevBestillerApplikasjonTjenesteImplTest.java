@@ -150,8 +150,8 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         assertThat(historikkinnslag.getDokumentMalType()).isEqualTo(DOKUMENT_MAL_TYPE);
         verify(prosessTaskRepository, times(2)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
-        assertThat(taskCaptor.getValue().getTasks().get(0).getTask().getTaskType()).isEqualTo(DistribuerBrevTask.TASKTYPE);
-        assertThat(taskCaptor.getValue().getTasks().get(1).getTask().getTaskType()).isEqualTo(PubliserHistorikkTaskProperties.TASKTYPE);
+        assertThat(taskCaptor.getValue().getTasks().get(0).task().getTaskType()).isEqualTo(DistribuerBrevTask.TASKTYPE);
+        assertThat(taskCaptor.getValue().getTasks().get(1).task().getTaskType()).isEqualTo(PubliserHistorikkTaskProperties.TASKTYPE);
     }
 
     @Test
@@ -176,8 +176,8 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         verify(historikkRepository, times(1)).lagre(any(DokumentHistorikkinnslag.class));
         verify(prosessTaskRepository, times(1)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
-        assertThat(taskCaptor.getValue().getTasks().get(0).getTask().getTaskType()).isEqualTo(DistribuerBrevTask.TASKTYPE);
-        assertThat(taskCaptor.getValue().getTasks().get(1).getTask().getTaskType()).isEqualTo(PubliserHistorikkTaskProperties.TASKTYPE);
+        assertThat(taskCaptor.getValue().getTasks().get(0).task().getTaskType()).isEqualTo(DistribuerBrevTask.TASKTYPE);
+        assertThat(taskCaptor.getValue().getTasks().get(1).task().getTaskType()).isEqualTo(PubliserHistorikkTaskProperties.TASKTYPE);
     }
 
     @Test

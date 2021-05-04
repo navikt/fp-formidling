@@ -1,5 +1,22 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
@@ -24,22 +41,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innhentopplysninger.Yt
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
-import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
-import org.xml.sax.SAXException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.stream.XMLStreamException;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import no.nav.foreldrepenger.xmlutils.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.INNHENT_DOK)

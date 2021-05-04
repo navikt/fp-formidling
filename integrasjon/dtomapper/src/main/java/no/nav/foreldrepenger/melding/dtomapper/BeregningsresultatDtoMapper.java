@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.melding.dtomapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-import no.nav.vedtak.util.StringUtils;
 
 public class BeregningsresultatDtoMapper {
 
@@ -59,7 +58,7 @@ public class BeregningsresultatDtoMapper {
     private static BeregningsresultatAndel mapAndelFraDto(BeregningsresultatPeriodeAndelDto dto, UnaryOperator<String> hentNavn) {
         return BeregningsresultatAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.fraKode(dto.getAktivitetStatus().getKode()))
-                .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
+                .medArbeidsforholdRef(dto.getArbeidsforholdId() != null && !dto.getArbeidsforholdId().isEmpty() ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                 .medArbeidsgiver(mapArbeidsgiverFraDto(dto, hentNavn))
                 .medStillingsprosent(dto.getStillingsprosent())
                 .medBrukerErMottaker(dto.getTilSoker() != null && dto.getTilSoker() != 0)

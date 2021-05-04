@@ -37,14 +37,16 @@ public class SjekkDbStrukturTest {
 
     @Test
     public void sjekk_at_alle_tabeller_er_dokumentert() throws Exception {
-        String sql = "select t.table_name from information_schema.tables t\n" +
-                "join pg_class c on t.table_name = c.relname\n" +
-                "where t.table_schema = current_schema\n" +
-                "and t.table_name not like 'schema_%' AND t.table_name not like 'flyway_%' " +
-                "AND t.table_name not like 'prosess_task_partition_%' " +
-                "AND t.table_name not like 'prosess_task' " +
-                "and t.table_name not like 'mock_%' \n" +
-                "and obj_description(c.oid) is null";
+        String sql = """
+                select t.table_name from information_schema.tables t
+                join pg_class c on t.table_name = c.relname
+                where t.table_schema = current_schema
+                and t.table_name not like 'schema_%' AND t.table_name not like 'flyway_%' 
+                AND t.table_name not like 'prosess_task_partition_%' 
+                AND t.table_name not like 'prosess_task' 
+                and t.table_name not like 'mock_%' 
+                and obj_description(c.oid) is null
+                """;
         List<String> avvik = new ArrayList<>();
         try (Connection conn = ds.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -64,32 +66,33 @@ public class SjekkDbStrukturTest {
     public void sjekk_at_alle_relevant_kolonner_er_dokumentert() throws Exception {
         List<String> avvik = new ArrayList<>();
 
-        String sql = "SELECT c.table_name||'.'||c.column_name  " +
-                "FROM pg_catalog.pg_statio_all_tables as st\n" +
-                "       right join pg_catalog.pg_description pgd on (pgd.objoid=st.relid)\n" +
-                "       right join information_schema.columns c on (pgd.objsubid=c.ordinal_position\n" +
-                "                                                     and  c.table_schema=st.schemaname and c.table_name=st.relname)\n" +
-                "WHERE c.table_schema = current_schema\n" +
-                "AND upper(c.column_name) NOT IN ('OPPRETTET_TID','ENDRET_TID','OPPRETTET_AV','ENDRET_AV','VERSJON','BESKRIVELSE','NAVN','FOM', 'TOM','LAND', 'LANDKODE', 'KL_LANDKODE', 'KL_LANDKODER', 'AKTIV')\n" +
-                "AND c.table_name not like 'schema_%'\n" +
-                "AND c.table_name not like 'flyway_%'\n" +
-                "AND c.table_name not like 'prosess_task_partition_%'\n" +
-                "AND c.table_name not like 'prosess_task'\n" +
-                "AND c.table_name not like 'mock_%' \n" +
-                "AND pgd.description is null\n" +
-                "AND not exists (\n" +
-                "          SELECT\n" +
-                "                 1\n" +
-                "          FROM\n" +
-                "               information_schema.table_constraints AS tc\n" +
-                "                 JOIN information_schema.key_column_usage AS kcu\n" +
-                "                   ON tc.constraint_name = kcu.constraint_name\n" +
-                "                        AND tc.table_schema = kcu.table_schema\n" +
-                "          WHERE constraint_type IN ('FOREIGN KEY', 'PRIMARY KEY')\n" +
-                "            AND tc.table_schema=current_schema\n" +
-                "            AND tc.table_name = c.table_name and kcu.column_name = c.column_name\n" +
-                "    )\n" +
-                "ORDER BY c.table_name, c.column_name";
+        String sql = """
+                SELECT c.table_name||'.'||c.column_name  
+                FROM pg_catalog.pg_statio_all_tables as st
+                       right join pg_catalog.pg_description pgd on (pgd.objoid=st.relid)
+                       right join information_schema.columns c on (pgd.objsubid=c.ordinal_position
+                                                                     and  c.table_schema=st.schemaname and c.table_name=st.relname)
+                WHERE c.table_schema = current_schema
+                AND upper(c.column_name) NOT IN ('OPPRETTET_TID','ENDRET_TID','OPPRETTET_AV','ENDRET_AV','VERSJON','BESKRIVELSE','NAVN','FOM', 'TOM','LAND', 'LANDKODE', 'KL_LANDKODE', 'KL_LANDKODER', 'AKTIV')
+                AND c.table_name not like 'schema_%'
+                AND c.table_name not like 'flyway_%'
+                AND c.table_name not like 'prosess_task_partition_%'
+                AND c.table_name not like 'prosess_task'
+                AND c.table_name not like 'mock_%' 
+                AND pgd.description is null
+                AND not exists (
+                          SELECT 1
+                          FROM
+                               information_schema.table_constraints AS tc
+                                 JOIN information_schema.key_column_usage AS kcu
+                                   ON tc.constraint_name = kcu.constraint_name
+                                        AND tc.table_schema = kcu.table_schema
+                          WHERE constraint_type IN ('FOREIGN KEY', 'PRIMARY KEY')
+                            AND tc.table_schema=current_schema
+                            AND tc.table_name = c.table_name and kcu.column_name = c.column_name
+                    )
+                ORDER BY c.table_name, c.column_name
+                """;
 
         try (Connection conn = ds.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -102,38 +105,6 @@ public class SjekkDbStrukturTest {
         }
 
         assertThat(avvik).withFailMessage("Mangler dokumentasjon for %s kolonner. %s\n %s", avvik.size(), avvik, HJELP).isEmpty();
-    }
-
-    @Disabled("venter til KL_ kolonner er fjernet")
-    @Test
-    public void sjekk_alle_KL_kolonner_har_FK_referanser_til_Kodeliste() throws Exception {
-        String sql = "select c.table_name, c.column_name from information_schema.columns c\n" +
-                "    where column_name like 'kl_%'\n" +
-                "    and table_schema = current_schema\n" +
-                "    and (c.table_name, c.column_name) not in\n" +
-                "        (select table_name, column_name from information_schema.key_column_usage kcu where kcu.column_name like 'kl_%' and kcu.constraint_name like 'fk_%'\n" +
-                "         and kcu.constraint_catalog = c.table_catalog\n" +
-                "        and kcu.constraint_schema = c.table_schema)";
-
-        List<String> avvik = new ArrayList<>();
-        StringBuilder tekst = new StringBuilder();
-        try (Connection conn = ds.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);) {
-
-            try (ResultSet rs = stmt.executeQuery()) {
-
-                while (rs.next()) {
-                    String t = rs.getString(1) + ", " + rs.getString(2);
-                    avvik.add(t);
-                    tekst.append(t).append("\n");
-                }
-            }
-
-        }
-        int sz = avvik.size();
-        String beskrivelse = "Kolonner som starter med KL_ forventes å ha foreign key referanse til KODELISTE tabell (som må dekke både kode og kodeverk) og tilhørende indeks.";
-
-        assertThat(avvik).withFailMessage(beskrivelse + sz + " foreign keys\n" + tekst).isEmpty();
     }
 
     @Disabled("Denne må tilpasses til Postgresql")

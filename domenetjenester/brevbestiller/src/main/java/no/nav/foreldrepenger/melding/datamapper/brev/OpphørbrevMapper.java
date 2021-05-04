@@ -1,5 +1,28 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
+import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
+
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
 import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -32,30 +55,9 @@ import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.xmlutils.JaxbHelper;
 import no.nav.vedtak.exception.VLException;
-import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
 import no.nav.vedtak.util.Tuple;
-import org.xml.sax.SAXException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.OPPHØR_DOK)

@@ -66,6 +66,10 @@
             <groupId>no.nav.foreldrepenger.felles.sikkerhet</groupId>
             <artifactId>felles-sikkerhet</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-abac-legacy</artifactId>
+        </dependency>
 
         <!-- Resteasy -->
         <dependency>

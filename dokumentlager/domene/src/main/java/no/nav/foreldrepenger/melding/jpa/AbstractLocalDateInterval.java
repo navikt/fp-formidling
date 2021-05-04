@@ -1,12 +1,10 @@
 package no.nav.foreldrepenger.melding.jpa;
 
-import no.nav.vedtak.konfig.Tid;
-import org.threeten.extra.Interval;
+import static java.time.DayOfWeek.SATURDAY;
+import static java.time.DayOfWeek.SUNDAY;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.chrono.ChronoLocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,9 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static java.time.DayOfWeek.SATURDAY;
-import static java.time.DayOfWeek.SUNDAY;
-import static java.time.temporal.ChronoUnit.DAYS;
+import no.nav.vedtak.konfig.Tid;
 
 /**
  * Basis klasse for modellere et dato interval.
@@ -78,17 +74,6 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
         return fom;
     }
 
-    public Interval tilIntervall() {
-        return getIntervall(getFomDato(), getTomDato());
-    }
-
-    private static Interval getIntervall(LocalDate fomDato, LocalDate tomDato) {
-        LocalDateTime døgnstart = TIDENES_ENDE.equals(tomDato) ? tomDato.atStartOfDay() : tomDato.atStartOfDay().plusDays(1);
-        return Interval.of(
-                fomDato.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant(),
-                døgnstart.atZone(ZoneId.systemDefault()).toInstant());
-    }
-
     public boolean erFørEllerLikPeriodeslutt(ChronoLocalDate dato) {
         return getTomDato() == null || getTomDato().isAfter(dato) || getTomDato().isEqual(dato);
     }
@@ -123,14 +108,6 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
             case SUNDAY -> dato.plusDays(1);
              default -> dato;
         };
-    }
-
-    public long antallDager() {
-        return DAYS.between(getFomDato(), getTomDato());
-    }
-
-    public boolean overlapper(AbstractLocalDateInterval periode) {
-        return tilIntervall().overlaps(getIntervall(periode.getFomDato(), periode.getTomDato()));
     }
 
     public int antallArbeidsdager() {

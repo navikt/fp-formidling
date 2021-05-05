@@ -54,6 +54,8 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     private List<BeregningsgrunnlagRegel> beregningsgrunnlagregler;
 
     private int klagefristUker;
+    private String lovhjemlerUttak;
+    private String lovhjemlerBeregning;
 
     private boolean inkludereUtbetaling;
     private boolean inkludereGradering;
@@ -223,6 +225,10 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     public int getKlagefristUker() {
         return klagefristUker;
     }
+
+    public String getLovhjemlerUttak() { return lovhjemlerUttak; }
+
+    public String getLovhjemlerBeregning() { return lovhjemlerBeregning; }
 
     public boolean isInkludereUtbetaling() {
         return inkludereUtbetaling;
@@ -458,6 +464,16 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
 
         public Builder medKlagefristUker(int klagefristUker) {
             this.kladd.klagefristUker = klagefristUker;
+            return this;
+        }
+
+        public Builder medLovhjemlerUttak(String lovhjemlerUttak) {
+            this.kladd.lovhjemlerUttak = lovhjemlerUttak;
+            return this;
+        }
+
+        public Builder medLovhjemlerBeregning(String lovhjemlerBeregning) {
+            this.kladd.lovhjemlerBeregning = lovhjemlerBeregning;
             return this;
         }
 

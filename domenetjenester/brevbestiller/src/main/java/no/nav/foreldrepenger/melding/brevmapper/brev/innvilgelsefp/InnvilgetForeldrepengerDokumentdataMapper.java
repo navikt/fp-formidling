@@ -10,6 +10,8 @@ import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
@@ -105,6 +107,8 @@ public class InnvilgetForeldrepengerDokumentdataMapper implements DokumentdataMa
 
         List<Utbetalingsperiode> utbetalingsperioder = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder, beregningsgrunnlag.getBeregningsgrunnlagPerioder());
         KonsekvensForInnvilgetYtelse konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
+        String konsekvensForytelsen = String.valueOf(konsekvensForInnvilgetYtelse);
+        boolean erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
 
         var dokumentdataBuilder = InnvilgelseForeldrepengerDokumentdata.ny()
                 .medFellesDokumentData(fellesBuilder.build())
@@ -145,6 +149,8 @@ public class InnvilgetForeldrepengerDokumentdataMapper implements DokumentdataMa
                 .medUtbetalingsperioder(utbetalingsperioder)
 
                 .medKlagefristUker(brevParametere.getKlagefristUker())
+                .medLovhjemlerUttak(UttakMapper.mapLovhjemlerForUttak(uttakResultatPerioder, konsekvensForytelsen, erInnvilgetRevurdering))
+                .medLovhjemlerBeregning(FellesMapper.formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForytelsen, erInnvilgetRevurdering))
 
                 .medInkludereUtbetaling(skalInkludereUtbetaling(behandling, utbetalingsperioder))
                 .medInkludereGradering(skalInkludereGradering(behandling, utbetalingsperioder))
@@ -153,6 +159,7 @@ public class InnvilgetForeldrepengerDokumentdataMapper implements DokumentdataMa
                 ;
 
                 mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, dokumentdataBuilder);
+
         return dokumentdataBuilder.build();
     }
 
@@ -249,7 +256,11 @@ public class InnvilgetForeldrepengerDokumentdataMapper implements DokumentdataMa
                 || BehandlingType.KLAGE.equals(behandlingType);
     }
 
-    private boolean erFbEllerRvInnvilget( Behandling behandling) {
+    private boolean erFbEllerRvInnvilget(Behandling behandling) {
         return behandling.getBehandlingsresultat().erInnvilget() && (behandling.erRevurdering() || behandling.erFørstegangssøknad());
+    }
+
+    private boolean erInnvilgetRevurdering(Behandling behandling) {
+        return behandling.getBehandlingsresultat().erInnvilget() && behandling.erRevurdering();
     }
 }

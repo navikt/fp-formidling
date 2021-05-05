@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
@@ -179,6 +180,8 @@ public class InnvilgetForeldrepengerDokumentdataMapperTest {
         assertThat(dokumentdata.getPerioder()).hasSize(3);
 
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
+        assertThat(dokumentdata.getLovhjemlerUttak()).isEqualTo("§ forvaltningsloven § 35");
+        assertThat(dokumentdata.getLovhjemlerBeregning()).isEqualTo("§§ 14-7 og forvaltningsloven § 35");
 
         assertThat(dokumentdata.isInkludereUtbetaling()).isTrue();
         assertThat(dokumentdata.isInkludereGradering()).isFalse();
@@ -238,6 +241,7 @@ public class InnvilgetForeldrepengerDokumentdataMapperTest {
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode())
                 .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
+                .medhHjemmel(Hjemmel.F_14_7)
                 .medBesteberegnet(true)
                 .build();
     }

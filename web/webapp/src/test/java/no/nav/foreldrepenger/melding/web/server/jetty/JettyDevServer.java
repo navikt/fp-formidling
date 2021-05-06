@@ -43,6 +43,7 @@ public class JettyDevServer extends JettyServer {
     @Override
     protected void konfigurer() throws Exception {
         konfigurerLogback();
+        konfigurerMiljø();
         super.konfigurer();
     }
 
@@ -66,7 +67,6 @@ public class JettyDevServer extends JettyServer {
         StatusPrinter.printInCaseOfErrorsOrWarnings(context);
     }
 
-    @Override
     protected void konfigurerMiljø() throws Exception {
         System.setProperty("develop-local", "true");
         PropertiesUtils.initProperties();

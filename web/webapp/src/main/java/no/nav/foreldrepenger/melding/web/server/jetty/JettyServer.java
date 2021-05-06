@@ -55,39 +55,6 @@ public class JettyServer extends AbstractJettyServer {
     }
 
     @Override
-    protected void konfigurerMiljø() throws Exception {
-        hacks4Nais();
-    }
-
-    private void hacks4Nais() {
-        loadBalancerFqdnTilLoadBalancerUrl();
-        temporært();
-    }
-
-    private void loadBalancerFqdnTilLoadBalancerUrl() {
-        if (System.getenv("LOADBALANCER_FQDN") != null) {
-            String loadbalancerFqdn = System.getenv("LOADBALANCER_FQDN");
-            String protocol = (loadbalancerFqdn.startsWith("localhost")) ? "http" : "https";
-            System.setProperty("loadbalancer.url", protocol + "://" + loadbalancerFqdn);
-        }
-    }
-
-    private void temporært() {
-        // FIXME (u139158): PFP-1176 Skriv om i AuthorizationRequestBuilder når Jboss dør
-        if (System.getenv("OIDC_OPENAM_HOSTURL") != null) {
-            System.setProperty("OpenIdConnect.issoHost", System.getenv("OIDC_OPENAM_HOSTURL"));
-        }
-        // FIXME (u139158): PFP-1176 Skriv om i AuthorizationRequestBuilder og IdTokenAndRefreshTokenProvider når Jboss dør
-        if (System.getenv("OIDC_OPENAM_AGENTNAME") != null) {
-            System.setProperty("OpenIdConnect.username", System.getenv("OIDC_OPENAM_AGENTNAME"));
-        }
-        // FIXME (u139158): PFP-1176 Skriv om i IdTokenAndRefreshTokenProvider når Jboss dør
-        if (System.getenv("OIDC_OPENAM_PASSWORD") != null) {
-            System.setProperty("OpenIdConnect.password", System.getenv("OIDC_OPENAM_PASSWORD"));
-        }
-    }
-
-    @Override
     protected void konfigurerJndi() throws Exception {
         new EnvEntry("jdbc/defaultDS",
                 DatasourceUtil.createDatasource(DATASOURCE_NAME, DatasourceRole.USER, ENV.getCluster(), 4));

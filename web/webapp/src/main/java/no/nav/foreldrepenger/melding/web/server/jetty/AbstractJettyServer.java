@@ -56,12 +56,9 @@ abstract class AbstractJettyServer {
     }
 
     protected void konfigurer() throws Exception {
-        konfigurerMiljø();
         konfigurerSikkerhet();
         konfigurerJndi();
     }
-
-    protected abstract void konfigurerMiljø() throws Exception; //NOSONAR
 
     protected void konfigurerSikkerhet() {
         Security.setProperty(AuthConfigFactory.DEFAULT_FACTORY_SECURITY_PROPERTY, AuthConfigFactoryImpl.class.getCanonicalName());

@@ -1,5 +1,15 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import java.util.Objects;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
@@ -16,15 +26,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.Opph
 import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.YtelseTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
-import org.xml.sax.SAXException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-import java.util.Objects;
+import no.nav.foreldrepenger.xmlutils.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.HENLEGG_BEHANDLING_DOK)

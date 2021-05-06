@@ -1,11 +1,10 @@
 package no.nav.foreldrepenger.melding.datamapper.mal;
 
-import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
-import no.nav.vedtak.util.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
 
 public final class DokumentMalFelles {
 
@@ -21,7 +20,7 @@ public final class DokumentMalFelles {
     }
 
     protected static void opprettIkkeObligatoriskeFlettefelt(List<Flettefelt> flettefelter, String feltnavn, String feltverdi) {
-        if (!StringUtils.nullOrEmpty(feltverdi)) {
+        if (feltverdi != null && !feltverdi.isEmpty()) {
             Flettefelt flettefelt = new Flettefelt();
 
             flettefelt.setFeltnavn(feltnavn);

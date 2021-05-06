@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ArbeidsforholdType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
-import no.nav.vedtak.felles.integrasjon.felles.ws.DateUtil;
+import no.nav.foreldrepenger.xmlutils.DateUtil;
 
 public class PeriodeMergerVerktøy {
 

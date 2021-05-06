@@ -21,7 +21,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.KonsekvensForYtelseKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.vedtak.util.StringUtils;
 
 public class BehandlingMapper {
 
@@ -37,7 +36,7 @@ public class BehandlingMapper {
     }
 
     public static Optional<String> avklarFritekst(DokumentHendelse dokumentHendelse, Behandling behandling) {
-        if (!StringUtils.nullOrEmpty(dokumentHendelse.getFritekst())) {
+        if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
             return Optional.of(dokumentHendelse.getFritekst());
         } else if (behandling.getBehandlingsresultat() != null) {
             return Optional.ofNullable(behandling.getBehandlingsresultat().getAvslagarsakFritekst());

@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.klage.avvist.AvvistGru
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.melding.klage.KlageVurdering;
-import no.nav.vedtak.util.StringUtils;
 
 public class KlageMapper {
     public static final Map<String, AvvistGrunnKode> avvistGrunnMap;
@@ -78,7 +77,7 @@ public class KlageMapper {
     }
 
     public static Optional<String> avklarFritekstKlage(DokumentHendelse dokumentHendelse, Klage klage) {
-        if (!StringUtils.nullOrEmpty(dokumentHendelse.getFritekst())) {
+        if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
             return Optional.of(dokumentHendelse.getFritekst());
         } else if (klage.getGjeldendeKlageVurderingsresultat() != null) {
             return Optional.ofNullable(klage.getGjeldendeKlageVurderingsresultat().getFritekstTilBrev());

@@ -6,33 +6,32 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
-import no.nav.vedtak.util.StringUtils;
 
 public class DokumentHendelseDtoMapper {
 
     private static RevurderingVarslingÅrsak utledRevurderingVarslingsårsak(String varslingsårsak) {
-        if (StringUtils.nullOrEmpty(varslingsårsak)) {
+        if (varslingsårsak == null || varslingsårsak.isEmpty()) {
             return RevurderingVarslingÅrsak.UDEFINERT;
         }
         return RevurderingVarslingÅrsak.fraKode(varslingsårsak);
     }
 
     private static FagsakYtelseType utledYtelseType(String ytelseType) {
-        if (StringUtils.nullOrEmpty(ytelseType)) {
+        if (ytelseType == null || ytelseType.isEmpty()) {
             return null;
         }
         return FagsakYtelseType.fraKode(ytelseType);
     }
 
     private static DokumentMalType utleddokumentMalType(String dokumentmal) {
-        if (StringUtils.nullOrEmpty(dokumentmal)) {
+        if (dokumentmal == null || dokumentmal.isEmpty()) {
             return null;
         }
         return DokumentMalType.fraKode(dokumentmal);
     }
 
     private static HistorikkAktør utledHistorikkAktør(String historikkAktør) {
-        if (StringUtils.nullOrEmpty(historikkAktør)) {
+        if (historikkAktør == null || historikkAktør.isEmpty()) {
             return HistorikkAktør.UDEFINERT;
         }
         return HistorikkAktør.fraKode(historikkAktør);

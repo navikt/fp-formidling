@@ -77,6 +77,10 @@
             <groupId>no.nav.foreldrepenger.kontrakter</groupId>
             <artifactId>fp-formidling-v1</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-xmlutils</artifactId>
+        </dependency>
 
         <!-- Eksterne -->
         <dependency>

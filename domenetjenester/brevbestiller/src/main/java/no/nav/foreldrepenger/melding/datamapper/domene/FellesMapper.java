@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.E
 import java.util.Set;
 
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
-import no.nav.vedtak.util.StringUtils;
 
 public class FellesMapper {
 
@@ -61,7 +60,7 @@ public class FellesMapper {
         leggTilEkstraSeksjonstegnHvisRelevant(builder, antall);
         settInnEventuelleTillegg(builder, startTillegg, sluttTillegg, antall);
 
-        if (antall > 1 && StringUtils.nullOrEmpty(sluttTillegg)) {
+        if (antall > 1 && (sluttTillegg == null || sluttTillegg.isEmpty())) {
             // bytt ut siste kommaforekomst med " og ".
             int pos = builder.lastIndexOf(",");
             builder.replace(pos, pos + 2, " og ");
@@ -77,10 +76,10 @@ public class FellesMapper {
     }
 
     private static void settInnEventuelleTillegg(StringBuilder builder, String startTillegg, String sluttTillegg, int antall) {
-        if (!StringUtils.nullOrEmpty(startTillegg)) {
+        if (startTillegg != null && !startTillegg.isEmpty()) {
             builder.insert(0, startTillegg.concat(" "));
         }
-        if (!StringUtils.nullOrEmpty(sluttTillegg)) {
+        if (sluttTillegg != null && !sluttTillegg.isEmpty()) {
             builder.append(antall > 0 ? " og " : "").append(sluttTillegg);
         }
     }

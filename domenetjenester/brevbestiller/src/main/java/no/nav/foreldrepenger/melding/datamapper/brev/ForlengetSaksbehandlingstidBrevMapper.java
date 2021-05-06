@@ -28,7 +28,8 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.Personstatus
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.VariantKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.YtelseTypeKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import no.nav.foreldrepenger.xmlutils.JaxbHelper;
+
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.FORLENGET_DOK)

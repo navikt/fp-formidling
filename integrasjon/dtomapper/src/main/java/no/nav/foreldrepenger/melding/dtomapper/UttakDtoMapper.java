@@ -21,7 +21,6 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-import no.nav.vedtak.util.StringUtils;
 
 public class UttakDtoMapper {
 
@@ -71,7 +70,7 @@ public class UttakDtoMapper {
                 .medGraderingInnvilget(dto.isGradering())
                 .medTrekkonto(StønadskontoType.fraKode(dto.getStønadskontoType().getKode()))
                 .medUttakAktivitet(UttakAktivitet.ny()
-                        .medArbeidsforholdRef(!StringUtils.nullOrEmpty(dto.getArbeidsforholdId()) ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
+                        .medArbeidsforholdRef(dto.getArbeidsforholdId() != null && !dto.getArbeidsforholdId().isEmpty() ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                         .medArbeidsgiver(mapArbeidsgiver(dto.getArbeidsgiverReferanse(), hentNavn))
                         .medUttakArbeidType(UttakArbeidType.fraKode(dto.getUttakArbeidType().getKode()))
                         .build())

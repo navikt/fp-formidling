@@ -15,6 +15,10 @@
         <param-value>false</param-value>
     </context-param>
 
+    <listener>
+        <listener-class>no.nav.vedtak.sikkerhet.jaspic.SamAutoRegistration</listener-class>
+    </listener>
+
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Ubeskyttet</web-resource-name>

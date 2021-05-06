@@ -1,5 +1,13 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -11,14 +19,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.ObjectFa
 import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.UendretutfallConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.uendretutfall.YtelseTypeKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
-import org.xml.sax.SAXException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
+import no.nav.foreldrepenger.xmlutils.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.UENDRETUTFALL_DOK)

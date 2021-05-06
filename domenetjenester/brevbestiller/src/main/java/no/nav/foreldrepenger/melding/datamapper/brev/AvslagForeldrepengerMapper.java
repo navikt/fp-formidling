@@ -43,7 +43,7 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
-import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
+import no.nav.foreldrepenger.xmlutils.JaxbHelper;
 import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped

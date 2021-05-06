@@ -1,5 +1,13 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -10,15 +18,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FritekstbrevConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.ObjectFactory;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
-import no.nav.vedtak.util.StringUtils;
-import org.xml.sax.SAXException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
+import no.nav.foreldrepenger.xmlutils.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.FRITEKST_DOK)
@@ -41,11 +41,11 @@ public class FritekstBrevMapper extends DokumentTypeMapper {
     }
 
     private String finnFaktiskTittel(DokumentHendelse hendelse, Behandling behandling) {
-        return !StringUtils.nullOrEmpty(hendelse.getTittel()) ? hendelse.getTittel() : behandling.getBehandlingsresultat().getOverskrift();
+        return hendelse.getTittel() != null && !hendelse.getTittel().isEmpty() ? hendelse.getTittel() : behandling.getBehandlingsresultat().getOverskrift();
     }
 
     private String finnFaktiskBrødtekst(DokumentHendelse hendelse, Behandling behandling) {
-        return !StringUtils.nullOrEmpty(hendelse.getFritekst()) ? hendelse.getFritekst() : behandling.getBehandlingsresultat().getFritekstbrev();
+        return hendelse.getFritekst() != null && !hendelse.getFritekst().isEmpty()  ? hendelse.getFritekst() : behandling.getBehandlingsresultat().getFritekstbrev();
     }
 
 

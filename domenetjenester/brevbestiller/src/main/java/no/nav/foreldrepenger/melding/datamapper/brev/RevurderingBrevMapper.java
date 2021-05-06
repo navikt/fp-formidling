@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.xml.sax.SAXException;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
@@ -17,16 +26,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.revurdering.ObjectFact
 import no.nav.foreldrepenger.melding.integrasjon.dokument.revurdering.RevurderingConstants;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.revurdering.YtelseTypeKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.vedtak.felles.integrasjon.felles.ws.JaxbHelper;
-import no.nav.vedtak.util.StringUtils;
-import org.xml.sax.SAXException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
+import no.nav.foreldrepenger.xmlutils.JaxbHelper;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.REVURDERING_DOK)
@@ -61,13 +61,13 @@ public class RevurderingBrevMapper extends DokumentTypeMapper {
         fagType.setFritekst(hendelse.getFritekst());
         fagType.setAntallBarn(familieHendelse.getAntallBarn());
         familieHendelse.getTermindato().map(XmlUtil::finnDatoVerdiAvUtenTidSone).ifPresent(fagType::setTerminDato);
-        fellesType.setAutomatiskBehandlet(StringUtils.nullOrEmpty(hendelse.getFritekst()));
+        fellesType.setAutomatiskBehandlet(hendelse.getFritekst() == null || hendelse.getFritekst().isEmpty());
         return fagType;
     }
 
     private AdvarselKodeKode utledAdvarselkode(DokumentHendelse hendelse) {
         if (hendelse.getRevurderingVarslingÅrsak().equals(RevurderingVarslingÅrsak.UDEFINERT)) {
-            if (!StringUtils.nullOrEmpty(hendelse.getFritekst())) {
+            if (hendelse.getFritekst() != null && !hendelse.getFritekst().isEmpty()) {
                 return AdvarselKodeKode.fromValue(RevurderingVarslingÅrsak.ANNET.getKode());
             }
             return null;

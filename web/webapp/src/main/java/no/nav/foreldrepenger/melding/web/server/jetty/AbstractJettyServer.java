@@ -43,6 +43,7 @@ abstract class AbstractJettyServer {
             new EnvConfiguration(),
             new PlusConfiguration(),
     };
+
     private AppKonfigurasjon appKonfigurasjon;
 
     public AbstractJettyServer(AppKonfigurasjon appKonfigurasjon) {

@@ -333,6 +333,9 @@ public final class UtbetalingsperiodeMapper {
         if (resultat == 0 && annenAktivitetListe != null && annenAktivitetListe.size() > 0) {
             resultat = annenAktivitetListe.stream().map(AnnenAktivitet::getUtbetalingsgrad).max(Integer::compareTo).orElse(0);
         }
+        if (resultat > 100) {
+            resultat = 100;
+        }
         return resultat;
     }
 }

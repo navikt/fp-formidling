@@ -1,8 +1,19 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
-import no.nav.foreldrepenger.melding.brevbestiller.JsonMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevproduksjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.task.BrevTaskProperties;
 import no.nav.foreldrepenger.melding.brevbestiller.task.DistribuerBrevTask;
@@ -30,15 +41,6 @@ import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -105,7 +107,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
             DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
             Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
-            dokumentFelles.setBrevData(JsonMapper.toJson(dokumentdata));
+            dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
 
             byte[] brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
             OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse, behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg);

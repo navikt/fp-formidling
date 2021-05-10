@@ -1,11 +1,10 @@
 package no.nav.foreldrepenger.melding.aksjonspunkt;
 
 public class Aksjonspunkt {
-    private AksjonspunktDefinisjon aksjonspunktDefinisjon;
-    private AksjonspunktStatus aksjonspunktStatus;
+    private final AksjonspunktDefinisjon aksjonspunktDefinisjon;
+    private final AksjonspunktStatus aksjonspunktStatus;
 
     private Aksjonspunkt(Builder builder) {
-
         aksjonspunktDefinisjon = builder.aksjonspunktDefinisjon;
         aksjonspunktStatus = builder.aksjonspunktStatus;
     }

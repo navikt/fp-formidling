@@ -1,23 +1,23 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnAntallArbeidsgivere;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnDagsats;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnMånedsbeløp;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harArbeidsgiverAndel;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harBrukerAndel;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.time.LocalDate;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnAntallArbeidsgivere;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnDagsats;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harDelvisRefusjon;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harFullRefusjon;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harIngenRefusjon;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BeregningsresultatMapperTest {
 
@@ -103,7 +103,7 @@ public class BeregningsresultatMapperTest {
     }
 
     @Test
-    public void skal_finne_at_bruker_har_andel() {
+    public void skal_finne_at_bruker_har_full_refusjon() {
         // Arrange
         BeregningsresultatFP beregningsresultat = BeregningsresultatFP.ny()
                 .leggTilBeregningsresultatPerioder(of(
@@ -130,11 +130,11 @@ public class BeregningsresultatMapperTest {
                 .build();
 
         // Act + Assert
-        assertThat(harBrukerAndel(beregningsresultat)).isTrue();
+        assertThat(harFullRefusjon(beregningsresultat)).isTrue();
     }
 
     @Test
-    public void skal_finne_at_arbeidsgiver_har_andel() {
+    public void skal_finne_at_bruker_har_ingen_refusjon() {
         // Arrange
         BeregningsresultatFP beregningsresultat = BeregningsresultatFP.ny()
                 .leggTilBeregningsresultatPerioder(of(
@@ -161,6 +161,38 @@ public class BeregningsresultatMapperTest {
                 .build();
 
         // Act + Assert
-        assertThat(harArbeidsgiverAndel(beregningsresultat)).isTrue();
+        assertThat(harIngenRefusjon(beregningsresultat)).isTrue();
+    }
+
+
+    @Test
+    public void skal_finne_at_bruker_har_delvis_refusjon() {
+        // Arrange
+        BeregningsresultatFP beregningsresultat = BeregningsresultatFP.ny()
+                .leggTilBeregningsresultatPerioder(of(
+                        BeregningsresultatPeriode.ny()
+                                .medPeriode(UBETYDELIG_PERIODE)
+                                .medBeregningsresultatAndel(of(
+                                        BeregningsresultatAndel.ny()
+                                                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                                                .medArbeidsgiver(new Arbeidsgiver("Navn1", "Referanse1"))
+                                                .medBrukerErMottaker(true)
+                                                .build()
+                                ))
+                                .build(),
+                        BeregningsresultatPeriode.ny()
+                                .medPeriode(UBETYDELIG_PERIODE)
+                                .medBeregningsresultatAndel(of(
+                                        BeregningsresultatAndel.ny()
+                                                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                                                .medArbeidsgiver(new Arbeidsgiver("Navn2", "Referanse2"))
+                                                .medArbeidsgiverErMottaker(true)
+                                                .build()
+                                ))
+                                .build()))
+                .build();
+
+        // Act + Assert
+        assertThat(harDelvisRefusjon(beregningsresultat)).isTrue();
     }
 }

@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereAvslag;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInfoOmUtbetaling;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInnvilget;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetaling;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -18,11 +9,19 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Konsek
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
+import org.junit.jupiter.api.Test;
+
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereAvslag;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereGradering;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInnvilget;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetaling;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UndermalInkluderingMapperTest {
 
     @Test
-    public void skal_inkludere_info_om_utbetaling_når_det_er_innvilget_resultat_og_mer_enn_en_periode() {
+    public void skal_inkludere__utbetaling_når_det_er_innvilget_resultat_og_mer_enn_en_periode() {
         // Arrange
         Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
@@ -31,201 +30,12 @@ public class UndermalInkluderingMapperTest {
 
         Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("").build();
         Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("").build();
-
-        // Act
-        boolean resultat = skalInkludereInfoOmUtbetaling(behandling, of(utbetalingsperiode1, utbetalingsperiode2));
-
-        // Assert
-        assertThat(resultat).isTrue();
-    }
-
-    @Test
-    public void skal_ikke_inkludere_info_om_utbetaling_når_det_er_avslått_resultat() {
-        // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
-                .build();
-        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
-
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("").build();
-        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("").build();
-
-        // Act
-        boolean resultat = skalInkludereInfoOmUtbetaling(behandling, of(utbetalingsperiode1, utbetalingsperiode2));
-
-        // Assert
-        assertThat(resultat).isFalse();
-    }
-
-    @Test
-    public void skal_inkludere_info_om_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_næring_og_uten_gradering_og_uten_en_av_gitte_årsaker() {
-        // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
-        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
-
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("1234").medNæring(Næring.ny().medGradering(false).build()).build();
-
-        // Act
-        boolean resultat = skalInkludereInfoOmUtbetaling(behandling, of(utbetalingsperiode1));
-
-        // Assert
-        assertThat(resultat).isTrue();
-    }
-
-    @Test
-    public void skal_ikke_inkludere_info_om_utbetaling_når_det_er_innvilget_resultat_og_en_periode_uten_gradering_med_en_av_gitte_årsaker() {
-        // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
-        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
-
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("2010").medNæring(Næring.ny().medGradering(false).build()).build();
-
-        // Act
-        boolean resultat = skalInkludereInfoOmUtbetaling(behandling, of(utbetalingsperiode1));
-
-        // Assert
-        assertThat(resultat).isFalse();
-    }
-
-    @Test
-    public void skal_ikke_inkludere_info_om_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_gradering_uten_en_av_gitte_årsaker() {
-        // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
-        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
-
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("1234").medNæring(Næring.ny().medGradering(true).build()).build();
-
-        // Act
-        boolean resultat = skalInkludereInfoOmUtbetaling(behandling, of(utbetalingsperiode1));
-
-        // Assert
-        assertThat(resultat).isFalse();
-    }
-
-    @Test
-    public void skal_inkludere_info_om_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_arbeidsforhold_og_uten_gradering_og_uten_en_av_gitte_årsaker() {
-        // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
-        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
-
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("1234").medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).build())).build();
-
-        // Act
-        boolean resultat = skalInkludereInfoOmUtbetaling(behandling, of(utbetalingsperiode1));
-
-        // Assert
-        assertThat(resultat).isTrue();
-    }
-
-    @Test
-    public void skal_inkludere_info_om_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_annen_aktivitet_og_uten_gradering_og_uten_en_av_gitte_årsaker() {
-        // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
-        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
-
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("1234").medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(false).build())).build();
-
-        // Act
-        boolean resultat = skalInkludereInfoOmUtbetaling(behandling, of(utbetalingsperiode1));
-
-        // Assert
-        assertThat(resultat).isTrue();
-    }
-
-    @Test
-    public void skal_inkludere_utbetaling_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_med_gitt_årsak() {
-        // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
-        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
-
-        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("2010").build();
-
-        // Act
-        boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode));
-
-        // Assert
-        assertThat(resultat).isTrue();
-    }
-
-    @Test
-    public void skal_ikke_inkludere_utbetaling_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_uten_gitt_årsak() {
-        // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
-        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
-
-        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("1234").build();
-
-        // Act
-        boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode));
-
-        // Assert
-        assertThat(resultat).isFalse();
-    }
-
-    @Test
-    public void skal_inkludere_utbetaling_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_med_gradering() {
-        // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
-        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
-
-        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("1234").medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(true).build())).build();
-
-        // Act
-        boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode));
-
-        // Assert
-        assertThat(resultat).isTrue();
-    }
-
-    @Test
-    public void skal_ikke_inkludere_utbetaling_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_uten_gradering() {
-        // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
-        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
-
-        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("1234").medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(false).build())).build();
-
-        // Act
-        boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode));
-
-        // Assert
-        assertThat(resultat).isFalse();
-    }
-
-    @Test
-    public void skal_ikke_inkludere_utbetaling_når_det_er_innvilget_resultat_og_mer_enn_en_periode() {
-        // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
-        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
-
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("2010").build();
-        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("2011").build();
 
         // Act
         boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode1, utbetalingsperiode2));
 
         // Assert
-        assertThat(resultat).isFalse();
+        assertThat(resultat).isTrue();
     }
 
     @Test
@@ -236,10 +46,199 @@ public class UndermalInkluderingMapperTest {
                 .build();
         Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("").build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("").build();
+
+        // Act
+        boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode1, utbetalingsperiode2));
+
+        // Assert
+        assertThat(resultat).isFalse();
+    }
+
+    @Test
+    public void skal_inkludere_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_næring_og_uten_gradering_og_uten_en_av_gitte_årsaker() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("1234").medNæring(Næring.ny().medGradering(false).build()).build();
+
+        // Act
+        boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode1));
+
+        // Assert
+        assertThat(resultat).isTrue();
+    }
+
+    @Test
+    public void skal_ikke_inkludere_utbetaling_når_det_er_innvilget_resultat_og_en_periode_uten_gradering_med_en_av_gitte_årsaker() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("2010").medNæring(Næring.ny().medGradering(false).build()).build();
+
+        // Act
+        boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode1));
+
+        // Assert
+        assertThat(resultat).isFalse();
+    }
+
+    @Test
+    public void skal_ikke_inkludere_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_gradering_uten_en_av_gitte_årsaker() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("1234").medNæring(Næring.ny().medGradering(true).build()).build();
+
+        // Act
+        boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode1));
+
+        // Assert
+        assertThat(resultat).isFalse();
+    }
+
+    @Test
+    public void skal_inkludere_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_arbeidsforhold_og_uten_gradering_og_uten_en_av_gitte_årsaker() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("1234").medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).build())).build();
+
+        // Act
+        boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode1));
+
+        // Assert
+        assertThat(resultat).isTrue();
+    }
+
+    @Test
+    public void skal_inkludere_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_annen_aktivitet_og_uten_gradering_og_uten_en_av_gitte_årsaker() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("1234").medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(false).build())).build();
+
+        // Act
+        boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode1));
+
+        // Assert
+        assertThat(resultat).isTrue();
+    }
+
+    @Test
+    public void skal_inkludere_gradering_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_med_gitt_årsak() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("2010").build();
 
         // Act
-        boolean resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode));
+        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode));
+
+        // Assert
+        assertThat(resultat).isTrue();
+    }
+
+    @Test
+    public void skal_ikke_inkludere_gradering_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_uten_gitt_årsak() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("1234").build();
+
+        // Act
+        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode));
+
+        // Assert
+        assertThat(resultat).isFalse();
+    }
+
+    @Test
+    public void skal_inkludere_gradering_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_med_gradering() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("1234").medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(true).build())).build();
+
+        // Act
+        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode));
+
+        // Assert
+        assertThat(resultat).isTrue();
+    }
+
+    @Test
+    public void skal_ikke_inkludere_gradering_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_uten_gradering() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("1234").medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(false).build())).build();
+
+        // Act
+        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode));
+
+        // Assert
+        assertThat(resultat).isFalse();
+    }
+
+    @Test
+    public void skal_ikke_inkludere_gradering_når_det_er_innvilget_resultat_og_mer_enn_en_periode() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("2010").build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("2011").build();
+
+        // Act
+        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode1, utbetalingsperiode2));
+
+        // Assert
+        assertThat(resultat).isFalse();
+    }
+
+    @Test
+    public void skal_ikke_inkludere_gradering_når_det_er_avslått_resultat() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("2010").build();
+
+        // Act
+        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode));
 
         // Assert
         assertThat(resultat).isFalse();

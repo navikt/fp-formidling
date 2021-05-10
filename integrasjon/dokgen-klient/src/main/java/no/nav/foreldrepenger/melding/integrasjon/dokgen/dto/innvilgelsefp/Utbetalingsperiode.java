@@ -15,6 +15,7 @@ public class Utbetalingsperiode {
     private LocalDate periodeTomDate;
     private long periodeDagsats;
     private int antallTapteDager;
+    private int prioritertUtbetalingsgrad;
     private List<Arbeidsforhold> arbeidsforholdsliste = new ArrayList<>();
     private Næring næring;
     private List<AnnenAktivitet> annenAktivitetsliste = new ArrayList<>();
@@ -106,6 +107,11 @@ public class Utbetalingsperiode {
 
         public Builder medAntallTapteDager(int antallTapteDager) {
             this.kladd.antallTapteDager = antallTapteDager;
+            return this;
+        }
+
+        public Builder medPrioritertUtbetalingsgrad(int prioritertUtbetalingsgrad) {
+            this.kladd.prioritertUtbetalingsgrad = prioritertUtbetalingsgrad;
             return this;
         }
 

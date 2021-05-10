@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
 public class Næring {
     private boolean gradering;
-    private int uttaksgrad;
+    private int utbetalingsgrad;
     private int prosentArbeid;
     private int sistLignedeÅr;
 
@@ -12,6 +12,10 @@ public class Næring {
 
     public boolean isGradering() {
         return gradering;
+    }
+
+    public int getUtbetalingsgrad() {
+        return utbetalingsgrad;
     }
 
     public int getSistLignedeÅr() {
@@ -30,8 +34,8 @@ public class Næring {
             return this;
         }
 
-        public Builder medUttaksgrad(int uttaksgrad) {
-            this.kladd.uttaksgrad = uttaksgrad;
+        public Builder medUtbetalingsgrad(int utbetalingsgrad) {
+            this.kladd.utbetalingsgrad = utbetalingsgrad;
             return this;
         }
 

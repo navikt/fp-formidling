@@ -1,37 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnDagsats;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnMånedsbeløp;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
-import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktStatus;
@@ -48,6 +16,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
@@ -57,10 +26,10 @@ import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AleneomsorgKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.InnvilgelseForeldrepengerDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.KonsekvensForInnvilgetYtelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
@@ -80,6 +49,37 @@ import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.melding.ytelsefordeling.OppgittRettighet;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnDagsats;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class InnvilgetForeldrepengerDokumentdataMapperTest {
@@ -153,16 +153,18 @@ public class InnvilgetForeldrepengerDokumentdataMapperTest {
         assertThat(dokumentdata.getMånedsbeløp()).isEqualTo(finnMånedsbeløp(beregningsresultatFP));
         assertThat(dokumentdata.getForMyeUtbetalt()).isEqualTo(ForMyeUtbetalt.GENERELL);
         assertThat(dokumentdata.isInntektMottattArbeidsgiver()).isTrue();
-        assertThat(dokumentdata.isAnnenForelderHarRettVurdert()).isTrue();
+        assertThat(dokumentdata.isAnnenForelderHarRettVurdert()).isEqualTo(VurderingsKode.JA);
         assertThat(dokumentdata.isAnnenForelderHarRett()).isTrue();
-        assertThat(dokumentdata.getAleneomsorgKode()).isEqualTo(AleneomsorgKode.JA);
+        assertThat(dokumentdata.getAleneomsorgKode()).isEqualTo(VurderingsKode.JA);
         assertThat(dokumentdata.barnErFødt()).isFalse();
         assertThat(dokumentdata.årsakErFødselshendelse()).isTrue();
         assertThat(dokumentdata.isIkkeOmsorg()).isFalse();
         assertThat(dokumentdata.isGjelderMor()).isTrue();
         assertThat(dokumentdata.isGjelderFødsel()).isTrue();
-        assertThat(dokumentdata.harBrukerAndel()).isTrue();
-        assertThat(dokumentdata.harArbeidsgiverAndel()).isTrue();
+        assertThat(dokumentdata.delvisRefusjon()).isTrue();
+        assertThat(dokumentdata.ingenRefusjon()).isFalse();
+        assertThat(dokumentdata.erfbEllerRvInnvilget()).isTrue();
+        assertThat(dokumentdata.fullRefusjon()).isFalse();
         assertThat(dokumentdata.getAntallPerioder()).isEqualTo(3);
         assertThat(dokumentdata.harInnvilgedePerioder()).isTrue();
         assertThat(dokumentdata.getAntallArbeidsgivere()).isEqualTo(1);
@@ -178,9 +180,11 @@ public class InnvilgetForeldrepengerDokumentdataMapperTest {
         assertThat(dokumentdata.getPerioder()).hasSize(3);
 
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
+        assertThat(dokumentdata.getLovhjemlerUttak()).isEqualTo("§ forvaltningsloven § 35");
+        assertThat(dokumentdata.getLovhjemlerBeregning()).isEqualTo("§§ 14-7 og forvaltningsloven § 35");
 
-        assertThat(dokumentdata.isInkludereInfoOmUtbetaling()).isTrue();
-        assertThat(dokumentdata.isInkludereUtbetaling()).isFalse();
+        assertThat(dokumentdata.isInkludereUtbetaling()).isTrue();
+        assertThat(dokumentdata.isInkludereGradering()).isFalse();
         assertThat(dokumentdata.isInkludereInnvilget()).isTrue();
         assertThat(dokumentdata.isInkludereAvslag()).isTrue();
 
@@ -237,6 +241,7 @@ public class InnvilgetForeldrepengerDokumentdataMapperTest {
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode())
                 .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
+                .medhHjemmel(Hjemmel.F_14_7)
                 .medBesteberegnet(true)
                 .build();
     }

@@ -171,19 +171,25 @@ public final class UtbetalingsperiodeMapper {
                                                LocalDate fomDate) {
         PeriodeResultatÅrsak periodeResultatÅrsak = utledÅrsakskode(uttakResultatPeriode);
 
+        List<Arbeidsforhold> arbeidsfoholdListe = mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode);
+        Næring næring = mapNæring(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode);
+        List<AnnenAktivitet> annenAktivitetListe = mapAnnenAktivtetListe(beregningsresultatPeriode, uttakResultatPeriode);
+
         var utbetalingsPerioder = Utbetalingsperiode.ny()
                 .medAntallTapteDager(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter()))
                 .medInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode))
                 .medPeriodeFom(fomDate)
                 .medPeriodeTom(beregningsresultatPeriode.getBeregningsresultatPeriodeTom())
                 .medÅrsak(periodeResultatÅrsak.getKode())
-                .medArbeidsforhold(mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode))
-                .medNæring(mapNæring(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode))
-                .medAnnenAktivitet(mapAnnenAktivtetListe(beregningsresultatPeriode, uttakResultatPeriode));
+                .medArbeidsforhold(arbeidsfoholdListe)
+                .medNæring(næring)
+                .medAnnenAktivitet(annenAktivitetListe)
+                .medPrioritertUtbetalingsgrad(finnPrioritertUtbetalingsgrad(arbeidsfoholdListe, næring, annenAktivitetListe));
 
         if (beregningsresultatPeriode.getDagsats() != null) {
             utbetalingsPerioder.medPeriodeDagsats(beregningsresultatPeriode.getDagsats());
         }
+
         return utbetalingsPerioder.build();
     }
 
@@ -217,7 +223,7 @@ public final class UtbetalingsperiodeMapper {
         tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement2().ifPresent(
                 uttakAktivitet -> {
                     annenAktivitetBuilder.medGradering(uttakAktivitet.getGraderingInnvilget());
-                    annenAktivitetBuilder.medUttaksgrad(uttakAktivitet.getUtbetalingsprosent().intValue());
+                    annenAktivitetBuilder.medUtbetalingsgrad(uttakAktivitet.getUtbetalingsprosent().intValue());
                     annenAktivitetBuilder.medProsentArbeid(uttakAktivitet.getArbeidsprosent().intValue());
                 });
         return annenAktivitetBuilder.build();
@@ -246,7 +252,7 @@ public final class UtbetalingsperiodeMapper {
         var næringBuilder = Næring.ny();
 
         if (uttakAktivitet.isPresent()) {
-            næringBuilder.medUttaksgrad((uttakAktivitet.get().getUtbetalingsprosent().intValue()));
+            næringBuilder.medUtbetalingsgrad((uttakAktivitet.get().getUtbetalingsprosent().intValue()));
             næringBuilder.medProsentArbeid(uttakAktivitet.get().getArbeidsprosent().intValue());
             næringBuilder.medGradering(uttakAktivitet.get().getGraderingInnvilget());
         }
@@ -284,7 +290,6 @@ public final class UtbetalingsperiodeMapper {
         var arbeidsforhold = Arbeidsforhold.ny()
                 .medArbeidsgiverNavn((beregningsresultatAndel.getArbeidsgiver().map(Arbeidsgiver::getNavn).orElse("Andel")));
         if (uttakAktivitet.isPresent()) {
-            arbeidsforhold.medUttaksgrad(uttakAktivitet.get().getUtbetalingsprosent().intValue());
             arbeidsforhold.medProsentArbeid(uttakAktivitet.get().getArbeidsprosent().intValue());
             arbeidsforhold.medUtbetalingsgrad(uttakAktivitet.get().getUtbetalingsprosent().intValue());
             arbeidsforhold.medGradering(uttakAktivitet.get().getGraderingInnvilget());
@@ -315,5 +320,22 @@ public final class UtbetalingsperiodeMapper {
                 arbeidsforholdBuilder.medNaturalytelseEndringType(NaturalytelseEndringType.INGEN_ENDRING);
             }
         }
+    }
+
+    private static int finnPrioritertUtbetalingsgrad(List<Arbeidsforhold> arbeidsfoholdListe, Næring næring, List<AnnenAktivitet> annenAktivitetListe) {
+        int resultat = 0;
+        if (arbeidsfoholdListe != null && arbeidsfoholdListe.size() > 0) {
+            resultat = arbeidsfoholdListe.stream().map(Arbeidsforhold::getUtbetalingsgrad).max(Integer::compareTo).orElse(0);
+        }
+        if (resultat == 0 && næring != null) {
+            resultat = næring.getUtbetalingsgrad();
+        }
+        if (resultat == 0 && annenAktivitetListe != null && annenAktivitetListe.size() > 0) {
+            resultat = annenAktivitetListe.stream().map(AnnenAktivitet::getUtbetalingsgrad).max(Integer::compareTo).orElse(0);
+        }
+        if (resultat > 100) {
+            resultat = 100;
+        }
+        return resultat;
     }
 }

@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -88,6 +89,10 @@ public enum AktivitetStatus implements Kodeverdi {
 
     public boolean harKombinertStatus() {
         return KOMBINERTE_STATUSER.contains(this);
+    }
+
+    public static boolean erKombinertStatus(String aktivitetStatus) {
+        return KOMBINERTE_STATUSER.stream().map(AktivitetStatus::name).collect(Collectors.toSet()).contains(aktivitetStatus);
     }
 
     @JsonProperty

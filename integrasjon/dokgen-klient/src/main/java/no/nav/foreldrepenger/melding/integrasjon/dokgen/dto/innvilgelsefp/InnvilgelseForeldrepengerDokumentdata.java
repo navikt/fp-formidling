@@ -1,16 +1,14 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
+
 public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
-    private BehandlingType behandlingType;
-    private BehandlingResultatType behandlingResultatType;
+    private String behandlingType;
+    private String behandlingResultatType;
     private KonsekvensForInnvilgetYtelse konsekvensForInnvilgetYtelse;
     private String søknadsdato;
     private int dekningsgrad;
@@ -22,7 +20,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     private boolean inntektMottattArbeidsgiver;
     private boolean annenForelderHarRett;
     private VurderingsKode annenForelderHarRettVurdert;
-    private VurderingsKode vurderingsKode;
+    private VurderingsKode aleneomsorgKode;
     private boolean ikkeOmsorg;
     private boolean barnErFødt;
     private boolean årsakErFødselshendelse;
@@ -62,11 +60,11 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     private boolean inkludereInnvilget;
     private boolean inkludereAvslag;
 
-    public BehandlingType getBehandlingType() {
+    public String getBehandlingType() {
         return behandlingType;
     }
 
-    public BehandlingResultatType getBehandlingResultatType() {
+    public String getBehandlingResultatType() {
         return behandlingResultatType;
     }
 
@@ -94,7 +92,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
         return seksG;
     }
 
-    public boolean isInntektOverSeksG() {
+    public boolean getInntektOverSeksG() {
         return inntektOverSeksG;
     }
 
@@ -102,59 +100,59 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
         return forMyeUtbetalt;
     }
 
-    public boolean isInntektMottattArbeidsgiver() {
+    public boolean getInntektMottattArbeidsgiver() {
         return inntektMottattArbeidsgiver;
     }
 
-    public boolean isAnnenForelderHarRett() {
+    public boolean getAnnenForelderHarRett() {
         return annenForelderHarRett;
     }
 
-    public VurderingsKode isAnnenForelderHarRettVurdert() {
+    public VurderingsKode getAnnenForelderHarRettVurdert() {
         return annenForelderHarRettVurdert;
     }
 
     public VurderingsKode getAleneomsorgKode() {
-        return vurderingsKode;
+        return aleneomsorgKode;
     }
 
-    public boolean isIkkeOmsorg() {
+    public boolean getIkkeOmsorg() {
         return ikkeOmsorg;
     }
 
-    public boolean barnErFødt() {
+    public boolean getBarnErFødt() {
         return barnErFødt;
     }
 
-    public boolean årsakErFødselshendelse() {
+    public boolean getÅrsakErFødselshendelse() {
         return årsakErFødselshendelse;
     }
 
-    public boolean isGjelderMor() {
+    public boolean getGjelderMor() {
         return gjelderMor;
     }
 
-    public boolean isGjelderFødsel() {
+    public boolean getGjelderFødsel() {
         return gjelderFødsel;
     }
 
-    public boolean erBesteberegning() {
+    public boolean getErBesteberegning() {
         return erBesteberegning;
     }
 
-    public boolean ingenRefusjon() {
+    public boolean getIngenRefusjon() {
         return ingenRefusjon;
     }
 
-    public boolean delvisRefusjon() {
+    public boolean getDelvisRefusjon() {
         return delvisRefusjon;
     }
 
-    public boolean fullRefusjon() {
+    public boolean getFullRefusjon() {
         return fullRefusjon;
     }
 
-    public boolean erfbEllerRvInnvilget() {
+    public boolean getFbEllerRvInnvilget() {
         return fbEllerRvInnvilget;
     }
 
@@ -162,7 +160,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
         return antallPerioder;
     }
 
-    public boolean harInnvilgedePerioder() {
+    public boolean getHarInnvilgedePerioder() {
         return harInnvilgedePerioder;
     }
 
@@ -214,7 +212,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
         return bruttoBeregningsgrunnlag;
     }
 
-    public boolean harBruktBruttoBeregningsgrunnlag() {
+    public boolean getHarBruktBruttoBeregningsgrunnlag() {
         return harBruktBruttoBeregningsgrunnlag;
     }
 
@@ -230,19 +228,19 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
 
     public String getLovhjemlerBeregning() { return lovhjemlerBeregning; }
 
-    public boolean isInkludereUtbetaling() {
+    public boolean getInkludereUtbetaling() {
         return inkludereUtbetaling;
     }
 
-    public boolean isInkludereGradering() {
+    public boolean getInkludereGradering() {
         return inkludereGradering;
     }
 
-    public boolean isInkludereInnvilget() {
+    public boolean getInkludereInnvilget() {
         return inkludereInnvilget;
     }
 
-    public boolean isInkludereAvslag() {
+    public boolean getInkludereAvslag() {
         return inkludereAvslag;
     }
 
@@ -262,12 +260,12 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medBehandlingType(BehandlingType behandlingType) {
+        public Builder medBehandlingType(String behandlingType) {
             this.kladd.behandlingType = behandlingType;
             return this;
         }
 
-        public Builder medBehandlingResultatType(BehandlingResultatType behandlingResultatType) {
+        public Builder medBehandlingResultatType(String behandlingResultatType) {
             this.kladd.behandlingResultatType = behandlingResultatType;
             return this;
         }
@@ -327,8 +325,8 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medAleneomsorgKode(VurderingsKode vurderingsKode) {
-            this.kladd.vurderingsKode = vurderingsKode;
+        public Builder medAleneomsorgKode(VurderingsKode aleneomsorgKode) {
+            this.kladd.aleneomsorgKode = aleneomsorgKode;
             return this;
         }
 

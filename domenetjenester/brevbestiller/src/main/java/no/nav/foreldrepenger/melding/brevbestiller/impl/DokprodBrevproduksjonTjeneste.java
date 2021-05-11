@@ -19,11 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
+import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevproduksjonTjeneste;
+import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
+import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapperProvider;
 import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
@@ -38,6 +41,7 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.melding.typer.AktørId;
@@ -54,16 +58,19 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkere
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
+import no.nav.vedtak.util.env.Environment;
 
 @ApplicationScoped
 public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokprodBrevproduksjonTjeneste.class);
+    private static final Environment ENVIRONMENT = Environment.current();
 
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DokumentproduksjonConsumer dokumentproduksjonProxyService;
     private SakClient sakRestKlient;
     private DomeneobjektProvider domeneobjektProvider;
     private DokumentRepository dokumentRepository;
+    private DokumentdataMapperProvider dokumentdataMapperProvider;
 
     public DokprodBrevproduksjonTjeneste() {
         // for cdi proxy
@@ -74,12 +81,14 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                                          SakClient sakKlient, //TODO: Legg på @Jersey når opprettsak er borte
                                          DokumentFellesDataMapper dokumentFellesDataMapper,
                                          DomeneobjektProvider domeneobjektProvider,
-                                         DokumentRepository dokumentRepository) {
+                                         DokumentRepository dokumentRepository,
+                                         DokumentdataMapperProvider dokumentdataMapperProvider) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
         this.sakRestKlient = sakKlient;
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentRepository = dokumentRepository;
+        this.dokumentdataMapperProvider = dokumentdataMapperProvider;
     }
 
     @Override
@@ -96,6 +105,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             var saksnummer = bestemSaksnummer(dokumentHendelse.getDokumentMalType(), dokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
             Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling, saksnummer);
             dokumentFelles.setBrevData(elementTilString(brevXmlElement));
+            opprettAlternativeBrevDataOmNødvendig(dokumentHendelse, behandling, dokumentMal, dokumentFelles);
 
             final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = DokumentbestillingMapper.mapFraBehandling(dokumentMal,
                     dokumentFelles, saksnummer, harVedlegg);
@@ -115,7 +125,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         return historikkinnslagList;
     }
 
-    private Saksnummer bestemSaksnummer(DokumentMalType malType, Saksnummer saksnummer, AktørId aktørId) {
+    Saksnummer bestemSaksnummer(DokumentMalType malType, Saksnummer saksnummer, AktørId aktørId) {
         if (Long.parseLong(saksnummer.getVerdi()) < 152000000L)
             return saksnummer;
         try {
@@ -133,6 +143,18 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         } catch (Exception e) {
             LOGGER.info("FPFORMIDLING SAK feil for saksnummer ", e);
             throw BrevbestillerFeil.feilFraSak(e);
+        }
+    }
+
+    private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, DokumentFelles dokumentFelles) {
+        if (!ENVIRONMENT.isProd() && DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.equals(dokumentMal)) {
+            try {
+                DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(DokumentMalType.INNVILGELSE_FORELDREPENGER);
+                Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+                dokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
+            } catch (Exception e) {
+                LOGGER.info("Feilet i å lage Dokgen-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}", dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid());
+            }
         }
     }
 

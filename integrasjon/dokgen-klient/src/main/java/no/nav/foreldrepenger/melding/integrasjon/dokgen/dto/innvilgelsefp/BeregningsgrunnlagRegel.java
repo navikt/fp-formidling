@@ -3,15 +3,13 @@ package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-
 public class BeregningsgrunnlagRegel {
-    private AktivitetStatus aktivitetStatus;
+    private String aktivitetStatus;
     private int antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke;
     private boolean snNyoppstartet;
     private List<BeregningsgrunnlagAndel> andelListe = new ArrayList<>();
 
-    public AktivitetStatus getAktivitetStatus() {
+    public String getAktivitetStatus() {
         return aktivitetStatus;
     }
 
@@ -30,7 +28,7 @@ public class BeregningsgrunnlagRegel {
             this.kladd = new BeregningsgrunnlagRegel();
         }
 
-        public Builder medAktivitetStatus(AktivitetStatus aktivitetStatus) {
+        public Builder medAktivitetStatus(String aktivitetStatus) {
             this.kladd.aktivitetStatus = aktivitetStatus;
             return this;
         }

@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
+
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -10,6 +12,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -21,6 +24,7 @@ import no.nav.foreldrepenger.melding.brevbestiller.task.FerdigstillForsendelseTa
 import no.nav.foreldrepenger.melding.brevbestiller.task.TilknyttVedleggTask;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapperProvider;
+import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
@@ -41,10 +45,12 @@ import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
+import no.nav.vedtak.util.env.Environment;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokgenBrevproduksjonTjeneste.class);
+    private static final Environment ENVIRONMENT = Environment.current();
 
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DomeneobjektProvider domeneobjektProvider;
@@ -54,6 +60,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private DokumentdataMapperProvider dokumentdataMapperProvider;
     private ProsessTaskRepository prosessTaskRepository;
     private HistorikkRepository historikkRepository;
+    private DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste;
 
     DokgenBrevproduksjonTjeneste() {
         // CDI
@@ -67,7 +74,8 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                                         OpprettJournalpostTjeneste opprettJournalpostTjeneste,
                                         DokumentdataMapperProvider dokumentdataMapperProvider,
                                         ProsessTaskRepository prosessTaskRepository,
-                                        HistorikkRepository historikkRepository) {
+                                        HistorikkRepository historikkRepository,
+                                        DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste) {
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentRepository = dokumentRepository;
@@ -76,6 +84,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         this.dokumentdataMapperProvider = dokumentdataMapperProvider;
         this.prosessTaskRepository = prosessTaskRepository;
         this.historikkRepository = historikkRepository;
+        this.dokprodBrevproduksjonTjeneste = dokprodBrevproduksjonTjeneste;
     } //NOSONAR
 
     @Override
@@ -108,6 +117,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
             Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
             dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
+            opprettAlternativeBrevDataOmNødvendig(dokumentHendelse, behandling, dokumentMal, dokumentFelles);
 
             byte[] brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
             OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse, behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg);
@@ -129,6 +139,18 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                 .medBestiltTid(LocalDateTime.now())
                 .medBestillingType(bestillingType.name())
                 .build();
+    }
+
+    private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, DokumentFelles dokumentFelles) {
+        if (!ENVIRONMENT.isProd() && DokumentMalType.INNVILGELSE_FORELDREPENGER.equals(dokumentMal)) {
+            try {
+                var saksnummer = dokprodBrevproduksjonTjeneste.bestemSaksnummer(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK, dokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
+                Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK, dokumentFelles, dokumentHendelse, behandling, saksnummer);
+                dokumentFelles.setAlternativeBrevData(elementTilString(brevXmlElement));
+            } catch (Exception e) {
+                LOGGER.info("Feilet i å lage Dokprod-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}", dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid());
+            }
+        }
     }
 
     private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMal, OpprettJournalpostResponse response, JournalpostId journalpostId, boolean innsynMedVedlegg) {

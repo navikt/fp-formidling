@@ -60,7 +60,7 @@ public final class BeregningsgrunnlagMapper {
         for (BeregningsgrunnlagAktivitetStatus bgAktivitetStatus : beregningsgrunnlag.getAktivitetStatuser()) {
             BeregningsgrunnlagRegel.Builder builder = BeregningsgrunnlagRegel.ny();
             List<BeregningsgrunnlagPrStatusOgAndel> filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe);
-            builder.medAktivitetStatus(bgAktivitetStatus.getAktivitetStatus());
+            builder.medAktivitetStatus(bgAktivitetStatus.getAktivitetStatus().name());
             builder.medAndelListe(mapAndelListe(filtrertListe));
             builder.medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
             builder.medSnNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
@@ -74,7 +74,7 @@ public final class BeregningsgrunnlagMapper {
     }
 
     private static boolean minstEnRegelHarKombinertAktivitetStatus(List<BeregningsgrunnlagRegel> beregningsgrunnlagregler) {
-        return beregningsgrunnlagregler.stream().anyMatch(regel -> regel.getAktivitetStatus().harKombinertStatus());
+        return beregningsgrunnlagregler.stream().anyMatch(regel -> AktivitetStatus.erKombinertStatus(regel.getAktivitetStatus()));
     }
 
     private static List<BeregningsgrunnlagPrStatusOgAndel> finnBgpsaListe(Beregningsgrunnlag beregningsgrunnlag) {
@@ -104,7 +104,7 @@ public final class BeregningsgrunnlagMapper {
     private static BeregningsgrunnlagAndel lagBeregningsgrunnlagAndel(BeregningsgrunnlagPrStatusOgAndel andel) {
         BeregningsgrunnlagAndel.Builder builder = BeregningsgrunnlagAndel.ny();
 
-        builder.medAktivitetStatus(andel.getAktivitetStatus());
+        builder.medAktivitetStatus(andel.getAktivitetStatus().name());
         builder.medDagsats(andel.getDagsats());
         builder.medEtterlønnSluttpakke(OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(andel.getArbeidsforholdType()));
 

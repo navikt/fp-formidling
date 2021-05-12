@@ -1,15 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
@@ -20,6 +10,16 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Beregn
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public final class BeregningsgrunnlagMapper {
 
@@ -92,6 +92,19 @@ public final class BeregningsgrunnlagMapper {
             resultatListe = bgpsaListe.stream().filter(andel -> relevanteStatuser.contains(andel.getAktivitetStatus())).collect(Collectors.toList());
         } else {
             resultatListe = bgpsaListe.stream().filter(andel -> bgAktivitetStatus.getAktivitetStatus().equals(andel.getAktivitetStatus())).collect(Collectors.toList());
+
+            //Spesialhåndtering av tilkommet arbeidsforhold for Dagpenger og AAP - andeler som ikke kan mappes gjennom aktivitetesstatuslisten på beregningsgrunnlag da de er tilkommet etter skjæringstidspunkt. Typisk dersom arbeidsgiver er tilkommet etter start permisjon og krever refusjon i permisjonstiden.
+            List<AktivitetStatus> aktuelleStatuserForTilkommetArbForhold = List.of(AktivitetStatus.DAGPENGER, AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+            if (resultatListe.stream().anyMatch(br-> aktuelleStatuserForTilkommetArbForhold.contains(br.getAktivitetStatus())) && hentSummertDagsats(resultatListe) != hentSummertDagsats(bgpsaListe)){
+                long sumTilkommetDagsats = hentSumTilkommetDagsats(bgpsaListe);
+                if (sumTilkommetDagsats != 0) {
+                    resultatListe.forEach(rl-> {
+                        if (aktuelleStatuserForTilkommetArbForhold.contains(rl.getAktivitetStatus())) {
+                            rl.setDagsats(sumTilkommetDagsats);
+                        }
+                    });
+                }
+            }
         }
         if (resultatListe.isEmpty()) {
             StringBuilder sb = new StringBuilder();
@@ -99,6 +112,18 @@ public final class BeregningsgrunnlagMapper {
             throw new IllegalStateException(String.format("Fant ingen andeler for status: %s, andeler: %s", bgAktivitetStatus.getAktivitetStatus(), sb));
         }
         return resultatListe;
+    }
+
+    private static long hentSummertDagsats(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+        return bgpsaListe.stream().map(BeregningsgrunnlagPrStatusOgAndel::getDagsats).reduce(Long::sum).orElse(0L);
+    }
+
+    private static long hentSumTilkommetDagsats(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+        return bgpsaListe.stream()
+                .filter(andel->andel.getDagsats() > 0)
+                .filter(BeregningsgrunnlagPrStatusOgAndel::getErTilkommetAndel)
+                .map(BeregningsgrunnlagPrStatusOgAndel::getDagsats)
+                .reduce(Long::sum).orElse(0L);
     }
 
     private static BeregningsgrunnlagAndel lagBeregningsgrunnlagAndel(BeregningsgrunnlagPrStatusOgAndel andel) {

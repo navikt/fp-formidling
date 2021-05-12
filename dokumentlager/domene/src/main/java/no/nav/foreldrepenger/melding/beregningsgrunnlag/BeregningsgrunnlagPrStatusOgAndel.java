@@ -21,6 +21,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     private OpptjeningAktivitetType arbeidsforholdType;
     private DatoIntervall beregningsperiode;
     private BGAndelArbeidsforhold bgAndelArbeidsforhold;
+    private Boolean erTilkommetAndel;
 
     private BeregningsgrunnlagPrStatusOgAndel(Builder builder) {
         dagsats = builder.dagsats;
@@ -32,6 +33,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         arbeidsforholdType = builder.arbeidsforholdType;
         beregningsperiode = builder.beregningsperiode;
         bgAndelArbeidsforhold = builder.bgAndelArbeidsforhold;
+        erTilkommetAndel = builder.erTilkommetAndel;
     }
 
     public static Builder ny() {
@@ -40,6 +42,9 @@ public class BeregningsgrunnlagPrStatusOgAndel {
 
     public Long getDagsats() {
         return dagsats;
+    }
+    public void setDagsats(long sats) {
+        this.dagsats = dagsats + sats;
     }
 
     public AktivitetStatus getAktivitetStatus() {
@@ -92,6 +97,8 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         return nyIArbeidslivet;
     }
 
+    public Boolean getErTilkommetAndel() { return erTilkommetAndel; }
+
     public static final class Builder {
         private Long dagsats;
         private AktivitetStatus aktivitetStatus;
@@ -102,6 +109,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         private OpptjeningAktivitetType arbeidsforholdType;
         private DatoIntervall beregningsperiode;
         private BGAndelArbeidsforhold bgAndelArbeidsforhold;
+        private Boolean erTilkommetAndel;
 
         private Builder() {
         }
@@ -148,6 +156,11 @@ public class BeregningsgrunnlagPrStatusOgAndel {
 
         public Builder medBgAndelArbeidsforhold(BGAndelArbeidsforhold bgAndelArbeidsforhold) {
             this.bgAndelArbeidsforhold = bgAndelArbeidsforhold;
+            return this;
+        }
+
+        public Builder medErTilkommetAndel(Boolean erTilkommetAndel) {
+            this.erTilkommetAndel = erTilkommetAndel;
             return this;
         }
 

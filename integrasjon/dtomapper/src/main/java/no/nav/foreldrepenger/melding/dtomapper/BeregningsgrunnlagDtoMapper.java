@@ -80,7 +80,8 @@ public class BeregningsgrunnlagDtoMapper {
                 .medDagsats(dto.getDagsats())
                 .medBeregningsperiode(avklarBeregningsperiode(dto))
                 .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
-                .medArbeidsforholdType(bgAndelArbeidsforhold == null ? OpptjeningAktivitetType.UDEFINERT : OpptjeningAktivitetType.fraKode(dto.getArbeidsforholdType().getKode()));
+                .medArbeidsforholdType(bgAndelArbeidsforhold == null ? OpptjeningAktivitetType.UDEFINERT : OpptjeningAktivitetType.fraKode(dto.getArbeidsforholdType().getKode()))
+                .medErTilkommetAndel(dto.getErTilkommetAndel());
         return builder.build();
     }
 

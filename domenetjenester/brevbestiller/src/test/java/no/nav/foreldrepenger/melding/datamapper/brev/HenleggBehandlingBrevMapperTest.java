@@ -167,7 +167,7 @@ public class HenleggBehandlingBrevMapperTest {
 
     private Behandling byggBehandling(BehandlingType behandlingType, String behandlendeEnhetNavn) {
         return Behandling.builder()
-                .medId(123L)
+                .medUuid(UUID.randomUUID())
                 .medBehandlingType(behandlingType)
                 .medBehandlendeEnhetNavn(behandlendeEnhetNavn)
                 .build();

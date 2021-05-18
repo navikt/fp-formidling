@@ -28,7 +28,6 @@ public class BehandlingDtoMapper {
         if (dto.getRequestPayload() != null) {
             linkBuilder.medRequestPayload(
                     new BehandlingRelLinkPayload(dto.getRequestPayload().getSaksnummer(),
-                            dto.getRequestPayload().getBehandlingId(),
                             dto.getRequestPayload().getBehandlingUuid()));
         }
         return linkBuilder
@@ -41,8 +40,7 @@ public class BehandlingDtoMapper {
         Supplier<Stream<BehandlingResourceLink>> behandlingFormidlingResourceLinkStreamSupplier = () -> dto.getFormidlingRessurser().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
         behandlingFormidlingResourceLinkStreamSupplier.get().forEach(builder::leggTilFormidlingResourceLink);
-        builder.medId(dto.getId())
-                .medUuid(dto.getUuid())
+        builder.medUuid(dto.getUuid())
                 .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
                 .medStatus(BehandlingStatus.fraKode(dto.getStatus().getKode()))
                 .medOpprettetDato(dto.getOpprettet())

@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.anke.Anke;
@@ -86,12 +85,12 @@ public class DomeneobjektProvider {
     }
 
     public Behandling hentBehandling(UUID behandlingUuid) {
-        return BehandlingDtoMapper.mapBehandlingFraDto((behandlingRestKlient.hentBehandling(new BehandlingIdDto(behandlingUuid))));
+        return BehandlingDtoMapper.mapBehandlingFraDto((behandlingRestKlient.hentBehandling(behandlingUuid)));
     }
 
     public Optional<Behandling> hentOriginalBehandlingHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentOriginalBehandling(behandling.getResourceLinker())
-                .map(dto -> behandlingRestKlient.hentBehandling(new BehandlingIdDto(dto.getId()))) //TODO - Endre til UUID..
+                .map(dto -> behandlingRestKlient.hentBehandling(dto.getUuid()))
                 .map(BehandlingDtoMapper::mapBehandlingFraDto);
     }
 

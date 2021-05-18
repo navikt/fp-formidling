@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 
 @ExtendWith(MockitoExtension.class)
 class AvslagEngangsstønadDokumentdataMapperTest {
-    private static final long ID = 123456;
+    private static final UUID ID = UUID.randomUUID();
     private static final AktørId AKTØR_ID = new AktørId("2222222222222");
 
     private DokumentFelles dokumentFelles;
@@ -133,7 +134,7 @@ class AvslagEngangsstønadDokumentdataMapperTest {
         if (avslagsfritekst != null) {
             behandlingresultat.medAvslagarsakFritekst(avslagsfritekst);
         }
-        var behandlingBuilder = Behandling.builder().medId(AvslagEngangsstønadDokumentdataMapperTest.ID)
+        var behandlingBuilder = Behandling.builder().medUuid(AvslagEngangsstønadDokumentdataMapperTest.ID)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medBehandlingsresultat(behandlingresultat.build())
                 .medFagsakBackend(fagsak);

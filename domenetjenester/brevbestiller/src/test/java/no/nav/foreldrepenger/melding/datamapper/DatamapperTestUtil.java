@@ -110,7 +110,10 @@ public class DatamapperTestUtil {
     }
 
     public static Behandling.Builder standardBehandlingBuilder() {
-        return Behandling.builder().medId(123L).medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD).medSpråkkode(Språkkode.NB);
+        return Behandling.builder()
+                .medUuid(UUID.randomUUID())
+                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+                .medSpråkkode(Språkkode.NB);
     }
 
     public static Behandling standardBehandling() {

@@ -5,6 +5,8 @@ import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagSta
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +51,7 @@ class HenleggeDokumentdataMapperTest {
         assertThat(henleggelseDokumentdata.getOpphavType()).isEqualTo("FAMPEN");
         assertThat(henleggelseDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
     }
-    
+
     @Test
     public void henlegg_mapper_anke_med_opphav_klage() {
         //Arrange
@@ -71,7 +73,7 @@ class HenleggeDokumentdataMapperTest {
 
     private Behandling opprettBehandling(BehandlingType behType, String behNavn) {
         return Behandling.builder()
-                .medId(1L)
+                .medUuid(UUID.randomUUID())
                 .medBehandlingType(behType)
                 .medBehandlendeEnhetNavn(behNavn)
                 .medBehandlingsresultat(Behandlingsresultat.builder()

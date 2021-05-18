@@ -18,7 +18,6 @@ public class Behandling {
     private List<BehandlingResourceLink> formidlingRessurser;
 
     //Felter brukt i brev
-    private long id;
     private UUID uuid;
     private BehandlingType behandlingType;
     private Integer behandlingstidFristUker;
@@ -86,10 +85,6 @@ public class Behandling {
         return uuid;
     }
 
-    public long getId() {
-        return id;
-    }
-
     public List<BehandlingResourceLink> getResourceLinker() {
         return resourceLinker;
     }
@@ -107,7 +102,7 @@ public class Behandling {
                 .map(BehandlingÅrsak::getBehandlingÅrsakType)
                 .anyMatch(behandlingÅrsak::equals);
     }
-    
+
     public boolean erFørstegangssøknad() {
         return BehandlingType.FØRSTEGANGSSØKNAD.equals(getBehandlingType());
     }
@@ -215,11 +210,6 @@ public class Behandling {
 
         public Behandling.Builder leggTilFormidlingResourceLink(BehandlingResourceLink resourceLink) {
             this.kladd.formidlingRessurser.add(resourceLink);
-            return this;
-        }
-
-        public Behandling.Builder medId(long id) {
-            this.kladd.id = id;
             return this;
         }
 

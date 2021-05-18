@@ -42,8 +42,9 @@ class AnkeBeslutningOmOpphevingBrevMapperTest {
     @InjectMocks
     protected AnkeBeslutningOmOpphevingBrevMapper mapper;
 
-    void setUp(AnkeVurdering vurdering, String fritekst, long ID) {
-        behandling = Behandling.builder().medId(ID)
+    void setUp(AnkeVurdering vurdering, String fritekst, UUID behandlingId) {
+        behandling = Behandling.builder()
+                .medUuid(behandlingId)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medSpråkkode(Språkkode.NB)
                 .build();
@@ -70,7 +71,7 @@ class AnkeBeslutningOmOpphevingBrevMapperTest {
     @Test
     void map_for_hjemsende_og_oppheve_foreldrepenger() {
         //Arrange
-        setUp(AnkeVurdering.ANKE_OPPHEVE_OG_HJEMSENDE, FRITEKST, 12345678);
+        setUp(AnkeVurdering.ANKE_OPPHEVE_OG_HJEMSENDE, FRITEKST, UUID.randomUUID());
         //Assert
         ResourceBundle expectedValues = ResourceBundle.getBundle(
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
@@ -85,7 +86,7 @@ class AnkeBeslutningOmOpphevingBrevMapperTest {
     @Test
     void map_for_hjemsende_uten_oppheve() {
         //Arrange
-        setUp(AnkeVurdering.ANKE_HJEMSEND_UTEN_OPPHEV, FRITEKST, 12345679);
+        setUp(AnkeVurdering.ANKE_HJEMSEND_UTEN_OPPHEV, FRITEKST, UUID.randomUUID());
         //Assert
         ResourceBundle expectedValues = ResourceBundle.getBundle(
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
@@ -100,7 +101,7 @@ class AnkeBeslutningOmOpphevingBrevMapperTest {
     @Test
     void map_uten_anke() {
         //Arrange
-        setUp(null, null, 12345679);
+        setUp(null, null, UUID.randomUUID());
         //Assert
         ResourceBundle expectedValues = ResourceBundle.getBundle(
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),

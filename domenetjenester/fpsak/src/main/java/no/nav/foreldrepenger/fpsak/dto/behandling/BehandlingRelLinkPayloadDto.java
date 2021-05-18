@@ -1,12 +1,13 @@
 package no.nav.foreldrepenger.fpsak.dto.behandling;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingRelLinkPayloadDto {
     private Long saksnummer;
-    private Long behandlingId;
-    private String behandlingUuid;
+    private UUID behandlingUuid;
 
     public Long getSaksnummer() {
         return saksnummer;
@@ -16,23 +17,18 @@ public class BehandlingRelLinkPayloadDto {
         this.saksnummer = saksnummer;
     }
 
-    public Long getBehandlingId() {
-        return behandlingId;
-    }
-
-    public void setBehandlingId(Long behandlingId) {
-        this.behandlingId = behandlingId;
-    }
-
-    public String getBehandlingUuid() {
+    public UUID getBehandlingUuid() {
         return behandlingUuid;
+    }
+
+    public void setBehandlingUuid(UUID behandlingUuid) {
+        this.behandlingUuid = behandlingUuid;
     }
 
     @Override
     public String toString() {
         return "BehandlingRelLinkPayloadDto{" +
                 "saksnummer=" + saksnummer +
-                ", behandlingId=" + behandlingId +
                 ", behandlingUuid='" + behandlingUuid + '\'' +
                 '}';
     }

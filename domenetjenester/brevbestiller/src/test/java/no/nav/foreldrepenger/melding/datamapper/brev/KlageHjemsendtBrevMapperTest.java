@@ -31,7 +31,7 @@ import no.nav.foreldrepenger.melding.klage.KlageVurdering;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 
 public class KlageHjemsendtBrevMapperTest {
-    private static final long ID = 123L;
+    private static final UUID BEHANDLING_ID = UUID.randomUUID();
     private static final String KA = "NAV Klageinstans Midt-Norge";
 
     @Mock
@@ -132,7 +132,8 @@ public class KlageHjemsendtBrevMapperTest {
 
     private Behandling opprettBehandling() {
         BehandlingType behandlingType = BehandlingType.KLAGE;
-        return Behandling.builder().medId(ID)
+        return Behandling.builder()
+                .medUuid(BEHANDLING_ID)
                 .medBehandlingType(behandlingType)
                 .medSpråkkode(Språkkode.NB)
                 .build();

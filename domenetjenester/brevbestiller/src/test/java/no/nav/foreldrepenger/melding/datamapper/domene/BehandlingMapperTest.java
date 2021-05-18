@@ -22,7 +22,7 @@ public class BehandlingMapperTest {
 
     private static final String HENDELSE_FRITEKST = "HENDELSE_FRITEKST";
     private static final String BEHANDLING_FRITEKST = "BEHANDLING_FRITEKST";
-    private static final long BEHANDLING_ID = 123L;
+    private static final UUID BEHANDLING_ID = UUID.randomUUID();
     Behandling behandling;
     DokumentHendelse dokumentHendelse;
 
@@ -110,8 +110,7 @@ public class BehandlingMapperTest {
     }
 
     private Behandling.Builder standardBehandlingBuilder() {
-        return Behandling.builder()
-                .medId(BEHANDLING_ID);
+        return Behandling.builder().medUuid(BEHANDLING_ID);
     }
 
 }

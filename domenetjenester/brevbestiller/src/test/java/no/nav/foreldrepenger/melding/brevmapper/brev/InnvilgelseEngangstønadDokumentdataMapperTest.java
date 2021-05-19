@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,8 +37,8 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 @ExtendWith(MockitoExtension.class)
 class InnvilgelseEngangstønadDokumentdataMapperTest {
     private InnvilgelseEngangstønadDokumentdataMapper dokumentdataMapperTest;
-    private static final long ID = 123L;
-    private static final long ID_REV = 124L;
+    private static final UUID ID = UUID.randomUUID();
+    private static final UUID ID_REV = UUID.randomUUID();
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
@@ -163,8 +164,9 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         assertThat(innvilgelseDokumentdata.getInnvilgetBeløp()).isEqualTo(formaterBeløp(1000L));
     }
 
-    private Behandling opprettBehandling(BehandlingType behType, long id) {
-        return Behandling.builder().medId(id)
+    private Behandling opprettBehandling(BehandlingType behType, UUID id) {
+        return Behandling.builder()
+                .medUuid(id)
                 .medBehandlingType(behType)
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
                 .build();

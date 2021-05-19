@@ -20,6 +20,7 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -141,7 +142,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
 
     private Behandling opprettBehandling() {
         return Behandling.builder()
-                .medId(1L)
+                .medUuid(UUID.randomUUID())
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
                 .medBehandlingsresultat(Behandlingsresultat.builder()

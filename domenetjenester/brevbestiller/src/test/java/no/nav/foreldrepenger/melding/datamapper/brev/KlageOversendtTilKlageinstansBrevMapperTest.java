@@ -34,7 +34,7 @@ import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 
 @ExtendWith(MockitoExtension.class)
 public class KlageOversendtTilKlageinstansBrevMapperTest {
-    private static final long ID = 123L;
+    private static final UUID BEHANDLING_ID = UUID.randomUUID();
     private static final String NFP = "NAV Familie- og pensjonsytelser";
 
     @Mock
@@ -99,7 +99,8 @@ public class KlageOversendtTilKlageinstansBrevMapperTest {
     }
 
     private Behandling opprettBehandling() {
-        return Behandling.builder().medId(ID)
+        return Behandling.builder()
+                .medUuid(BEHANDLING_ID)
                 .medBehandlingType(BehandlingType.KLAGE)
                 .medSpråkkode(Språkkode.NB)
                 .build();

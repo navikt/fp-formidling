@@ -38,8 +38,9 @@ public class EtterlysInntektsmeldingBrevMapperTest {
     @InjectMocks
     private EtterlysInntektsmeldingBrevMapper mapper;
 
-    public void setup(FagsakYtelseType ytelseType, long ID) {
-        behandling = Behandling.builder().medId(ID)
+    public void setup(FagsakYtelseType ytelseType, UUID behandlingId) {
+        behandling = Behandling.builder()
+                .medUuid(behandlingId)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medSpråkkode(Språkkode.NB)
                 .build();
@@ -66,7 +67,7 @@ public class EtterlysInntektsmeldingBrevMapperTest {
 
     @Test
     public void test_map_fagtype_foreldrepenger() {
-        setup(FagsakYtelseType.FORELDREPENGER, 123L);
+        setup(FagsakYtelseType.FORELDREPENGER, UUID.randomUUID());
 
         ResourceBundle expectedValues = ResourceBundle.getBundle(
                 String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),
@@ -79,7 +80,7 @@ public class EtterlysInntektsmeldingBrevMapperTest {
 
     @Test
     public void test_map_fagtype_svangerskapspenger() {
-      setup(FagsakYtelseType.SVANGERSKAPSPENGER, 124L);
+      setup(FagsakYtelseType.SVANGERSKAPSPENGER, UUID.randomUUID());
 
       ResourceBundle expectedValues = ResourceBundle.getBundle(
             String.join("/", ROTMAPPE, mapper.templateFolder(), "expected"),

@@ -32,7 +32,7 @@ import no.nav.foreldrepenger.melding.klage.KlageFormkravResultat;
 import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 
 public class KlageAvvistBrevMapperTest {
-    private static final long ID = 123L;
+    private static final UUID BEHANDLING_ID = UUID.randomUUID();
     private static final String NFP = "NAV Familie- og pensjonsytelser Drammen";
     private static final String NFP_TLF = "55 55 33 33";
     private static final String KA = "NAV Klageinstans Midt-Norge";
@@ -186,7 +186,8 @@ public class KlageAvvistBrevMapperTest {
     }
 
     private Behandling opprettBehandling() {
-        return Behandling.builder().medId(ID)
+        return Behandling.builder()
+                .medUuid(BEHANDLING_ID)
                 .medBehandlingType(BehandlingType.KLAGE)
                 .medSpråkkode(Språkkode.NB)
                 .build();

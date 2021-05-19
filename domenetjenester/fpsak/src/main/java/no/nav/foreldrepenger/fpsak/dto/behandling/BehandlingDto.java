@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingDto {
-    private Long id;
+
     private UUID uuid;
     private Integer versjon;
     private KodeDto type;
@@ -41,14 +41,6 @@ public class BehandlingDto {
     private String venteArsakKode;
     private List<BehandlingÅrsakDto> behandlingÅrsaker = new ArrayList<>();
     private LocalDate originalVedtaksDato;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Integer getVersjon() {
         return versjon;
@@ -269,7 +261,7 @@ public class BehandlingDto {
     @Override
     public String toString() {
         return "BehandlingDto{" +
-                "id=" + id +
+                "id=" + uuid +
                 ", versjon=" + versjon +
                 ", type=" + type +
                 ", status=" + status +

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -19,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingIdDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.MottattDokumentDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
@@ -67,22 +67,18 @@ public class BehandlingRestKlient {
         this.endpointFpsakRestBase = endpointFpsakRestBase;
     }
 
-    public BehandlingDto hentBehandling(BehandlingIdDto behandlingIdDto) {
+    public BehandlingDto hentBehandling(UUID behandlingId) {
         Optional<BehandlingDto> behandling = Optional.empty();
         try {
             URIBuilder behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + HENT_BEHANLDING_ENDPOINT);
-            behandlingUriBuilder.setParameter(BEHANDLING_ID, velgRiktigBehandlingIdfraDto(behandlingIdDto));
+            behandlingUriBuilder.setParameter(BEHANDLING_ID, behandlingId.toString());
             behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);
         }
         return behandling.orElseThrow(() -> {
-            throw new IllegalStateException("Klarte ikke hente behandling: " + behandlingIdDto.getBehandlingId().toString());
+            throw new IllegalStateException("Klarte ikke hente behandling: " + behandlingId);
         });
-    }
-
-    private String velgRiktigBehandlingIdfraDto(BehandlingIdDto behandlingIdDto) {
-        return behandlingIdDto.getBehandlingUuid() != null ? behandlingIdDto.getBehandlingUuid().toString() : behandlingIdDto.getBehandlingId().toString();
     }
 
     public Optional<BehandlingDto> hentOriginalBehandling(List<BehandlingResourceLink> resourceLinker) {
@@ -302,25 +298,24 @@ public class BehandlingRestKlient {
             URIBuilder uriBuilder = new URIBuilder(endpoint);
             if (payload != null) {
                 //Hvis payloaden er null, er GET parameterne antagelivis allerede satt i urlen
-                if (payload.getSaksnummer() != null) {
-                    uriBuilder.addParameter(SAKSNUMMER, String.valueOf(payload.getSaksnummer()));
+                if (payload.saksnummer() != null) {
+                    uriBuilder.addParameter(SAKSNUMMER, String.valueOf(payload.saksnummer()));
                 }
-                if (payload.getBehandlingId() != null) {
-                    uriBuilder.addParameter(BEHANDLING_ID, String.valueOf(payload.getBehandlingId()));
+                if (payload.behandlingUuid() != null) {
+                    uriBuilder.addParameter(BEHANDLING_ID, String.valueOf(payload.behandlingUuid()));
                 }
             }
-            return uriBuilder
-                    .build();
+            return uriBuilder.build();
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(e);
         }
     }
 
-    private String hentBehandlingId(List<BehandlingResourceLink> linkListe) {
+    private UUID hentBehandlingId(List<BehandlingResourceLink> linkListe) {
         return linkListe.stream()
                 .map(BehandlingResourceLink::getRequestPayload)
                 .filter(Objects::nonNull)
-                .map(BehandlingRelLinkPayload::getBehandlingUuid)
+                .map(BehandlingRelLinkPayload::behandlingUuid)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);

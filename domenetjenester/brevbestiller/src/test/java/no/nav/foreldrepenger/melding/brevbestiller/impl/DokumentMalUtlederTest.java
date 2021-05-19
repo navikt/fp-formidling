@@ -210,7 +210,6 @@ public class DokumentMalUtlederTest {
         hendelse = standardBuilder()
                 .build();
         Behandling behandling = Behandling.builder()
-                .medId(123)
                 .medUuid(UUID.randomUUID())
                 .build();
         assertThatThrownBy(() -> dokumentMalUtleder.utledDokumentmal(behandling, hendelse)).isInstanceOf(VLException.class);

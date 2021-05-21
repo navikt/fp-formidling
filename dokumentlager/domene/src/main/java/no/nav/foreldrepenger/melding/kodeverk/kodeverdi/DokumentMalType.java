@@ -51,7 +51,7 @@ public enum DokumentMalType implements Kodeverdi {
     FORLENGET_SAKSBEHANDLINGSTID(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID, "Forlenget saksbehandlingstid", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
     FORLENGET_SAKSBEHANDLINGSTID_MEDL(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_MEDL, "Forlenget saksbehandlingstid - medlemskap", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING_IKKE_SENDT, DoksysKode.FRITKS),
     FORLENGET_SAKSBEHANDLINGSTID_TIDLIG(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG, "Forlenget saksbehandlingstid - Tidlig søknad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
-    INNVILGET_FORELDREPENGER(DokumentMalTypeKode.INNVILGET_FORELDREPENGER, "Innvilgelsesbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    INNVILGELSE_FORELDREPENGER(DokumentMalTypeKode.INNVILGELSE_FORELDREPENGER, "Innvilgelsesbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated

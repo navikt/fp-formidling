@@ -100,13 +100,13 @@ public class BeregningsgrunnlagMapperTest {
         // Assert
         assertThat(regler).hasSize(2);
 
-        assertThat(regler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER);
+        assertThat(regler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER.name());
         assertThat(regler.get(0).getAndelListe()).hasSize(1);
         assertThat(regler.get(0).getAndelListe().get(0).getDagsats()).isEqualTo(FRILANSER_DAGSATS);
         assertThat(regler.get(0).getAndelListe().get(0).getMånedsinntekt()).isEqualTo(FRILANSER_BRUTTO_PR_ÅR.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
         assertThat(regler.get(0).getAndelListe().get(0).getÅrsinntekt()).isEqualTo(FRILANSER_BRUTTO_PR_ÅR.longValue());
 
-        assertThat(regler.get(1).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER);
+        assertThat(regler.get(1).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER.name());
         assertThat(regler.get(1).getAndelListe()).hasSize(1);
         assertThat(regler.get(1).getAndelListe().get(0).getDagsats()).isEqualTo(ARBEIDSTAKER_DAGSATS);
         assertThat(regler.get(1).getAndelListe().get(0).getMånedsinntekt()).isEqualTo(ARBEIDSTAKER_BRUTTO_PR_ÅR.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
@@ -117,10 +117,10 @@ public class BeregningsgrunnlagMapperTest {
     public void skal_finne_at_brutto_beregningsgrunnlag_er_brukt_fordi_det_er_mer_enn_en_regel() {
         // Arrange
         BeregningsgrunnlagRegel regel1 = BeregningsgrunnlagRegel.ny()
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER)
+                .medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER.name())
                 .build();
         BeregningsgrunnlagRegel regel2 = BeregningsgrunnlagRegel.ny()
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name())
                 .build();
 
         // Act
@@ -134,7 +134,7 @@ public class BeregningsgrunnlagMapperTest {
     public void skal_finne_at_brutto_beregningsgrunnlag_er_brukt_fordi_det_er_kombinert_status() {
         // Arrange
         BeregningsgrunnlagRegel regel1 = BeregningsgrunnlagRegel.ny()
-                .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL)
+                .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
                 .build();
 
         // Act
@@ -148,7 +148,7 @@ public class BeregningsgrunnlagMapperTest {
     public void skal_finne_at_brutto_beregningsgrunnlag_ikke_er_brukt() {
         // Arrange
         BeregningsgrunnlagRegel regel1 = BeregningsgrunnlagRegel.ny()
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name())
                 .build();
 
         // Act

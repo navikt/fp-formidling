@@ -84,7 +84,7 @@ import no.nav.foreldrepenger.melding.ytelsefordeling.OppgittRettighet;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 
 @ExtendWith(MockitoExtension.class)
-public class InnvilgetForeldrepengerDokumentdataMapperTest {
+public class InnvilgelseForeldrepengerDokumentdataMapperTest {
 
     private static final LocalDate SØKNADSDATO = LocalDate.now().minusDays(1);
     private static final Dekningsgrad DEKNINGSGRAD = Dekningsgrad._100;
@@ -105,13 +105,13 @@ public class InnvilgetForeldrepengerDokumentdataMapperTest {
 
     private DokumentData dokumentData;
 
-    private InnvilgetForeldrepengerDokumentdataMapper dokumentdataMapper;
+    private InnvilgelseForeldrepengerDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     public void before() {
         BrevParametere brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        dokumentData = lagStandardDokumentData(DokumentMalType.INNVILGET_FORELDREPENGER);
-        dokumentdataMapper = new InnvilgetForeldrepengerDokumentdataMapper(brevParametere, domeneobjektProvider);
+        dokumentData = lagStandardDokumentData(DokumentMalType.INNVILGELSE_FORELDREPENGER);
+        dokumentdataMapper = new InnvilgelseForeldrepengerDokumentdataMapper(brevParametere, domeneobjektProvider);
 
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
@@ -146,29 +146,29 @@ public class InnvilgetForeldrepengerDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FRITEKST);
 
-        assertThat(dokumentdata.getBehandlingType()).isEqualTo(behandling.getBehandlingType());
-        assertThat(dokumentdata.getBehandlingResultatType()).isEqualTo(behandling.getBehandlingsresultat().getBehandlingResultatType());
+        assertThat(dokumentdata.getBehandlingType()).isEqualTo(behandling.getBehandlingType().name());
+        assertThat(dokumentdata.getBehandlingResultatType()).isEqualTo(behandling.getBehandlingsresultat().getBehandlingResultatType().name());
         assertThat(dokumentdata.getKonsekvensForInnvilgetYtelse()).isEqualTo(KonsekvensForInnvilgetYtelse.ENDRING_I_BEREGNING_OG_UTTAK);
         assertThat(dokumentdata.getSøknadsdato()).isEqualTo(formaterDatoNorsk(SØKNADSDATO));
         assertThat(dokumentdata.getDekningsgrad()).isEqualTo(DEKNINGSGRAD.getVerdi());
         assertThat(dokumentdata.getDagsats()).isEqualTo(finnDagsats(beregningsresultatFP));
         assertThat(dokumentdata.getMånedsbeløp()).isEqualTo(finnMånedsbeløp(beregningsresultatFP));
         assertThat(dokumentdata.getForMyeUtbetalt()).isEqualTo(ForMyeUtbetalt.GENERELL);
-        assertThat(dokumentdata.isInntektMottattArbeidsgiver()).isTrue();
-        assertThat(dokumentdata.isAnnenForelderHarRettVurdert()).isEqualTo(VurderingsKode.JA);
-        assertThat(dokumentdata.isAnnenForelderHarRett()).isTrue();
+        assertThat(dokumentdata.getInntektMottattArbeidsgiver()).isTrue();
+        assertThat(dokumentdata.getAnnenForelderHarRettVurdert()).isEqualTo(VurderingsKode.JA);
+        assertThat(dokumentdata.getAnnenForelderHarRett()).isTrue();
         assertThat(dokumentdata.getAleneomsorgKode()).isEqualTo(VurderingsKode.JA);
-        assertThat(dokumentdata.barnErFødt()).isFalse();
-        assertThat(dokumentdata.årsakErFødselshendelse()).isTrue();
-        assertThat(dokumentdata.isIkkeOmsorg()).isFalse();
-        assertThat(dokumentdata.isGjelderMor()).isTrue();
-        assertThat(dokumentdata.isGjelderFødsel()).isTrue();
-        assertThat(dokumentdata.delvisRefusjon()).isTrue();
-        assertThat(dokumentdata.ingenRefusjon()).isFalse();
-        assertThat(dokumentdata.erfbEllerRvInnvilget()).isTrue();
-        assertThat(dokumentdata.fullRefusjon()).isFalse();
+        assertThat(dokumentdata.getBarnErFødt()).isFalse();
+        assertThat(dokumentdata.getÅrsakErFødselshendelse()).isTrue();
+        assertThat(dokumentdata.getIkkeOmsorg()).isFalse();
+        assertThat(dokumentdata.getGjelderMor()).isTrue();
+        assertThat(dokumentdata.getGjelderFødsel()).isTrue();
+        assertThat(dokumentdata.getDelvisRefusjon()).isTrue();
+        assertThat(dokumentdata.getIngenRefusjon()).isFalse();
+        assertThat(dokumentdata.getFbEllerRvInnvilget()).isTrue();
+        assertThat(dokumentdata.getFullRefusjon()).isFalse();
         assertThat(dokumentdata.getAntallPerioder()).isEqualTo(3);
-        assertThat(dokumentdata.harInnvilgedePerioder()).isTrue();
+        assertThat(dokumentdata.getHarInnvilgedePerioder()).isTrue();
         assertThat(dokumentdata.getAntallArbeidsgivere()).isEqualTo(1);
         assertThat(dokumentdata.getDagerTaptFørTermin()).isEqualTo(TAPTE_DAGER_FPFF);
         assertThat(dokumentdata.getDisponibleDager()).isEqualTo(DISPONIBLE_DAGER);
@@ -185,17 +185,17 @@ public class InnvilgetForeldrepengerDokumentdataMapperTest {
         assertThat(dokumentdata.getLovhjemlerUttak()).isEqualTo("§ forvaltningsloven § 35");
         assertThat(dokumentdata.getLovhjemlerBeregning()).isEqualTo("§§ 14-7 og forvaltningsloven § 35");
 
-        assertThat(dokumentdata.isInkludereUtbetaling()).isTrue();
-        assertThat(dokumentdata.isInkludereGradering()).isFalse();
-        assertThat(dokumentdata.isInkludereInnvilget()).isTrue();
-        assertThat(dokumentdata.isInkludereAvslag()).isTrue();
+        assertThat(dokumentdata.getInkludereUtbetaling()).isTrue();
+        assertThat(dokumentdata.getInkludereGradering()).isFalse();
+        assertThat(dokumentdata.getInkludereInnvilget()).isTrue();
+        assertThat(dokumentdata.getInkludereAvslag()).isTrue();
 
         assertThat(dokumentdata.getBeregningsgrunnlagregler()).hasSize(1);
         assertThat(dokumentdata.getBruttoBeregningsgrunnlag()).isEqualTo(BRUTTO_BERENINGSGRUNNLAG);
         assertThat(dokumentdata.getSeksG()).isEqualTo(GRUNNBELØP * 6);
-        assertThat(dokumentdata.isInntektOverSeksG()).isFalse();
-        assertThat(dokumentdata.erBesteberegning()).isTrue();
-        assertThat(dokumentdata.harBruktBruttoBeregningsgrunnlag()).isFalse();
+        assertThat(dokumentdata.getInntektOverSeksG()).isFalse();
+        assertThat(dokumentdata.getErBesteberegning()).isTrue();
+        assertThat(dokumentdata.getHarBruktBruttoBeregningsgrunnlag()).isFalse();
     }
 
     private FagsakBackend opprettFagsakBackend() {

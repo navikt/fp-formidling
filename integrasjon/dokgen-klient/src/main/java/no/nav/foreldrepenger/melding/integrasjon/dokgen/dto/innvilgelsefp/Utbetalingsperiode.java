@@ -65,6 +65,10 @@ public class Utbetalingsperiode {
         return annenAktivitetsliste;
     }
 
+    public int getPrioritertUtbetalingsgrad() {
+        return prioritertUtbetalingsgrad;
+    }
+
     public static Builder ny() {
         return new Builder();
     }

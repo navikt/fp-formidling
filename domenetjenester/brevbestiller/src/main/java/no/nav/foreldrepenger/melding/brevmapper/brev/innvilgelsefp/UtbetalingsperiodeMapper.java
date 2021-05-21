@@ -219,7 +219,7 @@ public final class UtbetalingsperiodeMapper {
     private static AnnenAktivitet mapAnnenAktivitet(Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> tilkjentYtelseAndelMedTilhørendeUttaksaktivitet) {
         BeregningsresultatAndel beregningsresultatAndel = tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement1();
         var annenAktivitetBuilder = AnnenAktivitet.ny()
-                .medAktivitetStatus((beregningsresultatAndel.getAktivitetStatus()));
+                .medAktivitetStatus((beregningsresultatAndel.getAktivitetStatus().name()));
         tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement2().ifPresent(
                 uttakAktivitet -> {
                     annenAktivitetBuilder.medGradering(uttakAktivitet.getGraderingInnvilget());

@@ -34,7 +34,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.INFOBREV_TIL_ANNEN_FORELDER,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL,
-            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG);
+            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG,
+            DokumentMalType.INNVILGELSE_FORELDREPENGER);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
             DokumentMalType.INNHENT_DOK,
             DokumentMalType.REVURDERING_DOK,

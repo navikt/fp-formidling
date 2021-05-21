@@ -110,13 +110,13 @@ public class UtbetalingsperiodeMergerFellesTest {
 
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
-        utbetalingsperiode1 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).build())).build();
+        utbetalingsperiode1 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).build())).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
-        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.FRILANSER).build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.FRILANSER.name()).build())).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
-        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).build())).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
     }
 

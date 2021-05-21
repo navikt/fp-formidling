@@ -51,9 +51,6 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "sprak_kode", nullable = false)
     private Språkkode språkkode = Språkkode.UDEFINERT;
 
-    /**
-     * Offisielt tildelt saksnummer fra GSAK.
-     */
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "saksnummer", column = @Column(name = "saksnummer", nullable = false, updatable = false)))
     private Saksnummer saksnummer;
@@ -114,8 +111,16 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "sakspart_person_status", nullable = false)
     private String sakspartPersonStatus;
 
+    // TODO(JEJ): Etter vi er ferdige med overgangen til ny mal for innvilgelse foreldrepenger,
+    // vil kolonnen XML erstattes av BREV_DATA / alternativeBrevData under (blir brevData).
+    // Dette blir mao starten på expand-contract for å bli kvitt "XML"-navnet, der vi først må skrive samme data til begge kolonner,
+    // og så bestille DB-jobb der data kopieres fra XML til BREV_DATA, før XML kan slettes tilslutt.
+    // Frem til dette vil BREV_DATA inneholde den versjonen av brevet som ikke ble bestilt,
+    // mens XML inneholder faktisk sendt versjon som alltid.
     @Column(name = "xml")
     private String brevData;
+    @Column(name = "brev_data")
+    private String alternativeBrevData;
 
     @Transient
     private Optional<Kopi> erKopi;
@@ -220,8 +225,16 @@ public class DokumentFelles extends BaseEntitet {
         return brevData;
     }
 
+    public String getAlternativeBrevData() {
+        return alternativeBrevData;
+    }
+
     public void setBrevData(String brevData) {
         this.brevData = brevData;
+    }
+
+    public void setAlternativeBrevData(String alternativeBrevData) {
+        this.alternativeBrevData = alternativeBrevData;
     }
 
     @Override

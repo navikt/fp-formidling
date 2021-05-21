@@ -28,12 +28,14 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 import no.nav.foreldrepenger.melding.poststed.PostnummerSynkroniseringTjeneste;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
+import no.nav.vedtak.util.env.Environment;
 
 
 @Path("/forvaltning")
 @ApplicationScoped
 @Transactional
 public class ForvaltningRestTjeneste {
+    private static final Environment ENVIRONMENT = Environment.current();
 
     private DokgenRestKlient dokgenRestKlient;
     private PostnummerSynkroniseringTjeneste postnummerTjeneste;
@@ -56,7 +58,7 @@ public class ForvaltningRestTjeneste {
     @Path("/dokgen-json-til-pdf")
     @Consumes(APPLICATION_JSON)
     @Produces("application/pdf")
-    @Operation(description = "Tar imot en FP-Dokgen JSON og sender den til FP-Dokgen for å lage PDF",
+    @Operation(description = "Tar imot en FP-Dokgen JSON og sender den til FP-Dokgen for å lage PDF. Tjenesten er ikke tilgjengelig i produksjon - bruk DEV eller lokalt miljø.",
             tags = "forvaltning",
             responses = {
                     @ApiResponse(responseCode = "200",
@@ -70,6 +72,11 @@ public class ForvaltningRestTjeneste {
     @BeskyttetRessurs(action = READ, resource = DRIFT)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response dokgenJsonTilPdf(@BeanParam @Valid DokgenJsonTilPdfDto dokgenJsonTilPdfDto) throws Exception {
+        if (ENVIRONMENT.isProd()) {
+            // Kjøring i prod vil potensielt gi unødvendig loggstøy, feks ved syntaksfeil
+            return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
+        }
+
         Dokumentdata dokumentdata = (Dokumentdata) DefaultJsonMapper.getObjectMapper().readValue(dokgenJsonTilPdfDto.getDokumentdataJson(), Class.forName(dokgenJsonTilPdfDto.getDokumentdataKlasse()));
 
         byte[] resultat = dokgenRestKlient.genererPdf(dokgenJsonTilPdfDto.getMalType(), Språkkode.fraKode(dokgenJsonTilPdfDto.getSpråkKode()), dokumentdata);

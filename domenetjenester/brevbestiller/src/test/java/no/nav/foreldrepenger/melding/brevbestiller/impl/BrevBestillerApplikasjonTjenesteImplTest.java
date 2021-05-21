@@ -116,7 +116,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         navKontaktKonfigurasjon = new NavKontaktKonfigurasjon("1", "2", "3", "4", "5", "6", "7");
         dokumentbestillingDtoMapper = new DokumentbestillingDtoMapper();
         dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, navKontaktKonfigurasjon, virksomhetTjeneste);
-        dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository, dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, prosessTaskRepository, historikkRepository);
+        dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository, dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, prosessTaskRepository, historikkRepository, dokprodBrevproduksjonTjeneste);
         tjeneste = new BrevBestillerApplikasjonTjenesteImpl(dokumentMalUtleder, domeneobjektProvider, dokumentbestillingDtoMapper, dokprodBrevproduksjonTjeneste, dokgenBrevproduksjonTjeneste);
     }
 

@@ -1,9 +1,7 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-
 public class AnnenAktivitet {
-    private AktivitetStatus aktivitetStatus;
+    private String aktivitetStatus;
     private boolean gradering;
     private int utbetalingsgrad;
     private int prosentArbeid;
@@ -16,7 +14,7 @@ public class AnnenAktivitet {
         return utbetalingsgrad;
     }
 
-    public AktivitetStatus getAktivitetStatus() {
+    public String getAktivitetStatus() {
         return aktivitetStatus;
     }
 
@@ -31,7 +29,7 @@ public class AnnenAktivitet {
             this.kladd = new AnnenAktivitet();
         }
 
-        public Builder medAktivitetStatus(AktivitetStatus aktivitetStatus) {
+        public Builder medAktivitetStatus(String aktivitetStatus) {
             this.kladd.aktivitetStatus = aktivitetStatus;
             return this;
         }

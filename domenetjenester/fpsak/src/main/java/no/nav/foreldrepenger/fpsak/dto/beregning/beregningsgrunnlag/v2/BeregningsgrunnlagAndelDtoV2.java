@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -69,6 +68,10 @@ public class BeregningsgrunnlagAndelDtoV2 {
     @Valid
     private BgAndelArbeidsforholdDtoV2 arbeidsforhold;
 
+    @JsonProperty(value = "erTilkommetAndel")
+    @Valid
+    private Boolean erTilkommetAndel;
+
     public BeregningsgrunnlagAndelDtoV2() {
     }
 
@@ -80,7 +83,8 @@ public class BeregningsgrunnlagAndelDtoV2 {
                                         @Valid @NotNull KodeDto arbeidsforholdType,
                                         @Valid LocalDate beregningsperiodeFom,
                                         @Valid LocalDate beregningsperiodeTom,
-                                        @Valid BgAndelArbeidsforholdDtoV2 arbeidsforhold) {
+                                        @Valid BgAndelArbeidsforholdDtoV2 arbeidsforhold,
+                                        @Valid Boolean erTilkommetAndel) {
         this.dagsats = dagsats;
         this.aktivitetStatus = aktivitetStatus;
         this.bruttoPrÅr = bruttoPrÅr;
@@ -90,6 +94,7 @@ public class BeregningsgrunnlagAndelDtoV2 {
         this.beregningsperiodeFom = beregningsperiodeFom;
         this.beregningsperiodeTom = beregningsperiodeTom;
         this.arbeidsforhold = arbeidsforhold;
+        this.erTilkommetAndel = erTilkommetAndel;
     }
 
     public Long getDagsats() {
@@ -127,4 +132,6 @@ public class BeregningsgrunnlagAndelDtoV2 {
     public BgAndelArbeidsforholdDtoV2 getArbeidsforhold() {
         return arbeidsforhold;
     }
+
+    public Boolean getErTilkommetAndel() { return erTilkommetAndel; }
 }

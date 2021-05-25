@@ -125,9 +125,9 @@ public class BeregningsgrunnlagMapperTest {
 
         // Assert
         assertThat(regler).hasSize(1);
-        assertThat(regler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER);
+        assertThat(regler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
         assertThat(regler.get(0).getAndelListe()).hasSize(1);
-        assertThat(regler.get(0).getAndelListe().get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER);
+        assertThat(regler.get(0).getAndelListe().get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
         assertThat(regler.get(0).getAndelListe().get(0).getDagsats()).isEqualTo(1002);
 
     }
@@ -145,9 +145,9 @@ public class BeregningsgrunnlagMapperTest {
 
         // Assert
         assertThat(regler).hasSize(1);
-        assertThat(regler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER);
+        assertThat(regler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
         assertThat(regler.get(0).getAndelListe()).hasSize(1);
-        assertThat(regler.get(0).getAndelListe().get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER);
+        assertThat(regler.get(0).getAndelListe().get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
         assertThat(regler.get(0).getAndelListe().get(0).getDagsats()).isEqualTo(1002);
 
     }

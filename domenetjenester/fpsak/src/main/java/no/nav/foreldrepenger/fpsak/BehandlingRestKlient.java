@@ -18,6 +18,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.foreldrepenger.fpsak.dto.DokumentMalTypeDto;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.MottattDokumentDto;
@@ -278,6 +279,13 @@ public class BehandlingRestKlient {
         return resourceLinker.stream()
                 .filter(dto -> "sendt-varsel-om-revurdering".equals(dto.getRel()))
                 .findFirst().flatMap(link -> hentDtoFraLink(link, Boolean.class));
+    }
+
+    public Optional<DokumentMalTypeDto> hentInnvilgelseForeldrepengerDokumentmal(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker.stream()
+                .filter(dto -> "dokmal-innvfp".equals(dto.getRel()))
+                .findFirst()
+                .flatMap(link -> hentDtoFraLink(link, DokumentMalTypeDto.class));
     }
 
     protected <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {

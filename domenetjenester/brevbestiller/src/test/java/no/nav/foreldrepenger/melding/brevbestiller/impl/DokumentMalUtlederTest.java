@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -9,7 +11,6 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -28,13 +29,15 @@ import no.nav.vedtak.exception.VLException;
 
 public class DokumentMalUtlederTest {
 
-    private final DomeneobjektProvider domeneobjektProvider = Mockito.mock(DomeneobjektProvider.class);
+    private final DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
     private DokumentMalUtleder dokumentMalUtleder;
     private DokumentHendelse hendelse;
 
     @BeforeEach
     public void setup() {
-        dokumentMalUtleder = new DokumentMalUtleder(domeneobjektProvider, null, null);
+        DokgenLanseringTjeneste dokgenLanseringTjeneste = mock(DokgenLanseringTjeneste.class);
+        when(dokgenLanseringTjeneste.velgInnvilgelseFpMal(any(Behandling.class))).thenReturn(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK);
+        dokumentMalUtleder = new DokumentMalUtleder(domeneobjektProvider, null, null, dokgenLanseringTjeneste);
     }
 
     @Test

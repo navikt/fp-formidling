@@ -40,6 +40,7 @@ import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.InntektArbeidYtelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
@@ -178,6 +179,12 @@ public class DomeneobjektProvider {
 
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {
         return MottattDokumentDtoMapper.mapMottattedokumenterFraDto(behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
+    }
+
+    public DokumentMalType hentInnvilgelseForeldrepengerDokumentmal(Behandling behandling) {
+        return behandlingRestKlient.hentInnvilgelseForeldrepengerDokumentmal(behandling.getResourceLinker())
+                .map(dto -> DokumentMalType.fraKode(dto.dokumentMalTypeKode()))
+                .orElse(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK);
     }
 
     public String getJsonTestdata() {

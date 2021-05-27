@@ -3,10 +3,32 @@ package no.nav.foreldrepenger.melding.brevbestiller.impl;
 import java.util.Map;
 import java.util.Set;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.util.env.Environment;
 
+@ApplicationScoped
 public class DokgenLanseringTjeneste {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DokgenLanseringTjeneste.class);
+
+    private DomeneobjektProvider domeneobjektProvider;
+
+    @Inject
+    public DokgenLanseringTjeneste(DomeneobjektProvider domeneobjektProvider) {
+        this.domeneobjektProvider = domeneobjektProvider;
+    }
+
+    DokgenLanseringTjeneste() {
+        // CDI
+    }
 
     private static final Environment ENV = Environment.current();
     private static final Set<DokumentMalType> DOKGEN_MALER_PROD = Set.of(
@@ -78,5 +100,17 @@ public class DokgenLanseringTjeneste {
             return OVERSTYRE_MAL_DEV.get(dokumentMalType);
         }
         return dokumentMalType;
+    }
+
+    public DokumentMalType velgInnvilgelseFpMal(Behandling behandling) {
+        if (ENV.isProd()) {
+            return DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK;
+        }
+        try {
+            return domeneobjektProvider.hentInnvilgelseForeldrepengerDokumentmal(behandling);
+        } catch (Exception e) {
+            LOGGER.info("Feilet ved kall til Fpsak for å bestemme innvilgelsesmal FP - defaulter til Dokprod: {}", e.getMessage());
+            return DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK;
+        }
     }
 }

@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -18,14 +27,6 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
-
 @ApplicationScoped
 class DokumentMalUtleder {
 
@@ -33,6 +34,7 @@ class DokumentMalUtleder {
     private DomeneobjektProvider domeneobjektProvider;
     private HistorikkRepository historikkRepository;
     private BehandlingRestKlient behandlingRestKlient;
+    private DokgenLanseringTjeneste dokgenLanseringTjeneste;
 
     public DokumentMalUtleder() {
         //CDI
@@ -41,10 +43,12 @@ class DokumentMalUtleder {
     @Inject
     public DokumentMalUtleder(DomeneobjektProvider domeneobjektProvider,
                               HistorikkRepository historikkRepository,
-                              BehandlingRestKlient behandlingRestKlient) {
+                              BehandlingRestKlient behandlingRestKlient,
+                              DokgenLanseringTjeneste dokgenLanseringTjeneste) {
         this.domeneobjektProvider = domeneobjektProvider;
         this.historikkRepository = historikkRepository;
         this.behandlingRestKlient = behandlingRestKlient;
+        this.dokgenLanseringTjeneste = dokgenLanseringTjeneste;
     }
 
     private static boolean erKunEndringIFordelingAvYtelsen(Behandlingsresultat behandlingsresultat) {
@@ -65,7 +69,7 @@ class DokumentMalUtleder {
     private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
-            return DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK;
+            return dokgenLanseringTjeneste.velgInnvilgelseFpMal(behandling);
         } else if (behandlingsresultat.erAvslått()) {
             return DokumentMalType.AVSLAG_FORELDREPENGER_DOK;
         } else if (behandlingsresultat.erOpphørt()) {

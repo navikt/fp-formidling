@@ -35,14 +35,14 @@ public final class BeregningsresultatMapper {
     }
 
     public static boolean harIngenRefusjon(BeregningsresultatFP beregningsresultatFP) {
-        return !harBrukerAndel(beregningsresultatFP) && harArbeidsgiverAndel(beregningsresultatFP);
+        return harBrukerAndel(beregningsresultatFP) && !harArbeidsgiverAndel(beregningsresultatFP);
     }
 
     public static boolean harDelvisRefusjon(BeregningsresultatFP beregningsresultatFP) {
         return harBrukerAndel(beregningsresultatFP) && harArbeidsgiverAndel(beregningsresultatFP);
     }
     public static boolean harFullRefusjon(BeregningsresultatFP beregningsresultatFP) {
-        return harBrukerAndel(beregningsresultatFP) && !harArbeidsgiverAndel(beregningsresultatFP);
+        return !harBrukerAndel(beregningsresultatFP) && harArbeidsgiverAndel(beregningsresultatFP);
     }
 
     public static boolean harBrukerAndel(BeregningsresultatFP beregningsresultatFP) {

@@ -2,9 +2,9 @@ package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.KonsekvensForInnvilgetYtelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 
@@ -25,15 +25,15 @@ public final class UndermalInkluderingMapper {
         return behandling.getBehandlingsresultat().erInnvilget() && utbetalingsperioder.size() == 1 && periodeHarGitteÅrsakerEllerGradering(utbetalingsperioder.get(0));
     }
 
-    public static boolean skalInkludereInnvilget(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder, KonsekvensForInnvilgetYtelse konsekvens) {
-        return !KonsekvensForInnvilgetYtelse.ENDRING_I_BEREGNING.equals(konsekvens)
+    public static boolean skalInkludereInnvilget(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder, String konsekvens) {
+        return !KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvens)
                 && (harMerEnnEnPeriodeOgMinstEnInnvilget(utbetalingsperioder)
                 || erRevurderingMedEndring(konsekvens, behandling)
                 || utbetalingsperioder.stream().anyMatch(UndermalInkluderingMapper::periodeHarGitteÅrsakerEllerGradering)); //TODO: Dobbeltsjekke med CCM at dette ble riktig
     }
 
-    public static boolean skalInkludereAvslag(List<Utbetalingsperiode> utbetalingsperioder, KonsekvensForInnvilgetYtelse konsekvens) {
-        return utbetalingsperioder.stream().anyMatch(periode -> !periode.isInnvilget()) && !KonsekvensForInnvilgetYtelse.ENDRING_I_BEREGNING.equals(konsekvens);
+    public static boolean skalInkludereAvslag(List<Utbetalingsperiode> utbetalingsperioder, String konsekvens) {
+        return utbetalingsperioder.stream().anyMatch(periode -> !periode.isInnvilget()) && (!KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvens)) ;
     }
 
     private static boolean harKunEnPeriodeUtenGraderingOgUtenGitteÅrsaker(List<Utbetalingsperiode> utbetalingsperioder) {
@@ -50,14 +50,14 @@ public final class UndermalInkluderingMapper {
         return utbetalingsperioder.stream().anyMatch(Utbetalingsperiode::isInnvilget) && utbetalingsperioder.size() > 1;
     }
 
-    private static boolean erRevurderingMedEndring(KonsekvensForInnvilgetYtelse konsekvens, Behandling behandling) {
+    private static boolean erRevurderingMedEndring(String konsekvens, Behandling behandling) {
         return !BehandlingType.FØRSTEGANGSSØKNAD.equals(behandling.getBehandlingType())
                 && BehandlingResultatType.FORELDREPENGER_ENDRET.equals(behandling.getBehandlingsresultat().getBehandlingResultatType())
                 && erEndringIUttak(konsekvens);
     }
 
-    private static boolean erEndringIUttak(KonsekvensForInnvilgetYtelse konsekvens) {
-        return KonsekvensForInnvilgetYtelse.ENDRING_I_UTTAK.equals(konsekvens) || KonsekvensForInnvilgetYtelse.ENDRING_I_BEREGNING_OG_UTTAK.equals(konsekvens);
+    private static boolean erEndringIUttak(String konsekvens) {
+        return KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode().equals(konsekvens) || KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.getKode().equals(konsekvens);
     }
 
     private static boolean periodeHarGitteÅrsakerEllerGradering(Utbetalingsperiode utbetalingsperiode) {

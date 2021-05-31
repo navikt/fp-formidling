@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Objects;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Arbeidsforhold {
     private String arbeidsgiverNavn;
@@ -33,6 +33,27 @@ public class Arbeidsforhold {
 
     public long getNaturalytelseNyDagsats() {
         return naturalytelseNyDagsats;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (Arbeidsforhold) object;
+        return Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn)
+                && Objects.equals(gradering, that.gradering)
+                && Objects.equals(prosentArbeid, that.prosentArbeid)
+                && Objects.equals(stillingsprosent, that.stillingsprosent)
+                && Objects.equals(utbetalingsgrad, that.utbetalingsgrad)
+                && Objects.equals(naturalytelseEndringType, that.naturalytelseEndringType)
+                && Objects.equals(naturalytelseEndringDato, that.naturalytelseEndringDato)
+                && Objects.equals(naturalytelseNyDagsats, that.naturalytelseNyDagsats);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(arbeidsgiverNavn, gradering, prosentArbeid, stillingsprosent, utbetalingsgrad,
+                naturalytelseEndringType, naturalytelseEndringDato, naturalytelseNyDagsats);
     }
 
     public static Builder ny() {

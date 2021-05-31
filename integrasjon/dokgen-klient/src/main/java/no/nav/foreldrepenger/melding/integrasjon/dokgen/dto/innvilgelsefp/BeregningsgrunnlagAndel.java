@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Objects;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class BeregningsgrunnlagAndel {
     private String aktivitetStatus;
@@ -33,8 +33,22 @@ public class BeregningsgrunnlagAndel {
         return årsinntekt;
     }
 
-    public boolean isEtterlønnSluttpakke() {
-        return etterlønnSluttpakke;
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (BeregningsgrunnlagAndel) object;
+        return Objects.equals(aktivitetStatus, that.aktivitetStatus)
+                && Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn)
+                && Objects.equals(dagsats, that.dagsats)
+                && Objects.equals(månedsinntekt, that.månedsinntekt)
+                && Objects.equals(årsinntekt, that.årsinntekt)
+                && Objects.equals(etterlønnSluttpakke, that.etterlønnSluttpakke);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(aktivitetStatus, arbeidsgiverNavn, dagsats, månedsinntekt, årsinntekt, etterlønnSluttpakke);
     }
 
     public static Builder ny() {

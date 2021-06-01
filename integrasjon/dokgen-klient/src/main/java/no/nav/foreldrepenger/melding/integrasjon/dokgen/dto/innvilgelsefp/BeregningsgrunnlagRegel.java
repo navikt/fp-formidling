@@ -1,20 +1,20 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class BeregningsgrunnlagRegel {
-    private String aktivitetStatus;
+    private String regelStatus;
     private int antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke;
     private boolean snNyoppstartet;
     private List<BeregningsgrunnlagAndel> andelListe = new ArrayList<>();
 
-    public String getAktivitetStatus() {
-        return aktivitetStatus;
+    public String getRegelStatus() {
+        return regelStatus;
     }
 
     public List<BeregningsgrunnlagAndel> getAndelListe() {
@@ -26,7 +26,7 @@ public class BeregningsgrunnlagRegel {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         var that = (BeregningsgrunnlagRegel) object;
-        return Objects.equals(aktivitetStatus, that.aktivitetStatus)
+        return Objects.equals(regelStatus, that.regelStatus)
                 && Objects.equals(antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke, that.antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke)
                 && Objects.equals(snNyoppstartet, that.snNyoppstartet)
                 && Objects.equals(andelListe, that.andelListe);
@@ -34,7 +34,7 @@ public class BeregningsgrunnlagRegel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(aktivitetStatus, antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke, snNyoppstartet, andelListe);
+        return Objects.hash(regelStatus, antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke, snNyoppstartet, andelListe);
     }
 
     public static Builder ny() {
@@ -49,7 +49,7 @@ public class BeregningsgrunnlagRegel {
         }
 
         public Builder medAktivitetStatus(String aktivitetStatus) {
-            this.kladd.aktivitetStatus = aktivitetStatus;
+            this.kladd.regelStatus = aktivitetStatus;
             return this;
         }
 

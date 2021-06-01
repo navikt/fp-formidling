@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+import java.util.Objects;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class BeregningsgrunnlagAndel {
@@ -12,6 +12,7 @@ public class BeregningsgrunnlagAndel {
     private long månedsinntekt;
     private long årsinntekt;
     private boolean etterlønnSluttpakke;
+    private int sistLignedeÅr;
 
     public String getAktivitetStatus() {
         return aktivitetStatus;
@@ -33,6 +34,8 @@ public class BeregningsgrunnlagAndel {
         return årsinntekt;
     }
 
+    public int getSistLignedeÅr() { return sistLignedeÅr; }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -43,12 +46,13 @@ public class BeregningsgrunnlagAndel {
                 && Objects.equals(dagsats, that.dagsats)
                 && Objects.equals(månedsinntekt, that.månedsinntekt)
                 && Objects.equals(årsinntekt, that.årsinntekt)
-                && Objects.equals(etterlønnSluttpakke, that.etterlønnSluttpakke);
+                && Objects.equals(etterlønnSluttpakke, that.etterlønnSluttpakke)
+                && Objects.equals(sistLignedeÅr, that.sistLignedeÅr);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(aktivitetStatus, arbeidsgiverNavn, dagsats, månedsinntekt, årsinntekt, etterlønnSluttpakke);
+        return Objects.hash(aktivitetStatus, arbeidsgiverNavn, dagsats, månedsinntekt, årsinntekt, etterlønnSluttpakke, sistLignedeÅr);
     }
 
     public static Builder ny() {
@@ -89,6 +93,11 @@ public class BeregningsgrunnlagAndel {
 
         public Builder medEtterlønnSluttpakke(boolean etterlønnSluttpakke) {
             this.kladd.etterlønnSluttpakke = etterlønnSluttpakke;
+            return this;
+        }
+
+        public Builder medSistLignedeÅr(int sistLignedeÅr) {
+            this.kladd.sistLignedeÅr = sistLignedeÅr;
             return this;
         }
 

@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Objects;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Næring {
     private boolean gradering;
@@ -25,6 +25,22 @@ public class Næring {
 
     public int getSistLignedeÅr() {
         return sistLignedeÅr;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (Næring) object;
+        return Objects.equals(gradering, that.gradering)
+                && Objects.equals(utbetalingsgrad, that.utbetalingsgrad)
+                && Objects.equals(prosentArbeid, that.prosentArbeid)
+                && Objects.equals(sistLignedeÅr, that.sistLignedeÅr);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gradering, utbetalingsgrad, prosentArbeid, sistLignedeÅr);
     }
 
     public static class Builder {

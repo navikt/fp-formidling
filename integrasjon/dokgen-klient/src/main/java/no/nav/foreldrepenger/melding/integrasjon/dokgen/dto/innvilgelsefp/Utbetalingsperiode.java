@@ -5,13 +5,12 @@ import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public class Utbetalingsperiode {
     private boolean innvilget;
@@ -74,8 +73,27 @@ public class Utbetalingsperiode {
         return annenAktivitetsliste;
     }
 
-    public int getPrioritertUtbetalingsgrad() {
-        return prioritertUtbetalingsgrad;
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (Utbetalingsperiode) object;
+        return Objects.equals(innvilget, that.innvilget)
+                && Objects.equals(årsak, that.årsak)
+                && Objects.equals(periodeFom, that.periodeFom)
+                && Objects.equals(periodeTom, that.periodeTom)
+                && Objects.equals(periodeDagsats, that.periodeDagsats)
+                && Objects.equals(antallTapteDager, that.antallTapteDager)
+                && Objects.equals(prioritertUtbetalingsgrad, that.prioritertUtbetalingsgrad)
+                && Objects.equals(arbeidsforholdsliste, that.arbeidsforholdsliste)
+                && Objects.equals(næring, that.næring)
+                && Objects.equals(annenAktivitetsliste, that.annenAktivitetsliste);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(innvilget, årsak, periodeFom, periodeTom, periodeDagsats, antallTapteDager,
+                prioritertUtbetalingsgrad, arbeidsforholdsliste, næring, annenAktivitetsliste);
     }
 
     public static Builder ny() {

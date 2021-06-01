@@ -2,11 +2,10 @@ package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class BeregningsgrunnlagRegel {
     private String aktivitetStatus;
@@ -20,6 +19,22 @@ public class BeregningsgrunnlagRegel {
 
     public List<BeregningsgrunnlagAndel> getAndelListe() {
         return andelListe;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (BeregningsgrunnlagRegel) object;
+        return Objects.equals(aktivitetStatus, that.aktivitetStatus)
+                && Objects.equals(antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke, that.antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke)
+                && Objects.equals(snNyoppstartet, that.snNyoppstartet)
+                && Objects.equals(andelListe, that.andelListe);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(aktivitetStatus, antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke, snNyoppstartet, andelListe);
     }
 
     public static Builder ny() {

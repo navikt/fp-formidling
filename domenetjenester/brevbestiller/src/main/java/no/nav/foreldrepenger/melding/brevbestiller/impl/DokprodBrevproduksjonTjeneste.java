@@ -58,12 +58,10 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkere
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
-import no.nav.vedtak.util.env.Environment;
 
 @ApplicationScoped
 public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokprodBrevproduksjonTjeneste.class);
-    private static final Environment ENVIRONMENT = Environment.current();
 
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DokumentproduksjonConsumer dokumentproduksjonProxyService;
@@ -147,10 +145,11 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     }
 
     private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, DokumentFelles dokumentFelles) {
-        if (!ENVIRONMENT.isProd() && DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.equals(dokumentMal)) {
+        if (DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.equals(dokumentMal)) {
             try {
                 DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(DokumentMalType.INNVILGELSE_FORELDREPENGER);
                 Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+                dokumentdata.getFelles().anonymiser();
                 dokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
             } catch (Exception e) {
                 LOGGER.info("Feilet i å lage Dokgen-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}", dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid());

@@ -36,6 +36,15 @@ public class FellesDokumentdata {
         return ytelseType;
     }
 
+    // Til bruk når alternativt ulansert brev skal genereres i testfasen av innvilgelse FP
+    public void anonymiser() {
+        this.søkerNavn = søkerNavn.substring(0, 3) + " ANONYMISERT";
+        this.søkerPersonnummer = søkerPersonnummer.substring(0, 4) + "** *****";
+        if (this.mottakerNavn != null) {
+            this.mottakerNavn = mottakerNavn.substring(0, 3) + " ANONYMISERT";
+        }
+    }
+
     public static class Builder {
         private FellesDokumentdata kladd;
 

@@ -45,12 +45,10 @@ import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
-import no.nav.vedtak.util.env.Environment;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokgenBrevproduksjonTjeneste.class);
-    private static final Environment ENVIRONMENT = Environment.current();
 
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DomeneobjektProvider domeneobjektProvider;
@@ -142,7 +140,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     }
 
     private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, DokumentFelles dokumentFelles) {
-        if (!ENVIRONMENT.isProd() && DokumentMalType.INNVILGELSE_FORELDREPENGER.equals(dokumentMal)) {
+        if (DokumentMalType.INNVILGELSE_FORELDREPENGER.equals(dokumentMal)) {
             try {
                 var saksnummer = dokprodBrevproduksjonTjeneste.bestemSaksnummer(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK, dokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
                 Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK, dokumentFelles, dokumentHendelse, behandling, saksnummer);

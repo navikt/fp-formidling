@@ -74,7 +74,7 @@ public final class BeregningsgrunnlagMapper {
     }
 
     private static boolean minstEnRegelHarKombinertAktivitetStatus(List<BeregningsgrunnlagRegel> beregningsgrunnlagregler) {
-        return beregningsgrunnlagregler.stream().anyMatch(regel -> AktivitetStatus.erKombinertStatus(regel.getAktivitetStatus()));
+        return beregningsgrunnlagregler.stream().anyMatch(regel -> AktivitetStatus.erKombinertStatus(regel.getRegelStatus()));
     }
 
     private static List<BeregningsgrunnlagPrStatusOgAndel> finnBgpsaListe(Beregningsgrunnlag beregningsgrunnlag) {
@@ -138,7 +138,9 @@ public final class BeregningsgrunnlagMapper {
             builder.medMånedsinntekt(getMånedsinntekt(andel).longValue());
             builder.medÅrsinntekt(andel.getBruttoPrÅr().longValue());
         }
-
+        if (AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus())) {
+            builder.medSistLignedeÅr(andel.getBeregningsperiodeTom() == null ? 0 : andel.getBeregningsperiodeTom().getYear());
+        }
         if (AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())) {
             getArbeidsgiverNavn(andel).ifPresent(builder::medArbeidsgiverNavn);
         }

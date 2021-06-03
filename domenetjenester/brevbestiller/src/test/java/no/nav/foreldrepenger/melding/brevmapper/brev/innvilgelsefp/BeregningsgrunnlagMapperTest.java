@@ -7,10 +7,12 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriod
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
 import no.nav.foreldrepenger.melding.typer.Beløp;
+import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.List.of;
@@ -30,6 +32,7 @@ public class BeregningsgrunnlagMapperTest {
     private static final long STANDARD_PERIODE_DAGSATS = 100L;
     private static final long FRILANSER_DAGSATS = 200L;
     private static final long ARBEIDSTAKER_DAGSATS = 300L;
+    private static final DatoIntervall BER_PERIODE = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2021, 1, 1), LocalDate.of(2021, 9, 1));
 
     @Test
     public void skal_finne_brutto() {
@@ -99,13 +102,13 @@ public class BeregningsgrunnlagMapperTest {
         // Assert
         assertThat(regler).hasSize(2);
 
-        assertThat(regler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.FRILANSER.name());
+        assertThat(regler.get(0).getRegelStatus()).isEqualTo(AktivitetStatus.FRILANSER.name());
         assertThat(regler.get(0).getAndelListe()).hasSize(1);
         assertThat(regler.get(0).getAndelListe().get(0).getDagsats()).isEqualTo(FRILANSER_DAGSATS);
         assertThat(regler.get(0).getAndelListe().get(0).getMånedsinntekt()).isEqualTo(FRILANSER_BRUTTO_PR_ÅR.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
         assertThat(regler.get(0).getAndelListe().get(0).getÅrsinntekt()).isEqualTo(FRILANSER_BRUTTO_PR_ÅR.longValue());
 
-        assertThat(regler.get(1).getAktivitetStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER.name());
+        assertThat(regler.get(1).getRegelStatus()).isEqualTo(AktivitetStatus.ARBEIDSTAKER.name());
         assertThat(regler.get(1).getAndelListe()).hasSize(1);
         assertThat(regler.get(1).getAndelListe().get(0).getDagsats()).isEqualTo(ARBEIDSTAKER_DAGSATS);
         assertThat(regler.get(1).getAndelListe().get(0).getMånedsinntekt()).isEqualTo(ARBEIDSTAKER_BRUTTO_PR_ÅR.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
@@ -125,7 +128,7 @@ public class BeregningsgrunnlagMapperTest {
 
         // Assert
         assertThat(regler).hasSize(1);
-        assertThat(regler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
+        assertThat(regler.get(0).getRegelStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
         assertThat(regler.get(0).getAndelListe()).hasSize(1);
         assertThat(regler.get(0).getAndelListe().get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
         assertThat(regler.get(0).getAndelListe().get(0).getDagsats()).isEqualTo(1002);
@@ -145,11 +148,29 @@ public class BeregningsgrunnlagMapperTest {
 
         // Assert
         assertThat(regler).hasSize(1);
-        assertThat(regler.get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
+        assertThat(regler.get(0).getRegelStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
         assertThat(regler.get(0).getAndelListe()).hasSize(1);
         assertThat(regler.get(0).getAndelListe().get(0).getAktivitetStatus()).isEqualTo(AktivitetStatus.DAGPENGER.name());
         assertThat(regler.get(0).getAndelListe().get(0).getDagsats()).isEqualTo(1002);
 
+    }
+
+    @Test
+    public void skal_mappe_sistLignedeÅr_når_selvstendig_næringsdrivende() {
+        // Arrange
+        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
+                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
+                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode( of(lagBgpsandel(BigDecimal.valueOf(254232), 978,  AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, false ),
+                        lagBgpsandel(BigDecimal.valueOf(0), 24, AktivitetStatus.ARBEIDSTAKER, true ))))
+                .build();
+
+        // Act
+        List<BeregningsgrunnlagRegel> regler = mapRegelListe(beregningsgrunnlag);
+
+        // Assert
+        assertThat(regler.get(0).getAndelListe().get(0).getSistLignedeÅr()).isEqualTo(BER_PERIODE.getTomDato().getYear());
+        assertThat(regler.get(1).getAndelListe().get(0).getSistLignedeÅr()).isEqualTo(0);
     }
 
     @Test
@@ -197,6 +218,8 @@ public class BeregningsgrunnlagMapperTest {
         assertThat(resultat).isFalse();
     }
 
+
+
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode(List<BeregningsgrunnlagPrStatusOgAndel> andelsliste) {
         return BeregningsgrunnlagPeriode.ny()
                 .medDagsats(STANDARD_PERIODE_DAGSATS)
@@ -229,6 +252,7 @@ public class BeregningsgrunnlagMapperTest {
                 .medDagsats(dagsats)
                 .medAktivitetStatus(aktivitetStatus)
                 .medErTilkommetAndel(erTilkommetAndeler)
+                .medBeregningsperiode(BER_PERIODE)
                 .build();
     }
 

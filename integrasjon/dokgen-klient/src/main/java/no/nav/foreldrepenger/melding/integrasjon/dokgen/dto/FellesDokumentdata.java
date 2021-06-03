@@ -1,5 +1,10 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class FellesDokumentdata {
     private String søkerNavn;
     private String søkerPersonnummer;
@@ -11,8 +16,6 @@ public class FellesDokumentdata {
     private String saksnummer;
     private String mottakerNavn;
     private String ytelseType;
-
-    public static Builder ny() { return new Builder(); }
 
     public String getSøkerNavn() { return søkerNavn; }
 
@@ -36,6 +39,29 @@ public class FellesDokumentdata {
         return ytelseType;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (FellesDokumentdata) object;
+        return Objects.equals(søkerNavn, that.søkerNavn)
+                && Objects.equals(søkerPersonnummer, that.søkerPersonnummer)
+                && Objects.equals(fritekst, that.fritekst)
+                && Objects.equals(brevDato, that.brevDato)
+                && Objects.equals(erAutomatiskBehandlet, that.erAutomatiskBehandlet)
+                && Objects.equals(erKopi, that.erKopi)
+                && Objects.equals(harVerge, that.harVerge)
+                && Objects.equals(saksnummer, that.saksnummer)
+                && Objects.equals(mottakerNavn, that.mottakerNavn)
+                && Objects.equals(ytelseType, that.ytelseType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(søkerNavn, søkerPersonnummer, fritekst, brevDato, erAutomatiskBehandlet, erKopi,
+                harVerge, saksnummer, mottakerNavn, ytelseType);
+    }
+
     // Til bruk når alternativt ulansert brev skal genereres i testfasen av innvilgelse FP
     public void anonymiser() {
         this.søkerNavn = søkerNavn.substring(0, 3) + " ANONYMISERT";
@@ -43,6 +69,10 @@ public class FellesDokumentdata {
         if (this.mottakerNavn != null) {
             this.mottakerNavn = mottakerNavn.substring(0, 3) + " ANONYMISERT";
         }
+    }
+
+    public static Builder ny() {
+        return new Builder();
     }
 
     public static class Builder {

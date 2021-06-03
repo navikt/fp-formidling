@@ -1,5 +1,10 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class EngangsstønadInnvilgelseDokumentdata extends Dokumentdata {
     private boolean revurdering;
     private boolean førstegangsbehandling;
@@ -10,13 +15,7 @@ public class EngangsstønadInnvilgelseDokumentdata extends Dokumentdata {
     private boolean fbEllerMedhold;
     private boolean erEndretSats;
 
-    public static Builder ny() {
-        return new Builder();
-    }
-
     public boolean getRevurdering() { return revurdering; }
-
-    public boolean getFørstegangsbehandling() { return førstegangsbehandling;  }
 
     public boolean getMedhold() { return medhold; }
 
@@ -30,8 +29,33 @@ public class EngangsstønadInnvilgelseDokumentdata extends Dokumentdata {
 
     public boolean getFbEllerMedhold() { return fbEllerMedhold; }
 
-
     public boolean getErEndretSats() { return erEndretSats; }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (EngangsstønadInnvilgelseDokumentdata) object;
+        return Objects.equals(felles, that.felles)
+                && Objects.equals(revurdering, that.revurdering)
+                && Objects.equals(førstegangsbehandling, that.førstegangsbehandling)
+                && Objects.equals(medhold, that.medhold)
+                && Objects.equals(innvilgetBeløp, that.innvilgetBeløp)
+                && Objects.equals(klagefristUker, that.klagefristUker)
+                && Objects.equals(død, that.død)
+                && Objects.equals(fbEllerMedhold, that.fbEllerMedhold)
+                && Objects.equals(erEndretSats, that.erEndretSats);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(felles, revurdering, førstegangsbehandling, medhold, innvilgetBeløp, klagefristUker, død,
+                fbEllerMedhold, erEndretSats);
+    }
+
+    public static Builder ny() {
+        return new Builder();
+    }
 
     public static class Builder {
         private EngangsstønadInnvilgelseDokumentdata kladd;

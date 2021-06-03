@@ -1,15 +1,16 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class VarselOmRevurderingDokumentdata extends Dokumentdata {
     private String terminDato;
     private String fristDato;
     private int antallBarn;
     private String advarselKode;
     private boolean flereOpplysninger;
-
-    public static Builder ny() {
-        return new Builder();
-    }
 
     public String getTerminDato() {
         return terminDato;
@@ -27,8 +28,30 @@ public class VarselOmRevurderingDokumentdata extends Dokumentdata {
         return advarselKode;
     }
 
-    public boolean isFlereOpplysninger() {
+    public boolean getFlereOpplysninger() {
         return flereOpplysninger;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (VarselOmRevurderingDokumentdata) object;
+        return Objects.equals(felles, that.felles)
+                && Objects.equals(terminDato, that.terminDato)
+                && Objects.equals(fristDato, that.fristDato)
+                && Objects.equals(antallBarn, that.antallBarn)
+                && Objects.equals(advarselKode, that.advarselKode)
+                && Objects.equals(flereOpplysninger, that.flereOpplysninger);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(felles, terminDato, fristDato, antallBarn, advarselKode, flereOpplysninger);
+    }
+
+    public static Builder ny() {
+        return new Builder();
     }
 
     public static class Builder {

@@ -1,7 +1,11 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
 import java.util.List;
+import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
     private String avslagÅrsak;
     private boolean førstegangsbehandling;
@@ -11,10 +15,6 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
     private List<String> vilkårTyper;
     private int klagefristUker;
     private String avslagMedlemskap;
-
-    public static Builder ny() {
-        return new Builder();
-    }
 
     public String getAvslagÅrsak() {
         return avslagÅrsak;
@@ -32,17 +32,41 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
         return relasjonsRolle;
     }
 
-    public boolean getgjelderFødsel() {
+    public boolean getGjelderFødsel() {
         return gjelderFødsel;
     }
 
-    public List<String> getvilkårTyper() {
+    public List<String> getVilkårTyper() {
         return vilkårTyper;
     }
 
     public int getKlagefristUker() { return klagefristUker; }
 
-    public String getAvslagMedlemskap() { return avslagMedlemskap; }
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (EngangsstønadAvslagDokumentdata) object;
+        return Objects.equals(felles, that.felles)
+                && Objects.equals(avslagÅrsak, that.avslagÅrsak)
+                && Objects.equals(førstegangsbehandling, that.førstegangsbehandling)
+                && Objects.equals(antallBarn, that.antallBarn)
+                && Objects.equals(relasjonsRolle, that.relasjonsRolle)
+                && Objects.equals(gjelderFødsel, that.gjelderFødsel)
+                && Objects.equals(vilkårTyper, that.vilkårTyper)
+                && Objects.equals(klagefristUker, that.klagefristUker)
+                && Objects.equals(avslagMedlemskap, that.avslagMedlemskap);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(felles, avslagÅrsak, førstegangsbehandling, antallBarn, relasjonsRolle, gjelderFødsel,
+                vilkårTyper, klagefristUker, avslagMedlemskap);
+    }
+
+    public static Builder ny() {
+        return new Builder();
+    }
 
     public static class Builder {
         private EngangsstønadAvslagDokumentdata kladd;
@@ -56,12 +80,12 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public EngangsstønadAvslagDokumentdata.Builder medAvslagsÅrsaker(String avslagsÅrsak) {
+        public EngangsstønadAvslagDokumentdata.Builder medAvslagsÅrsak(String avslagsÅrsak) {
             this.kladd.avslagÅrsak = avslagsÅrsak;
             return this;
         }
 
-        public EngangsstønadAvslagDokumentdata.Builder medFørstegangBehandling(boolean førstegangsbehandling) {
+        public EngangsstønadAvslagDokumentdata.Builder medFørstegangsbehandling(boolean førstegangsbehandling) {
             this.kladd.førstegangsbehandling = førstegangsbehandling;
             return this;
         }

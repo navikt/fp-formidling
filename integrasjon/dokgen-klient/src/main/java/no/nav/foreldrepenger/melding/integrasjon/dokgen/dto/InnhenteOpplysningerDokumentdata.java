@@ -1,5 +1,10 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class InnhenteOpplysningerDokumentdata extends Dokumentdata {
     private boolean førstegangsbehandling;
     private boolean revurdering;
@@ -9,24 +14,57 @@ public class InnhenteOpplysningerDokumentdata extends Dokumentdata {
     private String søknadDato;
     private String fristDato;
 
-    public static Builder ny() {
-        return new Builder();
+    public boolean getFørstegangsbehandling() {
+        return førstegangsbehandling;
     }
 
-    public boolean getFørstegangsbehandling() { return førstegangsbehandling;  }
+    public boolean getRevurdering() {
+        return revurdering;
+    }
 
-    public boolean getRevurdering() { return revurdering; }
+    public boolean getEndringssøknad() {
+        return endringssøknad;
+    }
 
-    public boolean getEndringssøknad() { return endringssøknad; }
+    public boolean getDød() {
+        return død;
+    }
 
-    public boolean getDød() { return død; }
+    public boolean getKlage() {
+        return klage;
+    }
 
-    public boolean getKlage() { return klage; }
-
-    public String getSøknadDato() { return søknadDato; }
+    public String getSøknadDato() {
+        return søknadDato;
+    }
 
     public String getFristDato() {
         return fristDato;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (InnhenteOpplysningerDokumentdata) object;
+        return Objects.equals(felles, that.felles)
+                && Objects.equals(førstegangsbehandling, that.førstegangsbehandling)
+                && Objects.equals(revurdering, that.revurdering)
+                && Objects.equals(endringssøknad, that.endringssøknad)
+                && Objects.equals(død, that.død)
+                && Objects.equals(klage, that.klage)
+                && Objects.equals(søknadDato, that.søknadDato)
+                && Objects.equals(fristDato, that.fristDato);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(felles, førstegangsbehandling, revurdering, endringssøknad, død, klage,
+                søknadDato, fristDato);
+    }
+
+    public static Builder ny() {
+        return new Builder();
     }
 
     public static class Builder {

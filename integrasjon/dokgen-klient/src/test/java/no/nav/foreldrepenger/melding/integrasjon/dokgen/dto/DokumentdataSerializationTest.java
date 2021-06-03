@@ -15,7 +15,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
+import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynResultatType;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagAndel;
@@ -27,10 +30,14 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Nærin
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
+import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
+import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 
 public class DokumentdataSerializationTest {
 
-    private ObjectMapper mapper = DefaultJsonMapper.getObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = DefaultJsonMapper.getObjectMapper();
 
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_foreldrepenger() throws IOException {
@@ -59,7 +66,6 @@ public class DokumentdataSerializationTest {
                 .medGradering(true)
                 .medUtbetalingsgrad(60)
                 .medProsentArbeid(70)
-                .medSistLignedeÅr(2020)
                 .build();
         AnnenAktivitet annenAktivitet = AnnenAktivitet.ny()
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
@@ -98,6 +104,7 @@ public class DokumentdataSerializationTest {
                 .medMånedsinntekt(5000)
                 .medÅrsinntekt(500000)
                 .medEtterlønnSluttpakke(true)
+                .medSistLignedeÅr(2019)
                 .build();
         BeregningsgrunnlagAndel andel2 = BeregningsgrunnlagAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
@@ -106,6 +113,7 @@ public class DokumentdataSerializationTest {
                 .medMånedsinntekt(1000)
                 .medÅrsinntekt(110000)
                 .medEtterlønnSluttpakke(true)
+                .medSistLignedeÅr(2020)
                 .build();
         BeregningsgrunnlagRegel regel1 = BeregningsgrunnlagRegel.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name())
@@ -120,6 +128,7 @@ public class DokumentdataSerializationTest {
                 .medAndelListe(of(andel2))
                 .build();
         InnvilgelseForeldrepengerDokumentdata dokumentdata = InnvilgelseForeldrepengerDokumentdata.ny()
+                .medFelles(opprettFellesDokumentdata())
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD.name())
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET.name())
                 .medKonsekvensForInnvilgetYtelse(KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.name())
@@ -166,15 +175,172 @@ public class DokumentdataSerializationTest {
         assertEquals(dokumentdata, utførTest(dokumentdata));
     }
 
+    @Test
+    public void skal_serialisere_og_deserialisere_dokumentdata_for_avslag_engangsstønad() throws IOException {
+        // Arrange
+        EngangsstønadAvslagDokumentdata dokumentdata = EngangsstønadAvslagDokumentdata.ny()
+                .medFelles(opprettFellesDokumentdata())
+                .medAvslagsÅrsak(Avslagsårsak.SØKER_ER_IKKE_MEDLEM.getKode())
+                .medFørstegangsbehandling(true)
+                .medAntallBarn(2)
+                .medRelasjonsRolle(RelasjonsRolleType.MORA.getKode())
+                .medGjelderFødsel(true)
+                .medVilkårTyper(of(VilkårType.FØDSELSVILKÅRET_MOR.getKode(), VilkårType.MEDLEMSKAPSVILKÅRET.getKode()))
+                .medKlagefristUker(6)
+                .medAvslagMedlemskap("IKKE_MEDL_FØR_STP")
+                .build();
+
+        // Act + Assert
+        assertEquals(dokumentdata, utførTest(dokumentdata));
+    }
+
+    @Test
+    public void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_engangsstønad() throws IOException {
+        // Arrange
+        EngangsstønadInnvilgelseDokumentdata dokumentdata = EngangsstønadInnvilgelseDokumentdata.ny()
+                .medFelles(opprettFellesDokumentdata())
+                .medRevurdering(true)
+                .medFørstegangsbehandling(true)
+                .medMedhold(true)
+                .medInnvilgetBeløp("200")
+                .medKlagefristUker(4)
+                .medDød(true)
+                .medFbEllerMedhold(true)
+                .medErEndretSats(true)
+                .build();
+
+        // Act + Assert
+        assertEquals(dokumentdata, utførTest(dokumentdata));
+    }
+
+    @Test
+    public void skal_serialisere_og_deserialisere_dokumentdata_for_forlenget_saksbehandlingstid() throws IOException {
+        // Arrange
+        ForlengetSaksbehandlingstidDokumentdata dokumentdata = ForlengetSaksbehandlingstidDokumentdata.ny()
+                .medFelles(opprettFellesDokumentdata())
+                .medVariantType(ForlengetSaksbehandlingstidDokumentdata.VariantType.FORLENGET)
+                .medDød(true)
+                .medBehandlingsfristUker(6)
+                .medAntallBarn(2)
+                .build();
+
+        // Act + Assert
+        assertEquals(dokumentdata, utførTest(dokumentdata));
+    }
+
+    @Test
+    public void skal_serialisere_og_deserialisere_dokumentdata_for_henleggelse() throws IOException {
+        // Arrange
+        HenleggelseDokumentdata dokumentdata = HenleggelseDokumentdata.ny()
+                .medFelles(opprettFellesDokumentdata())
+                .medVanligBehandling(true)
+                .medKlage(true)
+                .medAnke(true)
+                .medInnsyn(true)
+                .medOpphavType("FAMPEN")
+                .build();
+
+        // Act + Assert
+        assertEquals(dokumentdata, utførTest(dokumentdata));
+    }
+
+    @Test
+    public void skal_serialisere_og_deserialisere_dokumentdata_for_ikke_søkt() throws IOException {
+        // Arrange
+        IkkeSøktDokumentdata dokumentdata = IkkeSøktDokumentdata.ny()
+                .medFelles(opprettFellesDokumentdata())
+                .medArbeidsgiverNavn("Arbeidsgiver1")
+                .medMottattDato(formaterDatoNorsk(LocalDate.now()))
+                .build();
+
+        // Act + Assert
+        assertEquals(dokumentdata, utførTest(dokumentdata));
+    }
+
+    @Test
+    public void skal_serialisere_og_deserialisere_dokumentdata_for_info_til_annen_forelder() throws IOException {
+        // Arrange
+        InfoTilAnnenForelderDokumentdata dokumentdata = InfoTilAnnenForelderDokumentdata.ny()
+                .medFelles(opprettFellesDokumentdata())
+                .medBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING.getKode())
+                .medSisteUttaksdagMor(formaterDatoNorsk(LocalDate.now()))
+                .build();
+
+        // Act + Assert
+        assertEquals(dokumentdata, utførTest(dokumentdata));
+    }
+
+    @Test
+    public void skal_serialisere_og_deserialisere_dokumentdata_for_innhente_opplysninger() throws IOException {
+        // Arrange
+        InnhenteOpplysningerDokumentdata dokumentdata = InnhenteOpplysningerDokumentdata.ny()
+                .medFelles(opprettFellesDokumentdata())
+                .medFørstegangsbehandling(true)
+                .medRevurdering(true)
+                .medEndringssøknad(true)
+                .medDød(true)
+                .medKlage(true)
+                .medSøknadDato(formaterDatoNorsk(LocalDate.now()))
+                .medFristDato(formaterDatoNorsk(LocalDate.now().plusDays(10)))
+                .build();
+
+        // Act + Assert
+        assertEquals(dokumentdata, utførTest(dokumentdata));
+    }
+
+    @Test
+    public void skal_serialisere_og_deserialisere_dokumentdata_for_innsyn() throws IOException {
+        // Arrange
+        InnsynDokumentdata dokumentdata = InnsynDokumentdata.ny()
+                .medFelles(opprettFellesDokumentdata())
+                .medInnsynResultat(InnsynResultatType.INNVILGET.getKode())
+                .medKlagefrist(6)
+                .build();
+
+        // Act + Assert
+        assertEquals(dokumentdata, utførTest(dokumentdata));
+    }
+
+    @Test
+    public void skal_serialisere_og_deserialisere_dokumentdata_for_varsel_om_revurdering() throws IOException {
+        // Arrange
+        VarselOmRevurderingDokumentdata dokumentdata = VarselOmRevurderingDokumentdata.ny()
+                .medFelles(opprettFellesDokumentdata())
+                .medTerminDato(formaterDatoNorsk(LocalDate.now().minusDays(10)))
+                .medFristDato(formaterDatoNorsk(LocalDate.now()))
+                .medAntallBarn(2)
+                .medAdvarselKode(RevurderingVarslingÅrsak.ARBEID_I_UTLANDET.getKode())
+                .medFlereOpplysninger(true)
+                .build();
+
+        // Act + Assert
+        assertEquals(dokumentdata, utførTest(dokumentdata));
+    }
+
     private Object utførTest(Object object) throws IOException {
         return fraJson(tilJson(object), object.getClass());
     }
 
     private String tilJson(Object obj) throws JsonProcessingException {
-        return mapper.writeValueAsString(obj);
+        return OBJECT_MAPPER.writeValueAsString(obj);
     }
 
     private Object fraJson(String json, Class clazz) throws JsonProcessingException {
-        return mapper.readValue(json, clazz);
+        return OBJECT_MAPPER.readValue(json, clazz);
+    }
+
+    private FellesDokumentdata opprettFellesDokumentdata() {
+        return FellesDokumentdata.ny()
+                .medSøkerNavn("Søker Søkersen")
+                .medSøkerPersonnummer("11111111111")
+                .medFritekst("Fritekst")
+                .medBrevDato(formaterDatoNorsk(LocalDate.now()))
+                .medErAutomatiskBehandlet(true)
+                .medErKopi(true)
+                .medHarVerge(true)
+                .medSaksnummer("123456789")
+                .medMottakerNavn("Mottaker Mottakersen")
+                .medYtelseType(FagsakYtelseType.FORELDREPENGER.getKode())
+                .build();
     }
 }

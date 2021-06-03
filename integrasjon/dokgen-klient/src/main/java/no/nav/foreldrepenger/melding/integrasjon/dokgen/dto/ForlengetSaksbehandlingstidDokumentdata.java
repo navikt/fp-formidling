@@ -1,14 +1,15 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ForlengetSaksbehandlingstidDokumentdata extends Dokumentdata {
     private VariantType variantType;
     private boolean død;
     private int behandlingsfristUker;
     private int antallBarn;
-
-    public static Builder ny() {
-        return new Builder();
-    }
 
     public VariantType getVariantType() {
         return variantType;
@@ -26,11 +27,32 @@ public class ForlengetSaksbehandlingstidDokumentdata extends Dokumentdata {
         return antallBarn;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (ForlengetSaksbehandlingstidDokumentdata) object;
+        return Objects.equals(felles, that.felles)
+                && Objects.equals(variantType, that.variantType)
+                && Objects.equals(død, that.død)
+                && Objects.equals(behandlingsfristUker, that.behandlingsfristUker)
+                && Objects.equals(antallBarn, that.antallBarn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(felles, variantType, død, behandlingsfristUker, antallBarn);
+    }
+
     public enum VariantType {
         FORLENGET,
         MEDLEM,
         FORTIDLIG,
         KLAGE;
+    }
+
+    public static Builder ny() {
+        return new Builder();
     }
 
     public static class Builder {

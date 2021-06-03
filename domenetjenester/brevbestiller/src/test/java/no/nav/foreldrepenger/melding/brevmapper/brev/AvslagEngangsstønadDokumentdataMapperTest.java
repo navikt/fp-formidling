@@ -93,10 +93,10 @@ class AvslagEngangsstønadDokumentdataMapperTest {
         assertThat(avslagDokumentdata.getAvslagÅrsak()).isEqualTo(Avslagsårsak.SØKT_FOR_SENT.name());
         assertThat(avslagDokumentdata.getAntallBarn()).isEqualTo(1);
         assertThat(avslagDokumentdata.getFørstegangsbehandling()).isTrue();
-        assertThat(avslagDokumentdata.getgjelderFødsel()).isTrue();
+        assertThat(avslagDokumentdata.getGjelderFødsel()).isTrue();
         assertThat(avslagDokumentdata.getRelasjonsRolle()).isEqualTo(RelasjonsRolleType.MORA.getKode());
-        assertThat(avslagDokumentdata.getvilkårTyper()).hasSize(1);
-        assertThat(avslagDokumentdata.getvilkårTyper()).containsExactly("FP_VK_3");
+        assertThat(avslagDokumentdata.getVilkårTyper()).hasSize(1);
+        assertThat(avslagDokumentdata.getVilkårTyper()).containsExactly("FP_VK_3");
         assertThat(avslagDokumentdata.getFelles().getFritekst()).isEqualTo(avslagsfritekst);
     }
 

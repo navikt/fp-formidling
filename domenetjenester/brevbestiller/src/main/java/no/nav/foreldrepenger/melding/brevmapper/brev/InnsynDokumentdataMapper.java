@@ -44,7 +44,7 @@ public class InnsynDokumentdataMapper implements DokumentdataMapper {
         avklarFritekst(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
         return InnsynDokumentdata.ny()
-                .medFellesDokumentData(fellesBuilder.build())
+                .medFelles(fellesBuilder.build())
                 .medKlagefrist(brevParametere.getKlagefristUker())
                 .medInnsynResultat(innsynsBehandling.getInnsynResultatType().getKode())
                 .build();

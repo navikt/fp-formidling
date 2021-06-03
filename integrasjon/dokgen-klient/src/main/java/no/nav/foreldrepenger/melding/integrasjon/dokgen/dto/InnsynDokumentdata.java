@@ -1,14 +1,36 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
-public class InnsynDokumentdata extends Dokumentdata{
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public class InnsynDokumentdata extends Dokumentdata {
     private String innsynResultat;
     private int klagefrist;
-
-    public static Builder ny() { return new Builder(); }
 
     public String getInnsynResultat() { return innsynResultat; }
 
     public int getKlagefrist() { return klagefrist; }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (InnsynDokumentdata) object;
+        return Objects.equals(felles, that.felles)
+                && Objects.equals(innsynResultat, that.innsynResultat)
+                && Objects.equals(klagefrist, that.klagefrist);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(felles, innsynResultat, klagefrist);
+    }
+
+    public static Builder ny() {
+        return new Builder();
+    }
 
     public static class Builder {
         private InnsynDokumentdata kladd;
@@ -17,7 +39,7 @@ public class InnsynDokumentdata extends Dokumentdata{
             this.kladd = new InnsynDokumentdata();
         }
 
-        public Builder medFellesDokumentData(FellesDokumentdata fellesDokumentdata) {
+        public Builder medFelles(FellesDokumentdata fellesDokumentdata) {
             this.kladd.felles = fellesDokumentdata;
             return this;
         }

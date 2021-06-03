@@ -68,9 +68,9 @@ public class AvslagEngangsstønadDokumentdataMapper implements DokumentdataMappe
         List<Vilkår> vilkår = domeneobjektProvider.hentVilkår(behandling);
 
         var dokumentdataBuilder = EngangsstønadAvslagDokumentdata.ny()
-                .medAvslagsÅrsaker(mapAvslagsårsakerBrev(behandling.getBehandlingsresultat().getAvslagsårsak()))
+                .medAvslagsÅrsak(mapAvslagsårsakerBrev(behandling.getBehandlingsresultat().getAvslagsårsak()))
                 .medFelles(fellesBuilder.build())
-                .medFørstegangBehandling(behandling.erFørstegangssøknad())
+                .medFørstegangsbehandling(behandling.erFørstegangssøknad())
                 .medGjelderFødsel(familieHendelse.isGjelderFødsel())
                 .medRelasjonsRolle(utledRelasjonsRolle(behandling.getFagsakBackend()))
                 .medVilkårTyper(utledVilkårTilBrev(vilkår, behandling.getBehandlingsresultat().getAvslagsårsak(), behandling))
@@ -86,7 +86,7 @@ public class AvslagEngangsstønadDokumentdataMapper implements DokumentdataMappe
     }
 
     String utledRelasjonsRolle(FagsakBackend fagsak) {
-        if(!RelasjonsRolleType.erRegistrertForeldre(fagsak.getRelasjonsRolleType())) {
+        if (!RelasjonsRolleType.erRegistrertForeldre(fagsak.getRelasjonsRolleType())) {
             return hentKjønnOgMapRelasjonsrolle(fagsak.getAktørId());
         } else {
             return fagsak.getRelasjonsRolleType().toString();

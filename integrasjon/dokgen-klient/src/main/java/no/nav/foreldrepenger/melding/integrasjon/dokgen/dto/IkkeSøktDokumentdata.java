@@ -1,12 +1,13 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
 
+import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class IkkeSøktDokumentdata extends Dokumentdata {
     private String arbeidsgiverNavn;
     private String mottattDato;
-
-    public static Builder ny() {
-        return new Builder();
-    }
 
     public String getArbeidsgiverNavn() {
         return arbeidsgiverNavn;
@@ -14,6 +15,25 @@ public class IkkeSøktDokumentdata extends Dokumentdata {
 
     public String getMottattDato() {
         return mottattDato;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        var that = (IkkeSøktDokumentdata) object;
+        return Objects.equals(felles, that.felles)
+                && Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn)
+                && Objects.equals(mottattDato, that.mottattDato);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(felles, arbeidsgiverNavn, mottattDato);
+    }
+
+    public static Builder ny() {
+        return new Builder();
     }
 
     public static class Builder {

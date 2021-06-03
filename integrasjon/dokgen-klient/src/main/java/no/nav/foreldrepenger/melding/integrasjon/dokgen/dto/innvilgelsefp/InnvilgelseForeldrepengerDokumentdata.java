@@ -253,7 +253,8 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         var that = (InnvilgelseForeldrepengerDokumentdata) object;
-        return Objects.equals(behandlingType, that.behandlingType)
+        return Objects.equals(felles, that.felles)
+                && Objects.equals(behandlingType, that.behandlingType)
                 && Objects.equals(behandlingResultatType, that.behandlingResultatType)
                 && Objects.equals(konsekvensForInnvilgetYtelse, that.konsekvensForInnvilgetYtelse)
                 && Objects.equals(søknadsdato, that.søknadsdato)
@@ -304,7 +305,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
 
     @Override
     public int hashCode() {
-        return Objects.hash(behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, søknadsdato,
+        return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, søknadsdato,
                 dekningsgrad, dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver,
                 annenForelderHarRett, annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse,
                 gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget,
@@ -325,7 +326,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
             this.kladd = new InnvilgelseForeldrepengerDokumentdata();
         }
 
-        public Builder medFellesDokumentData(FellesDokumentdata fellesDokumentdata) {
+        public Builder medFelles(FellesDokumentdata fellesDokumentdata) {
             this.kladd.felles = fellesDokumentdata;
             return this;
         }

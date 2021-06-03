@@ -99,7 +99,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
         assertThat(varselOmRevurderingDokumentdata.getFristDato()).isEqualTo(formaterDatoNorsk(brevMapperUtil.getSvarFrist()));
         assertThat(varselOmRevurderingDokumentdata.getAntallBarn()).isEqualTo(ANTALL_BARN);
         assertThat(varselOmRevurderingDokumentdata.getAdvarselKode()).isEqualTo(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN.getKode());
-        assertThat(varselOmRevurderingDokumentdata.isFlereOpplysninger()).isFalse();
+        assertThat(varselOmRevurderingDokumentdata.getFlereOpplysninger()).isFalse();
     }
 
     @Test
@@ -132,7 +132,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
         VarselOmRevurderingDokumentdata varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
 
         // Assert
-        assertThat(varselOmRevurderingDokumentdata.isFlereOpplysninger()).isTrue();
+        assertThat(varselOmRevurderingDokumentdata.getFlereOpplysninger()).isTrue();
     }
 
     private FamilieHendelse opprettFamiliehendelse() {

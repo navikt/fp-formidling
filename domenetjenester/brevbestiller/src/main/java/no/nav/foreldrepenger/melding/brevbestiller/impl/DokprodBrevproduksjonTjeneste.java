@@ -152,7 +152,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                 dokumentdata.getFelles().anonymiser();
                 dokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
             } catch (Exception e) {
-                LOGGER.info("Feilet i å lage Dokgen-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}", dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid());
+                LOGGER.info("Feilet i å lage Dokgen-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}", dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
             }
         }
     }

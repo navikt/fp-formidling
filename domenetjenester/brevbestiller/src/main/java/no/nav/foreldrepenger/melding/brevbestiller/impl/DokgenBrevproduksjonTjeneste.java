@@ -146,7 +146,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                 Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK, dokumentFelles, dokumentHendelse, behandling, saksnummer);
                 dokumentFelles.setAlternativeBrevData(elementTilString(brevXmlElement));
             } catch (Exception e) {
-                LOGGER.info("Feilet i å lage Dokprod-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}", dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid());
+                LOGGER.info("Feilet i å lage Dokprod-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}", dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
             }
         }
     }

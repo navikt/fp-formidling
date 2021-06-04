@@ -120,6 +120,9 @@ abstract class AbstractJettyServer {
         // Add support for X-Forwarded headers
         httpConfig.addCustomizer(new org.eclipse.jetty.server.ForwardedRequestCustomizer());
 
+        // Gjør det mulig å ta imot større argumenter igjennom REST (trengs for dokgen-json-til-pdf i forvaltningsgrensesnittet)
+        httpConfig.setRequestHeaderSize(32768);
+
         return httpConfig;
     }
 

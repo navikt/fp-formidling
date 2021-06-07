@@ -158,7 +158,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapperTest {
         assertThat(dokumentdata.getAleneomsorgKode()).isEqualTo(VurderingsKode.JA);
         assertThat(dokumentdata.getBarnErFødt()).isFalse();
         assertThat(dokumentdata.getÅrsakErFødselshendelse()).isTrue();
-        assertThat(dokumentdata.getIkkeOmsorg()).isFalse();
+        assertThat(dokumentdata.getIkkeOmsorg()).isTrue();
         assertThat(dokumentdata.getGjelderMor()).isTrue();
         assertThat(dokumentdata.getGjelderFødsel()).isTrue();
         assertThat(dokumentdata.getDelvisRefusjon()).isTrue();

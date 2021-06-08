@@ -1,20 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMerger.mergePerioder;
-import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
@@ -32,7 +17,21 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-import no.nav.vedtak.util.Tuple;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMerger.mergePerioder;
+import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 
 public final class UtbetalingsperiodeMapper {
 
@@ -118,7 +117,7 @@ public final class UtbetalingsperiodeMapper {
                 .medInnvilget((uttakperiode.isInnvilget() && !erGraderingAvslått(uttakperiode)))
                 .medPeriodeFom(uttakperiode.getFom())
                 .medPeriodeTom(uttakperiode.getTom())
-                .medÅrsak((uttakperiode.getPeriodeResultatType().getKode()));
+                .medÅrsak((uttakperiode.getPeriodeResultatÅrsak().getKode()));
         return utbetalingsPerioder.build();
     }
 
@@ -216,11 +215,10 @@ public final class UtbetalingsperiodeMapper {
         return annenAktivitetListe;
     }
 
-    private static AnnenAktivitet mapAnnenAktivitet(Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> tilkjentYtelseAndelMedTilhørendeUttaksaktivitet) {
-        BeregningsresultatAndel beregningsresultatAndel = tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement1();
+    private static AnnenAktivitet mapAnnenAktivitet(BeregningsresOgUttaksAndel tilkjentYtelseAndelMedTilhørendeUttaksaktivitet) {
         var annenAktivitetBuilder = AnnenAktivitet.ny()
-                .medAktivitetStatus((beregningsresultatAndel.getAktivitetStatus().name()));
-        tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement2().ifPresent(
+                .medAktivitetStatus((tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.andel.getAktivitetStatus().name()));
+        tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.UttakAktivitet.ifPresent(
                 uttakAktivitet -> {
                     annenAktivitetBuilder.medGradering(uttakAktivitet.getGraderingInnvilget());
                     annenAktivitetBuilder.medUtbetalingsgrad(uttakAktivitet.getUtbetalingsprosent().intValue());
@@ -229,16 +227,18 @@ public final class UtbetalingsperiodeMapper {
         return annenAktivitetBuilder.build();
     }
 
-    private static Stream<Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>>> finnAndelerOgUttakAnnenAktivitet(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakPeriode) {
+    private static Stream<BeregningsresOgUttaksAndel> finnAndelerOgUttakAnnenAktivitet(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakPeriode) {
         return beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
                 .filter(Predicate.not(andel -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus())))
                 .filter(Predicate.not(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())))
                 .map(andel -> matchBeregningsresultatAndelMedUttaksaktivitet(andel, uttakPeriode));
     }
 
-    private static Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> matchBeregningsresultatAndelMedUttaksaktivitet(BeregningsresultatAndel andel, UttakResultatPeriode uttakPeriode) {
-        return new Tuple<>(andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakPeriode.getAktiviteter(), andel));
+    private static BeregningsresOgUttaksAndel matchBeregningsresultatAndelMedUttaksaktivitet(BeregningsresultatAndel andel, UttakResultatPeriode uttakPeriode) {
+        return new BeregningsresOgUttaksAndel(andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakPeriode.getAktiviteter(), andel));
     }
+
+    private static record BeregningsresOgUttaksAndel (BeregningsresultatAndel andel, Optional<UttakResultatPeriodeAktivitet> UttakAktivitet) {}
 
     private static Næring mapNæring(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         return finnNæringsandeler(beregningsresultatPeriode).stream().map(andel -> mapNæringsandel(

@@ -1,5 +1,26 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import no.nav.foreldrepenger.melding.typer.DatoIntervall;
+import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
+import no.nav.foreldrepenger.melding.uttak.UttakAktivitet;
+import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.util.List.of;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFomHvisFinnes;
@@ -7,23 +28,6 @@ import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.Utbeta
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.harInnvilgedePerioder;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
-import no.nav.foreldrepenger.melding.typer.DatoIntervall;
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
-import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 
 public class UtbetalingsperiodeMapperTest {
 
@@ -157,6 +161,70 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(resultat).hasSize(2);
         assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(uPeriode.getFom());
         assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(brPeriode3.getBeregningsresultatPeriodeFom());
+    }
+
+    @Test
+    public void skal_mappe_annenAktitetListe_når_den_inneholder_annet() {
+        // Arrange
+        DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
+        DatoIntervall tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
+        DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
+
+        BeregningsresultatAndel beregningsresultatAndel = BeregningsresultatAndel.ny()
+                .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL).build();
+        BeregningsresultatPeriode brPeriode = BeregningsresultatPeriode.ny()
+                .medPeriode(tidsperiodeBp1)
+                .medDagsats(0L)
+                .medBeregningsresultatAndel(of(beregningsresultatAndel))
+                .build();
+
+        BeregningsgrunnlagPrStatusOgAndel prStatusOgAndel = BeregningsgrunnlagPrStatusOgAndel.ny().medBeregningsperiode(tidsperiodeUp1).build();
+
+        List<BeregningsresultatPeriode> beregningsresultatPerioder = of(brPeriode);
+
+        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+                .medPeriode(beregningPer)
+                .medDagsats(620L)
+                .medBeregningsgrunnlagPrStatusOgAndelList(of(prStatusOgAndel))
+                .build();
+        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
+
+        UttakAktivitet uttakAktivitet = UttakAktivitet.ny()
+                .medUttakArbeidType(UttakArbeidType.ANNET)
+                .build();
+
+        UttakResultatPeriodeAktivitet uttakResultatPeriodeAktivitet = UttakResultatPeriodeAktivitet.ny()
+                .medTrekkdager(BigDecimal.TEN)
+                .medUtbetalingsprosent(BigDecimal.ZERO)
+                .medUttakAktivitet(uttakAktivitet)
+                .medGraderingInnvilget(true)
+                .medArbeidsprosent(BigDecimal.valueOf(20))
+                .build();
+
+        UttakResultatPeriodeAktivitet uttakResultatPeriodeAktivitet2 = UttakResultatPeriodeAktivitet.ny()
+                .medTrekkdager(BigDecimal.TEN)
+                .medUtbetalingsprosent(BigDecimal.ZERO)
+                .medUttakAktivitet(uttakAktivitet)
+                .build();
+        UttakResultatPeriode uPeriode = UttakResultatPeriode.ny()
+                .medAktiviteter(of(uttakResultatPeriodeAktivitet, uttakResultatPeriodeAktivitet2))
+                .medTidsperiode(tidsperiodeUp1)
+                .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT)
+                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
+                .build();
+
+        UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(of(uPeriode)).build();
+
+        // Act
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder);
+
+        // Assert
+        assertThat(resultat).hasSize(1);
+
+        assertThat(resultat.get(0).isInnvilget()).isTrue();
+        assertThat(resultat.get(0).getPeriodeDagsats()).isEqualTo(0L);
+        assertThat(resultat.get(0).getÅrsak()).isEqualTo(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode());
+        assertThat(resultat.get(0).getAnnenAktivitetsliste()).hasSize(1);
     }
 
     @Test

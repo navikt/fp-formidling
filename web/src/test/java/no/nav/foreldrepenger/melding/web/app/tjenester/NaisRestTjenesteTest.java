@@ -50,23 +50,8 @@ public class NaisRestTjenesteTest {
 
     @Test
     public void isReady_skal_returnere_service_unavailable_når_databasetest_feiler() {
-        when(kafka.isAlive()).thenReturn(true);
         when(db.isReady()).thenReturn(false);
         assertThat(restTjeneste.isReady().getStatus()).isEqualTo(Response.Status.SERVICE_UNAVAILABLE.getStatusCode());
-    }
-
-    @Test
-    public void isReady_skal_returnere_service_unavailable_når_kafka_feiler() {
-        when(kafka.isAlive()).thenReturn(false);
-        when(db.isReady()).thenReturn(true);
-        assertThat(restTjeneste.isReady().getStatus()).isEqualTo(Response.Status.SERVICE_UNAVAILABLE.getStatusCode());
-    }
-
-    @Test
-    public void isReady_skal_returnere_status_ok_når_database_og_kafka_er_ok() {
-        when(kafka.isAlive()).thenReturn(true);
-        when(db.isReady()).thenReturn(true);
-        assertThat(restTjeneste.isReady().getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
     }
 
     @Test

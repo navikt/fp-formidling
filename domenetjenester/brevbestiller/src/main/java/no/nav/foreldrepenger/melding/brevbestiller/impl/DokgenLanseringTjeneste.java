@@ -9,10 +9,10 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.vedtak.util.env.Environment;
 
 @ApplicationScoped
 public class DokgenLanseringTjeneste {

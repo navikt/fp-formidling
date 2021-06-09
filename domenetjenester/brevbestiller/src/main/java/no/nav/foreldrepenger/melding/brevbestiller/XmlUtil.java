@@ -1,15 +1,17 @@
 package no.nav.foreldrepenger.melding.brevbestiller;
 
-import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
-import org.w3c.dom.Element;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
+import java.time.LocalDate;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.time.LocalDate;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
+
+import no.nav.vedtak.exception.TekniskException;
 
 public class XmlUtil {
     private XmlUtil() {
@@ -35,7 +37,7 @@ public class XmlUtil {
                     DatatypeConstants.FIELD_UNDEFINED,
                     DatatypeConstants.FIELD_UNDEFINED);
         } catch (DatatypeConfigurationException e) {
-            throw DokumentBestillerFeil.datokonverteringsfeil(dato.toString(), e);
+            throw new TekniskException("FPFORMIDLING-151337", String.format("Kan ikke konvertere dato %s til xmlformatert dato.", dato.toString()), e);
 
         }
     }

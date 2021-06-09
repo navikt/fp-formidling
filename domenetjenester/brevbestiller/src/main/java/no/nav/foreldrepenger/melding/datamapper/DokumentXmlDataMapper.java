@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.MottakerType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.xmlutils.DateUtil;
+import no.nav.vedtak.exception.TekniskException;
 
 public class DokumentXmlDataMapper {
 
@@ -41,7 +42,7 @@ public class DokumentXmlDataMapper {
             Document doc = db.parse(is);
             brevXmlElement = doc.getDocumentElement();
         } catch (Exception e) { // SAXException | XMLStreamException | ParserConfigurationException | IOException | JAXBException
-            throw DokumentBestillerFeil.xmlgenereringsfeil(behandling.getUuid().toString(), e);
+            throw new TekniskException("FPFORMIDLING-151666", String.format("Kan ikke bestille dokument for behandling %s. Problemer ved generering av xml", behandling.getUuid().toString()), e);
         }
         return brevXmlElement;
     }

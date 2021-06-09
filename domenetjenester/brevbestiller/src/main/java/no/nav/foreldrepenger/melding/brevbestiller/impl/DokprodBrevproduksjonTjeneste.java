@@ -22,12 +22,10 @@ import org.w3c.dom.Element;
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
-import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevproduksjonTjeneste;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapperProvider;
-import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
@@ -56,6 +54,7 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
+import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
 
@@ -143,7 +142,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             return sak.map(s -> new Saksnummer(String.valueOf(s.getId()))).orElseThrow();
         } catch (Exception e) {
             LOGGER.info("FPFORMIDLING SAK feil for saksnummer ", e);
-            throw BrevbestillerFeil.feilFraSak(e);
+            throw new TekniskException("FPFORMIDLING-210632", String.format("Feilmelding fra Sak."), e);
         }
     }
 
@@ -190,7 +189,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         try {
             dokumentproduksjonProxyService.ferdigstillForsendelse(request);
         } catch (Exception e) {
-            throw DokumentMapperFeil.ferdigstillingAvDokumentFeil(journalpostId, e);
+            throw new TekniskException("FPFORMIDLING-316712", String.format("Feil i ferdigstilling av dokument med journalpostId %s", journalpostId), e );
         }
     }
 
@@ -208,7 +207,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         try {
             dokumentproduksjonProxyService.knyttVedleggTilForsendelse(request);
         } catch (Exception e) {
-            throw DokumentMapperFeil.knyttingAvVedleggFeil(dokumentId, e);
+            throw new TekniskException("FPFORMIDLING-795245", String.format("Feil i knytting av vedlegg til dokument med id %s", dokumentId), e );
         }
     }
 
@@ -235,7 +234,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             return dokumentproduksjonProxyService
                     .produserIkkeredigerbartDokument(produserIkkeredigerbartDokumentRequest);
         } catch (ProduserIkkeredigerbartDokumentDokumentErRedigerbart | ProduserIkkeredigerbartDokumentDokumentErVedlegg funksjonellFeil) {
-            throw BrevbestillerFeil.feilFraDokProd(funksjonellFeil);
+            throw new TekniskException("FPFORMIDLING-210631", String.format("Feilmelding fra DokProd."), funksjonellFeil);
         }
     }
 
@@ -272,7 +271,8 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         dokument = forhåndsvis(dokumentMal, brevXmlElement);
         if (dokument.length == 0) {
             LOGGER.error("Klarte ikke hente behandling: {}", behandling.getUuid());
-            throw BrevbestillerFeil.klarteIkkeÅForhåndsviseMal(dokumentMal.getKode(), behandling.getUuid().toString());
+            throw new TekniskException("FPFORMIDLING-221005",
+                    String.format("Klarte ikke hente forhåndvise mal %s for behandling %s.", dokumentMal.getKode(), behandling.getUuid().toString()));
         }
         LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getUuid().toString());
         return dokument;

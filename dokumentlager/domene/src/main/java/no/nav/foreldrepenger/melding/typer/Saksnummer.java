@@ -6,13 +6,11 @@ import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import no.nav.foreldrepenger.melding.kodeverk.diff.IndexKey;
-
 /**
  * Saksnummer refererer til saksnummer registret i GSAK.
  */
 @Embeddable
-public class Saksnummer implements SakId, IndexKey {
+public class Saksnummer implements SakId {
     private static final String CHARS = "a-z0-9_:-";
 
     private static final Pattern VALID = Pattern.compile("^(-?[1-9]|[a-z0])[" + CHARS + "]*$", Pattern.CASE_INSENSITIVE);
@@ -35,12 +33,7 @@ public class Saksnummer implements SakId, IndexKey {
         this.saksnummer = saksnummer;
     }
 
-    @Override
-    public String getIndexKey() { //NOSONAR
-        return saksnummer;
-    }
-
-    public String getVerdi() { //NOSONAR
+    public String getVerdi() { // NOSONAR
         return saksnummer;
     }
 

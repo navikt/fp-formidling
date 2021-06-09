@@ -53,23 +53,32 @@ public class AktivitetsMapper {
         aktivitetStatusKodeStatusTypeKodeMap.put(AktivitetStatus.KUN_YTELSE, StatusTypeKode.KUN_YTELSE);
     }
 
-    static ArbeidsforholdListeType mapArbeidsforholdliste(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+    static ArbeidsforholdListeType mapArbeidsforholdliste(BeregningsresultatPeriode beregningsresultatPeriode,
+            UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         ArbeidsforholdListeType arbeidsforholdListeType = objectFactory.createArbeidsforholdListeType();
         List<ArbeidsforholdType> arbeidsforholdListe = new ArrayList<>();
         for (BeregningsresultatAndel andel : finnArbeidsandeler(beregningsresultatPeriode)) {
-            arbeidsforholdListe.add(mapArbeidsforholdAndel(beregningsresultatPeriode, andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel), beregningsgrunnlagPeriode));
+            arbeidsforholdListe
+                    .add(mapArbeidsforholdAndel(beregningsresultatPeriode, andel,
+                            PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner
+                                    .finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel),
+                            beregningsgrunnlagPeriode));
         }
-        Comparator<ArbeidsforholdType> arbeidsforholdTypeIsGraderingComparator = (a, b) -> - Boolean.compare(a.isGradering(), b.isGradering()); // - for reverse order.
+        Comparator<ArbeidsforholdType> arbeidsforholdTypeIsGraderingComparator = (a, b) -> -Boolean.compare(a.isGradering(), b.isGradering()); // -
+                                                                                                                                               // for
+                                                                                                                                               // reverse
+                                                                                                                                               // order.
         arbeidsforholdListe.sort(arbeidsforholdTypeIsGraderingComparator);
         arbeidsforholdListeType.getArbeidsforhold().addAll(arbeidsforholdListe);
         return arbeidsforholdListeType.getArbeidsforhold().isEmpty() ? null : arbeidsforholdListeType;
     }
 
-
-    private static ArbeidsforholdType mapArbeidsforholdAndel(BeregningsresultatPeriode beregningsresultatPeriode, BeregningsresultatAndel beregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet> uttakAktivitet, Optional<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagAndel, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+    private static ArbeidsforholdType mapArbeidsforholdAndel(BeregningsresultatPeriode beregningsresultatPeriode,
+            BeregningsresultatAndel beregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet> uttakAktivitet,
+            Optional<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagAndel, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         ArbeidsforholdType arbeidsforhold = objectFactory.createArbeidsforholdType();
         arbeidsforhold.setAktivitetDagsats((long) beregningsresultatAndel.getDagsats());
-        arbeidsforhold.setArbeidsgiverNavn(beregningsresultatAndel.getArbeidsgiver().map(Arbeidsgiver::getNavn).orElse("Andel"));
+        arbeidsforhold.setArbeidsgiverNavn(beregningsresultatAndel.getArbeidsgiver().map(Arbeidsgiver::navn).orElse("Andel"));
         if (uttakAktivitet.isPresent()) {
             arbeidsforhold.setUttaksgrad(uttakAktivitet.get().getUtbetalingsprosent().toBigInteger());
             arbeidsforhold.setProsentArbeid(uttakAktivitet.get().getArbeidsprosent().toBigInteger());
@@ -80,31 +89,35 @@ public class AktivitetsMapper {
         beregningsgrunnlagAndel.ifPresent(bgAndel -> {
             final BeregningsgrunnlagPrStatusOgAndel statusOgAndel = beregningsgrunnlagAndel.get();
             statusOgAndel.getBgAndelArbeidsforhold().ifPresent(bgAndelArbeidsforhold -> {
-                if (bgAndelArbeidsforhold.getNaturalytelseBortfaltPrÅr() != null ||
-                        bgAndelArbeidsforhold.getNaturalytelseTilkommetPrÅr() != null)
+                if (bgAndelArbeidsforhold.naturalytelseBortfaltPrÅr() != null ||
+                        bgAndelArbeidsforhold.naturalytelseTilkommetPrÅr() != null)
                     mapNaturalytelse(arbeidsforhold, beregningsgrunnlagPeriode, beregningsresultatPeriode);
             });
         });
         return arbeidsforhold;
     }
 
-    private static void mapNaturalytelse(ArbeidsforholdType arbeidsforhold, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, BeregningsresultatPeriode beregningsresultatPeriode) {
+    private static void mapNaturalytelse(ArbeidsforholdType arbeidsforhold, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
+            BeregningsresultatPeriode beregningsresultatPeriode) {
         for (String årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
             if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode().equals(årsak)) {
                 arbeidsforhold.setNaturalytelseEndringType(NaturalytelseEndringTypeKode.STOPP);
                 arbeidsforhold.setNaturalytelseNyDagsats(beregningsgrunnlagPeriode.getDagsats());
-                arbeidsforhold.setNaturalytelseEndringDato(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
+                arbeidsforhold
+                        .setNaturalytelseEndringDato(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
             } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode().equals(årsak)) {
                 arbeidsforhold.setNaturalytelseEndringType(NaturalytelseEndringTypeKode.START);
                 arbeidsforhold.setNaturalytelseNyDagsats(beregningsgrunnlagPeriode.getDagsats());
-                arbeidsforhold.setNaturalytelseEndringDato(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
+                arbeidsforhold
+                        .setNaturalytelseEndringDato(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
             } else {
                 arbeidsforhold.setNaturalytelseEndringType(NaturalytelseEndringTypeKode.INGEN_ENDRING);
             }
         }
     }
 
-    static NæringListeType mapNæringsliste(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+    static NæringListeType mapNæringsliste(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakResultatPeriode,
+            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         NæringListeType næringListe = objectFactory.createNæringListeType();
         finnNæringsandeler(beregningsresultatPeriode).stream().map(andel -> mapNæringsandel(andel,
                 PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel),
@@ -115,8 +128,8 @@ public class AktivitetsMapper {
     }
 
     private static NæringType mapNæringsandel(BeregningsresultatAndel beregingsresultatAndel,
-                                              Optional<UttakResultatPeriodeAktivitet> uttakAktivitet,
-                                              Optional<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagAndel) {
+            Optional<UttakResultatPeriodeAktivitet> uttakAktivitet,
+            Optional<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagAndel) {
         NæringType næring = objectFactory.createNæringType();
         næring.setAktivitetDagsats((long) beregingsresultatAndel.getDagsats());
         if (uttakAktivitet.isPresent()) {
@@ -141,7 +154,13 @@ public class AktivitetsMapper {
     static AnnenAktivitetListeType mapAnnenAktivtetListe(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakPeriode) {
 
         AnnenAktivitetListeType annenAktivitetListe = objectFactory.createAnnenAktivitetListeType();
-         Comparator<AnnenAktivitetType> annenAktiviteTypeIsGraderingComparator = (a, b) -> - Boolean.compare(a.isGradering(), b.isGradering()); // - for å reverse rekkefølgen-gradering først i listen
+        Comparator<AnnenAktivitetType> annenAktiviteTypeIsGraderingComparator = (a, b) -> -Boolean.compare(a.isGradering(), b.isGradering()); // - for
+                                                                                                                                              // å
+                                                                                                                                              // reverse
+                                                                                                                                              // rekkefølgen-gradering
+                                                                                                                                              // først
+                                                                                                                                              // i
+                                                                                                                                              // listen
         finnAndelerOgUttakAnnenAktivitet(beregningsresultatPeriode, uttakPeriode)
                 .map(AktivitetsMapper::mapAnnenAktivitet)
                 .sorted(annenAktiviteTypeIsGraderingComparator)
@@ -149,7 +168,8 @@ public class AktivitetsMapper {
         return annenAktivitetListe.getAnnenAktivitet().isEmpty() ? null : annenAktivitetListe;
     }
 
-    static AnnenAktivitetType mapAnnenAktivitet(Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> tilkjentYtelseAndelMedTilhørendeUttaksaktivitet) {
+    static AnnenAktivitetType mapAnnenAktivitet(
+            Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> tilkjentYtelseAndelMedTilhørendeUttaksaktivitet) {
 
         BeregningsresultatAndel beregningsresultatAndel = tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement1();
         AnnenAktivitetType annenAktivitet = objectFactory.createAnnenAktivitetType();
@@ -170,18 +190,18 @@ public class AktivitetsMapper {
                 .collect(Collectors.toList());
     }
 
-    private static Stream<Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>>> finnAndelerOgUttakAnnenAktivitet(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakPeriode) {
+    private static Stream<Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>>> finnAndelerOgUttakAnnenAktivitet(
+            BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakPeriode) {
         return beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
                 .filter(Predicate.not(andel -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus())))
                 .filter(Predicate.not(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())))
                 .map(andel -> matchBeregningsresultatAndelMedUttaksaktivitet(andel, uttakPeriode));
     }
 
-
-    private static Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> matchBeregningsresultatAndelMedUttaksaktivitet(BeregningsresultatAndel andel, UttakResultatPeriode uttakPeriode) {
+    private static Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> matchBeregningsresultatAndelMedUttaksaktivitet(
+            BeregningsresultatAndel andel, UttakResultatPeriode uttakPeriode) {
         return new Tuple<>(andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakPeriode.getAktiviteter(), andel));
     }
-
 
     private static StatusTypeKode tilStatusTypeKode(AktivitetStatus statuskode) {
 

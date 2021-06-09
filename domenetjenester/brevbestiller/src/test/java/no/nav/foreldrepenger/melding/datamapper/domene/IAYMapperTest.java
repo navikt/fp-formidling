@@ -33,7 +33,7 @@ public class IAYMapperTest {
         Inntektsmelding inntektsmelding = IAYMapper.hentNyesteInntektsmelding(inntektArbeidYtelse);
 
         // Assert
-        assertThat(inntektsmelding.getArbeidsgiverNavn()).isEqualTo("Fasit");
+        assertThat(inntektsmelding.arbeidsgiverNavn()).isEqualTo("Fasit");
     }
 
 }

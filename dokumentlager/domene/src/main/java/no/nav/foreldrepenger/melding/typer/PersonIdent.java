@@ -4,23 +4,24 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import no.nav.foreldrepenger.melding.kodeverk.diff.IndexKey;
-
 /**
- * Denne mapper p.t Norsk person ident (fødselsnummer, inkl F-nr, D-nr eller FDAT)
+ * Denne mapper p.t Norsk person ident (fødselsnummer, inkl F-nr, D-nr eller
+ * FDAT)
  * <ul>
  * <li>F-nr: http://lovdata.no/forskrift/2007-11-09-1268/%C2%A72-2 (F-nr)</li>
  *
- * <li>D-nr: http://lovdata.no/forskrift/2007-11-09-1268/%C2%A72-5 (D-nr), samt hvem som kan utstede
+ * <li>D-nr: http://lovdata.no/forskrift/2007-11-09-1268/%C2%A72-5 (D-nr), samt
+ * hvem som kan utstede
  * (http://lovdata.no/forskrift/2007-11-09-1268/%C2%A72-6)</li>
  *
- * <li>FDAT: Personer uten FNR. Disse har fødselsdato + 00000 (normalt) eller fødselsdato + 00001 (dødfødt).
+ * <li>FDAT: Personer uten FNR. Disse har fødselsdato + 00000 (normalt) eller
+ * fødselsdato + 00001 (dødfødt).
  * </ul>
  */
-public class PersonIdent implements Comparable<PersonIdent>, IndexKey {
+public class PersonIdent implements Comparable<PersonIdent> {
 
-    private static final int[] CHECKSUM_EN_VECTOR = new int[]{3, 7, 6, 1, 8, 9, 4, 5, 2};
-    private static final int[] CHECKSUM_TO_VECTOR = new int[]{5, 4, 3, 2, 7, 6, 5, 4, 3, 2};
+    private static final int[] CHECKSUM_EN_VECTOR = new int[] { 3, 7, 6, 1, 8, 9, 4, 5, 2 };
+    private static final int[] CHECKSUM_TO_VECTOR = new int[] { 5, 4, 3, 2, 7, 6, 5, 4, 3, 2 };
 
     private static final int FNR_LENGDE = 11;
 
@@ -35,7 +36,8 @@ public class PersonIdent implements Comparable<PersonIdent>, IndexKey {
     }
 
     /**
-     * @return true hvis angitt str er et fødselsnummer (F-Nr eller D-Nr). False hvis ikke, eller er FDAT nummer.
+     * @return true hvis angitt str er et fødselsnummer (F-Nr eller D-Nr). False
+     *         hvis ikke, eller er FDAT nummer.
      */
     public static boolean erGyldigFnr(final String str) {
         if (str == null) {
@@ -84,11 +86,6 @@ public class PersonIdent implements Comparable<PersonIdent>, IndexKey {
     }
 
     @Override
-    public String getIndexKey() {
-        return ident + "(" + (erDnr() ? "DNR" : erFdatNummer() ? "FDAT" : "FNR") + ")"; //NOSONAR
-    }
-
-    @Override
     public int compareTo(PersonIdent o) {
         return this.ident.compareTo(o.ident);
     }
@@ -119,7 +116,8 @@ public class PersonIdent implements Comparable<PersonIdent>, IndexKey {
     }
 
     /**
-     * Hvorvidt dette er et Fdat Nummer (dvs. gjelder person uten tildelt fødselsnummer).
+     * Hvorvidt dette er et Fdat Nummer (dvs. gjelder person uten tildelt
+     * fødselsnummer).
      */
     public boolean erFdatNummer() {
         return isFdatNummer(getPersonnummer(ident));

@@ -30,9 +30,9 @@ public final class StønadskontoMapper {
     }
 
     private static Optional<BigInteger> finnSaldo(Saldoer saldoer, StønadskontoType stønadskontoType) {
-        Optional<Stønadskonto> stønadskonto = PeriodeBeregner.finnStønadsKontoMedType(saldoer.getStønadskontoer(), stønadskontoType);
+        Optional<Stønadskonto> stønadskonto = PeriodeBeregner.finnStønadsKontoMedType(saldoer.stønadskontoer(), stønadskontoType);
         if (stønadskonto.isPresent()) {
-            int saldo = stønadskonto.get().getSaldo();
+            int saldo = stønadskonto.get().saldo();
             return Optional.of(saldo > 0 ? BigInteger.valueOf(saldo) : BigInteger.valueOf(0));
         }
         return Optional.empty();
@@ -43,16 +43,16 @@ public final class StønadskontoMapper {
     }
 
     public static Optional<BigInteger> finnForeldrepengeperiodenUtvidetUkerHvisFinnes(Saldoer saldoer) {
-        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.getStønadskontoer(), StønadskontoType.FLERBARNSDAGER)
-                .map(Stønadskonto::getMaxDager)
+        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.stønadskontoer(), StønadskontoType.FLERBARNSDAGER)
+                .map(Stønadskonto::maxDager)
                 .map(BigInteger::valueOf)
                 .map(dager -> dager.divide(BigInteger.valueOf(5)));
     }
 
     public static Optional<Integer> finnPrematurDagerHvisFinnes(Saldoer saldoer) {
-        return saldoer.getStønadskontoer()
+        return saldoer.stønadskontoer()
                 .stream()
-                .map(Stønadskonto::getPrematurDager)
+                .map(Stønadskonto::prematurDager)
                 .max(Integer::compareTo);
     }
 }

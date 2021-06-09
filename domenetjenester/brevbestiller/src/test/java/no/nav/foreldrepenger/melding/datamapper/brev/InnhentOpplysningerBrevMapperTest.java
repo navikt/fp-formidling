@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -55,10 +54,9 @@ public class InnhentOpplysningerBrevMapperTest {
 
     @Test
     public void skal_bruke_klage_til_å_velge_mottatt_dato() {
-        KlageDokument mockKlagedokument = Mockito.mock(KlageDokument.class);
-        klageDokument = Optional.of(mockKlagedokument);
-        when(mockKlagedokument.getMottattDato()).thenReturn(FØRSTE_JANUAR_TJUENITTEN);
-        FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter, klageDokument);
+        klageDokument = Optional.of(new KlageDokument(FØRSTE_JANUAR_TJUENITTEN));
+        FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter,
+                klageDokument);
         assertThat(fagType.getSoknadDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(FØRSTE_JANUAR_TJUENITTEN));
         assertThat(fagType.getBehandlingsType()).isEqualTo(BehandlingsTypeKode.FOERSTEGANGSBEHANDLING);
         assertThat(fagType.getFritekst()).isEqualTo(FRITEKST);
@@ -70,7 +68,8 @@ public class InnhentOpplysningerBrevMapperTest {
     public void skal_velge_vanlig_søknad__mottatt_dato() {
         LocalDate andreJanuar = LocalDate.of(2019, 1, 2);
         mottatteDokumenter.add(new MottattDokument(andreJanuar, DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL, DokumentKategori.SØKNAD));
-        FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter, klageDokument);
+        FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter,
+                klageDokument);
         assertThat(fagType.getSoknadDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(andreJanuar));
         assertThat(fagType.getBehandlingsType()).isEqualTo(BehandlingsTypeKode.FOERSTEGANGSBEHANDLING);
         assertThat(fagType.getFritekst()).isEqualTo(FRITEKST);
@@ -82,11 +81,13 @@ public class InnhentOpplysningerBrevMapperTest {
     public void skal_velge_mottattt_dato_fra_siste_søknad_mottatt_når_flere() {
         LocalDate andreJanuar = LocalDate.of(2019, 1, 2);
         LocalDate fjerdeJanuar = LocalDate.of(2019, 1, 4);
-        LocalDate forsteJanuar = LocalDate.of(2019, 1, 1);;
+        LocalDate forsteJanuar = LocalDate.of(2019, 1, 1);
+        ;
         mottatteDokumenter.add(new MottattDokument(andreJanuar, DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL, DokumentKategori.SØKNAD));
         mottatteDokumenter.add(new MottattDokument(fjerdeJanuar, DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL, DokumentKategori.SØKNAD));
         mottatteDokumenter.add(new MottattDokument(forsteJanuar, DokumentTypeId.SØKNAD_FORELDREPENGER_FØDSEL, DokumentKategori.SØKNAD));
-        FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter, klageDokument);
+        FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter,
+                klageDokument);
         assertThat(fagType.getSoknadDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(fjerdeJanuar));
         assertThat(fagType.getBehandlingsType()).isEqualTo(BehandlingsTypeKode.FOERSTEGANGSBEHANDLING);
         assertThat(fagType.getFritekst()).isEqualTo(FRITEKST);
@@ -102,7 +103,8 @@ public class InnhentOpplysningerBrevMapperTest {
         LocalDate fjerdeJanuar = LocalDate.of(2019, 1, 4);
         mottatteDokumenter.add(new MottattDokument(andreJanuar, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD));
         mottatteDokumenter.add(new MottattDokument(fjerdeJanuar, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD));
-        FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter, klageDokument);
+        FagType fagType = brevMapper.mapFagType(dokumentFelles, DatamapperTestUtil.standardDokumenthendelse(), behandling, mottatteDokumenter,
+                klageDokument);
         assertThat(fagType.getSoknadDato()).isEqualTo(XmlUtil.finnDatoVerdiAvUtenTidSone(fjerdeJanuar));
         assertThat(fagType.getBehandlingsType()).isEqualTo(BehandlingsTypeKode.ENDRINGSSØKNAD);
         assertThat(fagType.getFritekst()).isEqualTo(FRITEKST);
@@ -112,7 +114,8 @@ public class InnhentOpplysningerBrevMapperTest {
 
     @Test
     public void skal_fungere_med_svp() {
-        DokumentHendelse dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build();
+        DokumentHendelse dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER)
+                .build();
         FagType fagType = brevMapper.mapFagType(dokumentFelles, dokumentHendelse, behandling, mottatteDokumenter, klageDokument);
         assertThat(fagType.getYtelseType()).isEqualTo(YtelseTypeKode.SVP);
     }

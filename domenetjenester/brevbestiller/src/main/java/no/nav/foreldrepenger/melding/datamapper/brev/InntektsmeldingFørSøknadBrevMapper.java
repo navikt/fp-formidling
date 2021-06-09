@@ -68,8 +68,8 @@ public class InntektsmeldingFørSøknadBrevMapper extends DokumentTypeMapper {
         fagType.setBehandlingsType(mapToXmlBehandlingsType(behandling.getBehandlingType()));
         Inntektsmelding inntektsmelding = IAYMapper.hentNyesteInntektsmelding(iay);
         fagType.setSokAntallUkerFor(BigInteger.valueOf(brevParametere.getSøkAntallUker()));
-        fagType.setArbeidsgiverNavn(inntektsmelding.getArbeidsgiverNavn());
-        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(inntektsmelding.getInnsendingstidspunkt()));
+        fagType.setArbeidsgiverNavn(inntektsmelding.arbeidsgiverNavn());
+        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(inntektsmelding.innsendingstidspunkt()));
         fagType.setPeriodeListe(mapFeriePerioder(inntektsmelding));
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         return fagType;
@@ -94,7 +94,7 @@ public class InntektsmeldingFørSøknadBrevMapper extends DokumentTypeMapper {
 
     private PeriodeListeType mapFeriePerioder(Inntektsmelding inntektsmelding) {
         PeriodeListeType periodeListe = objectFactory.createPeriodeListeType();
-        inntektsmelding.getUtsettelsePerioder()
+        inntektsmelding.utsettelsePerioder()
                 .stream()
                 .filter(up -> UtsettelseÅrsak.FERIE.equals(up.getUtsettelseÅrsak()))
                 .forEach(up -> {

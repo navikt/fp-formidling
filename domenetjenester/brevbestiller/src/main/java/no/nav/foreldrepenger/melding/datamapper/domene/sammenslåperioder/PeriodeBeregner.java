@@ -142,7 +142,7 @@ public class PeriodeBeregner {
 
         for (UttakResultatPeriodeAktivitet aktivitet : uttakAktiviteter) {
             if (uttakAktivitetStatusMap.getOrDefault(andel.getAktivitetStatus(), UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType())
-                && (arbeidsgiver.isEmpty() || Objects.equals(arbeidsgiver.get().getArbeidsgiverReferanse(), aktivitet.getArbeidsgiverIdentifikator()))
+                && (arbeidsgiver.isEmpty() || Objects.equals(arbeidsgiver.get().arbeidsgiverReferanse(), aktivitet.getArbeidsgiverIdentifikator()))
                 && (arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold() && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId())))) {
                     return Optional.of(aktivitet);
             }
@@ -152,7 +152,7 @@ public class PeriodeBeregner {
 
     public static Optional<Stønadskonto> finnStønadsKontoMedType(Set<Stønadskonto> stønadskontoer, StønadskontoType stønadskontoType) {
         return stønadskontoer.stream().
-                filter(stønadskonto -> stønadskontoType.equals(stønadskonto.getStønadskontoType()))
+                filter(stønadskonto -> stønadskontoType.equals(stønadskonto.stønadskontoType()))
                 .findFirst();
     }
 

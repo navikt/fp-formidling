@@ -64,10 +64,10 @@ public class DokumentFellesDataMapper {
         Verge verge = vergeOpt.get();
 
 
-        if (verge.getAktoerId() != null) {
-            AktørId vergesAktørId = new AktørId(verge.getAktoerId());
+        if (verge.aktoerId() != null) {
+            AktørId vergesAktørId = new AktørId(verge.aktoerId());
             opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, vergesAktørId, søkersAktørId, Optional.of( DokumentFelles.Kopi.NEI)); // orginalen går til verge
-        } else if (verge.getOrganisasjonsnummer() != null) {
+        } else if (verge.organisasjonsnummer() != null) {
             opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, dokumentHendelse, verge, søkersAktørId, Optional.of( DokumentFelles.Kopi.NEI));// orginalen går til verge
         }
     }
@@ -90,13 +90,13 @@ public class DokumentFellesDataMapper {
                 dokumentData,
                 personinfoBruker,
                 virksomhet,
-                verge.getNavn(),
+                verge.navn(),
                 avsenderEnhet,
                 erKopi);
     }
 
     private Virksomhet getVirksomhet(Verge verge) {
-        return virksomhetTjeneste.getOrganisasjon(verge.getOrganisasjonsnummer(), LandkodeOversetter::tilLandkoderToBokstav);
+        return virksomhetTjeneste.getOrganisasjon(verge.organisasjonsnummer(), LandkodeOversetter::tilLandkoderToBokstav);
     }
 
     private void opprettDokumentDataForMottaker(Behandling behandling,

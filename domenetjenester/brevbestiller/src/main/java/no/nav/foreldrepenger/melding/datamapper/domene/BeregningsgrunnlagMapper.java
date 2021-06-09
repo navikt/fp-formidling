@@ -1,5 +1,15 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
@@ -16,16 +26,6 @@ import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-
 public class BeregningsgrunnlagMapper {
     public BeregningsgrunnlagMapper() {
         // CDI Proxy
@@ -38,9 +38,10 @@ public class BeregningsgrunnlagMapper {
         for (BeregningsgrunnlagAktivitetStatus bgAktivitetStatus : beregningsgrunnlag.getAktivitetStatuser()) {
             BeregningsgrunnlagRegelType beregningsgrunnlagRegel = objectFactory.createBeregningsgrunnlagRegelType();
             List<BeregningsgrunnlagPrStatusOgAndel> filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe);
-            beregningsgrunnlagRegel.setRegelStatus(tilStatusTypeKode(bgAktivitetStatus.getAktivitetStatus()));
+            beregningsgrunnlagRegel.setRegelStatus(tilStatusTypeKode(bgAktivitetStatus.aktivitetStatus()));
             beregningsgrunnlagRegel.setAndelListe(mapAndelListe(filtrertListe));
-            beregningsgrunnlagRegel.setAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
+            beregningsgrunnlagRegel
+                    .setAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
             beregningsgrunnlagRegel.setSNNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
             regelListe.getBeregningsgrunnlagRegel().add(beregningsgrunnlagRegel);
         }
@@ -56,9 +57,12 @@ public class BeregningsgrunnlagMapper {
 
     static {
         kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_AT_FL, List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER));
-        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_AT_SN, List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
-        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_AT_FL_SN, List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
-        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_FL_SN, List.of(AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
+        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_AT_SN,
+                List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
+        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_AT_FL_SN,
+                List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
+        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_FL_SN,
+                List.of(AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
     }
 
     static {
@@ -101,21 +105,22 @@ public class BeregningsgrunnlagMapper {
     }
 
     public static List<BeregningsgrunnlagPrStatusOgAndel> finnAktivitetStatuserForAndeler(BeregningsgrunnlagAktivitetStatus bgAktivitetStatus,
-                                                                                          List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+            List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         List<BeregningsgrunnlagPrStatusOgAndel> resultatListe;
-        if (AktivitetStatus.KUN_YTELSE.equals(bgAktivitetStatus.getAktivitetStatus())) {
+        if (AktivitetStatus.KUN_YTELSE.equals(bgAktivitetStatus.aktivitetStatus())) {
             return bgpsaListe;
         }
-        if (bgAktivitetStatus.getAktivitetStatus().harKombinertStatus()) {
-            List<AktivitetStatus> relevanteStatuser = kombinerteRegelStatuserMap.get(bgAktivitetStatus.getAktivitetStatus());
+        if (bgAktivitetStatus.aktivitetStatus().harKombinertStatus()) {
+            List<AktivitetStatus> relevanteStatuser = kombinerteRegelStatuserMap.get(bgAktivitetStatus.aktivitetStatus());
             resultatListe = bgpsaListe.stream().filter(andel -> relevanteStatuser.contains(andel.getAktivitetStatus())).collect(Collectors.toList());
         } else {
-            resultatListe = bgpsaListe.stream().filter(andel -> bgAktivitetStatus.getAktivitetStatus().equals(andel.getAktivitetStatus())).collect(Collectors.toList());
+            resultatListe = bgpsaListe.stream().filter(andel -> bgAktivitetStatus.aktivitetStatus().equals(andel.getAktivitetStatus()))
+                    .collect(Collectors.toList());
         }
         if (resultatListe.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             bgpsaListe.stream().map(BeregningsgrunnlagPrStatusOgAndel::getAktivitetStatus).map(AktivitetStatus::getKode).forEach(sb::append);
-            throw new IllegalStateException(String.format("Fant ingen andeler for status: %s, andeler: %s", bgAktivitetStatus.getAktivitetStatus(), sb));
+            throw new IllegalStateException(String.format("Fant ingen andeler for status: %s, andeler: %s", bgAktivitetStatus.aktivitetStatus(), sb));
         }
         return resultatListe;
     }
@@ -146,15 +151,14 @@ public class BeregningsgrunnlagMapper {
     }
 
     public static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagPrStatusOgAndel andel) {
-        return andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::getNavn);
+        return andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::navn);
     }
 
     public static BigDecimal getBgBruttoPrÅr(BeregningsgrunnlagPrStatusOgAndel andel) {
         return andel.getAvkortetPrÅr() != null ? andel.getAvkortetPrÅr() : andel.getBruttoPrÅr();
     }
 
-    static BigInteger tellAntallArbeidsforholdIBeregningUtenSluttpakke
-            (List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+    static BigInteger tellAntallArbeidsforholdIBeregningUtenSluttpakke(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         return BigInteger.valueOf(bgpsaListe.stream()
                 .filter(bgpsa -> AktivitetStatus.ARBEIDSTAKER.equals(bgpsa.getAktivitetStatus()))
                 .filter(bgpsa -> !OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(bgpsa.getArbeidsforholdType()))
@@ -171,7 +175,7 @@ public class BeregningsgrunnlagMapper {
     }
 
     static AndelListeType mapAndelListe(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
-        //Litt stygt å ha disse her, spesielt uten qualifiers
+        // Litt stygt å ha disse her, spesielt uten qualifiers
         ObjectFactory objectFactory = new ObjectFactory();
         AndelListeType andelListeType = objectFactory.createAndelListeType();
         bgpsaListe.forEach(bgpsa -> andelListeType.getAndel().add(lagAndelType(bgpsa)));
@@ -189,7 +193,10 @@ public class BeregningsgrunnlagMapper {
     public static boolean inntektOverSeksG(Beregningsgrunnlag beregningsgrunnlag) {
         return finnFørstePeriode(beregningsgrunnlag).getBruttoPrÅr().compareTo(finnSeksG(beregningsgrunnlag)) > 0;
     }
-    //kun SVP: avkortetPerÅr gir faktisk beregningsgrunnlag for alle arbeidsforhold, og ikke bare arbeidsforholdet det søkes om - en verdi kun på dto
+
+    // kun SVP: avkortetPerÅr gir faktisk beregningsgrunnlag for alle
+    // arbeidsforhold, og ikke bare arbeidsforholdet det søkes om - en verdi kun på
+    // dto
     public static BigDecimal getAvkortetPrAarSVP(Beregningsgrunnlag beregningsgrunnlag) {
         return finnFørstePeriode(beregningsgrunnlag).getAvkortetPrÅr();
     }

@@ -1,5 +1,17 @@
 package no.nav.foreldrepenger.melding.poststed;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import no.nav.foreldrepenger.melding.integrasjon.kodeverk.KodeverkConsumer;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.EnkeltKodeverk;
@@ -14,17 +26,6 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkResponse;
 import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.util.Tuple;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class KodeverkTjeneste {
@@ -81,12 +82,13 @@ public class KodeverkTjeneste {
     }
 
     private Map<String, KodeverkKode> oversettFraHentKodeverkResponse(HentKodeverkResponse response) {
-        if (response.getKodeverk() instanceof EnkeltKodeverk) {
+        if (response.getKodeverk()instanceof EnkeltKodeverk e) {
             return ((EnkeltKodeverk) response.getKodeverk()).getKode().stream()
                     .map(KodeverkTjeneste::oversettFraKode)
                     .collect(Collectors.toMap(KodeverkKode::getKode, kodeverkKode -> kodeverkKode));
         } else {
-            throw new IntegrasjonException("FP-402870", String.format("Kodeverktype ikke støttet: %s", response.getKodeverk().getClass().getSimpleName()));
+            throw new IntegrasjonException("FP-402870",
+                    String.format("Kodeverktype ikke støttet: %s", response.getKodeverk().getClass().getSimpleName()));
         }
     }
 

@@ -1,16 +1,16 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public final class BeregningsresultatMapper {
 
@@ -23,13 +23,13 @@ public final class BeregningsresultatMapper {
     }
 
     public static int finnAntallArbeidsgivere(BeregningsresultatFP beregningsresultat) {
-        return (int)beregningsresultat.getBeregningsresultatPerioder().stream()
+        return (int) beregningsresultat.getBeregningsresultatPerioder().stream()
                 .map(BeregningsresultatPeriode::getBeregningsresultatAndelList)
                 .flatMap(Collection::stream)
                 .filter(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus()))
                 .map(BeregningsresultatAndel::getArbeidsgiver)
                 .flatMap(Optional::stream)
-                .map(Arbeidsgiver::getArbeidsgiverReferanse)
+                .map(Arbeidsgiver::arbeidsgiverReferanse)
                 .distinct()
                 .count();
     }
@@ -41,6 +41,7 @@ public final class BeregningsresultatMapper {
     public static boolean harDelvisRefusjon(BeregningsresultatFP beregningsresultatFP) {
         return harBrukerAndel(beregningsresultatFP) && harArbeidsgiverAndel(beregningsresultatFP);
     }
+
     public static boolean harFullRefusjon(BeregningsresultatFP beregningsresultatFP) {
         return !harBrukerAndel(beregningsresultatFP) && harArbeidsgiverAndel(beregningsresultatFP);
     }

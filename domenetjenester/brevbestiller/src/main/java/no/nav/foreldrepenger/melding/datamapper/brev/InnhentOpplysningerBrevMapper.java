@@ -92,7 +92,7 @@ public class InnhentOpplysningerBrevMapper extends DokumentTypeMapper {
     }
 
     private XMLGregorianCalendar hentMottattDatoFraKlage(KlageDokument klageDokument, Behandling behandling) {
-        LocalDate klageDato = klageDokument.getMottattDato() != null ? klageDokument.getMottattDato() : behandling.getOpprettetDato().toLocalDate();
+        LocalDate klageDato = klageDokument.motattDato() != null ? klageDokument.motattDato() : behandling.getOpprettetDato().toLocalDate();
         return XmlUtil.finnDatoVerdiAvUtenTidSone(klageDato);
     }
 

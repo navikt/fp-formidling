@@ -60,7 +60,7 @@ public class UttakResultatPeriodeAktivitet {
     }
 
     public String getArbeidsgiverIdentifikator() {
-        return uttakAktivitet.getArbeidsgiver().map(Arbeidsgiver::getArbeidsgiverReferanse).orElse(null);
+        return uttakAktivitet.getArbeidsgiver().map(Arbeidsgiver::arbeidsgiverReferanse).orElse(null);
     }
 
     public String getArbeidsforholdId() {
@@ -74,7 +74,6 @@ public class UttakResultatPeriodeAktivitet {
     public LocalDate getTom() {
         return this.uttakResultatPeriode.getTom();
     }
-
 
     public static final class Builder {
         private StønadskontoType trekkonto;

@@ -41,11 +41,12 @@ public class AvslagEngangsstønadDokumentdataMapper implements DokumentdataMappe
     private PersonAdapter personAdapter;
 
     AvslagEngangsstønadDokumentdataMapper() {
-        //CDI
+        // CDI
     }
 
     @Inject
-    public AvslagEngangsstønadDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider, PersonAdapter personAdapter) {
+    public AvslagEngangsstønadDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider,
+            PersonAdapter personAdapter) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
         this.personAdapter = personAdapter;
@@ -60,7 +61,8 @@ public class AvslagEngangsstønadDokumentdataMapper implements DokumentdataMappe
     public EngangsstønadAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
 
         var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+                dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         avklarFritekst(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
@@ -77,11 +79,13 @@ public class AvslagEngangsstønadDokumentdataMapper implements DokumentdataMappe
                 .medAntallBarn(familieHendelse.getAntallBarn().intValue())
                 .medKlagefristUker(brevParametere.getKlagefristUker());
 
-        utledAvslagsgrunnHvisMedlVilkår(behandling.getBehandlingsresultat().getAvslagsårsak(), isSkjæringstidspunktPassert(familieHendelse),familieHendelse.isGjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
+        utledAvslagsgrunnHvisMedlVilkår(behandling.getBehandlingsresultat().getAvslagsårsak(), isSkjæringstidspunktPassert(familieHendelse),
+                familieHendelse.isGjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
 
         return dokumentdataBuilder.build();
     }
-    private boolean isSkjæringstidspunktPassert(FamilieHendelse familieHendelse){
+
+    private boolean isSkjæringstidspunktPassert(FamilieHendelse familieHendelse) {
         return familieHendelse.getSkjæringstidspunkt().isPresent() && familieHendelse.getSkjæringstidspunkt().get().isBefore(LocalDate.now());
     }
 
@@ -102,23 +106,24 @@ public class AvslagEngangsstønadDokumentdataMapper implements DokumentdataMappe
         Set<VilkårType> vilkårTyper = VilkårType.getVilkårTyper(avslagsÅrsakKode);
         List<String> vilkårTilBrev = new ArrayList<>();
         vilkårFraBehandling.stream()
-            .filter(v-> vilkårTyper.contains(v.getVilkårType()))
-            .map(Vilkår::getVilkårType)
-            .forEach(vt-> vilkårTilBrev.add(mapVilkårBrev(vt, behandling)));
-        if(vilkårTilBrev.isEmpty()) {
-            throw new IllegalArgumentException("Utviklerfeil: Brev mangler vilkår for avslagskode "+avslagsÅrsakKode);
+                .filter(v -> vilkårTyper.contains(v.vilkårType()))
+                .map(Vilkår::vilkårType)
+                .forEach(vt -> vilkårTilBrev.add(mapVilkårBrev(vt, behandling)));
+        if (vilkårTilBrev.isEmpty()) {
+            throw new IllegalArgumentException("Utviklerfeil: Brev mangler vilkår for avslagskode " + avslagsÅrsakKode);
         }
         return vilkårTilBrev;
     }
 
     private String mapVilkårBrev(VilkårType vilkårType, Behandling behandling) {
-        if(VilkårType.ADOPSJONSVILKÅRET_ENGANGSSTØNAD.equals(vilkårType) || VilkårType.FØDSELSVILKÅRET_MOR.equals(vilkårType) && !behandling.erRevurdering()) {
+        if (VilkårType.ADOPSJONSVILKÅRET_ENGANGSSTØNAD.equals(vilkårType)
+                || VilkårType.FØDSELSVILKÅRET_MOR.equals(vilkårType) && !behandling.erRevurdering()) {
             return "FPVK1_4";
-        } else if(VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) && behandling.erFørstegangssøknad()) {
+        } else if (VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) && behandling.erFørstegangssøknad()) {
             return "FPVK2_FB";
-        } else if(VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) && behandling.erRevurdering()) {
+        } else if (VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) && behandling.erRevurdering()) {
             return "FPVK2_RV";
-        } else if( erVilkår213(vilkårType) && behandling.erRevurdering()) {
+        } else if (erVilkår213(vilkårType) && behandling.erRevurdering()) {
             return "FPVK1_4_5_8_RV";
         } else {
             return vilkårType.getKode();
@@ -132,13 +137,13 @@ public class AvslagEngangsstønadDokumentdataMapper implements DokumentdataMappe
                 || VilkårType.FORELDREANSVARSVILKÅRET_2_LEDD.equals(vilkårType);
     }
 
-   String mapAvslagsårsakerBrev(Avslagsårsak avslagsårsak) {
+    String mapAvslagsårsakerBrev(Avslagsårsak avslagsårsak) {
         if (Avslagsårsak.erAlleredeUtbetaltEngangsstønad(avslagsårsak)) {
-             return "ALLEREDE_UTBETALT_ENGANGSSTØNAD";
+            return "ALLEREDE_UTBETALT_ENGANGSSTØNAD";
         } else if (Avslagsårsak.erAlleredeUtbetaltForeldrepenger(avslagsårsak)) {
-             return "ALLEREDE_UTBETALT_FORELDREPENGER";
+            return "ALLEREDE_UTBETALT_FORELDREPENGER";
         } else if (Avslagsårsak.farHarIkkeAleneomsorg(avslagsårsak)) {
-             return "IKKE_ALENEOMSORG";
+            return "IKKE_ALENEOMSORG";
         } else if (Avslagsårsak.barnIkkeRiktigAlder(avslagsårsak)) {
             return "BARN_IKKE_RIKTIG_ALDER";
         } else if (Avslagsårsak.ikkeBarnetsFar(avslagsårsak)) {

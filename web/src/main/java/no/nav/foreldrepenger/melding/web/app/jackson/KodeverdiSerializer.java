@@ -6,21 +6,22 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BasisKodeverdi;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 
 /**
- * Enkel serialisering av KodeverkTabell klasser, uten at disse trenger @JsonIgnore eller lignende. Deserialisering går
- * av seg selv normalt (får null for andre felter).
+ * Enkel serialisering av KodeverkTabell klasser, uten at disse
+ * trenger @JsonIgnore eller lignende. Deserialisering går av seg selv normalt
+ * (får null for andre felter).
  */
 @SuppressWarnings("java:S2055")
-public class KodeverdiSerializer extends StdSerializer<BasisKodeverdi> {
+public class KodeverdiSerializer extends StdSerializer<Kodeverdi> {
 
     public KodeverdiSerializer() {
-        super(BasisKodeverdi.class);
+        super(Kodeverdi.class);
     }
 
     @Override
-    public void serialize(BasisKodeverdi value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+    public void serialize(Kodeverdi value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
         jgen.writeStartObject();
         jgen.writeStringField("kode", value.getKode());
         jgen.writeStringField("kodeverk", value.getKodeverk());

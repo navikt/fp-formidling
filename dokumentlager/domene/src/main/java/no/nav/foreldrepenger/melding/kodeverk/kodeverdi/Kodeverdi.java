@@ -1,10 +1,7 @@
 package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
-/** Kodeverk som er portet til java. */
-public interface Kodeverdi extends BasisKodeverdi {
-    @Override
+public interface Kodeverdi {
     String getKode();
 
-    @Override
     String getKodeverk();
 }

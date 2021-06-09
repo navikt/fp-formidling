@@ -1,5 +1,21 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
@@ -18,21 +34,6 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
-
 public final class BeregningsresultatMapper {
 
     private static ObjectFactory objectFactory = new ObjectFactory();
@@ -47,24 +48,25 @@ public final class BeregningsresultatMapper {
                 .filter(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus()))
                 .map(BeregningsresultatAndel::getArbeidsgiver)
                 .flatMap(Optional::stream)
-                .map(Arbeidsgiver::getArbeidsgiverReferanse)
+                .map(Arbeidsgiver::arbeidsgiverReferanse)
                 .distinct()
                 .count());
 
     }
 
     public static PeriodeListeType mapPeriodeListe(List<BeregningsresultatPeriode> beregningsresultatPerioder,
-                                                   UttakResultatPerioder uttakResultatPerioder,
-                                                   List<BeregningsgrunnlagPeriode> beregningingsgrunnlagperioder) {
+            UttakResultatPerioder uttakResultatPerioder,
+            List<BeregningsgrunnlagPeriode> beregningingsgrunnlagperioder) {
         PeriodeListeType periodeListe = objectFactory.createPeriodeListeType();
         List<PeriodeType> periodelisteFørSammenslåing = new ArrayList<>();
         List<UttakResultatPeriode> uttaksperioder = uttakResultatPerioder.getPerioder();
-        //er avhengig av at listen er sortert med tidligste periode først
-        List<BeregningsresultatPeriode> beregningsresultatperSortert = beregningsresultatPerioder.stream().sorted(Comparator.comparing(BeregningsresultatPeriode::getBeregningsresultatPeriodeFom)).collect(Collectors.toList());
+        // er avhengig av at listen er sortert med tidligste periode først
+        List<BeregningsresultatPeriode> beregningsresultatperSortert = beregningsresultatPerioder.stream()
+                .sorted(Comparator.comparing(BeregningsresultatPeriode::getBeregningsresultatPeriodeFom)).collect(Collectors.toList());
 
         List<UttakResultatPeriode> uttaksperioderMedÅrsak = new ArrayList<>(filtrerBortUkjentÅrsak(uttaksperioder));
 
-        for (int i = 0; i < beregningsresultatperSortert.size() ; i++) {
+        for (int i = 0; i < beregningsresultatperSortert.size(); i++) {
             var beregningsresultatPeriode = beregningsresultatperSortert.get(i);
             UttakResultatPeriode matchetUttaksperiode = PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttaksperioder);
             if (matchetUttaksperiode.getPeriodeResultatÅrsak().erUkjent() || avslåttManglendeSøktUtenTrekkdager(matchetUttaksperiode)) {
@@ -72,14 +74,14 @@ public final class BeregningsresultatMapper {
             }
             uttaksperioderMedÅrsak.remove(matchetUttaksperiode);
             PeriodeType periodeTilListen;
-            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder);
+            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode,
+                    beregningingsgrunnlagperioder);
 
-            if (i==0) {
+            if (i == 0) {
                 periodeTilListen = mapForstePeriode(beregningsresultatPeriode,
                         matchetUttaksperiode,
                         beregningsgrunnlagPeriode);
-            }
-            else {
+            } else {
                 periodeTilListen = mapPerioderEtterFørste(beregningsresultatPeriode,
                         matchetUttaksperiode,
                         beregningsgrunnlagPeriode);
@@ -130,24 +132,26 @@ public final class BeregningsresultatMapper {
     }
 
     private static PeriodeType mapForstePeriode(BeregningsresultatPeriode beregningsresultatPeriode,
-                                                UttakResultatPeriode uttakResultatPeriode,
-                                                BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+            UttakResultatPeriode uttakResultatPeriode,
+            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         if (uttakResultatPeriode.getFom().isBefore(beregningsresultatPeriode.getBeregningsresultatPeriodeFom())) {
             return mapEnkelPeriode(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, uttakResultatPeriode.getFom());
         }
-        return mapEnkelPeriode(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, beregningsresultatPeriode.getBeregningsresultatPeriodeFom());
+        return mapEnkelPeriode(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode,
+                beregningsresultatPeriode.getBeregningsresultatPeriodeFom());
     }
 
     private static PeriodeType mapPerioderEtterFørste(BeregningsresultatPeriode beregningsresultatPeriode,
-                                                      UttakResultatPeriode matchetUttaksperiode,
-                                                      BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        return mapEnkelPeriode(beregningsresultatPeriode, matchetUttaksperiode, beregningsgrunnlagPeriode, beregningsresultatPeriode.getBeregningsresultatPeriodeFom());
+            UttakResultatPeriode matchetUttaksperiode,
+            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        return mapEnkelPeriode(beregningsresultatPeriode, matchetUttaksperiode, beregningsgrunnlagPeriode,
+                beregningsresultatPeriode.getBeregningsresultatPeriodeFom());
     }
 
     private static PeriodeType mapEnkelPeriode(BeregningsresultatPeriode beregningsresultatPeriode,
-                                               UttakResultatPeriode uttakResultatPeriode,
-                                               BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
-                                               LocalDate fomDate) {
+            UttakResultatPeriode uttakResultatPeriode,
+            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
+            LocalDate fomDate) {
         PeriodeType periode = objectFactory.createPeriodeType();
         periode.setAntallTapteDager(BigInteger.valueOf(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter())));
         periode.setInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode));
@@ -156,23 +160,21 @@ public final class BeregningsresultatMapper {
         periode.setPeriodeTom(XmlUtil.finnDatoVerdiAvUtenTidSone(beregningsresultatPeriode.getBeregningsresultatPeriodeTom()));
         periode.setÅrsak(periodeResultatÅrsak.getKode());
         periode.setPeriodeDagsats(beregningsresultatPeriode.getDagsats());
-        periode.setArbeidsforholdListe(AktivitetsMapper.mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
+        periode.setArbeidsforholdListe(
+                AktivitetsMapper.mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
         periode.setNæringListe(AktivitetsMapper.mapNæringsliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode));
         periode.setAnnenAktivitetListe(AktivitetsMapper.mapAnnenAktivtetListe(beregningsresultatPeriode, uttakResultatPeriode));
         return periode;
     }
 
-
     private static int mapAntallTapteDagerFra(List<UttakResultatPeriodeAktivitet> uttakAktiviteter) {
-        return alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ?
-                uttakAktiviteter.stream()
-                        .map(UttakResultatPeriodeAktivitet::getTrekkdager)
-                        .filter(Objects::nonNull)
-                        .mapToInt(BigDecimal::intValue)
-                        .max()
-                        .orElse(0) : 0;
+        return alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ? uttakAktiviteter.stream()
+                .map(UttakResultatPeriodeAktivitet::getTrekkdager)
+                .filter(Objects::nonNull)
+                .mapToInt(BigDecimal::intValue)
+                .max()
+                .orElse(0) : 0;
     }
-
 
     private static PeriodeResultatÅrsak utledÅrsakskode(UttakResultatPeriode uttakPeriode) {
         if (erGraderingAvslått(uttakPeriode) && erInnvilget(uttakPeriode)) {
@@ -216,7 +218,7 @@ public final class BeregningsresultatMapper {
     public static BigInteger tellAntallAvslag(PeriodeListeType periodeListe) {
         return BigInteger.valueOf(periodeListe.getPeriode().stream()
                 .filter(Predicate.not(PeriodeType::isInnvilget))
-                //Skal ikke opplyse søker om tapt fpff siden bruker ikke har søkt om det
+                // Skal ikke opplyse søker om tapt fpff siden bruker ikke har søkt om det
                 .filter(p -> !PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE.getKode().equals(p.getÅrsak()))
                 .count());
     }

@@ -162,7 +162,7 @@ class DokumentMalUtleder {
         if (klageVurderingResultat == null) {
             throw DokumentBestillerFeil.behandlingManglerKlageVurderingResultat(behandling.getUuid().toString());
         }
-        KlageVurdering klagevurdering = klageVurderingResultat.getKlageVurdering();
+        KlageVurdering klagevurdering = klageVurderingResultat.klageVurdering();
 
         if (KlageVurdering.AVVIS_KLAGE.equals(klagevurdering)) {
             return DokumentMalType.KLAGE_AVVIST;

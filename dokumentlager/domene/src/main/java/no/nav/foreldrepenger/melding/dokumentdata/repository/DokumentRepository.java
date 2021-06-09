@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.melding.dokumentdata.repository;
 
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import java.util.Objects;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.util.Objects;
+
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 
 @ApplicationScoped
 public class DokumentRepository {
@@ -14,20 +14,18 @@ public class DokumentRepository {
     private EntityManager entityManager;
 
     public DokumentRepository() {
-        //CDI
+
     }
 
     @Inject
     public DokumentRepository(EntityManager entityManager) {
-        Objects.requireNonNull(entityManager, "entityManager"); //$NON-NLS-1$
+        Objects.requireNonNull(entityManager, "entityManager");
         this.entityManager = entityManager;
     }
 
     public void lagre(DokumentData dokumentData) {
         entityManager.persist(dokumentData);
-        for (DokumentFelles df : dokumentData.getDokumentFelles()) {
-            entityManager.persist(df);
-        }
+        dokumentData.getDokumentFelles().stream().forEach(entityManager::persist);
         entityManager.flush();
     }
 }

@@ -54,7 +54,7 @@ public class KlageOmgjøringBrevMapper extends FritekstmalBrevMapper {
             if (hendelse.getFritekst() != null) { // Forhåndsvisning
                 brødtekstFelter.put("mintekst", hendelse.getFritekst());
             } else if (klage.getGjeldendeKlageVurderingsresultat() != null) { // Bestilling
-                brødtekstFelter.put("mintekst", klage.getGjeldendeKlageVurderingsresultat().getFritekstTilBrev());
+                brødtekstFelter.put("mintekst", klage.getGjeldendeKlageVurderingsresultat().fritekstTilBrev());
             }
         }
 

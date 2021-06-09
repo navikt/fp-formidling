@@ -38,9 +38,9 @@ public class KlageMapper {
 
     public static List<KlageAvvistÅrsak> listeAvAvvisteÅrsaker(Klage klage) {
         if (klage.getFormkravKA() != null) {
-            return klage.getFormkravKA().getAvvistÅrsaker();
+            return klage.getFormkravKA().avvistÅrsaker();
         } else if (klage.getFormkravNFP() != null) {
-            return klage.getFormkravNFP().getAvvistÅrsaker();
+            return klage.getFormkravNFP().avvistÅrsaker();
         }
         return Collections.emptyList();
     }
@@ -80,7 +80,7 @@ public class KlageMapper {
         if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
             return Optional.of(dokumentHendelse.getFritekst());
         } else if (klage.getGjeldendeKlageVurderingsresultat() != null) {
-            return Optional.ofNullable(klage.getGjeldendeKlageVurderingsresultat().getFritekstTilBrev());
+            return Optional.ofNullable(klage.getGjeldendeKlageVurderingsresultat().fritekstTilBrev());
         }
         return Optional.empty();
     }
@@ -92,7 +92,7 @@ public class KlageMapper {
         if (klage.getGjeldendeKlageVurderingsresultat() == null) {
             throw new IllegalStateException();
         }
-        KlageVurdering klageVurdering = klage.getGjeldendeKlageVurderingsresultat().getKlageVurdering();
+        KlageVurdering klageVurdering = klage.getGjeldendeKlageVurderingsresultat().klageVurdering();
         return KlageVurdering.OPPHEVE_YTELSESVEDTAK.equals(klageVurdering);
     }
 }

@@ -115,8 +115,8 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
                 .medBehandlingType(behandling.getBehandlingType().name())
                 .medBehandlingResultatType(behandling.getBehandlingsresultat().getBehandlingResultatType().name())
                 .medKonsekvensForInnvilgetYtelse(konsekvensForInnvilgetYtelse)
-                .medSøknadsdato(formaterDatoNorsk(søknad.getMottattDato()))
-                .medDekningsgrad(ytelseFordeling.getDekningsgrad().getVerdi())
+                .medSøknadsdato(formaterDatoNorsk(søknad.mottattDato()))
+                .medDekningsgrad(ytelseFordeling.dekningsgrad().getVerdi())
                 .medDagsats(finnDagsats(beregningsresultatFP))
                 .medMånedsbeløp(finnMånedsbeløp(beregningsresultatFP))
                 .medForMyeUtbetalt(forMyeUtbetalt(utbetalingsperioder, behandling))
@@ -136,7 +136,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
                 .medFbEllerRvInnvilget(erFbEllerRvInnvilget(behandling))
                 .medHarInnvilgedePerioder(harInnvilgedePerioder(utbetalingsperioder))
                 .medAntallArbeidsgivere(finnAntallArbeidsgivere(beregningsresultatFP))
-                .medDagerTaptFørTermin(saldoer.getTapteDagerFpff())
+                .medDagerTaptFørTermin(saldoer.tapteDagerFpff())
                 .medDisponibleDager(finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()))
                 .medDisponibleFellesDager(finnDisponibleFellesDager(saldoer))
                 .medSisteDagAvSistePeriode(formaterDatoNorsk(finnSisteDagAvSistePeriode(uttakResultatPerioder)))
@@ -206,7 +206,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
 
     private VurderingsKode erAleneomsorg(Søknad søknad, UttakResultatPerioder uttakResultatPerioder) {
         VurderingsKode vurderingsKode;
-        if (søknad.getOppgittRettighet().harAleneomsorgForBarnet()) {
+        if (søknad.oppgittRettighet().harAleneomsorgForBarnet()) {
             vurderingsKode = uttakResultatPerioder.isAleneomsorg() ? VurderingsKode.JA : VurderingsKode.NEI;
         } else {
             vurderingsKode = VurderingsKode.IKKE_VURDERT;

@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 
 public class KlageDtoMapper {
 
-
     public static KlageDokument mapKlagedokumentFraDto(MottattKlagedokumentDto dto) {
         return new KlageDokument(dto.getMottattDato());
     }
@@ -49,7 +48,6 @@ public class KlageDtoMapper {
         }
     }
 
-
     private static KlageFormkravResultat mapKlageFormkravResultatfraDto(KlageFormkravResultatDto dto) {
         List<KlageAvvistÅrsak> avvistÅrsaker = dto.getAvvistArsaker().stream()
                 .map(KodeDto::getKode)
@@ -59,10 +57,7 @@ public class KlageDtoMapper {
     }
 
     private static KlageVurderingResultat mapKlageVurderingResultatfraDto(KlageVurderingResultatDto dto) {
-        return KlageVurderingResultat.ny()
-                .medKlageVurdering(KlageVurdering.fraKode(dto.getKlageVurdering().getKode()))
-                .medFritekstTilbrev(dto.getFritekstTilBrev())
-                .build();
+        return new KlageVurderingResultat(KlageVurdering.fraKode(dto.getKlageVurdering().getKode()), dto.getFritekstTilBrev());
     }
 
     private static BehandlingType finnBehandlingType(String behandlingType) {

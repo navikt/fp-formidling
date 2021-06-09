@@ -1,8 +1,10 @@
 package no.nav.foreldrepenger.melding.dokumentdata;
 
-import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
-import no.nav.foreldrepenger.melding.kodeverk.diff.IndexKey;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -13,15 +15,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+
+import no.nav.foreldrepenger.melding.jpa.BaseEntitet;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @Entity(name = "DokumentData")
 @Table(name = "DOKUMENT_DATA")
-public class DokumentData extends BaseEntitet implements IndexKey {
+public class DokumentData extends BaseEntitet {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_DOKUMENT_DATA")
     private Long id;
@@ -48,7 +48,7 @@ public class DokumentData extends BaseEntitet implements IndexKey {
 
     @SuppressWarnings("unused")
     public DokumentData() {
-        //Hibernate
+        // Hibernate
     }
 
     private DokumentData(Builder builder) {
@@ -60,11 +60,6 @@ public class DokumentData extends BaseEntitet implements IndexKey {
 
     public static Builder builder() {
         return new Builder();
-    }
-
-    @Override
-    public String getIndexKey() {
-        return IndexKey.createKey(dokumentMalType, behandlingUuid);
     }
 
     public Long getId() {
@@ -123,7 +118,6 @@ public class DokumentData extends BaseEntitet implements IndexKey {
     public String toString() {
         return getClass().getSimpleName() + "<>";
     }
-
 
     public static final class Builder {
 

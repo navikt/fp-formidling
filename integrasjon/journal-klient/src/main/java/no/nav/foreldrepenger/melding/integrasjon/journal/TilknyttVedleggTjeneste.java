@@ -29,7 +29,7 @@ public class TilknyttVedleggTjeneste {
     }
 
     public void knyttAlleVedleggTilDokument(Collection<InnsynDokument> vedlegg, JournalpostId journalpostId) {
-        vedlegg.forEach(v -> knyttVedleggTilForsendelse(journalpostId, v.getJournalpostId(), v.getDokumentId()));
+        vedlegg.forEach(v -> knyttVedleggTilForsendelse(journalpostId, v.journalpostId(), v.dokumentId()));
     }
 
     private void knyttVedleggTilForsendelse(JournalpostId knyttesTilJournalpostId, JournalpostId knyttesFraJournalpostId, String dokumentId) {

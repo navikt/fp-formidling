@@ -14,6 +14,6 @@ public class YtelseFordelingDtoMapperTest {
         int dekningsgrad = 80;
         YtelseFordelingDto dto = new YtelseFordelingDto.Builder().medGjeldendeDekningsgrad(dekningsgrad).build();
         YtelseFordeling ytelseFordeling = YtelseFordelingDtoMapper.mapYtelseFordelingFraDto(dto);
-        assertThat(ytelseFordeling.getDekningsgrad().getVerdi()).isEqualTo(dekningsgrad);
+        assertThat(ytelseFordeling.dekningsgrad().getVerdi()).isEqualTo(dekningsgrad);
     }
 }

@@ -25,7 +25,7 @@ public class DokumentproduksjonConsumerProducer implements ReadinessAware {
         return new DokumentproduksjonConsumerImpl(port);
     }
 
-    private DokumentproduksjonSelftestConsumer dokumentproduksjonSelftestConsumer() {
+    DokumentproduksjonSelftestConsumer dokumentproduksjonSelftestConsumer() {
         DokumentproduksjonV2 port = wrapWithSts(consumerConfig.getPort(), SYSTEM_SAML);
         return new DokumentproduksjonSelftestConsumerImpl(port, consumerConfig.getEndpointUrl());
     }

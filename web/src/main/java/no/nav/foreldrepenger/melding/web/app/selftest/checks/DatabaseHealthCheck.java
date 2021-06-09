@@ -1,46 +1,37 @@
 package no.nav.foreldrepenger.melding.web.app.selftest.checks;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Locale;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import no.nav.vedtak.log.metrics.ReadinessAware;
+
 @ApplicationScoped
-public class DatabaseHealthCheck {
+public class DatabaseHealthCheck implements ReadinessAware {
 
     private static final String JDBC_DEFAULT_DS = "jdbc/defaultDS";
     private static final String SQL_QUERY = "select count(1) from PROSESS_TASK_TYPE";
-    private String jndiName;
-    // må være rask, og bruke et stabilt tabell-navn
-    private String endpoint = null; // ukjent frem til første gangs test
+    private final DataSource ds;
 
-    public DatabaseHealthCheck() {
-        this.jndiName = JDBC_DEFAULT_DS;
+    public DatabaseHealthCheck() throws NamingException {
+        this(JDBC_DEFAULT_DS);
     }
 
-    DatabaseHealthCheck(String dsJndiName) {
-        this.jndiName = dsJndiName;
+    DatabaseHealthCheck(String dsJndiName) throws NamingException {
+        ds = DataSource.class.cast(new InitialContext().lookup(dsJndiName));
+    }
+
+    @Override
+    public boolean isReady() {
+        return performCheck();
     }
 
     private boolean performCheck() {
-
-        DataSource dataSource = null;
-        try {
-            dataSource = (DataSource) new InitialContext().lookup(jndiName);
-        } catch (NamingException e) {
-            return false;
-        }
-
-        try (Connection connection = dataSource.getConnection()) {
-            if (endpoint == null) {
-                endpoint = extractEndpoint(connection);
-           }
+        try (var connection = ds.getConnection()) {
             try (Statement statement = connection.createStatement()) {
                 if (!statement.execute(SQL_QUERY)) {
                     throw new SQLException("SQL-spørring ga ikke et resultatsett");
@@ -49,28 +40,6 @@ public class DatabaseHealthCheck {
         } catch (SQLException e) {
             return false;
         }
-
         return true;
-    }
-
-    private String extractEndpoint(Connection connection) {
-        String result = "?";
-        try {
-            DatabaseMetaData metaData = connection.getMetaData();
-            String url = metaData.getURL();
-            if (url != null) {
-                if (!url.toUpperCase(Locale.US).contains("SERVICE_NAME=")) { // don't care about Norwegian letters here
-                    url = url + "/" + connection.getSchema();
-                }
-                result = url;
-            }
-        } catch (SQLException e) { //NOSONAR
-            // ikke fatalt
-        }
-        return result;
-    }
-
-    public boolean isReady() {
-        return performCheck();
     }
 }

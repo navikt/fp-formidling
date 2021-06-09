@@ -7,11 +7,12 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.binding.DokumentproduksjonV2;
+import no.nav.vedtak.log.metrics.ReadinessAware;
 import no.nav.vedtak.sts.client.StsClientType;
 import no.nav.vedtak.sts.client.StsConfigurationUtil;
 
 @Dependent
-public class DokumentproduksjonConsumerProducer {
+public class DokumentproduksjonConsumerProducer implements ReadinessAware {
     private DokumentproduksjonConsumerConfig consumerConfig;
 
     @Inject
@@ -24,13 +25,23 @@ public class DokumentproduksjonConsumerProducer {
         return new DokumentproduksjonConsumerImpl(port);
     }
 
-    public DokumentproduksjonSelftestConsumer dokumentproduksjonSelftestConsumer() {
+    private DokumentproduksjonSelftestConsumer dokumentproduksjonSelftestConsumer() {
         DokumentproduksjonV2 port = wrapWithSts(consumerConfig.getPort(), SYSTEM_SAML);
         return new DokumentproduksjonSelftestConsumerImpl(port, consumerConfig.getEndpointUrl());
     }
 
     DokumentproduksjonV2 wrapWithSts(DokumentproduksjonV2 port, StsClientType samlTokenType) {
         return StsConfigurationUtil.wrapWithSts(port, samlTokenType);
+    }
+
+    @Override
+    public boolean isReady() {
+        try {
+            dokumentproduksjonSelftestConsumer().ping();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

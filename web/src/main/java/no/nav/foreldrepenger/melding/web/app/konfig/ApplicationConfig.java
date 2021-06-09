@@ -22,6 +22,7 @@ import no.nav.foreldrepenger.melding.web.app.exceptions.JsonParseExceptionMapper
 import no.nav.foreldrepenger.melding.web.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.melding.web.app.tjenester.ForvaltningRestTjeneste;
 import no.nav.foreldrepenger.melding.web.app.tjenester.brev.BrevRestTjeneste;
+import no.nav.foreldrepenger.melding.web.server.jetty.TimingFilter;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 
 @ApplicationPath(ApplicationConfig.API_URI)
@@ -56,6 +57,7 @@ public class ApplicationConfig extends Application {
     public Set<Class<?>> getClasses() {
 
         return Set.of(BrevRestTjeneste.class,
+                TimingFilter.class,
                 ForvaltningRestTjeneste.class,
                 ProsessTaskRestTjeneste.class,
                 GeneralRestExceptionMapper.class,

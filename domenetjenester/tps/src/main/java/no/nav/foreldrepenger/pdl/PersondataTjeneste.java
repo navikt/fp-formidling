@@ -153,7 +153,7 @@ public class PersondataTjeneste {
             .filter(Objects::nonNull)
             .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
         var pdlStatusDød = person.getFolkeregisterpersonstatus().stream()
-            .map(Folkeregisterpersonstatus::getForenkletStatus)
+            .map(Folkeregisterpersonstatus::getForen:::kletStatus)
             .findFirst().map(PersondataTjeneste::harPersonstatusDød).orElse(false);
         return Personinfo.getbuilder(aktørId).medPersonIdent(personIdent)
             .medNavn(person.getNavn().stream().map(PersondataTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN"))

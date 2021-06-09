@@ -1,11 +1,16 @@
 package no.nav.foreldrepenger.melding.web.server.jetty;
 
-import no.nav.foreldrepenger.melding.web.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatabaseScript;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceRole;
-import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceUtil;
-import no.nav.vedtak.isso.IssoApplication;
-import no.nav.vedtak.util.env.Environment;
+import static no.nav.foreldrepenger.konfig.Cluster.LOCAL;
+import static no.nav.foreldrepenger.konfig.Cluster.NAIS_CLUSTER_NAME;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.sql.DataSource;
+
 import org.eclipse.jetty.plus.jndi.EnvEntry;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
@@ -14,15 +19,12 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static no.nav.vedtak.util.env.Cluster.LOCAL;
-import static no.nav.vedtak.util.env.Cluster.NAIS_CLUSTER_NAME;
+import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.foreldrepenger.melding.web.app.konfig.ApplicationConfig;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatabaseScript;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceRole;
+import no.nav.foreldrepenger.melding.web.server.jetty.db.DatasourceUtil;
+import no.nav.vedtak.isso.IssoApplication;
 
 public class JettyServer extends AbstractJettyServer {
 
@@ -72,7 +74,7 @@ public class JettyServer extends AbstractJettyServer {
         DataSource migreringDs = DatasourceUtil.createDatasource(DATASOURCE_NAME, DatasourceRole.ADMIN, ENV.getCluster(),
                 1);
         try {
-            DatabaseScript.migrate(migreringDs, initSql,false);
+            DatabaseScript.migrate(migreringDs, initSql, false);
             migreringDs.getConnection().close();
         } catch (SQLException e) {
             log.warn("Klarte ikke stenge connection etter migrering", e);
@@ -91,7 +93,8 @@ public class JettyServer extends AbstractJettyServer {
         // Find path to class-files while starting jetty from development environment.
         List<Class<?>> appClasses = Arrays.asList((Class<?>) ApplicationConfig.class, (Class<?>) IssoApplication.class);
 
-        List<Resource> resources = appClasses.stream().map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation())).collect(Collectors.toList());
+        List<Resource> resources = appClasses.stream().map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
+                .collect(Collectors.toList());
 
         metaData.setWebInfClassesResources(resources);
     }
@@ -100,8 +103,7 @@ public class JettyServer extends AbstractJettyServer {
     protected ResourceCollection createResourceCollection() throws IOException {
         return new ResourceCollection(
                 Resource.newClassPathResource("META-INF/resources/webjars/"),
-                Resource.newClassPathResource("/web")
-        );
+                Resource.newClassPathResource("/web"));
     }
 
 }

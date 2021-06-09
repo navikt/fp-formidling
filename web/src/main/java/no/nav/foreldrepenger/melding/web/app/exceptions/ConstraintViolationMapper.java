@@ -42,7 +42,7 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
             var feltNavn = getFeltNavn(constraintViolation.getPropertyPath());
             feilene.add(new FeltFeilDto(feltNavn, constraintViolation.getMessage()));
         }
-        var feltNavn = feilene.stream().map(FeltFeilDto::getNavn).collect(Collectors.toList());
+        var feltNavn = feilene.stream().map(FeltFeilDto::navn).collect(Collectors.toList());
         var feilmelding = String.format(
                 "Det oppstod en valideringsfeil på felt %s. " + "Vennligst kontroller at alle feltverdier er korrekte.",
                 feltNavn);
@@ -56,7 +56,7 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
         var message = exception.getException().getMessage();
         LOG.error(message);
         return Response.status(Response.Status.BAD_REQUEST)
-                .entity(new FeilDto(FeilType.GENERELL_FEIL, "Det oppstod en serverfeil: Validering er feilkonfigurert."))
+                .entity(new FeilDto("Det oppstod en serverfeil: Validering er feilkonfigurert.", FeilType.GENERELL_FEIL))
                 .type(MediaType.APPLICATION_JSON)
                 .build();
     }

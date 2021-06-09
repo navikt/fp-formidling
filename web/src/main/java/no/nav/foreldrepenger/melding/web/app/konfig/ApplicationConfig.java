@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.web.app.konfig;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -33,25 +31,20 @@ public class ApplicationConfig extends Application {
 
     public ApplicationConfig() {
 
-        OpenAPI oas = new OpenAPI();
-        Info info = new Info()
-                .title("Foreldrepenger formidling")
-                .version("1.0")
-                .description("REST grensesnitt for formidling.");
-
-        oas.info(info)
-                .addServersItem(new Server()
-                        .url("/fpformidling"));
-        SwaggerConfiguration oasConfig = new SwaggerConfiguration()
-                .openAPI(oas)
-                .prettyPrint(true)
-                .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
-                .resourcePackages(Stream.of("no.nav")
-                        .collect(Collectors.toSet()));
-
         try {
             new GenericOpenApiContextBuilder<>()
-                    .openApiConfiguration(oasConfig)
+                    .openApiConfiguration(new SwaggerConfiguration()
+                            .openAPI(new OpenAPI()
+                                    .info(new Info()
+                                            .title("Foreldrepenger formidling")
+                                            .version("1.0")
+                                            .description("REST grensesnitt for formidling."))
+                                    .addServersItem(new Server()
+                                            .url("/fpformidling")))
+                            .prettyPrint(true)
+                            .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
+                            .resourcePackages(Stream.of("no.nav")
+                                    .collect(Collectors.toSet())))
                     .buildContext(true)
                     .read();
         } catch (OpenApiConfigurationException e) {
@@ -61,21 +54,16 @@ public class ApplicationConfig extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<>();
 
-        classes.add(BrevRestTjeneste.class);
-        classes.add(ForvaltningRestTjeneste.class);
-        classes.add(ProsessTaskRestTjeneste.class);
-
-        classes.add(GeneralRestExceptionMapper.class);
-        classes.add(JacksonJsonConfig.class);
-
-        classes.add(SwaggerSerializers.class);
-        classes.add(OpenApiResource.class);
-        classes.add(ConstraintViolationMapper.class);
-        classes.add(JsonMappingExceptionMapper.class);
-        classes.add(JsonParseExceptionMapper.class);
-
-        return Collections.unmodifiableSet(classes);
+        return Set.of(BrevRestTjeneste.class,
+                ForvaltningRestTjeneste.class,
+                ProsessTaskRestTjeneste.class,
+                GeneralRestExceptionMapper.class,
+                JacksonJsonConfig.class,
+                SwaggerSerializers.class,
+                OpenApiResource.class,
+                ConstraintViolationMapper.class,
+                JsonMappingExceptionMapper.class,
+                JsonParseExceptionMapper.class);
     }
 }

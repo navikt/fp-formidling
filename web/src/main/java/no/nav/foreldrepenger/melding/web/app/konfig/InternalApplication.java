@@ -14,7 +14,6 @@ public class InternalApplication extends Application {
     public static final String API_URL = "/internal";
 
     public InternalApplication() {
-        // CDI
     }
 
     @Override

@@ -35,7 +35,7 @@ public class RedirectExceptionMapperTest {
         String feilmelding = "feilmelding";
         FeilType feilType = FeilType.MANGLER_TILGANG_FEIL;
         Response generalResponse = Response.status(Response.Status.FORBIDDEN)
-                .entity(new FeilDto(feilType, feilmelding))
+                .entity(new FeilDto(feilmelding, feilType))
                 .type(MediaType.APPLICATION_JSON)
                 .build();
 

@@ -25,31 +25,31 @@ public class NaisRestTjeneste {
     private static final String RESPONSE_OK = "OK";
     private static final CacheControl CC = cacheControl();
 
-    private ApplicationServiceStarter starterService;
-    private List<LivenessAware> live;
-    private List<ReadinessAware> ready;
+    private ApplicationServiceStarter starter;
+    private List<LivenessAware> livenessAware;
+    private List<ReadinessAware> readinessAware;
 
     public NaisRestTjeneste() {
     }
 
     @Inject
-    public NaisRestTjeneste(ApplicationServiceStarter starterService, @Any Instance<LivenessAware> livenessAware,
+    public NaisRestTjeneste(ApplicationServiceStarter starter, @Any Instance<LivenessAware> livenessAware,
             @Any Instance<ReadinessAware> readinessAware) {
-        this(starterService, livenessAware.stream().collect(toList()), readinessAware.stream().collect(toList()));
+        this(starter, livenessAware.stream().collect(toList()), readinessAware.stream().collect(toList()));
 
     }
 
-    NaisRestTjeneste(ApplicationServiceStarter starterService, List<LivenessAware> live, List<ReadinessAware> ready) {
-        this.live = live;
-        this.ready = ready;
-        this.starterService = starterService;
+    NaisRestTjeneste(ApplicationServiceStarter starter, List<LivenessAware> live, List<ReadinessAware> ready) {
+        this.livenessAware = live;
+        this.readinessAware = ready;
+        this.starter = starter;
     }
 
     @GET
     @Path("isReady")
     @Operation(description = "sjekker om poden er klar", tags = "nais", hidden = true)
     public Response isReady() {
-        if (ready.stream().allMatch(ReadinessAware::isReady)) {
+        if (readinessAware.stream().allMatch(ReadinessAware::isReady)) {
             return Response
                     .ok(RESPONSE_OK)
                     .cacheControl(CC)
@@ -65,7 +65,7 @@ public class NaisRestTjeneste {
     @Path("isAlive")
     @Operation(description = "sjekker om poden lever", tags = "nais", hidden = true)
     public Response isAlive() {
-        if (live.stream().allMatch(LivenessAware::isAlive)) {
+        if (livenessAware.stream().allMatch(LivenessAware::isAlive)) {
             return Response
                     .ok(RESPONSE_OK)
                     .cacheControl(CC)
@@ -80,7 +80,7 @@ public class NaisRestTjeneste {
     @Path("preStop")
     @Operation(description = "kalles på før stopp", tags = "nais", hidden = true)
     public Response preStop() {
-        starterService.stopServices();
+        starter.stopServices();
         return Response.ok(RESPONSE_OK).build();
     }
 
@@ -90,5 +90,11 @@ public class NaisRestTjeneste {
         cc.setNoStore(true);
         cc.setMustRevalidate(true);
         return cc;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [starter=" + starter + ", livenessAware=" + livenessAware + ", readinessAware="
+                + readinessAware + "]";
     }
 }

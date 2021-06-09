@@ -78,7 +78,8 @@ public class DokumentMalUtlederTest {
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
+                .isEqualTo(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.getKode());
     }
 
     @Test
@@ -93,7 +94,8 @@ public class DokumentMalUtlederTest {
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
+                .isEqualTo(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD.getKode());
     }
 
     @Test
@@ -150,7 +152,8 @@ public class DokumentMalUtlederTest {
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.AVSLAG_FORELDREPENGER_DOK.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
+                .isEqualTo(DokumentMalType.AVSLAG_FORELDREPENGER_DOK.getKode());
     }
 
     @Test
@@ -165,7 +168,6 @@ public class DokumentMalUtlederTest {
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.OPPHØR_DOK.getKode());
     }
 
-
     @Test
     public void utled_innvilget_fp_endret() {
         hendelse = standardBuilder()
@@ -177,7 +179,8 @@ public class DokumentMalUtlederTest {
                         Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
                                 .build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
+                .isEqualTo(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.getKode());
     }
 
     @Test
@@ -243,7 +246,8 @@ public class DokumentMalUtlederTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medBehandlingsresultat(behandlingsresultat)
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
+                .isEqualTo(DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK.getKode());
     }
 
     @Test
@@ -260,7 +264,8 @@ public class DokumentMalUtlederTest {
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medBehandlingsresultat(behandlingsresultat)
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
+                .isEqualTo(DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK.getKode());
     }
 
     private void sjekkKlageDokument(KlageVurdering klageVurdering, DokumentMalType dokumentmal) {
@@ -274,7 +279,7 @@ public class DokumentMalUtlederTest {
                 .build();
 
         Klage klage = Klage.ny()
-                .medKlageVurderingResultatNK(KlageVurderingResultat.ny().medKlageVurdering(klageVurdering).build())
+                .medKlageVurderingResultatNK(new KlageVurderingResultat(klageVurdering, null))
                 .build();
         when(domeneobjektProvider.hentKlagebehandling(behandling)).thenReturn(klage);
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(dokumentmal.getKode());

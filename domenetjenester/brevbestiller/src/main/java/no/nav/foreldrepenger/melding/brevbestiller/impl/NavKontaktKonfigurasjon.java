@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.brevbestiller.impl;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.vedtak.konfig.KonfigVerdi;
+import no.nav.foreldrepenger.konfig.KonfigVerdi;
 
 @ApplicationScoped
 public class NavKontaktKonfigurasjon {

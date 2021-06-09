@@ -29,7 +29,6 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
-import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
@@ -56,6 +55,7 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.xmlutils.JaxbHelper;
+import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.util.Tuple;
 
@@ -79,8 +79,8 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
 
     @Inject
     public OpphørbrevMapper(BrevParametere brevParametere,
-                            DomeneobjektProvider domeneobjektProvider,
-                            PersonAdapter personAdapter) {
+            DomeneobjektProvider domeneobjektProvider,
+            PersonAdapter personAdapter) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
         this.personAdapter = personAdapter;
@@ -88,9 +88,9 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
 
     @Override
     public String mapTilBrevXML(FellesType fellesType,
-                                DokumentFelles dokumentFelles,
-                                DokumentHendelse dokumentHendelse,
-                                Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
+            DokumentFelles dokumentFelles,
+            DokumentHendelse dokumentHendelse,
+            Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
 
         String behandlingstype = BehandlingMapper.utledBehandlingsTypeForAvslagVedtak(behandling, dokumentHendelse);
         FagType fagType = mapFagType(behandlingstype, behandling, dokumentFelles);
@@ -103,7 +103,8 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
         Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)
                 .orElseGet(() -> UttakResultatPerioder.ny().build()); // bestående av tomme lister.
-        Optional<UttakResultatPerioder> originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).flatMap(domeneobjektProvider::hentUttaksresultatHvisFinnes);
+        Optional<UttakResultatPerioder> originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
+                .flatMap(domeneobjektProvider::hentUttaksresultatHvisFinnes);
         long halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
         FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
 
@@ -133,7 +134,7 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
     }
 
     private void mapFelterRelatertTilAvslagårsaker(Behandlingsresultat behandlingsresultat,
-                                                   UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
+            UttakResultatPerioder uttakResultatPerioder, FagType fagType) {
         Tuple<AarsakListeType, String> aarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapAarsakListeOgLovhjemmelFra(
                 behandlingsresultat,
                 uttakResultatPerioder);
@@ -175,8 +176,8 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
     }
 
     private List<String> hentAvslagsårsaker(AarsakListeType årsakListe) {
-        return årsakListe.getAvslagsAarsak() == null ? Collections.emptyList() :
-                årsakListe.getAvslagsAarsak().stream()
+        return årsakListe.getAvslagsAarsak() == null ? Collections.emptyList()
+                : årsakListe.getAvslagsAarsak().stream()
                         .map(AvslagsAarsakType::getAvslagsAarsakKode)
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
@@ -191,7 +192,8 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
         Set<String> opphørsårsaker = PeriodeResultatÅrsak.opphørsAvslagÅrsaker();
         List<UttakResultatPeriode> perioder = uttakResultatPerioder.getPerioder();
 
-        // Finn fom-dato i første periode av de siste sammenhengende periodene med opphørårsaker
+        // Finn fom-dato i første periode av de siste sammenhengende periodene med
+        // opphørårsaker
         LocalDate fom = null;
         for (int i = perioder.size() - 1; i >= 0; i--) {
             UttakResultatPeriode periode = perioder.get(i);
@@ -201,7 +203,8 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
                 return fom;
             }
         }
-        // bruker skjæringstidspunkt fom = null eller tidligste periode i uttaksplan er opphørt eller avslått
+        // bruker skjæringstidspunkt fom = null eller tidligste periode i uttaksplan er
+        // opphørt eller avslått
         return null;
     }
 
@@ -225,9 +228,10 @@ public class OpphørbrevMapper extends DokumentTypeMapper {
     }
 
     private VLException brevFeilPgaUtilstrekkeligTekstgrunnlag(boolean opphørsdatoPresent) {
-        return opphørsdatoPresent ?
-                DokumentMapperFeil.ingenStartdatoVedPersonstatusDød() :
-                DokumentMapperFeil.ingenOpphørsdatoVedPersonstatusDød();
+        return opphørsdatoPresent ? new TekniskException("FPFORMIDLING-743452",
+                "Feil ved produksjon av opphørdokument: Klarte ikke utlede startdato fra det opprinnelige vedtaket. Påkrevd når personstatus = 'DØD'")
+                : new TekniskException("FPFORMIDLING-724872",
+                        "Feil ved produksjon av opphørdokument: Klarte ikke utlede opphørsdato fra uttaksplanen. Påkrevd når personstatus = 'DØD'");
     }
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {

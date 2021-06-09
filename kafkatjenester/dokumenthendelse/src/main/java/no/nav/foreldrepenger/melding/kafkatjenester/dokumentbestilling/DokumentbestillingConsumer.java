@@ -20,13 +20,13 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.melding.kodeverk.kafka.KafkaIntegration;
 import no.nav.vedtak.apptjeneste.AppServiceHandler;
+import no.nav.vedtak.log.metrics.LivenessAware;
 
 @ApplicationScoped
 @ActivateRequestContext
 @Transactional
-public class DokumentbestillingConsumer implements AppServiceHandler, KafkaIntegration {
+public class DokumentbestillingConsumer implements AppServiceHandler, LivenessAware {
 
     private static final Logger log = LoggerFactory.getLogger(DokumentbestillingConsumer.class);
     private KafkaStreams stream;
@@ -34,12 +34,12 @@ public class DokumentbestillingConsumer implements AppServiceHandler, KafkaInteg
     private KafkaReader kafkaReader;
 
     public DokumentbestillingConsumer() {
-        //CDI
+        // CDI
     }
 
     @Inject
     public DokumentbestillingConsumer(DokumentbestillingStreamKafkaProperties streamKafkaProperties,
-                                      KafkaReader kafkaReader) {
+            KafkaReader kafkaReader) {
         this.topic = streamKafkaProperties.getTopic();
         this.kafkaReader = kafkaReader;
 
@@ -119,7 +119,6 @@ public class DokumentbestillingConsumer implements AppServiceHandler, KafkaInteg
         stream.close(Duration.ofSeconds(10));
         log.info("Shutdown av topic={}, tilstand={} med 10 sekunder timeout", topic, stream.state());
     }
-
 
     private void addShutdownHooks() {
         stream.setStateListener((oldState, newState) -> {

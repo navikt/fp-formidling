@@ -203,9 +203,7 @@ public class KlageAvvistBrevMapperTest {
     }
 
     private void mockKlage(Behandling behandling, BehandlingType behandlingType, List<KlageAvvistÅrsak> avvistÅrsaker) {
-        KlageVurderingResultat klageVurderingResultat = KlageVurderingResultat.ny()
-                .medFritekstTilbrev("FRITEKST")
-                .build();
+        KlageVurderingResultat klageVurderingResultat = new KlageVurderingResultat(null, "FRITEKST");
         KlageFormkravResultat klageFormkravResultat = new KlageFormkravResultat(avvistÅrsaker);
         Klage klage = Klage.ny()
                 .medPåklagdBehandlingType(behandlingType)

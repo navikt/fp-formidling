@@ -43,7 +43,7 @@ final class SvpUtledAvslagArbeidsforhold {
 
     private static SvpAvslagArbeidsforhold utled_AT_FL_SN(SvpUttakResultatArbeidsforhold ura, SvpAvslagArbeidsforhold.Builder builder) {
         if (ura.getArbeidsgiver() != null) {
-            return builder.medArbeidsgiverNavn(ura.getArbeidsgiver().getNavn()).build();
+            return builder.medArbeidsgiverNavn(ura.getArbeidsgiver().navn()).build();
         }
         if (UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.equals(ura.getUttakArbeidType())) {
             return builder.medErSN(true).build();

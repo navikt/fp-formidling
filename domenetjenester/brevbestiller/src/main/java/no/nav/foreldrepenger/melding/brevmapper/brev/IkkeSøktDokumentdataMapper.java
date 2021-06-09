@@ -49,8 +49,8 @@ public class IkkeSøktDokumentdataMapper implements DokumentdataMapper {
 
         var dokumentdataBuilder = IkkeSøktDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
-                .medArbeidsgiverNavn(inntektsmelding.getArbeidsgiverNavn())
-                .medMottattDato(formaterDatoNorsk(inntektsmelding.getInnsendingstidspunkt()));
+                .medArbeidsgiverNavn(inntektsmelding.arbeidsgiverNavn())
+                .medMottattDato(formaterDatoNorsk(inntektsmelding.innsendingstidspunkt()));
 
         return dokumentdataBuilder.build();
     }

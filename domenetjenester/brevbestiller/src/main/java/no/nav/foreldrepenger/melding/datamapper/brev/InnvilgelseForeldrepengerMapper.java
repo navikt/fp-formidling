@@ -132,7 +132,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         if (!fritekstGjelderIkkeLenger(aksjonspunkter)) {
             avklarFritekst(dokumentHendelse, behandling).ifPresent(fagType::setFritekst);
         }
-        fagType.setDekningsgrad(BigInteger.valueOf(ytelseFordeling.getDekningsgrad().getVerdi()));
+        fagType.setDekningsgrad(BigInteger.valueOf(ytelseFordeling.dekningsgrad().getVerdi()));
 
         mapFelterRelatertTilBehandling(behandling, fagType);
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, fagType);
@@ -170,11 +170,11 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
     }
 
     private void mapFelterRelatertTilSøknadOgRettighet(Søknad søknad, UttakResultatPerioder uttakResultatPerioder, List<Aksjonspunkt> aksjonspunkter, FagType fagType) {
-        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknad.getMottattDato()));
+        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(søknad.mottattDato()));
 
         //Dokprod tolker FagType.aleneomsorg som om "det har vært søkt om aleneomsorg og verdien er resultatet. Hvis det ikke er søkt aleneomsorg så skal det ikke stå noe i brevet om dette (derav IKKE_VURDERT)
         VurderingsstatusKode aleneomsorg;
-        if (søknad.getOppgittRettighet().harAleneomsorgForBarnet()) {
+        if (søknad.oppgittRettighet().harAleneomsorgForBarnet()) {
             aleneomsorg = uttakResultatPerioder.isAleneomsorg() ? VurderingsstatusKode.JA : VurderingsstatusKode.NEI;
         } else {
             aleneomsorg = VurderingsstatusKode.IKKE_VURDERT;
@@ -196,7 +196,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
     }
 
     private void mapFelterRelatertTilStønadskontoer(FagType fagType, Saldoer saldoer, FagsakBackend fagsak) {
-        fagType.setDagerTaptFørTermin(BigInteger.valueOf(saldoer.getTapteDagerFpff()));
+        fagType.setDagerTaptFørTermin(BigInteger.valueOf(saldoer.tapteDagerFpff()));
         fagType.setDisponibleDager(StønadskontoMapper.finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()));
         fagType.setDisponibleFellesDager(StønadskontoMapper.finnDisponibleFellesDager(saldoer));
         StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer).ifPresent(fagType::setForeldrepengeperiodenUtvidetUker);

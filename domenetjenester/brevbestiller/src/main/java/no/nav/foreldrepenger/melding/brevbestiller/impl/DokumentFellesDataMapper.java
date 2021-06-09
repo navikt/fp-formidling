@@ -1,11 +1,17 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.LandkodeOversetter;
-import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
@@ -17,12 +23,7 @@ import no.nav.foreldrepenger.melding.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.melding.verge.Verge;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Optional;
+import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped
 public class DokumentFellesDataMapper {
@@ -64,10 +65,10 @@ public class DokumentFellesDataMapper {
         Verge verge = vergeOpt.get();
 
 
-        if (verge.getAktoerId() != null) {
-            AktørId vergesAktørId = new AktørId(verge.getAktoerId());
+        if (verge.aktoerId() != null) {
+            AktørId vergesAktørId = new AktørId(verge.aktoerId());
             opprettDokumentDataForMottaker(behandling, dokumentData, dokumentHendelse, vergesAktørId, søkersAktørId, Optional.of( DokumentFelles.Kopi.NEI)); // orginalen går til verge
-        } else if (verge.getOrganisasjonsnummer() != null) {
+        } else if (verge.organisasjonsnummer() != null) {
             opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, dokumentHendelse, verge, søkersAktørId, Optional.of( DokumentFelles.Kopi.NEI));// orginalen går til verge
         }
     }
@@ -81,7 +82,8 @@ public class DokumentFellesDataMapper {
         Virksomhet virksomhet = getVirksomhet(verge);
 
         Personinfo personinfoBruker = personAdapter.hentBrukerForAktør(aktørIdBruker)
-                .orElseThrow(() -> DokumentBestillerFeil.fantIkkeFnrForAktørId(aktørIdBruker));
+                .orElseThrow(() -> new TekniskException("FPFORMIDLING-109013",
+                String.format("Fant ikke fødselsnummer for aktørId: %s. Kan ikke bestille dokument", aktørIdBruker)));
 
         String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
                 dokumentHendelse.getBehandlendeEnhetNavn() : behandling.getBehandlendeEnhetNavn();
@@ -90,13 +92,13 @@ public class DokumentFellesDataMapper {
                 dokumentData,
                 personinfoBruker,
                 virksomhet,
-                verge.getNavn(),
+                verge.navn(),
                 avsenderEnhet,
                 erKopi);
     }
 
     private Virksomhet getVirksomhet(Verge verge) {
-        return virksomhetTjeneste.getOrganisasjon(verge.getOrganisasjonsnummer(), LandkodeOversetter::tilLandkoderToBokstav);
+        return virksomhetTjeneste.getOrganisasjon(verge.organisasjonsnummer(), LandkodeOversetter::tilLandkoderToBokstav);
     }
 
     private void opprettDokumentDataForMottaker(Behandling behandling,
@@ -106,12 +108,13 @@ public class DokumentFellesDataMapper {
                                                 AktørId aktørIdBruker,Optional<DokumentFelles.Kopi> erKopi) {
 
         Adresseinfo adresseinfo = innhentAdresseopplysningerForDokumentsending(aktørIdMottaker)
-                .orElseThrow(() -> DokumentBestillerFeil.fantIkkeAdresse(aktørIdMottaker));
+                .orElseThrow(() -> new TekniskException("FPFORMIDLING-119013", String.format("Fant ikke adresse for aktørId: %s. Kan ikke bestille dokument", aktørIdMottaker)));
 
         DokumentAdresse adresse = fra(adresseinfo);
 
         var personinfoBruker = Objects.equals(aktørIdMottaker, aktørIdBruker) ? fraAdresseinfo(aktørIdBruker, adresseinfo) :
-                personAdapter.hentBrukerForAktør(aktørIdBruker).orElseThrow(() -> DokumentBestillerFeil.fantIkkeFnrForAktørId(aktørIdBruker));
+                personAdapter.hentBrukerForAktør(aktørIdBruker).orElseThrow(() -> new TekniskException("FPFORMIDLING-109013",
+                String.format("Fant ikke fødselsnummer for aktørId: %s. Kan ikke bestille dokument", aktørIdBruker)));
 
         String avsenderEnhet = dokumentHendelse.getBehandlendeEnhetNavn() != null ?
                 dokumentHendelse.getBehandlendeEnhetNavn() : behandling.getBehandlendeEnhetNavn();

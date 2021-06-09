@@ -16,7 +16,7 @@ public final class StønadskontoMapper {
     public static int finnDisponibleDager(Saldoer saldoer, RelasjonsRolleType rolleType) {
         int saldoForeldrepenger = finnSaldo(saldoer, FORELDREPENGER);
 
-        if (saldoForeldrepenger!=0) {
+        if (saldoForeldrepenger != 0) {
             return saldoForeldrepenger;
         }
 
@@ -24,7 +24,7 @@ public final class StønadskontoMapper {
     }
 
     public static int finnSaldo(Saldoer saldoer, StønadskontoType stønadskontoType) {
-        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.getStønadskontoer(), stønadskontoType).map(sk-> Math.max(sk.getSaldo(), 0)).orElse(0);
+        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.stønadskontoer(), stønadskontoType).map(sk -> Math.max(sk.saldo(), 0)).orElse(0);
     }
 
     public static int finnDisponibleFellesDager(Saldoer saldoer) {
@@ -32,17 +32,17 @@ public final class StønadskontoMapper {
     }
 
     public static int finnForeldrepengeperiodenUtvidetUkerHvisFinnes(Saldoer saldoer) {
-        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.getStønadskontoer(), StønadskontoType.FLERBARNSDAGER)
-                .map(Stønadskonto::getMaxDager)
+        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.stønadskontoer(), StønadskontoType.FLERBARNSDAGER)
+                .map(Stønadskonto::maxDager)
                 .map(BigInteger::valueOf)
                 .map(dager -> dager.divide(BigInteger.valueOf(5)))
                 .map(BigInteger::intValue).orElse(0);
     }
 
     public static Integer finnPrematurDagerHvisFinnes(Saldoer saldoer) {
-        return saldoer.getStønadskontoer()
+        return saldoer.stønadskontoer()
                 .stream()
-                .map(Stønadskonto::getPrematurDager)
+                .map(Stønadskonto::prematurDager)
                 .max(Integer::compareTo).orElse(null);
     }
 }

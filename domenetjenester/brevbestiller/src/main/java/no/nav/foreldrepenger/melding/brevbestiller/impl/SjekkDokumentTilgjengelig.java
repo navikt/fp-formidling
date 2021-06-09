@@ -1,13 +1,14 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import java.util.UUID;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalRestriksjon;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.UUID;
 
 @ApplicationScoped
 public class SjekkDokumentTilgjengelig {

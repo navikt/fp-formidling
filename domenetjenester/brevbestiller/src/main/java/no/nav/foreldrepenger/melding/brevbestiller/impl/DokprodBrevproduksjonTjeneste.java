@@ -22,12 +22,10 @@ import org.w3c.dom.Element;
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
-import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevproduksjonTjeneste;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapperProvider;
-import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
@@ -56,6 +54,7 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
+import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
 
@@ -76,11 +75,11 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Inject
     public DokprodBrevproduksjonTjeneste(DokumentproduksjonConsumer dokumentproduksjonProxyService,
-                                         SakClient sakKlient, //TODO: Legg på @Jersey når opprettsak er borte
-                                         DokumentFellesDataMapper dokumentFellesDataMapper,
-                                         DomeneobjektProvider domeneobjektProvider,
-                                         DokumentRepository dokumentRepository,
-                                         DokumentdataMapperProvider dokumentdataMapperProvider) {
+            SakClient sakKlient, // TODO: Legg på @Jersey når opprettsak er borte
+            DokumentFellesDataMapper dokumentFellesDataMapper,
+            DomeneobjektProvider domeneobjektProvider,
+            DokumentRepository dokumentRepository,
+            DokumentdataMapperProvider dokumentdataMapperProvider) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
         this.sakRestKlient = sakKlient;
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
@@ -100,21 +99,24 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         dokumentRepository.lagre(dokumentData);
 
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
-            var saksnummer = bestemSaksnummer(dokumentHendelse.getDokumentMalType(), dokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
+            var saksnummer = bestemSaksnummer(dokumentHendelse.getDokumentMalType(), dokumentFelles.getSaksnummer(),
+                    domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
             Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling, saksnummer);
             dokumentFelles.setBrevData(elementTilString(brevXmlElement));
             opprettAlternativeBrevDataOmNødvendig(dokumentHendelse, behandling, dokumentMal, dokumentFelles);
 
             final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = DokumentbestillingMapper.mapFraBehandling(dokumentMal,
                     dokumentFelles, saksnummer, harVedlegg);
-            hentJournalpostTittel(DokumentXmlDataMapper.velgDokumentMapper(dokumentMal)).ifPresent(dokumentbestillingsinformasjon::setUstrukturertTittel);
+            hentJournalpostTittel(DokumentXmlDataMapper.velgDokumentMapper(dokumentMal))
+                    .ifPresent(dokumentbestillingsinformasjon::setUstrukturertTittel);
 
-            ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = produserIkkeredigerbartDokument(brevXmlElement, dokumentbestillingsinformasjon);
+            ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokumentResponse = produserIkkeredigerbartDokument(brevXmlElement,
+                    dokumentbestillingsinformasjon);
             if (harVedlegg) {
                 JournalpostId journalpostId = new JournalpostId(produserIkkeredigerbartDokumentResponse.getJournalpostId());
                 knyttAlleVedleggTilDokument(vedlegg, journalpostId, behandling.getEndretAv());
                 ferdigstillForsendelse(journalpostId, behandling.getEndretAv());
-                //TODO kanseller forsendelse hvis det feiler
+                // TODO kanseller forsendelse hvis det feiler
             }
 
             historikkinnslagList.add(lagHistorikkinnslag(dokumentHendelse, produserIkkeredigerbartDokumentResponse, dokumentMal));
@@ -140,11 +142,12 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             return sak.map(s -> new Saksnummer(String.valueOf(s.getId()))).orElseThrow();
         } catch (Exception e) {
             LOGGER.info("FPFORMIDLING SAK feil for saksnummer ", e);
-            throw BrevbestillerFeil.feilFraSak(e);
+            throw new TekniskException("FPFORMIDLING-210632", String.format("Feilmelding fra Sak."), e);
         }
     }
 
-    private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, DokumentFelles dokumentFelles) {
+    private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal,
+            DokumentFelles dokumentFelles) {
         if (DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.equals(dokumentMal)) {
             try {
                 DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(DokumentMalType.INNVILGELSE_FORELDREPENGER);
@@ -152,7 +155,8 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                 dokumentdata.getFelles().anonymiser();
                 dokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
             } catch (Exception e) {
-                LOGGER.info("Feilet i å lage Dokgen-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}", dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
+                LOGGER.info("Feilet i å lage Dokgen-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}",
+                        dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
             }
         }
     }
@@ -185,16 +189,16 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         try {
             dokumentproduksjonProxyService.ferdigstillForsendelse(request);
         } catch (Exception e) {
-            throw DokumentMapperFeil.ferdigstillingAvDokumentFeil(journalpostId, e);
+            throw new TekniskException("FPFORMIDLING-316712", String.format("Feil i ferdigstilling av dokument med journalpostId %s", journalpostId), e );
         }
     }
 
     private void knyttAlleVedleggTilDokument(Collection<InnsynDokument> vedlegg, JournalpostId journalpostId, String endretAv) {
-        vedlegg.forEach(v -> knyttVedleggTilForsendelse(journalpostId, v.getJournalpostId(), v.getDokumentId(), endretAv));
+        vedlegg.forEach(v -> knyttVedleggTilForsendelse(journalpostId, v.journalpostId(), v.dokumentId(), endretAv));
     }
 
     private void knyttVedleggTilForsendelse(JournalpostId knyttesTilJournalpostId, JournalpostId knyttesFraJournalpostId, String dokumentId,
-                                            String endretAvNavn) {
+            String endretAvNavn) {
         KnyttVedleggTilForsendelseRequest request = new KnyttVedleggTilForsendelseRequest();
         request.setDokumentId(dokumentId);
         request.setEndretAvNavn(endretAvNavn);
@@ -203,7 +207,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         try {
             dokumentproduksjonProxyService.knyttVedleggTilForsendelse(request);
         } catch (Exception e) {
-            throw DokumentMapperFeil.knyttingAvVedleggFeil(dokumentId, e);
+            throw new TekniskException("FPFORMIDLING-795245", String.format("Feil i knytting av vedlegg til dokument med id %s", dokumentId), e );
         }
     }
 
@@ -214,16 +218,15 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         return filtrerUtDuplikater(domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter());
     }
 
-
     public static Collection<InnsynDokument> filtrerUtDuplikater(List<InnsynDokument> dokumenter) {
         return dokumenter
                 .stream()
-                .collect(Collectors.toConcurrentMap(InnsynDokument::getDokumentId, Function.identity(), (p, q) -> p))
+                .collect(Collectors.toConcurrentMap(InnsynDokument::dokumentId, Function.identity(), (p, q) -> p))
                 .values();
     }
 
     private ProduserIkkeredigerbartDokumentResponse produserIkkeredigerbartDokument(Element brevXmlElement,
-                                                                                    Dokumentbestillingsinformasjon dokumentbestillingsinformasjon) {
+            Dokumentbestillingsinformasjon dokumentbestillingsinformasjon) {
         ProduserIkkeredigerbartDokumentRequest produserIkkeredigerbartDokumentRequest = new ProduserIkkeredigerbartDokumentRequest();
         produserIkkeredigerbartDokumentRequest.setBrevdata(brevXmlElement);
         produserIkkeredigerbartDokumentRequest.setDokumentbestillingsinformasjon(dokumentbestillingsinformasjon);
@@ -231,21 +234,21 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             return dokumentproduksjonProxyService
                     .produserIkkeredigerbartDokument(produserIkkeredigerbartDokumentRequest);
         } catch (ProduserIkkeredigerbartDokumentDokumentErRedigerbart | ProduserIkkeredigerbartDokumentDokumentErVedlegg funksjonellFeil) {
-            throw BrevbestillerFeil.feilFraDokProd(funksjonellFeil);
+            throw new TekniskException("FPFORMIDLING-210631", String.format("Feilmelding fra DokProd."), funksjonellFeil);
         }
     }
 
     private DokumentHistorikkinnslag lagHistorikkinnslag(DokumentHendelse dokumentHendelse,
-                                                         ProduserIkkeredigerbartDokumentResponse response,
-                                                         DokumentMalType dokumentMal) {
+            ProduserIkkeredigerbartDokumentResponse response,
+            DokumentMalType dokumentMal) {
         return DokumentHistorikkinnslag.builder()
                 .medBehandlingUuid(dokumentHendelse.getBehandlingUuid())
                 .medHistorikkUuid(UUID.randomUUID())
                 .medHendelseId(dokumentHendelse.getId())
                 .medJournalpostId(new JournalpostId(response.getJournalpostId()))
                 .medDokumentId(response.getDokumentId())
-                .medHistorikkAktør(dokumentHendelse.getHistorikkAktør() != null ?
-                        dokumentHendelse.getHistorikkAktør() : HistorikkAktør.VEDTAKSLØSNINGEN)
+                .medHistorikkAktør(
+                        dokumentHendelse.getHistorikkAktør() != null ? dokumentHendelse.getHistorikkAktør() : HistorikkAktør.VEDTAKSLØSNINGEN)
                 .medDokumentMalType(dokumentMal)
                 .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
                 .build();
@@ -258,7 +261,8 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
 
         final DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
-        var saksnummer = bestemSaksnummer(dokumentHendelse.getDokumentMalType(), førsteDokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
+        var saksnummer = bestemSaksnummer(dokumentHendelse.getDokumentMalType(), førsteDokumentFelles.getSaksnummer(),
+                domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
         Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, dokumentHendelse, behandling, saksnummer);
 
         førsteDokumentFelles.setBrevData(elementTilString(brevXmlElement));
@@ -267,7 +271,8 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         dokument = forhåndsvis(dokumentMal, brevXmlElement);
         if (dokument.length == 0) {
             LOGGER.error("Klarte ikke hente behandling: {}", behandling.getUuid());
-            throw BrevbestillerFeil.klarteIkkeÅForhåndsviseMal(dokumentMal.getKode(), behandling.getUuid().toString());
+            throw new TekniskException("FPFORMIDLING-221005",
+                    String.format("Klarte ikke hente forhåndvise mal %s for behandling %s.", dokumentMal.getKode(), behandling.getUuid().toString()));
         }
         LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getUuid().toString());
         return dokument;
@@ -278,9 +283,10 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         produserDokumentutkastRequest.setDokumenttypeId(dokumentMal.getDokSysKode().getKode());
         produserDokumentutkastRequest.setBrevdata(brevXmlElement);
 
-        ProduserDokumentutkastResponse produserDokumentutkastResponse = dokumentproduksjonProxyService.produserDokumentutkast(produserDokumentutkastRequest);
+        ProduserDokumentutkastResponse produserDokumentutkastResponse = dokumentproduksjonProxyService
+                .produserDokumentutkast(produserDokumentutkastRequest);
         if (produserDokumentutkastResponse != null && produserDokumentutkastResponse.getDokumentutkast() != null) {
-            return produserDokumentutkastResponse.getDokumentutkast();//$NON-NLS-1$
+            return produserDokumentutkastResponse.getDokumentutkast();// $NON-NLS-1$
         }
         return new byte[0];
     }

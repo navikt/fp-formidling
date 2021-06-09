@@ -1,22 +1,12 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder;
 
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
-import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
-import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
-import no.nav.foreldrepenger.melding.uttak.Stønadskonto;
-import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
-import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.FOR_SEN_SØKNAD;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE;
+import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -30,16 +20,26 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.FOR_SEN_SØKNAD;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
+import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
+import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.melding.uttak.Stønadskonto;
+import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
+import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
+import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+import no.nav.vedtak.exception.TekniskException;
 
 public class PeriodeBeregner {
-    private static List<String> manglendeEllerForSenSøknadOmGraderingÅrsaker = List.of( //NOSONAR
+    private static List<String> manglendeEllerForSenSøknadOmGraderingÅrsaker = List.of( // NOSONAR
             ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT.getKode(),
             AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD.getKode(),
             FOR_SEN_SØKNAD.getKode());
@@ -61,48 +61,56 @@ public class PeriodeBeregner {
     }
 
     private PeriodeBeregner() {
-        //for sonar
+        // for sonar
     }
 
     public static BeregningsgrunnlagPeriode finnBeregninsgrunnlagperiode(BeregningsresultatPeriode periode,
-                                                                         List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
+            List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
         for (BeregningsgrunnlagPeriode beregningsgrunnlagPeriode : beregningsgrunnlagPerioder) {
             if (!periode.getBeregningsresultatPeriodeFom().isBefore(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom()) &&
-                    (beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom() == null || (!periode.getBeregningsresultatPeriodeTom().isAfter(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom())))) {
+                    (beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom() == null
+                            || (!periode.getBeregningsresultatPeriodeTom().isAfter(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom())))) {
                 return beregningsgrunnlagPeriode;
             }
         }
-        throw DokumentBestillerFeil.kanIkkeMatchePerioder("beregningsgrunnlagperiode");
+        throw new TekniskException("FPFORMIDLING-368280",
+                String.format("Klarte ikke matche beregningsresultatperiode og %S for brev", "beregningsgrunnlagperiode"));
     }
 
     public static UttakResultatPeriode finnUttaksPeriode(BeregningsresultatPeriode periode, List<UttakResultatPeriode> uttakPerioder) {
         for (UttakResultatPeriode uttakPeriode : uttakPerioder) {
-            if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom()) && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
+            if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom())
+                    && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
                 return uttakPeriode;
             }
         }
-        throw DokumentBestillerFeil.kanIkkeMatchePerioder("uttaksperiode");
+        throw new TekniskException("FPFORMIDLING-368280",
+                String.format("Klarte ikke matche beregningsresultatperiode og %S for brev", "uttaksperiode"));
     }
 
-    public static List<SvpUttakResultatPeriode> finnUttakPeriodeKandidater(BeregningsresultatPeriode periode, List<SvpUttakResultatPeriode> uttakPerioder) {
+    public static List<SvpUttakResultatPeriode> finnUttakPeriodeKandidater(BeregningsresultatPeriode periode,
+            List<SvpUttakResultatPeriode> uttakPerioder) {
         if (periode.getDagsats() > 0) {
             List<SvpUttakResultatPeriode> kandidater = new ArrayList<>();
             for (SvpUttakResultatPeriode uttakPeriode : uttakPerioder) {
-                if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom()) && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
+                if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom())
+                        && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
                     kandidater.add(uttakPeriode);
                 }
             }
             if (!kandidater.isEmpty()) {
                 return kandidater.stream().filter(SvpUttakResultatPeriode::isInnvilget).collect(Collectors.toList());
             }
-            throw DokumentBestillerFeil.kanIkkeMatchePerioder("uttaksperiode");
+            throw new TekniskException("FPFORMIDLING-368280",
+                    String.format("Klarte ikke matche beregningsresultatperiode og %S for brev", "uttaksperiode"));
         }
         return Collections.emptyList();
     }
 
-    //TODO - Skriv tester.. Dette oppfører seg annerledes i DTOene enn fpsak
-    public static Optional<BeregningsgrunnlagPrStatusOgAndel> finnBgPerStatusOgAndelHvisFinnes(List<BeregningsgrunnlagPrStatusOgAndel> bgPerStatusOgAndelListe,
-                                                                                               BeregningsresultatAndel andel) {
+    // TODO - Skriv tester.. Dette oppfører seg annerledes i DTOene enn fpsak
+    public static Optional<BeregningsgrunnlagPrStatusOgAndel> finnBgPerStatusOgAndelHvisFinnes(
+            List<BeregningsgrunnlagPrStatusOgAndel> bgPerStatusOgAndelListe,
+            BeregningsresultatAndel andel) {
         for (BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel : bgPerStatusOgAndelListe) {
             if (andel.getAktivitetStatus().equals(bgPerStatusOgAndel.getAktivitetStatus())) {
                 if (AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())) {
@@ -127,7 +135,8 @@ public class PeriodeBeregner {
         return sammeArbeidsforhold(arbeidsgiver.get(), arbeidsforholdRef, bgPerStatusOgAndel);
     }
 
-    private static boolean sammeArbeidsforhold(Arbeidsgiver arbeidsgiver, ArbeidsforholdRef arbeidsforholdRef, BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel) {
+    private static boolean sammeArbeidsforhold(Arbeidsgiver arbeidsgiver, ArbeidsforholdRef arbeidsforholdRef,
+            BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel) {
         return bgPerStatusOgAndel.gjelderSammeArbeidsforhold(arbeidsgiver, arbeidsforholdRef);
     }
 
@@ -136,23 +145,25 @@ public class PeriodeBeregner {
     }
 
     public static Optional<UttakResultatPeriodeAktivitet> finnAktivitetMedStatusHvisFinnes(List<UttakResultatPeriodeAktivitet> uttakAktiviteter,
-                                                                                           BeregningsresultatAndel andel) {
+            BeregningsresultatAndel andel) {
         Optional<Arbeidsgiver> arbeidsgiver = andel.getArbeidsgiver();
         ArbeidsforholdRef arbeidsforholdRef = andel.getArbeidsforholdRef();
 
         for (UttakResultatPeriodeAktivitet aktivitet : uttakAktiviteter) {
             if (uttakAktivitetStatusMap.getOrDefault(andel.getAktivitetStatus(), UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType())
-                && (arbeidsgiver.isEmpty() || Objects.equals(arbeidsgiver.get().getArbeidsgiverReferanse(), aktivitet.getArbeidsgiverIdentifikator()))
-                && (arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold() && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId())))) {
-                    return Optional.of(aktivitet);
+                    && (arbeidsgiver.isEmpty()
+                            || Objects.equals(arbeidsgiver.get().arbeidsgiverReferanse(), aktivitet.getArbeidsgiverIdentifikator()))
+                    && (arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null
+                            || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold()
+                                    && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId())))) {
+                return Optional.of(aktivitet);
             }
         }
         return Optional.empty();
     }
 
     public static Optional<Stønadskonto> finnStønadsKontoMedType(Set<Stønadskonto> stønadskontoer, StønadskontoType stønadskontoType) {
-        return stønadskontoer.stream().
-                filter(stønadskonto -> stønadskontoType.equals(stønadskonto.getStønadskontoType()))
+        return stønadskontoer.stream().filter(stønadskonto -> stønadskontoType.equals(stønadskonto.stønadskontoType()))
                 .findFirst();
     }
 
@@ -181,7 +192,7 @@ public class PeriodeBeregner {
     }
 
     private static UtbetaltKode forMyeUtbetaltKode(boolean generell, boolean ferie, boolean jobb,
-                                                   LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
+            LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
         if (generell) {
             return UtbetaltKode.GENERELL;
         }

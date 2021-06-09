@@ -12,7 +12,6 @@ import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -27,6 +26,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.avbruttbehandling.Ytel
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.xmlutils.JaxbHelper;
+import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.HENLEGG_BEHANDLING_DOK)
@@ -35,12 +35,12 @@ public class HenleggBehandlingBrevMapper extends DokumentTypeMapper {
     static final String FAMPEN = "NAV Familie- og pensjonsytelser";
 
     public HenleggBehandlingBrevMapper() {
-        //CDI
+        // CDI
     }
 
     @Override
     public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                Behandling behandling) throws JAXBException, XMLStreamException, SAXException {
+            Behandling behandling) throws JAXBException, XMLStreamException, SAXException {
         FagType fagType = mapFagType(hendelse, behandling);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
         return JaxbHelper.marshalNoNamespaceXML(AvbruttbehandlingConstants.JAXB_CLASS, brevdataTypeJAXBElement, null);
@@ -70,7 +70,7 @@ public class HenleggBehandlingBrevMapper extends DokumentTypeMapper {
         if (Objects.equals(vlKode, BehandlingType.INNSYN.getKode())) {
             return BehandlingsTypeKode.INNSYN;
         }
-        throw DokumentMapperFeil.henleggBehandlingBrevKreverGyldigBehandlingstype(vlKode);
+        throw new TekniskException("FPFORMIDLING-875835", String.format("Ugyldig behandlingstype %s for brev med malkode HENLEG", vlKode));
     }
 
     private OpphavTypeKode utledOpphavType(DokumentHendelse hendelse, Behandling behandling) {

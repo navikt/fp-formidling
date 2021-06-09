@@ -116,9 +116,7 @@ public class KlageOversendtTilKlageinstansBrevMapperTest {
     }
 
     private void mockKlage(Behandling behandling, BehandlingType behandlingType) {
-        KlageVurderingResultat klageVurderingResultat = KlageVurderingResultat.ny()
-                .medFritekstTilbrev("FRITEKST")
-                .build();
+        KlageVurderingResultat klageVurderingResultat = new KlageVurderingResultat(null, "FRITEKST");
         Klage klage = Klage.ny()
                 .medPåklagdBehandlingType(behandlingType)
                 .medKlageVurderingResultatNK(klageVurderingResultat)

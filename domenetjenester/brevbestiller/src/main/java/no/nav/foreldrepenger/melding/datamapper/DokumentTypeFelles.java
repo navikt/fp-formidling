@@ -1,13 +1,16 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import no.nav.vedtak.exception.TekniskException;
 
 public class DokumentTypeFelles {
 
@@ -18,7 +21,7 @@ public class DokumentTypeFelles {
             LocalDate localDate = dato.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             return DatatypeFactory.newInstance().newXMLGregorianCalendar(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth(), -2147483648, -2147483648, -2147483648, -2147483648, -2147483648);
         } catch (ParseException | DatatypeConfigurationException e) {
-            throw DokumentBestillerFeil.datokonverteringsfeil(datoString, e);
+            throw new TekniskException("FPFORMIDLING-151337", String.format("Kan ikke konvertere dato %s til xmlformatert dato.", datoString), e);
         }
     }
 }

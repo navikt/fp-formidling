@@ -77,14 +77,14 @@ public class KlageOversendtTilKlageinstansBrevMapper extends FritekstmalBrevMapp
         if (hendelse.getFritekst() != null) { // Forhåndsvisning
             brevdata.leggTil("mintekst", hendelse.getFritekst());
         } else if (klage.getGjeldendeKlageVurderingsresultat() != null) { // Bestilling
-            brevdata.leggTil("mintekst", klage.getGjeldendeKlageVurderingsresultat().getFritekstTilBrev());
+            brevdata.leggTil("mintekst", klage.getGjeldendeKlageVurderingsresultat().fritekstTilBrev());
         }
         return brevdata;
     }
 
     private LocalDate utledMottattDato(KlageDokument klageDokument, Behandling behandling) {
-        return klageDokument.getMottattDato() != null
-                ? klageDokument.getMottattDato()
+        return klageDokument.motattDato() != null
+                ? klageDokument.motattDato()
                 : behandling.getOpprettetDato().toLocalDate();
     }
 }

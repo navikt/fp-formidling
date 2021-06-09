@@ -9,9 +9,7 @@ public class IAYMapper {
 
     public static Inntektsmelding hentNyesteInntektsmelding(InntektArbeidYtelse iay) {
         return iay.getInntektsmeldinger().stream()
-                .max(Comparator.comparing(Inntektsmelding::getInnsendingstidspunkt))
-                .orElseThrow(() -> {
-            throw new IllegalStateException("Finner ingen inntektsmelding");
-        });
+                .max(Comparator.comparing(Inntektsmelding::innsendingstidspunkt))
+                .orElseThrow(() -> new IllegalStateException("Finner ingen inntektsmelding"));
     }
 }

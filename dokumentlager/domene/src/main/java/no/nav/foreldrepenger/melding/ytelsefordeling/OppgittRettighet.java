@@ -1,13 +1,5 @@
 package no.nav.foreldrepenger.melding.ytelsefordeling;
 
-public class OppgittRettighet {
-    private boolean harAleneomsorgForBarnet;
+public record OppgittRettighet(boolean harAleneomsorgForBarnet) {
 
-    public OppgittRettighet(boolean harAleneomsorgForBarnet) {
-        this.harAleneomsorgForBarnet = harAleneomsorgForBarnet;
-    }
-
-    public boolean harAleneomsorgForBarnet() {
-        return harAleneomsorgForBarnet;
-    }
 }

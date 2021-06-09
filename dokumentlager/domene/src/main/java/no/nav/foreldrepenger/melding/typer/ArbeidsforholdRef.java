@@ -6,14 +6,12 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import no.nav.foreldrepenger.melding.kodeverk.diff.IndexKey;
-
 /**
  * Arbeidsforhold id fra AA-registeret. (ikke intern id)
  */
 
 @Embeddable
-public class ArbeidsforholdRef implements IndexKey, Serializable {
+public class ArbeidsforholdRef implements Serializable {
 
     @Column(name = "arbeidsforhold_id")
     private String referanse;
@@ -33,11 +31,6 @@ public class ArbeidsforholdRef implements IndexKey, Serializable {
         return referanse;
     }
 
-    @Override
-    public String getIndexKey() {
-        return IndexKey.createKey(referanse);
-    }
-
     public boolean gjelderForSpesifiktArbeidsforhold() {
         return referanse != null && !referanse.isEmpty();
     }
@@ -54,11 +47,13 @@ public class ArbeidsforholdRef implements IndexKey, Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o)
+            return true;
         if (o == null && this.referanse == null) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         ArbeidsforholdRef that = (ArbeidsforholdRef) o;
         return Objects.equals(referanse, that.referanse);
     }

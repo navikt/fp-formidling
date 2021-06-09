@@ -16,7 +16,6 @@ import org.w3c.dom.Element;
 
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.brevbestiller.BrevbestillerFeil;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevproduksjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.task.BrevTaskProperties;
 import no.nav.foreldrepenger.melding.brevbestiller.task.DistribuerBrevTask;
@@ -42,6 +41,7 @@ import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostR
 import no.nav.foreldrepenger.melding.kafkatjenester.historikk.task.PubliserHistorikkTaskProperties;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
@@ -66,14 +66,14 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Inject
     public DokgenBrevproduksjonTjeneste(DokumentFellesDataMapper dokumentFellesDataMapper,
-                                        DomeneobjektProvider domeneobjektProvider,
-                                        DokumentRepository dokumentRepository,
-                                        DokgenRestKlient dokgenRestKlient,
-                                        OpprettJournalpostTjeneste opprettJournalpostTjeneste,
-                                        DokumentdataMapperProvider dokumentdataMapperProvider,
-                                        ProsessTaskRepository prosessTaskRepository,
-                                        HistorikkRepository historikkRepository,
-                                        DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste) {
+            DomeneobjektProvider domeneobjektProvider,
+            DokumentRepository dokumentRepository,
+            DokgenRestKlient dokgenRestKlient,
+            OpprettJournalpostTjeneste opprettJournalpostTjeneste,
+            DokumentdataMapperProvider dokumentdataMapperProvider,
+            ProsessTaskRepository prosessTaskRepository,
+            HistorikkRepository historikkRepository,
+            DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste) {
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentRepository = dokumentRepository;
@@ -83,7 +83,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         this.prosessTaskRepository = prosessTaskRepository;
         this.historikkRepository = historikkRepository;
         this.dokprodBrevproduksjonTjeneste = dokprodBrevproduksjonTjeneste;
-    } //NOSONAR
+    } // NOSONAR
 
     @Override
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
@@ -98,7 +98,9 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         try {
             brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
         } catch (Exception e) {
-            throw BrevbestillerFeil.klarteIkkeForhåndvise(dokumentMal.getKode(), behandling.getUuid().toString(), e);
+            throw new TekniskException("FPFORMIDLING-221006",
+                    String.format("Klarte ikke hente forhåndvise mal %s for behandling %s.", dokumentMal.getKode(), behandling.getUuid().toString()),
+                    e);
         }
         LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getUuid().toString());
         return brev;
@@ -118,7 +120,8 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             opprettAlternativeBrevDataOmNødvendig(dokumentHendelse, behandling, dokumentMal, dokumentFelles);
 
             byte[] brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
-            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse, behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg);
+            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
+                    behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg);
             JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
 
             if (innsynMedVedlegg) {
@@ -127,7 +130,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
             distribuerBrevOgLagHistorikk(dokumentHendelse, dokumentMal, response, journalpostId, innsynMedVedlegg);
         }
-        return Collections.emptyList(); //TODO(JEJ): Omstrukturere koden når DokprodBrevproduksjonTjeneste er historie
+        return Collections.emptyList(); // TODO(JEJ): Omstrukturere koden når DokprodBrevproduksjonTjeneste er historie
     }
 
     private DokumentData lagDokumentData(Behandling behandling, DokumentMalType dokumentMalType, BestillingType bestillingType) {
@@ -139,19 +142,24 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                 .build();
     }
 
-    private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, DokumentFelles dokumentFelles) {
+    private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal,
+            DokumentFelles dokumentFelles) {
         if (DokumentMalType.INNVILGELSE_FORELDREPENGER.equals(dokumentMal)) {
             try {
-                var saksnummer = dokprodBrevproduksjonTjeneste.bestemSaksnummer(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK, dokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
-                Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK, dokumentFelles, dokumentHendelse, behandling, saksnummer);
+                var saksnummer = dokprodBrevproduksjonTjeneste.bestemSaksnummer(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK,
+                        dokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
+                Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK, dokumentFelles,
+                        dokumentHendelse, behandling, saksnummer);
                 dokumentFelles.setAlternativeBrevData(elementTilString(brevXmlElement));
             } catch (Exception e) {
-                LOGGER.info("Feilet i å lage Dokprod-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}", dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
+                LOGGER.info("Feilet i å lage Dokprod-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}",
+                        dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
             }
         }
     }
 
-    private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMal, OpprettJournalpostResponse response, JournalpostId journalpostId, boolean innsynMedVedlegg) {
+    private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMal, OpprettJournalpostResponse response,
+            JournalpostId journalpostId, boolean innsynMedVedlegg) {
         ProsessTaskGruppe taskGruppe = new ProsessTaskGruppe();
         taskGruppe.addNesteSekvensiell(opprettDistribuerBrevTask(journalpostId, innsynMedVedlegg, dokumentHendelse.getBehandlingUuid()));
         DokumentHistorikkinnslag historikkinnslag = lagHistorikkinnslag(dokumentHendelse, response, dokumentMal);
@@ -169,7 +177,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private ProsessTaskData opprettTilknyttVedleggTask(UUID behandlingUuId, JournalpostId journalpostId) {
         ProsessTaskData prosessTaskData = new ProsessTaskData(TilknyttVedleggTask.TASKTYPE);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID,(String.valueOf(behandlingUuId)));
+        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, (String.valueOf(behandlingUuId)));
         return prosessTaskData;
     }
 
@@ -178,11 +186,12 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         return prosessTaskData;
     }
+
     private ProsessTaskData opprettDistribuerBrevTask(JournalpostId journalpostId, boolean innsynMedVedlegg, UUID behandlingUuId) {
         ProsessTaskData prosessTaskData = new ProsessTaskData(DistribuerBrevTask.TASKTYPE);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID,(String.valueOf(behandlingUuId)));
-        //må vente til vedlegg er knyttet og journalpost er ferdigstilt
+        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, (String.valueOf(behandlingUuId)));
+        // må vente til vedlegg er knyttet og journalpost er ferdigstilt
         if (innsynMedVedlegg) {
             prosessTaskData.setNesteKjøringEtter(LocalDateTime.now().plusMinutes(1));
         }
@@ -203,16 +212,16 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     }
 
     private DokumentHistorikkinnslag lagHistorikkinnslag(DokumentHendelse dokumentHendelse,
-                                                         OpprettJournalpostResponse response,
-                                                         DokumentMalType dokumentMal) {
+            OpprettJournalpostResponse response,
+            DokumentMalType dokumentMal) {
         DokumentHistorikkinnslag historikkinnslag = DokumentHistorikkinnslag.builder()
                 .medBehandlingUuid(dokumentHendelse.getBehandlingUuid())
                 .medHistorikkUuid(UUID.randomUUID())
                 .medHendelseId(dokumentHendelse.getId())
                 .medJournalpostId(new JournalpostId(response.getJournalpostId()))
                 .medDokumentId(response.getDokumenter().get(0).getDokumentInfoId())
-                .medHistorikkAktør(dokumentHendelse.getHistorikkAktør() != null ?
-                        dokumentHendelse.getHistorikkAktør() : HistorikkAktør.VEDTAKSLØSNINGEN)
+                .medHistorikkAktør(
+                        dokumentHendelse.getHistorikkAktør() != null ? dokumentHendelse.getHistorikkAktør() : HistorikkAktør.VEDTAKSLØSNINGEN)
                 .medDokumentMalType(dokumentMal)
                 .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
                 .build();

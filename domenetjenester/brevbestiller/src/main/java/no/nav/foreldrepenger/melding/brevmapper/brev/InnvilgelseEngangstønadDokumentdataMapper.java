@@ -59,7 +59,7 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
                 .medRevurdering(behandling.erRevurdering())
                 .medFørstegangsbehandling(behandling.erFørstegangssøknad())
                 .medMedhold(BehandlingMapper.erMedhold(behandling))
-                .medInnvilgetBeløp(formaterBeløp(beregningsresultat.getBeløp()))
+                .medInnvilgetBeløp(formaterBeløp(beregningsresultat.beløp()))
                 .medKlagefristUker(brevParametere.getKlagefristUker())
                 .medDød(erDød(dokumentFelles))
                 .medFbEllerMedhold(erFBellerMedhold(behandling))
@@ -94,7 +94,7 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
     private Long sjekkOmDifferanseHvisRevurdering(Behandling originalBehandling, BeregningsresultatES beregningsresultat) {
         Optional<BeregningsresultatES> originaltBeregningsresultat = domeneobjektProvider.hentBeregningsresultatESHvisFinnes(originalBehandling);
 
-        return originaltBeregningsresultat.map(orgBeregningsresultat -> Math.abs(beregningsresultat.getBeløp() - orgBeregningsresultat.getBeløp()))
+        return originaltBeregningsresultat.map(orgBeregningsresultat -> Math.abs(beregningsresultat.beløp() - orgBeregningsresultat.beløp()))
                 .orElse(0L);
     }
 

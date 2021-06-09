@@ -1,5 +1,15 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
@@ -11,25 +21,18 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Beregn
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-
 public final class BeregningsgrunnlagMapper {
 
     private static final Map<AktivitetStatus, List<AktivitetStatus>> kombinerteRegelStatuserMap = new HashMap<>();
 
     static {
         kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_AT_FL, List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER));
-        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_AT_SN, List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
-        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_AT_FL_SN, List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
-        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_FL_SN, List.of(AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
+        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_AT_SN,
+                List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
+        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_AT_FL_SN,
+                List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
+        kombinerteRegelStatuserMap.put(AktivitetStatus.KOMBINERT_FL_SN,
+                List.of(AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
     }
 
     public static long finnBrutto(Beregningsgrunnlag beregningsgrunnlag) {
@@ -60,7 +63,7 @@ public final class BeregningsgrunnlagMapper {
         for (BeregningsgrunnlagAktivitetStatus bgAktivitetStatus : beregningsgrunnlag.getAktivitetStatuser()) {
             BeregningsgrunnlagRegel.Builder builder = BeregningsgrunnlagRegel.ny();
             List<BeregningsgrunnlagPrStatusOgAndel> filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe);
-            builder.medAktivitetStatus(bgAktivitetStatus.getAktivitetStatus().name());
+            builder.medAktivitetStatus(bgAktivitetStatus.aktivitetStatus().name());
             builder.medAndelListe(mapAndelListe(filtrertListe));
             builder.medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
             builder.medSnNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
@@ -82,23 +85,29 @@ public final class BeregningsgrunnlagMapper {
     }
 
     private static List<BeregningsgrunnlagPrStatusOgAndel> finnAktivitetStatuserForAndeler(BeregningsgrunnlagAktivitetStatus bgAktivitetStatus,
-                                                                                          List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+            List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         List<BeregningsgrunnlagPrStatusOgAndel> resultatListe;
-        if (AktivitetStatus.KUN_YTELSE.equals(bgAktivitetStatus.getAktivitetStatus())) {
+        if (AktivitetStatus.KUN_YTELSE.equals(bgAktivitetStatus.aktivitetStatus())) {
             return bgpsaListe;
         }
-        if (bgAktivitetStatus.getAktivitetStatus().harKombinertStatus()) {
-            List<AktivitetStatus> relevanteStatuser = kombinerteRegelStatuserMap.get(bgAktivitetStatus.getAktivitetStatus());
+        if (bgAktivitetStatus.aktivitetStatus().harKombinertStatus()) {
+            List<AktivitetStatus> relevanteStatuser = kombinerteRegelStatuserMap.get(bgAktivitetStatus.aktivitetStatus());
             resultatListe = bgpsaListe.stream().filter(andel -> relevanteStatuser.contains(andel.getAktivitetStatus())).collect(Collectors.toList());
         } else {
-            resultatListe = bgpsaListe.stream().filter(andel -> bgAktivitetStatus.getAktivitetStatus().equals(andel.getAktivitetStatus())).collect(Collectors.toList());
+            resultatListe = bgpsaListe.stream().filter(andel -> bgAktivitetStatus.aktivitetStatus().equals(andel.getAktivitetStatus()))
+                    .collect(Collectors.toList());
 
-            //Spesialhåndtering av tilkommet arbeidsforhold for Dagpenger og AAP - andeler som ikke kan mappes gjennom aktivitetesstatuslisten på beregningsgrunnlag da de er tilkommet etter skjæringstidspunkt. Typisk dersom arbeidsgiver er tilkommet etter start permisjon og krever refusjon i permisjonstiden.
-            List<AktivitetStatus> aktuelleStatuserForTilkommetArbForhold = List.of(AktivitetStatus.DAGPENGER, AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
-            if (resultatListe.stream().anyMatch(br-> aktuelleStatuserForTilkommetArbForhold.contains(br.getAktivitetStatus())) && hentSummertDagsats(resultatListe) != hentSummertDagsats(bgpsaListe)){
+            // Spesialhåndtering av tilkommet arbeidsforhold for Dagpenger og AAP - andeler
+            // som ikke kan mappes gjennom aktivitetesstatuslisten på beregningsgrunnlag da
+            // de er tilkommet etter skjæringstidspunkt. Typisk dersom arbeidsgiver er
+            // tilkommet etter start permisjon og krever refusjon i permisjonstiden.
+            List<AktivitetStatus> aktuelleStatuserForTilkommetArbForhold = List.of(AktivitetStatus.DAGPENGER,
+                    AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+            if (resultatListe.stream().anyMatch(br -> aktuelleStatuserForTilkommetArbForhold.contains(br.getAktivitetStatus()))
+                    && hentSummertDagsats(resultatListe) != hentSummertDagsats(bgpsaListe)) {
                 long sumTilkommetDagsats = hentSumTilkommetDagsats(bgpsaListe);
                 if (sumTilkommetDagsats != 0) {
-                    resultatListe.forEach(rl-> {
+                    resultatListe.forEach(rl -> {
                         if (aktuelleStatuserForTilkommetArbForhold.contains(rl.getAktivitetStatus())) {
                             rl.setDagsats(sumTilkommetDagsats);
                         }
@@ -109,7 +118,7 @@ public final class BeregningsgrunnlagMapper {
         if (resultatListe.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             bgpsaListe.stream().map(BeregningsgrunnlagPrStatusOgAndel::getAktivitetStatus).map(AktivitetStatus::getKode).forEach(sb::append);
-            throw new IllegalStateException(String.format("Fant ingen andeler for status: %s, andeler: %s", bgAktivitetStatus.getAktivitetStatus(), sb));
+            throw new IllegalStateException(String.format("Fant ingen andeler for status: %s, andeler: %s", bgAktivitetStatus.aktivitetStatus(), sb));
         }
         return resultatListe;
     }
@@ -120,7 +129,7 @@ public final class BeregningsgrunnlagMapper {
 
     private static long hentSumTilkommetDagsats(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         return bgpsaListe.stream()
-                .filter(andel->andel.getDagsats() > 0)
+                .filter(andel -> andel.getDagsats() > 0)
                 .filter(BeregningsgrunnlagPrStatusOgAndel::getErTilkommetAndel)
                 .map(BeregningsgrunnlagPrStatusOgAndel::getDagsats)
                 .reduce(Long::sum).orElse(0L);
@@ -153,7 +162,7 @@ public final class BeregningsgrunnlagMapper {
     }
 
     private static Optional<String> getArbeidsgiverNavn(BeregningsgrunnlagPrStatusOgAndel andel) {
-        return andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::getNavn);
+        return andel.getBgAndelArbeidsforhold().flatMap(BGAndelArbeidsforhold::getArbeidsgiver).map(Arbeidsgiver::navn);
     }
 
     private static BigDecimal getBgBruttoPrÅr(BeregningsgrunnlagPrStatusOgAndel andel) {

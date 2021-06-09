@@ -10,24 +10,37 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class InnvilgelseForeldrepengerMapperTest {
 
     InnvilgelseForeldrepengerMapper mapper;
 
-    private final DomeneobjektProvider domeneobjektProvider = Mockito.mock(DomeneobjektProvider.class);
-    private final Behandling behandling = Mockito.mock(Behandling.class);
-    private final Behandling annenBehandling = Mockito.mock(Behandling.class);
-    private final Behandling tredjeBehandling = Mockito.mock(Behandling.class);
-    private final Behandling fjerdeBehandling = Mockito.mock(Behandling.class);
-    private final Behandling femteBehandling = Mockito.mock(Behandling.class);
-    private final Søknad søknad = Mockito.mock(Søknad.class);
+    @Mock
+    private DomeneobjektProvider domeneobjektProvider;
+    @Mock
+    private Behandling behandling;
+    @Mock
+    private Behandling annenBehandling;
+    @Mock
+    private Behandling tredjeBehandling;
+    @Mock
+    private Behandling fjerdeBehandling;
+    @Mock
+    private Behandling femteBehandling;
+    private static final Søknad SØKNAD = new Søknad(null, null, null);
 
     @BeforeEach
     public void setup() {
@@ -49,7 +62,7 @@ public class InnvilgelseForeldrepengerMapperTest {
 
     @Test
     public void skalHenteSøknadDypt() {
-        when(domeneobjektProvider.hentSøknad(femteBehandling)).thenReturn(Optional.of(søknad));
+        when(domeneobjektProvider.hentSøknad(femteBehandling)).thenReturn(Optional.of(SØKNAD));
 
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)).thenReturn(Optional.of(annenBehandling));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(annenBehandling)).thenReturn(Optional.of(tredjeBehandling));
@@ -61,7 +74,7 @@ public class InnvilgelseForeldrepengerMapperTest {
 
     @Test
     public void skalHenteSøknadIkkeDyptDypt() {
-        when(domeneobjektProvider.hentSøknad(behandling)).thenReturn(Optional.of(søknad));
+        when(domeneobjektProvider.hentSøknad(behandling)).thenReturn(Optional.of(SØKNAD));
 
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)).thenReturn(Optional.of(annenBehandling));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(annenBehandling)).thenReturn(Optional.of(tredjeBehandling));

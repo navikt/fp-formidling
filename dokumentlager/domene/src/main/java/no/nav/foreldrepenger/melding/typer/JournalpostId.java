@@ -9,13 +9,11 @@ import javax.persistence.Embeddable;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import no.nav.foreldrepenger.melding.kodeverk.diff.IndexKey;
-
 /**
  * Journalpostid refererer til journalpost registret i Joark.
  */
 @Embeddable
-public class JournalpostId implements Serializable, IndexKey {
+public class JournalpostId implements Serializable {
     private static final String CHARS = "a-z0-9_:-";
 
     private static final Pattern VALID = Pattern.compile("^(-?[1-9]|[a-z0])[" + CHARS + "]*$", Pattern.CASE_INSENSITIVE);
@@ -23,7 +21,7 @@ public class JournalpostId implements Serializable, IndexKey {
 
     @JsonValue
     @Column(name = "journalpost_id", updatable = false)
-    private String journalpostId;  // NOSONAR
+    private String journalpostId; // NOSONAR
 
     JournalpostId() {
         // for hibernate
@@ -38,17 +36,13 @@ public class JournalpostId implements Serializable, IndexKey {
         Objects.requireNonNull(journalpostId, "journalpostId");
         if (!VALID.matcher(journalpostId).matches()) {
             // skal ikke skje, funksjonelle feilmeldinger håndteres ikke her.
-            throw new IllegalArgumentException("Ugyldig aktørId, støtter kun A-Z/0-9/:/-/_ tegn. Var: " + journalpostId.replaceAll(INVALID.pattern(), "?") + " (vasket)");
+            throw new IllegalArgumentException(
+                    "Ugyldig aktørId, støtter kun A-Z/0-9/:/-/_ tegn. Var: " + journalpostId.replaceAll(INVALID.pattern(), "?") + " (vasket)");
         }
         this.journalpostId = journalpostId;
     }
 
-    @Override
-    public String getIndexKey() { //NOSONAR
-        return journalpostId;
-    }
-
-    public String getVerdi() { //NOSONAR
+    public String getVerdi() { // NOSONAR
         return journalpostId;
     }
 
@@ -74,6 +68,6 @@ public class JournalpostId implements Serializable, IndexKey {
     }
 
     public static boolean erGyldig(String input) {
-        return input != null && !(input = input.trim()).isEmpty() && VALID.matcher(input).matches();  // NOSONAR
+        return input != null && !(input = input.trim()).isEmpty() && VALID.matcher(input).matches(); // NOSONAR
     }
 }

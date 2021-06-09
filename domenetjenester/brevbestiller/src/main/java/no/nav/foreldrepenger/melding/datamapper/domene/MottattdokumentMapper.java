@@ -20,16 +20,16 @@ public class MottattdokumentMapper {
     public static LocalDate finnSøknadsdatoFraMottatteDokumenter(Behandling behandling, List<MottattDokument> mottatteDokumenter) {
         return mottatteDokumenter.stream()
                 .filter(dok -> BehandlingMapper.gjelderEndringsøknad(behandling) ? velgEndringssøknad(dok) : velgSøknad(dok))
-                .sorted(Comparator.comparing(MottattDokument::getMottattDato).reversed())
+                .sorted(Comparator.comparing(MottattDokument::mottattDato).reversed())
                 .findFirst()
-                .map(MottattDokument::getMottattDato).orElse(LocalDate.now());
+                .map(MottattDokument::mottattDato).orElse(LocalDate.now());
     }
 
     private static boolean velgEndringssøknad(MottattDokument dok) {
-        return dok.getDokumentTypeId() != null && dok.getDokumentTypeId().erEndringsøknadType();
+        return dok.dokumentTypeId() != null && dok.dokumentTypeId().erEndringsøknadType();
     }
 
     private static boolean velgSøknad(MottattDokument dok) {
-        return dok.getDokumentTypeId() != null && (dok.getDokumentTypeId().erSøknadType() || DokumentKategori.SØKNAD.equals(dok.getDokumentKategori()));
+        return dok.dokumentTypeId() != null && (dok.dokumentTypeId().erSøknadType() || DokumentKategori.SØKNAD.equals(dok.dokumentKategori()));
     }
 }

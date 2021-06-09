@@ -149,10 +149,7 @@ public class KlageHjemsendtBrevMapperTest {
     }
 
     private void mockKlage(Behandling behandling, BehandlingType behandlingType, KlageVurdering klageVurdering) {
-        KlageVurderingResultat klageVurderingResultat = KlageVurderingResultat.ny()
-                .medFritekstTilbrev("FRITEKST")
-                .medKlageVurdering(klageVurdering)
-                .build();
+        KlageVurderingResultat klageVurderingResultat = new KlageVurderingResultat(klageVurdering, "FRITEKST");
         Klage klage = Klage.ny()
                 .medPåklagdBehandlingType(behandlingType)
                 .medKlageVurderingResultatNK(klageVurderingResultat)

@@ -15,7 +15,6 @@ import org.xml.sax.SAXException;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.brevbestiller.XmlUtil;
-import no.nav.foreldrepenger.melding.datamapper.DokumentMapperFeil;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.IAYMapper;
@@ -36,6 +35,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.inntektsmeldingfortidl
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.ytelsefordeling.UtsettelseÅrsak;
 import no.nav.foreldrepenger.xmlutils.JaxbHelper;
+import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.INNTEKTSMELDING_FOR_TIDLIG_DOK)
@@ -46,7 +46,7 @@ public class InntektsmeldingFørSøknadBrevMapper extends DokumentTypeMapper {
     private BrevParametere brevParametere;
 
     public InntektsmeldingFørSøknadBrevMapper() {
-        //CDI
+        // CDI
     }
 
     @Inject
@@ -56,7 +56,8 @@ public class InntektsmeldingFørSøknadBrevMapper extends DokumentTypeMapper {
     }
 
     @Override
-    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) throws JAXBException, SAXException, XMLStreamException {
+    public String mapTilBrevXML(FellesType fellesType, DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling)
+            throws JAXBException, SAXException, XMLStreamException {
         InntektArbeidYtelse iay = domeneobjektProvider.hentInntektArbeidYtelse(behandling);
         FagType fagType = mapFagType(behandling, iay, dokumentHendelse);
         JAXBElement<BrevdataType> brevdataTypeJAXBElement = mapintoBrevdataType(fellesType, fagType);
@@ -68,8 +69,8 @@ public class InntektsmeldingFørSøknadBrevMapper extends DokumentTypeMapper {
         fagType.setBehandlingsType(mapToXmlBehandlingsType(behandling.getBehandlingType()));
         Inntektsmelding inntektsmelding = IAYMapper.hentNyesteInntektsmelding(iay);
         fagType.setSokAntallUkerFor(BigInteger.valueOf(brevParametere.getSøkAntallUker()));
-        fagType.setArbeidsgiverNavn(inntektsmelding.getArbeidsgiverNavn());
-        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(inntektsmelding.getInnsendingstidspunkt()));
+        fagType.setArbeidsgiverNavn(inntektsmelding.arbeidsgiverNavn());
+        fagType.setMottattDato(XmlUtil.finnDatoVerdiAvUtenTidSone(inntektsmelding.innsendingstidspunkt()));
         fagType.setPeriodeListe(mapFeriePerioder(inntektsmelding));
         fagType.setYtelseType(YtelseTypeKode.fromValue(dokumentHendelse.getYtelseType().getKode()));
         return fagType;
@@ -81,7 +82,8 @@ public class InntektsmeldingFørSøknadBrevMapper extends DokumentTypeMapper {
         } else if (Objects.equals(behandlingType, BehandlingType.REVURDERING)) {
             return BehandlingsTypeKode.REVURDERING;
         }
-        throw DokumentMapperFeil.innhentDokumentasjonKreverGyldigBehandlingstype(behandlingType.getKode());
+        throw new TekniskException("FPFORMIDLING-875839",
+                String.format("Ugyldig behandlingstype %s for brev med malkode INNHEN.", behandlingType.getKode()));
     }
 
     private JAXBElement<BrevdataType> mapintoBrevdataType(FellesType fellesType, FagType fagType) {
@@ -94,7 +96,7 @@ public class InntektsmeldingFørSøknadBrevMapper extends DokumentTypeMapper {
 
     private PeriodeListeType mapFeriePerioder(Inntektsmelding inntektsmelding) {
         PeriodeListeType periodeListe = objectFactory.createPeriodeListeType();
-        inntektsmelding.getUtsettelsePerioder()
+        inntektsmelding.utsettelsePerioder()
                 .stream()
                 .filter(up -> UtsettelseÅrsak.FERIE.equals(up.getUtsettelseÅrsak()))
                 .forEach(up -> {

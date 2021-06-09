@@ -50,7 +50,7 @@ public class UttakSvpDtoMapper {
     }
 
     private static String getArbeidsgiverNavn(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold, Arbeidsgiver arbeidsgiver) {
-        return arbeidsgiver != null ? arbeidsgiver.getNavn() : brukUttakArbeidType(arbeidsforhold);
+        return arbeidsgiver != null ? arbeidsgiver.navn() : brukUttakArbeidType(arbeidsforhold);
     }
 
     private static String brukUttakArbeidType(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold) {

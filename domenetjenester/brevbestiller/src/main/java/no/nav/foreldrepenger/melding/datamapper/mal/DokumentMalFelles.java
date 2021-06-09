@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.foreldrepenger.melding.datamapper.DokumentBestillerFeil;
+import no.nav.vedtak.exception.TekniskException;
 
 public final class DokumentMalFelles {
 
@@ -58,7 +58,8 @@ public final class DokumentMalFelles {
         try {
             return opprettFlettefelt(feltnavn, feltverdi.toString());
         } catch (RuntimeException e) { //NOSONAR
-            throw DokumentBestillerFeil.feltManglerVerdi(feltnavn, e);
+            throw new TekniskException("FPFORMIDLING-220913",
+            String.format("Kan ikke produsere dokument, obligatorisk felt %s mangler innhold", feltnavn), e);
         }
     }
 
@@ -66,7 +67,8 @@ public final class DokumentMalFelles {
         try {
             return opprettStrukturertFlettefelt(feltnavn, feltverdi.toString());
         } catch (RuntimeException e) { //NOSONAR
-            throw DokumentBestillerFeil.feltManglerVerdi(feltnavn, e);
+            throw new TekniskException("FPFORMIDLING-220913",
+            String.format("Kan ikke produsere dokument, obligatorisk felt %s mangler innhold", feltnavn), e);
         }
     }
 }

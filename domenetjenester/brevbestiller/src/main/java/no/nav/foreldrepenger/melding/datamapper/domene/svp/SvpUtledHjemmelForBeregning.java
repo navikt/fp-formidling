@@ -3,10 +3,10 @@ package no.nav.foreldrepenger.melding.datamapper.domene.svp;
 import static no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper.formaterLovhjemlerForBeregning;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 
 final class SvpUtledHjemmelForBeregning {
 

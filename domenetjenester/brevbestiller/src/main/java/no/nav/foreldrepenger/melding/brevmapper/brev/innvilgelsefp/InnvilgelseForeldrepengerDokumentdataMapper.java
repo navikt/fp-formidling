@@ -88,7 +88,8 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
     }
 
     @Override
-    public InnvilgelseForeldrepengerDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse, Behandling behandling) {
+    public InnvilgelseForeldrepengerDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
+            Behandling behandling) {
         YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
         BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
         Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
@@ -96,16 +97,19 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
         Søknad søknad = hentNyesteSøknad(behandling);
         List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
         FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        Optional<FamilieHendelse> originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling).map(domeneobjektProvider::hentFamiliehendelse);
+        Optional<FamilieHendelse> originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
+                .map(domeneobjektProvider::hentFamiliehendelse);
         FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         Saldoer saldoer = domeneobjektProvider.hentSaldoer(behandling);
 
         var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, dokumentHendelse);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+                dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         avklarFritekst(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        List<Utbetalingsperiode> utbetalingsperioder = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder, beregningsgrunnlag.getBeregningsgrunnlagPerioder());
+        List<Utbetalingsperiode> utbetalingsperioder = UtbetalingsperiodeMapper.mapUtbetalingsperioder(
+                beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder, beregningsgrunnlag.getBeregningsgrunnlagPerioder());
         String konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
         boolean erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
 
@@ -115,8 +119,8 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
                 .medBehandlingType(behandling.getBehandlingType().name())
                 .medBehandlingResultatType(behandling.getBehandlingsresultat().getBehandlingResultatType().name())
                 .medKonsekvensForInnvilgetYtelse(konsekvensForInnvilgetYtelse)
-                .medSøknadsdato(formaterDatoNorsk(søknad.getMottattDato()))
-                .medDekningsgrad(ytelseFordeling.getDekningsgrad().getVerdi())
+                .medSøknadsdato(formaterDatoNorsk(søknad.mottattDato()))
+                .medDekningsgrad(ytelseFordeling.dekningsgrad().getVerdi())
                 .medDagsats(finnDagsats(beregningsresultatFP))
                 .medMånedsbeløp(finnMånedsbeløp(beregningsresultatFP))
                 .medForMyeUtbetalt(forMyeUtbetalt(utbetalingsperioder, behandling))
@@ -136,7 +140,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
                 .medFbEllerRvInnvilget(erFbEllerRvInnvilget(behandling))
                 .medHarInnvilgedePerioder(harInnvilgedePerioder(utbetalingsperioder))
                 .medAntallArbeidsgivere(finnAntallArbeidsgivere(beregningsresultatFP))
-                .medDagerTaptFørTermin(saldoer.getTapteDagerFpff())
+                .medDagerTaptFørTermin(saldoer.tapteDagerFpff())
                 .medDisponibleDager(finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()))
                 .medDisponibleFellesDager(finnDisponibleFellesDager(saldoer))
                 .medSisteDagAvSistePeriode(formaterDatoNorsk(finnSisteDagAvSistePeriode(uttakResultatPerioder)))
@@ -149,20 +153,21 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
 
                 .medKlagefristUker(brevParametere.getKlagefristUker())
                 .medLovhjemlerUttak(UttakMapper.mapLovhjemlerForUttak(uttakResultatPerioder, konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
-                .medLovhjemlerBeregning(FellesMapper.formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
+                .medLovhjemlerBeregning(FellesMapper.formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(),
+                        konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
 
                 .medInkludereUtbetaling(skalInkludereUtbetaling(behandling, utbetalingsperioder))
                 .medInkludereGradering(skalInkludereGradering(behandling, utbetalingsperioder))
                 .medInkludereInnvilget(skalInkludereInnvilget(behandling, utbetalingsperioder, konsekvensForInnvilgetYtelse))
-                .medInkludereAvslag(skalInkludereAvslag(utbetalingsperioder, konsekvensForInnvilgetYtelse))
-                ;
+                .medInkludereAvslag(skalInkludereAvslag(utbetalingsperioder, konsekvensForInnvilgetYtelse));
 
-                mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, dokumentdataBuilder);
+        mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, dokumentdataBuilder);
 
         return dokumentdataBuilder.build();
     }
 
-    private void mapFelterRelatertTilBeregningsgrunnlag(Beregningsgrunnlag beregningsgrunnlag, InnvilgelseForeldrepengerDokumentdata.Builder builder) {
+    private void mapFelterRelatertTilBeregningsgrunnlag(Beregningsgrunnlag beregningsgrunnlag,
+            InnvilgelseForeldrepengerDokumentdata.Builder builder) {
         List<BeregningsgrunnlagRegel> beregningsgrunnlagregler = mapRegelListe(beregningsgrunnlag);
         builder.medBeregningsgrunnlagregler(beregningsgrunnlagregler);
         builder.medBruttoBeregningsgrunnlag(finnBrutto(beregningsgrunnlag));
@@ -175,8 +180,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
     private LocalDate finnSisteDagAvSistePeriode(UttakResultatPerioder uttakResultatPerioder) {
         return Stream.concat(
                 uttakResultatPerioder.getPerioder().stream(),
-                uttakResultatPerioder.getPerioderAnnenPart().stream()
-                ).filter(UttakResultatPeriode::isInnvilget)
+                uttakResultatPerioder.getPerioderAnnenPart().stream()).filter(UttakResultatPeriode::isInnvilget)
                 .map(UttakResultatPeriode::getTom)
                 .max(LocalDate::compareTo)
                 .orElse(null);
@@ -186,19 +190,19 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
         return RelasjonsRolleType.MORA.equals(fagsak.getRelasjonsRolleType());
     }
 
-    private boolean erRevurderingPgaFødselshendelse(Behandling behandling, FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse) {
+    private boolean erRevurderingPgaFødselshendelse(Behandling behandling, FamilieHendelse familieHendelse,
+            Optional<FamilieHendelse> originalFamiliehendelse) {
         return behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_HENDELSE_FØDSEL) ||
                 familieHendelse.isBarnErFødt() && originalFamiliehendelse.map(fh -> !fh.isBarnErFødt()).orElse(false);
     }
 
     private VurderingsKode utledAnnenForelderRettVurdertKode(List<Aksjonspunkt> aksjonspunkter, UttakResultatPerioder uttakResultatPerioder) {
         VurderingsKode annenForelderHarRettVurdert;
-        if (aksjonspunkter.stream().
-                filter(ap -> Objects.equals(ap.getAksjonspunktDefinisjon(), AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT)).
-                anyMatch(ap -> Objects.equals(ap.getAksjonspunktStatus(), AksjonspunktStatus.UTFØRT))) {
+        if (aksjonspunkter.stream()
+                .filter(ap -> Objects.equals(ap.getAksjonspunktDefinisjon(), AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT))
+                .anyMatch(ap -> Objects.equals(ap.getAksjonspunktStatus(), AksjonspunktStatus.UTFØRT))) {
             annenForelderHarRettVurdert = uttakResultatPerioder.isAnnenForelderHarRett() ? VurderingsKode.JA : VurderingsKode.NEI;
-        }
-        else {
+        } else {
             annenForelderHarRettVurdert = VurderingsKode.IKKE_VURDERT;
         }
         return annenForelderHarRettVurdert;
@@ -206,7 +210,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
 
     private VurderingsKode erAleneomsorg(Søknad søknad, UttakResultatPerioder uttakResultatPerioder) {
         VurderingsKode vurderingsKode;
-        if (søknad.getOppgittRettighet().harAleneomsorgForBarnet()) {
+        if (søknad.oppgittRettighet().harAleneomsorgForBarnet()) {
             vurderingsKode = uttakResultatPerioder.isAleneomsorg() ? VurderingsKode.JA : VurderingsKode.NEI;
         } else {
             vurderingsKode = VurderingsKode.IKKE_VURDERT;
@@ -222,7 +226,8 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
         while (søknad.isEmpty() && nåværendeForsøk < maxForsøk) {
             søknad = domeneobjektProvider.hentSøknad(nåværendeBehandling);
             if (søknad.isEmpty()) {
-                Behandling nesteBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(nåværendeBehandling).orElseThrow(IllegalStateException::new);
+                Behandling nesteBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(nåværendeBehandling)
+                        .orElseThrow(IllegalStateException::new);
                 if (nåværendeBehandling.getUuid() == nesteBehandling.getUuid()) {
                     throw new IllegalStateException();
                 }
@@ -234,12 +239,14 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
     }
 
     private String mapKonsekvensForInnvilgetYtelse(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {
-         if (konsekvenserForYtelsen.isEmpty()) {
-             return null;
-         } else if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_UTTAK) && konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING)) {
-                 return "ENDRING_I_BEREGNING_OG_UTTAK";
-         } else  {
-            return konsekvenserForYtelsen.get(0).getKode(); // velger bare den første i listen (finnes ikke koder for andre ev. kombinasjoner)
+        if (konsekvenserForYtelsen.isEmpty()) {
+            return null;
+        } else if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_UTTAK)
+                && konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING)) {
+            return "ENDRING_I_BEREGNING_OG_UTTAK";
+        } else {
+            return konsekvenserForYtelsen.get(0).getKode(); // velger bare den første i listen (finnes ikke koder for andre ev.
+                                                            // kombinasjoner)
         }
     }
 

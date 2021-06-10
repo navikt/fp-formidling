@@ -38,7 +38,7 @@ public class OpprettJournalpostTjeneste {
     }
 
     @Inject
-    public OpprettJournalpostTjeneste(/* @Jersey */Journalpost journalpostRestKlient) {
+    public OpprettJournalpostTjeneste(/* @Jersey */ Journalpost journalpostRestKlient) {
         this.journalpostRestKlient = journalpostRestKlient;
     }
 

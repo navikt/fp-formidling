@@ -32,12 +32,12 @@ public class JerseyDokgenKlient extends AbstractJerseyRestClient implements Dokg
     }
 
     @Override
-    public byte[] genererPdf(String mal, Språkkode språk, Dokumentdata dokumentdata) {
+    public byte[] genererPdf(String mal, Språkkode språk, Dokumentdata data) {
         return Optional.ofNullable(invoke(client.target(baseUri)
                 .path(TEMPLATE)
                 .resolveTemplates(Map.of("mal", mal, "språk", språk.getKode()))
                 .request(APPLICATION_JSON_TYPE)
-                .buildPost(json(dokumentdata)), byte[].class))
+                .buildPost(json(data)), byte[].class))
                 .orElseThrow(() -> new TekniskException(KODE,
                         format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", mal, språk.getKode())));
     }

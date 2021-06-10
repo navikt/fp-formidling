@@ -46,7 +46,7 @@ public class JerseyDokdistKlient extends AbstractJerseyRestClient implements Dok
         Optional.ofNullable(
                 invoke(target
                         .request(APPLICATION_JSON_TYPE)
-                        .buildPost(json(req(id))), DistribuerJournalpostResponse.class))
+                        .buildPost(json(new DistribuerJournalpostRequest(id, FPSAK))), DistribuerJournalpostResponse.class))
                 .ifPresentOrElse(v -> LOG.info("Distribuert {} med bestillingsId {}", id, v.getBestillingsId()),
                         () -> new TekniskException(KODE, format("Fikk tomt svar ved kall til dokdist for %s.", id)));
     }

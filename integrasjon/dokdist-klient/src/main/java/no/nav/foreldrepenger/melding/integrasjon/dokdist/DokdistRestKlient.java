@@ -19,6 +19,12 @@ import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 @Dependent
+@Deprecated
+/**
+ *
+ * @see JerseyDokdistKlient
+ *
+ */
 public class DokdistRestKlient implements Dokdist {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokdistRestKlient.class);
     private static final String DOKDIST_REST_BASE_URL = "dokdist_rest_base.url";

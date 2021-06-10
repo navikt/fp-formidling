@@ -3,6 +3,9 @@ package no.nav.foreldrepenger.melding.integrasjon.dokgen;
 import static java.lang.String.format;
 import static javax.ws.rs.client.Entity.json;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
+import static no.nav.foreldrepenger.melding.geografisk.Språkkode.EN;
+import static no.nav.foreldrepenger.melding.geografisk.Språkkode.NB;
+import static no.nav.foreldrepenger.melding.geografisk.Språkkode.NN;
 
 import java.net.URI;
 import java.util.Map;
@@ -23,7 +26,7 @@ import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 @Dependent
 public class JerseyDokgenKlient extends AbstractJerseyRestClient implements Dokgen {
     private static final String KODE = "FPFORMIDLING-946543";
-    private static final Set<Språkkode> STØTTEDE_SPRÅK = Set.of(Språkkode.NB, Språkkode.NN, Språkkode.EN);
+    private static final Set<Språkkode> STØTTEDE_SPRÅK = Set.of(NB, NN, EN);
     private static final String DOKGEN_REST_BASE_URI = "dokgen_rest_base.url";
     private static final String TEMPLATE = "/template/{mal}/template_{språk}/create-pdf-variation";
     private final URI baseUri;

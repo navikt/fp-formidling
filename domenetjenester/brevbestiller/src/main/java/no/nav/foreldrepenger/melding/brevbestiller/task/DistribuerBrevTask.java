@@ -5,7 +5,7 @@ import static no.nav.foreldrepenger.melding.brevbestiller.task.DistribuerBrevTas
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.melding.integrasjon.dokdist.DokdistRestKlient;
+import no.nav.foreldrepenger.melding.integrasjon.dokdist.Dokdist;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
@@ -17,14 +17,14 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
 
     public static final String TASKTYPE = "formidling.distribuerBrev";
 
-    private DokdistRestKlient dokdistRestKlient;
+    private Dokdist dokdistRestKlient;
 
     public DistribuerBrevTask() {
-        //CDI
+        // CDI
     }
 
     @Inject
-    public DistribuerBrevTask(DokdistRestKlient dokdistRestKlient) {
+    public DistribuerBrevTask(Dokdist dokdistRestKlient) {
         this.dokdistRestKlient = dokdistRestKlient;
     }
 

@@ -51,10 +51,6 @@ public class JerseyDokdistKlient extends AbstractJerseyRestClient implements Dok
                         () -> new TekniskException(KODE, format("Fikk tomt svar ved kall til dokdist for %s.", id)));
     }
 
-    private static DistribuerJournalpostRequest req(JournalpostId id) {
-        return new DistribuerJournalpostRequest(id, FPSAK);
-    }
-
     @Override
     public String toString() {
         return getClass().getSimpleName() + " [target=" + target.getUri() + "]";

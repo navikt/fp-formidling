@@ -1,21 +1,23 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen;
 
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
-import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
-import no.nav.vedtak.konfig.KonfigVerdi;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.Optional;
-import java.util.Set;
+import no.nav.foreldrepenger.konfig.KonfigVerdi;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 @ApplicationScoped
-public class DokgenRestKlient {
+public class DokgenRestKlient implements Dokgen {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokgenRestKlient.class);
     private static final String DOKGEN_REST_BASE_URL = "dokgen_rest_base.url";
     private static final String CREATE_PDF = "/create-pdf-variation";
@@ -25,16 +27,17 @@ public class DokgenRestKlient {
     private String endpointDokgenRestBase;
 
     public DokgenRestKlient() {
-        //CDI
+        // CDI
     }
 
     @Inject
     public DokgenRestKlient(OidcRestClient oidcRestClient,
-                            @KonfigVerdi(DOKGEN_REST_BASE_URL) String endpointDokgenRestBase) {
+            @KonfigVerdi(DOKGEN_REST_BASE_URL) String endpointDokgenRestBase) {
         this.oidcRestClient = oidcRestClient;
         this.endpointDokgenRestBase = endpointDokgenRestBase;
     }
 
+    @Override
     public byte[] genererPdf(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
         Optional<byte[]> pdf;
         try {
@@ -43,10 +46,12 @@ public class DokgenRestKlient {
             LOGGER.info("Kaller Dokgen for generering av mal {} på språk {}", maltype, språkkode.getKode());
             pdf = oidcRestClient.postReturnsOptionalOfByteArray(uriBuilder.build(), dokumentdata);
         } catch (Exception e) {
-            throw new TekniskException("FPFORMIDLING-946544", String.format("Fikk feil ved kall til dokgen for mal %s og språkkode %s", maltype, språkkode.getKode()), e);
+            throw new TekniskException("FPFORMIDLING-946544",
+                    String.format("Fikk feil ved kall til dokgen for mal %s og språkkode %s", maltype, språkkode.getKode()), e);
         }
         if (pdf.isEmpty()) {
-            throw new TekniskException("FPFORMIDLING-946543", String.format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", maltype, språkkode.getKode()));
+            throw new TekniskException("FPFORMIDLING-946543",
+                    String.format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", maltype, språkkode.getKode()));
         }
         return pdf.get();
     }

@@ -34,7 +34,7 @@ import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
@@ -53,7 +53,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DomeneobjektProvider domeneobjektProvider;
     private DokumentRepository dokumentRepository;
-    private DokgenRestKlient dokgenRestKlient;
+    private Dokgen dokgenRestKlient;
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
     private DokumentdataMapperProvider dokumentdataMapperProvider;
     private ProsessTaskRepository prosessTaskRepository;
@@ -68,7 +68,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     public DokgenBrevproduksjonTjeneste(DokumentFellesDataMapper dokumentFellesDataMapper,
             DomeneobjektProvider domeneobjektProvider,
             DokumentRepository dokumentRepository,
-            DokgenRestKlient dokgenRestKlient,
+            /* @Jersey */Dokgen dokgenRestKlient,
             OpprettJournalpostTjeneste opprettJournalpostTjeneste,
             DokumentdataMapperProvider dokumentdataMapperProvider,
             ProsessTaskRepository prosessTaskRepository,
@@ -83,7 +83,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         this.prosessTaskRepository = prosessTaskRepository;
         this.historikkRepository = historikkRepository;
         this.dokprodBrevproduksjonTjeneste = dokprodBrevproduksjonTjeneste;
-    } // NOSONAR
+    }
 
     @Override
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {

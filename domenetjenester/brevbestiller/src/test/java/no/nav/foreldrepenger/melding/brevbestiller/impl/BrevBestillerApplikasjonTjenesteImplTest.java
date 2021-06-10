@@ -45,7 +45,7 @@ import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokdist.Dokdist;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettResponse;
@@ -87,7 +87,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     @Mock
     private DokumentRepository dokumentRepository;
     @Mock
-    private DokgenRestKlient dokgenRestKlient;
+    private Dokgen dokgenRestKlient;
     @Mock
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
     @Mock

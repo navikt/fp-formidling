@@ -22,14 +22,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
+import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.geografisk.PoststedKodeverkRepository;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 import no.nav.foreldrepenger.melding.poststed.PostnummerSynkroniseringTjeneste;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
-import no.nav.vedtak.util.env.Environment;
-
 
 @Path("/forvaltning")
 @ApplicationScoped
@@ -37,7 +36,7 @@ import no.nav.vedtak.util.env.Environment;
 public class ForvaltningRestTjeneste {
     private static final Environment ENVIRONMENT = Environment.current();
 
-    private DokgenRestKlient dokgenRestKlient;
+    private Dokgen dokgenRestKlient;
     private PostnummerSynkroniseringTjeneste postnummerTjeneste;
     private PoststedKodeverkRepository poststedKodeverkRepository;
 
@@ -46,9 +45,9 @@ public class ForvaltningRestTjeneste {
     }
 
     @Inject
-    public ForvaltningRestTjeneste(DokgenRestKlient dokgenRestKlient,
-                                   PostnummerSynkroniseringTjeneste postnummerTjeneste,
-                                   PoststedKodeverkRepository poststedKodeverkRepository) {
+    public ForvaltningRestTjeneste(/* @Jersey */ Dokgen dokgenRestKlient,
+            PostnummerSynkroniseringTjeneste postnummerTjeneste,
+            PoststedKodeverkRepository poststedKodeverkRepository) {
         this.dokgenRestKlient = dokgenRestKlient;
         this.postnummerTjeneste = postnummerTjeneste;
         this.poststedKodeverkRepository = poststedKodeverkRepository;
@@ -58,17 +57,9 @@ public class ForvaltningRestTjeneste {
     @Path("/dokgen-json-til-pdf")
     @Consumes(APPLICATION_JSON)
     @Produces("application/pdf")
-    @Operation(description = "Tar imot en FP-Dokgen JSON og sender den til FP-Dokgen for å lage PDF. Tjenesten er ikke tilgjengelig i produksjon - bruk DEV eller lokalt miljø.",
-            tags = "forvaltning",
-            responses = {
-                    @ApiResponse(responseCode = "200",
-                            description = "Returnerer PDF",
-                            content = @Content(
-                                    mediaType = "application/pdf",
-                                    schema = @Schema(type = "string", format = "byte")
-                            )
-                    )
-            })
+    @Operation(description = "Tar imot en FP-Dokgen JSON og sender den til FP-Dokgen for å lage PDF. Tjenesten er ikke tilgjengelig i produksjon - bruk DEV eller lokalt miljø.", tags = "forvaltning", responses = {
+            @ApiResponse(responseCode = "200", description = "Returnerer PDF", content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "byte")))
+    })
     @BeskyttetRessurs(action = READ, resource = DRIFT)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response dokgenJsonTilPdf(@BeanParam @Valid DokgenJsonTilPdfDto dokgenJsonTilPdfDto) throws Exception {
@@ -77,9 +68,11 @@ public class ForvaltningRestTjeneste {
             return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
         }
 
-        Dokumentdata dokumentdata = (Dokumentdata) DefaultJsonMapper.getObjectMapper().readValue(dokgenJsonTilPdfDto.getDokumentdataJson(), Class.forName(dokgenJsonTilPdfDto.getDokumentdataKlasse()));
+        Dokumentdata dokumentdata = (Dokumentdata) DefaultJsonMapper.getObjectMapper().readValue(dokgenJsonTilPdfDto.getDokumentdataJson(),
+                Class.forName(dokgenJsonTilPdfDto.getDokumentdataKlasse()));
 
-        byte[] resultat = dokgenRestKlient.genererPdf(dokgenJsonTilPdfDto.getMalType(), Språkkode.fraKode(dokgenJsonTilPdfDto.getSpråkKode()), dokumentdata);
+        byte[] resultat = dokgenRestKlient.genererPdf(dokgenJsonTilPdfDto.getMalType(), Språkkode.fraKode(dokgenJsonTilPdfDto.getSpråkKode()),
+                dokumentdata);
 
         Response.ResponseBuilder responseBuilder = Response.ok(resultat);
         responseBuilder.type("application/pdf");

@@ -1,0 +1,56 @@
+package no.nav.foreldrepenger.melding.integrasjon.dokdist;
+
+import static java.lang.String.format;
+import static javax.ws.rs.client.Entity.json;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
+import static no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem.FPSAK;
+
+import java.net.URI;
+import java.util.Optional;
+
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+import javax.ws.rs.client.WebTarget;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import no.nav.foreldrepenger.konfig.KonfigVerdi;
+import no.nav.foreldrepenger.melding.integrasjon.dokdist.dto.DistribuerJournalpostRequest;
+import no.nav.foreldrepenger.melding.integrasjon.dokdist.dto.DistribuerJournalpostResponse;
+import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.felles.integrasjon.rest.jersey.AbstractJerseyRestClient;
+import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
+
+@Dependent
+@Jersey
+public class JerseyDokdistKlient extends AbstractJerseyRestClient implements Dokdist {
+    private static final String KODE = "FPFORMIDLING-647352";
+    private static final Logger LOG = LoggerFactory.getLogger(JerseyDokdistKlient.class);
+    private static final String DOKDIST_REST_BASE_URL = "dokdist_rest_base.url";
+    private static final String DISTRIBUERJOURNALPOST = "/distribuerjournalpost";
+    private final WebTarget target;
+
+    @Inject
+    public JerseyDokdistKlient(
+            @KonfigVerdi(value = DOKDIST_REST_BASE_URL, defaultVerdi = "some sensible default") URI baseUri) {
+        this.target = client.target(baseUri).path(DISTRIBUERJOURNALPOST);
+    }
+
+    @Override
+    public void distribuerJournalpost(JournalpostId id) {
+        LOG.trace("Distribuerer journalpost {} til {}", id, target.getUri());
+        Optional.ofNullable(
+                invoke(target
+                        .request(APPLICATION_JSON_TYPE)
+                        .buildPost(json(new DistribuerJournalpostRequest(id, FPSAK))), DistribuerJournalpostResponse.class))
+                .ifPresentOrElse(v -> LOG.info("Distribuert {} med bestillingsId {}", id, v.getBestillingsId()),
+                        () -> new TekniskException(KODE, format("Fikk tomt svar ved kall til dokdist for %s.", id)));
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [target=" + target.getUri() + "]";
+    }
+}

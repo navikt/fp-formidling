@@ -44,8 +44,8 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
-import no.nav.foreldrepenger.melding.integrasjon.dokdist.DokdistRestKlient;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.DokgenRestKlient;
+import no.nav.foreldrepenger.melding.integrasjon.dokdist.Dokdist;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettResponse;
@@ -87,11 +87,11 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     @Mock
     private DokumentRepository dokumentRepository;
     @Mock
-    private DokgenRestKlient dokgenRestKlient;
+    private Dokgen dokgenRestKlient;
     @Mock
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
     @Mock
-    private DokdistRestKlient dokdistRestKlient;
+    private Dokdist dokdistRestKlient;
     @Mock
     private DokumentMalUtleder dokumentMalUtleder;
     @Mock
@@ -112,12 +112,16 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
 
     @BeforeEach
     public void beforeEach() {
-        dokumentdataMapper = new InnvilgelseEngangstønadDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)), domeneobjektProvider);
+        dokumentdataMapper = new InnvilgelseEngangstønadDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)),
+                domeneobjektProvider);
         navKontaktKonfigurasjon = new NavKontaktKonfigurasjon("1", "2", "3", "4", "5", "6", "7");
         dokumentbestillingDtoMapper = new DokumentbestillingDtoMapper();
         dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, navKontaktKonfigurasjon, virksomhetTjeneste);
-        dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository, dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, prosessTaskRepository, historikkRepository, dokprodBrevproduksjonTjeneste);
-        tjeneste = new BrevBestillerApplikasjonTjenesteImpl(dokumentMalUtleder, domeneobjektProvider, dokumentbestillingDtoMapper, dokprodBrevproduksjonTjeneste, dokgenBrevproduksjonTjeneste);
+        dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
+                dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, prosessTaskRepository, historikkRepository,
+                dokprodBrevproduksjonTjeneste);
+        tjeneste = new BrevBestillerApplikasjonTjenesteImpl(dokumentMalUtleder, domeneobjektProvider, dokumentbestillingDtoMapper,
+                dokprodBrevproduksjonTjeneste, dokgenBrevproduksjonTjeneste);
     }
 
     @Test
@@ -228,7 +232,8 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
                 .medUuid(BEHANDLING_UUID)
                 .medFagsakBackend(fagsakBackend)
                 .medSpråkkode(Språkkode.NB)
-                .leggTilResourceLink(harVerge ? BehandlingResourceLink.ny().medRel("soeker-verge").build() : BehandlingResourceLink.ny().medRel("annet").build())
+                .leggTilResourceLink(
+                        harVerge ? BehandlingResourceLink.ny().medRel("soeker-verge").build() : BehandlingResourceLink.ny().medRel("annet").build())
                 .build();
         when(domeneobjektProvider.hentFagsakBackend(eq(behandling))).thenReturn(fagsakBackend);
         when(domeneobjektProvider.hentBehandling(any(UUID.class))).thenReturn(behandling);
@@ -253,8 +258,10 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
 
     private void mockJournal(DokumentHendelse dokumentHendelse) {
         DokumentOpprettResponse dokumentOpprettResponse = new DokumentOpprettResponse(DOKUMENT_INFO_ID);
-        OpprettJournalpostResponse opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), "", true, List.of(dokumentOpprettResponse));
-        when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true)))
-                .thenReturn(opprettJournalpostResponse);
+        OpprettJournalpostResponse opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), "", true,
+                List.of(dokumentOpprettResponse));
+        when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse),
+                eq(SAKSNUMMER), eq(true)))
+                        .thenReturn(opprettJournalpostResponse);
     }
 }

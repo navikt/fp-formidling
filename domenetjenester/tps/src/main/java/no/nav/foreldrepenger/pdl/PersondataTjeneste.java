@@ -65,8 +65,8 @@ import no.nav.pdl.UtenlandskAdresseResponseProjection;
 import no.nav.pdl.Vegadresse;
 import no.nav.pdl.VegadresseResponseProjection;
 import no.nav.vedtak.exception.VLException;
-import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 import no.nav.vedtak.felles.integrasjon.pdl.Pdl;
+import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 import no.nav.vedtak.konfig.Tid;
 import no.nav.vedtak.util.LRUCache;
 
@@ -74,8 +74,9 @@ import no.nav.vedtak.util.LRUCache;
 public class PersondataTjeneste {
 
     /*
-     * Dokumentasjon adresser: https://navikt.github.io/pdl/#_adresser
-     * Det er brukt TPS-kompatible forretningsregler - se kommentar i bunn av fil for gjeldendeAdresse
+     * Dokumentasjon adresser: https://navikt.github.io/pdl/#_adresser Det er brukt
+     * TPS-kompatible forretningsregler - se kommentar i bunn av fil for
+     * gjeldendeAdresse
      */
 
     private static final String HARDKODET_POSTNR = "XXXX";
@@ -136,32 +137,32 @@ public class PersondataTjeneste {
         var query = new HentPersonQueryRequest();
         query.setIdent(aktørId.getId());
         var projection = new PersonResponseProjection()
-            .navn(new NavnResponseProjection().forkortetNavn().fornavn().mellomnavn().etternavn())
-            .foedsel(new FoedselResponseProjection().foedselsdato())
-            .doedsfall(new DoedsfallResponseProjection().doedsdato())
-            .kjoenn(new KjoennResponseProjection().kjoenn())
-            .folkeregisterpersonstatus(new FolkeregisterpersonstatusResponseProjection().forenkletStatus());
+                .navn(new NavnResponseProjection().forkortetNavn().fornavn().mellomnavn().etternavn())
+                .foedsel(new FoedselResponseProjection().foedselsdato())
+                .doedsfall(new DoedsfallResponseProjection().doedsdato())
+                .kjoenn(new KjoennResponseProjection().kjoenn())
+                .folkeregisterpersonstatus(new FolkeregisterpersonstatusResponseProjection().forenkletStatus());
 
         var person = pdlKlient.hentPerson(query, projection);
 
         var fødselsdato = person.getFoedsel().stream()
-            .map(Foedsel::getFoedselsdato)
-            .filter(Objects::nonNull)
-            .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
+                .map(Foedsel::getFoedselsdato)
+                .filter(Objects::nonNull)
+                .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
         var dødssdato = person.getDoedsfall().stream()
-            .map(Doedsfall::getDoedsdato)
-            .filter(Objects::nonNull)
-            .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
+                .map(Doedsfall::getDoedsdato)
+                .filter(Objects::nonNull)
+                .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
         var pdlStatusDød = person.getFolkeregisterpersonstatus().stream()
-            .map(Folkeregisterpersonstatus::getForen:::kletStatus)
-            .findFirst().map(PersondataTjeneste::harPersonstatusDød).orElse(false);
+                .map(Folkeregisterpersonstatus::getForenkletStatus)
+                .findFirst().map(PersondataTjeneste::harPersonstatusDød).orElse(false);
         return Personinfo.getbuilder(aktørId).medPersonIdent(personIdent)
-            .medNavn(person.getNavn().stream().map(PersondataTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN"))
-            .medFødselsdato(fødselsdato)
-            .medDødsdato(dødssdato)
-            .medNavBrukerKjønn(mapKjønn(person))
-            .medRegistrertDød(pdlStatusDød)
-            .build();
+                .medNavn(person.getNavn().stream().map(PersondataTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN"))
+                .medFødselsdato(fødselsdato)
+                .medDødsdato(dødssdato)
+                .medNavBrukerKjønn(mapKjønn(person))
+                .medRegistrertDød(pdlStatusDød)
+                .build();
     }
 
     public Adresseinfo hentAdresseinformasjon(AktørId aktørId, PersonIdent personIdent) {
@@ -175,23 +176,28 @@ public class PersondataTjeneste {
                         .vegadresse(new VegadresseResponseProjection().adressenavn().husnummer().husbokstav().postnummer())
                         .matrikkeladresse(new MatrikkeladresseResponseProjection().tilleggsnavn().postnummer())
                         .ukjentBosted(new UkjentBostedResponseProjection().bostedskommune())
-                        .utenlandskAdresse(new UtenlandskAdresseResponseProjection().adressenavnNummer().bygningEtasjeLeilighet().postboksNummerNavn().bySted().regionDistriktOmraade().postkode().landkode()))
+                        .utenlandskAdresse(new UtenlandskAdresseResponseProjection().adressenavnNummer().bygningEtasjeLeilighet().postboksNummerNavn()
+                                .bySted().regionDistriktOmraade().postkode().landkode()))
                 .oppholdsadresse(new OppholdsadresseResponseProjection().gyldigFraOgMed().coAdressenavn()
                         .vegadresse(new VegadresseResponseProjection().adressenavn().husnummer().husbokstav().postnummer())
                         .matrikkeladresse(new MatrikkeladresseResponseProjection().tilleggsnavn().postnummer())
-                        .utenlandskAdresse(new UtenlandskAdresseResponseProjection().adressenavnNummer().bygningEtasjeLeilighet().postboksNummerNavn().bySted().regionDistriktOmraade().postkode().landkode()))
+                        .utenlandskAdresse(new UtenlandskAdresseResponseProjection().adressenavnNummer().bygningEtasjeLeilighet().postboksNummerNavn()
+                                .bySted().regionDistriktOmraade().postkode().landkode()))
                 .kontaktadresse(new KontaktadresseResponseProjection().type().gyldigFraOgMed().coAdressenavn()
                         .vegadresse(new VegadresseResponseProjection().adressenavn().husnummer().husbokstav().postnummer())
                         .postboksadresse(new PostboksadresseResponseProjection().postboks().postbokseier().postnummer())
-                        .postadresseIFrittFormat(new PostadresseIFrittFormatResponseProjection().adresselinje1().adresselinje2().adresselinje3().postnummer())
-                        .utenlandskAdresse(new UtenlandskAdresseResponseProjection().adressenavnNummer().bygningEtasjeLeilighet().postboksNummerNavn().bySted().regionDistriktOmraade().postkode().landkode())
-                        .utenlandskAdresseIFrittFormat(new UtenlandskAdresseIFrittFormatResponseProjection().adresselinje1().adresselinje2().adresselinje3().byEllerStedsnavn().postkode().landkode()))
-                ;
+                        .postadresseIFrittFormat(
+                                new PostadresseIFrittFormatResponseProjection().adresselinje1().adresselinje2().adresselinje3().postnummer())
+                        .utenlandskAdresse(new UtenlandskAdresseResponseProjection().adressenavnNummer().bygningEtasjeLeilighet().postboksNummerNavn()
+                                .bySted().regionDistriktOmraade().postkode().landkode())
+                        .utenlandskAdresseIFrittFormat(new UtenlandskAdresseIFrittFormatResponseProjection().adresselinje1().adresselinje2()
+                                .adresselinje3().byEllerStedsnavn().postkode().landkode()));
 
         var person = pdlKlient.hentPerson(query, projection);
 
         var navn = person.getNavn().stream().map(PersondataTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN");
-        // TODO: Avklar om man skal sette personstatus død hvis det foreligger dødsdato !
+        // TODO: Avklar om man skal sette personstatus død hvis det foreligger dødsdato
+        // !
         var pdlStatusDød = person.getFolkeregisterpersonstatus().stream()
                 .map(Folkeregisterpersonstatus::getForenkletStatus)
                 .findFirst().map(PersondataTjeneste::harPersonstatusDød).orElse(false);
@@ -225,44 +231,67 @@ public class PersondataTjeneste {
 
     private static NavBrukerKjønn mapKjønn(Person person) {
         var kode = person.getKjoenn().stream()
-            .map(Kjoenn::getKjoenn)
-            .filter(Objects::nonNull)
-            .findFirst().orElse(KjoennType.UKJENT);
+                .map(Kjoenn::getKjoenn)
+                .filter(Objects::nonNull)
+                .findFirst().orElse(KjoennType.UKJENT);
         if (KjoennType.MANN.equals(kode))
             return NavBrukerKjønn.MANN;
         return KjoennType.KVINNE.equals(kode) ? NavBrukerKjønn.KVINNE : NavBrukerKjønn.UDEFINERT;
     }
 
-    private List<Adresseinfo> mapAdresser(List<Bostedsadresse> bostedsadresser, List<Kontaktadresse> kontaktadresser, List<Oppholdsadresse> oppholdsadresser) {
+    private List<Adresseinfo> mapAdresser(List<Bostedsadresse> bostedsadresser, List<Kontaktadresse> kontaktadresser,
+            List<Oppholdsadresse> oppholdsadresser) {
         List<Adresseinfo> resultat = new ArrayList<>();
-        var bostedFom = bostedsadresser.stream().map(PersondataTjeneste::bostedAdresseFom).filter(Objects::nonNull).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
-        bostedsadresser.stream().map(a -> mapVegadresse(AdresseType.BOSTEDSADRESSE, a.getVegadresse(), a.getCoAdressenavn(), bostedFom)).filter(Objects::nonNull).forEach(resultat::add);
-        bostedsadresser.stream().map(a -> mapMatrikkeladresse(AdresseType.BOSTEDSADRESSE, a.getMatrikkeladresse(), a.getCoAdressenavn(), bostedFom)).filter(Objects::nonNull).forEach(resultat::add);
+        var bostedFom = bostedsadresser.stream().map(PersondataTjeneste::bostedAdresseFom).filter(Objects::nonNull).max(Comparator.naturalOrder())
+                .orElse(Tid.TIDENES_BEGYNNELSE);
+        bostedsadresser.stream().map(a -> mapVegadresse(AdresseType.BOSTEDSADRESSE, a.getVegadresse(), a.getCoAdressenavn(), bostedFom))
+                .filter(Objects::nonNull).forEach(resultat::add);
+        bostedsadresser.stream().map(a -> mapMatrikkeladresse(AdresseType.BOSTEDSADRESSE, a.getMatrikkeladresse(), a.getCoAdressenavn(), bostedFom))
+                .filter(Objects::nonNull).forEach(resultat::add);
         bostedsadresser.stream().map(a -> mapUkjentadresse(a.getUkjentBosted(), bostedFom)).filter(Objects::nonNull).forEach(resultat::add);
-        bostedsadresser.stream().map(a -> mapUtenlandskadresse(AdresseType.BOSTEDSADRESSE, a.getUtenlandskAdresse(), a.getCoAdressenavn(), bostedFom)).filter(Objects::nonNull).forEach(resultat::add);
+        bostedsadresser.stream().map(a -> mapUtenlandskadresse(AdresseType.BOSTEDSADRESSE, a.getUtenlandskAdresse(), a.getCoAdressenavn(), bostedFom))
+                .filter(Objects::nonNull).forEach(resultat::add);
 
-        var oppholdFom = oppholdsadresser.stream().map(Oppholdsadresse::getGyldigFraOgMed).filter(Objects::nonNull).map(PersondataTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
-        oppholdsadresser.stream().map(a -> mapVegadresse(AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE, a.getVegadresse(), a.getCoAdressenavn(), oppholdFom)).filter(Objects::nonNull).forEach(resultat::add);
-        oppholdsadresser.stream().map(a -> mapMatrikkeladresse(AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE, a.getMatrikkeladresse(), a.getCoAdressenavn(), oppholdFom)).filter(Objects::nonNull).forEach(resultat::add);
-        oppholdsadresser.stream().map(a -> mapUtenlandskadresse(AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND, a.getUtenlandskAdresse(), a.getCoAdressenavn(), oppholdFom)).filter(Objects::nonNull).forEach(resultat::add);
+        var oppholdFom = oppholdsadresser.stream().map(Oppholdsadresse::getGyldigFraOgMed).filter(Objects::nonNull)
+                .map(PersondataTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
+        oppholdsadresser.stream()
+                .map(a -> mapVegadresse(AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE, a.getVegadresse(), a.getCoAdressenavn(), oppholdFom))
+                .filter(Objects::nonNull).forEach(resultat::add);
+        oppholdsadresser.stream()
+                .map(a -> mapMatrikkeladresse(AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE, a.getMatrikkeladresse(), a.getCoAdressenavn(), oppholdFom))
+                .filter(Objects::nonNull).forEach(resultat::add);
+        oppholdsadresser.stream().map(
+                a -> mapUtenlandskadresse(AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND, a.getUtenlandskAdresse(), a.getCoAdressenavn(), oppholdFom))
+                .filter(Objects::nonNull).forEach(resultat::add);
 
-        var kontaktFom = kontaktadresser.stream().map(Kontaktadresse::getGyldigFraOgMed).filter(Objects::nonNull).map(PersondataTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
-        kontaktadresser.stream().map(a -> mapVegadresse(AdresseType.POSTADRESSE, a.getVegadresse(), a.getCoAdressenavn(), kontaktFom)).filter(Objects::nonNull).forEach(resultat::add);
-        kontaktadresser.stream().map(a -> mapPostboksadresse(AdresseType.POSTADRESSE, a.getPostboksadresse(), a.getCoAdressenavn(), kontaktFom)).filter(Objects::nonNull).forEach(resultat::add);
-        kontaktadresser.stream().map(a -> mapFriAdresseNorsk(AdresseType.POSTADRESSE, a.getPostadresseIFrittFormat(), a.getCoAdressenavn(), kontaktFom)).filter(Objects::nonNull).forEach(resultat::add);
-        kontaktadresser.stream().map(a -> mapUtenlandskadresse(AdresseType.POSTADRESSE_UTLAND, a.getUtenlandskAdresse(), a.getCoAdressenavn(), kontaktFom)).filter(Objects::nonNull).forEach(resultat::add);
-        kontaktadresser.stream().map(a -> mapFriAdresseUtland(AdresseType.POSTADRESSE_UTLAND, a.getUtenlandskAdresseIFrittFormat(), a.getCoAdressenavn(), kontaktFom)).filter(Objects::nonNull).forEach(resultat::add);
+        var kontaktFom = kontaktadresser.stream().map(Kontaktadresse::getGyldigFraOgMed).filter(Objects::nonNull)
+                .map(PersondataTjeneste::tilLocalDate).max(Comparator.naturalOrder()).orElse(Tid.TIDENES_BEGYNNELSE);
+        kontaktadresser.stream().map(a -> mapVegadresse(AdresseType.POSTADRESSE, a.getVegadresse(), a.getCoAdressenavn(), kontaktFom))
+                .filter(Objects::nonNull).forEach(resultat::add);
+        kontaktadresser.stream().map(a -> mapPostboksadresse(AdresseType.POSTADRESSE, a.getPostboksadresse(), a.getCoAdressenavn(), kontaktFom))
+                .filter(Objects::nonNull).forEach(resultat::add);
+        kontaktadresser.stream()
+                .map(a -> mapFriAdresseNorsk(AdresseType.POSTADRESSE, a.getPostadresseIFrittFormat(), a.getCoAdressenavn(), kontaktFom))
+                .filter(Objects::nonNull).forEach(resultat::add);
+        kontaktadresser.stream()
+                .map(a -> mapUtenlandskadresse(AdresseType.POSTADRESSE_UTLAND, a.getUtenlandskAdresse(), a.getCoAdressenavn(), kontaktFom))
+                .filter(Objects::nonNull).forEach(resultat::add);
+        kontaktadresser.stream()
+                .map(a -> mapFriAdresseUtland(AdresseType.POSTADRESSE_UTLAND, a.getUtenlandskAdresseIFrittFormat(), a.getCoAdressenavn(), kontaktFom))
+                .filter(Objects::nonNull).forEach(resultat::add);
         if (resultat.isEmpty()) {
             resultat.add(Adresseinfo.builder(AdresseType.UKJENT_ADRESSE).medGyldigFom(Tid.TIDENES_BEGYNNELSE).buildTemporary());
         }
         return resultat;
     }
 
-    // TODO: Vurder om man skal bruke flyttedato dersom satt. Gyldigfom ga minst avvik mot tps men kan være en stund etter (el før) flyttedato.
+    // TODO: Vurder om man skal bruke flyttedato dersom satt. Gyldigfom ga minst
+    // avvik mot tps men kan være en stund etter (el før) flyttedato.
     private static LocalDate bostedAdresseFom(Bostedsadresse bostedsadresse) {
         if (bostedsadresse.getGyldigFraOgMed() != null)
             return tilLocalDate(bostedsadresse.getGyldigFraOgMed());
-        return bostedsadresse.getAngittFlyttedato() != null ? LocalDate.parse(bostedsadresse.getAngittFlyttedato(), DateTimeFormatter.ISO_LOCAL_DATE) : null;
+        return bostedsadresse.getAngittFlyttedato() != null ? LocalDate.parse(bostedsadresse.getAngittFlyttedato(), DateTimeFormatter.ISO_LOCAL_DATE)
+                : null;
     }
 
     private static LocalDate tilLocalDate(Date date) {
@@ -342,9 +371,12 @@ public class PersondataTjeneste {
         if (utenlandskAdresse == null)
             return null;
         var coledd = coNavn != null && !coNavn.isBlank() ? coNavn : null;
-        var linje1 = hvisfinnes(utenlandskAdresse.getAdressenavnNummer()) + hvisfinnes(utenlandskAdresse.getBygningEtasjeLeilighet()) + hvisfinnes(utenlandskAdresse.getPostboksNummerNavn());
-        var linje2 = hvisfinnes(utenlandskAdresse.getPostkode()) + hvisfinnes(utenlandskAdresse.getBySted()) + hvisfinnes(utenlandskAdresse.getRegionDistriktOmraade());
-        // TODO: Vurder om postkode bør i postnr og om bysted + region bør i poststed. Var ikke slik med TPS.
+        var linje1 = hvisfinnes(utenlandskAdresse.getAdressenavnNummer()) + hvisfinnes(utenlandskAdresse.getBygningEtasjeLeilighet())
+                + hvisfinnes(utenlandskAdresse.getPostboksNummerNavn());
+        var linje2 = hvisfinnes(utenlandskAdresse.getPostkode()) + hvisfinnes(utenlandskAdresse.getBySted())
+                + hvisfinnes(utenlandskAdresse.getRegionDistriktOmraade());
+        // TODO: Vurder om postkode bør i postnr og om bysted + region bør i poststed.
+        // Var ikke slik med TPS.
         return Adresseinfo.builder(type)
                 .medAdresselinje1(coledd != null ? coledd : linje1)
                 .medAdresselinje2(coledd != null ? linje1 : linje2)
@@ -360,7 +392,8 @@ public class PersondataTjeneste {
             return null;
         var coledd = coNavn != null && !coNavn.isBlank() ? coNavn : null;
         var postlinje = hvisfinnes(utenlandskAdresse.getPostkode()) + hvisfinnes(utenlandskAdresse.getByEllerStedsnavn());
-        // TODO: Vurder om postkode bør i postnr og om bysted + region bør i poststed. Var ikke slik med TPS.
+        // TODO: Vurder om postkode bør i postnr og om bysted + region bør i poststed.
+        // Var ikke slik med TPS.
         if (coledd != null) {
             return Adresseinfo.builder(type)
                     .medAdresselinje1(coledd)
@@ -394,26 +427,29 @@ public class PersondataTjeneste {
     }
 
     /*
-     * Tilpasset forretningsregler fra TPS. Bruker rangering nedenfor med mindre det finnes en bostedsadresse
-     * OBS: Bostedsadresser har en gyldigfom og flyttedato. Nå er brukt gyldigfom ettersom det ga færrest avvik ift TPS.
+     * Tilpasset forretningsregler fra TPS. Bruker rangering nedenfor med mindre det
+     * finnes en bostedsadresse OBS: Bostedsadresser har en gyldigfom og flyttedato.
+     * Nå er brukt gyldigfom ettersom det ga færrest avvik ift TPS.
      */
     private static Adresseinfo velgAdresse(List<Adresseinfo> alleAdresser) {
         var nyesteBostedAdresse = nyesteAdresseAvType(alleAdresser, AdresseType.BOSTEDSADRESSE).orElse(null);
         var rangertAdresse = nyesteAdresseAvType(alleAdresser, AdresseType.POSTADRESSE)
-            .orElseGet(() -> nyesteAdresseAvType(alleAdresser, AdresseType.POSTADRESSE_UTLAND)
-                .orElseGet(() -> nyesteAdresseAvType(alleAdresser, AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE)
-                    .orElseGet(() -> nyesteAdresseAvType(alleAdresser, AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND)
-                        .orElseGet(() -> nyesteAdresseAvType(alleAdresser, AdresseType.BOSTEDSADRESSE)
-                            .orElse(Adresseinfo.builder(AdresseType.UKJENT_ADRESSE).medGyldigFom(Tid.TIDENES_BEGYNNELSE).buildTemporary())
+                .orElseGet(() -> nyesteAdresseAvType(alleAdresser, AdresseType.POSTADRESSE_UTLAND)
+                        .orElseGet(() -> nyesteAdresseAvType(alleAdresser, AdresseType.MIDLERTIDIG_POSTADRESSE_NORGE)
+                                .orElseGet(() -> nyesteAdresseAvType(alleAdresser, AdresseType.MIDLERTIDIG_POSTADRESSE_UTLAND)
+                                        .orElseGet(() -> nyesteAdresseAvType(alleAdresser, AdresseType.BOSTEDSADRESSE)
+                                                .orElse(Adresseinfo.builder(AdresseType.UKJENT_ADRESSE).medGyldigFom(Tid.TIDENES_BEGYNNELSE)
+                                                        .buildTemporary())
 
-                ))));
+                                        ))));
         if (nyesteBostedAdresse != null && nyesteBostedAdresse.getGyldigFom().isAfter(rangertAdresse.getGyldigFom()))
             return nyesteBostedAdresse;
         return rangertAdresse;
     }
 
     private static Optional<Adresseinfo> nyesteAdresseAvType(List<Adresseinfo> alleAdresser, AdresseType adresseType) {
-        return alleAdresser.stream().filter(a -> adresseType.equals(a.getGjeldendePostadresseType())).max(Comparator.comparing(Adresseinfo::getGyldigFom));
+        return alleAdresser.stream().filter(a -> adresseType.equals(a.getGjeldendePostadresseType()))
+                .max(Comparator.comparing(Adresseinfo::getGyldigFom));
     }
 
 }

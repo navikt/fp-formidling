@@ -17,20 +17,20 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
 
     public static final String TASKTYPE = "formidling.distribuerBrev";
 
-    private Dokdist dokdistRestKlient;
+    private Dokdist dokdist;
 
     public DistribuerBrevTask() {
-        // CDI
+
     }
 
     @Inject
-    public DistribuerBrevTask(Dokdist dokdistRestKlient) {
-        this.dokdistRestKlient = dokdistRestKlient;
+    public DistribuerBrevTask(/* @Jersey */Dokdist dokdist) {
+        this.dokdist = dokdist;
     }
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
         JournalpostId journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(BrevTaskProperties.JOURNALPOST_ID));
-        dokdistRestKlient.distribuerJournalpost(journalpostId);
+        dokdist.distribuerJournalpost(journalpostId);
     }
 }

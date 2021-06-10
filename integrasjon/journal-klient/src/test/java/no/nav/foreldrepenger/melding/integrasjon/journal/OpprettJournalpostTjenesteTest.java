@@ -11,13 +11,13 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import no.nav.foreldrepenger.melding.integrasjon.journal.dto.AvsenderMottakerIdType;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.AvsenderMottakerIdType;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettResponse;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostRequest;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
@@ -36,10 +36,10 @@ public class OpprettJournalpostTjenesteTest {
     private OpprettJournalpostTjeneste opprettJournalpost; // objektet vi tester
 
     // Mocks
-    private JournalpostRestKlient journalpostRestKlient = mock(JournalpostRestKlient.class);
+    private Journalpost journalpostRestKlient = mock(JournalpostRestKlient.class);
 
     @BeforeEach
-    public void setup()  {
+    public void setup() {
         opprettJournalpost = new OpprettJournalpostTjeneste(journalpostRestKlient);
 
         OpprettJournalpostResponse response = new OpprettJournalpostResponse(JOURNALPOST_ID, "", true, List.of(new DokumentOpprettResponse("1111")));
@@ -59,7 +59,8 @@ public class OpprettJournalpostTjenesteTest {
         Saksnummer saksnummer = new Saksnummer("153456789");
 
         // Act
-        OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.INNVILGELSE_ENGANGSSTØNAD, dokumentFelles, dokumentHendelse, saksnummer, true);
+        OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
+                dokumentFelles, dokumentHendelse, saksnummer, true);
 
         // Assert
         Mockito.verify(journalpostRestKlient).opprettJournalpost(requestCaptor.capture(), eq(true));

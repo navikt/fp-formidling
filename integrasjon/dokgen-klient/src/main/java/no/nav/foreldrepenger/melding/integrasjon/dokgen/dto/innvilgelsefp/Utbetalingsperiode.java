@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,7 @@ public class Utbetalingsperiode {
     private LocalDate periodeTomDate;
     private long periodeDagsats;
     private int antallTapteDager;
-    private int prioritertUtbetalingsgrad;
+    private BigDecimal prioritertUtbetalingsgrad;
     private List<Arbeidsforhold> arbeidsforholdsliste = new ArrayList<>();
     private Næring næring;
     private List<AnnenAktivitet> annenAktivitetsliste = new ArrayList<>();
@@ -141,8 +143,8 @@ public class Utbetalingsperiode {
             return this;
         }
 
-        public Builder medPrioritertUtbetalingsgrad(int prioritertUtbetalingsgrad) {
-            this.kladd.prioritertUtbetalingsgrad = prioritertUtbetalingsgrad;
+        public Builder medPrioritertUtbetalingsgrad(BigDecimal prioritertUtbetalingsgrad) {
+            this.kladd.prioritertUtbetalingsgrad = prioritertUtbetalingsgrad.setScale(1, RoundingMode.HALF_UP);
             return this;
         }
 

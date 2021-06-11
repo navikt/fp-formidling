@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.Utbeta
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMergerFelles.slåSammenPerioder;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
@@ -93,7 +94,7 @@ public class UtbetalingsperiodeMergerFellesTest {
         utbetalingsperiode1 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2020).build()).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
-        utbetalingsperiode1 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2020).medUtbetalingsgrad(1).build()).build();
+        utbetalingsperiode1 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2020).medUtbetalingsgrad(BigDecimal.ONE).build()).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
         utbetalingsperiode1 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2019).build()).build();

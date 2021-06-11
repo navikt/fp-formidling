@@ -211,11 +211,8 @@ public final class UtbetalingsperiodeMapper {
     private static List<AnnenAktivitet> mapAnnenAktivtetListe(BeregningsresultatPeriode beregningsresultatPeriode,
             UttakResultatPeriode uttakPeriode) {
         List<AnnenAktivitet> annenAktivitetListe = new ArrayList<>();
-        Comparator<AnnenAktivitet> annenAktiviteTypeIsGraderingComparator = (a, b) -> -Boolean.compare(a.isGradering(), b.isGradering()); // - for å
-                                                                                                                                          // reverse
-                                                                                                                                          // rekkefølgen-gradering
-                                                                                                                                          // først i
-                                                                                                                                          // listen
+        // - for å reverse rekkefølgen-gradering først i listen:
+        Comparator<AnnenAktivitet> annenAktiviteTypeIsGraderingComparator = (a, b) -> - Boolean.compare(a.isGradering(), b.isGradering());
         finnAndelerOgUttakAnnenAktivitet(beregningsresultatPeriode, uttakPeriode)
                 .map(UtbetalingsperiodeMapper::mapAnnenAktivitet)
                 .sorted(annenAktiviteTypeIsGraderingComparator)
@@ -229,8 +226,8 @@ public final class UtbetalingsperiodeMapper {
         tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.UttakAktivitet.ifPresent(
                 uttakAktivitet -> {
                     annenAktivitetBuilder.medGradering(uttakAktivitet.getGraderingInnvilget());
-                    annenAktivitetBuilder.medUtbetalingsgrad(uttakAktivitet.getUtbetalingsprosent().intValue());
-                    annenAktivitetBuilder.medProsentArbeid(uttakAktivitet.getArbeidsprosent().intValue());
+                    annenAktivitetBuilder.medUtbetalingsgrad(uttakAktivitet.getUtbetalingsprosent());
+                    annenAktivitetBuilder.medProsentArbeid(uttakAktivitet.getArbeidsprosent());
                 });
         return annenAktivitetBuilder.build();
     }
@@ -264,8 +261,8 @@ public final class UtbetalingsperiodeMapper {
         var næringBuilder = Næring.ny();
 
         if (uttakAktivitet.isPresent()) {
-            næringBuilder.medUtbetalingsgrad((uttakAktivitet.get().getUtbetalingsprosent().intValue()));
-            næringBuilder.medProsentArbeid(uttakAktivitet.get().getArbeidsprosent().intValue());
+            næringBuilder.medUtbetalingsgrad((uttakAktivitet.get().getUtbetalingsprosent()));
+            næringBuilder.medProsentArbeid(uttakAktivitet.get().getArbeidsprosent());
             næringBuilder.medGradering(uttakAktivitet.get().getGraderingInnvilget());
         }
         beregningsgrunnlagAndel.ifPresent(bgAndel -> {
@@ -292,9 +289,8 @@ public final class UtbetalingsperiodeMapper {
                                     .finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel),
                             beregningsgrunnlagPeriode));
         }
-        Comparator<Arbeidsforhold> arbeidsforholdTypeIsGraderingComparator = (a, b) -> -Boolean.compare(a.isGradering(), b.isGradering()); // - for
-                                                                                                                                           // reverse
-                                                                                                                                           // order.
+        // - for reverse order:
+        Comparator<Arbeidsforhold> arbeidsforholdTypeIsGraderingComparator = (a, b) -> - Boolean.compare(a.isGradering(), b.isGradering());
         arbeidsforholdListe.sort(arbeidsforholdTypeIsGraderingComparator);
         return arbeidsforholdListe;
     }
@@ -311,11 +307,11 @@ public final class UtbetalingsperiodeMapper {
         var arbeidsforhold = Arbeidsforhold.ny()
                 .medArbeidsgiverNavn((beregningsresultatAndel.getArbeidsgiver().map(Arbeidsgiver::navn).orElse("Andel")));
         if (uttakAktivitet.isPresent()) {
-            arbeidsforhold.medProsentArbeid(uttakAktivitet.get().getArbeidsprosent().intValue());
-            arbeidsforhold.medUtbetalingsgrad(uttakAktivitet.get().getUtbetalingsprosent().intValue());
+            arbeidsforhold.medProsentArbeid(uttakAktivitet.get().getArbeidsprosent());
+            arbeidsforhold.medUtbetalingsgrad(uttakAktivitet.get().getUtbetalingsprosent());
             arbeidsforhold.medGradering(uttakAktivitet.get().getGraderingInnvilget());
         }
-        arbeidsforhold.medStillingsprosent(beregningsresultatAndel.getStillingsprosent().intValue());
+        arbeidsforhold.medStillingsprosent(beregningsresultatAndel.getStillingsprosent());
         beregningsgrunnlagAndel.ifPresent(bgAndel -> {
             final BeregningsgrunnlagPrStatusOgAndel statusOgAndel = beregningsgrunnlagAndel.get();
             statusOgAndel.getBgAndelArbeidsforhold().ifPresent(bgAndelArbeidsforhold -> {
@@ -344,20 +340,37 @@ public final class UtbetalingsperiodeMapper {
         }
     }
 
-    private static int finnPrioritertUtbetalingsgrad(List<Arbeidsforhold> arbeidsfoholdListe, Næring næring,
-            List<AnnenAktivitet> annenAktivitetListe) {
-        int resultat = 0;
-        if (arbeidsfoholdListe != null && arbeidsfoholdListe.size() > 0) {
-            resultat = arbeidsfoholdListe.stream().map(Arbeidsforhold::getUtbetalingsgrad).max(Integer::compareTo).orElse(0);
+    private static BigDecimal finnPrioritertUtbetalingsgrad(List<Arbeidsforhold> arbeidsfoholdListe, Næring næring, List<AnnenAktivitet> annenAktivitetListe) {
+        // TODO(JEJ): Denne logikken er midlertidig og skal byttes ut når vi får avklart reglene
+        BigDecimal resultat = BigDecimal.ZERO;
+        if (arbeidsfoholdListe != null && arbeidsfoholdListe.size() == 1) {
+            resultat = arbeidsfoholdListe.get(0).getUtbetalingsgrad() != null ? arbeidsfoholdListe.get(0).getUtbetalingsgrad() : BigDecimal.ZERO;
+        } else if (arbeidsfoholdListe != null && arbeidsfoholdListe.size() > 1) {
+            Optional<Arbeidsforhold> arbeidsforholdMedGradering = arbeidsfoholdListe.stream().filter(Arbeidsforhold::isGradering).findFirst();
+            if (arbeidsforholdMedGradering.isPresent()) {
+                resultat = arbeidsforholdMedGradering.get().getUtbetalingsgrad();
+            } else {
+                resultat = arbeidsfoholdListe.stream().filter(a -> a.getUtbetalingsgrad() != null).findFirst().map(Arbeidsforhold::getUtbetalingsgrad).orElse(BigDecimal.ZERO);
+            }
         }
-        if (resultat == 0 && næring != null) {
-            resultat = næring.getUtbetalingsgrad();
+
+        if (resultat.equals(BigDecimal.ZERO) && næring != null) {
+            resultat = næring.getUtbetalingsgrad() != null ? næring.getUtbetalingsgrad() : BigDecimal.ZERO;
         }
-        if (resultat == 0 && annenAktivitetListe != null && annenAktivitetListe.size() > 0) {
-            resultat = annenAktivitetListe.stream().map(AnnenAktivitet::getUtbetalingsgrad).max(Integer::compareTo).orElse(0);
+
+        if (resultat.equals(BigDecimal.ZERO) && annenAktivitetListe != null && annenAktivitetListe.size() == 1) {
+            resultat = annenAktivitetListe.get(0).getUtbetalingsgrad() != null ? annenAktivitetListe.get(0).getUtbetalingsgrad() : BigDecimal.ZERO;
+        } else if (annenAktivitetListe != null && annenAktivitetListe.size() > 1) {
+            Optional<AnnenAktivitet> annenAktivitetMedGradering = annenAktivitetListe.stream().filter(AnnenAktivitet::isGradering).findFirst();
+            if (annenAktivitetMedGradering.isPresent()) {
+                resultat = annenAktivitetMedGradering.get().getUtbetalingsgrad() != null ? annenAktivitetMedGradering.get().getUtbetalingsgrad() : BigDecimal.ZERO;
+            } else {
+                resultat = annenAktivitetListe.stream().filter(a -> a.getUtbetalingsgrad() != null).findFirst().map(AnnenAktivitet::getUtbetalingsgrad).orElse(BigDecimal.ZERO);
+            }
         }
-        if (resultat > 100) {
-            resultat = 100;
+
+        if (resultat.compareTo(BigDecimal.valueOf(100)) > 0) {
+            resultat = BigDecimal.valueOf(100);
         }
         return resultat;
     }

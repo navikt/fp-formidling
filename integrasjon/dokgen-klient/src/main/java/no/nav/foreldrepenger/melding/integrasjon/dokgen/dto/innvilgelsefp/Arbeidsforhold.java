@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -8,9 +10,9 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 public class Arbeidsforhold {
     private String arbeidsgiverNavn;
     private boolean gradering;
-    private int prosentArbeid;
-    private int stillingsprosent;
-    private int utbetalingsgrad;
+    private BigDecimal prosentArbeid;
+    private BigDecimal stillingsprosent;
+    private BigDecimal utbetalingsgrad;
     private NaturalytelseEndringType naturalytelseEndringType;
     private String naturalytelseEndringDato;
     private long naturalytelseNyDagsats;
@@ -19,7 +21,7 @@ public class Arbeidsforhold {
         return gradering;
     }
 
-    public int getUtbetalingsgrad() {
+    public BigDecimal getUtbetalingsgrad() {
         return utbetalingsgrad;
     }
 
@@ -77,18 +79,18 @@ public class Arbeidsforhold {
             return this;
         }
 
-        public Builder medProsentArbeid(int prosentArbeid) {
-            this.kladd.prosentArbeid = prosentArbeid;
+        public Builder medProsentArbeid(BigDecimal prosentArbeid) {
+            this.kladd.prosentArbeid = prosentArbeid.setScale(1, RoundingMode.HALF_UP);
             return this;
         }
 
-        public Builder medStillingsprosent(int stillingsprosent) {
-            this.kladd.stillingsprosent = stillingsprosent;
+        public Builder medStillingsprosent(BigDecimal stillingsprosent) {
+            this.kladd.stillingsprosent = stillingsprosent.setScale(1, RoundingMode.HALF_UP);
             return this;
         }
 
-        public Builder medUtbetalingsgrad(int utbetalingsgrad) {
-            this.kladd.utbetalingsgrad = utbetalingsgrad;
+        public Builder medUtbetalingsgrad(BigDecimal utbetalingsgrad) {
+            this.kladd.utbetalingsgrad = utbetalingsgrad.setScale(1, RoundingMode.HALF_UP);
             return this;
         }
 

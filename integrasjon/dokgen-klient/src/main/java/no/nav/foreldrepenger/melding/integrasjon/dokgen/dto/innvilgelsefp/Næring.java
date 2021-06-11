@@ -1,15 +1,17 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.Objects;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Næring {
     private boolean gradering;
-    private int utbetalingsgrad;
-    private int prosentArbeid;
+    private BigDecimal utbetalingsgrad;
+    private BigDecimal prosentArbeid;
     @JsonIgnore
     private int sistLignedeÅr;
 
@@ -21,7 +23,7 @@ public class Næring {
         return gradering;
     }
 
-    public int getUtbetalingsgrad() {
+    public BigDecimal getUtbetalingsgrad() {
         return utbetalingsgrad;
     }
 
@@ -56,13 +58,13 @@ public class Næring {
             return this;
         }
 
-        public Builder medUtbetalingsgrad(int utbetalingsgrad) {
-            this.kladd.utbetalingsgrad = utbetalingsgrad;
+        public Builder medUtbetalingsgrad(BigDecimal utbetalingsgrad) {
+            this.kladd.utbetalingsgrad = utbetalingsgrad.setScale(1, RoundingMode.HALF_UP);
             return this;
         }
 
-        public Builder medProsentArbeid(int prosentArbeid) {
-            this.kladd.prosentArbeid = prosentArbeid;
+        public Builder medProsentArbeid(BigDecimal prosentArbeid) {
+            this.kladd.prosentArbeid = prosentArbeid.setScale(1, RoundingMode.HALF_UP);
             return this;
         }
 

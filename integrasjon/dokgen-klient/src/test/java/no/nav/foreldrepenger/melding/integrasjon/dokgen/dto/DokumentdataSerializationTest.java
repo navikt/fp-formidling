@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
@@ -45,9 +46,9 @@ public class DokumentdataSerializationTest {
         Arbeidsforhold arbeidsforhold1 = Arbeidsforhold.ny()
                 .medArbeidsgiverNavn("Arbeidsgiver 1")
                 .medGradering(true)
-                .medProsentArbeid(100)
-                .medStillingsprosent(100)
-                .medUtbetalingsgrad(100)
+                .medProsentArbeid(BigDecimal.valueOf(100))
+                .medStillingsprosent(BigDecimal.valueOf(100))
+                .medUtbetalingsgrad(BigDecimal.valueOf(100))
                 .medNaturalytelseEndringType(NaturalytelseEndringType.INGEN_ENDRING)
                 .medNaturalytelseEndringDato(formaterDatoNorsk(LocalDate.now().minusDays(5)))
                 .medNaturalytelseNyDagsats(500)
@@ -55,23 +56,23 @@ public class DokumentdataSerializationTest {
         Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.ny()
                 .medArbeidsgiverNavn("Arbeidsgiver 2")
                 .medGradering(true)
-                .medProsentArbeid(10)
-                .medStillingsprosent(20)
-                .medUtbetalingsgrad(30)
+                .medProsentArbeid(BigDecimal.valueOf(10))
+                .medStillingsprosent(BigDecimal.valueOf(20))
+                .medUtbetalingsgrad(BigDecimal.valueOf(30.55))
                 .medNaturalytelseEndringType(NaturalytelseEndringType.START)
                 .medNaturalytelseEndringDato(formaterDatoNorsk(LocalDate.now().minusDays(50)))
                 .medNaturalytelseNyDagsats(200)
                 .build();
         Næring næring = Næring.ny()
                 .medGradering(true)
-                .medUtbetalingsgrad(60)
-                .medProsentArbeid(70)
+                .medUtbetalingsgrad(BigDecimal.valueOf(60))
+                .medProsentArbeid(BigDecimal.valueOf(70))
                 .build();
         AnnenAktivitet annenAktivitet = AnnenAktivitet.ny()
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
                 .medGradering(true)
-                .medUtbetalingsgrad(20)
-                .medProsentArbeid(30)
+                .medUtbetalingsgrad(BigDecimal.valueOf(20))
+                .medProsentArbeid(BigDecimal.valueOf(30))
                 .build();
         Utbetalingsperiode periode1 = Utbetalingsperiode.ny()
                 .medInnvilget(true)
@@ -80,7 +81,7 @@ public class DokumentdataSerializationTest {
                 .medPeriodeTom(LocalDate.now().minusDays(8))
                 .medPeriodeDagsats(123L)
                 .medAntallTapteDager(10)
-                .medPrioritertUtbetalingsgrad(100)
+                .medPrioritertUtbetalingsgrad(BigDecimal.valueOf(100))
                 .medArbeidsforhold(of(arbeidsforhold1, arbeidsforhold2))
                 .medNæring(næring)
                 .medAnnenAktivitet(of(annenAktivitet))
@@ -92,7 +93,7 @@ public class DokumentdataSerializationTest {
                 .medPeriodeTom(LocalDate.now().minusDays(5))
                 .medPeriodeDagsats(234L)
                 .medAntallTapteDager(11)
-                .medPrioritertUtbetalingsgrad(80)
+                .medPrioritertUtbetalingsgrad(BigDecimal.valueOf(80))
                 .medArbeidsforhold(of(arbeidsforhold1))
                 .medNæring(næring)
                 .medAnnenAktivitet(of(annenAktivitet))

@@ -26,6 +26,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenA
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.NaturalytelseEndringType;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Prosent;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
@@ -226,8 +227,8 @@ public final class UtbetalingsperiodeMapper {
         tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.UttakAktivitet.ifPresent(
                 uttakAktivitet -> {
                     annenAktivitetBuilder.medGradering(uttakAktivitet.getGraderingInnvilget());
-                    annenAktivitetBuilder.medUtbetalingsgrad(uttakAktivitet.getUtbetalingsprosent());
-                    annenAktivitetBuilder.medProsentArbeid(uttakAktivitet.getArbeidsprosent());
+                    annenAktivitetBuilder.medUtbetalingsgrad(Prosent.of(uttakAktivitet.getUtbetalingsprosent()));
+                    annenAktivitetBuilder.medProsentArbeid(Prosent.of(uttakAktivitet.getArbeidsprosent()));
                 });
         return annenAktivitetBuilder.build();
     }
@@ -260,11 +261,11 @@ public final class UtbetalingsperiodeMapper {
             Optional<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagAndel) {
         var næringBuilder = Næring.ny();
 
-        if (uttakAktivitet.isPresent()) {
-            næringBuilder.medUtbetalingsgrad((uttakAktivitet.get().getUtbetalingsprosent()));
-            næringBuilder.medProsentArbeid(uttakAktivitet.get().getArbeidsprosent());
-            næringBuilder.medGradering(uttakAktivitet.get().getGraderingInnvilget());
-        }
+        uttakAktivitet.ifPresent(u -> {
+            næringBuilder.medUtbetalingsgrad(Prosent.of(u.getUtbetalingsprosent()));
+            næringBuilder.medProsentArbeid(Prosent.of(u.getArbeidsprosent()));
+            næringBuilder.medGradering(u.getGraderingInnvilget());
+        });
         beregningsgrunnlagAndel.ifPresent(bgAndel -> {
             if (bgAndel.getBeregningsperiodeTom() != null) {
                 næringBuilder.medSistLignedeÅr(bgAndel.getBeregningsperiodeTom().getYear());
@@ -307,11 +308,11 @@ public final class UtbetalingsperiodeMapper {
         var arbeidsforhold = Arbeidsforhold.ny()
                 .medArbeidsgiverNavn((beregningsresultatAndel.getArbeidsgiver().map(Arbeidsgiver::navn).orElse("Andel")));
         if (uttakAktivitet.isPresent()) {
-            arbeidsforhold.medProsentArbeid(uttakAktivitet.get().getArbeidsprosent());
-            arbeidsforhold.medUtbetalingsgrad(uttakAktivitet.get().getUtbetalingsprosent());
+            arbeidsforhold.medProsentArbeid(Prosent.of(uttakAktivitet.get().getArbeidsprosent()));
+            arbeidsforhold.medUtbetalingsgrad(Prosent.of(uttakAktivitet.get().getUtbetalingsprosent()));
             arbeidsforhold.medGradering(uttakAktivitet.get().getGraderingInnvilget());
         }
-        arbeidsforhold.medStillingsprosent(beregningsresultatAndel.getStillingsprosent());
+        arbeidsforhold.medStillingsprosent(Prosent.of(beregningsresultatAndel.getStillingsprosent()));
         beregningsgrunnlagAndel.ifPresent(bgAndel -> {
             final BeregningsgrunnlagPrStatusOgAndel statusOgAndel = beregningsgrunnlagAndel.get();
             statusOgAndel.getBgAndelArbeidsforhold().ifPresent(bgAndelArbeidsforhold -> {
@@ -340,37 +341,37 @@ public final class UtbetalingsperiodeMapper {
         }
     }
 
-    private static BigDecimal finnPrioritertUtbetalingsgrad(List<Arbeidsforhold> arbeidsfoholdListe, Næring næring, List<AnnenAktivitet> annenAktivitetListe) {
+    private static Prosent finnPrioritertUtbetalingsgrad(List<Arbeidsforhold> arbeidsfoholdListe, Næring næring, List<AnnenAktivitet> annenAktivitetListe) {
         // TODO(JEJ): Denne logikken er midlertidig og skal byttes ut når vi får avklart reglene
-        BigDecimal resultat = BigDecimal.ZERO;
+        Prosent resultat = Prosent.NULL;
         if (arbeidsfoholdListe != null && arbeidsfoholdListe.size() == 1) {
-            resultat = arbeidsfoholdListe.get(0).getUtbetalingsgrad() != null ? arbeidsfoholdListe.get(0).getUtbetalingsgrad() : BigDecimal.ZERO;
+            resultat = arbeidsfoholdListe.get(0).getUtbetalingsgrad() != null ? arbeidsfoholdListe.get(0).getUtbetalingsgrad() : Prosent.NULL;
         } else if (arbeidsfoholdListe != null && arbeidsfoholdListe.size() > 1) {
             Optional<Arbeidsforhold> arbeidsforholdMedGradering = arbeidsfoholdListe.stream().filter(Arbeidsforhold::isGradering).findFirst();
             if (arbeidsforholdMedGradering.isPresent()) {
                 resultat = arbeidsforholdMedGradering.get().getUtbetalingsgrad();
             } else {
-                resultat = arbeidsfoholdListe.stream().filter(a -> a.getUtbetalingsgrad() != null).findFirst().map(Arbeidsforhold::getUtbetalingsgrad).orElse(BigDecimal.ZERO);
+                resultat = arbeidsfoholdListe.stream().filter(a -> a.getUtbetalingsgrad() != null).findFirst().map(Arbeidsforhold::getUtbetalingsgrad).orElse(Prosent.NULL);
             }
         }
 
-        if (resultat.equals(BigDecimal.ZERO) && næring != null) {
-            resultat = næring.getUtbetalingsgrad() != null ? næring.getUtbetalingsgrad() : BigDecimal.ZERO;
+        if (resultat.equals(Prosent.NULL) && næring != null) {
+            resultat = næring.getUtbetalingsgrad() != null ? næring.getUtbetalingsgrad() : Prosent.NULL;
         }
 
-        if (resultat.equals(BigDecimal.ZERO) && annenAktivitetListe != null && annenAktivitetListe.size() == 1) {
-            resultat = annenAktivitetListe.get(0).getUtbetalingsgrad() != null ? annenAktivitetListe.get(0).getUtbetalingsgrad() : BigDecimal.ZERO;
+        if (resultat.equals(Prosent.NULL) && annenAktivitetListe != null && annenAktivitetListe.size() == 1) {
+            resultat = annenAktivitetListe.get(0).getUtbetalingsgrad() != null ? annenAktivitetListe.get(0).getUtbetalingsgrad() : Prosent.NULL;
         } else if (annenAktivitetListe != null && annenAktivitetListe.size() > 1) {
             Optional<AnnenAktivitet> annenAktivitetMedGradering = annenAktivitetListe.stream().filter(AnnenAktivitet::isGradering).findFirst();
             if (annenAktivitetMedGradering.isPresent()) {
-                resultat = annenAktivitetMedGradering.get().getUtbetalingsgrad() != null ? annenAktivitetMedGradering.get().getUtbetalingsgrad() : BigDecimal.ZERO;
+                resultat = annenAktivitetMedGradering.get().getUtbetalingsgrad() != null ? annenAktivitetMedGradering.get().getUtbetalingsgrad() : Prosent.NULL;
             } else {
-                resultat = annenAktivitetListe.stream().filter(a -> a.getUtbetalingsgrad() != null).findFirst().map(AnnenAktivitet::getUtbetalingsgrad).orElse(BigDecimal.ZERO);
+                resultat = annenAktivitetListe.stream().filter(a -> a.getUtbetalingsgrad() != null).findFirst().map(AnnenAktivitet::getUtbetalingsgrad).orElse(Prosent.NULL);
             }
         }
 
-        if (resultat.compareTo(BigDecimal.valueOf(100)) > 0) {
-            resultat = BigDecimal.valueOf(100);
+        if (resultat.erStørreEnnHundreProsent()) {
+            resultat = Prosent.HUNDRE;
         }
         return resultat;
     }

@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -10,9 +8,9 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 public class Arbeidsforhold {
     private String arbeidsgiverNavn;
     private boolean gradering;
-    private BigDecimal prosentArbeid;
-    private BigDecimal stillingsprosent;
-    private BigDecimal utbetalingsgrad;
+    private Prosent prosentArbeid;
+    private Prosent stillingsprosent;
+    private Prosent utbetalingsgrad;
     private NaturalytelseEndringType naturalytelseEndringType;
     private String naturalytelseEndringDato;
     private long naturalytelseNyDagsats;
@@ -21,7 +19,7 @@ public class Arbeidsforhold {
         return gradering;
     }
 
-    public BigDecimal getUtbetalingsgrad() {
+    public Prosent getUtbetalingsgrad() {
         return utbetalingsgrad;
     }
 
@@ -79,18 +77,18 @@ public class Arbeidsforhold {
             return this;
         }
 
-        public Builder medProsentArbeid(BigDecimal prosentArbeid) {
-            this.kladd.prosentArbeid = prosentArbeid.setScale(1, RoundingMode.HALF_UP);
+        public Builder medProsentArbeid(Prosent prosentArbeid) {
+            this.kladd.prosentArbeid = prosentArbeid;
             return this;
         }
 
-        public Builder medStillingsprosent(BigDecimal stillingsprosent) {
-            this.kladd.stillingsprosent = stillingsprosent.setScale(1, RoundingMode.HALF_UP);
+        public Builder medStillingsprosent(Prosent stillingsprosent) {
+            this.kladd.stillingsprosent = stillingsprosent;
             return this;
         }
 
-        public Builder medUtbetalingsgrad(BigDecimal utbetalingsgrad) {
-            this.kladd.utbetalingsgrad = utbetalingsgrad.setScale(1, RoundingMode.HALF_UP);
+        public Builder medUtbetalingsgrad(Prosent utbetalingsgrad) {
+            this.kladd.utbetalingsgrad = utbetalingsgrad;
             return this;
         }
 

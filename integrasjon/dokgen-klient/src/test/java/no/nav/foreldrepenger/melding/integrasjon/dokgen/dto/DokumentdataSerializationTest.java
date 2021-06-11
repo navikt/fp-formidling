@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForMye
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.InnvilgelseForeldrepengerDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.NaturalytelseEndringType;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Prosent;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
@@ -46,9 +47,9 @@ public class DokumentdataSerializationTest {
         Arbeidsforhold arbeidsforhold1 = Arbeidsforhold.ny()
                 .medArbeidsgiverNavn("Arbeidsgiver 1")
                 .medGradering(true)
-                .medProsentArbeid(BigDecimal.valueOf(100))
-                .medStillingsprosent(BigDecimal.valueOf(100))
-                .medUtbetalingsgrad(BigDecimal.valueOf(100))
+                .medProsentArbeid(Prosent.HUNDRE)
+                .medStillingsprosent(Prosent.HUNDRE)
+                .medUtbetalingsgrad(Prosent.HUNDRE)
                 .medNaturalytelseEndringType(NaturalytelseEndringType.INGEN_ENDRING)
                 .medNaturalytelseEndringDato(formaterDatoNorsk(LocalDate.now().minusDays(5)))
                 .medNaturalytelseNyDagsats(500)
@@ -56,23 +57,23 @@ public class DokumentdataSerializationTest {
         Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.ny()
                 .medArbeidsgiverNavn("Arbeidsgiver 2")
                 .medGradering(true)
-                .medProsentArbeid(BigDecimal.valueOf(10))
-                .medStillingsprosent(BigDecimal.valueOf(20))
-                .medUtbetalingsgrad(BigDecimal.valueOf(30.55))
+                .medProsentArbeid(Prosent.of(BigDecimal.TEN))
+                .medStillingsprosent(Prosent.of(BigDecimal.valueOf(20)))
+                .medUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(30.55)))
                 .medNaturalytelseEndringType(NaturalytelseEndringType.START)
                 .medNaturalytelseEndringDato(formaterDatoNorsk(LocalDate.now().minusDays(50)))
                 .medNaturalytelseNyDagsats(200)
                 .build();
         Næring næring = Næring.ny()
                 .medGradering(true)
-                .medUtbetalingsgrad(BigDecimal.valueOf(60))
-                .medProsentArbeid(BigDecimal.valueOf(70))
+                .medUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(60)))
+                .medProsentArbeid(Prosent.of(BigDecimal.valueOf(70)))
                 .build();
         AnnenAktivitet annenAktivitet = AnnenAktivitet.ny()
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
                 .medGradering(true)
-                .medUtbetalingsgrad(BigDecimal.valueOf(20))
-                .medProsentArbeid(BigDecimal.valueOf(30))
+                .medUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(20)))
+                .medProsentArbeid(Prosent.of(BigDecimal.valueOf(30)))
                 .build();
         Utbetalingsperiode periode1 = Utbetalingsperiode.ny()
                 .medInnvilget(true)
@@ -81,7 +82,7 @@ public class DokumentdataSerializationTest {
                 .medPeriodeTom(LocalDate.now().minusDays(8))
                 .medPeriodeDagsats(123L)
                 .medAntallTapteDager(10)
-                .medPrioritertUtbetalingsgrad(BigDecimal.valueOf(100))
+                .medPrioritertUtbetalingsgrad(Prosent.HUNDRE)
                 .medArbeidsforhold(of(arbeidsforhold1, arbeidsforhold2))
                 .medNæring(næring)
                 .medAnnenAktivitet(of(annenAktivitet))
@@ -93,7 +94,7 @@ public class DokumentdataSerializationTest {
                 .medPeriodeTom(LocalDate.now().minusDays(5))
                 .medPeriodeDagsats(234L)
                 .medAntallTapteDager(11)
-                .medPrioritertUtbetalingsgrad(BigDecimal.valueOf(80))
+                .medPrioritertUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(80)))
                 .medArbeidsforhold(of(arbeidsforhold1))
                 .medNæring(næring)
                 .medAnnenAktivitet(of(annenAktivitet))

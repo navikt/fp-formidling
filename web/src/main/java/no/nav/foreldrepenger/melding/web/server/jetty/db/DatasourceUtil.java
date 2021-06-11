@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import io.micrometer.core.instrument.Metrics;
 import no.nav.foreldrepenger.konfig.Cluster;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil;
@@ -55,7 +56,7 @@ public class DatasourceUtil {
         config.setMaxLifetime(30001);
         config.setConnectionTestQuery("select 1");
         config.setDriverClassName("org.postgresql.Driver");
-
+        config.setMetricRegistry(Metrics.globalRegistry);
         Properties dsProperties = new Properties();
         config.setDataSourceProperties(dsProperties);
 

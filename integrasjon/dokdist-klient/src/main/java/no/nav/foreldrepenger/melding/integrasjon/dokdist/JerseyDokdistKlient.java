@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokdist;
 
-import static java.lang.String.format;
 import static javax.ws.rs.client.Entity.json;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem.FPSAK;
@@ -20,12 +19,12 @@ import no.nav.foreldrepenger.melding.integrasjon.dokdist.dto.DistribuerJournalpo
 import no.nav.foreldrepenger.melding.integrasjon.dokdist.dto.DistribuerJournalpostResponse;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.felles.integrasjon.rest.jersey.AbstractJerseyRestClient;
+import no.nav.vedtak.felles.integrasjon.rest.jersey.AbstractJerseyOidcRestClient;
 import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 
 @Dependent
 @Jersey
-public class JerseyDokdistKlient extends AbstractJerseyRestClient implements Dokdist {
+public class JerseyDokdistKlient extends AbstractJerseyOidcRestClient implements Dokdist {
     private static final String KODE = "FPFORMIDLING-647352";
     private static final Logger LOG = LoggerFactory.getLogger(JerseyDokdistKlient.class);
     private static final String DOKDIST_REST_BASE_URL = "dokdist_rest_base.url";
@@ -35,7 +34,9 @@ public class JerseyDokdistKlient extends AbstractJerseyRestClient implements Dok
     @Inject
     public JerseyDokdistKlient(
             @KonfigVerdi(value = DOKDIST_REST_BASE_URL, defaultVerdi = "some sensible default") URI baseUri) {
-        this.target = client.target(baseUri).path(DISTRIBUERJOURNALPOST);
+        this.target = client
+                .target(baseUri)
+                .path(DISTRIBUERJOURNALPOST);
     }
 
     @Override
@@ -46,7 +47,8 @@ public class JerseyDokdistKlient extends AbstractJerseyRestClient implements Dok
                         .request(APPLICATION_JSON_TYPE)
                         .buildPost(json(new DistribuerJournalpostRequest(id, FPSAK))), DistribuerJournalpostResponse.class))
                 .ifPresentOrElse(v -> LOG.info("Distribuert {} med bestillingsId {}", id, v.getBestillingsId()),
-                        () -> new TekniskException(KODE, format("Fikk tomt svar ved kall til dokdist for %s.", id)));
+                        () -> new TekniskException(KODE, String.format("Fikk tomt svar ved kall til dokdist for %s.", id)));
+        LOG.info("Distribuerert journalpost {} til {} OK", id, target.getUri());
     }
 
     @Override

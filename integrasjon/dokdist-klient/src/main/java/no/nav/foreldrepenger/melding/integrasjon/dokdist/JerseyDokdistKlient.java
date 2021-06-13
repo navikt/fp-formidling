@@ -45,7 +45,7 @@ public class JerseyDokdistKlient extends AbstractJerseyOidcRestClient implements
                         .request(APPLICATION_JSON_TYPE)
                         .buildPost(json(new DistribuerJournalpostRequest(id, FPSAK))), DistribuerJournalpostResponse.class))
                 .ifPresentOrElse(v -> LOG.info("Distribuert {} med bestillingsId {}", id, v.getBestillingsId()),
-                        () -> new TekniskException(KODE, format("Fikk tomt svar ved kall til dokdist for %s.", id)));
+                        () -> new TekniskException(KODE, String.format("Fikk tomt svar ved kall til dokdist for %s.", id)));
     }
 
     @Override

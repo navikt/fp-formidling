@@ -34,7 +34,9 @@ public class JerseyDokdistKlient extends AbstractJerseyOidcRestClient implements
     @Inject
     public JerseyDokdistKlient(
             @KonfigVerdi(value = DOKDIST_REST_BASE_URL, defaultVerdi = "some sensible default") URI baseUri) {
-        this.target = client.target(baseUri).path(DISTRIBUERJOURNALPOST);
+        this.target = client
+                .target(baseUri)
+                .path(DISTRIBUERJOURNALPOST);
     }
 
     @Override
@@ -46,6 +48,7 @@ public class JerseyDokdistKlient extends AbstractJerseyOidcRestClient implements
                         .buildPost(json(new DistribuerJournalpostRequest(id, FPSAK))), DistribuerJournalpostResponse.class))
                 .ifPresentOrElse(v -> LOG.info("Distribuert {} med bestillingsId {}", id, v.getBestillingsId()),
                         () -> new TekniskException(KODE, String.format("Fikk tomt svar ved kall til dokdist for %s.", id)));
+        LOG.info("Distribuerert journalpost {} til {} OK", id, target.getUri());
     }
 
     @Override

@@ -5,6 +5,8 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 import java.net.URI;
 
+import javax.enterprise.context.Dependent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +21,7 @@ import no.nav.vedtak.felles.integrasjon.rest.jersey.AbstractJerseyOidcRestClient
 import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 
 @Jersey
+@Dependent
 public class JerseyJournalpostKlient extends AbstractJerseyOidcRestClient implements Journalpost {
     private static final String FORSØK_FERDIGSTILL = "forsoekFerdigstill";
     private static final Logger LOG = LoggerFactory.getLogger(JerseyJournalpostKlient.class);

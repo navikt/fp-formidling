@@ -5,21 +5,21 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 import java.net.URI;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
+import no.nav.foreldrepenger.melding.integrasjon.journal.dto.FerdigstillJournalpostRequest;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostRequest;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.TilknyttVedleggRequest;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.TilknyttVedleggResponse;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
-import no.nav.vedtak.felles.integrasjon.rest.jersey.AbstractJerseyRestClient;
+import no.nav.vedtak.felles.integrasjon.rest.jersey.AbstractJerseyOidcRestClient;
 import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 
 @Jersey
-public class JerseyJournalpostKlient extends AbstractJerseyRestClient implements Journalpost {
+public class JerseyJournalpostKlient extends AbstractJerseyOidcRestClient implements Journalpost {
     private static final String FORSØK_FERDIGSTILL = "forsoekFerdigstill";
     private static final Logger LOG = LoggerFactory.getLogger(JerseyJournalpostKlient.class);
     private static final String TILKNYTT_VEDLEGG = "/{id}/tilknyttVedlegg";
@@ -51,12 +51,11 @@ public class JerseyJournalpostKlient extends AbstractJerseyRestClient implements
     @Override
     public void ferdigstillJournalpost(JournalpostId id) {
         LOG.trace("Ferdigstiller journalpost {}", id);
-        throw new NotImplementedException("Må se nøyere på dette senere");
-        /*
-         * patch(client.target(dokarkivUrl) .path(FERDIGSTILL) .resolveTemplate("id",
-         * id.getVerdi()).getUri(), new FerdigstillJournalpostRequest("9999"), null);
-         */
-
+        patch(client.target(dokarkivUrl)
+                .path(FERDIGSTILL)
+                .resolveTemplate("id", id.getVerdi())
+                .getUri(), new FerdigstillJournalpostRequest("9999"));
+        LOG.info("Ferdigstilt journalpost OK");
     }
 
     @Override

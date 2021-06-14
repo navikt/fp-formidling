@@ -7,7 +7,7 @@ import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
+import no.nav.foreldrepenger.fpsak.Behandlinger;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
@@ -53,20 +53,19 @@ import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 @ApplicationScoped
 public class DomeneobjektProvider {
 
-    private BehandlingRestKlient behandlingRestKlient;
+    private Behandlinger behandlingRestKlient;
     private ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
-    public DomeneobjektProvider(BehandlingRestKlient behandlingRestKlient,
-                                ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+    public DomeneobjektProvider(Behandlinger behandlingRestKlient,
+            ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         this.behandlingRestKlient = behandlingRestKlient;
         this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }
 
     public DomeneobjektProvider() {
-        //CDI
+        // CDI
     }
-
 
     public FagsakBackend hentFagsakBackend(Behandling behandling) {
         if (behandling.harFagsakBackend()) {
@@ -78,11 +77,13 @@ public class DomeneobjektProvider {
     }
 
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-             return BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getFormidlingRessurser()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+        return BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(
+                behandlingRestKlient.hentBeregningsgrunnlag(behandling.getFormidlingRessurser()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getFormidlingRessurser()).map(dto -> BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+        return behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getFormidlingRessurser())
+                .map(dto -> BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public Behandling hentBehandling(UUID behandlingUuid) {
@@ -96,19 +97,24 @@ public class DomeneobjektProvider {
     }
 
     public BeregningsresultatES hentBeregningsresultatES(Behandling behandling) {
-        return BeregningsresultatDtoMapper.mapBeregningsresultatESFraDto(behandlingRestKlient.hentBeregningsresultatEngangsstønad(behandling.getResourceLinker()));
+        return BeregningsresultatDtoMapper
+                .mapBeregningsresultatESFraDto(behandlingRestKlient.hentBeregningsresultatEngangsstønad(behandling.getResourceLinker()));
     }
 
     public Optional<BeregningsresultatES> hentBeregningsresultatESHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentBeregningsresultatEngangsstønadHvisFinnes(behandling.getResourceLinker()).map(BeregningsresultatDtoMapper::mapBeregningsresultatESFraDto);
+        return behandlingRestKlient.hentBeregningsresultatEngangsstønadHvisFinnes(behandling.getResourceLinker())
+                .map(BeregningsresultatDtoMapper::mapBeregningsresultatESFraDto);
     }
 
     public BeregningsresultatFP hentBeregningsresultatFP(Behandling behandling) {
-        return BeregningsresultatDtoMapper.mapBeregningsresultatFPFraDto(behandlingRestKlient.hentBeregningsresultatForeldrepenger(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+        return BeregningsresultatDtoMapper.mapBeregningsresultatFPFraDto(
+                behandlingRestKlient.hentBeregningsresultatForeldrepenger(behandling.getResourceLinker()),
+                arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<BeregningsresultatFP> hentBeregningsresultatFPHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentBeregningsresultatForeldrepengerHvisFinnes(behandling.getResourceLinker()).map(r -> BeregningsresultatDtoMapper.mapBeregningsresultatFPFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+        return behandlingRestKlient.hentBeregningsresultatForeldrepengerHvisFinnes(behandling.getResourceLinker())
+                .map(r -> BeregningsresultatDtoMapper.mapBeregningsresultatFPFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public FamilieHendelse hentFamiliehendelse(Behandling behandling) {
@@ -116,11 +122,13 @@ public class DomeneobjektProvider {
     }
 
     public Optional<FamilieHendelse> hentFamiliehendelseHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentFamiliehendelseHvisFinnes(behandling.getResourceLinker()).map(FamiliehendelseDtoMapper::mapFamiliehendelsefraDto);
+        return behandlingRestKlient.hentFamiliehendelseHvisFinnes(behandling.getResourceLinker())
+                .map(FamiliehendelseDtoMapper::mapFamiliehendelsefraDto);
     }
 
     public InntektArbeidYtelse hentInntektArbeidYtelse(Behandling behandling) {
-        return IAYDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektArbeidYtelseDto(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+        return IAYDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektArbeidYtelseDto(behandling.getResourceLinker()),
+                arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Innsyn hentInnsyn(Behandling behandling) {
@@ -150,15 +158,18 @@ public class DomeneobjektProvider {
     }
 
     public Optional<UttakResultatPerioder> hentUttaksresultatHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentUttaksresultatHvisFinnes(behandling.getResourceLinker()).map(r -> UttakDtoMapper.mapUttaksresultatPerioderFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+        return behandlingRestKlient.hentUttaksresultatHvisFinnes(behandling.getResourceLinker())
+                .map(r -> UttakDtoMapper.mapUttaksresultatPerioderFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public UttakResultatPerioder hentUttaksresultat(Behandling behandling) {
-        return UttakDtoMapper.mapUttaksresultatPerioderFraDto(behandlingRestKlient.hentUttaksresultat(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+        return UttakDtoMapper.mapUttaksresultatPerioderFraDto(behandlingRestKlient.hentUttaksresultat(behandling.getResourceLinker()),
+                arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public SvpUttaksresultat hentUttaksresultatSvp(Behandling behandling) {
-        return UttakSvpDtoMapper.mapSvpUttaksresultatFraDto(behandlingRestKlient.hentUttaksresultatSvp(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+        return UttakSvpDtoMapper.mapSvpUttaksresultatFraDto(behandlingRestKlient.hentUttaksresultatSvp(behandling.getResourceLinker()),
+                arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public YtelseFordeling hentYtelseFordeling(Behandling behandling) {
@@ -174,7 +185,8 @@ public class DomeneobjektProvider {
     }
 
     public Optional<Verge> hentVerge(Behandling behandling) {
-        return behandlingRestKlient.hentVergeHvisFinnes(behandling.getResourceLinker()).map(v -> new Verge(v.getAktoerId(), v.getOrganisasjonsnummer(), v.getNavn()));
+        return behandlingRestKlient.hentVergeHvisFinnes(behandling.getResourceLinker())
+                .map(v -> new Verge(v.getAktoerId(), v.getOrganisasjonsnummer(), v.getNavn()));
     }
 
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {
@@ -185,10 +197,6 @@ public class DomeneobjektProvider {
         return behandlingRestKlient.hentInnvilgelseForeldrepengerDokumentmal(behandling.getResourceLinker())
                 .map(dto -> DokumentMalType.fraKode(dto.dokumentMalTypeKode()))
                 .orElse(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK);
-    }
-
-    public String getJsonTestdata() {
-        return behandlingRestKlient.getJsonTestdata();
     }
 
 }

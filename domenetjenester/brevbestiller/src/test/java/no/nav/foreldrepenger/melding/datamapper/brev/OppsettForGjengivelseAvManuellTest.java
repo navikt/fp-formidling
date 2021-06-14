@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 public abstract class OppsettForGjengivelseAvManuellTest {
 
@@ -49,7 +50,6 @@ public abstract class OppsettForGjengivelseAvManuellTest {
     protected BehandlingRestKlient behandlingRestKlient;
     protected DomeneobjektProvider domeneobjektProvider;
 
-
     protected void setup(String scenario) throws IOException {
         jsonMapper.registerModule(new Jdk8Module());
         jsonMapper.registerModule(new JavaTimeModule());
@@ -64,7 +64,6 @@ public abstract class OppsettForGjengivelseAvManuellTest {
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne ikke deserialiser fra json til BehandlingDto", e);
         }
-        //behandling = Behandling.builder(behandlingDtoMapper.mapBehandlingFraDto(dto)).build();
         behandling = BehandlingDtoMapper.mapBehandlingFraDto(dto);
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
@@ -77,8 +76,13 @@ public abstract class OppsettForGjengivelseAvManuellTest {
 
     protected class RedirectedToJsonResource extends BehandlingRestKlient {
 
+        public RedirectedToJsonResource(OidcRestClient oidcRestClient, String endpointFpsakRestBase) {
+            super(oidcRestClient, endpointFpsakRestBase);
+            // TODO Auto-generated constructor stub
+        }
+
         @Override
-        protected <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
+        public <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
             JsonNode entity = testdata.get(link.getRel());
             jsonMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             if (entity == null || entity.toString().isEmpty()) {

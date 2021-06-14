@@ -22,7 +22,7 @@ public class AnkeDtoMapper {
                 .medAnkeVurdering(AnkeVurdering.fraKode(ankeResultat.getAnkeVurdering().getKode()))
                 .medFritekstTilBrev(ankeResultat.getFritekstTilBrev())
                 .medAnkeVurderingOmgjoer(AnkeVurderingOmgjør.fraKode(ankeResultat.getAnkeVurderingOmgjoer().getKode()))
-                .medPaAnketBehandlingUuid(ankeResultat.getPaAnketBehandlingUuid());
+                .medPaAnketBehandlingUuid(ankeResultat.getPåAnketKlageBehandlingUuid());
 
         return Optional.of(builder.build());
     }

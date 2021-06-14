@@ -17,8 +17,8 @@ public class AnkeVurderingResultatDto {
     private String fritekstTilBrev;
     @JsonProperty("ankeVurderingOmgjoer")
     private KodeDto ankeVurderingOmgjoer;
-    @JsonProperty("paAnketBehandlingUuid")
-    private UUID paAnketBehandlingUuid;
+    @JsonProperty("påAnketKlageBehandlingUuid")
+    private UUID påAnketKlageBehandlingUuid;
 
 
     public AnkeVurderingResultatDto() {
@@ -36,8 +36,8 @@ public class AnkeVurderingResultatDto {
         return ankeVurderingOmgjoer;
     }
 
-    public UUID getPaAnketBehandlingUuid() {
-        return paAnketBehandlingUuid;
+    public UUID getPåAnketKlageBehandlingUuid() {
+        return påAnketKlageBehandlingUuid;
     }
 
 }

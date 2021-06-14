@@ -72,10 +72,10 @@ public class AnkeOmgjøreVedtakBrevMapper extends FritekstmalBrevMapper {
 
         Optional<Anke> anke = domeneobjektProvider.hentAnkebehandling(behandling);
         if (anke.isPresent()) {
-            UUID klageBehandlingUuid = anke.map(Anke::getPaAnketBehandlingUuid).orElse(null);
-            if (klageBehandlingUuid != null) {
-                Behandling klageBehandling = domeneobjektProvider.hentBehandling(klageBehandlingUuid);
-                vedtaksDato = klageBehandling.getOriginalVedtaksDato() != null ? medFormatering(klageBehandling.getOriginalVedtaksDato()) : null;
+            UUID påAnketKlageBehandlingUuid = anke.map(Anke::getPåAnketKlageBehandlingUuid).orElse(null);
+            if (påAnketKlageBehandlingUuid != null) {
+                Behandling påAnketKlageBehandling = domeneobjektProvider.hentBehandling(påAnketKlageBehandlingUuid);
+                vedtaksDato = påAnketKlageBehandling.getOriginalVedtaksDato() != null ? medFormatering(påAnketKlageBehandling.getOriginalVedtaksDato()) : null;
             }
             if (AnkeVurderingOmgjør.ANKE_TIL_GUNST.equals(anke.get().getAnkeVurderingOmgjoer())) {
                 gunst= true;

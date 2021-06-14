@@ -64,8 +64,6 @@ public abstract class OppsettForGjengivelseAvManuellTest {
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne ikke deserialiser fra json til BehandlingDto", e);
         }
-        // behandling =
-        // Behandling.builder(behandlingDtoMapper.mapBehandlingFraDto(dto)).build();
         behandling = BehandlingDtoMapper.mapBehandlingFraDto(dto);
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())

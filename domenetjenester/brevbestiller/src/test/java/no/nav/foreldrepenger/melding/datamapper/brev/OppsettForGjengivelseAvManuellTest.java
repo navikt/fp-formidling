@@ -28,6 +28,7 @@ import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dtomapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 public abstract class OppsettForGjengivelseAvManuellTest {
 
@@ -76,6 +77,11 @@ public abstract class OppsettForGjengivelseAvManuellTest {
     abstract String mappenHvorFilenMedLoggetTestdataLigger();
 
     protected class RedirectedToJsonResource extends BehandlingRestKlient {
+
+        public RedirectedToJsonResource(OidcRestClient oidcRestClient, String endpointFpsakRestBase) {
+            super(oidcRestClient, endpointFpsakRestBase);
+            // TODO Auto-generated constructor stub
+        }
 
         @Override
         public <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {

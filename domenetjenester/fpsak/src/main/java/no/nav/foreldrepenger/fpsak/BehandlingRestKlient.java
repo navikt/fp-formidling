@@ -19,6 +19,12 @@ import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 @Dependent
+@Deprecated
+/**
+ *
+ * @see JerseyBehandlinger
+ *
+ */
 public class BehandlingRestKlient implements Behandlinger {
     private static final Logger LOGGER = LoggerFactory.getLogger(BehandlingRestKlient.class);
     private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";

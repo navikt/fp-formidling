@@ -34,9 +34,9 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjeng
 
     @BeforeEach
     public void setup() {
-        lenient().when(arbeidsgiverTjeneste.hentArbeidsgiverNavn("973135678")).thenReturn("COLOR LINE CREW AS" );
-        lenient().when(arbeidsgiverTjeneste.hentArbeidsgiverNavn("973861778")).thenReturn("EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET" );
-        behandlingRestKlient = new RedirectedToJsonResource();
+        lenient().when(arbeidsgiverTjeneste.hentArbeidsgiverNavn("973135678")).thenReturn("COLOR LINE CREW AS");
+        lenient().when(arbeidsgiverTjeneste.hentArbeidsgiverNavn("973861778")).thenReturn("EQUINOR ASA AVD STATOIL SOKKELVIRKSOMHET");
+        behandlingRestKlient = new RedirectedToJsonResource(null, null);
         domeneobjektProvider = new DomeneobjektProvider(behandlingRestKlient, arbeidsgiverTjeneste);
         mapper = new InnvilgelseSvangerskapspengerBrevMapper(brevParametere, domeneobjektProvider);
         MockitoAnnotations.openMocks(this);
@@ -73,10 +73,11 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjeng
         assertThat(fagType.getBrødtekst()
                 .contains(
                         "Vi har vurdert saken din på nytt, og du har rett til svangerskapspenger. Vi har derfor endret vedtaket du har fått tidligere."))
-                .isTrue();
+                                .isTrue();
         assertThat(fagType.getBrødtekst()
                 .contains(
-                        "Vi har fått nye inntektsopplysningar. Derfor har vi endra det du får utbetalt.")).isFalse(); // skal ikke kunne komme i kombinasjon med teksten over.
+                        "Vi har fått nye inntektsopplysningar. Derfor har vi endra det du får utbetalt.")).isFalse(); // skal ikke kunne komme i
+                                                                                                                      // kombinasjon med teksten over.
     }
 
     @Test
@@ -93,12 +94,12 @@ public class InnvilgelseSvangerskapspengerBrevMapperTest extends OppsettForGjeng
         assertThat(fagType.getBrødtekst()
                 .contains(
                         "Vi har endret den siste dagen din med svangerskapspenger til 9. juli 2019 fordi du har fått endret termindatoen din."))
-                .isTrue();
+                                .isTrue();
     }
 
     private InnvilgelseSvangerskapspengerBrevMapper medRevurderingData(boolean erEndretFraAvslag,
-                                                                       boolean erUtbetalingEndret,
-                                                                       boolean erTermindatoEndret) {
+            boolean erUtbetalingEndret,
+            boolean erTermindatoEndret) {
         return new InnvilgelseSvangerskapspengerBrevMapper(brevParametere, domeneobjektProvider) {
             @Override
             Brevdata mapTilBrevfelter(DokumentHendelse hendelse, Behandling behandling) {

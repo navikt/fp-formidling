@@ -35,13 +35,13 @@ jobs:
         run: |
           echo "CACHE_KEY=$(expr $(date +%V) - 1 + 1)" >> $GITHUB_ENV
           echo "PREVIOUS_CACHE_KEY=$(expr $(date +%V) - 1)" >> $GITHUB_ENV
-#      - name: Henter maven avhengigheter som er cachet
-#        uses: actions/cache@v2.1.5
-#        with:
-#          path: ~/.m2
-#          key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
-#          restore-keys: |
-#            ${{ runner.os }}-maven-${{ env.PREVIOUS_CACHE_KEY }}
+      - name: Henter maven avhengigheter som er cachet
+        uses: actions/cache@v2.1.5
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ env.CACHE_KEY }}
+          restore-keys: |
+            ${{ runner.os }}-maven-${{ env.PREVIOUS_CACHE_KEY }}
       - uses: actions/setup-java@v2
         with:
           distribution: 'adopt'

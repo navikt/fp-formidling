@@ -8,7 +8,7 @@ public class Anke {
     private AnkeVurdering ankeVurdering;
     private String fritekstTilBrev;
     private AnkeVurderingOmgjør ankeVurderingOmgjoer;
-    private UUID paAnketBehandlingUuid;
+    private UUID påAnketKlageBehandlingUuid;
 
     public static Builder ny() {
         return new Builder();
@@ -26,8 +26,8 @@ public class Anke {
         return ankeVurderingOmgjoer;
     }
 
-    public UUID getPaAnketBehandlingUuid() {
-        return paAnketBehandlingUuid;
+    public UUID getPåAnketKlageBehandlingUuid() {
+        return påAnketKlageBehandlingUuid;
     }
 
     public static final class Builder {
@@ -52,8 +52,8 @@ public class Anke {
             return this;
         }
 
-        public Builder medPaAnketBehandlingUuid(UUID val) {
-            kladd.paAnketBehandlingUuid = val;
+        public Builder medPaAnketBehandlingUuid(UUID påAnketKlageBehandlingUuid) {
+            kladd.påAnketKlageBehandlingUuid = påAnketKlageBehandlingUuid;
             return this;
         }
 

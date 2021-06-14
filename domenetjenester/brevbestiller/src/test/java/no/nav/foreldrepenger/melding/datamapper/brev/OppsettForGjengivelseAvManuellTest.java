@@ -49,7 +49,6 @@ public abstract class OppsettForGjengivelseAvManuellTest {
     protected BehandlingRestKlient behandlingRestKlient;
     protected DomeneobjektProvider domeneobjektProvider;
 
-
     protected void setup(String scenario) throws IOException {
         jsonMapper.registerModule(new Jdk8Module());
         jsonMapper.registerModule(new JavaTimeModule());
@@ -64,7 +63,8 @@ public abstract class OppsettForGjengivelseAvManuellTest {
         } catch (IOException e) {
             throw new IllegalArgumentException("Kunne ikke deserialiser fra json til BehandlingDto", e);
         }
-        //behandling = Behandling.builder(behandlingDtoMapper.mapBehandlingFraDto(dto)).build();
+        // behandling =
+        // Behandling.builder(behandlingDtoMapper.mapBehandlingFraDto(dto)).build();
         behandling = BehandlingDtoMapper.mapBehandlingFraDto(dto);
         dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
@@ -78,7 +78,7 @@ public abstract class OppsettForGjengivelseAvManuellTest {
     protected class RedirectedToJsonResource extends BehandlingRestKlient {
 
         @Override
-        protected <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
+        public <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
             JsonNode entity = testdata.get(link.getRel());
             jsonMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             if (entity == null || entity.toString().isEmpty()) {

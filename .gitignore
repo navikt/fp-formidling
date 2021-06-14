@@ -2,6 +2,7 @@
 .wtpmodules
 target
 .project
+.factoryPath
 .classpath
 outdated-dependencies.txt
 bin

@@ -1,20 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnBrutto;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnSeksG;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.harBruktBruttoBeregningsgrunnlag;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.inntektOverSeksG;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.mapRegelListe;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
@@ -23,11 +8,25 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStat
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
 import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.List;
+
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnBrutto;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnSeksG;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.harBruktBruttoBeregningsgrunnlag;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.inntektOverSeksG;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.mapRegelListe;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class BeregningsgrunnlagMapperTest {
 
-    private static final BigDecimal AVKORTET_PR_ÅR = BigDecimal.valueOf(60);
-    private static final BigDecimal FRILANSER_BRUTTO_PR_ÅR = BigDecimal.valueOf(50000);
+    private static final BigDecimal AVKORTET_PR_ÅR = BigDecimal.valueOf(542987.4);
+    private static final BigDecimal FRILANSER_BRUTTO_PR_ÅR = BigDecimal.valueOf(95406.6);
     private static final BigDecimal ARBEIDSTAKER_BRUTTO_PR_ÅR = BigDecimal.valueOf(100000);
     private static final BigDecimal GRUNNBELØP = BigDecimal.valueOf(50_000);
     private static final long STANDARD_PERIODE_DAGSATS = 100L;
@@ -43,7 +42,7 @@ public class BeregningsgrunnlagMapperTest {
                 .build();
 
         // Act + Assert
-        assertThat(finnBrutto(beregningsgrunnlag)).isEqualTo(FRILANSER_BRUTTO_PR_ÅR.add(AVKORTET_PR_ÅR).longValue());
+        assertThat(finnBrutto(beregningsgrunnlag)).isEqualTo(638394);
     }
 
     @Test
@@ -162,8 +161,8 @@ public class BeregningsgrunnlagMapperTest {
         Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode( of(lagBgpsandel(BigDecimal.valueOf(254232), 978,  AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, false ),
-                        lagBgpsandel(BigDecimal.valueOf(0), 24, AktivitetStatus.ARBEIDSTAKER, true ))))
+                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode( of(lagBgpsandel(BigDecimal.valueOf(254232), null, 978,  AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, false ),
+                        lagBgpsandel(BigDecimal.valueOf(0), null, 24, AktivitetStatus.ARBEIDSTAKER, true ))))
                 .build();
 
         // Act
@@ -231,25 +230,26 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     private List<BeregningsgrunnlagPrStatusOgAndel> lagBraListeFrilanser() {
-        return of(lagBgpsandel(FRILANSER_BRUTTO_PR_ÅR, FRILANSER_DAGSATS, AktivitetStatus.FRILANSER, false),
+        return of(lagBgpsandel(FRILANSER_BRUTTO_PR_ÅR, null, FRILANSER_DAGSATS, AktivitetStatus.FRILANSER, false),
                 lagBgpsaAvkortetArbeidstaker());
     }
 
     private List<BeregningsgrunnlagPrStatusOgAndel> lagBraListeDPOgTilkommetArbforhold() {
-        return of(lagBgpsandel(BigDecimal.valueOf(254232), 978,  AktivitetStatus.DAGPENGER, false ),
-                lagBgpsandel(BigDecimal.valueOf(0), 24, AktivitetStatus.ARBEIDSTAKER, true ));
+        return of(lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, 978,  AktivitetStatus.DAGPENGER, false ),
+                lagBgpsandel(BigDecimal.valueOf(0), AVKORTET_PR_ÅR,24, AktivitetStatus.ARBEIDSTAKER, true ));
 
     }
 
     private List<BeregningsgrunnlagPrStatusOgAndel> lagBraListeDPogUtenTilkommetArbforhold() {
-        return of(lagBgpsandel(BigDecimal.valueOf(254232), 1002,  AktivitetStatus.DAGPENGER, false ),
-                lagBgpsandel(BigDecimal.valueOf(254232), 24,  AktivitetStatus.ARBEIDSTAKER, false ));
+        return of(lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, 1002,  AktivitetStatus.DAGPENGER, false ),
+                lagBgpsandel(BigDecimal.valueOf(254232),  AVKORTET_PR_ÅR, 24,  AktivitetStatus.ARBEIDSTAKER, false ));
 
     }
 
-    private BeregningsgrunnlagPrStatusOgAndel lagBgpsandel(BigDecimal brPrÅr, long dagsats, AktivitetStatus aktivitetStatus, Boolean erTilkommetAndeler ) {
+    private BeregningsgrunnlagPrStatusOgAndel lagBgpsandel(BigDecimal brPrÅr, BigDecimal avkortetPrÅr, long dagsats, AktivitetStatus aktivitetStatus, Boolean erTilkommetAndeler ) {
         return BeregningsgrunnlagPrStatusOgAndel.ny()
                 .medBruttoPrÅr(brPrÅr)
+                .medAvkortetPrÅr(avkortetPrÅr)
                 .medDagsats(dagsats)
                 .medAktivitetStatus(aktivitetStatus)
                 .medErTilkommetAndel(erTilkommetAndeler)

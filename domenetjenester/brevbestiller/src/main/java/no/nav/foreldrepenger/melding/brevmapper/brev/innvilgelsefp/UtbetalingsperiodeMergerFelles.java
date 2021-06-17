@@ -68,7 +68,7 @@ public final class UtbetalingsperiodeMergerFelles {
         return periodeEn.getAnnenAktivitetsliste().size() == periodeTo.getAnnenAktivitetsliste().size();
     }
 
-    private static boolean likArbeidsforholdListe(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    private static boolean harLikeMangeArbeidsforhold(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
         if (periodeEn.getArbeidsforholdsliste() == null && periodeTo.getArbeidsforholdsliste() == null) {
             return true;
         }
@@ -93,7 +93,7 @@ public final class UtbetalingsperiodeMergerFelles {
     }
 
     private static boolean likeArbeidsforhold(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
-        boolean alleMatcher = likArbeidsforholdListe(periodeEn, periodeTo);
+        boolean alleMatcher = harLikeMangeArbeidsforhold(periodeEn, periodeTo);
         if (!alleMatcher) {
             return false;
         }
@@ -137,8 +137,10 @@ public final class UtbetalingsperiodeMergerFelles {
     }
 
     private static boolean likArbeidsforholdType(Arbeidsforhold arb, Arbeidsforhold arb2) {
-        return  Objects.equals(arb.getNaturalytelseEndringDato(), arb2.getNaturalytelseEndringDato()) &&
-                Objects.equals(arb.getNaturalytelseEndringType(), arb2.getNaturalytelseEndringType()) &&
-                Objects.equals(arb.getNaturalytelseNyDagsats(), arb2.getNaturalytelseNyDagsats());
+        return Objects.equals(arb.getArbeidsgiverNavn(), arb2.getArbeidsgiverNavn()) &&
+               Objects.equals(arb.getAktivitetDagsats(), arb2.getAktivitetDagsats()) &&
+               Objects.equals(arb.getNaturalytelseEndringDato(), arb2.getNaturalytelseEndringDato()) &&
+               Objects.equals(arb.getNaturalytelseEndringType(), arb2.getNaturalytelseEndringType()) &&
+               Objects.equals(arb.getNaturalytelseNyDagsats(), arb2.getNaturalytelseNyDagsats());
     }
 }

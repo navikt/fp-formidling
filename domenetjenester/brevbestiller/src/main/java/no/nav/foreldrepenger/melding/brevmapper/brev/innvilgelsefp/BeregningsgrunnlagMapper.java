@@ -1,15 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
@@ -20,6 +10,15 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Beregn
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public final class BeregningsgrunnlagMapper {
 
@@ -36,16 +35,17 @@ public final class BeregningsgrunnlagMapper {
     }
 
     public static long finnBrutto(Beregningsgrunnlag beregningsgrunnlag) {
-        AtomicLong sum = new AtomicLong();
-        finnBgpsaListe(beregningsgrunnlag)
-                .forEach(andel -> {
+        double sum = finnBgpsaListe(beregningsgrunnlag).stream()
+                .mapToDouble(andel -> {
                     if (andel.getAvkortetPrÅr() != null) {
-                        sum.addAndGet(andel.getAvkortetPrÅr().longValue());
+                        return andel.getAvkortetPrÅr().doubleValue();
                     } else if (andel.getBruttoPrÅr() != null) {
-                        sum.addAndGet(andel.getBruttoPrÅr().longValue());
+                        return andel.getBruttoPrÅr().doubleValue();
                     }
-                });
-        return sum.get();
+                    return 0;
+                }).reduce(0, Double::sum);
+
+        return BigDecimal.valueOf(sum).setScale(1, RoundingMode.HALF_UP).longValue();
     }
 
     public static BigDecimal finnSeksG(Beregningsgrunnlag beregningsgrunnlag) {

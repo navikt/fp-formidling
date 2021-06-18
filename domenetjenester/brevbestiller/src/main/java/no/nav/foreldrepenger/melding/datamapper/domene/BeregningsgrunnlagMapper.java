@@ -1,15 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
@@ -25,6 +15,15 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class BeregningsgrunnlagMapper {
     public BeregningsgrunnlagMapper() {
@@ -92,16 +91,17 @@ public class BeregningsgrunnlagMapper {
     }
 
     public static long finnBrutto(Beregningsgrunnlag beregningsgrunnlag) {
-        AtomicLong sum = new AtomicLong();
-        finnBgpsaListe(beregningsgrunnlag)
-                .forEach(andel -> {
+        double sum = finnBgpsaListe(beregningsgrunnlag).stream()
+                .mapToDouble(andel -> {
                     if (andel.getAvkortetPrÅr() != null) {
-                        sum.addAndGet(andel.getAvkortetPrÅr().longValue());
+                        return andel.getAvkortetPrÅr().doubleValue();
                     } else if (andel.getBruttoPrÅr() != null) {
-                        sum.addAndGet(andel.getBruttoPrÅr().longValue());
+                        return andel.getBruttoPrÅr().doubleValue();
                     }
-                });
-        return sum.get();
+                    return 0;
+                }).reduce(0, Double::sum);
+
+        return BigDecimal.valueOf(sum).setScale(1, RoundingMode.HALF_UP).longValue();
     }
 
     public static List<BeregningsgrunnlagPrStatusOgAndel> finnAktivitetStatuserForAndeler(BeregningsgrunnlagAktivitetStatus bgAktivitetStatus,

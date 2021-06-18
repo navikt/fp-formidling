@@ -307,6 +307,7 @@ public final class UtbetalingsperiodeMapper {
             Optional<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagAndel, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         var arbeidsforhold = Arbeidsforhold.ny()
                 .medArbeidsgiverNavn((beregningsresultatAndel.getArbeidsgiver().map(Arbeidsgiver::navn).orElse("Andel")));
+        arbeidsforhold.medAktivitetDagsats(beregningsresultatAndel.getDagsats());
         if (uttakAktivitet.isPresent()) {
             arbeidsforhold.medProsentArbeid(Prosent.of(uttakAktivitet.get().getArbeidsprosent()));
             arbeidsforhold.medUtbetalingsgrad(Prosent.of(uttakAktivitet.get().getUtbetalingsprosent()));

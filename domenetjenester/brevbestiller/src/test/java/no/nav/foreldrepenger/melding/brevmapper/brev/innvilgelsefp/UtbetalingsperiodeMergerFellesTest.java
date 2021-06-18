@@ -126,7 +126,6 @@ public class UtbetalingsperiodeMergerFellesTest {
     public void skal_finne_like_aktiviteter_kompleks_arbeidsforhold() {
         Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medArbeidsforhold(of()).build();
         Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medArbeidsforhold(of()).build();
-
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
         utbetalingsperiode1 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("1").build())).build();
@@ -137,6 +136,22 @@ public class UtbetalingsperiodeMergerFellesTest {
 
         utbetalingsperiode1 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("2").medNaturalytelseNyDagsats(200L).build())).build();
         utbetalingsperiode2 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("2").build())).build();
+        assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
+
+        utbetalingsperiode1 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medArbeidsgiverNavn("navn1").build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medArbeidsgiverNavn("navn1").build())).build();
+        assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
+
+        utbetalingsperiode1 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medArbeidsgiverNavn("navn1").build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medArbeidsgiverNavn("navn2").build())).build();
+        assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
+
+        utbetalingsperiode1 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medAktivitetDagsats(1).build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medAktivitetDagsats(1).build())).build();
+        assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
+
+        utbetalingsperiode1 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medAktivitetDagsats(1).build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medAktivitetDagsats(2).build())).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
     }
 }

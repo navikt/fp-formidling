@@ -3,9 +3,13 @@ package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Arbeidsforhold {
+    @JsonIgnore
+    private int aktivitetDagsats;
+
     private String arbeidsgiverNavn;
     private boolean gradering;
     private Prosent prosentArbeid;
@@ -14,6 +18,14 @@ public class Arbeidsforhold {
     private NaturalytelseEndringType naturalytelseEndringType;
     private String naturalytelseEndringDato;
     private long naturalytelseNyDagsats;
+
+    public int getAktivitetDagsats() {
+        return aktivitetDagsats;
+    }
+
+    public String getArbeidsgiverNavn() {
+        return arbeidsgiverNavn;
+    }
 
     public boolean isGradering() {
         return gradering;
@@ -40,7 +52,8 @@ public class Arbeidsforhold {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         var that = (Arbeidsforhold) object;
-        return Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn)
+        return Objects.equals(aktivitetDagsats, that.aktivitetDagsats)
+                && Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn)
                 && Objects.equals(gradering, that.gradering)
                 && Objects.equals(prosentArbeid, that.prosentArbeid)
                 && Objects.equals(stillingsprosent, that.stillingsprosent)
@@ -52,8 +65,8 @@ public class Arbeidsforhold {
 
     @Override
     public int hashCode() {
-        return Objects.hash(arbeidsgiverNavn, gradering, prosentArbeid, stillingsprosent, utbetalingsgrad,
-                naturalytelseEndringType, naturalytelseEndringDato, naturalytelseNyDagsats);
+        return Objects.hash(aktivitetDagsats, arbeidsgiverNavn, gradering, prosentArbeid, stillingsprosent,
+                utbetalingsgrad, naturalytelseEndringType, naturalytelseEndringDato, naturalytelseNyDagsats);
     }
 
     public static Builder ny() {
@@ -65,6 +78,11 @@ public class Arbeidsforhold {
 
         private Builder() {
             this.kladd = new Arbeidsforhold();
+        }
+
+        public Builder medAktivitetDagsats(int aktivitetDagsats) {
+            this.kladd.aktivitetDagsats = aktivitetDagsats;
+            return this;
         }
 
         public Builder medArbeidsgiverNavn(String arbeidsgiverNavn) {

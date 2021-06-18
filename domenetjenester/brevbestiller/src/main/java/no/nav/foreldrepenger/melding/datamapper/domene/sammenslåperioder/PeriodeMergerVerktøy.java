@@ -108,7 +108,7 @@ public class PeriodeMergerVerktøy {
         return periodeEn.getAnnenAktivitetListe().getAnnenAktivitet().size() == periodeTo.getAnnenAktivitetListe().getAnnenAktivitet().size();
     }
 
-    private static boolean likArbeidsforholdListe(PeriodeType periodeEn, PeriodeType periodeTo) {
+    private static boolean harLikeMangeArbeidsforhold(PeriodeType periodeEn, PeriodeType periodeTo) {
         if (periodeEn.getArbeidsforholdListe() == null && periodeTo.getArbeidsforholdListe() == null) {
             return true;
         }
@@ -133,7 +133,7 @@ public class PeriodeMergerVerktøy {
     }
 
     static boolean likeArbeidsforhold(PeriodeType periodeEn, PeriodeType periodeTo) {
-        boolean alleMatcher = likArbeidsforholdListe(periodeEn, periodeTo);
+        boolean alleMatcher = harLikeMangeArbeidsforhold(periodeEn, periodeTo);
         if (!alleMatcher) {
             return false;
         }
@@ -182,7 +182,8 @@ public class PeriodeMergerVerktøy {
     }
 
     private static boolean likArbeidsforholdType(ArbeidsforholdType arb, ArbeidsforholdType arb2) {
-        return Objects.equals(arb.getAktivitetDagsats(), arb2.getAktivitetDagsats()) &&
+        return Objects.equals(arb.getArbeidsgiverNavn(), arb2.getArbeidsgiverNavn()) &&
+                Objects.equals(arb.getAktivitetDagsats(), arb2.getAktivitetDagsats()) &&
                 Objects.equals(arb.getNaturalytelseEndringDato(), arb2.getNaturalytelseEndringDato()) &&
                 Objects.equals(arb.getNaturalytelseEndringType(), arb2.getNaturalytelseEndringType()) &&
                 Objects.equals(arb.getNaturalytelseNyDagsats(), arb2.getNaturalytelseNyDagsats());

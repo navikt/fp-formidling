@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereAvslag;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereGradering;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInnvilget;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetaling;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -18,6 +9,15 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeid
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
+import org.junit.jupiter.api.Test;
+
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereAvslag;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInnvilget;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereNyeOpplysningerUtbet;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetNårGradering;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetaling;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UndermalInkluderingMapperTest {
 
@@ -153,7 +153,7 @@ public class UndermalInkluderingMapperTest {
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("2010").build();
 
         // Act
-        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode));
+        boolean resultat = skalInkludereUtbetNårGradering(behandling, of(utbetalingsperiode));
 
         // Assert
         assertThat(resultat).isTrue();
@@ -170,7 +170,7 @@ public class UndermalInkluderingMapperTest {
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("1234").build();
 
         // Act
-        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode));
+        boolean resultat = skalInkludereUtbetNårGradering(behandling, of(utbetalingsperiode));
 
         // Assert
         assertThat(resultat).isFalse();
@@ -187,7 +187,7 @@ public class UndermalInkluderingMapperTest {
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("1234").medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(true).build())).build();
 
         // Act
-        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode));
+        boolean resultat = skalInkludereUtbetNårGradering(behandling, of(utbetalingsperiode));
 
         // Assert
         assertThat(resultat).isTrue();
@@ -204,7 +204,7 @@ public class UndermalInkluderingMapperTest {
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("1234").medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(false).build())).build();
 
         // Act
-        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode));
+        boolean resultat = skalInkludereUtbetNårGradering(behandling, of(utbetalingsperiode));
 
         // Assert
         assertThat(resultat).isFalse();
@@ -222,7 +222,7 @@ public class UndermalInkluderingMapperTest {
         Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("2011").build();
 
         // Act
-        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode1, utbetalingsperiode2));
+        boolean resultat = skalInkludereUtbetNårGradering(behandling, of(utbetalingsperiode1, utbetalingsperiode2));
 
         // Assert
         assertThat(resultat).isFalse();
@@ -239,7 +239,7 @@ public class UndermalInkluderingMapperTest {
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("2010").build();
 
         // Act
-        boolean resultat = skalInkludereGradering(behandling, of(utbetalingsperiode));
+        boolean resultat = skalInkludereUtbetNårGradering(behandling, of(utbetalingsperiode));
 
         // Assert
         assertThat(resultat).isFalse();
@@ -401,5 +401,54 @@ public class UndermalInkluderingMapperTest {
 
         // Assert
         assertThat(resultat).isTrue();
+    }
+
+    @Test
+    public void skal_inkludere_skalInkludereNyeOpplysningerUtbet_når_det_er_en_periode_med_gradering() {
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("1234").medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(true).build())).build();
+
+        // Act
+        boolean resultat = skalInkludereNyeOpplysningerUtbet(behandling, of(utbetalingsperiode), 123);
+
+        // Assert
+        assertThat(resultat).isTrue();
+    }
+
+    @Test
+    public void skalInkludereNyeOpplysningerUtbet_når_en_periode_og_gyldig_utstettelse_årsak() {
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("2010").medInnvilget(true).build();
+
+        // Act
+        boolean resultat = skalInkludereNyeOpplysningerUtbet(behandling, of(utbetalingsperiode), 123);
+
+        // Assert
+        assertThat(resultat).isTrue();
+    }
+
+    @Test
+    public void skal_ikke_inkludereNyeOpplysningerUtbet_når_flere_perioder() {
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
+
+        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak("2010").medInnvilget(true).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("2011").medInnvilget(true).build();
+
+        // Act
+        boolean resultat = skalInkludereNyeOpplysningerUtbet(behandling, of(utbetalingsperiode, utbetalingsperiode2), 123);
+
+        // Assert
+        assertThat(resultat).isFalse();
     }
 }

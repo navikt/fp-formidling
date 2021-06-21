@@ -56,8 +56,9 @@ import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.Støna
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnPrematurDagerHvisFinnes;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereAvslag;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereGradering;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInnvilget;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereNyeOpplysningerUtbet;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetNårGradering;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetaling;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFomHvisFinnes;
@@ -111,6 +112,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
                 beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder, beregningsgrunnlag.getBeregningsgrunnlagPerioder());
         String konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
         boolean erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
+        long dagsats = finnDagsats(beregningsresultatFP);
 
         var dokumentdataBuilder = InnvilgelseForeldrepengerDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
@@ -120,7 +122,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
                 .medKonsekvensForInnvilgetYtelse(konsekvensForInnvilgetYtelse)
                 .medSøknadsdato(formaterDatoNorsk(søknad.mottattDato()))
                 .medDekningsgrad(ytelseFordeling.dekningsgrad().getVerdi())
-                .medDagsats(finnDagsats(beregningsresultatFP))
+                .medDagsats(dagsats)
                 .medMånedsbeløp(finnMånedsbeløp(beregningsresultatFP))
                 .medForMyeUtbetalt(forMyeUtbetalt(utbetalingsperioder, behandling))
                 .medInntektMottattArbeidsgiver(erEndringMedEndretInntektsmelding(behandling))
@@ -156,9 +158,10 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
                         konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
 
                 .medInkludereUtbetaling(skalInkludereUtbetaling(behandling, utbetalingsperioder))
-                .medInkludereGradering(skalInkludereGradering(behandling, utbetalingsperioder))
+                .medInkludereUtbetNårGradering(skalInkludereUtbetNårGradering(behandling, utbetalingsperioder))
                 .medInkludereInnvilget(skalInkludereInnvilget(behandling, utbetalingsperioder, konsekvensForInnvilgetYtelse))
-                .medInkludereAvslag(skalInkludereAvslag(utbetalingsperioder, konsekvensForInnvilgetYtelse));
+                .medInkludereAvslag(skalInkludereAvslag(utbetalingsperioder, konsekvensForInnvilgetYtelse))
+                .medInkludereNyeOpplysningerUtbet(skalInkludereNyeOpplysningerUtbet(behandling, utbetalingsperioder, dagsats));
 
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, dokumentdataBuilder);
 

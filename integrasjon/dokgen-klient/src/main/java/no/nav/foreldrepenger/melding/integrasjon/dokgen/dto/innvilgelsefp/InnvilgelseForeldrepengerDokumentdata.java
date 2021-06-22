@@ -1,13 +1,12 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
@@ -60,9 +59,10 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     private String lovhjemlerBeregning;
 
     private boolean inkludereUtbetaling;
-    private boolean inkludereGradering;
+    private boolean inkludereUtbetNårGradering;
     private boolean inkludereInnvilget;
     private boolean inkludereAvslag;
+    private boolean inkludereNyeOpplysningerUtbet;
 
     public String getBehandlingType() {
         return behandlingType;
@@ -236,8 +236,8 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
         return inkludereUtbetaling;
     }
 
-    public boolean getInkludereGradering() {
-        return inkludereGradering;
+    public boolean getInkludereUtbetNårGradering() {
+        return inkludereUtbetNårGradering;
     }
 
     public boolean getInkludereInnvilget() {
@@ -247,6 +247,8 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     public boolean getInkludereAvslag() {
         return inkludereAvslag;
     }
+
+    public boolean getInkludereNyeOpplysningerUtbet() { return inkludereNyeOpplysningerUtbet; }
 
     @Override
     public boolean equals(Object object) {
@@ -298,9 +300,10 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
                 && Objects.equals(lovhjemlerUttak, that.lovhjemlerUttak)
                 && Objects.equals(lovhjemlerBeregning, that.lovhjemlerBeregning)
                 && Objects.equals(inkludereUtbetaling, that.inkludereUtbetaling)
-                && Objects.equals(inkludereGradering, that.inkludereGradering)
+                && Objects.equals(inkludereUtbetNårGradering, that.inkludereUtbetNårGradering)
                 && Objects.equals(inkludereInnvilget, that.inkludereInnvilget)
-                && Objects.equals(inkludereAvslag, that.inkludereAvslag);
+                && Objects.equals(inkludereAvslag, that.inkludereAvslag)
+                && Objects.equals(inkludereNyeOpplysningerUtbet, that.inkludereNyeOpplysningerUtbet);
     }
 
     @Override
@@ -312,7 +315,8 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
                 antallPerioder, harInnvilgedePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager, disponibleFellesDager,
                 sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker, antallBarn, prematurDager,
                 perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler, klagefristUker,
-                lovhjemlerUttak, lovhjemlerBeregning, inkludereUtbetaling, inkludereGradering, inkludereInnvilget, inkludereAvslag);
+                lovhjemlerUttak, lovhjemlerBeregning, inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget, inkludereAvslag,
+                inkludereNyeOpplysningerUtbet);
     }
 
     public static Builder ny() {
@@ -551,8 +555,8 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medInkludereGradering(boolean inkludereGradering) {
-            this.kladd.inkludereGradering = inkludereGradering;
+        public Builder medInkludereUtbetNårGradering(boolean inkludereUtbetNårGradering) {
+            this.kladd.inkludereUtbetNårGradering = inkludereUtbetNårGradering;
             return this;
         }
 
@@ -563,6 +567,11 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
 
         public Builder medInkludereAvslag(boolean inkludereAvslag) {
             this.kladd.inkludereAvslag = inkludereAvslag;
+            return this;
+        }
+
+        public Builder medInkludereNyeOpplysningerUtbet(boolean inkludereNyeOpplysningerUtbet) {
+            this.kladd.inkludereNyeOpplysningerUtbet = inkludereNyeOpplysningerUtbet;
             return this;
         }
 

@@ -36,7 +36,7 @@
 
         <!-- Felles artefakter -->
         <felles.version>3.2.112</felles.version>
-        <prosesstask.version>2.5.34</prosesstask.version>
+        <prosesstask.version>2.6.3</prosesstask.version>
         <kontrakter.version>5.2.3</kontrakter.version>
         <dokprod-kontrakt.version>2.1.8</dokprod-kontrakt.version>
 
@@ -84,16 +84,24 @@
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.kontrakter</groupId>
-                <artifactId>fp-kontrakter-root</artifactId>
-                <version>${kontrakter.version}</version>
+                <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+                <artifactId>felles-integrasjon-pom</artifactId>
+                <version>${felles.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-                <artifactId>felles-integrasjon-pom</artifactId>
-                <version>${felles.version}</version>
+                <!-- Importeres etter felles-root og felles for å sikre samme avhengigheter gjennom hele! -->
+                <groupId>no.nav.vedtak.prosesstask</groupId>
+                <artifactId>prosesstask-root</artifactId>
+                <version>${prosesstask.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.foreldrepenger.kontrakter</groupId>
+                <artifactId>fp-kontrakter-root</artifactId>
+                <version>${kontrakter.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -103,18 +111,6 @@
                 <version>${kontrakter.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.vedtak.prosesstask</groupId>
-                <artifactId>prosesstask-root</artifactId>
-                <version>${prosesstask.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.vedtak.prosesstask</groupId>
-                <artifactId>prosesstask-legacy</artifactId>
-                <version>${prosesstask.version}</version>
             </dependency>
 
             <dependency>

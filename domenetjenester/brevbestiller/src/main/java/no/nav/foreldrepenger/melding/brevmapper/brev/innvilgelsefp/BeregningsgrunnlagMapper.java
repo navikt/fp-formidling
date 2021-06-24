@@ -37,10 +37,10 @@ public final class BeregningsgrunnlagMapper {
     public static long finnBrutto(Beregningsgrunnlag beregningsgrunnlag) {
         double sum = finnBgpsaListe(beregningsgrunnlag).stream()
                 .mapToDouble(andel -> {
-                    if (andel.getAvkortetPrÅr() != null) {
-                        return andel.getAvkortetPrÅr().doubleValue();
-                    } else if (andel.getBruttoPrÅr() != null) {
+                    if (andel.getBruttoPrÅr() != null) {
                         return andel.getBruttoPrÅr().doubleValue();
+                    } else if (andel.getAvkortetPrÅr() != null) {
+                        return andel.getAvkortetPrÅr().doubleValue();
                     }
                     return 0;
                 }).reduce(0, Double::sum);

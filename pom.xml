@@ -35,7 +35,7 @@
         <jacoco.skip>true</jacoco.skip> <!-- default skip coverage -->
 
         <!-- Felles artefakter -->
-        <felles.version>3.2.112</felles.version>
+        <felles.version>3.2.107</felles.version>
         <prosesstask.version>2.6.3</prosesstask.version>
         <kontrakter.version>5.2.3</kontrakter.version>
         <dokprod-kontrakt.version>2.1.8</dokprod-kontrakt.version>

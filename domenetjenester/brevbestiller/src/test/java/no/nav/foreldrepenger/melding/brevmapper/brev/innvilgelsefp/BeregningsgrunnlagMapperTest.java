@@ -27,7 +27,7 @@ public class BeregningsgrunnlagMapperTest {
 
     private static final BigDecimal AVKORTET_PR_ÅR = BigDecimal.valueOf(542987.4);
     private static final BigDecimal FRILANSER_BRUTTO_PR_ÅR = BigDecimal.valueOf(95406.6);
-    private static final BigDecimal ARBEIDSTAKER_BRUTTO_PR_ÅR = BigDecimal.valueOf(100000);
+    private static final BigDecimal ARBEIDSTAKER_BRUTTO_PR_ÅR = BigDecimal.valueOf(1000000);
     private static final BigDecimal GRUNNBELØP = BigDecimal.valueOf(50_000);
     private static final long STANDARD_PERIODE_DAGSATS = 100L;
     private static final long FRILANSER_DAGSATS = 200L;

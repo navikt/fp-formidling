@@ -42,7 +42,7 @@ public class BeregningsgrunnlagMapperTest {
                 .build();
 
         // Act + Assert
-        assertThat(finnBrutto(beregningsgrunnlag)).isEqualTo(638394);
+        assertThat(finnBrutto(beregningsgrunnlag)).isEqualTo(AVKORTET_PR_ÅR.add(FRILANSER_BRUTTO_PR_ÅR).longValue());
     }
 
     @Test

@@ -21,7 +21,7 @@ public class KodeverkConsumer {
 
     public static final String SERVICE_IDENTIFIER = "KodeverkV2";
 
-    private static final String WSDL = "wsdl/no/nav/tjeneste/virksomhet/kodeverk/v2/Kodeverk.wsdl";
+    private static final String WSDL = "wsdl/no/nav/tjeneste/virksomhet/kodeverk/v2/kodeverk.wsdl";
     private static final String NAMESPACE = "http://nav.no/tjeneste/virksomhet/kodeverk/v2/";
     private static final QName SERVICE = new QName(NAMESPACE, "Kodeverk_v2");
     private static final QName PORT = new QName(NAMESPACE, "Kodeverk_v2");

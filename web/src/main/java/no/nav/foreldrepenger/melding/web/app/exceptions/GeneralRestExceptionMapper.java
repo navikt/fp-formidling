@@ -4,12 +4,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.jboss.resteasy.spi.ApplicationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -22,7 +22,7 @@ import no.nav.vedtak.log.mdc.MDCOperations;
 import no.nav.vedtak.log.util.LoggerUtils;
 
 @Provider
-public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationException> {
+public class GeneralRestExceptionMapper implements ExceptionMapper<WebApplicationException> {
 
     // FIXME Humle, ikke bruk feilkoder her, håndter som valideringsfeil, eller legg
     // til egen samtidig-oppdatering-feil Feil-rammeverket
@@ -32,7 +32,7 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<ApplicationEx
     private static final Logger LOGGER = LoggerFactory.getLogger(GeneralRestExceptionMapper.class);
 
     @Override
-    public Response toResponse(ApplicationException exception) {
+    public Response toResponse(WebApplicationException exception) {
         Throwable cause = exception.getCause();
 
         if (cause instanceof Valideringsfeil) {

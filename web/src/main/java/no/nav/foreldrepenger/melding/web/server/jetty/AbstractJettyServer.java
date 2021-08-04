@@ -107,7 +107,7 @@ abstract class AbstractJettyServer {
         webAppContext.setContextPath(appKonfigurasjon.getContextPath());
         webAppContext.setConfigurations(CONFIGURATIONS);
         webAppContext.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
-                "^.*resteasy-.*.jar$|^.*felles-.*.jar$");
+                "^.*jersey-.*.jar$|^.*felles-.*.jar$");
         webAppContext.setSecurityHandler(createSecurityHandler());
         return webAppContext;
     }

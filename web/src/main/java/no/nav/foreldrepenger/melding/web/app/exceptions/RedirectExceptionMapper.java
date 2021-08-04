@@ -2,18 +2,18 @@ package no.nav.foreldrepenger.melding.web.app.exceptions;
 
 import java.net.URI;
 
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import org.jboss.resteasy.spi.ApplicationException;
 import org.owasp.encoder.Encode;
 
 import no.nav.vedtak.sikkerhet.ContextPathHolder;
 import no.nav.vedtak.util.env.Environment;
 
 @Provider
-public class RedirectExceptionMapper implements ExceptionMapper<ApplicationException> {
+public class RedirectExceptionMapper implements ExceptionMapper<WebApplicationException> {
 
     private static final Environment ENV = Environment.current();
     private final String loadBalancerUrl;
@@ -33,7 +33,7 @@ public class RedirectExceptionMapper implements ExceptionMapper<ApplicationExcep
     }
 
     @Override
-    public Response toResponse(ApplicationException exception) {
+    public Response toResponse(WebApplicationException exception) {
         Response response = generalRestExceptionMapper.toResponse(exception);
         String feilmelding = ((FeilDto) response.getEntity()).feilmelding();
         String enkodetFeilmelding = Encode.forUriComponent(feilmelding);

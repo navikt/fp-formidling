@@ -1,0 +1,31 @@
+2021-02-16 10:25:13,114 [INFO ] [main] o.f.c.i.l.VersionPrinter - [, , , ] - Flyway Community Edition 7.3.0 by Redgate
+2021-02-16 10:25:13,357 [INFO ] [main] o.f.c.i.d.b.DatabaseType - [, , , ] - Database: jdbc:postgresql://localhost:5432/postgres (PostgreSQL 11.5)
+2021-02-16 10:25:14,036 [INFO ] [main] o.f.c.i.c.DbValidate - [, , , ] - Successfully validated 59 migrations (execution time 00:00.577s)
+2021-02-16 10:25:14,052 [INFO ] [main] o.f.c.i.c.DbMigrate - [, , , ] - Current version of schema "public": 1.1.60
+2021-02-16 10:25:14,053 [INFO ] [main] o.f.c.i.c.DbMigrate - [, , , ] - Schema "public" is up to date. No migration necessary.
+2021-02-16 10:25:14,324 [INFO ] [main] o.e.j.s.Server - [, , , ] - jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 11.0.2+9
+2021-02-16 10:25:14,961 [INFO ] [main] o.e.j.a.AnnotationConfiguration - [, , , ] - Scanning elapsed time=325ms
+2021-02-16 10:25:14,998 [INFO ] [main] o.e.j.w.StandardDescriptorProcessor - [, , , ] - NO JSP Support for /fpformidling, did not find org.eclipse.jetty.jsp.JettyJspServlet
+2021-02-16 10:25:19,092 [INFO ] [main] o.e.j.s.session - [, , , ] - DefaultSessionIdManager workerName=node0
+2021-02-16 10:25:19,092 [INFO ] [main] o.e.j.s.session - [, , , ] - No SessionScavenger set, using defaults
+2021-02-16 10:25:19,094 [INFO ] [main] o.e.j.s.session - [, , , ] - node0 Scavenging every 600000ms
+2021-02-16 10:25:19,698 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: DokumentbestillingConsumer$Proxy$_$$_WeldClientProxy
+2021-02-16 10:25:19,718 [INFO ] [main] n.n.v.k.KonfigVerdiProdusent - [, , , ] - KonfigVerdi: kafka.bootstrap.servers="localhost:9092" @no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling.DokumentbestillingStreamKafkaProperties
+2021-02-16 10:25:19,730 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Bruker applicationID: ID-privat-foreldrepenger-dokumenthendelse-vtp
+2021-02-16 10:25:19,730 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Using user name vtp to authenticate against Kafka brokers
+2021-02-16 10:25:20,625 [WARN ] [main] o.h.j.b.i.PersistenceXmlParser - [, , , ] - HHH015018: Encountered multiple persistence-unit stanzas defining same name [pu-default]; persistence-unit names must be unique
+2021-02-16 10:25:20,681 [INFO ] [main] n.n.v.f.j.VLPersistenceUnitProvider - [, , , ] - Found ORM mapping file: META-INF/pu-default.dokumententiteter.orm.xml
+2021-02-16 10:25:20,681 [INFO ] [main] n.n.v.f.j.VLPersistenceUnitProvider - [, , , ] - Found ORM mapping file: META-INF/pu-default.prosesstask.orm.xml
+2021-02-16 10:25:25,702 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - From state=REBALANCING to state=CREATED
+2021-02-16 10:25:25,705 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Starter konsumering av topic=privat-foreldrepenger-dokumenthendelse-vtp, tilstand=REBALANCING
+2021-02-16 10:25:25,707 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: BatchTaskScheduler$Proxy$_$$_WeldClientProxy
+2021-02-16 10:25:26,525 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: TaskManager$Proxy$_$$_WeldClientProxy
+2021-02-16 10:25:26,625 [INFO ] [main] n.n.v.f.p.i.TaskManagerRepositoryImpl - [, , , ] - Startup: DB(tz=Europe/Berlin, current_timestamp=2021-02-16 10:25:26.624226+CET), App(user.timezone=Europe/Berlin, hibernate.jdbc.time_zone=null, inputtid=2021-02-16 10:25:26.556910+CET, inputtid2=2021-02-16T10:25:26.556910). Drift=00:00:00.067316
+2021-02-16 10:25:26,936 [INFO ] [TaskManager-poller_001] n.n.v.f.p.i.TaskManagerRepositoryImpl - [, , , ] - Pollet task for kjøring: id=1032401, type=retry.feilendeTasks, gruppe=21384003350, sekvens=1, status=KLAR, tidligereFeiledeForsøk=0, angitt nesteKjøringEtter=2021-02-11T07:30
+2021-02-16 10:25:27,037 [WARN ] [TaskManager-runtask_001] n.n.v.i.c.ServerInfo - [, CallId_1613467526957_1108103592, , ] - F-050157:Uventet format for host, klarer ikke å utvide cookie domain. Forventet format var xx.xx.xx, fikk 'localhost'. (OK hvis kjører lokalt).
+2021-02-16 10:25:28,915 [INFO ] [main] o.e.j.s.h.ContextHandler - [, , , ] - Started o.e.j.w.WebAppContext@2228db21{/fpformidling,[jar:file:/C:/Users/L151567/.m2/repository/org/webjars/swagger-ui/3.42.0/swagger-ui-3.42.0.jar!/META-INF/resources/webjars/, file:///C:/git/fp-formidling/web/webapp/target/classes/web/],AVAILABLE}
+2021-02-16 10:25:28,933 [INFO ] [main] o.e.j.s.AbstractConnector - [, , , ] - Started ServerConnector@62f87c44{HTTP/1.1, (http/1.1)}{0.0.0.0:8010}
+2021-02-16 10:25:28,944 [INFO ] [main] o.e.j.u.s.SslContextFactory - [, , , ] - x509=X509@4a1cafb2(app-key,h=[],w=[]) for Server@17c3e33[provider=null,keyStore=file:///C:/Users/L151567/.modig/keystore.jks,trustStore=null]
+2021-02-16 10:25:28,957 [INFO ] [main] o.e.j.s.AbstractConnector - [, , , ] - Started ServerConnector@3e587920{SSL, (ssl, http/1.1)}{0.0.0.0:8343}
+2021-02-16 10:25:28,957 [INFO ] [main] o.e.j.s.Server - [, , , ] - Started @19014ms
+2021-02-16 10:25:31,865 [INFO ] [TaskManager-runtask_001] n.n.v.i.SystemUserIdTokenProvider - [, CallId_1613467526957_1108103592, , ] - Forsøk 1 av 10 for henting av systemuser id token feilet, fikk org.apache.http.conn.HttpHostConnectException: Connect to localhost:8063 [localhost/127.0.0.1, localhost/0:0:0:0:0:0:0:1] failed: Connection refused: connect. Sover i 1800 ms og prøver på nytt

@@ -13,7 +13,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 
 import org.hibernate.validator.internal.engine.path.PathImpl;
-import org.jboss.resteasy.api.validation.ResteasyViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,11 +22,6 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
 
     @Override
     public Response toResponse(ConstraintViolationException exception) {
-        var constraintViolations = exception.getConstraintViolations();
-
-        if (constraintViolations.isEmpty() && exception instanceof ResteasyViolationException) {
-            return håndterFeilKonfigurering((ResteasyViolationException) exception);
-        }
         log(exception);
         return lagResponse(exception);
     }
@@ -48,15 +42,6 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
                 feltNavn);
         return Response.status(Response.Status.BAD_REQUEST)
                 .entity(new FeilDto(feilmelding, feilene))
-                .type(MediaType.APPLICATION_JSON)
-                .build();
-    }
-
-    private static Response håndterFeilKonfigurering(ResteasyViolationException exception) {
-        var message = exception.getException().getMessage();
-        LOG.error(message);
-        return Response.status(Response.Status.BAD_REQUEST)
-                .entity(new FeilDto("Det oppstod en serverfeil: Validering er feilkonfigurert.", FeilType.GENERELL_FEIL))
                 .type(MediaType.APPLICATION_JSON)
                 .build();
     }

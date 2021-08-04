@@ -1,0 +1,94 @@
+2021-02-02 16:56:57,503 [INFO ] [main] o.f.c.i.l.VersionPrinter - [, , , ] - Flyway Community Edition 7.3.0 by Redgate
+2021-02-02 16:56:57,768 [INFO ] [main] o.f.c.i.d.b.DatabaseType - [, , , ] - Database: jdbc:postgresql://localhost:5432/postgres (PostgreSQL 11.5)
+2021-02-02 16:56:58,658 [INFO ] [main] o.f.c.i.c.DbValidate - [, , , ] - Successfully validated 59 migrations (execution time 00:00.774s)
+2021-02-02 16:56:58,676 [INFO ] [main] o.f.c.i.c.DbMigrate - [, , , ] - Current version of schema "public": 1.1.59
+2021-02-02 16:56:58,693 [INFO ] [main] o.f.c.i.c.DbMigrate - [, , , ] - Migrating schema "public" to version "1.1.60 - prosess tasks tilknyttVedlegg og ferdigstilleJournalpost"
+2021-02-02 16:56:58,756 [INFO ] [main] o.f.c.i.c.DbMigrate - [, , , ] - Successfully applied 1 migration to schema "public" (execution time 00:00.089s)
+2021-02-02 16:56:59,028 [INFO ] [main] o.e.j.s.Server - [, , , ] - jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 11.0.2+9
+2021-02-02 16:56:59,698 [INFO ] [main] o.e.j.a.AnnotationConfiguration - [, , , ] - Scanning elapsed time=334ms
+2021-02-02 16:56:59,743 [INFO ] [main] o.e.j.w.StandardDescriptorProcessor - [, , , ] - NO JSP Support for /fpformidling, did not find org.eclipse.jetty.jsp.JettyJspServlet
+2021-02-02 16:57:03,893 [INFO ] [main] o.e.j.s.session - [, , , ] - DefaultSessionIdManager workerName=node0
+2021-02-02 16:57:03,893 [INFO ] [main] o.e.j.s.session - [, , , ] - No SessionScavenger set, using defaults
+2021-02-02 16:57:03,895 [INFO ] [main] o.e.j.s.session - [, , , ] - node0 Scavenging every 660000ms
+2021-02-02 16:57:04,508 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: DokumentbestillingConsumer$Proxy$_$$_WeldClientProxy
+2021-02-02 16:57:04,527 [INFO ] [main] n.n.v.k.KonfigVerdiProdusent - [, , , ] - KonfigVerdi: kafka.bootstrap.servers="localhost:9092" @no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling.DokumentbestillingStreamKafkaProperties
+2021-02-02 16:57:04,539 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Bruker applicationID: ID-privat-foreldrepenger-dokumenthendelse-vtp
+2021-02-02 16:57:04,539 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Using user name vtp to authenticate against Kafka brokers
+2021-02-02 16:57:05,580 [WARN ] [main] o.h.j.b.i.PersistenceXmlParser - [, , , ] - HHH015018: Encountered multiple persistence-unit stanzas defining same name [pu-default]; persistence-unit names must be unique
+2021-02-02 16:57:05,637 [INFO ] [main] n.n.v.f.j.VLPersistenceUnitProvider - [, , , ] - Found ORM mapping file: META-INF/pu-default.dokumententiteter.orm.xml
+2021-02-02 16:57:05,637 [INFO ] [main] n.n.v.f.j.VLPersistenceUnitProvider - [, , , ] - Found ORM mapping file: META-INF/pu-default.prosesstask.orm.xml
+2021-02-02 16:57:10,795 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - From state=REBALANCING to state=CREATED
+2021-02-02 16:57:10,798 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Starter konsumering av topic=privat-foreldrepenger-dokumenthendelse-vtp, tilstand=REBALANCING
+2021-02-02 16:57:10,801 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: TaskManager$Proxy$_$$_WeldClientProxy
+2021-02-02 16:57:11,016 [INFO ] [main] n.n.v.f.p.i.TaskManagerRepositoryImpl - [, , , ] - Startup: DB(tz=Europe/Berlin, current_timestamp=2021-02-02 16:57:10.975645+CET), App(user.timezone=Europe/Berlin, hibernate.jdbc.time_zone=null, inputtid=2021-02-02 16:57:10.841682+CET, inputtid2=2021-02-02T16:57:10.841682). Drift=00:00:00.133963
+2021-02-02 16:57:11,059 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: BatchTaskScheduler$Proxy$_$$_WeldClientProxy
+2021-02-02 16:57:11,920 [INFO ] [main] n.n.v.f.p.i.c.BatchTaskScheduler - [, , , ] - Restarter batch-task da siste='no.nav.vedtak.felles.prosesstask.impl.ProsessTaskEntitet@779cda39' står til feilet.
+2021-02-02 16:57:11,956 [INFO ] [main] n.n.v.f.p.i.c.BatchTaskScheduler - [, , , ] - Restarter batch-task da siste='no.nav.vedtak.felles.prosesstask.impl.ProsessTaskEntitet@1ee5792a' står til feilet.
+2021-02-02 16:57:11,961 [INFO ] [main] n.n.v.f.p.i.c.BatchTaskScheduler - [, , , ] - Restarter batch-task da siste='no.nav.vedtak.felles.prosesstask.impl.ProsessTaskEntitet@335a45a8' står til feilet.
+2021-02-02 16:57:14,315 [INFO ] [main] o.e.j.s.h.ContextHandler - [, , , ] - Started o.e.j.w.WebAppContext@39ab59f8{/fpformidling,[jar:file:/C:/Users/L151567/.m2/repository/org/webjars/swagger-ui/3.40.0/swagger-ui-3.40.0.jar!/META-INF/resources/webjars/, file:///C:/git/fp-formidling/web/webapp/target/classes/web/],AVAILABLE}
+2021-02-02 16:57:14,333 [INFO ] [main] o.e.j.s.AbstractConnector - [, , , ] - Started ServerConnector@4d411036{HTTP/1.1, (http/1.1)}{0.0.0.0:8010}
+2021-02-02 16:57:14,348 [INFO ] [main] o.e.j.u.s.SslContextFactory - [, , , ] - x509=X509@1027cdcd(app-key,h=[],w=[]) for Server@741f8cf[provider=null,keyStore=file:///C:/Users/L151567/.modig/keystore.jks,trustStore=null]
+2021-02-02 16:57:14,370 [INFO ] [main] o.e.j.s.AbstractConnector - [, , , ] - Started ServerConnector@29ad44e3{SSL, (ssl, http/1.1)}{0.0.0.0:8343}
+2021-02-02 16:57:14,370 [INFO ] [main] o.e.j.s.Server - [, , , ] - Started @20623ms
+2021-02-02 17:10:29,181 [INFO ] [main] o.f.c.i.l.VersionPrinter - [, , , ] - Flyway Community Edition 7.3.0 by Redgate
+2021-02-02 17:10:29,403 [INFO ] [main] o.f.c.i.d.b.DatabaseType - [, , , ] - Database: jdbc:postgresql://localhost:5432/postgres (PostgreSQL 11.5)
+2021-02-02 17:10:29,631 [INFO ] [main] o.f.c.i.c.DbValidate - [, , , ] - Successfully validated 59 migrations (execution time 00:00.167s)
+2021-02-02 17:10:29,648 [INFO ] [main] o.f.c.i.c.DbMigrate - [, , , ] - Current version of schema "public": 1.1.60
+2021-02-02 17:10:29,649 [INFO ] [main] o.f.c.i.c.DbMigrate - [, , , ] - Schema "public" is up to date. No migration necessary.
+2021-02-02 17:10:29,922 [INFO ] [main] o.e.j.s.Server - [, , , ] - jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 11.0.2+9
+2021-02-02 17:10:30,669 [INFO ] [main] o.e.j.a.AnnotationConfiguration - [, , , ] - Scanning elapsed time=370ms
+2021-02-02 17:10:30,708 [INFO ] [main] o.e.j.w.StandardDescriptorProcessor - [, , , ] - NO JSP Support for /fpformidling, did not find org.eclipse.jetty.jsp.JettyJspServlet
+2021-02-02 17:10:35,943 [INFO ] [main] o.e.j.s.session - [, , , ] - DefaultSessionIdManager workerName=node0
+2021-02-02 17:10:35,944 [INFO ] [main] o.e.j.s.session - [, , , ] - No SessionScavenger set, using defaults
+2021-02-02 17:10:35,946 [INFO ] [main] o.e.j.s.session - [, , , ] - node0 Scavenging every 600000ms
+2021-02-02 17:10:37,097 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: DokumentbestillingConsumer$Proxy$_$$_WeldClientProxy
+2021-02-02 17:10:37,128 [INFO ] [main] n.n.v.k.KonfigVerdiProdusent - [, , , ] - KonfigVerdi: kafka.bootstrap.servers="localhost:9092" @no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling.DokumentbestillingStreamKafkaProperties
+2021-02-02 17:10:37,140 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Bruker applicationID: ID-privat-foreldrepenger-dokumenthendelse-vtp
+2021-02-02 17:10:37,141 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Using user name vtp to authenticate against Kafka brokers
+2021-02-02 17:10:38,891 [WARN ] [main] o.h.j.b.i.PersistenceXmlParser - [, , , ] - HHH015018: Encountered multiple persistence-unit stanzas defining same name [pu-default]; persistence-unit names must be unique
+2021-02-02 17:10:39,160 [INFO ] [main] n.n.v.f.j.VLPersistenceUnitProvider - [, , , ] - Found ORM mapping file: META-INF/pu-default.dokumententiteter.orm.xml
+2021-02-02 17:10:39,160 [INFO ] [main] n.n.v.f.j.VLPersistenceUnitProvider - [, , , ] - Found ORM mapping file: META-INF/pu-default.prosesstask.orm.xml
+2021-02-02 17:10:50,786 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - From state=REBALANCING to state=CREATED
+2021-02-02 17:10:50,789 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Starter konsumering av topic=privat-foreldrepenger-dokumenthendelse-vtp, tilstand=REBALANCING
+2021-02-02 17:10:50,792 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: BatchTaskScheduler$Proxy$_$$_WeldClientProxy
+2021-02-02 17:10:51,456 [INFO ] [main] n.n.v.f.p.i.c.BatchTaskScheduler - [, , , ] - Restarter batch-task da siste='no.nav.vedtak.felles.prosesstask.impl.ProsessTaskEntitet@7bb4f09d' står til feilet.
+2021-02-02 17:10:51,514 [INFO ] [main] n.n.v.f.p.i.c.BatchTaskScheduler - [, , , ] - Restarter batch-task da siste='no.nav.vedtak.felles.prosesstask.impl.ProsessTaskEntitet@698394bf' står til feilet.
+2021-02-02 17:10:51,520 [INFO ] [main] n.n.v.f.p.i.c.BatchTaskScheduler - [, , , ] - Restarter batch-task da siste='no.nav.vedtak.felles.prosesstask.impl.ProsessTaskEntitet@e14559e' står til feilet.
+2021-02-02 17:10:51,536 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: TaskManager$Proxy$_$$_WeldClientProxy
+2021-02-02 17:10:51,660 [INFO ] [main] n.n.v.f.p.i.TaskManagerRepositoryImpl - [, , , ] - Startup: DB(tz=Europe/Berlin, current_timestamp=2021-02-02 17:10:51.659572+CET), App(user.timezone=Europe/Berlin, hibernate.jdbc.time_zone=null, inputtid=2021-02-02 17:10:51.579721+CET, inputtid2=2021-02-02T17:10:51.579721). Drift=00:00:00.079851
+2021-02-02 17:10:54,186 [INFO ] [main] o.e.j.s.h.ContextHandler - [, , , ] - Started o.e.j.w.WebAppContext@df1cff6{/fpformidling,[jar:file:/C:/Users/L151567/.m2/repository/org/webjars/swagger-ui/3.40.0/swagger-ui-3.40.0.jar!/META-INF/resources/webjars/, file:///C:/git/fp-formidling/web/webapp/target/classes/web/],AVAILABLE}
+2021-02-02 17:10:54,207 [INFO ] [main] o.e.j.s.AbstractConnector - [, , , ] - Started ServerConnector@bc57b40{HTTP/1.1, (http/1.1)}{0.0.0.0:8010}
+2021-02-02 17:10:54,220 [INFO ] [main] o.e.j.u.s.SslContextFactory - [, , , ] - x509=X509@78c34153(app-key,h=[],w=[]) for Server@2387e60b[provider=null,keyStore=file:///C:/Users/L151567/.modig/keystore.jks,trustStore=null]
+2021-02-02 17:10:54,236 [INFO ] [main] o.e.j.s.AbstractConnector - [, , , ] - Started ServerConnector@30b34287{SSL, (ssl, http/1.1)}{0.0.0.0:8343}
+2021-02-02 17:10:54,236 [INFO ] [main] o.e.j.s.Server - [, , , ] - Started @29519ms
+2021-02-02 17:31:25,923 [INFO ] [main] o.f.c.i.l.VersionPrinter - [, , , ] - Flyway Community Edition 7.3.0 by Redgate
+2021-02-02 17:31:26,150 [INFO ] [main] o.f.c.i.d.b.DatabaseType - [, , , ] - Database: jdbc:postgresql://localhost:5432/postgres (PostgreSQL 11.5)
+2021-02-02 17:31:26,772 [INFO ] [main] o.f.c.i.c.DbValidate - [, , , ] - Successfully validated 59 migrations (execution time 00:00.559s)
+2021-02-02 17:31:26,788 [INFO ] [main] o.f.c.i.c.DbMigrate - [, , , ] - Current version of schema "public": 1.1.60
+2021-02-02 17:31:26,789 [INFO ] [main] o.f.c.i.c.DbMigrate - [, , , ] - Schema "public" is up to date. No migration necessary.
+2021-02-02 17:31:27,056 [INFO ] [main] o.e.j.s.Server - [, , , ] - jetty-9.4.35.v20201120; built: 2020-11-20T21:17:03.964Z; git: bdc54f03a5e0a7e280fab27f55c3c75ee8da89fb; jvm 11.0.2+9
+2021-02-02 17:31:27,789 [INFO ] [main] o.e.j.a.AnnotationConfiguration - [, , , ] - Scanning elapsed time=373ms
+2021-02-02 17:31:27,832 [INFO ] [main] o.e.j.w.StandardDescriptorProcessor - [, , , ] - NO JSP Support for /fpformidling, did not find org.eclipse.jetty.jsp.JettyJspServlet
+2021-02-02 17:31:31,939 [INFO ] [main] o.e.j.s.session - [, , , ] - DefaultSessionIdManager workerName=node0
+2021-02-02 17:31:31,940 [INFO ] [main] o.e.j.s.session - [, , , ] - No SessionScavenger set, using defaults
+2021-02-02 17:31:31,942 [INFO ] [main] o.e.j.s.session - [, , , ] - node0 Scavenging every 600000ms
+2021-02-02 17:31:32,590 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: BatchTaskScheduler$Proxy$_$$_WeldClientProxy
+2021-02-02 17:31:32,769 [WARN ] [main] o.h.j.b.i.PersistenceXmlParser - [, , , ] - HHH015018: Encountered multiple persistence-unit stanzas defining same name [pu-default]; persistence-unit names must be unique
+2021-02-02 17:31:32,835 [INFO ] [main] n.n.v.f.j.VLPersistenceUnitProvider - [, , , ] - Found ORM mapping file: META-INF/pu-default.dokumententiteter.orm.xml
+2021-02-02 17:31:32,836 [INFO ] [main] n.n.v.f.j.VLPersistenceUnitProvider - [, , , ] - Found ORM mapping file: META-INF/pu-default.prosesstask.orm.xml
+2021-02-02 17:31:38,448 [INFO ] [main] n.n.v.f.p.i.c.BatchTaskScheduler - [, , , ] - Restarter batch-task da siste='no.nav.vedtak.felles.prosesstask.impl.ProsessTaskEntitet@208b8425' står til feilet.
+2021-02-02 17:31:38,515 [INFO ] [main] n.n.v.f.p.i.c.BatchTaskScheduler - [, , , ] - Restarter batch-task da siste='no.nav.vedtak.felles.prosesstask.impl.ProsessTaskEntitet@705dc1a6' står til feilet.
+2021-02-02 17:31:38,520 [INFO ] [main] n.n.v.f.p.i.c.BatchTaskScheduler - [, , , ] - Restarter batch-task da siste='no.nav.vedtak.felles.prosesstask.impl.ProsessTaskEntitet@71e9640' står til feilet.
+2021-02-02 17:31:38,537 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: DokumentbestillingConsumer$Proxy$_$$_WeldClientProxy
+2021-02-02 17:31:38,549 [INFO ] [main] n.n.v.k.KonfigVerdiProdusent - [, , , ] - KonfigVerdi: kafka.bootstrap.servers="localhost:9092" @no.nav.foreldrepenger.melding.kafkatjenester.dokumentbestilling.DokumentbestillingStreamKafkaProperties
+2021-02-02 17:31:38,562 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Bruker applicationID: ID-privat-foreldrepenger-dokumenthendelse-vtp
+2021-02-02 17:31:38,563 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Using user name vtp to authenticate against Kafka brokers
+2021-02-02 17:31:39,457 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - From state=REBALANCING to state=CREATED
+2021-02-02 17:31:39,459 [INFO ] [main] n.n.f.m.k.d.DokumentbestillingConsumer - [, , , ] - Starter konsumering av topic=privat-foreldrepenger-dokumenthendelse-vtp, tilstand=REBALANCING
+2021-02-02 17:31:39,461 [INFO ] [main] n.n.f.m.w.a.t.ApplicationServiceStarterImpl - [, , , ] - starter service: TaskManager$Proxy$_$$_WeldClientProxy
+2021-02-02 17:31:39,598 [INFO ] [main] n.n.v.f.p.i.TaskManagerRepositoryImpl - [, , , ] - Startup: DB(tz=Europe/Berlin, current_timestamp=2021-02-02 17:31:39.597008+CET), App(user.timezone=Europe/Berlin, hibernate.jdbc.time_zone=null, inputtid=2021-02-02 17:31:39.495762+CET, inputtid2=2021-02-02T17:31:39.495762). Drift=00:00:00.101246
+2021-02-02 17:31:42,071 [INFO ] [main] o.e.j.s.h.ContextHandler - [, , , ] - Started o.e.j.w.WebAppContext@38f2e97e{/fpformidling,[jar:file:/C:/Users/L151567/.m2/repository/org/webjars/swagger-ui/3.40.0/swagger-ui-3.40.0.jar!/META-INF/resources/webjars/, file:///C:/git/fp-formidling/web/webapp/target/classes/web/],AVAILABLE}
+2021-02-02 17:31:42,095 [INFO ] [main] o.e.j.s.AbstractConnector - [, , , ] - Started ServerConnector@2f3c6ac4{HTTP/1.1, (http/1.1)}{0.0.0.0:8010}
+2021-02-02 17:31:42,108 [INFO ] [main] o.e.j.u.s.SslContextFactory - [, , , ] - x509=X509@2926144f(app-key,h=[],w=[]) for Server@63893cf6[provider=null,keyStore=file:///C:/Users/L151567/.modig/keystore.jks,trustStore=null]
+2021-02-02 17:31:42,128 [INFO ] [main] o.e.j.s.AbstractConnector - [, , , ] - Started ServerConnector@70e659aa{SSL, (ssl, http/1.1)}{0.0.0.0:8343}
+2021-02-02 17:31:42,129 [INFO ] [main] o.e.j.s.Server - [, , , ] - Started @19891ms

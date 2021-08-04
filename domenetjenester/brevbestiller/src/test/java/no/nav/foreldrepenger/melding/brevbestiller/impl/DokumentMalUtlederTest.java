@@ -42,11 +42,11 @@ public class DokumentMalUtlederTest {
 
     @Test
     public void utledfra_input_mal() {
-        sjekkAtVelgerValgtMal(DokumentMalType.UENDRETUTFALL_DOK);
+        sjekkAtVelgerValgtMal(DokumentMalType.INGEN_ENDRING);
         sjekkAtVelgerValgtMal(DokumentMalType.FRITEKST_DOK);
         sjekkAtVelgerValgtMal(DokumentMalType.KLAGE_AVVIST);
-        sjekkAtVelgerValgtMal(DokumentMalType.FORLENGET_DOK);
-        sjekkAtVelgerValgtMal(DokumentMalType.AVSLAGSVEDTAK_DOK);
+        sjekkAtVelgerValgtMal(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
+        sjekkAtVelgerValgtMal(DokumentMalType.AVSLAG_ENGANGSSTØNAD);
     }
 
     private void sjekkAtVelgerValgtMal(DokumentMalType malType) {
@@ -57,7 +57,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_uendret_utfall() {
+    public void utled_ingen_endring() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
@@ -66,7 +66,7 @@ public class DokumentMalUtlederTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medBehandlingsresultat(Behandlingsresultat.builder().medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.INGEN_ENDRING)).build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.UENDRETUTFALL_DOK.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.INGEN_ENDRING.getKode());
     }
 
     @Test

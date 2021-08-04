@@ -41,7 +41,7 @@ public class DokumentHistorikkTjenesteTest {
                 .medBehandlingUuid(UUID.randomUUID())
                 .medHistorikkUuid(UUID.randomUUID())
                 .medHendelseId(1L)
-                .medDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK)
+                .medDokumentMalType(DokumentMalType.INGEN_ENDRING)
                 .medJournalpostId(new JournalpostId("123"))
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)
                 .medDokumentId("123")

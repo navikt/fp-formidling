@@ -6,6 +6,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import java.net.URI;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ public class JerseyJournalpostKlient extends AbstractJerseyOidcRestClient implem
     private final URI dokarkivUrl;
     private final URI dokarkivProxyUrl;
 
+    @Inject
     public JerseyJournalpostKlient(@KonfigVerdi(value = "journalpost_rest_v1.url", defaultVerdi = DEFAULT_URI) URI dokarkivUrl,
             @KonfigVerdi(value = "journalpost_rest_proxy_v1.url", defaultVerdi = DEFAULT_PROXY_URI) URI dokarkivProxyUrl) {
         this.dokarkivUrl = dokarkivUrl;

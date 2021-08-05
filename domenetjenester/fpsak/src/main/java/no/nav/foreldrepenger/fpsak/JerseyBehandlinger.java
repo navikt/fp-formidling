@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 
@@ -26,6 +27,7 @@ public class JerseyBehandlinger extends AbstractJerseyRestClient implements Beha
     private static final String BEHANDLING_ID = "behandlingId";
     private final URI baseUri;
 
+    @Inject
     public JerseyBehandlinger(@KonfigVerdi(FPSAK_REST_BASE_URL) URI baseUri) {
         this.baseUri = baseUri;
     }

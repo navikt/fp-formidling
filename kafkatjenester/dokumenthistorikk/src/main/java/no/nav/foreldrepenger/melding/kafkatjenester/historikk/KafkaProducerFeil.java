@@ -1,14 +1,14 @@
 package no.nav.foreldrepenger.melding.kafkatjenester.historikk;
 
-import no.nav.vedtak.exception.IntegrasjonException;
-import no.nav.vedtak.exception.ManglerTilgangException;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.RetriableException;
 
+import no.nav.vedtak.exception.IntegrasjonException;
+
 public class KafkaProducerFeil {
 
-    public static ManglerTilgangException feilIPålogging(String topic, Exception e) {
-        return new ManglerTilgangException("FPFORMIDLINGKAFKA-821005", String.format("Feil i pålogging mot Kafka, topic:%s", topic), e);
+    public static IntegrasjonException feilIPålogging(String topic, Exception e) {
+        return new IntegrasjonException("FPFORMIDLINGKAFKA-821005", String.format("Feil i pålogging mot Kafka, topic:%s", topic), e);
     }
 
     public static IntegrasjonException uventetFeil(String topic, Exception e) {

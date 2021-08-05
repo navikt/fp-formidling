@@ -1,11 +1,14 @@
 package no.nav.foreldrepenger.melding.web.app.konfig;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
 
 import io.swagger.v3.jaxrs2.SwaggerSerializers;
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
@@ -15,10 +18,7 @@ import io.swagger.v3.oas.integration.SwaggerConfiguration;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
-import no.nav.foreldrepenger.melding.web.app.exceptions.ConstraintViolationMapper;
-import no.nav.foreldrepenger.melding.web.app.exceptions.GeneralRestExceptionMapper;
-import no.nav.foreldrepenger.melding.web.app.exceptions.JsonMappingExceptionMapper;
-import no.nav.foreldrepenger.melding.web.app.exceptions.JsonParseExceptionMapper;
+import no.nav.foreldrepenger.melding.web.app.exceptions.KnownExceptionMappers;
 import no.nav.foreldrepenger.melding.web.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.melding.web.app.tjenester.ForvaltningRestTjeneste;
 import no.nav.foreldrepenger.melding.web.app.tjenester.brev.BrevRestTjeneste;
@@ -26,13 +26,14 @@ import no.nav.foreldrepenger.melding.web.server.jetty.TimingFilter;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 
 @ApplicationPath(ApplicationConfig.API_URI)
-public class ApplicationConfig extends Application {
+public class ApplicationConfig extends ResourceConfig {
 
     static final String API_URI = "/api";
 
     public ApplicationConfig() {
 
         try {
+            property(org.glassfish.jersey.server.ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED, true);
             new GenericOpenApiContextBuilder<>()
                     .openApiConfiguration(new SwaggerConfiguration()
                             .openAPI(new OpenAPI()
@@ -51,21 +52,19 @@ public class ApplicationConfig extends Application {
         } catch (OpenApiConfigurationException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
-    }
 
-    @Override
-    public Set<Class<?>> getClasses() {
+        property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
+        register(SwaggerSerializers.class);
+        register(OpenApiResource.class);
+        register(JacksonJsonConfig.class);
+        register(TimingFilter.class);
 
-        return Set.of(BrevRestTjeneste.class,
-                TimingFilter.class,
+        registerClasses(Set.of(BrevRestTjeneste.class,
                 ForvaltningRestTjeneste.class,
-                ProsessTaskRestTjeneste.class,
-                GeneralRestExceptionMapper.class,
-                JacksonJsonConfig.class,
-                SwaggerSerializers.class,
-                OpenApiResource.class,
-                ConstraintViolationMapper.class,
-                JsonMappingExceptionMapper.class,
-                JsonParseExceptionMapper.class);
+                ProsessTaskRestTjeneste.class));
+
+        registerInstances(new LinkedHashSet<>(new KnownExceptionMappers().getExceptionMappers()));
+
+        property(org.glassfish.jersey.server.ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED, true);
     }
 }

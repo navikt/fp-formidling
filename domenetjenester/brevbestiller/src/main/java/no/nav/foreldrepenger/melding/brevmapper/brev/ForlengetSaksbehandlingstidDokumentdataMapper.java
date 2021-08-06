@@ -53,7 +53,7 @@ public class ForlengetSaksbehandlingstidDokumentdataMapper implements Dokumentda
     @Override
     public ForlengetSaksbehandlingstidDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
 
-        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
+        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse, behandling);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
         return ForlengetSaksbehandlingstidDokumentdata.ny()

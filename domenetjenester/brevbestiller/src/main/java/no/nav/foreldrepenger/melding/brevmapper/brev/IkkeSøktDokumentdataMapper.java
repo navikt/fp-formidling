@@ -41,7 +41,7 @@ public class IkkeSøktDokumentdataMapper implements DokumentdataMapper {
     @Override
     public IkkeSøktDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
 
-        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
+        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse, behandling);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
 
         InntektArbeidYtelse iay = domeneobjektProvider.hentInntektArbeidYtelse(behandling);

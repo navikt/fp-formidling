@@ -39,7 +39,7 @@ public class InnsynDokumentdataMapper implements DokumentdataMapper {
     public InnsynDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
         Innsyn innsynsBehandling = domeneobjektProvider.hentInnsyn(behandling);
 
-        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
+        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse, behandling);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         avklarFritekst(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 

@@ -38,7 +38,6 @@ public class ApplicationConfig extends Application {
     public ApplicationConfig() {
 
         try {
-            property(org.glassfish.jersey.server.ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED, true);
             new GenericOpenApiContextBuilder<>()
                     .openApiConfiguration(new SwaggerConfiguration()
                             .openAPI(new OpenAPI()

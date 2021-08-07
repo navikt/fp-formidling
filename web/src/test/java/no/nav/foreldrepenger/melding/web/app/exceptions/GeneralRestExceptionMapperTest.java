@@ -14,18 +14,18 @@ import ch.qos.logback.classic.Level;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.ManglerTilgangException;
 import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.log.util.MemoryAppender;
 
 @Execution(ExecutionMode.SAME_THREAD)
-public class VLExceptionMapperTest {
+public class GeneralRestExceptionMapperTest {
 
-    private final VLExceptionMapper vlExceptionMapper = new VLExceptionMapper();
-    private MemoryAppender logSniffer;
+    private static MemoryAppender logSniffer;
+
+    private final GeneralRestExceptionMapper exceptionMapper = new GeneralRestExceptionMapper();
 
     @BeforeEach
     public void setUp() {
-        logSniffer = MemoryAppender.sniff(VLExceptionMapper.class);
+        logSniffer = MemoryAppender.sniff(GeneralRestExceptionMapper.class);
     }
 
     @AfterEach
@@ -34,28 +34,24 @@ public class VLExceptionMapperTest {
     }
 
     @Test
-    public void skalMappeManglerTilgangFeil() {
-        VLException manglerTilgangFeil = new ManglerTilgangException("MANGLER_TILGANG_FEIL", "ManglerTilgangFeilmeldingKode");
-
-        Response response = vlExceptionMapper.toResponse(manglerTilgangFeil);
+    public void skalIkkeMappeManglerTilgangFeil() {
+        var response = exceptionMapper.toResponse(manglerTilgangFeil());
 
         assertThat(response.getStatus()).isEqualTo(403);
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
-        FeilDto feilDto = (FeilDto) response.getEntity();
+        var feilDto = (FeilDto) response.getEntity();
 
         assertThat(feilDto.type()).isEqualTo(FeilType.MANGLER_TILGANG_FEIL);
-        assertThat(feilDto.feilmelding()).isEqualTo("MANGLER_TILGANG_FEIL:ManglerTilgangFeilmeldingKode");
-        assertThat(logSniffer.search("MANGLER_TILGANG_FEIL:ManglerTilgangFeilmeldingKode", Level.WARN)).isEmpty();
+        assertThat(feilDto.feilmelding()).contains("ManglerTilgangFeilmeldingKode");
+        assertThat(logSniffer.search("ManglerTilgangFeilmeldingKode", Level.WARN)).isEmpty();
     }
 
     @Test
     public void skalMappeFunksjonellFeil() {
-        VLException funksjonellFeil = new FunksjonellException("FUNK_FEIL", "en funksjonell feilmelding", "et løsningsforslag");
-
-        Response response = vlExceptionMapper.toResponse(funksjonellFeil);
+        var response = exceptionMapper.toResponse(funksjonellFeil());
 
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
-        FeilDto feilDto = (FeilDto) response.getEntity();
+        var feilDto = (FeilDto) response.getEntity();
 
         assertThat(feilDto.feilmelding()).contains("FUNK_FEIL");
         assertThat(feilDto.feilmelding()).contains("en funksjonell feilmelding");
@@ -65,12 +61,10 @@ public class VLExceptionMapperTest {
 
     @Test
     public void skalMappeVLException() {
-        VLException vlException = new TekniskException("TEK_FEIL", "en teknisk feilmelding");
-
-        Response response = vlExceptionMapper.toResponse(vlException);
+        var response = exceptionMapper.toResponse(tekniskFeil());
 
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
-        FeilDto feilDto = (FeilDto) response.getEntity();
+        var feilDto = (FeilDto) response.getEntity();
 
         assertThat(feilDto.feilmelding()).contains("TEK_FEIL");
         assertThat(feilDto.feilmelding()).contains("en teknisk feilmelding");
@@ -82,7 +76,7 @@ public class VLExceptionMapperTest {
         String feilmelding = "en helt generell feil";
         RuntimeException generellFeil = new RuntimeException(feilmelding);
 
-        Response response = vlExceptionMapper.toResponse(new TekniskException("KODE", "TEKST", generellFeil));
+        Response response = exceptionMapper.toResponse(new TekniskException("KODE", "TEKST", generellFeil));
 
         assertThat(response.getStatus()).isEqualTo(500);
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
@@ -96,7 +90,7 @@ public class VLExceptionMapperTest {
     public void skalMappeWrappedFeilUtenCause() {
         String feilmelding = "en helt generell feil";
 
-        Response response = vlExceptionMapper.toResponse(new TekniskException("KODE", feilmelding));
+        Response response = exceptionMapper.toResponse(new TekniskException("KODE", feilmelding));
 
         assertThat(response.getStatus()).isEqualTo(500);
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
@@ -105,4 +99,33 @@ public class VLExceptionMapperTest {
         assertThat(feilDto.feilmelding()).contains(feilmelding);
         assertThat(logSniffer.search(feilmelding, Level.WARN)).hasSize(1);
     }
+
+    @Test
+    public void skalMappeGenerellFeil() {
+        String feilmelding = "en helt generell feil";
+        RuntimeException generellFeil = new IllegalArgumentException(feilmelding);
+
+        Response response = exceptionMapper.toResponse(generellFeil);
+
+        assertThat(response.getStatus()).isEqualTo(500);
+        assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
+        FeilDto feilDto = (FeilDto) response.getEntity();
+
+        assertThat(feilDto.feilmelding()).contains(feilmelding);
+        assertThat(logSniffer.search(feilmelding, Level.WARN)).hasSize(1);
+    }
+
+
+    private static FunksjonellException funksjonellFeil() {
+        return new FunksjonellException("FUNK_FEIL", "en funksjonell feilmelding", "et løsningsforslag");
+    }
+
+    private static TekniskException tekniskFeil() {
+        return new TekniskException("TEK_FEIL", "en teknisk feilmelding");
+    }
+
+    private static ManglerTilgangException manglerTilgangFeil() {
+        return new ManglerTilgangException("MANGLER_TILGANG_FEIL","ManglerTilgangFeilmeldingKode");
+    }
+
 }

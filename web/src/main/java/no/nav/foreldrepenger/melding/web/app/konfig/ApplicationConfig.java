@@ -1,16 +1,18 @@
 package no.nav.foreldrepenger.melding.web.app.konfig;
 
-import java.util.LinkedHashSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 
-import io.swagger.v3.jaxrs2.SwaggerSerializers;
 import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import io.swagger.v3.oas.integration.GenericOpenApiContextBuilder;
 import io.swagger.v3.oas.integration.OpenApiConfigurationException;
@@ -18,7 +20,10 @@ import io.swagger.v3.oas.integration.SwaggerConfiguration;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
-import no.nav.foreldrepenger.melding.web.app.exceptions.KnownExceptionMappers;
+import no.nav.foreldrepenger.melding.web.app.exceptions.ConstraintViolationMapper;
+import no.nav.foreldrepenger.melding.web.app.exceptions.GeneralRestExceptionMapper;
+import no.nav.foreldrepenger.melding.web.app.exceptions.JsonMappingExceptionMapper;
+import no.nav.foreldrepenger.melding.web.app.exceptions.JsonParseExceptionMapper;
 import no.nav.foreldrepenger.melding.web.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.melding.web.app.tjenester.ForvaltningRestTjeneste;
 import no.nav.foreldrepenger.melding.web.app.tjenester.brev.BrevRestTjeneste;
@@ -26,14 +31,13 @@ import no.nav.foreldrepenger.melding.web.server.jetty.TimingFilter;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 
 @ApplicationPath(ApplicationConfig.API_URI)
-public class ApplicationConfig extends ResourceConfig {
+public class ApplicationConfig extends Application {
 
     static final String API_URI = "/api";
 
     public ApplicationConfig() {
 
         try {
-            property(org.glassfish.jersey.server.ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED, true);
             new GenericOpenApiContextBuilder<>()
                     .openApiConfiguration(new SwaggerConfiguration()
                             .openAPI(new OpenAPI()
@@ -52,19 +56,40 @@ public class ApplicationConfig extends ResourceConfig {
         } catch (OpenApiConfigurationException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
+    }
 
-        property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
-        register(SwaggerSerializers.class);
-        register(OpenApiResource.class);
-        register(JacksonJsonConfig.class);
-        register(TimingFilter.class);
+    @Override
+    public Set<Class<?>> getClasses() {
+        Set<Class<?>> classes = new HashSet<>();
+        // eksponert grensesnitt
+        classes.add(BrevRestTjeneste.class);
+        classes.add(ForvaltningRestTjeneste.class);
+        classes.add(ProsessTaskRestTjeneste.class);
 
-        registerClasses(Set.of(BrevRestTjeneste.class,
-                ForvaltningRestTjeneste.class,
-                ProsessTaskRestTjeneste.class));
+        // swagger
+        classes.add(OpenApiResource.class);
 
-        registerInstances(new LinkedHashSet<>(new KnownExceptionMappers().getExceptionMappers()));
+        // Applikasjonsoppsett
+        classes.add(TimingFilter.class);
+        classes.add(JacksonJsonConfig.class);
 
-        property(org.glassfish.jersey.server.ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED, true);
+        // ExceptionMappers pga de som finnes i Jackson+Jersey-media
+        classes.add(ConstraintViolationMapper.class);
+        classes.add(JsonMappingExceptionMapper.class);
+        classes.add(JsonParseExceptionMapper.class);
+
+        // Generell exceptionmapper m/logging for øvrige tilfelle
+        classes.add(GeneralRestExceptionMapper.class);
+
+        return Collections.unmodifiableSet(classes);
+    }
+
+    @Override
+    public Map<String, Object> getProperties() {
+        Map<String, Object> properties = new HashMap<>();
+        // Ref Jersey doc
+        properties.put(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
+        properties.put(ServerProperties.PROCESSING_RESPONSE_ERRORS_ENABLED, true);
+        return properties;
     }
 }

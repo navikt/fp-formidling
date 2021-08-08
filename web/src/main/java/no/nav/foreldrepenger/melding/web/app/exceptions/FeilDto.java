@@ -5,18 +5,18 @@ import static no.nav.foreldrepenger.melding.web.app.exceptions.FeilType.GENERELL
 
 import java.util.Collection;
 
-public record FeilDto(String feilmelding, FeilType type, Collection<FeltFeilDto> feltFeil) {
+public record FeilDto(FeilType type, String feilmelding, Collection<FeltFeilDto> feltFeil) {
 
-    public FeilDto(String feilmelding, FeilType type) {
-        this(feilmelding, type, emptyList());
+    public FeilDto(FeilType type, String feilmelding) {
+        this(type, feilmelding, emptyList());
     }
 
     public FeilDto(String feilmelding, Collection<FeltFeilDto> feltFeil) {
-        this(feilmelding, GENERELL_FEIL, feltFeil);
+        this(GENERELL_FEIL, feilmelding, feltFeil);
     }
 
     public FeilDto(String feilmelding) {
-        this(feilmelding, GENERELL_FEIL, emptyList());
+        this(GENERELL_FEIL, feilmelding, emptyList());
     }
 
 }

@@ -45,7 +45,7 @@ public class InfoTilAnnenForeldrerDokumentdataMapper implements DokumentdataMapp
     @Override
     public InfoTilAnnenForelderDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
 
-        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
+        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse, behandling);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
         BehandlingÅrsakType aarsak = BehandlingÅrsakType.INFOBREV_BEHANDLING;

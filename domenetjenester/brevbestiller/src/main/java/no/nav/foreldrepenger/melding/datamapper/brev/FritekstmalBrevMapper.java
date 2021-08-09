@@ -138,7 +138,7 @@ public abstract class FritekstmalBrevMapper extends FritekstBrevMapper implement
         // og dette skal overstyre behandlende enhet på Behandling, da denne kan ha endret seg
         // siden brevet ble bestilt. Ved forhåndsvisning må det hentes fra Behandling.
         return (hendelse.getBehandlendeEnhetNavn() != null && hendelse.behandlesAvKlageinstans())
-                || (behandling.getBehandlendeEnhetNavn() != null && behandling.behandlesAvKlageinstans());
+                || (hendelse.getBehandlendeEnhetNavn() == null && behandling.getBehandlendeEnhetNavn() != null && behandling.behandlesAvKlageinstans());
     }
 
     public class Brevdata {

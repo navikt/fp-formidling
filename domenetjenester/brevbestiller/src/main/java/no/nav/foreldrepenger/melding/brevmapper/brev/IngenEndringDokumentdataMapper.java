@@ -29,7 +29,7 @@ public class IngenEndringDokumentdataMapper implements DokumentdataMapper {
 
     @Override
     public IngenEndringDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
-        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
+        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse, behandling);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         return IngenEndringDokumentdata.ny().medFelles(fellesBuilder.build()).build();
     }

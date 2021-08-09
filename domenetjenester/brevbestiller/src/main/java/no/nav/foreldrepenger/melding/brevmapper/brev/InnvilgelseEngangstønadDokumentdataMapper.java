@@ -50,7 +50,7 @@ public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataM
     public EngangsstønadInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
         BeregningsresultatES beregningsresultat = domeneobjektProvider.hentBeregningsresultatES(behandling);
 
-        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
+        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse, behandling);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
 

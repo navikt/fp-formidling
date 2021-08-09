@@ -41,6 +41,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.InnhenteOpplysningerDokumentdata;
+import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
@@ -52,6 +53,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     private static final String FRITEKST_INN = "Tekst1\n- Vedlegg1\n- Vedlegg2\nTekst2\nTekst3\n- Vedlegg3\nTekst4";
     private static final String FRITEKST_UT = "Tekst1\n- Vedlegg1\n- Vedlegg2\n\nTekst2\n\nTekst3\n- Vedlegg3\n\nTekst4\n";
     private static final LocalDate SØKNAD_DATO = LocalDate.now().minusDays(1);
+    private static final LocalDate KLAGE_DATO = LocalDate.now().minusDays(2);
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
@@ -94,6 +96,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getFritekst()).isEqualTo(FRITEKST_UT);
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
 
         assertThat(innhenteOpplysningerDokumentdata.getFørstegangsbehandling()).isFalse();
         assertThat(innhenteOpplysningerDokumentdata.getRevurdering()).isTrue();
@@ -140,6 +143,70 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFristDato()).isEqualTo(formaterDatoEngelsk(brevMapperUtil.getSvarFrist()));
     }
 
+    @Test
+    public void skal_mappe_behandlesAvKA_når_det_er_angitt_på_hendelsen() {
+        // Arrange
+        Behandling behandling = opprettKlageBehandling("NFP");
+        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
+        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().medBehandlendeEnhetNavn("NAV Klageinstans").build();
+        mockKlageDokument();
+
+        // Act
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+
+        // Assert
+        assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isTrue();
+    }
+
+    @Test
+    public void skal_ikke_mappe_behandlesAvKA_når_det_er_angitt_noe_annet_på_hendelsen() {
+        // Arrange
+        Behandling behandling = opprettKlageBehandling("NAV Klageinstans");
+        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
+        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().medBehandlendeEnhetNavn("NFP").build();
+        mockKlageDokument();
+
+        // Act
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+
+        // Assert
+        assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
+    }
+
+    @Test
+    public void skal_mappe_behandlesAvKA_fra_behandlingen_når_det_ikke_er_angitt_på_hendelsen() {
+        // Arrange
+        Behandling behandling = opprettKlageBehandling("NAV Klageinstans");
+        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
+        DokumentHendelse dokumentHendelse = lagDokumentHendelse();
+        mockKlageDokument();
+
+        // Act
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+
+        // Assert
+        assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isTrue();
+    }
+
+    @Test
+    public void skal_ikke_mappe_behandlesAvKA_når_det_ikke_er_angitt_på_verken_hendelsen_eller_behandlingen() {
+        // Arrange
+        Behandling behandling = opprettKlageBehandling("NFP");
+        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
+        DokumentHendelse dokumentHendelse = lagDokumentHendelse();
+        mockKlageDokument();
+
+        // Act
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+
+        // Assert
+        assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
+    }
+
     private Behandling opprettBehandling(Språkkode språkkode) {
         return Behandling.builder()
                 .medUuid(UUID.randomUUID())
@@ -151,9 +218,22 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
                 .build();
     }
 
+    private Behandling opprettKlageBehandling(String behandlendeEnhet) {
+        return Behandling.builder()
+                .medUuid(UUID.randomUUID())
+                .medBehandlingType(BehandlingType.KLAGE)
+                .medBehandlendeEnhetNavn(behandlendeEnhet)
+                .build();
+    }
+
     private DokumentHendelse lagDokumentHendelse() {
         return lagStandardHendelseBuilder()
                 .medFritekst(FRITEKST_INN)
                 .build();
+    }
+
+    private void mockKlageDokument() {
+        KlageDokument klageDokument = new KlageDokument(KLAGE_DATO);
+        when(domeneobjektProvider.hentKlageDokument(any(Behandling.class))).thenReturn(klageDokument);
     }
 }

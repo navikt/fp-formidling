@@ -31,7 +31,7 @@ public class HenleggeDokumentdataMapper implements DokumentdataMapper {
     @Override
     public HenleggelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
 
-        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse);
+        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse, behandling);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
 

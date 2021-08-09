@@ -21,6 +21,7 @@ import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.Underm
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereNyeOpplysningerUtbet;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetNårGradering;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetaling;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallInnvilgedePerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFomHvisFinnes;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTomHvisFinnes;
@@ -138,8 +139,9 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
                 .medIngenRefusjon(harIngenRefusjon(beregningsresultatFP))
                 .medDelvisRefusjon(harDelvisRefusjon(beregningsresultatFP))
                 .medFullRefusjon(harFullRefusjon(beregningsresultatFP))
-                .medAntallPerioder(finnAntallPerioder(utbetalingsperioder))
                 .medFbEllerRvInnvilget(erFbEllerRvInnvilget(behandling))
+                .medAntallPerioder(finnAntallPerioder(utbetalingsperioder))
+                .medAntallInnvilgedePerioder(finnAntallInnvilgedePerioder(utbetalingsperioder))
                 .medHarInnvilgedePerioder(harInnvilgedePerioder(utbetalingsperioder))
                 .medAntallArbeidsgivere(finnAntallArbeidsgivere(beregningsresultatFP))
                 .medDagerTaptFørTermin(saldoer.tapteDagerFpff())

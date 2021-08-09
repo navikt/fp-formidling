@@ -89,12 +89,16 @@ public final class UtbetalingsperiodeMapper {
                 .max(Comparator.comparing(LocalDate::toEpochDay)).orElse(null);
     }
 
-    public static boolean harInnvilgedePerioder(List<Utbetalingsperiode> utbetalingsperioder) {
-        return utbetalingsperioder.stream().anyMatch(Utbetalingsperiode::isInnvilget);
-    }
-
     public static int finnAntallPerioder(List<Utbetalingsperiode> utbetalingsperioder) {
         return utbetalingsperioder.size();
+    }
+
+    public static int finnAntallInnvilgedePerioder(List<Utbetalingsperiode> utbetalingsperioder) {
+        return (int) utbetalingsperioder.stream().filter(Utbetalingsperiode::isInnvilget).count();
+    }
+
+    public static boolean harInnvilgedePerioder(List<Utbetalingsperiode> utbetalingsperioder) {
+        return utbetalingsperioder.stream().anyMatch(Utbetalingsperiode::isInnvilget);
     }
 
     public static boolean finnesPeriodeMedIkkeOmsorg(List<Utbetalingsperiode> perioder) {

@@ -1,12 +1,13 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
@@ -36,6 +37,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     private boolean fbEllerRvInnvilget;
 
     private int antallPerioder;
+    private int antallInnvilgedePerioder;
     private boolean harInnvilgedePerioder;
     private int antallArbeidsgivere;
     private int dagerTaptFørTermin;
@@ -164,6 +166,10 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
         return antallPerioder;
     }
 
+    public int getAntallInnvilgedePerioder() {
+        return antallInnvilgedePerioder;
+    }
+
     public boolean getHarInnvilgedePerioder() {
         return harInnvilgedePerioder;
     }
@@ -281,6 +287,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
                 && Objects.equals(fullRefusjon, that.fullRefusjon)
                 && Objects.equals(fbEllerRvInnvilget, that.fbEllerRvInnvilget)
                 && Objects.equals(antallPerioder, that.antallPerioder)
+                && Objects.equals(antallInnvilgedePerioder, that.antallInnvilgedePerioder)
                 && Objects.equals(harInnvilgedePerioder, that.harInnvilgedePerioder)
                 && Objects.equals(antallArbeidsgivere, that.antallArbeidsgivere)
                 && Objects.equals(dagerTaptFørTermin, that.dagerTaptFørTermin)
@@ -312,11 +319,11 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
                 dekningsgrad, dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver,
                 annenForelderHarRett, annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse,
                 gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget,
-                antallPerioder, harInnvilgedePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager, disponibleFellesDager,
-                sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker, antallBarn, prematurDager,
-                perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler, klagefristUker,
-                lovhjemlerUttak, lovhjemlerBeregning, inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget, inkludereAvslag,
-                inkludereNyeOpplysningerUtbet);
+                antallPerioder, antallInnvilgedePerioder, harInnvilgedePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager,
+                disponibleFellesDager, sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker,
+                antallBarn, prematurDager, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler,
+                klagefristUker, lovhjemlerUttak, lovhjemlerBeregning, inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget,
+                inkludereAvslag, inkludereNyeOpplysningerUtbet);
     }
 
     public static Builder ny() {
@@ -457,6 +464,11 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
 
         public Builder medAntallPerioder(int antallPerioder) {
             this.kladd.antallPerioder = antallPerioder;
+            return this;
+        }
+
+        public Builder medAntallInnvilgedePerioder(int antallInnvilgedePerioder) {
+            this.kladd.antallInnvilgedePerioder = antallInnvilgedePerioder;
             return this;
         }
 

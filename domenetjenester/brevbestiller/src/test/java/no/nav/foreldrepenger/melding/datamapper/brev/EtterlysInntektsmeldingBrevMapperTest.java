@@ -48,7 +48,6 @@ public class EtterlysInntektsmeldingBrevMapperTest {
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(ytelseType)
-                .medBehandlendeEnhetNavn(HenleggBehandlingBrevMapper.FAMPEN)
                 .build();
 
         mapper = new EtterlysInntektsmeldingBrevMapper() {

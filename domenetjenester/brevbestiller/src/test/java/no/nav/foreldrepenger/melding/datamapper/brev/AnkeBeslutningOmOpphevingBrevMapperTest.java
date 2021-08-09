@@ -52,7 +52,6 @@ class AnkeBeslutningOmOpphevingBrevMapperTest {
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
-                .medBehandlendeEnhetNavn(HenleggBehandlingBrevMapper.FAMPEN)
                 .build();
 
         mapper = new AnkeBeslutningOmOpphevingBrevMapper() {

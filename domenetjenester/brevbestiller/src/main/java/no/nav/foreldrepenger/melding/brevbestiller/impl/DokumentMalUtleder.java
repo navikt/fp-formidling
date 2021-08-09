@@ -114,7 +114,7 @@ class DokumentMalUtleder {
         if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {
             return mapKlageBrev(behandling);
         } else if (erRevurderingMedUendretUtfall(behandling)) {
-            return DokumentMalType.UENDRETUTFALL_DOK;
+            return DokumentMalType.INGEN_ENDRING;
         } else if (FagsakYtelseType.FORELDREPENGER.equals(hendelse.getYtelseType())) {
             return mapForeldrepengerVedtaksbrev(behandling);
         } else if (FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType())) {

@@ -48,11 +48,7 @@ public class DokumentXmlDataMapper {
     }
 
     public static DokumentTypeMapper velgDokumentMapper(DokumentMalType dokumentMalType) {
-        String faktiskDokumentmal = dokumentMalType.getKode();
-        if (DokumentMalType.FORLENGET_BREVMALER_DOKPROD.contains(dokumentMalType)) {
-            faktiskDokumentmal = DokumentMalType.FORLENGET_DOK.getKode();
-        }
-        return CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(faktiskDokumentmal)).get();
+        return CDI.current().select(DokumentTypeMapper.class, new NamedLiteral(dokumentMalType.getKode())).get();
     }
 
     private static FellesType mapFellesType(final DokumentFelles dokumentFelles, Saksnummer saksnummer) {

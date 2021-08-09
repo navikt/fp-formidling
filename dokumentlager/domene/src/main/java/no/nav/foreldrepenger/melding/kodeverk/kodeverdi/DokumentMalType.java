@@ -94,12 +94,6 @@ public enum DokumentMalType implements Kodeverdi {
     ;
     public static final String KODEVERK = "DOKUMENT_MAL_TYPE";
 
-    @Deprecated
-    public static final Set<DokumentMalType> FORLENGET_BREVMALER_DOKPROD = Set.of(
-            DokumentMalType.FORLENGET_MEDL_DOK,
-            DokumentMalType.FORLENGET_TIDLIG_SOK,
-            DokumentMalType.FORLENGET_DOK);
-
     public static final Set<DokumentMalType> FORLENGET_SAKSBEHANDLINGSTID_BREVMALER = Set.of(
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL,

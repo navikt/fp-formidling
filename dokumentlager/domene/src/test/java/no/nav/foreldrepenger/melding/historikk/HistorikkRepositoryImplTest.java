@@ -46,7 +46,7 @@ public class HistorikkRepositoryImplTest {
                 .medJournalpostId(new JournalpostId(123L))
                 .medDokumentId("123")
                 .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
-                .medDokumentMalType(DokumentMalType.UENDRETUTFALL_DOK)
+                .medDokumentMalType(DokumentMalType.INGEN_ENDRING)
                 .medHistorikkAktør(HistorikkAktør.SAKSBEHANDLER)
                 .build();
         historikkRepository.lagre(historikkInnslag);

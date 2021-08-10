@@ -1,16 +1,16 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
 public final class BeregningsresultatMapper {
 
@@ -35,7 +35,8 @@ public final class BeregningsresultatMapper {
     }
 
     public static boolean harIngenRefusjon(BeregningsresultatFP beregningsresultatFP) {
-        return harBrukerAndel(beregningsresultatFP) && !harArbeidsgiverAndel(beregningsresultatFP);
+        return (harBrukerAndel(beregningsresultatFP) && !harArbeidsgiverAndel(beregningsresultatFP)) ||
+                (!harBrukerAndel(beregningsresultatFP) && !harArbeidsgiverAndel(beregningsresultatFP));
     }
 
     public static boolean harDelvisRefusjon(BeregningsresultatFP beregningsresultatFP) {

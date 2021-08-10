@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
 import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallInnvilgedePerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFomHvisFinnes;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTomHvisFinnes;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.harInnvilgedePerioder;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
@@ -310,28 +310,6 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_finne_innvilgede_perioder() {
-        // Arrange
-        List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
-        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 30), false, utbetalingsperioder);
-
-        // Act + Assert
-        assertThat(harInnvilgedePerioder(utbetalingsperioder)).isTrue();
-    }
-
-    @Test
-    public void skal_ikke_finne_innvilgede_perioder() {
-        // Arrange
-        List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
-        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), false, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 30), false, utbetalingsperioder);
-
-        // Act + Assert
-        assertThat(harInnvilgedePerioder(utbetalingsperioder)).isFalse();
-    }
-
-    @Test
     public void skal_finne_antall_perioder() {
         // Arrange
         List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
@@ -341,6 +319,18 @@ public class UtbetalingsperiodeMapperTest {
 
         // Act + Assert
         assertThat(finnAntallPerioder(utbetalingsperioder)).isEqualTo(3);
+    }
+
+    @Test
+    public void skal_finne_antall_innvilgede_perioder() {
+        // Arrange
+        List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
+        leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, utbetalingsperioder);
+        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true, utbetalingsperioder);
+        leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), true, utbetalingsperioder);
+
+        // Act + Assert
+        assertThat(finnAntallInnvilgedePerioder(utbetalingsperioder)).isEqualTo(2);
     }
 
     @Test

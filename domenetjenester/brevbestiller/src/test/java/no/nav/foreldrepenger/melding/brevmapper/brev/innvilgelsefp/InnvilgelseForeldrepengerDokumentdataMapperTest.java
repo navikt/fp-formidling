@@ -168,7 +168,6 @@ public class InnvilgelseForeldrepengerDokumentdataMapperTest {
         assertThat(dokumentdata.getFullRefusjon()).isFalse();
         assertThat(dokumentdata.getAntallPerioder()).isEqualTo(3);
         assertThat(dokumentdata.getAntallInnvilgedePerioder()).isEqualTo(1);
-        assertThat(dokumentdata.getHarInnvilgedePerioder()).isTrue();
         assertThat(dokumentdata.getAntallArbeidsgivere()).isEqualTo(1);
         assertThat(dokumentdata.getDagerTaptFørTermin()).isEqualTo(TAPTE_DAGER_FPFF);
         assertThat(dokumentdata.getDisponibleDager()).isEqualTo(DISPONIBLE_DAGER);

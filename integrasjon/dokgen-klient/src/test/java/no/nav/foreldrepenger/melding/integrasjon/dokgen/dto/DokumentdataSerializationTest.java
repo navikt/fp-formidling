@@ -156,7 +156,7 @@ public class DokumentdataSerializationTest {
                 .medFullRefusjon(true)
                 .medFbEllerRvInnvilget(true)
                 .medAntallPerioder(2)
-                .medHarInnvilgedePerioder(true)
+                .medAntallInnvilgedePerioder(1)
                 .medAntallArbeidsgivere(3)
                 .medDagerTaptFørTermin(4)
                 .medDisponibleDager(5)

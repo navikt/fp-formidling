@@ -97,10 +97,6 @@ public final class UtbetalingsperiodeMapper {
         return (int) utbetalingsperioder.stream().filter(Utbetalingsperiode::isInnvilget).count();
     }
 
-    public static boolean harInnvilgedePerioder(List<Utbetalingsperiode> utbetalingsperioder) {
-        return utbetalingsperioder.stream().anyMatch(Utbetalingsperiode::isInnvilget);
-    }
-
     public static boolean finnesPeriodeMedIkkeOmsorg(List<Utbetalingsperiode> perioder) {
         return perioder.stream()
                 .map(Utbetalingsperiode::getÅrsak)

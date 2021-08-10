@@ -9,25 +9,34 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.geografisk.PoststedKodeverkRepository;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.melding.poststed.PostnummerSynkroniseringTjeneste;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
+import no.nav.foreldrepenger.melding.web.app.tjenester.brev.AbacBehandlingUuidDto;
+import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
+import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
 @Path("/forvaltning")
@@ -37,6 +46,8 @@ public class ForvaltningRestTjeneste {
     private static final Environment ENVIRONMENT = Environment.current();
 
     private Dokgen dokgenRestKlient;
+    private DomeneobjektProvider domeneobjektProvider;
+    private SakClient sakClient;
     private PostnummerSynkroniseringTjeneste postnummerTjeneste;
     private PoststedKodeverkRepository poststedKodeverkRepository;
 
@@ -46,9 +57,13 @@ public class ForvaltningRestTjeneste {
 
     @Inject
     public ForvaltningRestTjeneste(/* @Jersey */ Dokgen dokgenRestKlient,
+            DomeneobjektProvider domeneobjektProvider,
+            SakClient sakClient,
             PostnummerSynkroniseringTjeneste postnummerTjeneste,
             PoststedKodeverkRepository poststedKodeverkRepository) {
         this.dokgenRestKlient = dokgenRestKlient;
+        this.domeneobjektProvider = domeneobjektProvider;
+        this.sakClient = sakClient;
         this.postnummerTjeneste = postnummerTjeneste;
         this.poststedKodeverkRepository = poststedKodeverkRepository;
     }
@@ -78,6 +93,34 @@ public class ForvaltningRestTjeneste {
         responseBuilder.type("application/pdf");
         responseBuilder.header("Content-Disposition", "attachment; filename=dokument.pdf");
         return responseBuilder.build();
+    }
+
+    @POST
+    @Path("/opprett-arkivsak-hvis-mangler")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    @Operation(description = "Tar imot behandlingUuid og oppretter arkivsak til bruk for dokprod dersom det mangler.", tags = "forvaltning")
+    @BeskyttetRessurs(action = READ, resource = DRIFT)
+    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
+    public Response opprettArkivsakVedBehov(@NotNull @QueryParam(AbacBehandlingUuidDto.NAME) @Parameter(description = AbacBehandlingUuidDto.DESC)
+                                                @Valid AbacBehandlingUuidDto uuidDto) throws Exception {
+        var behandling = domeneobjektProvider.hentBehandling(uuidDto.getBehandlingUuid());
+        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var saksnummer = fagsak.getSaksnummer();
+        if (Long.parseLong(saksnummer.getVerdi()) >= 152000000L) {
+            var sak = sakClient.finnForSaksnummer(saksnummer.getVerdi());
+            if (sak.isEmpty()) {
+                var request = SakJson.getBuilder()
+                        .medAktoerId(fagsak.getAktørId().getId())
+                        .medFagsakNr(saksnummer.getVerdi())
+                        .medApplikasjon(Fagsystem.FPSAK.getOffisiellKode())
+                        .medTema("FOR")
+                        .build();
+                var arkivsak = sakClient.opprettSak(request);
+                return Response.ok(new Saksnummer(String.valueOf(arkivsak.getId()))).build();
+            }
+        }
+        return Response.ok().build();
     }
 
     @POST

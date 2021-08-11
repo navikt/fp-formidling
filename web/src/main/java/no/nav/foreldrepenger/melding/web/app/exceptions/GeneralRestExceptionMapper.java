@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import no.nav.foreldrepenger.melding.brevbestiller.impl.ForhåndsvisningsException;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.ManglerTilgangException;
 import no.nav.vedtak.felles.jpa.TomtResultatException;
@@ -30,6 +31,9 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<Throwable> {
             if (feil instanceof ManglerTilgangException) {
                 return ikkeTilgang(getExceptionMelding(feil));
             }
+            if (feil instanceof ForhåndsvisningsException fve) {
+                return forhåndsVisning(fve);
+            }
             loggTilApplikasjonslogg(feil);
             return serverError(getExceptionFullFeilmelding(feil));
         } finally {
@@ -46,6 +50,15 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<Throwable> {
     }
 
     private static Response serverError(String feilmelding) {
+        return Response.serverError()
+                .entity(new FeilDto(FeilType.GENERELL_FEIL, feilmelding))
+                .type(MediaType.APPLICATION_JSON)
+                .build();
+    }
+
+    private static Response forhåndsVisning(ForhåndsvisningsException fve) {
+        var løsningsforslag = getTextForField(fve.getLøsningsforslag());
+        var feilmelding = String.format("Det oppstod en feil: %s - %s", getExceptionMelding(fve), løsningsforslag);
         return Response.serverError()
                 .entity(new FeilDto(FeilType.GENERELL_FEIL, feilmelding))
                 .type(MediaType.APPLICATION_JSON)

@@ -7,12 +7,15 @@ import javax.security.auth.login.LoginException;
 import javax.xml.ws.WebServiceException;
 
 public class SoapWebServiceFeil {
+
+    public static String DOKPROD_FEIL_INNHOLD = "F-942048";
+
     private SoapWebServiceFeil() {
 
     }
 
     static IntegrasjonException soapFaultIwebserviceKall(String webservice, WebServiceException e) {
-        return new IntegrasjonException("F-942048", String.format("SOAP tjenesten [ %s ] returnerte en SOAP Fault:", webservice), e);
+        return new IntegrasjonException(DOKPROD_FEIL_INNHOLD, String.format("SOAP tjenesten [ %s ] returnerte en SOAP Fault:", webservice), e);
     }
 
     static TekniskException feiletUtlogging(LoginException e) {

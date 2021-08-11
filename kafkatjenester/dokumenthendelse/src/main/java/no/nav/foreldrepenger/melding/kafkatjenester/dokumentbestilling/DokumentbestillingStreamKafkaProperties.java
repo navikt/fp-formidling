@@ -5,7 +5,7 @@ import javax.inject.Inject;
 
 import no.nav.familie.topic.Topic;
 import no.nav.familie.topic.TopicManifest;
-import no.nav.vedtak.konfig.KonfigVerdi;
+import no.nav.foreldrepenger.konfig.KonfigVerdi;
 
 @Dependent
 public class DokumentbestillingStreamKafkaProperties {

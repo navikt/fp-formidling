@@ -243,12 +243,6 @@
                 <type>jar</type>
             </dependency>
 
-            <dependency>
-                <groupId>net.minidev</groupId>
-                <artifactId>json-smart</artifactId>
-                <version>2.3</version>
-            </dependency>
-
             <!-- Kontrakter -->
             <dependency>
                 <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>

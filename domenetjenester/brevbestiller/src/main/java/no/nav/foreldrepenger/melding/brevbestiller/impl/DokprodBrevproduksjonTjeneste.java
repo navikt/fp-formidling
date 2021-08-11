@@ -35,6 +35,8 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.melding.dokumentproduksjon.v2.DokumentproduksjonConsumer;
+import no.nav.foreldrepenger.melding.dokumentproduksjon.v2.SoapWebServiceFeil;
+import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
@@ -54,6 +56,7 @@ import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokume
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserDokumentutkastResponse;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentRequest;
 import no.nav.tjeneste.virksomhet.dokumentproduksjon.v2.meldinger.ProduserIkkeredigerbartDokumentResponse;
+import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
@@ -256,6 +259,9 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Override
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
+        if (DokumentMalType.OPPHØR_DOK.equals(dokumentMal) && FagsakYtelseType.SVANGERSKAPSPENGER.equals(dokumentHendelse.getYtelseType())) {
+            throw new ForhåndsvisningsException("FPFORMIDLING-221007", "Opphørsbrev Svangerskapspenger ikke implementert", "Se rutine for opphør Svangerskapspenger");
+        }
         byte[] dokument;
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.UTKAST);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
@@ -268,7 +274,18 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         førsteDokumentFelles.setBrevData(elementTilString(brevXmlElement));
         dokumentRepository.lagre(dokumentData);
 
-        dokument = forhåndsvis(dokumentMal, brevXmlElement);
+        try {
+            dokument = forhåndsvis(dokumentMal, brevXmlElement);
+        } catch (IntegrasjonException e) {
+            if (!SoapWebServiceFeil.DOKPROD_FEIL_INNHOLD.equals(e.getKode())) throw e;
+            if (DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.equals(dokumentMal) && FagsakYtelseType.FORELDREPENGER.equals(dokumentHendelse.getYtelseType())) {
+                throw new TekniskException("FPFORMIDLING-221008", "Feil ved produksjon av forhåndsvisning - se over uttaksperioder/årsakskoder", e.getCause());
+            } else {
+                throw new TekniskException("FPFORMIDLING-221009",
+                        String.format("Forhåndsvisning av %s ikke implementert eller det er mangler i data", dokumentMal.getNavn()), e.getCause());
+            }
+        }
+
         if (dokument.length == 0) {
             LOGGER.error("Klarte ikke hente behandling: {}", behandling.getUuid());
             throw new TekniskException("FPFORMIDLING-221005",

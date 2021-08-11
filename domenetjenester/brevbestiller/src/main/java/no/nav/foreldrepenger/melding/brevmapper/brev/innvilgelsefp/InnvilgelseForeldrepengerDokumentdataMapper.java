@@ -21,6 +21,7 @@ import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.Underm
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereNyeOpplysningerUtbet;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetNårGradering;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetaling;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallAvslåttePerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallInnvilgedePerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFomHvisFinnes;
@@ -141,6 +142,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
                 .medFbEllerRvInnvilget(erFbEllerRvInnvilget(behandling))
                 .medAntallPerioder(finnAntallPerioder(utbetalingsperioder))
                 .medAntallInnvilgedePerioder(finnAntallInnvilgedePerioder(utbetalingsperioder))
+                .medAntallAvslåttePerioder(finnAntallAvslåttePerioder(utbetalingsperioder))
                 .medAntallArbeidsgivere(finnAntallArbeidsgivere(beregningsresultatFP))
                 .medDagerTaptFørTermin(saldoer.tapteDagerFpff())
                 .medDisponibleDager(finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()))

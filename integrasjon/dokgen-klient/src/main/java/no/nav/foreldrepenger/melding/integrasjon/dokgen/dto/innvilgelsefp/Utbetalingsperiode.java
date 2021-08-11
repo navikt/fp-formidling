@@ -32,6 +32,10 @@ public class Utbetalingsperiode {
         return innvilget;
     }
 
+    public boolean isAvslått() {
+        return !innvilget;
+    }
+
     public String getÅrsak() {
         return årsak;
     }

@@ -31,20 +31,20 @@ public class VirksomhetTjeneste {
     public Virksomhet getOrganisasjon(String orgNummer, UnaryOperator<String> landKodeOversetter)  {
         var response = eregRestKlient.hentOrganisasjonAdresse(orgNummer);
         var adresse = response.getKorrespondanseadresse();
-        var antaNorsk = adresse.getLandkode() == null || Landkoder.NOR.getKode().equals(adresse.getLandkode()) || "NO".equals(adresse.getLandkode());
-        var oversattLandkode = antaNorsk ? Landkoder.NOR.getKode() : landKodeOversetter.apply(adresse.getLandkode());
+        var antaNorsk = adresse.landkode() == null || Landkoder.NOR.getKode().equals(adresse.landkode()) || "NO".equals(adresse.landkode());
+        var oversattLandkode = antaNorsk ? Landkoder.NOR.getKode() : landKodeOversetter.apply(adresse.landkode());
         var builder = new Virksomhet.Builder()
                 .medOrgnr(orgNummer)
                 .medNavn(response.getNavn())
-                .medAdresselinje1(adresse.getAdresselinje1())
-                .medAdresselinje2(adresse.getAdresselinje2())
-                .medAdresselinje3(adresse.getAdresselinje3())
+                .medAdresselinje1(adresse.adresselinje1())
+                .medAdresselinje2(adresse.adresselinje2())
+                .medAdresselinje3(adresse.adresselinje3())
                 .medLandkode(oversattLandkode)
-                .medPostNr(adresse.getPostnummer())
-                .medPoststed(adresse.getPoststed());
+                .medPostNr(adresse.postnummer())
+                .medPoststed(adresse.poststed());
 
-        if (antaNorsk && adresse.getPostnummer() != null) {
-            kodeverkRepository.finnPostnummer(adresse.getPostnummer()).map(Poststed::getPoststednavn).ifPresent(builder::medPoststed);
+        if (antaNorsk && adresse.postnummer() != null) {
+            kodeverkRepository.finnPostnummer(adresse.postnummer()).map(Poststed::getPoststednavn).ifPresent(builder::medPoststed);
         }
         return builder.build();
     }

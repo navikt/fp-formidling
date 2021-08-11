@@ -1,6 +1,11 @@
 package no.nav.foreldrepenger.melding.kafkatjenester.historikk;
 
-import no.nav.vedtak.konfig.KonfigVerdi;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -11,10 +16,7 @@ import org.apache.kafka.common.errors.AuthorizationException;
 import org.apache.kafka.common.errors.RetriableException;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.Properties;
-import java.util.concurrent.ExecutionException;
+import no.nav.foreldrepenger.konfig.KonfigVerdi;
 
 @ApplicationScoped
 public class DokumentHistorikkinnslagProducer {

@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.melding.integrasjon.kodeverk;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.xml.namespace.QName;
+import javax.xml.ws.soap.SOAPFaultException;
+
+import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.cxf.ws.addressing.WSAddressingFeature;
+
+import no.nav.foreldrepenger.konfig.KonfigVerdi;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.FinnKodeverkListeRequest;
@@ -7,14 +16,6 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.FinnKodeverkListeRespons
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkResponse;
 import no.nav.vedtak.exception.IntegrasjonException;
-import no.nav.vedtak.konfig.KonfigVerdi;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.xml.namespace.QName;
-import javax.xml.ws.soap.SOAPFaultException;
 
 @ApplicationScoped
 public class KodeverkConsumer {

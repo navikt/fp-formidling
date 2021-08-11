@@ -9,9 +9,9 @@ import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.foreldrepenger.konfig.KonfigVerdi;
 import no.nav.foreldrepenger.melding.web.app.pdp.dto.PipDto;
 import no.nav.vedtak.felles.integrasjon.rest.SystemUserOidcRestClient;
-import no.nav.vedtak.konfig.KonfigVerdi;
 
 @ApplicationScoped
 //For Future Use

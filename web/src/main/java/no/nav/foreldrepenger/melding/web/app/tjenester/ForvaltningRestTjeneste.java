@@ -102,8 +102,7 @@ public class ForvaltningRestTjeneste {
     @Operation(description = "Tar imot behandlingUuid og oppretter arkivsak til bruk for dokprod dersom det mangler.", tags = "forvaltning")
     @BeskyttetRessurs(action = READ, resource = DRIFT)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response opprettArkivsakVedBehov(@NotNull @QueryParam(AbacBehandlingUuidDto.NAME) @Parameter(description = AbacBehandlingUuidDto.DESC)
-                                                @Valid AbacBehandlingUuidDto uuidDto) throws Exception {
+    public Response opprettArkivsakVedBehov(@BeanParam @Valid AbacBehandlingUuidDto uuidDto) throws Exception {
         var behandling = domeneobjektProvider.hentBehandling(uuidDto.getBehandlingUuid());
         var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         var saksnummer = fagsak.getSaksnummer();

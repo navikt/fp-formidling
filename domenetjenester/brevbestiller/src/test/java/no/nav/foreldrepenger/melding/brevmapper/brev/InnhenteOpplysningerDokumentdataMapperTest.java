@@ -83,7 +83,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagDokumentHendelse();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getFelles()).isNotNull();
@@ -97,6 +97,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getFritekst()).isEqualTo(FRITEKST_UT);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getErUtkast()).isEqualTo(false);
 
         assertThat(innhenteOpplysningerDokumentdata.getFørstegangsbehandling()).isFalse();
         assertThat(innhenteOpplysningerDokumentdata.getRevurdering()).isTrue();
@@ -115,7 +116,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagDokumentHendelse();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getFelles()).isNotNull();
@@ -134,7 +135,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagDokumentHendelse();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getFelles()).isNotNull();
@@ -152,7 +153,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         mockKlageDokument();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
@@ -168,7 +169,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         mockKlageDokument();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
@@ -184,7 +185,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         mockKlageDokument();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
@@ -200,7 +201,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         mockKlageDokument();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();

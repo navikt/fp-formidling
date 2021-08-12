@@ -65,7 +65,7 @@ public class ForlengetSaksbehandlingstidDokumentdataMapperTest {
                 .build();
 
         // Act
-        ForlengetSaksbehandlingstidDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        ForlengetSaksbehandlingstidDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -77,6 +77,8 @@ public class ForlengetSaksbehandlingstidDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getErKopi()).isEqualTo(true);
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
+        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
+        assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(false);
 
         assertThat(dokumentdata.getVariantType()).isEqualTo(ForlengetSaksbehandlingstidDokumentdata.VariantType.MEDLEM);
         assertThat(dokumentdata.getDød()).isFalse();

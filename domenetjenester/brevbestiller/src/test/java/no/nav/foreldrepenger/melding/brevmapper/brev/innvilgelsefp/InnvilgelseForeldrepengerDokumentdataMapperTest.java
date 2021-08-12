@@ -131,7 +131,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        InnvilgelseForeldrepengerDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        InnvilgelseForeldrepengerDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, true);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -144,6 +144,8 @@ public class InnvilgelseForeldrepengerDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FRITEKST);
+        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
+        assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(true);
 
         assertThat(dokumentdata.getBehandlingType()).isEqualTo(behandling.getBehandlingType().name());
         assertThat(dokumentdata.getBehandlingResultatType()).isEqualTo(behandling.getBehandlingsresultat().getBehandlingResultatType().name());

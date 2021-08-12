@@ -28,7 +28,7 @@ import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.Utbeta
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTomHvisFinnes;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesDokumentdataBuilder;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 
@@ -91,7 +91,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
 
     @Override
     public InnvilgelseForeldrepengerDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
-            Behandling behandling) {
+                                                                    Behandling behandling, boolean erUtkast) {
         YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
         BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
         Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
@@ -104,7 +104,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
         FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         Saldoer saldoer = domeneobjektProvider.hentSaldoer(behandling);
 
-        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, dokumentHendelse, behandling);
+        var fellesBuilder = opprettFellesBuilder(dokumentFelles, dokumentHendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(
                 dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());

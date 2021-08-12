@@ -154,7 +154,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         if (DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.equals(dokumentMal)) {
             try {
                 DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(DokumentMalType.INNVILGELSE_FORELDREPENGER);
-                Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+                Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
                 dokumentdata.getFelles().anonymiser();
                 dokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
             } catch (Exception e) {

@@ -81,7 +81,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
         // Act
-        VarselOmRevurderingDokumentdata varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        VarselOmRevurderingDokumentdata varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(varselOmRevurderingDokumentdata.getFelles()).isNotNull();
@@ -94,6 +94,8 @@ public class VarselOmRevurderingDokumentdataMapperTest {
         assertThat(varselOmRevurderingDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(varselOmRevurderingDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(varselOmRevurderingDokumentdata.getFelles().getFritekst()).isEqualTo(FRITEKST);
+        assertThat(varselOmRevurderingDokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
+        assertThat(varselOmRevurderingDokumentdata.getFelles().getErUtkast()).isEqualTo(false);
 
         assertThat(varselOmRevurderingDokumentdata.getTerminDato()).isEqualTo(formaterDatoNorsk(TERMINDATO));
         assertThat(varselOmRevurderingDokumentdata.getFristDato()).isEqualTo(formaterDatoNorsk(brevMapperUtil.getSvarFrist()));
@@ -110,7 +112,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
         // Act
-        VarselOmRevurderingDokumentdata varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        VarselOmRevurderingDokumentdata varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(varselOmRevurderingDokumentdata.getFelles()).isNotNull();
@@ -129,7 +131,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEID_I_UTLANDET);
 
         // Act
-        VarselOmRevurderingDokumentdata varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        VarselOmRevurderingDokumentdata varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(varselOmRevurderingDokumentdata.getFlereOpplysninger()).isTrue();

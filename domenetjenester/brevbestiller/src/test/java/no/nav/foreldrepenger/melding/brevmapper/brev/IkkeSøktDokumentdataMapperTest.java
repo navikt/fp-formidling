@@ -65,7 +65,7 @@ public class IkkeSøktDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        IkkeSøktDokumentdata ikkeSøktDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        IkkeSøktDokumentdata ikkeSøktDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(ikkeSøktDokumentdata.getFelles()).isNotNull();
@@ -77,6 +77,8 @@ public class IkkeSøktDokumentdataMapperTest {
         assertThat(ikkeSøktDokumentdata.getFelles().getErKopi()).isEqualTo(true);
         assertThat(ikkeSøktDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(ikkeSøktDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
+        assertThat(ikkeSøktDokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
+        assertThat(ikkeSøktDokumentdata.getFelles().getErUtkast()).isEqualTo(false);
 
         assertThat(ikkeSøktDokumentdata.getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER);
         assertThat(ikkeSøktDokumentdata.getMottattDato()).isEqualTo(formaterDatoNorsk(INNSENDINGSTIDSPUNKT));
@@ -90,7 +92,7 @@ public class IkkeSøktDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        IkkeSøktDokumentdata ikkeSøktDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        IkkeSøktDokumentdata ikkeSøktDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(ikkeSøktDokumentdata.getFelles()).isNotNull();

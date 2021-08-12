@@ -47,7 +47,7 @@ public class IngenEndringDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        IngenEndringDokumentdata ingenEndringDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        IngenEndringDokumentdata ingenEndringDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(ingenEndringDokumentdata.getFelles()).isNotNull();
@@ -59,6 +59,8 @@ public class IngenEndringDokumentdataMapperTest {
         assertThat(ingenEndringDokumentdata.getFelles().getErKopi()).isEqualTo(true);
         assertThat(ingenEndringDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(ingenEndringDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
+        assertThat(ingenEndringDokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
+        assertThat(ingenEndringDokumentdata.getFelles().getErUtkast()).isEqualTo(false);
     }
 
     @Test
@@ -69,7 +71,7 @@ public class IngenEndringDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        IngenEndringDokumentdata ingenEndringDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        IngenEndringDokumentdata ingenEndringDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(ingenEndringDokumentdata.getFelles()).isNotNull();

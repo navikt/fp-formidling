@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
 import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallAvslåttePerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallInnvilgedePerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFomHvisFinnes;
@@ -331,6 +332,18 @@ public class UtbetalingsperiodeMapperTest {
 
         // Act + Assert
         assertThat(finnAntallInnvilgedePerioder(utbetalingsperioder)).isEqualTo(2);
+    }
+
+    @Test
+    public void skal_finne_antall_avslåtte_perioder() {
+        // Arrange
+        List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
+        leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, utbetalingsperioder);
+        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true, utbetalingsperioder);
+        leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), true, utbetalingsperioder);
+
+        // Act + Assert
+        assertThat(finnAntallAvslåttePerioder(utbetalingsperioder)).isEqualTo(1);
     }
 
     @Test

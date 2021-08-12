@@ -97,6 +97,10 @@ public final class UtbetalingsperiodeMapper {
         return (int) utbetalingsperioder.stream().filter(Utbetalingsperiode::isInnvilget).count();
     }
 
+    public static int finnAntallAvslåttePerioder(List<Utbetalingsperiode> utbetalingsperioder) {
+        return (int) utbetalingsperioder.stream().filter(Utbetalingsperiode::isAvslått).count();
+    }
+
     public static boolean finnesPeriodeMedIkkeOmsorg(List<Utbetalingsperiode> perioder) {
         return perioder.stream()
                 .map(Utbetalingsperiode::getÅrsak)

@@ -38,6 +38,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
 
     private int antallPerioder;
     private int antallInnvilgedePerioder;
+    private int antallAvslåttePerioder;
     private int antallArbeidsgivere;
     private int dagerTaptFørTermin;
     private int disponibleDager;
@@ -169,6 +170,10 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
         return antallInnvilgedePerioder;
     }
 
+    public int getAntallAvslåttePerioder() {
+        return antallAvslåttePerioder;
+    }
+
     public int getAntallArbeidsgivere() {
         return antallArbeidsgivere;
     }
@@ -283,6 +288,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
                 && Objects.equals(fbEllerRvInnvilget, that.fbEllerRvInnvilget)
                 && Objects.equals(antallPerioder, that.antallPerioder)
                 && Objects.equals(antallInnvilgedePerioder, that.antallInnvilgedePerioder)
+                && Objects.equals(antallAvslåttePerioder, that.antallAvslåttePerioder)
                 && Objects.equals(antallArbeidsgivere, that.antallArbeidsgivere)
                 && Objects.equals(dagerTaptFørTermin, that.dagerTaptFørTermin)
                 && Objects.equals(disponibleDager, that.disponibleDager)
@@ -313,7 +319,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
                 dekningsgrad, dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver,
                 annenForelderHarRett, annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse,
                 gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget,
-                antallPerioder, antallInnvilgedePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager,
+                antallPerioder, antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager,
                 disponibleFellesDager, sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker,
                 antallBarn, prematurDager, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler,
                 klagefristUker, lovhjemlerUttak, lovhjemlerBeregning, inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget,
@@ -463,6 +469,11 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
 
         public Builder medAntallInnvilgedePerioder(int antallInnvilgedePerioder) {
             this.kladd.antallInnvilgedePerioder = antallInnvilgedePerioder;
+            return this;
+        }
+
+        public Builder medAntallAvslåttePerioder(int antallAvslåttePerioder) {
+            this.kladd.antallAvslåttePerioder = antallAvslåttePerioder;
             return this;
         }
 

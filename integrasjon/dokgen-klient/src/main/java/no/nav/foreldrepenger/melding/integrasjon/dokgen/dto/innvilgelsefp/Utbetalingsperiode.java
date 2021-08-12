@@ -23,13 +23,17 @@ public class Utbetalingsperiode {
     private LocalDate periodeTomDate;
     private long periodeDagsats;
     private int antallTapteDager;
-    private Prosent prioritertUtbetalingsgrad;
+    private Prosent prioritertUtbetalingsgrad = Prosent.NULL;
     private List<Arbeidsforhold> arbeidsforholdsliste = new ArrayList<>();
     private Næring næring;
     private List<AnnenAktivitet> annenAktivitetsliste = new ArrayList<>();
 
     public boolean isInnvilget() {
         return innvilget;
+    }
+
+    public boolean isAvslått() {
+        return !innvilget;
     }
 
     public String getÅrsak() {

@@ -94,9 +94,10 @@ public class BrevMapperUtil {
         return !dokumentFelles.getMottakerId().equals(dokumentFelles.getSakspartId());
     }
 
-    public static FellesDokumentdata.Builder opprettFellesDokumentdataBuilder(DokumentFelles dokumentFelles,
-                                                                              DokumentHendelse dokumentHendelse,
-                                                                              Behandling behandling) {
+    public static FellesDokumentdata.Builder opprettFellesBuilder(DokumentFelles dokumentFelles,
+                                                                  DokumentHendelse dokumentHendelse,
+                                                                  Behandling behandling,
+                                                                  boolean erUtkast) {
         FellesDokumentdata.Builder fellesBuilder = FellesDokumentdata.ny()
                 .medSøkerNavn(dokumentFelles.getSakspartNavn())
                 .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
@@ -104,7 +105,8 @@ public class BrevMapperUtil {
                 .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
                 .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
                 .medYtelseType(dokumentHendelse.getYtelseType().getKode())
-                .medBehandlesAvKA(behandlesAvKlageinstans(dokumentHendelse, behandling));
+                .medBehandlesAvKA(behandlesAvKlageinstans(dokumentHendelse, behandling))
+                .medErUtkast(erUtkast);
 
         if (brevSendesTilVerge(dokumentFelles)) {
             fellesBuilder.medMottakerNavn(dokumentFelles.getMottakerNavn());

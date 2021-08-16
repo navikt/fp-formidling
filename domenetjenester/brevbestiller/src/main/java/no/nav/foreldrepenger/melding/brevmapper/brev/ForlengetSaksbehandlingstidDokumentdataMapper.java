@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erDød;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesDokumentdataBuilder;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import java.math.BigInteger;
@@ -51,9 +51,10 @@ public class ForlengetSaksbehandlingstidDokumentdataMapper implements Dokumentda
     }
 
     @Override
-    public ForlengetSaksbehandlingstidDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
+    public ForlengetSaksbehandlingstidDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
+                                                                      Behandling behandling, boolean erUtkast) {
 
-        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse, behandling);
+        var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
         return ForlengetSaksbehandlingstidDokumentdata.ny()

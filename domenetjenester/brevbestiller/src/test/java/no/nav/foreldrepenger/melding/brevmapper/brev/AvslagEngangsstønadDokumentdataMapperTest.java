@@ -87,7 +87,7 @@ class AvslagEngangsstønadDokumentdataMapperTest {
         when(domeneobjektProvider.hentVilkår(avslagESFB)).thenReturn(vilkårFraBehandling);
 
         //Act
-        EngangsstønadAvslagDokumentdata avslagDokumentdata = avslagEngangsstønadDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, avslagESFB);
+        EngangsstønadAvslagDokumentdata avslagDokumentdata = avslagEngangsstønadDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, avslagESFB, false);
 
         //Verify
         assertThat(avslagDokumentdata.getAvslagÅrsak()).isEqualTo(Avslagsårsak.SØKT_FOR_SENT.name());

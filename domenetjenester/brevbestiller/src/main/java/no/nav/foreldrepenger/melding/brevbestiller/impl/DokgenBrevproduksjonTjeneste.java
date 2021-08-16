@@ -93,7 +93,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
 
         DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
-        Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(førsteDokumentFelles, dokumentHendelse, behandling);
+        Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(førsteDokumentFelles, dokumentHendelse, behandling, true);
         byte[] brev;
         try {
             brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
@@ -115,7 +115,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
             DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
-            Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+            Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
             dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
             opprettAlternativeBrevDataOmNødvendig(dokumentHendelse, behandling, dokumentMal, dokumentFelles);
 

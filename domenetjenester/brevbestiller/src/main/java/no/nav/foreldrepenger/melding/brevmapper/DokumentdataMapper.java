@@ -9,5 +9,5 @@ public interface DokumentdataMapper {
 
     String getTemplateNavn();
 
-    Dokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling);
+    Dokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling, boolean erUtkast);
 }

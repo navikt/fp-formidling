@@ -59,7 +59,7 @@ class InfoBrevTilAnnenForeldrerDokumentdataMapperTest {
         when(domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)).thenReturn(Optional.of(uttakResultatPerioder));
 
         //Act
-        InfoTilAnnenForelderDokumentdata infoTilAnnenForelderData = infoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        InfoTilAnnenForelderDokumentdata infoTilAnnenForelderData = infoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         //assert
         assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_BEHANDLING.getKode());
@@ -75,7 +75,7 @@ class InfoBrevTilAnnenForeldrerDokumentdataMapperTest {
         when(domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)).thenReturn(Optional.of(uttakResultatPerioder));
 
         //Act
-        InfoTilAnnenForelderDokumentdata infoTilAnnenForelderData = infoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        InfoTilAnnenForelderDokumentdata infoTilAnnenForelderData = infoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         //assert
         assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_OPPHOLD.getKode());

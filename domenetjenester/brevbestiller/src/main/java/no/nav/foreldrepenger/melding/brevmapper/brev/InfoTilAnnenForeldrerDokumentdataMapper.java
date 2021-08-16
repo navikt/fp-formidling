@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesDokumentdataBuilder;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import java.math.BigDecimal;
@@ -43,9 +43,10 @@ public class InfoTilAnnenForeldrerDokumentdataMapper implements DokumentdataMapp
     }
 
     @Override
-    public InfoTilAnnenForelderDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling) {
+    public InfoTilAnnenForelderDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
+                                                               Behandling behandling, boolean erUtkast) {
 
-        var fellesBuilder = opprettFellesDokumentdataBuilder(dokumentFelles, hendelse, behandling);
+        var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
         BehandlingÅrsakType aarsak = BehandlingÅrsakType.INFOBREV_BEHANDLING;

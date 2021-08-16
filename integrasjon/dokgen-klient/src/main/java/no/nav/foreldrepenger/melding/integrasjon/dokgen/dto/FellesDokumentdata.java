@@ -17,6 +17,7 @@ public class FellesDokumentdata {
     private String mottakerNavn;
     private String ytelseType;
     private boolean behandlesAvKA;
+    private boolean erUtkast;
 
     public String getSøkerNavn() { return søkerNavn; }
 
@@ -44,6 +45,10 @@ public class FellesDokumentdata {
         return behandlesAvKA;
     }
 
+    public boolean getErUtkast() {
+        return erUtkast;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -59,13 +64,14 @@ public class FellesDokumentdata {
                 && Objects.equals(saksnummer, that.saksnummer)
                 && Objects.equals(mottakerNavn, that.mottakerNavn)
                 && Objects.equals(ytelseType, that.ytelseType)
-                && Objects.equals(behandlesAvKA, that.behandlesAvKA);
+                && Objects.equals(behandlesAvKA, that.behandlesAvKA)
+                && Objects.equals(erUtkast, that.erUtkast);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(søkerNavn, søkerPersonnummer, fritekst, brevDato, erAutomatiskBehandlet, erKopi,
-                harVerge, saksnummer, mottakerNavn, ytelseType, behandlesAvKA);
+                harVerge, saksnummer, mottakerNavn, ytelseType, behandlesAvKA, erUtkast);
     }
 
     // Til bruk når alternativt ulansert brev skal genereres i testfasen av innvilgelse FP
@@ -140,6 +146,11 @@ public class FellesDokumentdata {
 
         public Builder medBehandlesAvKA(boolean behandlesAvKA) {
             this.kladd.behandlesAvKA = behandlesAvKA;
+            return this;
+        }
+
+        public Builder medErUtkast(boolean erUtkast) {
+            this.kladd.erUtkast = erUtkast;
             return this;
         }
 

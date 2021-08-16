@@ -41,7 +41,7 @@ class HenleggeDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.FORELDREPENGER);
 
         //Act
-        HenleggelseDokumentdata henleggelseDokumentdata = mapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        HenleggelseDokumentdata henleggelseDokumentdata = mapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         //Assert
         assertThat(henleggelseDokumentdata.getVanligBehandling()).isTrue();
@@ -60,7 +60,7 @@ class HenleggeDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.SVANGERSKAPSPENGER);
 
         //Act
-        HenleggelseDokumentdata henleggelseDokumentdata = mapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling);
+        HenleggelseDokumentdata henleggelseDokumentdata = mapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         //Assert
         assertThat(henleggelseDokumentdata.getVanligBehandling()).isFalse();

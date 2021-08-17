@@ -14,12 +14,12 @@ import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelCompa
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.AarsakListeType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.AvslagsAarsakType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.opphor.ObjectFactory;
+import no.nav.foreldrepenger.melding.typer.Tuple;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
-import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 public class ÅrsakMapperOpphør {

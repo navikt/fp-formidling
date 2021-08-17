@@ -1,15 +1,15 @@
 package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
+
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.RelatertYtelseType;
 import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Optional;
 
 public class BeregningsgrunnlagPrStatusOgAndel {
     private Long dagsats;

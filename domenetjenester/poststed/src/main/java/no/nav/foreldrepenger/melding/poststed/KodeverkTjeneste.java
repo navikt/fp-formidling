@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import no.nav.foreldrepenger.melding.integrasjon.kodeverk.KodeverkConsumer;
+import no.nav.foreldrepenger.melding.typer.Tuple;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.EnkeltKodeverk;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.IdentifiserbarEntitet;
@@ -25,7 +26,6 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.FinnKodeverkListeRespons
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkResponse;
 import no.nav.vedtak.exception.IntegrasjonException;
-import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 public class KodeverkTjeneste {

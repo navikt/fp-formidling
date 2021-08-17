@@ -42,9 +42,9 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.melding.typer.Tuple;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.xmlutils.JaxbHelper;
-import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.AVSLAG_FORELDREPENGER_DOK)
@@ -116,11 +116,11 @@ public class AvslagForeldrepengerMapper extends DokumentTypeMapper {
                 behandlingsresultat,
                 beregningsresultatFP.map(BeregningsresultatFP::getBeregningsresultatPerioder).orElse(Collections.emptyList()),
                 uttakResultatPerioder);
-        AarsakListeType aarsakListe = aarsakListeOgLovhjemmel.getElement1();
+        AarsakListeType aarsakListe = aarsakListeOgLovhjemmel.element1();
 
         fagType.setAntallAarsaker(BigInteger.valueOf(aarsakListe.getAvslagsAarsak().size()));
         fagType.setAarsakListe(aarsakListe);
-        fagType.setLovhjemmelForAvslag(aarsakListeOgLovhjemmel.getElement2());
+        fagType.setLovhjemmelForAvslag(aarsakListeOgLovhjemmel.element2());
     }
 
     private RelasjonskodeKode fra(FagsakBackend fagsak) {

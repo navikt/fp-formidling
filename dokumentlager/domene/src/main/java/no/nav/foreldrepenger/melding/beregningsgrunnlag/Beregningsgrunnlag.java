@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 
-import no.nav.foreldrepenger.melding.typer.Beløp;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import no.nav.foreldrepenger.melding.typer.Beløp;
 
 public class Beregningsgrunnlag {
     private Beløp grunnbeløp;

@@ -28,10 +28,10 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepeng
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.NæringType;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.ObjectFactory;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.StatusTypeKode;
+import no.nav.foreldrepenger.melding.typer.Tuple;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-import no.nav.vedtak.util.Tuple;
 
 public class AktivitetsMapper {
 
@@ -171,11 +171,11 @@ public class AktivitetsMapper {
     static AnnenAktivitetType mapAnnenAktivitet(
             Tuple<BeregningsresultatAndel, Optional<UttakResultatPeriodeAktivitet>> tilkjentYtelseAndelMedTilhørendeUttaksaktivitet) {
 
-        BeregningsresultatAndel beregningsresultatAndel = tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement1();
+        BeregningsresultatAndel beregningsresultatAndel = tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.element1();
         AnnenAktivitetType annenAktivitet = objectFactory.createAnnenAktivitetType();
         annenAktivitet.setAktivitetDagsats((long) beregningsresultatAndel.getDagsats());
         annenAktivitet.setAktivitetType(tilStatusTypeKode(beregningsresultatAndel.getAktivitetStatus()));
-        tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.getElement2().ifPresent(
+        tilkjentYtelseAndelMedTilhørendeUttaksaktivitet.element2().ifPresent(
                 uttakAktivitet -> {
                     annenAktivitet.setGradering(uttakAktivitet.getGraderingInnvilget());
                     annenAktivitet.setUttaksgrad(uttakAktivitet.getUtbetalingsprosent().toBigInteger());

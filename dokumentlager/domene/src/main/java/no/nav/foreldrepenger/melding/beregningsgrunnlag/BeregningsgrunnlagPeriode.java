@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.melding.beregningsgrunnlag;
 
-import no.nav.foreldrepenger.melding.typer.DatoIntervall;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 
 public class BeregningsgrunnlagPeriode {
     private Long dagsats;

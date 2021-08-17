@@ -98,8 +98,8 @@ public class KodeverkTjeneste {
         return new KodeverkKode.Builder()
                 .medKode(kode.getNavn())
                 .medNavn(term.orElse(null))
-                .medGyldigFom(gyldighetsperiode.map(Tuple::getElement1).orElse(null))
-                .medGyldigTom(gyldighetsperiode.map(Tuple::getElement2).orElse(null))
+                .medGyldigFom(gyldighetsperiode.map(Tuple::element1).orElse(null))
+                .medGyldigTom(gyldighetsperiode.map(Tuple::element2).orElse(null))
                 .build();
     }
 

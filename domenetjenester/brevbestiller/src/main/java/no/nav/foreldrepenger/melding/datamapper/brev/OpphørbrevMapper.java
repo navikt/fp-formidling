@@ -24,6 +24,7 @@ import javax.xml.stream.XMLStreamException;
 import org.xml.sax.SAXException;
 
 import no.nav.foreldrepenger.PersonAdapter;
+import no.nav.foreldrepenger.melding.Tuple;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -57,7 +58,6 @@ import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.xmlutils.JaxbHelper;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.exception.VLException;
-import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.OPPHØR_DOK)

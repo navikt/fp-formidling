@@ -25,7 +25,6 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.FinnKodeverkListeRespons
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.HentKodeverkResponse;
 import no.nav.vedtak.exception.IntegrasjonException;
-import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 public class KodeverkTjeneste {
@@ -131,5 +130,16 @@ public class KodeverkTjeneste {
             return null;
         }
         return xmlGregorianCalendar.toGregorianCalendar().toZonedDateTime().toLocalDate();
+    }
+
+    private static record Tuple<T1, T2> (T1 element1, T2 element2) {
+
+        public T1 getElement1() {
+            return element1();
+        }
+
+        public T2 getElement2() {
+            return element2();
+        }
     }
 }

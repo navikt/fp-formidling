@@ -18,6 +18,7 @@ import javax.xml.stream.XMLStreamException;
 
 import org.xml.sax.SAXException;
 
+import no.nav.foreldrepenger.melding.Tuple;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
@@ -44,7 +45,6 @@ import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.xmlutils.JaxbHelper;
-import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.AVSLAG_FORELDREPENGER_DOK)

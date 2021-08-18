@@ -14,6 +14,7 @@ import java.util.TreeSet;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import no.nav.foreldrepenger.melding.Tuple;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
@@ -30,7 +31,6 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
-import no.nav.vedtak.util.Tuple;
 
 @ApplicationScoped
 public class ÅrsakMapperAvslag {

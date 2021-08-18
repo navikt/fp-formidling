@@ -16,6 +16,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     private String konsekvensForInnvilgetYtelse;
     private String søknadsdato;
     private int dekningsgrad;
+    private boolean harUtbetaling;
     private long dagsats;
     private long månedsbeløp;
     private long seksG;
@@ -84,6 +85,10 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
 
     public int getDekningsgrad() {
         return dekningsgrad;
+    }
+
+    public boolean getHarUtbetaling() {
+        return harUtbetaling;
     }
 
     public long getDagsats() {
@@ -267,6 +272,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
                 && Objects.equals(konsekvensForInnvilgetYtelse, that.konsekvensForInnvilgetYtelse)
                 && Objects.equals(søknadsdato, that.søknadsdato)
                 && Objects.equals(dekningsgrad, that.dekningsgrad)
+                && Objects.equals(harUtbetaling, that.harUtbetaling)
                 && Objects.equals(dagsats, that.dagsats)
                 && Objects.equals(månedsbeløp, that.månedsbeløp)
                 && Objects.equals(seksG, that.seksG)
@@ -316,7 +322,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     @Override
     public int hashCode() {
         return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, søknadsdato,
-                dekningsgrad, dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver,
+                dekningsgrad, harUtbetaling, dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver,
                 annenForelderHarRett, annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse,
                 gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget,
                 antallPerioder, antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager,
@@ -357,13 +363,18 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
             return this;
         }
 
+        public Builder medSøknadsdato(String søknadsdato) {
+            this.kladd.søknadsdato = søknadsdato;
+            return this;
+        }
+
         public Builder medDekningsgrad(int dekningsgrad) {
             this.kladd.dekningsgrad = dekningsgrad;
             return this;
         }
 
-        public Builder medSøknadsdato(String søknadsdato) {
-            this.kladd.søknadsdato = søknadsdato;
+        public Builder medHarUtbetaling(boolean harUtbetaling) {
+            this.kladd.harUtbetaling = harUtbetaling;
             return this;
         }
 

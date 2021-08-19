@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.KodeverdiMedNavn;
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public enum Hjemmel implements Kodeverdi, KodeverdiMedNavn {
 
-    F_14_7("F_14_7", "folketrygdloven §§ 14-7"),
+    F_14_7("F_14_7", "folketrygdloven § 14-7"),
     F_14_7_8_30("F_14_7_8_30", "folketrygdloven §§ 14-7 og 8-30"),
     F_14_7_8_28_8_30("F_14_7_8_28_8_30", "folketrygdloven §§ 14-7, 8-28 og 8-30"),
     F_14_7_8_35("F_14_7_8_35", "folketrygdloven §§ 14-7 og 8-35"),

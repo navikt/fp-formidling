@@ -11,6 +11,7 @@ import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.Beregn
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harDelvisRefusjon;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harFullRefusjon;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harIngenRefusjon;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harUtbetaling;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.ForMyeUtbetaltMapper.forMyeUtbetalt;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnDisponibleDager;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnDisponibleFellesDager;
@@ -124,6 +125,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
                 .medKonsekvensForInnvilgetYtelse(konsekvensForInnvilgetYtelse)
                 .medSøknadsdato(formaterDatoNorsk(søknad.mottattDato()))
                 .medDekningsgrad(ytelseFordeling.dekningsgrad().getVerdi())
+                .medHarUtbetaling(harUtbetaling(beregningsresultatFP))
                 .medDagsats(dagsats)
                 .medMånedsbeløp(finnMånedsbeløp(beregningsresultatFP))
                 .medForMyeUtbetalt(forMyeUtbetalt(utbetalingsperioder, behandling))

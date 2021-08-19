@@ -1,16 +1,16 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public final class BeregningsresultatMapper {
 
@@ -59,6 +59,13 @@ public final class BeregningsresultatMapper {
                 .map(BeregningsresultatPeriode::getBeregningsresultatAndelList)
                 .flatMap(List::stream)
                 .anyMatch(BeregningsresultatAndel::erArbeidsgiverMottaker);
+    }
+
+    public static boolean harUtbetaling(BeregningsresultatFP beregningsresultatFP) {
+        return beregningsresultatFP.getBeregningsresultatPerioder().stream()
+                .map(BeregningsresultatPeriode::getBeregningsresultatAndelList)
+                .flatMap(List::stream)
+                .anyMatch(a -> a.getDagsats() > 0);
     }
 
     private static Optional<BeregningsresultatPeriode> finnFørsteInnvilgedePeriode(BeregningsresultatFP beregningsresultat) {

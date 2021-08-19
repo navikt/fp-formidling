@@ -1,15 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.melding.typer.DatoIntervall;
-import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-
 import static java.util.List.of;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnAntallArbeidsgivere;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnDagsats;
@@ -17,7 +7,19 @@ import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.Beregn
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harDelvisRefusjon;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harFullRefusjon;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harIngenRefusjon;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harUtbetaling;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.Test;
+
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.melding.typer.DatoIntervall;
+import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public class BeregningsresultatMapperTest {
 
@@ -224,5 +226,58 @@ public class BeregningsresultatMapperTest {
 
         // Act + Assert
         assertThat(harDelvisRefusjon(beregningsresultat)).isTrue();
+    }
+
+    @Test
+    public void skal_finne_at_bruker_har_utbetaling() {
+        // Arrange
+        BeregningsresultatFP beregningsresultat = BeregningsresultatFP.ny()
+                .leggTilBeregningsresultatPerioder(of(
+                        BeregningsresultatPeriode.ny()
+                                .medPeriode(UBETYDELIG_PERIODE)
+                                .medBeregningsresultatAndel(of(
+                                        BeregningsresultatAndel.ny()
+                                                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                                                .medDagsats(0)
+                                                .build(),
+                                        BeregningsresultatAndel.ny()
+                                                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                                                .medDagsats(0)
+                                                .build()
+                                ))
+                                .build(),
+                        BeregningsresultatPeriode.ny()
+                                .medPeriode(UBETYDELIG_PERIODE)
+                                .medBeregningsresultatAndel(of(
+                                        BeregningsresultatAndel.ny()
+                                                .medAktivitetStatus(AktivitetStatus.FRILANSER)
+                                                .medDagsats(100)
+                                                .build()
+                                ))
+                                .build()))
+                .build();
+
+        // Act + Assert
+        assertThat(harUtbetaling(beregningsresultat)).isTrue();
+    }
+
+    @Test
+    public void skal_finne_at_bruker_ikke_har_utbetaling() {
+        // Arrange
+        BeregningsresultatFP beregningsresultat = BeregningsresultatFP.ny()
+                .leggTilBeregningsresultatPerioder(of(
+                        BeregningsresultatPeriode.ny()
+                                .medPeriode(UBETYDELIG_PERIODE)
+                                .medBeregningsresultatAndel(of(
+                                        BeregningsresultatAndel.ny()
+                                                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                                                .medDagsats(0)
+                                                .build()
+                                ))
+                                .build()))
+                .build();
+
+        // Act + Assert
+        assertThat(harUtbetaling(beregningsresultat)).isFalse();
     }
 }

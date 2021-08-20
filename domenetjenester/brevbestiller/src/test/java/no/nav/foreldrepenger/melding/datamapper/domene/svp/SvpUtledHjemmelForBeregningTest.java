@@ -13,10 +13,8 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 
 public class SvpUtledHjemmelForBeregningTest {
 
-
     @Test
     public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_30() {
-
         // Arrange
         Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
@@ -36,12 +34,10 @@ public class SvpUtledHjemmelForBeregningTest {
 
         // Assert
         assertThat(hjemmel).containsOnlyOnce("§§ 14-4 og 8-30");
-
     }
 
     @Test
     public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_49() {
-
         // Arrange
         Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
@@ -61,12 +57,10 @@ public class SvpUtledHjemmelForBeregningTest {
 
         // Assert
         assertThat(hjemmel).containsOnlyOnce("§§ 14-4 og 8-49");
-
     }
 
     @Test
     public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7() {
-
         // Arrange
         Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
@@ -85,8 +79,6 @@ public class SvpUtledHjemmelForBeregningTest {
         String hjemmel = SvpUtledHjemmelForBeregning.utled(beregningsgrunnlag, behandling);
 
         // Assert
-        assertThat(hjemmel).containsOnlyOnce("§§ 14-4");
-
+        assertThat(hjemmel).containsOnlyOnce("§ 14-4");
     }
-
 }

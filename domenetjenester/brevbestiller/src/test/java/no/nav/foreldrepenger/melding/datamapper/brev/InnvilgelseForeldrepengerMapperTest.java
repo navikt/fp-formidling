@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -55,20 +56,20 @@ public class InnvilgelseForeldrepengerMapperTest {
 
     @Test
     public void skalIkkeEvigLoopMenKasteException() {
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)).thenReturn(Optional.of(annenBehandling));
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(annenBehandling)).thenReturn(Optional.of(behandling));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(behandling))).thenReturn(Optional.of(annenBehandling));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(annenBehandling))).thenReturn(Optional.of(behandling));
         assertThatThrownBy(() -> mapper.hentSøknadUansett(behandling)).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     public void skalHenteSøknadDypt() {
-        when(domeneobjektProvider.hentSøknad(femteBehandling)).thenReturn(Optional.of(SØKNAD));
+        when(domeneobjektProvider.hentSøknad(eq(femteBehandling))).thenReturn(Optional.of(SØKNAD));
 
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)).thenReturn(Optional.of(annenBehandling));
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(annenBehandling)).thenReturn(Optional.of(tredjeBehandling));
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(tredjeBehandling)).thenReturn(Optional.of(fjerdeBehandling));
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(fjerdeBehandling)).thenReturn(Optional.of(femteBehandling));
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(femteBehandling)).thenReturn(Optional.empty());
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(behandling))).thenReturn(Optional.of(annenBehandling));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(annenBehandling))).thenReturn(Optional.of(tredjeBehandling));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(tredjeBehandling))).thenReturn(Optional.of(fjerdeBehandling));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(fjerdeBehandling))).thenReturn(Optional.of(femteBehandling));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(femteBehandling))).thenReturn(Optional.empty());
         assertThat(mapper.hentSøknadUansett(behandling)).isNotNull();
     }
 
@@ -76,18 +77,18 @@ public class InnvilgelseForeldrepengerMapperTest {
     public void skalHenteSøknadIkkeDyptDypt() {
         when(domeneobjektProvider.hentSøknad(behandling)).thenReturn(Optional.of(SØKNAD));
 
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)).thenReturn(Optional.of(annenBehandling));
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(annenBehandling)).thenReturn(Optional.of(tredjeBehandling));
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(tredjeBehandling)).thenReturn(Optional.of(fjerdeBehandling));
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(femteBehandling)).thenReturn(Optional.empty());
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(behandling))).thenReturn(Optional.of(annenBehandling));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(annenBehandling))).thenReturn(Optional.of(tredjeBehandling));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(tredjeBehandling))).thenReturn(Optional.of(fjerdeBehandling));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(femteBehandling))).thenReturn(Optional.empty());
         assertThat(mapper.hentSøknadUansett(behandling)).isNotNull();
     }
 
     @Test
     public void skalFeileNårTomtForBehandlinger() {
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)).thenReturn(Optional.of(annenBehandling));
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(annenBehandling)).thenReturn(Optional.of(tredjeBehandling));
-        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(tredjeBehandling)).thenReturn(Optional.empty());
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(behandling))).thenReturn(Optional.of(annenBehandling));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(annenBehandling))).thenReturn(Optional.of(tredjeBehandling));
+        when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(tredjeBehandling))).thenReturn(Optional.empty());
         assertThatThrownBy(() -> mapper.hentSøknadUansett(behandling)).isInstanceOf(IllegalStateException.class);
     }
 

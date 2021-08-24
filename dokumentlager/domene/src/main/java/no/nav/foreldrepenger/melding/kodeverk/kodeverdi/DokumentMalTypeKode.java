@@ -33,6 +33,7 @@ public class DokumentMalTypeKode {
     public static final String FORLENGET_SAKSBEHANDLINGSTID_MEDL = "FORMED";
     public static final String FORLENGET_SAKSBEHANDLINGSTID_TIDLIG = "FORTID";
     public static final String INNVILGELSE_FORELDREPENGER = "INVFOR";
+    public static final String FORELDREPENGER_AVSLAG = "AVSFOR";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated

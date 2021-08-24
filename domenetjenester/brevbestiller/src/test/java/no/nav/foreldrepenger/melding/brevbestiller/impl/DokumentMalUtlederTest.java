@@ -153,7 +153,7 @@ public class DokumentMalUtlederTest {
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
                 .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.AVSLAG_FORELDREPENGER_DOK.getKode());
+                .isEqualTo(DokumentMalType.FORELDREPENGER_AVSLAG.getKode());
     }
 
     @Test

@@ -10,6 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
+import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -73,7 +74,7 @@ class DokumentMalUtleder {
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
             return dokgenLanseringTjeneste.velgInnvilgelseFpMal(behandling);
         } else if (behandlingsresultat.erAvslått()) {
-            return DokumentMalType.AVSLAG_FORELDREPENGER_DOK;
+            return Environment.current().isProd() ? DokumentMalType.AVSLAG_FORELDREPENGER_DOK : DokumentMalType.FORELDREPENGER_AVSLAG;
         } else if (behandlingsresultat.erOpphørt()) {
             return DokumentMalType.OPPHØR_DOK;
         }

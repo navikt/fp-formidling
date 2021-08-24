@@ -1,23 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.svp;
 
-import static java.lang.Boolean.TRUE;
-import static no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
-import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getMånedsinntekt;
-import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp.erPerioderSammenhengendeOgSkalSlåSammen;
-
-import java.time.chrono.ChronoLocalDate;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
@@ -38,6 +20,24 @@ import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+
+import java.time.chrono.ChronoLocalDate;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
+
+import static java.lang.Boolean.TRUE;
+import static no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
+import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getMånedsinntekt;
+import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp.erPerioderSammenhengendeOgSkalSlåSammen;
 
 @SuppressWarnings({ "unchecked", "java:S1192" })
 public class SvpMapper {
@@ -183,7 +183,7 @@ public class SvpMapper {
         map.put("avslagArbeidsforhold", SvpUtledAvslagArbeidsforhold.utled(uttakResultatArbeidsforhold));
         map.put("uttakPerioder", new HashMap<>());
 
-        LinkedList<BeregningsresultatPeriode> periodeDagsats = new LinkedList<>();
+        LinkedList<SVPUtbetalingsperiodeInnvilgelse> periodeDagsats = new LinkedList<>();
 
         beregningsresultatPerioder.stream()
                 .forEach(beregningsresultatPeriode -> {
@@ -208,14 +208,14 @@ public class SvpMapper {
                                 }
 
                             });
-                    if (beregningsresultatPeriode.getDagsats() > 0) {
+                    if (beregningsresultatPeriode.getDagsats() > 0) { // FIXME Legg i egen loop
                         mapPeriodeDagsats(periodeDagsats, beregningsresultatPeriode);
                     }
                 });
 
         map.put("antallPerioder", getAntallPerioder((Map) map.get("uttakPerioder")));
         map.put("periodeDagsats", periodeDagsats);
-        map.put("stonadsperiodeTom", periodeDagsats.getLast().getPeriode().getTom());
+        map.put("stonadsperiodeTom", periodeDagsats.getLast().periode().getTom());
         map.put("naturalytelse", naturalytelser);
 
         return map;
@@ -253,15 +253,15 @@ public class SvpMapper {
         }
     }
 
-    private static void mapPeriodeDagsats(LinkedList<BeregningsresultatPeriode> periodeDagsats, BeregningsresultatPeriode beregningsresultatPeriode) {
+    private static void mapPeriodeDagsats(LinkedList<SVPUtbetalingsperiodeInnvilgelse> periodeDagsats, BeregningsresultatPeriode beregningsresultatPeriode) {
         if (periodeDagsats.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(periodeDagsats.getLast(), beregningsresultatPeriode)) {
-            periodeDagsats.add(beregningsresultatPeriode);
+            periodeDagsats.add(new SVPUtbetalingsperiodeInnvilgelse(beregningsresultatPeriode));
         } else {
-            var sammenhengendeFom = periodeDagsats.pollLast().getPeriode().getFom();
-            periodeDagsats.add(BeregningsresultatPeriode.ny()
-                    .medPeriode(DatoIntervall.fraOgMedTilOgMed(sammenhengendeFom, beregningsresultatPeriode.getPeriode().getTom()))
-                    .medDagsats(beregningsresultatPeriode.getDagsats())
-                    .build());
+            var sammenhengendeFom = periodeDagsats.pollLast().periode().getFom();
+            periodeDagsats.add(new SVPUtbetalingsperiodeInnvilgelse(
+                    beregningsresultatPeriode.getDagsats(),
+                    beregningsresultatPeriode.getUtbetaltTilSoker(),
+                    DatoIntervall.fraOgMedTilOgMed(sammenhengendeFom, beregningsresultatPeriode.getPeriode().getTom())));
         }
     }
 

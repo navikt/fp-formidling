@@ -1,19 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erEndretFraAvslått;
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erTermindatoEndret;
-import static no.nav.foreldrepenger.melding.datamapper.domene.svp.SvpMapper.mapFra;
-import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
@@ -27,6 +13,19 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erEndretFraAvslått;
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erTermindatoEndret;
+import static no.nav.foreldrepenger.melding.datamapper.domene.svp.SvpMapper.mapFra;
+import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
 
 @ApplicationScoped
 @Named(DokumentMalTypeKode.INNVILGELSE_SVANGERSKAPSPENGER_DOK)
@@ -63,7 +62,7 @@ public class InnvilgelseSvangerskapspengerBrevMapper extends FritekstmalBrevMapp
         brevdata.leggTilAlle(mapFra(svpUttaksresultat, hendelse, beregningsgrunnlag, beregningsresultatFP, behandling))
                 .leggTil("manedsbelop", BeregningsresultatMapper.finnMånedsbeløp(beregningsresultatFP))
                 .leggTil("mottattDato", medFormatering(søknadsdato))
-                .leggTil("refusjonTilBruker", 0 < BeregningsresultatMapper.finnTotalBrukerAndel(beregningsresultatFP))
+                .leggTil("refusjonTilBruker",0 < BeregningsresultatMapper.finnTotalBrukerAndel(beregningsresultatFP))
                 .leggTil("refusjonerTilArbeidsgivere", SvpMapper.finnAntallRefusjonerTilArbeidsgivere(beregningsresultatFP));
 
         if (behandling.erRevurdering()) {

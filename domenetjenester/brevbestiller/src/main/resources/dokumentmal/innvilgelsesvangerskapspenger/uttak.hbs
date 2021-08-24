@@ -26,9 +26,9 @@
         {{/each}}
     {{/each}}
 {{/gt}}
-{{#gt (size periodeDagsats) 1}}
+{{#gt (size utbetalingsperioder) 1}}
 {{~i18n "Dette_far_du" (i18n "periodene")}}
-    {{#each periodeDagsats}}
+    {{#each utbetalingsperioder}}
 {{#if @first}}*-{{/if}}{{i18n "fra_og_med_til_og_med" periode.fom periode.tom}}
 {{~#eq dagsats utbetaltTilSoker}}
 {{~i18n "x_kroner_pr_dag_lik" dagsats utbetaltTilSoker }}{{#if @last}}-*{{/if}}
@@ -38,7 +38,7 @@
     {{/each}}
 {{else}}
 {{~i18n "Dette_far_du" (i18n "perioden")}}
-    {{#each periodeDagsats}}
+    {{#each utbetalingsperioder}}
 {{i18n "fra_og_med_til_og_med" periode.fom periode.tom}}
 {{~#eq dagsats utbetaltTilSoker}}
 {{~i18n "x_kroner_pr_dag_lik" dagsats utbetaltTilSoker }}

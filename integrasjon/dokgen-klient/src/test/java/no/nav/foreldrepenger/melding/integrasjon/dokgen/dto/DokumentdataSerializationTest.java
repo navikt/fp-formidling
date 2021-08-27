@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeid
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagAndel;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.InnvilgelseForeldrepengerDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.NaturalytelseEndringType;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Prosent;
@@ -129,7 +129,7 @@ public class DokumentdataSerializationTest {
                 .medSnNyoppstartet(true)
                 .medAndelListe(of(andel2))
                 .build();
-        InnvilgelseForeldrepengerDokumentdata dokumentdata = InnvilgelseForeldrepengerDokumentdata.ny()
+        ForeldrepengerInnvilgelseDokumentdata dokumentdata = ForeldrepengerInnvilgelseDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD.name())
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET.name())
@@ -263,7 +263,7 @@ public class DokumentdataSerializationTest {
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_info_til_annen_forelder() throws IOException {
         // Arrange
-        InfoTilAnnenForelderDokumentdata dokumentdata = InfoTilAnnenForelderDokumentdata.ny()
+        ForeldrepengerInfoTilAnnenForelderDokumentdata dokumentdata = ForeldrepengerInfoTilAnnenForelderDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING.getKode())
                 .medSisteUttaksdagMor(formaterDatoNorsk(LocalDate.now()))

@@ -43,7 +43,7 @@ import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 
 @ExtendWith(MockitoExtension.class)
-class AvslagEngangsstønadDokumentdataMapperTest {
+class EngangsstønadAvslagDokumentdataMapperTest {
     private static final UUID ID = UUID.randomUUID();
     private static final AktørId AKTØR_ID = new AktørId("2222222222222");
 
@@ -55,11 +55,11 @@ class AvslagEngangsstønadDokumentdataMapperTest {
     @Mock
     private PersonAdapter personAdapter = mock(PersonAdapter.class);
 
-    private AvslagEngangsstønadDokumentdataMapper avslagEngangsstønadDokumentdataMapper;
+    private EngangsstønadAvslagDokumentdataMapper engangsstønadAvslagDokumentdataMapper;
 
     @BeforeEach
     void setUp() {
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.AVSLAG_ENGANGSSTØNAD));
+        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_AVSLAG));
         dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).build();
 
         Personinfo personinfo = Personinfo.getbuilder(AKTØR_ID)
@@ -69,7 +69,7 @@ class AvslagEngangsstønadDokumentdataMapperTest {
                 .build();
         lenient().when(personAdapter.hentBrukerForAktør(any())).thenReturn(Optional.of(personinfo));
 
-        avslagEngangsstønadDokumentdataMapper = new AvslagEngangsstønadDokumentdataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider, personAdapter);
+        engangsstønadAvslagDokumentdataMapper = new EngangsstønadAvslagDokumentdataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider, personAdapter);
     }
 
     @Test
@@ -87,7 +87,7 @@ class AvslagEngangsstønadDokumentdataMapperTest {
         when(domeneobjektProvider.hentVilkår(avslagESFB)).thenReturn(vilkårFraBehandling);
 
         //Act
-        EngangsstønadAvslagDokumentdata avslagDokumentdata = avslagEngangsstønadDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, avslagESFB, false);
+        EngangsstønadAvslagDokumentdata avslagDokumentdata = engangsstønadAvslagDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, avslagESFB, false);
 
         //Verify
         assertThat(avslagDokumentdata.getAvslagÅrsak()).isEqualTo(Avslagsårsak.SØKT_FOR_SENT.name());
@@ -102,7 +102,7 @@ class AvslagEngangsstønadDokumentdataMapperTest {
 
     @Test
     void mapAvslagsårsakerBrev_mapper_riktig() {
-        String avslagsårsak = avslagEngangsstønadDokumentdataMapper.mapAvslagsårsakerBrev(Avslagsårsak.SØKER_ER_MEDMOR);
+        String avslagsårsak = engangsstønadAvslagDokumentdataMapper.mapAvslagsårsakerBrev(Avslagsårsak.SØKER_ER_MEDMOR);
 
         assertThat(avslagsårsak).isEqualTo("IKKE_ALENEOMSORG");
     }
@@ -112,7 +112,7 @@ class AvslagEngangsstønadDokumentdataMapperTest {
         List<Vilkår> vilkårFraBehandling = List.of(new Vilkår(VilkårType.FØDSELSVILKÅRET_MOR));
         Behandling fbbehandling = opprettBehandling(Avslagsårsak.SØKER_ER_MEDMOR, null, null);
 
-        List<String> vilkårTilBrev = avslagEngangsstønadDokumentdataMapper.utledVilkårTilBrev(vilkårFraBehandling, Avslagsårsak.SØKER_ER_MEDMOR, fbbehandling);
+        List<String> vilkårTilBrev = engangsstønadAvslagDokumentdataMapper.utledVilkårTilBrev(vilkårFraBehandling, Avslagsårsak.SØKER_ER_MEDMOR, fbbehandling);
 
         assertThat(vilkårTilBrev).hasSize(1);
         assertThat(vilkårTilBrev.get(0)).isEqualTo("FPVK1_4");
@@ -121,7 +121,7 @@ class AvslagEngangsstønadDokumentdataMapperTest {
     @Test
     void utledRelasjonsRolle_skal_utlede_riktig_rolle() {
         FagsakBackend fagsak = opprettFagsak(RelasjonsRolleType.SAMBOER);
-        String rolle = avslagEngangsstønadDokumentdataMapper.utledRelasjonsRolle(fagsak);
+        String rolle = engangsstønadAvslagDokumentdataMapper.utledRelasjonsRolle(fagsak);
 
         assertThat(rolle).isEqualTo(RelasjonsRolleType.MEDMOR.getKode());
     }
@@ -134,7 +134,7 @@ class AvslagEngangsstønadDokumentdataMapperTest {
         if (avslagsfritekst != null) {
             behandlingresultat.medAvslagarsakFritekst(avslagsfritekst);
         }
-        var behandlingBuilder = Behandling.builder().medUuid(AvslagEngangsstønadDokumentdataMapperTest.ID)
+        var behandlingBuilder = Behandling.builder().medUuid(EngangsstønadAvslagDokumentdataMapperTest.ID)
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medBehandlingsresultat(behandlingresultat.build())
                 .medFagsakBackend(fagsak);

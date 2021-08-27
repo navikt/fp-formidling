@@ -5,7 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class InfoTilAnnenForelderDokumentdata extends Dokumentdata {
+public class ForeldrepengerInfoTilAnnenForelderDokumentdata extends Dokumentdata {
     private String behandlingsÅrsak;
     private String sisteUttaksdagMor;
 
@@ -17,7 +17,7 @@ public class InfoTilAnnenForelderDokumentdata extends Dokumentdata {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        var that = (InfoTilAnnenForelderDokumentdata) object;
+        var that = (ForeldrepengerInfoTilAnnenForelderDokumentdata) object;
         return Objects.equals(felles, that.felles)
                 && Objects.equals(behandlingsÅrsak, that.behandlingsÅrsak)
                 && Objects.equals(sisteUttaksdagMor, that.sisteUttaksdagMor);
@@ -33,10 +33,10 @@ public class InfoTilAnnenForelderDokumentdata extends Dokumentdata {
     }
 
     public static class Builder {
-        private InfoTilAnnenForelderDokumentdata kladd;
+        private ForeldrepengerInfoTilAnnenForelderDokumentdata kladd;
 
         private Builder() {
-            this.kladd = new InfoTilAnnenForelderDokumentdata();
+            this.kladd = new ForeldrepengerInfoTilAnnenForelderDokumentdata();
         }
 
         public Builder medFelles(FellesDokumentdata fellesDokumentdata) {
@@ -54,7 +54,7 @@ public class InfoTilAnnenForelderDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public InfoTilAnnenForelderDokumentdata build() {
+        public ForeldrepengerInfoTilAnnenForelderDokumentdata build() {
             return this.kladd;
         }
     }

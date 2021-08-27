@@ -60,7 +60,7 @@ import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.InnvilgelseForeldrepengerDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -83,7 +83,7 @@ import no.nav.foreldrepenger.melding.ytelsefordeling.OppgittRettighet;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 
 @ExtendWith(MockitoExtension.class)
-public class InnvilgelseForeldrepengerDokumentdataMapperTest {
+public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     private static final LocalDate SØKNADSDATO = LocalDate.now().minusDays(1);
     private static final Dekningsgrad DEKNINGSGRAD = Dekningsgrad._100;
@@ -104,13 +104,13 @@ public class InnvilgelseForeldrepengerDokumentdataMapperTest {
 
     private DokumentData dokumentData;
 
-    private InnvilgelseForeldrepengerDokumentdataMapper dokumentdataMapper;
+    private ForeldrepengerInnvilgelseDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     public void before() {
         BrevParametere brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        dokumentData = lagStandardDokumentData(DokumentMalType.INNVILGELSE_FORELDREPENGER);
-        dokumentdataMapper = new InnvilgelseForeldrepengerDokumentdataMapper(brevParametere, domeneobjektProvider);
+        dokumentData = lagStandardDokumentData(DokumentMalType.FORELDREPENGER_INNVILGELSE);
+        dokumentdataMapper = new ForeldrepengerInnvilgelseDokumentdataMapper(brevParametere, domeneobjektProvider);
 
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
@@ -131,7 +131,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapperTest {
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        InnvilgelseForeldrepengerDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, true);
+        ForeldrepengerInnvilgelseDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, true);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();

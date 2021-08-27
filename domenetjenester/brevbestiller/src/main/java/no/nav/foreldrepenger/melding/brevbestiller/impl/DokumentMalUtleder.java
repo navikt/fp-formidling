@@ -61,9 +61,9 @@ class DokumentMalUtleder {
     private DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (behandlingsresultat.erInnvilget()) {
-            return DokumentMalType.INNVILGELSE_ENGANGSSTØNAD;
+            return DokumentMalType.ENGANGSSTØNAD_INNVILGELSE;
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
-                return DokumentMalType.AVSLAG_ENGANGSSTØNAD;
+                return DokumentMalType.ENGANGSSTØNAD_AVSLAG;
         }
         throw new TekniskException("FPFORMIDLING-666915",
         String.format("Ingen brevmal konfigurert for denne type behandlingen %s.", behandling.getUuid().toString()));

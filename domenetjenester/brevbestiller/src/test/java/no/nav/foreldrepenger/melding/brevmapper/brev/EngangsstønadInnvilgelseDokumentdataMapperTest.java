@@ -35,8 +35,8 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
-class InnvilgelseEngangstønadDokumentdataMapperTest {
-    private InnvilgelseEngangstønadDokumentdataMapper dokumentdataMapperTest;
+class EngangsstønadInnvilgelseDokumentdataMapperTest {
+    private EngangsstønadInnvilgelseDokumentdataMapper dokumentdataMapperTest;
     private static final UUID ID = UUID.randomUUID();
     private static final UUID ID_REV = UUID.randomUUID();
 
@@ -50,7 +50,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
     @BeforeEach
     public void setup() {
         dokumentHendelse = lagStandardHendelseBuilder().build();
-        dokumentdataMapperTest = new InnvilgelseEngangstønadDokumentdataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider);
+        dokumentdataMapperTest = new EngangsstønadInnvilgelseDokumentdataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider);
     }
 
     @Test
@@ -59,7 +59,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         Behandling orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
 
-        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD));
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE));
 
         FamilieHendelse familieHendelse = lagFamHendelse(BigInteger.ONE);
         FamilieHendelse orgfamilieHendelse = lagFamHendelse(BigInteger.ONE);
@@ -90,7 +90,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         //Arrange
         Behandling orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
-        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD));
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE));
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(innvilgetES))).thenReturn(Optional.of(orgBehES));
@@ -107,7 +107,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
     @Test
     public void skal_sende_original_til_verge() {
         //Arrange
-        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD), DokumentFelles.Kopi.NEI, true);
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE), DokumentFelles.Kopi.NEI, true);
         Behandling innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV);
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
@@ -125,7 +125,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
     @Test
     public void skal_sende_kopi_til_søker() {
         //Arrange
-        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD), DokumentFelles.Kopi.JA, false);
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE), DokumentFelles.Kopi.JA, false);
         Behandling innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV);
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
@@ -147,7 +147,7 @@ class InnvilgelseEngangstønadDokumentdataMapperTest {
         Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
         FamilieHendelse familieHendelse = lagFamHendelse(BigInteger.TWO);
         FamilieHendelse orgfamilieHendelse = lagFamHendelse(BigInteger.ONE);
-        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD));
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE));
 
         when(domeneobjektProvider.hentBeregningsresultatES(eq(innvilgetES))).thenReturn(new BeregningsresultatES(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(innvilgetES))).thenReturn(Optional.of(orgBehES));

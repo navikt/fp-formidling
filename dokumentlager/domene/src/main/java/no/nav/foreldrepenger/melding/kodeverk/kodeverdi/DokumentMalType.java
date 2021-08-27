@@ -38,20 +38,20 @@ public enum DokumentMalType implements Kodeverdi {
     KLAGE_HJEMSENDT(DokumentMalTypeKode.KLAGE_HJEMSENDT, "Klage hjemsendt/opphevet", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
 
     //Dokgen
-    INNVILGELSE_ENGANGSSTØNAD(DokumentMalTypeKode.INNVILGELSE_ENGANGSSTØNAD, "Vedtak om innvilgelse av engangsstønad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    ENGANGSSTØNAD_INNVILGELSE(DokumentMalTypeKode.ENGANGSSTØNAD_INNVILGELSE, "Vedtak om innvilgelse av engangsstønad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    ENGANGSSTØNAD_AVSLAG(DokumentMalTypeKode.ENGANGSSTØNAD_AVSLAG, "Avslag engangsstønad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    FORELDREPENGER_INNVILGELSE(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE, "Innvilgelsesbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    FORELDREPENGER_AVSLAG(DokumentMalTypeKode.FORELDREPENGER_AVSLAG, "Avslagsbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER(DokumentMalTypeKode.FORELDREPENGER_INFO_TIL_ANNEN_FORELDER, "Informasjonsbrev til den andre forelderen", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     INNHENTE_OPPLYSNINGER(DokumentMalTypeKode.INNHENTE_OPPLYSNINGER, "Innhent dokumentasjon", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
-    AVSLAG_ENGANGSSTØNAD(DokumentMalTypeKode.AVSLAG_ENGANGSSTØNAD, "Avslag engangsstønad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     VARSEL_OM_REVURDERING(DokumentMalTypeKode.VARSEL_OM_REVURDERING, "Varsel om revurdering", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.REVURDERING, DoksysKode.FRITKS),
     INFO_OM_HENLEGGELSE(DokumentMalTypeKode.INFO_OM_HENLEGGELSE, "Behandling henlagt", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     INNSYN_SVAR(DokumentMalTypeKode.INNSYN_SVAR, "Svar på innsynskrav", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     IKKE_SØKT(DokumentMalTypeKode.IKKE_SØKT, "Ikke mottatt søknad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     INGEN_ENDRING(DokumentMalTypeKode.INGEN_ENDRING, "Uendret utfall", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
-    INFOBREV_TIL_ANNEN_FORELDER(DokumentMalTypeKode.INFO_TIL_ANNEN_FORELDER, "Informasjonsbrev til den andre forelderen", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     FORLENGET_SAKSBEHANDLINGSTID(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID, "Forlenget saksbehandlingstid", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
     FORLENGET_SAKSBEHANDLINGSTID_MEDL(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_MEDL, "Forlenget saksbehandlingstid - medlemskap", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING_IKKE_SENDT, DoksysKode.FRITKS),
     FORLENGET_SAKSBEHANDLINGSTID_TIDLIG(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG, "Forlenget saksbehandlingstid - Tidlig søknad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
-    INNVILGELSE_FORELDREPENGER(DokumentMalTypeKode.INNVILGELSE_FORELDREPENGER, "Innvilgelsesbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
-    FORELDREPENGER_AVSLAG(DokumentMalTypeKode.FORELDREPENGER_AVSLAG, "Avslagsbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated

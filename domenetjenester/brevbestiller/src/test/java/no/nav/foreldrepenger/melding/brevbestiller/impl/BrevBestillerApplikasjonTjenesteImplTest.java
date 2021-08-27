@@ -32,7 +32,7 @@ import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingDtoMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.task.DistribuerBrevTask;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapperProvider;
-import no.nav.foreldrepenger.melding.brevmapper.brev.InnvilgelseEngangstønadDokumentdataMapper;
+import no.nav.foreldrepenger.melding.brevmapper.brev.EngangsstønadInnvilgelseDokumentdataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
@@ -74,7 +74,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     private static final Saksnummer SAKSNUMMER = new Saksnummer("123456");
     private static final byte[] BREVET = "BREV".getBytes();
     private static final JournalpostId JOURNALPOST = new JournalpostId("7654321");
-    private static final DokumentMalType DOKUMENT_MAL_TYPE = DokumentMalType.INNVILGELSE_ENGANGSSTØNAD;
+    private static final DokumentMalType DOKUMENT_MAL_TYPE = DokumentMalType.ENGANGSSTØNAD_INNVILGELSE;
     private static final long HENDELSE_ID = 1L;
     private static final String DOKUMENT_INFO_ID = "987";
 
@@ -103,7 +103,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     @Mock
     private HistorikkRepository historikkRepository;
 
-    private InnvilgelseEngangstønadDokumentdataMapper dokumentdataMapper;
+    private EngangsstønadInnvilgelseDokumentdataMapper dokumentdataMapper;
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private DokumentbestillingDtoMapper dokumentbestillingDtoMapper;
     private DokumentFellesDataMapper dokumentFellesDataMapper;
@@ -112,7 +112,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
 
     @BeforeEach
     public void beforeEach() {
-        dokumentdataMapper = new InnvilgelseEngangstønadDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)),
+        dokumentdataMapper = new EngangsstønadInnvilgelseDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)),
                 domeneobjektProvider);
         navKontaktKonfigurasjon = new NavKontaktKonfigurasjon("1", "2", "3", "4", "5", "6", "7");
         dokumentbestillingDtoMapper = new DokumentbestillingDtoMapper();
@@ -130,7 +130,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         Personinfo personinfo = mockTps(true);
         Behandling behandling = mockDomeneobjektProvider(personinfo, true);
         DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
-        when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD);
+        when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(eq(DOKUMENT_MAL_TYPE))).thenReturn(dokumentdataMapper);
@@ -164,7 +164,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         Personinfo personinfo = mockTps(false);
         Behandling behandling = mockDomeneobjektProvider(personinfo, false);
         DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
-        when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD);
+        when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(eq(DOKUMENT_MAL_TYPE))).thenReturn(dokumentdataMapper);

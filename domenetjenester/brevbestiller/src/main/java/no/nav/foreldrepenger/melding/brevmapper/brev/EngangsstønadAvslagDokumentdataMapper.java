@@ -34,19 +34,19 @@ import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.AVSLAG_ENGANGSSTØNAD)
-public class AvslagEngangsstønadDokumentdataMapper implements DokumentdataMapper {
+@DokumentMalTypeRef(DokumentMalTypeKode.ENGANGSSTØNAD_AVSLAG)
+public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMapper {
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
     private PersonAdapter personAdapter;
 
-    AvslagEngangsstønadDokumentdataMapper() {
+    EngangsstønadAvslagDokumentdataMapper() {
         // CDI
     }
 
     @Inject
-    public AvslagEngangsstønadDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider,
-            PersonAdapter personAdapter) {
+    public EngangsstønadAvslagDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider,
+                                                 PersonAdapter personAdapter) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
         this.personAdapter = personAdapter;

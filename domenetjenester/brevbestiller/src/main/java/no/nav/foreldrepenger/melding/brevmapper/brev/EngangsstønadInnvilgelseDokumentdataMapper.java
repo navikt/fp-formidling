@@ -25,18 +25,18 @@ import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsT
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.INNVILGELSE_ENGANGSSTØNAD)
-public class InnvilgelseEngangstønadDokumentdataMapper implements DokumentdataMapper {
+@DokumentMalTypeRef(DokumentMalTypeKode.ENGANGSSTØNAD_INNVILGELSE)
+public class EngangsstønadInnvilgelseDokumentdataMapper implements DokumentdataMapper {
 
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
 
-    InnvilgelseEngangstønadDokumentdataMapper() {
+    EngangsstønadInnvilgelseDokumentdataMapper() {
         //CDI
     }
 
     @Inject
-    public InnvilgelseEngangstønadDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
+    public EngangsstønadInnvilgelseDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
     }

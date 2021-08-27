@@ -61,7 +61,7 @@ import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.InnvilgelseForeldrepengerDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -74,13 +74,13 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.INNVILGELSE_FORELDREPENGER)
-public class InnvilgelseForeldrepengerDokumentdataMapper implements DokumentdataMapper {
+@DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE)
+public class ForeldrepengerInnvilgelseDokumentdataMapper implements DokumentdataMapper {
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
 
     @Inject
-    public InnvilgelseForeldrepengerDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
+    public ForeldrepengerInnvilgelseDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
     }
@@ -91,7 +91,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
     }
 
     @Override
-    public InnvilgelseForeldrepengerDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
+    public ForeldrepengerInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
                                                                     Behandling behandling, boolean erUtkast) {
         YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
         BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
@@ -117,7 +117,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
         boolean erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
         long dagsats = finnDagsats(beregningsresultatFP);
 
-        var dokumentdataBuilder = InnvilgelseForeldrepengerDokumentdata.ny()
+        var dokumentdataBuilder = ForeldrepengerInnvilgelseDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
 
                 .medBehandlingType(behandling.getBehandlingType().name())
@@ -174,7 +174,7 @@ public class InnvilgelseForeldrepengerDokumentdataMapper implements Dokumentdata
     }
 
     private void mapFelterRelatertTilBeregningsgrunnlag(Beregningsgrunnlag beregningsgrunnlag,
-            InnvilgelseForeldrepengerDokumentdata.Builder builder) {
+            ForeldrepengerInnvilgelseDokumentdata.Builder builder) {
         List<BeregningsgrunnlagRegel> beregningsgrunnlagregler = mapRegelListe(beregningsgrunnlag);
         builder.medBeregningsgrunnlagregler(beregningsgrunnlagregler);
         builder.medBruttoBeregningsgrunnlag(finnBrutto(beregningsgrunnlag));

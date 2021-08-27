@@ -1,16 +1,18 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import java.util.Map;
+import java.util.Set;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.Map;
-import java.util.Set;
 
 @ApplicationScoped
 public class DokgenLanseringTjeneste {
@@ -30,33 +32,34 @@ public class DokgenLanseringTjeneste {
 
     private static final Environment ENV = Environment.current();
     private static final Set<DokumentMalType> DOKGEN_MALER_PROD = Set.of(
-            DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
-            DokumentMalType.AVSLAG_ENGANGSSTØNAD,
+            DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
+            DokumentMalType.ENGANGSSTØNAD_AVSLAG,
             DokumentMalType.IKKE_SØKT,
             DokumentMalType.INNHENTE_OPPLYSNINGER,
             DokumentMalType.VARSEL_OM_REVURDERING,
             DokumentMalType.INFO_OM_HENLEGGELSE,
             DokumentMalType.INGEN_ENDRING,
             DokumentMalType.INNSYN_SVAR,
-            DokumentMalType.INFOBREV_TIL_ANNEN_FORELDER,
+            DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG,
-            DokumentMalType.INNVILGELSE_FORELDREPENGER);
+            DokumentMalType.FORELDREPENGER_INNVILGELSE);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(
-            DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
-            DokumentMalType.AVSLAG_ENGANGSSTØNAD,
+            DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
+            DokumentMalType.ENGANGSSTØNAD_AVSLAG,
             DokumentMalType.IKKE_SØKT,
             DokumentMalType.INNHENTE_OPPLYSNINGER,
             DokumentMalType.VARSEL_OM_REVURDERING,
             DokumentMalType.INFO_OM_HENLEGGELSE,
             DokumentMalType.INGEN_ENDRING,
             DokumentMalType.INNSYN_SVAR,
-            DokumentMalType.INFOBREV_TIL_ANNEN_FORELDER,
+            DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG,
-            DokumentMalType.INNVILGELSE_FORELDREPENGER);
+            DokumentMalType.FORELDREPENGER_INNVILGELSE,
+            DokumentMalType.FORELDREPENGER_AVSLAG);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
             DokumentMalType.INNHENT_DOK,
             DokumentMalType.REVURDERING_DOK,

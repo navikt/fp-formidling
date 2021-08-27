@@ -144,7 +144,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal,
             DokumentFelles dokumentFelles) {
-        if (DokumentMalType.INNVILGELSE_FORELDREPENGER.equals(dokumentMal)) {
+        if (DokumentMalType.FORELDREPENGER_INNVILGELSE.equals(dokumentMal)) {
             try {
                 var saksnummer = dokprodBrevproduksjonTjeneste.bestemSaksnummer(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK,
                         dokumentFelles.getSaksnummer(), domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());

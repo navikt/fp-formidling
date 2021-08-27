@@ -46,7 +46,7 @@ public class DokumentMalUtlederTest {
         sjekkAtVelgerValgtMal(DokumentMalType.FRITEKST_DOK);
         sjekkAtVelgerValgtMal(DokumentMalType.KLAGE_AVVIST);
         sjekkAtVelgerValgtMal(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
-        sjekkAtVelgerValgtMal(DokumentMalType.AVSLAG_ENGANGSSTØNAD);
+        sjekkAtVelgerValgtMal(DokumentMalType.ENGANGSSTØNAD_AVSLAG);
     }
 
     private void sjekkAtVelgerValgtMal(DokumentMalType malType) {
@@ -95,7 +95,7 @@ public class DokumentMalUtlederTest {
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
                 .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD.getKode());
+                .isEqualTo(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getKode());
     }
 
     @Test
@@ -110,7 +110,7 @@ public class DokumentMalUtlederTest {
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.AVSLAG_ENGANGSSTØNAD.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_AVSLAG.getKode());
     }
 
     @Test
@@ -125,7 +125,7 @@ public class DokumentMalUtlederTest {
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.OPPHØR).build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.AVSLAG_ENGANGSSTØNAD.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_AVSLAG.getKode());
     }
 
     @Test
@@ -153,7 +153,7 @@ public class DokumentMalUtlederTest {
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
                 .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.AVSLAG_FORELDREPENGER_DOK.getKode());
+                .isEqualTo(DokumentMalType.FORELDREPENGER_AVSLAG.getKode());
     }
 
     @Test

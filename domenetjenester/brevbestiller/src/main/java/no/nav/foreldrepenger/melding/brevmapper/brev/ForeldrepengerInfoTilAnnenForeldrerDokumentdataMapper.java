@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.InfoTilAnnenForelderDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.ForeldrepengerInfoTilAnnenForelderDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
@@ -24,16 +24,16 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.INFO_TIL_ANNEN_FORELDER)
-public class InfoTilAnnenForeldrerDokumentdataMapper implements DokumentdataMapper {
+@DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INFO_TIL_ANNEN_FORELDER)
+public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements DokumentdataMapper {
     private DomeneobjektProvider domeneobjektProvider;
 
-    InfoTilAnnenForeldrerDokumentdataMapper() {
+    ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper() {
         //CDI
     }
 
     @Inject
-    public InfoTilAnnenForeldrerDokumentdataMapper(DomeneobjektProvider domeneobjektProvider) {
+    public ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper(DomeneobjektProvider domeneobjektProvider) {
         this.domeneobjektProvider = domeneobjektProvider;
     }
 
@@ -43,8 +43,8 @@ public class InfoTilAnnenForeldrerDokumentdataMapper implements DokumentdataMapp
     }
 
     @Override
-    public InfoTilAnnenForelderDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                               Behandling behandling, boolean erUtkast) {
+    public ForeldrepengerInfoTilAnnenForelderDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
+                                                                             Behandling behandling, boolean erUtkast) {
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
@@ -68,7 +68,7 @@ public class InfoTilAnnenForeldrerDokumentdataMapper implements DokumentdataMapp
         }
 
 
-        return InfoTilAnnenForelderDokumentdata.ny()
+        return ForeldrepengerInfoTilAnnenForelderDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
                 .medBehandlingÅrsak(aarsak.getKode())
                 .medSisteUttaksdagMor(sisteUttaksdagMor)

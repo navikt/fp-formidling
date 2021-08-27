@@ -10,7 +10,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
+public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private String behandlingType;
     private String behandlingResultatType;
     private String konsekvensForInnvilgetYtelse;
@@ -265,7 +265,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        var that = (InnvilgelseForeldrepengerDokumentdata) object;
+        var that = (ForeldrepengerInnvilgelseDokumentdata) object;
         return Objects.equals(felles, that.felles)
                 && Objects.equals(behandlingType, that.behandlingType)
                 && Objects.equals(behandlingResultatType, that.behandlingResultatType)
@@ -337,10 +337,10 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
     }
 
     public static class Builder {
-        private InnvilgelseForeldrepengerDokumentdata kladd;
+        private ForeldrepengerInnvilgelseDokumentdata kladd;
 
         private Builder() {
-            this.kladd = new InnvilgelseForeldrepengerDokumentdata();
+            this.kladd = new ForeldrepengerInnvilgelseDokumentdata();
         }
 
         public Builder medFelles(FellesDokumentdata fellesDokumentdata) {
@@ -598,7 +598,7 @@ public class InnvilgelseForeldrepengerDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public InnvilgelseForeldrepengerDokumentdata build() {
+        public ForeldrepengerInnvilgelseDokumentdata build() {
             return this.kladd;
         }
     }

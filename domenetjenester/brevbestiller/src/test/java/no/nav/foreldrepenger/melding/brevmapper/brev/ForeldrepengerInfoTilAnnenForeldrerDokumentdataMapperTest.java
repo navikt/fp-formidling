@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.InfoTilAnnenForelderDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.ForeldrepengerInfoTilAnnenForelderDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
@@ -33,21 +33,21 @@ import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 
-class InfoBrevTilAnnenForeldrerDokumentdataMapperTest {
+class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
     private DokumentFelles dokumentFelles;
     private DokumentHendelse dokumentHendelse;
 
-    private InfoTilAnnenForeldrerDokumentdataMapper infoTilAnnenForeldrerDokumentdataMapper;
+    private ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper;
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
     @BeforeEach
     void setUp() {
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.INFOBREV_TIL_ANNEN_FORELDER));
+        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER));
         dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).build();
 
-        infoTilAnnenForeldrerDokumentdataMapper = new InfoTilAnnenForeldrerDokumentdataMapper(domeneobjektProvider);
+        foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper = new ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper(domeneobjektProvider);
     }
 
     @Test
@@ -59,7 +59,7 @@ class InfoBrevTilAnnenForeldrerDokumentdataMapperTest {
         when(domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)).thenReturn(Optional.of(uttakResultatPerioder));
 
         //Act
-        InfoTilAnnenForelderDokumentdata infoTilAnnenForelderData = infoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        ForeldrepengerInfoTilAnnenForelderDokumentdata infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         //assert
         assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_BEHANDLING.getKode());
@@ -75,7 +75,7 @@ class InfoBrevTilAnnenForeldrerDokumentdataMapperTest {
         when(domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)).thenReturn(Optional.of(uttakResultatPerioder));
 
         //Act
-        InfoTilAnnenForelderDokumentdata infoTilAnnenForelderData = infoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        ForeldrepengerInfoTilAnnenForelderDokumentdata infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         //assert
         assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_OPPHOLD.getKode());

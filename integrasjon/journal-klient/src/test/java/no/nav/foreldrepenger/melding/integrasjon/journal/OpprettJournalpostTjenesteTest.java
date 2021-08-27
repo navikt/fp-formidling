@@ -59,7 +59,7 @@ public class OpprettJournalpostTjenesteTest {
         Saksnummer saksnummer = new Saksnummer("153456789");
 
         // Act
-        OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.INNVILGELSE_ENGANGSSTØNAD,
+        OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
                 dokumentFelles, dokumentHendelse, saksnummer, true);
 
         // Assert
@@ -77,7 +77,7 @@ public class OpprettJournalpostTjenesteTest {
         assertThat(genRequest.getJournalfoerendeEnhet()).isEqualTo("9999");
         assertThat(genRequest.getBruker().getId()).isEqualTo(FNR);
         assertThat(genRequest.getEksternReferanseId()).isEqualTo(null);
-        assertThat(genRequest.getDokumenter().get(0).getBrevkode()).isEqualTo(DokumentMalType.INNVILGELSE_ENGANGSSTØNAD.getKode());
+        assertThat(genRequest.getDokumenter().get(0).getBrevkode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getKode());
         byte[] brev = genRequest.getDokumenter().get(0).getDokumentvarianter().get(0).getFysiskDokument();
         assertThat(brev).contains(GEN_BREV);
         assertThat(genRequest.getDokumenter().get(0).getDokumentvarianter().get(0).getVariantformat()).isEqualTo("ARKIV");

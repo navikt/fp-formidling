@@ -20,19 +20,20 @@ public class DokumentMalTypeKode {
     public static final String KLAGE_HJEMSENDT = "KHJEMS";
 
     //Dokgen
-    public static final String INNVILGELSE_ENGANGSSTØNAD = "INNVES";
+    public static final String ENGANGSSTØNAD_INNVILGELSE = "INNVES";
+    public static final String ENGANGSSTØNAD_AVSLAG = "AVSLES";
+    public static final String FORELDREPENGER_INNVILGELSE = "INVFOR";
+    public static final String FORELDREPENGER_AVSLAG = "AVSFOR";
+    public static final String FORELDREPENGER_INFO_TIL_ANNEN_FORELDER ="INFOAF";
     public static final String INNHENTE_OPPLYSNINGER = "INNOPP";
-    public static final String AVSLAG_ENGANGSSTØNAD = "AVSLES";
     public static final String VARSEL_OM_REVURDERING = "VARREV";
     public static final String INFO_OM_HENLEGGELSE = "IOHENL";
     public static final String INNSYN_SVAR = "INNSYN";
     public static final String IKKE_SØKT = "IKKESO";
     public static final String INGEN_ENDRING = "INGEND";
-    public static final String INFO_TIL_ANNEN_FORELDER ="INFOAF";
     public static final String FORLENGET_SAKSBEHANDLINGSTID = "FORSAK";
     public static final String FORLENGET_SAKSBEHANDLINGSTID_MEDL = "FORMED";
     public static final String FORLENGET_SAKSBEHANDLINGSTID_TIDLIG = "FORTID";
-    public static final String INNVILGELSE_FORELDREPENGER = "INVFOR";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated

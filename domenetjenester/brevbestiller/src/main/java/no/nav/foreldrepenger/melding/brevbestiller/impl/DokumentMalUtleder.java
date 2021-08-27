@@ -10,6 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
+import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -60,9 +61,9 @@ class DokumentMalUtleder {
     private DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (behandlingsresultat.erInnvilget()) {
-            return DokumentMalType.INNVILGELSE_ENGANGSSTØNAD;
+            return DokumentMalType.ENGANGSSTØNAD_INNVILGELSE;
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
-                return DokumentMalType.AVSLAG_ENGANGSSTØNAD;
+                return DokumentMalType.ENGANGSSTØNAD_AVSLAG;
         }
         throw new TekniskException("FPFORMIDLING-666915",
         String.format("Ingen brevmal konfigurert for denne type behandlingen %s.", behandling.getUuid().toString()));
@@ -73,7 +74,7 @@ class DokumentMalUtleder {
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
             return dokgenLanseringTjeneste.velgInnvilgelseFpMal(behandling);
         } else if (behandlingsresultat.erAvslått()) {
-            return DokumentMalType.AVSLAG_FORELDREPENGER_DOK;
+            return Environment.current().isProd() ? DokumentMalType.AVSLAG_FORELDREPENGER_DOK : DokumentMalType.FORELDREPENGER_AVSLAG;
         } else if (behandlingsresultat.erOpphørt()) {
             return DokumentMalType.OPPHØR_DOK;
         }

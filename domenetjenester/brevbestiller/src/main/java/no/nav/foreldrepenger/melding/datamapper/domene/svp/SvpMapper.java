@@ -59,7 +59,7 @@ public class SvpMapper {
     public static Map<String, Object> mapFra(SvpUttaksresultat svpUttaksresultat, DokumentHendelse hendelse, Beregningsgrunnlag beregningsgrunnlag,
             BeregningsresultatFP beregningsresultat, Behandling behandling) {
         Map<String, Object> map = new HashMap<>(mapAtFlSnForholdFra(beregningsgrunnlag));
-        map.putAll(mapAktiviteter(svpUttaksresultat, beregningsresultat, beregningsgrunnlag));
+        map.putAll(mapPerioder(svpUttaksresultat, beregningsresultat, beregningsgrunnlag));
         map.put("nyEllerEndretBeregning", erNyEllerEndretBeregning(behandling));
         map.put("bruttoBeregningsgrunnlag", BeregningsgrunnlagMapper.getAvkortetPrAarSVP(beregningsgrunnlag));
         map.put("militarSivil", BeregningsgrunnlagMapper.militærEllerSivilTjeneste(beregningsgrunnlag));
@@ -165,26 +165,24 @@ public class SvpMapper {
                 behandling.getBehandlingsresultat().getKonsekvenserForYtelsen().contains(ENDRING_I_BEREGNING);
     }
 
-    private static Map mapAktiviteter(SvpUttaksresultat svpUttaksresultat, BeregningsresultatFP beregningsresultatFP,
-            Beregningsgrunnlag beregningsgrunnlag) {
+    private static Map mapPerioder(SvpUttaksresultat svpUttaksresultat, BeregningsresultatFP beregningsresultatFP,
+                                   Beregningsgrunnlag beregningsgrunnlag) {
 
         Map<String, Object> map = new HashMap<>();
-        Set<Map> naturalytelser = new TreeSet<>(Comparator.comparing(naturalytelse -> ((ChronoLocalDate) naturalytelse.get("endringsDato"))));
+
+        List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold = svpUttaksresultat.getUttakResultatArbeidsforhold();
+        map.put("avslagPerioder", SvpUtledAvslagPerioder.utled(uttakResultatArbeidsforhold));
+        map.put("avslagArbeidsforhold", SvpUtledAvslagArbeidsforhold.utled(uttakResultatArbeidsforhold));
+
+        List<SvpUttakResultatPeriode> uttakPerioder = uttakResultatArbeidsforhold.stream()
+            .flatMap(ur -> ur.getPerioder().stream())
+            .collect(Collectors.toList());
+        map.put("uttakPerioder", new HashMap<>()); // FIXME det er forvirrende med map entry med key "uttakPerioder" som oppdateres i koden nedenfor, og en variabel med samme navn
 
         List<BeregningsresultatPeriode> beregningsresultatPerioder = beregningsresultatFP.getBeregningsresultatPerioder();
         List<BeregningsgrunnlagPeriode> beregningingsgrunnlagperioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
 
-        List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold = svpUttaksresultat.getUttakResultatArbeidsforhold();
-        List<SvpUttakResultatPeriode> uttakPerioder = uttakResultatArbeidsforhold.stream()
-                .flatMap(ur -> ur.getPerioder().stream())
-                .collect(Collectors.toList());
-
-        map.put("avslagPerioder", SvpUtledAvslagPerioder.utled(uttakResultatArbeidsforhold));
-        map.put("avslagArbeidsforhold", SvpUtledAvslagArbeidsforhold.utled(uttakResultatArbeidsforhold));
-        map.put("uttakPerioder", new HashMap<>());
-
-        LinkedList<SVPUtbetalingsperiodeInnvilgelse> utbetalingsperioder = new LinkedList<>();
-
+        Set<Map> naturalytelser = new TreeSet<>(Comparator.comparing(naturalytelse -> ((ChronoLocalDate) naturalytelse.get("endringsDato"))));
         beregningsresultatPerioder.stream()
                 .forEach(beregningsresultatPeriode -> {
                     var matchetBgPeriode = PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder);
@@ -209,15 +207,33 @@ public class SvpMapper {
                             });
                 });
 
-        mapUtbetalingsperioder(utbetalingsperioder, beregningsresultatPerioder);
-
         map.put("antallPerioder", getAntallPerioder((Map) map.get("uttakPerioder")));
+        map.put("naturalytelse", naturalytelser);
+
+        LinkedList<SVPUtbetalingsperiodeInnvilgelse> utbetalingsperioder = mapUtbetalingsperioder(beregningsresultatPerioder);
         map.put("utbetalingsperioder", utbetalingsperioder);
         map.put("stonadsperiodeTom", utbetalingsperioder.getLast().periode().getTom());
-        map.put("naturalytelse", naturalytelser);
 
         return map;
 
+    }
+
+    private static LinkedList<SVPUtbetalingsperiodeInnvilgelse> mapUtbetalingsperioder(List<BeregningsresultatPeriode> beregningsresultatPerioder) {
+        LinkedList<SVPUtbetalingsperiodeInnvilgelse> utbetalingsperioder = new LinkedList<>();
+        beregningsresultatPerioder.forEach(beregningsresultatPeriode -> {
+            if (beregningsresultatPeriode.getDagsats() > 0) {
+                if (utbetalingsperioder.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(utbetalingsperioder.getLast(), beregningsresultatPeriode)) {
+                    utbetalingsperioder.add(new SVPUtbetalingsperiodeInnvilgelse(beregningsresultatPeriode));
+                } else {
+                    var sammenhengendeFom = utbetalingsperioder.pollLast().periode().getFom();
+                    utbetalingsperioder.add(new SVPUtbetalingsperiodeInnvilgelse(
+                            beregningsresultatPeriode.getDagsats(),
+                            beregningsresultatPeriode.getUtbetaltTilSoker(),
+                            DatoIntervall.fraOgMedTilOgMed(sammenhengendeFom, beregningsresultatPeriode.getPeriode().getTom())));
+                }
+            }
+        });
+        return utbetalingsperioder;
     }
 
     private static String utledArbeidsgiverNavn(BeregningsresultatAndel andel, AktivitetStatus aktivitetStatus) {
@@ -249,22 +265,6 @@ public class SvpMapper {
         if (eksisterendePerioderMap != null) {
             eksisterendePerioderMap.merge("perioder", uttakResultatPeriode, leggTilEllerMergeHvisSammenhengende());
         }
-    }
-
-    private static void mapUtbetalingsperioder(LinkedList<SVPUtbetalingsperiodeInnvilgelse> utbetalingsPerioderTilBrev, List<BeregningsresultatPeriode> beregningsresultatPerioder) {
-        beregningsresultatPerioder.forEach(beregningsresultatPeriode -> {
-            if (beregningsresultatPeriode.getDagsats() > 0) {
-                if (utbetalingsPerioderTilBrev.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(utbetalingsPerioderTilBrev.getLast(), beregningsresultatPeriode)) {
-                    utbetalingsPerioderTilBrev.add(new SVPUtbetalingsperiodeInnvilgelse(beregningsresultatPeriode));
-                } else {
-                    var sammenhengendeFom = utbetalingsPerioderTilBrev.pollLast().periode().getFom();
-                    utbetalingsPerioderTilBrev.add(new SVPUtbetalingsperiodeInnvilgelse(
-                            beregningsresultatPeriode.getDagsats(),
-                            beregningsresultatPeriode.getUtbetaltTilSoker(),
-                            DatoIntervall.fraOgMedTilOgMed(sammenhengendeFom, beregningsresultatPeriode.getPeriode().getTom())));
-                }
-            }
-        });
     }
 
     private static Optional<SvpUttakResultatPeriode> finnUttakPeriode(List<SvpUttakResultatPeriode> matchendeUttaksperioder,

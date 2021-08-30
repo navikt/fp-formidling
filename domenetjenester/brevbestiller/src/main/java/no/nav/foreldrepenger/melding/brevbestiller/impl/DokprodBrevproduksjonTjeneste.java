@@ -153,15 +153,27 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             DokumentFelles dokumentFelles) {
         if (DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.equals(dokumentMal)) {
             try {
-                DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(DokumentMalType.FORELDREPENGER_INNVILGELSE);
-                Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
-                dokumentdata.getFelles().anonymiser();
-                dokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
+                opprettAlternativeBrevData(dokumentHendelse, behandling, dokumentFelles, DokumentMalType.FORELDREPENGER_INNVILGELSE);
             } catch (Exception e) {
                 LOGGER.info("Feilet i å lage Dokgen-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}",
                         dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
             }
         }
+        else if (DokumentMalType.AVSLAG_FORELDREPENGER_DOK.equals(dokumentMal)) {
+            try {
+                opprettAlternativeBrevData(dokumentHendelse, behandling, dokumentFelles, DokumentMalType.FORELDREPENGER_AVSLAG);
+            } catch (Exception e) {
+                LOGGER.info("Feilet i å lage Dokgen-versjonen av avslag foreldrepenger for bestilling {} og behandling {}",
+                        dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
+            }
+        }
+    }
+
+    private void opprettAlternativeBrevData(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentFelles dokumentFelles, DokumentMalType dokumentMalType) {
+        DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMalType);
+        Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        dokumentdata.getFelles().anonymiser();
+        dokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
     }
 
     // TODO: Fjern når infobrev er på dokgen

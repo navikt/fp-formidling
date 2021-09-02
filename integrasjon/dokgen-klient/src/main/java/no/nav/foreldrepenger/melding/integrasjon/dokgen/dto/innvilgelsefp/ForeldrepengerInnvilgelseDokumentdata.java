@@ -1,13 +1,12 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
@@ -50,6 +49,8 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private int foreldrepengeperiodenUtvidetUker;
     private int antallBarn;
     private int prematurDager;
+    private int antallDødeBarn;
+    private String dødsdato;
 
     private List<Utbetalingsperiode> perioder = new ArrayList<>();
 
@@ -219,6 +220,14 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return prematurDager;
     }
 
+    public int getAntallDødeBarn() {
+        return antallDødeBarn;
+    }
+
+    public String getDødsdato() {
+        return dødsdato;
+    }
+
     public List<Utbetalingsperiode> getPerioder() {
         return perioder;
     }
@@ -305,6 +314,8 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 && Objects.equals(foreldrepengeperiodenUtvidetUker, that.foreldrepengeperiodenUtvidetUker)
                 && Objects.equals(antallBarn, that.antallBarn)
                 && Objects.equals(prematurDager, that.prematurDager)
+                && Objects.equals(antallDødeBarn, that.antallDødeBarn)
+                && Objects.equals(dødsdato, that.dødsdato)
                 && Objects.equals(perioder, that.perioder)
                 && Objects.equals(bruttoBeregningsgrunnlag, that.bruttoBeregningsgrunnlag)
                 && Objects.equals(harBruktBruttoBeregningsgrunnlag, that.harBruktBruttoBeregningsgrunnlag)
@@ -327,7 +338,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget,
                 antallPerioder, antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager,
                 disponibleFellesDager, sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker,
-                antallBarn, prematurDager, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler,
+                antallBarn, prematurDager, antallDødeBarn, dødsdato, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler,
                 klagefristUker, lovhjemlerUttak, lovhjemlerBeregning, inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget,
                 inkludereAvslag, inkludereNyeOpplysningerUtbet);
     }
@@ -535,6 +546,16 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medPrematurDager(int prematurDager) {
             this.kladd.prematurDager = prematurDager;
+            return this;
+        }
+
+        public Builder medAntallDødeBarn(int antallDødeBarn) {
+            this.kladd.antallDødeBarn = antallDødeBarn;
+            return this;
+        }
+
+        public Builder medDødsdato(String dødsdato) {
+            this.kladd.dødsdato = dødsdato;
             return this;
         }
 

@@ -90,7 +90,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
                 .medAnnenForelderHarRett(uttakResultatPerioder.map(UttakResultatPerioder::isAnnenForelderHarRett).orElse(false))
                 .medAntallBarn(familiehendelse.getAntallBarn().intValue())
                 .medHalvG(halvG)
-                .medKlageFristUker(brevParametere.getKlagefristUker());
+                .medKlagefristUker(brevParametere.getKlagefristUker());
 
         mapAvslåttePerioder(behandling, dokumentdataBuilder, uttakResultatPerioder);
 

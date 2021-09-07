@@ -17,7 +17,7 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
     private boolean annenForelderHarRett;
     private int antallBarn;
     private long halvG;
-    private int klageFristUker;
+    private int klagefristUker;
     private String lovhjemmelForAvslag;
     private int antallPerioder;
     private List<AvslåttPeriode> avslåttePerioder;
@@ -50,8 +50,8 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
         return halvG;
     }
 
-    public int getKlageFristUker() {
-        return klageFristUker;
+    public int getKlagefristUker() {
+        return klagefristUker;
     }
 
     public String getLovhjemmelForAvslag() {
@@ -79,7 +79,7 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
                 && Objects.equals(annenForelderHarRett, that.annenForelderHarRett)
                 && Objects.equals(antallBarn, that.antallBarn)
                 && Objects.equals(halvG, that.halvG)
-                && Objects.equals(klageFristUker, that.klageFristUker)
+                && Objects.equals(klagefristUker, that.klagefristUker)
                 && Objects.equals(lovhjemmelForAvslag, that.lovhjemmelForAvslag)
                 && Objects.equals(antallPerioder, that.antallPerioder)
                 && Objects.equals(avslåttePerioder, that.avslåttePerioder);
@@ -88,7 +88,7 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
     @Override
     public int hashCode() {
         return Objects.hash(felles, relasjonskode, mottattDato, gjelderFødsel, barnErFødt, annenForelderHarRett,
-                antallBarn, halvG, klageFristUker, lovhjemmelForAvslag, antallPerioder, avslåttePerioder);
+                antallBarn, halvG, klagefristUker, lovhjemmelForAvslag, antallPerioder, avslåttePerioder);
     }
 
     public static Builder ny() {
@@ -142,8 +142,8 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medKlageFristUker(int klageFristUker) {
-            this.kladd.klageFristUker = klageFristUker;
+        public Builder medKlagefristUker(int klagefristUker) {
+            this.kladd.klagefristUker = klagefristUker;
             return this;
         }
 

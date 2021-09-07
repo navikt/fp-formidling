@@ -133,7 +133,7 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getAnnenForelderHarRett()).isTrue();
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(2);
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
-        assertThat(dokumentdata.getKlageFristUker()).isEqualTo(KLAGEFRIST);
+        assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
         assertThat(dokumentdata.getLovhjemmelForAvslag()).isEqualTo("§ forvaltningsloven § 35");
         assertThat(dokumentdata.getAntallPerioder()).isEqualTo(2);
         assertThat(dokumentdata.getAvslåttePerioder()).hasSize(2); // Periode 2 og 3 skal slås sammen

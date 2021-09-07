@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
+import static no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper.formaterLovhjemlerForBeregningDokprod;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -31,7 +32,6 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsresultatMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.StønadskontoMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -164,7 +164,7 @@ public class InnvilgelseForeldrepengerMapper extends DokumentTypeMapper {
         boolean revurdering = BehandlingType.REVURDERING.equals(behandling.getBehandlingType());
         boolean innvilget = BehandlingResultatType.INNVILGET.equals(behandling.getBehandlingsresultat().getBehandlingResultatType());
         boolean innvilgetRevurdering = revurdering && innvilget;
-        lovhjemmelType.setBeregning(FellesMapper.formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForYtelsen, innvilgetRevurdering));
+        lovhjemmelType.setBeregning(formaterLovhjemlerForBeregningDokprod(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForYtelsen, innvilgetRevurdering));
         lovhjemmelType.setVurdering(UttakMapper.mapLovhjemlerForUttak(uttakResultatPerioder, konsekvensForYtelsen, innvilgetRevurdering));
         fagType.setLovhjemmel(lovhjemmelType);
     }

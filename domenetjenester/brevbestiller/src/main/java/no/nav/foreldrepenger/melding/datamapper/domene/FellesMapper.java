@@ -4,14 +4,37 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.E
 
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
+import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 public class FellesMapper {
 
-    public static String formaterLovhjemlerForBeregning(String lovhjemmelBeregning, String konsekvensForYtelse, boolean innvilgetRevurdering) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FellesMapper.class);
+    public static final String UDEFINERT = "UDEFINERT";
+
+    @Deprecated //Ivaretar eksisterende returverdi ved null for gamle brev - slettes med Dokprod-brevene
+    public static String formaterLovhjemlerForBeregningDokprod(String lovhjemmelBeregning, String konsekvensForYtelse, boolean innvilgetRevurdering) {
         if (lovhjemmelBeregning == null) {
             return "";
         }
+        return doFormaterLovhjemlerForBeregning(lovhjemmelBeregning, konsekvensForYtelse, innvilgetRevurdering);
+    }
+
+    public static String formaterLovhjemlerForBeregning(String lovhjemmelBeregning, String konsekvensForYtelse, boolean innvilgetRevurdering, Saksnummer saksnummer) {
+        if (lovhjemmelBeregning == null) {
+            return UDEFINERT;
+        } else if (Hjemmel.UDEFINERT.getNavn().equals(lovhjemmelBeregning)) {
+            LOGGER.warn(saksnummer.toString() + " har udefinert hjemmel. Fint om du melder dette på TFP-4569 så vi kan se hvor ofte det skjer.");
+            return UDEFINERT;
+        }
+        return doFormaterLovhjemlerForBeregning(lovhjemmelBeregning, konsekvensForYtelse, innvilgetRevurdering);
+    }
+
+    private static String doFormaterLovhjemlerForBeregning(String lovhjemmelBeregning, String konsekvensForYtelse, boolean innvilgetRevurdering) {
         if (endringIBeregning(konsekvensForYtelse) || innvilgetRevurdering) {
             lovhjemmelBeregning += (" og forvaltningsloven § 35");
         }

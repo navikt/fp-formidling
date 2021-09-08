@@ -118,10 +118,6 @@
             <groupId>no.nav</groupId>
             <artifactId>vault-jdbc</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.bettercloud</groupId>
-            <artifactId>vault-java-driver</artifactId>
-        </dependency>
 
         <!-- Server -->
         <dependency>

@@ -14,13 +14,12 @@ import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjeneste;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalRestriksjon;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
-public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjeneste {
+public class DokumentBehandlingTjenesteImpl {
     private DomeneobjektProvider domeneobjektProvider;
     private SjekkDokumentTilgjengelig sjekkDokumentTilgjengelig;
 
@@ -35,7 +34,6 @@ public class DokumentBehandlingTjenesteImpl implements DokumentBehandlingTjenest
         this.sjekkDokumentTilgjengelig = sjekkDokumentTilgjengelig;
     }
 
-    @Override
     public List<BrevmalDto> hentBrevmalerFor(UUID behandlingUuid) {
         Behandling behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
         final List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);

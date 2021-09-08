@@ -21,8 +21,8 @@ import javax.ws.rs.core.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
-import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.impl.BrevBestillerTjeneste;
+import no.nav.foreldrepenger.melding.brevbestiller.impl.DokumentBehandlingTjenesteImpl;
 import no.nav.foreldrepenger.melding.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
@@ -31,7 +31,7 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @Transactional
 public class BrevRestTjeneste {
 
-    private DokumentBehandlingTjeneste dokumentBehandlingTjeneste;
+    private DokumentBehandlingTjenesteImpl dokumentBehandlingTjeneste;
     private BrevBestillerTjeneste brevBestillerApplikasjonTjeneste;
 
     public BrevRestTjeneste() {
@@ -39,7 +39,7 @@ public class BrevRestTjeneste {
     }
 
     @Inject
-    public BrevRestTjeneste(DokumentBehandlingTjeneste dokumentBehandlingTjeneste,
+    public BrevRestTjeneste(DokumentBehandlingTjenesteImpl dokumentBehandlingTjeneste,
                             BrevBestillerTjeneste brevBestillerApplikasjonTjeneste) {
         this.dokumentBehandlingTjeneste = dokumentBehandlingTjeneste;
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;

@@ -9,11 +9,11 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
-public class DokumentbestillingMapper {
+public class DokumentHendelseMapper {
 
-    private DokumentbestillingMapper() {}
+    private DokumentHendelseMapper() {}
 
-    public static DokumentHendelse mapDokumentbestillingFraDtoForEndepunkt(DokumentbestillingDto brevDto) {
+    public static DokumentHendelse mapFra(DokumentbestillingDto brevDto) {
         return DokumentHendelse.builder()
                 .medBehandlingUuid(brevDto.getBehandlingUuid())
                 .medBestillingUuid(UUID.randomUUID())

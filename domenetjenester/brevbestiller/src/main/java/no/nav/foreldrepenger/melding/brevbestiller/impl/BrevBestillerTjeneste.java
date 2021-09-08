@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingMapper;
+import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentHendelseMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
@@ -39,7 +39,7 @@ public class BrevBestillerTjeneste {
     }
 
     public byte[] forhandsvisBrev(DokumentbestillingDto dokumentbestillingDto) {
-        DokumentHendelse dokumentHendelse = DokumentbestillingMapper.mapDokumentbestillingFraDtoForEndepunkt(dokumentbestillingDto);
+        DokumentHendelse dokumentHendelse = DokumentHendelseMapper.mapFra(dokumentbestillingDto);
         Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
 

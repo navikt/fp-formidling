@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
-public class BrevBestillerApplikasjonTjenesteImpl {
+public class BrevBestillerTjeneste {
 
     private DokumentMalUtleder dokumentMalUtleder;
     private DomeneobjektProvider domeneobjektProvider;
@@ -24,16 +24,16 @@ public class BrevBestillerApplikasjonTjenesteImpl {
     private DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste;
     private DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste;
 
-    public BrevBestillerApplikasjonTjenesteImpl() {
+    public BrevBestillerTjeneste() {
         // for cdi proxy
     }
 
     @Inject
-    public BrevBestillerApplikasjonTjenesteImpl(DokumentMalUtleder dokumentMalUtleder,
-                                                DomeneobjektProvider domeneobjektProvider,
-                                                DokumentbestillingDtoMapper dokumentbestillingDtoMapper,
-                                                DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste,
-                                                DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste) {
+    public BrevBestillerTjeneste(DokumentMalUtleder dokumentMalUtleder,
+                                 DomeneobjektProvider domeneobjektProvider,
+                                 DokumentbestillingDtoMapper dokumentbestillingDtoMapper,
+                                 DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste,
+                                 DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste) {
         this.dokumentMalUtleder = dokumentMalUtleder;
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentbestillingDtoMapper = dokumentbestillingDtoMapper;

@@ -63,7 +63,7 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class BrevBestillerApplikasjonTjenesteImplTest {
+public class BrevBestillerTjenesteTest {
 
     private static final UUID BEHANDLING_UUID = UUID.randomUUID();
     private static final String NAVN = "Nav Navesen";
@@ -108,7 +108,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
     private DokumentbestillingDtoMapper dokumentbestillingDtoMapper;
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste;
-    private BrevBestillerApplikasjonTjenesteImpl tjeneste;
+    private BrevBestillerTjeneste tjeneste;
 
     @BeforeEach
     public void beforeEach() {
@@ -120,7 +120,7 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
         dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
                 dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, prosessTaskRepository, historikkRepository,
                 dokprodBrevproduksjonTjeneste);
-        tjeneste = new BrevBestillerApplikasjonTjenesteImpl(dokumentMalUtleder, domeneobjektProvider, dokumentbestillingDtoMapper,
+        tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokumentbestillingDtoMapper,
                 dokprodBrevproduksjonTjeneste, dokgenBrevproduksjonTjeneste);
     }
 

@@ -9,7 +9,6 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingDtoMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -17,7 +16,7 @@ import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
-public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplikasjonTjeneste {
+public class BrevBestillerApplikasjonTjenesteImpl {
 
     private DokumentMalUtleder dokumentMalUtleder;
     private DomeneobjektProvider domeneobjektProvider;
@@ -42,7 +41,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         this.dokgenBrevproduksjonTjeneste = dokgenBrevproduksjonTjeneste;
     }
 
-    @Override
     public byte[] forhandsvisBrev(DokumentbestillingDto dokumentbestillingDto) {
         DokumentHendelse dokumentHendelse = dokumentbestillingDtoMapper.mapDokumentbestillingFraDtoForEndepunkt(dokumentbestillingDto);
         Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
@@ -55,7 +53,6 @@ public class BrevBestillerApplikasjonTjenesteImpl implements BrevBestillerApplik
         }
     }
 
-    @Override
     public List<DokumentHistorikkinnslag> bestillBrev(DokumentHendelse dokumentHendelse) {
         Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);

@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingDtoMapper;
+import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
@@ -20,7 +20,6 @@ public class BrevBestillerTjeneste {
 
     private DokumentMalUtleder dokumentMalUtleder;
     private DomeneobjektProvider domeneobjektProvider;
-    private DokumentbestillingDtoMapper dokumentbestillingDtoMapper;
     private DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste;
     private DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste;
 
@@ -31,18 +30,16 @@ public class BrevBestillerTjeneste {
     @Inject
     public BrevBestillerTjeneste(DokumentMalUtleder dokumentMalUtleder,
                                  DomeneobjektProvider domeneobjektProvider,
-                                 DokumentbestillingDtoMapper dokumentbestillingDtoMapper,
                                  DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste,
                                  DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste) {
         this.dokumentMalUtleder = dokumentMalUtleder;
         this.domeneobjektProvider = domeneobjektProvider;
-        this.dokumentbestillingDtoMapper = dokumentbestillingDtoMapper;
         this.dokprodBrevproduksjonTjeneste = dokprodBrevproduksjonTjeneste;
         this.dokgenBrevproduksjonTjeneste = dokgenBrevproduksjonTjeneste;
     }
 
     public byte[] forhandsvisBrev(DokumentbestillingDto dokumentbestillingDto) {
-        DokumentHendelse dokumentHendelse = dokumentbestillingDtoMapper.mapDokumentbestillingFraDtoForEndepunkt(dokumentbestillingDto);
+        DokumentHendelse dokumentHendelse = DokumentbestillingMapper.mapDokumentbestillingFraDtoForEndepunkt(dokumentbestillingDto);
         Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
 

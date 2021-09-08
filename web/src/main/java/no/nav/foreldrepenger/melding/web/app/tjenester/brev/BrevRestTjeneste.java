@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -28,11 +27,10 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
 @Path("/brev")
 @ApplicationScoped
-@Transactional
 public class BrevRestTjeneste {
 
     private BrevmalTjeneste brevmalTjeneste;
-    private BrevBestillerTjeneste brevBestillerApplikasjonTjeneste;
+    private BrevBestillerTjeneste brevBestillerTjeneste;
 
     public BrevRestTjeneste() {
         //CDI
@@ -42,7 +40,7 @@ public class BrevRestTjeneste {
     public BrevRestTjeneste(BrevmalTjeneste brevmalTjeneste,
                             BrevBestillerTjeneste brevBestillerApplikasjonTjeneste) {
         this.brevmalTjeneste = brevmalTjeneste;
-        this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
+        this.brevBestillerTjeneste = brevBestillerApplikasjonTjeneste;
     }
 
     @GET
@@ -63,7 +61,7 @@ public class BrevRestTjeneste {
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response forhaandsvisDokument(
             @Parameter(description = "Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid AbacDokumentbestillingDto dokumentbestillingDto) { // NOSONAR
-        byte[] dokument = brevBestillerApplikasjonTjeneste.forhandsvisBrev(dokumentbestillingDto);
+        byte[] dokument = brevBestillerTjeneste.forhandsvisBrev(dokumentbestillingDto);
 
         if (dokument != null && dokument.length != 0) {
             Response.ResponseBuilder responseBuilder = Response.ok(dokument);

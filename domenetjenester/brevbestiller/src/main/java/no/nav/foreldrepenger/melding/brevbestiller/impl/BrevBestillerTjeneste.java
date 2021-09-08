@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -30,6 +31,7 @@ public class BrevBestillerTjeneste {
     @Inject
     public BrevBestillerTjeneste(DokumentMalUtleder dokumentMalUtleder,
                                  DomeneobjektProvider domeneobjektProvider,
+
                                  DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste,
                                  DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste) {
         this.dokumentMalUtleder = dokumentMalUtleder;
@@ -38,6 +40,7 @@ public class BrevBestillerTjeneste {
         this.dokgenBrevproduksjonTjeneste = dokgenBrevproduksjonTjeneste;
     }
 
+    @Transactional
     public byte[] forhandsvisBrev(DokumentbestillingDto dokumentbestillingDto) {
         DokumentHendelse dokumentHendelse = DokumentHendelseMapper.mapFra(dokumentbestillingDto);
         Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
@@ -50,6 +53,7 @@ public class BrevBestillerTjeneste {
         }
     }
 
+    @Transactional
     public List<DokumentHistorikkinnslag> bestillBrev(DokumentHendelse dokumentHendelse) {
         Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
         DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);

@@ -49,6 +49,20 @@
         </syslogConfig>
     </appender>
 
+    <!-- SecureLog -->
+    <appender name="secureLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/secure-logs/secure.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>/secure-logs/secure.log.%i</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>1</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>50MB</maxFileSize>
+        </triggeringPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+    </appender>
+
     <logger name="no.nav" level="${log.level.no.nav:-INFO}"/>
 
     <!-- skru paa for aa logge all sql statements med parametere -->
@@ -72,6 +86,10 @@
 
     <logger name="auditLogger" level="INFO" additivity="false">
         <appender-ref ref="auditLogger" />
+    </logger>
+
+    <logger name="secureLogger" level="INFO" additivity="false">
+        <appender-ref ref="secureLogger" />
     </logger>
 
     <logger name="sporing" level="OFF" additivity="false" />

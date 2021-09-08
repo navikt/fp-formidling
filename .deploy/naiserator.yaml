@@ -6,7 +6,8 @@ metadata:
   labels:
     team: teamforeldrepenger
 spec:
-  image:  {{image}}
+  image: {{image}}
+  port: 8080
   ingresses:
   {{#each ingresses as |url|}}
      - {{url}}
@@ -17,24 +18,20 @@ spec:
     periodSeconds: 10
     failureThreshold: 27
     timeout: 5
-  port: 8080
-  preStopHookPath: fpformidling/internal/health/preStop
-  prometheus:
-    enabled: true
-    path: /fpformidling/internal/metrics/prometheus
   readiness:
     path: /fpformidling/internal/health/isReady
     initialDelay: 30
     timeout: 5
     periodSeconds: 10
     failureThreshold: 27
+  preStopHookPath: /fpformidling/internal/health/preStop
+  prometheus:
+    enabled: true
+    path: /fpformidling/internal/metrics/prometheus
   replicas:
     min: {{minReplicas}}
     max: {{maxReplicas}}
     cpuThresholdPercentage: 80
-  leaderElection: false
-  istio:
-    enabled: false
   resources:
     limits:
       cpu: "2000m"
@@ -42,16 +39,13 @@ spec:
     requests:
       cpu: "100m"
       memory: "1024Mi"
-  logformat: accesslog
-  logtransform: dns_loglevel
-  webproxy: false
   vault:
     enabled: true
     paths:
       - kvPath: {{serviceuserkv}}
         mountPath: /var/run/secrets/nais.io/srvfpformidling
-      - kvPath: /kv/{{cluster}}/fss/fpformidling/{{namespace}}
-        mountPath: /var/run/secrets/nais.io/vault
+  secureLogs:
+    enabled: true
   env:
   {{#each env}}
    - name: {{@key}}

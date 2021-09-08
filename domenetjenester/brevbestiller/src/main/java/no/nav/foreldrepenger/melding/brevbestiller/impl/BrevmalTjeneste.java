@@ -19,17 +19,17 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalRestriksjon;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
-public class DokumentBehandlingTjenesteImpl {
+public class BrevmalTjeneste {
     private DomeneobjektProvider domeneobjektProvider;
     private SjekkDokumentTilgjengelig sjekkDokumentTilgjengelig;
 
-    public DokumentBehandlingTjenesteImpl() {
+    public BrevmalTjeneste() {
         // for cdi proxy
     }
 
     @Inject
-    public DokumentBehandlingTjenesteImpl(DomeneobjektProvider domeneobjektProvider,
-                                          SjekkDokumentTilgjengelig sjekkDokumentTilgjengelig) {
+    public BrevmalTjeneste(DomeneobjektProvider domeneobjektProvider,
+                           SjekkDokumentTilgjengelig sjekkDokumentTilgjengelig) {
         this.domeneobjektProvider = domeneobjektProvider;
         this.sjekkDokumentTilgjengelig = sjekkDokumentTilgjengelig;
     }

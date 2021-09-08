@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
 import no.nav.foreldrepenger.melding.brevbestiller.impl.BrevBestillerTjeneste;
-import no.nav.foreldrepenger.melding.brevbestiller.impl.DokumentBehandlingTjenesteImpl;
+import no.nav.foreldrepenger.melding.brevbestiller.impl.BrevmalTjeneste;
 import no.nav.foreldrepenger.melding.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
@@ -31,7 +31,7 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @Transactional
 public class BrevRestTjeneste {
 
-    private DokumentBehandlingTjenesteImpl dokumentBehandlingTjeneste;
+    private BrevmalTjeneste brevmalTjeneste;
     private BrevBestillerTjeneste brevBestillerApplikasjonTjeneste;
 
     public BrevRestTjeneste() {
@@ -39,9 +39,9 @@ public class BrevRestTjeneste {
     }
 
     @Inject
-    public BrevRestTjeneste(DokumentBehandlingTjenesteImpl dokumentBehandlingTjeneste,
+    public BrevRestTjeneste(BrevmalTjeneste brevmalTjeneste,
                             BrevBestillerTjeneste brevBestillerApplikasjonTjeneste) {
-        this.dokumentBehandlingTjeneste = dokumentBehandlingTjeneste;
+        this.brevmalTjeneste = brevmalTjeneste;
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
     }
 
@@ -52,7 +52,7 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(action = READ, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public List<BrevmalDto> hentMaler(@NotNull @QueryParam(AbacBehandlingUuidDto.NAME) @Parameter(description = AbacBehandlingUuidDto.DESC) @Valid AbacBehandlingUuidDto uuidDto) {
-        return dokumentBehandlingTjeneste.hentBrevmalerFor(uuidDto.getBehandlingUuid()); // NOSONAR
+        return brevmalTjeneste.hentBrevmalerFor(uuidDto.getBehandlingUuid()); // NOSONAR
     }
 
     @POST

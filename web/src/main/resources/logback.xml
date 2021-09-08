@@ -89,7 +89,7 @@
     </logger>
 
     <logger name="secureLogger" level="INFO" additivity="false">
-        <appender-ref ref="secureLog" />
+        <appender-ref ref="secureLogger" />
     </logger>
 
     <logger name="sporing" level="OFF" additivity="false" />

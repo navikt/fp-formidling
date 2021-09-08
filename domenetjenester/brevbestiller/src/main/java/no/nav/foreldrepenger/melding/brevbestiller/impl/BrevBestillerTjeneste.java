@@ -30,6 +30,7 @@ public class BrevBestillerTjeneste {
     @Inject
     public BrevBestillerTjeneste(DokumentMalUtleder dokumentMalUtleder,
                                  DomeneobjektProvider domeneobjektProvider,
+
                                  DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste,
                                  DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste) {
         this.dokumentMalUtleder = dokumentMalUtleder;

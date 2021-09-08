@@ -21,8 +21,8 @@ import javax.ws.rs.core.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
-import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
-import no.nav.foreldrepenger.melding.brevbestiller.api.DokumentBehandlingTjeneste;
+import no.nav.foreldrepenger.melding.brevbestiller.impl.BrevBestillerTjeneste;
+import no.nav.foreldrepenger.melding.brevbestiller.impl.BrevmalTjeneste;
 import no.nav.foreldrepenger.melding.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 
@@ -31,17 +31,17 @@ import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 @Transactional
 public class BrevRestTjeneste {
 
-    private DokumentBehandlingTjeneste dokumentBehandlingTjeneste;
-    private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
+    private BrevmalTjeneste brevmalTjeneste;
+    private BrevBestillerTjeneste brevBestillerApplikasjonTjeneste;
 
     public BrevRestTjeneste() {
         //CDI
     }
 
     @Inject
-    public BrevRestTjeneste(DokumentBehandlingTjeneste dokumentBehandlingTjeneste,
-                            BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste) {
-        this.dokumentBehandlingTjeneste = dokumentBehandlingTjeneste;
+    public BrevRestTjeneste(BrevmalTjeneste brevmalTjeneste,
+                            BrevBestillerTjeneste brevBestillerApplikasjonTjeneste) {
+        this.brevmalTjeneste = brevmalTjeneste;
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
     }
 
@@ -52,7 +52,7 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(action = READ, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public List<BrevmalDto> hentMaler(@NotNull @QueryParam(AbacBehandlingUuidDto.NAME) @Parameter(description = AbacBehandlingUuidDto.DESC) @Valid AbacBehandlingUuidDto uuidDto) {
-        return dokumentBehandlingTjeneste.hentBrevmalerFor(uuidDto.getBehandlingUuid()); // NOSONAR
+        return brevmalTjeneste.hentBrevmalerFor(uuidDto.getBehandlingUuid()); // NOSONAR
     }
 
     @POST

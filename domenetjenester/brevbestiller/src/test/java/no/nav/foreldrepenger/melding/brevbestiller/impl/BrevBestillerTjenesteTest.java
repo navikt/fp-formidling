@@ -29,7 +29,6 @@ import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatES;
-import no.nav.foreldrepenger.melding.brevbestiller.dto.DokumentbestillingDtoMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.task.DistribuerBrevTask;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapperProvider;
 import no.nav.foreldrepenger.melding.brevmapper.brev.EngangsstønadInnvilgelseDokumentdataMapper;
@@ -63,7 +62,7 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class BrevBestillerApplikasjonTjenesteImplTest {
+public class BrevBestillerTjenesteTest {
 
     private static final UUID BEHANDLING_UUID = UUID.randomUUID();
     private static final String NAVN = "Nav Navesen";
@@ -105,22 +104,20 @@ public class BrevBestillerApplikasjonTjenesteImplTest {
 
     private EngangsstønadInnvilgelseDokumentdataMapper dokumentdataMapper;
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
-    private DokumentbestillingDtoMapper dokumentbestillingDtoMapper;
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste;
-    private BrevBestillerApplikasjonTjenesteImpl tjeneste;
+    private BrevBestillerTjeneste tjeneste;
 
     @BeforeEach
     public void beforeEach() {
         dokumentdataMapper = new EngangsstønadInnvilgelseDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)),
                 domeneobjektProvider);
         navKontaktKonfigurasjon = new NavKontaktKonfigurasjon("1", "2", "3", "4", "5", "6", "7");
-        dokumentbestillingDtoMapper = new DokumentbestillingDtoMapper();
         dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, navKontaktKonfigurasjon, virksomhetTjeneste);
         dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
                 dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, prosessTaskRepository, historikkRepository,
                 dokprodBrevproduksjonTjeneste);
-        tjeneste = new BrevBestillerApplikasjonTjenesteImpl(dokumentMalUtleder, domeneobjektProvider, dokumentbestillingDtoMapper,
+        tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider,
                 dokprodBrevproduksjonTjeneste, dokgenBrevproduksjonTjeneste);
     }
 

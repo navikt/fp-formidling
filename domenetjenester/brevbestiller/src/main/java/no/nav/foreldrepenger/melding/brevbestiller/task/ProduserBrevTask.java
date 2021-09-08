@@ -7,7 +7,7 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.melding.brevbestiller.api.BrevBestillerApplikasjonTjeneste;
+import no.nav.foreldrepenger.melding.brevbestiller.impl.BrevBestillerTjeneste;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
@@ -23,7 +23,7 @@ public class ProduserBrevTask implements ProsessTaskHandler {
 
     public static final String TASKTYPE = "formidling.bestillBrev";
 
-    private BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste;
+    private BrevBestillerTjeneste brevBestillerApplikasjonTjeneste;
     private HendelseRepository hendelseRepository;
     private HistorikkRepository historikkRepository;
     private ProsessTaskRepository prosessTaskRepository;
@@ -33,7 +33,7 @@ public class ProduserBrevTask implements ProsessTaskHandler {
     }
 
     @Inject
-    public ProduserBrevTask(BrevBestillerApplikasjonTjeneste brevBestillerApplikasjonTjeneste,
+    public ProduserBrevTask(BrevBestillerTjeneste brevBestillerApplikasjonTjeneste,
                             HendelseRepository hendelseRepository,
                             HistorikkRepository historikkRepository,
                             ProsessTaskRepository prosessTaskRepository) {

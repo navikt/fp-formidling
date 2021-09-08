@@ -96,10 +96,6 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         try {
             brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
         } catch (Exception e) {
-            if (dokumentdata.getFelles().getSaksnummer().equals("148390054")) {
-                dokumentdata.getFelles().anonymiser();
-                LOGGER.warn("Klarte ikke å generere brev av følgende brevdata {}", DefaultJsonMapper.toJson(dokumentdata));
-            }
             throw new TekniskException("FPFORMIDLING-221006",
                     String.format("Klarte ikke hente forhåndvise mal %s for behandling %s.", dokumentMal.getKode(), behandling.getUuid().toString()),
                     e);

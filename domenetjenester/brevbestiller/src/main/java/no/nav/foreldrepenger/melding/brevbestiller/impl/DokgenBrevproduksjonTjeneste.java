@@ -47,6 +47,8 @@ import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilStri
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokgenBrevproduksjonTjeneste.class);
+    private static final Logger SECURE_LOGGER = LoggerFactory.getLogger("secureLogger");
+
 
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DomeneobjektProvider domeneobjektProvider;
@@ -96,6 +98,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         try {
             brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
         } catch (Exception e) {
+            SECURE_LOGGER.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
             throw new TekniskException("FPFORMIDLING-221006",
                     String.format("Klarte ikke hente forhåndvise mal %s for behandling %s.", dokumentMal.getKode(), behandling.getUuid().toString()),
                     e);
@@ -117,7 +120,15 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
             opprettAlternativeBrevDataOmNødvendig(dokumentHendelse, behandling, dokumentMal, dokumentFelles);
 
-            byte[] brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
+            byte[] brev;
+            try {
+                brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
+            } catch (Exception e) {
+                SECURE_LOGGER.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
+                throw new TekniskException("FPFORMIDLING-221045",
+                        String.format("Klarte ikke å produsere mal %s for behandling %s.", dokumentMal.getKode(), behandling.getUuid().toString()),
+                        e);
+            }
             OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
                     behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg);
             JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());

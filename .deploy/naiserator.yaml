@@ -6,7 +6,7 @@ metadata:
   labels:
     team: teamforeldrepenger
 spec:
-  image:  {{image}}
+  image: {{image}}
   port: 8080
   ingresses:
   {{#each ingresses as |url|}}
@@ -44,6 +44,8 @@ spec:
     paths:
       - kvPath: {{serviceuserkv}}
         mountPath: /var/run/secrets/nais.io/srvfpformidling
+  secureLogs:
+    enabled: true
   env:
   {{#each env}}
    - name: {{@key}}

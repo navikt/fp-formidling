@@ -1,10 +1,30 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.svp;
 
+import static java.lang.Boolean.TRUE;
+import static no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
+import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getMånedsinntekt;
+import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp.erPerioderSammenhengendeOgSkalSlåSammen;
+
+import java.math.BigDecimal;
+import java.time.chrono.ChronoLocalDate;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
@@ -21,26 +41,11 @@ import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
-import java.time.chrono.ChronoLocalDate;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
-import java.util.stream.Collectors;
-
-import static java.lang.Boolean.TRUE;
-import static no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
-import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getMånedsinntekt;
-import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp.erPerioderSammenhengendeOgSkalSlåSammen;
-
 @SuppressWarnings({ "unchecked", "java:S1192" })
 public class SvpMapper {
+
+    public static final String BORTFALLER = "bortfaller";
+    public static final String TILKOMMER = "tilkommer";
 
     private SvpMapper() {
     }
@@ -165,7 +170,7 @@ public class SvpMapper {
                 behandling.getBehandlingsresultat().getKonsekvenserForYtelsen().contains(ENDRING_I_BEREGNING);
     }
 
-    private static Map mapPerioder(SvpUttaksresultat svpUttaksresultat, BeregningsresultatFP beregningsresultatFP,
+    static Map<String, Object> mapPerioder(SvpUttaksresultat svpUttaksresultat, BeregningsresultatFP beregningsresultatFP,
                                    Beregningsgrunnlag beregningsgrunnlag) {
 
         Map<String, Object> map = new HashMap<>();
@@ -201,7 +206,7 @@ public class SvpMapper {
                                 mapAktivitet(map, matchetUttaksperiode.get(), beregningsresultatPeriode, andel, arbeidsgiverNavn);
 
                                 if (harNaturalytelse(matchetBgPeriode, andel)) {
-                                    Map naturalytelse = mapNaturalytelse(matchetBgPeriode, beregningsresultatPeriode, arbeidsgiverNavn);
+                                    Map naturalytelse = mapNaturalytelse(matchetBgPeriode, arbeidsgiverNavn);
                                     naturalytelser.add(naturalytelse);
                                 }
                             });
@@ -320,26 +325,49 @@ public class SvpMapper {
                 .isPresent();
     }
 
-    private static Map mapNaturalytelse(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, BeregningsresultatPeriode beregningsresultatPeriode,
-            String arbeidsgiverNavn) {
+    private static Map<String, Object> mapNaturalytelse(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, String arbeidsgiverNavn) {
         Map<String, Object> map = new HashMap<>();
-        String endringType = null;
-        for (String årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
-            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode().equals(årsak)) {
-                endringType = "bortfaller";
-            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode().equals(årsak)) {
-                endringType = "tilkommer";
-            } else {
-                endringType = null;
-            }
-        }
+        String endringType = utledNaturalytelseBortfallEllerTilkomst(beregningsgrunnlagPeriode);
+
         if (endringType != null) {
             map.put("arbeidsgiverNavn", arbeidsgiverNavn);
             map.put(endringType, true);
             map.put("nyDagsats", beregningsgrunnlagPeriode.getDagsats());
-            map.put("endringsDato", Dato.medFormatering(beregningsresultatPeriode.getBeregningsresultatPeriodeFom()));
+            map.put("endringsDato", Dato.medFormatering(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom()));
         }
         return map;
     }
 
+    private static String utledNaturalytelseBortfallEllerTilkomst(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        String endringType = null;
+
+        for (String årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
+            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode().equals(årsak)) {
+                endringType = BORTFALLER;
+            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode().equals(årsak)) {
+                endringType = TILKOMMER;
+            }
+        }
+
+        if (endringType != null) {
+            return endringType;
+        }
+
+        for (BeregningsgrunnlagPrStatusOgAndel andel : beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
+            BigDecimal bortfaltPrÅr = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforhold::getNaturalytelseBortfaltPrÅr).orElse(null);
+            BigDecimal tilkommetPrÅr = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforhold::getNaturalytelseTilkommetPrÅr).orElse(null);
+            if ((bortfaltPrÅr != null && tilkommetPrÅr == null) ||
+                    (beggeHarVerdi(bortfaltPrÅr, tilkommetPrÅr) && tilkommetPrÅr.compareTo(bortfaltPrÅr) < 0)) {
+                endringType = BORTFALLER;
+            } else if ((bortfaltPrÅr == null && tilkommetPrÅr != null) ||
+                    (beggeHarVerdi(bortfaltPrÅr, tilkommetPrÅr) && tilkommetPrÅr.compareTo(bortfaltPrÅr) >= 0)) {
+                endringType = TILKOMMER;
+            }
+        }
+        return endringType;
+    }
+
+    private static boolean beggeHarVerdi(BigDecimal bortfaltPrÅr, BigDecimal tilkommetPrÅr) {
+        return bortfaltPrÅr != null && tilkommetPrÅr != null;
+    }
 }

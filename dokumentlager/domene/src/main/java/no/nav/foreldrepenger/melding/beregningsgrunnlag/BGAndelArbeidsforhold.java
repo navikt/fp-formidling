@@ -18,4 +18,12 @@ public record BGAndelArbeidsforhold(Arbeidsgiver arbeidsgiver,
     public Optional<ArbeidsforholdRef> getArbeidsforholdRef() {
         return Optional.ofNullable(arbeidsforholdRef());
     }
+
+    public BigDecimal getNaturalytelseBortfaltPrÅr() {
+        return naturalytelseBortfaltPrÅr;
+    }
+
+    public BigDecimal getNaturalytelseTilkommetPrÅr() {
+        return naturalytelseTilkommetPrÅr;
+    }
 }

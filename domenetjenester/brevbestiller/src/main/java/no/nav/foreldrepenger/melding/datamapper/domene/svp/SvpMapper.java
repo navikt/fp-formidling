@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.Beregningsgrunnlag
 import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp.erPerioderSammenhengendeOgSkalSlåSammen;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -188,6 +189,7 @@ public class SvpMapper {
         List<BeregningsgrunnlagPeriode> beregningingsgrunnlagperioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
 
         Set<Map> naturalytelser = new TreeSet<>(Comparator.comparing(naturalytelse -> ((ChronoLocalDate) naturalytelse.get("endringsDato"))));
+        LocalDate startFørstePeriode = finnStartFørstePeriode(beregningingsgrunnlagperioder);
         beregningsresultatPerioder.stream()
                 .forEach(beregningsresultatPeriode -> {
                     var matchetBgPeriode = PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder);
@@ -205,7 +207,7 @@ public class SvpMapper {
 
                                 mapAktivitet(map, matchetUttaksperiode.get(), beregningsresultatPeriode, andel, arbeidsgiverNavn);
 
-                                if (harNaturalytelse(matchetBgPeriode, andel)) {
+                                if (harNaturalytelse(matchetBgPeriode, andel, startFørstePeriode)) {
                                     Map naturalytelse = mapNaturalytelse(matchetBgPeriode, arbeidsgiverNavn);
                                     naturalytelser.add(naturalytelse);
                                 }
@@ -317,12 +319,22 @@ public class SvpMapper {
         };
     }
 
-    private static boolean harNaturalytelse(BeregningsgrunnlagPeriode matchetBgPeriode, BeregningsresultatAndel andel) {
+    private static LocalDate finnStartFørstePeriode(List<BeregningsgrunnlagPeriode> beregningingsgrunnlagperioder) {
+        return beregningingsgrunnlagperioder.stream()
+                .map(BeregningsgrunnlagPeriode::getBeregningsgrunnlagPeriodeFom)
+                .collect(Collectors.toList()).stream().min(Comparator.naturalOrder()).orElse(null);
+    }
+
+    private static boolean harNaturalytelse(BeregningsgrunnlagPeriode matchetBgPeriode, BeregningsresultatAndel andel, LocalDate startFørstePeriode) {
         return PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(matchetBgPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel)
                 .flatMap(BeregningsgrunnlagPrStatusOgAndel::getBgAndelArbeidsforhold)
                 .filter(bgAndelArbeidsforhold -> bgAndelArbeidsforhold.naturalytelseBortfaltPrÅr() != null ||
                         bgAndelArbeidsforhold.naturalytelseTilkommetPrÅr() != null)
-                .isPresent();
+                .isPresent() && ikkeErFørstePeriode(startFørstePeriode, matchetBgPeriode);
+    }
+
+    private static boolean ikkeErFørstePeriode(LocalDate startFørstePeriode, BeregningsgrunnlagPeriode matchetBgPeriode) {
+        return startFørstePeriode != null && !startFørstePeriode.equals(matchetBgPeriode.getBeregningsgrunnlagPeriodeFom());
     }
 
     private static Map<String, Object> mapNaturalytelse(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, String arbeidsgiverNavn) {

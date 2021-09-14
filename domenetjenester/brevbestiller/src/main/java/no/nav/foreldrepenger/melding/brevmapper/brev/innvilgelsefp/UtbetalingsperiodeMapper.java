@@ -346,17 +346,16 @@ public final class UtbetalingsperiodeMapper {
         }
     }
 
-    private static Prosent finnPrioritertUtbetalingsgrad(List<Arbeidsforhold> arbeidsfoholdListe, Næring næring, List<AnnenAktivitet> annenAktivitetListe) {
-        // TODO(JEJ): Denne logikken er midlertidig og skal byttes ut når vi får avklart reglene
+    public static Prosent finnPrioritertUtbetalingsgrad(List<Arbeidsforhold> arbeidsfoholdListe, Næring næring, List<AnnenAktivitet> annenAktivitetListe) {
         Prosent resultat = Prosent.NULL;
         if (arbeidsfoholdListe != null && arbeidsfoholdListe.size() == 1) {
             resultat = arbeidsfoholdListe.get(0).getUtbetalingsgrad() != null ? arbeidsfoholdListe.get(0).getUtbetalingsgrad() : Prosent.NULL;
         } else if (arbeidsfoholdListe != null && arbeidsfoholdListe.size() > 1) {
             Optional<Arbeidsforhold> arbeidsforholdMedGradering = arbeidsfoholdListe.stream().filter(Arbeidsforhold::isGradering).findFirst();
             if (arbeidsforholdMedGradering.isPresent()) {
-                resultat = arbeidsforholdMedGradering.get().getUtbetalingsgrad();
+                resultat = arbeidsforholdMedGradering.get().getUtbetalingsgrad() != null ? arbeidsforholdMedGradering.get().getUtbetalingsgrad() : Prosent.NULL;
             } else {
-                resultat = arbeidsfoholdListe.stream().filter(a -> a.getUtbetalingsgrad() != null).findFirst().map(Arbeidsforhold::getUtbetalingsgrad).orElse(Prosent.NULL);
+                resultat = arbeidsfoholdListe.stream().filter(a -> !a.getUtbetalingsgrad().equals(Prosent.NULL)).findFirst().map(Arbeidsforhold::getUtbetalingsgrad).orElse(Prosent.NULL);
             }
         }
 
@@ -369,9 +368,9 @@ public final class UtbetalingsperiodeMapper {
         } else if (annenAktivitetListe != null && annenAktivitetListe.size() > 1) {
             Optional<AnnenAktivitet> annenAktivitetMedGradering = annenAktivitetListe.stream().filter(AnnenAktivitet::isGradering).findFirst();
             if (annenAktivitetMedGradering.isPresent()) {
-                resultat = annenAktivitetMedGradering.get().getUtbetalingsgrad() != null ? annenAktivitetMedGradering.get().getUtbetalingsgrad() : Prosent.NULL;
+                resultat = annenAktivitetMedGradering.get().getUtbetalingsgrad() != null ? annenAktivitetMedGradering.get().getUtbetalingsgrad() : Prosent.NULL ;
             } else {
-                resultat = annenAktivitetListe.stream().filter(a -> a.getUtbetalingsgrad() != null).findFirst().map(AnnenAktivitet::getUtbetalingsgrad).orElse(Prosent.NULL);
+                resultat = annenAktivitetListe.stream().filter(a -> !a.getUtbetalingsgrad().equals(Prosent.NULL)).findFirst().map(AnnenAktivitet::getUtbetalingsgrad).orElse(Prosent.NULL);
             }
         }
 

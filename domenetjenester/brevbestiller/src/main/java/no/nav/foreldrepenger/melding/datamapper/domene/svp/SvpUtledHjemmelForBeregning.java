@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.svp;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper.formaterLovhjemlerForBeregningDokprod;
+import static no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper.formaterLovhjemlerForBeregning;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -26,8 +26,7 @@ final class SvpUtledHjemmelForBeregning {
             hjemmel = hjemmel.replace("14-7", "14-4");
         }
 
-        return formaterLovhjemlerForBeregningDokprod(hjemmel, konsekvensForYtelsen, innvilget && revurdering);
+        return formaterLovhjemlerForBeregning(hjemmel, konsekvensForYtelsen, innvilget && revurdering, behandling);
 
     }
-
 }

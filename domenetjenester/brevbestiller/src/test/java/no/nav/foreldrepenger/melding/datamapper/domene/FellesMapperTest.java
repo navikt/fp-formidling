@@ -4,12 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.KonsekvensForYtelseKode;
-import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 public class FellesMapperTest {
 
@@ -34,13 +35,25 @@ public class FellesMapperTest {
     @Test
     public void formaterLovhjemlerUdefinert() {
         String lovhjemmelFraBeregning = Hjemmel.UDEFINERT.getNavn();
-        assertLovformateringBeregning(lovhjemmelFraBeregning, "", false, FellesMapper.UDEFINERT);
+        assertLovformateringBeregning(lovhjemmelFraBeregning, "", false, "");
     }
 
     @Test
     public void formaterLovhjemlerNull() {
         String lovhjemmelFraBeregning = null;
-        assertLovformateringBeregning(lovhjemmelFraBeregning, "", false, FellesMapper.UDEFINERT);
+        assertLovformateringBeregning(lovhjemmelFraBeregning, "", false, "");
+    }
+
+    @Test
+    public void formaterLovhjemlerRevurderingEndringBeregningOgLovhjemmelUdefinertFraBeregning() {
+        String lovhjemmelFraBeregning = Hjemmel.UDEFINERT.getNavn();
+        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelseKode.ENDRING_I_BEREGNING.value(), false, " og forvaltningsloven § 35");
+    }
+
+    @Test
+    public void formaterLovhjemlerRevurderingEndringBeregningOgLovhjemmelNullFraBeregning() {
+        String lovhjemmelFraBeregning = null;
+        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelseKode.ENDRING_I_BEREGNING.value(), false, " og forvaltningsloven § 35");
     }
 
     @Test
@@ -71,7 +84,7 @@ public class FellesMapperTest {
     }
 
     private void assertLovformateringBeregning(String input, String konsekvensForYtelse, boolean innvilgetRevurdering, String forventetOutput) {
-        String lovhjemler = FellesMapper.formaterLovhjemlerForBeregning(input, konsekvensForYtelse, innvilgetRevurdering, new Saksnummer("123"));
+        String lovhjemler = FellesMapper.formaterLovhjemlerForBeregning(input, konsekvensForYtelse, innvilgetRevurdering, Behandling.builder().medUuid(UUID.randomUUID()).build());
         assertThat(lovhjemler).isEqualTo(forventetOutput);
     }
 }

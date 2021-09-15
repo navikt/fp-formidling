@@ -5,6 +5,10 @@ import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Prosent;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
@@ -26,6 +30,7 @@ import static java.util.List.of;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallAvslåttePerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallInnvilgedePerioder;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnPrioritertUtbetalingsgrad;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFom;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTom;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
@@ -386,18 +391,77 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_hente_prioritert_utbetalingsgrad_fra_arbeidsforholdet_med_høyest() {
-        //TODO(JEJ) når det evt. blir avklart at vi løser det slik
+    public void skal_hente_prioritert_utbetalingsgrad_fra_arbeidsforholdet_med_gradering_om_finnes() {
+        List <Arbeidsforhold> arbeidsforholdListe =
+                List.of(opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(0)), Prosent.of(BigDecimal.valueOf(80))),
+                        opprettArbeidsforhold(true, Prosent.of(BigDecimal.valueOf(20)), Prosent.of(BigDecimal.valueOf(100))),
+                        opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(0.0)), Prosent.of(BigDecimal.valueOf(100))));
+
+        assertThat(finnPrioritertUtbetalingsgrad(arbeidsforholdListe, null, null)).isEqualTo(Prosent.of(BigDecimal.valueOf(20)));
     }
 
+    @Test
+    public void skal_hente_prioritert_utbetalingsgrad_fra_første_arbeidsfohold_med_utbetalingsgrad() {
+        List <Arbeidsforhold> arbeidsforholdListe =
+                List.of(opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(0.0)), Prosent.of(BigDecimal.valueOf(0.0))),
+                        opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(20)), Prosent.of(BigDecimal.valueOf(100))),
+                        opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(0.0)), Prosent.of(BigDecimal.valueOf(0.0))));
+
+        assertThat(finnPrioritertUtbetalingsgrad(arbeidsforholdListe, null, null)).isEqualTo(Prosent.of(BigDecimal.valueOf(20)));
+    }
     @Test
     public void skal_hente_prioritert_utbetalingsgrad_fra_næring_når_arbeidsforhold_ikke_finnes() {
-        //TODO(JEJ) når det evt. blir avklart at vi løser det slik
+        Næring næring = Næring.ny().medSistLignedeÅr(LocalDate.now().getYear())
+                .medGradering(false)
+                .medUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(100)))
+                .medProsentArbeid(Prosent.of(BigDecimal.valueOf(0.0)))
+                .build();
+
+        assertThat(finnPrioritertUtbetalingsgrad(null, næring, null)).isEqualTo(Prosent.of(BigDecimal.valueOf(100)));
     }
 
     @Test
-    public void skal_hente_prioritert_utbetalingsgrad_fra_annen_aktivitet_med_høyest_når_verken_arbeidsforhold_eller_næring_finnes() {
-        //TODO(JEJ) når det evt. blir avklart at vi løser det slik
+    public void skal_hente_prioritert_utbetalingsgrad_fra_annen_aktivitet_når_verken_arbeidsforhold_eller_næring_finnes() {
+        List<AnnenAktivitet> annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(100))));
+
+        assertThat(finnPrioritertUtbetalingsgrad(null, null, annenAktivitetListe)).isEqualTo(Prosent.of(BigDecimal.valueOf(100)));
+    }
+
+    @Test
+    public void skal_hente_prioritert_utbetalingsgrad_fra_aktiviteten_med_gradering_hvis_finnes() {
+        List<AnnenAktivitet> annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(0))), opprettAnnenAktivitet(true, Prosent.of(BigDecimal.valueOf(60))));
+
+        assertThat(finnPrioritertUtbetalingsgrad(null, null, annenAktivitetListe)).isEqualTo(Prosent.of(BigDecimal.valueOf(60)));
+    }
+
+    @Test
+    public void skal_hente_prioritert_utbetalingsgrad_fra_første_aktivitet_med_utbetalingsgrad() {
+        List<AnnenAktivitet> annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(0))), opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(100))));
+
+        assertThat(finnPrioritertUtbetalingsgrad(null, null, annenAktivitetListe)).isEqualTo(Prosent.of(BigDecimal.valueOf(100)));
+    }
+
+
+    private Arbeidsforhold opprettArbeidsforhold(boolean gradering, Prosent utbetalingsgrad, Prosent prosentArbeid) {
+        return Arbeidsforhold.ny()
+                .medNaturalytelseEndringType(null)
+                .medGradering(gradering)
+                .medUtbetalingsgrad(utbetalingsgrad)
+                .medAktivitetDagsats(223)
+                .medArbeidsgiverNavn("ARBERIDSGVIER AS")
+                .medProsentArbeid(prosentArbeid)
+                .medStillingsprosent(Prosent.of(BigDecimal.valueOf(100)))
+                .build();
+    }
+
+    private AnnenAktivitet opprettAnnenAktivitet(boolean gradering, Prosent utbetalingsgrad) {
+        return AnnenAktivitet.ny()
+                .medGradering(gradering)
+                .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.getKode())
+                .medUtbetalingsgrad(utbetalingsgrad)
+                .medProsentArbeid(Prosent.of(BigDecimal.valueOf(0.0)))
+                .build();
+
     }
 
     private void leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, List<Utbetalingsperiode> utbetalingsperioder) {

@@ -10,8 +10,12 @@ public class Næring {
     private boolean gradering;
     private Prosent utbetalingsgrad;
     private Prosent prosentArbeid;
+
     @JsonIgnore
     private int sistLignedeÅr;
+
+    @JsonIgnore
+    private int aktivitetDagsats;
 
     public static Builder ny() {
         return new Builder();
@@ -29,6 +33,10 @@ public class Næring {
         return sistLignedeÅr;
     }
 
+    public int getAktivitetDagsats() {
+        return aktivitetDagsats;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -36,12 +44,13 @@ public class Næring {
         var that = (Næring) object;
         return Objects.equals(gradering, that.gradering)
                 && Objects.equals(utbetalingsgrad, that.utbetalingsgrad)
-                && Objects.equals(prosentArbeid, that.prosentArbeid);
+                && Objects.equals(prosentArbeid, that.prosentArbeid)
+                && Objects.equals(aktivitetDagsats, that.aktivitetDagsats);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gradering, utbetalingsgrad, prosentArbeid);
+        return Objects.hash(gradering, utbetalingsgrad, prosentArbeid, aktivitetDagsats);
     }
 
     public static class Builder {
@@ -68,6 +77,11 @@ public class Næring {
 
         public Builder medSistLignedeÅr(int sistLignedeÅr) {
             this.kladd.sistLignedeÅr = sistLignedeÅr;
+            return this;
+        }
+
+        public Builder medAktivitetDagsats(int aktivitetDagsats) {
+            this.kladd.aktivitetDagsats = aktivitetDagsats;
             return this;
         }
 

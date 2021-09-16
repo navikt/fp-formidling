@@ -1,13 +1,14 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import static java.util.Arrays.asList;
 import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMergerFelles.erFomRettEtterTomDato;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMergerFelles.likeAktiviteter;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMergerFelles.slåSammenPerioder;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMerger.erFomRettEtterTomDato;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMerger.likeAktiviteter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,28 +19,69 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Nærin
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Prosent;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 
-public class UtbetalingsperiodeMergerFellesTest {
+public class UtbetalingsperiodeMergerTest {
+
+    private static final LocalDate PERIODE1_FOM = LocalDate.now().minusDays(10);
+    private static final LocalDate PERIODE1_TOM = LocalDate.now().plusDays(5);
+    private static final LocalDate PERIODE2_FOM = LocalDate.now().plusDays(6);
+    private static final LocalDate PERIODE2_TOM = LocalDate.now().plusDays(10);
+    private static final LocalDate PERIODE3_FOM = LocalDate.now().plusDays(20);
+    private static final LocalDate PERIODE3_TOM = LocalDate.now().plusDays(30);
 
     @Test
-    public void skal_slå_sammen_perioder() {
+    public void skal_slå_sammen_perioder_som_er_sammenhengende() {
         // Arrange
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medPeriodeFom(LocalDate.now().minusDays(10)).medPeriodeTom(LocalDate.now().plusDays(5)).medAntallTapteDager(5).build();
-        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medPeriodeFom(LocalDate.now().plusDays(6)).medPeriodeTom(LocalDate.now().plusDays(10)).medAntallTapteDager(5).build();
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE1_FOM).medPeriodeTom(PERIODE1_TOM).medAntallTapteDager(4).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE2_FOM).medPeriodeTom(PERIODE2_TOM).medAntallTapteDager(5).build();
+        Utbetalingsperiode utbetalingsperiode3 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE3_FOM).medPeriodeTom(PERIODE3_TOM).medAntallTapteDager(6).build();
 
         // Act
-        Utbetalingsperiode resultat = slåSammenPerioder(utbetalingsperiode1, utbetalingsperiode2);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2, utbetalingsperiode3));
 
         // Assert
-        assertThat(resultat.getPeriodeFom()).isEqualTo(LocalDate.now().minusDays(10));
-        assertThat(resultat.getPeriodeTom()).isEqualTo(LocalDate.now().plusDays(10));
-        assertThat(resultat.getAntallTapteDager()).isEqualTo(10);
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+        assertThat(resultat.get(0).getAntallTapteDager()).isEqualTo(9);
+        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(PERIODE3_FOM);
+        assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(PERIODE3_TOM);
+        assertThat(resultat.get(1).getAntallTapteDager()).isEqualTo(6);
+    }
+
+    @Test
+    public void skal_ikke_slå_sammen_perioder_med_forskjellig_dagsats() {
+        // Arrange
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE1_FOM).medPeriodeTom(PERIODE1_TOM).medPeriodeDagsats(1000).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE2_FOM).medPeriodeTom(PERIODE2_TOM).medPeriodeDagsats(2000).build();
+
+        // Act
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
+
+        // Assert
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
+        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
+        assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+    }
+
+    @Test
+    public void skal_returnere_enkeltperiode() {
+        // Arrange
+        List<Utbetalingsperiode> utbetalingsperiode = of(Utbetalingsperiode.ny().medPeriodeFom(PERIODE1_FOM).medPeriodeTom(PERIODE1_TOM).medAntallTapteDager(5).build());
+
+        // Act
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(utbetalingsperiode);
+
+        // Assert
+        assertThat(resultat).isEqualTo(utbetalingsperiode);
     }
 
     @Test
     public void skal_finne_at_periode_2_er_rett_etter_periode_1() {
         // Arrange
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medPeriodeFom(LocalDate.now().minusDays(10)).medPeriodeTom(LocalDate.now().plusDays(5)).build();
-        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medPeriodeFom(LocalDate.now().plusDays(6)).medPeriodeTom(LocalDate.now().plusDays(10)).build();
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE1_FOM).medPeriodeTom(PERIODE1_TOM).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE2_FOM).medPeriodeTom(PERIODE2_TOM).build();
 
         // Act
         boolean resultat = erFomRettEtterTomDato(utbetalingsperiode1, utbetalingsperiode2);
@@ -98,11 +140,14 @@ public class UtbetalingsperiodeMergerFellesTest {
         utbetalingsperiode1 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2020).medUtbetalingsgrad(Prosent.of(BigDecimal.ONE)).build()).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
-        utbetalingsperiode1 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2019).build()).build();
+        utbetalingsperiode1 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2019).medAktivitetDagsats(100).build()).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
-        utbetalingsperiode2 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2019).build()).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2019).medAktivitetDagsats(100).build()).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
+
+        utbetalingsperiode2 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2019).medAktivitetDagsats(200).build()).build();
+        assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
     }
 
     @Test
@@ -112,13 +157,16 @@ public class UtbetalingsperiodeMergerFellesTest {
 
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
-        utbetalingsperiode1 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).build())).build();
+        utbetalingsperiode1 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(200).build())).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
-        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.FRILANSER.name()).build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.FRILANSER.name()).medAktivitetDagsats(100).build())).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
-        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(100).build())).build();
+        assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
+
+        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(200).build())).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
     }
 

@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class AnnenAktivitet {
@@ -10,6 +11,9 @@ public class AnnenAktivitet {
     private boolean gradering;
     private Prosent utbetalingsgrad;
     private Prosent prosentArbeid;
+
+    @JsonIgnore
+    private int aktivitetDagsats;
 
     public boolean isGradering() {
         return gradering;
@@ -23,6 +27,10 @@ public class AnnenAktivitet {
         return aktivitetStatus;
     }
 
+    public int getAktivitetDagsats() {
+        return aktivitetDagsats;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -31,12 +39,13 @@ public class AnnenAktivitet {
         return Objects.equals(aktivitetStatus, that.aktivitetStatus)
                 && Objects.equals(gradering, that.gradering)
                 && Objects.equals(utbetalingsgrad, that.utbetalingsgrad)
-                && Objects.equals(prosentArbeid, that.prosentArbeid);
+                && Objects.equals(prosentArbeid, that.prosentArbeid)
+                && Objects.equals(aktivitetDagsats, that.aktivitetDagsats);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(aktivitetStatus, gradering, utbetalingsgrad, prosentArbeid);
+        return Objects.hash(aktivitetStatus, gradering, utbetalingsgrad, prosentArbeid, aktivitetDagsats);
     }
 
     public static Builder ny() {
@@ -67,6 +76,11 @@ public class AnnenAktivitet {
 
         public Builder medProsentArbeid(Prosent prosentArbeid) {
             this.kladd.prosentArbeid = prosentArbeid;
+            return this;
+        }
+
+        public Builder medAktivitetDagsats(int aktivitetDagsats) {
+            this.kladd.aktivitetDagsats = aktivitetDagsats;
             return this;
         }
 

@@ -14,7 +14,7 @@ import java.util.List;
  * Klassen utleder hvorvidt for forskjellige blokker / undermaler i innvilgelse foreldrepenger brevet skal inkluderes:
  */
 public final class UndermalInkluderingMapper {
-    private static final List<String> UTBETALING_ÅRSAKER = List.of("2010" , "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2030", "2031", "2032", "2033", "2034");
+    private static final List<String> UTBETALING_ÅRSAKER = List.of("2010" , "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2030", "2031", "2032", "2033", "2034", "2038");
     private static final List<String> GYLDIG_UTSETTELSE_ÅRSAKER = List.of("2010" , "2011", "2012", "2013", "2014");
 
     public static boolean skalInkludereUtbetaling(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder) {

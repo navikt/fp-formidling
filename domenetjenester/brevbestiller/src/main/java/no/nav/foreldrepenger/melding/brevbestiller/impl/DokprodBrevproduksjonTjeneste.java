@@ -1,24 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
@@ -60,6 +41,23 @@ import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
 @ApplicationScoped
 public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -156,14 +154,6 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                 opprettAlternativeBrevData(dokumentHendelse, behandling, dokumentFelles, DokumentMalType.FORELDREPENGER_INNVILGELSE);
             } catch (Exception e) {
                 LOGGER.info("Feilet i å lage Dokgen-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}",
-                        dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
-            }
-        }
-        else if (DokumentMalType.AVSLAG_FORELDREPENGER_DOK.equals(dokumentMal)) {
-            try {
-                opprettAlternativeBrevData(dokumentHendelse, behandling, dokumentFelles, DokumentMalType.FORELDREPENGER_AVSLAG);
-            } catch (Exception e) {
-                LOGGER.info("Feilet i å lage Dokgen-versjonen av avslag foreldrepenger for bestilling {} og behandling {}",
                         dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
             }
         }

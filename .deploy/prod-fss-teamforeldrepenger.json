@@ -6,7 +6,8 @@
   "maxReplicas": "3",
   "ingresses": [
     "https://app.adeo.no/fpformidling",
-    "https://fpformidling.nais.adeo.no/"
+    "https://fpformidling.nais.adeo.no/",
+    "https://fpformidling.intern.nav.no/"
   ],
   "env": {
     "APPDYNAMICS_AGENT_ACCOUNT_NAME": "PROD",
@@ -15,7 +16,7 @@
     "DEFAULTDS_VAULT_ROLEPREFIX": "fpformidling",
     "DEFAULTDS_USERNAME": "fpformidling",
     "DEFAULTDS_URL": "jdbc:postgresql://a01dbfl039.adeo.no:5432/fpformidling",
-    "DOKDIST_REST_BASE_URL": "https://dokdistfordeling.nais.adeo.no/rest/v1",
+    "DOKDIST_REST_BASE_URL": "http://dokdistfordeling.teamdokumenthandtering/rest/v1",
     "DOKGEN_REST_BASE_URL": "http://fpdokgen.teamforeldrepenger",
     "DOKUMENTPRODUKSJON_V2_URL": "https://dokprod.nais.adeo.no/dokprod/ws/dokumentproduksjon/v2",
     "FPSAK_REST_BASE_URL": "http://fpsak/",
@@ -24,9 +25,6 @@
     "KAFKA_HISTORIKKINNSLAG_TOPIC": "privat-foreldrepenger-historikkinnslag",
     "JOURNALPOST_REST_V1_URL": "https://dokarkiv.nais.adeo.no/rest/journalpostapi/v1/journalpost",
     "JOURNALPOST_REST_PROXY_V1_URL": "https://dokarkivproxy.nais.adeo.no/rest/journalpostapi/v1/journalpost",
-    "OIDC_AAD_B2C_HOSTURL": "https://NOT-USED.adeo.internal",
-    "OIDC_AAD_B2C_JWKSURL": "https://login.microsoftonline.com/navnob2c.onmicrosoft.com/discovery/v2.0/keys?p=b2c_1a_idporten",
-    "OIDC_AAD_B2C_PASSWORD": "not.used.in.fss",
     "OIDC_STS_ISSUER_URL": "https://security-token-service.nais.adeo.no",
     "OIDC_STS_JWKS_URL": "https://security-token-service.nais.adeo.no/rest/v1/sts/jwks",
     "ORGANISASJON_RS_URL": "https://modapp.adeo.no/ereg/api/v1/organisasjon",

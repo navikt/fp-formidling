@@ -48,6 +48,7 @@ import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.melding.ytelsefordeling.OppgittRettighet;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
+import no.nav.vedtak.exception.FunksjonellException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -77,6 +78,8 @@ import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.forma
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -96,6 +99,10 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     private static final int BRUTTO_BERENINGSGRUNNLAG = 400;
     private static final int GRUNNBELØP = 100000;
 
+    private Behandling behandling;
+    private DokumentFelles dokumentFelles;
+    private DokumentHendelse dokumentHendelse;
+
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
@@ -111,8 +118,11 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         dokumentData = lagStandardDokumentData(DokumentMalType.FORELDREPENGER_INNVILGELSE);
         dokumentdataMapper = new ForeldrepengerInnvilgelseDokumentdataMapper(brevParametere, domeneobjektProvider);
 
+        behandling = opprettBehandling();
+        dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        dokumentHendelse = lagStandardHendelseBuilder().build();
+
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
-        when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
         when(domeneobjektProvider.hentBeregningsresultatFP(any(Behandling.class))).thenReturn(beregningsresultatFP);
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
@@ -124,11 +134,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     public void skal_mappe_felter_for_brev() {
-        // Arrange
-        Behandling behandling = opprettBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
-
+        when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         // Act
         ForeldrepengerInnvilgelseDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, true);
 
@@ -200,6 +206,21 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getInntektOverSeksG()).isFalse();
         assertThat(dokumentdata.getErBesteberegning()).isTrue();
         assertThat(dokumentdata.getHarBruktBruttoBeregningsgrunnlag()).isFalse();
+    }
+
+    @Test
+    public void skal_feile_hvis_dødsdato_og_flere_barn() {
+        FamilieHendelse familieHendelse = new FamilieHendelse(BigInteger.TWO, true, true, FamilieHendelseType.FØDSEL,
+                new FamilieHendelse.OptionalDatoer(Optional.of(LocalDate.now().minusDays(3)), Optional.empty(), Optional.of(LocalDate.now().minusDays(3)), Optional.of(LocalDate.now())));
+
+        when(domeneobjektProvider.hentFamiliehendelse(any())).thenReturn(familieHendelse);
+
+        Exception thrown = assertThrows(
+                FunksjonellException.class,
+                () -> dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false)
+        );
+
+        assertTrue(thrown.getMessage().contains("Feiler fordi vi ikke håndterer flere barn og død. Meld fra til produkteier for manuell håndtering. Gjelder behandling"));
     }
 
     private FagsakBackend opprettFagsakBackend() {

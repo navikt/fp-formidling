@@ -32,6 +32,9 @@
     "KODEVERK_V2_URL": "https://kodeverk.nais.adeo.no/ws/kodeverk/v2",
     "SCHEMA_REGISTRY_URL": "http://kafka-schema-registry.tpa:8081",
     "SECURITYTOKENSERVICE_URL": "https://sts.adeo.no/SecurityTokenServiceProvider/",
+    "OIDC_AAD_B2C_HOSTURL": "https://NOT-USED.adeo.internal",
+    "OIDC_AAD_B2C_JWKSURL": "https://login.microsoftonline.com/navnob2c.onmicrosoft.com/discovery/v2.0/keys?p=b2c_1a_idporten",
+    "OIDC_AAD_B2C_PASSWORD": "not.used.in.fss",
     "TASK_MANAGER_POLLING_TASKS_SIZE": "1",
     "TASK_MANAGER_RUNNER_THREADS": "1"
   }

@@ -6,8 +6,8 @@
   "maxReplicas": "3",
   "ingresses": [
     "https://app-q1.adeo.no/fpformidling",
-    "https://fpformidling.nais.preprod.local/",
-    "https://fpformidling.dev.adeo.no/",
+    "https://fpformidling-q1.nais.preprod.local/",
+    "https://fpformidling-q1.dev.adeo.no/",
     "https://fpformidling.dev.intern.nav.no/"
   ],
   "env": {

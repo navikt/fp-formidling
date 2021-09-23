@@ -1,5 +1,45 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
+import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
+import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktStatus;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
+import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
+import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
+import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
+import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.melding.søknad.Søknad;
+import no.nav.foreldrepenger.melding.uttak.Saldoer;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
+import no.nav.vedtak.exception.FunksjonellException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnBrutto;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnSeksG;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.harBruktBruttoBeregningsgrunnlag;
@@ -32,46 +72,6 @@ import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.a
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
-import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
-import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktStatus;
-import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
-import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
-import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.melding.søknad.Søknad;
-import no.nav.foreldrepenger.melding.uttak.Saldoer;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
-import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE)
@@ -174,8 +174,18 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         mapFelterRelatertTilDødeBarn(familieHendelse, dokumentdataBuilder);
 
+        ForeldrepengerInnvilgelseDokumentdata  fpInnvilgelseDokumentdata = dokumentdataBuilder.build();
 
-        return dokumentdataBuilder.build();
+        skalFeileOmDødtBarnOgFlerlinger(behandling, fpInnvilgelseDokumentdata);
+
+        return fpInnvilgelseDokumentdata;
+    }
+
+    private void skalFeileOmDødtBarnOgFlerlinger(Behandling behandling, ForeldrepengerInnvilgelseDokumentdata fpInnvilgelseDokumentdata) {
+    if (fpInnvilgelseDokumentdata.getAntallDødeBarn() > 0 && fpInnvilgelseDokumentdata.getAntallBarn() > 1) {
+            throw new FunksjonellException("FPFORMIDLING-0001",
+            String.format("Feiler fordi vi ikke håndterer flere barn og død. Meld fra til produkteier for manuell håndtering. Gjelder behandling %s ", behandling.getUuid()));
+        }
     }
 
     private void mapFelterRelatertTilDødeBarn(FamilieHendelse familieHendelse, //todo når fpsak gir oss informasjon om hvor mange barn som er døde må denne oppdateres

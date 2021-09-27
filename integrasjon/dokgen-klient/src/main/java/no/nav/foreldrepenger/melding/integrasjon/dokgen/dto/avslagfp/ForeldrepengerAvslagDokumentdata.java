@@ -20,6 +20,7 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
     private int klagefristUker;
     private String lovhjemmelForAvslag;
     private int antallPerioder;
+    private boolean kreverSammenhengendeUttak;
     private List<AvslåttPeriode> avslåttePerioder;
 
     public String getRelasjonskode() {
@@ -62,6 +63,10 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
         return antallPerioder;
     }
 
+    public boolean getKreverSammenhengendeUttak() {
+        return kreverSammenhengendeUttak;
+    }
+
     public List<AvslåttPeriode> getAvslåttePerioder() {
         return avslåttePerioder;
     }
@@ -82,13 +87,14 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
                 && Objects.equals(klagefristUker, that.klagefristUker)
                 && Objects.equals(lovhjemmelForAvslag, that.lovhjemmelForAvslag)
                 && Objects.equals(antallPerioder, that.antallPerioder)
+                && Objects.equals(kreverSammenhengendeUttak, that.kreverSammenhengendeUttak)
                 && Objects.equals(avslåttePerioder, that.avslåttePerioder);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(felles, relasjonskode, mottattDato, gjelderFødsel, barnErFødt, annenForelderHarRett,
-                antallBarn, halvG, klagefristUker, lovhjemmelForAvslag, antallPerioder, avslåttePerioder);
+                antallBarn, halvG, klagefristUker, lovhjemmelForAvslag, antallPerioder, kreverSammenhengendeUttak, avslåttePerioder);
     }
 
     public static Builder ny() {
@@ -154,6 +160,11 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
 
         public Builder medAntallPerioder(int antallPerioder) {
             this.kladd.antallPerioder = antallPerioder;
+            return this;
+        }
+
+        public Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
+            this.kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
             return this;
         }
 

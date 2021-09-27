@@ -81,7 +81,7 @@ public class KodeverkTjeneste {
     }
 
     private Map<String, KodeverkKode> oversettFraHentKodeverkResponse(HentKodeverkResponse response) {
-        if (response.getKodeverk()instanceof EnkeltKodeverk e) {
+        if (response.getKodeverk()instanceof EnkeltKodeverk) {
             return ((EnkeltKodeverk) response.getKodeverk()).getKode().stream()
                     .map(KodeverkTjeneste::oversettFraKode)
                     .collect(Collectors.toMap(KodeverkKode::getKode, kodeverkKode -> kodeverkKode));

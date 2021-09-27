@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.fpsak.Behandlinger;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
+import no.nav.foreldrepenger.fpsak.dto.uttak.KreverSammenhengendeUttakDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.anke.Anke;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -197,6 +198,10 @@ public class DomeneobjektProvider {
         return behandlingRestKlient.hentInnvilgelseForeldrepengerDokumentmal(behandling.getResourceLinker())
                 .map(dto -> DokumentMalType.fraKode(dto.dokumentMalTypeKode()))
                 .orElse(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK);
+    }
+    public boolean kreverSammenhengendeUttak(Behandling behandling) {
+        return behandlingRestKlient.kreverSammenhengendeUttak(behandling.getResourceLinker()).kreverSammenhengendeUttak();
+
     }
 
 }

@@ -23,6 +23,7 @@ import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadBackendDto;
+import no.nav.foreldrepenger.fpsak.dto.uttak.KreverSammenhengendeUttakDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.saldo.SaldoerDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
@@ -261,6 +262,15 @@ public interface Behandlinger {
                 .filter(dto -> "dokmal-innvfp".equals(dto.getRel()))
                 .findFirst()
                 .flatMap(link -> hentDtoFraLink(link, DokumentMalTypeDto.class));
+    }
+
+    default KreverSammenhengendeUttakDto kreverSammenhengendeUttak(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker
+                .stream()
+                .filter(dto -> "krever-sammenhengende-uttak".equals(dto.getRel()))
+                .findFirst()
+                .flatMap(link -> hentDtoFraLink(link, KreverSammenhengendeUttakDto.class))
+                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente om behandlingen krever sammenhengende uttak: " + hentBehandlingId(resourceLinker)));
     }
 
     private static UUID hentBehandlingId(List<BehandlingResourceLink> resourceLinker) {

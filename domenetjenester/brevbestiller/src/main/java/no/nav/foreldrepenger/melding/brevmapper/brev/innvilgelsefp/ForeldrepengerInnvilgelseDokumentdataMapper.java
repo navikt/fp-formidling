@@ -152,6 +152,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medForeldrepengeperiodenUtvidetUker(finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer))
                 .medAntallBarn(familieHendelse.getAntallBarn().intValue())
                 .medPrematurDager(finnPrematurDagerHvisFinnes(saldoer))
+                .medKreverSammenhengendeUttak(domeneobjektProvider.kreverSammenhengendeUttak(behandling))
                 .medUtbetalingsperioder(utbetalingsperioder)
 
                 .medKlagefristUker(brevParametere.getKlagefristUker())

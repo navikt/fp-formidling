@@ -51,6 +51,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private int prematurDager;
     private int antallDødeBarn;
     private String dødsdato;
+    private boolean kreverSammenhengendeUttak;
 
     private List<Utbetalingsperiode> perioder = new ArrayList<>();
 
@@ -228,6 +229,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return dødsdato;
     }
 
+    public boolean getKreverSammenhengendeUttak() {
+        return kreverSammenhengendeUttak;
+    }
+
     public List<Utbetalingsperiode> getPerioder() {
         return perioder;
     }
@@ -316,6 +321,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 && Objects.equals(prematurDager, that.prematurDager)
                 && Objects.equals(antallDødeBarn, that.antallDødeBarn)
                 && Objects.equals(dødsdato, that.dødsdato)
+                && Objects.equals(kreverSammenhengendeUttak, that.kreverSammenhengendeUttak)
                 && Objects.equals(perioder, that.perioder)
                 && Objects.equals(bruttoBeregningsgrunnlag, that.bruttoBeregningsgrunnlag)
                 && Objects.equals(harBruktBruttoBeregningsgrunnlag, that.harBruktBruttoBeregningsgrunnlag)
@@ -338,7 +344,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget,
                 antallPerioder, antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager,
                 disponibleFellesDager, sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker,
-                antallBarn, prematurDager, antallDødeBarn, dødsdato, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler,
+                antallBarn, prematurDager, antallDødeBarn, dødsdato, kreverSammenhengendeUttak, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler,
                 klagefristUker, lovhjemlerUttak, lovhjemlerBeregning, inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget,
                 inkludereAvslag, inkludereNyeOpplysningerUtbet);
     }
@@ -556,6 +562,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medDødsdato(String dødsdato) {
             this.kladd.dødsdato = dødsdato;
+            return this;
+        }
+
+        public Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
+            this.kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
             return this;
         }
 

@@ -1,33 +1,6 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.VERGES_NAVN;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
+import no.nav.foreldrepenger.fpsak.dto.uttak.KreverSammenhengendeUttakDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -46,6 +19,33 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.VarselOmRevurderingD
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Optional;
+import java.util.UUID;
+
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.VERGES_NAVN;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class VarselOmRevurderingDokumentdataMapperTest {
@@ -71,6 +71,8 @@ public class VarselOmRevurderingDokumentdataMapperTest {
 
         FamilieHendelse familieHendelse = opprettFamiliehendelse();
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(familieHendelse);
+        KreverSammenhengendeUttakDto kreverSammenhengendeUttak = new KreverSammenhengendeUttakDto(true);
+        when(domeneobjektProvider.kreverSammenhengendeUttak(any())).thenReturn(kreverSammenhengendeUttak.kreverSammenhengendeUttak());
     }
 
     @Test
@@ -102,6 +104,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
         assertThat(varselOmRevurderingDokumentdata.getAntallBarn()).isEqualTo(ANTALL_BARN);
         assertThat(varselOmRevurderingDokumentdata.getAdvarselKode()).isEqualTo(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN.getKode());
         assertThat(varselOmRevurderingDokumentdata.getFlereOpplysninger()).isFalse();
+        assertThat(varselOmRevurderingDokumentdata.getKreverSammenhengendeUttak()).isTrue();
     }
 
     @Test

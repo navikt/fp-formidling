@@ -11,10 +11,9 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 
 @ApplicationScoped
-@ProsessTask(CleanNextBucketBatchTask.TASKTYPE)
+@ProsessTask(value = "partition.cleanBucket", cronExpression = "0 0 7 1 * *", maxFailedRuns = 1)
 public class CleanNextBucketBatchTask implements ProsessTaskHandler {
 
-    public static final String TASKTYPE = "partition.cleanBucket";
     private static final Logger log = LoggerFactory.getLogger(CleanNextBucketBatchTask.class);
     private BatchProsessTaskRepository taskRepository;
 

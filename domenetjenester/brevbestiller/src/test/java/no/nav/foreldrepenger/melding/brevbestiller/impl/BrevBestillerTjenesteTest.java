@@ -49,7 +49,7 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettResponse;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
-import no.nav.foreldrepenger.melding.kafkatjenester.historikk.task.PubliserHistorikkTaskProperties;
+import no.nav.foreldrepenger.melding.kafkatjenester.historikk.task.PubliserHistorikkTask;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
@@ -59,7 +59,8 @@ import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
-import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
+import no.nav.vedtak.felles.prosesstask.api.TaskType;
 
 @ExtendWith(MockitoExtension.class)
 public class BrevBestillerTjenesteTest {
@@ -76,6 +77,9 @@ public class BrevBestillerTjenesteTest {
     private static final DokumentMalType DOKUMENT_MAL_TYPE = DokumentMalType.ENGANGSSTØNAD_INNVILGELSE;
     private static final long HENDELSE_ID = 1L;
     private static final String DOKUMENT_INFO_ID = "987";
+
+    private static final TaskType HISTORIKK_TASK = TaskType.forProsessTask(PubliserHistorikkTask.class);
+    private static final TaskType DIST_TASK = TaskType.forProsessTask(DistribuerBrevTask.class);
 
     @Mock
     private PersonAdapter personAdapter;
@@ -98,7 +102,7 @@ public class BrevBestillerTjenesteTest {
     @Mock
     private DokumentdataMapperProvider dokumentdataMapperProvider;
     @Mock
-    private ProsessTaskRepository prosessTaskRepository;
+    private ProsessTaskTjeneste taskTjeneste;
     @Mock
     private HistorikkRepository historikkRepository;
 
@@ -115,7 +119,7 @@ public class BrevBestillerTjenesteTest {
         navKontaktKonfigurasjon = new NavKontaktKonfigurasjon("1", "2", "3", "4", "5", "6", "7");
         dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, navKontaktKonfigurasjon, virksomhetTjeneste);
         dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
-                dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, prosessTaskRepository, historikkRepository,
+                dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste, historikkRepository,
                 dokprodBrevproduksjonTjeneste);
         tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider,
                 dokprodBrevproduksjonTjeneste, dokgenBrevproduksjonTjeneste);
@@ -149,10 +153,10 @@ public class BrevBestillerTjenesteTest {
         assertThat(historikkinnslag.getJournalpostId()).isEqualTo(JOURNALPOST);
         assertThat(historikkinnslag.getHistorikkinnslagType()).isEqualTo(HistorikkinnslagType.BREV_SENT);
         assertThat(historikkinnslag.getDokumentMalType()).isEqualTo(DOKUMENT_MAL_TYPE);
-        verify(prosessTaskRepository, times(2)).lagre(taskCaptor.capture());
+        verify(taskTjeneste, times(2)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
-        assertThat(taskCaptor.getValue().getTasks().get(0).task().getTaskType()).isEqualTo(DistribuerBrevTask.TASKTYPE);
-        assertThat(taskCaptor.getValue().getTasks().get(1).task().getTaskType()).isEqualTo(PubliserHistorikkTaskProperties.TASKTYPE);
+        assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
+        assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
     }
 
     @Test
@@ -175,10 +179,10 @@ public class BrevBestillerTjenesteTest {
         verify(opprettJournalpostTjeneste, times(1))
                 .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true));
         verify(historikkRepository, times(1)).lagre(any(DokumentHistorikkinnslag.class));
-        verify(prosessTaskRepository, times(1)).lagre(taskCaptor.capture());
+        verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
-        assertThat(taskCaptor.getValue().getTasks().get(0).task().getTaskType()).isEqualTo(DistribuerBrevTask.TASKTYPE);
-        assertThat(taskCaptor.getValue().getTasks().get(1).task().getTaskType()).isEqualTo(PubliserHistorikkTaskProperties.TASKTYPE);
+        assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
+        assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
     }
 
     @Test

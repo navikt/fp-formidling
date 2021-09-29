@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.task;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.task.TilknyttVedleggTask.TASKTYPE;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -21,9 +19,9 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 
 @ApplicationScoped
-@ProsessTask(TASKTYPE)
+@ProsessTask(value = "formidling.tilknyttVedlegg", maxFailedRuns = 2)
 public class TilknyttVedleggTask implements ProsessTaskHandler {
-    public static final String TASKTYPE = "formidling.tilknyttVedlegg";
+
     private TilknyttVedleggTjeneste tilknyttVedleggTjeneste;
     private DomeneobjektProvider domeneobjektProvider;
 

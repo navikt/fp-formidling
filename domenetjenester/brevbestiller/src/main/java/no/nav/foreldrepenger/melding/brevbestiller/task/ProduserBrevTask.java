@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.task;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.task.ProduserBrevTask.TASKTYPE;
-
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -11,22 +9,20 @@ import no.nav.foreldrepenger.melding.brevbestiller.impl.BrevBestillerTjeneste;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
-import no.nav.foreldrepenger.melding.kafkatjenester.historikk.task.PubliserHistorikkTaskProperties;
+import no.nav.foreldrepenger.melding.kafkatjenester.historikk.task.PubliserHistorikkTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
-import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 
 @ApplicationScoped
-@ProsessTask(TASKTYPE)
+@ProsessTask("formidling.bestillBrev")
 public class ProduserBrevTask implements ProsessTaskHandler {
-
-    public static final String TASKTYPE = "formidling.bestillBrev";
 
     private BrevBestillerTjeneste brevBestillerApplikasjonTjeneste;
     private HendelseRepository hendelseRepository;
     private HistorikkRepository historikkRepository;
-    private ProsessTaskRepository prosessTaskRepository;
+    private ProsessTaskTjeneste taskTjeneste;
 
     public ProduserBrevTask() {
         //CDI
@@ -36,11 +32,11 @@ public class ProduserBrevTask implements ProsessTaskHandler {
     public ProduserBrevTask(BrevBestillerTjeneste brevBestillerApplikasjonTjeneste,
                             HendelseRepository hendelseRepository,
                             HistorikkRepository historikkRepository,
-                            ProsessTaskRepository prosessTaskRepository) {
+                            ProsessTaskTjeneste taskTjeneste) {
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
         this.hendelseRepository = hendelseRepository;
         this.historikkRepository = historikkRepository;
-        this.prosessTaskRepository = prosessTaskRepository;
+        this.taskTjeneste = taskTjeneste;
     }
 
     @Override
@@ -54,9 +50,9 @@ public class ProduserBrevTask implements ProsessTaskHandler {
     }
 
     private void opprettProsesstaskForHistorikkInnslag(DokumentHistorikkinnslag historikkinnslag) {
-        ProsessTaskData prosessTaskData = new ProsessTaskData(PubliserHistorikkTaskProperties.TASKTYPE);
-        prosessTaskData.setProperty(PubliserHistorikkTaskProperties.HISTORIKK_ID, String.valueOf(historikkinnslag.getId()));
+        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(PubliserHistorikkTask.class);
+        prosessTaskData.setProperty(PubliserHistorikkTask.HISTORIKK_ID, String.valueOf(historikkinnslag.getId()));
         prosessTaskData.setGruppe("FORMIDLING");
-        prosessTaskRepository.lagre(prosessTaskData);
+        taskTjeneste.lagre(prosessTaskData);
     }
 }

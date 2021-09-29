@@ -11,13 +11,13 @@ import no.nav.foreldrepenger.melding.brevbestiller.task.ProduserBrevTask;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
-import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 
 @ApplicationScoped
 public class HendelseHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(HendelseHandler.class);
     private HendelseRepository hendelseRepository;
-    private ProsessTaskRepository prosessTaskRepository;
+    private ProsessTaskTjeneste taskTjeneste;
 
     public HendelseHandler() {
         //CDI
@@ -25,9 +25,9 @@ public class HendelseHandler {
 
     @Inject
     public HendelseHandler(HendelseRepository hendelseRepository,
-                           ProsessTaskRepository prosessTaskRepository) {
+                           ProsessTaskTjeneste taskTjeneste) {
         this.hendelseRepository = hendelseRepository;
-        this.prosessTaskRepository = prosessTaskRepository;
+        this.taskTjeneste = taskTjeneste;
     }
 
     public void prosesser(DokumentHendelse hendelse) {
@@ -41,10 +41,10 @@ public class HendelseHandler {
     }
 
     private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {
-        ProsessTaskData prosessTaskData = new ProsessTaskData(ProduserBrevTask.TASKTYPE);
+        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(ProduserBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
         prosessTaskData.setGruppe("FORMIDLING");
-        prosessTaskRepository.lagre(prosessTaskData);
+        taskTjeneste.lagre(prosessTaskData);
     }
 }

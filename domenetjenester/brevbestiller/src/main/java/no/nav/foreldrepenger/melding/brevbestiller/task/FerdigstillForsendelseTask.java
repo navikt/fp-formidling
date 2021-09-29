@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.task;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.task.FerdigstillForsendelseTask.TASKTYPE;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -12,9 +10,8 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 
 @ApplicationScoped
-@ProsessTask(TASKTYPE)
+@ProsessTask(value = "formidling.ferdigstillForsendelse", maxFailedRuns = 2)
 public class FerdigstillForsendelseTask implements ProsessTaskHandler {
-    public static final String TASKTYPE = "formidling.ferdigstillForsendelse";
 
     JournalpostRestKlient journalpostRestKlient;
 

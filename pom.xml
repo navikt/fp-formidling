@@ -32,8 +32,8 @@
         <jacoco.skip>true</jacoco.skip> <!-- default skip coverage -->
 
         <!-- Felles artefakter -->
-        <felles.version>4.0.8</felles.version>
-        <prosesstask.version>3.0.3</prosesstask.version>
+        <felles.version>4.0.9</felles.version>
+        <prosesstask.version>3.0.4</prosesstask.version>
         <kontrakter.version>6.0.4</kontrakter.version>
         <konfig.version>1.1.4</konfig.version>
         <dokprod-kontrakt.version>2.1.8</dokprod-kontrakt.version>

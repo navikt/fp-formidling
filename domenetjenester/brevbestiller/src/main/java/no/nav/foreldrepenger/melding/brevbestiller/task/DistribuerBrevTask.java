@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.task;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.task.DistribuerBrevTask.TASKTYPE;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -12,10 +10,8 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 
 @ApplicationScoped
-@ProsessTask(TASKTYPE)
+@ProsessTask(value = "formidling.distribuerBrev", maxFailedRuns = 2)
 public class DistribuerBrevTask implements ProsessTaskHandler {
-
-    public static final String TASKTYPE = "formidling.distribuerBrev";
 
     private Dokdist dokdist;
 

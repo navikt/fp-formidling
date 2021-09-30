@@ -25,21 +25,21 @@ import no.nav.foreldrepenger.melding.kafkatjenester.felles.util.Serialiseringsve
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.felles.dokumentbestilling.kodeverk.FagsakYtelseType;
 import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
-import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(JpaExtension.class)
 public class KafkaReaderTest {
 
     @Mock
-    private ProsessTaskRepository prosessTaskRepository;
+    private ProsessTaskTjeneste taskTjeneste;
     private KafkaReader kafkaReader;
     private EntityManager entityManager;
 
     @BeforeEach
     public void setup(EntityManager entityManager) {
         var hendelseRepository = new HendelseRepository(entityManager);
-        var hendelseHandler = new HendelseHandler(hendelseRepository, prosessTaskRepository);
+        var hendelseHandler = new HendelseHandler(hendelseRepository, taskTjeneste);
         kafkaReader = new KafkaReader(hendelseHandler, hendelseRepository);
         this.entityManager = entityManager;
     }

@@ -8,10 +8,8 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 
 @ApplicationScoped
-@ProsessTask(SynchKodeverkBatchTask.TASKTYPE)
+@ProsessTask(value = "kodeverk.synch", cronExpression = "0 0 6 1 * *", maxFailedRuns = 1)
 public class SynchKodeverkBatchTask implements ProsessTaskHandler {
-
-    public static final String TASKTYPE = "kodeverk.synch";
 
     private PostnummerSynkroniseringTjeneste postnummerTjeneste;
 

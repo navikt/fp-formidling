@@ -11,8 +11,10 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 
 @ApplicationScoped
-@ProsessTask(PubliserHistorikkTaskProperties.TASKTYPE)
+@ProsessTask("formidling.publiserHistorikk")
 public class PubliserHistorikkTask implements ProsessTaskHandler {
+
+    public static final String HISTORIKK_ID = "historikkId";
 
     private HistorikkRepository historikkRepository;
     private DokumentHistorikkTjeneste dokumentHistorikkTjeneste;
@@ -30,7 +32,7 @@ public class PubliserHistorikkTask implements ProsessTaskHandler {
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
-        long historikkId = Long.parseLong(prosessTaskData.getPropertyValue(PubliserHistorikkTaskProperties.HISTORIKK_ID));
+        long historikkId = Long.parseLong(prosessTaskData.getPropertyValue(PubliserHistorikkTask.HISTORIKK_ID));
         DokumentHistorikkinnslag historikkinnslag = historikkRepository.hentInnslagMedId(historikkId);
         dokumentHistorikkTjeneste.publiserHistorikk(historikkinnslag);
     }

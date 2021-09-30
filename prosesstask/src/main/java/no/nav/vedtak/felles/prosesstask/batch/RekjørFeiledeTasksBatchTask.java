@@ -9,23 +9,23 @@ import org.slf4j.LoggerFactory;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 
 @ApplicationScoped
-@ProsessTask(RekjørFeiledeTasksBatchTask.TASKTYPE)
+@ProsessTask(value = "retry.feilendeTasks", cronExpression = "0 30 7 * * *", maxFailedRuns = 1)
 public class RekjørFeiledeTasksBatchTask implements ProsessTaskHandler {
 
-    public static final String TASKTYPE = "retry.feilendeTasks";
     private static final Logger log = LoggerFactory.getLogger(RekjørFeiledeTasksBatchTask.class);
-    private BatchProsessTaskRepository taskRepository;
+    private ProsessTaskTjeneste taskTjeneste;
 
     @Inject
-    public RekjørFeiledeTasksBatchTask(BatchProsessTaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    public RekjørFeiledeTasksBatchTask(ProsessTaskTjeneste taskTjeneste) {
+        this.taskTjeneste = taskTjeneste;
     }
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
-        int rekjørAlleFeiledeTasks = taskRepository.rekjørAlleFeiledeTasks();
+        var rekjørAlleFeiledeTasks = taskTjeneste.restartAlleFeiledeTasks();
         log.info("Rekjører alle feilende tasks, oppdaterte {} tasks", rekjørAlleFeiledeTasks);
     }
 }

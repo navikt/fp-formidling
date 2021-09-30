@@ -1,5 +1,19 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevproduksjonTjeneste;
@@ -24,25 +38,13 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
-import no.nav.foreldrepenger.melding.kafkatjenester.historikk.task.PubliserHistorikkTaskProperties;
+import no.nav.foreldrepenger.melding.kafkatjenester.historikk.task.PubliserHistorikkTask;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
-import no.nav.vedtak.felles.prosesstask.api.ProsessTaskRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -56,7 +58,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private Dokgen dokgenRestKlient;
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
     private DokumentdataMapperProvider dokumentdataMapperProvider;
-    private ProsessTaskRepository prosessTaskRepository;
+    private ProsessTaskTjeneste taskTjeneste;
     private HistorikkRepository historikkRepository;
     private DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste;
 
@@ -71,7 +73,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             /* @Jersey */Dokgen dokgenRestKlient,
             OpprettJournalpostTjeneste opprettJournalpostTjeneste,
             DokumentdataMapperProvider dokumentdataMapperProvider,
-            ProsessTaskRepository prosessTaskRepository,
+            ProsessTaskTjeneste taskTjeneste,
             HistorikkRepository historikkRepository,
             DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste) {
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
@@ -80,7 +82,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         this.dokgenRestKlient = dokgenRestKlient;
         this.opprettJournalpostTjeneste = opprettJournalpostTjeneste;
         this.dokumentdataMapperProvider = dokumentdataMapperProvider;
-        this.prosessTaskRepository = prosessTaskRepository;
+        this.taskTjeneste = taskTjeneste;
         this.historikkRepository = historikkRepository;
         this.dokprodBrevproduksjonTjeneste = dokprodBrevproduksjonTjeneste;
     }
@@ -176,31 +178,31 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         taskGruppe.addNesteSekvensiell(opprettDistribuerBrevTask(journalpostId, innsynMedVedlegg, dokumentHendelse.getBehandlingUuid()));
         DokumentHistorikkinnslag historikkinnslag = lagHistorikkinnslag(dokumentHendelse, response, dokumentMal);
         taskGruppe.addNesteSekvensiell(opprettPubliserHistorikkTask(historikkinnslag));
-        prosessTaskRepository.lagre(taskGruppe);
+        taskTjeneste.lagre(taskGruppe);
     }
 
     private void leggTilVedleggOgFerdigstillForsendelse(UUID behandlingUid, JournalpostId journalpostId) {
         ProsessTaskGruppe taskGruppe = new ProsessTaskGruppe();
         taskGruppe.addNesteSekvensiell(opprettTilknyttVedleggTask(behandlingUid, journalpostId));
         taskGruppe.addNesteSekvensiell(opprettFerdigstillForsendelseTask(journalpostId));
-        prosessTaskRepository.lagre(taskGruppe);
+        taskTjeneste.lagre(taskGruppe);
     }
 
     private ProsessTaskData opprettTilknyttVedleggTask(UUID behandlingUuId, JournalpostId journalpostId) {
-        ProsessTaskData prosessTaskData = new ProsessTaskData(TilknyttVedleggTask.TASKTYPE);
+        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(TilknyttVedleggTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, (String.valueOf(behandlingUuId)));
         return prosessTaskData;
     }
 
     private ProsessTaskData opprettFerdigstillForsendelseTask(JournalpostId journalpostId) {
-        ProsessTaskData prosessTaskData = new ProsessTaskData(FerdigstillForsendelseTask.TASKTYPE);
+        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(FerdigstillForsendelseTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         return prosessTaskData;
     }
 
     private ProsessTaskData opprettDistribuerBrevTask(JournalpostId journalpostId, boolean innsynMedVedlegg, UUID behandlingUuId) {
-        ProsessTaskData prosessTaskData = new ProsessTaskData(DistribuerBrevTask.TASKTYPE);
+        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, (String.valueOf(behandlingUuId)));
         // må vente til vedlegg er knyttet og journalpost er ferdigstilt
@@ -211,8 +213,8 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     }
 
     private ProsessTaskData opprettPubliserHistorikkTask(DokumentHistorikkinnslag historikkinnslag) {
-        ProsessTaskData prosessTaskData = new ProsessTaskData(PubliserHistorikkTaskProperties.TASKTYPE);
-        prosessTaskData.setProperty(PubliserHistorikkTaskProperties.HISTORIKK_ID, String.valueOf(historikkinnslag.getId()));
+        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(PubliserHistorikkTask.class);
+        prosessTaskData.setProperty(PubliserHistorikkTask.HISTORIKK_ID, String.valueOf(historikkinnslag.getId()));
         return prosessTaskData;
     }
 

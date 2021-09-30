@@ -1,17 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -26,6 +14,16 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.VLException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DokumentMalUtlederTest {
 
@@ -35,9 +33,7 @@ public class DokumentMalUtlederTest {
 
     @BeforeEach
     public void setup() {
-        DokgenLanseringTjeneste dokgenLanseringTjeneste = mock(DokgenLanseringTjeneste.class);
-        when(dokgenLanseringTjeneste.velgInnvilgelseFpMal(any(Behandling.class))).thenReturn(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK);
-        dokumentMalUtleder = new DokumentMalUtleder(domeneobjektProvider, null, null, dokgenLanseringTjeneste);
+        dokumentMalUtleder = new DokumentMalUtleder(domeneobjektProvider, null, null);
     }
 
     @Test
@@ -79,7 +75,7 @@ public class DokumentMalUtlederTest {
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
                 .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.getKode());
+                .isEqualTo(DokumentMalType.FORELDREPENGER_INNVILGELSE.getKode());
     }
 
     @Test
@@ -180,7 +176,7 @@ public class DokumentMalUtlederTest {
                                 .build())
                 .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.getKode());
+                .isEqualTo(DokumentMalType.FORELDREPENGER_INNVILGELSE.getKode());
     }
 
     @Test

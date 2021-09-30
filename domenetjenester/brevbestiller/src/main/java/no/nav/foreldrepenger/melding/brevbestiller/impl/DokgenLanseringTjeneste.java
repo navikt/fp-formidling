@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import no.nav.foreldrepenger.konfig.Environment;
-import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import org.slf4j.Logger;
@@ -101,14 +100,5 @@ public class DokgenLanseringTjeneste {
             return OVERSTYRE_MAL_DEV.get(dokumentMalType);
         }
         return dokumentMalType;
-    }
-
-    public DokumentMalType velgInnvilgelseFpMal(Behandling behandling) {
-        try {
-            return domeneobjektProvider.hentInnvilgelseForeldrepengerDokumentmal(behandling);
-        } catch (Exception e) {
-            LOGGER.info("Feilet ved kall til Fpsak for å bestemme innvilgelsesmal FP - defaulter til Dokprod: {}", e.getMessage());
-            return DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK;
-        }
     }
 }

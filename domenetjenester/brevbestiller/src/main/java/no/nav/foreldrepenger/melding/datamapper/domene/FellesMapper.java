@@ -18,7 +18,7 @@ public class FellesMapper {
     public static String formaterLovhjemlerForBeregning(String lovhjemmelBeregning, String konsekvensForYtelse, boolean innvilgetRevurdering, Behandling behandling) {
         if (lovhjemmelBeregning == null) {
             lovhjemmelBeregning = "";
-        } else if (Hjemmel.UDEFINERT.getNavn().equals(lovhjemmelBeregning)) {
+        } else if (Hjemmel.UDEFINERT.getNavn().equals(lovhjemmelBeregning) && !KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode().equals(konsekvensForYtelse)) {
             LOGGER.warn("Behandling " + behandling.getUuid() + " har udefinert hjemmel. Fint om du melder dette på TFP-4569 så vi kan se hvor ofte det skjer.");
             lovhjemmelBeregning = "";
         }

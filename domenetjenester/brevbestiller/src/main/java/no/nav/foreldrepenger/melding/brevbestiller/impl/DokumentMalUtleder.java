@@ -34,7 +34,6 @@ class DokumentMalUtleder {
     private DomeneobjektProvider domeneobjektProvider;
     private HistorikkRepository historikkRepository;
     private BehandlingRestKlient behandlingRestKlient;
-    private DokgenLanseringTjeneste dokgenLanseringTjeneste;
 
     public DokumentMalUtleder() {
         //CDI
@@ -43,12 +42,10 @@ class DokumentMalUtleder {
     @Inject
     public DokumentMalUtleder(DomeneobjektProvider domeneobjektProvider,
                               HistorikkRepository historikkRepository,
-                              BehandlingRestKlient behandlingRestKlient,
-                              DokgenLanseringTjeneste dokgenLanseringTjeneste) {
+                              BehandlingRestKlient behandlingRestKlient) {
         this.domeneobjektProvider = domeneobjektProvider;
         this.historikkRepository = historikkRepository;
         this.behandlingRestKlient = behandlingRestKlient;
-        this.dokgenLanseringTjeneste = dokgenLanseringTjeneste;
     }
 
     private static boolean erKunEndringIFordelingAvYtelsen(Behandlingsresultat behandlingsresultat) {
@@ -70,7 +67,7 @@ class DokumentMalUtleder {
     private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
-            return dokgenLanseringTjeneste.velgInnvilgelseFpMal(behandling);
+            return DokumentMalType.FORELDREPENGER_INNVILGELSE;
         } else if (behandlingsresultat.erAvslått()) {
             return DokumentMalType.FORELDREPENGER_AVSLAG;
         } else if (behandlingsresultat.erOpphørt()) {

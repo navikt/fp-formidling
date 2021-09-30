@@ -1,16 +1,8 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpsak.Behandlinger;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.uttak.KreverSammenhengendeUttakDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.anke.Anke;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -41,7 +33,6 @@ import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.InntektArbeidYtelse;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.søknad.Søknad;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
@@ -50,6 +41,12 @@ import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @ApplicationScoped
 public class DomeneobjektProvider {
@@ -194,11 +191,6 @@ public class DomeneobjektProvider {
         return MottattDokumentDtoMapper.mapMottattedokumenterFraDto(behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
     }
 
-    public DokumentMalType hentInnvilgelseForeldrepengerDokumentmal(Behandling behandling) {
-        return behandlingRestKlient.hentInnvilgelseForeldrepengerDokumentmal(behandling.getResourceLinker())
-                .map(dto -> DokumentMalType.fraKode(dto.dokumentMalTypeKode()))
-                .orElse(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK);
-    }
     public boolean kreverSammenhengendeUttak(Behandling behandling) {
         return behandlingRestKlient.kreverSammenhengendeUttak(behandling.getResourceLinker()).kreverSammenhengendeUttak();
 

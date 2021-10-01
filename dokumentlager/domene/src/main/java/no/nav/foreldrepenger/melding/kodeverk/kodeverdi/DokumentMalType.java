@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum DokumentMalType implements Kodeverdi {
 
     //Mal hos team dokument
-    INNVILGELSE_FORELDREPENGER_DOK(DokumentMalTypeKode.INNVILGELSE_FORELDREPENGER_DOK, "Innvilgelsesbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNVFP),
     OPPHØR_DOK(DokumentMalTypeKode.OPPHØR_DOK, "Opphør brev", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
@@ -42,6 +41,7 @@ public enum DokumentMalType implements Kodeverdi {
     ENGANGSSTØNAD_AVSLAG(DokumentMalTypeKode.ENGANGSSTØNAD_AVSLAG, "Avslag engangsstønad", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     FORELDREPENGER_INNVILGELSE(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE, "Innvilgelsesbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     FORELDREPENGER_AVSLAG(DokumentMalTypeKode.FORELDREPENGER_AVSLAG, "Avslagsbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    FORELDREPENGER_ANNULLERT(DokumentMalTypeKode.FORELDREPENGER_ANNULLERT, "Annullering av Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER(DokumentMalTypeKode.FORELDREPENGER_INFO_TIL_ANNEN_FORELDER, "Informasjonsbrev til den andre forelderen", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     INNHENTE_OPPLYSNINGER(DokumentMalTypeKode.INNHENTE_OPPLYSNINGER, "Innhent dokumentasjon", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     VARSEL_OM_REVURDERING(DokumentMalTypeKode.VARSEL_OM_REVURDERING, "Varsel om revurdering", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.REVURDERING, DoksysKode.FRITKS),
@@ -90,6 +90,8 @@ public enum DokumentMalType implements Kodeverdi {
     INNHENT_DOK(DokumentMalTypeKode.INNHENT_DOK, "Innhent dokumentasjon", TILGJENGELIG_MANUELL_UTSENDELSE.J.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNHEN), //NOSONAR
     @Deprecated
     AVSLAG_FORELDREPENGER_DOK(DokumentMalTypeKode.AVSLAG_FORELDREPENGER_DOK, "Avslagsbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.AVSLFP ), //NOSONAR
+    @Deprecated
+    INNVILGELSE_FORELDREPENGER_DOK(DokumentMalTypeKode.INNVILGELSE_FORELDREPENGER_DOK, "Innvilgelsesbrev Foreldrepenger", TILGJENGELIG_MANUELL_UTSENDELSE.N.toString(), DokumentMalRestriksjon.INGEN, DoksysKode.INNVFP), //NOSONAR
 
     UDEFINERT("-"),
 

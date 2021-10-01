@@ -1,27 +1,15 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import no.nav.foreldrepenger.konfig.Environment;
-import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.util.Map;
 import java.util.Set;
 
+import javax.enterprise.context.ApplicationScoped;
+
+import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+
 @ApplicationScoped
 public class DokgenLanseringTjeneste {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DokgenLanseringTjeneste.class);
-
-    private DomeneobjektProvider domeneobjektProvider;
-
-    @Inject
-    public DokgenLanseringTjeneste(DomeneobjektProvider domeneobjektProvider) {
-        this.domeneobjektProvider = domeneobjektProvider;
-    }
 
     DokgenLanseringTjeneste() {
         // CDI
@@ -57,7 +45,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG,
             DokumentMalType.FORELDREPENGER_INNVILGELSE,
-            DokumentMalType.FORELDREPENGER_AVSLAG);
+            DokumentMalType.FORELDREPENGER_AVSLAG,
+            DokumentMalType.FORELDREPENGER_ANNULLERT);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
             DokumentMalType.INNHENT_DOK,
             DokumentMalType.REVURDERING_DOK,

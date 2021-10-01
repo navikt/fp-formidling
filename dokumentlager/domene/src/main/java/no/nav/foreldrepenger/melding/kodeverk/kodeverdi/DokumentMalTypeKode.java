@@ -3,9 +3,7 @@ package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 public class DokumentMalTypeKode {
 
     //Mal hos team dokument
-    public static final String INNVILGELSE_FORELDREPENGER_DOK = "INNVFP";
     public static final String OPPHØR_DOK = "OPPHOR";
-    public static final String AVSLAG_FORELDREPENGER_DOK = "AVSLFP";
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     public static final String FRITEKST_DOK = "FRITKS";
@@ -24,6 +22,7 @@ public class DokumentMalTypeKode {
     public static final String ENGANGSSTØNAD_AVSLAG = "AVSLES";
     public static final String FORELDREPENGER_INNVILGELSE = "INVFOR";
     public static final String FORELDREPENGER_AVSLAG = "AVSFOR";
+    public static final String FORELDREPENGER_ANNULLERT = "ANUFOR";
     public static final String FORELDREPENGER_INFO_TIL_ANNEN_FORELDER ="INFOAF";
     public static final String INNHENTE_OPPLYSNINGER = "INNOPP";
     public static final String VARSEL_OM_REVURDERING = "VARREV";
@@ -70,5 +69,9 @@ public class DokumentMalTypeKode {
     public static final String HENLEGG_BEHANDLING_DOK = "HENLEG"; //NOSONAR
     @Deprecated
     public static final String INNHENT_DOK = "INNHEN"; //NOSONAR
+    @Deprecated
+    public static final String AVSLAG_FORELDREPENGER_DOK = "AVSLFP"; //NOSONAR
+    @Deprecated
+    public static final String INNVILGELSE_FORELDREPENGER_DOK = "INNVFP"; //NOSONAR
 
 }

@@ -19,7 +19,7 @@ public class FellesMapper {
         if (lovhjemmelBeregning == null) {
             lovhjemmelBeregning = "";
         } else if (Hjemmel.UDEFINERT.getNavn().equals(lovhjemmelBeregning) && !KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode().equals(konsekvensForYtelse)) {
-            LOGGER.warn("Behandling " + behandling.getUuid() + " har udefinert hjemmel. Fint om du melder dette på TFP-4569 så vi kan se hvor ofte det skjer.");
+            LOGGER.warn("Behandling " + behandling.getUuid() + " har udefinert hjemmel. Fint om du sjekker på TFP-4569 om dette er en NY sak, og i så fall melder det der så vi kan se hvor ofte det skjer.");
             lovhjemmelBeregning = "";
         }
         if (endringIBeregning(konsekvensForYtelse) || innvilgetRevurdering) {

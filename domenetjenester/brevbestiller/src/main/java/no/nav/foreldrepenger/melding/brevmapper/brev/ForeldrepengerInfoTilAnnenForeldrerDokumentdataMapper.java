@@ -1,15 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Optional;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
@@ -22,6 +12,15 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Optional;
+
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INFO_TIL_ANNEN_FORELDER)
@@ -72,6 +71,7 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
                 .medFelles(fellesBuilder.build())
                 .medBehandlingÅrsak(aarsak.getKode())
                 .medSisteUttaksdagMor(sisteUttaksdagMor)
+                .medKreverSammenhengendeUttak(domeneobjektProvider.kreverSammenhengendeUttak(behandling))
                 .build();
     }
 }

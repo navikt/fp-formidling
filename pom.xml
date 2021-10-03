@@ -32,16 +32,16 @@
         <jacoco.skip>true</jacoco.skip> <!-- default skip coverage -->
 
         <!-- Felles artefakter -->
-        <felles.version>4.0.9</felles.version>
-        <prosesstask.version>3.0.4</prosesstask.version>
+        <felles.version>4.0.10</felles.version>
+        <prosesstask.version>3.0.6</prosesstask.version>
         <kontrakter.version>6.0.4</kontrakter.version>
         <konfig.version>1.1.4</konfig.version>
         <dokprod-kontrakt.version>2.1.8</dokprod-kontrakt.version>
 
         <!-- Eksterne -->
         <prometheus.version>0.12.0</prometheus.version>
-        <swagger.version>2.1.10</swagger.version>
-        <swagger-ui.version>3.52.1</swagger-ui.version>
+        <swagger.version>2.1.11</swagger.version>
+        <swagger-ui.version>3.52.3</swagger-ui.version>
         <kafka.version>3.0.0</kafka.version>
         <logstash.version>6.6</logstash.version>
         <logback-syslog4j.version>1.0.0</logback-syslog4j.version>
@@ -393,13 +393,6 @@
                 <version>${geronimo.osgi.version}</version>
             </dependency>
 
-            <!-- versjon som passer jandex-maven -->
-            <dependency>
-                <groupId>org.jboss</groupId>
-                <artifactId>jandex</artifactId>
-                <version>2.4.0.Final</version>
-            </dependency>
-
             <!-- Swagger -->
             <dependency>
                 <groupId>io.swagger.core.v3</groupId>
@@ -479,7 +472,7 @@
                 <plugin>
                     <groupId>org.jboss.jandex</groupId>
                     <artifactId>jandex-maven-plugin</artifactId>
-                    <version>1.2.0</version>
+                    <version>1.1.1</version>
                     <executions>
                         <execution>
                             <id>make-index</id>

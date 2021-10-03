@@ -3,11 +3,9 @@ package no.nav.foreldrepenger.melding.behandling;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.melding.beregning.BeregningResultat;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
-import no.nav.foreldrepenger.melding.vilkår.VilkårResultat;
 
 public class Behandlingsresultat {
     private Avslagsårsak avslagsårsak; //Kode
@@ -21,9 +19,7 @@ public class Behandlingsresultat {
 
     //Objekter
     private String beregning; //BeregningResultat
-    private VilkårResultat vilkårResultat; //VilkårResultat
     private String periode; //Uttaksperiodegrense
-    private BeregningResultat beregningResultat;
     private Behandling behandling;
 
     private Behandlingsresultat(Builder builder) {
@@ -36,9 +32,7 @@ public class Behandlingsresultat {
         konsekvenserForYtelsen = builder.konsekvenserForYtelsen;
         erRevurderingMedUendretUtfall = builder.erRevurderingMedUendretUtfall;
         beregning = builder.beregning;
-        vilkårResultat = builder.vilkårResultat;
         periode = builder.periode;
-        beregningResultat = builder.beregningResultat;
         behandling = builder.behandling;
     }
 
@@ -76,10 +70,6 @@ public class Behandlingsresultat {
 
     public String getBeregning() {
         return beregning;
-    }
-
-    public VilkårResultat getVilkårResultat() {
-        return vilkårResultat;
     }
 
     public String getPeriode() {
@@ -127,10 +117,6 @@ public class Behandlingsresultat {
         return BehandlingResultatType.FORELDREPENGER_ENDRET.equals(behandlingResultatType);
     }
 
-    public BeregningResultat getBeregningResultat() {
-        return beregningResultat;
-    }
-
     public Behandling getBehandling() {
         return behandling;
     }
@@ -149,9 +135,7 @@ public class Behandlingsresultat {
         private List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>();
         private Boolean erRevurderingMedUendretUtfall;
         private String beregning;
-        private VilkårResultat vilkårResultat;
         private String periode;
-        private BeregningResultat beregningResultat;
         private Behandling behandling;
 
         private Builder() {
@@ -202,18 +186,8 @@ public class Behandlingsresultat {
             return this;
         }
 
-        public Builder vilkårResultat(VilkårResultat vilkårResultat) {
-            this.vilkårResultat = vilkårResultat;
-            return this;
-        }
-
         public Builder Periode(String periode) {
             this.periode = periode;
-            return this;
-        }
-
-        public Builder beregningResultat(BeregningResultat beregningResultat) {
-            this.beregningResultat = beregningResultat;
             return this;
         }
 

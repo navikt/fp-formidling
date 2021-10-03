@@ -52,7 +52,7 @@ public class IkkeSøktDokumentdataMapperTest {
         dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new IkkeSøktDokumentdataMapper(domeneobjektProvider);
 
-        Inntektsmelding inntektsmelding = new Inntektsmelding(ARBEIDSGIVER, "", null, INNSENDINGSTIDSPUNKT);
+        Inntektsmelding inntektsmelding = new Inntektsmelding(ARBEIDSGIVER, "", INNSENDINGSTIDSPUNKT);
         InntektArbeidYtelse iay = InntektArbeidYtelse.ny().medInntektsmeldinger(List.of(inntektsmelding)).build();
         when(domeneobjektProvider.hentInntektArbeidYtelse(any(Behandling.class))).thenReturn(iay);
     }

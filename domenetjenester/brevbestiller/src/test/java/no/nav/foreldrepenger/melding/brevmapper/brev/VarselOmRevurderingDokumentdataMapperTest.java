@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
-import no.nav.foreldrepenger.fpsak.dto.uttak.KreverSammenhengendeUttakDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -71,8 +70,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
 
         FamilieHendelse familieHendelse = opprettFamiliehendelse();
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(familieHendelse);
-        KreverSammenhengendeUttakDto kreverSammenhengendeUttak = new KreverSammenhengendeUttakDto(true);
-        when(domeneobjektProvider.kreverSammenhengendeUttak(any())).thenReturn(kreverSammenhengendeUttak.kreverSammenhengendeUttak());
+        when(domeneobjektProvider.kreverSammenhengendeUttak(any())).thenReturn(true);
     }
 
     @Test

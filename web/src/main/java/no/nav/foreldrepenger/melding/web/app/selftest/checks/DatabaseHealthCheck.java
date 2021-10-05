@@ -14,7 +14,7 @@ import no.nav.vedtak.log.metrics.ReadinessAware;
 public class DatabaseHealthCheck implements ReadinessAware {
 
     private static final String JDBC_DEFAULT_DS = "jdbc/defaultDS";
-    private static final String SQL_QUERY = "select count(1) from PROSESS_TASK_TYPE";
+    private static final String SQL_QUERY = "select 1";
     private final DataSource ds;
 
     public DatabaseHealthCheck() throws NamingException {

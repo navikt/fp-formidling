@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import java.util.List;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
@@ -8,29 +10,25 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeid
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 
-import java.util.List;
-
 /**
  * Klassen utleder hvorvidt for forskjellige blokker / undermaler i innvilgelse foreldrepenger brevet skal inkluderes:
  */
 public final class UndermalInkluderingMapper {
-    private static final List<String> UTBETALING_ÅRSAKER = List.of("2010" , "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2030", "2031", "2032", "2033", "2034", "2038");
-    private static final List<String> GYLDIG_UTSETTELSE_ÅRSAKER = List.of("2010" , "2011", "2012", "2013", "2014");
 
     public static boolean skalInkludereUtbetaling(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder) {
         return behandling.getBehandlingsresultat().erInnvilget()
-                && (utbetalingsperioder.size() > 1 || harKunEnPeriodeUtenGraderingOgUtenGitteÅrsaker(utbetalingsperioder));
+                && (utbetalingsperioder.size() > 1 || harKunEnPeriodeUtenGraderingOgUtenUtbetalingÅrsak(utbetalingsperioder));
     }
 
     public static boolean skalInkludereUtbetNårGradering(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder) {
-        return behandling.getBehandlingsresultat().erInnvilget() && utbetalingsperioder.size() == 1 && periodeHarGitteÅrsakerEllerGradering(utbetalingsperioder.get(0));
+        return behandling.getBehandlingsresultat().erInnvilget() && utbetalingsperioder.size() == 1 && periodeHarUtbetalingÅrsakEllerGradering(utbetalingsperioder.get(0));
     }
 
     public static boolean skalInkludereInnvilget(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder, String konsekvens) {
         return !KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvens)
                 && (harMerEnnEnPeriodeOgMinstEnInnvilget(utbetalingsperioder)
                 || erRevurderingMedEndring(konsekvens, behandling)
-                || utbetalingsperioder.stream().anyMatch(UndermalInkluderingMapper::periodeHarGitteÅrsakerEllerGradering)); //TODO: Dobbeltsjekke med CCM at dette ble riktig
+                || utbetalingsperioder.stream().anyMatch(UndermalInkluderingMapper::periodeHarUtbetalingÅrsakEllerGradering)); //TODO: Dobbeltsjekke med CCM at dette ble riktig
     }
 
     public static boolean skalInkludereAvslag(List<Utbetalingsperiode> utbetalingsperioder, String konsekvens) {
@@ -38,11 +36,11 @@ public final class UndermalInkluderingMapper {
     }
 
     public static boolean skalInkludereNyeOpplysningerUtbet(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder, long dagsats) {
-        return dagsats > 0 && behandling.getBehandlingsresultat().erInnvilget() && utbetalingsperioder.size() == 1 && periodeHarGyldigUtsettelseÅrsakerEllerGradering(utbetalingsperioder.get(0));
+        return dagsats > 0 && behandling.getBehandlingsresultat().erInnvilget() && utbetalingsperioder.size() == 1 && periodeHarGyldigUtsettelseÅrsakEllerGradering(utbetalingsperioder.get(0));
     }
 
-    private static boolean harKunEnPeriodeUtenGraderingOgUtenGitteÅrsaker(List<Utbetalingsperiode> utbetalingsperioder) {
-        return utbetalingsperioder.size() == 1 && !UTBETALING_ÅRSAKER.contains(utbetalingsperioder.get(0).getÅrsak()) && ikkeHarGradering(utbetalingsperioder.get(0));
+    private static boolean harKunEnPeriodeUtenGraderingOgUtenUtbetalingÅrsak(List<Utbetalingsperiode> utbetalingsperioder) {
+        return utbetalingsperioder.size() == 1 && !utbetalingsperioder.get(0).getÅrsak().erUtbetalingÅrsak() && ikkeHarGradering(utbetalingsperioder.get(0));
     }
 
     private static boolean ikkeHarGradering(Utbetalingsperiode utbetalingsperiode) {
@@ -65,14 +63,12 @@ public final class UndermalInkluderingMapper {
         return KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode().equals(konsekvens) || KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.getKode().equals(konsekvens);
     }
 
-    private static boolean periodeHarGitteÅrsakerEllerGradering(Utbetalingsperiode utbetalingsperiode) {
-        return UTBETALING_ÅRSAKER.contains(utbetalingsperiode.getÅrsak())
-                || harGradering(utbetalingsperiode);
+    private static boolean periodeHarUtbetalingÅrsakEllerGradering(Utbetalingsperiode utbetalingsperiode) {
+        return utbetalingsperiode.getÅrsak().erUtbetalingÅrsak() || harGradering(utbetalingsperiode);
     }
 
-    private static boolean periodeHarGyldigUtsettelseÅrsakerEllerGradering(Utbetalingsperiode utbetalingsperiode) {
-        return GYLDIG_UTSETTELSE_ÅRSAKER.contains(utbetalingsperiode.getÅrsak())
-                || harGradering(utbetalingsperiode);
+    private static boolean periodeHarGyldigUtsettelseÅrsakEllerGradering(Utbetalingsperiode utbetalingsperiode) {
+        return utbetalingsperiode.getÅrsak().erGyldigUtsettelseÅrsak() || harGradering(utbetalingsperiode);
     }
 
     private static boolean harGradering(Utbetalingsperiode utbetalingsperiode) {

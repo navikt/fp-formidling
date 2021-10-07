@@ -137,11 +137,11 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getLovhjemmelForAvslag()).isEqualTo("§ forvaltningsloven § 35");
         assertThat(dokumentdata.getAntallPerioder()).isEqualTo(2);
         assertThat(dokumentdata.getAvslåttePerioder()).hasSize(2); // Periode 2 og 3 skal slås sammen
-        assertThat(dokumentdata.getAvslåttePerioder().get(0).getAvslagsårsak()).isEqualTo(ÅRSAK_1.getKode());
+        assertThat(dokumentdata.getAvslåttePerioder().get(0).getAvslagsårsak().getKode()).isEqualTo(ÅRSAK_1.getKode());
         assertThat(dokumentdata.getAvslåttePerioder().get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
         assertThat(dokumentdata.getAvslåttePerioder().get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
         assertThat(dokumentdata.getAvslåttePerioder().get(0).getAntallTapteDager()).isEqualTo(TREKKDAGER.intValue());
-        assertThat(dokumentdata.getAvslåttePerioder().get(1).getAvslagsårsak()).isEqualTo(ÅRSAK_2_OG_3.getKode());
+        assertThat(dokumentdata.getAvslåttePerioder().get(1).getAvslagsårsak().getKode()).isEqualTo(ÅRSAK_2_OG_3.getKode());
         assertThat(dokumentdata.getAvslåttePerioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
         assertThat(dokumentdata.getAvslåttePerioder().get(1).getPeriodeTom()).isEqualTo(PERIODE3_TOM);
         assertThat(dokumentdata.getAvslåttePerioder().get(1).getAntallTapteDager()).isEqualTo(TREKKDAGER.intValue() * 2);

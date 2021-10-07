@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
@@ -102,13 +103,13 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(uPeriode.getTom());
         assertThat(resultat.get(0).isInnvilget()).isFalse();
         assertThat(resultat.get(0).getPeriodeDagsats()).isEqualTo(0L);
-        assertThat(resultat.get(0).getÅrsak()).isEqualTo(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode());
+        assertThat(resultat.get(0).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode());
 
         assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(brPeriode3.getBeregningsresultatPeriodeFom());
         assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(brPeriode3.getBeregningsresultatPeriodeTom());
         assertThat(resultat.get(1).isInnvilget()).isTrue();
         assertThat(resultat.get(1).getPeriodeDagsats()).isEqualTo(620L);
-        assertThat(resultat.get(1).getÅrsak()).isEqualTo(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode());
+        assertThat(resultat.get(1).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode());
     }
 
     @Test
@@ -232,7 +233,7 @@ public class UtbetalingsperiodeMapperTest {
 
         assertThat(resultat.get(0).isInnvilget()).isTrue();
         assertThat(resultat.get(0).getPeriodeDagsats()).isEqualTo(0L);
-        assertThat(resultat.get(0).getÅrsak()).isEqualTo(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode());
+        assertThat(resultat.get(0).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode());
         assertThat(resultat.get(0).getAnnenAktivitetsliste()).hasSize(1);
     }
 
@@ -359,7 +360,7 @@ public class UtbetalingsperiodeMapperTest {
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
-                .medÅrsak(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode()))
                 .build();
 
         // Act + Assert
@@ -372,7 +373,7 @@ public class UtbetalingsperiodeMapperTest {
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
-                .medÅrsak(PeriodeResultatÅrsak.FAR_HAR_IKKE_OMSORG.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.FAR_HAR_IKKE_OMSORG.getKode()))
                 .build();
 
         // Act + Assert
@@ -385,7 +386,7 @@ public class UtbetalingsperiodeMapperTest {
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
-                .medÅrsak(PeriodeResultatÅrsak.FØDSELSVILKÅRET_IKKE_OPPFYLT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.FØDSELSVILKÅRET_IKKE_OPPFYLT.getKode()))
                 .build();
 
         // Act + Assert

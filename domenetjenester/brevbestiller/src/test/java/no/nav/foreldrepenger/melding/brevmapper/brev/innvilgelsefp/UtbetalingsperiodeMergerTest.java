@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
@@ -207,8 +208,8 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     public void skal_slå_sammen_perioder_med_like_årsaker() {
         // Arrange
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("2001").medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4).build();
-        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("2001").medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5).build();
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2001")).medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2001")).medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5).build();
 
         // Act
         List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
@@ -223,10 +224,10 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     public void skal_slå_sammen_perioder_med_forskjellige_årsaker_som_er_regnet_som_like() {
         // Arrange
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("4040").medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4).build();
-        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("4112").medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5).build();
-        Utbetalingsperiode utbetalingsperiode3 = Utbetalingsperiode.ny().medÅrsak("2003").medPeriodeFom(PERIODE2_TOM.plusDays(1), Språkkode.NB).medPeriodeTom(PERIODE2_TOM.plusDays(2), Språkkode.NB).medAntallTapteDager(1).build();
-        Utbetalingsperiode utbetalingsperiode4 = Utbetalingsperiode.ny().medÅrsak("2007").medPeriodeFom(PERIODE2_TOM.plusDays(3), Språkkode.NB).medPeriodeTom(PERIODE2_TOM.plusDays(4), Språkkode.NB).medAntallTapteDager(2).build();
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("4040")).medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("4112")).medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5).build();
+        Utbetalingsperiode utbetalingsperiode3 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2003")).medPeriodeFom(PERIODE2_TOM.plusDays(1), Språkkode.NB).medPeriodeTom(PERIODE2_TOM.plusDays(2), Språkkode.NB).medAntallTapteDager(1).build();
+        Utbetalingsperiode utbetalingsperiode4 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2007")).medPeriodeFom(PERIODE2_TOM.plusDays(3), Språkkode.NB).medPeriodeTom(PERIODE2_TOM.plusDays(4), Språkkode.NB).medAntallTapteDager(2).build();
 
         // Act
         List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2, utbetalingsperiode3, utbetalingsperiode4));
@@ -244,8 +245,8 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     public void skal_ikke_slå_sammen_perioder_med_forskjellige_årsaker_som_ikke_er_regnet_som_like() {
         // Arrange
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("4030").medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4).build();
-        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("4502").medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5).build();
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("4030")).medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("4502")).medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5).build();
 
         // Act
         List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));

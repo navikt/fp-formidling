@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
@@ -42,7 +43,7 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT.getKode()))
                 .build();
 
         // Act
@@ -59,7 +60,7 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD.getKode()))
                 .build();
 
         // Act
@@ -76,7 +77,7 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.FOR_SEN_SØKNAD.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.FOR_SEN_SØKNAD.getKode()))
                 .build();
 
         // Act
@@ -93,7 +94,7 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE.getKode()))
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .build();
 
@@ -111,7 +112,7 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode()))
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .build();
 
@@ -129,11 +130,11 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode()))
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .build();
         Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode()))
                 .medPeriodeFom(LocalDate.now().plusDays(50), Språkkode.NB)
                 .build();
 
@@ -151,7 +152,7 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode()))
                 .medPeriodeFom(LocalDate.now().plusDays(50), Språkkode.NB)
                 .build();
 
@@ -169,7 +170,7 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID.getKode()))
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .build();
 
@@ -187,7 +188,7 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode()))
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .build();
 
@@ -205,11 +206,11 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode()))
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .build();
         Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode()))
                 .medPeriodeFom(LocalDate.now().plusDays(50), Språkkode.NB)
                 .build();
 
@@ -227,7 +228,7 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode()))
                 .medPeriodeFom(LocalDate.now().plusDays(50), Språkkode.NB)
                 .build();
 
@@ -245,11 +246,11 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode()))
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .build();
         Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode()))
                 .medPeriodeFom(LocalDate.now().minusDays(20), Språkkode.NB)
                 .build();
 
@@ -259,6 +260,7 @@ public class ForMyeUtbetaltMapperTest {
         // Assert
         assertThat(resultat).isEqualTo(ForMyeUtbetalt.GENERELL);
     }
+
     @Test
     public void skal_returnere_ingen_når_førstegangsbehandling() {
         // Arrange
@@ -266,7 +268,7 @@ public class ForMyeUtbetaltMapperTest {
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medAvsluttet(LocalDateTime.now()).build();
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode())
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode()))
                 .medPeriodeFom(LocalDate.now().plusDays(50), Språkkode.NB)
                 .build();
 

@@ -1,9 +1,10 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak.erRegnetSomLike;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import no.nav.foreldrepenger.melding.brevmapper.brev.felles.DatoVerktøy;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
@@ -12,25 +13,6 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Nærin
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 
 public final class UtbetalingsperiodeMerger {
-    private static final List<List<String>> NON_EQUAL_KODER_SOM_LIKEVEL_OPPFYLLER_MERGE = List.of(
-            List.of("2001", "2002", "2003", "2004", "2005", "2006", "2007", "2036", "2037"),
-            List.of("2010", "2015"),
-            List.of("2011", "2016"),
-            List.of("2012", "2018", "2025"),
-            List.of("2013", "2019", "2026"),
-            List.of("2014", "2017", "2027"),
-            List.of("4003", "4012"),
-            List.of("4030", "4031"),
-            List.of("4038", "4110"),
-            List.of("4039", "4111"),
-            List.of("4040", "4112"),
-            List.of("4058", "4059"),
-            List.of("4061", "4062", "4063", "4064", "4065", "4115", "4116", "4117"),
-            List.of("4066", "4067", "4068", "4069", "4070", "4088", "4089"),
-            List.of("4080", "4501"),
-            List.of("4084", "4085"),
-            List.of("4094", "4502")
-    );
 
     public static List<Utbetalingsperiode> mergePerioder(List<Utbetalingsperiode> perioder) {
         if (perioder.size() <= 1) {
@@ -101,10 +83,6 @@ public final class UtbetalingsperiodeMerger {
 
     private static boolean likPeriodeDagsats(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
         return Objects.equals(periodeEn.getPeriodeDagsats(), periodeTo.getPeriodeDagsats());
-    }
-
-    private static boolean erRegnetSomLike(String årsak1, String årsak2) {
-        return NON_EQUAL_KODER_SOM_LIKEVEL_OPPFYLLER_MERGE.stream().anyMatch(k -> k.containsAll(Set.of(årsak1, årsak2)));
     }
 
     private static boolean likeAndreAktiviteter(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {

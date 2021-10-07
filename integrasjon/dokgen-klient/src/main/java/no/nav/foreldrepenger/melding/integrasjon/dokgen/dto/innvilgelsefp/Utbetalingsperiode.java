@@ -12,11 +12,12 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public class Utbetalingsperiode {
     private boolean innvilget;
-    private String årsak;
+    private Årsak årsak;
     private String periodeFom;
     @JsonIgnore
     private LocalDate periodeFomDate;
@@ -40,7 +41,7 @@ public class Utbetalingsperiode {
         return !innvilget;
     }
 
-    public String getÅrsak() {
+    public Årsak getÅrsak() {
         return årsak;
     }
 
@@ -121,7 +122,7 @@ public class Utbetalingsperiode {
             return this;
         }
 
-        public Builder medÅrsak(String årsak) {
+        public Builder medÅrsak(Årsak årsak) {
             this.kladd.årsak = årsak;
             return this;
         }

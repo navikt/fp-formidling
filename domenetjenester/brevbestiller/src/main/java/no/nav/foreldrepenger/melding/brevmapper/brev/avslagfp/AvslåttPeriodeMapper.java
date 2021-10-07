@@ -23,6 +23,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.Period
 import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.avslagfp.AvslåttPeriode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
@@ -83,7 +84,7 @@ public class AvslåttPeriodeMapper {
 
     private static AvslåttPeriode årsaktypeFra(ÅrsakMedLovReferanse årsakKode) {
         AvslåttPeriode avslåttPeriode = AvslåttPeriode.ny()
-                .medAvslagsårsak(årsakKode.getKode())
+                .medAvslagsårsak(Årsak.of(årsakKode.getKode()))
                 .build();
         leggTilLovReferanse(årsakKode);
         return avslåttPeriode;
@@ -93,7 +94,7 @@ public class AvslåttPeriodeMapper {
                                                UttakResultatPeriode uttakResultatPeriode,
                                                Språkkode språkkode) {
         AvslåttPeriode avslåttPeriode = AvslåttPeriode.ny()
-                .medAvslagsårsak(uttakResultatPeriode.getPeriodeResultatÅrsak().getKode())
+                .medAvslagsårsak(Årsak.of(uttakResultatPeriode.getPeriodeResultatÅrsak().getKode()))
                 .medPeriodeFom(beregningsresultatPeriode.getBeregningsresultatPeriodeFom(), språkkode)
                 .medPeriodeTom(beregningsresultatPeriode.getBeregningsresultatPeriodeTom(), språkkode)
                 .medAntallTapteDager(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter()))

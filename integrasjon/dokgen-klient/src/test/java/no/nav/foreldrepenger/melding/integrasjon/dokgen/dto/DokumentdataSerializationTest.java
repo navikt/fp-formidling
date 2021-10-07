@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynResultatType;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagAndel;
@@ -78,7 +79,7 @@ public class DokumentdataSerializationTest {
                 .build();
         Utbetalingsperiode periode1 = Utbetalingsperiode.ny()
                 .medInnvilget(true)
-                .medÅrsak("2001")
+                .medÅrsak(Årsak.of("2001"))
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .medPeriodeTom(LocalDate.now().minusDays(8), Språkkode.NB)
                 .medPeriodeDagsats(123L)
@@ -90,7 +91,7 @@ public class DokumentdataSerializationTest {
                 .build();
         Utbetalingsperiode periode2 = Utbetalingsperiode.ny()
                 .medInnvilget(false)
-                .medÅrsak("2002")
+                .medÅrsak(Årsak.of("2002"))
                 .medPeriodeFom(LocalDate.now().minusDays(7), Språkkode.NB)
                 .medPeriodeTom(LocalDate.now().minusDays(5), Språkkode.NB)
                 .medPeriodeDagsats(234L)

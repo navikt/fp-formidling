@@ -23,6 +23,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStat
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.NaturalytelseEndringType;
@@ -108,8 +109,8 @@ public final class UtbetalingsperiodeMapper {
     public static boolean finnesPeriodeMedIkkeOmsorg(List<Utbetalingsperiode> perioder) {
         return perioder.stream()
                 .map(Utbetalingsperiode::getÅrsak)
-                .anyMatch(årsak -> PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode().equals(årsak)
-                        || PeriodeResultatÅrsak.FAR_HAR_IKKE_OMSORG.getKode().equals(årsak));
+                .anyMatch(årsak -> Årsak.of(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode()).equals(årsak)
+                        || Årsak.of(PeriodeResultatÅrsak.FAR_HAR_IKKE_OMSORG.getKode()).equals(årsak));
     }
 
     private static List<Utbetalingsperiode> mapPerioderUtenBeregningsgrunnlag(List<UttakResultatPeriode> perioderUtenBeregningsgrunnlag,
@@ -129,7 +130,7 @@ public final class UtbetalingsperiodeMapper {
                 .medInnvilget((uttakperiode.isInnvilget() && !erGraderingAvslått(uttakperiode)))
                 .medPeriodeFom(uttakperiode.getFom(), språkkode)
                 .medPeriodeTom(uttakperiode.getTom(), språkkode)
-                .medÅrsak((uttakperiode.getPeriodeResultatÅrsak().getKode()));
+                .medÅrsak(Årsak.of(uttakperiode.getPeriodeResultatÅrsak().getKode()));
         return utbetalingsPerioder.build();
     }
 
@@ -196,7 +197,7 @@ public final class UtbetalingsperiodeMapper {
                 .medInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode))
                 .medPeriodeFom(fomDate, språkkode)
                 .medPeriodeTom(beregningsresultatPeriode.getBeregningsresultatPeriodeTom(), språkkode)
-                .medÅrsak(periodeResultatÅrsak.getKode())
+                .medÅrsak(Årsak.of(periodeResultatÅrsak.getKode()))
                 .medArbeidsforhold(arbeidsfoholdListe)
                 .medNæring(næring)
                 .medAnnenAktivitet(annenAktivitetListe)

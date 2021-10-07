@@ -1,5 +1,19 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevproduksjonTjeneste;
@@ -21,7 +35,7 @@ import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.Dokgen;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;
 import no.nav.foreldrepenger.melding.kafkatjenester.historikk.task.PubliserHistorikkTask;
@@ -31,18 +45,6 @@ import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {

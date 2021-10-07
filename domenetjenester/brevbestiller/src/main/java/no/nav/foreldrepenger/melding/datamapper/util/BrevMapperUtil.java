@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.PersonstatusKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 

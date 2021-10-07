@@ -45,7 +45,7 @@ import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.melding.integrasjon.dokdist.Dokdist;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.Dokgen;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.DokumentOpprettResponse;
 import no.nav.foreldrepenger.melding.integrasjon.journal.dto.OpprettJournalpostResponse;

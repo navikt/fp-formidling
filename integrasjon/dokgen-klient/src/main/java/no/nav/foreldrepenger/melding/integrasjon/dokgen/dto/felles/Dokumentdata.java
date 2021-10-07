@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
+package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles;
 
 public abstract class Dokumentdata {
     protected FellesDokumentdata felles;

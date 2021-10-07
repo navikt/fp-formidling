@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen;
 
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Dokumentdata;
 
 public interface Dokgen {
 

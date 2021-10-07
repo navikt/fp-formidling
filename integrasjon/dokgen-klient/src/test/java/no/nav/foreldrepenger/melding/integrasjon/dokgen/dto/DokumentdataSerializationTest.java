@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynResultatType;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;

@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 

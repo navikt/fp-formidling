@@ -1,12 +1,13 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.Dokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.FellesDokumentdata;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Dokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {

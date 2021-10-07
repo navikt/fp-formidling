@@ -202,4 +202,111 @@ public class UtbetalingsperiodeMergerTest {
         utbetalingsperiode2 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medAktivitetDagsats(2).build())).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
     }
+
+    @Test
+    public void skal_slå_sammen_perioder_med_like_årsaker() {
+        // Arrange
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("2001").medPeriodeFom(PERIODE1_FOM).medPeriodeTom(PERIODE1_TOM).medAntallTapteDager(4).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("2001").medPeriodeFom(PERIODE2_FOM).medPeriodeTom(PERIODE2_TOM).medAntallTapteDager(5).build();
+
+        // Act
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
+
+        // Assert
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+        assertThat(resultat.get(0).getAntallTapteDager()).isEqualTo(9);
+    }
+
+    @Test
+    public void skal_slå_sammen_perioder_med_forskjellige_årsaker_som_er_regnet_som_like() {
+        // Arrange
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("4040").medPeriodeFom(PERIODE1_FOM).medPeriodeTom(PERIODE1_TOM).medAntallTapteDager(4).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("4112").medPeriodeFom(PERIODE2_FOM).medPeriodeTom(PERIODE2_TOM).medAntallTapteDager(5).build();
+        Utbetalingsperiode utbetalingsperiode3 = Utbetalingsperiode.ny().medÅrsak("2003").medPeriodeFom(PERIODE2_TOM.plusDays(1)).medPeriodeTom(PERIODE2_TOM.plusDays(2)).medAntallTapteDager(1).build();
+        Utbetalingsperiode utbetalingsperiode4 = Utbetalingsperiode.ny().medÅrsak("2007").medPeriodeFom(PERIODE2_TOM.plusDays(3)).medPeriodeTom(PERIODE2_TOM.plusDays(4)).medAntallTapteDager(2).build();
+
+        // Act
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2, utbetalingsperiode3, utbetalingsperiode4));
+
+        // Assert
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+        assertThat(resultat.get(0).getAntallTapteDager()).isEqualTo(9);
+        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(PERIODE2_TOM.plusDays(1));
+        assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM.plusDays(4));
+        assertThat(resultat.get(1).getAntallTapteDager()).isEqualTo(3);
+    }
+
+    @Test
+    public void skal_ikke_slå_sammen_perioder_med_forskjellige_årsaker_som_ikke_er_regnet_som_like() {
+        // Arrange
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak("4030").medPeriodeFom(PERIODE1_FOM).medPeriodeTom(PERIODE1_TOM).medAntallTapteDager(4).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak("4502").medPeriodeFom(PERIODE2_FOM).medPeriodeTom(PERIODE2_TOM).medAntallTapteDager(5).build();
+
+        // Act
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
+
+        // Assert
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
+        assertThat(resultat.get(0).getAntallTapteDager()).isEqualTo(4);
+        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
+        assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+        assertThat(resultat.get(1).getAntallTapteDager()).isEqualTo(5);
+    }
+
+    @Test
+    public void skal_slå_sammen_innvilgede_perioder() {
+        // Arrange
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medInnvilget(true).medPeriodeFom(PERIODE1_FOM).medPeriodeTom(PERIODE1_TOM).medAntallTapteDager(4).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medInnvilget(true).medPeriodeFom(PERIODE2_FOM).medPeriodeTom(PERIODE2_TOM).medAntallTapteDager(5).build();
+
+        // Act
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
+
+        // Assert
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+        assertThat(resultat.get(0).getAntallTapteDager()).isEqualTo(9);
+    }
+
+    @Test
+    public void skal_slå_sammen_avslåtte_perioder() {
+        // Arrange
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medInnvilget(false).medPeriodeFom(PERIODE1_FOM).medPeriodeTom(PERIODE1_TOM).medAntallTapteDager(4).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medInnvilget(false).medPeriodeFom(PERIODE2_FOM).medPeriodeTom(PERIODE2_TOM).medAntallTapteDager(5).build();
+
+        // Act
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
+
+        // Assert
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+        assertThat(resultat.get(0).getAntallTapteDager()).isEqualTo(9);
+    }
+
+    @Test
+    public void skal_ikke_slå_sammen_innvilgede_perioder_med_avslåtte_perioder() {
+        // Arrange
+        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medInnvilget(false).medPeriodeFom(PERIODE1_FOM).medPeriodeTom(PERIODE1_TOM).medAntallTapteDager(4).build();
+        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medInnvilget(true).medPeriodeFom(PERIODE2_FOM).medPeriodeTom(PERIODE2_TOM).medAntallTapteDager(5).build();
+
+        // Act
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
+
+        // Assert
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
+        assertThat(resultat.get(0).getAntallTapteDager()).isEqualTo(4);
+        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
+        assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+        assertThat(resultat.get(1).getAntallTapteDager()).isEqualTo(5);
+    }
 }

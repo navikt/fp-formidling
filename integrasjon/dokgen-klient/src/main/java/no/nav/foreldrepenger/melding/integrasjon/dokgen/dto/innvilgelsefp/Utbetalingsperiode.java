@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,6 +10,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public class Utbetalingsperiode {
@@ -27,6 +29,8 @@ public class Utbetalingsperiode {
     private List<Arbeidsforhold> arbeidsforholdsliste = new ArrayList<>();
     private Næring næring;
     private List<AnnenAktivitet> annenAktivitetsliste = new ArrayList<>();
+    @JsonIgnore
+    private Språkkode språkkode;
 
     public boolean isInnvilget() {
         return innvilget;
@@ -48,11 +52,6 @@ public class Utbetalingsperiode {
         return periodeTomDate;
     }
 
-    public void setPeriodeTom(LocalDate periodeTom) {
-        this.periodeTom = formaterDatoNorsk(periodeTom);
-        this.periodeTomDate = periodeTom;
-    }
-
     public long getPeriodeDagsats() {
         return periodeDagsats;
     }
@@ -61,8 +60,8 @@ public class Utbetalingsperiode {
         return antallTapteDager;
     }
 
-    public void setAntallTapteDager(int antallTapteDager) {
-        this.antallTapteDager = antallTapteDager;
+    public Prosent getPrioritertUtbetalingsgrad() {
+        return prioritertUtbetalingsgrad;
     }
 
     public List<Arbeidsforhold> getArbeidsforholdsliste() {
@@ -75,6 +74,10 @@ public class Utbetalingsperiode {
 
     public List<AnnenAktivitet> getAnnenAktivitetsliste() {
         return annenAktivitetsliste;
+    }
+
+    public Språkkode getSpråkkode() {
+        return språkkode;
     }
 
     @Override
@@ -123,15 +126,17 @@ public class Utbetalingsperiode {
             return this;
         }
 
-        public Builder medPeriodeFom(LocalDate periodeFom) {
-            this.kladd.periodeFom = formaterDatoNorsk(periodeFom);
+        public Builder medPeriodeFom(LocalDate periodeFom, Språkkode språkkode) {
+            this.kladd.periodeFom = formaterDato(periodeFom, språkkode);
             this.kladd.periodeFomDate = periodeFom;
+            this.kladd.språkkode = språkkode;
             return this;
         }
 
-        public Builder medPeriodeTom(LocalDate periodeTom) {
-            this.kladd.periodeTom = formaterDatoNorsk(periodeTom);
+        public Builder medPeriodeTom(LocalDate periodeTom, Språkkode språkkode) {
+            this.kladd.periodeTom = formaterDato(periodeTom, språkkode);
             this.kladd.periodeTomDate = periodeTom;
+            this.kladd.språkkode = språkkode;
             return this;
         }
 

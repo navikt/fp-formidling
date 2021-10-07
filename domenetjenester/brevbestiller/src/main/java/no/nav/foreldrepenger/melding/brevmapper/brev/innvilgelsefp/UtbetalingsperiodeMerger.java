@@ -65,9 +65,18 @@ public final class UtbetalingsperiodeMerger {
     }
 
     private static Utbetalingsperiode slåSammenPerioder(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
-        periodeEn.setAntallTapteDager(periodeEn.getAntallTapteDager() + (periodeTo.getAntallTapteDager()));
-        periodeEn.setPeriodeTom(periodeTo.getPeriodeTom());
-        return periodeEn;
+        return Utbetalingsperiode.ny()
+                .medInnvilget(periodeEn.isInnvilget())
+                .medÅrsak(periodeEn.getÅrsak())
+                .medPeriodeFom(periodeEn.getPeriodeFom(), periodeEn.getSpråkkode())
+                .medPeriodeTom(periodeTo.getPeriodeTom(), periodeEn.getSpråkkode())
+                .medPeriodeDagsats(periodeEn.getPeriodeDagsats())
+                .medAntallTapteDager(periodeEn.getAntallTapteDager() + (periodeTo.getAntallTapteDager()))
+                .medPrioritertUtbetalingsgrad(periodeEn.getPrioritertUtbetalingsgrad())
+                .medArbeidsforhold(periodeEn.getArbeidsforholdsliste())
+                .medNæring(periodeEn.getNæring())
+                .medAnnenAktivitet(periodeEn.getAnnenAktivitetsliste())
+                .build();
     }
 
     private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {

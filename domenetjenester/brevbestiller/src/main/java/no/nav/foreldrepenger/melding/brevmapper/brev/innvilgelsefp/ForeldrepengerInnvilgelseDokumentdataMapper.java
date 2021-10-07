@@ -1,45 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
-import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
-import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktStatus;
-import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
-import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
-import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
-import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.melding.søknad.Søknad;
-import no.nav.foreldrepenger.melding.uttak.Saldoer;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
-import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
-import no.nav.vedtak.exception.FunksjonellException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnBrutto;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnSeksG;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.harBruktBruttoBeregningsgrunnlag;
@@ -71,7 +31,48 @@ import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.Utbeta
 import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
+import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
+import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktStatus;
+import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
+import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.UttakMapper;
+import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
+import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
+import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.melding.søknad.Søknad;
+import no.nav.foreldrepenger.melding.uttak.Saldoer;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
+import no.nav.vedtak.exception.FunksjonellException;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE)
@@ -104,15 +105,17 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .map(domeneobjektProvider::hentFamiliehendelse);
         FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         Saldoer saldoer = domeneobjektProvider.hentSaldoer(behandling);
+        Språkkode språkkode = behandling.getSpråkkode();
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, dokumentHendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(
-                dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+                dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         avklarFritekst(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
         List<Utbetalingsperiode> utbetalingsperioder = UtbetalingsperiodeMapper.mapUtbetalingsperioder(
-                beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder, beregningsgrunnlag.getBeregningsgrunnlagPerioder());
+                beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder,
+                beregningsgrunnlag.getBeregningsgrunnlagPerioder(), språkkode);
         String konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
         boolean erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
         long dagsats = finnDagsats(beregningsresultatFP);
@@ -123,7 +126,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medBehandlingType(behandling.getBehandlingType().name())
                 .medBehandlingResultatType(behandling.getBehandlingsresultat().getBehandlingResultatType().name())
                 .medKonsekvensForInnvilgetYtelse(konsekvensForInnvilgetYtelse)
-                .medSøknadsdato(formaterDatoNorsk(søknad.mottattDato()))
+                .medSøknadsdato(formaterDato(søknad.mottattDato(), språkkode))
                 .medDekningsgrad(ytelseFordeling.dekningsgrad().getVerdi())
                 .medHarUtbetaling(harUtbetaling(beregningsresultatFP))
                 .medDagsats(dagsats)
@@ -166,14 +169,14 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medInkludereAvslag(skalInkludereAvslag(utbetalingsperioder, konsekvensForInnvilgetYtelse))
                 .medInkludereNyeOpplysningerUtbet(skalInkludereNyeOpplysningerUtbet(behandling, utbetalingsperioder, dagsats));
 
-        finnSisteDagAvSistePeriode(uttakResultatPerioder).ifPresent( dato-> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDatoNorsk(dato)));
-        finnStønadsperiodeFom(utbetalingsperioder).ifPresent(dato-> dokumentdataBuilder.medStønadsperiodeFom(formaterDatoNorsk(dato)));
-        finnStønadsperiodeTom(utbetalingsperioder).ifPresent(dato-> dokumentdataBuilder.medStønadsperiodeTom(formaterDatoNorsk(dato)));
+        finnSisteDagAvSistePeriode(uttakResultatPerioder).ifPresent(dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
+        finnStønadsperiodeFom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));
+        finnStønadsperiodeTom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeTom(formaterDato(dato, språkkode)));
 
 
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, dokumentdataBuilder);
 
-        mapFelterRelatertTilDødeBarn(familieHendelse, dokumentdataBuilder);
+        mapFelterRelatertTilDødeBarn(familieHendelse, dokumentdataBuilder, språkkode);
 
         ForeldrepengerInnvilgelseDokumentdata  fpInnvilgelseDokumentdata = dokumentdataBuilder.build();
 
@@ -190,10 +193,11 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     private void mapFelterRelatertTilDødeBarn(FamilieHendelse familieHendelse, //todo når fpsak gir oss informasjon om hvor mange barn som er døde må denne oppdateres
-            ForeldrepengerInnvilgelseDokumentdata.Builder dokumentdataBuilder) {
+                                              ForeldrepengerInnvilgelseDokumentdata.Builder dokumentdataBuilder,
+                                              Språkkode språkkode) {
         familieHendelse.getDødsdato().ifPresentOrElse(
                 (value)
-                        -> { dokumentdataBuilder.medDødsdato(formaterDatoNorsk(value));
+                        -> { dokumentdataBuilder.medDødsdato(formaterDato(value, språkkode));
                              dokumentdataBuilder.medAntallDødeBarn(1); },
                 ()
                         -> dokumentdataBuilder.medAntallDødeBarn(0));

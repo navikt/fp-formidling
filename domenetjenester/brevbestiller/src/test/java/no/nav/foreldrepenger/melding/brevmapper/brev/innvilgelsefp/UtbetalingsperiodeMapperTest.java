@@ -1,10 +1,30 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallAvslåttePerioder;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallInnvilgedePerioder;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnPrioritertUtbetalingsgrad;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFom;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTom;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
@@ -18,23 +38,6 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallAvslåttePerioder;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallInnvilgedePerioder;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnPrioritertUtbetalingsgrad;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFom;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTom;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class UtbetalingsperiodeMapperTest {
 
@@ -91,7 +94,7 @@ public class UtbetalingsperiodeMapperTest {
         UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(of(uPeriode, uPeriode2)).build();
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(2);
@@ -100,13 +103,13 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(uPeriode.getTom());
         assertThat(resultat.get(0).isInnvilget()).isFalse();
         assertThat(resultat.get(0).getPeriodeDagsats()).isEqualTo(0L);
-        assertThat(resultat.get(0).getÅrsak()).isEqualTo(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode());
+        assertThat(resultat.get(0).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode());
 
         assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(brPeriode3.getBeregningsresultatPeriodeFom());
         assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(brPeriode3.getBeregningsresultatPeriodeTom());
         assertThat(resultat.get(1).isInnvilget()).isTrue();
         assertThat(resultat.get(1).getPeriodeDagsats()).isEqualTo(620L);
-        assertThat(resultat.get(1).getÅrsak()).isEqualTo(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode());
+        assertThat(resultat.get(1).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode());
     }
 
     @Test
@@ -162,7 +165,7 @@ public class UtbetalingsperiodeMapperTest {
         UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(of(uPeriode2, uPeriode)).build();
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(2);
@@ -223,14 +226,14 @@ public class UtbetalingsperiodeMapperTest {
         UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(of(uPeriode)).build();
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(1);
 
         assertThat(resultat.get(0).isInnvilget()).isTrue();
         assertThat(resultat.get(0).getPeriodeDagsats()).isEqualTo(0L);
-        assertThat(resultat.get(0).getÅrsak()).isEqualTo(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode());
+        assertThat(resultat.get(0).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode());
         assertThat(resultat.get(0).getAnnenAktivitetsliste()).hasSize(1);
     }
 
@@ -259,7 +262,7 @@ public class UtbetalingsperiodeMapperTest {
         List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(0);
@@ -290,7 +293,7 @@ public class UtbetalingsperiodeMapperTest {
         List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(1);
@@ -355,9 +358,9 @@ public class UtbetalingsperiodeMapperTest {
     public void skal_finne_periode_med_ikke_omsorg_mor() {
         // Arrange
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medPeriodeFom(LocalDate.now().minusDays(10))
-                .medPeriodeTom(LocalDate.now().plusDays(10))
-                .medÅrsak(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode())
+                .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
+                .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode()))
                 .build();
 
         // Act + Assert
@@ -368,9 +371,9 @@ public class UtbetalingsperiodeMapperTest {
     public void skal_finne_periode_med_ikke_omsorg_far() {
         // Arrange
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medPeriodeFom(LocalDate.now().minusDays(10))
-                .medPeriodeTom(LocalDate.now().plusDays(10))
-                .medÅrsak(PeriodeResultatÅrsak.FAR_HAR_IKKE_OMSORG.getKode())
+                .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
+                .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.FAR_HAR_IKKE_OMSORG.getKode()))
                 .build();
 
         // Act + Assert
@@ -381,9 +384,9 @@ public class UtbetalingsperiodeMapperTest {
     public void skal_ikke_finne_periode_med_ikke_omsorg() {
         // Arrange
         Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
-                .medPeriodeFom(LocalDate.now().minusDays(10))
-                .medPeriodeTom(LocalDate.now().plusDays(10))
-                .medÅrsak(PeriodeResultatÅrsak.FØDSELSVILKÅRET_IKKE_OPPFYLT.getKode())
+                .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
+                .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
+                .medÅrsak(Årsak.of(PeriodeResultatÅrsak.FØDSELSVILKÅRET_IKKE_OPPFYLT.getKode()))
                 .build();
 
         // Act + Assert
@@ -466,8 +469,8 @@ public class UtbetalingsperiodeMapperTest {
 
     private void leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, List<Utbetalingsperiode> utbetalingsperioder) {
         utbetalingsperioder.add(Utbetalingsperiode.ny()
-                .medPeriodeFom(fom)
-                .medPeriodeTom(tom)
+                .medPeriodeFom(fom, Språkkode.NB)
+                .medPeriodeTom(tom, Språkkode.NB)
                 .medInnvilget(innvilget)
                 .build());
     }

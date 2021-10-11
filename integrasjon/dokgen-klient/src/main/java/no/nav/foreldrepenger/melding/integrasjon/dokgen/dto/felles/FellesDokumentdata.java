@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto;
+package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles;
 
 import java.util.Objects;
 

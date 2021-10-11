@@ -9,10 +9,11 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class AvslåttPeriode {
-    private String avslagsårsak;
+    private Årsak avslagsårsak;
     @JsonIgnore
     private LocalDate periodeFomDate;
     private String periodeFom;
@@ -23,7 +24,7 @@ public class AvslåttPeriode {
     @JsonIgnore
     private Språkkode språkkode;
 
-    public String getAvslagsårsak() {
+    public Årsak getAvslagsårsak() {
         return avslagsårsak;
     }
 
@@ -70,7 +71,7 @@ public class AvslåttPeriode {
             this.kladd = new AvslåttPeriode();
         }
 
-        public Builder medAvslagsårsak(String avslagsårsak) {
+        public Builder medAvslagsårsak(Årsak avslagsårsak) {
             this.kladd.avslagsårsak = avslagsårsak;
             return this;
         }

@@ -1,18 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
-
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Stream;
-
 import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT;
 import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD;
 import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.FOR_SEN_SØKNAD;
@@ -21,19 +8,33 @@ import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsa
 import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE;
 import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT;
 
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+
 public final class ForMyeUtbetaltMapper {
-    private static List<String> manglendeEllerForSenSøknadOmGraderingÅrsaker = List.of(
-            ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT.getKode(),
-            AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD.getKode(),
-            FOR_SEN_SØKNAD.getKode());
+    private static final List<Årsak> manglendeEllerForSenSøknadOmGraderingÅrsaker = List.of(
+            Årsak.of(ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT.getKode()),
+            Årsak.of(AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD.getKode()),
+            Årsak.of(FOR_SEN_SØKNAD.getKode()));
 
-    private static List<String> innvilgetUtsettelsePgaFerieÅrsaker = List.of(
-            UTSETTELSE_GYLDIG_PGA_FERIE.getKode(),
-            UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode());
+    private static final List<Årsak> innvilgetUtsettelsePgaFerieÅrsaker = List.of(
+            Årsak.of(UTSETTELSE_GYLDIG_PGA_FERIE.getKode()),
+            Årsak.of(UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode()));
 
-    private static List<String> innvilgetUtsettelsePgaArbeidÅrsaker = List.of(
-            UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID.getKode(),
-            UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode());
+    private static final List<Årsak> innvilgetUtsettelsePgaArbeidÅrsaker = List.of(
+            Årsak.of(UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID.getKode()),
+            Årsak.of(UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode()));
 
     public static ForMyeUtbetalt forMyeUtbetalt(List<Utbetalingsperiode> periodeListe, Behandling behandling) {
         if (!behandling.erRevurdering()) {

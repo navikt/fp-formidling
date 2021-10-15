@@ -93,8 +93,6 @@ public enum DokumentMalType implements Kodeverdi {
     @Deprecated
     INNVILGELSE_FORELDREPENGER_DOK(DokumentMalTypeKode.INNVILGELSE_FORELDREPENGER_DOK, "Innvilgelsesbrev Foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.INNVFP), //NOSONAR
 
-    UDEFINERT("-"),
-
     UDEFINERT("-")
     ;
 

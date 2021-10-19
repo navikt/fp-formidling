@@ -161,7 +161,7 @@ public class DokumentMalUtlederTest {
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.OPPHØR).build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.OPPHØR_DOK.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FORELDREPENGER_OPPHØR.getKode());
     }
 
     @Test

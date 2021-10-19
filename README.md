@@ -18,7 +18,7 @@ Interne henvendelser kan sendes via Slack i kanalen #fp-brev.
 For å kjøre lokalt må du å ha VTP kjørende på forhånd.
 Konfigurasjonen i app-vtp.properties skal du ikke trenge å endre.
 Sett $MODULE_DIR$ som working directory, og bruk classpath til webapp.
-Kjører på Java 16. Kan korte ned classpathen med jar manifest.
+Kjører på Java 17. Kan korte ned classpathen med jar manifest.
 
 ### Database 
 Bruk Docker Compose i fpsak-autotest for lokal utvikling - da får du PostgreSQL-container automatisk (se lengre ned).

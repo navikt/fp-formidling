@@ -1,15 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder;
 
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.FOR_SEN_SØKNAD;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE;
-import static no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,9 +16,6 @@ import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeListeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.PeriodeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.UtbetaltKode;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.uttak.Stønadskonto;
 import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
@@ -39,18 +27,6 @@ import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.exception.TekniskException;
 
 public class PeriodeBeregner {
-    private static List<String> manglendeEllerForSenSøknadOmGraderingÅrsaker = List.of( // NOSONAR
-            ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT.getKode(),
-            AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD.getKode(),
-            FOR_SEN_SØKNAD.getKode());
-
-    private static List<String> innvilgetUtsettelsePgaFerieÅrsaker = List.of(
-            UTSETTELSE_GYLDIG_PGA_FERIE.getKode(),
-            UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT.getKode());
-
-    private static List<String> innvilgetUtsettelsePgaArbeidÅrsaker = List.of(
-            UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID.getKode(),
-            UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode());
 
     private static Map<AktivitetStatus, UttakArbeidType> uttakAktivitetStatusMap = new HashMap<>();
 
@@ -165,55 +141,5 @@ public class PeriodeBeregner {
     public static Optional<Stønadskonto> finnStønadsKontoMedType(Set<Stønadskonto> stønadskontoer, StønadskontoType stønadskontoType) {
         return stønadskontoer.stream().filter(stønadskonto -> stønadskontoType.equals(stønadskonto.stønadskontoType()))
                 .findFirst();
-    }
-
-    public static UtbetaltKode forMyeUtbetalt(PeriodeListeType periodeListe, LocalDate vedtaksdato) {
-        LocalDate innvilgetUtsettelseFOM = null;
-
-        boolean generell = false;
-        boolean ferie = false;
-        boolean jobb = false;
-
-        for (PeriodeType periode : periodeListe.getPeriode()) {
-            if (PeriodeVerktøy.periodeHarGradering(periode) || manglendeEllerForSenSøknadOmGraderingÅrsaker.contains(periode.getÅrsak())) {
-                generell = true;
-                break;
-            }
-            if (innvilgetUtsettelsePgaFerieÅrsaker.contains(periode.getÅrsak())) {
-                ferie = true;
-                innvilgetUtsettelseFOM = tidligsteAv(innvilgetUtsettelseFOM, PeriodeVerktøy.xmlGregorianTilLocalDate(periode.getPeriodeFom()));
-            }
-            if (innvilgetUtsettelsePgaArbeidÅrsaker.contains(periode.getÅrsak())) {
-                jobb = true;
-                innvilgetUtsettelseFOM = tidligsteAv(innvilgetUtsettelseFOM, PeriodeVerktøy.xmlGregorianTilLocalDate(periode.getPeriodeFom()));
-            }
-        }
-        return forMyeUtbetaltKode(generell, ferie, jobb, innvilgetUtsettelseFOM, vedtaksdato);
-    }
-
-    private static UtbetaltKode forMyeUtbetaltKode(boolean generell, boolean ferie, boolean jobb,
-            LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
-        if (generell) {
-            return UtbetaltKode.GENERELL;
-        }
-        if ((ferie || jobb) && erInnvilgetUtsettelseInneværendeMånedEllerTidligere(innvilgetUtsettelseFOM, vedtaksdato)) {
-            if (ferie && jobb) {
-                return UtbetaltKode.GENERELL;
-            }
-            return ferie ? UtbetaltKode.FERIE : UtbetaltKode.JOBB;
-        }
-        return UtbetaltKode.INGEN;
-    }
-
-    private static boolean erInnvilgetUtsettelseInneværendeMånedEllerTidligere(LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
-        LocalDate iDag = vedtaksdato != null ? vedtaksdato : LocalDate.now();
-        return innvilgetUtsettelseFOM.isBefore(iDag.plusMonths(1).withDayOfMonth(1));
-    }
-
-    private static LocalDate tidligsteAv(LocalDate innvilgetUtsettelseFOM, LocalDate periodeFOM) {
-        if (innvilgetUtsettelseFOM == null || periodeFOM.isBefore(innvilgetUtsettelseFOM)) {
-            return periodeFOM;
-        }
-        return innvilgetUtsettelseFOM;
     }
 }

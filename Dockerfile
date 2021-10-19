@@ -1,4 +1,4 @@
-FROM navikt/java:16-appdynamics
+FROM navikt/java:17-appdynamics
 
 ENV APPD_ENABLED=true
 ENV APP_NAME=fpformidling
@@ -21,4 +21,4 @@ COPY web/target/lib/*.jar /app/lib/
 # Export vault properties
 COPY export-vault.sh /init-scripts/export-vault.sh
 
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom -Duser.timezone=Europe/Oslo --illegal-access=permit"
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/./urandom -Duser.timezone=Europe/Oslo"

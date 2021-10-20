@@ -119,8 +119,7 @@ public class BrevBestillerTjenesteTest {
         navKontaktKonfigurasjon = new NavKontaktKonfigurasjon("1", "2", "3", "4", "5", "6", "7");
         dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, navKontaktKonfigurasjon, virksomhetTjeneste);
         dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
-                dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste, historikkRepository,
-                dokprodBrevproduksjonTjeneste);
+                dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste, historikkRepository);
         tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider,
                 dokprodBrevproduksjonTjeneste, dokgenBrevproduksjonTjeneste);
     }

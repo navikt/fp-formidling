@@ -73,42 +73,8 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_finne_brutto() {
-        assertThat(BeregningsgrunnlagMapper.finnBrutto(beregningsgrunnlag)).isEqualTo(BRUTTO_PR_ÅR.add(AVKORTET_PR_ÅR).longValue());
-    }
-
-    @Test
     public void skal_finne_avkortetPrÅr_SVP() {
         assertThat(BeregningsgrunnlagMapper.getAvkortetPrAarSVP(beregningsgrunnlag)).isEqualTo(AVKORTET_PR_ÅR);
-    }
-
-    @Test
-    public void skal_identifsere_overbetalt() {
-        Beregningsgrunnlag originaltBeregninsgrunnlag = Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagPeriode(
-                        BeregningsgrunnlagPeriode.ny()
-                                .medDagsats(STANDARD_PERIODE_DAGSATS + 5)
-                                .build()
-                )
-                .build();
-        assertThat(BeregningsgrunnlagMapper.erOverbetalt(beregningsgrunnlag, originaltBeregninsgrunnlag)).isTrue();
-    }
-
-    @Test
-    public void skal_identifsere_ikke_overbetalt() {
-        Beregningsgrunnlag originaltBeregninsgrunnlag = Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagPeriode(
-                        BeregningsgrunnlagPeriode.ny()
-                                .medDagsats(STANDARD_PERIODE_DAGSATS - 5)
-                                .build()
-                )
-                .build();
-        assertThat(BeregningsgrunnlagMapper.erOverbetalt(beregningsgrunnlag, originaltBeregninsgrunnlag)).isFalse();
-    }
-
-    @Test
-    public void skal_identifsere_ikke_overbetalt_ingen_original() {
-        assertThat(BeregningsgrunnlagMapper.erOverbetalt(beregningsgrunnlag, null)).isFalse();
     }
 
     @Test
@@ -162,46 +128,6 @@ public class BeregningsgrunnlagMapperTest {
         beregningsgrunnlag = Beregningsgrunnlag.ny().medBesteberegnet(true)
                 .build();
         assertThat(beregningsgrunnlag.getErBesteberegnet()).isTrue();
-    }
-
-    @Test
-    public void skal_identifsere_nyoppstartet_sn() {
-        assertThat(BeregningsgrunnlagMapper.nyoppstartetSelvstendingNæringsdrivende(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
-                .getBeregningsgrunnlagPrStatusOgAndelList()))
-                .isFalse();
-
-        beregningsgrunnlag = Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode.ny()
-                        .medBeregningsgrunnlagPrStatusOgAndelList(List.of(BeregningsgrunnlagPrStatusOgAndel.ny()
-                                .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
-                                .medNyIArbeidslivet(true)
-                                .build()))
-                        .build())
-                .build();
-
-        assertThat(BeregningsgrunnlagMapper.nyoppstartetSelvstendingNæringsdrivende(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
-                .getBeregningsgrunnlagPrStatusOgAndelList()))
-                .isTrue();
-
-        beregningsgrunnlag = Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagPeriode(BeregningsgrunnlagPeriode.ny()
-                        .medBeregningsgrunnlagPrStatusOgAndelList(List.of(BeregningsgrunnlagPrStatusOgAndel.ny()
-                                .medAktivitetStatus(AktivitetStatus.FRILANSER)
-                                .medNyIArbeidslivet(true)
-                                .build()))
-                        .build())
-                .build();
-
-        assertThat(BeregningsgrunnlagMapper.nyoppstartetSelvstendingNæringsdrivende(beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
-                .getBeregningsgrunnlagPrStatusOgAndelList()))
-                .isFalse();
-    }
-
-    @Test
-    public void skal_telle_antall_arbeidsforhold() {
-        assertThat(BeregningsgrunnlagMapper.tellAntallArbeidsforholdIBeregningUtenSluttpakke(
-                beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList()))
-                .isEqualTo(1);
     }
 
     @Test

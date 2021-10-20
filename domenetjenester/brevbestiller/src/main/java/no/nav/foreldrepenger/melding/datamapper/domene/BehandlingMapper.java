@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
-import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.ENDRINGSSØKNAD;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.FØRSTEGANGSSØKNAD;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.REVURDERING;
 import static no.nav.foreldrepenger.melding.datamapper.mal.BehandlingTypeKonstanter.SØKNAD;
@@ -16,10 +15,7 @@ import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.BehandlingsTypeType;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsResultatKode;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.BehandlingsTypeKode;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.KonsekvensForYtelseKode;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 
 public class BehandlingMapper {
@@ -44,17 +40,6 @@ public class BehandlingMapper {
         return Optional.empty();
     }
 
-    public static int finnAntallUkerBehandlingsfrist(BehandlingType behandlingType) {
-        return behandlingType.getBehandlingstidFristUker();
-    }
-
-    public static String finnBehandlingTypeForDokument(Behandling behandling) {
-        return gjelderEndringsøknad(behandling) ?
-                ENDRINGSSØKNAD :
-                behandling.getBehandlingType().getKode();
-        }
-
-
     public static boolean gjelderEndringsøknad(Behandling behandling) {
         // endringssøknad kan være satt ved førstegangsbehandling og henleggelse pga håndtering av tapte dager
         return behandling.erRevurdering() && behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER);
@@ -67,7 +52,6 @@ public class BehandlingMapper {
         return !originalFamiliehendelse.get().getTermindato().equals(familieHendelse.getTermindato());
     }
 
-
     public static Boolean erEndretFraAvslått(Optional<Behandling> orginalBehandling) {
         return orginalBehandling.map(forrigeBehandling -> forrigeBehandling.getBehandlingsresultat().erAvslått())
                 .orElse(false);
@@ -79,16 +63,6 @@ public class BehandlingMapper {
                 konsekvenserForYtelsen.size() == 1;
 
         return kunEndringIBeregning;
-    }
-
-    public static boolean erRevurderingPgaFødselshendelse(Behandling behandling, FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse) {
-        return behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_HENDELSE_FØDSEL) ||
-                familieHendelse.isBarnErFødt() && originalFamiliehendelse.map(fh -> !fh.isBarnErFødt()).orElse(false);
-    }
-
-    public static BehandlingsTypeKode utledBehandlingsTypeInnvilgetFP(Behandling behandling) {
-        return BehandlingType.REVURDERING.equals(behandling.getBehandlingType()) ?
-                BehandlingsTypeKode.REVURDERING : BehandlingsTypeKode.FOERSTEGANGSBEHANDLING;
     }
 
     public static BehandlingsTypeType utledBehandlingsTypeInnvilgetES(Behandling behandling) {
@@ -110,37 +84,6 @@ public class BehandlingMapper {
             return FØRSTEGANGSSØKNAD;
         }
         return SØKNAD;
-    }
-
-    public static boolean erEndringMedEndretInntektsmelding(Behandling behandling) {
-        return erEndring(behandling.getBehandlingType())
-                && behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING);
-    }
-
-    private static boolean erEndring(BehandlingType behandlingType) {
-        return BehandlingType.REVURDERING.equals(behandlingType)
-                || BehandlingType.KLAGE.equals(behandlingType);
-    }
-
-    public static BehandlingsResultatKode tilBehandlingsResultatKode(BehandlingResultatType behandlingsresultatkode) {
-        if (BehandlingResultatType.INNVILGET.equals(behandlingsresultatkode)) {
-            return BehandlingsResultatKode.INNVILGET;
-        } else if (BehandlingResultatType.AVSLÅTT.equals(behandlingsresultatkode)) {
-            return BehandlingsResultatKode.AVSLÅTT;
-        } else if (BehandlingResultatType.OPPHØR.equals(behandlingsresultatkode)) {
-            return BehandlingsResultatKode.OPPHØR;
-        } else if (BehandlingResultatType.FORELDREPENGER_ENDRET.equals(behandlingsresultatkode)) {
-            return BehandlingsResultatKode.FORELDREPENGER_ENDRET;
-        } else {
-            return BehandlingsResultatKode.INGEN_ENDRING;
-        }
-    }
-
-    public static KonsekvensForYtelseKode finnKonsekvensForYtelseKode(String konsekvens) {
-        if (konsekvensForYtelseKodeMap.containsKey(konsekvens)) {
-            return konsekvensForYtelseKodeMap.get(konsekvens);
-        }
-        return KonsekvensForYtelseKode.INGEN_ENDRING;
     }
 
     public static String kodeFra(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {

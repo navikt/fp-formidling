@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum DokumentMalType implements Kodeverdi {
 
     //Mal hos team dokument
-    FORELDREPENGER_OPPHØR(DokumentMalTypeKode.OPPHØR_DOK, "Opphør foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
+    FORELDREPENGER_OPPHØR(DokumentMalTypeKode.FORELDREPENGER_OPPHØR, "Opphør foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     FRITEKST_DOK(DokumentMalTypeKode.FRITEKST_DOK, "Fritekstbrev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS ),

@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 public class DokumentMalTypeKode {
 
     //Mal hos team dokument
-    public static final String OPPHØR_DOK = "OPPHOR";
+    public static final String FORELDREPENGER_OPPHØR = "OPPHOR";
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     public static final String FRITEKST_DOK = "FRITKS";

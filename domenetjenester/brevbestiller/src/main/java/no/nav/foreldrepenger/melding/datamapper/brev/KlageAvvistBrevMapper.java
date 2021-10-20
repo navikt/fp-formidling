@@ -26,7 +26,7 @@ import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
-@Named(DokumentMalTypeKode.KLAGE_AVVIST)
+@Named(DokumentMalTypeKode.KLAGE_AVVIST_FRITEKST)
 public class KlageAvvistBrevMapper extends FritekstmalBrevMapper {
 
     public KlageAvvistBrevMapper() {

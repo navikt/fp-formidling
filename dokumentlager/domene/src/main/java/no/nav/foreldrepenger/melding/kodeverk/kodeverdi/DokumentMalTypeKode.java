@@ -2,19 +2,12 @@ package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
 public class DokumentMalTypeKode {
 
-    //Mal hos team dokument
-
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     public static final String FRITEKST_DOK = "FRITKS";
-    public static final String ETTERLYS_INNTEKTSMELDING_DOK = "INNLYS";
-    public static final String INNVILGELSE_SVANGERSKAPSPENGER_DOK = "INNSVP";
-    public static final String ANKEBREV_BESLUTNING_OM_OPPHEVING = "ANKEBO";
-    public static final String ANKE_VEDTAK_OMGJORING_DOK = "VEDOGA";
-    public static final String KLAGE_STADFESTET = "KSTADF";
-    public static final String KLAGE_AVVIST = "KAVVIS";
-    public static final String KLAGE_OMGJØRING = "KOMGJO";
-    public static final String KLAGE_OVERSENDT_KLAGEINSTANS = "KOVKLA";
-    public static final String KLAGE_HJEMSENDT = "KHJEMS";
+    public static final String ETTERLYS_INNTEKTSMELDING_FRITEKST = "INNLYS";
+    public static final String SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST = "INNSVP";
+    public static final String ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST = "ANKEBO";
+    public static final String ANKE_VEDTAK_OMGJORING_FRITEKST = "VEDOGA";
 
     //Dokgen
     public static final String ENGANGSSTØNAD_INNVILGELSE = "INNVES";
@@ -33,47 +26,62 @@ public class DokumentMalTypeKode {
     public static final String FORLENGET_SAKSBEHANDLINGSTID = "FORSAK";
     public static final String FORLENGET_SAKSBEHANDLINGSTID_MEDL = "FORMED";
     public static final String FORLENGET_SAKSBEHANDLINGSTID_TIDLIG = "FORTID";
+    public static final String KLAGE_AVVIST = "KGEAVV";
+    public static final String KLAGE_HJEMSENDT = "KGEHJE";
+    public static final String KLAGE_OMGJORT = "KGEOMG";
+    public static final String KLAGE_OVERSENDT = "KGEOVE";
+    public static final String KLAGE_STADFESTET = "KGESTA";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
-    public static final String OPPHØR_DOK = "OPPHOR";
+    public static final String ENGANGSSTØNAD_INNVILGELSE_DOK = "POSVED"; //NOSONAR
     @Deprecated
-    public static final String KLAGE_OVERSENDT_KLAGEINSTANS_DOK = "KLAGOV"; //NOSONAR
+    public static final String ENGANGSSTØNAD_AVSLAG_DOK = "AVSLAG"; //NOSONAR
+    @Deprecated
+    public static final String FORELDREPENGER_INNVILGELSE_DOK = "INNVFP"; //NOSONAR
+    @Deprecated
+    public static final String FORELDREPENGER_AVSLAG_DOK = "AVSLFP"; //NOSONAR
+    @Deprecated
+    public static final String FORELDREPENGER_OPPHØR_DOK = "OPPHOR"; //NOSONAR
+    @Deprecated
+    public static final String FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER_DOK = "INAFOR"; //NOSONAR
+    @Deprecated
+    public static final String INNHENTE_OPPLYSNINGER_DOK = "INNHEN"; //NOSONAR
+    @Deprecated
+    public static final String VARSEL_OM_REVURDERING_DOK = "REVURD"; //NOSONAR
+    @Deprecated
+    public static final String INFO_OM_HENLEGGELSE_DOK = "HENLEG"; //NOSONAR
+    @Deprecated
+    public static final String INNSYN_SVAR_DOK = "INSSKR"; //NOSONAR
+    @Deprecated
+    public static final String IKKE_SØKT_DOK = "INNTID"; //NOSONAR
+    @Deprecated
+    public static final String INGEN_ENDRING_DOK = "UENDRE"; //NOSONAR
+    @Deprecated
+    public static final String FORLENGET_SAKSBEHANDLINGSTID_DOK = "FORLEN"; //NOSONAR
+    @Deprecated
+    public static final String FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK = "FORLME"; //NOSONAR
+    @Deprecated
+    public static final String FORLENGET_SAKSBEHANDLINGSTID_TIDLIG_DOK = "FORLTS"; //NOSONAR
     @Deprecated
     public static final String KLAGE_AVVIST_DOK = "KLAGAV"; //NOSONAR
     @Deprecated
-    public static final String KLAGE_YTELSESVEDTAK_OPPHEVET_DOK = "KLAGNY"; //NOSONAR
+    public static final String KLAGE_AVVIST_FRITEKST = "KAVVIS"; //NOSONAR
     @Deprecated
-    public static final String VEDTAK_MEDHOLD = "VEDMED"; //NOSONAR
+    public static final String KLAGE_HJEMSENDT_DOK = "KLAGNY"; //NOSONAR
     @Deprecated
-    public static final String KLAGE_YTELSESVEDTAK_STADFESTET_DOK = "KLAGVE"; //NOSONAR
+    public static final String KLAGE_HJEMSENDT_FRITEKST = "KHJEMS"; //NOSONAR
     @Deprecated
-    public static final String POSITIVT_VEDTAK_DOK = "POSVED"; //NOSONAR
+    public static final String KLAGE_OMGJORT_DOK = "VEDMED"; //NOSONAR
     @Deprecated
-    public static final String INNTEKTSMELDING_FOR_TIDLIG_DOK = "INNTID"; //NOSONAR
+    public static final String KLAGE_OMGJORT_FRITEKST = "KOMGJO"; //NOSONAR
     @Deprecated
-    public static final String AVSLAGSVEDTAK_DOK = "AVSLAG"; //NOSONAR
+    public static final String KLAGE_OVERSENDT_DOK = "KLAGOV"; //NOSONAR
     @Deprecated
-    public static final String REVURDERING_DOK = "REVURD"; //NOSONAR
+    public static final String KLAGE_OVERSENDT_FRITEKST = "KOVKLA"; //NOSONAR
     @Deprecated
-    public static final String UENDRETUTFALL_DOK = "UENDRE"; //NOSONAR
+    public static final String KLAGE_STADFESTET_DOK = "KLAGVE"; //NOSONAR
     @Deprecated
-    public static final String INFO_TIL_ANNEN_FORELDER_DOK = "INAFOR"; //NOSONAR
-    @Deprecated
-    public static final String INNSYNSKRAV_SVAR = "INSSKR"; //NOSONAR
-    @Deprecated
-    public static final String FORLENGET_DOK = "FORLEN"; //NOSONAR
-    @Deprecated
-    public static final String FORLENGET_MEDL_DOK = "FORLME"; //NOSONAR
-    @Deprecated
-    public static final String FORLENGET_TIDLIG_SOK = "FORLTS"; //NOSONAR
-    @Deprecated
-    public static final String HENLEGG_BEHANDLING_DOK = "HENLEG"; //NOSONAR
-    @Deprecated
-    public static final String INNHENT_DOK = "INNHEN"; //NOSONAR
-    @Deprecated
-    public static final String AVSLAG_FORELDREPENGER_DOK = "AVSLFP"; //NOSONAR
-    @Deprecated
-    public static final String INNVILGELSE_FORELDREPENGER_DOK = "INNVFP"; //NOSONAR
+    public static final String KLAGE_STADFESTET_FRITEKST = "KSTADF"; //NOSONAR
 
 }

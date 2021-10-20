@@ -83,6 +83,6 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
     }
 
     private LocalDate hentMottattDatoFraKlage(KlageDokument klageDokument, Behandling behandling) {
-        return klageDokument.motattDato() != null ? klageDokument.motattDato() : behandling.getOpprettetDato().toLocalDate();
+        return klageDokument.mottattDato() != null ? klageDokument.mottattDato() : behandling.getOpprettetDato().toLocalDate();
     }
 }

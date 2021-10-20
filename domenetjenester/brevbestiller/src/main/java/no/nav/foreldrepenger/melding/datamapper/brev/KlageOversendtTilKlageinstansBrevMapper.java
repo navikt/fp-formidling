@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
-@Named(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS)
+@Named(DokumentMalTypeKode.KLAGE_OVERSENDT_FRITEKST)
 public class KlageOversendtTilKlageinstansBrevMapper extends FritekstmalBrevMapper {
 
     public KlageOversendtTilKlageinstansBrevMapper() {
@@ -83,8 +83,8 @@ public class KlageOversendtTilKlageinstansBrevMapper extends FritekstmalBrevMapp
     }
 
     private LocalDate utledMottattDato(KlageDokument klageDokument, Behandling behandling) {
-        return klageDokument.motattDato() != null
-                ? klageDokument.motattDato()
+        return klageDokument.mottattDato() != null
+                ? klageDokument.mottattDato()
                 : behandling.getOpprettetDato().toLocalDate();
     }
 }

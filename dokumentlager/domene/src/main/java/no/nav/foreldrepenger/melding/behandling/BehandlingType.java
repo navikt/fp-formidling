@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Kodeverdi;
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public enum BehandlingType implements Kodeverdi {
 
-
     /**
      * Konstanter for å skrive ned kodeverdi. For å hente ut andre data konfigurert, må disse leses fra databasen (eks.
      * for å hente offisiell kode for et Nav kodeverk).
@@ -32,7 +31,6 @@ public enum BehandlingType implements Kodeverdi {
 
     INNSYN("BT-006", 1, false),
 
-    TILBAKEBETALING_ENDRING("BT-005", 6, false),
     TILBAKEKREVING("BT-007", 0, false),
     TILBAKEKREVING_REVURDERING("BT-009", 0, false),
 
@@ -41,7 +39,7 @@ public enum BehandlingType implements Kodeverdi {
 
     private static final Set<BehandlingType> YTELSE_BEHANDLING_TYPER = Set.of(FØRSTEGANGSSØKNAD, REVURDERING);
     private static final Set<BehandlingType> ANDRE_BEHANDLING_TYPER = Set.of(KLAGE, ANKE, INNSYN);
-    private static final Set<BehandlingType> TILBAKEKREVING_TYPER = Set.of(TILBAKEBETALING_ENDRING, TILBAKEKREVING, TILBAKEKREVING_REVURDERING);
+    private static final Set<BehandlingType> TILBAKEKREVING_TYPER = Set.of(TILBAKEKREVING, TILBAKEKREVING_REVURDERING);
 
     public static final String KODEVERK = "BEHANDLING_TYPE";
     private static final Map<String, BehandlingType> KODER = new LinkedHashMap<>();

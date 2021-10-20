@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
-@Named(DokumentMalTypeKode.KLAGE_OMGJØRING)
+@Named(DokumentMalTypeKode.KLAGE_OMGJORT_FRITEKST)
 public class KlageOmgjøringBrevMapper extends FritekstmalBrevMapper {
 
     public KlageOmgjøringBrevMapper() {

@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -14,16 +25,6 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.VLException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class DokumentMalUtlederTest {
 
@@ -221,7 +222,7 @@ public class DokumentMalUtlederTest {
     public void utled_klage() {
         sjekkKlageDokument(KlageVurdering.AVVIS_KLAGE, DokumentMalType.KLAGE_AVVIST);
         sjekkKlageDokument(KlageVurdering.STADFESTE_YTELSESVEDTAK, DokumentMalType.KLAGE_STADFESTET);
-        sjekkKlageDokument(KlageVurdering.MEDHOLD_I_KLAGE, DokumentMalType.KLAGE_OMGJØRING);
+        sjekkKlageDokument(KlageVurdering.MEDHOLD_I_KLAGE, DokumentMalType.KLAGE_OMGJORT);
         sjekkKlageDokument(KlageVurdering.OPPHEVE_YTELSESVEDTAK, DokumentMalType.KLAGE_HJEMSENDT);
         sjekkKlageDokument(KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE, DokumentMalType.KLAGE_HJEMSENDT);
         assertThatThrownBy(() -> sjekkKlageDokument(KlageVurdering.UDEFINERT, DokumentMalType.KLAGE_AVVIST)).isInstanceOf(VLException.class);
@@ -243,7 +244,7 @@ public class DokumentMalUtlederTest {
                 .medBehandlingsresultat(behandlingsresultat)
                 .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK.getKode());
+                .isEqualTo(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST.getKode());
     }
 
     @Test
@@ -261,7 +262,7 @@ public class DokumentMalUtlederTest {
                 .medBehandlingsresultat(behandlingsresultat)
                 .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK.getKode());
+                .isEqualTo(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST.getKode());
     }
 
     private void sjekkKlageDokument(KlageVurdering klageVurdering, DokumentMalType dokumentmal) {

@@ -1,5 +1,19 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erEndretFraAvslått;
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erTermindatoEndret;
+import static no.nav.foreldrepenger.melding.datamapper.domene.svp.SvpMapper.mapFra;
+import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
@@ -14,21 +28,8 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erEndretFraAvslått;
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.erTermindatoEndret;
-import static no.nav.foreldrepenger.melding.datamapper.domene.svp.SvpMapper.mapFra;
-import static no.nav.foreldrepenger.melding.typer.Dato.medFormatering;
-
 @ApplicationScoped
-@Named(DokumentMalTypeKode.INNVILGELSE_SVANGERSKAPSPENGER_DOK)
+@Named(DokumentMalTypeKode.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST)
 public class InnvilgelseSvangerskapspengerBrevMapper extends FritekstmalBrevMapper {
 
     public InnvilgelseSvangerskapspengerBrevMapper() {

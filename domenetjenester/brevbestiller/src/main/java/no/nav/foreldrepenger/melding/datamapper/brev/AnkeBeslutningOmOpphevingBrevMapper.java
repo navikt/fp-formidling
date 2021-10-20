@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
-@Named(DokumentMalTypeKode.ANKEBREV_BESLUTNING_OM_OPPHEVING)
+@Named(DokumentMalTypeKode.ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST)
 public class AnkeBeslutningOmOpphevingBrevMapper extends FritekstmalBrevMapper {
 
     public AnkeBeslutningOmOpphevingBrevMapper() {

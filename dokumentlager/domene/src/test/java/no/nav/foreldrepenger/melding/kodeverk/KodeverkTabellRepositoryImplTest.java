@@ -10,8 +10,8 @@ public class KodeverkTabellRepositoryImplTest {
 
     @Test
     public void skal_hente_en_dokumentmal() {
-        DokumentMalType resultat = DokumentMalType.AVSLAGSVEDTAK_DOK;
-        assertThat(resultat.getKode()).isEqualTo(DokumentMalType.AVSLAGSVEDTAK_DOK.getKode());
+        DokumentMalType resultat = DokumentMalType.ENGANGSSTØNAD_AVSLAG_DOK;
+        assertThat(resultat.getKode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_AVSLAG_DOK.getKode());
     }
 
 }

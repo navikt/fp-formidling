@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -20,16 +29,10 @@ import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
-
 @ApplicationScoped
 class DokumentMalUtleder {
+
+    private static final Environment ENV = Environment.current();
 
     private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingUuid: ";
     private DomeneobjektProvider domeneobjektProvider;
@@ -72,7 +75,7 @@ class DokumentMalUtleder {
         } else if (behandlingsresultat.erAvslått()) {
             return DokumentMalType.FORELDREPENGER_AVSLAG;
         } else if (behandlingsresultat.erOpphørt()) {
-            return !Environment.current().isProd() ? DokumentMalType.FORELDREPENGER_OPPHØR : DokumentMalType.OPPHØR_DOK;
+            return !Environment.current().isProd() ? DokumentMalType.FORELDREPENGER_OPPHØR : DokumentMalType.FORELDREPENGER_OPPHØR_DOK;
         }
         throw new TekniskException("FPFORMIDLING-666915",
         String.format("Ingen brevmal konfigurert for denne type behandlingen %s.", behandling.getUuid().toString()));
@@ -81,7 +84,7 @@ class DokumentMalUtleder {
     private DokumentMalType mapSvangerskapspengerVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
-            return DokumentMalType.INNVILGELSE_SVANGERSKAPSPENGER_DOK;
+            return DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST;
         }
         throw new TekniskException("FPFORMIDLING-666915",
         String.format("Ingen brevmal konfigurert for denne type behandlingen %s.", behandling.getUuid().toString()));
@@ -151,7 +154,7 @@ class DokumentMalUtleder {
     private boolean harSendtVarselOmRevurdering(Behandling behandling) {
         return historikkRepository.hentInnslagForBehandling(behandling.getUuid())
                 .stream().map(DokumentHistorikkinnslag::getDokumentMalType)
-                .anyMatch(d -> DokumentMalType.REVURDERING_DOK.equals(d) || DokumentMalType.VARSEL_OM_REVURDERING.equals(d))
+                .anyMatch(d -> DokumentMalType.VARSEL_OM_REVURDERING_DOK.equals(d) || DokumentMalType.VARSEL_OM_REVURDERING.equals(d))
                 || Boolean.TRUE.equals(behandlingRestKlient.harSendtVarselOmRevurdering(behandling.getResourceLinker()).orElse(false));
     }
 
@@ -169,13 +172,13 @@ class DokumentMalUtleder {
         KlageVurdering klagevurdering = klageVurderingResultat.klageVurdering();
 
         if (KlageVurdering.AVVIS_KLAGE.equals(klagevurdering)) {
-            return DokumentMalType.KLAGE_AVVIST;
+            return ENV.isProd() ? DokumentMalType.KLAGE_AVVIST_FRITEKST : DokumentMalType.KLAGE_AVVIST;
         } else if (Arrays.asList(KlageVurdering.OPPHEVE_YTELSESVEDTAK, KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE).contains(klagevurdering)) {
-            return DokumentMalType.KLAGE_HJEMSENDT;
+            return ENV.isProd() ? DokumentMalType.KLAGE_HJEMSENDT_FRITEKST : DokumentMalType.KLAGE_HJEMSENDT;
         } else if (KlageVurdering.MEDHOLD_I_KLAGE.equals(klagevurdering)) {
-            return DokumentMalType.KLAGE_OMGJØRING;
+            return ENV.isProd() ? DokumentMalType.KLAGE_OMGJORT_FRITEKST : DokumentMalType.KLAGE_OMGJORT;
         } else if (KlageVurdering.STADFESTE_YTELSESVEDTAK.equals(klagevurdering)) {
-            return DokumentMalType.KLAGE_STADFESTET;
+            return ENV.isProd() ? DokumentMalType.KLAGE_STADFESTET_FRITEKST : DokumentMalType.KLAGE_STADFESTET;
         }
 
         throw new TekniskException("FPFORMIDLING-666915",

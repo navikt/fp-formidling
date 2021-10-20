@@ -188,13 +188,13 @@ public class BrevBestillerTjenesteTest {
     public void skal_bare_kalle_dokgen_tjenesten_for_maler_som_er_konvertert() {
         // Arrange
         DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
-        when(dokumentMalUtleder.utledDokumentmal(any(), any())).thenReturn(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK);
+        when(dokumentMalUtleder.utledDokumentmal(any(), any())).thenReturn(DokumentMalType.FORELDREPENGER_INNVILGELSE_DOK);
 
         // Act
         tjeneste.bestillBrev(dokumentHendelse);
 
         // Assert
-        verify(dokprodBrevproduksjonTjeneste, times(1)).bestillBrev(eq(dokumentHendelse), any(), eq(DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK));
+        verify(dokprodBrevproduksjonTjeneste, times(1)).bestillBrev(eq(dokumentHendelse), any(), eq(DokumentMalType.FORELDREPENGER_INNVILGELSE_DOK));
         verifyNoInteractions(dokgenRestKlient);
         verifyNoInteractions(opprettJournalpostTjeneste);
         verifyNoInteractions(dokdistRestKlient);

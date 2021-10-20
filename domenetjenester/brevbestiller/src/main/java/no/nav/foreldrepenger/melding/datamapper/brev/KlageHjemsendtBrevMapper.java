@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
-@Named(DokumentMalTypeKode.KLAGE_HJEMSENDT)
+@Named(DokumentMalTypeKode.KLAGE_HJEMSENDT_FRITEKST)
 public class KlageHjemsendtBrevMapper extends FritekstmalBrevMapper {
 
     private BrevMapperUtil brevMapperUtil;

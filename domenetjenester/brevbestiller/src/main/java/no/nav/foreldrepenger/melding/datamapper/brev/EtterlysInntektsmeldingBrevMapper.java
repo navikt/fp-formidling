@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 
 @ApplicationScoped
-@Named(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_DOK)
+@Named(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_FRITEKST)
 public class EtterlysInntektsmeldingBrevMapper extends FritekstmalBrevMapper {
 
     private BrevMapperUtil brevMapperUtil;

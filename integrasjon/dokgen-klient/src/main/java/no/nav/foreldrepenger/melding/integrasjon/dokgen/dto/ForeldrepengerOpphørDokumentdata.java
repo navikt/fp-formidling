@@ -69,6 +69,18 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
         return barnDødsdato;
     }
 
+    public String getOpphørDato() {
+        return opphørDato;
+    }
+
+    public String getFomStønadsdato() {
+        return fomStønadsdato;
+    }
+
+    public String getTomStønadsdato() {
+        return tomStønadsdato;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

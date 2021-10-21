@@ -82,19 +82,30 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        var that = (ForeldrepengerOpphørDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(erSøkerDød, that.erSøkerDød)
-                && Objects.equals(relasjonskode, that.relasjonskode)
-                && Objects.equals(klagefristUker, that.klagefristUker);
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final ForeldrepengerOpphørDokumentdata that = (ForeldrepengerOpphørDokumentdata) o;
+        return erSøkerDød == that.erSøkerDød
+                && gjelderFødsel == that.gjelderFødsel
+                && getAntallBarn() == that.getAntallBarn()
+                && getHalvG() == that.getHalvG()
+                && getAntallÅrsaker() == that.getAntallÅrsaker()
+                && getKlagefristUker() == that.getKlagefristUker()
+                && Objects.equals(getRelasjonskode(), that.getRelasjonskode())
+                && Objects.equals(getLovhjemmelForAvslag(), that.getLovhjemmelForAvslag())
+                && Objects.equals(getAvslagÅrsaker(), that.getAvslagÅrsaker())
+                && Objects.equals(getKontaktTelefonnummer(), that.getKontaktTelefonnummer())
+                && Objects.equals(getBarnDødsdato(), that.getBarnDødsdato())
+                && Objects.equals(getOpphørDato(), that.getOpphørDato())
+                && Objects.equals(getFomStønadsdato(), that.getFomStønadsdato())
+                && Objects.equals(getTomStønadsdato(), that.getTomStønadsdato())
+                && Objects.equals(getFelles(), that.getFelles());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, erSøkerDød, relasjonskode, klagefristUker);
+        return Objects.hash(felles, erSøkerDød, getRelasjonskode(), gjelderFødsel, getAntallBarn(), getHalvG(), getLovhjemmelForAvslag(), getAntallÅrsaker(), getAvslagÅrsaker(), getKlagefristUker(), getKontaktTelefonnummer(), getBarnDødsdato(), getOpphørDato(), getFomStønadsdato(), getTomStønadsdato());
     }
 
     public static Builder ny() {

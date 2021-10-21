@@ -97,8 +97,6 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentUttaksresultatHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
-
-
     }
 
     @Test

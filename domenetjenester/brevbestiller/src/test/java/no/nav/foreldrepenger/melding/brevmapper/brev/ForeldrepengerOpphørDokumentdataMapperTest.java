@@ -88,10 +88,9 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
     @BeforeEach
     public void before() {
         BrevParametere brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        NavKontaktKonfigurasjon navKontaktKonfigurasjon = new NavKontaktKonfigurasjon("1", "2", "3", "4", "5", "6", "7");
         dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
 
-        dokumentdataMapper = new ForeldrepengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider, navKontaktKonfigurasjon);
+        dokumentdataMapper = new ForeldrepengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
 
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
@@ -131,7 +130,6 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
         assertThat(dokumentdata.getLovhjemmelForAvslag()).isEmpty();
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
-        assertThat(dokumentdata.getKontaktTelefonnummer()).isEqualTo("1");
         assertThat(dokumentdata.getBarnDødsdato()).isEqualTo(formaterDato(LocalDate.now(), Språkkode.NB));
         assertThat(dokumentdata.getOpphørDato()).isEqualTo(formaterDato(LocalDate.now(), Språkkode.NB));
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(ANTALL_BARN);

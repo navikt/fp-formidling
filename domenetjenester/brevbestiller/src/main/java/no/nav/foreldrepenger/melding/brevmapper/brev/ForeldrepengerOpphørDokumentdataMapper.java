@@ -54,7 +54,6 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
 
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;
-    private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
 
     ForeldrepengerOpphørDokumentdataMapper() {
         //CDI
@@ -62,11 +61,9 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
 
     @Inject
     public ForeldrepengerOpphørDokumentdataMapper(BrevParametere brevParametere,
-                                                  DomeneobjektProvider domeneobjektProvider,
-                                                  NavKontaktKonfigurasjon navKontaktKonfigurasjon) {
+                                                  DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
-        this.navKontaktKonfigurasjon = navKontaktKonfigurasjon;
     }
 
     @Override
@@ -105,8 +102,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
                 .medGjelderFødsel(familiehendelse.isGjelderFødsel())
                 .medAntallBarn(familiehendelse.getAntallBarn().intValue())
                 .medHalvG(halvG)
-                .medKlagefristUker(brevParametere.getKlagefristUker())
-                .medKontaktTelefonNummer(norg2KontaktTelefonnummer(avsenderEnhet));
+                .medKlagefristUker(brevParametere.getKlagefristUker());
 
         var årsakListe = mapAvslagårsaker(behandling.getBehandlingsresultat(), uttakResultatPerioder, dokumentdataBuilder);
 
@@ -142,14 +138,6 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         builder.medLovhjemmelForAvslag(aarsakListeOgLovhjemmel.getElement2());
 
         return årsakListe;
-    }
-
-    private String norg2KontaktTelefonnummer(String behandlendeEnhetNavn) {
-        if (behandlendeEnhetNavn == null) {
-            return navKontaktKonfigurasjon.getNorg2KontaktTelefonNummer();
-        }
-        return behandlendeEnhetNavn.contains(navKontaktKonfigurasjon.getBrevAvsenderKlageEnhet())
-                ? navKontaktKonfigurasjon.getNorg2NavKlageinstansTelefon() : navKontaktKonfigurasjon.getNorg2KontaktTelefonNummer();
     }
 
     private String finnRelasjonskode(FagsakBackend fagsak) {

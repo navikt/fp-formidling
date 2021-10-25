@@ -19,7 +19,6 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
     private int antallÅrsaker;
     private List<String> avslagÅrsaker;
     private int klagefristUker;
-    private String kontaktTelefonnummer;
     private String barnDødsdato;
     private String opphørDato;
     private String fomStønadsdato;
@@ -61,10 +60,6 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
         return klagefristUker;
     }
 
-    public String getKontaktTelefonnummer() {
-        return kontaktTelefonnummer;
-    }
-
     public String getBarnDødsdato() {
         return barnDødsdato;
     }
@@ -86,8 +81,8 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final ForeldrepengerOpphørDokumentdata that = (ForeldrepengerOpphørDokumentdata) o;
-        return erSøkerDød == that.erSøkerDød
-                && gjelderFødsel == that.gjelderFødsel
+        return erSøkerDød() == that.erSøkerDød()
+                && erGjelderFødsel() == that.erGjelderFødsel()
                 && getAntallBarn() == that.getAntallBarn()
                 && getHalvG() == that.getHalvG()
                 && getAntallÅrsaker() == that.getAntallÅrsaker()
@@ -95,7 +90,6 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
                 && Objects.equals(getRelasjonskode(), that.getRelasjonskode())
                 && Objects.equals(getLovhjemmelForAvslag(), that.getLovhjemmelForAvslag())
                 && Objects.equals(getAvslagÅrsaker(), that.getAvslagÅrsaker())
-                && Objects.equals(getKontaktTelefonnummer(), that.getKontaktTelefonnummer())
                 && Objects.equals(getBarnDødsdato(), that.getBarnDødsdato())
                 && Objects.equals(getOpphørDato(), that.getOpphørDato())
                 && Objects.equals(getFomStønadsdato(), that.getFomStønadsdato())
@@ -105,7 +99,7 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, erSøkerDød, getRelasjonskode(), gjelderFødsel, getAntallBarn(), getHalvG(), getLovhjemmelForAvslag(), getAntallÅrsaker(), getAvslagÅrsaker(), getKlagefristUker(), getKontaktTelefonnummer(), getBarnDødsdato(), getOpphørDato(), getFomStønadsdato(), getTomStønadsdato());
+        return Objects.hash(getFelles(), erSøkerDød(), getRelasjonskode(), erGjelderFødsel(), getAntallBarn(), getHalvG(), getLovhjemmelForAvslag(), getAntallÅrsaker(), getAvslagÅrsaker(), getKlagefristUker(), getBarnDødsdato(), getOpphørDato(), getFomStønadsdato(), getTomStønadsdato());
     }
 
     public static Builder ny() {
@@ -166,11 +160,6 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
 
         public Builder medKlagefristUker(int klagefristUker) {
             this.kladd.klagefristUker = klagefristUker;
-            return this;
-        }
-
-        public Builder medKontaktTelefonNummer(String kontaktTlf) {
-            this.kladd.kontaktTelefonnummer = kontaktTlf;
             return this;
         }
 

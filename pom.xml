@@ -58,7 +58,7 @@
         <assertj.version>3.21.0</assertj.version>
         <jupiter.version>5.8.1</jupiter.version>
         <mockito.version>4.0.0</mockito.version>
-        <reflections.version>0.10.1</reflections.version>
+        <reflections.version>0.10.2</reflections.version>
     </properties>
 
     <!-- NB: Unngå å put scope (test, provided) i dependency management. Det har uheldige virkninger ved bruk av import og dependency (bruk composition

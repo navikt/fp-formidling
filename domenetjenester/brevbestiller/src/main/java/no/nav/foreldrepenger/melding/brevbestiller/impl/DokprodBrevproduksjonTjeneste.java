@@ -263,7 +263,8 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Override
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
-        if (DokumentMalType.FORELDREPENGER_OPPHØR.equals(dokumentMal) && FagsakYtelseType.SVANGERSKAPSPENGER.equals(dokumentHendelse.getYtelseType())) {
+        if ((DokumentMalType.OPPHØR_DOK.equals(dokumentMal) || DokumentMalType.FORELDREPENGER_OPPHØR.equals(dokumentMal))
+                && FagsakYtelseType.SVANGERSKAPSPENGER.equals(dokumentHendelse.getYtelseType())) {
             throw new ForhåndsvisningsException("FPFORMIDLING-221007", "Opphørsbrev Svangerskapspenger ikke implementert", "Se rutine for opphør Svangerskapspenger");
         }
         byte[] dokument;

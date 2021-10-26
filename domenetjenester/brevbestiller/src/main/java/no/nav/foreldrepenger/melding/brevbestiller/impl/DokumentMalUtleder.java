@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
+import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -71,7 +72,7 @@ class DokumentMalUtleder {
         } else if (behandlingsresultat.erAvslått()) {
             return DokumentMalType.FORELDREPENGER_AVSLAG;
         } else if (behandlingsresultat.erOpphørt()) {
-            return DokumentMalType.FORELDREPENGER_OPPHØR;
+            return !Environment.current().isProd() ? DokumentMalType.FORELDREPENGER_OPPHØR : DokumentMalType.OPPHØR_DOK;
         }
         throw new TekniskException("FPFORMIDLING-666915",
         String.format("Ingen brevmal konfigurert for denne type behandlingen %s.", behandling.getUuid().toString()));

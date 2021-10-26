@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.brevmapper.brev;
+package no.nav.foreldrepenger.melding.brevmapper.brev.opphørfp;
 
 import java.util.Collection;
 import java.util.HashMap;

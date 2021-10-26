@@ -60,7 +60,7 @@ import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.exception.VLException;
 
 @ApplicationScoped
-@Named(DokumentMalTypeKode.FORELDREPENGER_OPPHØR)
+@Named(DokumentMalTypeKode.OPPHØR_DOK)
 public class OpphørbrevMapper extends DokumentTypeMapper {
     private static final Map<RelasjonsRolleType, RelasjonskodeKode> relasjonskodeTypeMap;
 

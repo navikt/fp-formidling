@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.brevmapper.brev;
+package no.nav.foreldrepenger.melding.brevmapper.brev.opphørfp;
 
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erDød;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.melding.Tuple;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.melding.brevbestiller.impl.NavKontaktKonfigurasjon;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
@@ -41,7 +40,7 @@ import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.exception.VLException;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_OPPHØR)
+@DokumentMalTypeRef(DokumentMalTypeKode.OPPHØR_DOK)
 public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapper {
 
     private static final Map<RelasjonsRolleType, String> relasjonskodeTypeMap;

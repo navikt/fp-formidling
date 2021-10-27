@@ -151,11 +151,11 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal,
             DokumentFelles dokumentFelles) {
-        if (DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.equals(dokumentMal)) {
+        if (DokumentMalType.OPPHØR_DOK.equals(dokumentMal)) {
             try {
-                opprettAlternativeBrevData(dokumentHendelse, behandling, dokumentFelles, DokumentMalType.FORELDREPENGER_INNVILGELSE);
+                opprettAlternativeBrevData(dokumentHendelse, behandling, dokumentFelles, DokumentMalType.FORELDREPENGER_OPPHØR);
             } catch (Exception e) {
-                LOGGER.info("Feilet i å lage Dokgen-versjonen av innvilgelse foreldrepenger for bestilling {} og behandling {}",
+                LOGGER.info("Feilet i å lage Dokgen-versjonen av opphør foreldrepenger for bestilling {} og behandling {}",
                         dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
             }
         }

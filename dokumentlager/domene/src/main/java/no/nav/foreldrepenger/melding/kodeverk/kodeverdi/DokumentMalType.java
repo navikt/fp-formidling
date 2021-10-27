@@ -21,9 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public enum DokumentMalType implements Kodeverdi {
 
-    //Mal hos team dokument
-    OPPHØR_DOK(DokumentMalTypeKode.OPPHØR_DOK, "Opphør brev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
-
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     FRITEKST_DOK(DokumentMalTypeKode.FRITEKST_DOK, "Fritekstbrev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS ),
     ETTERLYS_INNTEKTSMELDING_DOK(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_DOK, "Etterlys inntektsmelding", "J", DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
@@ -41,6 +38,7 @@ public enum DokumentMalType implements Kodeverdi {
     ENGANGSSTØNAD_AVSLAG(DokumentMalTypeKode.ENGANGSSTØNAD_AVSLAG, "Avslag engangsstønad", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     FORELDREPENGER_INNVILGELSE(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE, "Innvilgelsesbrev Foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     FORELDREPENGER_AVSLAG(DokumentMalTypeKode.FORELDREPENGER_AVSLAG, "Avslagsbrev Foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    FORELDREPENGER_OPPHØR(DokumentMalTypeKode.FORELDREPENGER_OPPHØR, "Opphør Foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
     FORELDREPENGER_ANNULLERT(DokumentMalTypeKode.FORELDREPENGER_ANNULLERT, "Annullering av Foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER(DokumentMalTypeKode.FORELDREPENGER_INFO_TIL_ANNEN_FORELDER, "Informasjonsbrev til den andre forelderen", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     INNHENTE_OPPLYSNINGER(DokumentMalTypeKode.INNHENTE_OPPLYSNINGER, "Innhent dokumentasjon", "J", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
@@ -54,6 +52,8 @@ public enum DokumentMalType implements Kodeverdi {
     FORLENGET_SAKSBEHANDLINGSTID_TIDLIG(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG, "Forlenget saksbehandlingstid - Tidlig søknad", "N", DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
+    @Deprecated
+    OPPHØR_DOK(DokumentMalTypeKode.OPPHØR_DOK, "Opphør brev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
     @Deprecated
     KLAGE_OVERSENDT_KLAGEINSTANS_DOK(DokumentMalTypeKode.KLAGE_OVERSENDT_KLAGEINSTANS_DOK,"Overføring til NAV Klageinstans", "N", DokumentMalRestriksjon.INGEN, DoksysKode.KLAGOV), //NOSONAR
     @Deprecated

@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 public class DokumentMalTypeKode {
 
     //Mal hos team dokument
-    public static final String OPPHØR_DOK = "OPPHOR";
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     public static final String FRITEKST_DOK = "FRITKS";
@@ -22,6 +21,7 @@ public class DokumentMalTypeKode {
     public static final String ENGANGSSTØNAD_AVSLAG = "AVSLES";
     public static final String FORELDREPENGER_INNVILGELSE = "INVFOR";
     public static final String FORELDREPENGER_AVSLAG = "AVSFOR";
+    public static final String FORELDREPENGER_OPPHØR = "OPPFOR";
     public static final String FORELDREPENGER_ANNULLERT = "ANUFOR";
     public static final String FORELDREPENGER_INFO_TIL_ANNEN_FORELDER ="INFOAF";
     public static final String INNHENTE_OPPLYSNINGER = "INNOPP";
@@ -35,6 +35,8 @@ public class DokumentMalTypeKode {
     public static final String FORLENGET_SAKSBEHANDLINGSTID_TIDLIG = "FORTID";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
+    @Deprecated
+    public static final String OPPHØR_DOK = "OPPHOR";
     @Deprecated
     public static final String KLAGE_OVERSENDT_KLAGEINSTANS_DOK = "KLAGOV"; //NOSONAR
     @Deprecated

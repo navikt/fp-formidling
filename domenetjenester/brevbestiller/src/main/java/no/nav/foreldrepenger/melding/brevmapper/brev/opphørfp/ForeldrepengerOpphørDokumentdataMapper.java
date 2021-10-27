@@ -40,7 +40,7 @@ import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.exception.VLException;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.OPPHØR_DOK)
+@DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_OPPHØR)
 public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapper {
 
     private static final Map<RelasjonsRolleType, String> relasjonskodeTypeMap;

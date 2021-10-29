@@ -136,7 +136,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             var sak = sakRestKlient.finnForSaksnummer(saksnummer.getVerdi());
             if (sak.isEmpty()) {
                 LOGGER.info("FPFORMIDLING SAK ingen treff på saksnummer {}", saksnummer.getVerdi());
-                if (DokumentMalType.INFO_TIL_ANNEN_FORELDER_DOK.equals(malType)) {
+                if (DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER_DOK.equals(malType)) {
                     sak = Optional.ofNullable(opprettArkivsak(saksnummer, aktørId));
                 }
             } else {
@@ -151,7 +151,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal,
             DokumentFelles dokumentFelles) {
-        if (DokumentMalType.OPPHØR_DOK.equals(dokumentMal)) {
+        if (DokumentMalType.FORELDREPENGER_OPPHØR_DOK.equals(dokumentMal)) {
             try {
                 opprettAlternativeBrevData(dokumentHendelse, behandling, dokumentFelles, DokumentMalType.FORELDREPENGER_OPPHØR);
             } catch (Exception e) {
@@ -219,7 +219,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     }
 
     private Collection<InnsynDokument> finnEventuelleVedlegg(Behandling behandling, DokumentMalType dokumentMal) {
-        if (!DokumentMalType.INNSYNSKRAV_SVAR.equals(dokumentMal)) {
+        if (!DokumentMalType.INNSYN_SVAR_DOK.equals(dokumentMal)) {
             return Collections.emptyList();
         }
         return filtrerUtDuplikater(domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter());
@@ -263,7 +263,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Override
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
-        if ((DokumentMalType.OPPHØR_DOK.equals(dokumentMal) || DokumentMalType.FORELDREPENGER_OPPHØR.equals(dokumentMal))
+        if ((DokumentMalType.FORELDREPENGER_OPPHØR_DOK.equals(dokumentMal) || DokumentMalType.FORELDREPENGER_OPPHØR.equals(dokumentMal))
                 && FagsakYtelseType.SVANGERSKAPSPENGER.equals(dokumentHendelse.getYtelseType())) {
             throw new ForhåndsvisningsException("FPFORMIDLING-221007", "Opphørsbrev Svangerskapspenger ikke implementert", "Se rutine for opphør Svangerskapspenger");
         }
@@ -283,7 +283,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             dokument = forhåndsvis(dokumentMal, brevXmlElement);
         } catch (IntegrasjonException e) {
             if (!SoapWebServiceFeil.DOKPROD_FEIL_INNHOLD.equals(e.getKode())) throw e;
-            if (DokumentMalType.INNVILGELSE_FORELDREPENGER_DOK.equals(dokumentMal) && FagsakYtelseType.FORELDREPENGER.equals(dokumentHendelse.getYtelseType())) {
+            if (DokumentMalType.FORELDREPENGER_INNVILGELSE_DOK.equals(dokumentMal) && FagsakYtelseType.FORELDREPENGER.equals(dokumentHendelse.getYtelseType())) {
                 throw new TekniskException("FPFORMIDLING-221008", "Feil ved produksjon av forhåndsvisning - se over uttaksperioder/årsakskoder", e.getCause());
             } else {
                 throw new TekniskException("FPFORMIDLING-221009",

@@ -67,26 +67,26 @@ public class BrevmalTjeneste {
                 .filter(dm -> !dm.erTilgjengeligForManuellUtsendelse() || malSkalIkkeTilgjengeliggjøresForManuellUtsendelse(dm))
                 .collect(Collectors.toList());
         if (harAksjonspunktVarselOmRevurdering(aksjonspunkter)) {
-            fjernes.add(DokumentMalType.FORLENGET_DOK);
+            fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_DOK);
             fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID);
-            fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);
+            fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK);
             fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
-            fjernes.add(DokumentMalType.REVURDERING_DOK);
+            fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING_DOK);
             fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING);
         } else if (behandling.erKlage()) {
-            fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);
+            fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK);
             fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
-            fjernes.add(DokumentMalType.REVURDERING_DOK);
+            fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING_DOK);
             fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING);
         } else if (behandling.erRevurdering()) {
             if (!automatiskOpprettet) {
-                fjernes.add(DokumentMalType.FORLENGET_DOK);
+                fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_DOK);
                 fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID);
-                fjernes.add(DokumentMalType.FORLENGET_MEDL_DOK);
+                fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK);
                 fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
             }
         } else {
-            fjernes.add(DokumentMalType.REVURDERING_DOK);
+            fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING_DOK);
             fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING);
         }
         return fjernes;

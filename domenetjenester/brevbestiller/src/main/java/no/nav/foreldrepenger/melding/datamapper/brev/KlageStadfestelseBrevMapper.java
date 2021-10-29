@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
-@Named(DokumentMalTypeKode.KLAGE_STADFESTET)
+@Named(DokumentMalTypeKode.KLAGE_STADFESTET_FRITEKST)
 public class KlageStadfestelseBrevMapper extends FritekstmalBrevMapper {
 
     public KlageStadfestelseBrevMapper() {

@@ -47,25 +47,34 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.FORELDREPENGER_INNVILGELSE,
             DokumentMalType.FORELDREPENGER_AVSLAG,
             DokumentMalType.FORELDREPENGER_ANNULLERT,
-            DokumentMalType.FORELDREPENGER_OPPHØR);
+            DokumentMalType.FORELDREPENGER_OPPHØR,
+            DokumentMalType.KLAGE_AVVIST,
+            DokumentMalType.KLAGE_HJEMSENDT,
+            DokumentMalType.KLAGE_OMGJORT,
+            DokumentMalType.KLAGE_OVERSENDT,
+            DokumentMalType.KLAGE_STADFESTET);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
-            DokumentMalType.INNHENT_DOK,
-            DokumentMalType.REVURDERING_DOK,
-            DokumentMalType.FORLENGET_DOK,
-            DokumentMalType.FORLENGET_MEDL_DOK);
+            DokumentMalType.INNHENTE_OPPLYSNINGER_DOK,
+            DokumentMalType.VARSEL_OM_REVURDERING_DOK,
+            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_DOK,
+            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_DEV = Set.of(
-            DokumentMalType.INNHENT_DOK,
-            DokumentMalType.REVURDERING_DOK,
-            DokumentMalType.FORLENGET_DOK,
-            DokumentMalType.FORLENGET_MEDL_DOK);
+            DokumentMalType.INNHENTE_OPPLYSNINGER_DOK,
+            DokumentMalType.VARSEL_OM_REVURDERING_DOK,
+            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_DOK,
+            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK);
     private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_DEV = Map.of(
-            DokumentMalType.REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING,
-            DokumentMalType.HENLEGG_BEHANDLING_DOK, DokumentMalType.INFO_OM_HENLEGGELSE,
-            DokumentMalType.INNSYNSKRAV_SVAR, DokumentMalType.INNSYN_SVAR);
+            DokumentMalType.VARSEL_OM_REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING,
+            DokumentMalType.INFO_OM_HENLEGGELSE_DOK, DokumentMalType.INFO_OM_HENLEGGELSE,
+            DokumentMalType.INNSYN_SVAR_DOK, DokumentMalType.INNSYN_SVAR,
+            DokumentMalType.KLAGE_HJEMSENDT_FRITEKST, DokumentMalType.KLAGE_HJEMSENDT,
+            DokumentMalType.KLAGE_OMGJORT_FRITEKST, DokumentMalType.KLAGE_OMGJORT,
+            DokumentMalType.KLAGE_OVERSENDT_FRITEKST, DokumentMalType.KLAGE_OVERSENDT,
+            DokumentMalType.KLAGE_STADFESTET_FRITEKST, DokumentMalType.KLAGE_STADFESTET);
     private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_PROD = Map.of(
-            DokumentMalType.REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING,
-            DokumentMalType.HENLEGG_BEHANDLING_DOK, DokumentMalType.INFO_OM_HENLEGGELSE,
-            DokumentMalType.INNSYNSKRAV_SVAR, DokumentMalType.INNSYN_SVAR);
+            DokumentMalType.VARSEL_OM_REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING,
+            DokumentMalType.INFO_OM_HENLEGGELSE_DOK, DokumentMalType.INFO_OM_HENLEGGELSE,
+            DokumentMalType.INNSYN_SVAR_DOK, DokumentMalType.INNSYN_SVAR);
 
     public static boolean malSkalBrukeDokgen(DokumentMalType dokumentMalType) {
         if (ENV.isProd()) {

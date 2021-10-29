@@ -67,7 +67,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
 
     @Override
     public String getTemplateNavn() {
-        return "foreldrepenger-opphør";
+        return "foreldrepenger-opphor";
     }
 
     @Override

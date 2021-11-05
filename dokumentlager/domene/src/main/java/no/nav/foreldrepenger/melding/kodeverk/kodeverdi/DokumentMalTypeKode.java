@@ -5,7 +5,6 @@ public class DokumentMalTypeKode {
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     public static final String FRITEKST_DOK = "FRITKS";
     public static final String ETTERLYS_INNTEKTSMELDING_FRITEKST = "INNLYS";
-    public static final String SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST = "INNSVP";
     public static final String ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST = "ANKEBO";
     public static final String ANKE_VEDTAK_OMGJORING_FRITEKST = "VEDOGA";
 
@@ -17,6 +16,7 @@ public class DokumentMalTypeKode {
     public static final String FORELDREPENGER_OPPHØR = "OPPFOR";
     public static final String FORELDREPENGER_ANNULLERT = "ANUFOR";
     public static final String FORELDREPENGER_INFO_TIL_ANNEN_FORELDER ="INFOAF";
+    public static final String SVANGERSKAPSPENGER_INNVILGELSE = "INVSVP";
     public static final String SVANGERSKAPSPENGER_OPPHØR = "OPPSVP";
     public static final String INNHENTE_OPPLYSNINGER = "INNOPP";
     public static final String VARSEL_OM_REVURDERING = "VARREV";
@@ -46,6 +46,8 @@ public class DokumentMalTypeKode {
     public static final String FORELDREPENGER_OPPHØR_DOK = "OPPHOR"; //NOSONAR
     @Deprecated
     public static final String FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER_DOK = "INAFOR"; //NOSONAR
+    @Deprecated
+    public static final String SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST = "INNSVP"; //NOSONAR
     @Deprecated
     public static final String INNHENTE_OPPLYSNINGER_DOK = "INNHEN"; //NOSONAR
     @Deprecated

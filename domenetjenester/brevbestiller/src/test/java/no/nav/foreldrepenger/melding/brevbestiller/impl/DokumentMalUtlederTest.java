@@ -257,7 +257,7 @@ public class DokumentMalUtlederTest {
                 .medBehandlingsresultat(behandlingsresultat)
                 .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST.getKode());
+                .isEqualTo(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE.getKode());
     }
 
     @Test
@@ -275,7 +275,7 @@ public class DokumentMalUtlederTest {
                 .medBehandlingsresultat(behandlingsresultat)
                 .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST.getKode());
+                .isEqualTo(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE.getKode());
     }
 
     private void sjekkKlageDokument(KlageVurdering klageVurdering, DokumentMalType dokumentmal) {

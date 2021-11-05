@@ -20,6 +20,9 @@ import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public class UttakSvpDtoMapper {
 
+    public static final String NÆRINGSDRIVENDE = "næringsdrivende";
+    public static final String FRILANSER = "frilanser";
+
     public static SvpUttaksresultat mapSvpUttaksresultatFraDto(SvangerskapspengerUttakResultatDto svpUttaksresultatresultatDto, UnaryOperator<String> hentNavn) {
         final var svpUttaksresultatBuilder = SvpUttaksresultat.Builder.ny();
         final var uttaksResultatArbeidsforhold = svpUttaksresultatresultatDto.getUttaksResultatArbeidsforhold();
@@ -32,7 +35,7 @@ public class UttakSvpDtoMapper {
             uttakResultatArbeidsforholdBuild.medUttakArbeidType(uttakArbeidType);
             uttakResultatArbeidsforholdBuild.medArbeidsforholdIkkeOppfyltÅrsak(arbeidsforholdIkkeOppfyltÅrsak);
             uttakResultatArbeidsforholdBuild.leggTilPerioder(utledSvpUttakResultatPeriode(arbeidsforhold, arbeidsgiver));
-            svpUttaksresultatBuilder.medUttakResultatArbeidsforhold(uttakResultatArbeidsforholdBuild.build());
+            svpUttaksresultatBuilder.leggTilUttakResultatArbeidsforhold(uttakResultatArbeidsforholdBuild.build());
         });
         return svpUttaksresultatBuilder.build();
     }
@@ -55,10 +58,10 @@ public class UttakSvpDtoMapper {
 
     private static String brukUttakArbeidType(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold) {
         if (UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.getKode().equals(arbeidsforhold.getArbeidType().getKode())) {
-            return "næringsdrivende";
+            return NÆRINGSDRIVENDE;
         }
         if (UttakArbeidType.FRILANS.getKode().equals(arbeidsforhold.getArbeidType().getKode())) {
-            return "frilanser";
+            return FRILANSER;
         }
         return null;
     }

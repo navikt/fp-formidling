@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.avslagfp;
 
+import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
+
 import no.nav.foreldrepenger.melding.Tuple;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -19,17 +30,6 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
-
-import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
 
 public class AvslåttPeriodeMapper {
     private static Set<String> lovReferanser;
@@ -119,7 +119,7 @@ public class AvslåttPeriodeMapper {
 
     private static UttakResultatPeriode finnUttakResultatPeriode(Optional<UttakResultatPerioder> uttakResultatPerioder,
                                                                  BeregningsresultatPeriode beregningsresultatPeriode) {
-        return PeriodeBeregner.finnUttaksPeriode(beregningsresultatPeriode, uttakResultatPerioder
+        return PeriodeBeregner.finnUttaksperiode(beregningsresultatPeriode, uttakResultatPerioder
                 .map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList()));
     }
 }

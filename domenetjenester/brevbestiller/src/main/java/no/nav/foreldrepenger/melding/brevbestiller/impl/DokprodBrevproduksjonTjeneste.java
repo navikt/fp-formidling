@@ -1,5 +1,24 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -42,23 +61,6 @@ import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
 @ApplicationScoped
 public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -105,6 +107,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                     domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
             Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling, saksnummer);
             dokumentFelles.setBrevData(elementTilString(brevXmlElement));
+            opprettAlternativeBrevDataOmNødvendig(dokumentHendelse, behandling, dokumentMal, dokumentFelles);
 
             final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = DokumentbestillingMapper.mapFraBehandling(dokumentMal,
                     dokumentFelles, saksnummer, harVedlegg);
@@ -144,6 +147,18 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         } catch (Exception e) {
             LOGGER.info("FPFORMIDLING SAK feil for saksnummer ", e);
             throw new TekniskException("FPFORMIDLING-210632", "Feilmelding fra Sak", e);
+        }
+    }
+
+    private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling,
+                                                       DokumentMalType dokumentMal, DokumentFelles dokumentFelles) {
+        if (DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST.equals(dokumentMal)) { //NOSONAR
+            try {
+                opprettAlternativeBrevData(dokumentHendelse, behandling, dokumentFelles, DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE);
+            } catch (Exception e) {
+                LOGGER.info("Feilet i å lage Dokgen-versjonen av svangerskapspenger innvilgelse for bestilling {} og behandling {}",
+                        dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
+            }
         }
     }
 

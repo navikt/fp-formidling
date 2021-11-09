@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.fpsak.dto.behandling;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingsresultatDto {
@@ -18,6 +18,7 @@ public class BehandlingsresultatDto {
     private String overskrift;
     private String fritekstbrev;
     private Boolean erRevurderingMedUendretUtfall;
+    private SkjæringstidspunktDto skjæringstidspunkt;
 
     public Integer getId() {
         return id;
@@ -99,6 +100,17 @@ public class BehandlingsresultatDto {
         this.erRevurderingMedUendretUtfall = erRevurderingMedUendretUtfall;
     }
 
+    public LocalDate getSkjæringstidspunkt() {
+        if (skjæringstidspunkt!=null) {
+            return skjæringstidspunkt.dato();
+        }
+        return null;
+    }
+
+    public void setSkjæringstidspunkt(SkjæringstidspunktDto skjæringstidspunkt) {
+        this.skjæringstidspunkt = skjæringstidspunkt;
+    }
+
     @Override
     public String toString() {
         return "BehandlingsresultatDto{" +
@@ -112,6 +124,7 @@ public class BehandlingsresultatDto {
                 ", overskrift='" + overskrift + '\'' +
                 ", fritekstbrev='" + fritekstbrev + '\'' +
                 ", erRevurderingMedUendretUtfall='" + erRevurderingMedUendretUtfall + '\'' +
+                ", skjæringstidspunkt=" + skjæringstidspunkt + '\'' +
                 '}';
     }
 }

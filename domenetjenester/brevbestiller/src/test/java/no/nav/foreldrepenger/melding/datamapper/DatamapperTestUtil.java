@@ -1,15 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.mockito.Mockito;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -23,6 +13,15 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
+import org.mockito.Mockito;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.mockito.Mockito.when;
 
 public class DatamapperTestUtil {
 
@@ -103,6 +102,14 @@ public class DatamapperTestUtil {
                 .medBehandlingUuid(UUID.randomUUID())
                 .medFritekst(FRITEKST)
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER);
+    }
+
+    public static DokumentHendelse.Builder lagStandardHendelseSVPBuilder() {
+        return DokumentHendelse.builder()
+                .medBestillingUuid(UUID.randomUUID())
+                .medBehandlingUuid(UUID.randomUUID())
+                .medFritekst(FRITEKST)
+                .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER);
     }
 
     public static DokumentHendelse standardDokumenthendelse() {

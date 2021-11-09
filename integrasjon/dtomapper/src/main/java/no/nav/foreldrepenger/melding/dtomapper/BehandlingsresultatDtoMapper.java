@@ -1,10 +1,5 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
-import static no.nav.foreldrepenger.melding.behandling.Behandlingsresultat.builder;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingsresultatDto;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -12,6 +7,12 @@ import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static no.nav.foreldrepenger.melding.behandling.Behandlingsresultat.builder;
 
 public class BehandlingsresultatDtoMapper {
 
@@ -34,6 +35,7 @@ public class BehandlingsresultatDtoMapper {
         }
         builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);
         builder.medErRevurderingMedUendretUtfall(dto.getErRevurderingMedUendretUtfall());
+        builder.medSkjæringstidspunkt(Optional.ofNullable(dto.getSkjæringstidspunkt()));
         return builder.build();
     }
 }

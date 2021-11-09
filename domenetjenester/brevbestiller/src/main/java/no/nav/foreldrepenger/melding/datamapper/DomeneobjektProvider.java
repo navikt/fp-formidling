@@ -172,6 +172,11 @@ public class DomeneobjektProvider {
                 arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
+    public Optional<SvpUttaksresultat> hentUttaksresultatSvpHvisFinnes(Behandling behandling) {
+        return behandlingRestKlient.hentUttaksresultatSvpHvisFinnes(behandling.getResourceLinker())
+                .map(svangerskapspengerUttakResultatDto -> UttakSvpDtoMapper.mapSvpUttaksresultatFraDto(svangerskapspengerUttakResultatDto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+    }
+
     public YtelseFordeling hentYtelseFordeling(Behandling behandling) {
         return YtelseFordelingDtoMapper.mapYtelseFordelingFraDto(behandlingRestKlient.hentYtelseFordeling(behandling.getResourceLinker()));
     }

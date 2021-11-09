@@ -1,24 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
@@ -60,6 +41,23 @@ import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
 @ApplicationScoped
 public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -145,7 +143,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             return sak.map(s -> new Saksnummer(String.valueOf(s.getId()))).orElseThrow();
         } catch (Exception e) {
             LOGGER.info("FPFORMIDLING SAK feil for saksnummer ", e);
-            throw new TekniskException("FPFORMIDLING-210632", String.format("Feilmelding fra Sak."), e);
+            throw new TekniskException("FPFORMIDLING-210632", "Feilmelding fra Sak", e);
         }
     }
 
@@ -241,7 +239,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             return dokumentproduksjonProxyService
                     .produserIkkeredigerbartDokument(produserIkkeredigerbartDokumentRequest);
         } catch (ProduserIkkeredigerbartDokumentDokumentErRedigerbart | ProduserIkkeredigerbartDokumentDokumentErVedlegg funksjonellFeil) {
-            throw new TekniskException("FPFORMIDLING-210631", String.format("Feilmelding fra DokProd."), funksjonellFeil);
+            throw new TekniskException("FPFORMIDLING-210631", "Feilmelding fra DokProd.", funksjonellFeil);
         }
     }
 
@@ -298,6 +296,11 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         }
         LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getUuid().toString());
         return dokument;
+    }
+
+    @Override
+    public void generereBrevForTestFormål(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
+        //do nothing
     }
 
     private byte[] forhåndsvis(DokumentMalType dokumentMal, Element brevXmlElement) {

@@ -1,11 +1,13 @@
 package no.nav.foreldrepenger.melding.behandling;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class Behandlingsresultat {
     private Avslagsårsak avslagsårsak; //Kode
@@ -16,6 +18,7 @@ public class Behandlingsresultat {
     private String avslagarsakFritekst;
     private List<KonsekvensForYtelsen> konsekvenserForYtelsen; //Kode BehandlingsresultatKonsekvensForYtelsen
     private Boolean erRevurderingMedUendretUtfall;
+    private Optional<LocalDate> skjæringstidspunkt;
 
     //Objekter
     private String beregning; //BeregningResultat
@@ -31,6 +34,7 @@ public class Behandlingsresultat {
         avslagarsakFritekst = builder.avslagarsakFritekst;
         konsekvenserForYtelsen = builder.konsekvenserForYtelsen;
         erRevurderingMedUendretUtfall = builder.erRevurderingMedUendretUtfall;
+        skjæringstidspunkt = builder.skjæringstidspunkt;
         beregning = builder.beregning;
         periode = builder.periode;
         behandling = builder.behandling;
@@ -82,6 +86,10 @@ public class Behandlingsresultat {
 
     public Boolean erRevurderingMedUendretUtfall() {
         return Boolean.TRUE.equals(erRevurderingMedUendretUtfall);
+    }
+
+    public Optional<LocalDate> getSkjæringstidspunkt() {
+        return skjæringstidspunkt;
     }
 
     public boolean isBehandlingsresultatAvslåttOrOpphørt() {
@@ -138,6 +146,7 @@ public class Behandlingsresultat {
         private String avslagarsakFritekst;
         private List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>();
         private Boolean erRevurderingMedUendretUtfall;
+        private Optional<LocalDate> skjæringstidspunkt;
         private String beregning;
         private String periode;
         private Behandling behandling;
@@ -182,6 +191,11 @@ public class Behandlingsresultat {
 
         public Builder medErRevurderingMedUendretUtfall(Boolean erRevurderingMedUendretUtfall) {
             this.erRevurderingMedUendretUtfall = erRevurderingMedUendretUtfall;
+            return this;
+        }
+
+        public Builder medSkjæringstidspunkt(Optional<LocalDate> skjæringstidspunkt) {
+            this.skjæringstidspunkt = skjæringstidspunkt;
             return this;
         }
 

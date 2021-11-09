@@ -193,7 +193,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getPerioder()).hasSize(3);
 
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
-        assertThat(dokumentdata.getLovhjemlerUttak()).isEqualTo("§ forvaltningsloven § 35");
+        assertThat(dokumentdata.getLovhjemlerUttak()).isEqualTo("forvaltningsloven § 35");
         assertThat(dokumentdata.getLovhjemlerBeregning()).isEqualTo("§ 14-7 og forvaltningsloven § 35");
 
         assertThat(dokumentdata.getInkludereUtbetaling()).isTrue();

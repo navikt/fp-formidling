@@ -172,13 +172,13 @@ class DokumentMalUtleder {
         KlageVurdering klagevurdering = klageVurderingResultat.klageVurdering();
 
         if (KlageVurdering.AVVIS_KLAGE.equals(klagevurdering)) {
-            return ENV.isProd() ? DokumentMalType.KLAGE_AVVIST_FRITEKST : DokumentMalType.KLAGE_AVVIST;
+            return DokumentMalType.KLAGE_AVVIST;
         } else if (Arrays.asList(KlageVurdering.OPPHEVE_YTELSESVEDTAK, KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE).contains(klagevurdering)) {
-            return ENV.isProd() ? DokumentMalType.KLAGE_HJEMSENDT_FRITEKST : DokumentMalType.KLAGE_HJEMSENDT;
+            return DokumentMalType.KLAGE_HJEMSENDT;
         } else if (KlageVurdering.MEDHOLD_I_KLAGE.equals(klagevurdering)) {
-            return ENV.isProd() ? DokumentMalType.KLAGE_OMGJORT_FRITEKST : DokumentMalType.KLAGE_OMGJORT;
+            return DokumentMalType.KLAGE_OMGJORT;
         } else if (KlageVurdering.STADFESTE_YTELSESVEDTAK.equals(klagevurdering)) {
-            return ENV.isProd() ? DokumentMalType.KLAGE_STADFESTET_FRITEKST : DokumentMalType.KLAGE_STADFESTET;
+            return DokumentMalType.KLAGE_STADFESTET;
         }
 
         throw new TekniskException("FPFORMIDLING-666915",

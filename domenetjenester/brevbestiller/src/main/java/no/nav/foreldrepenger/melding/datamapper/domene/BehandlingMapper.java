@@ -33,11 +33,38 @@ public class BehandlingMapper {
 
     public static Optional<String> avklarFritekst(DokumentHendelse dokumentHendelse, Behandling behandling) {
         if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
+            return Optional.of(konverterFritekstFraDokprodTilDokgenFormatering(dokumentHendelse.getFritekst()));
+        } else if (behandling.getBehandlingsresultat() != null && behandling.getBehandlingsresultat().getAvslagarsakFritekst() != null) {
+            return Optional.of(konverterFritekstFraDokprodTilDokgenFormatering(behandling.getBehandlingsresultat().getAvslagarsakFritekst()));
+        }
+        return Optional.empty();
+    }
+
+    //TODO(JEJ): Slettes når alle brev er flyttet til Dokgen
+    public static Optional<String> avklarFritekstDokprod(DokumentHendelse dokumentHendelse, Behandling behandling) {
+        if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
             return Optional.of(dokumentHendelse.getFritekst());
         } else if (behandling.getBehandlingsresultat() != null) {
             return Optional.ofNullable(behandling.getBehandlingsresultat().getAvslagarsakFritekst());
         }
         return Optional.empty();
+    }
+
+    // I Dokprod brukes - til punktliste og _ til overskrift. Denne viderefører dette ved å konvertere til * og #### for Dokgen:
+    static String konverterFritekstFraDokprodTilDokgenFormatering(String fritekst) {
+        String[] linjer = fritekst.split("\n");
+        StringBuilder resultat = new StringBuilder();
+        boolean førsteLinje = true;
+
+        for (String linje : linjer) {
+            if (!førsteLinje) {
+                resultat.append("\n");
+            } else {
+                førsteLinje = false;
+            }
+            resultat.append(linje.replaceAll("^_", "##### ").replaceAll("^- ", "* "));
+        }
+        return resultat.toString();
     }
 
     public static boolean gjelderEndringsøknad(Behandling behandling) {

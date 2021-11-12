@@ -73,7 +73,7 @@ public class SvpMapper {
         map.put("seksG", BeregningsgrunnlagMapper.finnSeksG(beregningsgrunnlag).intValue());
         map.put("lovhjemmel", SvpUtledHjemmelForBeregning.utled(beregningsgrunnlag, behandling));
         mapIkkeSøkteAktiviteter(map);
-        BehandlingMapper.avklarFritekst(hendelse, behandling).ifPresent(fritekst -> map.put("fritekst", fritekst));
+        BehandlingMapper.avklarFritekstDokprod(hendelse, behandling).ifPresent(fritekst -> map.put("fritekst", fritekst));
         return map;
     }
 

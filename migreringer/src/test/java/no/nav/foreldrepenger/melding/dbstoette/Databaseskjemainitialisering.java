@@ -11,7 +11,6 @@ import javax.sql.DataSource;
 import org.eclipse.jetty.plus.jndi.EnvEntry;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
-import org.flywaydb.core.api.configuration.ClassicConfiguration;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -35,12 +34,11 @@ public final class Databaseskjemainitialisering {
     @SuppressWarnings("resource")
     public static void migrerUnittestSkjemaer() {
         if (GUARD_UNIT_TEST_SKJEMAER.compareAndSet(false, true)) {
-
-            ClassicConfiguration conf = new ClassicConfiguration();
-            conf.setDataSource(createDs(USER));
-            conf.setLocationsAsStrings(DB_SCRIPT_LOCATION);
-            conf.setBaselineOnMigrate(true);
-            Flyway flyway = new Flyway(conf);
+            var flyway = Flyway.configure()
+                    .dataSource(createDs(USER))
+                    .locations(DB_SCRIPT_LOCATION)
+                    .baselineOnMigrate(true)
+                    .load();
             try {
                 flyway.migrate();
             } catch (FlywayException fwe) {

@@ -70,7 +70,9 @@ class DokumentMalUtleder {
 
     private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
-        if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
+        if (behandlingsresultat.erForeldrepengerSenere() && !ENV.isProd()) {
+            return DokumentMalType.FORELDREPENGER_ANNULLERT;
+        } else if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
             return DokumentMalType.FORELDREPENGER_INNVILGELSE;
         } else if (behandlingsresultat.erAvslått()) {
             return DokumentMalType.FORELDREPENGER_AVSLAG;

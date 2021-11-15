@@ -1,8 +1,16 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.fpsak.Behandlinger;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
+import no.nav.foreldrepenger.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.anke.Anke;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -41,12 +49,6 @@ import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.verge.Verge;
 import no.nav.foreldrepenger.melding.vilkår.Vilkår;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @ApplicationScoped
 public class DomeneobjektProvider {
@@ -193,7 +195,9 @@ public class DomeneobjektProvider {
 
     public boolean kreverSammenhengendeUttak(Behandling behandling) {
         return behandlingRestKlient.kreverSammenhengendeUttak(behandling.getResourceLinker()).kreverSammenhengendeUttak();
-
     }
 
+    public StartdatoUtsattDto hentStartdatoUtsatt(Behandling behandling) {
+        return behandlingRestKlient.hentStartdatoUtsatt(behandling.getResourceLinker());
+    }
 }

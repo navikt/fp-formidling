@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.foreldrepenger.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
@@ -45,12 +46,19 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
+        StartdatoUtsattDto startdatoUtsatt = domeneobjektProvider.hentStartdatoUtsatt(behandling);
+        boolean harSøktOmNyPeriode = startdatoUtsatt.nyStartdato() != null;
+
         var dokumentdataBuilder = ForeldrepengerAnnullertDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
-//                .medHarSøktOmNyPeriode() // finnes det en periode i Ytelse fordeling som ikke er fri utsettelse?
-//                .medPlanlagtOppstartDato() // hvis harSøktOmNyPeriode=true - fom-dato på første periode
-//                .medKanBehandlesDato(planlagtOppstartDato - 4 uker)
+                .medHarSøktOmNyPeriode(harSøktOmNyPeriode)
                 .medKlagefristUker(brevParametere.getKlagefristUker());
+
+        if (harSøktOmNyPeriode) {
+            dokumentdataBuilder.medPlanlagtOppstartDato(formaterDato(startdatoUtsatt.nyStartdato(), behandling.getSpråkkode()));
+            dokumentdataBuilder.medKanBehandlesDato(formaterDato(startdatoUtsatt.nyStartdato().minusWeeks(4), behandling.getSpråkkode()));
+        }
+
         return dokumentdataBuilder.build();
     }
 }

@@ -113,6 +113,10 @@ public class Behandlingsresultat {
         return BehandlingResultatType.OPPHØR.equals(behandlingResultatType);
     }
 
+    public boolean erForeldrepengerSenere() {
+        return BehandlingResultatType.FORELDREPENGER_SENERE.equals(behandlingResultatType);
+    }
+
     public boolean isBehandlingsresultatForeldrepengerEndret() {
         return BehandlingResultatType.FORELDREPENGER_ENDRET.equals(behandlingResultatType);
     }

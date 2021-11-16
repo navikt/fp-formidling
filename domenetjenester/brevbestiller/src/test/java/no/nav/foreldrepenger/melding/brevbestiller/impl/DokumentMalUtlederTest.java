@@ -196,6 +196,19 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
+    public void utled_annullert_fp() {
+        hendelse = standardBuilder()
+                .medGjelderVedtak(true)
+                .build();
+        Behandling behandling = Behandling.builder()
+                .medUuid(UUID.randomUUID())
+                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_SENERE).build())
+                .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
+                .isEqualTo(DokumentMalType.FORELDREPENGER_ANNULLERT.getKode());
+    }
+
+    @Test
     public void utledfritekst() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)

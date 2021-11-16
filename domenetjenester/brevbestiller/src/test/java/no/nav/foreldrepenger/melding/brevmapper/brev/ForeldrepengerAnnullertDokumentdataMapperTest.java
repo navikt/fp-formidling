@@ -11,6 +11,7 @@ import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.forma
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import no.nav.foreldrepenger.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -32,6 +34,8 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
 public class ForeldrepengerAnnullertDokumentdataMapperTest {
+
+    private static final LocalDate NY_STARTDATO = LocalDate.now().plusWeeks(20);
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
@@ -48,11 +52,13 @@ public class ForeldrepengerAnnullertDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_brev_til_bruker() {
+    public void skal_mappe_felter_for_brev_til_bruker_med_ny_startdato() {
         // Arrange
         Behandling behandling = standardBehandling();
         DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         DokumentHendelse dokumentHendelse = standardDokumenthendelse();
+        when(domeneobjektProvider.hentStartdatoUtsatt(behandling))
+                .thenReturn(new StartdatoUtsattDto(true, NY_STARTDATO));
 
         // Act
         ForeldrepengerAnnullertDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -71,5 +77,26 @@ public class ForeldrepengerAnnullertDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(false);
 
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(6);
+        assertThat(dokumentdata.getHarSøktOmNyPeriode()).isTrue();
+        assertThat(dokumentdata.getPlanlagtOppstartDato()).isEqualTo(formaterDatoNorsk(NY_STARTDATO));
+        assertThat(dokumentdata.getKanBehandlesDato()).isEqualTo(formaterDatoNorsk(NY_STARTDATO.minusWeeks(4)));
+    }
+
+    @Test
+    public void skal_mappe_felter_for_brev_til_bruker_uten_ny_startdato() {
+        // Arrange
+        Behandling behandling = standardBehandling();
+        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        DokumentHendelse dokumentHendelse = standardDokumenthendelse();
+        when(domeneobjektProvider.hentStartdatoUtsatt(behandling))
+                .thenReturn(new StartdatoUtsattDto(true, null));
+
+        // Act
+        ForeldrepengerAnnullertDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+
+        // Assert
+        assertThat(dokumentdata.getHarSøktOmNyPeriode()).isFalse();
+        assertThat(dokumentdata.getPlanlagtOppstartDato()).isNull();
+        assertThat(dokumentdata.getKanBehandlesDato()).isNull();
     }
 }

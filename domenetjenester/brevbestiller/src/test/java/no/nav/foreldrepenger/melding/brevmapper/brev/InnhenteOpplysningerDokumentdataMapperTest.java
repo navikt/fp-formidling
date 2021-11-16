@@ -41,6 +41,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.InnhenteOpplysningerDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -50,8 +51,7 @@ import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 @ExtendWith(MockitoExtension.class)
 public class InnhenteOpplysningerDokumentdataMapperTest {
 
-    private static final String FRITEKST_INN = "Tekst1\n- Vedlegg1\n- Vedlegg2\nTekst2\nTekst3\n- Vedlegg3\nTekst4";
-    private static final String FRITEKST_UT = "Tekst1\n- Vedlegg1\n- Vedlegg2\n\nTekst2\n\nTekst3\n- Vedlegg3\n\nTekst4\n";
+    private static final String FRITEKST = "Tekst1\n- Vedlegg1\n- Vedlegg2\nTekst2\nTekst3\n- Vedlegg3\nTekst4";
     private static final LocalDate SØKNAD_DATO = LocalDate.now().minusDays(1);
     private static final LocalDate KLAGE_DATO = LocalDate.now().minusDays(2);
 
@@ -95,7 +95,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isEqualTo(true);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getFritekst()).isEqualTo(FRITEKST_UT);
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getFritekst()).isEqualTo(Fritekst.fra(FRITEKST));
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getErUtkast()).isEqualTo(false);
 
@@ -229,7 +229,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
 
     private DokumentHendelse lagDokumentHendelse() {
         return lagStandardHendelseBuilder()
-                .medFritekst(FRITEKST_INN)
+                .medFritekst(FRITEKST)
                 .build();
     }
 

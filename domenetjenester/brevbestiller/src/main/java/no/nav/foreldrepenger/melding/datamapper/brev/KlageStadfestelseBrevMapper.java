@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst.fra;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -10,9 +12,9 @@ import javax.inject.Named;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
@@ -66,9 +68,9 @@ public class KlageStadfestelseBrevMapper extends FritekstmalBrevMapper {
                 .leggTil("ytelseType", hendelse.getYtelseType().getKode());
 
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
-        Optional<String> fritekstOpt = KlageMapper.avklarFritekstKlage(hendelse, klage);
+        Optional<Fritekst> fritekstOpt = fra(hendelse, klage);
         if (fritekstOpt.isPresent()) {
-            brevdata.leggTil("mintekst", fritekstOpt.get());
+            brevdata.leggTil("mintekst", fritekstOpt.get().getFritekst());
         }
         return brevdata;
     }

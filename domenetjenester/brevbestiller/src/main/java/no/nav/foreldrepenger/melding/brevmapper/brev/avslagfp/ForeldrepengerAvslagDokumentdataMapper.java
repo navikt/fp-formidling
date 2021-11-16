@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.avslagfp;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.avklarFritekst;
 import static no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
@@ -29,6 +28,7 @@ import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.avslagfp.AvslåttPeriode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.avslagfp.ForeldrepengerAvslagDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
@@ -72,7 +72,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, dokumentHendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
-        avklarFritekst(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
+        Fritekst.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
         FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);

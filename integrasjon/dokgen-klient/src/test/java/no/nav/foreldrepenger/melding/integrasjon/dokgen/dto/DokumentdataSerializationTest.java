@@ -22,6 +22,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.FellesDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
@@ -339,7 +340,7 @@ public class DokumentdataSerializationTest {
         return FellesDokumentdata.ny()
                 .medSøkerNavn("Søker Søkersen")
                 .medSøkerPersonnummer("11111111111")
-                .medFritekst("Fritekst")
+                .medFritekst(Fritekst.fra("Fritekst"))
                 .medBrevDato(formaterDatoNorsk(LocalDate.now()))
                 .medErAutomatiskBehandlet(true)
                 .medErKopi(true)

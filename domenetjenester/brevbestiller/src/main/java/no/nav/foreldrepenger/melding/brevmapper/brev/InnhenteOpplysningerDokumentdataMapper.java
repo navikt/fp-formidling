@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.brevmapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erDød;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.erEndringssøknad;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.ivaretaLinjeskiftIFritekst;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
@@ -22,6 +21,7 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.InnhenteOpplysningerDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.klage.KlageDokument;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
@@ -54,7 +54,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
-        fellesBuilder.medFritekst(ivaretaLinjeskiftIFritekst(hendelse.getFritekst()));
+        fellesBuilder.medFritekst(Fritekst.fra(hendelse.getFritekst()));
 
         var dokumentdataBuilder = InnhenteOpplysningerDokumentdata.ny()
                 .medFelles(fellesBuilder.build())

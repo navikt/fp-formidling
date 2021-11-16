@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.konverterFritekstFraDokprodTilDokgenFormatering;
 import static no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper.formaterLovhjemler;
 import static no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak.IKKE_KONKRET;
 import static no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK;
@@ -75,15 +74,6 @@ public class KlageMapper {
             return Optional.empty();
         }
         return Optional.of(lovhjemmelBuiloer.toString());
-    }
-
-    public static Optional<String> avklarFritekstKlage(DokumentHendelse dokumentHendelse, Klage klage) {
-        if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
-            return Optional.of(konverterFritekstFraDokprodTilDokgenFormatering(dokumentHendelse.getFritekst()));
-        } else if (klage.getGjeldendeKlageVurderingsresultat() != null && klage.getGjeldendeKlageVurderingsresultat().fritekstTilBrev() != null) {
-            return Optional.of(konverterFritekstFraDokprodTilDokgenFormatering(klage.getGjeldendeKlageVurderingsresultat().fritekstTilBrev()));
-        }
-        return Optional.empty();
     }
 
     public static boolean erOpphevet(Klage klage, DokumentHendelse hendelse) {

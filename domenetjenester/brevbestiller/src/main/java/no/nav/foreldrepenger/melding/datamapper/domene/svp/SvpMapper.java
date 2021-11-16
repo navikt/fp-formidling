@@ -4,6 +4,7 @@ import static java.lang.Boolean.TRUE;
 import static no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
 import static no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper.getMånedsinntekt;
 import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerSvp.erPerioderSammenhengendeOgSkalSlåSammen;
+import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst.forDokprod;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -31,7 +32,6 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivi
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
-import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
@@ -73,7 +73,7 @@ public class SvpMapper {
         map.put("seksG", BeregningsgrunnlagMapper.finnSeksG(beregningsgrunnlag).intValue());
         map.put("lovhjemmel", SvpUtledHjemmelForBeregning.utled(beregningsgrunnlag, behandling));
         mapIkkeSøkteAktiviteter(map);
-        BehandlingMapper.avklarFritekstDokprod(hendelse, behandling).ifPresent(fritekst -> map.put("fritekst", fritekst));
+        forDokprod(hendelse, behandling).ifPresent(fritekst -> map.put("fritekst", fritekst));
         return map;
     }
 

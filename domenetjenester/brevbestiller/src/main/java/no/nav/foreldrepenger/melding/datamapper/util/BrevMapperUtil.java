@@ -30,40 +30,6 @@ public class BrevMapperUtil {
         return LocalDate.now().plusDays(brevParametere.getSvarfristDager());
     }
 
-    public static String ivaretaLinjeskiftIFritekst(String fritekst) {
-        if (fritekst != null && !fritekst.equals("")) {
-            String[] fritekstLinjer = fritekst.split("\n");
-            if (fritekstLinjer.length > 1) {
-                StringBuilder resultat = new StringBuilder();
-                resultat.append(fritekstLinjer[0]);
-                boolean sisteVarPunktliste = false;
-                for (int i=1; i < fritekstLinjer.length; i++) {
-                    resultat.append("\n");
-                    String linje = fritekstLinjer[i];
-                    if (linje.startsWith("-")) {
-                        resultat.append(linje);
-                        sisteVarPunktliste = true;
-                    } else {
-                        resultat.append("\n"); //Ekstra linjeskift må inn for at det ikke skal ignoreres i Dokgen...
-                        resultat.append(linje);
-                        sisteVarPunktliste = false;
-                    }
-                }
-                if (!sisteVarPunktliste) {
-                    resultat.append("\n"); //Uten ekstra linjeskift her kommer neste overskrift for nærme...
-                }
-                return resultat.toString();
-            } else if (fritekstLinjer.length == 1) {
-                if (fritekstLinjer[0].startsWith("-")) {
-                    return fritekstLinjer[0];
-                } else {
-                    return fritekstLinjer[0] + "\n";
-                }
-            }
-        }
-        return fritekst;
-    }
-
     public static String formaterPersonnummer(String personnummer) {
         if (personnummer != null && personnummer.length() == 11) {
             StringBuilder formatertPersonnummer = new StringBuilder(personnummer);

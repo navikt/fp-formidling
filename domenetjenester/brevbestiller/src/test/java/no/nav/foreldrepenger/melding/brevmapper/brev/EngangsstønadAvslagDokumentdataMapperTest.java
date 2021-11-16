@@ -32,6 +32,7 @@ import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
@@ -97,7 +98,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         assertThat(avslagDokumentdata.getRelasjonsRolle()).isEqualTo(RelasjonsRolleType.MORA.getKode());
         assertThat(avslagDokumentdata.getVilkårTyper()).hasSize(1);
         assertThat(avslagDokumentdata.getVilkårTyper()).containsExactly("FP_VK_3");
-        assertThat(avslagDokumentdata.getFelles().getFritekst()).isEqualTo(avslagsfritekst);
+        assertThat(avslagDokumentdata.getFelles().getFritekst()).isEqualTo(Fritekst.fra(avslagsfritekst));
     }
 
     @Test

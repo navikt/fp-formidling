@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.datamapper.brev;
 
+import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst.fra;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.KlageMapper;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.fritekstbrev.FagType;
 import no.nav.foreldrepenger.melding.klage.Klage;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
@@ -75,8 +77,8 @@ public class KlageHjemsendtBrevMapper extends FritekstmalBrevMapper {
         Brevdata brevdata = new Brevdata();
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
 
-        Optional<String> fritekstOpt = KlageMapper.avklarFritekstKlage(hendelse, klage);
-        fritekstOpt.ifPresent(s -> brevdata.leggTil("mintekst", s));
+        Optional<Fritekst> fritekstOpt = fra(hendelse, klage);
+        fritekstOpt.ifPresent(s -> brevdata.leggTil("mintekst", s.getFritekst()));
 
         brevdata.leggTil("ytelseType", hendelse.getYtelseType().getKode());
         brevdata.leggTil("opphevet", KlageMapper.erOpphevet(klage, hendelse));

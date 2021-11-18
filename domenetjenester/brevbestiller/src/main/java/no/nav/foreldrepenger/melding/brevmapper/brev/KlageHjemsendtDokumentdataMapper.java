@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
+import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst.fra;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -47,7 +48,7 @@ public class KlageHjemsendtDokumentdataMapper implements DokumentdataMapper {
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
-        KlageMapper.avklarFritekstKlage(hendelse, klage).ifPresent(fellesBuilder::medFritekst);
+        fra(hendelse, klage).ifPresent(fellesBuilder::medFritekst);
 
         var dokumentdataBuilder = KlageHjemsendtDokumentdata.ny()
                 .medFelles(fellesBuilder.build())

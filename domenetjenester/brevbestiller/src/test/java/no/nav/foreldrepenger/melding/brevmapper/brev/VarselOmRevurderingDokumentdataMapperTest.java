@@ -1,35 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
-import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
-import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
-import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles.Kopi;
-import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
-import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.VarselOmRevurderingDokumentdata;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.Optional;
-import java.util.UUID;
-
 import static java.util.List.of;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
@@ -45,6 +15,38 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
+import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
+import no.nav.foreldrepenger.melding.behandling.RevurderingVarslingÅrsak;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
+import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles.Kopi;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.VarselOmRevurderingDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
 public class VarselOmRevurderingDokumentdataMapperTest {
@@ -93,7 +95,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
         assertThat(varselOmRevurderingDokumentdata.getFelles().getErKopi()).isEqualTo(true);
         assertThat(varselOmRevurderingDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(varselOmRevurderingDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(varselOmRevurderingDokumentdata.getFelles().getFritekst()).isEqualTo(FRITEKST);
+        assertThat(varselOmRevurderingDokumentdata.getFelles().getFritekst()).isEqualTo(Fritekst.fra(FRITEKST));
         assertThat(varselOmRevurderingDokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
         assertThat(varselOmRevurderingDokumentdata.getFelles().getErUtkast()).isEqualTo(false);
 

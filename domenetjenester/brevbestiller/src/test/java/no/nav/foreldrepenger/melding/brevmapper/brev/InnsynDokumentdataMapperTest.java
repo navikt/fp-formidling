@@ -29,15 +29,15 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.InnsynDokumentdata;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
 class InnsynDokumentdataMapperTest {
+
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
-
-    private BrevParametere brevParametere;
 
     private DokumentData dokumentData;
 
@@ -57,7 +57,6 @@ class InnsynDokumentdataMapperTest {
         behandling = opprettBehandling();
 
         innsynDokumentdataMapper = new InnsynDokumentdataMapper(brevParametere, domeneobjektProvider);
-
     }
 
     @Test
@@ -87,7 +86,7 @@ class InnsynDokumentdataMapperTest {
 
         assertThat(innsynsDokumentData.getInnsynResultat()).isEqualTo(InnsynResultatType.AVVIST.getKode());
         assertThat(innsynsDokumentData.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.ENGANGSTØNAD.getKode());
-        assertThat(innsynsDokumentData.getFelles().getFritekst()).isEqualTo(FRITEKST);
+        assertThat(innsynsDokumentData.getFelles().getFritekst()).isEqualTo(Fritekst.fra(FRITEKST));
     }
 
     private Behandling opprettBehandling() {

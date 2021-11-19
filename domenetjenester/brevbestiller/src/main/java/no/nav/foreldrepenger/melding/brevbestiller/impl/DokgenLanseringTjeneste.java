@@ -1,12 +1,11 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import java.util.Map;
-import java.util.Set;
-
-import javax.enterprise.context.ApplicationScoped;
-
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+
+import javax.enterprise.context.ApplicationScoped;
+import java.util.Map;
+import java.util.Set;
 
 @ApplicationScoped
 public class DokgenLanseringTjeneste {
@@ -56,6 +55,7 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.KLAGE_OMGJORT,
             DokumentMalType.KLAGE_OVERSENDT,
             DokumentMalType.KLAGE_STADFESTET,
+            DokumentMalType.SVANGERSKAPSPENGER_OPPHØR,
             DokumentMalType.FORELDREPENGER_ANNULLERT,
             DokumentMalType.FORELDREPENGER_OPPHØR);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
@@ -85,6 +85,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.KLAGE_OVERSENDT_FRITEKST, DokumentMalType.KLAGE_OVERSENDT,
             DokumentMalType.KLAGE_STADFESTET_FRITEKST, DokumentMalType.KLAGE_STADFESTET);
 
+    private static final Set<DokumentMalType> GENERERING_AV_JSON = Set.of(DokumentMalType.SVANGERSKAPSPENGER_OPPHØR);
+
     public static boolean malSkalBrukeDokgen(DokumentMalType dokumentMalType) {
         if (ENV.isProd()) {
             return DOKGEN_MALER_PROD.contains(dokumentMalType);
@@ -92,6 +94,10 @@ public class DokgenLanseringTjeneste {
             return DOKGEN_MALER_DEV.contains(dokumentMalType);
         }
     }
+
+    public static boolean malSkalGenerereJson(DokumentMalType dokumentMalType) {
+        return GENERERING_AV_JSON.contains(dokumentMalType);
+        }
 
     public static boolean malSkalIkkeTilgjengeliggjøresForManuellUtsendelse(DokumentMalType dokumentMalType) {
         if (ENV.isProd()) {

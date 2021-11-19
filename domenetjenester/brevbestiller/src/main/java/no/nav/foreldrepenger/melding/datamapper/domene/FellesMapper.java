@@ -1,15 +1,14 @@
 package no.nav.foreldrepenger.melding.datamapper.domene;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.ENDRING_BEREGNING_OG_UTTAK;
-
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Set;
+
+import static no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper.ENDRING_BEREGNING_OG_UTTAK;
 
 public class FellesMapper {
 
@@ -55,13 +54,17 @@ public class FellesMapper {
 
     public static int formaterLovhjemler(Set<String> hjemler, StringBuilder builder,
                                          String startTillegg, String sluttTillegg) {
-        builder.append("§ ");
         int antall = 0;
         for (String hjemmel : hjemler) {
             if (hjemmel.trim().isEmpty()) {
                 continue;
             } else if (antall > 0) {
                 builder.append(", ");
+            }
+            if (antall==0) {
+                if(!hjemmel.contains("§")) {
+                    builder.append("§ ");
+                }
             }
             builder.append(hjemmel.trim());
             antall++;

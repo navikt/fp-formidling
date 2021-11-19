@@ -9,7 +9,6 @@ import java.util.Set;
  */
 public class DokumentTypeId {
 
-    public static final DokumentTypeId SØKNAD_FORELDREPENGER_FØDSEL = new DokumentTypeId("I000005"); //$NON-NLS-1$
     public static final DokumentTypeId FORELDREPENGER_ENDRING_SØKNAD = new DokumentTypeId("I000050"); //$NON-NLS-1$
 
     private static final Set<String> SØKNAD_KODER = Set.of("SØKNAD_SVANGERSKAPSPENGER", "I000001", "SØKNAD_FORELDREPENGER_ADOPSJON", "I000002",

@@ -1,16 +1,5 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
@@ -25,6 +14,17 @@ import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.exception.TekniskException;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class PeriodeBeregner {
 

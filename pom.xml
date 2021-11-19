@@ -42,7 +42,7 @@
         <swagger.version>2.1.11</swagger.version>
         <swagger-ui.version>4.1.0</swagger-ui.version>
         <kafka.version>3.0.0</kafka.version>
-        <logstash.version>7.0</logstash.version>
+        <logstash.version>7.0.1</logstash.version>
         <logback-syslog4j.version>1.0.0</logback-syslog4j.version>
         <geronimo.jaspi.version>2.0.0</geronimo.jaspi.version>
         <geronimo.osgi.version>1.1</geronimo.osgi.version>

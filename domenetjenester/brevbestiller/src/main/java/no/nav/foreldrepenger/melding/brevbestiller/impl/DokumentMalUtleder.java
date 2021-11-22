@@ -77,7 +77,7 @@ class DokumentMalUtleder {
         } else if (behandlingsresultat.erAvslått()) {
             return DokumentMalType.FORELDREPENGER_AVSLAG;
         } else if (behandlingsresultat.erOpphørt()) {
-            return !ENV.isProd() ? DokumentMalType.FORELDREPENGER_OPPHØR : DokumentMalType.FORELDREPENGER_OPPHØR_DOK;
+            return DokumentMalType.FORELDREPENGER_OPPHØR;
         }
         throw new TekniskException("FPFORMIDLING-666915",
         String.format("Ingen brevmal konfigurert for denne type behandlingen %s.", behandling.getUuid().toString()));

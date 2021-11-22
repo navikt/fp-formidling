@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -19,14 +28,6 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
 
 @ApplicationScoped
 class DokumentMalUtleder {
@@ -69,14 +70,14 @@ class DokumentMalUtleder {
 
     private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
-        if (behandlingsresultat.erForeldrepengerSenere() && !ENV.isProd()) {
+        if (behandlingsresultat.erForeldrepengerSenere()) {
             return DokumentMalType.FORELDREPENGER_ANNULLERT;
         } else if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
             return DokumentMalType.FORELDREPENGER_INNVILGELSE;
         } else if (behandlingsresultat.erAvslått()) {
             return DokumentMalType.FORELDREPENGER_AVSLAG;
         } else if (behandlingsresultat.erOpphørt()) {
-            return !Environment.current().isProd() ? DokumentMalType.FORELDREPENGER_OPPHØR : DokumentMalType.FORELDREPENGER_OPPHØR_DOK;
+            return !ENV.isProd() ? DokumentMalType.FORELDREPENGER_OPPHØR : DokumentMalType.FORELDREPENGER_OPPHØR_DOK;
         }
         throw new TekniskException("FPFORMIDLING-666915",
         String.format("Ingen brevmal konfigurert for denne type behandlingen %s.", behandling.getUuid().toString()));

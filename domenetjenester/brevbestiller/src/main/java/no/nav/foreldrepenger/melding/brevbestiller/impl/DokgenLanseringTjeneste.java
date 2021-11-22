@@ -1,11 +1,12 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import no.nav.foreldrepenger.konfig.Environment;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-
-import javax.enterprise.context.ApplicationScoped;
 import java.util.Map;
 import java.util.Set;
+
+import javax.enterprise.context.ApplicationScoped;
+
+import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 public class DokgenLanseringTjeneste {
@@ -34,7 +35,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.KLAGE_HJEMSENDT,
             DokumentMalType.KLAGE_OMGJORT,
             DokumentMalType.KLAGE_OVERSENDT,
-            DokumentMalType.KLAGE_STADFESTET);
+            DokumentMalType.KLAGE_STADFESTET,
+            DokumentMalType.FORELDREPENGER_ANNULLERT);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(
             DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
             DokumentMalType.ENGANGSSTØNAD_AVSLAG,

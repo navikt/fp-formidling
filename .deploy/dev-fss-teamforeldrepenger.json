@@ -33,9 +33,6 @@
     "KODEVERK_V2_URL": "https://kodeverk.nais.preprod.local/ws/kodeverk/v2",
     "SCHEMA_REGISTRY_URL": "https://kafka-test-schema-registry.nais.preprod.local",
     "SECURITYTOKENSERVICE_URL": "https://sts-q1.preprod.local/SecurityTokenServiceProvider/",
-    "OIDC_AAD_B2C_HOSTURL": "https://not.used.in.fss",
-    "OIDC_AAD_B2C_JWKSURL": "https://login.microsoftonline.com/navtestb2c.onmicrosoft.com/discovery/v2.0/keys?p=b2c_1a_idporten_ver1",
-    "OIDC_AAD_B2C_PASSWORD": "not.used.in.fss",
     "TASK_MANAGER_POLLING_TASKS_SIZE": "1",
     "TASK_MANAGER_RUNNER_THREADS": "1"
   }

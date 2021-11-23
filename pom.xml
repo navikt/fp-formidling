@@ -268,7 +268,6 @@
 
             <!-- Database -->
             <dependency>
-                <!-- Må overstyre her så lenge fp-felles inkluderer en eldre versjon -->
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
                 <version>${flyway.version}</version>

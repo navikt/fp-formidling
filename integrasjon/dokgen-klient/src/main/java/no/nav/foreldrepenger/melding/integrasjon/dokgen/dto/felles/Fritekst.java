@@ -44,6 +44,9 @@ public class Fritekst {
     }
 
     public static Fritekst fra(String fritekst) {
+        if (fritekst == null) {
+            return null;
+        }
         return new Fritekst(ivaretaLinjeskiftIFritekst(konverterOverskrifterTilDokgenFormat(fritekst)));
     }
 

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles;
 
+import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst.fra;
 import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst.ivaretaLinjeskiftIFritekst;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -123,6 +124,16 @@ public class FritekstTest {
 
         // Act + Assert
         assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
+    }
+
+    @Test
+    public void skal_gi_null_hvis_fritekst_er_null() {
+        // Arrange
+        String fritekstInn = null;
+        String fritekstUt = null;
+
+        // Act + Assert
+        assertThat(fra(fritekstInn)).isEqualTo(fritekstUt);
     }
 
     private DokumentHendelse.Builder standardHendelseBuilder() {

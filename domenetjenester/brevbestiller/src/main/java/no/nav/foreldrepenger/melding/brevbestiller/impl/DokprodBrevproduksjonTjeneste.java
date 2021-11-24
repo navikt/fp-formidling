@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
+import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
@@ -248,7 +249,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Override
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
-        if (DokumentMalType.SVANGERSKAPSPENGER_OPPHØR.equals(dokumentMal)) {
+        if (DokumentMalType.SVANGERSKAPSPENGER_OPPHØR.equals(dokumentMal) && Environment.current().isProd()) {
             throw new ForhåndsvisningsException("FPFORMIDLING-221007", "Opphørsbrev Svangerskapspenger ikke implementert", "Se rutine for opphør Svangerskapspenger");
         }
         byte[] dokument;

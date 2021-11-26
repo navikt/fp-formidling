@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp;
 
+import static java.lang.Boolean.TRUE;
 import static no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper.formaterLovhjemlerForBeregning;
 
 import java.math.BigDecimal;
@@ -61,7 +62,7 @@ public final class BeregningMapper {
         for (BeregningsgrunnlagPrStatusOgAndel andel : getAndeler(beregningsgrunnlag)) {
             if (andel.getAktivitetStatus().erSelvstendigNæringsdrivende()) {
                 resultat = SelvstendigNæringsdrivende.ny(resultat)
-                        .medNyoppstartet(andel.getNyIArbeidslivet())
+                        .medNyoppstartet(TRUE.equals(andel.getNyIArbeidslivet()))
                         .medÅrsinntekt(andel.getBruttoPrÅr().longValue())
                         .medSistLignedeÅr(getSisteLignedeÅr(andel))
                         .medInntektLavere_AT_SN(AktivitetStatus.KOMBINERT_AT_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))

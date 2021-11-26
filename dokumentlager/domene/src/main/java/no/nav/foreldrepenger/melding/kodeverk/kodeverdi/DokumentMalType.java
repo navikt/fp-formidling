@@ -22,12 +22,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum DokumentMalType implements Kodeverdi {
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
-    FRITEKST_DOK(DokumentMalTypeKode.FRITEKST_DOK, "Fritekstbrev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS ),
     ETTERLYS_INNTEKTSMELDING_FRITEKST(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_FRITEKST, "Etterlys inntektsmelding", "J", DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
     ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST(DokumentMalTypeKode.ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST, "Ankebrev om beslutning om oppheving", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ANKE_VEDTAK_OMGJORING_FRITEKST(DokumentMalTypeKode.ANKE_VEDTAK_OMGJORING_FRITEKST, "Vedtak om omgjøring i ankesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
 
     //Dokgen
+    FRITEKSTBREV(DokumentMalTypeKode.FRITEKSTBREV, "Fritekstbrev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ENGANGSSTØNAD_INNVILGELSE(DokumentMalTypeKode.ENGANGSSTØNAD_INNVILGELSE, "Vedtak om innvilgelse av engangsstønad", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ENGANGSSTØNAD_AVSLAG(DokumentMalTypeKode.ENGANGSSTØNAD_AVSLAG, "Avslag engangsstønad", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     FORELDREPENGER_INNVILGELSE(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE, "Innvilgelsesbrev Foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
@@ -54,13 +54,15 @@ public enum DokumentMalType implements Kodeverdi {
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
-    ENGANGSSTØNAD_INNVILGELSE_DOK(DokumentMalTypeKode.ENGANGSSTØNAD_INNVILGELSE_DOK, "Positivt vedtaksbrev","N", DokumentMalRestriksjon.INGEN, DoksysKode.POSVED ), //NOSONAR
+    FRITEKSTBREV_DOK(DokumentMalTypeKode.FRITEKSTBREV_DOK, "Fritekstbrev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
+    @Deprecated
+    ENGANGSSTØNAD_INNVILGELSE_DOK(DokumentMalTypeKode.ENGANGSSTØNAD_INNVILGELSE_DOK, "Positivt vedtaksbrev","N", DokumentMalRestriksjon.INGEN, DoksysKode.POSVED), //NOSONAR
     @Deprecated
     ENGANGSSTØNAD_AVSLAG_DOK(DokumentMalTypeKode.ENGANGSSTØNAD_AVSLAG_DOK, "Avslagsbrev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.AVSLAG), //NOSONAR
     @Deprecated
     FORELDREPENGER_INNVILGELSE_DOK(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE_DOK, "Innvilgelsesbrev Foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.INNVFP), //NOSONAR
     @Deprecated
-    FORELDREPENGER_AVSLAG_DOK(DokumentMalTypeKode.FORELDREPENGER_AVSLAG_DOK, "Avslagsbrev Foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.AVSLFP ), //NOSONAR
+    FORELDREPENGER_AVSLAG_DOK(DokumentMalTypeKode.FORELDREPENGER_AVSLAG_DOK, "Avslagsbrev Foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.AVSLFP), //NOSONAR
     @Deprecated
     FORELDREPENGER_OPPHØR_DOK(DokumentMalTypeKode.FORELDREPENGER_OPPHØR_DOK, "Opphør brev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR), //NOSONAR
     @Deprecated

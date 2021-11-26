@@ -40,7 +40,7 @@ public class DokumentMalUtlederTest {
     @Test
     public void utledfra_input_mal() {
         sjekkAtVelgerValgtMal(DokumentMalType.INGEN_ENDRING);
-        sjekkAtVelgerValgtMal(DokumentMalType.FRITEKST_DOK);
+        sjekkAtVelgerValgtMal(DokumentMalType.FRITEKSTBREV);
         sjekkAtVelgerValgtMal(DokumentMalType.KLAGE_AVVIST);
         sjekkAtVelgerValgtMal(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
         sjekkAtVelgerValgtMal(DokumentMalType.ENGANGSSTØNAD_AVSLAG);
@@ -209,7 +209,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utledfritekst() {
+    public void utled_fritekstbrev() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
@@ -218,7 +218,7 @@ public class DokumentMalUtlederTest {
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medBehandlingsresultat(Behandlingsresultat.builder().medVedtaksbrev(Vedtaksbrev.FRITEKST).build())
                 .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FRITEKST_DOK.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FRITEKSTBREV.getKode());
     }
 
     @Test

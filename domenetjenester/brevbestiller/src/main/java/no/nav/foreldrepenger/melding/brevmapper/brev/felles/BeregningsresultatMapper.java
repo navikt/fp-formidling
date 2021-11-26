@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
+package no.nav.foreldrepenger.melding.brevmapper.brev.felles;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -66,6 +66,16 @@ public final class BeregningsresultatMapper {
                 .map(BeregningsresultatPeriode::getBeregningsresultatAndelList)
                 .flatMap(List::stream)
                 .anyMatch(a -> a.getDagsats() > 0);
+    }
+
+    public static int finnAntallRefusjonerTilArbeidsgivere(BeregningsresultatFP beregningsresultatFP) {
+        return (int) beregningsresultatFP.getBeregningsresultatPerioder().stream()
+                .flatMap(periode -> periode.getBeregningsresultatAndelList().stream())
+                .filter(BeregningsresultatAndel::erArbeidsgiverMottaker)
+                .map(beregningsresultatAndel -> beregningsresultatAndel.getArbeidsgiver().map(Arbeidsgiver::arbeidsgiverReferanse)
+                        .orElse(beregningsresultatAndel.getArbeidsforholdRef() != null ? beregningsresultatAndel.getArbeidsforholdRef().getReferanse()
+                                : "ukjent")) // om ikke annet som en sikring i test-miljøer.
+                .distinct().count();
     }
 
     private static Optional<BeregningsresultatPeriode> finnFørsteInnvilgedePeriode(BeregningsresultatFP beregningsresultat) {

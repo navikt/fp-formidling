@@ -60,7 +60,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.KLAGE_STADFESTET,
             DokumentMalType.SVANGERSKAPSPENGER_OPPHØR,
             DokumentMalType.FORELDREPENGER_ANNULLERT,
-            DokumentMalType.FORELDREPENGER_OPPHØR);
+            DokumentMalType.FORELDREPENGER_OPPHØR,
+            DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
             DokumentMalType.INNHENTE_OPPLYSNINGER_DOK,
             DokumentMalType.VARSEL_OM_REVURDERING_DOK,

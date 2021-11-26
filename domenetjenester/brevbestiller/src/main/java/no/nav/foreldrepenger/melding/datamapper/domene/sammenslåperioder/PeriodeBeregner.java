@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
@@ -15,17 +26,6 @@ import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.exception.TekniskException;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 public class PeriodeBeregner {
 
     private static Map<AktivitetStatus, UttakArbeidType> uttakAktivitetStatusMap = new HashMap<>();
@@ -40,8 +40,8 @@ public class PeriodeBeregner {
         // for sonar
     }
 
-    public static BeregningsgrunnlagPeriode finnBeregninsgrunnlagperiode(BeregningsresultatPeriode periode,
-            List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
+    public static BeregningsgrunnlagPeriode finnBeregningsgrunnlagperiode(BeregningsresultatPeriode periode,
+                                                                          List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
         for (BeregningsgrunnlagPeriode beregningsgrunnlagPeriode : beregningsgrunnlagPerioder) {
             if (!periode.getBeregningsresultatPeriodeFom().isBefore(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom()) &&
                     (beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom() == null
@@ -53,7 +53,7 @@ public class PeriodeBeregner {
                 String.format("Klarte ikke matche beregningsresultatperiode og %S for brev", "beregningsgrunnlagperiode"));
     }
 
-    public static UttakResultatPeriode finnUttaksPeriode(BeregningsresultatPeriode periode, List<UttakResultatPeriode> uttakPerioder) {
+    public static UttakResultatPeriode finnUttaksperiode(BeregningsresultatPeriode periode, List<UttakResultatPeriode> uttakPerioder) {
         for (UttakResultatPeriode uttakPeriode : uttakPerioder) {
             if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom())
                     && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {

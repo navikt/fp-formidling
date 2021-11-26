@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
+package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -18,11 +18,15 @@ public class Prosent {
         if (verdi == null || verdi.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalStateException("Ugyldig prosent-verdi: " + (verdi == null ? "null" : verdi.toPlainString()));
         }
-        this.verdi = verdi.setScale(1, RoundingMode.HALF_UP);;
+        this.verdi = verdi.setScale(1, RoundingMode.HALF_UP);
     }
 
     public static Prosent of(BigDecimal verdi) {
         return new Prosent(verdi);
+    }
+
+    public static Prosent of(int verdi) {
+        return new Prosent(BigDecimal.valueOf(verdi));
     }
 
     public boolean erStørreEnnHundreProsent() {

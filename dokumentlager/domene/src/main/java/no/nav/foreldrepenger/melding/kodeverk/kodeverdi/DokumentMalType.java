@@ -1,13 +1,5 @@
 package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +8,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public enum DokumentMalType implements Kodeverdi {
@@ -23,7 +24,6 @@ public enum DokumentMalType implements Kodeverdi {
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     FRITEKST_DOK(DokumentMalTypeKode.FRITEKST_DOK, "Fritekstbrev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS ),
     ETTERLYS_INNTEKTSMELDING_FRITEKST(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_FRITEKST, "Etterlys inntektsmelding", "J", DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
-    SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST(DokumentMalTypeKode.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST, "Innvilgelsesbrev svangerskapspenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST(DokumentMalTypeKode.ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST, "Ankebrev om beslutning om oppheving", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ANKE_VEDTAK_OMGJORING_FRITEKST(DokumentMalTypeKode.ANKE_VEDTAK_OMGJORING_FRITEKST, "Vedtak om omgjøring i ankesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
 
@@ -35,6 +35,7 @@ public enum DokumentMalType implements Kodeverdi {
     FORELDREPENGER_OPPHØR(DokumentMalTypeKode.FORELDREPENGER_OPPHØR, "Opphør Foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR),
     FORELDREPENGER_ANNULLERT(DokumentMalTypeKode.FORELDREPENGER_ANNULLERT, "Annullering av Foreldrepenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER(DokumentMalTypeKode.FORELDREPENGER_INFO_TIL_ANNEN_FORELDER, "Informasjonsbrev til den andre forelderen", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    SVANGERSKAPSPENGER_INNVILGELSE(DokumentMalTypeKode.SVANGERSKAPSPENGER_INNVILGELSE, "Innvilgelsesbrev svangerskapspenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     SVANGERSKAPSPENGER_OPPHØR(DokumentMalTypeKode.SVANGERSKAPSPENGER_OPPHØR, "Opphørsbrev svangerskapspenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     INNHENTE_OPPLYSNINGER(DokumentMalTypeKode.INNHENTE_OPPLYSNINGER, "Innhent dokumentasjon", "J", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     VARSEL_OM_REVURDERING(DokumentMalTypeKode.VARSEL_OM_REVURDERING, "Varsel om revurdering", "J", DokumentMalRestriksjon.REVURDERING, DoksysKode.FRITKS),
@@ -64,6 +65,8 @@ public enum DokumentMalType implements Kodeverdi {
     FORELDREPENGER_OPPHØR_DOK(DokumentMalTypeKode.FORELDREPENGER_OPPHØR_DOK, "Opphør brev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.OPPHOR), //NOSONAR
     @Deprecated
     FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER_DOK(DokumentMalTypeKode.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER_DOK, "Informasjonsbrev til den andre forelderen", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
+    @Deprecated
+    SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST(DokumentMalTypeKode.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST, "Innvilgelsesbrev svangerskapspenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
     @Deprecated
     INNHENTE_OPPLYSNINGER_DOK(DokumentMalTypeKode.INNHENTE_OPPLYSNINGER_DOK, "Innhent dokumentasjon", "J", DokumentMalRestriksjon.INGEN, DoksysKode.INNHEN), //NOSONAR
     @Deprecated

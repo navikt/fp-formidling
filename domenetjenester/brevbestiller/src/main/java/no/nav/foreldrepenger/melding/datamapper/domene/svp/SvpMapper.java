@@ -192,7 +192,7 @@ public class SvpMapper {
         LocalDate startFørstePeriode = finnStartFørstePeriode(beregningingsgrunnlagperioder);
         beregningsresultatPerioder.stream()
                 .forEach(beregningsresultatPeriode -> {
-                    var matchetBgPeriode = PeriodeBeregner.finnBeregninsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder);
+                    var matchetBgPeriode = PeriodeBeregner.finnBeregningsgrunnlagperiode(beregningsresultatPeriode, beregningingsgrunnlagperioder);
                     var uttakPeriodeKandidater = PeriodeBeregner.finnUttakPeriodeKandidater(beregningsresultatPeriode, uttakPerioder);
                     beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
                             .forEach(andel -> {

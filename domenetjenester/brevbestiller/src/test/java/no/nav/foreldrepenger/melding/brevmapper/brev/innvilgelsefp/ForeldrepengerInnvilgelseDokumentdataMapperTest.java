@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
 import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnDagsats;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnDagsats;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnMånedsbeløp;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
@@ -61,7 +61,6 @@ import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
@@ -85,6 +84,7 @@ import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.melding.ytelsefordeling.OppgittRettighet;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 import no.nav.vedtak.exception.FunksjonellException;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 
 @ExtendWith(MockitoExtension.class)
 public class ForeldrepengerInnvilgelseDokumentdataMapperTest {

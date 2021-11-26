@@ -1,13 +1,12 @@
-package no.nav.foreldrepenger.melding.datamapper.domene.svp;
+package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp;
 
 import static com.google.common.collect.ImmutableList.of;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
@@ -20,16 +19,14 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp.Naturalytelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp.Naturalytelse.NaturalytelseStatus;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
-import no.nav.foreldrepenger.melding.typer.Dato;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatArbeidsforhold;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
-public class SvpMapperTest {
+public class NaturalytelseMapperTest {
 
     private static final LocalDate PERIODE1_FOM = LocalDate.now().minusDays(10);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().minusDays(1);
@@ -42,165 +39,122 @@ public class SvpMapperTest {
     @Test
     public void skal_ikke_utlede_naturalytelse_som_starter_med_første_periode() {
         // Arrange
-        SvpUttaksresultat svpUttaksresultat = getSvpUttaksresultat(false);
         BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, false);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode()), false);
 
         // Act
-        Map<String, Object> resultat = SvpMapper.mapPerioder(svpUttaksresultat, beregningsresultatFP, beregningsgrunnlag);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        Set<Map> naturalytelse = (Set<Map>) resultat.get("naturalytelse");
-        assertThat(naturalytelse).isEmpty();
+        assertThat(resultat).isEmpty();
     }
 
     @Test
     public void skal_utlede_at_naturalytelse_bortfaller_når_årsak_er_bortfaller() {
         // Arrange
-        SvpUttaksresultat svpUttaksresultat = getSvpUttaksresultat(true);
         BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode()), true);
 
         // Act
-        Map<String, Object> resultat = SvpMapper.mapPerioder(svpUttaksresultat, beregningsresultatFP, beregningsgrunnlag);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        Set<Map> naturalytelse = (Set<Map>) resultat.get("naturalytelse");
-        assertThat(naturalytelse).isNotNull();
-        assertThat(naturalytelse).hasSize(1);
-        assertThat(((boolean)naturalytelse.stream().findFirst().get().get(SvpMapper.BORTFALLER))).isTrue();
-        assertThat(naturalytelse.stream().findFirst().get().get(SvpMapper.TILKOMMER)).isNull();
-        assertThat(((String)naturalytelse.stream().findFirst().get().get("arbeidsgiverNavn"))).isEqualTo(ARBEIDSGIVER_NAVN);
-        assertThat(((long)naturalytelse.stream().findFirst().get().get("nyDagsats"))).isEqualTo(DAGSATS);
-        assertThat(((Dato)naturalytelse.stream().findFirst().get().get("endringsDato"))).isEqualTo(Dato.medFormatering(PERIODE2_FOM));
+        assertThat(resultat).isNotNull();
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.BORTFALLER);
+        assertThat(resultat.get(0).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_NAVN);
+        assertThat(resultat.get(0).getNyDagsats()).isEqualTo(DAGSATS);
+        assertThat(resultat.get(0).getEndringsdato()).isEqualTo(formaterDatoNorsk(PERIODE2_FOM));
     }
 
     @Test
     public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_er_tilkommer() {
         // Arrange
-        SvpUttaksresultat svpUttaksresultat = getSvpUttaksresultat(true);
         BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, null, BigDecimal.valueOf(1000), of(PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode()), true);
 
         // Act
-        Map<String, Object> resultat = SvpMapper.mapPerioder(svpUttaksresultat, beregningsresultatFP, beregningsgrunnlag);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        Set<Map> naturalytelse = (Set<Map>) resultat.get("naturalytelse");
-        assertThat(naturalytelse).isNotNull();
-        assertThat(naturalytelse).hasSize(1);
-        assertThat(naturalytelse.stream().findFirst().get().get(SvpMapper.BORTFALLER)).isNull();
-        assertThat(((boolean)naturalytelse.stream().findFirst().get().get(SvpMapper.TILKOMMER))).isTrue();
+        assertThat(resultat).isNotNull();
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
     @Test
     public void skal_utlede_at_naturalytelse_bortfaller_når_årsak_ikke_er_angitt_og_bare_bortfaller_er_angitt() {
         // Arrange
-        SvpUttaksresultat svpUttaksresultat = getSvpUttaksresultat(true);
         BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(), true);
 
         // Act
-        Map<String, Object> resultat = SvpMapper.mapPerioder(svpUttaksresultat, beregningsresultatFP, beregningsgrunnlag);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        Set<Map> naturalytelse = (Set<Map>) resultat.get("naturalytelse");
-        assertThat(naturalytelse).isNotNull();
-        assertThat(naturalytelse).hasSize(1);
-        assertThat(((boolean)naturalytelse.stream().findFirst().get().get(SvpMapper.BORTFALLER))).isTrue();
-        assertThat(naturalytelse.stream().findFirst().get().get(SvpMapper.TILKOMMER)).isNull();
+        assertThat(resultat).isNotNull();
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.BORTFALLER);
     }
 
     @Test
     public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bare_tilkommer_er_angitt() {
         // Arrange
-        SvpUttaksresultat svpUttaksresultat = getSvpUttaksresultat(true);
         BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, null, BigDecimal.valueOf(1000), of(), true);
 
         // Act
-        Map<String, Object> resultat = SvpMapper.mapPerioder(svpUttaksresultat, beregningsresultatFP, beregningsgrunnlag);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        Set<Map> naturalytelse = (Set<Map>) resultat.get("naturalytelse");
-        assertThat(naturalytelse).isNotNull();
-        assertThat(naturalytelse).hasSize(1);
-        assertThat(naturalytelse.stream().findFirst().get().get(SvpMapper.BORTFALLER)).isNull();
-        assertThat(((boolean)naturalytelse.stream().findFirst().get().get(SvpMapper.TILKOMMER))).isTrue();
+        assertThat(resultat).isNotNull();
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
     @Test
     public void skal_utlede_at_naturalytelse_bortfaller_når_årsak_ikke_er_angitt_og_bortfaller_er_større_enn_tilkommer() {
         // Arrange
-        SvpUttaksresultat svpUttaksresultat = getSvpUttaksresultat(true);
         BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), BigDecimal.valueOf(500), of(), true);
 
         // Act
-        Map<String, Object> resultat = SvpMapper.mapPerioder(svpUttaksresultat, beregningsresultatFP, beregningsgrunnlag);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        Set<Map> naturalytelse = (Set<Map>) resultat.get("naturalytelse");
-        assertThat(naturalytelse).isNotNull();
-        assertThat(naturalytelse).hasSize(1);
-        assertThat(((boolean)naturalytelse.stream().findFirst().get().get(SvpMapper.BORTFALLER))).isTrue();
-        assertThat(naturalytelse.stream().findFirst().get().get(SvpMapper.TILKOMMER)).isNull();
+        assertThat(resultat).isNotNull();
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.BORTFALLER);
     }
 
     @Test
     public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bortfaller_er_lik_tilkommer() {
         // Arrange
-        SvpUttaksresultat svpUttaksresultat = getSvpUttaksresultat(true);
         BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), BigDecimal.valueOf(1000), of(), true);
 
         // Act
-        Map<String, Object> resultat = SvpMapper.mapPerioder(svpUttaksresultat, beregningsresultatFP, beregningsgrunnlag);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        Set<Map> naturalytelse = (Set<Map>) resultat.get("naturalytelse");
-        assertThat(naturalytelse).isNotNull();
-        assertThat(naturalytelse).hasSize(1);
-        assertThat(naturalytelse.stream().findFirst().get().get(SvpMapper.BORTFALLER)).isNull();
-        assertThat(((boolean)naturalytelse.stream().findFirst().get().get(SvpMapper.TILKOMMER))).isTrue();
+        assertThat(resultat).isNotNull();
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
     @Test
     public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bortfaller_er_mindre_enn_tilkommer() {
         // Arrange
-        SvpUttaksresultat svpUttaksresultat = getSvpUttaksresultat(true);
         BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(500), BigDecimal.valueOf(1000), of(), true);
 
         // Act
-        Map<String, Object> resultat = SvpMapper.mapPerioder(svpUttaksresultat, beregningsresultatFP, beregningsgrunnlag);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        Set<Map> naturalytelse = (Set<Map>) resultat.get("naturalytelse");
-        assertThat(naturalytelse).isNotNull();
-        assertThat(naturalytelse).hasSize(1);
-        assertThat(naturalytelse.stream().findFirst().get().get(SvpMapper.BORTFALLER)).isNull();
-        assertThat(((boolean)naturalytelse.stream().findFirst().get().get(SvpMapper.TILKOMMER))).isTrue();
-    }
-
-    private SvpUttaksresultat getSvpUttaksresultat(boolean inkluderePeriode2) {
-        SvpUttakResultatPeriode uttakPeriode1 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .build();
-        SvpUttakResultatPeriode uttakPeriode2 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .build();
-        SvpUttakResultatArbeidsforhold svpUttakResultatArbeidsforhold = SvpUttakResultatArbeidsforhold.Builder.ny()
-                .leggTilPerioder(inkluderePeriode2 ? of(uttakPeriode1, uttakPeriode2) : of(uttakPeriode1))
-                .build();
-        SvpUttaksresultat svpUttaksresultat = SvpUttaksresultat.Builder.ny()
-                .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold)
-                .build();
-        return svpUttaksresultat;
+        assertThat(resultat).isNotNull();
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
     private BeregningsresultatFP getBeregningsresultatFP(Arbeidsgiver arbeidsgiver, boolean inkluderePeriode2) {

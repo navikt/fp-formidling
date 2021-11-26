@@ -41,7 +41,7 @@ public class SvpUttaksresultat {
             return new Builder();
         }
 
-        public Builder medUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold uttakResultatArbeidsforhold) {
+        public Builder leggTilUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold uttakResultatArbeidsforhold) {
             this.uttakResultatArbeidsforhold.add(uttakResultatArbeidsforhold);
             return this;
         }

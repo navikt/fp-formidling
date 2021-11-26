@@ -1,13 +1,13 @@
-package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
+package no.nav.foreldrepenger.melding.brevmapper.brev.felles;
 
 import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnAntallArbeidsgivere;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnDagsats;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.finnMånedsbeløp;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harDelvisRefusjon;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harFullRefusjon;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harIngenRefusjon;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsresultatMapper.harUtbetaling;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnAntallArbeidsgivere;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnDagsats;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harDelvisRefusjon;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harFullRefusjon;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harIngenRefusjon;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harUtbetaling;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;

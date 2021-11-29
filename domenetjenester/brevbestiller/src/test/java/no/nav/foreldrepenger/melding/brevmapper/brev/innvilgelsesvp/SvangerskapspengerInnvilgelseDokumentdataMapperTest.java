@@ -154,7 +154,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getStønadsperiodeTom()).isEqualTo(formaterDatoNorsk(PERIODE2_TOM));
         assertThat(dokumentdata.getMånedsbeløp()).isEqualTo(DAGSATS_PERIODE1 * 260 / 12);
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDatoNorsk(SØKNAD_DATO));
-        assertThat(dokumentdata.getKlageFristUker()).isEqualTo(KLAGEFRIST);
+        assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
         assertThat(dokumentdata.getAntallUttaksperioder()).isEqualTo(2);
 
         assertThat(dokumentdata.getUttaksaktiviteter()).hasSize(1);

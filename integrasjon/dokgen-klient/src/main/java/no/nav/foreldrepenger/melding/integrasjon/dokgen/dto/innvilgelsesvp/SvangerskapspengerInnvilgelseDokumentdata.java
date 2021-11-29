@@ -19,7 +19,7 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
     private String stønadsperiodeTom;
     private long månedsbeløp;
     private String mottattDato;
-    private int klageFristUker;
+    private int klagefristUker;
     private int antallUttaksperioder;
     private List<Uttaksaktivitet> uttaksaktiviteter;
     private List<Utbetalingsperiode> utbetalingsperioder;
@@ -72,8 +72,8 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
         return mottattDato;
     }
 
-    public int getKlageFristUker() {
-        return klageFristUker;
+    public int getKlagefristUker() {
+        return klagefristUker;
     }
 
     public int getAntallUttaksperioder() {
@@ -151,7 +151,7 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
                 && Objects.equals(stønadsperiodeTom, that.stønadsperiodeTom)
                 && Objects.equals(månedsbeløp, that.månedsbeløp)
                 && Objects.equals(mottattDato, that.mottattDato)
-                && Objects.equals(klageFristUker, that.klageFristUker)
+                && Objects.equals(klagefristUker, that.klagefristUker)
                 && Objects.equals(antallUttaksperioder, that.antallUttaksperioder)
                 && Objects.equals(uttaksaktiviteter, that.uttaksaktiviteter)
                 && Objects.equals(utbetalingsperioder, that.utbetalingsperioder)
@@ -172,7 +172,7 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
     @Override
     public int hashCode() {
         return Objects.hash(felles, revurdering, endretFraAvslag, utbetalingEndret, termindatoEndret, refusjonTilBruker,
-                antallRefusjonerTilArbeidsgivere, stønadsperiodeTom, månedsbeløp, mottattDato, klageFristUker, antallUttaksperioder,
+                antallRefusjonerTilArbeidsgivere, stønadsperiodeTom, månedsbeløp, mottattDato, klagefristUker, antallUttaksperioder,
                 uttaksaktiviteter, utbetalingsperioder, avslagsperioder, avslåtteAktiviteter, inkludereBeregning,
                 arbeidsforhold, selvstendigNæringsdrivende, frilanser, naturalytelser, bruttoBeregningsgrunnlag, militærSivil,
                 inntektOver6G, seksG, lovhjemmel);
@@ -239,8 +239,8 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medKlagefristUker(int klageFristUker) {
-            this.kladd.klageFristUker = klageFristUker;
+        public Builder medKlagefristUker(int klagefristUker) {
+            this.kladd.klagefristUker = klagefristUker;
             return this;
         }
 

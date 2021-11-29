@@ -69,8 +69,8 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
     @Override
     public SvangerskapspengerInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
                                                                         Behandling behandling, boolean erUtkast) {
-
-        Språkkode språkkode = Språkkode.NB; //TODO: Erstatte med behandling.getSpråkkode() når engelsk mal er på plass
+        //TODO: Erstatte med behandling.getSpråkkode() når engelsk mal er på plass
+        Språkkode språkkode = Språkkode.EN.equals(behandling.getSpråkkode()) ? Språkkode.NB : behandling.getSpråkkode();
 
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);

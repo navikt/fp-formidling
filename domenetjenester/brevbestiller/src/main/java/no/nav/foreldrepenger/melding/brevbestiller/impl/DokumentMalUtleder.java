@@ -114,7 +114,7 @@ class DokumentMalUtleder {
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
         if (!Objects.equals(hendelse.getVedtaksbrev(), Vedtaksbrev.AUTOMATISK) &&
                 Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST)) {
-            return DokumentMalType.FRITEKST_DOK;
+            return ENV.isProd() ? DokumentMalType.FRITEKSTBREV_DOK : DokumentMalType.FRITEKSTBREV;
         }
         if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {
             return mapKlageBrev(behandling);

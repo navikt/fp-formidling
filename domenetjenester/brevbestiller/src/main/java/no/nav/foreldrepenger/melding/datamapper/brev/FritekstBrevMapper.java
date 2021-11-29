@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.xmlutils.JaxbHelper;
 
 @ApplicationScoped
-@Named(DokumentMalTypeKode.FRITEKST_DOK)
+@Named(DokumentMalTypeKode.FRITEKSTBREV_DOK)
 public class FritekstBrevMapper extends DokumentTypeMapper {
 
     @Override

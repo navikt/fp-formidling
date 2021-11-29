@@ -61,7 +61,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.SVANGERSKAPSPENGER_OPPHØR,
             DokumentMalType.FORELDREPENGER_ANNULLERT,
             DokumentMalType.FORELDREPENGER_OPPHØR,
-            DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE);
+            DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE,
+            DokumentMalType.FRITEKSTBREV);
     private static final Set<DokumentMalType> SKJULTE_MANUELLE_MALER_PROD = Set.of(
             DokumentMalType.INNHENTE_OPPLYSNINGER_DOK,
             DokumentMalType.VARSEL_OM_REVURDERING_DOK,
@@ -79,7 +80,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.KLAGE_HJEMSENDT_FRITEKST, DokumentMalType.KLAGE_HJEMSENDT,
             DokumentMalType.KLAGE_OMGJORT_FRITEKST, DokumentMalType.KLAGE_OMGJORT,
             DokumentMalType.KLAGE_OVERSENDT_FRITEKST, DokumentMalType.KLAGE_OVERSENDT,
-            DokumentMalType.KLAGE_STADFESTET_FRITEKST, DokumentMalType.KLAGE_STADFESTET);
+            DokumentMalType.KLAGE_STADFESTET_FRITEKST, DokumentMalType.KLAGE_STADFESTET,
+            DokumentMalType.FRITEKSTBREV_DOK, DokumentMalType.FRITEKSTBREV);
     private static final Map<DokumentMalType, DokumentMalType> OVERSTYRE_MAL_PROD = Map.of(
             DokumentMalType.VARSEL_OM_REVURDERING_DOK, DokumentMalType.VARSEL_OM_REVURDERING,
             DokumentMalType.INFO_OM_HENLEGGELSE_DOK, DokumentMalType.INFO_OM_HENLEGGELSE,

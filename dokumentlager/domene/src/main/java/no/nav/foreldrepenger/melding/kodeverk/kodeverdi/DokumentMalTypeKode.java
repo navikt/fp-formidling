@@ -3,12 +3,12 @@ package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 public class DokumentMalTypeKode {
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
-    public static final String FRITEKST_DOK = "FRITKS";
     public static final String ETTERLYS_INNTEKTSMELDING_FRITEKST = "INNLYS";
     public static final String ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST = "ANKEBO";
     public static final String ANKE_VEDTAK_OMGJORING_FRITEKST = "VEDOGA";
 
     //Dokgen
+    public static final String FRITEKSTBREV = "FRITEK";
     public static final String ENGANGSSTØNAD_INNVILGELSE = "INNVES";
     public static final String ENGANGSSTØNAD_AVSLAG = "AVSLES";
     public static final String FORELDREPENGER_INNVILGELSE = "INVFOR";
@@ -34,6 +34,8 @@ public class DokumentMalTypeKode {
     public static final String KLAGE_STADFESTET = "KGESTA";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
+    @Deprecated
+    public static final String FRITEKSTBREV_DOK = "FRITKS"; //NOSONAR
     @Deprecated
     public static final String ENGANGSSTØNAD_INNVILGELSE_DOK = "POSVED"; //NOSONAR
     @Deprecated

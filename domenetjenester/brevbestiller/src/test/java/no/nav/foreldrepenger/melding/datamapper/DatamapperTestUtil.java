@@ -1,5 +1,15 @@
 package no.nav.foreldrepenger.melding.datamapper;
 
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.mockito.Mockito;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
@@ -13,15 +23,6 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
-import org.mockito.Mockito;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.mockito.Mockito.when;
 
 public class DatamapperTestUtil {
 
@@ -31,7 +32,6 @@ public class DatamapperTestUtil {
     public static final String VERGES_FNR = "99999999999";
     public static final String SAKSNUMMER = "123456";
     public static final String FRITEKST = "FRITEKST";
-    public static final LocalDate FØRSTE_JANUAR_TJUENITTEN = LocalDate.of(2019, 1, 1);
     public static final Period SVARFRIST = Period.ofWeeks(6);
 
     private static final int KLAGEFRIST = 14;

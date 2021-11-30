@@ -4,7 +4,6 @@ import java.util.UUID;
 
 public class Anke {
 
-    // Er skrelt ned til minimum. Se fpsak for fullt innholt. Ta inn mer ved behov.
     private AnkeVurdering ankeVurdering;
     private String fritekstTilBrev;
     private AnkeVurderingOmgjør ankeVurderingOmgjoer;

@@ -1,13 +1,5 @@
 package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,14 +8,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public enum DokumentMalType implements Kodeverdi {
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     ETTERLYS_INNTEKTSMELDING_FRITEKST(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_FRITEKST, "Etterlys inntektsmelding", "J", DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
-    ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST(DokumentMalTypeKode.ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST, "Ankebrev om beslutning om oppheving", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
-    ANKE_VEDTAK_OMGJORING_FRITEKST(DokumentMalTypeKode.ANKE_VEDTAK_OMGJORING_FRITEKST, "Vedtak om omgjøring i ankesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
 
     //Dokgen
     FRITEKSTBREV(DokumentMalTypeKode.FRITEKSTBREV, "Fritekstbrev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
@@ -51,6 +50,8 @@ public enum DokumentMalType implements Kodeverdi {
     KLAGE_OMGJORT(DokumentMalTypeKode.KLAGE_OMGJORT, "Vedtak om omgjøring av klage", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     KLAGE_OVERSENDT(DokumentMalTypeKode.KLAGE_OVERSENDT, "Klage oversendt til klageinstans", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     KLAGE_STADFESTET(DokumentMalTypeKode.KLAGE_STADFESTET, "Vedtak om stadfestelse i klagesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    ANKE_OMGJORT(DokumentMalTypeKode.ANKE_OMGJORT, "Vedtak om omgjøring i ankesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    ANKE_OPPHEVET(DokumentMalTypeKode.ANKE_OPPHEVET, "Ankebrev om beslutning om oppheving", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
@@ -107,6 +108,10 @@ public enum DokumentMalType implements Kodeverdi {
     KLAGE_STADFESTET_DOK(DokumentMalTypeKode.KLAGE_STADFESTET_DOK, "Vedtak om stadfestelse", "N", DokumentMalRestriksjon.INGEN, DoksysKode.KLAGVE), //NOSONAR
     @Deprecated
     KLAGE_STADFESTET_FRITEKST(DokumentMalTypeKode.KLAGE_STADFESTET_FRITEKST, "Vedtak om stadfestelse i klagesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
+    @Deprecated
+    ANKE_OMGJORT_FRITEKST(DokumentMalTypeKode.ANKE_OMGJORT_FRITEKST, "Vedtak om omgjøring i ankesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
+    @Deprecated
+    ANKE_OPPHEVET_FRITEKST(DokumentMalTypeKode.ANKE_OPPHEVET_FRITEKST, "Ankebrev om beslutning om oppheving", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
 
     UDEFINERT("-")
     ;

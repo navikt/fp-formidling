@@ -22,7 +22,7 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.melding.typer.Dato;
 
 @ApplicationScoped
-@Named(DokumentMalTypeKode.ANKE_VEDTAK_OMGJORING_FRITEKST)
+@Named(DokumentMalTypeKode.ANKE_OMGJORT_FRITEKST)
 public class AnkeOmgjøreVedtakBrevMapper extends FritekstmalBrevMapper {
 
 

@@ -4,8 +4,6 @@ public class DokumentMalTypeKode {
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
     public static final String ETTERLYS_INNTEKTSMELDING_FRITEKST = "INNLYS";
-    public static final String ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST = "ANKEBO";
-    public static final String ANKE_VEDTAK_OMGJORING_FRITEKST = "VEDOGA";
 
     //Dokgen
     public static final String FRITEKSTBREV = "FRITEK";
@@ -33,6 +31,8 @@ public class DokumentMalTypeKode {
     public static final String KLAGE_OMGJORT = "KGEOMG";
     public static final String KLAGE_OVERSENDT = "KGEOVE";
     public static final String KLAGE_STADFESTET = "KGESTA";
+    public static final String ANKE_OMGJORT = "ANKOMG";
+    public static final String ANKE_OPPHEVET = "ANKOPP";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated
@@ -89,5 +89,9 @@ public class DokumentMalTypeKode {
     public static final String KLAGE_STADFESTET_DOK = "KLAGVE"; //NOSONAR
     @Deprecated
     public static final String KLAGE_STADFESTET_FRITEKST = "KSTADF"; //NOSONAR
+    @Deprecated
+    public static final String ANKE_OMGJORT_FRITEKST = "VEDOGA"; //NOSONAR
+    @Deprecated
+    public static final String ANKE_OPPHEVET_FRITEKST = "ANKEBO"; //NOSONAR
 
 }

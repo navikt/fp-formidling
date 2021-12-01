@@ -36,7 +36,7 @@ class OpphørsperiodeMapperTest {
     private static final String LOVHJEMLER = "§ 14-4 og forvaltningsloven § 35";
 
     @Test
-    public void  opphør_fra_behandlingsresulatet_uten_uttak() {
+    public void  en_opphørt_periode_uten_perioder() {
         //Arrange
         List<SvpUttakResultatArbeidsforhold> svpUttakResultatArbeidsforholdList = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, new Arbeidsgiver("1234", ARBGIVER_1), Collections.emptyList()));
 
@@ -47,51 +47,52 @@ class OpphørsperiodeMapperTest {
                 .build();
 
         //Act
-        Tuple<List<OpphørPeriode>, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, svpUttakResultatArbeidsforholdList, Språkkode.NB);
+        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, svpUttakResultatArbeidsforholdList, Språkkode.NB, null);
 
         //Assert
-        List<OpphørPeriode> opphørteperioder = opphørtePerioderOgLovhjemmel.element1();
+        OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
         String lovhjemler = opphørtePerioderOgLovhjemmel.element2();
 
-        assertThat(opphørteperioder.size()).isEqualTo(1);
-        assertThat(opphørteperioder.get(0).getÅrsak()).isEqualTo(Årsak.of(Avslagsårsak.SØKER_SKULLE_IKKE_SØKT_SVP.getKode()));
+        assertThat(opphørtPeriode).isNotNull();
+        assertThat(opphørtPeriode.getAntallArbeidsgivere()).isEqualTo(1);
+        assertThat(opphørtPeriode.getÅrsak()).isEqualTo(Årsak.of(Avslagsårsak.SØKER_SKULLE_IKKE_SØKT_SVP.getKode()));
         assertThat(lovhjemler).isEqualTo(LOVHJEMLER);
 
     }
 
 
     @Test
-    public void  en_opphørsperiode_uttak() {
+    public void  en_opphørt_Periode_med_en_arbeidsgiver() {
         //Arrange
         List<SvpUttakResultatArbeidsforhold> uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, new Arbeidsgiver("1234", ARBGIVER_1),
                 List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_1, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )),
-                        opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8309, ARBGIVER_2, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )))));
+                        opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8309, ARBGIVER_1, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )))));
 
         Behandling behandling  = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
                         .build())
                 .build();
         //Act
-        Tuple<List<OpphørPeriode>, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, uttakArbeidsforhold, Språkkode.NB);
+        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, uttakArbeidsforhold, Språkkode.NB, null);
 
         //Assert
-        List<OpphørPeriode> opphørteperioder = opphørtePerioderOgLovhjemmel.element1();
+        OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
         String lovhjemler = opphørtePerioderOgLovhjemmel.element2();
-
-        assertThat(opphørteperioder.size()).isEqualTo(1);
-        assertThat(opphørteperioder.get(0).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8309.getKode()));
-        assertThat(opphørteperioder.get(0).getArbeidsgivere()).isEqualTo(List.of(ARBGIVER_2));
-        assertThat(opphørteperioder.get(0).getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE2_FOM, Språkkode.NB));
-        assertThat(opphørteperioder.get(0).getStønadsperiodeTom()).isEqualTo(formaterDato(PERIODE2_TOM, Språkkode.NB));
+        assertThat(lovhjemler).isEqualTo(LOVHJEMLER);
+        assertThat(opphørtPeriode).isNotNull();
+        assertThat(opphørtPeriode.getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8309.getKode()));
+        assertThat(opphørtPeriode.getAntallArbeidsgivere()).isEqualTo(1);
+        assertThat(opphørtPeriode.getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE2_FOM, Språkkode.NB));
+        assertThat(opphørtPeriode.getStønadsperiodeTom()).isEqualTo(formaterDato(PERIODE2_TOM, Språkkode.NB));
 
     }
 
     @Test
-    public void  flere_opphørsperioder_uttak() {
+    public void  en_opphørt_periode_med_2_arbeidsgivere() {
         //Arrange
         List<SvpUttakResultatArbeidsforhold> uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, new Arbeidsgiver("1234", ARBGIVER_1),
                 List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_1, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )),
-                        opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8309, ARBGIVER_1, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )))
+                        opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8304, ARBGIVER_1, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )))
         ), opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, new Arbeidsgiver("4567", ARBGIVER_2),
                         List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_2, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )),
                                 opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8304, ARBGIVER_2, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )))));
@@ -101,85 +102,20 @@ class OpphørsperiodeMapperTest {
                         .build())
                 .build();
         //Act
-        Tuple<List<OpphørPeriode>, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, uttakArbeidsforhold, Språkkode.NB);
+        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, uttakArbeidsforhold, Språkkode.NB, null);
 
         //Assert
-        List<OpphørPeriode> opphørteperioder = opphørtePerioderOgLovhjemmel.element1();
+        OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
         String lovhjemler = opphørtePerioderOgLovhjemmel.element2();
 
-        assertThat(opphørteperioder.size()).isEqualTo(2);
-        assertThat(opphørteperioder.get(0).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8309.getKode()));
-        assertThat(opphørteperioder.get(0).getArbeidsgivere()).isEqualTo(List.of(ARBGIVER_1));
-        assertThat(opphørteperioder.get(0).getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE1_FOM, Språkkode.NB));
-        assertThat(opphørteperioder.get(0).getStønadsperiodeTom()).isEqualTo(formaterDato(PERIODE1_TOM, Språkkode.NB));
-        assertThat(opphørteperioder.get(1).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8304.getKode()));
-        assertThat(opphørteperioder.get(1).getArbeidsgivere()).isEqualTo(List.of(ARBGIVER_2));
-        assertThat(opphørteperioder.get(1).getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE2_FOM, Språkkode.NB));
-        assertThat(opphørteperioder.get(1).getStønadsperiodeTom()).isEqualTo(formaterDato(PERIODE2_TOM, Språkkode.NB));
+        assertThat(opphørtPeriode).isNotNull();
+        assertThat(lovhjemler).isEqualTo(LOVHJEMLER);
+        assertThat(opphørtPeriode.getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8304.getKode()));
+        assertThat(opphørtPeriode.getAntallArbeidsgivere()).isEqualTo(2);
+        assertThat(opphørtPeriode.getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE1_FOM, Språkkode.NB));
+        assertThat(opphørtPeriode.getStønadsperiodeTom()).isEqualTo(formaterDato(PERIODE2_TOM, Språkkode.NB));
     }
 
-    @Test
-    public void  opphør_er_sammenhengende_og_slås_sammen() {
-        //Arrange
-        List<SvpUttakResultatArbeidsforhold> uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, new Arbeidsgiver("1234", ARBGIVER_1),
-                List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_1, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )),
-                        opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8309, ARBGIVER_1, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )),
-                        opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8309, ARBGIVER_1, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )))
-        ), opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, new Arbeidsgiver("4567", ARBGIVER_2),
-                List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_2, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )),
-                        opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8304, ARBGIVER_2, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )))));
-
-        Behandling behandling  = standardBehandlingBuilder()
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .build())
-                .build();
-        //Act
-        Tuple<List<OpphørPeriode>, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, uttakArbeidsforhold, Språkkode.NB);
-
-        //Assert
-        List<OpphørPeriode> opphørteperioder = opphørtePerioderOgLovhjemmel.element1();
-        String lovhjemler = opphørtePerioderOgLovhjemmel.element2();
-
-        assertThat(opphørteperioder.size()).isEqualTo(2);
-        assertThat(opphørteperioder.get(0).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8309.getKode()));
-        assertThat(opphørteperioder.get(0).getArbeidsgivere()).isEqualTo(List.of(ARBGIVER_1));
-        assertThat(opphørteperioder.get(0).getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE1_FOM, Språkkode.NB));
-        assertThat(opphørteperioder.get(0).getStønadsperiodeTom()).isEqualTo(formaterDato(PERIODE2_TOM, Språkkode.NB));
-        assertThat(opphørteperioder.get(1).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8304.getKode()));
-        assertThat(opphørteperioder.get(1).getArbeidsgivere()).isEqualTo(List.of(ARBGIVER_2));
-        assertThat(opphørteperioder.get(1).getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE2_FOM, Språkkode.NB));
-        assertThat(opphørteperioder.get(1).getStønadsperiodeTom()).isEqualTo(formaterDato(PERIODE2_TOM, Språkkode.NB));
-    }
-
-    @Test
-    public void  opphørsperiodene_er_like_og_skal_slås_sammen() {
-        //Arrange
-        List<SvpUttakResultatArbeidsforhold> uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, new Arbeidsgiver("1234", ARBGIVER_1),
-                List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_1, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )),
-                        opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8309, ARBGIVER_1, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )),
-                        opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8309, ARBGIVER_1, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )))
-        ), opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, new Arbeidsgiver("4567", ARBGIVER_2),
-                List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_2, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )),
-                        opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8309, ARBGIVER_2, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )),
-                        opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8309, ARBGIVER_2, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )))));
-
-        Behandling behandling  = standardBehandlingBuilder()
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .build())
-                .build();
-        //Act
-        Tuple<List<OpphørPeriode>, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, uttakArbeidsforhold, Språkkode.NB);
-
-        //Assert
-        List<OpphørPeriode> opphørteperioder = opphørtePerioderOgLovhjemmel.element1();
-        String lovhjemler = opphørtePerioderOgLovhjemmel.element2();
-
-        assertThat(opphørteperioder.size()).isEqualTo(1);
-        assertThat(opphørteperioder.get(0).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8309.getKode()));
-        assertThat(opphørteperioder.get(0).getArbeidsgivere()).isEqualTo(List.of(ARBGIVER_1, ARBGIVER_2));
-        assertThat(opphørteperioder.get(0).getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE1_FOM, Språkkode.NB));
-
-    }
 
     @Test
     public void  en_opphørsperiode_pga_avslag_på_arbeidsforholdet() {
@@ -191,15 +127,15 @@ class OpphørsperiodeMapperTest {
                         .build())
                 .build();
         //Act
-        Tuple<List<OpphørPeriode>, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, uttakArbeidsforhold, Språkkode.NB);
+        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, uttakArbeidsforhold, Språkkode.NB, null);
 
         //Assert
-        List<OpphørPeriode> opphørteperioder = opphørtePerioderOgLovhjemmel.element1();
+        OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
         String lovhjemler = opphørtePerioderOgLovhjemmel.element2();
 
-        assertThat(opphørteperioder.size()).isEqualTo(1);
-        assertThat(opphørteperioder.get(0).getÅrsak()).isEqualTo(Årsak.of(ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE.getKode()));
-        assertThat(opphørteperioder.get(0).getArbeidsgivere()).isEqualTo(List.of(ARBGIVER_1));
+        assertThat(opphørtPeriode).isNotNull();
+        assertThat(opphørtPeriode.getÅrsak()).isEqualTo(Årsak.of(ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE.getKode()));
+        assertThat(opphørtPeriode.getAntallArbeidsgivere()).isEqualTo(1);
 
     }
 

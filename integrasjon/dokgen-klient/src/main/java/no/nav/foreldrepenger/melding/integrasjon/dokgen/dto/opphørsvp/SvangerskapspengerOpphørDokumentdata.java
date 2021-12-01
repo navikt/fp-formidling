@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 
-import java.util.List;
 import java.util.Objects;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -17,7 +16,7 @@ public class SvangerskapspengerOpphørDokumentdata extends Dokumentdata {
     private String fødselsdato;
     private long halvG;
     private String lovhjemmel;
-    private List<OpphørPeriode> opphørPerioder;
+    private OpphørPeriode opphørtPeriode;
     private int klagefristUker;
 
     public String getOpphørsdato() {
@@ -44,8 +43,8 @@ public class SvangerskapspengerOpphørDokumentdata extends Dokumentdata {
         return lovhjemmel;
     }
 
-    public List<OpphørPeriode> getOpphørPerioder() {
-        return opphørPerioder;
+    public OpphørPeriode getOpphørtPeriode() {
+        return opphørtPeriode;
     }
 
     public int getKlagefristUker() {
@@ -64,13 +63,13 @@ public class SvangerskapspengerOpphørDokumentdata extends Dokumentdata {
                 && Objects.equals(erSøkerDød, that.erSøkerDød)
                 && Objects.equals(halvG, that.halvG)
                 && Objects.equals(lovhjemmel, that.lovhjemmel)
-                && Objects.equals(opphørPerioder, that.opphørPerioder)
+                && Objects.equals(opphørtPeriode, that.opphørtPeriode)
                 && Objects.equals(klagefristUker, that.klagefristUker);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, opphørsdato, dødsdatoBarn, fødselsdato, erSøkerDød, halvG, lovhjemmel, opphørPerioder, klagefristUker);
+        return Objects.hash(felles, opphørsdato, dødsdatoBarn, fødselsdato, erSøkerDød, halvG, lovhjemmel, opphørtPeriode, klagefristUker);
     }
 
     public static Builder ny() {
@@ -124,8 +123,8 @@ public class SvangerskapspengerOpphørDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medOpphørPerioder(List<OpphørPeriode> opphørPerioder) {
-            this.kladd.opphørPerioder = opphørPerioder;
+        public Builder medOpphørPerioder(OpphørPeriode opphørtPeriode) {
+            this.kladd.opphørtPeriode = opphørtPeriode;
             return this;
         }
 

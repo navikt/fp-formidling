@@ -62,13 +62,8 @@ import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 class SvangerskapspengerOpphørDokumentdataMapperTest {
     private static final int KLAGEFRIST = 6;
     private static final int GRUNNBELØP = 100000;
-    private static final LocalDate SØKNAD_DATO = LocalDate.now().minusDays(1);
     private static final LocalDate PERIODE1_FOM = LocalDate.now().plusDays(2);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().plusDays(3);
-    private static final LocalDate PERIODE2_FOM = LocalDate.now().plusDays(4);
-    private static final LocalDate PERIODE2_TOM = LocalDate.now().plusDays(5);
-    private static final LocalDate PERIODE3_FOM = LocalDate.now().plusDays(6);
-    private static final LocalDate PERIODE3_TOM = LocalDate.now().plusDays(7);
     private static final String ARBEIDSGIVER_1 = "Arbeidsgiver_1";
 
     @Mock
@@ -118,10 +113,10 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getErSøkerDød()).isFalse();
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP/2);
         assertThat(dokumentdata.getLovhjemmel()).isEqualTo("§ 14-4 og forvaltningsloven § 35");
-        assertThat(dokumentdata.getOpphørPerioder().get(0).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8309.getKode()));
-        assertThat(dokumentdata.getOpphørPerioder().get(0).getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE1_FOM, Språkkode.NB));
-        assertThat(dokumentdata.getOpphørPerioder().get(0).getStønadsperiodeTom()).isEqualTo(formaterDato(PERIODE1_TOM, Språkkode.NB));
-        assertThat(dokumentdata.getOpphørPerioder().get(0).getArbeidsgivere()).isEqualTo(List.of(ARBEIDSGIVER_1));
+        assertThat(dokumentdata.getOpphørtPeriode().getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8309.getKode()));
+        assertThat(dokumentdata.getOpphørtPeriode().getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE1_FOM, Språkkode.NB));
+        assertThat(dokumentdata.getOpphørtPeriode().getStønadsperiodeTom()).isEqualTo(formaterDato(PERIODE1_TOM, Språkkode.NB));
+        assertThat(dokumentdata.getOpphørtPeriode().getAntallArbeidsgivere()).isEqualTo(1);
 
 
     }

@@ -117,7 +117,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
             dokumentdataBuilder.medSelvstendigNæringsdrivende(mapSelvstendigNæringsdrivende(beregningsgrunnlag));
             dokumentdataBuilder.medFrilanser(mapFrilanser(beregningsgrunnlag));
             dokumentdataBuilder.medNaturalytelser(mapNaturalytelser(beregningsresultat, beregningsgrunnlag, språkkode));
-            dokumentdataBuilder.medBruttoBeregningsgrunnlag(getAvkortetPrÅrSVP(beregningsgrunnlag).longValue());
+            dokumentdataBuilder.medBruttoBeregningsgrunnlag(getAvkortetPrÅrSVP(beregningsgrunnlag));
             dokumentdataBuilder.medMilitærSivil(erMilitærSivil(beregningsgrunnlag));
             dokumentdataBuilder.medInntektOver6G(inntektOverSeksG(beregningsgrunnlag));
             dokumentdataBuilder.medSeksG(finnSeksG(beregningsgrunnlag).longValue());

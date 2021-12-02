@@ -100,30 +100,38 @@ public class Fritekst {
 
     // Enkelt-linjeskift blir ignorert. Metoden sørger for at de kommer med ved å legge til ekstra, uten å ødelegge for punktlister:
     static String ivaretaLinjeskiftIFritekst(String fritekst) {
-        if (fritekst != null && !fritekst.equals("")) {
-            String[] linjer = fritekst.split("\n");
-            if (linjer.length > 1) {
-                StringBuilder resultat = new StringBuilder();
-                resultat.append(linjer[0]);
-                boolean sisteVarPunktliste = false;
-                for (int i=1; i < linjer.length; i++) {
-                    resultat.append("\n");
-                    String linje = linjer[i];
-                    if (linje.startsWith("-")) {
-                        resultat.append(linje);
-                        sisteVarPunktliste = true;
-                    } else {
-                        resultat.append("\n"); // Ekstra linjeskift må inn for at det ikke skal ignoreres i Dokgen...
-                        resultat.append(linje);
-                        sisteVarPunktliste = false;
-                    }
-                }
-                if (!sisteVarPunktliste) {
-                    resultat.append("\n"); // Uten ekstra linjeskift her kommer neste overskrift for nærme...
-                }
-                return resultat.toString();
+        if (fritekst == null || fritekst.equals("")) {
+            return fritekst;
+        }
+        String[] linjer = fritekst.split("\n");
+        if (linjer.length <= 1) {
+            return fritekst;
+        }
+
+        StringBuilder resultat = new StringBuilder();
+        resultat.append(linjer[0]);
+        boolean sisteVarPunktliste = false;
+        for (int i = 1; i < linjer.length; i++) {
+            resultat.append("\n");
+            String linje = linjer[i];
+            if (linje.startsWith("- ")) {
+                // Punktliste
+                resultat.append(linje);
+                sisteVarPunktliste = true;
+            } else if (!linjer[i - 1].startsWith("- ") && !linjer[i - 1].endsWith(".")) {
+                // Vi er midt i en setning, antagelig copy-paste fra PDF - legger ikke til linjeskift
+                resultat.append(linje);
+                sisteVarPunktliste = false;
+            } else {
+                // Ekstra linjeskift må inn for at det ikke skal ignoreres i Dokgen...
+                resultat.append("\n");
+                resultat.append(linje);
+                sisteVarPunktliste = false;
             }
         }
-        return fritekst;
+        if (!sisteVarPunktliste) {
+            resultat.append("\n"); // Uten ekstra linjeskift her kommer neste overskrift for nærme...
+        }
+        return resultat.toString();
     }
 }

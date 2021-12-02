@@ -63,7 +63,7 @@ public final class BeregningMapper {
             if (andel.getAktivitetStatus().erSelvstendigNæringsdrivende()) {
                 resultat = SelvstendigNæringsdrivende.ny(resultat)
                         .medNyoppstartet(TRUE.equals(andel.getNyIArbeidslivet()))
-                        .medÅrsinntekt(andel.getBruttoPrÅr().longValue())
+                        .medÅrsinntekt(bigDecimalTilLongMedAvrunding(andel.getBruttoPrÅr()))
                         .medSistLignedeÅr(getSisteLignedeÅr(andel))
                         .medInntektLavere_AT_SN(AktivitetStatus.KOMBINERT_AT_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
                         .medInntektLavere_AT_FL_SN(AktivitetStatus.KOMBINERT_AT_FL_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
@@ -79,7 +79,7 @@ public final class BeregningMapper {
         for (BeregningsgrunnlagPrStatusOgAndel andel : getAndeler(beregningsgrunnlag)) {
             if (andel.getAktivitetStatus().erFrilanser()) {
                 resultat = Frilanser.ny(resultat)
-                        .leggTilMånedsinntekt(getMånedsinntekt(andel).longValue())
+                        .leggTilMånedsinntekt(bigDecimalTilLongMedAvrunding(getMånedsinntekt(andel)))
                         .build();
             }
         }
@@ -87,8 +87,8 @@ public final class BeregningMapper {
     }
 
     // Spesielt for SVP: avkortetPerÅr gir faktisk beregningsgrunnlag for alle arbeidsforhold, og ikke bare arbeidsforholdet det søkes om
-    public static BigDecimal getAvkortetPrÅrSVP(Beregningsgrunnlag beregningsgrunnlag) {
-        return finnFørstePeriode(beregningsgrunnlag).getAvkortetPrÅr();
+    public static long getAvkortetPrÅrSVP(Beregningsgrunnlag beregningsgrunnlag) {
+        return bigDecimalTilLongMedAvrunding(finnFørstePeriode(beregningsgrunnlag).getAvkortetPrÅr());
     }
 
     public static boolean erMilitærSivil(Beregningsgrunnlag beregningsgrunnlag) {
@@ -136,7 +136,7 @@ public final class BeregningMapper {
     }
 
     private static List<BeregningsgrunnlagPrStatusOgAndel> finnAktivitetStatuserForAndeler(BeregningsgrunnlagAktivitetStatus bgAktivitetStatus,
-                                                                                          List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+                                                                                           List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         List<BeregningsgrunnlagPrStatusOgAndel> resultatListe;
         if (AktivitetStatus.KUN_YTELSE.equals(bgAktivitetStatus.aktivitetStatus())) {
             return bgpsaListe;
@@ -174,5 +174,9 @@ public final class BeregningMapper {
 
     private static BeregningsgrunnlagPeriode finnFørstePeriode(Beregningsgrunnlag beregningsgrunnlag) {
         return beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
+    }
+
+    private static long bigDecimalTilLongMedAvrunding(BigDecimal bigDecimal) {
+        return bigDecimal.setScale(1, RoundingMode.HALF_UP).longValue();
     }
 }

@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class BeregningMapperTest {
     private static final String ARBEIDSGIVER_1 = "Arbeidsgiver1 AS";
     private static final String ARBEIDSGIVER_2 = "Arbeidsgiver2 AS";
     private static final int BRUTTO_ÅR_ARBEIDSFORHOLD1 = 120000;
-    private static final int BRUTTO_ÅR_ARBEIDSFORHOLD2 = 720000;
+    private static final int BRUTTO_ÅR_ARBEIDSFORHOLD2 = 310100;
 
     @Test
     public void skal_mappe_arbeidsforhold_med_høyest_inntekt_først() {
@@ -67,9 +68,9 @@ public class BeregningMapperTest {
         // Assert
         assertThat(resultat).hasSize(2);
         assertThat(resultat.get(0).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_2);
-        assertThat(resultat.get(0).getMånedsinntekt()).isEqualTo(BRUTTO_ÅR_ARBEIDSFORHOLD2 / 12);
+        assertThat(resultat.get(0).getMånedsinntekt()).isEqualTo(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2).divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
         assertThat(resultat.get(1).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_1);
-        assertThat(resultat.get(1).getMånedsinntekt()).isEqualTo(BRUTTO_ÅR_ARBEIDSFORHOLD1 / 12);
+        assertThat(resultat.get(1).getMånedsinntekt()).isEqualTo(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
     }
 
 }

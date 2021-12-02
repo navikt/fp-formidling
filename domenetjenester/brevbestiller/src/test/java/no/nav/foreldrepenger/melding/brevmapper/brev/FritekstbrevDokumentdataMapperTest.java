@@ -31,8 +31,8 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 public class FritekstbrevDokumentdataMapperTest {
 
     private static final String OVERSKRIFT = "Hovedoverskrift";
-    private static final String BRØDTEKST_INN = "_Overskrift\nTekst";
-    private static final String BRØDTEKST_UT = "##### Overskrift\n\nTekst\n";
+    private static final String BRØDTEKST_INN = "_Overskrift\nEn setning.\nMer tekst.";
+    private static final String BRØDTEKST_UT = "##### Overskrift\nEn setning.\n\nMer tekst.\n";
 
     private DokumentData dokumentData;
 

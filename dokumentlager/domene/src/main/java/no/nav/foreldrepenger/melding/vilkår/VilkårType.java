@@ -91,7 +91,7 @@ public enum VilkårType implements Kodeverdi {
         Map.of(FagsakYtelseType.ENGANGSTØNAD, "§§ 21-3", FagsakYtelseType.FORELDREPENGER, "§§ 21-3", FagsakYtelseType.SVANGERSKAPSPENGER, "§ 21-3"),
         Avslagsårsak.MANGLENDE_DOKUMENTASJON),
     OPPTJENINGSPERIODEVILKÅR(VilkårTypeKoder.FP_VK_21,
-        Map.of(FagsakYtelseType.FORELDREPENGER, "§ 14-6 og 14-10"),
+        Map.of(FagsakYtelseType.FORELDREPENGER, "§ 14-6 og 14-10", FagsakYtelseType.SVANGERSKAPSPENGER, "§ 14-4"),
         Avslagsårsak.IKKE_TILSTREKKELIG_OPPTJENING),
     OPPTJENINGSVILKÅRET(VilkårTypeKoder.FP_VK_23,
         Map.of(FagsakYtelseType.FORELDREPENGER, "§ 14-6", FagsakYtelseType.SVANGERSKAPSPENGER, "§ 14-4"),

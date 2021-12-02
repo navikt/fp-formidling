@@ -1,5 +1,13 @@
 package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
@@ -7,15 +15,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
@@ -37,6 +36,7 @@ public enum DokumentMalType implements Kodeverdi {
     FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER(DokumentMalTypeKode.FORELDREPENGER_INFO_TIL_ANNEN_FORELDER, "Informasjonsbrev til den andre forelderen", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     SVANGERSKAPSPENGER_INNVILGELSE(DokumentMalTypeKode.SVANGERSKAPSPENGER_INNVILGELSE, "Innvilgelsesbrev svangerskapspenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     SVANGERSKAPSPENGER_OPPHØR(DokumentMalTypeKode.SVANGERSKAPSPENGER_OPPHØR, "Opphørsbrev svangerskapspenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    SVANGERSKAPSPENGER_AVSLAG(DokumentMalTypeKode.SVANGERSKAPSPENGER_AVSLAG, "Avslagsbrev svangerskapspenger", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     INNHENTE_OPPLYSNINGER(DokumentMalTypeKode.INNHENTE_OPPLYSNINGER, "Innhent dokumentasjon", "J", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     VARSEL_OM_REVURDERING(DokumentMalTypeKode.VARSEL_OM_REVURDERING, "Varsel om revurdering", "J", DokumentMalRestriksjon.REVURDERING, DoksysKode.FRITKS),
     INFO_OM_HENLEGGELSE(DokumentMalTypeKode.INFO_OM_HENLEGGELSE, "Behandling henlagt", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),

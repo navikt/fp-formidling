@@ -86,7 +86,6 @@ public class UttaksperiodeMapperTest {
     }
 
     private SvpUttaksresultat getSvpUttaksresultat() {
-
         // Arbeidstaker
         SvpUttakResultatPeriode uttakPeriode1 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
@@ -151,7 +150,6 @@ public class UttaksperiodeMapperTest {
     }
 
     private BeregningsresultatFP getBeregningsresultat() {
-
         // Arbeidstaker
         BeregningsresultatAndel arbeidsgiverAndel = BeregningsresultatAndel.ny()
                 .medArbeidsgiver(ARBEIDSGIVER)
@@ -208,9 +206,10 @@ public class UttaksperiodeMapperTest {
                 .medBeregningsresultatAndel(of(næringsdrivendeAndel))
                 .build();
 
+        // Periode 1 legges til to ganger for å simulere caset der samme arbeidsgiver har to oppføringer med lik FOM/TOM
         return BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(of(resultatPeriode1, resultatPeriode2, resultatPeriode3, resultatPeriode4,
-                        resultatPeriode5, resultatPeriode6, resultatPeriode7, resultatPeriode8))
+                .leggTilBeregningsresultatPerioder(of(resultatPeriode1, resultatPeriode1, resultatPeriode2, resultatPeriode3,
+                        resultatPeriode4, resultatPeriode5, resultatPeriode6, resultatPeriode7, resultatPeriode8))
                 .build();
     }
 }

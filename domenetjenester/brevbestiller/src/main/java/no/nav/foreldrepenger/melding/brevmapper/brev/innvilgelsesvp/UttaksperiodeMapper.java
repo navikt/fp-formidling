@@ -97,7 +97,7 @@ public final class UttaksperiodeMapper {
 
     private static BiFunction<List<Uttaksperiode>, Uttaksperiode, List<Uttaksperiode>> slåSammenSammenhengendePerioder() {
         return (resultat, neste) -> {
-            if (resultat.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(hentSisteUttaksperiode(resultat), neste)) {
+            if (resultat.isEmpty() || !erPerioderSammenhengendeEllerLikeOgSkalSlåSammen(hentSisteUttaksperiode(resultat), neste)) {
                 resultat.add(neste);
             } else {
                 var forrige = hentOgFjernSisteUttaksperiode(resultat);
@@ -107,9 +107,14 @@ public final class UttaksperiodeMapper {
         };
     }
 
-    private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Uttaksperiode periodeEn, Uttaksperiode periodeTo) {
+    private static boolean erPerioderSammenhengendeEllerLikeOgSkalSlåSammen(Uttaksperiode periodeEn, Uttaksperiode periodeTo) {
         boolean sammeUtbetalingsgrad = periodeEn.getUtbetalingsgrad().equals(periodeTo.getUtbetalingsgrad());
-        return sammeUtbetalingsgrad && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
+        return sammeUtbetalingsgrad && (erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom())
+                || erFomOgTomLike(periodeEn, periodeTo));
+    }
+
+    private static boolean erFomOgTomLike(Uttaksperiode periodeEn, Uttaksperiode periodeTo) {
+        return periodeEn.getPeriodeFom().equals(periodeTo.getPeriodeFom()) && periodeEn.getPeriodeTom().equals(periodeTo.getPeriodeTom());
     }
 
     private static Uttaksperiode hentSisteUttaksperiode(List<Uttaksperiode> uttaksperioder) {

@@ -73,24 +73,29 @@ public class FritekstTest {
 
         // Act + Assert
         assertThat(Fritekst.fra(dokumentHendelse, behandling).get().getFritekst())
-                .isEqualTo("Tekst\n##### Overskrift\nMer tekst\n- Punkt 1\n- Punkt 2\n\n##### Ny overskrift\nTekst-med-bindestrek_og_underscore\n");
+                .isEqualTo("Tekst\n##### Overskrift\nMer tekst\n- Punkt 1\n- Punkt 2\n##### Ny overskrift\nTekst-med-bindestrek_og_underscore");
+    }
+
+    @Test
+    public void skal_lage_linker_av_nav_no() {
+        // Arrange
+        behandling = standardBehandlingBuilder()
+                .medBehandlingsresultat(Behandlingsresultat.builder()
+                        .medAvslagarsakFritekst("Les mer om dette på nav.no/foreldrepenger.\nDu finner mer informasjon på nav.no/klage og nav.no/familie.")
+                        .build())
+                .build();
+        DokumentHendelse dokumentHendelse = standardHendelseBuilder().build();
+
+        // Act + Assert
+        assertThat(Fritekst.fra(dokumentHendelse, behandling).get().getFritekst())
+                .isEqualTo("Les mer om dette på [nav.no/foreldrepenger](https://nav.no/foreldrepenger).\\\nDu finner mer informasjon på [nav.no/klage](https://nav.no/klage) og [nav.no/familie](https://nav.no/familie).");
     }
 
     @Test
     public void skal_sette_inn_ekstra_linjeskift_i_fritekst_der_det_ikke_er_punktliste() {
         // Arrange
-        String fritekstInn = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\nTekst 2.\nTekst 3\n- Vedlegg 3";
-        String fritekstUt = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\n\nTekst 2.\n\nTekst 3\n- Vedlegg 3";
-
-        // Act + Assert
-        assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
-    }
-
-    @Test
-    public void skal_sette_inn_ekstra_linjeskift_i_fritekst_tilslutt_hvis_siste_ikke_var_punktliste() {
-        // Arrange
         String fritekstInn = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\nTekst 2.\nTekst 3\n- Vedlegg 3\nTekst 4";
-        String fritekstUt = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\n\nTekst 2.\n\nTekst 3\n- Vedlegg 3\n\nTekst 4\n";
+        String fritekstUt = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\n\nTekst 2.\\\nTekst 3\n- Vedlegg 3\n\nTekst 4";
 
         // Act + Assert
         assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
@@ -107,10 +112,20 @@ public class FritekstTest {
     }
 
     @Test
-    public void skal_ikke_sette_inn_ekstra_linjeskift_midt_i_setninger() {
+    public void skal_erstatte_vanlig_linjeskift_med_slash_linjeskift() {
         // Arrange
         String fritekstInn = "Dette er en setning\nmed et linjeskift midt i.\nNy setning.";
-        String fritekstUt = "Dette er en setning\nmed et linjeskift midt i.\n\nNy setning.\n";
+        String fritekstUt = "Dette er en setning\\\nmed et linjeskift midt i.\\\nNy setning.";
+
+        // Act + Assert
+        assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
+    }
+
+    @Test
+    public void skal_beholde_dobbelt_linjeskift_så_det_blir_ekstra_luft() {
+        // Arrange
+        String fritekstInn = "Dette er en setning.\n\nNy setning som skal ha 'luft'.";
+        String fritekstUt = "Dette er en setning.\n\n\nNy setning som skal ha 'luft'.";
 
         // Act + Assert
         assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
@@ -121,16 +136,6 @@ public class FritekstTest {
         // Arrange
         String fritekstInn = "- Vedlegg1";
         String fritekstUt = "- Vedlegg1";
-
-        // Act + Assert
-        assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
-    }
-
-    @Test
-    public void skal_håndtere_fritekst_på_flere_linjer_uten_punktliste() {
-        // Arrange
-        String fritekstInn = "Tekst 1.\nTekst 2.";
-        String fritekstUt = "Tekst 1.\n\nTekst 2.\n";
 
         // Act + Assert
         assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);

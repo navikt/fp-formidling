@@ -32,7 +32,7 @@ public class FritekstbrevDokumentdataMapperTest {
 
     private static final String OVERSKRIFT = "Hovedoverskrift";
     private static final String BRØDTEKST_INN = "_Overskrift\nEn setning.\nMer tekst.";
-    private static final String BRØDTEKST_UT = "##### Overskrift\nEn setning.\n\nMer tekst.\n";
+    private static final String BRØDTEKST_UT = "##### Overskrift\nEn setning.\\\nMer tekst.";
 
     private DokumentData dokumentData;
 

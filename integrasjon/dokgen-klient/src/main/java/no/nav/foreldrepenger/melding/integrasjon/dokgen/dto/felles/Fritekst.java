@@ -47,7 +47,10 @@ public class Fritekst {
         if (fritekst == null) {
             return null;
         }
-        return new Fritekst(ivaretaLinjeskiftIFritekst(konverterOverskrifterTilDokgenFormat(fritekst)));
+        fritekst = konverterOverskrifterTilDokgenFormat(fritekst);
+        fritekst = ivaretaLinjeskiftIFritekst(fritekst);
+        fritekst = fiksNavNoLinker(fritekst);
+        return new Fritekst(fritekst);
     }
 
     //TODO(JEJ): Slettes når alle brev er flyttet til Dokgen
@@ -98,9 +101,9 @@ public class Fritekst {
         return resultat.toString();
     }
 
-    // Enkelt-linjeskift blir ignorert. Metoden sørger for at de kommer med ved å legge til ekstra, uten å ødelegge for punktlister:
+    // Enkelt-linjeskift blir ignorert. Metoden sørger for at de kommer med ved å legge til ekstra der det trengs:
     static String ivaretaLinjeskiftIFritekst(String fritekst) {
-        if (fritekst == null || fritekst.equals("")) {
+        if (fritekst.equals("")) {
             return fritekst;
         }
         String[] linjer = fritekst.split("\n");
@@ -110,28 +113,28 @@ public class Fritekst {
 
         StringBuilder resultat = new StringBuilder();
         resultat.append(linjer[0]);
-        boolean sisteVarPunktliste = false;
         for (int i = 1; i < linjer.length; i++) {
-            resultat.append("\n");
             String linje = linjer[i];
-            if (linje.startsWith("- ")) {
-                // Punktliste
-                resultat.append(linje);
-                sisteVarPunktliste = true;
-            } else if (!linjer[i - 1].startsWith("- ") && !linjer[i - 1].endsWith(".")) {
-                // Vi er midt i en setning, antagelig copy-paste fra PDF - legger ikke til linjeskift
-                resultat.append(linje);
-                sisteVarPunktliste = false;
-            } else {
-                // Ekstra linjeskift må inn for at det ikke skal ignoreres i Dokgen...
+            String forrigeLinje = linjer[i-1];
+
+            if (forrigeLinje.startsWith("#####") || linje.startsWith("#####") || linje.startsWith("- ") || forrigeLinje.equals("")) {
+                // Overskrifter og punktlister skal bare ha et enkelt linjeskift for at det skal bli riktig
                 resultat.append("\n");
-                resultat.append(linje);
-                sisteVarPunktliste = false;
+            } else if (linje.equals("") || (forrigeLinje.startsWith("- ") && !linje.startsWith("- "))) {
+                // Tom linje (= ønske om mer "luft") og første linje etter punktliste må få et ekstra linjeskift
+                resultat.append("\n\n");
+            } else {
+                // Standard linjeskift med lite "luft", feks midt i setninger som er copy-pastet fra PDF
+                resultat.append("\\\n");
             }
-        }
-        if (!sisteVarPunktliste) {
-            resultat.append("\n"); // Uten ekstra linjeskift her kommer neste overskrift for nærme...
+
+            resultat.append(linje);
         }
         return resultat.toString();
+    }
+
+    // Når linker copy-pastes inn i fritekst er de ikke lengre klikkbare og må derfor fikses:
+    private static String fiksNavNoLinker(String fritekst) {
+        return fritekst.replaceAll("(.??)(nav.no/\\w*)(\s*|\\.)(.??)", "$1[$2](https://$2)$3$4");
     }
 }

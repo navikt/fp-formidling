@@ -76,9 +76,6 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
                                                                Behandling behandling,
                                                                boolean erUtkast) {
 
-        String avsenderEnhet = hendelse.getBehandlendeEnhetNavn() != null ?
-                hendelse.getBehandlendeEnhetNavn() : behandling.getBehandlendeEnhetNavn();
-
         Språkkode språkkode = behandling.getSpråkkode();
         FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);

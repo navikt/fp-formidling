@@ -7,6 +7,7 @@ import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -76,6 +77,7 @@ public final class UtbetalingsperiodeMapper {
             periodelisteFørSammenslåing.add(periodeTilListen);
         }
         periodelisteFørSammenslåing.addAll(mapPerioderUtenBeregningsgrunnlag(uttaksperioderMedÅrsak, språkkode));
+        Collections.sort(periodelisteFørSammenslåing, Comparator.comparing(Utbetalingsperiode::getPeriodeFom));
         periodeliste.addAll(mergePerioder(periodelisteFørSammenslåing));
         return periodeliste;
     }

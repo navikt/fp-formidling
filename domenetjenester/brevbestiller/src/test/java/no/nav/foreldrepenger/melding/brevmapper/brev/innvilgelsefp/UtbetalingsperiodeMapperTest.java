@@ -174,6 +174,67 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
+    public void skal_sortere_perioder_uten_beregningsgrunnlag_også() {
+        // Arrange
+        DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+        DatoIntervall tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+        DatoIntervall tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 6, 20), LocalDate.of(2019, 6, 29)); // Skal sorteres først
+        DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
+
+        BeregningsresultatPeriode brPeriode1 = BeregningsresultatPeriode.ny()
+                .medPeriode(tidsperiodeBp1)
+                .medDagsats(620L)
+                .build();
+        List<BeregningsresultatPeriode> beregningsresultatPerioder = of(brPeriode1);
+
+        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+                .medPeriode(beregningPer)
+                .medDagsats(620L)
+                .build();
+        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
+
+        UttakResultatPeriodeAktivitet uttakAktivitet1 = UttakResultatPeriodeAktivitet.ny()
+                .medTrekkdager(BigDecimal.ZERO)
+                .medUtbetalingsprosent(BigDecimal.valueOf(100L))
+                .build();
+        UttakResultatPeriode uPeriode1 = UttakResultatPeriode.ny()
+                .medAktiviteter(of(uttakAktivitet1))
+                .medTidsperiode(tidsperiodeUp1)
+                .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT)
+                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
+                .build();
+        UttakResultatPeriodeAktivitet uttakAktivitet2 = UttakResultatPeriodeAktivitet.ny()
+                .medTrekkdager(BigDecimal.TEN)
+                .medUtbetalingsprosent(BigDecimal.ZERO)
+                .build();
+        UttakResultatPeriode uPeriode2 = UttakResultatPeriode.ny()
+                .medAktiviteter(of(uttakAktivitet2))
+                .medTidsperiode(tidsperiodeUp2)
+                .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG)
+                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+                .build();
+        UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(of(uPeriode1, uPeriode2)).build();
+
+        // Act
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+
+        // Assert
+        assertThat(resultat).hasSize(2);
+
+        assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(uPeriode2.getFom());
+        assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(uPeriode2.getTom());
+        assertThat(resultat.get(0).isInnvilget()).isFalse();
+        assertThat(resultat.get(0).getPeriodeDagsats()).isEqualTo(0L);
+        assertThat(resultat.get(0).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode());
+
+        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(brPeriode1.getBeregningsresultatPeriodeFom());
+        assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(brPeriode1.getBeregningsresultatPeriodeTom());
+        assertThat(resultat.get(1).isInnvilget()).isTrue();
+        assertThat(resultat.get(1).getPeriodeDagsats()).isEqualTo(620L);
+        assertThat(resultat.get(1).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode());
+    }
+
+    @Test
     public void skal_mappe_annenAktitetListe_når_den_inneholder_annet() {
         // Arrange
         DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));

@@ -3,13 +3,12 @@ package no.nav.foreldrepenger.melding.brevmapper.brev.opphørsvp;
 import no.nav.foreldrepenger.melding.Tuple;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
+import no.nav.foreldrepenger.melding.brevmapper.brev.felles.SvpMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.inntektarbeidytelse.InntektArbeidYtelse;
-import no.nav.foreldrepenger.melding.inntektarbeidytelse.Inntektsmelding;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.opphørsvp.OpphørPeriode;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
@@ -18,7 +17,6 @@ import no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
-import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,7 +28,7 @@ import java.util.stream.Collectors;
 public class OpphørPeriodeMapper {
     private static Set<String> lovReferanser;
     
-    public static Tuple<OpphørPeriode, String> mapOpphørtePerioderOgLovhjemmel(Behandling behandling, FagsakYtelseType ytelseType, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, InntektArbeidYtelse iay) {
+    public static Tuple<OpphørPeriode, String> mapOpphørtePerioderOgLovhjemmel(Behandling behandling, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, InntektArbeidYtelse iay) {
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
@@ -43,9 +41,9 @@ public class OpphørPeriodeMapper {
               if(avslagsårsak != null) {
                   opphørtPeriode = mapOpphørteUttaksperioderFraInnvilget(uttakResultatArbeidsforhold, språkKode, avslagsårsak.getKode());
                   if (opphørtPeriode == null) {
-                      opphørtPeriode = opprettSvpOpphørUtenPeriode(avslagsårsak.getKode(), finnAntallArbeidsgivere(uttakResultatArbeidsforhold, iay));
+                      opphørtPeriode = opprettSvpOpphørUtenPeriode(avslagsårsak.getKode(), SvpMapperUtil.finnAntallArbeidsgivere(uttakResultatArbeidsforhold, iay));
                   }
-                  lovReferanser.add(leggTilLovreferanse(avslagsårsak, ytelseType));
+                  lovReferanser.add(SvpMapperUtil.leggTilLovreferanse(avslagsårsak));
               } else {
                   //TODO Anja Avklare om dette er nødvendig. Hvis ikke fjerne koden
                   opphørtPeriode = mapOpphørteArbeidsforhold(uttakResultatArbeidsforhold, iay);
@@ -60,16 +58,11 @@ public class OpphørPeriodeMapper {
         return new Tuple<>(opphørtPeriode,lovhjemmelForOpphør);
     }
 
-    private static String leggTilLovreferanse(Avslagsårsak avslagsårsak, FagsakYtelseType ytelseType) {
-        Set<VilkårType> vilkårTyper = VilkårType.getVilkårTyper(avslagsårsak);
-        return vilkårTyper.stream().map(vt -> vt.getLovReferanse(ytelseType)).findFirst().orElse("");
-    }
-
     private static OpphørPeriode mapOpphørteArbeidsforhold(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, InntektArbeidYtelse iay) {
         return uttakResultatArbeidsforhold.stream()
                 .filter(a-> !(ArbeidsforholdIkkeOppfyltÅrsak.INGEN.equals(a.getArbeidsforholdIkkeOppfyltÅrsak())))
                 .findFirst()
-                .map(a-> opprettSvpOpphørUtenPeriode(a.getArbeidsforholdIkkeOppfyltÅrsak().getKode(), finnAntallArbeidsgivere(uttakResultatArbeidsforhold, iay)))
+                .map(a-> opprettSvpOpphørUtenPeriode(a.getArbeidsforholdIkkeOppfyltÅrsak().getKode(), SvpMapperUtil.finnAntallArbeidsgivere(uttakResultatArbeidsforhold, iay)))
                 .orElse(null);
     }
 
@@ -147,20 +140,5 @@ public class OpphørPeriodeMapper {
 
     private static int finnAntallArbeidsgivereFraUttaket(List<SvpUttakResultatPeriode> perioder) {
         return (int) perioder.stream().map(SvpUttakResultatPeriode::getArbeidsgiverNavn).distinct().count();
-    }
-
-    private static int finnAntallArbeidsgivere(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, InntektArbeidYtelse iay) {
-        int antallArbeidsgivere = (int) uttakResultatArbeidsforhold.stream()
-                .flatMap(ura -> ura.getPerioder().stream())
-                .map(SvpUttakResultatPeriode::getArbeidsgiverNavn)
-                .distinct()
-                .count();
-        if(antallArbeidsgivere==0) {
-            antallArbeidsgivere = (int) uttakResultatArbeidsforhold.stream().map(SvpUttakResultatArbeidsforhold::getArbeidsgiver).distinct().count();
-        }
-        if(antallArbeidsgivere ==0) {
-            antallArbeidsgivere = (int) iay.getInntektsmeldinger().stream().map(Inntektsmelding::arbeidsgiverReferanse).distinct().count();
-        }
-        return antallArbeidsgivere;
     }
 }

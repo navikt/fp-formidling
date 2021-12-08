@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -28,6 +19,14 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
 
 @ApplicationScoped
 class DokumentMalUtleder {
@@ -88,8 +87,10 @@ class DokumentMalUtleder {
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
             return ENV.isProd() ?
                     DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST : DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE; //NOSONAR
-        } else if (behandlingsresultat.erOpphørt() && !ENV.isProd() ) {
+        } else if (behandlingsresultat.erOpphørt() && !ENV.isProd()) {
             return DokumentMalType.SVANGERSKAPSPENGER_OPPHØR;
+        } else if (behandlingsresultat.erAvslått() && !ENV.isProd()) {
+            return DokumentMalType.SVANGERSKAPSPENGER_AVSLAG;
         }
         throw new TekniskException("FPFORMIDLING-666915",
         String.format("Ingen brevmal konfigurert for denne type behandlingen %s.", behandling.getUuid().toString()));
@@ -128,7 +129,7 @@ class DokumentMalUtleder {
             return mapSvangerskapspengerVedtaksbrev(behandling);
         }
         throw new TekniskException("FPFORMIDLING-666915",
-        String.format("Kjenner ikke igjen ytelse %s for behandling %s.", hendelse.getYtelseType().getKode(), behandling.getUuid().toString()));
+        String.format("Ingen brevmal for ytelse %s for behandling %s.", hendelse.getYtelseType().getKode(), behandling.getUuid().toString()));
     }
 
     private boolean erRevurderingMedUendretUtfall(Behandling behandling) {

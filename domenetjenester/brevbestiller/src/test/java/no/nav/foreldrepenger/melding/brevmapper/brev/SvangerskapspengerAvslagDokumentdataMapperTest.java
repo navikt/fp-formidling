@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.melding.brevmapper.brev.opphørsvp;
+package no.nav.foreldrepenger.melding.brevmapper.brev;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -11,15 +11,18 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentKategori;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.SvangerskapspengerAvslagDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.opphørsvp.SvangerskapspengerOpphørDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
 import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
@@ -31,9 +34,7 @@ import no.nav.foreldrepenger.melding.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -51,54 +52,54 @@ import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagSta
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseSVPBuilder;
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class SvangerskapspengerOpphørDokumentdataMapperTest {
+class SvangerskapspengerAvslagDokumentdataMapperTest {
     private static final int KLAGEFRIST = 6;
     private static final int GRUNNBELØP = 100000;
     private static final LocalDate PERIODE1_FOM = LocalDate.now().plusDays(2);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().plusDays(3);
     private static final String ARBEIDSGIVER_1 = "Arbeidsgiver_1";
+    private static final Språkkode SPRÅKKODE_NB = Språkkode.NB;
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
     private DokumentData dokumentData;
 
-    private SvangerskapspengerOpphørDokumentdataMapper dokumentdataMapper;
+    private SvangerskapspengerAvslagDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
     public void before() {
         BrevParametere brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        dokumentData = lagStandardDokumentData(DokumentMalType.SVANGERSKAPSPENGER_OPPHØR);
-        dokumentdataMapper = new SvangerskapspengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
+        dokumentData = lagStandardDokumentData(DokumentMalType.SVANGERSKAPSPENGER_AVSLAG);
+        dokumentdataMapper = new SvangerskapspengerAvslagDokumentdataMapper(brevParametere, domeneobjektProvider);
+
+        MottattDokument mottattDokument = new MottattDokument(LocalDate.now(), DokumentTypeId.SØKNAD_SVANGERSKAPSPENGER, DokumentKategori.SØKNAD);
 
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        when(domeneobjektProvider.hentUttaksresultatSvpHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
+        when(domeneobjektProvider.hentUttaksresultatSvpHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT));
+        when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(List.of(mottattDokument));
     }
 
     @Test
-    public void skal_mappe_felter_for_brev() {
+    public void skal_mappe_felter_for_brev_med_årsak_fra_behandling() {
         // Arrange
-        Behandling behandling = opprettBehandling();
+        Behandling behandling = opprettBehandling(Avslagsårsak.ARBEIDSTAKER_KAN_OMPLASSERES);
         DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         DokumentHendelse dokumentHendelse = lagStandardHendelseSVPBuilder().build();
 
-        // Act
-        SvangerskapspengerOpphørDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        SvangerskapspengerAvslagDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
         assertThat(dokumentdata.getFelles().getSøkerNavn()).isEqualTo(SØKERS_NAVN);
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
-        assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
         assertThat(dokumentdata.getFelles().getHarVerge()).isEqualTo(true);
         assertThat(dokumentdata.getFelles().getErKopi()).isEqualTo(true);
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
@@ -106,17 +107,45 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
         assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(false);
 
-        assertThat(dokumentdata.getOpphørsdato()).isEqualTo(formaterDato(PERIODE1_FOM, Språkkode.NB));
-        assertThat(dokumentdata.getDødsdatoBarn()).isEqualTo(null);
-        assertThat(dokumentdata.getFødselsdato()).isEqualTo(formaterDato(LocalDate.now(), Språkkode.NB));
+        assertThat(dokumentdata.getÅrsak()).isEqualTo(Årsak.of(Avslagsårsak.ARBEIDSTAKER_KAN_OMPLASSERES.getKode()));
+        assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDato(LocalDate.now(), SPRÅKKODE_NB));
+        assertThat(dokumentdata.getAntallArbeidsgivere()).isEqualTo(1);
         assertThat(dokumentdata.getErSøkerDød()).isFalse();
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP/2);
-        assertThat(dokumentdata.getLovhjemmel()).isEqualTo("§ 14-4 og forvaltningsloven § 35");
-        assertThat(dokumentdata.getOpphørtPeriode().getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8309.getKode()));
-        assertThat(dokumentdata.getOpphørtPeriode().getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE1_FOM, Språkkode.NB));
-        assertThat(dokumentdata.getOpphørtPeriode().getStønadsperiodeTom()).isEqualTo(formaterDato(PERIODE1_TOM, Språkkode.NB));
-        assertThat(dokumentdata.getOpphørtPeriode().getAntallArbeidsgivere()).isEqualTo(1);
+        assertThat(dokumentdata.getLovhjemmel()).isEqualTo("§ 14-4");
+        assertThat(dokumentdata.getStønadsdatoFom()).isEqualTo(formaterDato(PERIODE1_FOM, SPRÅKKODE_NB));
+        assertThat(dokumentdata.getKlagefristUker()).isEqualTo(6);
+    }
 
+    @Test
+    public void skal_mappe_felter_for_brev_med_årsak_fra_uttaket() {
+        // Arrange
+        Behandling behandling = opprettBehandling(Avslagsårsak.UDEFINERT);
+        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        DokumentHendelse dokumentHendelse = lagStandardHendelseSVPBuilder().build();
+
+        SvangerskapspengerAvslagDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+
+        // Assert
+        assertThat(dokumentdata.getFelles()).isNotNull();
+        assertThat(dokumentdata.getFelles().getSøkerNavn()).isEqualTo(SØKERS_NAVN);
+        assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
+        assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
+        assertThat(dokumentdata.getFelles().getHarVerge()).isEqualTo(true);
+        assertThat(dokumentdata.getFelles().getErKopi()).isEqualTo(true);
+        assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
+        assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
+        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
+        assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(false);
+
+        assertThat(dokumentdata.getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT.getKode()));
+        assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDato(LocalDate.now(), SPRÅKKODE_NB));
+        assertThat(dokumentdata.getAntallArbeidsgivere()).isEqualTo(1);
+        assertThat(dokumentdata.getErSøkerDød()).isFalse();
+        assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP/2);
+        assertThat(dokumentdata.getLovhjemmel()).isEqualTo("§ 14-4");
+        assertThat(dokumentdata.getStønadsdatoFom()).isEqualTo(formaterDato(PERIODE1_FOM, SPRÅKKODE_NB));
+        assertThat(dokumentdata.getKlagefristUker()).isEqualTo(6);
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
@@ -133,7 +162,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
                 .build());
     }
 
-    private Optional<SvpUttaksresultat> opprettUttaksresultat() {
+    private Optional<SvpUttaksresultat> opprettUttaksresultat(PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak) {
         SvpUttakResultatPeriode uttakResultatPeriode1 = SvpUttakResultatPeriode.Builder.ny()
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medArbeidsgiverNavn(ARBEIDSGIVER_1)
@@ -141,7 +170,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
                 .build();
         SvpUttakResultatPeriode uttakResultatPeriode2 = SvpUttakResultatPeriode.Builder.ny()
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak._8309)
+                .medPeriodeIkkeOppfyltÅrsak(periodeIkkeOppfyltÅrsak)
                 .medArbeidsgiverNavn(ARBEIDSGIVER_1)
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .build();
@@ -156,13 +185,13 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         return Optional.of(uttaksresultat);
     }
 
-    private Behandling opprettBehandling() {
+    private Behandling opprettBehandling(Avslagsårsak årsak) {
         return Behandling.builder()
                 .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.REVURDERING)
+                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medBehandlingResultatType(BehandlingResultatType.OPPHØR)
-                        .medAvslagsårsak(Avslagsårsak.UDEFINERT)
+                        .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
+                        .medAvslagsårsak(årsak)
                         .build())
                 .medSpråkkode(Språkkode.NB)
                 .build();

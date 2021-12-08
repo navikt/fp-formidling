@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.melding.brevmapper.brev.opphørsvp;
 import no.nav.foreldrepenger.melding.Tuple;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.opphørsvp.OpphørPeriode;
@@ -47,7 +46,7 @@ class OpphørsperiodeMapperTest {
                 .build();
 
         //Act
-        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, svpUttakResultatArbeidsforholdList, Språkkode.NB, null);
+        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, svpUttakResultatArbeidsforholdList, Språkkode.NB, null);
 
         //Assert
         OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
@@ -73,7 +72,7 @@ class OpphørsperiodeMapperTest {
                         .build())
                 .build();
         //Act
-        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, uttakArbeidsforhold, Språkkode.NB, null);
+        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null);
 
         //Assert
         OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
@@ -102,7 +101,7 @@ class OpphørsperiodeMapperTest {
                         .build())
                 .build();
         //Act
-        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, uttakArbeidsforhold, Språkkode.NB, null);
+        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null);
 
         //Assert
         OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
@@ -127,7 +126,7 @@ class OpphørsperiodeMapperTest {
                         .build())
                 .build();
         //Act
-        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, FagsakYtelseType.SVANGERSKAPSPENGER, uttakArbeidsforhold, Språkkode.NB, null);
+        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null);
 
         //Assert
         OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();

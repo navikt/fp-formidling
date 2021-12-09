@@ -35,7 +35,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.KLAGE_OMGJORT,
             DokumentMalType.KLAGE_OVERSENDT,
             DokumentMalType.KLAGE_STADFESTET,
-            DokumentMalType.FORELDREPENGER_ANNULLERT);
+            DokumentMalType.FORELDREPENGER_ANNULLERT,
+            DokumentMalType.FORELDREPENGER_OPPHØR);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(
             DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
             DokumentMalType.ENGANGSSTØNAD_AVSLAG,

@@ -1,18 +1,17 @@
 package no.nav.foreldrepenger.melding.dtomapper;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartBarnDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataAdopsjonDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataFodselDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataOmsorgDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FamiliehendelseDtoMapperTest {
     private static final LocalDate FØRSTE_JANUAR = LocalDate.of(2018, 1, 1);
@@ -28,6 +27,14 @@ public class FamiliehendelseDtoMapperTest {
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 3, 0))).isEqualTo(3);
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 3, 3))).isEqualTo(3);
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 3, 1))).isEqualTo(1);
+    }
+
+    @Test
+    public void finnAntallDødeBarn() {
+        assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 1, 2))).isEqualTo(0);
+        assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedFødselOgDødsdato(3, 2))).isEqualTo(2);
+        assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedFødselOgDødsdato(3, 3))).isEqualTo(3);
+        assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedFødselOgDødsdato(3, 0))).isEqualTo(0);
     }
 
     @Test
@@ -61,9 +68,24 @@ public class FamiliehendelseDtoMapperTest {
         AvklartDataFodselDto dto = new AvklartDataFodselDto();
         dto.setTermindato(termindato);
         dto.setAntallBarnTermin(antallBarnTermin);
+
         for (int i = 0; i < antallbarnFødsel; i++) {
             dto.getAvklartBarn().add(new AvklartBarnDto(LocalDate.now(), null));
         }
+        return dto;
+    }
+
+    private FamiliehendelseDto lagFødselDtoMedFødselOgDødsdato(int antallbarnFødsel, int antallDødeBarn) {
+        AvklartDataFodselDto dto = new AvklartDataFodselDto();
+
+        for (int i = 0; i < antallbarnFødsel; i++) {
+            dto.getAvklartBarn().add(new AvklartBarnDto(LocalDate.now(), null));
+        }
+
+        for (int i = 0; i < antallDødeBarn; i++) {
+            dto.getAvklartBarn().get(i).setDodsdato(LocalDate.now());
+        }
+
         return dto;
     }
 

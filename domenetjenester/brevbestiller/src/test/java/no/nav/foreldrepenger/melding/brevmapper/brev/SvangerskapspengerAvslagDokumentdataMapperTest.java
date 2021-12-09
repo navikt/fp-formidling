@@ -150,7 +150,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
 
     private FamilieHendelse opprettFamiliehendelse() {
         FamilieHendelse.OptionalDatoer optionalDatoer = new FamilieHendelse.OptionalDatoer(Optional.empty(), Optional.of(LocalDate.now()), Optional.of(LocalDate.now()), Optional.empty());
-        return new FamilieHendelse(BigInteger.valueOf(2), false, true, FamilieHendelseType.TERMIN, optionalDatoer);
+        return new FamilieHendelse(BigInteger.valueOf(2), 0, false, true, FamilieHendelseType.TERMIN, optionalDatoer);
     }
 
     private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {

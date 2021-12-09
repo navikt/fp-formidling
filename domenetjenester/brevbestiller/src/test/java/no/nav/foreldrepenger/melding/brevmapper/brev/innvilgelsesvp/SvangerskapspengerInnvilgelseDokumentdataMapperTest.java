@@ -1,34 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp;
 
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
-import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -72,6 +43,34 @@ import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
@@ -297,7 +296,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamilieHendelse(LocalDate termindato) {
-        return new FamilieHendelse(BigInteger.ONE, true, true, FamilieHendelseType.TERMIN,
+        return new FamilieHendelse(BigInteger.ONE, 0,  true, true, FamilieHendelseType.TERMIN,
                 new FamilieHendelse.OptionalDatoer(Optional.of(LocalDate.now()), Optional.of(termindato), Optional.empty(), Optional.empty()));
     }
 

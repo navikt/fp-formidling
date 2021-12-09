@@ -8,6 +8,7 @@ public class FamilieHendelse {
 
     private FamilieHendelseType familieHendelseType; //Kodeliste.FamilieHendelseType
     private BigInteger antallBarn;
+    private int antallDødeBarn;
 
     private Optional<LocalDate> skjæringstidspunkt;
     private Optional<LocalDate> termindato;
@@ -17,11 +18,13 @@ public class FamilieHendelse {
     private boolean gjelderFødsel;
 
     public FamilieHendelse(BigInteger antallBarn,
+                           int antallDødeBarn,
                            boolean barnErFødt,
                            boolean gjelderFødsel,
                            FamilieHendelseType familieHendelseType,
                            OptionalDatoer optionalDato) {
         this.antallBarn = antallBarn;
+        this.antallDødeBarn = antallDødeBarn;
         this.skjæringstidspunkt = optionalDato.skjæringstidspunkt;
         this.termindato = optionalDato.termindato;
         this.barnErFødt = barnErFødt;
@@ -61,6 +64,10 @@ public class FamilieHendelse {
 
     public BigInteger getAntallBarn() {
         return antallBarn;
+    }
+
+    public int getAntallDødeBarn() {
+        return antallDødeBarn;
     }
 
 

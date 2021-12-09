@@ -1,40 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnDagsats;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnMånedsbeløp;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
-import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktStatus;
@@ -61,6 +26,7 @@ import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
@@ -83,8 +49,38 @@ import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.melding.ytelsefordeling.OppgittRettighet;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
-import no.nav.vedtak.exception.FunksjonellException;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnDagsats;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
@@ -210,28 +206,13 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getHarBruktBruttoBeregningsgrunnlag()).isFalse();
     }
 
-    @Test
-    public void skal_feile_hvis_dødsdato_og_flere_barn() {
-        FamilieHendelse familieHendelse = new FamilieHendelse(BigInteger.TWO, true, true, FamilieHendelseType.FØDSEL,
-                new FamilieHendelse.OptionalDatoer(Optional.of(LocalDate.now().minusDays(3)), Optional.empty(), Optional.of(LocalDate.now().minusDays(3)), Optional.of(LocalDate.now())));
-
-        when(domeneobjektProvider.hentFamiliehendelse(any())).thenReturn(familieHendelse);
-
-        Exception thrown = assertThrows(
-                FunksjonellException.class,
-                () -> dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false)
-        );
-
-        assertTrue(thrown.getMessage().contains("Feiler fordi vi ikke håndterer flere barn og død. Meld fra til produkteier for manuell håndtering. Gjelder behandling"));
-    }
-
     private FagsakBackend opprettFagsakBackend() {
         return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).build();
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
         FamilieHendelse.OptionalDatoer optionalDatoer = new FamilieHendelse.OptionalDatoer(Optional.empty(), Optional.of(LocalDate.now()), Optional.empty(), Optional.empty());
-        return new FamilieHendelse(BigInteger.valueOf(1), false, true, FamilieHendelseType.TERMIN, optionalDatoer);
+        return new FamilieHendelse(BigInteger.valueOf(1), 0, false, true, FamilieHendelseType.TERMIN, optionalDatoer);
     }
 
     private Optional<Søknad> opprettSøknad() {

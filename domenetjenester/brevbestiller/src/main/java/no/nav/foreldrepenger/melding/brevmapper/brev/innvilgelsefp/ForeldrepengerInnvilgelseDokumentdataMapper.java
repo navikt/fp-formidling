@@ -1,45 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnAntallArbeidsgivere;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnDagsats;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnMånedsbeløp;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harDelvisRefusjon;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harFullRefusjon;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harIngenRefusjon;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harUtbetaling;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnBrutto;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnSeksG;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.harBruktBruttoBeregningsgrunnlag;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.inntektOverSeksG;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.mapRegelListe;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.ForMyeUtbetaltMapper.forMyeUtbetalt;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnDisponibleDager;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnDisponibleFellesDager;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnPrematurDagerHvisFinnes;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereAvslag;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInnvilget;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereNyeOpplysningerUtbet;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetNårGradering;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetaling;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallAvslåttePerioder;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallInnvilgedePerioder;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFom;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTom;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktStatus;
@@ -72,7 +32,45 @@ import no.nav.foreldrepenger.melding.uttak.Saldoer;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
-import no.nav.vedtak.exception.FunksjonellException;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnAntallArbeidsgivere;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnDagsats;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harDelvisRefusjon;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harFullRefusjon;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harIngenRefusjon;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.harUtbetaling;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnBrutto;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnSeksG;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.harBruktBruttoBeregningsgrunnlag;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.inntektOverSeksG;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.mapRegelListe;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.ForMyeUtbetaltMapper.forMyeUtbetalt;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnDisponibleDager;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnDisponibleFellesDager;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.StønadskontoMapper.finnPrematurDagerHvisFinnes;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereAvslag;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInnvilget;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereNyeOpplysningerUtbet;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetNårGradering;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetaling;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallAvslåttePerioder;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallInnvilgedePerioder;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFom;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTom;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE)
@@ -119,6 +117,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         String konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
         boolean erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
         long dagsats = finnDagsats(beregningsresultatFP);
+        int antallBarn = familieHendelse.getAntallBarn().intValue();
+        int antallDødeBarn = familieHendelse.getAntallDødeBarn();
 
         var dokumentdataBuilder = ForeldrepengerInnvilgelseDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
@@ -153,7 +153,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medDisponibleDager(finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()))
                 .medDisponibleFellesDager(finnDisponibleFellesDager(saldoer))
                 .medForeldrepengeperiodenUtvidetUker(finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer))
-                .medAntallBarn(familieHendelse.getAntallBarn().intValue())
+                .medAntallBarn(antallBarn)
                 .medPrematurDager(finnPrematurDagerHvisFinnes(saldoer))
                 .medKreverSammenhengendeUttak(domeneobjektProvider.kreverSammenhengendeUttak(behandling))
                 .medUtbetalingsperioder(utbetalingsperioder)
@@ -173,34 +173,16 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         finnStønadsperiodeFom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));
         finnStønadsperiodeTom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeTom(formaterDato(dato, språkkode)));
 
-
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, dokumentdataBuilder);
 
-        mapFelterRelatertTilDødeBarn(familieHendelse, dokumentdataBuilder, språkkode);
-
-        ForeldrepengerInnvilgelseDokumentdata  fpInnvilgelseDokumentdata = dokumentdataBuilder.build();
-
-        skalFeileOmDødtBarnOgFlerlinger(behandling, fpInnvilgelseDokumentdata);
-
-        return fpInnvilgelseDokumentdata;
-    }
-
-    private void skalFeileOmDødtBarnOgFlerlinger(Behandling behandling, ForeldrepengerInnvilgelseDokumentdata fpInnvilgelseDokumentdata) {
-    if (fpInnvilgelseDokumentdata.getAntallDødeBarn() > 0 && fpInnvilgelseDokumentdata.getAntallBarn() > 1) {
-            throw new FunksjonellException("FPFORMIDLING-0001",
-            String.format("Feiler fordi vi ikke håndterer flere barn og død. Meld fra til produkteier for manuell håndtering. Gjelder behandling %s ", behandling.getUuid()));
+        //Dersom alle barna er døde skal vi sette dødsdato og faktisk antallDødeBarn. Det er kun i disse tilfellene at innvilgelsesbrevet skal informere om at barnet/barna er døde, ellers er saken fortsatt løpende
+        if (antallBarn == antallDødeBarn) {
+            familieHendelse.getDødsdato().ifPresent(d-> dokumentdataBuilder.medDødsdato(formaterDato(d, språkkode)));
+            dokumentdataBuilder.medAntallDødeBarn(antallDødeBarn);
+        } else {
+            dokumentdataBuilder.medAntallDødeBarn(0);
         }
-    }
-
-    private void mapFelterRelatertTilDødeBarn(FamilieHendelse familieHendelse, //todo når fpsak gir oss informasjon om hvor mange barn som er døde må denne oppdateres
-                                              ForeldrepengerInnvilgelseDokumentdata.Builder dokumentdataBuilder,
-                                              Språkkode språkkode) {
-        familieHendelse.getDødsdato().ifPresentOrElse(
-                (value)
-                        -> { dokumentdataBuilder.medDødsdato(formaterDato(value, språkkode));
-                             dokumentdataBuilder.medAntallDødeBarn(1); },
-                ()
-                        -> dokumentdataBuilder.medAntallDødeBarn(0));
+        return dokumentdataBuilder.build();
     }
 
     private void mapFelterRelatertTilBeregningsgrunnlag(Beregningsgrunnlag beregningsgrunnlag,

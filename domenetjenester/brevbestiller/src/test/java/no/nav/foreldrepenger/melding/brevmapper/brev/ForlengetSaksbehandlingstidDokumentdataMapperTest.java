@@ -1,5 +1,24 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
+import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
+import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
+import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.ForlengetSaksbehandlingstidDokumentdata;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.Optional;
+
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
@@ -13,26 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
-import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.ForlengetSaksbehandlingstidDokumentdata;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
 public class ForlengetSaksbehandlingstidDokumentdataMapperTest {
@@ -88,6 +87,6 @@ public class ForlengetSaksbehandlingstidDokumentdataMapperTest {
 
     private FamilieHendelse opprettFamiliehendelse() {
         FamilieHendelse.OptionalDatoer optionalDatoer = new FamilieHendelse.OptionalDatoer(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
-        return new FamilieHendelse(BigInteger.valueOf(ANTALL_BARN), false, false, FamilieHendelseType.TERMIN, optionalDatoer);
+        return new FamilieHendelse(BigInteger.valueOf(ANTALL_BARN), 0, false, false, FamilieHendelseType.TERMIN, optionalDatoer);
     }
 }

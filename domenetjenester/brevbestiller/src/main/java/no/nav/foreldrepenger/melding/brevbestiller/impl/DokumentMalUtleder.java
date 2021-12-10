@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
@@ -19,14 +28,6 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
 
 @ApplicationScoped
 class DokumentMalUtleder {
@@ -115,7 +116,7 @@ class DokumentMalUtleder {
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
         if (!Objects.equals(hendelse.getVedtaksbrev(), Vedtaksbrev.AUTOMATISK) &&
                 Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST)) {
-            return ENV.isProd() ? DokumentMalType.FRITEKSTBREV_DOK : DokumentMalType.FRITEKSTBREV;
+            return DokumentMalType.FRITEKSTBREV;
         }
         if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {
             return mapKlageBrev(behandling);

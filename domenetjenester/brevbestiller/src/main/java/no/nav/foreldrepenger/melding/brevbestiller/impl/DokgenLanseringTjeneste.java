@@ -1,11 +1,12 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import no.nav.foreldrepenger.konfig.Environment;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-
-import javax.enterprise.context.ApplicationScoped;
 import java.util.Map;
 import java.util.Set;
+
+import javax.enterprise.context.ApplicationScoped;
+
+import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 public class DokgenLanseringTjeneste {
@@ -36,7 +37,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.KLAGE_OVERSENDT,
             DokumentMalType.KLAGE_STADFESTET,
             DokumentMalType.FORELDREPENGER_ANNULLERT,
-            DokumentMalType.FORELDREPENGER_OPPHØR);
+            DokumentMalType.FORELDREPENGER_OPPHØR,
+            DokumentMalType.FRITEKSTBREV);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(
             DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
             DokumentMalType.ENGANGSSTØNAD_AVSLAG,
@@ -89,7 +91,8 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.KLAGE_HJEMSENDT_FRITEKST, DokumentMalType.KLAGE_HJEMSENDT,
             DokumentMalType.KLAGE_OMGJORT_FRITEKST, DokumentMalType.KLAGE_OMGJORT,
             DokumentMalType.KLAGE_OVERSENDT_FRITEKST, DokumentMalType.KLAGE_OVERSENDT,
-            DokumentMalType.KLAGE_STADFESTET_FRITEKST, DokumentMalType.KLAGE_STADFESTET);
+            DokumentMalType.KLAGE_STADFESTET_FRITEKST, DokumentMalType.KLAGE_STADFESTET,
+            DokumentMalType.FRITEKSTBREV_DOK, DokumentMalType.FRITEKSTBREV);
 
     private static final Set<DokumentMalType> GENERERING_AV_JSON = Set.of(
             DokumentMalType.SVANGERSKAPSPENGER_OPPHØR,

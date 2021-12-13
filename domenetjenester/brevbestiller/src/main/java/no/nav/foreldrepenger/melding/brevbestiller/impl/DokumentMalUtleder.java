@@ -86,8 +86,7 @@ class DokumentMalUtleder {
     private DokumentMalType mapSvangerskapspengerVedtaksbrev(Behandling behandling) {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
-            return ENV.isProd() ?
-                    DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST : DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE; //NOSONAR
+            return DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE;
         } else if (behandlingsresultat.erOpphørt() && !ENV.isProd()) {
             return DokumentMalType.SVANGERSKAPSPENGER_OPPHØR;
         } else if (behandlingsresultat.erAvslått() && !ENV.isProd()) {

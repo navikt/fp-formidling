@@ -19,14 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevproduksjonTjeneste;
-import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
-import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapperProvider;
 import no.nav.foreldrepenger.melding.datamapper.DokumentTypeMapper;
 import no.nav.foreldrepenger.melding.datamapper.DokumentXmlDataMapper;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
@@ -42,7 +39,6 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.melding.typer.AktørId;
@@ -71,7 +67,6 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
     private SakClient sakRestKlient;
     private DomeneobjektProvider domeneobjektProvider;
     private DokumentRepository dokumentRepository;
-    private DokumentdataMapperProvider dokumentdataMapperProvider;
 
     public DokprodBrevproduksjonTjeneste() {
         // for cdi proxy
@@ -82,14 +77,12 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             SakClient sakKlient, // TODO: Legg på @Jersey når opprettsak er borte
             DokumentFellesDataMapper dokumentFellesDataMapper,
             DomeneobjektProvider domeneobjektProvider,
-            DokumentRepository dokumentRepository,
-            DokumentdataMapperProvider dokumentdataMapperProvider) {
+            DokumentRepository dokumentRepository) {
         this.dokumentproduksjonProxyService = dokumentproduksjonProxyService;
         this.sakRestKlient = sakKlient;
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentRepository = dokumentRepository;
-        this.dokumentdataMapperProvider = dokumentdataMapperProvider;
     }
 
     @Override
@@ -107,7 +100,6 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                     domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
             Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling, saksnummer);
             dokumentFelles.setBrevData(elementTilString(brevXmlElement));
-            opprettAlternativeBrevDataOmNødvendig(dokumentHendelse, behandling, dokumentMal, dokumentFelles);
 
             final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = DokumentbestillingMapper.mapFraBehandling(dokumentMal,
                     dokumentFelles, saksnummer, harVedlegg);
@@ -148,25 +140,6 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             LOGGER.info("FPFORMIDLING SAK feil for saksnummer ", e);
             throw new TekniskException("FPFORMIDLING-210632", "Feilmelding fra Sak", e);
         }
-    }
-
-    private void opprettAlternativeBrevDataOmNødvendig(DokumentHendelse dokumentHendelse, Behandling behandling,
-                                                       DokumentMalType dokumentMal, DokumentFelles dokumentFelles) {
-        if (DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST.equals(dokumentMal)) { //NOSONAR
-            try {
-                opprettAlternativeBrevData(dokumentHendelse, behandling, dokumentFelles, DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE);
-            } catch (Exception e) {
-                LOGGER.info("Feilet i å lage Dokgen-versjonen av svangerskapspenger innvilgelse for bestilling {} og behandling {}",
-                        dokumentHendelse.getBestillingUuid(), dokumentHendelse.getBehandlingUuid(), e);
-            }
-        }
-    }
-
-    private void opprettAlternativeBrevData(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentFelles dokumentFelles, DokumentMalType dokumentMalType) {
-        DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMalType);
-        Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
-        dokumentdata.getFelles().anonymiser();
-        dokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
     }
 
     // TODO: Fjern når infobrev er på dokgen

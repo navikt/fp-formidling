@@ -57,8 +57,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         var iay = domeneobjektProvider.hentInntektArbeidYtelse(behandling);
 
-        //TODO: Erstatte med behandling.getSpråkkode() når engelsk mal er på plass
-        Språkkode språkkode = Språkkode.EN.equals(behandling.getSpråkkode()) ? Språkkode.NB : behandling.getSpråkkode();
+        Språkkode språkkode = behandling.getSpråkkode();
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
             fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);

@@ -38,6 +38,7 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.KLAGE_STADFESTET,
             DokumentMalType.FORELDREPENGER_ANNULLERT,
             DokumentMalType.FORELDREPENGER_OPPHØR,
+            DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE,
             DokumentMalType.FRITEKSTBREV);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(
             DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,

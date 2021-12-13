@@ -52,6 +52,7 @@ public enum DokumentMalType implements Kodeverdi {
     KLAGE_STADFESTET(DokumentMalTypeKode.KLAGE_STADFESTET, "Vedtak om stadfestelse i klagesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ANKE_OMGJORT(DokumentMalTypeKode.ANKE_OMGJORT, "Vedtak om omgjøring i ankesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ANKE_OPPHEVET(DokumentMalTypeKode.ANKE_OPPHEVET, "Ankebrev om beslutning om oppheving", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    ETTERLYS_INNTEKTSMELDING(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING, "Etterlys inntektsmelding", "J", DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated

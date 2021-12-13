@@ -33,6 +33,7 @@ public class DokumentMalTypeKode {
     public static final String KLAGE_STADFESTET = "KGESTA";
     public static final String ANKE_OMGJORT = "ANKOMG";
     public static final String ANKE_OPPHEVET = "ANKOPP";
+    public static final String ETTERLYS_INNTEKTSMELDING = "ELYSIM";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated

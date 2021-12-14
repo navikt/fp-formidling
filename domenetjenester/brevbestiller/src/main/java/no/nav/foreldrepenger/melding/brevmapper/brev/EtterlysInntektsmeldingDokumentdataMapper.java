@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev;
 
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.opprettFellesBuilder;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import no.nav.foreldrepenger.melding.datamapper.domene.MottattdokumentMapper;
 import no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.EtterlysInntektsmeldingDokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalTypeKode;
@@ -51,13 +53,15 @@ public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMa
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
 
+        Språkkode språkkode = behandling.getSpråkkode();
+
         LocalDate søknadDato = getSøknadsdato(behandling);
         LocalDate fristDato = brevMapperUtil.getSvarFrist();
 
         var dokumentdataBuilder = EtterlysInntektsmeldingDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
-                .medSøknadsdato(formaterDatoNorsk(søknadDato))
-                .medFristDato(formaterDatoNorsk(fristDato));
+                .medSøknadDato(formaterDato(søknadDato, språkkode))
+                .medFristDato(formaterDato(fristDato, språkkode));
 
         return dokumentdataBuilder.build();
     }

@@ -22,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum DokumentMalType implements Kodeverdi {
 
     //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
+    ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST(DokumentMalTypeKode.ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST, "Ankebrev om beslutning om oppheving", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
+    ANKE_VEDTAK_OMGJORING_FRITEKST(DokumentMalTypeKode.ANKE_VEDTAK_OMGJORING_FRITEKST, "Vedtak om omgjøring i ankesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ETTERLYS_INNTEKTSMELDING_FRITEKST(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_FRITEKST, "Etterlys inntektsmelding", "J", DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
 
     //Dokgen
@@ -113,6 +115,8 @@ public enum DokumentMalType implements Kodeverdi {
     ANKE_OMGJORT_FRITEKST(DokumentMalTypeKode.ANKE_OMGJORT_FRITEKST, "Vedtak om omgjøring i ankesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
     @Deprecated
     ANKE_OPPHEVET_FRITEKST(DokumentMalTypeKode.ANKE_OPPHEVET_FRITEKST, "Ankebrev om beslutning om oppheving", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
+    @Deprecated
+    ETTERLYS_INNTEKTSMELDING_FRITEKST(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_FRITEKST, "Etterlys inntektsmelding", "J", DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS), //NOSONAR
 
     UDEFINERT("-")
     ;

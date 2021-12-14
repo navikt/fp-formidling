@@ -49,7 +49,7 @@ public class EtterlysInntektsmeldingDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medSøknadsdato(String søknadDato) {
+        public Builder medSøknadDato(String søknadDato) {
             this.kladd.søknadDato = søknadDato;
             return this;
         }

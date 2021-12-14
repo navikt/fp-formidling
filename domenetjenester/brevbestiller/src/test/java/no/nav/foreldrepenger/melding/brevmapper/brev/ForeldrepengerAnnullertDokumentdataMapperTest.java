@@ -46,7 +46,7 @@ public class ForeldrepengerAnnullertDokumentdataMapperTest {
 
     @BeforeEach
     public void before() {
-        BrevParametere brevParametere = new BrevParametere(8, 2, Period.ZERO, Period.ZERO);
+        BrevParametere brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         dokumentData = lagStandardDokumentData(DokumentMalType.FORELDREPENGER_ANNULLERT);
         dokumentdataMapper = new ForeldrepengerAnnullertDokumentdataMapper(brevParametere, domeneobjektProvider);
     }

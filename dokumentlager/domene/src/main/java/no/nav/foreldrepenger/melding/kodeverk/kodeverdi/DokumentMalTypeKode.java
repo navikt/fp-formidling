@@ -2,9 +2,6 @@ package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
 public class DokumentMalTypeKode {
 
-    //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
-    public static final String ETTERLYS_INNTEKTSMELDING_FRITEKST = "INNLYS";
-
     //Dokgen
     public static final String FRITEKSTBREV = "FRITEK";
     public static final String ENGANGSSTØNAD_INNVILGELSE = "INNVES";
@@ -94,5 +91,7 @@ public class DokumentMalTypeKode {
     public static final String ANKE_OMGJORT_FRITEKST = "VEDOGA"; //NOSONAR
     @Deprecated
     public static final String ANKE_OPPHEVET_FRITEKST = "ANKEBO"; //NOSONAR
+    @Deprecated
+    public static final String ETTERLYS_INNTEKTSMELDING_FRITEKST = "INNLYS"; //NOSONAR
 
 }

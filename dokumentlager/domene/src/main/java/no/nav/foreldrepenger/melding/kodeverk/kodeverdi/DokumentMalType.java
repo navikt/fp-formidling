@@ -21,11 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public enum DokumentMalType implements Kodeverdi {
 
-    //Fritekstbrev - tekst unntatt header og footer genereres av fpformidling
-    ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST(DokumentMalTypeKode.ANKE_BESLUTNING_OM_OPPHEVING_FRITEKST, "Ankebrev om beslutning om oppheving", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
-    ANKE_VEDTAK_OMGJORING_FRITEKST(DokumentMalTypeKode.ANKE_VEDTAK_OMGJORING_FRITEKST, "Vedtak om omgjøring i ankesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
-    ETTERLYS_INNTEKTSMELDING_FRITEKST(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_FRITEKST, "Etterlys inntektsmelding", "J", DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS),
-
     //Dokgen
     FRITEKSTBREV(DokumentMalTypeKode.FRITEKSTBREV, "Fritekstbrev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ENGANGSSTØNAD_INNVILGELSE(DokumentMalTypeKode.ENGANGSSTØNAD_INNVILGELSE, "Vedtak om innvilgelse av engangsstønad", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),

@@ -36,7 +36,6 @@ import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp.SvangerskapspengerInnvilgelseDokumentdata;
@@ -70,9 +69,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
     @Override
     public SvangerskapspengerInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
                                                                         Behandling behandling, boolean erUtkast) {
-        //TODO: Erstatte med behandling.getSpråkkode() når engelsk mal er på plass
-        Språkkode språkkode = Språkkode.EN.equals(behandling.getSpråkkode()) ? Språkkode.NB : behandling.getSpråkkode();
-
+        var språkkode = behandling.getSpråkkode();
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         var beregningsresultat = domeneobjektProvider.hentBeregningsresultatFP(behandling);

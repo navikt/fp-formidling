@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.kodeverk.kodeverdi;
 
 public class DokumentMalTypeKode {
 
-    //Dokgen
     public static final String FRITEKSTBREV = "FRITEK";
     public static final String ENGANGSSTØNAD_INNVILGELSE = "INNVES";
     public static final String ENGANGSSTØNAD_AVSLAG = "AVSLES";

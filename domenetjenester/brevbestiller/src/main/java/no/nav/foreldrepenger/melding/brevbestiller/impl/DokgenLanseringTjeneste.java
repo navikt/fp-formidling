@@ -39,7 +39,9 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.FORELDREPENGER_ANNULLERT,
             DokumentMalType.FORELDREPENGER_OPPHØR,
             DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE,
-            DokumentMalType.FRITEKSTBREV);
+            DokumentMalType.FRITEKSTBREV,
+            DokumentMalType.ANKE_OMGJORT,
+            DokumentMalType.ANKE_OPPHEVET);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(
             DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
             DokumentMalType.ENGANGSSTØNAD_AVSLAG,
@@ -100,7 +102,9 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.KLAGE_OMGJORT_FRITEKST, DokumentMalType.KLAGE_OMGJORT,
             DokumentMalType.KLAGE_OVERSENDT_FRITEKST, DokumentMalType.KLAGE_OVERSENDT,
             DokumentMalType.KLAGE_STADFESTET_FRITEKST, DokumentMalType.KLAGE_STADFESTET,
-            DokumentMalType.FRITEKSTBREV_DOK, DokumentMalType.FRITEKSTBREV);
+            DokumentMalType.FRITEKSTBREV_DOK, DokumentMalType.FRITEKSTBREV,
+            DokumentMalType.ANKE_OMGJORT_FRITEKST, DokumentMalType.ANKE_OMGJORT,
+            DokumentMalType.ANKE_OPPHEVET_FRITEKST, DokumentMalType.ANKE_OPPHEVET);
 
     private static final Set<DokumentMalType> GENERERING_AV_JSON = Set.of(
             DokumentMalType.SVANGERSKAPSPENGER_OPPHØR,

@@ -59,6 +59,90 @@ public class DatoTest {
     }
 
     @Test
+    public void skal_formatere_dato_med_engelsk_format_1st() {
+        // Arrange
+        LocalDate dato = LocalDate.of(2021, 2, 1);
+
+        // Act
+        String resultat = Dato.formaterDatoEngelsk(dato);
+
+        // Assert
+        assertThat(resultat).isEqualTo("1st of February 2021");
+    }
+
+    @Test
+    public void skal_formatere_dato_med_engelsk_format_2nd() {
+        // Arrange
+        LocalDate dato = LocalDate.of(2021, 2, 2);
+
+        // Act
+        String resultat = Dato.formaterDatoEngelsk(dato);
+
+        // Assert
+        assertThat(resultat).isEqualTo("2nd of February 2021");
+    }
+
+    @Test
+    public void skal_formatere_dato_med_engelsk_format_3rd() {
+        // Arrange
+        LocalDate dato = LocalDate.of(2021, 2, 3);
+
+        // Act
+        String resultat = Dato.formaterDatoEngelsk(dato);
+
+        // Assert
+        assertThat(resultat).isEqualTo("3rd of February 2021");
+    }
+
+    @Test
+    public void skal_formatere_dato_med_engelsk_format_11th() {
+        // Arrange
+        LocalDate dato = LocalDate.of(2021, 2, 11);
+
+        // Act
+        String resultat = Dato.formaterDatoEngelsk(dato);
+
+        // Assert
+        assertThat(resultat).isEqualTo("11th of February 2021");
+    }
+
+    @Test
+    public void skal_formatere_dato_med_engelsk_format_13th() {
+        // Arrange
+        LocalDate dato = LocalDate.of(2021, 2, 13);
+
+        // Act
+        String resultat = Dato.formaterDatoEngelsk(dato);
+
+        // Assert
+        assertThat(resultat).isEqualTo("13th of February 2021");
+    }
+
+    @Test
+    public void skal_formatere_dato_med_engelsk_format_31st() {
+        // Arrange
+        LocalDate dato = LocalDate.of(2021, 3, 31);
+
+        // Act
+        String resultat = Dato.formaterDatoEngelsk(dato);
+
+        // Assert
+        assertThat(resultat).isEqualTo("31st of March 2021");
+    }
+
+    @Test
+    public void skal_formatere_dato_med_engelsk_format_22nd() {
+        // Arrange
+        LocalDate dato = LocalDate.of(2021, 2, 22);
+
+        // Act
+        String resultat = Dato.formaterDatoEngelsk(dato);
+
+        // Assert
+        assertThat(resultat).isEqualTo("22nd of February 2021");
+    }
+
+    @Test
     public void skal_formatere_dato_med_formatet_som_er_angitt_eksplisitt() {
         // Arrange
         LocalDate dato = LocalDate.of(2021, 9, 14);

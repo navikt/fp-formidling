@@ -60,7 +60,21 @@ public class Dato implements ChronoLocalDate {
         if (dato == null) {
             return null;
         }
-        return dato.getDayOfMonth() + "th of " + dato.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + dato.getYear();
+        var dayOfMonth = dato.getDayOfMonth();
+        return dayOfMonth + getDayOfMonthSuffix(dayOfMonth) + " of " + dato.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + dato.getYear();
+    }
+
+    private static String getDayOfMonthSuffix(final int dayOfMonth) {
+        var th = "th";
+        if (dayOfMonth >= 11 && dayOfMonth <= 13) {
+            return th;
+        }
+        return switch (dayOfMonth % 10) {
+            case 1 -> "st";
+            case 2 -> "nd";
+            case 3 -> "rd";
+            default -> th;
+        };
     }
 
     @Override

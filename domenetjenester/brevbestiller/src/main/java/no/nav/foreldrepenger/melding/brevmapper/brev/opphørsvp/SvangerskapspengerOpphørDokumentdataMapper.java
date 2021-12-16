@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.melding.brevmapper.brev.opphørsvp;
 
 import no.nav.foreldrepenger.melding.Tuple;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.brevmapper.DokumentdataMapper;
 import no.nav.foreldrepenger.melding.brevmapper.brev.felles.SvpMapperUtil;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
@@ -56,6 +58,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
         var svpUttaksresultat = domeneobjektProvider.hentUttaksresultatSvpHvisFinnes(behandling);
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         var iay = domeneobjektProvider.hentInntektArbeidYtelse(behandling);
+        var tilkjentYtelsePerioder = domeneobjektProvider.hentBeregningsresultatFPHvisFinnes(behandling).map(BeregningsresultatFP::getBeregningsresultatPerioder).orElse(Collections.emptyList());
 
         Språkkode språkkode = behandling.getSpråkkode();
 
@@ -73,7 +76,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
 
          mapOpphørtPeriodeOgLovhjemmel(dokumentdatabuilder, behandling,
                 svpUttaksresultat.map(SvpUttaksresultat::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()),
-                 språkkode, iay);
+                 språkkode, iay, tilkjentYtelsePerioder);
 
         SvpMapperUtil.finnFørsteUttakssdato(uttaksperioder, behandling.getBehandlingsresultat())
                  .ifPresent(d -> dokumentdatabuilder.medOpphørsdato(formaterDato(d, språkkode)));
@@ -85,10 +88,9 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
         return dokumentdatabuilder.build();
     }
 
-    private void mapOpphørtPeriodeOgLovhjemmel(SvangerskapspengerOpphørDokumentdata.Builder dokumentdataBuilder, Behandling behandling,
-                                               List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, InntektArbeidYtelse iay) {
+    private void mapOpphørtPeriodeOgLovhjemmel(SvangerskapspengerOpphørDokumentdata.Builder dokumentdataBuilder, Behandling behandling, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, InntektArbeidYtelse iay, List <BeregningsresultatPeriode> tilkjentYtelsePerioder) {
 
-        Tuple <OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakResultatArbeidsforhold, språkKode, iay);
+        Tuple <OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakResultatArbeidsforhold, språkKode, iay, tilkjentYtelsePerioder);
 
         dokumentdataBuilder.medLovhjemmel(opphørtePerioderOgLovhjemmel.element2());
         dokumentdataBuilder.medOpphørPerioder(opphørtePerioderOgLovhjemmel.element1());

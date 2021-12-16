@@ -3,6 +3,9 @@ package no.nav.foreldrepenger.melding.brevmapper.brev.opphørsvp;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
@@ -43,6 +46,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static java.util.List.of;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
 import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
@@ -52,6 +56,7 @@ import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagSta
 import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -63,7 +68,8 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
     private static final int GRUNNBELØP = 100000;
     private static final LocalDate PERIODE1_FOM = LocalDate.now().plusDays(2);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().plusDays(3);
-    private static final String ARBEIDSGIVER_1 = "Arbeidsgiver_1";
+    private static final String ARBEIDSGIVER_1_NAVN = "Arbeidsgiver_1";
+    private static final Arbeidsgiver ARBEIDSGIVER_1 = new Arbeidsgiver("123456", ARBEIDSGIVER_1_NAVN);
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
@@ -81,6 +87,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentUttaksresultatSvpHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
+        when(domeneobjektProvider.hentBeregningsresultatFPHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsresultat());
     }
 
     @Test
@@ -133,22 +140,37 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
                 .build());
     }
 
+    private Optional<BeregningsresultatFP> opprettBeregningsresultat() {
+        return Optional.of(BeregningsresultatFP.ny()
+                .leggTilBeregningsresultatPerioder(of(
+                        BeregningsresultatPeriode.ny()
+                                .medDagsats(500L)
+                                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
+                                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                                        .medArbeidsgiver(ARBEIDSGIVER_1)
+                                        .medStillingsprosent(BigDecimal.valueOf(50))
+                                        .build()))
+                                .build()))
+                .build());
+    }
+
     private Optional<SvpUttaksresultat> opprettUttaksresultat() {
         SvpUttakResultatPeriode uttakResultatPeriode1 = SvpUttakResultatPeriode.Builder.ny()
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .medArbeidsgiverNavn(ARBEIDSGIVER_1)
+                .medArbeidsgiverNavn(ARBEIDSGIVER_1_NAVN)
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .build();
         SvpUttakResultatPeriode uttakResultatPeriode2 = SvpUttakResultatPeriode.Builder.ny()
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak._8309)
-                .medArbeidsgiverNavn(ARBEIDSGIVER_1)
+                .medArbeidsgiverNavn(ARBEIDSGIVER_1_NAVN)
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .build();
 
         SvpUttaksresultat uttaksresultat = SvpUttaksresultat.Builder.ny()
                 .leggTilUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold.Builder.ny()
-                        .medArbeidsgiver(new Arbeidsgiver("1234", ARBEIDSGIVER_1))
+                        .medArbeidsgiver(new Arbeidsgiver("1234", ARBEIDSGIVER_1_NAVN))
                         .leggTilPerioder(List.of(uttakResultatPeriode1, uttakResultatPeriode2))
                         .build())
                 .build();

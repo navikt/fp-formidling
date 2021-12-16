@@ -132,11 +132,17 @@ public class OpphørPeriodeMapper {
     }
 
     private static Optional<LocalDate> finnFørsteStønadDato(List<BeregningsresultatPeriode> perioder) {
-        return perioder.stream().map(BeregningsresultatPeriode::getBeregningsresultatPeriodeFom).min(LocalDate::compareTo);
+        return perioder.stream()
+                .filter(p-> p.getDagsats() > 0)
+                .map(BeregningsresultatPeriode::getBeregningsresultatPeriodeFom)
+                .min(LocalDate::compareTo);
     }
 
     private static Optional<LocalDate> finnSisteStønadDato(List<BeregningsresultatPeriode> perioder) {
-        return perioder.stream().map(BeregningsresultatPeriode::getBeregningsresultatPeriodeTom).max(LocalDate::compareTo);
+        return perioder.stream()
+                .filter(p-> p.getDagsats() > 0)
+                .map(BeregningsresultatPeriode::getBeregningsresultatPeriodeTom)
+                .max(LocalDate::compareTo);
     }
 
     private static int finnAntallArbeidsgivereFraTilkjentYtelse(List<BeregningsresultatPeriode> perioder) {

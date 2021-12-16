@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public enum DokumentMalType implements Kodeverdi {
 
-    //Dokgen
     FRITEKSTBREV(DokumentMalTypeKode.FRITEKSTBREV, "Fritekstbrev", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ENGANGSSTØNAD_INNVILGELSE(DokumentMalTypeKode.ENGANGSSTØNAD_INNVILGELSE, "Vedtak om innvilgelse av engangsstønad", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
     ENGANGSSTØNAD_AVSLAG(DokumentMalTypeKode.ENGANGSSTØNAD_AVSLAG, "Avslag engangsstønad", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS),
@@ -110,8 +109,7 @@ public enum DokumentMalType implements Kodeverdi {
     ANKE_OMGJORT_FRITEKST(DokumentMalTypeKode.ANKE_OMGJORT_FRITEKST, "Vedtak om omgjøring i ankesak", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
     @Deprecated
     ANKE_OPPHEVET_FRITEKST(DokumentMalTypeKode.ANKE_OPPHEVET_FRITEKST, "Ankebrev om beslutning om oppheving", "N", DokumentMalRestriksjon.INGEN, DoksysKode.FRITKS), //NOSONAR
-
-    //@Deprecated TODO MS: sett den tilbake etter vi har langert i prod
+    @Deprecated
     ETTERLYS_INNTEKTSMELDING_FRITEKST(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_FRITEKST, "Etterlys inntektsmelding", "J", DokumentMalRestriksjon.ÅPEN_BEHANDLING, DoksysKode.FRITKS), //NOSONAR
 
     UDEFINERT("-")

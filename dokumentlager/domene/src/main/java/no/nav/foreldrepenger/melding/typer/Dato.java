@@ -61,7 +61,7 @@ public class Dato implements ChronoLocalDate {
         if (dato == null) {
             return null;
         }
-        return dato.format(ofPattern("d'" + getDayOfMonthSuffix(dato.getDayOfMonth()) + "' 'of' MMMM yyyy", Locale.ENGLISH));
+        return dato.format(ofPattern(String.format("d'%s' 'of' MMMM yyyy", getDayOfMonthSuffix(dato.getDayOfMonth())), Locale.ENGLISH));
     }
 
     private static String getDayOfMonthSuffix(final int dayOfMonth) {

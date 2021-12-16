@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 
@@ -56,7 +57,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     private List<Utbetalingsperiode> perioder = new ArrayList<>();
 
-    private long bruttoBeregningsgrunnlag;
+    private Beløp bruttoBeregningsgrunnlag;
     private boolean harBruktBruttoBeregningsgrunnlag;
     private List<BeregningsgrunnlagRegel> beregningsgrunnlagregler;
 
@@ -238,7 +239,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return perioder;
     }
 
-    public long getBruttoBeregningsgrunnlag() {
+    public Beløp getBruttoBeregningsgrunnlag() {
         return bruttoBeregningsgrunnlag;
     }
 
@@ -576,7 +577,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medBruttoBeregningsgrunnlag(long bruttoBeregningsgrunnlag) {
+        public Builder medBruttoBeregningsgrunnlag(Beløp bruttoBeregningsgrunnlag) {
             this.kladd.bruttoBeregningsgrunnlag = bruttoBeregningsgrunnlag;
             return this;
         }

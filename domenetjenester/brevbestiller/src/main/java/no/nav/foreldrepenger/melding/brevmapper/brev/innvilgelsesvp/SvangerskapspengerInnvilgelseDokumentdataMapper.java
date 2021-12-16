@@ -37,6 +37,7 @@ import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp.SvangerskapspengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp.Utbetalingsperiode;
@@ -114,7 +115,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
             dokumentdataBuilder.medSelvstendigNæringsdrivende(mapSelvstendigNæringsdrivende(beregningsgrunnlag));
             dokumentdataBuilder.medFrilanser(mapFrilanser(beregningsgrunnlag));
             dokumentdataBuilder.medNaturalytelser(mapNaturalytelser(beregningsresultat, beregningsgrunnlag, språkkode));
-            dokumentdataBuilder.medBruttoBeregningsgrunnlag(getAvkortetPrÅrSVP(beregningsgrunnlag));
+            dokumentdataBuilder.medBruttoBeregningsgrunnlag(Beløp.of(getAvkortetPrÅrSVP(beregningsgrunnlag)));
             dokumentdataBuilder.medMilitærSivil(erMilitærSivil(beregningsgrunnlag));
             dokumentdataBuilder.medInntektOver6G(inntektOverSeksG(beregningsgrunnlag));
             dokumentdataBuilder.medSeksG(finnSeksG(beregningsgrunnlag).longValue());

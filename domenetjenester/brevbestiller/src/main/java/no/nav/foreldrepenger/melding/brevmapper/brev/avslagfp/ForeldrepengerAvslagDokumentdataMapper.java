@@ -107,7 +107,6 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
                 uttakResultatPerioder);
 
         dokumentdataBuilder.medLovhjemmelForAvslag(avslåttePerioderOgLovhjemmel.element2());
-        dokumentdataBuilder.medAntallPerioder(avslåttePerioderOgLovhjemmel.element1().size());
         dokumentdataBuilder.medAvslåttePerioder(avslåttePerioderOgLovhjemmel.element1());
     }
 

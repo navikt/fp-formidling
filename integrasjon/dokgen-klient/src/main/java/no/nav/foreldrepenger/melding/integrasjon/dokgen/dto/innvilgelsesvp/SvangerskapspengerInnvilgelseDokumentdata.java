@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 
@@ -30,7 +31,7 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
     private SelvstendigNæringsdrivende selvstendigNæringsdrivende;
     private Frilanser frilanser;
     private List<Naturalytelse> naturalytelser;
-    private long bruttoBeregningsgrunnlag;
+    private Beløp bruttoBeregningsgrunnlag;
     private boolean militærSivil;
     private boolean inntektOver6G;
     private long seksG;
@@ -116,7 +117,7 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
         return naturalytelser;
     }
 
-    public long getBruttoBeregningsgrunnlag() {
+    public Beløp getBruttoBeregningsgrunnlag() {
         return bruttoBeregningsgrunnlag;
     }
 
@@ -294,7 +295,7 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medBruttoBeregningsgrunnlag(long bruttoBeregningsgrunnlag) {
+        public Builder medBruttoBeregningsgrunnlag(Beløp bruttoBeregningsgrunnlag) {
             this.kladd.bruttoBeregningsgrunnlag = bruttoBeregningsgrunnlag;
             return this;
         }

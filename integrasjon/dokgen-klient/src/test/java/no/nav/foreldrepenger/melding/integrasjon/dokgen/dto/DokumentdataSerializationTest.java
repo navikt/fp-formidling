@@ -21,6 +21,7 @@ import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynResultatType;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Fritekst;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Prosent;
@@ -173,7 +174,7 @@ public class DokumentdataSerializationTest {
                 .medAntallBarn(8)
                 .medPrematurDager(9)
                 .medUtbetalingsperioder(of(periode1, periode2))
-                .medBruttoBeregningsgrunnlag(300)
+                .medBruttoBeregningsgrunnlag(Beløp.of(300L))
                 .medHarBruktBruttoBeregningsgrunnlag(true)
                 .medBeregningsgrunnlagregler(of(regel1, regel2))
                 .build();

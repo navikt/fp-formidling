@@ -1,5 +1,24 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
@@ -37,23 +56,6 @@ import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
 @ApplicationScoped
 public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -84,6 +86,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Override
     public List<DokumentHistorikkinnslag> bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
+        LOGGER.info("Dokprod bestilling - skal ikke skje nå som vi har flyttet alt...");
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.BESTILL);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
         Collection<InnsynDokument> vedlegg = finnEventuelleVedlegg(behandling, dokumentMal);
@@ -97,6 +100,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
                     domeneobjektProvider.hentFagsakBackend(behandling).getAktørId());
             Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, dokumentFelles, dokumentHendelse, behandling, saksnummer);
             dokumentFelles.setBrevData(elementTilString(brevXmlElement));
+            dokumentFelles.setAlternativeBrevData(elementTilString(brevXmlElement));
 
             final Dokumentbestillingsinformasjon dokumentbestillingsinformasjon = DokumentbestillingMapper.mapFraBehandling(dokumentMal,
                     dokumentFelles, saksnummer, harVedlegg);
@@ -234,6 +238,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Override
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
+        LOGGER.info("Dokprod forhåndsvisning - skal ikke skje nå som vi har flyttet alt...");
         byte[] dokument;
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.UTKAST);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
@@ -244,6 +249,7 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         Element brevXmlElement = DokumentXmlDataMapper.mapTilBrevXml(dokumentMal, førsteDokumentFelles, dokumentHendelse, behandling, saksnummer);
 
         førsteDokumentFelles.setBrevData(elementTilString(brevXmlElement));
+        førsteDokumentFelles.setAlternativeBrevData(elementTilString(brevXmlElement));
         dokumentRepository.lagre(dokumentData);
 
         try {

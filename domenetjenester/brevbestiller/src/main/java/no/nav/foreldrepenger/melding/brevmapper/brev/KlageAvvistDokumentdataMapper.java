@@ -59,7 +59,6 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
                 .medGjelderTilbakekreving(klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType())
                 .medLovhjemler(getLovhjemler(behandling, klage))
                 .medKlagefristUker(brevParametere.getKlagefristUker())
-                .medAntallGrunner(avvistGrunner.size())
                 .medAvvistGrunner(avvistGrunner);
 
         return dokumentdataBuilder.build();

@@ -1,5 +1,35 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp;
 
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Beløp.of;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -43,34 +73,6 @@ import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
-import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
@@ -205,7 +207,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getNaturalytelser().get(0).getNyDagsats()).isEqualTo(DAGSATS_PERIODE2);
         assertThat(dokumentdata.getNaturalytelser().get(0).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER1_NAVN);
 
-        assertThat(dokumentdata.getBruttoBeregningsgrunnlag()).isEqualTo(GRUNNBELØP * 6);
+        assertThat(dokumentdata.getBruttoBeregningsgrunnlag()).isEqualTo(of(GRUNNBELØP * 6));
         assertThat(dokumentdata.getMilitærSivil()).isFalse();
         assertThat(dokumentdata.getInntektOver6G()).isTrue();
         assertThat(dokumentdata.getSeksG()).isEqualTo(GRUNNBELØP * 6);
@@ -263,7 +265,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         // Assert
         assertThat(dokumentdata.getSelvstendigNæringsdrivende()).isNotNull();
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getNyoppstartet()).isTrue();
-        assertThat(dokumentdata.getSelvstendigNæringsdrivende().getÅrsinntekt()).isEqualTo(BRUTTO_BERENINGSGRUNNLAG_SN);
+        assertThat(dokumentdata.getSelvstendigNæringsdrivende().getÅrsinntekt()).isEqualTo(of(BRUTTO_BERENINGSGRUNNLAG_SN));
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getSistLignedeÅr()).isEqualTo(LocalDate.now().getYear());
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getInntektLavere_AT_SN()).isFalse();
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getInntektLavere_AT_FL_SN()).isFalse();
@@ -284,7 +286,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
         // Assert
         assertThat(dokumentdata.getFrilanser()).isNotNull();
-        assertThat(dokumentdata.getFrilanser().getMånedsinntekt()).isEqualTo(BRUTTO_BERENINGSGRUNNLAG_FL / 12);
+        assertThat(dokumentdata.getFrilanser().getMånedsinntekt()).isEqualTo(of(BRUTTO_BERENINGSGRUNNLAG_FL / 12));
     }
 
     private Behandling.Builder opprettBehandling(BehandlingType behandlingType) {

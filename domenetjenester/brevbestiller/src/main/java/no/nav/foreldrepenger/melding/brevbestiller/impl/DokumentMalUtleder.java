@@ -1,16 +1,6 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
-import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -29,10 +19,16 @@ import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
+
 @ApplicationScoped
 class DokumentMalUtleder {
-
-    private static final Environment ENV = Environment.current();
 
     private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingUuid: ";
     private DomeneobjektProvider domeneobjektProvider;
@@ -87,9 +83,9 @@ class DokumentMalUtleder {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
             return DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE;
-        } else if (behandlingsresultat.erOpphørt() && !ENV.isProd()) {
+        } else if (behandlingsresultat.erOpphørt()) {
             return DokumentMalType.SVANGERSKAPSPENGER_OPPHØR;
-        } else if (behandlingsresultat.erAvslått() && !ENV.isProd()) {
+        } else if (behandlingsresultat.erAvslått()) {
             return DokumentMalType.SVANGERSKAPSPENGER_AVSLAG;
         }
         throw new TekniskException("FPFORMIDLING-666915",

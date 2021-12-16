@@ -1,25 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
-import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.melding.brevbestiller.DokumentbestillingMapper;
@@ -57,6 +37,23 @@ import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakJson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static no.nav.foreldrepenger.melding.brevbestiller.XmlUtil.elementTilString;
 
 @ApplicationScoped
 public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -237,9 +234,6 @@ public class DokprodBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
     @Override
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
-        if (DokumentMalType.SVANGERSKAPSPENGER_OPPHØR.equals(dokumentMal) && Environment.current().isProd()) {
-            throw new ForhåndsvisningsException("FPFORMIDLING-221007", "Opphørsbrev Svangerskapspenger ikke implementert", "Se rutine for opphør Svangerskapspenger");
-        }
         byte[] dokument;
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.UTKAST);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);

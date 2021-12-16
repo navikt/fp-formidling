@@ -49,11 +49,10 @@ public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMa
     @Override
     public EtterlysInntektsmeldingDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
                                                    Behandling behandling, boolean erUtkast) {
+        Språkkode språkkode = behandling.getSpråkkode();
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
-
-        Språkkode språkkode = behandling.getSpråkkode();
+        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
 
         LocalDate søknadDato = getSøknadsdato(behandling);
         LocalDate fristDato = brevMapperUtil.getSvarFrist();

@@ -173,6 +173,15 @@ class OpphørPeriodeMapperTest {
                                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                                         .medStillingsprosent(BigDecimal.valueOf(50))
                                         .build()))
+                                .build(),
+                        BeregningsresultatPeriode.ny()
+                                .medDagsats(0L)
+                                .medPeriode(fraOgMedTilOgMed(LocalDate.now().plusDays(8), LocalDate.now().plusDays(12)))
+                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
+                                        .medArbeidsgiver(antallArbeidsgivere == 1 ? ARBEIDSGIVER_1 : ARBEIDSGIVER_2)
+                                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                                        .medStillingsprosent(BigDecimal.valueOf(50))
+                                        .build()))
                                 .build()))
                 .build();
     }

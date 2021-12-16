@@ -1,10 +1,11 @@
 package no.nav.foreldrepenger.melding.typer;
 
+import static java.time.format.DateTimeFormatter.ofPattern;
+
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.ChronoPeriod;
 import java.time.chrono.Chronology;
-import java.time.format.TextStyle;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalField;
 import java.time.temporal.TemporalUnit;
@@ -53,15 +54,14 @@ public class Dato implements ChronoLocalDate {
         if (dato == null) {
             return null;
         }
-        return dato.getDayOfMonth() + ". " + dato.getMonth().getDisplayName(TextStyle.FULL, Locale.forLanguageTag("NO")) + " " + dato.getYear();
+        return dato.format(ofPattern("d. MMMM yyyy", Locale.forLanguageTag("NO")));
     }
 
     public static String formaterDatoEngelsk(LocalDate dato) {
         if (dato == null) {
             return null;
         }
-        var dayOfMonth = dato.getDayOfMonth();
-        return dayOfMonth + getDayOfMonthSuffix(dayOfMonth) + " of " + dato.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH) + " " + dato.getYear();
+        return dato.format(ofPattern("d'" + getDayOfMonthSuffix(dato.getDayOfMonth()) + "' 'of' MMMM yyyy", Locale.ENGLISH));
     }
 
     private static String getDayOfMonthSuffix(final int dayOfMonth) {

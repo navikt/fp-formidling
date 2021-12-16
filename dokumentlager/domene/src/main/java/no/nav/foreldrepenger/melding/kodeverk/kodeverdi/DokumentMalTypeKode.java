@@ -91,7 +91,7 @@ public class DokumentMalTypeKode {
     public static final String ANKE_OMGJORT_FRITEKST = "VEDOGA"; //NOSONAR
     @Deprecated
     public static final String ANKE_OPPHEVET_FRITEKST = "ANKEBO"; //NOSONAR
-    //@Deprecated TODO MS: sett den tilbake etter vi har langert i prod
+    @Deprecated
     public static final String ETTERLYS_INNTEKTSMELDING_FRITEKST = "INNLYS"; //NOSONAR
 
 }

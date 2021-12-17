@@ -1,13 +1,12 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+
+import javax.enterprise.context.ApplicationScoped;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import javax.enterprise.context.ApplicationScoped;
-
-import no.nav.foreldrepenger.konfig.Environment;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 public class DokgenLanseringTjeneste {
@@ -43,7 +42,9 @@ public class DokgenLanseringTjeneste {
             DokumentMalType.FRITEKSTBREV,
             DokumentMalType.ANKE_OMGJORT,
             DokumentMalType.ANKE_OPPHEVET,
-            DokumentMalType.ETTERLYS_INNTEKTSMELDING);
+            DokumentMalType.ETTERLYS_INNTEKTSMELDING,
+            DokumentMalType.SVANGERSKAPSPENGER_AVSLAG,
+            DokumentMalType.SVANGERSKAPSPENGER_OPPHØR);
     private static final Set<DokumentMalType> DOKGEN_MALER_DEV = Set.of(
             DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
             DokumentMalType.ENGANGSSTØNAD_AVSLAG,
@@ -116,9 +117,7 @@ public class DokgenLanseringTjeneste {
         OVERSTYRE_MAL_PROD.put(DokumentMalType.ETTERLYS_INNTEKTSMELDING_FRITEKST, DokumentMalType.ETTERLYS_INNTEKTSMELDING);
     }
 
-    private static final Set<DokumentMalType> GENERERING_AV_JSON = Set.of(
-            DokumentMalType.SVANGERSKAPSPENGER_OPPHØR,
-            DokumentMalType.SVANGERSKAPSPENGER_AVSLAG);
+    private static final Set<DokumentMalType> GENERERING_AV_JSON = Set.of();
 
     public static boolean malSkalBrukeDokgen(DokumentMalType dokumentMalType) {
         if (ENV.isProd()) {

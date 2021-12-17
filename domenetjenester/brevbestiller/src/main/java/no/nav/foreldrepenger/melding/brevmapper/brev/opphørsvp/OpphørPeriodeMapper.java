@@ -36,14 +36,14 @@ public class OpphørPeriodeMapper {
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
 
-        //Sjekker om periodeIkkeOppfyltÅrsak finnes fra uttak - oppretter opphørt periode.
-        OpphørPeriode opphørtPeriode = mapOpphørtPeriode(uttakResultatArbeidsforhold, språkKode, tilkjentYtelsePerioder);
+        //Sjekker om periodeIkkeOppfyltÅrsak finnes fra uttak - oppretter i såfall opphørt periode.
+        OpphørPeriode opphørtPeriode = mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(uttakResultatArbeidsforhold, språkKode, tilkjentYtelsePerioder, iay);
 
         //I en del tilfeller er behandlingen opphørt før det har kommet så langt som å beregne uttak
         if (opphørtPeriode == null) {
 
             if (avslagsårsak != null) {
-                opphørtPeriode = mapOpphørtPeriodeMedAvslagsårsak(tilkjentYtelsePerioder, uttakResultatArbeidsforhold, språkKode, avslagsårsak.getKode(), iay);
+                opphørtPeriode = mapOpphørtPeriode(tilkjentYtelsePerioder, uttakResultatArbeidsforhold, språkKode, avslagsårsak.getKode(), iay);
                 lovReferanser.add(SvpMapperUtil.leggTilLovreferanse(avslagsårsak));
             } else {
                 //TODO Anja Avklare om dette er nødvendig. Hvis ikke fjerne koden
@@ -78,33 +78,40 @@ public class OpphørPeriodeMapper {
                 .build();
     }
 
-    private static OpphørPeriode mapOpphørtPeriode(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, List<BeregningsresultatPeriode> tilkjentYtelsePerioder) {
+    private static OpphørPeriode mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, List<BeregningsresultatPeriode> tilkjentYtelsePerioder, InntektArbeidYtelse iay) {
         List<SvpUttakResultatPeriode> opphørtePerioder = uttakResultatArbeidsforhold.stream()
             .flatMap(ura -> ura.getPerioder().stream())
                 .filter(ur -> PeriodeResultatType.AVSLÅTT.equals(ur.getPeriodeResultatType()))
                 .filter(ur -> PeriodeIkkeOppfyltÅrsak.opphørsAvslagÅrsaker().contains(ur.getPeriodeIkkeOppfyltÅrsak()))
                 .collect(Collectors.toList());
 
-        if(opphørtePerioder.isEmpty()){
-            return null;
-        } else {
-            return opprettSvpOpphørPeriode(tilkjentYtelsePerioder, språkKode, finnPeriodeIkkeOppfyltÅrsak(opphørtePerioder));
+        if (!opphørtePerioder.isEmpty()) {
+            PeriodeIkkeOppfyltÅrsak årsak = finnPeriodeIkkeOppfyltÅrsak(opphørtePerioder);
+            if (årsak != null) {
+                lovReferanser.add(årsak.getLovHjemmelData());
+                return mapOpphørtPeriode(tilkjentYtelsePerioder, uttakResultatArbeidsforhold, språkKode, årsak.getKode(), iay);
+            }
         }
+        return null;
     }
 
     private static PeriodeIkkeOppfyltÅrsak finnPeriodeIkkeOppfyltÅrsak(List<SvpUttakResultatPeriode> opphørtePerioder) {
         return opphørtePerioder.stream().map(SvpUttakResultatPeriode::getPeriodeIkkeOppfyltÅrsak).findFirst().orElse(null);
     }
 
-    private static OpphørPeriode opprettSvpOpphørPeriode(List<BeregningsresultatPeriode> tilkjentYtelsePerioder,  Språkkode språkkode, PeriodeIkkeOppfyltÅrsak årsak) {
-        Optional<LocalDate> førsteDato = finnFørsteStønadDato(tilkjentYtelsePerioder);
-        Optional<LocalDate> sisteDato = finnSisteStønadDato(tilkjentYtelsePerioder);
+    private static OpphørPeriode mapOpphørtPeriode(List<BeregningsresultatPeriode> tilkjentYtelse, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkkode, String opphørÅrsak, InntektArbeidYtelse iay) {
+        Optional<LocalDate> førsteDato = finnFørsteStønadDato(tilkjentYtelse);
+        Optional<LocalDate> sisteDato = finnSisteStønadDato(tilkjentYtelse);
 
-        if (årsak!=null) {
-            lovReferanser.add(årsak.getLovHjemmelData());
+        if (førsteDato.isEmpty() && sisteDato.isEmpty() && !PeriodeIkkeOppfyltÅrsak._8304.getKode().equals(opphørÅrsak)) {
+            førsteDato = finnførsteUttaksDatoFraInnvilget(uttakResultatArbeidsforhold);
+            sisteDato = finnSisteUttaksDatoFraInnvilget(uttakResultatArbeidsforhold);
+        }
 
-            var builder = OpphørPeriode.ny().medÅrsak(Årsak.of(årsak.getKode()))
-                    .medAntallArbeidsgivere(finnAntallArbeidsgivereFraTilkjentYtelse(tilkjentYtelsePerioder));
+        if (opphørÅrsak != null) {
+            int antallArbeidsgivere = tilkjentYtelse.isEmpty() ?  SvpMapperUtil.finnAntallArbeidsgivere(uttakResultatArbeidsforhold, iay) : finnAntallArbeidsgivereFraTilkjentYtelse(tilkjentYtelse);
+            var builder = OpphørPeriode.ny().medÅrsak(Årsak.of(opphørÅrsak)).medAntallArbeidsgivere(antallArbeidsgivere);
+
             førsteDato.ifPresent(fd -> builder.medPeriodeFom(fd, språkkode));
             sisteDato.ifPresent(sd -> builder.medPeriodeTom(sd, språkkode));
 
@@ -113,22 +120,20 @@ public class OpphørPeriodeMapper {
         return null;
     }
 
-    private static OpphørPeriode mapOpphørtPeriodeMedAvslagsårsak(List<BeregningsresultatPeriode> tilkjentYtelse, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkkode, String opphørÅrsak, InntektArbeidYtelse iay) {
-        Optional<LocalDate> førsteDato = finnFørsteStønadDato(tilkjentYtelse);
-        Optional<LocalDate> sisteDato = finnSisteStønadDato(tilkjentYtelse);
+    private static Optional<LocalDate> finnførsteUttaksDatoFraInnvilget(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold) {
+        return uttakResultatArbeidsforhold.stream()
+                .flatMap(ura -> ura.getPerioder().stream())
+                .filter(ur -> PeriodeResultatType.INNVILGET.equals(ur.getPeriodeResultatType()))
+                .map(p-> p.getTidsperiode().getFomDato())
+                .min(LocalDate::compareTo);
+    }
 
-        if (opphørÅrsak != null) {
-            int antallArbeidsgivere = tilkjentYtelse.isEmpty() ?  SvpMapperUtil.finnAntallArbeidsgivere(uttakResultatArbeidsforhold, iay) : finnAntallArbeidsgivereFraTilkjentYtelse(tilkjentYtelse);
-
-            var builder = OpphørPeriode.ny().medÅrsak(Årsak.of(opphørÅrsak))
-                    .medAntallArbeidsgivere(antallArbeidsgivere);
-
-            førsteDato.ifPresent(fd -> builder.medPeriodeFom(fd, språkkode));
-            sisteDato.ifPresent(sd -> builder.medPeriodeTom(sd, språkkode));
-
-            return builder.build();
-        }
-        return null;
+    private static Optional<LocalDate> finnSisteUttaksDatoFraInnvilget(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold) {
+        return uttakResultatArbeidsforhold.stream()
+                .flatMap(ura -> ura.getPerioder().stream())
+                .filter(ur -> PeriodeResultatType.INNVILGET.equals(ur.getPeriodeResultatType()))
+                .map(p -> p.getTidsperiode().getTomDato())
+                .max(LocalDate::compareTo);
     }
 
     private static Optional<LocalDate> finnFørsteStønadDato(List<BeregningsresultatPeriode> perioder) {

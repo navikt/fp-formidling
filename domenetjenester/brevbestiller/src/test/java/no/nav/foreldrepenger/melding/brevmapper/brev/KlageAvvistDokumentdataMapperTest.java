@@ -84,7 +84,6 @@ public class KlageAvvistDokumentdataMapperTest {
         assertThat(dokumentdata.getGjelderTilbakekreving()).isFalse();
         assertThat(dokumentdata.getLovhjemler()).isEqualTo("forvaltningsloven §§ 28 og 33");
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(6);
-        assertThat(dokumentdata.getAntallGrunner()).isEqualTo(1);
         assertThat(dokumentdata.getAvvistGrunner()).containsAll(of(KlageAvvistÅrsak.KLAGER_IKKE_PART.getKode()));
     }
 
@@ -104,7 +103,6 @@ public class KlageAvvistDokumentdataMapperTest {
         // Assert
         assertThat(dokumentdata.getGjelderTilbakekreving()).isTrue();
         assertThat(dokumentdata.getLovhjemler()).isEqualTo("folketrygdloven § 21-12 og forvaltningsloven §§ 28, 31, 32 og 33");
-        assertThat(dokumentdata.getAntallGrunner()).isEqualTo(5);
         assertThat(dokumentdata.getAvvistGrunner()).containsAll(of(KlageAvvistÅrsak.KLAGET_FOR_SENT.getKode(),
                 KlageAvvistÅrsak.KLAGER_IKKE_PART.getKode(), KlageAvvistÅrsak.KLAGE_UGYLDIG.getKode(),
                 KlageAvvistÅrsak.IKKE_KONKRET.getKode(), KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK.getKode()));

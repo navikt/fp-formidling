@@ -1,14 +1,17 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Beløp;
+
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Frilanser {
-    private long månedsinntekt;
+    private Beløp månedsinntekt;
 
-    public long getMånedsinntekt() {
+    public Beløp getMånedsinntekt() {
         return månedsinntekt;
     }
 
@@ -47,8 +50,12 @@ public class Frilanser {
             }
         }
 
-        public Builder leggTilMånedsinntekt(long månedsinntekt) {
-            this.kladd.månedsinntekt = this.kladd.månedsinntekt + månedsinntekt;
+        public Builder leggTilMånedsinntekt(BigDecimal månedsinntekt) {
+            if (this.kladd.månedsinntekt != null) {
+                this.kladd.månedsinntekt = Beløp.of(this.kladd.månedsinntekt.getVerdi() + månedsinntekt.longValue());
+            } else {
+                this.kladd.månedsinntekt = Beløp.of(månedsinntekt);
+            }
             return this;
         }
 

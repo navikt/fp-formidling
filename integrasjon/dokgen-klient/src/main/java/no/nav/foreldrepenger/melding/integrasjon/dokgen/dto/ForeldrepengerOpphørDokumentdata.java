@@ -16,7 +16,6 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
     private int antallBarn;
     private long halvG;
     private String lovhjemmelForAvslag;
-    private int antallÅrsaker;
     private List<String> avslagÅrsaker;
     private int klagefristUker;
     private String barnDødsdato;
@@ -46,10 +45,6 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
 
     public String getLovhjemmelForAvslag() {
         return lovhjemmelForAvslag;
-    }
-
-    public int getAntallÅrsaker() {
-        return antallÅrsaker;
     }
 
     public List<String> getAvslagÅrsaker() {
@@ -85,7 +80,6 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
                 && erGjelderFødsel() == that.erGjelderFødsel()
                 && getAntallBarn() == that.getAntallBarn()
                 && getHalvG() == that.getHalvG()
-                && getAntallÅrsaker() == that.getAntallÅrsaker()
                 && getKlagefristUker() == that.getKlagefristUker()
                 && Objects.equals(getRelasjonskode(), that.getRelasjonskode())
                 && Objects.equals(getLovhjemmelForAvslag(), that.getLovhjemmelForAvslag())
@@ -99,7 +93,7 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFelles(), erSøkerDød(), getRelasjonskode(), erGjelderFødsel(), getAntallBarn(), getHalvG(), getLovhjemmelForAvslag(), getAntallÅrsaker(), getAvslagÅrsaker(), getKlagefristUker(), getBarnDødsdato(), getOpphørDato(), getFomStønadsdato(), getTomStønadsdato());
+        return Objects.hash(getFelles(), erSøkerDød(), getRelasjonskode(), erGjelderFødsel(), getAntallBarn(), getHalvG(), getLovhjemmelForAvslag(), getAvslagÅrsaker(), getKlagefristUker(), getBarnDødsdato(), getOpphørDato(), getFomStønadsdato(), getTomStønadsdato());
     }
 
     public static Builder ny() {
@@ -145,11 +139,6 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
 
         public Builder medLovhjemmelForAvslag(String lovhjemmelForAvslag) {
             this.kladd.lovhjemmelForAvslag = lovhjemmelForAvslag;
-            return this;
-        }
-
-        public Builder medAntallÅrsaker(int antallÅrsaker) {
-            this.kladd.antallÅrsaker = antallÅrsaker;
             return this;
         }
 

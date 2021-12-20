@@ -13,7 +13,6 @@ public class KlageAvvistDokumentdata extends Dokumentdata {
     private boolean gjelderTilbakekreving;
     private String lovhjemler;
     private int klagefristUker;
-    private int antallGrunner;
     private Set<String> avvistGrunner;
 
     public boolean getGjelderTilbakekreving() {
@@ -26,10 +25,6 @@ public class KlageAvvistDokumentdata extends Dokumentdata {
 
     public int getKlagefristUker() {
         return klagefristUker;
-    }
-
-    public int getAntallGrunner() {
-        return antallGrunner;
     }
 
     public Set<String> getAvvistGrunner() {
@@ -45,13 +40,12 @@ public class KlageAvvistDokumentdata extends Dokumentdata {
                 && Objects.equals(gjelderTilbakekreving, that.gjelderTilbakekreving)
                 && Objects.equals(lovhjemler, that.lovhjemler)
                 && Objects.equals(klagefristUker, that.klagefristUker)
-                && Objects.equals(antallGrunner, that.antallGrunner)
                 && Objects.equals(avvistGrunner, that.avvistGrunner);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, gjelderTilbakekreving, lovhjemler, klagefristUker, antallGrunner, avvistGrunner);
+        return Objects.hash(felles, gjelderTilbakekreving, lovhjemler, klagefristUker, avvistGrunner);
     }
 
     public static Builder ny() {
@@ -82,11 +76,6 @@ public class KlageAvvistDokumentdata extends Dokumentdata {
 
         public Builder medKlagefristUker(int klagefristUker) {
             this.kladd.klagefristUker = klagefristUker;
-            return this;
-        }
-
-        public Builder medAntallGrunner(int antallGrunner) {
-            this.kladd.antallGrunner = antallGrunner;
             return this;
         }
 

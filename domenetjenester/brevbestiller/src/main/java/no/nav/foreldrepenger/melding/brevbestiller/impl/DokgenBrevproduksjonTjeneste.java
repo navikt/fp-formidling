@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.brevbestiller.api.BrevproduksjonTjeneste;
@@ -30,15 +41,6 @@ import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
@@ -87,6 +89,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
         Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(førsteDokumentFelles, dokumentHendelse, behandling, true);
         førsteDokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
+        førsteDokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
         byte[] brev;
         try {
             brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
@@ -113,6 +116,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
             Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
             dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
+            dokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
 
             byte[] brev;
             try {

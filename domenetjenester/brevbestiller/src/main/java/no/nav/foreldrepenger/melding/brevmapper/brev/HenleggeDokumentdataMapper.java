@@ -47,7 +47,7 @@ public class HenleggeDokumentdataMapper implements DokumentdataMapper {
     }
 
     private String utledOpphavType(String behandlendeEnhetNavn) {
-        if (behandlendeEnhetNavn.contains(FAMPEN)) {
+        if (behandlendeEnhetNavn == null || behandlendeEnhetNavn.contains(FAMPEN)) {
             return "FAMPEN";
         }
         return "KLAGE";

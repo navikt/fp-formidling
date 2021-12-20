@@ -1,5 +1,21 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnBrutto;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnSeksG;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.harBruktBruttoBeregningsgrunnlag;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.inntektOverSeksG;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.mapRegelListe;
+import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Beløp.of;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
@@ -8,20 +24,6 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStat
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
 import no.nav.foreldrepenger.melding.typer.Beløp;
 import no.nav.foreldrepenger.melding.typer.DatoIntervall;
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.util.List;
-
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnBrutto;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.finnSeksG;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.harBruktBruttoBeregningsgrunnlag;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.inntektOverSeksG;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.BeregningsgrunnlagMapper.mapRegelListe;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class BeregningsgrunnlagMapperTest {
 
@@ -42,7 +44,7 @@ public class BeregningsgrunnlagMapperTest {
                 .build();
 
         // Act + Assert
-        assertThat(finnBrutto(beregningsgrunnlag)).isEqualTo(ARBEIDSTAKER_BRUTTO_PR_ÅR.add(FRILANSER_BRUTTO_PR_ÅR).longValue());
+        assertThat(finnBrutto(beregningsgrunnlag)).isEqualTo(of(ARBEIDSTAKER_BRUTTO_PR_ÅR.add(FRILANSER_BRUTTO_PR_ÅR).longValue()));
     }
 
     @Test

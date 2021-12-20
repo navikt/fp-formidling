@@ -129,7 +129,6 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
                 uttakResultatPerioder);
         List<String> årsakListe = aarsakListeOgLovhjemmel.getElement1();
 
-        builder.medAntallÅrsaker(årsakListe.size());
         builder.medAvslagÅrsaker(årsakListe);
         builder.medLovhjemmelForAvslag(aarsakListeOgLovhjemmel.getElement2());
 

@@ -1,13 +1,16 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Beløp;
+
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class SelvstendigNæringsdrivende {
     private Boolean nyoppstartet;
-    private long årsinntekt;
+    private Beløp årsinntekt;
     private int sistLignedeÅr;
     private boolean inntektLavere_AT_SN;
     private boolean inntektLavere_AT_FL_SN;
@@ -17,7 +20,7 @@ public class SelvstendigNæringsdrivende {
         return nyoppstartet;
     }
 
-    public long getÅrsinntekt() {
+    public Beløp getÅrsinntekt() {
         return årsinntekt;
     }
 
@@ -91,8 +94,12 @@ public class SelvstendigNæringsdrivende {
             return this;
         }
 
-        public Builder medÅrsinntekt(long årsinntekt) {
-            this.kladd.årsinntekt = this.kladd.årsinntekt + årsinntekt;
+        public Builder leggTilÅrsinntekt(BigDecimal årsinntekt) {
+            if (this.kladd.årsinntekt != null) {
+                this.kladd.årsinntekt = Beløp.of(this.kladd.årsinntekt.getVerdi() + årsinntekt.longValue());
+            } else {
+                this.kladd.årsinntekt = Beløp.of(årsinntekt);
+            }
             return this;
         }
 

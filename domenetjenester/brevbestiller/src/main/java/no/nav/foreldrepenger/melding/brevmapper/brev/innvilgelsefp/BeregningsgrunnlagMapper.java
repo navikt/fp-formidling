@@ -1,16 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagAndel;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
-import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
-import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -19,6 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Beløp;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagAndel;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
+import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
+import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public final class BeregningsgrunnlagMapper {
 
@@ -34,7 +35,7 @@ public final class BeregningsgrunnlagMapper {
                 List.of(AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
     }
 
-    public static long finnBrutto(Beregningsgrunnlag beregningsgrunnlag) {
+    public static Beløp finnBrutto(Beregningsgrunnlag beregningsgrunnlag) {
         double sum = finnBgpsaListe(beregningsgrunnlag).stream()
                 .mapToDouble(andel -> {
                     if (andel.getBruttoPrÅr() != null) {
@@ -45,7 +46,7 @@ public final class BeregningsgrunnlagMapper {
                     return 0;
                 }).reduce(0, Double::sum);
 
-        return BigDecimal.valueOf(sum).setScale(1, RoundingMode.HALF_UP).longValue();
+        return Beløp.of(sum);
     }
 
     public static BigDecimal finnSeksG(Beregningsgrunnlag beregningsgrunnlag) {

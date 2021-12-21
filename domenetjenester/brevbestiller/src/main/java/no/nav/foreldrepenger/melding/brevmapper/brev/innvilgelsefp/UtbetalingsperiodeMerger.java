@@ -1,16 +1,16 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.DatoVerktøy.erFomRettEtterTomDato;
-import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak.erRegnetSomLike;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.DatoVerktøy.erFomRettEtterTomDato;
+import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak.erRegnetSomLike;
 
 public final class UtbetalingsperiodeMerger {
 
@@ -55,6 +55,7 @@ public final class UtbetalingsperiodeMerger {
                 .medPeriodeDagsats(periodeEn.getPeriodeDagsats())
                 .medAntallTapteDager(periodeEn.getAntallTapteDager() + (periodeTo.getAntallTapteDager()))
                 .medPrioritertUtbetalingsgrad(periodeEn.getPrioritertUtbetalingsgrad())
+                .medStønadskontoType(periodeEn.getStønadskontoType())
                 .medArbeidsforhold(periodeEn.getArbeidsforholdsliste())
                 .medNæring(periodeEn.getNæring())
                 .medAnnenAktivitet(periodeEn.getAnnenAktivitetsliste())

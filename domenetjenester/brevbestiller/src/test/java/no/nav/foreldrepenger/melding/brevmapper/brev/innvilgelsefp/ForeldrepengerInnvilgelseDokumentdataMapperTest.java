@@ -1,39 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnDagsats;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnMånedsbeløp;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
-import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
-import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Beløp.of;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
-import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import no.nav.foreldrepenger.melding.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktDefinisjon;
 import no.nav.foreldrepenger.melding.aksjonspunkt.AksjonspunktStatus;
@@ -83,6 +49,39 @@ import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.melding.ytelsefordeling.OppgittRettighet;
 import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnDagsats;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.BeregningsresultatMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.FRITEKST;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SAKSNUMMER;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_FNR;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.SØKERS_NAVN;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentData;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.melding.datamapper.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.melding.datamapper.util.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Beløp.of;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
@@ -92,8 +91,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     private static final int DISPONIBLE_DAGER = 5;
     private static final int DISPONIBLE_DAGER_FELLES = 10;
     private static final int TAPTE_DAGER_FPFF = 2;
-    private static final LocalDate PERIODE_FOM = LocalDate.now().plusDays(2);
-    private static final LocalDate PERIODE_TOM = LocalDate.now().plusDays(3);
+    private static final LocalDate PERIODE_FOM = LocalDate.now().minusMonths(4);
+    private static final LocalDate PERIODE_TOM = LocalDate.now().minusMonths(4).plusDays(3);
     private static final int PREMATUR_DAGER = 2;
     private static final int KLAGEFRIST = 6;
     private static final int BRUTTO_BERENINGSGRUNNLAG = 400;
@@ -173,9 +172,9 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getIngenRefusjon()).isFalse();
         assertThat(dokumentdata.getFbEllerRvInnvilget()).isTrue();
         assertThat(dokumentdata.getFullRefusjon()).isFalse();
-        assertThat(dokumentdata.getAntallPerioder()).isEqualTo(3);
+        assertThat(dokumentdata.getAntallPerioder()).isEqualTo(4);
         assertThat(dokumentdata.getAntallInnvilgedePerioder()).isEqualTo(1);
-        assertThat(dokumentdata.getAntallAvslåttePerioder()).isEqualTo(2);
+        assertThat(dokumentdata.getAntallAvslåttePerioder()).isEqualTo(3);
         assertThat(dokumentdata.getAntallArbeidsgivere()).isEqualTo(1);
         assertThat(dokumentdata.getDagerTaptFørTermin()).isEqualTo(TAPTE_DAGER_FPFF);
         assertThat(dokumentdata.getDisponibleDager()).isEqualTo(DISPONIBLE_DAGER);
@@ -188,7 +187,9 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getPrematurDager()).isEqualTo(PREMATUR_DAGER);
         assertThat(dokumentdata.getAntallDødeBarn()).isEqualTo(0);
         assertThat(dokumentdata.getDødsdato()).isEqualTo(null);
-        assertThat(dokumentdata.getPerioder()).hasSize(3);
+        assertThat(dokumentdata.getMorKanSøkeOmDagerFørFødsel()).isTrue();
+        assertThat(dokumentdata.getPerioder()).hasSize(4);
+        assertThat(dokumentdata.getPerioder().get(0).getStønadskontoType()).isEqualTo(StønadskontoType.FORELDREPENGER);
 
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
         assertThat(dokumentdata.getLovhjemlerUttak()).isEqualTo("forvaltningsloven § 35");
@@ -282,6 +283,14 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .medUtbetalingsprosent(BigDecimal.ZERO)
                 .medUttakAktivitet(UttakAktivitet.ny().medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID).build())
                 .medArbeidsprosent(BigDecimal.valueOf(100))
+                .medTrekkonto(StønadskontoType.FORELDREPENGER)
+                .build();
+        UttakResultatPeriodeAktivitet uttakAktivitet1 = UttakResultatPeriodeAktivitet.ny()
+                .medTrekkdager(BigDecimal.TEN)
+                .medUtbetalingsprosent(BigDecimal.ZERO)
+                .medUttakAktivitet(UttakAktivitet.ny().medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID).build())
+                .medArbeidsprosent(BigDecimal.valueOf(200))
+                .medTrekkonto(StønadskontoType.FORELDREPENGER_FØR_FØDSEL)
                 .build();
         UttakResultatPeriode uttakResultatPeriode1 = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet))
@@ -296,8 +305,14 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG)
                 .build();
+        UttakResultatPeriode uttakResultatPeriode3 = UttakResultatPeriode.ny()
+                .medAktiviteter(of(uttakAktivitet1))
+                .medTidsperiode(fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1)))
+                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+                .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE)
+                .build();
         return UttakResultatPerioder.ny()
-                .medPerioder(of(uttakResultatPeriode1, uttakResultatPeriode2))
+                .medPerioder(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3))
                 .medAnnenForelderHarRett(true)
                 .medAleneomsorg(true)
                 .build();

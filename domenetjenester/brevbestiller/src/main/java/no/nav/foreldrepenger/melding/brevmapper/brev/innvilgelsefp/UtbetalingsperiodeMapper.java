@@ -1,21 +1,5 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
-import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMerger.mergePerioder;
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
@@ -31,11 +15,28 @@ import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeid
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.NaturalytelseEndringType;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMerger.mergePerioder;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 public final class UtbetalingsperiodeMapper {
 
@@ -132,7 +133,8 @@ public final class UtbetalingsperiodeMapper {
                 .medInnvilget((uttakperiode.isInnvilget() && !erGraderingAvslått(uttakperiode)))
                 .medPeriodeFom(uttakperiode.getFom(), språkkode)
                 .medPeriodeTom(uttakperiode.getTom(), språkkode)
-                .medÅrsak(Årsak.of(uttakperiode.getPeriodeResultatÅrsak().getKode()));
+                .medÅrsak(Årsak.of(uttakperiode.getPeriodeResultatÅrsak().getKode()))
+                .medStønadskontoType(hentStønadskontoType(uttakperiode));
         return utbetalingsPerioder.build();
     }
 
@@ -197,9 +199,10 @@ public final class UtbetalingsperiodeMapper {
         var utbetalingsPerioder = Utbetalingsperiode.ny()
                 .medAntallTapteDager(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter()))
                 .medInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode))
+                .medÅrsak(Årsak.of(periodeResultatÅrsak.getKode()))
+                .medStønadskontoType(hentStønadskontoType(uttakResultatPeriode))
                 .medPeriodeFom(fomDate, språkkode)
                 .medPeriodeTom(beregningsresultatPeriode.getBeregningsresultatPeriodeTom(), språkkode)
-                .medÅrsak(Årsak.of(periodeResultatÅrsak.getKode()))
                 .medArbeidsforhold(arbeidsfoholdListe)
                 .medNæring(næring)
                 .medAnnenAktivitet(annenAktivitetListe)
@@ -210,6 +213,10 @@ public final class UtbetalingsperiodeMapper {
         }
 
         return utbetalingsPerioder.build();
+    }
+
+    private static StønadskontoType hentStønadskontoType(UttakResultatPeriode uttakResultatPeriode) {
+        return uttakResultatPeriode.getAktiviteter().stream().findFirst().map(UttakResultatPeriodeAktivitet::getTrekkonto).orElse(StønadskontoType.UDEFINERT);
     }
 
     private static PeriodeResultatÅrsak utledÅrsakskode(UttakResultatPeriode uttakPeriode) {

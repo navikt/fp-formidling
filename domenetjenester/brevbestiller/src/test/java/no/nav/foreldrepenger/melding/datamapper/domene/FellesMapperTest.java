@@ -9,8 +9,8 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.innvilget.foreldrepenger.KonsekvensForYtelseKode;
 
 public class FellesMapperTest {
 
@@ -29,7 +29,7 @@ public class FellesMapperTest {
     @Test
     public void formaterLovhjemlerRevurderingEndringBeregning() {
         String lovhjemmelFraBeregning = "folketrygdloven § 14-7";
-        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelseKode.ENDRING_I_BEREGNING.value(), false, "§ 14-7 og forvaltningsloven § 35");
+        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false, "§ 14-7 og forvaltningsloven § 35");
     }
 
     @Test
@@ -47,13 +47,13 @@ public class FellesMapperTest {
     @Test
     public void formaterLovhjemlerRevurderingEndringBeregningOgLovhjemmelUdefinertFraBeregning() {
         String lovhjemmelFraBeregning = Hjemmel.UDEFINERT.getNavn();
-        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelseKode.ENDRING_I_BEREGNING.value(), false, " og forvaltningsloven § 35");
+        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false, " og forvaltningsloven § 35");
     }
 
     @Test
     public void formaterLovhjemlerRevurderingEndringBeregningOgLovhjemmelNullFraBeregning() {
         String lovhjemmelFraBeregning = null;
-        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelseKode.ENDRING_I_BEREGNING.value(), false, " og forvaltningsloven § 35");
+        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false, " og forvaltningsloven § 35");
     }
 
     @Test

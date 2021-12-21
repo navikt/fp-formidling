@@ -1,9 +1,9 @@
-package no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder;
+package no.nav.foreldrepenger.melding.brevmapper.brev.felles;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -28,7 +28,9 @@ import no.nav.vedtak.exception.TekniskException;
 
 public class PeriodeBeregner {
 
-    private static Map<AktivitetStatus, UttakArbeidType> uttakAktivitetStatusMap = new HashMap<>();
+    private static final String FEILKODE = "FPFORMIDLING-368280";
+    private static final String FEILMELDING = "Klarte ikke matche beregningsresultatperiode og %S for brev";
+    private static Map<AktivitetStatus, UttakArbeidType> uttakAktivitetStatusMap = new EnumMap<>(AktivitetStatus.class);
 
     static {
         uttakAktivitetStatusMap.put(AktivitetStatus.ARBEIDSTAKER, UttakArbeidType.ORDINÆRT_ARBEID);
@@ -49,8 +51,7 @@ public class PeriodeBeregner {
                 return beregningsgrunnlagPeriode;
             }
         }
-        throw new TekniskException("FPFORMIDLING-368280",
-                String.format("Klarte ikke matche beregningsresultatperiode og %S for brev", "beregningsgrunnlagperiode"));
+        throw new TekniskException(FEILKODE, String.format(FEILMELDING, "beregningsgrunnlagperiode"));
     }
 
     public static UttakResultatPeriode finnUttaksperiode(BeregningsresultatPeriode periode, List<UttakResultatPeriode> uttakPerioder) {
@@ -60,8 +61,7 @@ public class PeriodeBeregner {
                 return uttakPeriode;
             }
         }
-        throw new TekniskException("FPFORMIDLING-368280",
-                String.format("Klarte ikke matche beregningsresultatperiode og %S for brev", "uttaksperiode"));
+        throw new TekniskException(FEILKODE, String.format(FEILMELDING, "uttaksperiode"));
     }
 
     public static List<SvpUttakResultatPeriode> finnUttakPeriodeKandidater(BeregningsresultatPeriode periode,
@@ -77,8 +77,7 @@ public class PeriodeBeregner {
             if (!kandidater.isEmpty()) {
                 return kandidater.stream().filter(SvpUttakResultatPeriode::isInnvilget).collect(Collectors.toList());
             }
-            throw new TekniskException("FPFORMIDLING-368280",
-                    String.format("Klarte ikke matche beregningsresultatperiode og %S for brev", "uttaksperiode"));
+            throw new TekniskException(FEILKODE, String.format(FEILMELDING, "uttaksperiode"));
         }
         return Collections.emptyList();
     }

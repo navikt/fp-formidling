@@ -55,14 +55,6 @@
             <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>dtomapper</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>dokumentproduksjon-klient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>dokumentkontrakter</artifactId>
-        </dependency>
 
         <!-- Felles -->
         <dependency>

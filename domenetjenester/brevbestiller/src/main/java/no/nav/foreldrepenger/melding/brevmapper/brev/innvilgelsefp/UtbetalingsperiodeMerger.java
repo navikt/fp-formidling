@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.DatoVerktøy.erFomRettEtterTomDato;
 import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak.erRegnetSomLike;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.melding.brevmapper.brev.felles.DatoVerktøy;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp.Næring;
@@ -63,15 +63,11 @@ public final class UtbetalingsperiodeMerger {
 
     private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
         return sammeStatusOgÅrsak(periodeEn, periodeTo) && likPeriodeDagsats(periodeEn, periodeTo)
-                && likeAktiviteter(periodeEn, periodeTo) && erFomRettEtterTomDato(periodeEn, periodeTo);
+                && likeAktiviteter(periodeEn, periodeTo) && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
     }
 
     static boolean likeAktiviteter(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
         return likeArbeidsforhold(periodeEn, periodeTo) && likNæring(periodeEn, periodeTo) && likeAndreAktiviteter(periodeEn, periodeTo);
-    }
-
-    static boolean erFomRettEtterTomDato(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
-        return DatoVerktøy.erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
     }
 
     private static boolean sammeStatusOgÅrsak(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {

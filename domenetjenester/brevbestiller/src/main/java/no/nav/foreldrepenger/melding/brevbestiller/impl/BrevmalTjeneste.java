@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
-import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.malSkalIkkeTilgjengeliggjøresForManuellUtsendelse;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -64,29 +62,21 @@ public class BrevmalTjeneste {
     // - men vi vet ikke at en behandling er FP, SVP, eller ES. Mangler også noe på innsynsbehandling beskrevet i TFP-1084
     private List<DokumentMalType> filtrerUtilgjengeligBrevmaler(Behandling behandling, List<DokumentMalType> kandidater, boolean automatiskOpprettet, List<Aksjonspunkt> aksjonspunkter) {
         List<DokumentMalType> fjernes = kandidater.stream()
-                .filter(dm -> !dm.erTilgjengeligForManuellUtsendelse() || malSkalIkkeTilgjengeliggjøresForManuellUtsendelse(dm))
+                .filter(dm -> !dm.erTilgjengeligForManuellUtsendelse())
                 .collect(Collectors.toList());
         if (harAksjonspunktVarselOmRevurdering(aksjonspunkter)) {
-            fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_DOK);
             fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID);
-            fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK);
             fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
-            fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING_DOK);
             fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING);
         } else if (behandling.erKlage()) {
-            fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK);
             fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
-            fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING_DOK);
             fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING);
         } else if (behandling.erRevurdering()) {
             if (!automatiskOpprettet) {
-                fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_DOK);
                 fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID);
-                fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK);
                 fjernes.add(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL);
             }
         } else {
-            fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING_DOK);
             fjernes.add(DokumentMalType.VARSEL_OM_REVURDERING);
         }
         return fjernes;

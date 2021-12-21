@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.opphørfp;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +9,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.enterprise.context.ApplicationScoped;
-
-import com.google.common.collect.Lists;
 
 import no.nav.foreldrepenger.melding.Tuple;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
@@ -31,7 +30,7 @@ public class ÅrsakMapperOpphør {
     public static Tuple<List<String>, String> mapÅrsakslisteOgLovhjemmelFra(Behandlingsresultat behandlingsresultat,
                                                                       UttakResultatPerioder uttakResultatPerioder) {
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
-        List<String> årsaksliste = Lists.newArrayList();
+        List<String> årsaksliste = new ArrayList<>();
         årsaksliste.addAll(årsakerFra(behandlingsresultat, uttakResultatPerioder));
 
         return new Tuple<>(årsaksliste, FellesMapper.formaterLovhjemlerUttak(lovReferanser));

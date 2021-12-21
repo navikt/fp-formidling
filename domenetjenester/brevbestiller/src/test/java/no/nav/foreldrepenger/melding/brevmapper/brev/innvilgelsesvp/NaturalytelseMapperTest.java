@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp;
 
-import static com.google.common.collect.ImmutableList.of;
+import static java.util.List.of;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDatoNorsk;
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -7,7 +7,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.Period;
@@ -43,7 +42,6 @@ import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.melding.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
-import no.nav.foreldrepenger.melding.integrasjon.dokdist.Dokdist;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.melding.integrasjon.journal.OpprettJournalpostTjeneste;
@@ -94,11 +92,7 @@ public class BrevBestillerTjenesteTest {
     @Mock
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
     @Mock
-    private Dokdist dokdistRestKlient;
-    @Mock
     private DokumentMalUtleder dokumentMalUtleder;
-    @Mock
-    private DokprodBrevproduksjonTjeneste dokprodBrevproduksjonTjeneste;
     @Mock
     private DokumentdataMapperProvider dokumentdataMapperProvider;
     @Mock
@@ -120,14 +114,13 @@ public class BrevBestillerTjenesteTest {
         dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, navKontaktKonfigurasjon, virksomhetTjeneste);
         dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
                 dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste, historikkRepository);
-        tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider,
-                dokprodBrevproduksjonTjeneste, dokgenBrevproduksjonTjeneste);
+        tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
     }
 
     @Test
     public void skal_generere_og_sende_brev_til_både_søker_og_verge_og_returnere_historikkinnslag() {
         // Arrange
-        Personinfo personinfo = mockTps(true);
+        Personinfo personinfo = mockPdl(true);
         Behandling behandling = mockDomeneobjektProvider(personinfo, true);
         DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
         when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
@@ -161,7 +154,7 @@ public class BrevBestillerTjenesteTest {
     @Test
     public void skal_ikke_sende_til_verge_når_verge_ikke_er_definert() {
         // Arrange
-        Personinfo personinfo = mockTps(false);
+        Personinfo personinfo = mockPdl(false);
         Behandling behandling = mockDomeneobjektProvider(personinfo, false);
         DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
         when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
@@ -184,23 +177,7 @@ public class BrevBestillerTjenesteTest {
         assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
     }
 
-    @Test
-    public void skal_bare_kalle_dokgen_tjenesten_for_maler_som_er_konvertert() {
-        // Arrange
-        DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
-        when(dokumentMalUtleder.utledDokumentmal(any(), any())).thenReturn(DokumentMalType.FORELDREPENGER_INNVILGELSE_DOK);
-
-        // Act
-        tjeneste.bestillBrev(dokumentHendelse);
-
-        // Assert
-        verify(dokprodBrevproduksjonTjeneste, times(1)).bestillBrev(eq(dokumentHendelse), any(), eq(DokumentMalType.FORELDREPENGER_INNVILGELSE_DOK));
-        verifyNoInteractions(dokgenRestKlient);
-        verifyNoInteractions(opprettJournalpostTjeneste);
-        verifyNoInteractions(dokdistRestKlient);
-    }
-
-    private Personinfo mockTps(boolean harVerge) {
+    private Personinfo mockPdl(boolean harVerge) {
         Personinfo personinfoSøker = Personinfo.getbuilder(SØKER)
                 .medPersonIdent(SØKER_FNR)
                 .medNavn(NAVN)

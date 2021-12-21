@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp;
 
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.DatoVerktøy.erFomRettEtterTomDato;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,7 +10,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerVerktøy;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp.Avslagsperiode;
@@ -85,7 +86,7 @@ public final class AvslagsperiodeMapper {
         DatoIntervallEntitet forrigePeriodeIntervall = DatoIntervallEntitet.fraOgMedTilOgMed(forrigePeriode.getPeriodeFom(),
                 forrigePeriode.getPeriodeTom());
         return forrigePeriodeIntervall.inkluderer(nestePeriodeFom)
-                || PeriodeMergerVerktøy.erFomRettEtterTomDato(forrigePeriode.getPeriodeTom(), nestePeriodeFom);
+                || erFomRettEtterTomDato(forrigePeriode.getPeriodeTom(), nestePeriodeFom);
     }
 
     private static Avslagsperiode byggSammenslåttAvslagsperiode(Avslagsperiode forrigePeriode, LocalDate nyTom) {

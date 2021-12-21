@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
 import static java.util.Arrays.asList;
 import static java.util.List.of;
-import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMerger.erFomRettEtterTomDato;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMerger.likeAktiviteter;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -77,32 +76,6 @@ public class UtbetalingsperiodeMergerTest {
 
         // Assert
         assertThat(resultat).isEqualTo(utbetalingsperiode);
-    }
-
-    @Test
-    public void skal_finne_at_periode_2_er_rett_etter_periode_1() {
-        // Arrange
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).build();
-        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).build();
-
-        // Act
-        boolean resultat = erFomRettEtterTomDato(utbetalingsperiode1, utbetalingsperiode2);
-
-        // Assert
-        assertThat(resultat).isTrue();
-    }
-
-    @Test
-    public void skal_finne_at_periode_2_ikke_er_rett_etter_periode_1() {
-        // Arrange
-        Utbetalingsperiode utbetalingsperiode1 = Utbetalingsperiode.ny().medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB).medPeriodeTom(LocalDate.now().plusDays(3), Språkkode.NB).build();
-        Utbetalingsperiode utbetalingsperiode2 = Utbetalingsperiode.ny().medPeriodeFom(LocalDate.now().plusDays(8), Språkkode.NB).medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB).build();
-
-        // Act
-        boolean resultat = erFomRettEtterTomDato(utbetalingsperiode1, utbetalingsperiode2);
-
-        // Assert
-        assertThat(resultat).isFalse();
     }
 
     @Test

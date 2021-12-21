@@ -20,7 +20,6 @@ import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles.Kopi;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.felles.FellesType;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
@@ -90,10 +89,6 @@ public class DatamapperTestUtil {
                 .medBestillingType("B")
                 .medBestiltTid(LocalDateTime.now())
                 .build();
-    }
-
-    public static FellesType getFellesType() {
-        return new FellesType();
     }
 
     public static DokumentHendelse.Builder lagStandardHendelseBuilder() {

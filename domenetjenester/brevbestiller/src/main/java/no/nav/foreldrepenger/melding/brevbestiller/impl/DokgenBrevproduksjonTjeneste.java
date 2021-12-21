@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -13,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.brevbestiller.api.BrevproduksjonTjeneste;
 import no.nav.foreldrepenger.melding.brevbestiller.task.BrevTaskProperties;
 import no.nav.foreldrepenger.melding.brevbestiller.task.DistribuerBrevTask;
 import no.nav.foreldrepenger.melding.brevbestiller.task.FerdigstillForsendelseTask;
@@ -43,7 +40,7 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 
 @ApplicationScoped
-public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
+public class DokgenBrevproduksjonTjeneste {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokgenBrevproduksjonTjeneste.class);
     private static final Logger SECURE_LOGGER = LoggerFactory.getLogger("secureLogger");
 
@@ -79,7 +76,6 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         this.historikkRepository = historikkRepository;
     }
 
-    @Override
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.UTKAST);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
@@ -89,7 +85,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
         Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(førsteDokumentFelles, dokumentHendelse, behandling, true);
         førsteDokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
-        førsteDokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
+
         byte[] brev;
         try {
             brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
@@ -105,8 +101,7 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
         return brev;
     }
 
-    @Override
-    public List<DokumentHistorikkinnslag> bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
+    public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.BESTILL);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
         dokumentRepository.lagre(dokumentData);
@@ -116,7 +111,6 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
             DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
             Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
             dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
-            dokumentFelles.setAlternativeBrevData(DefaultJsonMapper.toJson(dokumentdata));
 
             byte[] brev;
             try {
@@ -138,20 +132,6 @@ public class DokgenBrevproduksjonTjeneste implements BrevproduksjonTjeneste {
 
             distribuerBrevOgLagHistorikk(dokumentHendelse, dokumentMal, response, journalpostId, innsynMedVedlegg);
         }
-        return Collections.emptyList(); // TODO(JEJ): Omstrukturere koden når DokprodBrevproduksjonTjeneste er historie
-    }
-
-    @Override
-    public void generereBrevForTestFormål(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
-        DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.BESTILL);
-        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
-        DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
-
-        DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
-        Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(førsteDokumentFelles, dokumentHendelse, behandling, false);
-
-        dokumentdata.getFelles().anonymiser();
-        SECURE_LOGGER.info("Generert json brev som ikke er lansert {}: {}", DefaultJsonMapper.toJson(dokumentdata), dokumentMal);
     }
 
     private DokumentData lagDokumentData(Behandling behandling, DokumentMalType dokumentMalType, BestillingType bestillingType) {

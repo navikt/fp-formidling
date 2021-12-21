@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp;
 
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerVerktøy.erFomRettEtterTomDato;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.DatoVerktøy.erFomRettEtterTomDato;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

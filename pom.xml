@@ -17,7 +17,6 @@
         <module>dokumentlager</module>
         <module>prosesstask</module>
         <module>domenetjenester</module>
-        <module>dokumentproduksjon-klient</module>
     </modules>
 
     <properties>
@@ -37,7 +36,6 @@
         <prosesstask.version>3.1.1</prosesstask.version>
         <kontrakter.version>6.0.8</kontrakter.version>
         <konfig.version>1.1.4</konfig.version>
-        <dokprod-kontrakt.version>2.1.8</dokprod-kontrakt.version>
 
         <!-- Eksterne -->
         <prometheus.version>0.13.0</prometheus.version>
@@ -159,16 +157,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>dokumentkontrakter</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>dokumentproduksjon-klient</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>dokgen-klient</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -260,12 +248,6 @@
                 <groupId>no.nav.foreldrepenger.kontrakter</groupId>
                 <artifactId>fp-formidling-v1</artifactId>
                 <version>${kontrakter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.tjenester.fim</groupId>
-                <artifactId>nav-fim-dokumentproduksjon-v2-tjenestespesifikasjon</artifactId>
-                <version>${dokprod-kontrakt.version}</version>
-                <classifier>jaxws</classifier>
             </dependency>
 
             <!-- Database -->

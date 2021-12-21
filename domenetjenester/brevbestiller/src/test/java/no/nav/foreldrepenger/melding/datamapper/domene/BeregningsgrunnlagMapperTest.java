@@ -14,7 +14,6 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
-import no.nav.foreldrepenger.melding.typer.Beløp;
 
 public class BeregningsgrunnlagMapperTest {
 
@@ -73,11 +72,6 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_finne_avkortetPrÅr_SVP() {
-        assertThat(BeregningsgrunnlagMapper.getAvkortetPrAarSVP(beregningsgrunnlag)).isEqualTo(AVKORTET_PR_ÅR);
-    }
-
-    @Test
     public void skal_identifsere_statuser() {
         List<BeregningsgrunnlagPrStatusOgAndel> arbeidstakerAndeler = BeregningsgrunnlagMapper
                 .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER),
@@ -129,31 +123,4 @@ public class BeregningsgrunnlagMapperTest {
                 .build();
         assertThat(beregningsgrunnlag.getErBesteberegnet()).isTrue();
     }
-
-    @Test
-    public void skal_identifisere_brutto_over_6g() {
-
-        beregningsgrunnlag = Beregningsgrunnlag.ny()
-                .medGrunnbeløp(new Beløp(GRUNNBELØP))
-                .leggTilBeregningsgrunnlagPeriode(
-                        BeregningsgrunnlagPeriode.ny()
-                                .medBruttoPrÅr(GRUNNBELØP.multiply(BigDecimal.valueOf(6)).add(BigDecimal.ONE))
-                                .build())
-                .build();
-        assertThat(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag)).isTrue();
-    }
-
-    @Test
-    public void skal_identifisere_ikke_brutto_over_6g() {
-
-        beregningsgrunnlag = Beregningsgrunnlag.ny()
-                .medGrunnbeløp(new Beløp(GRUNNBELØP))
-                .leggTilBeregningsgrunnlagPeriode(
-                        BeregningsgrunnlagPeriode.ny()
-                                .medBruttoPrÅr(GRUNNBELØP.multiply(BigDecimal.valueOf(6)))
-                                .build())
-                .build();
-        assertThat(BeregningsgrunnlagMapper.inntektOverSeksG(beregningsgrunnlag)).isFalse();
-    }
-
 }

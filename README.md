@@ -7,7 +7,7 @@ Applikasjonen bestiller brev basert på hendelser fra en kafka-kø, eller via et
 
 Spørsmål knyttet til koden eller prosjektet kan rettes til:
 * Anja Gøtesen Aalerud (anja.gotesen.aalerud@nav.no)
-* Jan Erik Johnsen (jan.erik.johnsen@nav.no)
+* Michal Sladek (michal.sladek@nav.no)
 
 ### Henvendelser for NAV-ansatte
 Interne henvendelser kan sendes via Slack i kanalen #fp-brev.

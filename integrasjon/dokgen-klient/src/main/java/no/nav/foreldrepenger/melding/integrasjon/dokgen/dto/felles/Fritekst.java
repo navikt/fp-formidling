@@ -53,17 +53,6 @@ public class Fritekst {
         return new Fritekst(fritekst);
     }
 
-    //TODO(JEJ): Slettes når alle brev er flyttet til Dokgen
-    @Deprecated
-    public static Optional<String> forDokprod(DokumentHendelse dokumentHendelse, Behandling behandling) {
-        if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
-            return Optional.of(dokumentHendelse.getFritekst());
-        } else if (behandling.getBehandlingsresultat() != null) {
-            return Optional.ofNullable(behandling.getBehandlingsresultat().getAvslagarsakFritekst());
-        }
-        return Optional.empty();
-    }
-
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

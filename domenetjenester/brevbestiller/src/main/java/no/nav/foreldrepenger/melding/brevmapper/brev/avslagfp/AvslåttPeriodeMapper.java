@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.avslagfp;
 
-import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -16,10 +16,10 @@ import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.behandling.ÅrsakMedLovReferanse;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.melding.brevmapper.brev.felles.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.datamapper.domene.BehandlingMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
 import no.nav.foreldrepenger.melding.datamapper.domene.LovhjemmelUtil;
-import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.avslagfp.AvslåttPeriode;

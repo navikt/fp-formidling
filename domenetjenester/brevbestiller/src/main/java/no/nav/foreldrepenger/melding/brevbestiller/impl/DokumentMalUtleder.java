@@ -1,5 +1,12 @@
 package no.nav.foreldrepenger.melding.brevbestiller.impl;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
@@ -18,14 +25,6 @@ import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.melding.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-
-import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokgenLanseringTjeneste.overstyrMalHvisNødvendig;
 
 @ApplicationScoped
 class DokumentMalUtleder {
@@ -99,7 +98,7 @@ class DokumentMalUtleder {
 
     DokumentMalType utledDokumentmal(Behandling behandling, DokumentHendelse hendelse) {
         if (hendelse.getDokumentMalType() != null) {
-            return overstyrMalHvisNødvendig(hendelse.getDokumentMalType());
+            return hendelse.getDokumentMalType();
         }
         if (Boolean.TRUE.equals(hendelse.isGjelderVedtak())) {
             return utledVedtaksbrev(behandling, hendelse);

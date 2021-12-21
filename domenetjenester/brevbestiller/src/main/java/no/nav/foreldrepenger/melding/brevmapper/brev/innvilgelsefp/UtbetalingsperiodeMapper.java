@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp.UtbetalingsperiodeMerger.mergePerioder;
-import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.alleAktiviteterHarNullUtbetaling;
 import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
-import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
+import no.nav.foreldrepenger.melding.brevmapper.brev.felles.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;

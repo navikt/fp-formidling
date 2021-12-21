@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp;
 
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.DatoVerktøy.erFomRettEtterTomDato;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp.AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse;
-import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeMergerVerktøy.erFomRettEtterTomDato;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.melding.beregning.BeregningsresultatAndel;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatFP;
 import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
+import no.nav.foreldrepenger.melding.brevmapper.brev.felles.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp.Uttaksaktivitet;

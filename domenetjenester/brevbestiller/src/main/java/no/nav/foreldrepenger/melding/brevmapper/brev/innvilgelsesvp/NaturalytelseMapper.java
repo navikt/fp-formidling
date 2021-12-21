@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp;
 
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.PeriodeBeregner.finnBeregningsgrunnlagperiode;
 import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp.AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse;
-import static no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner.finnBeregningsgrunnlagperiode;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.PeriodeÅrsak;
-import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
+import no.nav.foreldrepenger.melding.brevmapper.brev.felles.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp.Naturalytelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp.Naturalytelse.NaturalytelseStatus;

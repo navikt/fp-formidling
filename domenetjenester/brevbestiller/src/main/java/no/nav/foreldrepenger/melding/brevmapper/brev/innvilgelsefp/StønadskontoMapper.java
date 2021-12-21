@@ -6,7 +6,7 @@ import static no.nav.foreldrepenger.melding.uttak.StønadskontoType.MØDREKVOTE;
 
 import java.math.BigInteger;
 
-import no.nav.foreldrepenger.melding.datamapper.domene.sammenslåperioder.PeriodeBeregner;
+import no.nav.foreldrepenger.melding.brevmapper.brev.felles.PeriodeBeregner;
 import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.melding.uttak.Saldoer;
 import no.nav.foreldrepenger.melding.uttak.Stønadskonto;

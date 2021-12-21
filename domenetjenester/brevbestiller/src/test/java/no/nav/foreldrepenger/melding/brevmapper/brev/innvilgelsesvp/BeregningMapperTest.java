@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp;
 
 import static java.util.List.of;
+import static no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsesvp.BeregningMapper.utledLovhjemmelForBeregning;
 import static no.nav.foreldrepenger.melding.typer.DatoIntervall.fraOgMedTilOgMed;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,13 +12,18 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.melding.behandling.Behandling;
+import no.nav.foreldrepenger.melding.behandling.BehandlingType;
+import no.nav.foreldrepenger.melding.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsesvp.Arbeidsforhold;
+import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
@@ -73,4 +79,66 @@ public class BeregningMapperTest {
         assertThat(resultat.get(1).getMånedsinntekt()).isEqualTo(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
     }
 
+    @Test
+    public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_30() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder()
+                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+                .medBehandlingsresultat(behandlingsresultat)
+                .build();
+        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .medhHjemmel(Hjemmel.F_14_7_8_30)
+                .build();
+
+        // Act
+        String hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);
+
+        // Assert
+        assertThat(hjemmel).containsOnlyOnce("§§ 14-4 og 8-30");
+    }
+
+    @Test
+    public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_49() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder()
+                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+                .medBehandlingsresultat(behandlingsresultat)
+                .build();
+        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .medhHjemmel(Hjemmel.F_14_7_8_49)
+                .build();
+
+        // Act
+        String hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);
+
+        // Assert
+        assertThat(hjemmel).containsOnlyOnce("§§ 14-4 og 8-49");
+    }
+
+    @Test
+    public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7() {
+        // Arrange
+        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+                .build();
+        Behandling behandling = Behandling.builder()
+                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+                .medBehandlingsresultat(behandlingsresultat)
+                .build();
+        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .medhHjemmel(Hjemmel.F_14_7)
+                .build();
+
+        // Act
+        String hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);
+
+        // Assert
+        assertThat(hjemmel).containsOnlyOnce("§ 14-4");
+    }
 }

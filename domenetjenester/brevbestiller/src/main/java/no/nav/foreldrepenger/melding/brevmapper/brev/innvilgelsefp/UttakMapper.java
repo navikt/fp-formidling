@@ -1,8 +1,10 @@
-package no.nav.foreldrepenger.melding.datamapper.domene;
+package no.nav.foreldrepenger.melding.brevmapper.brev.innvilgelsefp;
 
 import java.util.Set;
 import java.util.TreeSet;
 
+import no.nav.foreldrepenger.melding.datamapper.domene.FellesMapper;
+import no.nav.foreldrepenger.melding.datamapper.domene.LovhjemmelUtil;
 import no.nav.foreldrepenger.melding.datamapper.domene.sortering.LovhjemmelComparator;
 import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;

@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.melding.brevmapper.brev.avslagfp;
 
+import static no.nav.foreldrepenger.melding.brevmapper.brev.felles.DatoVerktøy.erFomRettEtterTomDato;
 import static no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak.erRegnetSomLike;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.melding.brevmapper.brev.felles.DatoVerktøy;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.avslagfp.AvslåttPeriode;
 
 public class AvslåttPeriodeMerger {
@@ -41,7 +41,7 @@ public class AvslåttPeriodeMerger {
 
     private static boolean erPerioderSammenhengendeOgSkalSlåSammen(AvslåttPeriode periodeEn, AvslåttPeriode periodeTo) {
         return sammeAvslagsårsak(periodeEn, periodeTo)
-                && DatoVerktøy.erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
+                && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
     }
 
     private static boolean sammeAvslagsårsak(AvslåttPeriode periodeEn, AvslåttPeriode periodeTo) {

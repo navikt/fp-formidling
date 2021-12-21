@@ -27,8 +27,9 @@ import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped
 public class DokumentFellesDataMapper {
-    private static final String DOD_PERSON_STATUS = "DOD";
-    private static final String DEFAULT_PERSON_STATUS = "ANNET";
+    public static final String DOD_PERSON_STATUS = "DOD";
+    public static final String DEFAULT_PERSON_STATUS = "ANNET";
+
     private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private DomeneobjektProvider domeneobjektProvider;
     private PersonAdapter personAdapter;

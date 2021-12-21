@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.melding.datamapper.util;
 
+import static no.nav.foreldrepenger.melding.brevbestiller.impl.DokumentFellesDataMapper.DOD_PERSON_STATUS;
+
 import java.time.LocalDate;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -10,7 +12,6 @@ import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.FellesDokumentdata;
-import no.nav.foreldrepenger.melding.integrasjon.dokument.forlenget.PersonstatusKode;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 
 @ApplicationScoped
@@ -52,7 +53,7 @@ public class BrevMapperUtil {
     }
 
     public static boolean erDød(DokumentFelles dokumentFelles) {
-        return PersonstatusKode.DOD.toString().equalsIgnoreCase(dokumentFelles.getSakspartPersonStatus());
+        return DOD_PERSON_STATUS.equalsIgnoreCase(dokumentFelles.getSakspartPersonStatus());
     }
 
     public static boolean brevSendesTilVerge(DokumentFelles dokumentFelles) {

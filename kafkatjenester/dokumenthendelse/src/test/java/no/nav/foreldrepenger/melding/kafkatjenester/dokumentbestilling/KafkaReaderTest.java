@@ -70,7 +70,7 @@ public class KafkaReaderTest {
         DokumentbestillingV1 dto = new DokumentbestillingV1();
         dto.setBehandlingUuid(UUID.randomUUID());
         dto.setDokumentbestillingUuid(UUID.randomUUID());
-        dto.setDokumentMal(DokumentMalType.FORELDREPENGER_INNVILGELSE_DOK.getKode());
+        dto.setDokumentMal(DokumentMalType.FORELDREPENGER_INNVILGELSE.getKode());
         dto.setFritekst("123");
         dto.setHistorikkAktør(HistorikkAktør.BESLUTTER.getKode());
         dto.setYtelseType(FagsakYtelseType.FORELDREPENGER);

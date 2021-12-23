@@ -22,8 +22,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.PersonAdapter;
-import no.nav.foreldrepenger.melding.aktør.AdresseType;
-import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
@@ -101,7 +99,6 @@ public class BrevBestillerTjenesteTest {
     private HistorikkRepository historikkRepository;
 
     private EngangsstønadInnvilgelseDokumentdataMapper dokumentdataMapper;
-    private NavKontaktKonfigurasjon navKontaktKonfigurasjon;
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste;
     private BrevBestillerTjeneste tjeneste;
@@ -110,8 +107,7 @@ public class BrevBestillerTjenesteTest {
     public void beforeEach() {
         dokumentdataMapper = new EngangsstønadInnvilgelseDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)),
                 domeneobjektProvider);
-        navKontaktKonfigurasjon = new NavKontaktKonfigurasjon("1", "2", "3", "4", "5", "6", "7");
-        dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, navKontaktKonfigurasjon, virksomhetTjeneste);
+        dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, virksomhetTjeneste);
         dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
                 dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste, historikkRepository);
         tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
@@ -184,8 +180,6 @@ public class BrevBestillerTjenesteTest {
                 .medNavBrukerKjønn(NavBrukerKjønn.MANN)
                 .build();
         lenient().when(personAdapter.hentBrukerForAktør(eq(SØKER))).thenReturn(Optional.of(personinfoSøker));
-        Adresseinfo adresseSøker = new Adresseinfo.Builder(AdresseType.BOSTEDSADRESSE, SØKER_FNR, NAVN, false).build();
-        lenient().when(personAdapter.hentAdresseinformasjon(eq(SØKER))).thenReturn(Optional.of(adresseSøker));
 
         if (harVerge) {
             Personinfo personinfoVerge = Personinfo.getbuilder(VERGE)
@@ -194,8 +188,6 @@ public class BrevBestillerTjenesteTest {
                     .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
                     .build();
             lenient().when(personAdapter.hentBrukerForAktør(eq(VERGE))).thenReturn(Optional.of(personinfoVerge));
-            Adresseinfo adresseVerge = new Adresseinfo.Builder(AdresseType.BOSTEDSADRESSE, VERGE_FNR, NAVN, false).build();
-            lenient().when(personAdapter.hentAdresseinformasjon(eq(VERGE))).thenReturn(Optional.of(adresseVerge));
         }
         return personinfoSøker;
     }

@@ -13,7 +13,6 @@ import org.mockito.Mockito;
 import no.nav.foreldrepenger.melding.behandling.Behandling;
 import no.nav.foreldrepenger.melding.behandling.BehandlingType;
 import no.nav.foreldrepenger.melding.datamapper.konfig.BrevParametere;
-import no.nav.foreldrepenger.melding.dokumentdata.DokumentAdresse;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles.Kopi;
@@ -21,6 +20,7 @@ import no.nav.foreldrepenger.melding.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.melding.typer.PersonIdent;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 
 public class DatamapperTestUtil {
@@ -55,25 +55,13 @@ public class DatamapperTestUtil {
     }
 
     public static DokumentFelles lagStandardDokumentFelles(DokumentData dokumentdata, Kopi kopi, boolean tilVerge) {
-        DokumentAdresse dokumentAdresse = new DokumentAdresse.Builder()
-                .medAdresselinje1("Adresse 1")
-                .medPostNummer("0491")
-                .medPoststed("OSLO")
-                .medMottakerNavn(SØKERS_NAVN)
-                .build();
-
         return DokumentFelles.builder(dokumentdata)
                 .medAutomatiskBehandlet(Boolean.TRUE)
                 .medDokumentDato(LocalDate.now())
-                .medKontaktTelefonNummer("22222222")
-                .medMottakerAdresse(dokumentAdresse)
-                .medNavnAvsenderEnhet("NAV Familie og pensjonsytelser")
-                .medPostadresse(dokumentAdresse)
-                .medReturadresse(dokumentAdresse)
                 .medMottakerId(tilVerge ? VERGES_FNR : SØKERS_FNR)
                 .medMottakerNavn(tilVerge ? VERGES_NAVN : SØKERS_NAVN)
                 .medSaksnummer(new Saksnummer(SAKSNUMMER))
-                .medSakspartId(SØKERS_FNR)
+                .medSakspartId(PersonIdent.fra(SØKERS_FNR))
                 .medSakspartNavn(SØKERS_NAVN)
                 .medErKopi(kopi != null ? Optional.of(kopi) : null)
                 .medMottakerType(DokumentFelles.MottakerType.PERSON)

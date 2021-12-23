@@ -62,10 +62,6 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "automatisk_behandlet", nullable = false)
     private Boolean automatiskBehandlet;
 
-    /**
-     * Dokumentbestillingsinformasjon fra dokumentproduksjon tjenesten bruker sakspartId for å sette identen til bruker.
-     * Det er derfor ønsket å lagre ned denne for å spore hva slags data som er blitt sendt.
-     **/
     @Column(name = "sakspart_id", nullable = false)
     private String sakspartId;
 
@@ -75,31 +71,11 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "sign_beslutter_navn")
     private String signerendeBeslutterNavn;
 
-    /**
-     * Dokumentbestillingsinformasjon fra dokumentproduksjon tjenesten bruker mottakerId for å sette identen til
-     * mottaker.
-     * Det er derfor ønsket å lagre ned denne for å spore hva slags data som er blitt sendt.
-     **/
     @Column(name = "mottaker_id", nullable = false)
     private String mottakerId;
 
     @Column(name = "mottaker_navn", nullable = false)
     private String mottakerNavn;
-
-    @Transient
-    private DokumentAdresse mottakerAdresse;
-
-    @Column(name = "navn_avsender_enhet", nullable = false)
-    private String navnAvsenderEnhet;
-
-    @Column(name = "kontakt_tlf", nullable = false)
-    private String kontaktTlf;
-
-    @Transient
-    private DokumentAdresse returadresse;
-
-    @Transient
-    private DokumentAdresse postadresse;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "dokument_data_id", nullable = false, updatable = false)
@@ -129,12 +105,12 @@ public class DokumentFelles extends BaseEntitet {
         dokumentData.addDokumentFelles(this);
     }
 
-    public static DokumentFelles.Builder builder(DokumentData dokumentData) {
+    public static Builder builder(DokumentData dokumentData) {
         return new DokumentFelles.Builder(dokumentData);
     }
 
-    public static DokumentFelles.Builder builder() {
-        return new DokumentFelles.Builder();
+    public static Builder builder() {
+        return new Builder();
     }
 
     public Long getId() {
@@ -177,28 +153,8 @@ public class DokumentFelles extends BaseEntitet {
         return mottakerNavn;
     }
 
-    public DokumentAdresse getMottakerAdresse() {
-        return mottakerAdresse;
-    }
-
-    public String getNavnAvsenderEnhet() {
-        return navnAvsenderEnhet;
-    }
-
-    public String getKontaktTlf() {
-        return kontaktTlf;
-    }
-
     public DokumentData getDokumentData() {
         return dokumentData;
-    }
-
-    public DokumentAdresse getReturadresse() {
-        return returadresse;
-    }
-
-    public DokumentAdresse getPostadresse() {
-        return postadresse;
     }
 
     public LocalDate getDokumentDato() {
@@ -212,10 +168,6 @@ public class DokumentFelles extends BaseEntitet {
     public Optional<Kopi> getErKopi() { return erKopi; }
 
     public MottakerType getMottakerType() { return mottakerType; }
-
-    public String getBrevData() {
-        return brevData;
-    }
 
     public void setBrevData(String brevData) {
         this.brevData = brevData;
@@ -239,8 +191,6 @@ public class DokumentFelles extends BaseEntitet {
                 && Objects.equals(signerendeBeslutterNavn, dokFelles.getSignerendeBeslutterNavn())
                 && Objects.equals(mottakerId, dokFelles.getMottakerId())
                 && Objects.equals(mottakerNavn, dokFelles.getMottakerNavn())
-                && Objects.equals(navnAvsenderEnhet, dokFelles.getNavnAvsenderEnhet())
-                && Objects.equals(kontaktTlf, dokFelles.getKontaktTlf())
                 && Objects.equals(dokumentDato, dokFelles.getDokumentDato())
                 && Objects.equals(sakspartPersonStatus, dokFelles.getSakspartPersonStatus());
     }
@@ -248,15 +198,13 @@ public class DokumentFelles extends BaseEntitet {
     @Override
     public int hashCode() {
         return Objects.hash(getSpråkkode(), saksnummer, signerendeSaksbehandlerNavn, automatiskBehandlet, sakspartId, sakspartNavn,
-                signerendeBeslutterNavn, mottakerId, mottakerNavn, navnAvsenderEnhet,
-                kontaktTlf, dokumentDato, sakspartPersonStatus);
+                signerendeBeslutterNavn, mottakerId, mottakerNavn, dokumentDato, sakspartPersonStatus);
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "<>";
     }
-
 
     public static class Builder {
 
@@ -270,33 +218,28 @@ public class DokumentFelles extends BaseEntitet {
             this.dokumentFelles = new DokumentFelles(dokumentData);
         }
 
-        public DokumentFelles.Builder medSpråkkode(Språkkode språkkode) {
+        public Builder medSpråkkode(Språkkode språkkode) {
             this.dokumentFelles.språkkode = språkkode == null ? Språkkode.UDEFINERT : språkkode;
             return this;
         }
 
-        public DokumentFelles.Builder medSaksnummer(Saksnummer saksnummer) {
+        public Builder medSaksnummer(Saksnummer saksnummer) {
             this.dokumentFelles.saksnummer = saksnummer;
             return this;
         }
 
-        public DokumentFelles.Builder medSignerendeBeslutterNavn(String signerendeBeslutterNavn) {
+        public Builder medSignerendeBeslutterNavn(String signerendeBeslutterNavn) {
             this.dokumentFelles.signerendeBeslutterNavn = signerendeBeslutterNavn;
             return this;
         }
 
-        public DokumentFelles.Builder medSignerendeSaksbehandlerNavn(String signerendeSaksbehandlerNavn) {
+        public Builder medSignerendeSaksbehandlerNavn(String signerendeSaksbehandlerNavn) {
             this.dokumentFelles.signerendeSaksbehandlerNavn = signerendeSaksbehandlerNavn;
             return this;
         }
 
-        public DokumentFelles.Builder medAutomatiskBehandlet(Boolean automatiskBehandlet) {
+        public Builder medAutomatiskBehandlet(Boolean automatiskBehandlet) {
             this.dokumentFelles.automatiskBehandlet = automatiskBehandlet;
-            return this;
-        }
-
-        public DokumentFelles.Builder medSakspartId(String sakspartId) {
-            medSakspartId(sakspartId == null ? null : new PersonIdent(sakspartId));
             return this;
         }
 
@@ -305,12 +248,12 @@ public class DokumentFelles extends BaseEntitet {
             return this;
         }
 
-        public DokumentFelles.Builder medSakspartNavn(String sakspartNavn) {
+        public Builder medSakspartNavn(String sakspartNavn) {
             this.dokumentFelles.sakspartNavn = sakspartNavn;
             return this;
         }
 
-        public DokumentFelles.Builder medMottakerId(String mottakerId) {
+        public Builder medMottakerId(String mottakerId) {
             medMottakerId(mottakerId == null ? null : new PersonIdent(mottakerId));
             return this;
         }
@@ -320,57 +263,27 @@ public class DokumentFelles extends BaseEntitet {
             return this;
         }
 
-        public DokumentFelles.Builder medMottakerNavn(String mottakerNavn) {
+        public Builder medMottakerNavn(String mottakerNavn) {
             this.dokumentFelles.mottakerNavn = mottakerNavn;
             return this;
         }
 
-        public DokumentFelles.Builder medMottakerAdresse(DokumentAdresse mottakerAdresse) {
-            this.dokumentFelles.mottakerAdresse = mottakerAdresse;
-            return this;
-        }
-
-        public DokumentFelles.Builder medNavnAvsenderEnhet(String navnAvsenderEnhet) {
-            this.dokumentFelles.navnAvsenderEnhet = navnAvsenderEnhet;
-            return this;
-        }
-
-        public DokumentFelles.Builder medKontaktTelefonNummer(String kontaktTlf) {
-            this.dokumentFelles.kontaktTlf = kontaktTlf;
-            return this;
-        }
-
-        public DokumentFelles.Builder medReturadresse(DokumentAdresse returadresse) {
-            this.dokumentFelles.returadresse = returadresse;
-            return this;
-        }
-
-        public DokumentFelles.Builder medPostadresse(DokumentAdresse postadresse) {
-            this.dokumentFelles.postadresse = postadresse;
-            return this;
-        }
-
-        public DokumentFelles.Builder medDokumentDato(LocalDate dokumentDato) {
+        public Builder medDokumentDato(LocalDate dokumentDato) {
             this.dokumentFelles.dokumentDato = dokumentDato;
             return this;
         }
 
-        public DokumentFelles.Builder medSakspartPersonStatus(String sakspartPersonStatus) {
+        public Builder medSakspartPersonStatus(String sakspartPersonStatus) {
             this.dokumentFelles.sakspartPersonStatus = sakspartPersonStatus;
             return this;
         }
 
-        public DokumentFelles.Builder medBrevData(String brevData) {
-            this.dokumentFelles.brevData = brevData;
-            return this;
-        }
-
-        public DokumentFelles.Builder medErKopi(Optional<Kopi> kopi) {
+        public Builder medErKopi(Optional<Kopi> kopi) {
             this.dokumentFelles.erKopi = kopi;
             return this;
         }
 
-        public DokumentFelles.Builder medMottakerType(MottakerType mottakerType) {
+        public Builder medMottakerType(MottakerType mottakerType) {
             this.dokumentFelles.mottakerType = mottakerType;
             return this;
         }
@@ -388,11 +301,6 @@ public class DokumentFelles extends BaseEntitet {
             Objects.requireNonNull(dokumentFelles.sakspartNavn, "sakspartNavn");
             Objects.requireNonNull(dokumentFelles.mottakerId, "mottakerId");
             Objects.requireNonNull(dokumentFelles.mottakerNavn, "mottakerNavn");
-            Objects.requireNonNull(dokumentFelles.mottakerAdresse, "mottakerAdresse");
-            Objects.requireNonNull(dokumentFelles.navnAvsenderEnhet, "navnAvsenderEnhet");
-            Objects.requireNonNull(dokumentFelles.kontaktTlf, "kontaktTelefonNummer");
-            Objects.requireNonNull(dokumentFelles.returadresse, "returadresse");
-            Objects.requireNonNull(dokumentFelles.postadresse, "behandling");
             Objects.requireNonNull(dokumentFelles.dokumentDato, "dokumentDato");
             Objects.requireNonNull(dokumentFelles.dokumentData, "dokumentData");
         }

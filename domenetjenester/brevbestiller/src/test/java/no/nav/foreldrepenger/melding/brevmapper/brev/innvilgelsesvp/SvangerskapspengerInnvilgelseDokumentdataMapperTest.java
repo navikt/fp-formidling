@@ -266,7 +266,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getSelvstendigNæringsdrivende()).isNotNull();
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getNyoppstartet()).isTrue();
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getÅrsinntekt()).isEqualTo(of(BRUTTO_BERENINGSGRUNNLAG_SN));
-        assertThat(dokumentdata.getSelvstendigNæringsdrivende().getSistLignedeÅr()).isEqualTo(LocalDate.now().getYear());
+        assertThat(dokumentdata.getSelvstendigNæringsdrivende().getSistLignedeÅr()).isEqualTo(PERIODE1_TOM.getYear());
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getInntektLavere_AT_SN()).isFalse();
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getInntektLavere_AT_FL_SN()).isFalse();
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getInntektLavere_FL_SN()).isFalse();

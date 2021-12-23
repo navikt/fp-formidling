@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.melding.web.app.tjenester;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static no.nav.foreldrepenger.melding.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt.DRIFT;
-import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.CREATE;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -11,7 +10,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -24,12 +22,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.melding.datamapper.DomeneobjektProvider;
-import no.nav.foreldrepenger.melding.geografisk.PoststedKodeverkRepository;
 import no.nav.foreldrepenger.melding.geografisk.Språkkode;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.Fagsystem;
-import no.nav.foreldrepenger.melding.poststed.PostnummerSynkroniseringTjeneste;
 import no.nav.foreldrepenger.melding.typer.Saksnummer;
 import no.nav.foreldrepenger.melding.web.app.tjenester.brev.AbacBehandlingUuidDto;
 import no.nav.vedtak.felles.integrasjon.sak.v1.SakClient;
@@ -45,8 +41,6 @@ public class ForvaltningRestTjeneste {
     private Dokgen dokgenRestKlient;
     private DomeneobjektProvider domeneobjektProvider;
     private SakClient sakClient;
-    private PostnummerSynkroniseringTjeneste postnummerTjeneste;
-    private PoststedKodeverkRepository poststedKodeverkRepository;
 
     public ForvaltningRestTjeneste() {
         // CDI
@@ -55,14 +49,10 @@ public class ForvaltningRestTjeneste {
     @Inject
     public ForvaltningRestTjeneste(/* @Jersey */ Dokgen dokgenRestKlient,
             DomeneobjektProvider domeneobjektProvider,
-            SakClient sakClient,
-            PostnummerSynkroniseringTjeneste postnummerTjeneste,
-            PoststedKodeverkRepository poststedKodeverkRepository) {
+            SakClient sakClient) {
         this.dokgenRestKlient = dokgenRestKlient;
         this.domeneobjektProvider = domeneobjektProvider;
         this.sakClient = sakClient;
-        this.postnummerTjeneste = postnummerTjeneste;
-        this.poststedKodeverkRepository = poststedKodeverkRepository;
     }
 
     @POST
@@ -117,28 +107,5 @@ public class ForvaltningRestTjeneste {
             }
         }
         return Response.ok().build();
-    }
-
-    @POST
-    @Path("/synk-postnummer")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    @Operation(description = "Hente og lagre kodeverk Postnummer", tags = "forvaltning")
-    @BeskyttetRessurs(action = CREATE, resource = DRIFT)
-    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response synkPostnummer() {
-        postnummerTjeneste.synkroniserPostnummer();
-        return Response.ok().build();
-    }
-
-    @GET
-    @Path("/hent-postnummer")
-    @Consumes(APPLICATION_JSON)
-    @Produces(APPLICATION_JSON)
-    @Operation(description = "Hente lokale Postnummer", tags = "forvaltning")
-    @BeskyttetRessurs(action = CREATE, resource = DRIFT)
-    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response hentPostnummer() {
-        return Response.ok(poststedKodeverkRepository.finnPostnummer("SYNK")).build();
     }
 }

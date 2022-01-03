@@ -1,24 +1,26 @@
 package no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.innvilgelsefp;
 
-import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import no.nav.foreldrepenger.melding.geografisk.Språkkode;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Prosent;
+import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
+import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Prosent;
-import no.nav.foreldrepenger.melding.integrasjon.dokgen.dto.felles.Årsak;
+import static no.nav.foreldrepenger.melding.typer.Dato.formaterDato;
 
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public class Utbetalingsperiode {
     private boolean innvilget;
     private Årsak årsak;
+    @JsonIgnore
+    private StønadskontoType stønadskontoType;
     private String periodeFom;
     @JsonIgnore
     private LocalDate periodeFomDate;
@@ -46,6 +48,9 @@ public class Utbetalingsperiode {
         return årsak;
     }
 
+    public StønadskontoType getStønadskontoType() {
+        return stønadskontoType;
+    }
     public LocalDate getPeriodeFom() {
         return periodeFomDate;
     }
@@ -125,6 +130,11 @@ public class Utbetalingsperiode {
 
         public Builder medÅrsak(Årsak årsak) {
             this.kladd.årsak = årsak;
+            return this;
+        }
+
+        public Builder medStønadskontoType(StønadskontoType stønadskontoType) {
+            this.kladd.stønadskontoType = stønadskontoType;
             return this;
         }
 

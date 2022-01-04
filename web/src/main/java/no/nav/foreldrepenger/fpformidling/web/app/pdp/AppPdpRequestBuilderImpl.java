@@ -16,7 +16,7 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.AppAbacAttributtType;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.web.app.pdp.dto.PipDto;

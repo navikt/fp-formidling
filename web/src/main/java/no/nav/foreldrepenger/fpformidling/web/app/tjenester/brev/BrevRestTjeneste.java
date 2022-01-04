@@ -19,8 +19,8 @@ import javax.ws.rs.core.Response;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import no.nav.foreldrepenger.fpformidling.brevbestiller.impl.BrevBestillerTjeneste;
-import no.nav.foreldrepenger.fpformidling.brevbestiller.impl.BrevmalTjeneste;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.brevmal.BrevmalTjeneste;
 import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;

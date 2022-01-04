@@ -20,7 +20,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
-import no.nav.foreldrepenger.fpformidling.datamapper.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;

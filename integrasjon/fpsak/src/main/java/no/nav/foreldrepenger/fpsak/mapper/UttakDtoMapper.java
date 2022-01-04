@@ -6,21 +6,21 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
+import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
+import no.nav.foreldrepenger.fpformidling.uttak.UttakAktivitet;
+import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
+import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeAktivitetDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpsak.mapper.sortering.PeriodeComparator;
-import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
-import no.nav.foreldrepenger.melding.typer.DatoIntervall;
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
-import no.nav.foreldrepenger.melding.uttak.UttakAktivitet;
-import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPerioder;
-import no.nav.foreldrepenger.melding.uttak.kodeliste.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public class UttakDtoMapper {
 

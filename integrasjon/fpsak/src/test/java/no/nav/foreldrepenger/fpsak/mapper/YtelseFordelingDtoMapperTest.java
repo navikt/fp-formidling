@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.fpformidling.ytelsefordeling.YtelseFordeling;
 import no.nav.foreldrepenger.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
-import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 
 public class YtelseFordelingDtoMapperTest {
 

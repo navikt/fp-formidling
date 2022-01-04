@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>no.nav.foreldrepenger.melding</groupId>
+    <groupId>no.nav.foreldrepenger.fpformidling</groupId>
     <artifactId>fpformidling</artifactId>
     <packaging>pom</packaging>
     <name>FP-FORMIDLING :: Root</name>
@@ -115,84 +115,84 @@
             </dependency>
 
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>domene</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>domene</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>migreringer</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>prosesstask</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>dokumenthendelse</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>dokumenthistorikk</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>fpdokgen</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>dokdist</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>journal</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>migreringer</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>brevproduksjon</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>brevbestiller-xsd</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>fpsak</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>pdl</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>organisasjon</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
+                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>webapp</artifactId>
                 <version>${project.version}</version>
                 <type>jar</type>

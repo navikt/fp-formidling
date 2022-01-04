@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.fpsak.mapper;
 
+import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakDto;
-import no.nav.foreldrepenger.melding.fagsak.FagsakBackend;
-import no.nav.foreldrepenger.melding.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.melding.typer.AktørId;
 
 public class FagsakDtoMapper {
 

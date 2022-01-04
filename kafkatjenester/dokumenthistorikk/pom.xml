@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>no.nav.foreldrepenger.melding</groupId>
+        <groupId>no.nav.foreldrepenger.fpformidling</groupId>
         <artifactId>kafkatjenester</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
@@ -15,11 +15,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>domene</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>prosesstask</artifactId>
         </dependency>
         <dependency>

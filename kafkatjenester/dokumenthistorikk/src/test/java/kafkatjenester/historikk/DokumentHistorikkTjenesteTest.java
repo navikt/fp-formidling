@@ -13,13 +13,13 @@ import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
-import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
-import no.nav.foreldrepenger.melding.historikk.HistorikkinnslagType;
-import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkTjeneste;
-import no.nav.foreldrepenger.melding.kafkatjenester.historikk.DokumentHistorikkinnslagProducer;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.melding.typer.JournalpostId;
+import no.nav.foreldrepenger.fpformidling.historikk.DokumentHistorikkinnslag;
+import no.nav.foreldrepenger.fpformidling.historikk.HistorikkAktør;
+import no.nav.foreldrepenger.fpformidling.historikk.HistorikkinnslagType;
+import no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk.DokumentHistorikkTjeneste;
+import no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk.DokumentHistorikkinnslagProducer;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 
 @ExtendWith(MockitoExtension.class)
 public class DokumentHistorikkTjenesteTest {

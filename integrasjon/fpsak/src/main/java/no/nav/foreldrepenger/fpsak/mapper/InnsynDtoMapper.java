@@ -3,12 +3,12 @@ package no.nav.foreldrepenger.fpsak.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.nav.foreldrepenger.fpformidling.behandling.innsyn.Innsyn;
+import no.nav.foreldrepenger.fpformidling.behandling.innsyn.InnsynDokument;
+import no.nav.foreldrepenger.fpformidling.behandling.innsyn.InnsynResultatType;
+import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynDokumentDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
-import no.nav.foreldrepenger.melding.behandling.innsyn.Innsyn;
-import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynDokument;
-import no.nav.foreldrepenger.melding.behandling.innsyn.InnsynResultatType;
-import no.nav.foreldrepenger.melding.typer.JournalpostId;
 
 public class InnsynDtoMapper {
 

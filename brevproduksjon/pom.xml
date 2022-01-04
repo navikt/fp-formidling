@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>no.nav.foreldrepenger.melding</groupId>
+        <groupId>no.nav.foreldrepenger.fpformidling</groupId>
         <artifactId>fpformidling</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
@@ -16,39 +16,39 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>domene</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>fpsak</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>pdl</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>prosesstask</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>fpdokgen</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>dokdist</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>journal</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>organisasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>dokumenthistorikk</artifactId>
         </dependency>
 
@@ -78,7 +78,7 @@
 
         <!-- Test -->
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>migreringer</artifactId>
             <scope>test</scope>
             <type>test-jar</type>

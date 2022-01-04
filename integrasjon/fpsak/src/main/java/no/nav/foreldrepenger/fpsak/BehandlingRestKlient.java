@@ -12,10 +12,10 @@ import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.foreldrepenger.fpformidling.behandling.BehandlingRelLinkPayload;
+import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
-import no.nav.foreldrepenger.melding.behandling.BehandlingRelLinkPayload;
-import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 @Dependent

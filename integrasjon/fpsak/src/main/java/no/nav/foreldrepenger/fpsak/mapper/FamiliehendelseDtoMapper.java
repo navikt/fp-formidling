@@ -5,14 +5,14 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
+import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
+import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartBarnDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataAdopsjonDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataFodselDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.AvklartDataOmsorgDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
-import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.melding.familiehendelse.FamilieHendelseType;
 
 public class FamiliehendelseDtoMapper {
 

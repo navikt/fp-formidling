@@ -2,11 +2,11 @@ package no.nav.foreldrepenger.fpsak.mapper;
 
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
+import no.nav.foreldrepenger.fpformidling.uttak.Stønadskonto;
+import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
 import no.nav.foreldrepenger.fpsak.dto.uttak.saldo.SaldoerDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.saldo.StønadskontoDto;
-import no.nav.foreldrepenger.melding.uttak.Saldoer;
-import no.nav.foreldrepenger.melding.uttak.Stønadskonto;
-import no.nav.foreldrepenger.melding.uttak.StønadskontoType;
 
 public class StønadskontoDtoMapper {
 

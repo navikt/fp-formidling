@@ -2,9 +2,9 @@ package no.nav.foreldrepenger.fpsak.mapper.sortering;
 
 import java.util.Comparator;
 
-import no.nav.foreldrepenger.melding.beregning.BeregningsresultatPeriode;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
-import no.nav.foreldrepenger.melding.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 
 public class PeriodeComparator {
     public static final Comparator<BeregningsresultatPeriode> BEREGNINGSRESULTAT =

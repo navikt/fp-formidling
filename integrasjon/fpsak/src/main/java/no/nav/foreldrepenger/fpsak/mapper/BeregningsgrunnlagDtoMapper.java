@@ -3,24 +3,24 @@ package no.nav.foreldrepenger.fpsak.mapper;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BGAndelArbeidsforhold;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Hjemmel;
+import no.nav.foreldrepenger.fpformidling.opptjening.OpptjeningAktivitetType;
+import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.fpformidling.typer.Beløp;
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
+import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagAndelDtoV2;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDtoV2;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BgAndelArbeidsforholdDtoV2;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.fpsak.mapper.sortering.PeriodeComparator;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BGAndelArbeidsforhold;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPeriode;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
-import no.nav.foreldrepenger.melding.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.melding.opptjening.OpptjeningAktivitetType;
-import no.nav.foreldrepenger.melding.typer.ArbeidsforholdRef;
-import no.nav.foreldrepenger.melding.typer.Beløp;
-import no.nav.foreldrepenger.melding.typer.DatoIntervall;
-import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 public class BeregningsgrunnlagDtoMapper {
 

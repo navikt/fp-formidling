@@ -8,9 +8,9 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.melding.aktør.Personinfo;
-import no.nav.foreldrepenger.melding.typer.AktørId;
-import no.nav.foreldrepenger.melding.typer.PersonIdent;
+import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
+import no.nav.foreldrepenger.fpformidling.typer.AktørId;
+import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.pdl.PersondataTjeneste;
 import no.nav.vedtak.felles.integrasjon.pdl.PdlException;
 

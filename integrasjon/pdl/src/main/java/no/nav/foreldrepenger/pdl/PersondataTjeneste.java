@@ -10,10 +10,10 @@ import java.util.concurrent.TimeUnit;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.melding.aktør.Personinfo;
-import no.nav.foreldrepenger.melding.personopplysning.NavBrukerKjønn;
-import no.nav.foreldrepenger.melding.typer.AktørId;
-import no.nav.foreldrepenger.melding.typer.PersonIdent;
+import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
+import no.nav.foreldrepenger.fpformidling.personopplysning.NavBrukerKjønn;
+import no.nav.foreldrepenger.fpformidling.typer.AktørId;
+import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.pdl.Doedsfall;
 import no.nav.pdl.DoedsfallResponseProjection;
 import no.nav.pdl.Foedsel;

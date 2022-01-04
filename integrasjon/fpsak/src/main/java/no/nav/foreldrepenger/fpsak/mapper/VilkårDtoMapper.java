@@ -3,9 +3,9 @@ package no.nav.foreldrepenger.fpsak.mapper;
 import java.util.ArrayList;
 import java.util.List;
 
+import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
+import no.nav.foreldrepenger.fpformidling.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
-import no.nav.foreldrepenger.melding.vilkår.Vilkår;
-import no.nav.foreldrepenger.melding.vilkår.VilkårType;
 
 public class VilkårDtoMapper {
 

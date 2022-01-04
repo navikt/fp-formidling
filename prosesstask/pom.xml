@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>no.nav.foreldrepenger.melding</groupId>
+        <groupId>no.nav.foreldrepenger.fpformidling</groupId>
         <artifactId>fpformidling</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>

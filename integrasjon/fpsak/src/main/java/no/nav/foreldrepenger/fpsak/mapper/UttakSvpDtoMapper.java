@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
+import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
+import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatArbeidsforholdDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
-import no.nav.foreldrepenger.melding.typer.DatoIntervall;
-import no.nav.foreldrepenger.melding.uttak.UttakArbeidType;
-import no.nav.foreldrepenger.melding.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatArbeidsforhold;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.melding.uttak.svp.SvpUttaksresultat;
-import no.nav.foreldrepenger.melding.virksomhet.Arbeidsgiver;
 
 
 public class UttakSvpDtoMapper {

@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.fpsak.mapper;
 
+import no.nav.foreldrepenger.fpformidling.fagsak.Dekningsgrad;
+import no.nav.foreldrepenger.fpformidling.ytelsefordeling.YtelseFordeling;
 import no.nav.foreldrepenger.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
-import no.nav.foreldrepenger.melding.fagsak.Dekningsgrad;
-import no.nav.foreldrepenger.melding.ytelsefordeling.YtelseFordeling;
 
 public final class YtelseFordelingDtoMapper {
 

@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.fpsak.mapper;
 
+import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
+import no.nav.foreldrepenger.fpformidling.ytelsefordeling.OppgittRettighet;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadBackendDto;
-import no.nav.foreldrepenger.melding.søknad.Søknad;
-import no.nav.foreldrepenger.melding.ytelsefordeling.OppgittRettighet;
 
 public class SøknadDtoMapper {
     public static Søknad mapSøknadFraDto(SoknadBackendDto dto) {

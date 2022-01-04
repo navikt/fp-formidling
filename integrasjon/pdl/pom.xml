@@ -6,7 +6,7 @@
 
     <parent>
         <artifactId>integrasjon</artifactId>
-        <groupId>no.nav.foreldrepenger.melding</groupId>
+        <groupId>no.nav.foreldrepenger.fpformidling</groupId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
 
@@ -16,7 +16,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>domene</artifactId>
         </dependency>
 

@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
+import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.InntektArbeidYtelse;
+import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmelding;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektsmeldingDto;
-import no.nav.foreldrepenger.melding.inntektarbeidytelse.InntektArbeidYtelse;
-import no.nav.foreldrepenger.melding.inntektarbeidytelse.Inntektsmelding;
 
 public class IAYDtoMapper {
 

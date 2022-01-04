@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.fpsak.dto.uttak.svp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.melding.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.melding.uttak.svp.PeriodeIkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 
 public class SvangerskapspengerUttakResultatPeriodeDto {
     private BigDecimal utbetalingsgrad;

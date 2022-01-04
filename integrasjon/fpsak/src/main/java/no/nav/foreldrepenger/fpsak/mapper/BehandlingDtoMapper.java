@@ -6,17 +6,17 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
+import no.nav.foreldrepenger.fpformidling.behandling.BehandlingRelLinkPayload;
+import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
+import no.nav.foreldrepenger.fpformidling.behandling.BehandlingStatus;
+import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
+import no.nav.foreldrepenger.fpformidling.behandling.BehandlingÅrsak;
+import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
-import no.nav.foreldrepenger.melding.behandling.Behandling;
-import no.nav.foreldrepenger.melding.behandling.BehandlingRelLinkPayload;
-import no.nav.foreldrepenger.melding.behandling.BehandlingResourceLink;
-import no.nav.foreldrepenger.melding.behandling.BehandlingStatus;
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.melding.geografisk.Språkkode;
-import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.BehandlingÅrsakType;
 
 public class BehandlingDtoMapper {
 

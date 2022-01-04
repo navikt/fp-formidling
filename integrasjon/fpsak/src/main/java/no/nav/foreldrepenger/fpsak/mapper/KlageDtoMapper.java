@@ -3,18 +3,18 @@ package no.nav.foreldrepenger.fpsak.mapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
+import no.nav.foreldrepenger.fpformidling.klage.Klage;
+import no.nav.foreldrepenger.fpformidling.klage.KlageAvvistÅrsak;
+import no.nav.foreldrepenger.fpformidling.klage.KlageDokument;
+import no.nav.foreldrepenger.fpformidling.klage.KlageFormkravResultat;
+import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
+import no.nav.foreldrepenger.fpformidling.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
-import no.nav.foreldrepenger.melding.behandling.BehandlingType;
-import no.nav.foreldrepenger.melding.klage.Klage;
-import no.nav.foreldrepenger.melding.klage.KlageAvvistÅrsak;
-import no.nav.foreldrepenger.melding.klage.KlageDokument;
-import no.nav.foreldrepenger.melding.klage.KlageFormkravResultat;
-import no.nav.foreldrepenger.melding.klage.KlageVurdering;
-import no.nav.foreldrepenger.melding.klage.KlageVurderingResultat;
 
 public class KlageDtoMapper {
 

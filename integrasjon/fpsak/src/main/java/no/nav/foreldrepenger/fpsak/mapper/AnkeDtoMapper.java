@@ -2,11 +2,11 @@ package no.nav.foreldrepenger.fpsak.mapper;
 
 import java.util.Optional;
 
+import no.nav.foreldrepenger.fpformidling.anke.Anke;
+import no.nav.foreldrepenger.fpformidling.anke.AnkeVurdering;
+import no.nav.foreldrepenger.fpformidling.anke.AnkeVurderingOmgjør;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkeVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
-import no.nav.foreldrepenger.melding.anke.Anke;
-import no.nav.foreldrepenger.melding.anke.AnkeVurdering;
-import no.nav.foreldrepenger.melding.anke.AnkeVurderingOmgjør;
 
 public class AnkeDtoMapper {
 

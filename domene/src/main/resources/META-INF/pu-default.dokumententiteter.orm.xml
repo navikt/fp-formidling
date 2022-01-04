@@ -11,11 +11,11 @@
     <sequence-generator name="SEQ_EVENTMOTTAK_FEILLOGG" allocation-size="50" sequence-name="SEQ_EVENTMOTTAK_FEILLOGG"/>
     <sequence-generator name="SEQ_DOKUMENT_HISTORIKK" allocation-size="50" sequence-name="SEQ_DOKUMENT_HISTORIKK"/>
 
-    <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentData"/>
-    <entity class="no.nav.foreldrepenger.melding.dokumentdata.DokumentFelles"/>
-    <entity class="no.nav.foreldrepenger.melding.hendelser.DokumentHendelse"/>
-    <entity class="no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg"/>
-    <entity class="no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag"/>
-    <entity class="no.nav.foreldrepenger.melding.geografisk.Poststed"/>
+    <entity class="no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData"/>
+    <entity class="no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles"/>
+    <entity class="no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse"/>
+    <entity class="no.nav.foreldrepenger.fpformidling.eventmottak.EventmottakFeillogg"/>
+    <entity class="no.nav.foreldrepenger.fpformidling.historikk.DokumentHistorikkinnslag"/>
+    <entity class="no.nav.foreldrepenger.fpformidling.geografisk.Poststed"/>
 
 </entity-mappings>

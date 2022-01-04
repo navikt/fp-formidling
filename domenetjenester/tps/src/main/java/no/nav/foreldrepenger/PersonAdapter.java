@@ -8,7 +8,6 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.melding.aktør.Adresseinfo;
 import no.nav.foreldrepenger.melding.aktør.Personinfo;
 import no.nav.foreldrepenger.melding.typer.AktørId;
 import no.nav.foreldrepenger.melding.typer.PersonIdent;
@@ -40,15 +39,4 @@ public class PersonAdapter {
             throw pdlException;
         }
     }
-
-    public Optional<Adresseinfo> hentAdresseinformasjon(AktørId aktørId) {
-        try {
-            Optional<PersonIdent> funnetFnr = persondataTjeneste.hentPersonIdentForAktørId(aktørId);
-            return funnetFnr.map(pi -> persondataTjeneste.hentAdresseinformasjon(aktørId, pi));
-        } catch (PdlException pdlException) {
-            LOGGER.error("Fikk feil ved kall til PDL. Detaljer: type={}, cause={}, policy={}", pdlException.getDetails().type(), pdlException.getDetails().cause(), pdlException.getDetails().policy());
-            throw pdlException;
-        }
-    }
-
 }

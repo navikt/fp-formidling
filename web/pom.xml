@@ -38,10 +38,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>poststed</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>dokgen-klient</artifactId>
         </dependency>
         <dependency>
@@ -73,10 +69,6 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-abac-legacy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
-            <artifactId>felles-integrasjon-webservice</artifactId>
         </dependency>
 
         <!-- Rest-server -->

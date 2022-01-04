@@ -208,17 +208,7 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>kodeverk-klient</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>kafkautil</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>poststed</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -288,11 +278,6 @@
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka-clients</artifactId>
                 <version>${kafka.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                <version>${cxf.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>

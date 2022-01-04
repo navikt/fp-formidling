@@ -78,7 +78,7 @@ public class DokgenBrevproduksjonTjeneste {
 
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.UTKAST);
-        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
+        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
         dokumentRepository.lagre(dokumentData);
         DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
 
@@ -103,7 +103,7 @@ public class DokgenBrevproduksjonTjeneste {
 
     public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.BESTILL);
-        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData, dokumentHendelse);
+        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
         dokumentRepository.lagre(dokumentData);
         boolean innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
 

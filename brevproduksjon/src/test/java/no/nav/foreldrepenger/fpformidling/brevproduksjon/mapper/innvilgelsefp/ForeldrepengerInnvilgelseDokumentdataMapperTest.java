@@ -92,8 +92,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     private static final int DISPONIBLE_DAGER = 5;
     private static final int DISPONIBLE_DAGER_FELLES = 10;
     private static final int TAPTE_DAGER_FPFF = 2;
-    private static final LocalDate PERIODE_FOM = LocalDate.now().minusMonths(4);
-    private static final LocalDate PERIODE_TOM = LocalDate.now().minusMonths(4).plusDays(3);
+    private static final LocalDate PERIODE_FOM = LocalDate.now().plusMonths(4);
+    private static final LocalDate PERIODE_TOM = LocalDate.now().plusMonths(4).plusDays(3);
     private static final int PREMATUR_DAGER = 2;
     private static final int KLAGEFRIST = 6;
     private static final int BRUTTO_BERENINGSGRUNNLAG = 400;

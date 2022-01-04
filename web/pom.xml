@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>brevbestiller</artifactId>
+            <artifactId>brevproduksjon</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
@@ -38,7 +38,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>dokgen-klient</artifactId>
+            <artifactId>fpdokgen</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>

@@ -15,11 +15,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>dokdist-klient</module>
-        <module>dokgen-klient</module>
+        <module>dokdist</module>
+        <module>fpdokgen</module>
         <module>fpsak</module>
-        <module>journal-klient</module>
+        <module>journal</module>
         <module>organisasjon</module>
-        <module>tps</module>
+        <module>pdl</module>
     </modules>
 </project>

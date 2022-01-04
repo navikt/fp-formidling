@@ -17,7 +17,7 @@
     <dependencies>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>brevbestiller</artifactId>
+            <artifactId>brevproduksjon</artifactId>
         </dependency>
 
         <dependency>

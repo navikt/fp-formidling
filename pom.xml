@@ -10,6 +10,7 @@
     <version>${revision}${sha1}${changelist}</version>
 
     <modules>
+        <module>brevproduksjon</module>
         <module>domene</module>
         <module>integrasjon</module>
         <module>kafkatjenester</module>
@@ -146,17 +147,17 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>dokgen-klient</artifactId>
+                <artifactId>fpdokgen</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>dokdist-klient</artifactId>
+                <artifactId>dokdist</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>journal-klient</artifactId>
+                <artifactId>journal</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -167,7 +168,7 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>brevbestiller</artifactId>
+                <artifactId>brevproduksjon</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -182,7 +183,7 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>tps</artifactId>
+                <artifactId>pdl</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

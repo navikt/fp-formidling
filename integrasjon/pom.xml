@@ -17,7 +17,9 @@
     <modules>
         <module>dokdist-klient</module>
         <module>dokgen-klient</module>
-        <module>dtomapper</module>
+        <module>fpsak</module>
         <module>journal-klient</module>
+        <module>organisasjon</module>
+        <module>tps</module>
     </modules>
 </project>

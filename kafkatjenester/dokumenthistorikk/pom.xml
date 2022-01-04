@@ -20,10 +20,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>kafkautil</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
             <artifactId>prosesstask</artifactId>
         </dependency>
         <dependency>

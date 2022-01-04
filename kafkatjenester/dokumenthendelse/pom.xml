@@ -17,13 +17,13 @@
     <dependencies>
         <dependency>
             <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>hendelse</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>dtomapper</artifactId>
+            <artifactId>brevbestiller</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.vedtak.prosesstask</groupId>
+            <artifactId>prosesstask-legacy</artifactId>
+        </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
             <artifactId>hendelse-dokumentbestilling</artifactId>

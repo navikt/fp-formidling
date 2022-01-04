@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>dokdist-klient</artifactId>
-    <name>FP-FORMIDLING :: Dokumentdistribusjon klient</name>
+    <name>FP-FORMIDLING :: Integrasjon - Dokumentdistribusjon</name>
 
     <dependencies>
         <dependency>

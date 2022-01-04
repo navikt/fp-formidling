@@ -10,13 +10,12 @@
     <version>${revision}${sha1}${changelist}</version>
 
     <modules>
-        <module>migreringer</module>
-        <module>kafkatjenester</module>
+        <module>domene</module>
         <module>integrasjon</module>
-        <module>web</module>
-        <module>dokumentlager</module>
+        <module>kafkatjenester</module>
+        <module>migreringer</module>
         <module>prosesstask</module>
-        <module>domenetjenester</module>
+        <module>web</module>
     </modules>
 
     <properties>
@@ -116,11 +115,6 @@
 
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>dokumentlager</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>domene</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -143,11 +137,6 @@
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>dokumenthendelse</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>dtomapper</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -199,16 +188,6 @@
             <dependency>
                 <groupId>no.nav.foreldrepenger.melding</groupId>
                 <artifactId>organisasjon</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>hendelse</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.melding</groupId>
-                <artifactId>kafkautil</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

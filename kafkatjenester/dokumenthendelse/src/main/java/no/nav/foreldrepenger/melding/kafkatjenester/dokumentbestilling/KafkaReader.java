@@ -16,10 +16,8 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import no.nav.foreldrepenger.melding.dtomapper.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakStatus;
-import no.nav.foreldrepenger.melding.hendelse.HendelseHandler;
 import no.nav.foreldrepenger.melding.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;

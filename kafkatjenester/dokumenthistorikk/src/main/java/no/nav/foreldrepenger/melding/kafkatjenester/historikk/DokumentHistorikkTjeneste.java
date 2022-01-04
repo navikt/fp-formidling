@@ -8,10 +8,14 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import no.nav.foreldrepenger.melding.historikk.DokumentHistorikkinnslag;
-import no.nav.foreldrepenger.melding.kafkatjenester.felles.util.Serialiseringsverktøy;
 import no.nav.historikk.v1.HistorikkInnslagV1;
 
 @ApplicationScoped
@@ -19,7 +23,7 @@ public class DokumentHistorikkTjeneste {
 
     private static final Logger log = LoggerFactory.getLogger(DokumentHistorikkTjeneste.class);
 
-    private static final ObjectMapper mapper = Serialiseringsverktøy.getObjectMapper();
+    private static final ObjectMapper mapper = getObjectMapper();
 
     private DokumentHistorikkinnslagProducer meldingProducer;
 
@@ -51,6 +55,16 @@ public class DokumentHistorikkTjeneste {
             log.error("Klarte ikke å serialisere historikkinnslag");
             return null;
         }
+    }
+
+    private static ObjectMapper getObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new Jdk8Module());
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper;
     }
 
 }

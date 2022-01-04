@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>dokgen-klient</artifactId>
-    <name>FP-FORMIDLING :: Dokgen klient</name>
+    <name>FP-FORMIDLING :: Integrasjon - Fpdokgen</name>
 
     <dependencies>
         <dependency>

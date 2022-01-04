@@ -17,6 +17,5 @@
     <modules>
         <module>dokumenthistorikk</module>
         <module>dokumenthendelse</module>
-        <module>kafkautil</module>
     </modules>
 </project>

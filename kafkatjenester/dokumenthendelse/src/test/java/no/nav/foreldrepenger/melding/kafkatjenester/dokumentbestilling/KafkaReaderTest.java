@@ -16,12 +16,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.melding.dbstoette.JpaExtension;
 import no.nav.foreldrepenger.melding.eventmottak.EventmottakFeillogg;
-import no.nav.foreldrepenger.melding.hendelse.HendelseHandler;
 import no.nav.foreldrepenger.melding.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.melding.historikk.HistorikkAktør;
-import no.nav.foreldrepenger.melding.kafkatjenester.felles.util.Serialiseringsverktøy;
 import no.nav.foreldrepenger.melding.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.felles.dokumentbestilling.kodeverk.FagsakYtelseType;
 import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
@@ -60,7 +59,7 @@ public class KafkaReaderTest {
 
     private String serialiser(DokumentbestillingV1 dto) {
         try {
-            return Serialiseringsverktøy.getObjectMapper().writeValueAsString(dto);
+            return DefaultJsonMapper.getObjectMapper().writeValueAsString(dto);
         } catch (JsonProcessingException e) {
             return null;
         }

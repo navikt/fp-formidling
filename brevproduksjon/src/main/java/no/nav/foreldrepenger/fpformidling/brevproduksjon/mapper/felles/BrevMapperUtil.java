@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentFellesDataMapper.DOD_PERSON_STATUS;
-
 import java.time.LocalDate;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -52,7 +50,7 @@ public class BrevMapperUtil {
     }
 
     public static boolean erDød(DokumentFelles dokumentFelles) {
-        return DOD_PERSON_STATUS.equalsIgnoreCase(dokumentFelles.getSakspartPersonStatus());
+        return DokumentFelles.PersonStatus.DOD.equals(dokumentFelles.getSakspartPersonStatus());
     }
 
     public static boolean brevSendesTilVerge(DokumentFelles dokumentFelles) {

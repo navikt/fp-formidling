@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
+import static no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles.PersonStatus.ANNET;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -45,7 +46,7 @@ public class DatamapperTestUtil {
     public static DokumentFelles getDokumentFelles() {
         DokumentFelles dokumentFelles = Mockito.mock(DokumentFelles.class);
         when(dokumentFelles.getSakspartNavn()).thenReturn(SØKERS_NAVN);
-        when(dokumentFelles.getSakspartPersonStatus()).thenReturn("ANNET");
+        when(dokumentFelles.getSakspartPersonStatus()).thenReturn(ANNET);
         return dokumentFelles;
     }
 
@@ -65,7 +66,7 @@ public class DatamapperTestUtil {
                 .medErKopi(kopi != null ? Optional.of(kopi) : null)
                 .medMottakerType(DokumentFelles.MottakerType.PERSON)
                 .medSpråkkode(Språkkode.NB)
-                .medSakspartPersonStatus("ANNET")
+                .medSakspartPersonStatus(ANNET)
                 .build();
     }
 

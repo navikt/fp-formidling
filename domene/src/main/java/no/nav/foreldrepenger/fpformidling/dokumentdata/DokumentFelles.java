@@ -4,10 +4,12 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.persistence.AttributeConverter;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Convert;
+import javax.persistence.Converter;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +30,24 @@ import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
 @Entity(name = "DokumentFelles")
 @Table(name = "DOKUMENT_FELLES")
 public class DokumentFelles extends BaseEntitet {
+
+    public enum PersonStatus {
+        DOD,
+        ANNET;
+
+        @Converter(autoApply = true)
+        public static class KodeverdiConverter implements AttributeConverter<PersonStatus, String> {
+            @Override
+            public String convertToDatabaseColumn(PersonStatus status) {
+                return status == null ? null : status.name();
+            }
+
+            @Override
+            public PersonStatus convertToEntityAttribute(String status) {
+                return status == null ? null : PersonStatus.valueOf(status);
+            }
+        }
+    }
 
     public enum Kopi {
         JA,
@@ -84,8 +104,9 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "dokument_dato", nullable = false)
     private LocalDate dokumentDato;
 
+    @Convert(converter = PersonStatus.KodeverdiConverter.class)
     @Column(name = "sakspart_person_status", nullable = false)
-    private String sakspartPersonStatus;
+    private PersonStatus sakspartPersonStatus;
 
     @Column(name = "brev_data")
     private String brevData;
@@ -161,7 +182,7 @@ public class DokumentFelles extends BaseEntitet {
         return dokumentDato;
     }
 
-    public String getSakspartPersonStatus() {
+    public PersonStatus getSakspartPersonStatus() {
         return sakspartPersonStatus;
     }
 
@@ -273,7 +294,7 @@ public class DokumentFelles extends BaseEntitet {
             return this;
         }
 
-        public Builder medSakspartPersonStatus(String sakspartPersonStatus) {
+        public Builder medSakspartPersonStatus(PersonStatus sakspartPersonStatus) {
             this.dokumentFelles.sakspartPersonStatus = sakspartPersonStatus;
             return this;
         }

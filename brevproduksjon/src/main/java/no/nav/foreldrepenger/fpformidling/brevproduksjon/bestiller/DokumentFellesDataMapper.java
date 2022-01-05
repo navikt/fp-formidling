@@ -22,8 +22,6 @@ import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped
 public class DokumentFellesDataMapper {
-    public static final String DOD_PERSON_STATUS = "DOD";
-    public static final String DEFAULT_PERSON_STATUS = "ANNET";
     private static final String FANT_IKKE_BRUKER = "Fant ikke bruker for aktørId: %s. Kan ikke bestille dokument";
 
     private DomeneobjektProvider domeneobjektProvider;
@@ -167,7 +165,7 @@ public class DokumentFellesDataMapper {
     }
 
 //Todo når vi har koblet oss fra team CCM bør denne bruke faktiske koder og ikke gjøre om
-    private String getPersonstatusVerdi(Personinfo personinfo) {
-        return personinfo.isRegistrertDød() ? DOD_PERSON_STATUS : DEFAULT_PERSON_STATUS;
+    private DokumentFelles.PersonStatus getPersonstatusVerdi(Personinfo personinfo) {
+        return personinfo.isRegistrertDød() ? DokumentFelles.PersonStatus.DOD : DokumentFelles.PersonStatus.ANNET;
     }
 }

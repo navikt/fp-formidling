@@ -16,6 +16,5 @@
     <entity class="no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse"/>
     <entity class="no.nav.foreldrepenger.fpformidling.eventmottak.EventmottakFeillogg"/>
     <entity class="no.nav.foreldrepenger.fpformidling.historikk.DokumentHistorikkinnslag"/>
-    <entity class="no.nav.foreldrepenger.fpformidling.geografisk.Poststed"/>
 
 </entity-mappings>

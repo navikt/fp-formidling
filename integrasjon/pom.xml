@@ -6,7 +6,7 @@
 
     <parent>
         <artifactId>fpformidling</artifactId>
-        <groupId>no.nav.foreldrepenger.melding</groupId>
+        <groupId>no.nav.foreldrepenger.fpformidling</groupId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
 
@@ -15,9 +15,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>dokdist-klient</module>
-        <module>dokgen-klient</module>
-        <module>dtomapper</module>
-        <module>journal-klient</module>
+        <module>dokdist</module>
+        <module>fpdokgen</module>
+        <module>fpsak</module>
+        <module>journal</module>
+        <module>organisasjon</module>
+        <module>pdl</module>
     </modules>
 </project>

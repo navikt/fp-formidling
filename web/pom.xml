@@ -5,43 +5,43 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>no.nav.foreldrepenger.melding</groupId>
+        <groupId>no.nav.foreldrepenger.fpformidling</groupId>
         <artifactId>fpformidling</artifactId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
 
     <artifactId>webapp</artifactId>
-    <name>FP-FORMIDLING :: Web :: Applikasjon</name>
+    <name>FP-FORMIDLING :: Web</name>
     <packaging>jar</packaging>
 
     <dependencies>
         <!-- Fp-formidling internt -->
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>migreringer</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>domene</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>fpsak</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>brevbestiller</artifactId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
+            <artifactId>brevproduksjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>dokumenthendelse</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>dokgen-klient</artifactId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
+            <artifactId>fpdokgen</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>prosesstask</artifactId>
         </dependency>
 
@@ -215,7 +215,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>migreringer</artifactId>
             <type>test-jar</type>
             <scope>test</scope>
@@ -287,7 +287,7 @@
                             <manifest>
                                 <addClasspath>true</addClasspath>
                                 <classpathPrefix>lib/</classpathPrefix>
-                                <mainClass>no.nav.foreldrepenger.melding.web.server.jetty.JettyServer</mainClass>
+                                <mainClass>no.nav.foreldrepenger.fpformidling.web.server.jetty.JettyServer</mainClass>
                             </manifest>
                         </archive>
                     </configuration>

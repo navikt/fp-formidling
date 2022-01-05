@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>integrasjon</artifactId>
+        <groupId>no.nav.foreldrepenger.fpformidling</groupId>
+        <version>${revision}${sha1}${changelist}</version>
+    </parent>
+
+    <artifactId>dokdist</artifactId>
+    <name>FP-FORMIDLING :: Integrasjon - Dokumentdistribusjon</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
+            <artifactId>domene</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+            <artifactId>felles-integrasjon-rest-klient</artifactId>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-testutilities</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

@@ -10,7 +10,7 @@
             <protected>true</protected>
             <serverAuthContext>
                 <serverAuthModule>
-                    <className>no.nav.foreldrepenger.melding.web.server.jetty.sikkerhet.JettyOidcAuthModule</className>
+                    <className>no.nav.foreldrepenger.fpformidling.web.server.jetty.sikkerhet.JettyOidcAuthModule</className>
                 </serverAuthModule>
             </serverAuthContext>
         </serverAuthConfig>

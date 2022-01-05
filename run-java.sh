@@ -3,7 +3,7 @@ set -eu
 
 export JAVA_OPTS="${JAVA_OPTS:-} -Djava.security.egd=file:/dev/./urandom"
 
-export STARTUP_CLASS=${STARTUP_CLASS:-"no.nav.foreldrepenger.melding.web.server.jetty.JettyServer"}
+export STARTUP_CLASS=${STARTUP_CLASS:-"no.nav.foreldrepenger.fpformidling.web.server.jetty.JettyServer"}
 export CLASSPATH=app.jar:lib/*
 export LOGBACK_CONFIG=${LOGBACK_CONFIG:-"./conf/logback.xml"}
 

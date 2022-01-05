@@ -6,7 +6,7 @@
 
     <parent>
         <artifactId>kafkatjenester</artifactId>
-        <groupId>no.nav.foreldrepenger.melding</groupId>
+        <groupId>no.nav.foreldrepenger.fpformidling</groupId>
         <version>${revision}${sha1}${changelist}</version>
     </parent>
 
@@ -16,14 +16,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>hendelse</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
-            <artifactId>dtomapper</artifactId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
+            <artifactId>brevproduksjon</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.vedtak.prosesstask</groupId>
+            <artifactId>prosesstask-legacy</artifactId>
+        </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
             <artifactId>hendelse-dokumentbestilling</artifactId>
@@ -43,7 +43,7 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.foreldrepenger.melding</groupId>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>migreringer</artifactId>
             <type>test-jar</type>
             <scope>test</scope>

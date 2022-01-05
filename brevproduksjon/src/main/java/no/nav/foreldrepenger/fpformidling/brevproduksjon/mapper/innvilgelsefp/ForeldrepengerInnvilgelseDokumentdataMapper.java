@@ -200,7 +200,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                       .filter(up -> !StønadskontoType.FORELDREPENGER_FØR_FØDSEL.equals(up.getStønadskontoType()))
                       .map(Utbetalingsperiode::getPeriodeFom)
                       .min(LocalDate::compareTo)
-                      .map(md -> md.plusMonths(3).isBefore(LocalDate.now()))
+                      .map(md -> (LocalDate.now().isBefore(md.plusMonths(3))))
                       .orElse(false);
         }
 

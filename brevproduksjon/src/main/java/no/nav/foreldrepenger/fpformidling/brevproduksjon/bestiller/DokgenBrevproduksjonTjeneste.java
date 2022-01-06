@@ -190,7 +190,7 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     private boolean erInnsynMedVedlegg(Behandling behandling, DokumentMalType dokumentMal) {
-        if (!DokumentMalType.INNSYN_SVAR_DOK.equals(dokumentMal) && !DokumentMalType.INNSYN_SVAR.equals(dokumentMal)) {
+        if (!DokumentMalType.INNSYN_SVAR.equals(dokumentMal)) {
             return false;
         }
         return !domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter().isEmpty();

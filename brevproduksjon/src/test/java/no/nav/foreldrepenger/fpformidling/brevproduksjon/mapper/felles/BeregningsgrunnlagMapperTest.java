@@ -45,6 +45,7 @@ public class BeregningsgrunnlagMapperTest {
 
     private BeregningsgrunnlagPrStatusOgAndel lagBgpsaAap() {
         return BeregningsgrunnlagPrStatusOgAndel.ny()
+                .medDagsats(STANDARD_PERIODE_DAGSATS)
                 .medBruttoPrÅr(BRUTTO_PR_ÅR)
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER)
                 .build();

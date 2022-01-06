@@ -155,7 +155,7 @@ class DokumentMalUtleder {
     private boolean harSendtVarselOmRevurdering(Behandling behandling) {
         return historikkRepository.hentInnslagForBehandling(behandling.getUuid())
                 .stream().map(DokumentHistorikkinnslag::getDokumentMalType)
-                .anyMatch(d -> DokumentMalType.VARSEL_OM_REVURDERING_DOK.equals(d) || DokumentMalType.VARSEL_OM_REVURDERING.equals(d))
+                .anyMatch(DokumentMalType.VARSEL_OM_REVURDERING::equals)
                 || Boolean.TRUE.equals(behandlingRestKlient.harSendtVarselOmRevurdering(behandling.getResourceLinker()).orElse(false));
     }
 

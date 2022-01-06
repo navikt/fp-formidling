@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.InntektArbeidYtelse;
+import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.opphørsvp.OpphørPeriode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.opphørsvp.SvangerskapspengerOpphørDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
@@ -58,7 +58,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         var svpUttaksresultat = domeneobjektProvider.hentUttaksresultatSvpHvisFinnes(behandling);
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        var iay = domeneobjektProvider.hentInntektArbeidYtelse(behandling);
+        var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
         var tilkjentYtelsePerioder = domeneobjektProvider.hentBeregningsresultatFPHvisFinnes(behandling).map(BeregningsresultatFP::getBeregningsresultatPerioder).orElse(Collections.emptyList());
 
         Språkkode språkkode = behandling.getSpråkkode();
@@ -89,7 +89,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
         return dokumentdatabuilder.build();
     }
 
-    private void mapOpphørtPeriodeOgLovhjemmel(SvangerskapspengerOpphørDokumentdata.Builder dokumentdataBuilder, Behandling behandling, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, InntektArbeidYtelse iay, List <BeregningsresultatPeriode> tilkjentYtelsePerioder) {
+    private void mapOpphørtPeriodeOgLovhjemmel(SvangerskapspengerOpphørDokumentdata.Builder dokumentdataBuilder, Behandling behandling, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, Inntektsmeldinger iay, List <BeregningsresultatPeriode> tilkjentYtelsePerioder) {
 
         Tuple <OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakResultatArbeidsforhold, språkKode, iay, tilkjentYtelsePerioder);
 

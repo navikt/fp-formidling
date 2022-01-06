@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.Beregning
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
 import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatMedUttaksplanDto;
 import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakDto;
-import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektArbeidYtelseDto;
+import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektsmeldingerDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
@@ -105,13 +105,13 @@ public interface Behandlinger {
                 .flatMap(link -> hentDtoFraLink(link, SoknadBackendDto.class));
     }
 
-    default InntektArbeidYtelseDto hentInntektArbeidYtelseDto(List<BehandlingResourceLink> resourceLinker) {
+    default InntektsmeldingerDto hentInntektsmeldingerDto(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker
                 .stream()
-                .filter(dto -> "inntekt-arbeid-ytelse".equals(dto.getRel()))
+                .filter(dto -> "inntektsmeldinger".equals(dto.getRel()))
                 .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, InntektArbeidYtelseDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente IAY dto for behandling: " + hentBehandlingId(resourceLinker)));
+                .flatMap(link -> hentDtoFraLink(link, InntektsmeldingerDto.class))
+                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente Inntektsmeldinger dto for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default KlagebehandlingDto hentKlagebehandling(List<BehandlingResourceLink> resourceLinker) {

@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.InntektArbeidYtelse;
+import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
@@ -125,8 +125,8 @@ public class DomeneobjektProvider {
                 .map(FamiliehendelseDtoMapper::mapFamiliehendelsefraDto);
     }
 
-    public InntektArbeidYtelse hentInntektArbeidYtelse(Behandling behandling) {
-        return IAYDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektArbeidYtelseDto(behandling.getResourceLinker()),
+    public Inntektsmeldinger hentInntektsmeldinger(Behandling behandling) {
+        return IAYDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektsmeldingerDto(behandling.getResourceLinker()),
                 arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 

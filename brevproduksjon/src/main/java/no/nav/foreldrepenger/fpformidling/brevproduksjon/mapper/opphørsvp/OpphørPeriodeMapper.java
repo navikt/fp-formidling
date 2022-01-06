@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Lovhjemme
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.SvpMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.InntektArbeidYtelse;
+import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.opphørsvp.OpphørPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
@@ -31,7 +31,7 @@ import no.nav.vedtak.exception.TekniskException;
 public class OpphørPeriodeMapper {
     private static Set<String> lovReferanser;
     
-    public static Tuple<OpphørPeriode, String> mapOpphørtePerioderOgLovhjemmel(Behandling behandling, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, InntektArbeidYtelse iay, List<BeregningsresultatPeriode> tilkjentYtelsePerioder) {
+    public static Tuple<OpphørPeriode, String> mapOpphørtePerioderOgLovhjemmel(Behandling behandling, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, Inntektsmeldinger iay, List<BeregningsresultatPeriode> tilkjentYtelsePerioder) {
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
@@ -63,7 +63,7 @@ public class OpphørPeriodeMapper {
         return new Tuple<>(opphørtPeriode,lovhjemmelForOpphør);
     }
 
-    private static OpphørPeriode mapOpphørteArbeidsforhold(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, InntektArbeidYtelse iay) {
+    private static OpphørPeriode mapOpphørteArbeidsforhold(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Inntektsmeldinger iay) {
         return uttakResultatArbeidsforhold.stream()
                 .filter(a-> !(ArbeidsforholdIkkeOppfyltÅrsak.INGEN.equals(a.getArbeidsforholdIkkeOppfyltÅrsak())))
                 .findFirst()
@@ -78,7 +78,7 @@ public class OpphørPeriodeMapper {
                 .build();
     }
 
-    private static OpphørPeriode mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, List<BeregningsresultatPeriode> tilkjentYtelsePerioder, InntektArbeidYtelse iay) {
+    private static OpphørPeriode mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, List<BeregningsresultatPeriode> tilkjentYtelsePerioder, Inntektsmeldinger iay) {
         List<SvpUttakResultatPeriode> opphørtePerioder = uttakResultatArbeidsforhold.stream()
             .flatMap(ura -> ura.getPerioder().stream())
                 .filter(ur -> PeriodeResultatType.AVSLÅTT.equals(ur.getPeriodeResultatType()))
@@ -99,7 +99,7 @@ public class OpphørPeriodeMapper {
         return opphørtePerioder.stream().map(SvpUttakResultatPeriode::getPeriodeIkkeOppfyltÅrsak).findFirst().orElse(null);
     }
 
-    private static OpphørPeriode mapOpphørtPeriode(List<BeregningsresultatPeriode> tilkjentYtelse, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkkode, String opphørÅrsak, InntektArbeidYtelse iay) {
+    private static OpphørPeriode mapOpphørtPeriode(List<BeregningsresultatPeriode> tilkjentYtelse, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkkode, String opphørÅrsak, Inntektsmeldinger iay) {
         Optional<LocalDate> førsteDato = finnFørsteStønadDato(tilkjentYtelse);
         Optional<LocalDate> sisteDato = finnSisteStønadDato(tilkjentYtelse);
 

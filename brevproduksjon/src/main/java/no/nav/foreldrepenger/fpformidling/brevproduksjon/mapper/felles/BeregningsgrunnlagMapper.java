@@ -43,6 +43,23 @@ public class BeregningsgrunnlagMapper {
         } else {
             resultatListe = bgpsaListe.stream().filter(andel -> bgAktivitetStatus.aktivitetStatus().equals(andel.getAktivitetStatus()))
                     .collect(Collectors.toList());
+
+            // Spesialhåndtering av tilkommet arbeidsforhold for Dagpenger og AAP - andeler som ikke kan mappes gjennom
+            // aktivitetesstatuslisten på beregningsgrunnlag da de er tilkommet etter skjæringstidspunkt. Typisk dersom arbeidsgiver er
+            // tilkommet etter start permisjon og krever refusjon i permisjonstiden.
+            List<AktivitetStatus> aktuelleStatuserForTilkommetArbForhold = List.of(AktivitetStatus.DAGPENGER,
+                    AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+            if (resultatListe.stream().anyMatch(br -> aktuelleStatuserForTilkommetArbForhold.contains(br.getAktivitetStatus()))
+                    && hentSummertDagsats(resultatListe) != hentSummertDagsats(bgpsaListe)) {
+                long sumTilkommetDagsats = hentSumTilkommetDagsats(bgpsaListe);
+                if (sumTilkommetDagsats != 0) {
+                    resultatListe.forEach(rl -> {
+                        if (aktuelleStatuserForTilkommetArbForhold.contains(rl.getAktivitetStatus())) {
+                            rl.setDagsats(sumTilkommetDagsats);
+                        }
+                    });
+                }
+            }
         }
         if (resultatListe.isEmpty()) {
             StringBuilder sb = new StringBuilder();
@@ -55,5 +72,17 @@ public class BeregningsgrunnlagMapper {
     public static long getHalvGOrElseZero(Optional<Beregningsgrunnlag> beregningsgrunnlag) {
         return beregningsgrunnlag.map(Beregningsgrunnlag::getGrunnbeløp).map(Beløp::getVerdi).orElse(BigDecimal.ZERO)
                 .divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP).longValue();
+    }
+
+    private static long hentSummertDagsats(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+        return bgpsaListe.stream().map(BeregningsgrunnlagPrStatusOgAndel::getDagsats).reduce(Long::sum).orElse(0L);
+    }
+
+    private static long hentSumTilkommetDagsats(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
+        return bgpsaListe.stream()
+                .filter(andel -> andel.getDagsats() > 0)
+                .filter(BeregningsgrunnlagPrStatusOgAndel::getErTilkommetAndel)
+                .map(BeregningsgrunnlagPrStatusOgAndel::getDagsats)
+                .reduce(Long::sum).orElse(0L);
     }
 }

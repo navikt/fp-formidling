@@ -8,14 +8,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.InntektArbeidYtelse;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmelding;
+import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 
-public class IAYMapperTest {
+public class InntektsmeldingMapperTest {
 
     @Test
     public void skal_kaste_exception_hvis_det_ikke_finnes_inntektsmelding() {
-        assertThatThrownBy(() -> IAYMapper.hentNyesteInntektsmelding(InntektArbeidYtelse.ny().build()))
+        assertThatThrownBy(() -> InntektsmeldingMapper.hentNyesteInntektsmelding(new Inntektsmeldinger(List.of())))
                 .isInstanceOf(IllegalStateException.class);
     }
 
@@ -25,12 +25,10 @@ public class IAYMapperTest {
         Inntektsmelding inntektsmelding1 = new Inntektsmelding("Feil", "", LocalDate.now().minusDays(10));
         Inntektsmelding inntektsmelding2 = new Inntektsmelding("Fasit", "", LocalDate.now().minusDays(1));
         Inntektsmelding inntektsmelding3 = new Inntektsmelding("Feil", "", LocalDate.now().minusDays(4));
-        InntektArbeidYtelse inntektArbeidYtelse = InntektArbeidYtelse.ny()
-                .medInntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2, inntektsmelding3))
-                .build();
+        var inntektsmeldinger = new Inntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2, inntektsmelding3));
 
         // Act
-        Inntektsmelding inntektsmelding = IAYMapper.hentNyesteInntektsmelding(inntektArbeidYtelse);
+        var inntektsmelding = InntektsmeldingMapper.hentNyesteInntektsmelding(inntektsmeldinger);
 
         // Assert
         assertThat(inntektsmelding.arbeidsgiverNavn()).isEqualTo("Fasit");

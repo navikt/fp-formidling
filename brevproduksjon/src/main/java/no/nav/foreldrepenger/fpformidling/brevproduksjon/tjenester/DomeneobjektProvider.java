@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.InntektArbeidYtelse;
+import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
@@ -38,7 +38,7 @@ import no.nav.foreldrepenger.fpsak.mapper.BeregningsgrunnlagDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.BeregningsresultatDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.FagsakDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.FamiliehendelseDtoMapper;
-import no.nav.foreldrepenger.fpsak.mapper.IAYDtoMapper;
+import no.nav.foreldrepenger.fpsak.mapper.InntektsmeldingDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.InnsynDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.KlageDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.MottattDokumentDtoMapper;
@@ -125,8 +125,8 @@ public class DomeneobjektProvider {
                 .map(FamiliehendelseDtoMapper::mapFamiliehendelsefraDto);
     }
 
-    public InntektArbeidYtelse hentInntektArbeidYtelse(Behandling behandling) {
-        return IAYDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektArbeidYtelseDto(behandling.getResourceLinker()),
+    public Inntektsmeldinger hentInntektsmeldinger(Behandling behandling) {
+        return InntektsmeldingDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektsmeldingerDto(behandling.getResourceLinker()),
                 arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 

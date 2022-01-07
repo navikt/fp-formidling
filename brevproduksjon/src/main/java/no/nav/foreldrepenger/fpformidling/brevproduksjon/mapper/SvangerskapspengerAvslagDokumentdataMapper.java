@@ -67,7 +67,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         var behandlingsresultat = behandling.getBehandlingsresultat();
         var svpUttaksresultat = domeneobjektProvider.hentUttaksresultatSvpHvisFinnes(behandling);
-        var iay = domeneobjektProvider.hentInntektArbeidYtelse(behandling);
+        var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());

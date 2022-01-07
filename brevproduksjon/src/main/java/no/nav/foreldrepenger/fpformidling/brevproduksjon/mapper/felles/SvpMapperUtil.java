@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.InntektArbeidYtelse;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmelding;
+import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
@@ -55,7 +55,7 @@ public final class SvpMapperUtil {
                 .min(LocalDate::compareTo);
     }
 
-    public static int finnAntallArbeidsgivere(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, InntektArbeidYtelse iay) {
+    public static int finnAntallArbeidsgivere(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Inntektsmeldinger iay) {
         int antallArbeidsgivere = (int) uttakResultatArbeidsforhold.stream()
                 .flatMap(ura -> ura.getPerioder().stream())
                 .map(SvpUttakResultatPeriode::getArbeidsgiverNavn)

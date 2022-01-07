@@ -5,7 +5,7 @@ import java.util.Comparator;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmelding;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 
-public class IAYMapper {
+public class InntektsmeldingMapper {
 
     public static Inntektsmelding hentNyesteInntektsmelding(Inntektsmeldinger iay) {
         return iay.getInntektsmeldinger().stream()

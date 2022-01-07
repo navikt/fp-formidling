@@ -38,7 +38,7 @@ import no.nav.foreldrepenger.fpsak.mapper.BeregningsgrunnlagDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.BeregningsresultatDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.FagsakDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.FamiliehendelseDtoMapper;
-import no.nav.foreldrepenger.fpsak.mapper.IAYDtoMapper;
+import no.nav.foreldrepenger.fpsak.mapper.InntektsmeldingDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.InnsynDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.KlageDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.MottattDokumentDtoMapper;
@@ -126,7 +126,7 @@ public class DomeneobjektProvider {
     }
 
     public Inntektsmeldinger hentInntektsmeldinger(Behandling behandling) {
-        return IAYDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektsmeldingerDto(behandling.getResourceLinker()),
+        return InntektsmeldingDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektsmeldingerDto(behandling.getResourceLinker()),
                 arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 

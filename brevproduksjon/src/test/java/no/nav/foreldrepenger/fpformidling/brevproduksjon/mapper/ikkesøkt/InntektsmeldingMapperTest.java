@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmelding;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 
-public class IAYMapperTest {
+public class InntektsmeldingMapperTest {
 
     @Test
     public void skal_kaste_exception_hvis_det_ikke_finnes_inntektsmelding() {
-        assertThatThrownBy(() -> IAYMapper.hentNyesteInntektsmelding(new Inntektsmeldinger(List.of())))
+        assertThatThrownBy(() -> InntektsmeldingMapper.hentNyesteInntektsmelding(new Inntektsmeldinger(List.of())))
                 .isInstanceOf(IllegalStateException.class);
     }
 
@@ -28,7 +28,7 @@ public class IAYMapperTest {
         var inntektsmeldinger = new Inntektsmeldinger(List.of(inntektsmelding1, inntektsmelding2, inntektsmelding3));
 
         // Act
-        var inntektsmelding = IAYMapper.hentNyesteInntektsmelding(inntektsmeldinger);
+        var inntektsmelding = InntektsmeldingMapper.hentNyesteInntektsmelding(inntektsmeldinger);
 
         // Assert
         assertThat(inntektsmelding.arbeidsgiverNavn()).isEqualTo("Fasit");

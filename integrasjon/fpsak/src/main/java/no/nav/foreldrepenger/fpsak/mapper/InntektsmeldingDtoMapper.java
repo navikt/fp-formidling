@@ -8,7 +8,7 @@ import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektsmeldingDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektsmeldingerDto;
 
-public class IAYDtoMapper {
+public class InntektsmeldingDtoMapper {
 
     public static Inntektsmeldinger mapIAYFraDto(InntektsmeldingerDto dto, UnaryOperator<String> hentNavn) {
         var inntektsmeldinger = dto.getInntektsmeldinger().stream()

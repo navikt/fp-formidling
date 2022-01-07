@@ -45,7 +45,7 @@ public class IkkeSøktDokumentdataMapper implements DokumentdataMapper {
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
 
         Inntektsmeldinger iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
-        Inntektsmelding inntektsmelding = IAYMapper.hentNyesteInntektsmelding(iay);
+        Inntektsmelding inntektsmelding = InntektsmeldingMapper.hentNyesteInntektsmelding(iay);
 
         var dokumentdataBuilder = IkkeSøktDokumentdata.ny()
                 .medFelles(fellesBuilder.build())

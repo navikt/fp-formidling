@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -38,6 +29,13 @@ import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste {
@@ -98,6 +96,11 @@ public class DokgenBrevproduksjonTjeneste {
                     e);
         }
         LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getUuid().toString());
+
+        if ("cb910aed-7d5c-40e4-9690-6d6f0ed73099".equals(dokumentData.getBehandlingUuid().toString())) {
+            dokumentdata.getFelles().anonymiser();
+            SECURE_LOGGER.warn("Brevdata for uuid: cb910aed-7d5c-40e4-9690-6d6f0ed73099 {}",  DefaultJsonMapper.toJson(dokumentdata));
+        }
         return brev;
     }
 

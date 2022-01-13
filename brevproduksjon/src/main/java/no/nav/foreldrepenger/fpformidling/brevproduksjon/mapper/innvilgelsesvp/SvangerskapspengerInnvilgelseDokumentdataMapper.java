@@ -4,9 +4,9 @@ import static no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erEndretFraAvslått;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erTermindatoEndret;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.finnAntallRefusjonerTilArbeidsgivere;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.finnMånedsbeløp;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.harBrukerAndel;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnAntallRefusjonerTilArbeidsgivere;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harBrukerAndel;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.AvslagsperiodeMapper.mapAvslagsperioder;
@@ -73,24 +73,24 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         var språkkode = behandling.getSpråkkode();
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
-        var beregningsresultat = domeneobjektProvider.hentBeregningsresultatFP(behandling);
+        var tilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
         var uttaksresultatSvp = domeneobjektProvider.hentUttaksresultatSvp(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         Fritekst.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        List<Utbetalingsperiode> utbetalingsperioder = mapUtbetalingsperioder(beregningsresultat.getBeregningsresultatPerioder(), språkkode);
-        List<Uttaksaktivitet> uttaksaktiviteter = mapUttaksaktivteterMedPerioder(uttaksresultatSvp, beregningsresultat, språkkode);
+        List<Utbetalingsperiode> utbetalingsperioder = mapUtbetalingsperioder(tilkjentYtelse.getPerioder(), språkkode);
+        List<Uttaksaktivitet> uttaksaktiviteter = mapUttaksaktivteterMedPerioder(uttaksresultatSvp, tilkjentYtelse, språkkode);
         boolean inkludereBeregning = erNyEllerEndretBeregning(behandling);
 
         var dokumentdataBuilder = SvangerskapspengerInnvilgelseDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
                 .medRevurdering(behandling.erRevurdering())
-                .medRefusjonTilBruker(harBrukerAndel(beregningsresultat))
-                .medAntallRefusjonerTilArbeidsgivere(finnAntallRefusjonerTilArbeidsgivere(beregningsresultat))
+                .medRefusjonTilBruker(harBrukerAndel(tilkjentYtelse))
+                .medAntallRefusjonerTilArbeidsgivere(finnAntallRefusjonerTilArbeidsgivere(tilkjentYtelse))
                 .medStønadsperiodeTom(formaterDato(finnStønadsperiodeTom(utbetalingsperioder), språkkode))
-                .medMånedsbeløp(finnMånedsbeløp(beregningsresultat))
+                .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelse))
                 .medMottattDato(formaterDato(finnSøknadsdatoFraMottatteDokumenter(behandling, mottatteDokumenter), språkkode))
                 .medKlagefristUker(brevParametere.getKlagefristUker())
                 .medAntallUttaksperioder(tellAntallUttaksperioder(uttaksaktiviteter))
@@ -114,7 +114,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
             dokumentdataBuilder.medArbeidsforhold(mapArbeidsforhold(beregningsgrunnlag));
             dokumentdataBuilder.medSelvstendigNæringsdrivende(mapSelvstendigNæringsdrivende(beregningsgrunnlag));
             dokumentdataBuilder.medFrilanser(mapFrilanser(beregningsgrunnlag));
-            dokumentdataBuilder.medNaturalytelser(mapNaturalytelser(beregningsresultat, beregningsgrunnlag, språkkode));
+            dokumentdataBuilder.medNaturalytelser(mapNaturalytelser(tilkjentYtelse, beregningsgrunnlag, språkkode));
             dokumentdataBuilder.medBruttoBeregningsgrunnlag(Beløp.of(getAvkortetPrÅrSVP(beregningsgrunnlag)));
             dokumentdataBuilder.medMilitærSivil(erMilitærSivil(beregningsgrunnlag));
             dokumentdataBuilder.medInntektOver6G(inntektOverSeksG(beregningsgrunnlag));

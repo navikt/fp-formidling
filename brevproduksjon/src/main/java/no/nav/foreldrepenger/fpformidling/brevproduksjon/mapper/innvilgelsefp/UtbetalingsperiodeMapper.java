@@ -7,7 +7,6 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -16,8 +15,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
@@ -40,37 +39,36 @@ import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public final class UtbetalingsperiodeMapper {
 
-    public static List<Utbetalingsperiode> mapUtbetalingsperioder(List<BeregningsresultatPeriode> beregningsresultatPerioder,
+    public static List<Utbetalingsperiode> mapUtbetalingsperioder(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
                                                                   UttakResultatPerioder uttakResultatPerioder,
-                                                                  List<BeregningsgrunnlagPeriode> beregningingsgrunnlagperioder,
+                                                                  List<BeregningsgrunnlagPeriode> beregningingsgrunnlagPerioder,
                                                                   Språkkode språkkode) {
-        List<Utbetalingsperiode> periodeliste = new ArrayList<>();
         List<Utbetalingsperiode> periodelisteFørSammenslåing = new ArrayList<>();
         List<UttakResultatPeriode> uttaksperioder = uttakResultatPerioder.getPerioder();
         // er avhengig av at listen er sortert med tidligste periode først
-        List<BeregningsresultatPeriode> beregningsresultatperSortert = beregningsresultatPerioder.stream()
-                .sorted(Comparator.comparing(BeregningsresultatPeriode::getBeregningsresultatPeriodeFom)).collect(Collectors.toList());
+        List<TilkjentYtelsePeriode> tilkjentYtelsePerioderSortert = tilkjentYtelsePerioder.stream()
+                .sorted(Comparator.comparing(TilkjentYtelsePeriode::getPeriodeFom)).toList();
 
         List<UttakResultatPeriode> uttaksperioderMedÅrsak = new ArrayList<>(filtrerBortUkjentÅrsak(uttaksperioder));
 
-        for (int i = 0; i < beregningsresultatperSortert.size(); i++) {
-            var beregningsresultatPeriode = beregningsresultatperSortert.get(i);
-            UttakResultatPeriode matchetUttaksperiode = PeriodeBeregner.finnUttaksperiode(beregningsresultatPeriode, uttaksperioder);
+        for (int i = 0; i < tilkjentYtelsePerioderSortert.size(); i++) {
+            var tilkjentYtelsePeriode = tilkjentYtelsePerioderSortert.get(i);
+            UttakResultatPeriode matchetUttaksperiode = PeriodeBeregner.finnUttaksperiode(tilkjentYtelsePeriode, uttaksperioder);
             if (matchetUttaksperiode.getPeriodeResultatÅrsak().erUkjent() || avslåttManglendeSøktUtenTrekkdager(matchetUttaksperiode)) {
                 continue;
             }
             uttaksperioderMedÅrsak.remove(matchetUttaksperiode);
             Utbetalingsperiode periodeTilListen;
-            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = PeriodeBeregner.finnBeregningsgrunnlagperiode(beregningsresultatPeriode,
-                    beregningingsgrunnlagperioder);
+            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = PeriodeBeregner.finnBeregningsgrunnlagperiode(tilkjentYtelsePeriode,
+                    beregningingsgrunnlagPerioder);
 
             if (i == 0) {
-                periodeTilListen = mapFørstePeriode(beregningsresultatPeriode,
+                periodeTilListen = mapFørstePeriode(tilkjentYtelsePeriode,
                         matchetUttaksperiode,
                         beregningsgrunnlagPeriode,
                         språkkode);
             } else {
-                periodeTilListen = mapPerioderEtterFørste(beregningsresultatPeriode,
+                periodeTilListen = mapPerioderEtterFørste(tilkjentYtelsePeriode,
                         matchetUttaksperiode,
                         beregningsgrunnlagPeriode,
                         språkkode);
@@ -78,9 +76,8 @@ public final class UtbetalingsperiodeMapper {
             periodelisteFørSammenslåing.add(periodeTilListen);
         }
         periodelisteFørSammenslåing.addAll(mapPerioderUtenBeregningsgrunnlag(uttaksperioderMedÅrsak, språkkode));
-        Collections.sort(periodelisteFørSammenslåing, Comparator.comparing(Utbetalingsperiode::getPeriodeFom));
-        periodeliste.addAll(mergePerioder(periodelisteFørSammenslåing));
-        return periodeliste;
+        periodelisteFørSammenslåing.sort(Comparator.comparing(Utbetalingsperiode::getPeriodeFom));
+        return new ArrayList<>(mergePerioder(periodelisteFørSammenslåing));
     }
 
     public static Optional<LocalDate> finnStønadsperiodeFom(List<Utbetalingsperiode> periodeListe) {
@@ -138,12 +135,12 @@ public final class UtbetalingsperiodeMapper {
         return utbetalingsPerioder.build();
     }
 
-    private static Utbetalingsperiode mapPerioderEtterFørste(BeregningsresultatPeriode beregningsresultatPeriode,
+    private static Utbetalingsperiode mapPerioderEtterFørste(TilkjentYtelsePeriode tilkjentYtelsePeriode,
                                                              UttakResultatPeriode matchetUttaksperiode,
                                                              BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
                                                              Språkkode språkkode) {
-        return mapEnkelPeriode(beregningsresultatPeriode, matchetUttaksperiode, beregningsgrunnlagPeriode,
-                beregningsresultatPeriode.getBeregningsresultatPeriodeFom(), språkkode);
+        return mapEnkelPeriode(tilkjentYtelsePeriode, matchetUttaksperiode, beregningsgrunnlagPeriode,
+                tilkjentYtelsePeriode.getPeriodeFom(), språkkode);
     }
 
     private static List<UttakResultatPeriode> filtrerBortUkjentÅrsak(List<UttakResultatPeriode> uttaksperioder) {
@@ -173,28 +170,28 @@ public final class UtbetalingsperiodeMapper {
                 .orElse(0) : 0;
     }
 
-    private static Utbetalingsperiode mapFørstePeriode(BeregningsresultatPeriode beregningsresultatPeriode,
+    private static Utbetalingsperiode mapFørstePeriode(TilkjentYtelsePeriode tilkjentYtelsePeriode,
                                                        UttakResultatPeriode uttakResultatPeriode,
                                                        BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
                                                        Språkkode språkkode) {
-        if (uttakResultatPeriode.getFom().isBefore(beregningsresultatPeriode.getBeregningsresultatPeriodeFom())) {
-            return mapEnkelPeriode(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode,
+        if (uttakResultatPeriode.getFom().isBefore(tilkjentYtelsePeriode.getPeriodeFom())) {
+            return mapEnkelPeriode(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode,
                     uttakResultatPeriode.getFom(), språkkode);
         }
-        return mapEnkelPeriode(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode,
-                beregningsresultatPeriode.getBeregningsresultatPeriodeFom(), språkkode);
+        return mapEnkelPeriode(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode,
+                tilkjentYtelsePeriode.getPeriodeFom(), språkkode);
     }
 
-    private static Utbetalingsperiode mapEnkelPeriode(BeregningsresultatPeriode beregningsresultatPeriode,
+    private static Utbetalingsperiode mapEnkelPeriode(TilkjentYtelsePeriode tilkjentYtelsePeriode,
                                                       UttakResultatPeriode uttakResultatPeriode,
                                                       BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
                                                       LocalDate fomDate,
                                                       Språkkode språkkode) {
         PeriodeResultatÅrsak periodeResultatÅrsak = utledÅrsakskode(uttakResultatPeriode);
 
-        List<Arbeidsforhold> arbeidsfoholdListe = mapArbeidsforholdliste(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, språkkode);
-        Næring næring = mapNæring(beregningsresultatPeriode, uttakResultatPeriode, beregningsgrunnlagPeriode);
-        List<AnnenAktivitet> annenAktivitetListe = mapAnnenAktivtetListe(beregningsresultatPeriode, uttakResultatPeriode);
+        List<Arbeidsforhold> arbeidsfoholdListe = mapArbeidsforholdliste(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, språkkode);
+        Næring næring = mapNæring(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode);
+        List<AnnenAktivitet> annenAktivitetListe = mapAnnenAktivtetListe(tilkjentYtelsePeriode, uttakResultatPeriode);
 
         var utbetalingsPerioder = Utbetalingsperiode.ny()
                 .medAntallTapteDager(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter()))
@@ -202,14 +199,14 @@ public final class UtbetalingsperiodeMapper {
                 .medÅrsak(Årsak.of(periodeResultatÅrsak.getKode()))
                 .medStønadskontoType(hentStønadskontoType(uttakResultatPeriode))
                 .medPeriodeFom(fomDate, språkkode)
-                .medPeriodeTom(beregningsresultatPeriode.getBeregningsresultatPeriodeTom(), språkkode)
+                .medPeriodeTom(tilkjentYtelsePeriode.getPeriodeTom(), språkkode)
                 .medArbeidsforhold(arbeidsfoholdListe)
                 .medNæring(næring)
                 .medAnnenAktivitet(annenAktivitetListe)
                 .medPrioritertUtbetalingsgrad(finnPrioritertUtbetalingsgrad(arbeidsfoholdListe, næring, annenAktivitetListe));
 
-        if (beregningsresultatPeriode.getDagsats() != null) {
-            utbetalingsPerioder.medPeriodeDagsats(beregningsresultatPeriode.getDagsats());
+        if (tilkjentYtelsePeriode.getDagsats() != null) {
+            utbetalingsPerioder.medPeriodeDagsats(tilkjentYtelsePeriode.getDagsats());
         }
 
         return utbetalingsPerioder.build();
@@ -232,12 +229,12 @@ public final class UtbetalingsperiodeMapper {
         return !uttakPeriode.erGraderingInnvilget() && !uttakPeriode.getGraderingAvslagÅrsak().erUkjent();
     }
 
-    private static List<AnnenAktivitet> mapAnnenAktivtetListe(BeregningsresultatPeriode beregningsresultatPeriode,
-            UttakResultatPeriode uttakPeriode) {
+    private static List<AnnenAktivitet> mapAnnenAktivtetListe(TilkjentYtelsePeriode tilkjentYtelsePeriode,
+                                                              UttakResultatPeriode uttakPeriode) {
         List<AnnenAktivitet> annenAktivitetListe = new ArrayList<>();
         // - for å reverse rekkefølgen-gradering først i listen:
         Comparator<AnnenAktivitet> annenAktiviteTypeIsGraderingComparator = (a, b) -> - Boolean.compare(a.isGradering(), b.isGradering());
-        finnAndelerOgUttakAnnenAktivitet(beregningsresultatPeriode, uttakPeriode)
+        finnAndelerOgUttakAnnenAktivitet(tilkjentYtelsePeriode, uttakPeriode)
                 .map(UtbetalingsperiodeMapper::mapAnnenAktivitet)
                 .sorted(annenAktiviteTypeIsGraderingComparator)
                 .forEach(annenAktivitetListe::add);
@@ -257,25 +254,25 @@ public final class UtbetalingsperiodeMapper {
         return annenAktivitetBuilder.build();
     }
 
-    private static Stream<BeregningsresOgUttaksAndel> finnAndelerOgUttakAnnenAktivitet(BeregningsresultatPeriode beregningsresultatPeriode,
-            UttakResultatPeriode uttakPeriode) {
-        return beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
+    private static Stream<BeregningsresOgUttaksAndel> finnAndelerOgUttakAnnenAktivitet(TilkjentYtelsePeriode tilkjentYtelsePeriode,
+                                                                                       UttakResultatPeriode uttakPeriode) {
+        return tilkjentYtelsePeriode.getAndeler().stream()
                 .filter(Predicate.not(andel -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus())))
                 .filter(Predicate.not(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())))
-                .map(andel -> matchBeregningsresultatAndelMedUttaksaktivitet(andel, uttakPeriode));
+                .map(andel -> matchTilkjentYtelseAndelMedUttaksaktivitet(andel, uttakPeriode));
     }
 
-    private static BeregningsresOgUttaksAndel matchBeregningsresultatAndelMedUttaksaktivitet(BeregningsresultatAndel andel,
-            UttakResultatPeriode uttakPeriode) {
-        return new BeregningsresOgUttaksAndel(andel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakPeriode.getAktiviteter(), andel));
+    private static BeregningsresOgUttaksAndel matchTilkjentYtelseAndelMedUttaksaktivitet(TilkjentYtelseAndel tilkjentYtelseAndel,
+                                                                                         UttakResultatPeriode uttakPeriode) {
+        return new BeregningsresOgUttaksAndel(tilkjentYtelseAndel, PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakPeriode.getAktiviteter(), tilkjentYtelseAndel));
     }
 
-    private static record BeregningsresOgUttaksAndel(BeregningsresultatAndel andel, Optional<UttakResultatPeriodeAktivitet> UttakAktivitet) {
+    private static record BeregningsresOgUttaksAndel(TilkjentYtelseAndel andel, Optional<UttakResultatPeriodeAktivitet> UttakAktivitet) {
     }
 
-    private static Næring mapNæring(BeregningsresultatPeriode beregningsresultatPeriode, UttakResultatPeriode uttakResultatPeriode,
-            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
-        return finnNæringsandeler(beregningsresultatPeriode).stream().map(andel -> mapNæringsandel(
+    private static Næring mapNæring(TilkjentYtelsePeriode tilkjentYtelsePeriode, UttakResultatPeriode uttakResultatPeriode,
+                                    BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
+        return finnNæringsandeler(tilkjentYtelsePeriode).stream().map(andel -> mapNæringsandel(
                 PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel),
                 PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel)))
                 .findFirst().orElse(null);
@@ -299,18 +296,18 @@ public final class UtbetalingsperiodeMapper {
         return næringBuilder.build();
     }
 
-    private static List<BeregningsresultatAndel> finnNæringsandeler(BeregningsresultatPeriode beregningsresultatPeriode) {
-        return beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
+    private static List<TilkjentYtelseAndel> finnNæringsandeler(TilkjentYtelsePeriode tilkjentYtelsePeriode) {
+        return tilkjentYtelsePeriode.getAndeler().stream()
                 .filter(andel -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus()))
                 .collect(Collectors.toList());
     }
 
-    private static List<Arbeidsforhold> mapArbeidsforholdliste(BeregningsresultatPeriode beregningsresultatPeriode,
-            UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, Språkkode språkkode) {
+    private static List<Arbeidsforhold> mapArbeidsforholdliste(TilkjentYtelsePeriode tilkjentYtelsePeriode,
+                                                               UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, Språkkode språkkode) {
         List<Arbeidsforhold> arbeidsforholdListe = new ArrayList<>();
-        for (BeregningsresultatAndel andel : finnArbeidsandeler(beregningsresultatPeriode)) {
+        for (TilkjentYtelseAndel andel : finnArbeidsandeler(tilkjentYtelsePeriode)) {
             arbeidsforholdListe
-                    .add(mapArbeidsforholdAndel(beregningsresultatPeriode, andel,
+                    .add(mapArbeidsforholdAndel(tilkjentYtelsePeriode, andel,
                             PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner
                                     .finnBgPerStatusOgAndelHvisFinnes(beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel),
                             beregningsgrunnlagPeriode, språkkode));
@@ -321,49 +318,49 @@ public final class UtbetalingsperiodeMapper {
         return arbeidsforholdListe;
     }
 
-    private static List<BeregningsresultatAndel> finnArbeidsandeler(BeregningsresultatPeriode beregningsresultatPeriode) {
-        return beregningsresultatPeriode.getBeregningsresultatAndelList().stream()
+    private static List<TilkjentYtelseAndel> finnArbeidsandeler(TilkjentYtelsePeriode tilkjentYtelsePeriode) {
+        return tilkjentYtelsePeriode.getAndeler().stream()
                 .filter(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus()))
                 .collect(Collectors.toList());
     }
 
-    private static Arbeidsforhold mapArbeidsforholdAndel(BeregningsresultatPeriode beregningsresultatPeriode,
-                                                         BeregningsresultatAndel beregningsresultatAndel,
+    private static Arbeidsforhold mapArbeidsforholdAndel(TilkjentYtelsePeriode tilkjentYtelsePeriode,
+                                                         TilkjentYtelseAndel tilkjentYtelseAndel,
                                                          Optional<UttakResultatPeriodeAktivitet> uttakAktivitet,
                                                          Optional<BeregningsgrunnlagPrStatusOgAndel> beregningsgrunnlagAndel,
                                                          BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
                                                          Språkkode språkkode) {
         var arbeidsforhold = Arbeidsforhold.ny()
-                .medArbeidsgiverNavn((beregningsresultatAndel.getArbeidsgiver().map(Arbeidsgiver::navn).orElse("Andel")));
-        arbeidsforhold.medAktivitetDagsats(beregningsresultatAndel.getDagsats());
+                .medArbeidsgiverNavn((tilkjentYtelseAndel.getArbeidsgiver().map(Arbeidsgiver::navn).orElse("Andel")));
+        arbeidsforhold.medAktivitetDagsats(tilkjentYtelseAndel.getDagsats());
         if (uttakAktivitet.isPresent()) {
             arbeidsforhold.medProsentArbeid(Prosent.of(uttakAktivitet.get().getArbeidsprosent()));
             arbeidsforhold.medUtbetalingsgrad(Prosent.of(uttakAktivitet.get().getUtbetalingsprosent()));
             arbeidsforhold.medGradering(uttakAktivitet.get().getGraderingInnvilget());
         }
-        arbeidsforhold.medStillingsprosent(Prosent.of(beregningsresultatAndel.getStillingsprosent()));
+        arbeidsforhold.medStillingsprosent(Prosent.of(tilkjentYtelseAndel.getStillingsprosent()));
         beregningsgrunnlagAndel.ifPresent(bgAndel -> {
             final BeregningsgrunnlagPrStatusOgAndel statusOgAndel = beregningsgrunnlagAndel.get();
             statusOgAndel.getBgAndelArbeidsforhold().ifPresent(bgAndelArbeidsforhold -> {
                 if (bgAndelArbeidsforhold.naturalytelseBortfaltPrÅr() != null ||
                         bgAndelArbeidsforhold.naturalytelseTilkommetPrÅr() != null)
-                    mapNaturalytelse(arbeidsforhold, beregningsgrunnlagPeriode, beregningsresultatPeriode, språkkode);
+                    mapNaturalytelse(arbeidsforhold, beregningsgrunnlagPeriode, tilkjentYtelsePeriode, språkkode);
             });
         });
         return arbeidsforhold.build();
     }
 
     private static void mapNaturalytelse(Arbeidsforhold.Builder arbeidsforholdBuilder, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
-                                         BeregningsresultatPeriode beregningsresultatPeriode, Språkkode språkkode) {
+                                         TilkjentYtelsePeriode tilkjentYtelsePeriode, Språkkode språkkode) {
         for (String årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
             if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode().equals(årsak)) {
                 arbeidsforholdBuilder.medNaturalytelseEndringType(NaturalytelseEndringType.STOPP);
                 arbeidsforholdBuilder.medNaturalytelseNyDagsats((beregningsgrunnlagPeriode.getDagsats()));
-                arbeidsforholdBuilder.medNaturalytelseEndringDato(formaterDato(beregningsresultatPeriode.getBeregningsresultatPeriodeFom(), språkkode));
+                arbeidsforholdBuilder.medNaturalytelseEndringDato(formaterDato(tilkjentYtelsePeriode.getPeriodeFom(), språkkode));
             } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode().equals(årsak)) {
                 arbeidsforholdBuilder.medNaturalytelseEndringType((NaturalytelseEndringType.START));
                 arbeidsforholdBuilder.medNaturalytelseNyDagsats(beregningsgrunnlagPeriode.getDagsats());
-                arbeidsforholdBuilder.medNaturalytelseEndringDato(formaterDato(beregningsresultatPeriode.getBeregningsresultatPeriodeFom(), språkkode));
+                arbeidsforholdBuilder.medNaturalytelseEndringDato(formaterDato(tilkjentYtelsePeriode.getPeriodeFom(), språkkode));
             } else {
                 arbeidsforholdBuilder.medNaturalytelseEndringType(NaturalytelseEndringType.INGEN_ENDRING);
             }

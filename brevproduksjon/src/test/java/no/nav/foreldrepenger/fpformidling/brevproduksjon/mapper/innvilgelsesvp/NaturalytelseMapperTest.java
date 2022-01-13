@@ -10,9 +10,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
@@ -39,11 +39,11 @@ public class NaturalytelseMapperTest {
     @Test
     public void skal_ikke_utlede_naturalytelse_som_starter_med_første_periode() {
         // Arrange
-        BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, false);
+        TilkjentYtelseForeldrepenger tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, false);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode()), false);
 
         // Act
-        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
         assertThat(resultat).isEmpty();
@@ -52,11 +52,11 @@ public class NaturalytelseMapperTest {
     @Test
     public void skal_utlede_at_naturalytelse_bortfaller_når_årsak_er_bortfaller() {
         // Arrange
-        BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
+        TilkjentYtelseForeldrepenger tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode()), true);
 
         // Act
-        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
         assertThat(resultat).isNotNull();
@@ -70,11 +70,11 @@ public class NaturalytelseMapperTest {
     @Test
     public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_er_tilkommer() {
         // Arrange
-        BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
+        TilkjentYtelseForeldrepenger tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, null, BigDecimal.valueOf(1000), of(PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode()), true);
 
         // Act
-        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
         assertThat(resultat).isNotNull();
@@ -85,11 +85,11 @@ public class NaturalytelseMapperTest {
     @Test
     public void skal_utlede_at_naturalytelse_bortfaller_når_årsak_ikke_er_angitt_og_bare_bortfaller_er_angitt() {
         // Arrange
-        BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
+        TilkjentYtelseForeldrepenger tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(), true);
 
         // Act
-        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
         assertThat(resultat).isNotNull();
@@ -100,11 +100,11 @@ public class NaturalytelseMapperTest {
     @Test
     public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bare_tilkommer_er_angitt() {
         // Arrange
-        BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
+        TilkjentYtelseForeldrepenger tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, null, BigDecimal.valueOf(1000), of(), true);
 
         // Act
-        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
         assertThat(resultat).isNotNull();
@@ -115,11 +115,11 @@ public class NaturalytelseMapperTest {
     @Test
     public void skal_utlede_at_naturalytelse_bortfaller_når_årsak_ikke_er_angitt_og_bortfaller_er_større_enn_tilkommer() {
         // Arrange
-        BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
+        TilkjentYtelseForeldrepenger tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), BigDecimal.valueOf(500), of(), true);
 
         // Act
-        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
         assertThat(resultat).isNotNull();
@@ -130,11 +130,11 @@ public class NaturalytelseMapperTest {
     @Test
     public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bortfaller_er_lik_tilkommer() {
         // Arrange
-        BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
+        TilkjentYtelseForeldrepenger tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), BigDecimal.valueOf(1000), of(), true);
 
         // Act
-        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
         assertThat(resultat).isNotNull();
@@ -145,11 +145,11 @@ public class NaturalytelseMapperTest {
     @Test
     public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bortfaller_er_mindre_enn_tilkommer() {
         // Arrange
-        BeregningsresultatFP beregningsresultatFP = getBeregningsresultatFP(ARBEIDSGIVER, true);
+        TilkjentYtelseForeldrepenger tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(500), BigDecimal.valueOf(1000), of(), true);
 
         // Act
-        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(beregningsresultatFP, beregningsgrunnlag, Språkkode.NB);
+        List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
         assertThat(resultat).isNotNull();
@@ -157,23 +157,23 @@ public class NaturalytelseMapperTest {
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
-    private BeregningsresultatFP getBeregningsresultatFP(Arbeidsgiver arbeidsgiver, boolean inkluderePeriode2) {
-        BeregningsresultatAndel andel = BeregningsresultatAndel.ny()
+    private TilkjentYtelseForeldrepenger gettilkjentYtelseFP(Arbeidsgiver arbeidsgiver, boolean inkluderePeriode2) {
+        TilkjentYtelseAndel andel = TilkjentYtelseAndel.ny()
                 .medArbeidsgiver(arbeidsgiver)
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .build();
-        BeregningsresultatPeriode resultatPeriode1 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode resultatPeriode1 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .medDagsats(DAGSATS)
-                .medBeregningsresultatAndel(of(andel))
+                .medAndeler(of(andel))
                 .build();
-        BeregningsresultatPeriode resultatPeriode2 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode resultatPeriode2 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medDagsats(DAGSATS)
-                .medBeregningsresultatAndel(of(andel))
+                .medAndeler(of(andel))
                 .build();
-        return BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(inkluderePeriode2 ? of(resultatPeriode1, resultatPeriode2) : of(resultatPeriode1))
+        return TilkjentYtelseForeldrepenger.ny()
+                .leggTilPerioder(inkluderePeriode2 ? of(resultatPeriode1, resultatPeriode2) : of(resultatPeriode1))
                 .build();
     }
 

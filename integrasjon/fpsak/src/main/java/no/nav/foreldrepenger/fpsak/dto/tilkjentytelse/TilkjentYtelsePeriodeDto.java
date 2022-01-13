@@ -1,13 +1,13 @@
-package no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat;
+package no.nav.foreldrepenger.fpsak.dto.tilkjentytelse;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 
-public class BeregningsresultatPeriodeDto {
+public class TilkjentYtelsePeriodeDto {
     private LocalDate fom;
     private LocalDate tom;
     private int dagsats;
-    private BeregningsresultatPeriodeAndelDto[] andeler;
+    private TilkjentYtelseAndelDto[] andeler;
 
     public LocalDate getFom() {
         return fom;
@@ -21,7 +21,7 @@ public class BeregningsresultatPeriodeDto {
         return dagsats;
     }
 
-    public BeregningsresultatPeriodeAndelDto[] getAndeler() {
+    public TilkjentYtelseAndelDto[] getAndeler() {
         return Arrays.copyOf(andeler, andeler.length);
     }
 
@@ -37,7 +37,7 @@ public class BeregningsresultatPeriodeDto {
         this.dagsats = dagsats;
     }
 
-    public void setAndeler(BeregningsresultatPeriodeAndelDto[] andeler) {
+    public void setAndeler(TilkjentYtelseAndelDto[] andeler) {
         this.andeler = andeler;
     }
 }

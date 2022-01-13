@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
@@ -48,10 +48,10 @@ public class UttaksperiodeMapperTest {
     public void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_utbetalingsgrad_innenfor_samme_aktivitetstype() {
         // Arrange
         SvpUttaksresultat svpUttaksresultat = getSvpUttaksresultat();
-        BeregningsresultatFP beregningsresultatFP = getBeregningsresultat();
+        TilkjentYtelseForeldrepenger tilkjentYtelseFP = getTilkjentYtelse();
 
         // Act
-        List<Uttaksaktivitet> resultat = UttaksperiodeMapper.mapUttaksaktivteterMedPerioder(svpUttaksresultat, beregningsresultatFP, Språkkode.NB);
+        List<Uttaksaktivitet> resultat = UttaksperiodeMapper.mapUttaksaktivteterMedPerioder(svpUttaksresultat, tilkjentYtelseFP, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(3);
@@ -149,66 +149,66 @@ public class UttaksperiodeMapperTest {
                 .build();
     }
 
-    private BeregningsresultatFP getBeregningsresultat() {
+    private TilkjentYtelseForeldrepenger getTilkjentYtelse() {
         // Arbeidstaker
-        BeregningsresultatAndel arbeidsgiverAndel = BeregningsresultatAndel.ny()
+        TilkjentYtelseAndel arbeidsgiverAndel = TilkjentYtelseAndel.ny()
                 .medArbeidsgiver(ARBEIDSGIVER)
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .build();
-        BeregningsresultatPeriode resultatPeriode1 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode resultatPeriode1 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .medDagsats(DAGSATS)
-                .medBeregningsresultatAndel(of(arbeidsgiverAndel))
+                .medAndeler(of(arbeidsgiverAndel))
                 .build();
-        BeregningsresultatPeriode resultatPeriode2 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode resultatPeriode2 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medDagsats(DAGSATS)
-                .medBeregningsresultatAndel(of(arbeidsgiverAndel))
+                .medAndeler(of(arbeidsgiverAndel))
                 .build();
-        BeregningsresultatPeriode resultatPeriode3 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode resultatPeriode3 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
                 .medDagsats(DAGSATS)
-                .medBeregningsresultatAndel(of(arbeidsgiverAndel))
+                .medAndeler(of(arbeidsgiverAndel))
                 .build();
-        BeregningsresultatPeriode resultatPeriode4 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode resultatPeriode4 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
                 .medDagsats(DAGSATS)
-                .medBeregningsresultatAndel(of(arbeidsgiverAndel))
+                .medAndeler(of(arbeidsgiverAndel))
                 .build();
 
         // Frilanser
-        BeregningsresultatAndel frilanserAndel = BeregningsresultatAndel.ny()
+        TilkjentYtelseAndel frilanserAndel = TilkjentYtelseAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)
                 .build();
-        BeregningsresultatPeriode resultatPeriode5 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode resultatPeriode5 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medDagsats(DAGSATS)
-                .medBeregningsresultatAndel(of(frilanserAndel))
+                .medAndeler(of(frilanserAndel))
                 .build();
-        BeregningsresultatPeriode resultatPeriode6 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode resultatPeriode6 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
                 .medDagsats(DAGSATS)
-                .medBeregningsresultatAndel(of(frilanserAndel))
+                .medAndeler(of(frilanserAndel))
                 .build();
-        BeregningsresultatPeriode resultatPeriode7 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode resultatPeriode7 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
                 .medDagsats(DAGSATS)
-                .medBeregningsresultatAndel(of(frilanserAndel))
+                .medAndeler(of(frilanserAndel))
                 .build();
 
         // Næringsdrivende
-        BeregningsresultatAndel næringsdrivendeAndel = BeregningsresultatAndel.ny()
+        TilkjentYtelseAndel næringsdrivendeAndel = TilkjentYtelseAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
                 .build();
-        BeregningsresultatPeriode resultatPeriode8 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode resultatPeriode8 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medDagsats(DAGSATS)
-                .medBeregningsresultatAndel(of(næringsdrivendeAndel))
+                .medAndeler(of(næringsdrivendeAndel))
                 .build();
 
         // Periode 1 legges til to ganger for å simulere caset der samme arbeidsgiver har to oppføringer med lik FOM/TOM
-        return BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(of(resultatPeriode1, resultatPeriode1, resultatPeriode2, resultatPeriode3,
+        return TilkjentYtelseForeldrepenger.ny()
+                .leggTilPerioder(of(resultatPeriode1, resultatPeriode1, resultatPeriode2, resultatPeriode3,
                         resultatPeriode4, resultatPeriode5, resultatPeriode6, resultatPeriode7, resultatPeriode8))
                 .build();
     }

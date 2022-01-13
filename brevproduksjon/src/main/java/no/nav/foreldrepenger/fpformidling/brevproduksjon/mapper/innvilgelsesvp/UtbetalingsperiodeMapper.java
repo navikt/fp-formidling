@@ -8,23 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Utbetalingsperiode;
 
 public final class UtbetalingsperiodeMapper {
 
-    public static List<Utbetalingsperiode> mapUtbetalingsperioder(List<BeregningsresultatPeriode> beregningsresultatPerioder, Språkkode språkkode) {
+    public static List<Utbetalingsperiode> mapUtbetalingsperioder(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder, Språkkode språkkode) {
         List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
-        beregningsresultatPerioder.forEach(beregningsresultatPeriode -> {
-            if (beregningsresultatPeriode.getDagsats() > 0) {
-                if (utbetalingsperioder.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(getSisteUtbetalingsperiode(utbetalingsperioder), beregningsresultatPeriode)) {
-                    Utbetalingsperiode utbetalingsperiode = opprettUtbetalingsperiode(språkkode, beregningsresultatPeriode,
-                            beregningsresultatPeriode.getBeregningsresultatPeriodeFom());
+        tilkjentYtelsePerioder.forEach(tilkjentYtelsePeriode -> {
+            if (tilkjentYtelsePeriode.getDagsats() > 0) {
+                if (utbetalingsperioder.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(getSisteUtbetalingsperiode(utbetalingsperioder), tilkjentYtelsePeriode)) {
+                    Utbetalingsperiode utbetalingsperiode = opprettUtbetalingsperiode(språkkode, tilkjentYtelsePeriode,
+                            tilkjentYtelsePeriode.getPeriodeFom());
                     utbetalingsperioder.add(utbetalingsperiode);
                 } else {
                     var sammenhengendeFom = getSisteUtbetalingsperiode(utbetalingsperioder).getPeriodeFom();
-                    Utbetalingsperiode utbetalingsperiode = opprettUtbetalingsperiode(språkkode, beregningsresultatPeriode, sammenhengendeFom);
+                    Utbetalingsperiode utbetalingsperiode = opprettUtbetalingsperiode(språkkode, tilkjentYtelsePeriode, sammenhengendeFom);
                     utbetalingsperioder.remove(utbetalingsperioder.size()-1);
                     utbetalingsperioder.add(utbetalingsperiode);
                 }
@@ -37,9 +37,9 @@ public final class UtbetalingsperiodeMapper {
         return getSisteUtbetalingsperiode(utbetalingsperioder).getPeriodeTom();
     }
 
-    private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Utbetalingsperiode periodeEn, BeregningsresultatPeriode periodeTo) {
+    private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Utbetalingsperiode periodeEn, TilkjentYtelsePeriode periodeTo) {
         boolean sammeDagsats = Objects.equals(periodeEn.getPeriodeDagsats(), periodeTo.getDagsats());
-        boolean sammeUtbetaltTilSoker = Objects.equals(periodeEn.getUtbetaltTilSøker(), periodeTo.getUtbetaltTilSoker());
+        boolean sammeUtbetaltTilSoker = Objects.equals(periodeEn.getUtbetaltTilSøker(), periodeTo.getUtbetaltTilSøker());
         return sammeDagsats && sammeUtbetaltTilSoker &&
                 erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriode().getFomDato());
     }
@@ -48,13 +48,13 @@ public final class UtbetalingsperiodeMapper {
         return utbetalingsperioder.get(utbetalingsperioder.size() - 1);
     }
 
-    private static Utbetalingsperiode opprettUtbetalingsperiode(Språkkode språkkode, BeregningsresultatPeriode beregningsresultatPeriode,
+    private static Utbetalingsperiode opprettUtbetalingsperiode(Språkkode språkkode, TilkjentYtelsePeriode tilkjentYtelsePeriode,
                                                                 LocalDate periodeFom) {
         return Utbetalingsperiode.ny()
                 .medPeriodeFom(periodeFom, språkkode)
-                .medPeriodeTom(beregningsresultatPeriode.getBeregningsresultatPeriodeTom(), språkkode)
-                .medPeriodeDagsats(beregningsresultatPeriode.getDagsats())
-                .medUtbetaltTilSøker(beregningsresultatPeriode.getUtbetaltTilSoker())
+                .medPeriodeTom(tilkjentYtelsePeriode.getPeriodeTom(), språkkode)
+                .medPeriodeDagsats(tilkjentYtelsePeriode.getDagsats())
+                .medUtbetaltTilSøker(tilkjentYtelsePeriode.getUtbetaltTilSøker())
                 .build();
     }
 }

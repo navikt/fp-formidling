@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatES;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -50,7 +50,7 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
     @Override
     public EngangsstønadInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
                                                                    Behandling behandling, boolean erUtkast) {
-        BeregningsresultatES beregningsresultat = domeneobjektProvider.hentBeregningsresultatES(behandling);
+        TilkjentYtelseEngangsstønad tilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
@@ -61,7 +61,7 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medRevurdering(behandling.erRevurdering())
                 .medFørstegangsbehandling(behandling.erFørstegangssøknad())
                 .medMedhold(BehandlingMapper.erMedhold(behandling))
-                .medInnvilgetBeløp(formaterBeløp(beregningsresultat.beløp()))
+                .medInnvilgetBeløp(formaterBeløp(tilkjentYtelse.beløp()))
                 .medKlagefristUker(brevParametere.getKlagefristUker())
                 .medDød(erDød(dokumentFelles))
                 .medFbEllerMedhold(erFBellerMedhold(behandling))
@@ -71,7 +71,7 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
             Behandling originalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
                     .orElseThrow(()-> new IllegalArgumentException("Utviklerfeil:Finner ikke informasjon om orginal behandling for revurdering "));
 
-            Long differanse = sjekkOmDifferanseHvisRevurdering(originalBehandling, beregningsresultat);
+            Long differanse = sjekkOmDifferanseHvisRevurdering(originalBehandling, tilkjentYtelse);
 
             if (differanse != 0L) {
                 FamilieHendelse famHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
@@ -93,10 +93,10 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
             || BehandlingÅrsakType.årsakerEtterKlageBehandling().stream().anyMatch(behandling::harBehandlingÅrsak);
     }
 
-    private Long sjekkOmDifferanseHvisRevurdering(Behandling originalBehandling, BeregningsresultatES beregningsresultat) {
-        Optional<BeregningsresultatES> originaltBeregningsresultat = domeneobjektProvider.hentBeregningsresultatESHvisFinnes(originalBehandling);
+    private Long sjekkOmDifferanseHvisRevurdering(Behandling originalBehandling, TilkjentYtelseEngangsstønad tilkjentYtelse) {
+        Optional<TilkjentYtelseEngangsstønad> originaltTilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseESHvisFinnes(originalBehandling);
 
-        return originaltBeregningsresultat.map(orgBeregningsresultat -> Math.abs(beregningsresultat.beløp() - orgBeregningsresultat.beløp()))
+        return originaltTilkjentYtelse.map(orgTilkjentYtelse -> Math.abs(tilkjentYtelse.beløp() - orgTilkjentYtelse.beløp()))
                 .orElse(0L);
     }
 

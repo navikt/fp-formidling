@@ -15,10 +15,10 @@ import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagAndelDtoV2;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDtoV2;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BgAndelArbeidsforholdDtoV2;
+import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BeregningsgrunnlagAndelDtoV2;
+import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
+import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDtoV2;
+import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BgAndelArbeidsforholdDtoV2;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.fpsak.mapper.sortering.PeriodeComparator;
 

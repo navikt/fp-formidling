@@ -34,9 +34,9 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
@@ -133,7 +133,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        when(domeneobjektProvider.hentBeregningsresultatFP(any(Behandling.class))).thenReturn(opprettBeregningsresultat());
+        when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
 
         // Act
         SvangerskapspengerInnvilgelseDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -226,7 +226,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        when(domeneobjektProvider.hentBeregningsresultatFP(any(Behandling.class))).thenReturn(opprettBeregningsresultat());
+        when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
 
         Behandling originalBehandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medBehandlingsresultat(Behandlingsresultat.builder()
@@ -257,7 +257,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlagMedSNIFørstePeriode());
-        when(domeneobjektProvider.hentBeregningsresultatFP(any(Behandling.class))).thenReturn(opprettBeregningsresultatMedSNIFørstePeriode());
+        when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseMedSNIFørstePeriode());
 
         // Act
         SvangerskapspengerInnvilgelseDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -279,7 +279,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlagMedFLIFørstePeriode());
-        when(domeneobjektProvider.hentBeregningsresultatFP(any(Behandling.class))).thenReturn(opprettBeregningsresultatMedFLIFørstePeriode());
+        when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseMedFLIFørstePeriode());
 
         // Act
         SvangerskapspengerInnvilgelseDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -441,34 +441,34 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .build());
     }
 
-    private BeregningsresultatFP opprettBeregningsresultat() {
-        return BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(of(
-                        BeregningsresultatPeriode.ny()
+    private TilkjentYtelseForeldrepenger opprettTilkjentYtelse() {
+        return TilkjentYtelseForeldrepenger.ny()
+                .leggTilPerioder(of(
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(DAGSATS_PERIODE1)
                                 .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
-                                        .medBrukerErMottaker(true)
-                                        .medTilSoker(DAGSATS_PERIODE1.intValue())
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
+                                        .medErBrukerMottaker(true)
+                                        .medUtbetalesTilBruker(DAGSATS_PERIODE1.intValue())
                                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                                         .medStillingsprosent(BigDecimal.valueOf(100))
                                         .medArbeidsgiver(ARBEIDSGIVER1)
                                         .build()))
                                 .build(),
-                        BeregningsresultatPeriode.ny()
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(DAGSATS_PERIODE2)
                                 .medPeriode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
-                                        .medArbeidsgiverErMottaker(true)
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
+                                        .medErArbeidsgiverMottaker(true)
                                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                                         .medStillingsprosent(BigDecimal.valueOf(100))
                                         .medArbeidsgiver(ARBEIDSGIVER1)
                                         .build()))
                                 .build(),
-                        BeregningsresultatPeriode.ny()
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(DAGSATS_PERIODE3)
                                 .medPeriode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
-                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
                                         .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
                                         .medStillingsprosent(BigDecimal.valueOf(100))
                                         .build()))
@@ -476,13 +476,13 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .build();
     }
 
-    private BeregningsresultatFP opprettBeregningsresultatMedSNIFørstePeriode() {
-        return BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(of(
-                        BeregningsresultatPeriode.ny()
+    private TilkjentYtelseForeldrepenger opprettTilkjentYtelseMedSNIFørstePeriode() {
+        return TilkjentYtelseForeldrepenger.ny()
+                .leggTilPerioder(of(
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(DAGSATS_PERIODE1)
                                 .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
                                         .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
                                         .medStillingsprosent(BigDecimal.valueOf(100))
                                         .build()))
@@ -490,13 +490,13 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .build();
     }
 
-    private BeregningsresultatFP opprettBeregningsresultatMedFLIFørstePeriode() {
-        return BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(of(
-                        BeregningsresultatPeriode.ny()
+    private TilkjentYtelseForeldrepenger opprettTilkjentYtelseMedFLIFørstePeriode() {
+        return TilkjentYtelseForeldrepenger.ny()
+                .leggTilPerioder(of(
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(DAGSATS_PERIODE1)
                                 .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
                                         .medAktivitetStatus(AktivitetStatus.FRILANSER)
                                         .medStillingsprosent(BigDecimal.valueOf(100))
                                         .build()))

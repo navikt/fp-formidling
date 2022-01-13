@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.beregning;
+package no.nav.foreldrepenger.fpformidling.tilkjentytelse;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -7,25 +7,25 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
-public class BeregningsresultatAndel {
-    private int dagsats;
-    private BigDecimal stillingsprosent;
-    private AktivitetStatus aktivitetStatus;
-    private Arbeidsgiver arbeidsgiver;
-    private ArbeidsforholdRef arbeidsforholdRef;
-    private boolean brukerErMottaker;
-    private boolean arbeidsgiverErMottaker;
-    private int tilSoker;
+public class TilkjentYtelseAndel {
+    private final int dagsats;
+    private final AktivitetStatus aktivitetStatus;
+    private final boolean erArbeidsgiverMottaker;
+    private final BigDecimal stillingsprosent;
+    private final Arbeidsgiver arbeidsgiver;
+    private final ArbeidsforholdRef arbeidsforholdRef;
+    private final boolean erBrukerMottaker;
+    private final int utbetalesTilBruker;
 
-    private BeregningsresultatAndel(Builder builder) {
+    private TilkjentYtelseAndel(Builder builder) {
         dagsats = builder.dagsats;
         stillingsprosent = builder.stillingsprosent;
         aktivitetStatus = builder.aktivitetStatus;
         arbeidsgiver = builder.arbeidsgiver;
         arbeidsforholdRef = builder.arbeidsforholdRef;
-        brukerErMottaker = builder.brukerErMottaker;
-        arbeidsgiverErMottaker = builder.arbeidsgiverErMottaker;
-        tilSoker = builder.tilSoker;
+        erBrukerMottaker = builder.erBrukerMottaker;
+        erArbeidsgiverMottaker = builder.erArbeidsgiverMottaker;
+        utbetalesTilBruker = builder.utbetalesTilBruker;
     }
 
     public static Builder ny() {
@@ -40,7 +40,7 @@ public class BeregningsresultatAndel {
         return stillingsprosent;
     }
 
-    public int getTilSoker() { return tilSoker; }
+    public int getUtbetalesTilBruker() { return utbetalesTilBruker; }
 
     public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
@@ -55,22 +55,22 @@ public class BeregningsresultatAndel {
     }
 
     public boolean erBrukerMottaker() {
-        return brukerErMottaker;
+        return erBrukerMottaker;
     }
 
     public boolean erArbeidsgiverMottaker() {
-        return arbeidsgiverErMottaker;
+        return erArbeidsgiverMottaker;
     }
 
     public static final class Builder {
         private int dagsats;
-        private BigDecimal stillingsprosent;
         private AktivitetStatus aktivitetStatus;
+        private boolean erArbeidsgiverMottaker;
         private Arbeidsgiver arbeidsgiver;
         private ArbeidsforholdRef arbeidsforholdRef;
-        private boolean brukerErMottaker;
-        private boolean arbeidsgiverErMottaker;
-        private int tilSoker;
+        private BigDecimal stillingsprosent;
+        private boolean erBrukerMottaker;
+        private int utbetalesTilBruker;
 
         private Builder() {
         }
@@ -85,8 +85,8 @@ public class BeregningsresultatAndel {
             return this;
         }
 
-        public Builder medTilSoker(int tilSoker) {
-            this.tilSoker = tilSoker;
+        public Builder medUtbetalesTilBruker(int utbetalesTilBruker) {
+            this.utbetalesTilBruker = utbetalesTilBruker;
             return this;
         }
 
@@ -105,19 +105,19 @@ public class BeregningsresultatAndel {
             return this;
         }
 
-        public Builder medBrukerErMottaker(boolean brukerErMottaker) {
-            this.brukerErMottaker = brukerErMottaker;
+        public Builder medErBrukerMottaker(boolean erBrukerMottaker) {
+            this.erBrukerMottaker = erBrukerMottaker;
             return this;
         }
 
 
-        public Builder medArbeidsgiverErMottaker(boolean arbeidsgiverErMottaker) {
-            this.arbeidsgiverErMottaker = arbeidsgiverErMottaker;
+        public Builder medErArbeidsgiverMottaker(boolean erArbeidsgiverMottaker) {
+            this.erArbeidsgiverMottaker = erArbeidsgiverMottaker;
             return this;
         }
 
-        public BeregningsresultatAndel build() {
-            return new BeregningsresultatAndel(this);
+        public TilkjentYtelseAndel build() {
+            return new TilkjentYtelseAndel(this);
         }
     }
 }

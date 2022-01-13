@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
@@ -82,7 +82,7 @@ class OpphørPeriodeMapperTest {
                 List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_1_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )),
                         opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8309, ARBGIVER_1_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )))));
 
-        List<BeregningsresultatPeriode> tilkjentYtelsePerioder = opprettBeregningsresultat(1).getBeregningsresultatPerioder();
+        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = opprettTilkjentYtelse(1).getPerioder();
 
         //Act
         Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null, tilkjentYtelsePerioder);
@@ -115,7 +115,7 @@ class OpphørPeriodeMapperTest {
                         List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_2_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )),
                                 opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_2_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )))));
 
-        List<BeregningsresultatPeriode> tilkjentYtelsePerioder = Collections.emptyList();
+        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = Collections.emptyList();
 
         //Act
         Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null, tilkjentYtelsePerioder);
@@ -148,7 +148,7 @@ class OpphørPeriodeMapperTest {
                 List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_2_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )),
                         opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8304, ARBGIVER_2_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )))));
 
-        List<BeregningsresultatPeriode> tilkjentYtelsePerioder = Collections.emptyList();
+        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = Collections.emptyList();
 
         //Act
         Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null, tilkjentYtelsePerioder);
@@ -188,31 +188,31 @@ class OpphørPeriodeMapperTest {
 
     }
 
-    private BeregningsresultatFP opprettBeregningsresultat(int antallArbeidsgivere) {
-        return BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(of(
-                        BeregningsresultatPeriode.ny()
+    private TilkjentYtelseForeldrepenger opprettTilkjentYtelse(int antallArbeidsgivere) {
+        return TilkjentYtelseForeldrepenger.ny()
+                .leggTilPerioder(of(
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(500L)
                                 .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
                                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                                         .medArbeidsgiver(ARBEIDSGIVER_1)
                                         .medStillingsprosent(BigDecimal.valueOf(50))
                                         .build()))
                                 .build(),
-                        BeregningsresultatPeriode.ny()
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(300L)
                                 .medPeriode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
                                         .medArbeidsgiver(antallArbeidsgivere == 1 ? ARBEIDSGIVER_1 : ARBEIDSGIVER_2)
                                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                                         .medStillingsprosent(BigDecimal.valueOf(50))
                                         .build()))
                                 .build(),
-                        BeregningsresultatPeriode.ny()
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(0L)
                                 .medPeriode(fraOgMedTilOgMed(LocalDate.now().plusDays(8), LocalDate.now().plusDays(12)))
-                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
                                         .medArbeidsgiver(antallArbeidsgivere == 1 ? ARBEIDSGIVER_1 : ARBEIDSGIVER_2)
                                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                                         .medStillingsprosent(BigDecimal.valueOf(50))

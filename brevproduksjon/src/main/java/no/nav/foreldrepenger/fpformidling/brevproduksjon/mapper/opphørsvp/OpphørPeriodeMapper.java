@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
@@ -31,7 +31,7 @@ import no.nav.vedtak.exception.TekniskException;
 public class OpphørPeriodeMapper {
     private static Set<String> lovReferanser;
     
-    public static Tuple<OpphørPeriode, String> mapOpphørtePerioderOgLovhjemmel(Behandling behandling, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, Inntektsmeldinger iay, List<BeregningsresultatPeriode> tilkjentYtelsePerioder) {
+    public static Tuple<OpphørPeriode, String> mapOpphørtePerioderOgLovhjemmel(Behandling behandling, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, Inntektsmeldinger iay, List<TilkjentYtelsePeriode> tilkjentYtelsePerioder) {
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
@@ -78,7 +78,7 @@ public class OpphørPeriodeMapper {
                 .build();
     }
 
-    private static OpphørPeriode mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, List<BeregningsresultatPeriode> tilkjentYtelsePerioder, Inntektsmeldinger iay) {
+    private static OpphørPeriode mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, List<TilkjentYtelsePeriode> tilkjentYtelsePerioder, Inntektsmeldinger iay) {
         List<SvpUttakResultatPeriode> opphørtePerioder = uttakResultatArbeidsforhold.stream()
             .flatMap(ura -> ura.getPerioder().stream())
                 .filter(ur -> PeriodeResultatType.AVSLÅTT.equals(ur.getPeriodeResultatType()))
@@ -99,7 +99,7 @@ public class OpphørPeriodeMapper {
         return opphørtePerioder.stream().map(SvpUttakResultatPeriode::getPeriodeIkkeOppfyltÅrsak).findFirst().orElse(null);
     }
 
-    private static OpphørPeriode mapOpphørtPeriode(List<BeregningsresultatPeriode> tilkjentYtelse, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkkode, String opphørÅrsak, Inntektsmeldinger iay) {
+    private static OpphørPeriode mapOpphørtPeriode(List<TilkjentYtelsePeriode> tilkjentYtelse, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkkode, String opphørÅrsak, Inntektsmeldinger iay) {
         Optional<LocalDate> førsteDato = finnFørsteStønadDato(tilkjentYtelse);
         Optional<LocalDate> sisteDato = finnSisteStønadDato(tilkjentYtelse);
 
@@ -136,21 +136,21 @@ public class OpphørPeriodeMapper {
                 .max(LocalDate::compareTo);
     }
 
-    private static Optional<LocalDate> finnFørsteStønadDato(List<BeregningsresultatPeriode> perioder) {
+    private static Optional<LocalDate> finnFørsteStønadDato(List<TilkjentYtelsePeriode> perioder) {
         return perioder.stream()
                 .filter(p-> p.getDagsats() > 0)
-                .map(BeregningsresultatPeriode::getBeregningsresultatPeriodeFom)
+                .map(TilkjentYtelsePeriode::getPeriodeFom)
                 .min(LocalDate::compareTo);
     }
 
-    private static Optional<LocalDate> finnSisteStønadDato(List<BeregningsresultatPeriode> perioder) {
+    private static Optional<LocalDate> finnSisteStønadDato(List<TilkjentYtelsePeriode> perioder) {
         return perioder.stream()
                 .filter(p-> p.getDagsats() > 0)
-                .map(BeregningsresultatPeriode::getBeregningsresultatPeriodeTom)
+                .map(TilkjentYtelsePeriode::getPeriodeTom)
                 .max(LocalDate::compareTo);
     }
 
-    private static int finnAntallArbeidsgivereFraTilkjentYtelse(List<BeregningsresultatPeriode> perioder) {
-        return (int) perioder.stream().flatMap(p-> p.getBeregningsresultatAndelList().stream()).map(BeregningsresultatAndel::getArbeidsgiver).distinct().count();
+    private static int finnAntallArbeidsgivereFraTilkjentYtelse(List<TilkjentYtelsePeriode> perioder) {
+        return (int) perioder.stream().flatMap(p-> p.getAndeler().stream()).map(TilkjentYtelseAndel::getArbeidsgiver).distinct().count();
     }
 }

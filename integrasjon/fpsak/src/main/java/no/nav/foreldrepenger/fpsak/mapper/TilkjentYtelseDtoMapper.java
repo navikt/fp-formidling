@@ -60,10 +60,10 @@ public class TilkjentYtelseDtoMapper {
                 .medArbeidsforholdRef(dto.getArbeidsforholdId() != null && !dto.getArbeidsforholdId().isEmpty() ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                 .medArbeidsgiver(mapArbeidsgiverFraDto(dto, hentNavn))
                 .medStillingsprosent(dto.getStillingsprosent())
-                .medErBrukerMottaker(dto.getUtbetalesTilBruker() != null && dto.getUtbetalesTilBruker() != 0)
-                .medErArbeidsgiverMottaker(dto.getUtbetalesTilArbeidsgiver() != null && dto.getUtbetalesTilArbeidsgiver() != 0)
+                .medErBrukerMottaker(dto.getTilSoker() != null && dto.getTilSoker() != 0)
+                .medErArbeidsgiverMottaker(dto.getRefusjon() != null && dto.getRefusjon() != 0)
                 .medDagsats(summerDagsats(dto))
-                .medUtbetalesTilBruker(dto.getUtbetalesTilBruker())
+                .medUtbetalesTilBruker(dto.getTilSoker())
                 .build();
     }
 
@@ -77,11 +77,11 @@ public class TilkjentYtelseDtoMapper {
 
     private static int summerDagsats(TilkjentYtelseAndelDto dto) {
         int sum = 0;
-        if (dto.getUtbetalesTilBruker() != null) {
-            sum += dto.getUtbetalesTilBruker();
+        if (dto.getTilSoker() != null) {
+            sum += dto.getTilSoker();
         }
-        if (dto.getUtbetalesTilArbeidsgiver() != null) {
-            sum += dto.getUtbetalesTilArbeidsgiver();
+        if (dto.getRefusjon() != null) {
+            sum += dto.getRefusjon();
         }
         return sum;
     }

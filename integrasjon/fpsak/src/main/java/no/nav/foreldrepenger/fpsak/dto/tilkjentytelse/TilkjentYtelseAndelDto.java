@@ -5,13 +5,13 @@ import java.math.BigDecimal;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
 public class TilkjentYtelseAndelDto {
-    private KodeDto aktivitetStatus;
     private String arbeidsgiverReferanse;
-    private KodeDto arbeidsforholdType;
+    private Integer refusjon;
+    private Integer tilSoker;
+    private KodeDto aktivitetStatus;
     private String arbeidsforholdId;
-    private Integer utbetalesTilArbeidsgiver;
+    private KodeDto arbeidsforholdType;
     private BigDecimal stillingsprosent;
-    private Integer utbetalesTilBruker;
 
     public TilkjentYtelseAndelDto() {
     }
@@ -20,12 +20,12 @@ public class TilkjentYtelseAndelDto {
         return arbeidsgiverReferanse;
     }
 
-    public Integer getUtbetalesTilArbeidsgiver() {
-        return utbetalesTilArbeidsgiver;
+    public Integer getRefusjon() {
+        return refusjon;
     }
 
-    public Integer getUtbetalesTilBruker() {
-        return utbetalesTilBruker;
+    public Integer getTilSoker() {
+        return tilSoker;
     }
 
     public KodeDto getAktivitetStatus() {

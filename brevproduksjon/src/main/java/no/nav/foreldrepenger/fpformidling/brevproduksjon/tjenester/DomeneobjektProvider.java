@@ -11,8 +11,8 @@ import no.nav.foreldrepenger.fpformidling.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.fpformidling.anke.Anke;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.innsyn.Innsyn;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatES;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
@@ -35,7 +35,7 @@ import no.nav.foreldrepenger.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpsak.mapper.AnkeDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.BeregningsgrunnlagDtoMapper;
-import no.nav.foreldrepenger.fpsak.mapper.BeregningsresultatDtoMapper;
+import no.nav.foreldrepenger.fpsak.mapper.TilkjentYtelseDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.FagsakDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.FamiliehendelseDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.InntektsmeldingDtoMapper;
@@ -95,25 +95,25 @@ public class DomeneobjektProvider {
                 .map(BehandlingDtoMapper::mapBehandlingFraDto);
     }
 
-    public BeregningsresultatES hentBeregningsresultatES(Behandling behandling) {
-        return BeregningsresultatDtoMapper
-                .mapBeregningsresultatESFraDto(behandlingRestKlient.hentBeregningsresultatEngangsstønad(behandling.getResourceLinker()));
+    public TilkjentYtelseEngangsstønad hentTilkjentYtelseEngangsstønad(Behandling behandling) {
+        return TilkjentYtelseDtoMapper
+                .mapTilkjentYtelseESFraDto(behandlingRestKlient.hentTilkjentYtelseEngangsstønad(behandling.getResourceLinker()));
     }
 
-    public Optional<BeregningsresultatES> hentBeregningsresultatESHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentBeregningsresultatEngangsstønadHvisFinnes(behandling.getResourceLinker())
-                .map(BeregningsresultatDtoMapper::mapBeregningsresultatESFraDto);
+    public Optional<TilkjentYtelseEngangsstønad> hentTilkjentYtelseESHvisFinnes(Behandling behandling) {
+        return behandlingRestKlient.hentTilkjentYtelseEngangsstønadHvisFinnes(behandling.getResourceLinker())
+                .map(TilkjentYtelseDtoMapper::mapTilkjentYtelseESFraDto);
     }
 
-    public BeregningsresultatFP hentBeregningsresultatFP(Behandling behandling) {
-        return BeregningsresultatDtoMapper.mapBeregningsresultatFPFraDto(
-                behandlingRestKlient.hentBeregningsresultatForeldrepenger(behandling.getResourceLinker()),
+    public TilkjentYtelseForeldrepenger hentTilkjentYtelseForeldrepenger(Behandling behandling) {
+        return TilkjentYtelseDtoMapper.mapTilkjentYtelseFPFraDto(
+                behandlingRestKlient.hentTilkjentYtelseForeldrepenger(behandling.getResourceLinker()),
                 arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
-    public Optional<BeregningsresultatFP> hentBeregningsresultatFPHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentBeregningsresultatForeldrepengerHvisFinnes(behandling.getResourceLinker())
-                .map(r -> BeregningsresultatDtoMapper.mapBeregningsresultatFPFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+    public Optional<TilkjentYtelseForeldrepenger> hentTilkjentYtelseFPHvisFinnes(Behandling behandling) {
+        return behandlingRestKlient.hentTilkjentYtelseForeldrepengerHvisFinnes(behandling.getResourceLinker())
+                .map(r -> TilkjentYtelseDtoMapper.mapTilkjentYtelseFPFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public FamilieHendelse hentFamiliehendelse(Behandling behandling) {

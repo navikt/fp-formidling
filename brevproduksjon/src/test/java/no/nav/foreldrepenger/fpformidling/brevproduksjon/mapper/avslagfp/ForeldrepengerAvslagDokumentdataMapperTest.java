@@ -34,8 +34,8 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
@@ -98,7 +98,7 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(opprettMottattDokument());
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
-        when(domeneobjektProvider.hentBeregningsresultatFPHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsresultatFP());
+        when(domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentUttaksresultatHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
     }
@@ -160,18 +160,18 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
         return new FamilieHendelse(BigInteger.valueOf(2), 0,false, true, FamilieHendelseType.TERMIN, optionalDatoer);
     }
 
-    private Optional<BeregningsresultatFP> opprettBeregningsresultatFP() {
-        return Optional.of(BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(of(
-                        BeregningsresultatPeriode.ny()
+    private Optional<TilkjentYtelseForeldrepenger> opprettTilkjentYtelseFP() {
+        return Optional.of(TilkjentYtelseForeldrepenger.ny()
+                .leggTilPerioder(of(
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(100L)
                                 .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                                 .build(),
-                        BeregningsresultatPeriode.ny()
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(100L * 2)
                                 .medPeriode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                                 .build(),
-                        BeregningsresultatPeriode.ny()
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(100L * 3)
                                 .medPeriode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
                                 .build()))

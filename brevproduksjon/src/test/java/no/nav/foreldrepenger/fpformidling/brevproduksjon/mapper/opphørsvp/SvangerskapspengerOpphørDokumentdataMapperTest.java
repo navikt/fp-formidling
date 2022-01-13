@@ -33,9 +33,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
@@ -88,7 +88,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentUttaksresultatSvpHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
-        when(domeneobjektProvider.hentBeregningsresultatFPHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsresultat());
+        when(domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
     }
 
     @Test
@@ -141,13 +141,13 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
                 .build());
     }
 
-    private Optional<BeregningsresultatFP> opprettBeregningsresultat() {
-        return Optional.of(BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(of(
-                        BeregningsresultatPeriode.ny()
+    private Optional<TilkjentYtelseForeldrepenger> opprettTilkjentYtelse() {
+        return Optional.of(TilkjentYtelseForeldrepenger.ny()
+                .leggTilPerioder(of(
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(500L)
                                 .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
                                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                                         .medArbeidsgiver(ARBEIDSGIVER_1)
                                         .medStillingsprosent(BigDecimal.valueOf(50))

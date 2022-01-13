@@ -16,9 +16,9 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatEngangsstønadDto;
-import no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat.BeregningsresultatMedUttaksplanDto;
+import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
+import no.nav.foreldrepenger.fpsak.dto.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
+import no.nav.foreldrepenger.fpsak.dto.tilkjentytelse.TilkjentYtelseMedUttaksplanDto;
 import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektsmeldingerDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
@@ -68,33 +68,33 @@ public interface Behandlinger {
                 .flatMap(link -> hentDtoFraLink(link, FamilieHendelseGrunnlagDto.class));
     }
 
-    default Optional<BeregningsresultatEngangsstønadDto> hentBeregningsresultatEngangsstønadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
+    default Optional<TilkjentYtelseEngangsstønadDto> hentTilkjentYtelseEngangsstønadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker
                 .stream()
                 .filter(dto -> "beregningsresultat-engangsstonad".equals(dto.getRel()))
                 .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, BeregningsresultatEngangsstønadDto.class));
+                .flatMap(link -> hentDtoFraLink(link, TilkjentYtelseEngangsstønadDto.class));
     }
 
-    default BeregningsresultatEngangsstønadDto hentBeregningsresultatEngangsstønad(List<BehandlingResourceLink> resourceLinker) {
-        return hentBeregningsresultatEngangsstønadHvisFinnes(resourceLinker)
+    default TilkjentYtelseEngangsstønadDto hentTilkjentYtelseEngangsstønad(List<BehandlingResourceLink> resourceLinker) {
+        return hentTilkjentYtelseEngangsstønadHvisFinnes(resourceLinker)
                 .orElseThrow(() -> new IllegalStateException(
-                        "Klarte ikke hente Beregningsresultat engangsstønad for behandling: " + hentBehandlingId(resourceLinker)));
+                        "Klarte ikke hente Tilkjent ytelse engangsstønad for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
-    default BeregningsresultatMedUttaksplanDto hentBeregningsresultatForeldrepenger(List<BehandlingResourceLink> resourceLinker) {
-        return hentBeregningsresultatForeldrepengerHvisFinnes(resourceLinker).orElseThrow(() -> {
+    default TilkjentYtelseMedUttaksplanDto hentTilkjentYtelseForeldrepenger(List<BehandlingResourceLink> resourceLinker) {
+        return hentTilkjentYtelseForeldrepengerHvisFinnes(resourceLinker).orElseThrow(() -> {
             throw new IllegalStateException(
-                    "Klarte ikke hente Beregningsresultat foreldrepenger for behandling: " + hentBehandlingId(resourceLinker));
+                    "Klarte ikke hente Tilkjent ytelse foreldrepenger for behandling: " + hentBehandlingId(resourceLinker));
         });
     }
 
-    default Optional<BeregningsresultatMedUttaksplanDto> hentBeregningsresultatForeldrepengerHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
+    default Optional<TilkjentYtelseMedUttaksplanDto> hentTilkjentYtelseForeldrepengerHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker
                 .stream()
                 .filter(dto -> "beregningsresultat-foreldrepenger".equals(dto.getRel()))
                 .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, BeregningsresultatMedUttaksplanDto.class));
+                .flatMap(link -> hentDtoFraLink(link, TilkjentYtelseMedUttaksplanDto.class));
     }
 
     default Optional<SoknadBackendDto> hentSoknadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {

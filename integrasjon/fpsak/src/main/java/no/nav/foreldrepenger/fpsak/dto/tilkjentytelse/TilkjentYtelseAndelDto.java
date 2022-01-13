@@ -1,31 +1,31 @@
-package no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat;
+package no.nav.foreldrepenger.fpsak.dto.tilkjentytelse;
 
 import java.math.BigDecimal;
 
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
-public class BeregningsresultatPeriodeAndelDto {
-    private String arbeidsgiverReferanse;
-    private Integer refusjon;
-    private Integer tilSoker;
+public class TilkjentYtelseAndelDto {
     private KodeDto aktivitetStatus;
-    private String arbeidsforholdId;
+    private String arbeidsgiverReferanse;
     private KodeDto arbeidsforholdType;
+    private String arbeidsforholdId;
+    private Integer utbetalesTilArbeidsgiver;
     private BigDecimal stillingsprosent;
+    private Integer utbetalesTilBruker;
 
-    public BeregningsresultatPeriodeAndelDto() {
+    public TilkjentYtelseAndelDto() {
     }
 
     public String getArbeidsgiverReferanse() {
         return arbeidsgiverReferanse;
     }
 
-    public Integer getRefusjon() {
-        return refusjon;
+    public Integer getUtbetalesTilArbeidsgiver() {
+        return utbetalesTilArbeidsgiver;
     }
 
-    public Integer getTilSoker() {
-        return tilSoker;
+    public Integer getUtbetalesTilBruker() {
+        return utbetalesTilBruker;
     }
 
     public KodeDto getAktivitetStatus() {

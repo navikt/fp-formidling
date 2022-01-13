@@ -14,7 +14,7 @@ import java.util.TreeSet;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.behandling.ÅrsakMedLovReferanse;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
@@ -35,12 +35,12 @@ public class AvslåttPeriodeMapper {
     private static Set<String> lovReferanser;
 
     public static Tuple<List<AvslåttPeriode>, String> mapAvslåttePerioderOgLovhjemmel(Behandling behandling,
-                                                                                      List<BeregningsresultatPeriode> beregningsresultatPerioder,
+                                                                                      List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
                                                                                       Optional<UttakResultatPerioder> uttakResultatPerioder) {
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
 
-        List<AvslåttPeriode> avslåttePerioder = årsakerFra(beregningsresultatPerioder, uttakResultatPerioder, behandling.getSpråkkode());
+        List<AvslåttPeriode> avslåttePerioder = årsakerFra(tilkjentYtelsePerioder, uttakResultatPerioder, behandling.getSpråkkode());
         String lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
                 BehandlingMapper.kodeFra(behandlingsresultat.getKonsekvenserForYtelsen()),
                 false);
@@ -53,13 +53,13 @@ public class AvslåttPeriodeMapper {
         return new Tuple<>(avslåttePerioder, lovhjemmelForAvslag);
     }
 
-    private static List<AvslåttPeriode> årsakerFra(List<BeregningsresultatPeriode> beregningsresultatPerioder,
+    private static List<AvslåttPeriode> årsakerFra(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
                                                    Optional<UttakResultatPerioder> uttakResultatPerioder,
                                                    Språkkode språkkode) {
         List<AvslåttPeriode> avslåttePerioder = new ArrayList<>();
-        for (BeregningsresultatPeriode beregningsresultatPeriode : beregningsresultatPerioder) {
-            AvslåttPeriode avslåttPeriode = årsaktypeFra(beregningsresultatPeriode,
-                    finnUttakResultatPeriode(uttakResultatPerioder, beregningsresultatPeriode), språkkode);
+        for (TilkjentYtelsePeriode tilkjentYtelsePeriode : tilkjentYtelsePerioder) {
+            AvslåttPeriode avslåttPeriode = årsaktypeFra(tilkjentYtelsePeriode,
+                    finnUttakResultatPeriode(uttakResultatPerioder, tilkjentYtelsePeriode), språkkode);
             avslåttePerioder.add(avslåttPeriode);
         }
         return avslåttePerioder;
@@ -90,13 +90,13 @@ public class AvslåttPeriodeMapper {
         return avslåttPeriode;
     }
 
-    private static AvslåttPeriode årsaktypeFra(BeregningsresultatPeriode beregningsresultatPeriode,
+    private static AvslåttPeriode årsaktypeFra(TilkjentYtelsePeriode tilkjentYtelsePeriode,
                                                UttakResultatPeriode uttakResultatPeriode,
                                                Språkkode språkkode) {
         AvslåttPeriode avslåttPeriode = AvslåttPeriode.ny()
                 .medAvslagsårsak(Årsak.of(uttakResultatPeriode.getPeriodeResultatÅrsak().getKode()))
-                .medPeriodeFom(beregningsresultatPeriode.getBeregningsresultatPeriodeFom(), språkkode)
-                .medPeriodeTom(beregningsresultatPeriode.getBeregningsresultatPeriodeTom(), språkkode)
+                .medPeriodeFom(tilkjentYtelsePeriode.getPeriodeFom(), språkkode)
+                .medPeriodeTom(tilkjentYtelsePeriode.getPeriodeTom(), språkkode)
                 .medAntallTapteDager(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter()))
                 .build();
         leggTilLovReferanse(uttakResultatPeriode.getPeriodeResultatÅrsak());
@@ -118,8 +118,8 @@ public class AvslåttPeriodeMapper {
     }
 
     private static UttakResultatPeriode finnUttakResultatPeriode(Optional<UttakResultatPerioder> uttakResultatPerioder,
-                                                                 BeregningsresultatPeriode beregningsresultatPeriode) {
-        return PeriodeBeregner.finnUttaksperiode(beregningsresultatPeriode, uttakResultatPerioder
+                                                                 TilkjentYtelsePeriode tilkjentYtelsePeriode) {
+        return PeriodeBeregner.finnUttaksperiode(tilkjentYtelsePeriode, uttakResultatPerioder
                 .map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList()));
     }
 }

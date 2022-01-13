@@ -11,8 +11,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
@@ -29,7 +29,7 @@ import no.nav.vedtak.exception.TekniskException;
 public class PeriodeBeregner {
 
     private static final String FEILKODE = "FPFORMIDLING-368280";
-    private static final String FEILMELDING = "Klarte ikke matche beregningsresultatperiode og %S for brev";
+    private static final String FEILMELDING = "Klarte ikke matche tilkjentYtelsePeriode og %S for brev";
     private static Map<AktivitetStatus, UttakArbeidType> uttakAktivitetStatusMap = new EnumMap<>(AktivitetStatus.class);
 
     static {
@@ -42,35 +42,35 @@ public class PeriodeBeregner {
         // for sonar
     }
 
-    public static BeregningsgrunnlagPeriode finnBeregningsgrunnlagperiode(BeregningsresultatPeriode periode,
+    public static BeregningsgrunnlagPeriode finnBeregningsgrunnlagperiode(TilkjentYtelsePeriode periode,
                                                                           List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
         for (BeregningsgrunnlagPeriode beregningsgrunnlagPeriode : beregningsgrunnlagPerioder) {
-            if (!periode.getBeregningsresultatPeriodeFom().isBefore(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom()) &&
+            if (!periode.getPeriodeFom().isBefore(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom()) &&
                     (beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom() == null
-                            || (!periode.getBeregningsresultatPeriodeTom().isAfter(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom())))) {
+                            || (!periode.getPeriodeTom().isAfter(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom())))) {
                 return beregningsgrunnlagPeriode;
             }
         }
         throw new TekniskException(FEILKODE, String.format(FEILMELDING, "beregningsgrunnlagperiode"));
     }
 
-    public static UttakResultatPeriode finnUttaksperiode(BeregningsresultatPeriode periode, List<UttakResultatPeriode> uttakPerioder) {
+    public static UttakResultatPeriode finnUttaksperiode(TilkjentYtelsePeriode periode, List<UttakResultatPeriode> uttakPerioder) {
         for (UttakResultatPeriode uttakPeriode : uttakPerioder) {
-            if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom())
-                    && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
+            if (!periode.getPeriodeFom().isBefore(uttakPeriode.getFom())
+                    && !periode.getPeriodeTom().isAfter(uttakPeriode.getTom())) {
                 return uttakPeriode;
             }
         }
         throw new TekniskException(FEILKODE, String.format(FEILMELDING, "uttaksperiode"));
     }
 
-    public static List<SvpUttakResultatPeriode> finnUttakPeriodeKandidater(BeregningsresultatPeriode periode,
-            List<SvpUttakResultatPeriode> uttakPerioder) {
+    public static List<SvpUttakResultatPeriode> finnUttakPeriodeKandidater(TilkjentYtelsePeriode periode,
+                                                                           List<SvpUttakResultatPeriode> uttakPerioder) {
         if (periode.getDagsats() > 0) {
             List<SvpUttakResultatPeriode> kandidater = new ArrayList<>();
             for (SvpUttakResultatPeriode uttakPeriode : uttakPerioder) {
-                if (!periode.getBeregningsresultatPeriodeFom().isBefore(uttakPeriode.getFom())
-                        && !periode.getBeregningsresultatPeriodeTom().isAfter(uttakPeriode.getTom())) {
+                if (!periode.getPeriodeFom().isBefore(uttakPeriode.getFom())
+                        && !periode.getPeriodeTom().isAfter(uttakPeriode.getTom())) {
                     kandidater.add(uttakPeriode);
                 }
             }
@@ -85,7 +85,7 @@ public class PeriodeBeregner {
     // TODO - Skriv tester.. Dette oppfører seg annerledes i DTOene enn fpsak
     public static Optional<BeregningsgrunnlagPrStatusOgAndel> finnBgPerStatusOgAndelHvisFinnes(
             List<BeregningsgrunnlagPrStatusOgAndel> bgPerStatusOgAndelListe,
-            BeregningsresultatAndel andel) {
+            TilkjentYtelseAndel andel) {
         for (BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel : bgPerStatusOgAndelListe) {
             if (andel.getAktivitetStatus().equals(bgPerStatusOgAndel.getAktivitetStatus())) {
                 if (AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())) {
@@ -101,7 +101,7 @@ public class PeriodeBeregner {
         return Optional.empty();
     }
 
-    private static boolean sammeArbeidsforhold(BeregningsresultatAndel andel, BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel) {
+    private static boolean sammeArbeidsforhold(TilkjentYtelseAndel andel, BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel) {
         Optional<Arbeidsgiver> arbeidsgiver = andel.getArbeidsgiver();
         if (arbeidsgiver.isEmpty()) {
             return false;
@@ -120,7 +120,7 @@ public class PeriodeBeregner {
     }
 
     public static Optional<UttakResultatPeriodeAktivitet> finnAktivitetMedStatusHvisFinnes(List<UttakResultatPeriodeAktivitet> uttakAktiviteter,
-            BeregningsresultatAndel andel) {
+            TilkjentYtelseAndel andel) {
         Optional<Arbeidsgiver> arbeidsgiver = andel.getArbeidsgiver();
         ArbeidsforholdRef arbeidsforholdRef = andel.getArbeidsforholdRef();
 

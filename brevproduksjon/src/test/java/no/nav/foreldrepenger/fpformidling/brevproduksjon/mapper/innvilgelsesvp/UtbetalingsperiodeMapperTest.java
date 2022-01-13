@@ -9,8 +9,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Utbetalingsperiode;
 
@@ -19,61 +19,61 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_dagsats_og_beløp_til_søker() {
         // Arrange
-        List<BeregningsresultatPeriode> beregningsperioder = of(
-                BeregningsresultatPeriode.ny()
+        List<TilkjentYtelsePeriode> beregningsperioder = of(
+                TilkjentYtelsePeriode.ny()
                         .medDagsats(500L)
                         .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(10), LocalDate.now().minusDays(1)))
-                        .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
-                                .medBrukerErMottaker(true)
-                                .medTilSoker(500)
+                        .medAndeler(of(TilkjentYtelseAndel.ny()
+                                .medErBrukerMottaker(true)
+                                .medUtbetalesTilBruker(500)
                                 .build()))
                         .build(),
-                BeregningsresultatPeriode.ny() // Slås sammen med foregående periode
+                TilkjentYtelsePeriode.ny() // Slås sammen med foregående periode
                         .medDagsats(500L)
                         .medPeriode(fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(3)))
-                        .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
-                                .medBrukerErMottaker(true)
-                                .medTilSoker(500)
+                        .medAndeler(of(TilkjentYtelseAndel.ny()
+                                .medErBrukerMottaker(true)
+                                .medUtbetalesTilBruker(500)
                                 .build()))
                         .build(),
-                BeregningsresultatPeriode.ny() // Slås ikke sammen pga dato
+                TilkjentYtelsePeriode.ny() // Slås ikke sammen pga dato
                         .medDagsats(500L)
                         .medPeriode(fraOgMedTilOgMed(LocalDate.now().plusDays(8), LocalDate.now().plusDays(10)))
-                        .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
-                                .medBrukerErMottaker(true)
-                                .medTilSoker(500)
+                        .medAndeler(of(TilkjentYtelseAndel.ny()
+                                .medErBrukerMottaker(true)
+                                .medUtbetalesTilBruker(500)
                                 .build()))
                         .build(),
-                BeregningsresultatPeriode.ny() // Slås ikke sammen pga dagsats
+                TilkjentYtelsePeriode.ny() // Slås ikke sammen pga dagsats
                         .medDagsats(1000L)
                         .medPeriode(fraOgMedTilOgMed(LocalDate.now().plusDays(11), LocalDate.now().plusDays(12)))
-                        .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
-                                .medBrukerErMottaker(true)
-                                .medTilSoker(500)
+                        .medAndeler(of(TilkjentYtelseAndel.ny()
+                                .medErBrukerMottaker(true)
+                                .medUtbetalesTilBruker(500)
                                 .build()))
                         .build(),
-                BeregningsresultatPeriode.ny() // Slås ikke sammen fordi beløp til søker er forskjellig
+                TilkjentYtelsePeriode.ny() // Slås ikke sammen fordi beløp til søker er forskjellig
                         .medDagsats(1000L)
                         .medPeriode(fraOgMedTilOgMed(LocalDate.now().plusDays(13), LocalDate.now().plusDays(14)))
-                        .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
-                                .medBrukerErMottaker(true)
-                                .medTilSoker(400)
+                        .medAndeler(of(TilkjentYtelseAndel.ny()
+                                .medErBrukerMottaker(true)
+                                .medUtbetalesTilBruker(400)
                                 .build()))
                         .build(),
-                BeregningsresultatPeriode.ny() // Slås ikke sammen fordi bruker ikke er mottaker
+                TilkjentYtelsePeriode.ny() // Slås ikke sammen fordi bruker ikke er mottaker
                         .medDagsats(1000L)
                         .medPeriode(fraOgMedTilOgMed(LocalDate.now().plusDays(15), LocalDate.now().plusDays(16)))
-                        .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
-                                .medBrukerErMottaker(false)
-                                .medTilSoker(400)
+                        .medAndeler(of(TilkjentYtelseAndel.ny()
+                                .medErBrukerMottaker(false)
+                                .medUtbetalesTilBruker(400)
                                 .build()))
                         .build(),
-                BeregningsresultatPeriode.ny() // Slås sammen med foregående periode
+                TilkjentYtelsePeriode.ny() // Slås sammen med foregående periode
                         .medDagsats(1000L)
                         .medPeriode(fraOgMedTilOgMed(LocalDate.now().plusDays(17), LocalDate.now().plusDays(18)))
-                        .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
-                                .medBrukerErMottaker(false)
-                                .medTilSoker(400)
+                        .medAndeler(of(TilkjentYtelseAndel.ny()
+                                .medErBrukerMottaker(false)
+                                .medUtbetalesTilBruker(400)
                                 .build()))
                         .build()
         );

@@ -1,10 +1,10 @@
-package no.nav.foreldrepenger.fpsak.dto.beregning.beregningsresultat;
+package no.nav.foreldrepenger.fpsak.dto.tilkjentytelse;
 
-public class BeregningsresultatEngangsstønadDto {
+public class TilkjentYtelseEngangsstønadDto {
 
     private Long beregnetTilkjentYtelse;
 
-    public BeregningsresultatEngangsstønadDto() {
+    public TilkjentYtelseEngangsstønadDto() {
     }
 
     public Long getBeregnetTilkjentYtelse() {

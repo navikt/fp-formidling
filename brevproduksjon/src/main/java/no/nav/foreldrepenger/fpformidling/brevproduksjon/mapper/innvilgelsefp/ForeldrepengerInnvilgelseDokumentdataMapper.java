@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.finnAntallArbeidsgivere;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.finnDagsats;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.finnMånedsbeløp;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.harDelvisRefusjon;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.harFullRefusjon;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.harIngenRefusjon;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.harUtbetaling;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnAntallArbeidsgivere;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnDagsats;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harDelvisRefusjon;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harFullRefusjon;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harIngenRefusjon;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harUtbetaling;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.BeregningsgrunnlagMapper.finnBrutto;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.BeregningsgrunnlagMapper.finnSeksG;
@@ -46,7 +46,7 @@ import no.nav.foreldrepenger.fpformidling.aksjonspunkt.AksjonspunktStatus;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatFP;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -95,7 +95,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     public ForeldrepengerInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
                                                                     Behandling behandling, boolean erUtkast) {
         YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
-        BeregningsresultatFP beregningsresultatFP = domeneobjektProvider.hentBeregningsresultatFP(behandling);
+        TilkjentYtelseForeldrepenger tilkjentYtelseForeldrepenger = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
         Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
         Søknad søknad = hentNyesteSøknad(behandling);
@@ -114,11 +114,11 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         Fritekst.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
         List<Utbetalingsperiode> utbetalingsperioder = UtbetalingsperiodeMapper.mapUtbetalingsperioder(
-                beregningsresultatFP.getBeregningsresultatPerioder(), uttakResultatPerioder,
+                tilkjentYtelseForeldrepenger.getPerioder(), uttakResultatPerioder,
                 beregningsgrunnlag.getBeregningsgrunnlagPerioder(), språkkode);
         String konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
         boolean erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
-        long dagsats = finnDagsats(beregningsresultatFP);
+        long dagsats = finnDagsats(tilkjentYtelseForeldrepenger);
         int antallBarn = familieHendelse.getAntallBarn().intValue();
         int antallDødeBarn = familieHendelse.getAntallDødeBarn();
 
@@ -130,9 +130,9 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medKonsekvensForInnvilgetYtelse(konsekvensForInnvilgetYtelse)
                 .medSøknadsdato(formaterDato(søknad.mottattDato(), språkkode))
                 .medDekningsgrad(ytelseFordeling.dekningsgrad().getVerdi())
-                .medHarUtbetaling(harUtbetaling(beregningsresultatFP))
+                .medHarUtbetaling(harUtbetaling(tilkjentYtelseForeldrepenger))
                 .medDagsats(dagsats)
-                .medMånedsbeløp(finnMånedsbeløp(beregningsresultatFP))
+                .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelseForeldrepenger))
                 .medForMyeUtbetalt(forMyeUtbetalt(utbetalingsperioder, behandling))
                 .medInntektMottattArbeidsgiver(erEndringMedEndretInntektsmelding(behandling))
                 .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(aksjonspunkter, uttakResultatPerioder))
@@ -143,14 +143,14 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medIkkeOmsorg(finnesPeriodeMedIkkeOmsorg(utbetalingsperioder))
                 .medGjelderMor(gjelderMor(fagsak))
                 .medGjelderFødsel(familieHendelse.isGjelderFødsel())
-                .medIngenRefusjon(harIngenRefusjon(beregningsresultatFP))
-                .medDelvisRefusjon(harDelvisRefusjon(beregningsresultatFP))
-                .medFullRefusjon(harFullRefusjon(beregningsresultatFP))
+                .medIngenRefusjon(harIngenRefusjon(tilkjentYtelseForeldrepenger))
+                .medDelvisRefusjon(harDelvisRefusjon(tilkjentYtelseForeldrepenger))
+                .medFullRefusjon(harFullRefusjon(tilkjentYtelseForeldrepenger))
                 .medFbEllerRvInnvilget(erFbEllerRvInnvilget(behandling))
                 .medAntallPerioder(finnAntallPerioder(utbetalingsperioder))
                 .medAntallInnvilgedePerioder(finnAntallInnvilgedePerioder(utbetalingsperioder))
                 .medAntallAvslåttePerioder(finnAntallAvslåttePerioder(utbetalingsperioder))
-                .medAntallArbeidsgivere(finnAntallArbeidsgivere(beregningsresultatFP))
+                .medAntallArbeidsgivere(finnAntallArbeidsgivere(tilkjentYtelseForeldrepenger))
                 .medDagerTaptFørTermin(saldoer.tapteDagerFpff())
                 .medDisponibleDager(finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()))
                 .medDisponibleFellesDager(finnDisponibleFellesDager(saldoer))

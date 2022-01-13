@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatES;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.EngangsstønadInnvilgelseDokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapperProvider;
@@ -210,7 +210,7 @@ public class BrevBestillerTjenesteTest {
             Verge verge = new Verge(VERGE.getId(), "", "");
             when(domeneobjektProvider.hentVerge(eq(behandling))).thenReturn(Optional.of(verge));
         }
-        when(domeneobjektProvider.hentBeregningsresultatES(eq(behandling))).thenReturn(new BeregningsresultatES(1L));
+        when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(eq(behandling))).thenReturn(new TilkjentYtelseEngangsstønad(1L));
         return behandling;
     }
 

@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
 import static java.util.List.of;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.finnDagsats;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsresultatMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnDagsats;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnMånedsbeløp;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.FRITEKST;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SAKSNUMMER;
@@ -42,9 +42,9 @@ import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatFP;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
@@ -106,7 +106,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
-    private BeregningsresultatFP beregningsresultatFP = opprettBeregningsresultatFP();
+    private TilkjentYtelseForeldrepenger tilkjentYtelseFP = opprettTilkjentYtelseFP();
 
     private DokumentData dokumentData;
 
@@ -124,7 +124,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
-        when(domeneobjektProvider.hentBeregningsresultatFP(any(Behandling.class))).thenReturn(beregningsresultatFP);
+        when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(tilkjentYtelseFP);
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentUttaksresultat(any(Behandling.class))).thenReturn(opprettUttaksresultat());
         when(domeneobjektProvider.hentYtelseFordeling(any(Behandling.class))).thenReturn(opprettYtelseFordeling());
@@ -157,8 +157,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getKonsekvensForInnvilgetYtelse()).isEqualTo("ENDRING_I_BEREGNING_OG_UTTAK");
         assertThat(dokumentdata.getSøknadsdato()).isEqualTo(formaterDatoNorsk(SØKNADSDATO));
         assertThat(dokumentdata.getDekningsgrad()).isEqualTo(DEKNINGSGRAD.getVerdi());
-        assertThat(dokumentdata.getDagsats()).isEqualTo(finnDagsats(beregningsresultatFP));
-        assertThat(dokumentdata.getMånedsbeløp()).isEqualTo(finnMånedsbeløp(beregningsresultatFP));
+        assertThat(dokumentdata.getDagsats()).isEqualTo(finnDagsats(tilkjentYtelseFP));
+        assertThat(dokumentdata.getMånedsbeløp()).isEqualTo(finnMånedsbeløp(tilkjentYtelseFP));
         assertThat(dokumentdata.getForMyeUtbetalt()).isEqualTo(ForMyeUtbetalt.GENERELL);
         assertThat(dokumentdata.getInntektMottattArbeidsgiver()).isTrue();
         assertThat(dokumentdata.getAnnenForelderHarRettVurdert()).isEqualTo(VurderingsKode.JA);
@@ -223,25 +223,25 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         return Optional.of(new Søknad(SØKNADSDATO, LocalDate.now(), new OppgittRettighet(true)));
     }
 
-    private BeregningsresultatFP opprettBeregningsresultatFP() {
+    private TilkjentYtelseForeldrepenger opprettTilkjentYtelseFP() {
         Arbeidsgiver arbeidsgiver = new Arbeidsgiver("1", "navn");
-        return BeregningsresultatFP.ny()
-                .leggTilBeregningsresultatPerioder(of(
-                        BeregningsresultatPeriode.ny()
+        return TilkjentYtelseForeldrepenger.ny()
+                .leggTilPerioder(of(
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(100L)
                                 .medPeriode(fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1)))
-                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
-                                        .medBrukerErMottaker(true)
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
+                                        .medErBrukerMottaker(true)
                                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                                         .medStillingsprosent(BigDecimal.valueOf(100))
                                         .medArbeidsgiver(arbeidsgiver)
                                         .build()))
                                 .build(),
-                        BeregningsresultatPeriode.ny()
+                        TilkjentYtelsePeriode.ny()
                                 .medDagsats(100L * 2)
                                 .medPeriode(fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1)))
-                                .medBeregningsresultatAndel(of(BeregningsresultatAndel.ny()
-                                        .medArbeidsgiverErMottaker(true)
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
+                                        .medErArbeidsgiverMottaker(true)
                                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                                         .medStillingsprosent(BigDecimal.valueOf(100))
                                         .medArbeidsgiver(arbeidsgiver)

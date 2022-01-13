@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpsak.dto.beregning.beregningsgrunnlag.v2;
+package no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.NONE;
 

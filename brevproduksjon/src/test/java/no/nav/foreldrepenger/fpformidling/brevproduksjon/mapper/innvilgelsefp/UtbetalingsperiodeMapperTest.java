@@ -18,8 +18,8 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatAndel;
-import no.nav.foreldrepenger.fpformidling.beregning.BeregningsresultatPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
@@ -42,7 +42,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 public class UtbetalingsperiodeMapperTest {
 
     @Test
-    public void skal_hente_dato_fra_uttaksperiode_når_denne_er_før_beregningsresulatperioden_og_det_er_første_beregningResPeriode() {
+    public void skal_hente_dato_fra_uttaksperiode_når_denne_er_før_tilkjentytelseperioden_og_det_er_første_tilkjentYtelsePeriode() {
         // Arrange
         DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
         DatoIntervall tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 3), LocalDate.of(2019, 10, 4));
@@ -51,19 +51,19 @@ public class UtbetalingsperiodeMapperTest {
         DatoIntervall tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
         DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
 
-        BeregningsresultatPeriode brPeriode = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode tyPeriode = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp1)
                 .medDagsats(0L)
                 .build();
-        BeregningsresultatPeriode brPeriode2 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode tyPeriode2 = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp2)
                 .medDagsats(0L)
                 .build();
-        BeregningsresultatPeriode brPeriode3 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode tyPeriode3 = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp3)
                 .medDagsats(620L)
                 .build();
-        List<BeregningsresultatPeriode> beregningsresultatPerioder = of(brPeriode, brPeriode2, brPeriode3);
+        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode, tyPeriode2, tyPeriode3);
 
         BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(beregningPer)
@@ -94,7 +94,7 @@ public class UtbetalingsperiodeMapperTest {
         UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(of(uPeriode, uPeriode2)).build();
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(2);
@@ -105,8 +105,8 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(resultat.get(0).getPeriodeDagsats()).isEqualTo(0L);
         assertThat(resultat.get(0).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode());
 
-        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(brPeriode3.getBeregningsresultatPeriodeFom());
-        assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(brPeriode3.getBeregningsresultatPeriodeTom());
+        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(tyPeriode3.getPeriodeFom());
+        assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(tyPeriode3.getPeriodeTom());
         assertThat(resultat.get(1).isInnvilget()).isTrue();
         assertThat(resultat.get(1).getPeriodeDagsats()).isEqualTo(620L);
         assertThat(resultat.get(1).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode());
@@ -122,19 +122,19 @@ public class UtbetalingsperiodeMapperTest {
         DatoIntervall tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
         DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
 
-        BeregningsresultatPeriode brPeriode = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode tyPeriode = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp1)
                 .medDagsats(0L)
                 .build();
-        BeregningsresultatPeriode brPeriode2 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode tyPeriode2 = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp2)
                 .medDagsats(0L)
                 .build();
-        BeregningsresultatPeriode brPeriode3 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode tyPeriode3 = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp3)
                 .medDagsats(620L)
                 .build();
-        List<BeregningsresultatPeriode> beregningsresultatPerioder = of(brPeriode3, brPeriode2, brPeriode);
+        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode3, tyPeriode2, tyPeriode);
 
         BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(beregningPer)
@@ -165,12 +165,12 @@ public class UtbetalingsperiodeMapperTest {
         UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(of(uPeriode2, uPeriode)).build();
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(2);
         assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(uPeriode.getFom());
-        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(brPeriode3.getBeregningsresultatPeriodeFom());
+        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(tyPeriode3.getPeriodeFom());
     }
 
     @Test
@@ -181,11 +181,11 @@ public class UtbetalingsperiodeMapperTest {
         DatoIntervall tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 6, 20), LocalDate.of(2019, 6, 29)); // Skal sorteres først
         DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
 
-        BeregningsresultatPeriode brPeriode1 = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode tyPeriode1 = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp1)
                 .medDagsats(620L)
                 .build();
-        List<BeregningsresultatPeriode> beregningsresultatPerioder = of(brPeriode1);
+        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode1);
 
         BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(beregningPer)
@@ -216,7 +216,7 @@ public class UtbetalingsperiodeMapperTest {
         UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(of(uPeriode1, uPeriode2)).build();
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(2);
@@ -227,8 +227,8 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(resultat.get(0).getPeriodeDagsats()).isEqualTo(0L);
         assertThat(resultat.get(0).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode());
 
-        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(brPeriode1.getBeregningsresultatPeriodeFom());
-        assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(brPeriode1.getBeregningsresultatPeriodeTom());
+        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(tyPeriode1.getPeriodeFom());
+        assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(tyPeriode1.getPeriodeTom());
         assertThat(resultat.get(1).isInnvilget()).isTrue();
         assertThat(resultat.get(1).getPeriodeDagsats()).isEqualTo(620L);
         assertThat(resultat.get(1).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT.getKode());
@@ -241,17 +241,17 @@ public class UtbetalingsperiodeMapperTest {
         DatoIntervall tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
         DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
 
-        BeregningsresultatAndel beregningsresultatAndel = BeregningsresultatAndel.ny()
+        TilkjentYtelseAndel tilkjentYtelseAndel = TilkjentYtelseAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL).build();
-        BeregningsresultatPeriode brPeriode = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode tyPeriode = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp1)
                 .medDagsats(0L)
-                .medBeregningsresultatAndel(of(beregningsresultatAndel))
+                .medAndeler(of(tilkjentYtelseAndel))
                 .build();
 
         BeregningsgrunnlagPrStatusOgAndel prStatusOgAndel = BeregningsgrunnlagPrStatusOgAndel.ny().medBeregningsperiode(tidsperiodeUp1).build();
 
-        List<BeregningsresultatPeriode> beregningsresultatPerioder = of(brPeriode);
+        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode);
 
         BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(beregningPer)
@@ -287,7 +287,7 @@ public class UtbetalingsperiodeMapperTest {
         UttakResultatPerioder uttaksPerioder = UttakResultatPerioder.ny().medPerioder(of(uPeriode)).build();
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(1);
@@ -302,10 +302,10 @@ public class UtbetalingsperiodeMapperTest {
     public void skal_ignorere_avslåtte_manglende_søkte_perioder_med_null_trekkdager_ved_mapping_av_periodeliste() {
         // Arrange
         DatoIntervall tidsperiode = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 16), LocalDate.of(2019, 9, 16));
-        BeregningsresultatPeriode brPeriode = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode tyPeriode = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiode)
                 .build();
-        List<BeregningsresultatPeriode> beregningsresultatPerioder = of(brPeriode);
+        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode);
         UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.ZERO)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
@@ -323,7 +323,7 @@ public class UtbetalingsperiodeMapperTest {
         List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(0);
@@ -333,10 +333,10 @@ public class UtbetalingsperiodeMapperTest {
     public void skal_ta_med_avslåtte_manglende_søkte_perioder_med_trekkdager_ved_mapping_av_periodeliste() {
         // Arrange
         DatoIntervall tidsperiode = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 16), LocalDate.of(2019, 9, 16));
-        BeregningsresultatPeriode brPeriode = BeregningsresultatPeriode.ny()
+        TilkjentYtelsePeriode tyPeriode = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiode)
                 .build();
-        List<BeregningsresultatPeriode> beregningsresultatPerioder = of(brPeriode);
+        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode);
         UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.TEN)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
@@ -354,7 +354,7 @@ public class UtbetalingsperiodeMapperTest {
         List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsresultatPerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(1);

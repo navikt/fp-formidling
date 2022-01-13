@@ -96,11 +96,6 @@ public class DokgenBrevproduksjonTjeneste {
                     e);
         }
         LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getUuid().toString());
-
-        if ("cb910aed-7d5c-40e4-9690-6d6f0ed73099".equals(dokumentData.getBehandlingUuid().toString())) {
-            dokumentdata.getFelles().anonymiser();
-            SECURE_LOGGER.warn("Brevdata for uuid: cb910aed-7d5c-40e4-9690-6d6f0ed73099 {}",  DefaultJsonMapper.toJson(dokumentdata));
-        }
         return brev;
     }
 

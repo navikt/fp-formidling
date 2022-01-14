@@ -142,7 +142,7 @@ public class BeregningsgrunnlagMapperTest {
         // Arrange
         Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.DAGPENGER))
-                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeDPogUtenTilkommetArbforhold()))
+                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatus.DAGPENGER, 1002, AktivitetStatus.ARBEIDSTAKER)))
                 .build();
 
         // Act
@@ -163,8 +163,8 @@ public class BeregningsgrunnlagMapperTest {
         Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode( of(lagBgpsandel(BigDecimal.valueOf(254232), null, 978,  AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, false ),
-                        lagBgpsandel(BigDecimal.valueOf(0), null, 24, AktivitetStatus.ARBEIDSTAKER, true ))))
+                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(of(lagBgpsandel(BigDecimal.valueOf(254232), null, 978, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, false),
+                        lagBgpsandel(BigDecimal.valueOf(0), null, 24, AktivitetStatus.ARBEIDSTAKER, true))))
                 .build();
 
         // Act
@@ -220,6 +220,49 @@ public class BeregningsgrunnlagMapperTest {
         assertThat(resultat).isFalse();
     }
 
+    @Test
+    public void beregningsgrunnlag_med_militærstatus_med_dagsats_skal_ignorere_andre_statuser() {
+        // Arrange
+        BeregningsgrunnlagAktivitetStatus arbeidstaker = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
+        BeregningsgrunnlagAktivitetStatus militærEllerSivil = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL);
+
+        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .leggTilBeregningsgrunnlagAktivitetStatus(arbeidstaker)
+                .leggTilBeregningsgrunnlagAktivitetStatus(militærEllerSivil)
+                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatus.MILITÆR_ELLER_SIVIL, 1002, AktivitetStatus.ARBEIDSTAKER)))
+                .build();
+
+        // Act
+        List<BeregningsgrunnlagRegel> beregningsgrunnlagRegler = mapRegelListe(beregningsgrunnlag);
+
+        // Assert
+        assertThat(beregningsgrunnlagRegler).hasSize(1);
+        assertThat(beregningsgrunnlagRegler.get(0).getRegelStatus()).isEqualTo("MILITÆR_ELLER_SIVIL");
+        assertThat(beregningsgrunnlagRegler.get(0).getAndelListe().get(0).getDagsats()).isEqualTo(1002);
+    }
+
+    @Test
+    public void beregningsgrunnlag_med_militærstatus_uten_dagsats_skal_fungere_som_før() {
+        // Arrange
+        BeregningsgrunnlagAktivitetStatus arbeidstaker = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
+        BeregningsgrunnlagAktivitetStatus militærEllerSivil = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL);
+
+        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .leggTilBeregningsgrunnlagAktivitetStatus(arbeidstaker)
+                .leggTilBeregningsgrunnlagAktivitetStatus(militærEllerSivil)
+                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatus.MILITÆR_ELLER_SIVIL, 0, AktivitetStatus.ARBEIDSTAKER)))
+                .build();
+
+        // Act
+        List<BeregningsgrunnlagRegel> beregningsgrunnlagRegler = mapRegelListe(beregningsgrunnlag);
+
+        // Assert
+        assertThat(beregningsgrunnlagRegler).hasSize(2);
+        assertThat(beregningsgrunnlagRegler.get(0).getRegelStatus()).isEqualTo("ARBEIDSTAKER");
+        assertThat(beregningsgrunnlagRegler.get(0).getAndelListe().get(0).getDagsats()).isEqualTo(24);
+        assertThat(beregningsgrunnlagRegler.get(1).getRegelStatus()).isEqualTo("MILITÆR_ELLER_SIVIL");
+        assertThat(beregningsgrunnlagRegler.get(1).getAndelListe().get(0).getDagsats()).isEqualTo(0);
+    }
 
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode(List<BeregningsgrunnlagPrStatusOgAndel> andelsliste) {
@@ -236,19 +279,19 @@ public class BeregningsgrunnlagMapperTest {
                 lagBgpsaAvkortetArbeidstaker());
     }
 
+    private List<BeregningsgrunnlagPrStatusOgAndel> lagBraListeFor2Statuser(AktivitetStatus aktivitetStatus1, long dagsats, AktivitetStatus aktivitetStatus2) {
+        return of(lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, dagsats, aktivitetStatus1, false),
+                lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, 24, aktivitetStatus2, false));
+
+    }
+
     private List<BeregningsgrunnlagPrStatusOgAndel> lagBraListeDPOgTilkommetArbforhold() {
-        return of(lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, 978,  AktivitetStatus.DAGPENGER, false ),
-                lagBgpsandel(BigDecimal.valueOf(0), AVKORTET_PR_ÅR,24, AktivitetStatus.ARBEIDSTAKER, true ));
+        return of(lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, 978, AktivitetStatus.DAGPENGER, false),
+                lagBgpsandel(BigDecimal.valueOf(0), AVKORTET_PR_ÅR, 24, AktivitetStatus.ARBEIDSTAKER, true));
 
     }
 
-    private List<BeregningsgrunnlagPrStatusOgAndel> lagBraListeDPogUtenTilkommetArbforhold() {
-        return of(lagBgpsandel(BigDecimal.valueOf(254232), AVKORTET_PR_ÅR, 1002,  AktivitetStatus.DAGPENGER, false ),
-                lagBgpsandel(BigDecimal.valueOf(254232),  AVKORTET_PR_ÅR, 24,  AktivitetStatus.ARBEIDSTAKER, false ));
-
-    }
-
-    private BeregningsgrunnlagPrStatusOgAndel lagBgpsandel(BigDecimal brPrÅr, BigDecimal avkortetPrÅr, long dagsats, AktivitetStatus aktivitetStatus, Boolean erTilkommetAndeler ) {
+    private BeregningsgrunnlagPrStatusOgAndel lagBgpsandel(BigDecimal brPrÅr, BigDecimal avkortetPrÅr, long dagsats, AktivitetStatus aktivitetStatus, Boolean erTilkommetAndeler) {
         return BeregningsgrunnlagPrStatusOgAndel.ny()
                 .medBruttoPrÅr(brPrÅr)
                 .medAvkortetPrÅr(avkortetPrÅr)

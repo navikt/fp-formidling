@@ -57,7 +57,7 @@ public class BeregningMapperTest {
                 BeregningsgrunnlagPrStatusOgAndel.ny() // Ignoreres
                         .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
                         .build()
-                );
+        );
         BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(20), LocalDate.now().plusDays(20)))
                 .medBeregningsgrunnlagPrStatusOgAndelList(andel)
@@ -77,6 +77,63 @@ public class BeregningMapperTest {
         assertThat(resultat.get(0).getMånedsinntekt()).isEqualTo(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2).divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
         assertThat(resultat.get(1).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_1);
         assertThat(resultat.get(1).getMånedsinntekt()).isEqualTo(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1).divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP).longValue());
+    }
+
+
+    @Test
+    public void er_militær() {
+        // Arrange
+        List<BeregningsgrunnlagPrStatusOgAndel> andel = of(
+                BeregningsgrunnlagPrStatusOgAndel.ny()
+                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                        .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1))
+                        .medDagsats(500L)
+                        .build(),
+                BeregningsgrunnlagPrStatusOgAndel.ny() // Skal sorteres først
+                        .medAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL)
+                        .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2))
+                        .medDagsats(1000L)
+                        .build());
+
+        BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
+                .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(20), LocalDate.now().plusDays(20)))
+                .medBeregningsgrunnlagPrStatusOgAndelList(andel)
+                .build();
+        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
+                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
+                .leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriode)
+                .build();
+        // Act & Assert
+        assertThat(BeregningMapper.erMilitærSivil(beregningsgrunnlag)).isTrue();
+    }
+
+    @Test
+    public void er_ikke_militær() {
+        // Arrange
+        List<BeregningsgrunnlagPrStatusOgAndel> andel = of(
+                BeregningsgrunnlagPrStatusOgAndel.ny()
+                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                        .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1))
+                        .medDagsats(500L)
+                        .build(),
+                BeregningsgrunnlagPrStatusOgAndel.ny() // Skal sorteres først
+                        .medAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL)
+                        .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD2))
+                        .medDagsats(0L)
+                        .build());
+
+        BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
+                .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(20), LocalDate.now().plusDays(20)))
+                .medBeregningsgrunnlagPrStatusOgAndelList(andel)
+                .build();
+        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
+                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
+                .leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriode)
+                .build();
+        // Act & Assert
+        assertThat(BeregningMapper.erMilitærSivil(beregningsgrunnlag)).isFalse();
     }
 
     @Test

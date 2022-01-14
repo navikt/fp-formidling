@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
 import static java.util.List.of;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnDagsats;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnMånedsbeløp;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.FRITEKST;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SAKSNUMMER;
@@ -11,6 +9,8 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentData;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnDagsats;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnMånedsbeløp;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp.of;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
@@ -42,9 +42,6 @@ import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
@@ -69,6 +66,9 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakTyp
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
@@ -106,7 +106,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
-    private TilkjentYtelseForeldrepenger tilkjentYtelseFP = opprettTilkjentYtelseFP();
+    private final TilkjentYtelseForeldrepenger tilkjentYtelseFP = opprettTilkjentYtelseFP();
 
     private DokumentData dokumentData;
 
@@ -258,6 +258,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .medhHjemmel(Hjemmel.F_14_7)
                 .medBesteberegnet(true)
                 .build();
+
+
     }
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode() {

@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
 import static java.lang.Boolean.TRUE;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnBgpsaListe;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnFørstePeriode;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper.formaterLovhjemlerForBeregning;
 
 import java.math.BigDecimal;
@@ -17,8 +19,6 @@ import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Arbeidsforhold;
@@ -78,10 +78,13 @@ public final class BeregningMapper {
     }
 
     public static boolean erMilitærSivil(Beregningsgrunnlag beregningsgrunnlag) {
-        return beregningsgrunnlag.getAktivitetStatuser().stream()
-                .map(BeregningsgrunnlagAktivitetStatus::aktivitetStatus)
-                .collect(Collectors.toList())
-                .contains(AktivitetStatus.MILITÆR_ELLER_SIVIL);
+        return harMilitærStatusMedDagsatsOgAnnenStatus(finnBgpsaListe(beregningsgrunnlag));
+    }
+
+    private static boolean harMilitærStatusMedDagsatsOgAnnenStatus(List<BeregningsgrunnlagPrStatusOgAndel> andeler) {
+        return andeler.stream()
+                .filter(status -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(status.getAktivitetStatus()))
+                .anyMatch(andel -> andel.getDagsats() > 0);
     }
 
     public static boolean inntektOverSeksG(Beregningsgrunnlag beregningsgrunnlag) {
@@ -116,8 +119,8 @@ public final class BeregningMapper {
         List<BeregningsgrunnlagPrStatusOgAndel> andeler = new ArrayList<>();
         beregningsgrunnlag.getAktivitetStatuser()
                 .forEach(bgAktivitetStatus -> andeler.addAll(finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaList).stream()
-                .filter(andel -> getBgBruttoPrÅr(andel) != null)
-                .collect(Collectors.toList())));
+                        .filter(andel -> getBgBruttoPrÅr(andel) != null)
+                        .collect(Collectors.toList())));
         return andeler;
     }
 
@@ -141,7 +144,4 @@ public final class BeregningMapper {
         return andel.getDagsats() == null || andel.getDagsats() == 0;
     }
 
-    private static BeregningsgrunnlagPeriode finnFørstePeriode(Beregningsgrunnlag beregningsgrunnlag) {
-        return beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
-    }
 }

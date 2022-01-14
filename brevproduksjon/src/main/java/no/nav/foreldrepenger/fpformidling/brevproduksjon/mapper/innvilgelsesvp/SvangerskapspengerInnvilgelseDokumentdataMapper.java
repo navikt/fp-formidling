@@ -4,11 +4,11 @@ import static no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erEndretFraAvslått;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erTermindatoEndret;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnAntallRefusjonerTilArbeidsgivere;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnMånedsbeløp;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harBrukerAndel;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.AvslagsperiodeMapper.mapAvslagsperioder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.AvslåttAktivitetMapper.mapAvslåtteAktiviteter;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.BeregningMapper.erMilitærSivil;
@@ -62,6 +62,11 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         this.brevParametere = brevParametere;
     }
 
+    private static boolean erNyEllerEndretBeregning(Behandling behandling) {
+        return behandling.erFørstegangssøknad() ||
+                behandling.getBehandlingsresultat().getKonsekvenserForYtelsen().contains(ENDRING_I_BEREGNING);
+    }
+
     @Override
     public String getTemplateNavn() {
         return "svangerskapspenger-innvilgelse";
@@ -111,12 +116,18 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         }
 
         if (inkludereBeregning) {
-            dokumentdataBuilder.medArbeidsforhold(mapArbeidsforhold(beregningsgrunnlag));
-            dokumentdataBuilder.medSelvstendigNæringsdrivende(mapSelvstendigNæringsdrivende(beregningsgrunnlag));
-            dokumentdataBuilder.medFrilanser(mapFrilanser(beregningsgrunnlag));
+            //Spesielhåndtering av militærstatus. Dersom personen har militærstatus med dagsats er beregningsgrunnlaget satt til
+            //3G. I disse tilfellene skal andre statuser ignoreres (Beregning fjerner ikke andre statuser). Gjelder både FP og SVP.
+            if (erMilitærSivil(beregningsgrunnlag)) {
+                dokumentdataBuilder.medMilitærSivil(true);
+            } else {
+                dokumentdataBuilder.medArbeidsforhold(mapArbeidsforhold(beregningsgrunnlag));
+                dokumentdataBuilder.medSelvstendigNæringsdrivende(mapSelvstendigNæringsdrivende(beregningsgrunnlag));
+                dokumentdataBuilder.medFrilanser(mapFrilanser(beregningsgrunnlag));
+                dokumentdataBuilder.medMilitærSivil(false);
+            }
             dokumentdataBuilder.medNaturalytelser(mapNaturalytelser(tilkjentYtelse, beregningsgrunnlag, språkkode));
             dokumentdataBuilder.medBruttoBeregningsgrunnlag(Beløp.of(getAvkortetPrÅrSVP(beregningsgrunnlag)));
-            dokumentdataBuilder.medMilitærSivil(erMilitærSivil(beregningsgrunnlag));
             dokumentdataBuilder.medInntektOver6G(inntektOverSeksG(beregningsgrunnlag));
             dokumentdataBuilder.medSeksG(finnSeksG(beregningsgrunnlag).longValue());
             dokumentdataBuilder.medLovhjemmel(utledLovhjemmelForBeregning(beregningsgrunnlag, behandling));
@@ -127,10 +138,5 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
 
     private int tellAntallUttaksperioder(List<Uttaksaktivitet> uttaksaktiviteter) {
         return uttaksaktiviteter.stream().mapToInt(aktivitet -> aktivitet.getUttaksperioder().size()).sum();
-    }
-
-    private static boolean erNyEllerEndretBeregning(Behandling behandling) {
-        return behandling.erFørstegangssøknad() ||
-                behandling.getBehandlingsresultat().getKonsekvenserForYtelsen().contains(ENDRING_I_BEREGNING);
     }
 }

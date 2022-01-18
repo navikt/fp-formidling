@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnAntallArbeidsgivere;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnDagsats;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnMånedsbeløp;
@@ -7,7 +8,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Ti
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harFullRefusjon;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harIngenRefusjon;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harUtbetaling;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.BeregningsgrunnlagMapper.finnBrutto;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.BeregningsgrunnlagMapper.finnSeksG;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.BeregningsgrunnlagMapper.harBruktBruttoBeregningsgrunnlag;
@@ -46,7 +46,6 @@ import no.nav.foreldrepenger.fpformidling.aksjonspunkt.AksjonspunktStatus;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -67,6 +66,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakTyp
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
 import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
@@ -182,7 +182,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         //Dersom alle barna er døde skal vi sette dødsdato og faktisk antallDødeBarn. Det er kun i disse tilfellene at innvilgelsesbrevet skal informere om at barnet/barna er døde, ellers er saken fortsatt løpende
         if (antallBarn == antallDødeBarn) {
-            familieHendelse.getDødsdato().ifPresent(d-> dokumentdataBuilder.medDødsdato(formaterDato(d, språkkode)));
+            familieHendelse.getDødsdato().ifPresent(d -> dokumentdataBuilder.medDødsdato(formaterDato(d, språkkode)));
             dokumentdataBuilder.medAntallDødeBarn(antallDødeBarn);
         } else {
             dokumentdataBuilder.medAntallDødeBarn(0);
@@ -191,24 +191,24 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     private void mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(List<Utbetalingsperiode> utbetalingsperioder, ForeldrepengerInnvilgelseDokumentdata.Builder builder) {
-        boolean morTarIkkeAlleUkene  = utbetalingsperioder.stream().filter(Utbetalingsperiode::isAvslått).anyMatch(p -> PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE.getKode().equals(p.getÅrsak().getKode()));
+        boolean morTarIkkeAlleUkene = utbetalingsperioder.stream().filter(Utbetalingsperiode::isAvslått).anyMatch(p -> PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE.getKode().equals(p.getÅrsak().getKode()));
         boolean innenforFristTilÅSøke = false;
 
         if (morTarIkkeAlleUkene) {
-              innenforFristTilÅSøke = utbetalingsperioder.stream()
-                      .filter(Utbetalingsperiode::isInnvilget)
-                      .filter(up -> !StønadskontoType.FORELDREPENGER_FØR_FØDSEL.equals(up.getStønadskontoType()))
-                      .map(Utbetalingsperiode::getPeriodeFom)
-                      .min(LocalDate::compareTo)
-                      .map(md -> (LocalDate.now().isBefore(md.plusMonths(3))))
-                      .orElse(false);
+            innenforFristTilÅSøke = utbetalingsperioder.stream()
+                    .filter(Utbetalingsperiode::isInnvilget)
+                    .filter(up -> !StønadskontoType.FORELDREPENGER_FØR_FØDSEL.equals(up.getStønadskontoType()))
+                    .map(Utbetalingsperiode::getPeriodeFom)
+                    .min(LocalDate::compareTo)
+                    .map(md -> (LocalDate.now().isBefore(md.plusMonths(3))))
+                    .orElse(false);
         }
 
         builder.medMorKanSøkeOmDagerFørFødsel(innenforFristTilÅSøke);
     }
 
     private void mapFelterRelatertTilBeregningsgrunnlag(Beregningsgrunnlag beregningsgrunnlag,
-            ForeldrepengerInnvilgelseDokumentdata.Builder builder) {
+                                                        ForeldrepengerInnvilgelseDokumentdata.Builder builder) {
         List<BeregningsgrunnlagRegel> beregningsgrunnlagregler = mapRegelListe(beregningsgrunnlag);
         builder.medBeregningsgrunnlagregler(beregningsgrunnlagregler);
         builder.medBruttoBeregningsgrunnlag(finnBrutto(beregningsgrunnlag));
@@ -220,8 +220,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
     private Optional<LocalDate> finnSisteDagAvSistePeriode(UttakResultatPerioder uttakResultatPerioder) {
         return Stream.concat(
-                uttakResultatPerioder.getPerioder().stream(),
-                uttakResultatPerioder.getPerioderAnnenPart().stream()).filter(UttakResultatPeriode::isInnvilget)
+                        uttakResultatPerioder.getPerioder().stream(),
+                        uttakResultatPerioder.getPerioderAnnenPart().stream()).filter(UttakResultatPeriode::isInnvilget)
                 .map(UttakResultatPeriode::getTom)
                 .max(LocalDate::compareTo);
     }
@@ -231,7 +231,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     private boolean erRevurderingPgaFødselshendelse(Behandling behandling, FamilieHendelse familieHendelse,
-            Optional<FamilieHendelse> originalFamiliehendelse) {
+                                                    Optional<FamilieHendelse> originalFamiliehendelse) {
         return behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_HENDELSE_FØDSEL) ||
                 familieHendelse.isBarnErFødt() && originalFamiliehendelse.map(fh -> !fh.isBarnErFødt()).orElse(false);
     }
@@ -286,7 +286,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             return KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.name();
         } else {
             return konsekvenserForYtelsen.get(0).getKode(); // velger bare den første i listen (finnes ikke koder for andre ev.
-                                                            // kombinasjoner)
+            // kombinasjoner)
         }
     }
 

@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnBgpsaListe;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper.finnFørstePeriode;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,7 +14,6 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BGAndelArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagAndel;
@@ -48,16 +49,38 @@ public final class BeregningsgrunnlagMapper {
         List<BeregningsgrunnlagRegel> beregningsgrunnlagregler = new ArrayList<>();
         List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe = finnBgpsaListe(beregningsgrunnlag);
 
-        for (BeregningsgrunnlagAktivitetStatus bgAktivitetStatus : beregningsgrunnlag.getAktivitetStatuser()) {
-            BeregningsgrunnlagRegel.Builder builder = BeregningsgrunnlagRegel.ny();
-            List<BeregningsgrunnlagPrStatusOgAndel> filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe);
-            builder.medAktivitetStatus(bgAktivitetStatus.aktivitetStatus().name());
-            builder.medAndelListe(mapAndelListe(filtrertListe));
-            builder.medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
-            builder.medSnNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
-            beregningsgrunnlagregler.add(builder.build());
+        //Spesielhåndtering av militærstatus. Dersom personen har militærstatus med dagsats er beregningsgrunnlaget satt til
+        //3G. I disse tilfellene skal andre statuser ignoreres (Beregning fjerner ikke andre statuser). Gjelder både FP og SVP.
+        if (harMilitærStatusMedDagsatsOgAnnenStatus(bgpsaListe)) {
+            beregningsgrunnlagregler.add(opprettBeregningsregel(bgpsaListe, new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL)));
+        } else {
+            for (BeregningsgrunnlagAktivitetStatus bgAktivitetStatus : beregningsgrunnlag.getAktivitetStatuser()) {
+                beregningsgrunnlagregler.add(opprettBeregningsregel(bgpsaListe, bgAktivitetStatus));
+            }
         }
         return beregningsgrunnlagregler;
+    }
+
+    private static BeregningsgrunnlagRegel opprettBeregningsregel(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe, BeregningsgrunnlagAktivitetStatus bgAktivitetStatus) {
+        BeregningsgrunnlagRegel.Builder builder = BeregningsgrunnlagRegel.ny();
+        List<BeregningsgrunnlagPrStatusOgAndel> filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe);
+        builder.medAktivitetStatus(bgAktivitetStatus.aktivitetStatus().name());
+        builder.medAndelListe(mapAndelListe(filtrertListe));
+        builder.medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
+        builder.medSnNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
+        return builder.build();
+    }
+
+    private static boolean harMilitærStatusMedDagsatsOgAnnenStatus(List<BeregningsgrunnlagPrStatusOgAndel> andeler) {
+        boolean harMilitærAndelerMedDagsats = andeler.stream()
+                .filter(status -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(status.getAktivitetStatus()))
+                .anyMatch(andel -> andel.getDagsats() > 0);
+
+        if (!harMilitærAndelerMedDagsats) {
+            return false;
+        } else {
+            return !andeler.stream().allMatch(status -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(status.getAktivitetStatus()));
+        }
     }
 
     public static boolean harBruktBruttoBeregningsgrunnlag(List<BeregningsgrunnlagRegel> beregningsgrunnlagregler) {
@@ -66,10 +89,6 @@ public final class BeregningsgrunnlagMapper {
 
     private static boolean minstEnRegelHarKombinertAktivitetStatus(List<BeregningsgrunnlagRegel> beregningsgrunnlagregler) {
         return beregningsgrunnlagregler.stream().anyMatch(regel -> AktivitetStatus.erKombinertStatus(regel.getRegelStatus()));
-    }
-
-    private static List<BeregningsgrunnlagPrStatusOgAndel> finnBgpsaListe(Beregningsgrunnlag beregningsgrunnlag) {
-        return finnFørstePeriode(beregningsgrunnlag).getBeregningsgrunnlagPrStatusOgAndelList();
     }
 
     private static BeregningsgrunnlagAndel lagBeregningsgrunnlagAndel(BeregningsgrunnlagPrStatusOgAndel andel) {
@@ -126,9 +145,5 @@ public final class BeregningsgrunnlagMapper {
         List<BeregningsgrunnlagAndel> andeler = new ArrayList<>();
         bgpsaListe.forEach(bgpsa -> andeler.add(lagBeregningsgrunnlagAndel(bgpsa)));
         return andeler;
-    }
-
-    private static BeregningsgrunnlagPeriode finnFørstePeriode(Beregningsgrunnlag beregningsgrunnlag) {
-        return beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0);
     }
 }

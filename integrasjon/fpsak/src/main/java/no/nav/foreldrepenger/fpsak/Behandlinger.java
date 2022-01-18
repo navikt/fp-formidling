@@ -17,14 +17,14 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse.FamilieHendels
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.vilkår.VilkårDto;
 import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
-import no.nav.foreldrepenger.fpsak.dto.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
-import no.nav.foreldrepenger.fpsak.dto.tilkjentytelse.TilkjentYtelseMedUttaksplanDto;
 import no.nav.foreldrepenger.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpsak.dto.inntektarbeidytelse.InntektsmeldingerDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
 import no.nav.foreldrepenger.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpsak.dto.soknad.SoknadBackendDto;
+import no.nav.foreldrepenger.fpsak.dto.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
+import no.nav.foreldrepenger.fpsak.dto.tilkjentytelse.TilkjentYtelseMedUttaksplanDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.KreverSammenhengendeUttakDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;

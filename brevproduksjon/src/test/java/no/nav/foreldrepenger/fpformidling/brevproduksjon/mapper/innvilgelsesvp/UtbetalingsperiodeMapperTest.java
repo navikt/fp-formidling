@@ -9,10 +9,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Utbetalingsperiode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 
 public class UtbetalingsperiodeMapperTest {
 

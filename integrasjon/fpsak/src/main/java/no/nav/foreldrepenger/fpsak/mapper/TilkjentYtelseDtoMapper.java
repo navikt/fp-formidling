@@ -6,17 +6,17 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
+import no.nav.foreldrepenger.fpsak.dto.tilkjentytelse.TilkjentYtelseAndelDto;
 import no.nav.foreldrepenger.fpsak.dto.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
 import no.nav.foreldrepenger.fpsak.dto.tilkjentytelse.TilkjentYtelseMedUttaksplanDto;
-import no.nav.foreldrepenger.fpsak.dto.tilkjentytelse.TilkjentYtelseAndelDto;
 import no.nav.foreldrepenger.fpsak.dto.tilkjentytelse.TilkjentYtelsePeriodeDto;
 import no.nav.foreldrepenger.fpsak.mapper.sortering.PeriodeComparator;
 

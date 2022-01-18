@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
 import java.util.Optional;
 
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public final class AktivitetsbeskrivelseUtleder {

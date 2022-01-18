@@ -25,7 +25,6 @@ import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.EngangsstønadInnvilgelseDokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapperProvider;
@@ -49,6 +48,7 @@ import no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk.task.Publiser
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.personopplysning.NavBrukerKjønn;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;

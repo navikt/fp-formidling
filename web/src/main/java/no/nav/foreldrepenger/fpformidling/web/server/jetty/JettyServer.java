@@ -1,21 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 
 import static no.nav.foreldrepenger.konfig.Cluster.LOCAL;
-import static no.nav.foreldrepenger.konfig.Cluster.NAIS_CLUSTER_NAME;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
 import org.eclipse.jetty.plus.jndi.EnvEntry;
-import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.resource.ResourceCollection;
-import org.eclipse.jetty.webapp.MetaData;
-import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

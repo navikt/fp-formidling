@@ -32,28 +32,19 @@ public class JettyServer extends AbstractJettyServer {
     private static final String DATASOURCE_NAME = "defaultDS";
     private static final Logger log = LoggerFactory.getLogger(JettyServer.class);
 
-    public JettyServer() {
-        this(new JettyWebKonfigurasjon());
-    }
-
     public JettyServer(int serverPort) {
-        this(new JettyWebKonfigurasjon(serverPort));
-    }
-
-    JettyServer(AppKonfigurasjon appKonfigurasjon) {
-        super(appKonfigurasjon);
+        super(new JettyWebKonfigurasjon(serverPort));
     }
 
     public static void main(String[] args) throws Exception {
-        System.setProperty(NAIS_CLUSTER_NAME, ENV.clusterName());
-        JettyServer jettyServer;
+        jettyServer(args).bootStrap();
+    }
+
+    private static JettyServer jettyServer(String[] args) {
         if (args.length > 0) {
-            int serverPort = Integer.parseUnsignedInt(args[0]);
-            jettyServer = new JettyServer(serverPort);
-        } else {
-            jettyServer = new JettyServer();
+            return new JettyServer(Integer.parseUnsignedInt(args[0]));
         }
-        jettyServer.bootStrap();
+            return new JettyServer(8080);
     }
 
     @Override
@@ -82,28 +73,7 @@ public class JettyServer extends AbstractJettyServer {
     }
 
     @Override
-    protected WebAppContext createContext(AppKonfigurasjon appKonfigurasjon) throws IOException {
-        WebAppContext webAppContext = super.createContext(appKonfigurasjon);
-        webAppContext.setParentLoaderPriority(true);
-        updateMetaData(webAppContext.getMetaData());
-        return webAppContext;
+    protected List<Class<?>> getWebInfClasses() {
+        return List.of(ApplicationConfig.class, IssoApplication.class);
     }
-
-    private void updateMetaData(MetaData metaData) {
-        // Find path to class-files while starting jetty from development environment.
-        List<Class<?>> appClasses = Arrays.asList((Class<?>) ApplicationConfig.class, (Class<?>) IssoApplication.class);
-
-        List<Resource> resources = appClasses.stream().map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
-                .collect(Collectors.toList());
-
-        metaData.setWebInfClassesResources(resources);
-    }
-
-    @Override
-    protected ResourceCollection createResourceCollection() throws IOException {
-        return new ResourceCollection(
-                Resource.newClassPathResource("META-INF/resources/webjars/"),
-                Resource.newClassPathResource("/web"));
-    }
-
 }

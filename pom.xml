@@ -44,8 +44,6 @@
         <kafka.version>3.0.0</kafka.version>
         <logstash.version>7.0.1</logstash.version>
         <logback-syslog4j.version>1.0.0</logback-syslog4j.version>
-        <geronimo.jaspi.version>2.0.0</geronimo.jaspi.version>
-        <geronimo.osgi.version>1.1</geronimo.osgi.version>
         <owaspencoder.version>1.2.3</owaspencoder.version>
         <handlebars.version>4.3.0</handlebars.version>
         <commons-collections.version>4.4</commons-collections.version>
@@ -64,6 +62,14 @@
     over arv) da de overstyrer andre scope definisjoner. Sett det heller der det brukes. -->
     <dependencyManagement>
         <dependencies>
+            <!-- Overstyre felles -->
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-bom</artifactId>
+                <version>10.0.7</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>felles-root</artifactId>
@@ -320,18 +326,6 @@
                 <groupId>com.papertrailapp</groupId>
                 <artifactId>logback-syslog4j</artifactId>
                 <version>${logback-syslog4j.version}</version>
-            </dependency>
-
-            <!-- Sikkerhet: Geronimo -->
-            <dependency>
-                <groupId>org.apache.geronimo.components</groupId>
-                <artifactId>geronimo-jaspi</artifactId>
-                <version>${geronimo.jaspi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.geronimo.specs</groupId>
-                <artifactId>geronimo-osgi-locator</artifactId>
-                <version>${geronimo.osgi.version}</version>
             </dependency>
 
             <!-- Swagger -->

@@ -21,22 +21,18 @@ import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 @Jersey
 public class JerseyBehandlinger extends AbstractJerseyRestClient implements Behandlinger {
 
-    private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
-    private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/formidling/ressurser";
-    private static final String SAKSNUMMER = "saksnummer";
-    private static final String BEHANDLING_ID = "behandlingId";
     private final URI baseUri;
 
     @Inject
-    public JerseyBehandlinger(@KonfigVerdi(FPSAK_REST_BASE_URL) URI baseUri) {
+    public JerseyBehandlinger(@KonfigVerdi("fpsak.rest.base.url") URI baseUri) {
         this.baseUri = baseUri;
     }
 
     @Override
     public BehandlingDto hentBehandling(UUID behandlingId) {
         return Optional.ofNullable(client.target(baseUri)
-                .path(HENT_BEHANLDING_ENDPOINT)
-                .queryParam(BEHANDLING_ID, behandlingId)
+                .path("/fpsak/api/formidling/ressurser")
+                .queryParam("behandlingId", behandlingId)
                 .request(APPLICATION_JSON_TYPE)
                 .get(BehandlingDto.class))
                 .orElseThrow(() -> new IllegalStateException("Klarte ikke hente behandling: " + behandlingId));
@@ -58,10 +54,10 @@ public class JerseyBehandlinger extends AbstractJerseyRestClient implements Beha
         var payload = link.getRequestPayload();
         if (payload != null) {
             if (payload.saksnummer() != null) {
-                target.queryParam(SAKSNUMMER, payload.saksnummer());
+                target.queryParam("saksnummer", payload.saksnummer());
             }
             if (payload.behandlingUuid() != null) {
-                target.queryParam(BEHANDLING_ID, payload.behandlingUuid());
+                target.queryParam("behandlingId", payload.behandlingUuid());
             }
         }
         return target

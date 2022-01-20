@@ -19,9 +19,6 @@ public class PipRestKlient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PipRestKlient.class);
 
-    private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
-    private static final String PIP_BEHANDLING_ENDPOINT = "/fpsak/api/pip/pipdata-for-behandling";
-
     private SystemUserOidcRestClient oidcRestClient;
     private String endpointFpsakRestBase;
 
@@ -31,14 +28,14 @@ public class PipRestKlient {
 
     @Inject
     public PipRestKlient(SystemUserOidcRestClient oidcRestClient,
-                         @KonfigVerdi(FPSAK_REST_BASE_URL) String endpointFpsakRestBase) {
+                         @KonfigVerdi("fpsak.rest.base.url") String endpointFpsakRestBase) {
         this.oidcRestClient = oidcRestClient;
         this.endpointFpsakRestBase = endpointFpsakRestBase;
     }
 
     public PipDto hentPipdataForBehandling(String behandlingUUid) {
         try {
-            URIBuilder pipUriBuilder = new URIBuilder(endpointFpsakRestBase + PIP_BEHANDLING_ENDPOINT);
+            URIBuilder pipUriBuilder = new URIBuilder(endpointFpsakRestBase + "/fpsak/api/pip/pipdata-for-behandling");
             pipUriBuilder.setParameter("behandlingUuid", behandlingUUid);
             return oidcRestClient.getReturnsOptional(pipUriBuilder.build(), PipDto.class)
                     .orElseThrow(IllegalStateException::new);

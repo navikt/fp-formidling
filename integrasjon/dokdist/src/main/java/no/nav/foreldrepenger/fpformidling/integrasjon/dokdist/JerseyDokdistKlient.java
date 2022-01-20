@@ -27,7 +27,7 @@ import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 public class JerseyDokdistKlient extends AbstractJerseyOidcRestClient implements Dokdist {
     private static final String KODE = "FPFORMIDLING-647352";
     private static final Logger LOG = LoggerFactory.getLogger(JerseyDokdistKlient.class);
-    private static final String DOKDIST_REST_BASE_URL = "dokdist_rest_base.url";
+    private static final String DOKDIST_REST_BASE_URL = "dokdist.rest.base.url";
     private static final String DISTRIBUERJOURNALPOST = "/distribuerjournalpost";
     private final WebTarget target;
 

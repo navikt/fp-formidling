@@ -19,7 +19,7 @@ import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 @ApplicationScoped
 public class DokgenRestKlient implements Dokgen {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokgenRestKlient.class);
-    private static final String DOKGEN_REST_BASE_URL = "dokgen_rest_base.url";
+    private static final String DOKGEN_REST_BASE_URL = "dokgen.rest.base.url";
     private static final String CREATE_PDF = "/create-pdf-variation";
     private static final Set<Språkkode> STØTTEDE_SPRÅK = Set.of(Språkkode.NB, Språkkode.NN, Språkkode.EN);
 

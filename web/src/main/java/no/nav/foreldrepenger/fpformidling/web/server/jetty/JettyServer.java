@@ -1,21 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 
 import static no.nav.foreldrepenger.konfig.Cluster.LOCAL;
-import static no.nav.foreldrepenger.konfig.Cluster.NAIS_CLUSTER_NAME;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
 import org.eclipse.jetty.plus.jndi.EnvEntry;
-import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.resource.ResourceCollection;
-import org.eclipse.jetty.webapp.MetaData;
-import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,28 +24,19 @@ public class JettyServer extends AbstractJettyServer {
     private static final String DATASOURCE_NAME = "defaultDS";
     private static final Logger log = LoggerFactory.getLogger(JettyServer.class);
 
-    public JettyServer() {
-        this(new JettyWebKonfigurasjon());
-    }
-
     public JettyServer(int serverPort) {
-        this(new JettyWebKonfigurasjon(serverPort));
-    }
-
-    JettyServer(AppKonfigurasjon appKonfigurasjon) {
-        super(appKonfigurasjon);
+        super(new JettyWebKonfigurasjon(serverPort));
     }
 
     public static void main(String[] args) throws Exception {
-        System.setProperty(NAIS_CLUSTER_NAME, ENV.clusterName());
-        JettyServer jettyServer;
+        jettyServer(args).bootStrap();
+    }
+
+    private static JettyServer jettyServer(String[] args) {
         if (args.length > 0) {
-            int serverPort = Integer.parseUnsignedInt(args[0]);
-            jettyServer = new JettyServer(serverPort);
-        } else {
-            jettyServer = new JettyServer();
+            return new JettyServer(Integer.parseUnsignedInt(args[0]));
         }
-        jettyServer.bootStrap();
+            return new JettyServer(8080);
     }
 
     @Override
@@ -82,28 +65,7 @@ public class JettyServer extends AbstractJettyServer {
     }
 
     @Override
-    protected WebAppContext createContext(AppKonfigurasjon appKonfigurasjon) throws IOException {
-        WebAppContext webAppContext = super.createContext(appKonfigurasjon);
-        webAppContext.setParentLoaderPriority(true);
-        updateMetaData(webAppContext.getMetaData());
-        return webAppContext;
+    protected List<Class<?>> getWebInfClasses() {
+        return List.of(ApplicationConfig.class, IssoApplication.class);
     }
-
-    private void updateMetaData(MetaData metaData) {
-        // Find path to class-files while starting jetty from development environment.
-        List<Class<?>> appClasses = Arrays.asList((Class<?>) ApplicationConfig.class, (Class<?>) IssoApplication.class);
-
-        List<Resource> resources = appClasses.stream().map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
-                .collect(Collectors.toList());
-
-        metaData.setWebInfClassesResources(resources);
-    }
-
-    @Override
-    protected ResourceCollection createResourceCollection() throws IOException {
-        return new ResourceCollection(
-                Resource.newClassPathResource("META-INF/resources/webjars/"),
-                Resource.newClassPathResource("/web"));
-    }
-
 }

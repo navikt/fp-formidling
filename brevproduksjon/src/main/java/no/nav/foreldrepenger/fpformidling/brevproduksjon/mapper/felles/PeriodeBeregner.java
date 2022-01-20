@@ -11,11 +11,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.uttak.Stønadskonto;
 import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;

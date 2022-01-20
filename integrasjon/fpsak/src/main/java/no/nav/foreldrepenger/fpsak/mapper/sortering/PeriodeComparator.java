@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.fpsak.mapper.sortering;
 
 import java.util.Comparator;
 
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 
 public class PeriodeComparator {

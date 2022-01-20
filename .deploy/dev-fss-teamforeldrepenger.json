@@ -11,9 +11,6 @@
     "https://fpformidling.dev.intern.nav.no/"
   ],
   "env": {
-    "OIDC_OPEN_AM_WELL_KNOWN_URL": "https://isso-q.adeo.no/isso/oauth2/.well-known/openid-configuration",
-    "OIDC_OPEN_AM_CLIENT_ID": "fpformidling-q1",
-    "OIDC_STS_WELL_KNOWN_URL": "https://security-token-service.nais.preprod.local/.well-known/openid-configuration",
     "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD",
     "DEFAULTDS_VAULT_ENABLE": "true",
     "DEFAULTDS_VAULT_MOUNTPATH": "postgresql/preprod-fss",

@@ -34,8 +34,6 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
@@ -57,6 +55,8 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatT
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakAktivitet;

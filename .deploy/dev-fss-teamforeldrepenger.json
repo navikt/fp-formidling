@@ -16,7 +16,7 @@
     "DEFAULTDS_URL": "jdbc:postgresql://b27dbvl007.preprod.local:5432/fpformidling-q1",
     "KAFKA_DOKUMENTBESTILLING_TOPIC": "privat-foreldrepenger-dokumenthendelse-q1",
     "KAFKA_HISTORIKKINNSLAG_TOPIC": "privat-foreldrepenger-historikkinnslag-q1",
-    "SCHEMA_REGISTRY_URL": "https://kafka-test-schema-registry.nais.preprod.local",
+    "SCHEMA_REGISTRY_URL": "http://kafka-test-schema-registry.tpa:8081",
     "KAFKA_BOOTSTRAP_SERVERS": "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443"
   }
 }

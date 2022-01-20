@@ -36,8 +36,8 @@ public class JournalpostRestKlient implements Journalpost {
     private final OidcRestClient restKlientProxy;
 
     @Inject
-    public JournalpostRestKlient(@KonfigVerdi(value = "journalpost_rest_v1.url", defaultVerdi = DEFAULT_URI) URI endpoint, OidcRestClient restKlient,
-            @KonfigVerdi(value = "journalpost_rest_proxy_v1.url", defaultVerdi = DEFAULT_PROXY_URI) URI endpointProxy,
+    public JournalpostRestKlient(@KonfigVerdi(value = "journalpost.rest.v1.url", defaultVerdi = DEFAULT_URI) URI endpoint, OidcRestClient restKlient,
+            @KonfigVerdi(value = "journalpost.rest.proxy.v1.url", defaultVerdi = DEFAULT_PROXY_URI) URI endpointProxy,
             OidcRestClient restKlientProxy) {
         this.endpoint = endpoint;
         this.restKlient = restKlient;

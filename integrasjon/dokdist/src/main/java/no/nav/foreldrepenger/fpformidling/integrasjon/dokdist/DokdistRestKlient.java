@@ -27,7 +27,7 @@ import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
  */
 public class DokdistRestKlient implements Dokdist {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokdistRestKlient.class);
-    private static final String DOKDIST_REST_BASE_URL = "dokdist_rest_base.url";
+    private static final String DOKDIST_REST_BASE_URL = "dokdist.rest.base.url";
     private static final String DISTRIBUERJOURNALPOST = "/distribuerjournalpost";
 
     private final OidcRestClient oidcRestClient;

@@ -36,8 +36,8 @@ public class JerseyJournalpostKlient extends AbstractJerseyOidcRestClient implem
     private final URI dokarkivProxyUrl;
 
     @Inject
-    public JerseyJournalpostKlient(@KonfigVerdi(value = "journalpost_rest_v1.url", defaultVerdi = DEFAULT_URI) URI dokarkivUrl,
-            @KonfigVerdi(value = "journalpost_rest_proxy_v1.url", defaultVerdi = DEFAULT_PROXY_URI) URI dokarkivProxyUrl) {
+    public JerseyJournalpostKlient(@KonfigVerdi(value = "journalpost.rest.v1.url", defaultVerdi = DEFAULT_URI) URI dokarkivUrl,
+            @KonfigVerdi(value = "journalpost.rest.proxy.v1.url", defaultVerdi = DEFAULT_PROXY_URI) URI dokarkivProxyUrl) {
         this.dokarkivUrl = dokarkivUrl;
         this.dokarkivProxyUrl = dokarkivProxyUrl;
     }

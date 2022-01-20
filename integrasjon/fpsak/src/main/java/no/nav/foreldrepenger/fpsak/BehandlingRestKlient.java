@@ -27,17 +27,13 @@ import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
  */
 public class BehandlingRestKlient implements Behandlinger {
     private static final Logger LOGGER = LoggerFactory.getLogger(BehandlingRestKlient.class);
-    private static final String FPSAK_REST_BASE_URL = "fpsak_rest_base.url";
-    private static final String HENT_BEHANLDING_ENDPOINT = "/fpsak/api/formidling/ressurser";
-    private static final String SAKSNUMMER = "saksnummer";
-    private static final String BEHANDLING_ID = "behandlingId";
 
     private final OidcRestClient oidcRestClient;
     private final String endpointFpsakRestBase;
 
     @Inject
     public BehandlingRestKlient(OidcRestClient oidcRestClient,
-            @KonfigVerdi(FPSAK_REST_BASE_URL) String endpointFpsakRestBase) {
+            @KonfigVerdi("fpsak.rest.base.url") String endpointFpsakRestBase) {
         this.oidcRestClient = oidcRestClient;
         this.endpointFpsakRestBase = endpointFpsakRestBase;
     }
@@ -46,8 +42,8 @@ public class BehandlingRestKlient implements Behandlinger {
     public BehandlingDto hentBehandling(UUID behandlingId) {
         Optional<BehandlingDto> behandling = Optional.empty();
         try {
-            var behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + HENT_BEHANLDING_ENDPOINT);
-            behandlingUriBuilder.setParameter(BEHANDLING_ID, behandlingId.toString());
+            var behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + "/fpsak/api/formidling/ressurser");
+            behandlingUriBuilder.setParameter("behandlingId", behandlingId.toString());
             behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);
@@ -70,10 +66,10 @@ public class BehandlingRestKlient implements Behandlinger {
             if (payload != null) {
                 // Hvis payloaden er null, er GET parameterne antagelivis allerede satt i urlen
                 if (payload.saksnummer() != null) {
-                    uriBuilder.addParameter(SAKSNUMMER, String.valueOf(payload.saksnummer()));
+                    uriBuilder.addParameter("saksnummer", String.valueOf(payload.saksnummer()));
                 }
                 if (payload.behandlingUuid() != null) {
-                    uriBuilder.addParameter(BEHANDLING_ID, String.valueOf(payload.behandlingUuid()));
+                    uriBuilder.addParameter("behandlingId", String.valueOf(payload.behandlingUuid()));
                 }
             }
             return uriBuilder.build();

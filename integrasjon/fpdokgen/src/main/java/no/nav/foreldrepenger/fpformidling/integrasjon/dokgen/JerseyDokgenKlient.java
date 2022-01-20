@@ -26,7 +26,7 @@ import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 public class JerseyDokgenKlient extends AbstractJerseyOidcRestClient implements Dokgen {
     private static final String KODE = "FPFORMIDLING-946543";
     private static final Set<Språkkode> STØTTEDE_SPRÅK = Set.of(NB, NN, EN);
-    private static final String DOKGEN_REST_BASE_URI = "dokgen_rest_base.url";
+    private static final String DOKGEN_REST_BASE_URI = "dokgen.rest.base.url";
     private static final String TEMPLATE = "/template/{mal}/template_{språk}/create-pdf-variation";
     private final URI baseUri;
 

@@ -25,10 +25,7 @@ import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 @Dependent
 public class JournalpostRestKlient implements Journalpost {
-    private static final String DEFAULT_URI = "http://dokarkiv.default/rest/journalpostapi/v1/journalpost";
-    private static final String DEFAULT_PROXY_URI = "http://dokarkivproxy.default/rest/journalpostapi/v1/journalpost";
     private static final Logger LOG = LoggerFactory.getLogger(JournalpostRestKlient.class);
-    private static final String STATUS_OK = "OK";
 
     private final URI endpoint;
     private final URI endpointProxy;
@@ -36,9 +33,8 @@ public class JournalpostRestKlient implements Journalpost {
     private final OidcRestClient restKlientProxy;
 
     @Inject
-    public JournalpostRestKlient(@KonfigVerdi(value = "journalpost.rest.v1.url", defaultVerdi = DEFAULT_URI) URI endpoint, OidcRestClient restKlient,
-            @KonfigVerdi(value = "journalpost.rest.proxy.v1.url", defaultVerdi = DEFAULT_PROXY_URI) URI endpointProxy,
-            OidcRestClient restKlientProxy) {
+    public JournalpostRestKlient(@KonfigVerdi(value = "journalpost.rest.v1.url") URI endpoint, OidcRestClient restKlient,
+            @KonfigVerdi(value = "journalpost.rest.proxy.v1.url") URI endpointProxy, OidcRestClient restKlientProxy) {
         this.endpoint = endpoint;
         this.restKlient = restKlient;
         this.endpointProxy = endpointProxy;

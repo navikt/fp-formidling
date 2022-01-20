@@ -24,20 +24,14 @@ import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 @Jersey
 @Dependent
 public class JerseyJournalpostKlient extends AbstractJerseyOidcRestClient implements Journalpost {
-    private static final String FORSØK_FERDIGSTILL = "forsoekFerdigstill";
     private static final Logger LOG = LoggerFactory.getLogger(JerseyJournalpostKlient.class);
-    private static final String TILKNYTT_VEDLEGG = "/{id}/tilknyttVedlegg";
-    private static final String FERDIGSTILL = "/{id}/ferdigstill";
-
-    private static final String DEFAULT_URI = "http://dokarkiv.default/rest/journalpostapi/v1/journalpost";
-    private static final String DEFAULT_PROXY_URI = "http://dokarkivproxy.default/rest/journalpostapi/v1/journalpost";
 
     private final URI dokarkivUrl;
     private final URI dokarkivProxyUrl;
 
     @Inject
-    public JerseyJournalpostKlient(@KonfigVerdi(value = "journalpost.rest.v1.url", defaultVerdi = DEFAULT_URI) URI dokarkivUrl,
-            @KonfigVerdi(value = "journalpost.rest.proxy.v1.url", defaultVerdi = DEFAULT_PROXY_URI) URI dokarkivProxyUrl) {
+    public JerseyJournalpostKlient(@KonfigVerdi(value = "journalpost.rest.v1.url") URI dokarkivUrl,
+            @KonfigVerdi(value = "journalpost.rest.proxy.v1.url") URI dokarkivProxyUrl) {
         this.dokarkivUrl = dokarkivUrl;
         this.dokarkivProxyUrl = dokarkivProxyUrl;
     }
@@ -46,7 +40,7 @@ public class JerseyJournalpostKlient extends AbstractJerseyOidcRestClient implem
     public OpprettJournalpostResponse opprettJournalpost(OpprettJournalpostRequest req, boolean ferdigstill) {
         LOG.trace("Oppretter journalpost {}", req);
         var res = invoke(client.target(dokarkivUrl)
-                .queryParam(FORSØK_FERDIGSTILL, ferdigstill)
+                .queryParam("forsoekFerdigstill", ferdigstill)
                 .request(APPLICATION_JSON_TYPE)
                 .buildPost(json(req)), OpprettJournalpostResponse.class);
         LOG.info("Oppretter journalpost {} OK", res.getJournalpostId());
@@ -57,7 +51,7 @@ public class JerseyJournalpostKlient extends AbstractJerseyOidcRestClient implem
     public void ferdigstillJournalpost(JournalpostId id) {
         LOG.trace("Ferdigstiller journalpost {}", id);
         patch(client.target(dokarkivUrl)
-                .path(FERDIGSTILL)
+                .path("/{id}/ferdigstill")
                 .resolveTemplate("id", id.getVerdi())
                 .getUri(), new FerdigstillJournalpostRequest("9999"));
         LOG.info("Ferdigstilt journalpost OK");
@@ -67,7 +61,7 @@ public class JerseyJournalpostKlient extends AbstractJerseyOidcRestClient implem
     public void tilknyttVedlegg(TilknyttVedleggRequest req, JournalpostId til) {
         LOG.trace("Tilknytter vedlegg {}", til.getVerdi());
         var res = invoke(client.target(dokarkivProxyUrl)
-                .path(TILKNYTT_VEDLEGG)
+                .path("/{id}/tilknyttVedlegg")
                 .resolveTemplate("id", til.getVerdi())
                 .request(APPLICATION_JSON_TYPE)
                 .buildPut(json(req)), TilknyttVedleggResponse.class);

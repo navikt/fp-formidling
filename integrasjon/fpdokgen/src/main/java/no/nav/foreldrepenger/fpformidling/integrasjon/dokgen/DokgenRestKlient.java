@@ -19,8 +19,6 @@ import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 @ApplicationScoped
 public class DokgenRestKlient implements Dokgen {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokgenRestKlient.class);
-    private static final String DOKGEN_REST_BASE_URL = "dokgen.rest.base.url";
-    private static final String CREATE_PDF = "/create-pdf-variation";
     private static final Set<Språkkode> STØTTEDE_SPRÅK = Set.of(Språkkode.NB, Språkkode.NN, Språkkode.EN);
 
     private OidcRestClient oidcRestClient;
@@ -32,7 +30,7 @@ public class DokgenRestKlient implements Dokgen {
 
     @Inject
     public DokgenRestKlient(OidcRestClient oidcRestClient,
-            @KonfigVerdi(DOKGEN_REST_BASE_URL) String endpointDokgenRestBase) {
+            @KonfigVerdi("dokgen.rest.base.url") String endpointDokgenRestBase) {
         this.oidcRestClient = oidcRestClient;
         this.endpointDokgenRestBase = endpointDokgenRestBase;
     }
@@ -42,7 +40,7 @@ public class DokgenRestKlient implements Dokgen {
         Optional<byte[]> pdf;
         try {
             String templatePath = String.format("/template/%s/template_%s", maltype.toLowerCase(), getSpråkkode(språkkode));
-            URIBuilder uriBuilder = new URIBuilder(endpointDokgenRestBase + templatePath + CREATE_PDF);
+            URIBuilder uriBuilder = new URIBuilder(endpointDokgenRestBase + templatePath + "/create-pdf-variation");
             LOGGER.info("Kaller Dokgen for generering av mal {} på språk {}", maltype, språkkode.getKode());
             pdf = oidcRestClient.postReturnsOptionalOfByteArray(uriBuilder.build(), dokumentdata);
         } catch (Exception e) {

@@ -1,34 +1,13 @@
 {
-  "cluster": "preprod",
-  "namespace": "teamforeldrepenger",
   "serviceuserkv": "/serviceuser/data/dev/srvfpformidling",
   "minReplicas": "1",
   "maxReplicas": "3",
   "ingresses": [
     "https://app-q1.adeo.no/fpformidling",
     "https://fpformidling-q1.nais.preprod.local/",
-    "https://fpformidling-q1.dev.adeo.no/",
     "https://fpformidling.dev.intern.nav.no/"
   ],
   "env": {
-    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD",
-    "DEFAULTDS_VAULT_ENABLE": "true",
-    "DEFAULTDS_VAULT_MOUNTPATH": "postgresql/preprod-fss",
-    "DEFAULTDS_VAULT_ROLEPREFIX": "fpformidling-q1",
-    "DEFAULTDS_USERNAME": "fpformidling-q1",
-    "DEFAULTDS_URL": "jdbc:postgresql://B27DBVL007.preprod.local:5432/fpformidling-q1",
-    "DOKDIST_REST_BASE_URL": "http://dokdistfordeling-q1.teamdokumenthandtering/rest/v1",
-    "JOURNALPOST_REST_V1_URL": "http://dokarkiv-q1.teamdokumenthandtering/rest/journalpostapi/v1/journalpost",
-    "JOURNALPOST_REST_PROXY_V1_URL": "http://dokarkivproxy-q1.teamdokumenthandtering/rest/journalpostapi/v1/journalpost",
-    "SAK_RS_URL": "http://sak-q1.teamdokumenthandtering/api/v1/saker",
-    "DOKGEN_REST_BASE_URL": "http://fpdokgen.teamforeldrepenger",
-    "FPSAK_REST_BASE_URL": "http://fpsak.teamforeldrepenger/",
-    "KAFKA_DOKUMENTBESTILLING_TOPIC": "privat-foreldrepenger-dokumenthendelse-q1",
-    "KAFKA_HISTORIKKINNSLAG_TOPIC": "privat-foreldrepenger-historikkinnslag-q1",
-    "ORGANISASJON_RS_URL": "https://modapp-q1.adeo.no/ereg/api/v1/organisasjon",
-    "SCHEMA_REGISTRY_URL": "https://kafka-test-schema-registry.nais.preprod.local",
-    "KAFKA_BOOTSTRAP_SERVERS": "b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443",
-    "TASK_MANAGER_POLLING_TASKS_SIZE": "1",
-    "TASK_MANAGER_RUNNER_THREADS": "1"
+    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD"
   }
 }

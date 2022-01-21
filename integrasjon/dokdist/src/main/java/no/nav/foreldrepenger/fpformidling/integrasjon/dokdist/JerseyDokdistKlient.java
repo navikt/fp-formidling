@@ -25,18 +25,15 @@ import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 @Dependent
 @Jersey
 public class JerseyDokdistKlient extends AbstractJerseyOidcRestClient implements Dokdist {
-    private static final String KODE = "FPFORMIDLING-647352";
     private static final Logger LOG = LoggerFactory.getLogger(JerseyDokdistKlient.class);
-    private static final String DOKDIST_REST_BASE_URL = "dokdist.rest.base.url";
-    private static final String DISTRIBUERJOURNALPOST = "/distribuerjournalpost";
     private final WebTarget target;
 
     @Inject
     public JerseyDokdistKlient(
-            @KonfigVerdi(value = DOKDIST_REST_BASE_URL, defaultVerdi = "some sensible default") URI baseUri) {
+            @KonfigVerdi(value = "dokdist.rest.base.url", defaultVerdi = "some sensible default") URI baseUri) {
         this.target = client
                 .target(baseUri)
-                .path(DISTRIBUERJOURNALPOST);
+                .path("/distribuerjournalpost");
     }
 
     @Override
@@ -47,7 +44,7 @@ public class JerseyDokdistKlient extends AbstractJerseyOidcRestClient implements
                         .request(APPLICATION_JSON_TYPE)
                         .buildPost(json(new DistribuerJournalpostRequest(id, FPSAK))), DistribuerJournalpostResponse.class))
                 .ifPresentOrElse(v -> LOG.info("Distribuert {} med bestillingsId {}", id, v.getBestillingsId()),
-                        () -> new TekniskException(KODE, String.format("Fikk tomt svar ved kall til dokdist for %s.", id)));
+                        () -> { throw new TekniskException("FPFORMIDLING-647352", String.format("Fikk tomt svar ved kall til dokdist for %s.", id)); });
         LOG.info("Distribuerert journalpost {} til {} OK", id, target.getUri());
     }
 

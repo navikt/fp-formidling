@@ -24,25 +24,22 @@ import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 @Jersey
 @Dependent
 public class JerseyDokgenKlient extends AbstractJerseyOidcRestClient implements Dokgen {
-    private static final String KODE = "FPFORMIDLING-946543";
     private static final Set<Språkkode> STØTTEDE_SPRÅK = Set.of(NB, NN, EN);
-    private static final String DOKGEN_REST_BASE_URI = "dokgen.rest.base.url";
-    private static final String TEMPLATE = "/template/{mal}/template_{språk}/create-pdf-variation";
     private final URI baseUri;
 
     @Inject
-    public JerseyDokgenKlient(@KonfigVerdi(DOKGEN_REST_BASE_URI) URI baseUri) {
+    public JerseyDokgenKlient(@KonfigVerdi("dokgen.rest.base.url") URI baseUri) {
         this.baseUri = baseUri;
     }
 
     @Override
     public byte[] genererPdf(String mal, Språkkode språk, Dokumentdata data) {
         return Optional.ofNullable(invoke(client.target(baseUri)
-                .path(TEMPLATE)
+                .path("/template/{mal}/template_{språk}/create-pdf-variation")
                 .resolveTemplates(Map.of("mal", mal, "språk", språkkode(språk)))
                 .request(APPLICATION_JSON_TYPE)
                 .buildPost(json(data)), byte[].class))
-                .orElseThrow(() -> new TekniskException(KODE,
+                .orElseThrow(() -> new TekniskException("FPFORMIDLING-946543",
                         String.format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", mal, språk.getKode())));
     }
 

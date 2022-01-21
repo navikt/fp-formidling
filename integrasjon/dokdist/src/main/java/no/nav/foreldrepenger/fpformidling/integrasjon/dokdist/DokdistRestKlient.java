@@ -27,15 +27,13 @@ import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
  */
 public class DokdistRestKlient implements Dokdist {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokdistRestKlient.class);
-    private static final String DOKDIST_REST_BASE_URL = "dokdist.rest.base.url";
-    private static final String DISTRIBUERJOURNALPOST = "/distribuerjournalpost";
 
     private final OidcRestClient oidcRestClient;
     private final String endpointDokdistRestBase;
 
     @Inject
     public DokdistRestKlient(OidcRestClient oidcRestClient,
-            @KonfigVerdi(DOKDIST_REST_BASE_URL) String endpointDokdistRestBase) {
+            @KonfigVerdi("dokdist.rest.base.url") String endpointDokdistRestBase) {
         this.oidcRestClient = oidcRestClient;
         this.endpointDokdistRestBase = endpointDokdistRestBase;
     }
@@ -44,7 +42,7 @@ public class DokdistRestKlient implements Dokdist {
     public void distribuerJournalpost(JournalpostId journalpostId) {
         DistribuerJournalpostRequest request = lagRequest(journalpostId);
         try {
-            URIBuilder uriBuilder = new URIBuilder(endpointDokdistRestBase + DISTRIBUERJOURNALPOST);
+            URIBuilder uriBuilder = new URIBuilder(endpointDokdistRestBase + "/distribuerjournalpost");
             Optional<DistribuerJournalpostResponse> response = oidcRestClient.postReturnsOptional(uriBuilder.build(), request,
                     DistribuerJournalpostResponse.class);
             if (response.isPresent()) {

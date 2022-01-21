@@ -32,7 +32,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- Felles artefakter -->
-        <felles.version>4.1.11</felles.version>
+        <felles.version>4.1.14</felles.version>
         <prosesstask.version>3.1.6</prosesstask.version>
         <kontrakter.version>6.1.3</kontrakter.version>
         <konfig.version>1.1.4</konfig.version>

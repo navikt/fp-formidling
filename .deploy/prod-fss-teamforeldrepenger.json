@@ -8,15 +8,6 @@
     "https://fpformidling.intern.nav.no/"
   ],
   "env": {
-    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "PROD",
-    "DEFAULTDS_VAULT_ENABLE": "true",
-    "DEFAULTDS_VAULT_MOUNTPATH": "postgresql/prod-fss",
-    "DEFAULTDS_VAULT_ROLEPREFIX": "fpformidling",
-    "DEFAULTDS_USERNAME": "fpformidling",
-    "DEFAULTDS_URL": "jdbc:postgresql://a01dbfl039.adeo.no:5432/fpformidling",
-    "KAFKA_DOKUMENTBESTILLING_TOPIC": "privat-foreldrepenger-dokumenthendelse",
-    "KAFKA_HISTORIKKINNSLAG_TOPIC": "privat-foreldrepenger-historikkinnslag",
-    "SCHEMA_REGISTRY_URL": "http://kafka-schema-registry.tpa:8081",
-    "KAFKA_BOOTSTRAP_SERVERS": "a01apvl00145.adeo.no:8443,a01apvl00146.adeo.no:8443,a01apvl00147.adeo.no:8443,a01apvl00148.adeo.no:8443,a01apvl00149.adeo.no:8443,a01apvl00150.adeo.no:8443"
+    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "PROD"
   }
 }

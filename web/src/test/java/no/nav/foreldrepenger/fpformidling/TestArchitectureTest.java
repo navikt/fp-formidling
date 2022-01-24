@@ -71,7 +71,7 @@ public class TestArchitectureTest {
 
     @ArchTest
     public static void sanity_check_for_number_of_classes_to_analyze(JavaClasses classes) {
-        assertTrue(classes.size() > 20, "There is something wrong - there should be at least! 20 test classes to analyze");
+        assertTrue(classes.size() > 17, "There is something wrong - there should be at least! 20 test classes to analyze");
     }
 
     private static final ArchCondition<JavaMethod> callCheckMethod =

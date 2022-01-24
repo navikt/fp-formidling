@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.dbstoette;
 
-import static io.micrometer.core.instrument.Metrics.globalRegistry;
+import static java.lang.Runtime.getRuntime;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,6 +31,14 @@ public final class Databaseskjemainitialisering {
         migrerUnittestSkjemaer();
     }
 
+    public static DataSource initUnitTestDataSource() {
+        if (DS != null) {
+            return DS;
+        }
+        settJdniOppslag(USER);
+        return DS;
+    }
+
     @SuppressWarnings("resource")
     public static void migrerUnittestSkjemaer() {
         if (GUARD_UNIT_TEST_SKJEMAER.compareAndSet(false, true)) {
@@ -54,46 +62,27 @@ public final class Databaseskjemainitialisering {
     }
 
     private static synchronized DataSource settJdniOppslag(String user) {
-
         var ds = createDs(user);
-
         try {
-
             new EnvEntry("jdbc/defaultDS", ds); // NOSONAR
             return ds;
         } catch (NamingException e) {
-            throw new IllegalStateException("Feil under registrering av JDNI-entry for default datasource", e); // NOSONAR
+            throw new IllegalStateException("Feil under registrering av JDNI-entry for defaultDS", e); // NOSONAR
         }
     }
 
     private static HikariDataSource createDs(String user) {
         Objects.requireNonNull(user, "user");
         var cfg = new HikariConfig();
-        cfg.setJdbcUrl(System.getProperty("datasource.defaultDS.url",
-                String.format("jdbc:postgresql://127.0.0.1:5432/%s?reWriteBatchedInserts=true", USER)));
+        cfg.setJdbcUrl(String.format("jdbc:postgresql://localhost:5432/%s?reWriteBatchedInserts=true", USER));
         cfg.setUsername(USER);
         cfg.setPassword(USER);
         cfg.setConnectionTimeout(1500);
         cfg.setValidationTimeout(120L * 1000L);
         cfg.setMaximumPoolSize(4);
         cfg.setAutoCommit(false);
-        cfg.setMetricRegistry(globalRegistry);
         var ds = new HikariDataSource(cfg);
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                ds.close();
-            }
-        }));
+        getRuntime().addShutdownHook(new Thread(ds::close));
         return ds;
     }
-
-    public static DataSource initUnitTestDataSource() {
-        if (DS != null) {
-            return DS;
-        }
-        settJdniOppslag(USER);
-        return DS;
-    }
-
 }

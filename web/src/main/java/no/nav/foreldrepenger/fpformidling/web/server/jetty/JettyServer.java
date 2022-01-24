@@ -74,7 +74,7 @@ public class JettyServer {
         if (args.length > 0) {
             return new JettyServer(Integer.parseUnsignedInt(args[0]));
         }
-            return new JettyServer(ENV.getProperty("server.port", Integer.class, 8080));
+        return new JettyServer(ENV.getProperty("server.port", Integer.class, 8080));
     }
 
     private JettyServer(int serverPort) {
@@ -212,7 +212,7 @@ public class JettyServer {
         var resources = getWebInfClasses().stream()
                 .map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
                 .distinct()
-                .collect(Collectors.toList());
+                .toList();
 
         metaData.setWebInfClassesResources(resources);
     }

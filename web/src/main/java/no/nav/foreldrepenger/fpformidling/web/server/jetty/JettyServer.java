@@ -107,7 +107,6 @@ public class JettyServer {
         final String trustStorePasswordProp = "javax.net.ssl.trustStorePassword";
 
         var defaultLocation = ENV.getProperty("user.home", ".") + "/.modig/truststore.jks";
-
         var storePath = ENV.getProperty(trustStorePathProp, defaultLocation);
         var storeFile = new File(storePath);
         if (!storeFile.exists()) {
@@ -116,10 +115,6 @@ public class JettyServer {
                     + trustStorePathProp.toUpperCase().replace('.', '_') + "'");
         }
         var password = ENV.getProperty(trustStorePasswordProp, "changeit");
-        if (password == null) {
-            throw new IllegalStateException("Passord for å aksessere store truststore i " + storePath + " er null");
-        }
-
         System.setProperty(trustStorePathProp, storeFile.getAbsolutePath());
         System.setProperty(trustStorePasswordProp, password);
     }

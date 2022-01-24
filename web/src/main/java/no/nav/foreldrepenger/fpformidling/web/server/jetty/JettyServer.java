@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.naming.NamingException;
 import javax.security.auth.message.config.AuthConfigFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -123,31 +124,27 @@ public class JettyServer {
         System.setProperty(trustStorePasswordProp, password);
     }
 
-    private void konfigurerJndi() throws Exception {
+    private void konfigurerJndi() throws NamingException {
         new EnvEntry("jdbc/defaultDS", DatasourceUtil.createDatasource(DatasourceRole.USER, 4));
     }
 
     private void migrerDatabaser() {
         var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN,1);
         try {
-            var konfig = Flyway.configure()
+            var flyway = Flyway.configure()
                     .dataSource(dataSource)
                     .locations("classpath:/db/migration/defaultDS")
                     .baselineOnMigrate(true);
             if (ENV.isProd() || ENV.isDev()) {
-                konfig.initSql(String.format("SET ROLE \"%s\"", DatasourceUtil.getRole(DatasourceRole.ADMIN)));
+                flyway.initSql(String.format("SET ROLE \"%s\"", DatasourceUtil.getRole(DatasourceRole.ADMIN)));
             }
-            var flyway = konfig.load();
-            try {
-                flyway.migrate();
-            } catch (FlywayException e) {
-                LOG.error("Feil under migrering av databasen.");
-                throw e;
-            } finally {
-                dataSource.getConnection().close();
-            }
+            flyway.load().migrate();
+            dataSource.getConnection().close();
         } catch (SQLException e) {
             LOG.warn("Klarte ikke stenge connection etter migrering", e);
+        } catch (FlywayException e) {
+            LOG.error("Feil under migrering av databasen.");
+            throw e;
         }
     }
 

@@ -14,6 +14,7 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalRestriksjon;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.EnumDokumentMalRestriksjon;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
 
 @ApplicationScoped
@@ -93,20 +94,29 @@ public class BrevmalTjeneste {
         List<BrevmalDto> brevmalDtoList = new ArrayList<>(dmtList.size());
         for (DokumentMalType dmt : dmtList) {
             boolean tilgjengelig = sjekkDokumentTilgjengelig.sjekkOmTilgjengelig(behandling, dmt);
-            brevmalDtoList.add(new BrevmalDto(dmt.getKode(), dmt.getNavn(), mapKontraktDokumentMalRestriksjon(dmt.getDokumentmalRestriksjon()), tilgjengelig));
+            brevmalDtoList.add(new BrevmalDto(dmt.getKode(), dmt.getNavn(),
+                    mapKontraktDokumentMalRestriksjon(dmt.getDokumentmalRestriksjon()),
+                    mapKontraktEnumDokumentMalRestriksjon(dmt.getDokumentmalRestriksjon()),
+                    tilgjengelig));
         }
         return brevmalDtoList;
     }
 
     private no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon mapKontraktDokumentMalRestriksjon(DokumentMalRestriksjon dokumentMalRestriksjon) {
-        if (no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon.REVURDERING.getKode().equals(dokumentMalRestriksjon.getKode())) {
-            return no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon.REVURDERING;
-        } else if (no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon.ÅPEN_BEHANDLING.getKode().equals(dokumentMalRestriksjon.getKode())) {
-            return no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon.ÅPEN_BEHANDLING;
-        } else if (no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon.ÅPEN_BEHANDLING_IKKE_SENDT.getKode().equals(dokumentMalRestriksjon.getKode())) {
-            return no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon.ÅPEN_BEHANDLING_IKKE_SENDT;
-        } else {
-            return no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon.INGEN;
-        }
+        return  switch (dokumentMalRestriksjon) {
+            case REVURDERING -> no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon.REVURDERING;
+            case ÅPEN_BEHANDLING -> no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon.ÅPEN_BEHANDLING;
+            case ÅPEN_BEHANDLING_IKKE_SENDT -> no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon.ÅPEN_BEHANDLING_IKKE_SENDT;
+            default -> no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMalRestriksjon.INGEN;
+        };
+    }
+
+    private EnumDokumentMalRestriksjon mapKontraktEnumDokumentMalRestriksjon(DokumentMalRestriksjon dokumentMalRestriksjon) {
+        return  switch (dokumentMalRestriksjon) {
+            case REVURDERING -> EnumDokumentMalRestriksjon.REVURDERING;
+            case ÅPEN_BEHANDLING -> EnumDokumentMalRestriksjon.ÅPEN_BEHANDLING;
+            case ÅPEN_BEHANDLING_IKKE_SENDT -> EnumDokumentMalRestriksjon.ÅPEN_BEHANDLING_IKKE_SENDT;
+            default -> EnumDokumentMalRestriksjon.INGEN;
+        };
     }
 }

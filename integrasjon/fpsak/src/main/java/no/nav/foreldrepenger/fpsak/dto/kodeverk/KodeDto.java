@@ -1,6 +1,8 @@
 package no.nav.foreldrepenger.fpsak.dto.kodeverk;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KodeDto {
@@ -13,6 +15,19 @@ public class KodeDto {
     public KodeDto(String kodeverk, String kode) {
         this.kodeverk = kodeverk;
         this.kode = kode;
+    }
+
+    /*
+     * Etter at fpsak begynner å serialisere som String isf { "kode": "<kode>", "kodeverk": "<hodeverk>" }
+     * Så kan man gjøre om alle KodeDto-instanser til String.
+     * Eller enda bedre - rett til enum så man slipper <Enum>.fraKode(kodedto.kode) i alle mappere.
+     */
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public static KodeDto fraKode(@JsonProperty(value = "kode") Object node) {
+        if (node == null) {
+            return null;
+        }
+        return TempAvledeKode.getVerdiKodeDto(node, "kode");
     }
 
     public String getKode() {

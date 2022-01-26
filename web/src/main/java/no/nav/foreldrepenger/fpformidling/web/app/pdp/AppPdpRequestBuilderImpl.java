@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -35,8 +34,8 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
 
     public static final String ABAC_DOMAIN = "foreldrepenger";
 
-    private DomeneobjektProvider domeneobjektProvider;
-    private PipRestKlient pipRestKlient;
+    private final DomeneobjektProvider domeneobjektProvider;
+    private final PipRestKlient pipRestKlient;
 
     @Inject
     public AppPdpRequestBuilderImpl(DomeneobjektProvider domeneobjektProvider,
@@ -44,7 +43,6 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
         this.domeneobjektProvider = domeneobjektProvider;
         this.pipRestKlient = pipRestKlient;
     }
-
 
     @Override
     public PdpRequest lagPdpRequest(AbacAttributtSamling attributter) {
@@ -55,7 +53,7 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
 
         behandling.ifPresent(b -> {
                     PipDto dto = pipRestKlient.hentPipdataForBehandling(b.getUuid().toString());
-                    aktørIder.addAll(dto.getAktørIder().stream().map(AktørId::getId).collect(Collectors.toList()));
+                    aktørIder.addAll(dto.getAktørIder().stream().map(AktørId::getId).toList());
                     pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_SAKSSTATUS, dto.getFagsakStatus());
                     pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_BEHANDLINGSSTATUS, dto.getBehandlingStatus());
                 }

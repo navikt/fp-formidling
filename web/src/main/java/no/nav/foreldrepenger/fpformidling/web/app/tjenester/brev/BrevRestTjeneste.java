@@ -59,7 +59,7 @@ public class BrevRestTjeneste {
         return brevmalTjeneste.hentBrevmalerFor(uuidDto.getBehandlingUuid()); // NOSONAR
     }
 
-    private static class BehandlingUuidAbacDataSupplier implements Function<Object, AbacDataAttributter> {
+    public static class BehandlingUuidAbacDataSupplier implements Function<Object, AbacDataAttributter> {
 
         @Override
         public AbacDataAttributter apply(Object obj) {

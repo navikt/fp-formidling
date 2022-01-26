@@ -50,8 +50,8 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
     public PdpRequest lagPdpRequest(AbacAttributtSamling attributter) {
         PdpRequest pdpRequest = new PdpRequest();
         List<String> aktørIder = new ArrayList<>();
-        Set<String> uuids = attributter.getVerdier(StandardAbacAttributtType.BEHANDLING_UUID);
-        Optional<Behandling> behandling = uuids.stream().findFirst().map(UUID::fromString).map(domeneobjektProvider::hentBehandling);
+        Set<UUID> uuids = attributter.getVerdier(StandardAbacAttributtType.BEHANDLING_UUID);
+        Optional<Behandling> behandling = uuids.stream().findFirst().map(domeneobjektProvider::hentBehandling);
 
         behandling.ifPresent(b -> {
                     PipDto dto = pipRestKlient.hentPipdataForBehandling(b.getUuid().toString());

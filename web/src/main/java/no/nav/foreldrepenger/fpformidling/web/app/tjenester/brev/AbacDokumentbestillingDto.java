@@ -9,6 +9,6 @@ public class AbacDokumentbestillingDto extends DokumentbestillingDto implements 
 
     @Override
     public AbacDataAttributter abacAttributter() {
-        return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, getBehandlingUuid().toString());
+        return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, getBehandlingUuid());
     }
 }

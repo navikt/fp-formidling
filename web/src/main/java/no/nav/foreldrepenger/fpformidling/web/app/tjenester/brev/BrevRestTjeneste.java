@@ -22,12 +22,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.brevmal.BrevmalTjeneste;
-import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.AppAbacAttributtType;
 import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BehandlingUuidDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 
 @Path("/brev")
@@ -64,7 +64,7 @@ public class BrevRestTjeneste {
         @Override
         public AbacDataAttributter apply(Object obj) {
             var req = (BehandlingUuidDto) obj;
-            return AbacDataAttributter.opprett().leggTil(AppAbacAttributtType.BEHANDLING_UUID, req.getBehandlingUuid());
+            return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid());
         }
     }
 

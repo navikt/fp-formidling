@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
+/**
+ * @deprecated skal fjernes når alle apps serialiserer kodeverdi-enums som string isf objekt
+ */
 @Deprecated(since = "2020-09-17") // NOSONAR
 public class TempAvledeKode {
 
@@ -34,7 +37,7 @@ public class TempAvledeKode {
                     kodeverk = j.get("kodeverk").asText(); // NOSONAR
                 } else if (node instanceof TextNode t) { // NOSONAR
                     kodeverk = t.asText(); //NOSONAR
-                } else if (node instanceof Map m) { // NOSONAR
+                } else if (node instanceof Map m) { //  NOSONAR
                     kodeverk = (String) m.get("kodeverk"); // NOSONAR
                 }
             } catch (Exception e) {
@@ -67,7 +70,7 @@ public class TempAvledeKode {
                     kodeverk = j.get("kodeverk").asText();
                 } else if (node instanceof TextNode t) { // NOSONAR
                     kodeverk = t.asText();
-                } else if (node instanceof Map m) {
+                } else if (node instanceof Map m) { // NOSONAR
                     kodeverk = (String) m.get("kodeverk");
                 }
             } catch (Exception e) {

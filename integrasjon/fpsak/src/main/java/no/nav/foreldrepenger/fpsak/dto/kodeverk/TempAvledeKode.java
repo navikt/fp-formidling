@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.TextNode;
 
-@Deprecated(since = "2020-09-17")
+@Deprecated(since = "2020-09-17") // NOSONAR
 public class TempAvledeKode {
 
     private static final Logger LOG = LoggerFactory.getLogger(TempAvledeKode.class);
@@ -16,31 +16,31 @@ public class TempAvledeKode {
     @SuppressWarnings("rawtypes")
     public static String getVerdi(Class<? extends Enum> enumCls, Object node, String key) {
         String kode;
-        if (node instanceof String) {
-            kode = (String) node;
+        if (node instanceof String s) { // NOSONAR
+            kode = s;
         } else {
-            if (node instanceof JsonNode) {
-                kode = ((JsonNode) node).get(key).asText();
-            } else if (node instanceof TextNode) {
-                kode = ((TextNode) node).asText();
-            } else if (node instanceof Map) {
-                kode = (String) ((Map) node).get(key);
+            if (node instanceof JsonNode j) {
+                kode = j.get(key).asText();
+            } else if (node instanceof TextNode t) { // NOSONAR
+                kode = t.asText();
+            } else if (node instanceof Map m) {
+                kode = (String) m.get(key);
             } else {
                 throw new IllegalArgumentException("Støtter ikke node av type: " + node.getClass() + " for enum:" + enumCls.getName());
             }
-            String kodeverk = "uspesifisert";
+            String kodeverk = "uspesifisert"; // NOSONAR
             try {
-                if (node instanceof JsonNode) {
-                    kodeverk = ((JsonNode) node).get("kodeverk").asText();
-                } else if (node instanceof TextNode) {
-                    kodeverk = ((TextNode) node).asText();
-                } else if (node instanceof Map) {
-                    kodeverk = (String) ((Map) node).get("kodeverk");
+                if (node instanceof JsonNode j) {
+                    kodeverk = j.get("kodeverk").asText(); // NOSONAR
+                } else if (node instanceof TextNode t) { // NOSONAR
+                    kodeverk = t.asText(); //NOSONAR
+                } else if (node instanceof Map m) { // NOSONAR
+                    kodeverk = (String) m.get("kodeverk"); // NOSONAR
                 }
             } catch (Exception e) {
                 LOG.info("KODEVERK-OBJEKT: tempavledekode kalt uten at det finnes kodeverk - kode {}", kode);
             }
-            // Enable når gått over LOG.info("KODEVERK-OBJEKT: mottok kodeverdiobjekt som ikke var String - kode {} fra kodeverk {} ", kode, kodeverk);
+            // NOSONAR nable når gått over LOG.info("KODEVERK-OBJEKT: mottok kodeverdiobjekt som ikke var String - kode {} fra kodeverk {} ", kode, kodeverk);
         }
         return kode;
     }
@@ -49,31 +49,31 @@ public class TempAvledeKode {
     public static KodeDto getVerdiKodeDto(Object node, String key) {
         String kode;
         String kodeverk = null;
-        if (node instanceof String) {
-            kode = (String) node;
+        if (node instanceof String s) {
+            kode = s;
         } else {
-            if (node instanceof JsonNode) {
-                kode = ((JsonNode) node).get(key).asText();
-            } else if (node instanceof TextNode) {
-                kode = ((TextNode) node).asText();
-            } else if (node instanceof Map) {
-                kode = (String) ((Map) node).get(key);
+            if (node instanceof JsonNode j) {
+                kode = j.get(key).asText();
+            } else if (node instanceof TextNode t) { // NOSONAR
+                kode = t.asText();
+            } else if (node instanceof Map m) {
+                kode = (String) m.get(key);
             } else {
                 throw new IllegalArgumentException("Støtter ikke node av type: " + node.getClass() + " for KodeDto");
             }
             kodeverk = "uspesifisert";
             try {
-                if (node instanceof JsonNode) {
-                    kodeverk = ((JsonNode) node).get("kodeverk").asText();
-                } else if (node instanceof TextNode) {
-                    kodeverk = ((TextNode) node).asText();
-                } else if (node instanceof Map) {
-                    kodeverk = (String) ((Map) node).get("kodeverk");
+                if (node instanceof JsonNode j) {
+                    kodeverk = j.get("kodeverk").asText();
+                } else if (node instanceof TextNode t) { // NOSONAR
+                    kodeverk = t.asText();
+                } else if (node instanceof Map m) {
+                    kodeverk = (String) m.get("kodeverk");
                 }
             } catch (Exception e) {
                 LOG.info("KODEVERK-OBJEKT: tempavledekode kalt uten at det finnes kodeverk - kode {}", kode);
             }
-            // Enable når gått over LOG.info("KODEVERK-OBJEKT: mottok kodeverdiobjekt som ikke var String - kode {} fra kodeverk {} ", kode, kodeverk);
+            // NOSONAR Enable når gått over LOG.info("KODEVERK-OBJEKT: mottok kodeverdiobjekt som ikke var String - kode {} fra kodeverk {} ", kode, kodeverk);
         }
         return new KodeDto(kodeverk, kode);
     }

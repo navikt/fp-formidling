@@ -18,7 +18,7 @@ public class KodeDto {
     }
 
     /*
-     * Etter at fpsak begynner å serialisere som String isf { "kode": "<kode>", "kodeverk": "<hodeverk>" }
+     * Etter at fpsak begynner å serialisere som String isf { "kode": "<kode>", "kodeverk": "<hodeverk>" } // NOSONAR
      * Så kan man gjøre om alle KodeDto-instanser til String.
      * Eller enda bedre - rett til enum så man slipper <Enum>.fraKode(kodedto.kode) i alle mappere.
      */
@@ -27,7 +27,7 @@ public class KodeDto {
         if (node == null) {
             return null;
         }
-        return TempAvledeKode.getVerdiKodeDto(node, "kode");
+        return TempAvledeKode.getVerdiKodeDto(node, "kode"); // NOSONAR
     }
 
     public String getKode() {

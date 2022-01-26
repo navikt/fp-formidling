@@ -7,18 +7,15 @@ import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTI
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.AppAbacAttributtType;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
-import no.nav.foreldrepenger.fpformidling.web.app.pdp.dto.PipDto;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
 import no.nav.vedtak.sikkerhet.abac.PdpKlient;
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
@@ -46,13 +43,17 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
 
     @Override
     public PdpRequest lagPdpRequest(AbacAttributtSamling attributter) {
-        PdpRequest pdpRequest = new PdpRequest();
-        List<String> aktørIder = new ArrayList<>();
+        var pdpRequest = new PdpRequest();
         Set<UUID> uuids = attributter.getVerdier(StandardAbacAttributtType.BEHANDLING_UUID);
-        Optional<Behandling> behandling = uuids.stream().findFirst().map(domeneobjektProvider::hentBehandling);
+        var behandlingUuids = uuids.stream().distinct().toList();
+        if (behandlingUuids.size() > 1) {
+            throw new IllegalArgumentException("Støtter ikke request med to ulike behandlinger. Må utvides");
+        }
+        var behandling = behandlingUuids.stream().findFirst().map(domeneobjektProvider::hentBehandling);
 
+        List<String> aktørIder = new ArrayList<>();
         behandling.ifPresent(b -> {
-                    PipDto dto = pipRestKlient.hentPipdataForBehandling(b.getUuid().toString());
+                    var dto = pipRestKlient.hentPipdataForBehandling(b.getUuid().toString());
                     aktørIder.addAll(dto.getAktørIder().stream().map(AktørId::getId).toList());
                     pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_SAKSSTATUS, dto.getFagsakStatus());
                     pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_BEHANDLINGSSTATUS, dto.getBehandlingStatus());

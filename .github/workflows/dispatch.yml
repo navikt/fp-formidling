@@ -7,16 +7,10 @@ jobs:
   dispatcher:
     runs-on: ubuntu-latest
     steps:
-      - uses: navikt/github-app-token-generator@v1.1
-        id: get-token
-        with:
-          private-key: ${{ secrets.FP_PRIVATE_KEY }}
-          app-id: ${{ secrets.FP_APP_ID }}
-    
       - name: Slash command dispatch
         uses: peter-evans/slash-command-dispatch@v2.3.0
         with:
-          token: ${{ steps.get-token.outputs.token }}
+          token: ${{ secrets.READER_TOKEN }}
           commands: promote # matcher repository dispatch med navent 'promote-command'
           issue-type: issue
           allow-edits: true

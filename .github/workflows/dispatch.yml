@@ -10,7 +10,7 @@ jobs:
       - name: Slash command dispatch
         uses: peter-evans/slash-command-dispatch@v2.3.0
         with:
-          token: ${{ secrets.READER_TOKEN }}
+          token: ${{ secrets.GH_ACCESS_TOKEN }} # Kan ikke bruke GITHUB_TOKEN, READER_TOKEN eller Github App..
           commands: promote # matcher repository dispatch med navent 'promote-command'
           issue-type: issue
           allow-edits: true

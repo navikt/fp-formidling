@@ -35,7 +35,7 @@
         <felles.version>4.1.14</felles.version>
         <prosesstask.version>3.1.6</prosesstask.version>
         <kontrakter.version>6.1.4</kontrakter.version>
-        <konfig.version>1.1.4</konfig.version>
+        <konfig.version>1.1.5</konfig.version>
 
         <!-- Eksterne -->
         <prometheus.version>0.14.1</prometheus.version>

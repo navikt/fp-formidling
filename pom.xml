@@ -32,8 +32,8 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- Felles artefakter -->
-        <felles.version>4.1.16</felles.version>
-        <prosesstask.version>3.1.6</prosesstask.version>
+        <felles.version>4.1.17</felles.version>
+        <prosesstask.version>3.1.7</prosesstask.version>
         <kontrakter.version>6.1.4</kontrakter.version>
         <konfig.version>1.1.5</konfig.version>
 
@@ -44,7 +44,6 @@
         <kafka.version>3.1.0</kafka.version>
         <logstash.version>7.0.1</logstash.version>
         <logback-syslog4j.version>1.0.0</logback-syslog4j.version>
-        <owaspencoder.version>1.2.3</owaspencoder.version>
         <handlebars.version>4.3.0</handlebars.version>
         <commons-collections.version>4.4</commons-collections.version>
         <jersey.version>2.34</jersey.version>
@@ -263,11 +262,6 @@
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka-clients</artifactId>
                 <version>${kafka.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.owasp.encoder</groupId>
-                <artifactId>encoder</artifactId>
-                <version>${owaspencoder.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.jknack</groupId>

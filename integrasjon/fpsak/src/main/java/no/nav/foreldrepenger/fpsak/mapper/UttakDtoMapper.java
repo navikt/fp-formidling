@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
@@ -28,8 +25,6 @@ import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpsak.mapper.sortering.PeriodeComparator;
 
 public class UttakDtoMapper {
-
-    private static final Logger LOG = LoggerFactory.getLogger(UttakDtoMapper.class);
 
     public static UttakResultatPerioder mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto, UnaryOperator<String> hentNavn) {
         List<UttakResultatPeriode> uttakResultatPerioder = emptyIfNull(resultatPerioderDto.getPerioderSøker()).stream()

@@ -4,7 +4,6 @@ import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
@@ -22,7 +21,6 @@ import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeAktivitetDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPeriodeDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;

@@ -15,6 +15,7 @@ public class UttakResultatPeriodeDto {
     private List<UttakResultatPeriodeAktivitetDto> aktiviteter = new ArrayList<>();
     private KodeDto periodeResultatType;
     private KodeDto periodeResultatÅrsak;
+    private KodeDto periodeUtfallÅrsak;
     private KodeDto graderingAvslagÅrsak;
     private String periodeResultatÅrsakLovhjemmel;
     private String graderingsAvslagÅrsakLovhjemmel;
@@ -25,6 +26,10 @@ public class UttakResultatPeriodeDto {
 
     public KodeDto getPeriodeResultatÅrsak() {
         return periodeResultatÅrsak;
+    }
+
+    public KodeDto getPeriodeUtfallÅrsak() {
+        return periodeUtfallÅrsak;
     }
 
     public KodeDto getGraderingAvslagÅrsak() {

@@ -9,32 +9,37 @@ import no.nav.foreldrepenger.fpformidling.behandling.ÅrsakMedLovReferanse;
 public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
 
     // Her kommer Lovhjemler fra UttakResultatPeriodeDto - søk på bruk av CTOR - lar derfor være å lage full enum her inntil uttak i fpsak enda mer stabilt.
+    public static final String GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR = "GRADERING_AVSLAG_AARSAK";
+    public static final String PERIODE_ÅRSAK_DISCRIMINATOR = "PERIODE_UTFALL_AARSAK";
 
+    // UKJENT
     public static final PeriodeResultatÅrsak UKJENT = new PeriodeResultatÅrsak("-", "UKJENT", null);
-    private static final String GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR = "GRADERING_AVSLAG_AARSAK";
-    public static final PeriodeResultatÅrsak FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4501", GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR, null);
-    private static final String INNVILGET_ÅRSAK_DISCRIMINATOR = "INNVILGET_AARSAK";
-    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID = new PeriodeResultatÅrsak("2011", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE = new PeriodeResultatÅrsak("2010", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2016", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2015", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT= new PeriodeResultatÅrsak("2004", INNVILGET_ÅRSAK_DISCRIMINATOR, null);
-    private static final String IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR = "IKKE_OPPFYLT_AARSAK";
-    // Uttak årsaker
-    public static final PeriodeResultatÅrsak ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT = new PeriodeResultatÅrsak("4023", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak FAR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4012", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak HULL_MELLOM_FORELDRENES_PERIODER = new PeriodeResultatÅrsak("4005", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak MOR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4003", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak BARNET_ER_DØD = new PeriodeResultatÅrsak("4072", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak SØKER_ER_DØD = new PeriodeResultatÅrsak("4071", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak OPPHØR_MEDLEMSKAP = new PeriodeResultatÅrsak("4087", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak MOR_TAR_IKKE_ALLE_UKENE = new PeriodeResultatÅrsak("4095", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
 
-    public static final PeriodeResultatÅrsak FØDSELSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4096", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak ADOPSJONSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4097", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4098", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak OPPTJENINGSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4099", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4080", IKKE_OPPFYLT_ÅRSAK_DISCRIMINATOR, null);
+    // GRADERING avslått
+    public static final PeriodeResultatÅrsak FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4501", GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR, null);
+
+    // UTTAK periode innvilget
+    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID = new PeriodeResultatÅrsak("2011", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE = new PeriodeResultatÅrsak("2010", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2016", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2015", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT= new PeriodeResultatÅrsak("2004", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+
+    // UTTAK periode avslått
+    public static final PeriodeResultatÅrsak ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT = new PeriodeResultatÅrsak("4023", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak FAR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4012", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak HULL_MELLOM_FORELDRENES_PERIODER = new PeriodeResultatÅrsak("4005", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak MOR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4003", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak BARNET_ER_DØD = new PeriodeResultatÅrsak("4072", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak SØKER_ER_DØD = new PeriodeResultatÅrsak("4071", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak OPPHØR_MEDLEMSKAP = new PeriodeResultatÅrsak("4087", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak MOR_TAR_IKKE_ALLE_UKENE = new PeriodeResultatÅrsak("4095", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+
+    public static final PeriodeResultatÅrsak FØDSELSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4096", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak ADOPSJONSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4097", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4098", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak OPPTJENINGSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4099", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4080", PERIODE_ÅRSAK_DISCRIMINATOR, null);
 
     private String kodeverk;
     private String kode;

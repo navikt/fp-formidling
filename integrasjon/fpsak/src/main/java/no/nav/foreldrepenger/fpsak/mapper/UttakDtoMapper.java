@@ -1,14 +1,12 @@
 package no.nav.foreldrepenger.fpsak.mapper;
 
+import static no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak.GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR;
+import static no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak.PERIODE_ÅRSAK_DISCRIMINATOR;
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
@@ -27,8 +25,6 @@ import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpsak.mapper.sortering.PeriodeComparator;
 
 public class UttakDtoMapper {
-
-    private static final Logger LOG = LoggerFactory.getLogger(UttakDtoMapper.class);
 
     public static UttakResultatPerioder mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto, UnaryOperator<String> hentNavn) {
         List<UttakResultatPeriode> uttakResultatPerioder = emptyIfNull(resultatPerioderDto.getPerioderSøker()).stream()
@@ -61,22 +57,11 @@ public class UttakDtoMapper {
     }
 
     private static PeriodeResultatÅrsak velgPerioderesultatÅrsak(UttakResultatPeriodeDto dto) {
-        try {
-            if (dto.getPeriodeResultatÅrsak() == null && dto.getPeriodeUtfallÅrsak() != null) {
-                LOG.info("FORMIDLING uttakkode resultatårsak is null vs utfallårsak {}", dto.getPeriodeUtfallÅrsak().getKode());
-            } else if (dto.getPeriodeResultatÅrsak() != null && dto.getPeriodeUtfallÅrsak() == null) {
-                LOG.info("FORMIDLING uttakkode resultatårsak {} vs utfallårsak null", dto.getPeriodeResultatÅrsak().getKode());
-            } else if (dto.getPeriodeResultatÅrsak() != null && !Objects.equals(dto.getPeriodeResultatÅrsak().getKode(), dto.getPeriodeUtfallÅrsak().getKode())) {
-                LOG.info("FORMIDLING uttakkode resultatårsak {} vs utfallårsak {}", dto.getPeriodeResultatÅrsak().getKode(), dto.getPeriodeUtfallÅrsak().getKode());
-            }
-        } catch (Exception e) {
-            // NOSONAR
-        }
-        return dto.getPeriodeResultatÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getPeriodeResultatÅrsak().getKode(), dto.getPeriodeResultatÅrsak().getKodeverk(), dto.getPeriodeResultatÅrsakLovhjemmel());
+        return dto.getPeriodeUtfallÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getPeriodeUtfallÅrsak().getKode(), PERIODE_ÅRSAK_DISCRIMINATOR, dto.getPeriodeResultatÅrsakLovhjemmel());
     }
 
     private static PeriodeResultatÅrsak velgGraderingsavslagÅrsak(UttakResultatPeriodeDto dto) {
-        return dto.getGraderingAvslagÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getGraderingAvslagÅrsak().getKode(), dto.getGraderingAvslagÅrsak().getKodeverk(), dto.getGraderingsAvslagÅrsakLovhjemmel());
+        return dto.getGraderingAvslagÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getGraderingAvslagÅrsak().getKode(), GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR, dto.getGraderingsAvslagÅrsakLovhjemmel());
     }
 
     static UttakResultatPeriodeAktivitet aktivitetFraDto(UttakResultatPeriodeAktivitetDto dto, UnaryOperator<String> hentNavn) {

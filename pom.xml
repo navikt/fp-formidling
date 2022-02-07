@@ -40,7 +40,7 @@
         <!-- Eksterne -->
         <prometheus.version>0.14.1</prometheus.version>
         <swagger.version>2.1.12</swagger.version>
-        <swagger-ui.version>4.4.1</swagger-ui.version>
+        <swagger-ui.version>4.5.0</swagger-ui.version>
         <kafka.version>3.1.0</kafka.version>
         <logstash.version>7.0.1</logstash.version>
         <logback-syslog4j.version>1.0.0</logback-syslog4j.version>

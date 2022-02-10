@@ -43,6 +43,7 @@ import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceRole;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceUtil;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.isso.IssoApplication;
+import no.nav.vedtak.sikkerhet.ContextPathHolder;
 import no.nav.vedtak.sikkerhet.jaspic.OidcAuthModule;
 
 public class JettyServer {
@@ -78,6 +79,7 @@ public class JettyServer {
 
     private JettyServer(int serverPort) {
         this.serverPort = serverPort;
+        ContextPathHolder.instance(CONTEXT_PATH);
     }
 
     private void bootStrap() throws Exception {

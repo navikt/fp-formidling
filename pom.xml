@@ -38,15 +38,15 @@
         <konfig.version>1.1.5</konfig.version>
 
         <!-- Eksterne -->
-        <prometheus.version>0.14.1</prometheus.version>
-        <swagger.version>2.1.12</swagger.version>
-        <swagger-ui.version>4.4.1</swagger-ui.version>
+        <prometheus.version>0.15.0</prometheus.version>
+        <swagger.version>2.1.13</swagger.version>
+        <swagger-ui.version>4.5.0</swagger-ui.version>
         <kafka.version>3.1.0</kafka.version>
         <logstash.version>7.0.1</logstash.version>
         <logback-syslog4j.version>1.0.0</logback-syslog4j.version>
         <handlebars.version>4.3.0</handlebars.version>
         <commons-collections.version>4.4</commons-collections.version>
-        <jersey.version>2.34</jersey.version>
+        <jersey.version>2.35</jersey.version>
         <hikari.version>5.0.1</hikari.version>
         <flyway.version>8.4.4</flyway.version>
         <postgresql.version>42.3.2</postgresql.version>
@@ -65,7 +65,7 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-bom</artifactId>
-                <version>10.0.7</version>
+                <version>10.0.8</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>

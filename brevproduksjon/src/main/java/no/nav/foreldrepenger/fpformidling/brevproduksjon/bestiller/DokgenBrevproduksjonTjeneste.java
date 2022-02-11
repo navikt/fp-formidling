@@ -118,14 +118,13 @@ public class DokgenBrevproduksjonTjeneste {
             } catch (Exception e) {
                 dokumentdata.getFelles().anonymiser();
                 SECURE_LOGGER.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
-                throw new TekniskException("FPFORMIDLING-221045",
-                        String.format("Klarte ikke å produsere mal %s for behandling %s.", dokumentMal.getKode(), behandling.getUuid().toString()),
-                        e);
+                throw new TekniskException("FPFORMIDLING-221045", String.format("Klarte ikke å produsere mal %s for behandling %s.", dokumentMal.getKode(), behandling.getUuid().toString()), e);
             }
-            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
-                    behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg);
-            JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
 
+            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
+                    behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg, behandling.getBehandlingsresultat().getOverskrift());
+
+            JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
             if (innsynMedVedlegg) {
                 leggTilVedleggOgFerdigstillForsendelse(dokumentHendelse.getBehandlingUuid(), journalpostId);
             }

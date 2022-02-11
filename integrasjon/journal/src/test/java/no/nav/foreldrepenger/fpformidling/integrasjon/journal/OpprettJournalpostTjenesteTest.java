@@ -60,7 +60,7 @@ public class OpprettJournalpostTjenesteTest {
 
         // Act
         OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
-                dokumentFelles, dokumentHendelse, saksnummer, true);
+                dokumentFelles, dokumentHendelse, saksnummer, true, null);
 
         // Assert
         Mockito.verify(journalpostRestKlient).opprettJournalpost(requestCaptor.capture(), eq(true));

@@ -25,6 +25,7 @@ import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
+import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.EngangsstønadInnvilgelseDokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapperProvider;
@@ -45,6 +46,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpost
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.DokumentOpprettResponse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.OpprettJournalpostResponse;
 import no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk.task.PubliserHistorikkTask;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.personopplysning.NavBrukerKjønn;
@@ -132,7 +134,7 @@ public class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(2)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(2))
-                .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true));
+                .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null));
         verify(historikkRepository, times(2)).lagre(historikkCaptor.capture());
         DokumentHistorikkinnslag historikkinnslag = historikkCaptor.getAllValues().get(0);
         assertThat(historikkinnslag.getBehandlingUuid()).isEqualTo(BEHANDLING_UUID);
@@ -165,7 +167,7 @@ public class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(1))
-                .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true));
+                .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null));
         verify(historikkRepository, times(1)).lagre(any(DokumentHistorikkinnslag.class));
         verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
@@ -201,6 +203,7 @@ public class BrevBestillerTjenesteTest {
                 .medUuid(BEHANDLING_UUID)
                 .medFagsakBackend(fagsakBackend)
                 .medSpråkkode(Språkkode.NB)
+                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
                 .leggTilResourceLink(
                         harVerge ? BehandlingResourceLink.ny().medRel("soeker-verge").build() : BehandlingResourceLink.ny().medRel("annet").build())
                 .build();
@@ -230,7 +233,7 @@ public class BrevBestillerTjenesteTest {
         OpprettJournalpostResponse opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), "", true,
                 List.of(dokumentOpprettResponse));
         when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse),
-                eq(SAKSNUMMER), eq(true)))
+                eq(SAKSNUMMER), eq(true), eq(null)))
                         .thenReturn(opprettJournalpostResponse);
     }
 }

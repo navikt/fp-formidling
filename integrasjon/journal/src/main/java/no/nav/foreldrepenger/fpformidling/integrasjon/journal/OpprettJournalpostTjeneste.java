@@ -43,12 +43,12 @@ public class OpprettJournalpostTjeneste {
     }
 
     public OpprettJournalpostResponse journalførUtsendelse(byte[] brev, DokumentMalType dokumentMalType, DokumentFelles dokumentFelles,
-            DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill) {
+                                                           DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill, String overskriftVedFritekstBrev) {
         LOG.info("Starter journalføring av brev for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode());
 
         try {
             OpprettJournalpostResponse response = journalpostRestKlient
-                    .opprettJournalpost(lagRequest(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer, ferdigstill), ferdigstill);
+                    .opprettJournalpost(lagRequest(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer, ferdigstill, overskriftVedFritekstBrev), ferdigstill);
 
             if (ferdigstill && !response.erFerdigstilt()) {
                 LOG.warn("Journalpost {} ble ikke ferdigstilt", response.getJournalpostId());
@@ -64,8 +64,8 @@ public class OpprettJournalpostTjeneste {
     }
 
     private OpprettJournalpostRequest lagRequest(byte[] brev, DokumentMalType dokumentMalType, DokumentFelles dokumentFelles,
-            DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill) {
-        DokumentOpprettRequest dokument = new DokumentOpprettRequest(getTittel(dokumentHendelse, dokumentMalType), dokumentMalType.getKode(), null,
+            DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill, String overskriftVedFritekstbrev) {
+        DokumentOpprettRequest dokument = new DokumentOpprettRequest(getTittel(dokumentHendelse, dokumentMalType, overskriftVedFritekstbrev), dokumentMalType.getKode(), null,
                 brev);
 
         AvsenderMottaker avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), dokumentFelles.getMottakerNavn(),
@@ -77,7 +77,7 @@ public class OpprettJournalpostTjeneste {
                 bruker,
                 TEMA_FORELDREPENGER,
                 mapBehandlingsTema(dokumentHendelse.getYtelseType()),
-                getTittel(dokumentHendelse, dokumentMalType),
+                getTittel(dokumentHendelse, dokumentMalType, overskriftVedFritekstbrev),
                 ferdigstill ? AUTOMATISK_JOURNALFØRENDE_ENHET : null,
                 lagSak(saksnummer),
                 List.of(dokument));
@@ -87,8 +87,12 @@ public class OpprettJournalpostTjeneste {
         return new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), FAGSAKSTYPE, null, null);
     }
 
-    private String getTittel(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMalType) {
-        return dokumentHendelse.getTittel() != null ? dokumentHendelse.getTittel() : dokumentMalType.getNavn();
+    private String getTittel(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMalType, String overskriftVedFritekstbrev ) {
+        if (dokumentHendelse.getTittel() != null) {
+            return dokumentHendelse.getTittel();
+        } else if (overskriftVedFritekstbrev != null) {
+            return overskriftVedFritekstbrev;
+        } else return dokumentMalType.getNavn();
     }
 
     private String mapBehandlingsTema(FagsakYtelseType ytelseType) {

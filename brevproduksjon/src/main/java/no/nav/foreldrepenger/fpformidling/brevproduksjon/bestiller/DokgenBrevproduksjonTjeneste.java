@@ -122,7 +122,7 @@ public class DokgenBrevproduksjonTjeneste {
             }
 
             OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
-                    behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg, behandling.getBehandlingsresultat().getOverskrift());
+                    behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg, behandling.getBehandlingsresultat() != null ? behandling.getBehandlingsresultat().getOverskrift() : null);
 
             JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
             if (innsynMedVedlegg) {

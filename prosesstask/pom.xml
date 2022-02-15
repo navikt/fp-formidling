@@ -20,9 +20,8 @@
         </dependency>
         <dependency>
             <groupId>no.nav.vedtak.prosesstask</groupId>
-            <artifactId>prosesstask-legacy</artifactId>
+            <artifactId>prosesstask</artifactId>
         </dependency>
-
         <!-- Test -->
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>

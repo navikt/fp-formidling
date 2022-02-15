@@ -129,7 +129,7 @@ public class DokgenBrevproduksjonTjeneste {
                 leggTilVedleggOgFerdigstillForsendelse(dokumentHendelse.getBehandlingUuid(), journalpostId);
             }
 
-            distribuerBrevOgLagHistorikk(dokumentHendelse, dokumentMal, response, journalpostId, innsynMedVedlegg);
+            distribuerBrevOgLagHistorikk(dokumentHendelse, dokumentMal, response, journalpostId, innsynMedVedlegg, dokumentFelles.getSaksnummer().getVerdi());
         }
     }
 
@@ -143,9 +143,9 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMal, OpprettJournalpostResponse response,
-            JournalpostId journalpostId, boolean innsynMedVedlegg) {
+            JournalpostId journalpostId, boolean innsynMedVedlegg, String saksnummer) {
         ProsessTaskGruppe taskGruppe = new ProsessTaskGruppe();
-        taskGruppe.addNesteSekvensiell(opprettDistribuerBrevTask(journalpostId, innsynMedVedlegg, dokumentHendelse.getBehandlingUuid()));
+        taskGruppe.addNesteSekvensiell(opprettDistribuerBrevTask(journalpostId, innsynMedVedlegg, dokumentHendelse.getBehandlingUuid(), saksnummer));
         DokumentHistorikkinnslag historikkinnslag = lagHistorikkinnslag(dokumentHendelse, response, dokumentMal);
         taskGruppe.addNesteSekvensiell(opprettPubliserHistorikkTask(historikkinnslag));
         taskTjeneste.lagre(taskGruppe);
@@ -171,10 +171,11 @@ public class DokgenBrevproduksjonTjeneste {
         return prosessTaskData;
     }
 
-    private ProsessTaskData opprettDistribuerBrevTask(JournalpostId journalpostId, boolean innsynMedVedlegg, UUID behandlingUuId) {
+    private ProsessTaskData opprettDistribuerBrevTask(JournalpostId journalpostId, boolean innsynMedVedlegg, UUID behandlingUuId, String saksnummer) {
         ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, (String.valueOf(behandlingUuId)));
+        prosessTaskData.setProperty(BrevTaskProperties.SAKSNUMMER, saksnummer);
         // må vente til vedlegg er knyttet og journalpost er ferdigstilt
         if (innsynMedVedlegg) {
             prosessTaskData.setNesteKjøringEtter(LocalDateTime.now().plusMinutes(1));

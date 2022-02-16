@@ -6,6 +6,7 @@ import static no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem.FP
 
 import java.net.URI;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -37,12 +38,12 @@ public class JerseyDokdistKlient extends AbstractJerseyOidcRestClient implements
     }
 
     @Override
-    public void distribuerJournalpost(JournalpostId id) {
+    public void distribuerJournalpost(JournalpostId id, UUID bestillingUuid) {
         LOG.trace("Distribuerer journalpost {} til {}", id, target.getUri());
         Optional.ofNullable(
                 invoke(target
                         .request(APPLICATION_JSON_TYPE)
-                        .buildPost(json(new DistribuerJournalpostRequest(id, FPSAK))), DistribuerJournalpostResponse.class))
+                        .buildPost(json(new DistribuerJournalpostRequest(id, FPSAK, bestillingUuid))), DistribuerJournalpostResponse.class))
                 .ifPresentOrElse(v -> LOG.info("Distribuert {} med bestillingsId {}", id, v.getBestillingsId()),
                         () -> { throw new TekniskException("FPFORMIDLING-647352", String.format("Fikk tomt svar ved kall til dokdist for %s.", id)); });
         LOG.info("Distribuerert journalpost {} til {} OK", id, target.getUri());

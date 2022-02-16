@@ -35,8 +35,8 @@ public class DistribuerJournalpostRequest {
         this.dokumentProdApp = dokumentProdApp;
     }
 
-    public DistribuerJournalpostRequest(JournalpostId id, Fagsystem fagsystem) {
-        this(id.getVerdi(), UUID.randomUUID().toString(), fagsystem.getOffisiellKode(), fagsystem.getKode());
+    public DistribuerJournalpostRequest(JournalpostId id, Fagsystem fagsystem, UUID bestillingUuid) {
+        this(id.getVerdi(), String.valueOf(bestillingUuid), fagsystem.getOffisiellKode(), fagsystem.getKode());
     }
 
     public String getJournalpostId() {

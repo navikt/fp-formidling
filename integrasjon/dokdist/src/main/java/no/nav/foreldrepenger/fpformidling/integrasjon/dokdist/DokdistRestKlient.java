@@ -39,8 +39,8 @@ public class DokdistRestKlient implements Dokdist {
     }
 
     @Override
-    public void distribuerJournalpost(JournalpostId journalpostId) {
-        DistribuerJournalpostRequest request = lagRequest(journalpostId);
+    public void distribuerJournalpost(JournalpostId journalpostId, UUID bestillingUuid) {
+        DistribuerJournalpostRequest request = lagRequest(journalpostId, bestillingUuid);
         try {
             URIBuilder uriBuilder = new URIBuilder(endpointDokdistRestBase + "/distribuerjournalpost");
             Optional<DistribuerJournalpostResponse> response = oidcRestClient.postReturnsOptional(uriBuilder.build(), request,
@@ -55,9 +55,8 @@ public class DokdistRestKlient implements Dokdist {
         }
     }
 
-    private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId) {
-        String batchId = UUID.randomUUID().toString();
-        LOGGER.info("Bestiller distribusjon av {} med batchId {}", journalpostId, batchId);
-        return new DistribuerJournalpostRequest(journalpostId.getVerdi(), batchId, Fagsystem.FPSAK.getOffisiellKode(), Fagsystem.FPSAK.getKode());
+    private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId, UUID bestillingUuid) {
+        LOGGER.info("Bestiller distribusjon av {} med batchId {}", journalpostId, bestillingUuid);
+        return new DistribuerJournalpostRequest(journalpostId.getVerdi(), String.valueOf(bestillingUuid), Fagsystem.FPSAK.getOffisiellKode(), Fagsystem.FPSAK.getKode());
     }
 }

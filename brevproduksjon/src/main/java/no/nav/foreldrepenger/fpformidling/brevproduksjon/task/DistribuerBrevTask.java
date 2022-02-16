@@ -1,7 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
+import java.util.UUID;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+
+import org.apache.kafka.common.Uuid;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Dokdist;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
@@ -27,6 +31,7 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
         JournalpostId journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(BrevTaskProperties.JOURNALPOST_ID));
-        dokdist.distribuerJournalpost(journalpostId);
+        var bestillingUuid = UUID.fromString(prosessTaskData.getPropertyValue(BrevTaskProperties.BESTILLING_UUID));
+        dokdist.distribuerJournalpost(journalpostId, bestillingUuid);
     }
 }

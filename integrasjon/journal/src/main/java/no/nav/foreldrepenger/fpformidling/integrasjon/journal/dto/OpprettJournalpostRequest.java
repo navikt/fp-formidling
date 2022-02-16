@@ -93,6 +93,10 @@ public class OpprettJournalpostRequest {
         return dokumenter;
     }
 
+    public void setEksternReferanseId(String eksternReferanseId) {
+        this.eksternReferanseId = eksternReferanseId;
+    }
+
     @Override
     public String toString() {
         return "OpprettJournalpostRequest{" +

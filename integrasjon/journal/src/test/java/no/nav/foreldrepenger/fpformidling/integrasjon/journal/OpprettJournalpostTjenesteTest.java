@@ -76,7 +76,7 @@ public class OpprettJournalpostTjenesteTest {
         assertThat(genRequest.getAvsenderMottaker().getIdType()).isEqualByComparingTo(AvsenderMottakerIdType.FNR);
         assertThat(genRequest.getJournalfoerendeEnhet()).isEqualTo("9999");
         assertThat(genRequest.getBruker().getId()).isEqualTo(FNR);
-        assertThat(genRequest.getEksternReferanseId()).isEqualTo(null);
+        assertThat(genRequest.getEksternReferanseId()).isEqualTo(dokumentHendelse.getBestillingUuid().toString());
         assertThat(genRequest.getDokumenter().get(0).getBrevkode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getKode());
         byte[] brev = genRequest.getDokumenter().get(0).getDokumentvarianter().get(0).getFysiskDokument();
         assertThat(brev).contains(GEN_BREV);

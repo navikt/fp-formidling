@@ -72,7 +72,7 @@ public class OpprettJournalpostTjeneste {
                 hentAvsenderMotakkerType(dokumentFelles.getMottakerType()));
         Bruker bruker = new Bruker(dokumentFelles.getSakspartId(), BrukerIdType.FNR);
 
-        return new OpprettJournalpostRequest(
+        var journalpostRequest = new OpprettJournalpostRequest(
                 avsenderMottaker,
                 bruker,
                 TEMA_FORELDREPENGER,
@@ -81,6 +81,9 @@ public class OpprettJournalpostTjeneste {
                 ferdigstill ? AUTOMATISK_JOURNALFØRENDE_ENHET : null,
                 lagSak(saksnummer),
                 List.of(dokument));
+
+        journalpostRequest.setEksternReferanseId(String.valueOf(dokumentHendelse.getBestillingUuid()));
+        return journalpostRequest;
     }
 
     private Sak lagSak(Saksnummer saksnummer) {

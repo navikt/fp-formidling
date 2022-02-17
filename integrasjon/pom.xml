@@ -7,7 +7,7 @@
     <parent>
         <artifactId>fpformidling</artifactId>
         <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-        <version>${revision}${sha1}${changelist}</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>integrasjon</artifactId>

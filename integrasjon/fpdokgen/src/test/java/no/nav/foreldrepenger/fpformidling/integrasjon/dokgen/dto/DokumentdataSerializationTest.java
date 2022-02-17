@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.behandling.RevurderingVarslingÅrsak;
@@ -41,6 +40,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakTyp
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.vilkår.VilkårType;
+import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 public class DokumentdataSerializationTest {
 

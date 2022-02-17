@@ -39,14 +39,13 @@ jobs:
 
       - name: Set build version
         run: |
-          echo "BUILD_VERSION=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+          echo "BUILD_VERSION=2.0-$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
       - name: Build artifacts & deploy
         run: |
           echo "Building artifacts $BUILD_VERSION"
-          mvn jacoco:prepare-agent deploy jacoco:report sonar:sonar -e --batch-mode --settings .github/.m2/settings.xml -Dchangelist= -Dsha1=-${BUILD_VERSION} -Dsonar.login=${SONAR_TOKEN}
+          mvn jacoco:prepare-agent deploy jacoco:report sonar:sonar -e --batch-mode --settings .github/.m2/settings.xml -Drevision=${BUILD_VERSION} -Dsonar.login=${SONAR_TOKEN}
           echo "Deployed artifacts"
-          echo "TAG=$(mvn help:evaluate --batch-mode --settings .github/.m2/settings.xml --file .flattened -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,11 +61,11 @@ jobs:
 
       - name: Bygg, tag og push Docker image
         run: |
-          docker build --pull --tag ${IMAGE_BASE}:${TAG} --tag ${IMAGE_BASE}:latest .
+          docker build --pull --tag ${IMAGE_BASE}:${BUILD_VERSION} --tag ${IMAGE_BASE}:latest .
           docker push ${IMAGE_BASE} --all-tags
 
       - name: Lukk gamle deployment-issues
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -89,7 +88,7 @@ jobs:
       -  name: Opprett deployment issue
          id: createdeployissue
          if: success()
-         uses: actions/github-script@v5
+         uses: actions/github-script@v6
          with:
            github-token: ${{secrets.GITHUB_TOKEN}}
            script: |
@@ -97,7 +96,7 @@ jobs:
                owner: context.issue.owner,
                repo: context.issue.repo,
                labels: ['deployment'],
-               title: 'Deploy av ${{ env.TAG }}',
+               title: 'Deploy av ${{ env.BUILD_VERSION }}',
                body: '${{ github.sha }}'})
              .then(response => {
                      core.setOutput('number', response.data.number);
@@ -117,6 +116,6 @@ jobs:
           -d '{"ref":"master",
                   "inputs":{
                       "trigger": "${{ github.repository }}",
-                      "version": "${{ env.TAG }}",
+                      "version": "${{ env.BUILD_VERSION }}",
                       "issue_number": "${{ steps.createdeployissue.outputs.number }}"
                   }}'

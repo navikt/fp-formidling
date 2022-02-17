@@ -95,7 +95,7 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(action = CREATE, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response bestillDokument(
-            @Parameter(description = "Inneholder kode til brevmal og data som skal flettes inn i brevet") @TilpassetAbacAttributt(supplierClass = BestillingSupplier.class) @Valid DokumentbestillingV2Dto dokumentbestillingDto) { // NOSONAR
+            @Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = BestillingSupplier.class) @Valid DokumentbestillingV2Dto dokumentbestillingDto) { // NOSONAR
 
         DokumentHendelse hendelse = DokumentHendelseDtoMapper.mapDokumentHendelseFraV2Dto(dokumentbestillingDto);
         hendelseHandler.prosesser(hendelse);

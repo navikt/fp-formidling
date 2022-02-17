@@ -102,7 +102,7 @@ public class DokgenBrevproduksjonTjeneste {
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
             DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
             Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
-            dokumentFelles.setBrevData(no.nav.vedtak.mapper.json.DefaultJsonMapper.toJson(dokumentdata));
+            dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
 
             byte[] brev;
             try {

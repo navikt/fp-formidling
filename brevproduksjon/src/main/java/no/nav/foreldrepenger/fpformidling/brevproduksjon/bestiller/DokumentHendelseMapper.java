@@ -16,7 +16,7 @@ public class DokumentHendelseMapper {
     public static DokumentHendelse mapFra(DokumentbestillingDto brevDto) {
         return DokumentHendelse.builder()
                 .medBehandlingUuid(brevDto.getBehandlingUuid())
-                .medBestillingUuid(brevDto.getDokumentbestillingUuid())
+                .medBestillingUuid(brevDto.getDokumentbestillingUuid() != null ? brevDto.getDokumentbestillingUuid() : UUID.randomUUID())
                 .medYtelseType(utledYtelseType(brevDto.getYtelseType().getKode()))
                 .medFritekst(brevDto.getFritekst())
                 .medTittel(brevDto.getTittel())

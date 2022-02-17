@@ -39,12 +39,12 @@ jobs:
 
       - name: Set build version
         run: |
-          echo "BUILD_VERSION=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
+          echo "BUILD_VERSION=2.0-$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
       - name: Build med sonar analyse
         if: github.actor != 'dependabot[bot]'
         run: |
           echo "Building $BUILD_VERSION"
-          mvn jacoco:prepare-agent verify jacoco:report sonar:sonar -e --batch-mode --settings .github/.m2/settings.xml -Dchangelist= -Dsha1=-${BUILD_VERSION} -Dsonar.login=${SONAR_TOKEN}
+          mvn jacoco:prepare-agent verify jacoco:report sonar:sonar -e --batch-mode --settings .github/.m2/settings.xml -Drevision=${BUILD_VERSION} -Dsonar.login=${SONAR_TOKEN}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,7 +55,7 @@ jobs:
         if: github.actor == 'dependabot[bot]'
         run: |
           echo "Building $BUILD_VERSION"
-          mvn verify -e --batch-mode --settings .github/.m2/settings.xml -Dchangelist= -Dsha1=-${BUILD_VERSION}
+          mvn verify -e --batch-mode --settings .github/.m2/settings.xml -Drevision=${BUILD_VERSION}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DATASOURCE_HOST: localhost

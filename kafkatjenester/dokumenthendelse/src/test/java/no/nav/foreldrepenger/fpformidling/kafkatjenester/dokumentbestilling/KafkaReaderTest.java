@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import no.nav.foreldrepenger.felles.integrasjon.rest.DefaultJsonMapper;
 import no.nav.foreldrepenger.fpformidling.dbstoette.JpaExtension;
 import no.nav.foreldrepenger.fpformidling.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.fpformidling.hendelser.HendelseRepository;
@@ -25,6 +24,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.felles.dokumentbestilling.kodeverk.FagsakYtelseType;
 import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
+import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(JpaExtension.class)

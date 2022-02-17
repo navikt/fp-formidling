@@ -5,6 +5,8 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.YtelseType;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingV2Dto;
 import no.nav.vedtak.felles.dokumentbestilling.v1.DokumentbestillingV1;
 
 public class DokumentHendelseDtoMapper {
@@ -21,6 +23,13 @@ public class DokumentHendelseDtoMapper {
             return null;
         }
         return FagsakYtelseType.fraKode(ytelseType);
+    }
+
+    private static FagsakYtelseType utledYtelseType(YtelseType ytelseType) {
+        if (ytelseType == null) {
+            return null;
+        }
+        return FagsakYtelseType.fraKode(ytelseType.name());
     }
 
     private static DokumentMalType utleddokumentMalType(String dokumentmal) {
@@ -47,6 +56,19 @@ public class DokumentHendelseDtoMapper {
                 .medDokumentMalType(utleddokumentMalType(dokumentbestilling.getDokumentMal()))
                 .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(dokumentbestilling.getArsakskode()))
                 .medBehandlendeEnhetNavn(dokumentbestilling.getBehandlendeEnhetNavn())
+                .build();
+    }
+
+    public static DokumentHendelse mapDokumentHendelseFraV2Dto(DokumentbestillingV2Dto dokumentbestilling) {
+        return DokumentHendelse.builder()
+                .medBehandlingUuid(dokumentbestilling.behandlingUuid())
+                .medBestillingUuid(dokumentbestilling.dokumentbestillingUuid())
+                .medYtelseType(utledYtelseType(dokumentbestilling.ytelseType()))
+                .medFritekst(dokumentbestilling.fritekst())
+                .medHistorikkAktør(utledHistorikkAktør(dokumentbestilling.historikkAktør().name()))
+                .medDokumentMalType(utleddokumentMalType(dokumentbestilling.dokumentMal()))
+                .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(dokumentbestilling.arsakskode()))
+                .medBehandlendeEnhetNavn(dokumentbestilling.behandlendeEnhetNavn())
                 .build();
     }
 }

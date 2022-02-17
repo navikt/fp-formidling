@@ -99,10 +99,12 @@ public class OpprettJournalpostTjeneste {
     }
 
     private String mapBehandlingsTema(FagsakYtelseType ytelseType) {
-        return ytelseType.gjelderEngangsstønad() ? BehandlingTema.ENGANGSSTØNAD.getOffisiellKode()
-                : ytelseType.gjelderForeldrepenger() ? BehandlingTema.FORELDREPENGER.getOffisiellKode()
-                        : ytelseType.gjelderSvangerskapspenger() ? BehandlingTema.SVANGERSKAPSPENGER.getOffisiellKode()
-                                : BehandlingTema.UDEFINERT.getOffisiellKode();
+        return switch (ytelseType) {
+            case ENGANGSTØNAD -> BehandlingTema.ENGANGSSTØNAD.getOffisiellKode();
+            case FORELDREPENGER -> BehandlingTema.FORELDREPENGER.getOffisiellKode();
+            case SVANGERSKAPSPENGER -> BehandlingTema.SVANGERSKAPSPENGER.getOffisiellKode();
+            case UDEFINERT -> BehandlingTema.UDEFINERT.getOffisiellKode();
+        };
     }
 
     private AvsenderMottakerIdType hentAvsenderMotakkerType(DokumentFelles.MottakerType mottakerType) {

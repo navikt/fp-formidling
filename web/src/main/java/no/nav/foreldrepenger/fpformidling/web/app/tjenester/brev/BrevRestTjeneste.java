@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev;
 
+import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.CREATE;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.function.Function;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
@@ -22,20 +24,26 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.brevmal.BrevmalTjeneste;
+import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.kafkatjenester.dokumentbestilling.DokumentHendelseDtoMapper;
+import no.nav.foreldrepenger.fpformidling.kafkatjenester.dokumentbestilling.HendelseHandler;
 import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BehandlingUuidDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingV2Dto;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 
 @Path("/brev")
+@Transactional
 @ApplicationScoped
 public class BrevRestTjeneste {
 
     private BrevmalTjeneste brevmalTjeneste;
     private BrevBestillerTjeneste brevBestillerTjeneste;
+    private HendelseHandler hendelseHandler;
 
     public BrevRestTjeneste() {
         //CDI
@@ -43,9 +51,11 @@ public class BrevRestTjeneste {
 
     @Inject
     public BrevRestTjeneste(BrevmalTjeneste brevmalTjeneste,
-                            BrevBestillerTjeneste brevBestillerApplikasjonTjeneste) {
+                            BrevBestillerTjeneste brevBestillerApplikasjonTjeneste,
+                            HendelseHandler hendelseHandler) {
         this.brevmalTjeneste = brevmalTjeneste;
         this.brevBestillerTjeneste = brevBestillerApplikasjonTjeneste;
+        this.hendelseHandler = hendelseHandler;
     }
 
     @GET
@@ -59,15 +69,6 @@ public class BrevRestTjeneste {
         return brevmalTjeneste.hentBrevmalerFor(uuidDto.getBehandlingUuid()); // NOSONAR
     }
 
-    public static class BehandlingUuidAbacDataSupplier implements Function<Object, AbacDataAttributter> {
-
-        @Override
-        public AbacDataAttributter apply(Object obj) {
-            var req = (BehandlingUuidDto) obj;
-            return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid());
-        }
-    }
-
     @POST
     @Path("/forhaandsvis")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -75,7 +76,7 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(action = READ, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response forhaandsvisDokument(
-            @Parameter(description = "Inneholder kode til brevmal og data som skal flettes inn i brevet") @Valid AbacDokumentbestillingDto dokumentbestillingDto) { // NOSONAR
+            @Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @Valid AbacDokumentbestillingDto dokumentbestillingDto) { // NOSONAR
         byte[] dokument = brevBestillerTjeneste.forhandsvisBrev(dokumentbestillingDto);
 
         if (dokument != null && dokument.length != 0) {
@@ -85,5 +86,36 @@ public class BrevRestTjeneste {
             return responseBuilder.build();
         }
         return Response.serverError().build();
+    }
+
+    @POST
+    @Path("/bestill")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(description = "Bestiller, produserer og journalfører brevet", tags = "brev")
+    @BeskyttetRessurs(action = CREATE, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK)
+    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
+    public Response bestillDokument(
+            @Parameter(description = "Inneholder kode til brevmal og data som skal flettes inn i brevet") @TilpassetAbacAttributt(supplierClass = BestillingSupplier.class) @Valid DokumentbestillingV2Dto dokumentbestillingDto) { // NOSONAR
+
+        DokumentHendelse hendelse = DokumentHendelseDtoMapper.mapDokumentHendelseFraV2Dto(dokumentbestillingDto);
+        hendelseHandler.prosesser(hendelse);
+
+        return Response.ok().build();
+    }
+
+    public static class BehandlingUuidAbacDataSupplier implements Function<Object, AbacDataAttributter> {
+        @Override
+        public AbacDataAttributter apply(Object obj) {
+            var req = (BehandlingUuidDto) obj;
+            return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid());
+        }
+    }
+
+    public static class BestillingSupplier implements Function<Object, AbacDataAttributter> {
+        @Override
+        public AbacDataAttributter apply(Object obj) {
+            var req = (DokumentbestillingV2Dto) obj;
+            return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid());
+        }
     }
 }

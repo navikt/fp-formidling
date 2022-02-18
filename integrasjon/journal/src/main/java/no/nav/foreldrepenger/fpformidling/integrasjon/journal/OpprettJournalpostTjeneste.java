@@ -93,7 +93,7 @@ public class OpprettJournalpostTjeneste {
     private String getTittel(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMalType, String overskriftVedFritekstbrev ) {
         if (dokumentHendelse.getTittel() != null) {
             return dokumentHendelse.getTittel();
-        } else if (overskriftVedFritekstbrev != null) {
+        } else if (DokumentMalType.FRITEKSTBREV.equals(dokumentMalType) && overskriftVedFritekstbrev != null) {
             return overskriftVedFritekstbrev;
         } else return dokumentMalType.getNavn();
     }

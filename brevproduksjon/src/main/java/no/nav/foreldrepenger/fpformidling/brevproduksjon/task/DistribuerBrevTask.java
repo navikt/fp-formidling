@@ -31,7 +31,8 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
         JournalpostId journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(BrevTaskProperties.JOURNALPOST_ID));
-        var bestillingUuid = UUID.fromString(prosessTaskData.getPropertyValue(BrevTaskProperties.BESTILLING_UUID));
+        var propertyValue = prosessTaskData.getPropertyValue(BrevTaskProperties.BESTILLING_UUID);
+        var bestillingUuid = UUID.fromString(propertyValue != null ? propertyValue : UUID.randomUUID().toString()); //TODO: UUID.randomUUID().toString() skal vekk etter taskene har gått gjennom
         dokdist.distribuerJournalpost(journalpostId, bestillingUuid);
     }
 }

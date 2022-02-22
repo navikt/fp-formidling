@@ -36,6 +36,7 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse
     _8310("8310", "14-4"),
     PERIODE_SAMTIDIG_SOM_FERIE("8311", "14-4"),
     _8313("8313", "14-4"),
+    _8314("8314", "14-4"),
             ;
 
     private static final Map<String, PeriodeIkkeOppfyltÅrsak> KODER = new LinkedHashMap<>();

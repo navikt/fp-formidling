@@ -30,7 +30,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- Felles artefakter -->
-        <felles.version>4.1.17</felles.version>
+        <felles.version>4.1.18</felles.version>
         <prosesstask.version>3.1.7</prosesstask.version>
         <kontrakter.version>6.1.6</kontrakter.version>
         <konfig.version>1.1.5</konfig.version>
@@ -425,7 +425,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.10.0</version>
                     <configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>

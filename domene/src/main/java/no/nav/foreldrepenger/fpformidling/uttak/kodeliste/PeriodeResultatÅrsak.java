@@ -40,6 +40,8 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
     public static final PeriodeResultatÅrsak FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4098", PERIODE_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak OPPTJENINGSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4099", PERIODE_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4080", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak BARN_OVER_3_ÅR = new PeriodeResultatÅrsak("4022", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak STØNADSPERIODE_NYTT_BARN = new PeriodeResultatÅrsak("4104", PERIODE_ÅRSAK_DISCRIMINATOR, null);
 
     private String kodeverk;
     private String kode;
@@ -61,7 +63,9 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
                 FØDSELSVILKÅRET_IKKE_OPPFYLT.getKode(),
                 ADOPSJONSVILKÅRET_IKKE_OPPFYLT.getKode(),
                 FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT.getKode(),
-                OPPTJENINGSVILKÅRET_IKKE_OPPFYLT.getKode()
+                OPPTJENINGSVILKÅRET_IKKE_OPPFYLT.getKode(),
+                BARN_OVER_3_ÅR.getKode(),
+                STØNADSPERIODE_NYTT_BARN.getKode()
         ));
     }
 

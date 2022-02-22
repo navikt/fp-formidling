@@ -100,6 +100,7 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse
                 _8305,
                 _8306,
                 _8309,
+                _8314,
                 SØKT_FOR_SENT));
     }
 

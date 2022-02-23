@@ -45,7 +45,7 @@ public class JournalpostRestKlient implements Journalpost {
     public OpprettJournalpostResponse opprettJournalpost(OpprettJournalpostRequest request, boolean ferdigstill) {
         try {
             var uri = new URIBuilder(endpoint).addParameter("forsoekFerdigstill", "" + ferdigstill).build();
-            return restKlient.post(uri, request, OpprettJournalpostResponse.class);
+            return restKlient.postAcceptConflict(uri, request, OpprettJournalpostResponse.class);
         } catch (URISyntaxException e) {
             throw new TekniskException("FPFORMIDLING-156530", String
                     .format("Feil ved oppretting av URI for opprettelse av ny journalpost til fagsak %s.", request.getSak().getArkivsaksnummer()), e);

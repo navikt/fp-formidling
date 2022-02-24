@@ -47,7 +47,7 @@ public class UttakDtoMapper {
         List<UttakResultatPeriodeAktivitet> aktiviteter = dto.getAktiviteter().stream().map(a -> aktivitetFraDto(a, hentNavn)).collect(Collectors.toList());
         UttakResultatPeriode mappetPeriode = UttakResultatPeriode.ny()
                 .medGraderingAvslagÅrsak(velgGraderingsavslagÅrsak(dto))
-                .medPeriodeResultatType(PeriodeResultatType.fraKode(dto.getPeriodeResultatType().getKode()))
+                .medPeriodeResultatType(dto.getPeriodeResultatType())
                 .medPeriodeResultatÅrsak(velgPerioderesultatÅrsak(dto))
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
                 .medAktiviteter(aktiviteter)

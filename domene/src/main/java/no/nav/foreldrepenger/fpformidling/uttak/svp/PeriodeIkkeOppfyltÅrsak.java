@@ -1,17 +1,15 @@
 package no.nav.foreldrepenger.fpformidling.uttak.svp;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.behandling.ÅrsakMedLovReferanse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
@@ -51,6 +49,7 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse
         }
     }
 
+    @JsonValue
     private String kode;
 
     @JsonIgnore
@@ -61,29 +60,12 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse
         this.lovHjemmel = lovHjemmel;
     }
 
-    @JsonCreator
-    public static PeriodeIkkeOppfyltÅrsak fraKode(@JsonProperty("kode") String kode) {
-        if (kode == null) {
-            return null;
-        }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent PeriodeIkkeOppfyltÅrsak: " + kode);
-        }
-        return ad;
-    }
 
-    public static Map<String, PeriodeIkkeOppfyltÅrsak> kodeMap() {
-        return Collections.unmodifiableMap(KODER);
-    }
-
-    @JsonProperty
     @Override
     public String getKodeverk() {
         return KODEVERK;
     }
 
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;

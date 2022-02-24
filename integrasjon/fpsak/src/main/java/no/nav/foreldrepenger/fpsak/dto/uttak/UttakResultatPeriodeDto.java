@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
 public class UttakResultatPeriodeDto {
@@ -13,7 +14,7 @@ public class UttakResultatPeriodeDto {
     private LocalDate fom;
     private LocalDate tom;
     private List<UttakResultatPeriodeAktivitetDto> aktiviteter = new ArrayList<>();
-    private KodeDto periodeResultatType;
+    private PeriodeResultatType periodeResultatType;
     private KodeDto periodeResultatÅrsak;
     private KodeDto graderingAvslagÅrsak;
     private String periodeResultatÅrsakLovhjemmel;
@@ -44,7 +45,7 @@ public class UttakResultatPeriodeDto {
         return aktiviteter;
     }
 
-    public KodeDto getPeriodeResultatType() {
+    public PeriodeResultatType getPeriodeResultatType() {
         return periodeResultatType;
     }
 

@@ -5,10 +5,9 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
@@ -43,31 +42,18 @@ public enum PeriodeResultatType implements Kodeverdi {
         }
     }
 
+    @JsonValue
     private String kode;
 
     private PeriodeResultatType(String kode) {
         this.kode = kode;
     }
 
-    @JsonCreator
-    public static PeriodeResultatType fraKode(@JsonProperty(value = "kode") String kode) {
-        if (kode == null) {
-            return null;
-        }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent PeriodeResultatType: " + kode);
-        }
-        return ad;
-    }
-
-    @JsonProperty
     @Override
     public String getKodeverk() {
         return KODEVERK;
     }
 
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;

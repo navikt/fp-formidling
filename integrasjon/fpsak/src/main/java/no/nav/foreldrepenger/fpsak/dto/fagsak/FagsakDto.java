@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.fpsak.dto.fagsak;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 
 public class FagsakDto {
     private String saksnummer;
-    private KodeDto relasjonsRolleType;
+    private RelasjonsRolleType relasjonsRolleType;
     private String aktoerId;
 
     public FagsakDto() {
@@ -15,7 +15,7 @@ public class FagsakDto {
         return saksnummer;
     }
 
-    public KodeDto getRelasjonsRolleType() {
+    public RelasjonsRolleType getRelasjonsRolleType() {
         return relasjonsRolleType;
     }
 

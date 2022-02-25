@@ -3,8 +3,6 @@ package no.nav.foreldrepenger.fpsak.mapper;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.anke.Anke;
-import no.nav.foreldrepenger.fpformidling.anke.AnkeVurdering;
-import no.nav.foreldrepenger.fpformidling.anke.AnkeVurderingOmgjør;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkeVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.anke.AnkebehandlingDto;
 
@@ -19,9 +17,9 @@ public class AnkeDtoMapper {
         AnkeVurderingResultatDto ankeResultat = dto.getAnkeVurderingResultat();
 
         var builder = Anke.ny()
-                .medAnkeVurdering(AnkeVurdering.fraKode(ankeResultat.getAnkeVurdering().getKode()))
+                .medAnkeVurdering(ankeResultat.getAnkeVurdering())
                 .medFritekstTilBrev(ankeResultat.getFritekstTilBrev())
-                .medAnkeVurderingOmgjoer(AnkeVurderingOmgjør.fraKode(ankeResultat.getAnkeVurderingOmgjoer().getKode()))
+                .medAnkeVurderingOmgjoer(ankeResultat.getAnkeVurderingOmgjoer())
                 .medPaAnketBehandlingUuid(ankeResultat.getPåAnketKlageBehandlingUuid());
 
         return Optional.of(builder.build());

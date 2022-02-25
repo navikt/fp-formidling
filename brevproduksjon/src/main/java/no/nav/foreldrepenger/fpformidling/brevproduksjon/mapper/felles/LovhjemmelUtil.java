@@ -60,7 +60,7 @@ public class LovhjemmelUtil {
             jsonNode = objectMapper.readTree(lovData);
         } catch (IOException e) {
             throw new IllegalStateException(
-                    "Ugyldig format (forventet JSON) for kodeverk=" + årsakKode.getKodeverk() + ", kode=" + årsakKode.getKode() //$NON-NLS-1$ //$NON-NLS-2$
+                    "Ugyldig format (forventet JSON) for kode=" + årsakKode.getKode() //$NON-NLS-1$ //$NON-NLS-2$
                             + " " + lovData, //$NON-NLS-1$
                     e); //$NON-NLS-2$
         }

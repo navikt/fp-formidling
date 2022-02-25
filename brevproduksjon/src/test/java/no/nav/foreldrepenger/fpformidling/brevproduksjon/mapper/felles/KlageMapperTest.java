@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -11,17 +10,16 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.fpsak.mapper.KlageDtoMapper;
 
 public class KlageMapperTest {
@@ -76,15 +74,9 @@ public class KlageMapperTest {
 
     private KlageFormkravResultatDto lagFormkravResultatDto(List<KlageAvvistÅrsak> avvistÅrsaker) {
         KlageFormkravResultatDto dto = new KlageFormkravResultatDto();
-        dto.setAvvistArsaker(kodeverkTilDto(avvistÅrsaker));
-        dto.setPaklagdBehandlingType(new KodeDto("BEHANDLING_TYPE", "BT-002"));
+        dto.setAvvistArsaker(avvistÅrsaker);
+        dto.setPaklagdBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD);
         return dto;
-    }
-
-    private List<KodeDto> kodeverkTilDto(List<? extends Kodeverdi> kodeliste) {
-        List<KodeDto> dtoListe = new ArrayList<>();
-        kodeliste.forEach(k -> dtoListe.add(new KodeDto(k.getKodeverk(), k.getKode())));
-        return dtoListe;
     }
 
     private KlageVurderingResultatDto lagKlagevurderingResultatDto(boolean opphevet) {

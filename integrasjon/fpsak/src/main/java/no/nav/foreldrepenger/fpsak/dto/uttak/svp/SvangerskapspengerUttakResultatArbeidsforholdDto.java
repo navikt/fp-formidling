@@ -2,19 +2,20 @@ package no.nav.foreldrepenger.fpsak.dto.uttak.svp;
 
 import java.util.List;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
 
 public class SvangerskapspengerUttakResultatArbeidsforholdDto {
-    private KodeDto arbeidsforholdIkkeOppfyltÅrsak;
+    private ArbeidsforholdIkkeOppfyltÅrsak arbeidsforholdIkkeOppfyltÅrsak;
     private String arbeidsgiverReferanse;
-    private KodeDto  arbeidType;
+    private UttakArbeidType arbeidType;
 
     private List<SvangerskapspengerUttakResultatPeriodeDto> perioder;
 
     public SvangerskapspengerUttakResultatArbeidsforholdDto() {
     }
 
-    public KodeDto getArbeidsforholdIkkeOppfyltÅrsak() {
+    public ArbeidsforholdIkkeOppfyltÅrsak getArbeidsforholdIkkeOppfyltÅrsak() {
         return arbeidsforholdIkkeOppfyltÅrsak;
     }
 
@@ -22,7 +23,7 @@ public class SvangerskapspengerUttakResultatArbeidsforholdDto {
         return arbeidsgiverReferanse;
     }
 
-    public KodeDto getArbeidType() {
+    public UttakArbeidType getArbeidType() {
         return arbeidType;
     }
 

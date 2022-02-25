@@ -1,8 +1,10 @@
 package no.nav.foreldrepenger.fpsak.dto.uttak.saldo;
 
+import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
+
 public class StønadskontoDto {
 
-    private String stonadskontotype;
+    private StønadskontoType stonadskontotype;
     private int maxDager;
     private int saldo;
     private KontoUtvidelser kontoUtvidelser;
@@ -10,7 +12,7 @@ public class StønadskontoDto {
     public StønadskontoDto() {
     }
 
-    public String getStonadskontotype() {
+    public StønadskontoType getStonadskontotype() {
         return stonadskontotype;
     }
 

@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.uttak;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -30,28 +27,11 @@ public enum PeriodeResultatType implements Kodeverdi {
     UGYLDIG_UTSETTELSE("UGYLDIG_UTSETTELSE"),
     ;
 
-    private static final Map<String, PeriodeResultatType> KODER = new LinkedHashMap<>();
-
-    public static final String KODEVERK = "PERIODE_RESULTAT_TYPE";
-
-    static {
-        for (var v : values()) {
-            if (KODER.putIfAbsent(v.kode, v) != null) {
-                throw new IllegalArgumentException("Duplikat : " + v.kode);
-            }
-        }
-    }
-
     @JsonValue
     private String kode;
 
     private PeriodeResultatType(String kode) {
         this.kode = kode;
-    }
-
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
     }
 
     @Override

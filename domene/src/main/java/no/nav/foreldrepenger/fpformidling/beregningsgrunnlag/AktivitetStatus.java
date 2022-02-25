@@ -1,14 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.beregningsgrunnlag;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
@@ -33,34 +30,11 @@ public enum AktivitetStatus implements Kodeverdi {
 
     UDEFINERT("-");
 
-    public static final String KODEVERK = "AKTIVITET_STATUS";
-
-    private static final Map<String, AktivitetStatus> KODER = new LinkedHashMap<>();
-
-    static {
-        for (var v : values()) {
-            if (KODER.putIfAbsent(v.kode, v) != null) {
-                throw new IllegalArgumentException("Duplikat : " + v.kode);
-            }
-        }
-    }
-
+    @JsonValue
     private String kode;
 
     AktivitetStatus(String kode) {
         this.kode = kode;
-    }
-
-    @JsonCreator
-    public static AktivitetStatus fraKode(@JsonProperty("kode") String kode) {
-        if (kode == null) {
-            return null;
-        }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent AktivitetStatus: " + kode);
-        }
-        return ad;
     }
 
     private static final Set<AktivitetStatus> AT_STATUSER = Set.of(ARBEIDSTAKER,
@@ -95,13 +69,6 @@ public enum AktivitetStatus implements Kodeverdi {
         return KOMBINERTE_STATUSER.stream().map(AktivitetStatus::name).collect(Collectors.toSet()).contains(aktivitetStatus);
     }
 
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
-    }
-
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;

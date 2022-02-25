@@ -17,7 +17,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Hjemmel;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
@@ -28,12 +29,12 @@ public class BeregningsgrunnlagDtoV2 {
     @NotNull
     @Valid
     @Size(min = 1)
-    private List<KodeDto> aktivitetstatusListe;
+    private List<AktivitetStatus> aktivitetstatusListe;
 
     @JsonProperty(value = "hjemmel")
     @NotNull
     @Valid
-    private KodeDto hjemmel;
+    private Hjemmel hjemmel;
 
     @JsonProperty(value = "grunnbeløp")
     @Valid
@@ -55,8 +56,8 @@ public class BeregningsgrunnlagDtoV2 {
     public BeregningsgrunnlagDtoV2() {
     }
 
-    public BeregningsgrunnlagDtoV2(@NotNull @Valid @Size(min = 1) List<KodeDto> aktivitetstatusListe,
-                                   @NotNull @Valid KodeDto hjemmel,
+    public BeregningsgrunnlagDtoV2(@NotNull @Valid @Size(min = 1) List<AktivitetStatus> aktivitetstatusListe,
+                                   @NotNull @Valid Hjemmel hjemmel,
                                    @Valid @Digits(integer = 8, fraction = 2) @DecimalMin("0.00") @DecimalMax("10000000.00") BigDecimal grunnbeløp,
                                    @Valid @NotNull @Size(min = 1) List<BeregningsgrunnlagPeriodeDtoV2> beregningsgrunnlagperioder,
                                    @Valid boolean erBesteberegnet) {
@@ -67,11 +68,11 @@ public class BeregningsgrunnlagDtoV2 {
         this.erBesteberegnet = erBesteberegnet;
     }
 
-    public List<KodeDto> getAktivitetstatusListe() {
+    public List<AktivitetStatus> getAktivitetstatusListe() {
         return aktivitetstatusListe;
     }
 
-    public KodeDto getHjemmel() {
+    public Hjemmel getHjemmel() {
         return hjemmel;
     }
 

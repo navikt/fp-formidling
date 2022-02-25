@@ -29,7 +29,11 @@ public class DokumentHendelseDtoMapper {
         if (ytelseType == null) {
             return null;
         }
-        return FagsakYtelseType.fraKode(ytelseType.name());
+        return switch (ytelseType) {
+            case ES -> FagsakYtelseType.ENGANGSTØNAD;
+            case FP -> FagsakYtelseType.FORELDREPENGER;
+            case SVP -> FagsakYtelseType.SVANGERSKAPSPENGER;
+        };
     }
 
     private static DokumentMalType utleddokumentMalType(String dokumentmal) {

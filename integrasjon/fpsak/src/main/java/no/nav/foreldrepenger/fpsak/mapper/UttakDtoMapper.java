@@ -10,10 +10,7 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
-import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakAktivitet;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
@@ -57,11 +54,11 @@ public class UttakDtoMapper {
     }
 
     private static PeriodeResultatÅrsak velgPerioderesultatÅrsak(UttakResultatPeriodeDto dto) {
-        return dto.getPeriodeResultatÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getPeriodeResultatÅrsak().getKode(), PERIODE_ÅRSAK_DISCRIMINATOR, dto.getPeriodeResultatÅrsakLovhjemmel());
+        return dto.getPeriodeResultatÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getPeriodeResultatÅrsak(), PERIODE_ÅRSAK_DISCRIMINATOR, dto.getPeriodeResultatÅrsakLovhjemmel());
     }
 
     private static PeriodeResultatÅrsak velgGraderingsavslagÅrsak(UttakResultatPeriodeDto dto) {
-        return dto.getGraderingAvslagÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getGraderingAvslagÅrsak().getKode(), GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR, dto.getGraderingsAvslagÅrsakLovhjemmel());
+        return dto.getGraderingAvslagÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getGraderingAvslagÅrsak(), GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR, dto.getGraderingsAvslagÅrsakLovhjemmel());
     }
 
     static UttakResultatPeriodeAktivitet aktivitetFraDto(UttakResultatPeriodeAktivitetDto dto, UnaryOperator<String> hentNavn) {
@@ -70,11 +67,11 @@ public class UttakDtoMapper {
                 .medTrekkdager(dto.getTrekkdagerDesimaler())
                 .medUtbetalingsprosent(dto.getUtbetalingsgrad())
                 .medGraderingInnvilget(dto.isGradering())
-                .medTrekkonto(StønadskontoType.fraKode(dto.getStønadskontoType().getKode()))
+                .medTrekkonto(dto.getStønadskontoType())
                 .medUttakAktivitet(UttakAktivitet.ny()
                         .medArbeidsforholdRef(dto.getArbeidsforholdId() != null && !dto.getArbeidsforholdId().isEmpty() ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                         .medArbeidsgiver(mapArbeidsgiver(dto.getArbeidsgiverReferanse(), hentNavn))
-                        .medUttakArbeidType(UttakArbeidType.fraKode(dto.getUttakArbeidType().getKode()))
+                        .medUttakArbeidType(dto.getUttakArbeidType())
                         .build())
                 .build();
     }

@@ -321,7 +321,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG))
                 .medAvkortetPrÅr(new BigDecimal(GRUNNBELØP * 6))
                 .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriode1())
-                .medperiodeÅrsaker(of(PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode()))
+                .medperiodeÅrsaker(of(PeriodeÅrsak.NATURALYTELSE_TILKOMMER))
                 .build();
     }
 
@@ -346,7 +346,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG))
                 .medAvkortetPrÅr(new BigDecimal(GRUNNBELØP * 6))
                 .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriode2())
-                .medperiodeÅrsaker(of(PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode()))
+                .medperiodeÅrsaker(of(PeriodeÅrsak.NATURALYTELSE_BORTFALT))
                 .build();
     }
 

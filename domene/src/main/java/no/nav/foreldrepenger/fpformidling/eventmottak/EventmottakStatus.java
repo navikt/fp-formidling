@@ -6,25 +6,14 @@ import java.util.Map;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
 
-@JsonFormat(shape = Shape.OBJECT)
-@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public enum EventmottakStatus implements Kodeverdi {
 
     FEILET("FEILET"),
     FERDIG("FERDIG"),
     ;
-
-    public static final String KODEVERK = "EVENTMOTTAK_STATUS"; //$NON-NLS-1$
 
     private static final Map<String, EventmottakStatus> KODER = new LinkedHashMap<>();
 
@@ -42,8 +31,7 @@ public enum EventmottakStatus implements Kodeverdi {
         this.kode = kode;
     }
 
-    @JsonCreator
-    public static EventmottakStatus fraKode(@JsonProperty(value = "kode") String kode) {
+    public static EventmottakStatus fraKode(String kode) {
         if (kode == null) {
             return null;
         }
@@ -54,18 +42,10 @@ public enum EventmottakStatus implements Kodeverdi {
         return ad;
     }
 
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;
     }
-
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
-    }
-
 
     @Converter(autoApply = true)
     public static class KodeverdiConverter implements AttributeConverter<EventmottakStatus, String> {

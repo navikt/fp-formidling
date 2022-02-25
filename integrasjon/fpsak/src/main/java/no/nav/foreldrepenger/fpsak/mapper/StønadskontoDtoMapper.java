@@ -4,7 +4,6 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
 import no.nav.foreldrepenger.fpformidling.uttak.Stønadskonto;
-import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
 import no.nav.foreldrepenger.fpsak.dto.uttak.saldo.SaldoerDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.saldo.StønadskontoDto;
 
@@ -18,7 +17,7 @@ public class StønadskontoDtoMapper {
     }
 
     static Stønadskonto mapStønadskontoFradto(StønadskontoDto dto) {
-        return new Stønadskonto(dto.getMaxDager(), StønadskontoType.fraKode(dto.getStonadskontotype()), dto.getSaldo(), mapPrematurDager(dto), mapFlerbarnsdager(dto));
+        return new Stønadskonto(dto.getMaxDager(), dto.getStonadskontotype(), dto.getSaldo(), mapPrematurDager(dto), mapFlerbarnsdager(dto));
     }
 
     private static int mapPrematurDager(StønadskontoDto dto) {

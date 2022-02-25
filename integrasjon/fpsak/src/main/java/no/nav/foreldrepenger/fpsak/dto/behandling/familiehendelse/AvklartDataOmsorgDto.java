@@ -2,19 +2,12 @@ package no.nav.foreldrepenger.fpsak.dto.behandling.familiehendelse;
 
 import java.time.LocalDate;
 
-import javax.validation.Valid;
-
 import com.fasterxml.jackson.annotation.JsonTypeName;
-
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
 @JsonTypeName(value = "AvklartDataOmsorgDto")
 public class AvklartDataOmsorgDto extends FamiliehendelseDto {
 
     private LocalDate omsorgsovertakelseDato;
-
-    @Valid
-    private KodeDto vilkarType;
 
     private Integer antallBarnTilBeregning;
     private LocalDate foreldreansvarDato;
@@ -38,14 +31,6 @@ public class AvklartDataOmsorgDto extends FamiliehendelseDto {
 
     void setOmsorgsovertakelseDato(LocalDate omsorgsovertakelseDato) {
         this.omsorgsovertakelseDato = omsorgsovertakelseDato;
-    }
-
-    public KodeDto getVilkarType() {
-        return vilkarType;
-    }
-
-    void setVilkarType(KodeDto vilkarType) {
-        this.vilkarType = vilkarType;
     }
 
     public Integer getAntallBarnTilBeregning() {

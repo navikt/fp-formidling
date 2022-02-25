@@ -6,17 +6,9 @@ import java.util.Map;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
-@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public enum RevurderingVarslingÅrsak implements Kodeverdi {
 
     BARN_IKKE_REGISTRERT_FOLKEREGISTER("BARNIKKEREG"),
@@ -33,8 +25,6 @@ public enum RevurderingVarslingÅrsak implements Kodeverdi {
 
     private static final Map<String, RevurderingVarslingÅrsak> KODER = new LinkedHashMap<>();
 
-    public static final String KODEVERK = "REVURDERING_VARSLING_AARSAK";
-
     static {
         for (var v : values()) {
             if (KODER.putIfAbsent(v.kode, v) != null) {
@@ -43,7 +33,6 @@ public enum RevurderingVarslingÅrsak implements Kodeverdi {
         }
     }
 
-    @JsonIgnore
     private String navn;
 
     private String kode;
@@ -52,8 +41,7 @@ public enum RevurderingVarslingÅrsak implements Kodeverdi {
         this.kode = kode;
     }
 
-    @JsonCreator
-    public static RevurderingVarslingÅrsak fraKode(@JsonProperty("kode") String kode) {
+    public static RevurderingVarslingÅrsak fraKode(String kode) {
         if (kode == null) {
             return null;
         }
@@ -64,13 +52,6 @@ public enum RevurderingVarslingÅrsak implements Kodeverdi {
         return ad;
     }
 
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
-    }
-
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;

@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
@@ -28,8 +27,8 @@ public class UttakSvpDtoMapper {
         final var uttaksResultatArbeidsforhold = svpUttaksresultatresultatDto.getUttaksResultatArbeidsforhold();
         emptyIfNull(uttaksResultatArbeidsforhold).forEach(arbeidsforhold -> {
             final var uttakResultatArbeidsforholdBuild = SvpUttakResultatArbeidsforhold.Builder.ny();
-            final var arbeidsforholdIkkeOppfyltÅrsak = ArbeidsforholdIkkeOppfyltÅrsak.fraKode(arbeidsforhold.getArbeidsforholdIkkeOppfyltÅrsak().getKode());
-            final var uttakArbeidType =UttakArbeidType.fraKode(arbeidsforhold.getArbeidType().getKode());
+            final var arbeidsforholdIkkeOppfyltÅrsak = arbeidsforhold.getArbeidsforholdIkkeOppfyltÅrsak();
+            final var uttakArbeidType = arbeidsforhold.getArbeidType();
             final var arbeidsgiver = mapArbeidsgiver(arbeidsforhold.getArbeidsgiverReferanse(), hentNavn);
             uttakResultatArbeidsforholdBuild.medArbeidsgiver(arbeidsgiver);
             uttakResultatArbeidsforholdBuild.medUttakArbeidType(uttakArbeidType);

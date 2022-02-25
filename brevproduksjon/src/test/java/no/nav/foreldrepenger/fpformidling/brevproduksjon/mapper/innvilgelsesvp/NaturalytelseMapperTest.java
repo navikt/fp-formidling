@@ -40,7 +40,7 @@ public class NaturalytelseMapperTest {
     public void skal_ikke_utlede_naturalytelse_som_starter_med_første_periode() {
         // Arrange
         TilkjentYtelseForeldrepenger tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, false);
-        Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode()), false);
+        Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT), false);
 
         // Act
         List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
@@ -53,7 +53,7 @@ public class NaturalytelseMapperTest {
     public void skal_utlede_at_naturalytelse_bortfaller_når_årsak_er_bortfaller() {
         // Arrange
         TilkjentYtelseForeldrepenger tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
-        Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode()), true);
+        Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT), true);
 
         // Act
         List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
@@ -71,7 +71,7 @@ public class NaturalytelseMapperTest {
     public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_er_tilkommer() {
         // Arrange
         TilkjentYtelseForeldrepenger tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
-        Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, null, BigDecimal.valueOf(1000), of(PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode()), true);
+        Beregningsgrunnlag beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, null, BigDecimal.valueOf(1000), of(PeriodeÅrsak.NATURALYTELSE_TILKOMMER), true);
 
         // Act
         List<Naturalytelse> resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
@@ -177,7 +177,7 @@ public class NaturalytelseMapperTest {
                 .build();
     }
 
-    private Beregningsgrunnlag getBeregningsgrunnlag(Arbeidsgiver arbeidsgiver, BigDecimal naturalytelseBortfaller, BigDecimal naturalytelseTilkommer, List<String> periodeÅrsaker, boolean inkluderePeriode2) {
+    private Beregningsgrunnlag getBeregningsgrunnlag(Arbeidsgiver arbeidsgiver, BigDecimal naturalytelseBortfaller, BigDecimal naturalytelseTilkommer, List<PeriodeÅrsak> periodeÅrsaker, boolean inkluderePeriode2) {
         BGAndelArbeidsforhold bgAndelArbeidsforhold = new BGAndelArbeidsforhold(arbeidsgiver, ArbeidsforholdRef.ref("1"), naturalytelseBortfaller, naturalytelseTilkommer);
         BeregningsgrunnlagPrStatusOgAndel beregningsgrunnlagPrStatusOgAndel = BeregningsgrunnlagPrStatusOgAndel.ny()
                 .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)

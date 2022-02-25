@@ -9,11 +9,7 @@ import java.util.stream.Stream;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
-import no.nav.foreldrepenger.fpformidling.behandling.BehandlingStatus;
-import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingÅrsakDto;
@@ -41,8 +37,8 @@ public class BehandlingDtoMapper {
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
         behandlingFormidlingResourceLinkStreamSupplier.get().forEach(builder::leggTilFormidlingResourceLink);
         builder.medUuid(dto.getUuid())
-                .medBehandlingType(finnBehandlingType(dto.getType().getKode()))
-                .medStatus(BehandlingStatus.fraKode(dto.getStatus().getKode()))
+                .medBehandlingType(dto.getType())
+                .medStatus(dto.getStatus())
                 .medOpprettetDato(dto.getOpprettet())
                 .medAvsluttet(dto.getAvsluttet())
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
@@ -51,7 +47,7 @@ public class BehandlingDtoMapper {
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingÅrsaker()))
                 .medEndretAv(dto.getEndretAvBrukernavn())
-                .medSpråkkode(Språkkode.defaultNorsk(dto.getSprakkode().getKode()))
+                .medSpråkkode(dto.getSprakkode())
                 .medOriginalVedtaksDato(dto.getOriginalVedtaksDato());
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(BehandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));
@@ -71,12 +67,9 @@ public class BehandlingDtoMapper {
 
     private static BehandlingÅrsak mapBehandlingÅrsakFraDto(BehandlingÅrsakDto dto) {
         return BehandlingÅrsak.builder()
-                .medBehandlingÅrsakType(BehandlingÅrsakType.fraKodeDefaultUdefinert(dto.getBehandlingArsakType().getKode()))
+                .medBehandlingÅrsakType(dto.getBehandlingArsakType())
                 .medManueltOpprettet(dto.getManueltOpprettet())
                 .build();
     }
 
-    private static BehandlingType finnBehandlingType(String behandlingType) {
-        return BehandlingType.fraKode(behandlingType);
-    }
 }

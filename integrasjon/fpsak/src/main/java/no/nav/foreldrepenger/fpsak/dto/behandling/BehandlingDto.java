@@ -8,14 +8,16 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.behandling.BehandlingStatus;
+import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
+import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingDto {
 
     private UUID uuid;
-    private KodeDto type;
-    private KodeDto status;
+    private BehandlingType type;
+    private BehandlingStatus status;
     private LocalDateTime opprettet;
     private LocalDateTime avsluttet;
     private LocalDateTime endret;
@@ -24,7 +26,7 @@ public class BehandlingDto {
     private String ansvarligSaksbehandler;
     private String ansvarligBeslutter;
     private BehandlingsresultatDto behandlingsresultat;
-    private KodeDto sprakkode;
+    private Språkkode sprakkode;
     private boolean toTrinnsBehandling;
     private List<BehandlingResourceLinkDto> links = new ArrayList<>();
     private List<BehandlingResourceLinkDto> formidlingRessurser = new ArrayList<>();
@@ -32,19 +34,19 @@ public class BehandlingDto {
     private LocalDate originalVedtaksDato;
 
 
-    public KodeDto getType() {
+    public BehandlingType getType() {
         return type;
     }
 
-    public void setType(KodeDto type) {
+    public void setType(BehandlingType type) {
         this.type = type;
     }
 
-    public KodeDto getStatus() {
+    public BehandlingStatus getStatus() {
         return status;
     }
 
-    public void setStatus(KodeDto status) {
+    public void setStatus(BehandlingStatus status) {
         this.status = status;
     }
 
@@ -96,11 +98,11 @@ public class BehandlingDto {
         this.behandlingsresultat = behandlingsresultat;
     }
 
-    public KodeDto getSprakkode() {
+    public Språkkode getSprakkode() {
         return sprakkode;
     }
 
-    public void setSprakkode(KodeDto sprakkode) {
+    public void setSprakkode(Språkkode sprakkode) {
         this.sprakkode = sprakkode;
     }
 

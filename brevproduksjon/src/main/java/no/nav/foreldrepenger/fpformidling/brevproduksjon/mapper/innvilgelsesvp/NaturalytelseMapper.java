@@ -79,10 +79,10 @@ public final class NaturalytelseMapper {
     private static NaturalytelseStatus utledNaturalytelseStatus(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         NaturalytelseStatus naturalytelseStatus = null;
 
-        for (String årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
-            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode().equals(årsak)) {
+        for (PeriodeÅrsak årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
+            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.equals(årsak)) {
                 naturalytelseStatus = NaturalytelseStatus.BORTFALLER;
-            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode().equals(årsak)) {
+            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.equals(årsak)) {
                 naturalytelseStatus = NaturalytelseStatus.TILKOMMER;
             }
         }

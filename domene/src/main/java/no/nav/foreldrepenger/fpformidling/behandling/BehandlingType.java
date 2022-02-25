@@ -1,17 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.behandling;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
@@ -38,25 +34,14 @@ public enum BehandlingType implements Kodeverdi {
     ;
 
     private static final Set<BehandlingType> YTELSE_BEHANDLING_TYPER = Set.of(FØRSTEGANGSSØKNAD, REVURDERING);
-    private static final Set<BehandlingType> ANDRE_BEHANDLING_TYPER = Set.of(KLAGE, ANKE, INNSYN);
     private static final Set<BehandlingType> TILBAKEKREVING_TYPER = Set.of(TILBAKEKREVING, TILBAKEKREVING_REVURDERING);
-
-    public static final String KODEVERK = "BEHANDLING_TYPE";
-    private static final Map<String, BehandlingType> KODER = new LinkedHashMap<>();
-
-    static {
-        for (var v : values()) {
-            if (KODER.putIfAbsent(v.kode, v) != null) {
-                throw new IllegalArgumentException("Duplikat : " + v.kode);
-            }
-        }
-    }
 
     @JsonIgnore
     private int behandlingstidFristUker;
     @JsonIgnore
     private Boolean behandlingstidVarselbrev;
 
+    @JsonValue
     private String kode;
 
     private BehandlingType(String kode, int behandlingstidFristUker, Boolean behandlingstidVarselbrev) {
@@ -65,40 +50,9 @@ public enum BehandlingType implements Kodeverdi {
         this.behandlingstidVarselbrev = behandlingstidVarselbrev;
     }
 
-    @JsonCreator
-    public static BehandlingType fraKode(@JsonProperty(value = "kode") String kode) {
-        if (kode == null) {
-            return null;
-        }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent BehandlingType: " + kode);
-        }
-        return ad;
-    }
-
-    public static Map<String, BehandlingType> kodeMap() {
-        return Collections.unmodifiableMap(KODER);
-    }
-
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;
-    }
-
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
-    }
-
-    public static Set<BehandlingType> getYtelseBehandlingTyper() {
-        return YTELSE_BEHANDLING_TYPER;
-    }
-
-    public static Set<BehandlingType> getAndreBehandlingTyper() {
-        return ANDRE_BEHANDLING_TYPER;
     }
 
     public boolean erYtelseBehandlingType() {

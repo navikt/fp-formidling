@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
-import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.RelatertYtelseType;
 import no.nav.foreldrepenger.fpformidling.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
@@ -17,7 +16,6 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     private BigDecimal bruttoPrÅr;
     private BigDecimal avkortetPrÅr;
     private Boolean nyIArbeidslivet;
-    private RelatertYtelseType ytelse;
     private OpptjeningAktivitetType arbeidsforholdType;
     private DatoIntervall beregningsperiode;
     private BGAndelArbeidsforhold bgAndelArbeidsforhold;
@@ -29,7 +27,6 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         bruttoPrÅr = builder.bruttoPrÅr;
         avkortetPrÅr = builder.avkortetPrÅr;
         nyIArbeidslivet = builder.nyIArbeidslivet;
-        ytelse = builder.ytelse;
         arbeidsforholdType = builder.arbeidsforholdType;
         beregningsperiode = builder.beregningsperiode;
         bgAndelArbeidsforhold = builder.bgAndelArbeidsforhold;
@@ -57,10 +54,6 @@ public class BeregningsgrunnlagPrStatusOgAndel {
 
     public BigDecimal getAvkortetPrÅr() {
         return avkortetPrÅr;
-    }
-
-    public RelatertYtelseType getYtelse() {
-        return ytelse;
     }
 
     public OpptjeningAktivitetType getArbeidsforholdType() {
@@ -105,7 +98,6 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         private BigDecimal bruttoPrÅr;
         private BigDecimal avkortetPrÅr;
         private Boolean nyIArbeidslivet;
-        private RelatertYtelseType ytelse;
         private OpptjeningAktivitetType arbeidsforholdType;
         private DatoIntervall beregningsperiode;
         private BGAndelArbeidsforhold bgAndelArbeidsforhold;
@@ -136,11 +128,6 @@ public class BeregningsgrunnlagPrStatusOgAndel {
 
         public Builder medNyIArbeidslivet(Boolean nyIArbeidslivet) {
             this.nyIArbeidslivet = nyIArbeidslivet;
-            return this;
-        }
-
-        public Builder medYtelse(RelatertYtelseType ytelse) {
-            this.ytelse = ytelse;
             return this;
         }
 

@@ -61,7 +61,7 @@ public class ForvaltningRestTjeneste {
         Dokumentdata dokumentdata = (Dokumentdata) DefaultJsonMapper.getObjectMapper().readValue(dokgenJsonTilPdfDto.getDokumentdataJson(),
                 Class.forName(dokgenJsonTilPdfDto.getDokumentdataKlasse()));
 
-        byte[] resultat = dokgenRestKlient.genererPdf(dokgenJsonTilPdfDto.getMalType(), Språkkode.fraKode(dokgenJsonTilPdfDto.getSpråkKode()),
+        byte[] resultat = dokgenRestKlient.genererPdf(dokgenJsonTilPdfDto.getMalType(), Språkkode.defaultNorsk(dokgenJsonTilPdfDto.getSpråkKode()),
                 dokumentdata);
 
         Response.ResponseBuilder responseBuilder = Response.ok(resultat);

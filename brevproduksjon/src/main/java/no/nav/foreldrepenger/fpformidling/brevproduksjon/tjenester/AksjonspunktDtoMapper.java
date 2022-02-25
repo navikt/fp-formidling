@@ -40,8 +40,8 @@ public class AksjonspunktDtoMapper {
         List<Aksjonspunkt> aksjonspunktList = new ArrayList<>();
         for (AksjonspunktDto aksjonspunktDto : dtoer) {
             aksjonspunktList.add(Aksjonspunkt.ny()
-                    .medAksjonspunktDefinisjon(finnAksjonspunktDefinisjon(aksjonspunktDto.definisjon().getKode()))
-                    .medAksjonspunktStatus(finnAksjonspunktStatus(aksjonspunktDto.status().getKode()))
+                    .medAksjonspunktDefinisjon(finnAksjonspunktDefinisjon(aksjonspunktDto.definisjon()))
+                    .medAksjonspunktStatus(finnAksjonspunktStatus(aksjonspunktDto.status()))
                     .build());
         }
 

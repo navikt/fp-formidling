@@ -1,15 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.klage;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.behandling.ÅrsakMedLovReferanse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
@@ -32,18 +28,7 @@ public enum KlageAvvistÅrsak implements Kodeverdi, ÅrsakMedLovReferanse {
     UDEFINERT("-", null),
     ;
 
-    private static final Map<String, KlageAvvistÅrsak> KODER = new LinkedHashMap<>();
-
-    public static final String KODEVERK = "KLAGE_AVVIST_AARSAK";
-
-    static {
-        for (var v : values()) {
-            if (KODER.putIfAbsent(v.kode, v) != null) {
-                throw new IllegalArgumentException("Duplikat : " + v.kode);
-            }
-        }
-    }
-
+    @JsonValue
     private String kode;
 
     @JsonIgnore
@@ -54,25 +39,6 @@ public enum KlageAvvistÅrsak implements Kodeverdi, ÅrsakMedLovReferanse {
         this.lovHjemmel = lovHjemmel;
     }
 
-    @JsonCreator
-    public static KlageAvvistÅrsak fraKode(@JsonProperty(value = "kode") String kode) {
-        if (kode == null) {
-            return null;
-        }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent KlageAvvistÅrsak: " + kode);
-        }
-        return ad;
-    }
-
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
-    }
-
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;

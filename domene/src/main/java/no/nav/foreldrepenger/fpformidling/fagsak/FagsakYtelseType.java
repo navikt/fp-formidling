@@ -8,10 +8,9 @@ import javax.persistence.Converter;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
@@ -26,8 +25,6 @@ public enum FagsakYtelseType implements Kodeverdi {
     UDEFINERT("-"),
     ;
 
-    public static final String KODEVERK = "FAGSAK_YTELSE"; //$NON-NLS-1$
-
     private static final Map<String, FagsakYtelseType> KODER = new LinkedHashMap<>();
 
     static {
@@ -38,14 +35,14 @@ public enum FagsakYtelseType implements Kodeverdi {
         }
     }
 
+    @JsonValue
     private String kode;
 
     private FagsakYtelseType(String kode) {
         this.kode = kode;
     }
 
-    @JsonCreator
-    public static FagsakYtelseType fraKode(@JsonProperty(value = "kode") String kode) {
+    public static FagsakYtelseType fraKode(String kode) {
         if (kode == null) {
             return null;
         }
@@ -56,18 +53,10 @@ public enum FagsakYtelseType implements Kodeverdi {
         return ad;
     }
 
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;
     }
-
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
-    }
-
 
     public final boolean gjelderEngangsstønad() {
         return ENGANGSTØNAD.equals(this);

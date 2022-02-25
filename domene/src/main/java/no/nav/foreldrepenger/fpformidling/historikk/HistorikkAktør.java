@@ -2,16 +2,16 @@ package no.nav.foreldrepenger.fpformidling.historikk;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
@@ -30,8 +30,6 @@ public enum HistorikkAktør implements Kodeverdi {
 
     private static final Map<String, HistorikkAktør> KODER = new LinkedHashMap<>();
 
-    public static final String KODEVERK = "HISTORIKK_AKTOER";
-
     static {
         for (var v : values()) {
             if (KODER.putIfAbsent(v.kode, v) != null) {
@@ -40,31 +38,21 @@ public enum HistorikkAktør implements Kodeverdi {
         }
     }
 
+    @JsonValue
     private String kode;
 
     private HistorikkAktør(String kode) {
         this.kode = kode;
     }
 
-    @JsonCreator
-    public static HistorikkAktør fraKode(@JsonProperty("kode") String kode) {
+    public static HistorikkAktør fraKode(String kode) {
         if (kode == null) {
             return null;
         }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent HistorikkAktør: " + kode);
-        }
-        return ad;
+        return Optional.ofNullable(KODER.get(kode))
+                .orElseThrow(() -> new IllegalArgumentException("Ukjent HistorikkAktør: " + kode));
     }
 
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
-    }
-
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;

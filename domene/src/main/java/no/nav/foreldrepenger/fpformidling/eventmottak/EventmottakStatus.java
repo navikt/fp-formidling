@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.eventmottak;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -31,17 +32,6 @@ public enum EventmottakStatus implements Kodeverdi {
         this.kode = kode;
     }
 
-    public static EventmottakStatus fraKode(String kode) {
-        if (kode == null) {
-            return null;
-        }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent FagsakYtelseType: " + kode);
-        }
-        return ad;
-    }
-
     @Override
     public String getKode() {
         return kode;
@@ -57,6 +47,14 @@ public enum EventmottakStatus implements Kodeverdi {
         @Override
         public EventmottakStatus convertToEntityAttribute(String dbData) {
             return dbData == null ? null : fraKode(dbData);
+        }
+
+        private static EventmottakStatus fraKode(String kode) {
+            if (kode == null) {
+                return null;
+            }
+            return Optional.ofNullable(KODER.get(kode))
+                    .orElseThrow(() -> new IllegalArgumentException("Ukjent EventmottakStatus: " + kode));
         }
     }
 

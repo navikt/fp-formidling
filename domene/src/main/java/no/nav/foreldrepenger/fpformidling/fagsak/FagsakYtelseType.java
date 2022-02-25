@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.fagsak;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -46,11 +47,8 @@ public enum FagsakYtelseType implements Kodeverdi {
         if (kode == null) {
             return null;
         }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent FagsakYtelseType: " + kode);
-        }
-        return ad;
+        return Optional.ofNullable(KODER.get(kode))
+                .orElseThrow(() -> new IllegalArgumentException("Ukjent FagsakYtelseType: " + kode));
     }
 
     @Override

@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.behandling;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -33,8 +34,6 @@ public enum RevurderingVarslingÅrsak implements Kodeverdi {
         }
     }
 
-    private String navn;
-
     private String kode;
 
     RevurderingVarslingÅrsak(String kode) {
@@ -45,11 +44,8 @@ public enum RevurderingVarslingÅrsak implements Kodeverdi {
         if (kode == null) {
             return null;
         }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent RevurderingVarslingÅrsak: " + kode);
-        }
-        return ad;
+        return Optional.ofNullable(KODER.get(kode))
+                .orElseThrow(() ->  new IllegalArgumentException("Ukjent RevurderingVarslingÅrsak: " + kode));
     }
 
     @Override

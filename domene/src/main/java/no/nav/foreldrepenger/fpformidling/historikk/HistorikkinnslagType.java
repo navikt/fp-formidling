@@ -39,13 +39,7 @@ public enum HistorikkinnslagType implements Kodeverdi {
         this.kode = kode;
     }
 
-    public static HistorikkinnslagType fraKode(String kode) {
-        if (kode == null) {
-            return null;
-        }
-        return Optional.ofNullable(KODER.get(kode))
-                .orElseThrow(() -> new IllegalArgumentException("Ukjent HistorikkinnslagType: " + kode));
-    }
+
 
     @Override
     public String getKode() {
@@ -62,6 +56,14 @@ public enum HistorikkinnslagType implements Kodeverdi {
         @Override
         public HistorikkinnslagType convertToEntityAttribute(String dbData) {
             return dbData == null ? null : fraKode(dbData);
+        }
+
+        private static HistorikkinnslagType fraKode(String kode) {
+            if (kode == null) {
+                return null;
+            }
+            return Optional.ofNullable(KODER.get(kode))
+                    .orElseThrow(() -> new IllegalArgumentException("Ukjent HistorikkinnslagType: " + kode));
         }
     }
 }

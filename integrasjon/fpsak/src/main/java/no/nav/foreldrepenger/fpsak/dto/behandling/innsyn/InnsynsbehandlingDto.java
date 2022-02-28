@@ -4,18 +4,18 @@ package no.nav.foreldrepenger.fpsak.dto.behandling.innsyn;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.behandling.innsyn.InnsynResultatType;
 
 public class InnsynsbehandlingDto {
 
-    private KodeDto innsynResultatType;
+    private InnsynResultatType innsynResultatType;
     private List<InnsynDokumentDto> dokumenter = new ArrayList<>();
 
-    public KodeDto getInnsynResultatType() {
+    public InnsynResultatType getInnsynResultatType() {
         return innsynResultatType;
     }
 
-    public void setInnsynResultatType(KodeDto innsynResultatType) {
+    public void setInnsynResultatType(InnsynResultatType innsynResultatType) {
         this.innsynResultatType = innsynResultatType;
     }
 

@@ -9,7 +9,6 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.fpformidling.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
@@ -19,7 +18,6 @@ import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BeregningsgrunnlagA
 import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
 import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BeregningsgrunnlagPeriodeDtoV2;
 import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BgAndelArbeidsforholdDtoV2;
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 import no.nav.foreldrepenger.fpsak.mapper.sortering.PeriodeComparator;
 
 public class BeregningsgrunnlagDtoMapper {
@@ -46,7 +44,7 @@ public class BeregningsgrunnlagDtoMapper {
                 .map(periode -> mapBeregningsgrunnlagPeriodeFraDto(periode, hentNavn))
                 .sorted(PeriodeComparator.BEREGNINGSGRUNNLAG)
                 .forEach(builder::leggTilBeregningsgrunnlagPeriode);
-        builder.medhHjemmel(Hjemmel.fraKode(dto.getHjemmel().getKode()));
+        builder.medhHjemmel(dto.getHjemmel());
         builder.medBesteberegnet(dto.isErBesteberegnet());
         return builder.build();
     }
@@ -60,7 +58,7 @@ public class BeregningsgrunnlagDtoMapper {
                 .medAvkortetPrÅr(dto.getAvkortetPrÅr())
                 .medDagsats(dto.getDagsats())
                 .medPeriode(intervall)
-                .medperiodeÅrsaker(dto.getPeriodeårsaker().stream().map(KodeDto::getKode).collect(Collectors.toList()))
+                .medperiodeÅrsaker(dto.getPeriodeårsaker())
                 .medBeregningsgrunnlagPrStatusOgAndelList(dto.getBeregningsgrunnlagandeler().stream()
                         .map(andel -> mapBgpsaFraDto(andel, hentNavn))
                         .collect(Collectors.toList()))
@@ -73,14 +71,14 @@ public class BeregningsgrunnlagDtoMapper {
         if (dto.getArbeidsforhold() != null) {
             bgAndelArbeidsforhold = mapBgAndelArbeidsforholdfraDto(dto.getArbeidsforhold(), hentNavn);
         }
-        builder.medAktivitetStatus(AktivitetStatus.fraKode(dto.getAktivitetStatus().getKode()))
+        builder.medAktivitetStatus(dto.getAktivitetStatus())
                 .medBruttoPrÅr(dto.getBruttoPrÅr())
                 .medAvkortetPrÅr(dto.getAvkortetPrÅr())
                 .medNyIArbeidslivet(dto.getErNyIArbeidslivet())
                 .medDagsats(dto.getDagsats())
                 .medBeregningsperiode(avklarBeregningsperiode(dto))
                 .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
-                .medArbeidsforholdType(bgAndelArbeidsforhold == null ? OpptjeningAktivitetType.UDEFINERT : OpptjeningAktivitetType.fraKode(dto.getArbeidsforholdType().getKode()))
+                .medArbeidsforholdType(bgAndelArbeidsforhold == null ? OpptjeningAktivitetType.UDEFINERT : dto.getArbeidsforholdType())
                 .medErTilkommetAndel(dto.getErTilkommetAndel());
         return builder.build();
     }
@@ -93,7 +91,7 @@ public class BeregningsgrunnlagDtoMapper {
         );
     }
 
-    private static BeregningsgrunnlagAktivitetStatus mapBeregningsgrunnlagAktivitetStatusFraDto(KodeDto kodedto) {
-        return new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.fraKode(kodedto.getKode()));
+    private static BeregningsgrunnlagAktivitetStatus mapBeregningsgrunnlagAktivitetStatusFraDto(AktivitetStatus aktivitetStatus) {
+        return new BeregningsgrunnlagAktivitetStatus(aktivitetStatus);
     }
 }

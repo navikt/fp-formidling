@@ -2,23 +2,24 @@ package no.nav.foreldrepenger.fpsak.dto.uttak;
 
 import java.math.BigDecimal;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
+import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
 
 public class UttakResultatPeriodeAktivitetDto {
 
-    private KodeDto stønadskontoType;
+    private StønadskontoType stønadskontoType;
     private BigDecimal trekkdagerDesimaler;
     private BigDecimal prosentArbeid;
     private String arbeidsforholdId;
     private String arbeidsgiverReferanse;
     private BigDecimal utbetalingsgrad;
-    private KodeDto uttakArbeidType;
+    private UttakArbeidType uttakArbeidType;
     private boolean gradering;
 
     private UttakResultatPeriodeAktivitetDto() {
     }
 
-    public KodeDto getStønadskontoType() {
+    public StønadskontoType getStønadskontoType() {
         return stønadskontoType;
     }
 
@@ -38,7 +39,7 @@ public class UttakResultatPeriodeAktivitetDto {
         return utbetalingsgrad;
     }
 
-    public KodeDto getUttakArbeidType() {
+    public UttakArbeidType getUttakArbeidType() {
         return uttakArbeidType;
     }
 

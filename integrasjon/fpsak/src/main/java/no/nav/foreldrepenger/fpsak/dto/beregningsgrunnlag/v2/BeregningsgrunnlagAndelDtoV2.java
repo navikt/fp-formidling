@@ -16,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
+import no.nav.foreldrepenger.fpformidling.opptjening.OpptjeningAktivitetType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(value = JsonInclude.Include.NON_ABSENT, content = JsonInclude.Include.NON_EMPTY)
@@ -33,7 +34,7 @@ public class BeregningsgrunnlagAndelDtoV2 {
     @JsonProperty(value = "aktivitetStatus")
     @Valid
     @NotNull
-    private KodeDto aktivitetStatus;
+    private AktivitetStatus aktivitetStatus;
 
     @JsonProperty(value = "bruttoPrÅr")
     @Valid
@@ -56,7 +57,7 @@ public class BeregningsgrunnlagAndelDtoV2 {
     @JsonProperty(value = "arbeidsforholdType")
     @Valid
     @NotNull
-    private KodeDto arbeidsforholdType;
+    private OpptjeningAktivitetType arbeidsforholdType;
 
     @JsonProperty(value = "beregningsperiodeFom")
     @Valid
@@ -78,11 +79,11 @@ public class BeregningsgrunnlagAndelDtoV2 {
     }
 
     public BeregningsgrunnlagAndelDtoV2(@Valid @Digits(integer = 8, fraction = 2) @DecimalMin("0.00") @DecimalMax("10000.00") Long dagsats,
-                                        @Valid @NotNull KodeDto aktivitetStatus,
+                                        @Valid @NotNull AktivitetStatus aktivitetStatus,
                                         @Valid @Digits(integer = 8, fraction = 2) @DecimalMin("0.00") @DecimalMax("10000000.00") BigDecimal bruttoPrÅr,
                                         @Valid @Digits(integer = 8, fraction = 2) @DecimalMin("0.00") @DecimalMax("10000000.00") BigDecimal avkortetPrÅr,
                                         @Valid Boolean erNyIArbeidslivet,
-                                        @Valid @NotNull KodeDto arbeidsforholdType,
+                                        @Valid @NotNull OpptjeningAktivitetType arbeidsforholdType,
                                         @Valid LocalDate beregningsperiodeFom,
                                         @Valid LocalDate beregningsperiodeTom,
                                         @Valid BgAndelArbeidsforholdDtoV2 arbeidsforhold,
@@ -103,7 +104,7 @@ public class BeregningsgrunnlagAndelDtoV2 {
         return dagsats;
     }
 
-    public KodeDto getAktivitetStatus() {
+    public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
     }
 
@@ -119,7 +120,7 @@ public class BeregningsgrunnlagAndelDtoV2 {
         return erNyIArbeidslivet;
     }
 
-    public KodeDto getArbeidsforholdType() {
+    public OpptjeningAktivitetType getArbeidsforholdType() {
         return arbeidsforholdType;
     }
 

@@ -41,13 +41,7 @@ public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
     private static SimpleModule createModule() {
         SimpleModule module = new SimpleModule("VL-REST", new Version(1, 0, 0, null, null, null));
 
-        addSerializers(module);
-
         return module;
-    }
-
-    private static void addSerializers(SimpleModule module) {
-        module.addSerializer(new KodeverdiSerializer());
     }
 
     /**

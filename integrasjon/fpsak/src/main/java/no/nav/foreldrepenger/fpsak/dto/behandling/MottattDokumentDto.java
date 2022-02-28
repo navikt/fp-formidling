@@ -2,13 +2,13 @@ package no.nav.foreldrepenger.fpsak.dto.behandling;
 
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentKategori;
 
 public class MottattDokumentDto {
 
     private LocalDate mottattDato;
-    private KodeDto dokumentTypeId;
-    private KodeDto dokumentKategori;
+    private String dokumentTypeId;
+    private DokumentKategori dokumentKategori;
 
     public MottattDokumentDto() {
     }
@@ -17,11 +17,11 @@ public class MottattDokumentDto {
         return mottattDato;
     }
 
-    public KodeDto getDokumentTypeId() {
+    public String getDokumentTypeId() {
         return dokumentTypeId;
     }
 
-    public KodeDto getDokumentKategori() {
+    public DokumentKategori getDokumentKategori() {
         return dokumentKategori;
     }
 }

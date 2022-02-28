@@ -5,20 +5,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
-@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public enum DokumentMalType implements Kodeverdi {
 
     FRITEKSTBREV(DokumentMalTypeKode.FRITEKSTBREV, "Fritekstbrev", "N", DokumentMalRestriksjon.INGEN),
@@ -115,8 +108,6 @@ public enum DokumentMalType implements Kodeverdi {
     UDEFINERT("-")
     ;
 
-    public static final String KODEVERK = "DOKUMENT_MAL_TYPE";
-
     public static final Set<DokumentMalType> FORLENGET_SAKSBEHANDLINGSTID_BREVMALER = Set.of(
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
             DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL,
@@ -138,11 +129,8 @@ public enum DokumentMalType implements Kodeverdi {
     }
 
     private String kode;
-    @JsonIgnore
     private String navn;
-    @JsonIgnore
     private String manuellUtsendelse;
-    @JsonIgnore
     private DokumentMalRestriksjon dokumentmalRestriksjon;
 
     DokumentMalType() {
@@ -169,25 +157,14 @@ public enum DokumentMalType implements Kodeverdi {
         this.kode = kode;
     }
 
-    @JsonCreator
-    public static DokumentMalType fraKode(@JsonProperty("kode") String kode) {
+    public static DokumentMalType fraKode(String kode) {
         if (kode == null) {
             return null;
         }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent Dokumentmaltype: " + kode);
-        }
-        return ad;
+        return Optional.ofNullable(KODER.get(kode))
+                .orElseThrow(() -> new IllegalArgumentException("Ukjent Dokumentmaltype: " + kode));
     }
 
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
-    }
-
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;

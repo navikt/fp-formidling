@@ -56,7 +56,7 @@ public class TilkjentYtelseDtoMapper {
     //Fpsak slår sammen andeler i dto, så vi må eventuelt splitte dem opp igjen
     private static TilkjentYtelseAndel mapAndelFraDto(TilkjentYtelseAndelDto dto, UnaryOperator<String> hentNavn) {
         return TilkjentYtelseAndel.ny()
-                .medAktivitetStatus(AktivitetStatus.fraKode(dto.getAktivitetStatus().getKode()))
+                .medAktivitetStatus(dto.getAktivitetStatus())
                 .medArbeidsforholdRef(dto.getArbeidsforholdId() != null && !dto.getArbeidsforholdId().isEmpty() ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
                 .medArbeidsgiver(mapArbeidsgiverFraDto(dto, hentNavn))
                 .medStillingsprosent(dto.getStillingsprosent())
@@ -68,7 +68,7 @@ public class TilkjentYtelseDtoMapper {
     }
 
     private static Arbeidsgiver mapArbeidsgiverFraDto(TilkjentYtelseAndelDto dto, UnaryOperator<String> hentNavn) {
-        if (!AktivitetStatus.ARBEIDSTAKER.getKode().equals(dto.getAktivitetStatus().getKode())
+        if (!AktivitetStatus.ARBEIDSTAKER.equals(dto.getAktivitetStatus())
                 || dto.getArbeidsgiverReferanse() == null) {
             return null;
         }

@@ -5,18 +5,19 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.anke.AnkeVurdering;
+import no.nav.foreldrepenger.fpformidling.anke.AnkeVurderingOmgjør;
 
 @JsonAutoDetect(getterVisibility= JsonAutoDetect.Visibility.NONE, setterVisibility= JsonAutoDetect.Visibility.NONE, fieldVisibility= JsonAutoDetect.Visibility.ANY)
 public class AnkeVurderingResultatDto {
 
     // Er skrelt ned til minimum. Se fpsak for fullt innholt. Ta inn mer ved behov.
     @JsonProperty("ankeVurdering")
-    private KodeDto ankeVurdering;
+    private AnkeVurdering ankeVurdering;
     @JsonProperty("fritekstTilBrev")
     private String fritekstTilBrev;
     @JsonProperty("ankeVurderingOmgjoer")
-    private KodeDto ankeVurderingOmgjoer;
+    private AnkeVurderingOmgjør ankeVurderingOmgjoer;
     @JsonProperty("påAnketKlageBehandlingUuid")
     private UUID påAnketKlageBehandlingUuid;
 
@@ -24,7 +25,7 @@ public class AnkeVurderingResultatDto {
     public AnkeVurderingResultatDto() {
     }
 
-    public KodeDto getAnkeVurdering() {
+    public AnkeVurdering getAnkeVurdering() {
         return ankeVurdering;
     }
 
@@ -32,7 +33,7 @@ public class AnkeVurderingResultatDto {
         return fritekstTilBrev;
     }
 
-    public KodeDto getAnkeVurderingOmgjoer() {
+    public AnkeVurderingOmgjør getAnkeVurderingOmgjoer() {
         return ankeVurderingOmgjoer;
     }
 

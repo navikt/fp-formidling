@@ -352,12 +352,12 @@ public final class UtbetalingsperiodeMapper {
 
     private static void mapNaturalytelse(Arbeidsforhold.Builder arbeidsforholdBuilder, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
                                          TilkjentYtelsePeriode tilkjentYtelsePeriode, Språkkode språkkode) {
-        for (String årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
-            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.getKode().equals(årsak)) {
+        for (PeriodeÅrsak årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
+            if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.equals(årsak)) {
                 arbeidsforholdBuilder.medNaturalytelseEndringType(NaturalytelseEndringType.STOPP);
                 arbeidsforholdBuilder.medNaturalytelseNyDagsats((beregningsgrunnlagPeriode.getDagsats()));
                 arbeidsforholdBuilder.medNaturalytelseEndringDato(formaterDato(tilkjentYtelsePeriode.getPeriodeFom(), språkkode));
-            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.getKode().equals(årsak)) {
+            } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.equals(årsak)) {
                 arbeidsforholdBuilder.medNaturalytelseEndringType((NaturalytelseEndringType.START));
                 arbeidsforholdBuilder.medNaturalytelseNyDagsats(beregningsgrunnlagPeriode.getDagsats());
                 arbeidsforholdBuilder.medNaturalytelseEndringDato(formaterDato(tilkjentYtelsePeriode.getPeriodeFom(), språkkode));

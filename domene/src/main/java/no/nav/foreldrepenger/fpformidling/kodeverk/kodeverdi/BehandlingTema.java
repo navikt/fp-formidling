@@ -1,16 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
-@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public enum BehandlingTema implements Kodeverdi, KodeverdiMedOffisiellKode {
 
     ENGANGSSTØNAD("ENGST", "ab0327"),
@@ -33,21 +24,9 @@ public enum BehandlingTema implements Kodeverdi, KodeverdiMedOffisiellKode {
     UDEFINERT("-", null),
     ;
 
-    private static final Map<String, BehandlingTema> KODER = new LinkedHashMap<>();
-
-    public static final String KODEVERK = "BEHANDLING_TEMA";
-
-    static {
-        for (var v : values()) {
-            if (KODER.putIfAbsent(v.kode, v) != null) {
-                throw new IllegalArgumentException("Duplikat : " + v.kode);
-            }
-        }
-    }
-
+    @JsonValue
     private String kode;
 
-    @JsonIgnore
     private String offisiellKode;
 
 
@@ -56,25 +35,6 @@ public enum BehandlingTema implements Kodeverdi, KodeverdiMedOffisiellKode {
         this.offisiellKode = offisiellKode;
     }
 
-    @JsonCreator
-    public static BehandlingTema fraKode(@JsonProperty("kode") String kode) {
-        if (kode == null) {
-            return null;
-        }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent Tema: " + kode);
-        }
-        return ad;
-    }
-
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
-    }
-
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;

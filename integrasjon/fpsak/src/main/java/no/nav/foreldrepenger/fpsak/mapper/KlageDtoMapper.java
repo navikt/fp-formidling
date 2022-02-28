@@ -1,20 +1,14 @@
 package no.nav.foreldrepenger.fpsak.mapper;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
-import no.nav.foreldrepenger.fpformidling.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.klage.KlageFormkravResultat;
-import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
 import no.nav.foreldrepenger.fpformidling.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpsak.dto.klage.MottattKlagedokumentDto;
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
 
 public class KlageDtoMapper {
 
@@ -42,25 +36,17 @@ public class KlageDtoMapper {
     }
 
     private static void leggTilPåklagdBehandlingType(Klage.Builder builder, KlageFormkravResultatDto klageFormkravResultat) {
-        KodeDto paklagdBehandlingType = klageFormkravResultat.getPaklagdBehandlingType();
+        BehandlingType paklagdBehandlingType = klageFormkravResultat.getPaklagdBehandlingType();
         if (paklagdBehandlingType != null) {
-            builder.medPåklagdBehandlingType(finnBehandlingType(paklagdBehandlingType.getKode()));
+            builder.medPåklagdBehandlingType(paklagdBehandlingType);
         }
     }
 
     private static KlageFormkravResultat mapKlageFormkravResultatfraDto(KlageFormkravResultatDto dto) {
-        List<KlageAvvistÅrsak> avvistÅrsaker = dto.getAvvistArsaker().stream()
-                .map(KodeDto::getKode)
-                .map(KlageAvvistÅrsak::fraKode)
-                .collect(Collectors.toList());
-        return new KlageFormkravResultat(avvistÅrsaker);
+        return new KlageFormkravResultat(dto.getAvvistArsaker());
     }
 
     private static KlageVurderingResultat mapKlageVurderingResultatfraDto(KlageVurderingResultatDto dto) {
-        return new KlageVurderingResultat(KlageVurdering.fraKode(dto.getKlageVurdering().getKode()), dto.getFritekstTilBrev());
-    }
-
-    private static BehandlingType finnBehandlingType(String behandlingType) {
-        return BehandlingType.fraKode(behandlingType);
+        return new KlageVurderingResultat(dto.getKlageVurdering(), dto.getFritekstTilBrev());
     }
 }

@@ -54,11 +54,6 @@ public class KodeverdiValidator implements ConstraintValidator<ValidKodeverk, Ko
             ok = false;
         }
 
-        if (!gyldigKodeverk(kodeliste.getKodeverk())) {
-            context.buildConstraintViolationWithTemplate(invNavn);
-            ok = false;
-        }
-
         return ok;
     }
 }

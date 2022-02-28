@@ -2,18 +2,18 @@ package no.nav.foreldrepenger.fpsak.dto.behandling;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingÅrsakDto {
-    private KodeDto behandlingArsakType;
+    private BehandlingÅrsakType behandlingArsakType;
     private Boolean manueltOpprettet;
 
-    public KodeDto getBehandlingArsakType() {
+    public BehandlingÅrsakType getBehandlingArsakType() {
         return behandlingArsakType;
     }
 
-    public void setBehandlingArsakType(KodeDto behandlingArsakType) {
+    public void setBehandlingArsakType(BehandlingÅrsakType behandlingArsakType) {
         this.behandlingArsakType = behandlingArsakType;
     }
 

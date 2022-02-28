@@ -2,18 +2,15 @@ package no.nav.foreldrepenger.fpformidling.vilkår;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.behandling.ÅrsakMedLovReferanse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
@@ -70,18 +67,6 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
 
     ;
 
-    private static final Map<String, Avslagsårsak> KODER = new LinkedHashMap<>();
-
-    static {
-        for (var v : values()) {
-            if (KODER.putIfAbsent(v.kode, v) != null) {
-                throw new IllegalArgumentException("Duplikat : " + v.kode);
-            }
-        }
-    }
-
-    public static final String KODEVERK = "AVSLAGSARSAK"; //$NON-NLS-1$
-
     public static final Set<Avslagsårsak> ALLEREDE_UTBETALT_ENGANGSSTØNAD = Collections.unmodifiableSet(new LinkedHashSet<>(
             Arrays.asList(ENGANGSTØNAD_ER_ALLEREDE_UTBETAL_TIL_MOR, ENGANGSSTØNAD_ER_ALLEREDE_UTBETALT_TIL_FAR_MEDMOR)));
 
@@ -101,6 +86,7 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
     @JsonIgnore
     private String lovReferanse;
 
+    @JsonValue
     private String kode;
 
     Avslagsårsak(String kode, String lovReferanse) {
@@ -108,28 +94,9 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
         this.lovReferanse = lovReferanse;
     }
 
-    @JsonCreator
-    public static Avslagsårsak fraKode(@JsonProperty("kode") String kode) {
-        if (kode == null) {
-            return null;
-        }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent Avslagsårsak: " + kode);
-        }
-        return ad;
-    }
-
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;
-    }
-
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
     }
 
     @Override

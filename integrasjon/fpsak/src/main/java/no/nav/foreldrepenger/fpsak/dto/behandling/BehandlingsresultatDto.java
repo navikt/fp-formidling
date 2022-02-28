@@ -5,16 +5,18 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
+import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
+import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingsresultatDto {
     private Integer id;
-    private KodeDto type;
-    private KodeDto avslagsarsak;
-    private KodeDto rettenTil;
-    private List<KodeDto> konsekvenserForYtelsen;
-    private KodeDto vedtaksbrev;
+    private BehandlingResultatType type;
+    private Avslagsårsak avslagsarsak;
+    private List<KonsekvensForYtelsen> konsekvenserForYtelsen;
+    private Vedtaksbrev vedtaksbrev;
     private String avslagsarsakFritekst;
     private String overskrift;
     private String fritekstbrev;
@@ -29,35 +31,27 @@ public class BehandlingsresultatDto {
         this.id = id;
     }
 
-    public KodeDto getType() {
+    public BehandlingResultatType getType() {
         return type;
     }
 
-    public void setType(KodeDto type) {
+    public void setType(BehandlingResultatType type) {
         this.type = type;
     }
 
-    public KodeDto getAvslagsarsak() {
+    public Avslagsårsak getAvslagsarsak() {
         return avslagsarsak;
     }
 
-    public void setAvslagsarsak(KodeDto avslagsarsak) {
+    public void setAvslagsarsak(Avslagsårsak avslagsarsak) {
         this.avslagsarsak = avslagsarsak;
     }
 
-    public KodeDto getRettenTil() {
-        return rettenTil;
+    public List<KonsekvensForYtelsen> getKonsekvenserForYtelsen() {
+        return konsekvenserForYtelsen != null ? konsekvenserForYtelsen : List.of();
     }
 
-    public void setRettenTil(KodeDto rettenTil) {
-        this.rettenTil = rettenTil;
-    }
-
-    public List<KodeDto> getKonsekvenserForYtelsen() {
-        return konsekvenserForYtelsen;
-    }
-
-    public void setKonsekvenserForYtelsen(List<KodeDto> konsekvenserForYtelsen) {
+    public void setKonsekvenserForYtelsen(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {
         this.konsekvenserForYtelsen = konsekvenserForYtelsen;
     }
 
@@ -85,11 +79,11 @@ public class BehandlingsresultatDto {
         this.fritekstbrev = fritekstbrev;
     }
 
-    public KodeDto getVedtaksbrev() {
+    public Vedtaksbrev getVedtaksbrev() {
         return vedtaksbrev;
     }
 
-    public void setVedtaksbrev(KodeDto vedtaksbrev) {
+    public void setVedtaksbrev(Vedtaksbrev vedtaksbrev) {
         this.vedtaksbrev = vedtaksbrev;
     }
 
@@ -119,7 +113,6 @@ public class BehandlingsresultatDto {
                 ", type=" + (type != null ? type.toString() : null) +
                 ", avslagsarsak=" + (avslagsarsak != null ? avslagsarsak.toString() : null) +
                 ", vedtaksbrev=" + (vedtaksbrev != null ? vedtaksbrev.toString() : null) +
-                ", rettenTil=" + rettenTil +
                 ", konsekvenserForYtelsen=" + (konsekvenserForYtelsen != null ? konsekvenserForYtelsen.toString() : null) +
                 ", avslagsarsakFritekst='" + avslagsarsakFritekst + '\'' +
                 ", overskrift='" + overskrift + '\'' +

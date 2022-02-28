@@ -1,15 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonFormat(shape = Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
@@ -53,15 +51,12 @@ public enum BehandlingÅrsakType implements Kodeverdi {
     RE_HENDELSE_DØDFØDSEL("RE-HENDELSE-DØDFØD"),
 
     // La stå
+    @JsonEnumDefaultValue
     UDEFINERT("-"),
 
     ;
 
-    public static final String KODEVERK = "BEHANDLING_AARSAK"; //$NON-NLS-1$
-
-    private static final Map<String, BehandlingÅrsakType> KODER = new LinkedHashMap<>();
-
-
+    @JsonValue
     private String kode;
 
 
@@ -69,43 +64,9 @@ public enum BehandlingÅrsakType implements Kodeverdi {
         this.kode = kode;
     }
 
-    @JsonCreator
-    public static BehandlingÅrsakType fraKode(@JsonProperty("kode") String kode) {
-        if (kode == null) {
-            return null;
-        }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent BehandlingÅrsakType: " + kode);
-        }
-        return ad;
-    }
-
-    public static BehandlingÅrsakType fraKodeDefaultUdefinert(@JsonProperty("kode") String kode) {
-        if (kode == null) {
-            return null;
-        }
-        return KODER.getOrDefault(kode, UDEFINERT);
-    }
-
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
-    }
-
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;
-    }
-
-    static {
-        for (var v : values()) {
-            if (KODER.putIfAbsent(v.kode, v) != null) {
-                throw new IllegalArgumentException("Duplikat : " + v.kode);
-            }
-        }
     }
 
     public static Set<BehandlingÅrsakType> årsakerForAutomatiskRevurdering() {

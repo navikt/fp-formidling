@@ -3,14 +3,14 @@ package no.nav.foreldrepenger.fpformidling.historikk;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
@@ -24,8 +24,6 @@ public enum HistorikkinnslagType implements Kodeverdi {
 
     private static final Map<String, HistorikkinnslagType> KODER = new LinkedHashMap<>();
 
-    public static final String KODEVERK = "HISTORIKKINNSLAG_TYPE";
-
     static {
         for (var v : values()) {
             if (KODER.putIfAbsent(v.kode, v) != null) {
@@ -34,31 +32,15 @@ public enum HistorikkinnslagType implements Kodeverdi {
         }
     }
 
+    @JsonValue
     private String kode;
 
     private HistorikkinnslagType(String kode) {
         this.kode = kode;
     }
 
-    @JsonCreator
-    public static HistorikkinnslagType fraKode(@JsonProperty("kode") String kode) {
-        if (kode == null) {
-            return null;
-        }
-        var ad = KODER.get(kode);
-        if (ad == null) {
-            throw new IllegalArgumentException("Ukjent HistorikkinnslagType: " + kode);
-        }
-        return ad;
-    }
 
-    @JsonProperty
-    @Override
-    public String getKodeverk() {
-        return KODEVERK;
-    }
 
-    @JsonProperty
     @Override
     public String getKode() {
         return kode;
@@ -74,6 +56,14 @@ public enum HistorikkinnslagType implements Kodeverdi {
         @Override
         public HistorikkinnslagType convertToEntityAttribute(String dbData) {
             return dbData == null ? null : fraKode(dbData);
+        }
+
+        private static HistorikkinnslagType fraKode(String kode) {
+            if (kode == null) {
+                return null;
+            }
+            return Optional.ofNullable(KODER.get(kode))
+                    .orElseThrow(() -> new IllegalArgumentException("Ukjent HistorikkinnslagType: " + kode));
         }
     }
 }

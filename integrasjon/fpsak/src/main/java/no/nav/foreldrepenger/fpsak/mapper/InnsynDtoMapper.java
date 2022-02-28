@@ -5,7 +5,6 @@ import java.util.List;
 
 import no.nav.foreldrepenger.fpformidling.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.behandling.innsyn.InnsynDokument;
-import no.nav.foreldrepenger.fpformidling.behandling.innsyn.InnsynResultatType;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynDokumentDto;
 import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
@@ -13,7 +12,7 @@ import no.nav.foreldrepenger.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 public class InnsynDtoMapper {
 
     public static Innsyn mapInnsynFraDto(InnsynsbehandlingDto dto) {
-        return new Innsyn(InnsynResultatType.fraKode(dto.getInnsynResultatType().getKode()),
+        return new Innsyn(dto.getInnsynResultatType(),
                 mapInnsyndokumenterFraDto(dto.getDokumenter()));
     }
 

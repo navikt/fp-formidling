@@ -2,15 +2,14 @@ package no.nav.foreldrepenger.fpsak.dto.tilkjentytelse;
 
 import java.math.BigDecimal;
 
-import no.nav.foreldrepenger.fpsak.dto.kodeverk.KodeDto;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 
 public class TilkjentYtelseAndelDto {
     private String arbeidsgiverReferanse;
     private Integer refusjon;
     private Integer tilSoker;
-    private KodeDto aktivitetStatus;
+    private AktivitetStatus aktivitetStatus;
     private String arbeidsforholdId;
-    private KodeDto arbeidsforholdType;
     private BigDecimal stillingsprosent;
 
     public TilkjentYtelseAndelDto() {
@@ -28,16 +27,12 @@ public class TilkjentYtelseAndelDto {
         return tilSoker;
     }
 
-    public KodeDto getAktivitetStatus() {
+    public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;
     }
 
     public String getArbeidsforholdId() {
         return arbeidsforholdId;
-    }
-
-    public KodeDto getArbeidsforholdType() {
-        return arbeidsforholdType;
     }
 
     public BigDecimal getStillingsprosent() {

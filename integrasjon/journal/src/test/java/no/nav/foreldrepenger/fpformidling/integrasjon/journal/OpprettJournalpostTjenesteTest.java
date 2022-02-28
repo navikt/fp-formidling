@@ -71,11 +71,11 @@ public class OpprettJournalpostTjenesteTest {
         assertThat(genRequest.getSak().getSakstype()).isEqualTo("FAGSAK");
         assertThat(genRequest.getSak().getFagsakId()).isEqualTo(saksnummer.getVerdi());
         assertThat(genRequest.getSak().getFagsaksystem()).isEqualTo("FS36");
-        assertThat(genRequest.getAvsenderMottaker().getId()).isEqualTo(MOTTAKER_ID);
-        assertThat(genRequest.getAvsenderMottaker().getNavn()).isEqualTo(MOTTAKER_NAVN);
-        assertThat(genRequest.getAvsenderMottaker().getIdType()).isEqualByComparingTo(AvsenderMottakerIdType.FNR);
+        assertThat(genRequest.getAvsenderMottaker().id()).isEqualTo(MOTTAKER_ID);
+        assertThat(genRequest.getAvsenderMottaker().navn()).isEqualTo(MOTTAKER_NAVN);
+        assertThat(genRequest.getAvsenderMottaker().idType()).isEqualByComparingTo(AvsenderMottakerIdType.FNR);
         assertThat(genRequest.getJournalfoerendeEnhet()).isEqualTo("9999");
-        assertThat(genRequest.getBruker().getId()).isEqualTo(FNR);
+        assertThat(genRequest.getBruker().id()).isEqualTo(FNR);
         assertThat(genRequest.getEksternReferanseId()).isEqualTo(dokumentHendelse.getBestillingUuid().toString());
         assertThat(genRequest.getDokumenter().get(0).getBrevkode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getKode());
         byte[] brev = genRequest.getDokumenter().get(0).getDokumentvarianter().get(0).getFysiskDokument();

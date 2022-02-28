@@ -118,14 +118,14 @@ public class FamiliehendelseDtoMapper {
     }
 
     private static boolean alleFelterErNull(FamiliehendelseDto dto) {
-        if (dto instanceof AvklartDataOmsorgDto) {
-            return alleFelterOmsorgErNull((AvklartDataOmsorgDto) dto);
+        if (dto instanceof AvklartDataOmsorgDto avklartDataOmsorgDto) {
+            return alleFelterOmsorgErNull(avklartDataOmsorgDto);
         }
-        if (dto instanceof AvklartDataFodselDto) {
-            return alleFelterFødselErNull((AvklartDataFodselDto) dto);
+        if (dto instanceof AvklartDataFodselDto avklartDataFodselDto) {
+            return alleFelterFødselErNull(avklartDataFodselDto);
         }
-        if (dto instanceof AvklartDataAdopsjonDto) {
-            return alleFelterAdopsjonErNull((AvklartDataAdopsjonDto) dto);
+        if (dto instanceof AvklartDataAdopsjonDto avklartDataAdopsjonDto) {
+            return alleFelterAdopsjonErNull(avklartDataAdopsjonDto);
         }
         return true;
 
@@ -155,7 +155,6 @@ public class FamiliehendelseDtoMapper {
         return dto.getAntallBarnTilBeregning() == null &&
                 dto.getForeldreansvarDato() == null &&
                 dto.getOmsorgsovertakelseDato() == null &&
-                dto.getVilkarType() == null &&
                 dto.getSkjæringstidspunkt() == null;
     }
 

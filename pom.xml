@@ -32,13 +32,13 @@
         <!-- Felles artefakter -->
         <felles.version>4.1.18</felles.version>
         <prosesstask.version>3.1.7</prosesstask.version>
-        <kontrakter.version>6.1.9</kontrakter.version>
+        <kontrakter.version>6.1.10</kontrakter.version>
         <konfig.version>1.1.5</konfig.version>
 
         <!-- Eksterne -->
         <prometheus.version>0.15.0</prometheus.version>
         <swagger.version>2.1.13</swagger.version>
-        <swagger-ui.version>4.5.0</swagger-ui.version>
+        <swagger-ui.version>4.5.2</swagger-ui.version>
         <kafka.version>3.1.0</kafka.version>
         <logstash.version>7.0.1</logstash.version>
         <logback-syslog4j.version>1.0.0</logback-syslog4j.version>

@@ -71,9 +71,8 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
-        DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.UTKAST);
-        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
-        dokumentRepository.lagre(dokumentData);
+        DokumentData dokumentData = lagreDokumentDataFor(behandling, dokumentMal, BestillingType.UTKAST);
+
         DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
 
         DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
@@ -94,9 +93,7 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
-        DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, BestillingType.BESTILL);
-        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
-        dokumentRepository.lagre(dokumentData);
+        DokumentData dokumentData = lagreDokumentDataFor(behandling, dokumentMal, BestillingType.BESTILL);
         boolean innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
 
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
@@ -124,8 +121,21 @@ public class DokgenBrevproduksjonTjeneste {
         }
     }
 
+    private DokumentData lagreDokumentDataFor(Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {
+        DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, bestillingType);
+        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
+        dokumentRepository.lagre(dokumentData);
+        return dokumentData;
+    }
+
+
     private DokumentData lagDokumentData(Behandling behandling, DokumentMalType dokumentMalType, BestillingType bestillingType) {
-        return DokumentData.builder().medDokumentMalType(dokumentMalType).medBehandlingUuid(behandling.getUuid()).medBestiltTid(LocalDateTime.now()).medBestillingType(bestillingType.name()).build();
+        return DokumentData.builder()
+                .medDokumentMalType(dokumentMalType)
+                .medBehandlingUuid(behandling.getUuid())
+                .medBestiltTid(LocalDateTime.now())
+                .medBestillingType(bestillingType.name())
+                .build();
     }
 
     private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMal, OpprettJournalpostResponse response, JournalpostId journalpostId, boolean innsynMedVedlegg, String saksnummer) {

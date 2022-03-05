@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpformidling.historikk;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -51,8 +50,8 @@ public class HistorikkRepositoryImplTest {
                 .build();
         historikkRepository.lagre(historikkInnslag);
 
-        List<DokumentHistorikkinnslag> hendelseListe = historikkRepository.hentInnslagForBehandling(behandlingUuid);
+        var historikk = historikkRepository.hent(historikkInnslag.getId());
 
-        assertThat(hendelseListe).hasSize(1);
+        assertThat(historikk).isNotNull();
     }
 }

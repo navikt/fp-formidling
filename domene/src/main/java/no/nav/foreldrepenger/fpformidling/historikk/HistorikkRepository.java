@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.historikk;
 
-import java.util.List;
-import java.util.UUID;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -28,13 +25,7 @@ public class HistorikkRepository {
         lagreOgFlush(dokumentHistorikkinnslag);
     }
 
-    public List<DokumentHistorikkinnslag> hentInnslagForBehandling(UUID behandlingUuid) {
-        TypedQuery<DokumentHistorikkinnslag> query = entityManager.createQuery("from DokumentHistorikkinnslag where behandlingUuid=:behandlingUuid", DokumentHistorikkinnslag.class);
-        query.setParameter("behandlingUuid", behandlingUuid);
-        return query.getResultList();
-    }
-
-    public DokumentHistorikkinnslag hentInnslagMedId(long historikkinnslagId) {
+    public DokumentHistorikkinnslag hent(long historikkinnslagId) {
         TypedQuery<DokumentHistorikkinnslag> query = entityManager.createQuery("from DokumentHistorikkinnslag where id=:historikkinnslagId", DokumentHistorikkinnslag.class);
         query.setParameter("historikkinnslagId", historikkinnslagId);
         return HibernateVerktøy.hentEksaktResultat(query);

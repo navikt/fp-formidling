@@ -14,8 +14,7 @@ import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.historikk.DokumentHistorikkinnslag;
-import no.nav.foreldrepenger.fpformidling.historikk.HistorikkRepository;
+import no.nav.foreldrepenger.fpformidling.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
 import no.nav.foreldrepenger.fpformidling.klage.KlageVurderingResultat;
@@ -31,7 +30,7 @@ class DokumentMalUtleder {
 
     private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingUuid: ";
     private DomeneobjektProvider domeneobjektProvider;
-    private HistorikkRepository historikkRepository;
+    private HendelseRepository hendelseRepository;
     private BehandlingRestKlient behandlingRestKlient;
 
     public DokumentMalUtleder() {
@@ -40,10 +39,10 @@ class DokumentMalUtleder {
 
     @Inject
     public DokumentMalUtleder(DomeneobjektProvider domeneobjektProvider,
-                              HistorikkRepository historikkRepository,
+                              HendelseRepository hendelseRepository,
                               BehandlingRestKlient behandlingRestKlient) {
         this.domeneobjektProvider = domeneobjektProvider;
-        this.historikkRepository = historikkRepository;
+        this.hendelseRepository = hendelseRepository;
         this.behandlingRestKlient = behandlingRestKlient;
     }
 
@@ -153,8 +152,8 @@ class DokumentMalUtleder {
     }
 
     private boolean harSendtVarselOmRevurdering(Behandling behandling) {
-        return historikkRepository.hentInnslagForBehandling(behandling.getUuid())
-                .stream().map(DokumentHistorikkinnslag::getDokumentMalType)
+        return hendelseRepository.hentDokumentHendelserForBehandling(behandling.getUuid())
+                .stream().map(DokumentHendelse::getDokumentMalType)
                 .anyMatch(DokumentMalType.VARSEL_OM_REVURDERING::equals)
                 || Boolean.TRUE.equals(behandlingRestKlient.harSendtVarselOmRevurdering(behandling.getResourceLinker()).orElse(false));
     }

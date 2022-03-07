@@ -52,7 +52,7 @@ public class DokumentHendelse extends BaseEntitet {
 
     @Convert(converter = HistorikkAktør.KodeverdiConverter.class)
     @Column(name = "historikk_aktoer", nullable = false)
-    private HistorikkAktør historikkAktør = HistorikkAktør.UDEFINERT;  // TODO bør det ikke stå VL som default???
+    private HistorikkAktør historikkAktør = HistorikkAktør.VEDTAKSLØSNINGEN;
 
     @Convert(converter = RevurderingVarslingÅrsak.KodeverdiConverter.class)
     @Column(name = "revurdering_varsling_arsak", nullable = false)

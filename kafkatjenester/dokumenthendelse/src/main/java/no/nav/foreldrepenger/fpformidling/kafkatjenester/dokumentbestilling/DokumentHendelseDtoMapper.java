@@ -50,19 +50,6 @@ public class DokumentHendelseDtoMapper {
         return HistorikkAktør.fraKode(historikkAktør);
     }
 
-    private static HistorikkAktør utledHistorikkAktør(no.nav.foreldrepenger.kontrakter.formidling.kodeverk.HistorikkAktør historikkAktør) {
-        if (historikkAktør == null) {
-            return HistorikkAktør.UDEFINERT;
-        }
-        return switch (historikkAktør) {
-            case BESLUTTER -> HistorikkAktør.BESLUTTER;
-            case SAKSBEHANDLER -> HistorikkAktør.SAKSBEHANDLER;
-            case SØKER -> HistorikkAktør.SØKER;
-            case ARBEIDSGIVER -> HistorikkAktør.ARBEIDSGIVER;
-            case VEDTAKSLØSNINGEN -> HistorikkAktør.VEDTAKSLØSNINGEN;
-        };
-    }
-
     public static DokumentHendelse mapDokumentHendelseFraDtoForKafka(DokumentbestillingV1 dokumentbestilling) {
         return DokumentHendelse.builder()
                 .medBehandlingUuid(dokumentbestilling.getBehandlingUuid())
@@ -82,7 +69,6 @@ public class DokumentHendelseDtoMapper {
                 .medBestillingUuid(dokumentbestilling.dokumentbestillingUuid())
                 .medYtelseType(utledYtelseType(dokumentbestilling.ytelseType()))
                 .medFritekst(dokumentbestilling.fritekst())
-                .medHistorikkAktør(utledHistorikkAktør(dokumentbestilling.historikkAktør()))
                 .medDokumentMalType(utleddokumentMalType(dokumentbestilling.dokumentMal()))
                 .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(dokumentbestilling.arsakskode()))
                 .medBehandlendeEnhetNavn(dokumentbestilling.behandlendeEnhetNavn())

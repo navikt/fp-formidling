@@ -33,7 +33,7 @@ public class PubliserHistorikkTask implements ProsessTaskHandler {
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
         long historikkId = Long.parseLong(prosessTaskData.getPropertyValue(PubliserHistorikkTask.HISTORIKK_ID));
-        DokumentHistorikkinnslag historikkinnslag = historikkRepository.hentInnslagMedId(historikkId);
+        DokumentHistorikkinnslag historikkinnslag = historikkRepository.hent(historikkId);
         dokumentHistorikkTjeneste.publiserHistorikk(historikkinnslag);
     }
 }

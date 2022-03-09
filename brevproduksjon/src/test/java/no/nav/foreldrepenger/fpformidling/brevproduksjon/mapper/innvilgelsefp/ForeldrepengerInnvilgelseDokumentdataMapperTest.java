@@ -71,6 +71,7 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrep
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
 import no.nav.foreldrepenger.fpformidling.uttak.Stønadskonto;
 import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
@@ -327,8 +328,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     private Saldoer opprettSaldoer() {
         Set<Stønadskonto> stønadskontoer = Set.of(
-                new Stønadskonto(10, StønadskontoType.MØDREKVOTE, DISPONIBLE_DAGER, PREMATUR_DAGER, 0),
-                new Stønadskonto(5, StønadskontoType.FELLESPERIODE, DISPONIBLE_DAGER_FELLES, 0, 0));
+                new Stønadskonto(10, SaldoVisningStønadskontoType.MØDREKVOTE, DISPONIBLE_DAGER, PREMATUR_DAGER, 0),
+                new Stønadskonto(5, SaldoVisningStønadskontoType.FELLESPERIODE, DISPONIBLE_DAGER_FELLES, 0, 0));
         return new Saldoer(stønadskontoer, TAPTE_DAGER_FPFF);
     }
 

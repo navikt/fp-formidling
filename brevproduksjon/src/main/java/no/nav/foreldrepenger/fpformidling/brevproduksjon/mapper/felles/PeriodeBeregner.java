@@ -17,8 +17,8 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagP
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.Stønadskonto;
-import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
@@ -137,7 +137,7 @@ public class PeriodeBeregner {
         return Optional.empty();
     }
 
-    public static Optional<Stønadskonto> finnStønadsKontoMedType(Set<Stønadskonto> stønadskontoer, StønadskontoType stønadskontoType) {
+    public static Optional<Stønadskonto> finnStønadsKontoMedType(Set<Stønadskonto> stønadskontoer, SaldoVisningStønadskontoType stønadskontoType) {
         return stønadskontoer.stream().filter(stønadskonto -> stønadskontoType.equals(stønadskonto.stønadskontoType()))
                 .findFirst();
     }

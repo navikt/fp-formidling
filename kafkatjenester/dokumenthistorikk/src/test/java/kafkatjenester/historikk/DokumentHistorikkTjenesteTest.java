@@ -20,6 +20,8 @@ import no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk.DokumentHisto
 import no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk.DokumentHistorikkinnslagProducer;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
+import no.nav.foreldrepenger.fpsak.Behandlinger;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 
 @ExtendWith(MockitoExtension.class)
 public class DokumentHistorikkTjenesteTest {
@@ -28,15 +30,18 @@ public class DokumentHistorikkTjenesteTest {
     @Spy
     private DokumentHistorikkinnslagProducer historikkMeldingProducer;
 
+    @Spy
+    private Behandlinger behandlinger;
+
     @BeforeEach
     public void setup() {
-        historikkTjeneste = new DokumentHistorikkTjeneste(historikkMeldingProducer);
+        historikkTjeneste = new DokumentHistorikkTjeneste(historikkMeldingProducer, behandlinger);
         lenient().doNothing().when(historikkMeldingProducer).sendJson(Mockito.any());
+        lenient().doNothing().when(behandlinger).kvitterDokument(Mockito.any());
     }
 
     @Test
     public void publiserHistorikk() {
-
         DokumentHistorikkinnslag historikk = DokumentHistorikkinnslag.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medHistorikkUuid(UUID.randomUUID())
@@ -48,6 +53,7 @@ public class DokumentHistorikkTjenesteTest {
                 .medHistorikkinnslagType(HistorikkinnslagType.BREV_SENT)
                 .build();
         historikkTjeneste.publiserHistorikk(historikk);
-        verify(historikkMeldingProducer, times(1)).sendJson(Mockito.anyString());
+        verify(behandlinger, times(1)).kvitterDokument(Mockito.any());
+        verify(historikkMeldingProducer, times(0)).sendJson(Mockito.any());
     }
 }

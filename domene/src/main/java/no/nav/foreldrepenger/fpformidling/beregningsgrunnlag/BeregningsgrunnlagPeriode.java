@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
@@ -104,5 +105,36 @@ public class BeregningsgrunnlagPeriode {
         public BeregningsgrunnlagPeriode build() {
             return new BeregningsgrunnlagPeriode(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BeregningsgrunnlagPeriode that = (BeregningsgrunnlagPeriode) o;
+        return Objects.equals(dagsats, that.dagsats) &&
+                Objects.equals(bruttoPrÅr, that.bruttoPrÅr) &&
+                Objects.equals(avkortetPrÅr, that.avkortetPrÅr) &&
+                Objects.equals(periodeÅrsakKoder, that.periodeÅrsakKoder) &&
+                Objects.equals(periode, that.periode) &&
+                Objects.equals(beregningsgrunnlagPrStatusOgAndelList, that.beregningsgrunnlagPrStatusOgAndelList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dagsats, bruttoPrÅr, avkortetPrÅr, periodeÅrsakKoder, periode,
+                beregningsgrunnlagPrStatusOgAndelList);
+    }
+
+    @Override
+    public String toString() {
+        return "BeregningsgrunnlagPeriode{" +
+                "dagsats=" + dagsats +
+                ", bruttoPrÅr=" + bruttoPrÅr +
+                ", avkortetPrÅr=" + avkortetPrÅr +
+                ", periodeÅrsakKoder=" + periodeÅrsakKoder +
+                ", periode=" + periode +
+                ", beregningsgrunnlagPrStatusOgAndelList=" + beregningsgrunnlagPrStatusOgAndelList +
+                '}';
     }
 }

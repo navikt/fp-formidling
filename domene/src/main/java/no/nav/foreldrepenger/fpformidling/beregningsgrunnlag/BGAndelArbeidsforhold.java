@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.beregningsgrunnlag;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
@@ -25,5 +26,31 @@ public record BGAndelArbeidsforhold(Arbeidsgiver arbeidsgiver,
 
     public BigDecimal getNaturalytelseTilkommetPrÅr() {
         return naturalytelseTilkommetPrÅr;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BGAndelArbeidsforhold that = (BGAndelArbeidsforhold) o;
+        return Objects.equals(arbeidsgiver, that.arbeidsgiver) &&
+                Objects.equals(arbeidsforholdRef, that.arbeidsforholdRef) &&
+                Objects.equals(naturalytelseBortfaltPrÅr, that.naturalytelseBortfaltPrÅr) &&
+                Objects.equals(naturalytelseTilkommetPrÅr, that.naturalytelseTilkommetPrÅr);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(arbeidsgiver, arbeidsforholdRef, naturalytelseBortfaltPrÅr, naturalytelseTilkommetPrÅr);
+    }
+
+    @Override
+    public String toString() {
+        return "BGAndelArbeidsforhold{" +
+                "arbeidsgiver=" + arbeidsgiver +
+                ", arbeidsforholdRef=" + arbeidsforholdRef +
+                ", naturalytelseBortfaltPrÅr=" + naturalytelseBortfaltPrÅr +
+                ", naturalytelseTilkommetPrÅr=" + naturalytelseTilkommetPrÅr +
+                '}';
     }
 }

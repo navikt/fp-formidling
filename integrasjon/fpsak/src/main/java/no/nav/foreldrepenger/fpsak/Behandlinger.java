@@ -31,10 +31,19 @@ import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.saldo.SaldoerDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 
 public interface Behandlinger {
 
     <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz);
+
+    default BeregningsgrunnlagDto hentBeregningsgrunnlagV2(UUID behandlingUuid) {
+        return hentBeregningsgrunnlagV2HvisFinnes(behandlingUuid)
+                .orElseThrow(
+                        () -> new IllegalStateException("Klarte ikke hente beregningsgrunnlag for behandling: " + behandlingUuid ));
+    }
+
+    Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagV2HvisFinnes(UUID behandlingUuid);
 
     BehandlingDto hentBehandling(UUID behandlingId);
 

@@ -138,7 +138,7 @@ public class BeregningsgrunnlagV2DtoMapper {
             case UTDANNINGSPERMISJON -> OpptjeningAktivitetType.UTDANNINGSPERMISJON;
             case OPPLÆRINGSPENGER -> OpptjeningAktivitetType.OPPLÆRINGSPENGER;
             case ARBEID -> OpptjeningAktivitetType.ARBEID;
-            case ARBEIDSAVKLARING -> OpptjeningAktivitetType.AAP;
+            case ARBEIDSAVKLARING -> OpptjeningAktivitetType.ARBEIDSAVKLARING;
             case FORELDREPENGER -> OpptjeningAktivitetType.FORELDREPENGER;
             case OMSORGSPENGER -> OpptjeningAktivitetType.OMSORGSPENGER;
             case PLEIEPENGER -> OpptjeningAktivitetType.PLEIEPENGER;

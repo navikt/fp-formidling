@@ -7,7 +7,6 @@ import java.util.UUID;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
-import javax.validation.Valid;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.http.client.utils.URIBuilder;

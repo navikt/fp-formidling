@@ -20,7 +20,6 @@ import no.nav.foreldrepenger.fpsak.Behandlinger;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.historikk.v1.HistorikkInnslagV1;
-import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 
 @ApplicationScoped
 public class DokumentHistorikkTjeneste {

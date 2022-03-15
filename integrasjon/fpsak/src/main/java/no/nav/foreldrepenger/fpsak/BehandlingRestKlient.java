@@ -15,7 +15,9 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
+import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 @Dependent
@@ -58,6 +60,18 @@ public class BehandlingRestKlient implements Behandlinger {
             return oidcRestClient.postReturnsOptional(URI.create(endpointFpsakRestBase + link.getHref()), link.getRequestPayload(), clazz);
         }
         return oidcRestClient.getReturnsOptional(saksnummerRequest(endpointFpsakRestBase + link.getHref(), link.getRequestPayload()), clazz);
+    }
+
+    @Override
+    public Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagV2HvisFinnes(UUID behandlingUuid) {
+        try {
+            var uriBuilder = new URIBuilder(endpointFpsakRestBase + "/fpsak/api/formidling/beregningsgrunnlag/v2");
+            return oidcRestClient.getReturnsOptional(
+                    uriBuilder.addParameter("uuid", behandlingUuid.toString()).build(),
+                    BeregningsgrunnlagDto.class);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     private static URI saksnummerRequest(String endpoint, BehandlingRelLinkPayload payload) {

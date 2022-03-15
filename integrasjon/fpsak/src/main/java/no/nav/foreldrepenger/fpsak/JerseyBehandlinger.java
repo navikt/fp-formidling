@@ -14,6 +14,7 @@ import javax.ws.rs.client.Invocation;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
+import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.vedtak.felles.integrasjon.rest.jersey.AbstractJerseyRestClient;
 import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 
@@ -36,6 +37,18 @@ public class JerseyBehandlinger extends AbstractJerseyRestClient implements Beha
                 .request(APPLICATION_JSON_TYPE)
                 .get(BehandlingDto.class))
                 .orElseThrow(() -> new IllegalStateException("Klarte ikke hente behandling: " + behandlingId));
+    }
+
+    @Override
+    public Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagV2HvisFinnes(UUID behandlingUuid) {
+        return Optional.ofNullable(
+                invoke(client.target(baseUri)
+                        .path("/fpsak/api/formidling/beregningsgrunnlag/v2")
+                        .queryParam("uuid", behandlingUuid)
+                        .request(APPLICATION_JSON_TYPE)
+                        .buildGet(), BeregningsgrunnlagDto.class
+                )
+        );
     }
 
     @Override

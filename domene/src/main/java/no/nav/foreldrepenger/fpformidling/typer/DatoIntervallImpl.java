@@ -58,4 +58,12 @@ public class DatoIntervallImpl implements DatoIntervall {
     public int hashCode() {
         return Objects.hash(getFomDato(), getTomDato());
     }
+
+    @Override
+    public String toString() {
+        return "DatoIntervallImpl{" +
+                "fomDato=" + fomDato +
+                ", tomDato=" + tomDato +
+                '}';
+    }
 }

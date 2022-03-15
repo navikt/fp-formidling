@@ -7,6 +7,9 @@ import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import no.nav.foreldrepenger.fpformidling.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.fpformidling.anke.Anke;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
@@ -35,6 +38,7 @@ import no.nav.foreldrepenger.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpsak.mapper.AnkeDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.BeregningsgrunnlagDtoMapper;
+import no.nav.foreldrepenger.fpsak.mapper.BeregningsgrunnlagV2DtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.FagsakDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.FamiliehendelseDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.InnsynDtoMapper;
@@ -52,12 +56,14 @@ import no.nav.foreldrepenger.fpsak.mapper.YtelseFordelingDtoMapper;
 @ApplicationScoped
 public class DomeneobjektProvider {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DomeneobjektProvider.class);
+
     private Behandlinger behandlingRestKlient;
     private ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
     public DomeneobjektProvider(Behandlinger behandlingRestKlient,
-            ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+                                ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         this.behandlingRestKlient = behandlingRestKlient;
         this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }
@@ -76,13 +82,52 @@ public class DomeneobjektProvider {
     }
 
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        return BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(
+        var beregningsgrunnlag = BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(
                 behandlingRestKlient.hentBeregningsgrunnlag(behandling.getFormidlingRessurser()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+
+        Beregningsgrunnlag beregningsgrunnlagV2;
+        try {
+            beregningsgrunnlagV2 = hentBeregningsgrunnlagV2(behandling);
+
+            if (!beregningsgrunnlag.equals(beregningsgrunnlagV2)) {
+                LOGGER.info("FORMIDLING-BG: beregningsgrunnlagV2 {} er ulik beregningsgrunnlag: {}", beregningsgrunnlagV2, beregningsgrunnlag);
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("FORMIDLING-BG: Feil ved innhenting av beregningsgrunnlagV2");
+        }
+
+        return beregningsgrunnlag;
     }
 
     public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getFormidlingRessurser())
+        var beregningsgrunnlag = behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getFormidlingRessurser())
                 .map(dto -> BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+
+        Optional<Beregningsgrunnlag> beregningsgrunnlagV2;
+        try {
+            beregningsgrunnlagV2 = hentBeregningsgrunnlagV2HvisFinnes(behandling);
+
+            if (beregningsgrunnlag.isPresent() && beregningsgrunnlagV2.isPresent()) {
+                if (!beregningsgrunnlag.get().equals(beregningsgrunnlagV2.get())) {
+                    LOGGER.info("FORMIDLING-BG: beregningsgrunnlagV2 {} er ulik beregningsgrunnlag: {}", beregningsgrunnlagV2, beregningsgrunnlag);
+                }
+            } else {
+                LOGGER.info("FORMIDLING-BG: beregningsgrunnlag finnes ikke: v2:{} v1:{}", beregningsgrunnlagV2, beregningsgrunnlag);
+            }
+        } catch (Exception ex) {
+            LOGGER.info("FORMIDLING-BG: Feil ved innhenting av beregningsgrunnlagV2");
+        }
+        return beregningsgrunnlag;
+    }
+
+    public Beregningsgrunnlag hentBeregningsgrunnlagV2(Behandling behandling) {
+        return BeregningsgrunnlagV2DtoMapper.mapBeregningsgrunnlagFraDto(
+                behandlingRestKlient.hentBeregningsgrunnlagV2(behandling.getUuid()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+    }
+
+    public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagV2HvisFinnes(Behandling behandling) {
+        return behandlingRestKlient.hentBeregningsgrunnlagV2HvisFinnes(behandling.getUuid())
+                .map(dto -> BeregningsgrunnlagV2DtoMapper.mapBeregningsgrunnlagFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public Behandling hentBehandling(UUID behandlingUuid) {

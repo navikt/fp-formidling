@@ -1,18 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.beregningsgrunnlag;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.KodeverdiMedNavn;
 
-
-@JsonFormat(shape = Shape.OBJECT)
-@JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public enum Hjemmel implements Kodeverdi, KodeverdiMedNavn {
 
     F_14_7("F_14_7", "folketrygdloven § 14-7"),
@@ -29,10 +22,8 @@ public enum Hjemmel implements Kodeverdi, KodeverdiMedNavn {
     UDEFINERT("-", "Ikke definert"),
     ;
 
-    @JsonIgnore
     private String navn;
 
-    @JsonValue
     private String kode;
 
     Hjemmel(String kode, String navn) {

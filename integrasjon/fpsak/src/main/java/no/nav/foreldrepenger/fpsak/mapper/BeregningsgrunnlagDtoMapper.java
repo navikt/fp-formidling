@@ -9,7 +9,6 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
-import no.nav.foreldrepenger.fpformidling.opptjening.OpptjeningAktivitetType;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
@@ -78,7 +77,7 @@ public class BeregningsgrunnlagDtoMapper {
                 .medDagsats(dto.getDagsats())
                 .medBeregningsperiode(avklarBeregningsperiode(dto))
                 .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
-                .medArbeidsforholdType(bgAndelArbeidsforhold == null ? OpptjeningAktivitetType.UDEFINERT : dto.getArbeidsforholdType())
+                .medArbeidsforholdType(dto.getArbeidsforholdType())
                 .medErTilkommetAndel(dto.getErTilkommetAndel());
         return builder.build();
     }

@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.fpformidling.beregningsgrunnlag;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 
@@ -83,4 +84,31 @@ public class Beregningsgrunnlag {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Beregningsgrunnlag that = (Beregningsgrunnlag) o;
+        return erBesteberegnet == that.erBesteberegnet &&
+                Objects.equals(grunnbeløp, that.grunnbeløp) &&
+                Objects.equals(beregningsgrunnlagPerioder, that.beregningsgrunnlagPerioder) &&
+                Objects.equals(aktivitetStatuser, that.aktivitetStatuser) &&
+                hjemmel == that.hjemmel;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(grunnbeløp, beregningsgrunnlagPerioder, aktivitetStatuser, hjemmel, erBesteberegnet);
+    }
+
+    @Override
+    public String toString() {
+        return "Beregningsgrunnlag{" +
+                "grunnbeløp=" + grunnbeløp +
+                ", beregningsgrunnlagPerioder=" + beregningsgrunnlagPerioder +
+                ", aktivitetStatuser=" + aktivitetStatuser +
+                ", hjemmel=" + hjemmel +
+                ", erBesteberegnet=" + erBesteberegnet +
+                '}';
+    }
 }

@@ -36,9 +36,6 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.historikk.DokumentHistorikkinnslag;
-import no.nav.foreldrepenger.fpformidling.historikk.HistorikkRepository;
-import no.nav.foreldrepenger.fpformidling.historikk.HistorikkinnslagType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
@@ -95,8 +92,6 @@ public class BrevBestillerTjenesteTest {
     private DokumentdataMapperProvider dokumentdataMapperProvider;
     @Mock
     private ProsessTaskTjeneste taskTjeneste;
-    @Mock
-    private HistorikkRepository historikkRepository;
 
     private EngangsstønadInnvilgelseDokumentdataMapper dokumentdataMapper;
     private DokumentFellesDataMapper dokumentFellesDataMapper;
@@ -109,12 +104,12 @@ public class BrevBestillerTjenesteTest {
                 domeneobjektProvider);
         dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, virksomhetTjeneste);
         dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
-                dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste, historikkRepository);
+                dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste);
         tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
     }
 
     @Test
-    public void skal_generere_og_sende_brev_til_både_søker_og_verge_og_returnere_historikkinnslag() {
+    public void skal_generere_og_sende_brev_til_både_søker_og_verge() {
         // Arrange
         Personinfo personinfo = mockPdl(true);
         Behandling behandling = mockDomeneobjektProvider(personinfo, true);
@@ -123,7 +118,6 @@ public class BrevBestillerTjenesteTest {
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(eq(DOKUMENT_MAL_TYPE))).thenReturn(dokumentdataMapper);
-        ArgumentCaptor<DokumentHistorikkinnslag> historikkCaptor = ArgumentCaptor.forClass(DokumentHistorikkinnslag.class);
         ArgumentCaptor<ProsessTaskGruppe> taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
 
         // Act
@@ -133,14 +127,6 @@ public class BrevBestillerTjenesteTest {
         verify(dokgenRestKlient, times(2)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(2))
                 .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null));
-        verify(historikkRepository, times(2)).lagre(historikkCaptor.capture());
-        DokumentHistorikkinnslag historikkinnslag = historikkCaptor.getAllValues().get(0);
-        assertThat(historikkinnslag.getBehandlingUuid()).isEqualTo(BEHANDLING_UUID);
-        assertThat(historikkinnslag.getHendelseId()).isEqualTo(HENDELSE_ID);
-        assertThat(historikkinnslag.getDokumentId()).isEqualTo(DOKUMENT_INFO_ID);
-        assertThat(historikkinnslag.getJournalpostId()).isEqualTo(JOURNALPOST);
-        assertThat(historikkinnslag.getHistorikkinnslagType()).isEqualTo(HistorikkinnslagType.BREV_SENT);
-        assertThat(historikkinnslag.getDokumentMalType()).isEqualTo(DOKUMENT_MAL_TYPE);
         verify(taskTjeneste, times(2)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
@@ -166,7 +152,6 @@ public class BrevBestillerTjenesteTest {
         verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(1))
                 .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null));
-        verify(historikkRepository, times(1)).lagre(any(DokumentHistorikkinnslag.class));
         verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
@@ -231,6 +216,6 @@ public class BrevBestillerTjenesteTest {
                 List.of(dokumentOpprettResponse));
         when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse),
                 eq(SAKSNUMMER), eq(true), eq(null)))
-                        .thenReturn(opprettJournalpostResponse);
+                .thenReturn(opprettJournalpostResponse);
     }
 }

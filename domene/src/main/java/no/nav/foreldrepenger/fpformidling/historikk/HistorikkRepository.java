@@ -7,6 +7,8 @@ import javax.persistence.TypedQuery;
 
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
 
+@Deprecated(forRemoval = true)
+// Brukes ikke lenger - skal slettes etter siste task opprettet med historikkId er ferdig.
 @ApplicationScoped
 public class HistorikkRepository {
 
@@ -21,18 +23,9 @@ public class HistorikkRepository {
         this.entityManager = entityManager;
     }
 
-    public void lagre(DokumentHistorikkinnslag dokumentHistorikkinnslag) {
-        lagreOgFlush(dokumentHistorikkinnslag);
-    }
-
     public DokumentHistorikkinnslag hent(long historikkinnslagId) {
         TypedQuery<DokumentHistorikkinnslag> query = entityManager.createQuery("from DokumentHistorikkinnslag where id=:historikkinnslagId", DokumentHistorikkinnslag.class);
         query.setParameter("historikkinnslagId", historikkinnslagId);
         return HibernateVerktøy.hentEksaktResultat(query);
-    }
-
-    private void lagreOgFlush(Object objektTilLagring) {
-        entityManager.persist(objektTilLagring);
-        entityManager.flush();
     }
 }

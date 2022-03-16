@@ -28,7 +28,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.brevmal.BrevmalTjeneste;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.kafkatjenester.dokumentbestilling.DokumentHendelseTjeneste;
+import no.nav.foreldrepenger.fpformidling.web.app.tjenester.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BehandlingUuidDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.kafkatjenester.dokumentbestilling;
+package no.nav.foreldrepenger.fpformidling.web.app.tjenester;
 
 import java.util.Optional;
 

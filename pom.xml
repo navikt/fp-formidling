@@ -139,11 +139,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>dokumenthendelse</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>dokumenthistorikk</artifactId>
                 <version>${project.version}</version>
             </dependency>

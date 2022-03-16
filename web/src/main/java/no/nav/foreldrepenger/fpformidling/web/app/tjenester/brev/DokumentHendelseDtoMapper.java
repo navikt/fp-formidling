@@ -34,7 +34,7 @@ public class DokumentHendelseDtoMapper {
         return DokumentMalType.fraKode(dokumentmal);
     }
 
-    public static DokumentHendelse mapDokumentHendelseFraDto(DokumentbestillingV2Dto dokumentbestilling) {
+    public static DokumentHendelse mapFraDto(DokumentbestillingV2Dto dokumentbestilling) {
         return DokumentHendelse.builder()
                 .medBehandlingUuid(dokumentbestilling.behandlingUuid())
                 .medBestillingUuid(dokumentbestilling.dokumentbestillingUuid())

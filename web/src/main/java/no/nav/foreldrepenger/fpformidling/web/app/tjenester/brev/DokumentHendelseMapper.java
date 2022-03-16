@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
+package no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev;
 
 import java.util.Optional;
 import java.util.UUID;

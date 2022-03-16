@@ -23,7 +23,6 @@ import javax.ws.rs.core.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.brevmal.BrevmalTjeneste;
@@ -90,7 +89,6 @@ public class BrevRestTjeneste {
 
         var dokumentHendelse = DokumentHendelseMapper.mapFra(dokumentbestillingDto);
 
-
         byte[] dokument = brevBestillerTjeneste.forhandsvisBrev(dokumentHendelse);
 
         if (dokument != null && dokument.length != 0) {
@@ -113,7 +111,7 @@ public class BrevRestTjeneste {
             @TilpassetAbacAttributt(supplierClass = BestillingSupplier.class)
             @Valid DokumentbestillingV2Dto dokumentbestillingDto) { // NOSONAR
 
-        var hendelse = DokumentHendelseDtoMapper.mapDokumentHendelseFraDto(dokumentbestillingDto);
+        var hendelse = DokumentHendelseDtoMapper.mapFraDto(dokumentbestillingDto);
         dokumentHendelseTjeneste.validerUnikOgLagre(hendelse).ifPresent(this::opprettBestillBrevTask);
 
         return Response.ok().build();

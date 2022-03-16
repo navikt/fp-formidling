@@ -132,10 +132,6 @@ public class DokumentHistorikkinnslag extends BaseEntitet {
         return historikkinnslagType;
     }
 
-    public HistorikkAktør getHistorikkAktør() {
-        return historikkAktør;
-    }
-
     public DokumentMalType getDokumentMalType() {
         return dokumentMalType;
     }

@@ -15,7 +15,7 @@ public class BrevBestillerTjeneste {
     private DomeneobjektProvider domeneobjektProvider;
     private DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste;
 
-    public BrevBestillerTjeneste() {
+    BrevBestillerTjeneste() {
         // for cdi proxy
     }
 

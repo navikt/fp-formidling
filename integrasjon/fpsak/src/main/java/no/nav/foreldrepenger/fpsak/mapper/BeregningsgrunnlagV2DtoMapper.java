@@ -86,7 +86,7 @@ public class BeregningsgrunnlagV2DtoMapper {
             case NATURALYTELSE_TILKOMMER -> PeriodeÅrsak.NATURALYTELSE_TILKOMMER;
             case NATURALYTELSE_BORTFALT -> PeriodeÅrsak.NATURALYTELSE_BORTFALT;
             case ENDRING_I_AKTIVITETER_SØKT_FOR -> PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR;
-            case ENDRING_I_REFUSJONSKRAV -> PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR;
+            case ENDRING_I_REFUSJONSKRAV -> PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV;
             case REFUSJON_OPPHØRER -> PeriodeÅrsak.REFUSJON_OPPHØRER;
             case GRADERING -> PeriodeÅrsak.GRADERING;
             case GRADERING_OPPHØRER -> PeriodeÅrsak.GRADERING_OPPHØRER;

@@ -44,7 +44,7 @@ public class PubliserHistorikkTask implements ProsessTaskHandler {
         var historikkIdOpt = Optional.ofNullable(prosessTaskData.getPropertyValue(PubliserHistorikkTask.HISTORIKK_ID));
 
         if (historikkIdOpt.isPresent()) {
-            sendFromHistorikkWithId(historikkIdOpt.map(Long::parseLong).get());
+            sendFromHistorikkWithId(historikkIdOpt.map(Long::parseLong).orElseThrow());
         } else {
             var kvittering = new DokumentProdusertDto(
                     prosessTaskData.getBehandlingUuid(),

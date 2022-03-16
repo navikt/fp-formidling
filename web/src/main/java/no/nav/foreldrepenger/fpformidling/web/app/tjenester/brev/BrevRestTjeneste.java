@@ -87,7 +87,7 @@ public class BrevRestTjeneste {
             @TilpassetAbacAttributt(supplierClass = ForhåndsvisSupplier.class)
             @Valid DokumentbestillingDto dokumentbestillingDto) { // NOSONAR
 
-        var dokumentHendelse = DokumentHendelseMapper.mapFra(dokumentbestillingDto);
+        var dokumentHendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
 
         byte[] dokument = brevBestillerTjeneste.forhandsvisBrev(dokumentHendelse);
 
@@ -111,7 +111,7 @@ public class BrevRestTjeneste {
             @TilpassetAbacAttributt(supplierClass = BestillingSupplier.class)
             @Valid DokumentbestillingV2Dto dokumentbestillingDto) { // NOSONAR
 
-        var hendelse = DokumentHendelseDtoMapper.mapFraDto(dokumentbestillingDto);
+        var hendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
         dokumentHendelseTjeneste.validerUnikOgLagre(hendelse).ifPresent(this::opprettBestillBrevTask);
 
         return Response.ok().build();

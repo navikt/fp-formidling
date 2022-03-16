@@ -22,26 +22,27 @@ import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.historikk.v1.HistorikkInnslagV1;
 
 @ApplicationScoped
-public class DokumentHistorikkTjeneste {
+public class KvitteringTjeneste {
 
-    private static final Logger log = LoggerFactory.getLogger(DokumentHistorikkTjeneste.class);
+    private static final Logger log = LoggerFactory.getLogger(KvitteringTjeneste.class);
 
     private static final ObjectMapper mapper = getObjectMapper();
 
     private DokumentHistorikkinnslagProducer meldingProducer;
     private Behandlinger behandlinger;
 
-    public DokumentHistorikkTjeneste() {
+    public KvitteringTjeneste() {
         //CDI
     }
 
     @Inject
-    public DokumentHistorikkTjeneste(DokumentHistorikkinnslagProducer dokumentMeldingProducer,
-                                     Behandlinger behandlinger) {
+    public KvitteringTjeneste(DokumentHistorikkinnslagProducer dokumentMeldingProducer,
+                              Behandlinger behandlinger) {
         this.meldingProducer = dokumentMeldingProducer;
         this.behandlinger = behandlinger;
     }
 
+    @Deprecated(forRemoval = true) // Use sendKvittering(DokumentProdusertDto)
     public void publiserHistorikk(DokumentHistorikkinnslag historikkInnslag) {
         if (!Environment.current().isProd()) {
             var kvittering = new DokumentProdusertDto(
@@ -57,11 +58,11 @@ public class DokumentHistorikkTjeneste {
         }
     }
 
-    private void sendKvittering(DokumentProdusertDto kvittering) {
+    public void sendKvittering(DokumentProdusertDto kvittering) {
         behandlinger.kvitterDokument(kvittering);
     }
 
-    void publiserHistorikk(HistorikkInnslagV1 jsonHistorikk, long hendelseId) {
+    private void publiserHistorikk(HistorikkInnslagV1 jsonHistorikk, long hendelseId) {
         String serialisertJson = serialiser(jsonHistorikk);
         meldingProducer.sendJson(serialisertJson);
         log.info("Publisert historikk for hendelse: {}", hendelseId);

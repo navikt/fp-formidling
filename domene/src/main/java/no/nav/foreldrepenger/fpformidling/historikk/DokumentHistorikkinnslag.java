@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.fpformidling.jpa.BaseEntitet;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 
+@Deprecated(forRemoval = true)
 @Entity(name = "DokumentHistorikkinnslag")
 @Table(name = "DOKUMENT_HISTORIKKINNSLAG")
 public class DokumentHistorikkinnslag extends BaseEntitet {

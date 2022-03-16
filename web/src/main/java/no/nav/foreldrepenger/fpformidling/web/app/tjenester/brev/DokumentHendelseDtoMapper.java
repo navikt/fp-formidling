@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
+package no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -11,10 +11,21 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.YtelseType;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingV2Dto;
 
-public class DokumentHendelseMapper {
+public class DokumentHendelseDtoMapper {
 
-    private DokumentHendelseMapper() {}
+    public static DokumentHendelse mapFra(DokumentbestillingV2Dto dokumentbestilling) {
+        return DokumentHendelse.builder()
+                .medBehandlingUuid(dokumentbestilling.behandlingUuid())
+                .medBestillingUuid(dokumentbestilling.dokumentbestillingUuid())
+                .medYtelseType(utledYtelseType(dokumentbestilling.ytelseType()))
+                .medFritekst(dokumentbestilling.fritekst())
+                .medDokumentMalType(utleddokumentMalType(dokumentbestilling.dokumentMal()))
+                .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(dokumentbestilling.arsakskode()))
+                .medBehandlendeEnhetNavn(dokumentbestilling.behandlendeEnhetNavn())
+                .build();
+    }
 
     public static DokumentHendelse mapFra(DokumentbestillingDto brevDto) {
         return DokumentHendelse.builder()

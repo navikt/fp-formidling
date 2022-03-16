@@ -34,10 +34,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>dokumenthendelse</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>fpdokgen</artifactId>
         </dependency>
         <dependency>

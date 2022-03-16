@@ -16,6 +16,5 @@
 
     <modules>
         <module>dokumenthistorikk</module>
-        <module>dokumenthendelse</module>
     </modules>
 </project>

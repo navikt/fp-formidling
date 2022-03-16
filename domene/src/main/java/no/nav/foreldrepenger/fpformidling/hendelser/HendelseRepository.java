@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import no.nav.foreldrepenger.fpformidling.eventmottak.EventmottakFeillogg;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
 
@@ -30,10 +29,6 @@ public class HendelseRepository {
 
     public void lagre(DokumentHendelse dokumentHendelse) {
         lagreOgFlush(dokumentHendelse);
-    }
-
-    public void lagre(EventmottakFeillogg eventmottakFeillogg) {
-        lagreOgFlush(eventmottakFeillogg);
     }
 
     public boolean finnesHendelseMedUuidAllerede(UUID bestillingUuid) {

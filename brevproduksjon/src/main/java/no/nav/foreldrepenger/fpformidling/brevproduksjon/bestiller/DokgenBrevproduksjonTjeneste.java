@@ -70,49 +70,31 @@ public class DokgenBrevproduksjonTjeneste {
         this.historikkRepository = historikkRepository;
     }
 
-    public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
-        DokumentData dokumentData = lagreDokumentDataFor(behandling, dokumentMal, BestillingType.UTKAST);
-
+    public byte[] forhåndsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
+        var utkast = BestillingType.UTKAST;
+        DokumentData dokumentData = lagreDokumentDataFor(behandling, dokumentMal, utkast);
         DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
-
-        DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
-        Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(førsteDokumentFelles, dokumentHendelse, behandling, true);
-        førsteDokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
-
-        byte[] brev;
-        try {
-            brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
-        } catch (Exception e) {
-            dokumentdata.getFelles().anonymiser();
-            SECURE_LOGGER.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
-
-            throw new TekniskException("FPFORMIDLING-221006", String.format("Klarte ikke hente forhåndvise mal %s for behandling %s.", dokumentMal.getKode(), behandling.getUuid().toString()), e);
-        }
-        LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getUuid().toString());
-        return brev;
+        return genererDokument(dokumentHendelse, behandling, dokumentMal, førsteDokumentFelles, utkast);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
-        DokumentData dokumentData = lagreDokumentDataFor(behandling, dokumentMal, BestillingType.BESTILL);
-        boolean innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
+        var bestill = BestillingType.BESTILL;
+        DokumentData dokumentData = lagreDokumentDataFor(behandling, dokumentMal, bestill);
 
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
-            DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
-            Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
-            dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
+            byte[] brev = genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentFelles, bestill);
 
-            byte[] brev;
-            try {
-                brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
-            } catch (Exception e) {
-                dokumentdata.getFelles().anonymiser();
-                SECURE_LOGGER.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
-                throw new TekniskException("FPFORMIDLING-221045", String.format("Klarte ikke å produsere mal %s for behandling %s.", dokumentMal.getKode(), behandling.getUuid().toString()), e);
-            }
-
-            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse, behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg, behandling.getBehandlingsresultat() != null ? behandling.getBehandlingsresultat().getOverskrift() : null);
+            boolean innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
+            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev,
+                    dokumentMal,
+                    dokumentFelles,
+                    dokumentHendelse,
+                    behandling.getFagsakBackend().getSaksnummer(),
+                    !innsynMedVedlegg,
+                    behandling.getBehandlingsresultat() != null ? behandling.getBehandlingsresultat().getOverskrift() : null);
 
             JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
+
             if (innsynMedVedlegg) {
                 leggTilVedleggOgFerdigstillForsendelse(dokumentHendelse.getBehandlingUuid(), journalpostId);
             }
@@ -121,13 +103,35 @@ public class DokgenBrevproduksjonTjeneste {
         }
     }
 
+    private byte[] genererDokument(DokumentHendelse dokumentHendelse,
+                                   Behandling behandling,
+                                   DokumentMalType dokumentMal,
+                                   DokumentFelles dokumentFelles,
+                                   BestillingType bestillingType) {
+
+        DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
+        Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, BestillingType.UTKAST == bestillingType);
+        dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
+
+        byte[] brev;
+        try {
+            brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
+        } catch (Exception e) {
+            dokumentdata.getFelles().anonymiser();
+            SECURE_LOGGER.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
+            throw new TekniskException("FPFORMIDLING-221006", String.format("Klarte ikke hente %s generere mal %s for behandling %s.",
+                    bestillingType, dokumentMal.getKode(), behandling.getUuid().toString()), e);
+        }
+        LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getUuid().toString());
+        return brev;
+    }
+
     private DokumentData lagreDokumentDataFor(Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {
         DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, bestillingType);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
         dokumentRepository.lagre(dokumentData);
         return dokumentData;
     }
-
 
     private DokumentData lagDokumentData(Behandling behandling, DokumentMalType dokumentMalType, BestillingType bestillingType) {
         return DokumentData.builder()

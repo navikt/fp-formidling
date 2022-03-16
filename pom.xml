@@ -208,11 +208,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
-                <artifactId>hendelse-dokumentbestilling</artifactId>
-                <version>${kontrakter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
                 <artifactId>hendelse-historikk-innslag</artifactId>
                 <version>${kontrakter.version}</version>
             </dependency>

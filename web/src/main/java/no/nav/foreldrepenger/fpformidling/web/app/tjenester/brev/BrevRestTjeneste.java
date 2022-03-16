@@ -23,14 +23,19 @@ import javax.ws.rs.core.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseMapper;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.brevmal.BrevmalTjeneste;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.kafkatjenester.dokumentbestilling.DokumentHendelseDtoMapper;
-import no.nav.foreldrepenger.fpformidling.kafkatjenester.dokumentbestilling.HendelseHandler;
+import no.nav.foreldrepenger.fpformidling.kafkatjenester.dokumentbestilling.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BehandlingUuidDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingV2Dto;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
@@ -43,7 +48,8 @@ public class BrevRestTjeneste {
 
     private BrevmalTjeneste brevmalTjeneste;
     private BrevBestillerTjeneste brevBestillerTjeneste;
-    private HendelseHandler hendelseHandler;
+    private DokumentHendelseTjeneste dokumentHendelseTjeneste;
+    private ProsessTaskTjeneste taskTjeneste;
 
     public BrevRestTjeneste() {
         //CDI
@@ -52,10 +58,12 @@ public class BrevRestTjeneste {
     @Inject
     public BrevRestTjeneste(BrevmalTjeneste brevmalTjeneste,
                             BrevBestillerTjeneste brevBestillerApplikasjonTjeneste,
-                            HendelseHandler hendelseHandler) {
+                            DokumentHendelseTjeneste dokumentHendelseTjeneste,
+                            ProsessTaskTjeneste taskTjeneste) {
         this.brevmalTjeneste = brevmalTjeneste;
         this.brevBestillerTjeneste = brevBestillerApplikasjonTjeneste;
-        this.hendelseHandler = hendelseHandler;
+        this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
+        this.taskTjeneste = taskTjeneste;
     }
 
     @GET
@@ -65,7 +73,7 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(action = READ, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public List<BrevmalDto> hentMaler(@TilpassetAbacAttributt(supplierClass = BehandlingUuidAbacDataSupplier.class)
-            @NotNull @QueryParam("uuid") @Parameter(description = "behandlingUUID") @Valid BehandlingUuidDto uuidDto) {
+                                      @NotNull @QueryParam("uuid") @Parameter(description = "behandlingUUID") @Valid BehandlingUuidDto uuidDto) {
         return brevmalTjeneste.hentBrevmalerFor(uuidDto.getBehandlingUuid()); // NOSONAR
     }
 
@@ -76,8 +84,14 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(action = READ, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response forhaandsvisDokument(
-            @Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @Valid AbacDokumentbestillingDto dokumentbestillingDto) { // NOSONAR
-        byte[] dokument = brevBestillerTjeneste.forhandsvisBrev(dokumentbestillingDto);
+            @Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.")
+            @TilpassetAbacAttributt(supplierClass = ForhåndsvisSupplier.class)
+            @Valid DokumentbestillingDto dokumentbestillingDto) { // NOSONAR
+
+        var dokumentHendelse = DokumentHendelseMapper.mapFra(dokumentbestillingDto);
+
+
+        byte[] dokument = brevBestillerTjeneste.forhandsvisBrev(dokumentHendelse);
 
         if (dokument != null && dokument.length != 0) {
             Response.ResponseBuilder responseBuilder = Response.ok(dokument);
@@ -95,12 +109,21 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(action = CREATE, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response bestillDokument(
-            @Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = BestillingSupplier.class) @Valid DokumentbestillingV2Dto dokumentbestillingDto) { // NOSONAR
+            @Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.")
+            @TilpassetAbacAttributt(supplierClass = BestillingSupplier.class)
+            @Valid DokumentbestillingV2Dto dokumentbestillingDto) { // NOSONAR
 
-        DokumentHendelse hendelse = DokumentHendelseDtoMapper.mapDokumentHendelseFraV2Dto(dokumentbestillingDto);
-        hendelseHandler.prosesser(hendelse);
+        var hendelse = DokumentHendelseDtoMapper.mapDokumentHendelseFraDto(dokumentbestillingDto);
+        dokumentHendelseTjeneste.validerUnikOgLagre(hendelse).ifPresent(this::opprettBestillBrevTask);
 
         return Response.ok().build();
+    }
+
+    private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {
+        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(ProduserBrevTask.class);
+        prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
+        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
+        taskTjeneste.lagre(prosessTaskData);
     }
 
     public static class BehandlingUuidAbacDataSupplier implements Function<Object, AbacDataAttributter> {
@@ -116,6 +139,14 @@ public class BrevRestTjeneste {
         public AbacDataAttributter apply(Object obj) {
             var req = (DokumentbestillingV2Dto) obj;
             return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid());
+        }
+    }
+
+    public static class ForhåndsvisSupplier implements Function<Object, AbacDataAttributter> {
+        @Override
+        public AbacDataAttributter apply(Object obj) {
+            var req = (DokumentbestillingDto) obj;
+            return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.getBehandlingUuid());
         }
     }
 }

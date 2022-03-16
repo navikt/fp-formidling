@@ -22,10 +22,6 @@
 
         <dependency>
             <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
-            <artifactId>hendelse-dokumentbestilling</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.kontrakter.topics</groupId>
             <artifactId>hendelse-historikk-innslag</artifactId>
         </dependency>
         <dependency>

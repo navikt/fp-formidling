@@ -14,7 +14,6 @@ public class DokumentRepository {
     private EntityManager entityManager;
 
     public DokumentRepository() {
-
     }
 
     @Inject
@@ -25,7 +24,7 @@ public class DokumentRepository {
 
     public void lagre(DokumentData dokumentData) {
         entityManager.persist(dokumentData);
-        dokumentData.getDokumentFelles().stream().forEach(entityManager::persist);
+        dokumentData.getDokumentFelles().forEach(entityManager::persist);
         entityManager.flush();
     }
 }

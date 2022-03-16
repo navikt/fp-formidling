@@ -2,13 +2,11 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 
 @ApplicationScoped
 public class BrevBestillerTjeneste {
@@ -30,18 +28,23 @@ public class BrevBestillerTjeneste {
         this.dokgenBrevproduksjonTjeneste = dokgenBrevproduksjonTjeneste;
     }
 
-    @Transactional
-    public byte[] forhandsvisBrev(DokumentbestillingDto dokumentbestillingDto) {
-        DokumentHendelse dokumentHendelse = DokumentHendelseMapper.mapFra(dokumentbestillingDto);
-        Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
-        DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
-        return dokgenBrevproduksjonTjeneste.forhandsvisBrev(dokumentHendelse, behandling, dokumentMal);
+    public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse) {
+        Behandling behandling = hentBehandling(dokumentHendelse);
+        DokumentMalType dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
+        return dokgenBrevproduksjonTjeneste.forhåndsvisBrev(dokumentHendelse, behandling, dokumentMal);
     }
 
-    @Transactional
     public void bestillBrev(DokumentHendelse dokumentHendelse) {
-        Behandling behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
-        DokumentMalType dokumentMal = dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
+        Behandling behandling = hentBehandling(dokumentHendelse);
+        DokumentMalType dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
         dokgenBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, dokumentMal);
+    }
+
+    private Behandling hentBehandling(DokumentHendelse dokumentHendelse) {
+        return domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
+    }
+
+    private DokumentMalType utledDokumentMal(Behandling behandling, DokumentHendelse dokumentHendelse) {
+        return dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse);
     }
 }

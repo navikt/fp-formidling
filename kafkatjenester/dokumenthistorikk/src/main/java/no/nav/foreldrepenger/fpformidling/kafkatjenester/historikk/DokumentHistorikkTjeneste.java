@@ -16,6 +16,9 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import no.nav.foreldrepenger.fpformidling.historikk.DokumentHistorikkinnslag;
+import no.nav.foreldrepenger.fpsak.Behandlinger;
+import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.historikk.v1.HistorikkInnslagV1;
 
 @ApplicationScoped
@@ -26,20 +29,36 @@ public class DokumentHistorikkTjeneste {
     private static final ObjectMapper mapper = getObjectMapper();
 
     private DokumentHistorikkinnslagProducer meldingProducer;
+    private Behandlinger behandlinger;
 
     public DokumentHistorikkTjeneste() {
         //CDI
     }
 
     @Inject
-    public DokumentHistorikkTjeneste(DokumentHistorikkinnslagProducer dokumentMeldingProducer) {
+    public DokumentHistorikkTjeneste(DokumentHistorikkinnslagProducer dokumentMeldingProducer,
+                                     Behandlinger behandlinger) {
         this.meldingProducer = dokumentMeldingProducer;
+        this.behandlinger = behandlinger;
     }
 
-
     public void publiserHistorikk(DokumentHistorikkinnslag historikkInnslag) {
-        HistorikkInnslagV1 historikk = HistorikkTilDtoMapper.mapHistorikkinnslag(historikkInnslag);
-        publiserHistorikk(historikk, historikkInnslag.getHendelseId());
+        if (!Environment.current().isProd()) {
+            var kvittering = new DokumentProdusertDto(
+                    historikkInnslag.getBehandlingUuid(),
+                    historikkInnslag.getHistorikkUuuid(),
+                    historikkInnslag.getDokumentMalType().getKode(),
+                    historikkInnslag.getJournalpostId().getVerdi(),
+                    historikkInnslag.getDokumentId());
+            sendKvittering(kvittering);
+        } else {
+            HistorikkInnslagV1 historikk = HistorikkTilDtoMapper.mapHistorikkinnslag(historikkInnslag);
+            publiserHistorikk(historikk, historikkInnslag.getHendelseId());
+        }
+    }
+
+    private void sendKvittering(DokumentProdusertDto kvittering) {
+        behandlinger.kvitterDokument(kvittering);
     }
 
     void publiserHistorikk(HistorikkInnslagV1 jsonHistorikk, long hendelseId) {

@@ -43,5 +43,9 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
+            <artifactId>fpsak</artifactId>
+        </dependency>
     </dependencies>
 </project>

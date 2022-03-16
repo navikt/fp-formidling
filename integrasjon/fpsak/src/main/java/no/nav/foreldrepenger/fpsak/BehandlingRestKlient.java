@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
+import javax.ws.rs.core.UriBuilder;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
@@ -15,8 +16,8 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
-import no.nav.foreldrepenger.fpsak.dto.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
@@ -29,22 +30,28 @@ import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
  */
 public class BehandlingRestKlient implements Behandlinger {
     private static final Logger LOGGER = LoggerFactory.getLogger(BehandlingRestKlient.class);
+    protected static final String FPSAK_API = "/fpsak/api";
 
     private final OidcRestClient oidcRestClient;
-    private final String endpointFpsakRestBase;
+    private final URI endpointFpsakRestBase;
 
     @Inject
     public BehandlingRestKlient(OidcRestClient oidcRestClient,
-            @KonfigVerdi("fpsak.rest.base.url") String endpointFpsakRestBase) {
+                                @KonfigVerdi("fpsak.rest.base.url") URI endpointFpsakRestBase) {
         this.oidcRestClient = oidcRestClient;
         this.endpointFpsakRestBase = endpointFpsakRestBase;
+    }
+
+    @Override
+    public void kvitterDokument(DokumentProdusertDto kvittering) {
+        oidcRestClient.post(toUri(endpointFpsakRestBase, FPSAK_API, "/brev/kvittering"), kvittering);
     }
 
     @Override
     public BehandlingDto hentBehandling(UUID behandlingId) {
         Optional<BehandlingDto> behandling = Optional.empty();
         try {
-            var behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + "/fpsak/api/formidling/ressurser");
+            var behandlingUriBuilder = new URIBuilder(endpointFpsakRestBase + FPSAK_API + "/formidling/ressurser");
             behandlingUriBuilder.setParameter("behandlingId", behandlingId.toString());
             behandling = oidcRestClient.getReturnsOptional(behandlingUriBuilder.build(), BehandlingDto.class);
         } catch (URISyntaxException e) {
@@ -65,7 +72,7 @@ public class BehandlingRestKlient implements Behandlinger {
     @Override
     public Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagV2HvisFinnes(UUID behandlingUuid) {
         try {
-            var uriBuilder = new URIBuilder(endpointFpsakRestBase + "/fpsak/api/formidling/beregningsgrunnlag/v2");
+            var uriBuilder = new URIBuilder(endpointFpsakRestBase + FPSAK_API + "/formidling/beregningsgrunnlag/v2");
             return oidcRestClient.getReturnsOptional(
                     uriBuilder.addParameter("uuid", behandlingUuid.toString()).build(),
                     BeregningsgrunnlagDto.class);
@@ -95,5 +102,13 @@ public class BehandlingRestKlient implements Behandlinger {
     @Override
     public String toString() {
         return getClass().getSimpleName() + " [oidcRestClient=" + oidcRestClient + ", endpointFpsakRestBase=" + endpointFpsakRestBase + "]";
+    }
+
+    private URI toUri(URI baseURI, String apiPath, String resourcePath) {
+        try {
+            return UriBuilder.fromUri(baseURI).path(apiPath).path(resourcePath).build();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Ugyldig uri: " + baseURI + apiPath + resourcePath, e);
+        }
     }
 }

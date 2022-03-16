@@ -31,11 +31,14 @@ import no.nav.foreldrepenger.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.saldo.SaldoerDto;
 import no.nav.foreldrepenger.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 
 public interface Behandlinger {
 
     <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz);
+
+    void kvitterDokument(DokumentProdusertDto kvittering);
 
     default BeregningsgrunnlagDto hentBeregningsgrunnlagV2(UUID behandlingUuid) {
         return hentBeregningsgrunnlagV2HvisFinnes(behandlingUuid)

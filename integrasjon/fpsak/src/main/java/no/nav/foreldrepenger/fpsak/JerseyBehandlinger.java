@@ -14,6 +14,7 @@ import javax.ws.rs.client.Invocation;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.vedtak.felles.integrasjon.rest.jersey.AbstractJerseyRestClient;
 import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
@@ -22,6 +23,7 @@ import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 @Jersey
 public class JerseyBehandlinger extends AbstractJerseyRestClient implements Behandlinger {
 
+    protected static final String FPSAK_API = "/fpsak/api";
     private final URI baseUri;
 
     @Inject
@@ -31,8 +33,8 @@ public class JerseyBehandlinger extends AbstractJerseyRestClient implements Beha
 
     @Override
     public BehandlingDto hentBehandling(UUID behandlingId) {
-        return Optional.ofNullable(client.target(baseUri)
-                .path("/fpsak/api/formidling/ressurser")
+        return Optional.ofNullable(client.target(baseUri).path(FPSAK_API)
+                .path("/formidling/ressurser")
                 .queryParam("behandlingId", behandlingId)
                 .request(APPLICATION_JSON_TYPE)
                 .get(BehandlingDto.class))
@@ -42,8 +44,8 @@ public class JerseyBehandlinger extends AbstractJerseyRestClient implements Beha
     @Override
     public Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagV2HvisFinnes(UUID behandlingUuid) {
         return Optional.ofNullable(
-                invoke(client.target(baseUri)
-                        .path("/fpsak/api/formidling/beregningsgrunnlag/v2")
+                invoke(client.target(baseUri).path(FPSAK_API)
+                        .path("/formidling/beregningsgrunnlag/v2")
                         .queryParam("uuid", behandlingUuid)
                         .request(APPLICATION_JSON_TYPE)
                         .buildGet(), BeregningsgrunnlagDto.class
@@ -60,6 +62,14 @@ public class JerseyBehandlinger extends AbstractJerseyRestClient implements Beha
                     .buildPost(Entity.json(link.getRequestPayload())), clazz));
         }
         return Optional.ofNullable(invoke(invocation(link), clazz));
+    }
+
+    @Override
+    public void kvitterDokument(DokumentProdusertDto kvittering) {
+        invoke(client.target(baseUri).path(FPSAK_API)
+                .path("/brev/kvittering")
+                .request(APPLICATION_JSON_TYPE)
+                .buildPost(Entity.json(kvittering)));
     }
 
     private Invocation invocation(BehandlingResourceLink link) {

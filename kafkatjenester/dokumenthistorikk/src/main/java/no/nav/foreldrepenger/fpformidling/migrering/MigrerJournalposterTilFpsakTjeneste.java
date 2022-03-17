@@ -34,8 +34,9 @@ public class MigrerJournalposterTilFpsakTjeneste {
     }
 
     @Inject
-    public MigrerJournalposterTilFpsakTjeneste(DokumentHistorikkinnslagProducer dokumentMeldingProducer) {
+    public MigrerJournalposterTilFpsakTjeneste(DokumentHistorikkinnslagProducer dokumentMeldingProducer, HistorikkRepository historikkRepository) {
         this.meldingProducer = dokumentMeldingProducer;
+        this.historikkRepository = historikkRepository;
     }
 
     public void migrerHistorikk() {

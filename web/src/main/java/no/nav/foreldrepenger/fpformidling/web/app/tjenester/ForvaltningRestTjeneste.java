@@ -75,11 +75,11 @@ public class ForvaltningRestTjeneste {
         return responseBuilder.build();
     }
 
-/*    @GET
+    @GET
     @Path("historikk/migrer")
     @Operation(description = "Sender journalposter over til fpsak", tags = "forvaltning")
     public Response migrer() {
         migrerTjeneste.migrerHistorikk();
         return Response.ok().build();
-    }*/
+    }
 }

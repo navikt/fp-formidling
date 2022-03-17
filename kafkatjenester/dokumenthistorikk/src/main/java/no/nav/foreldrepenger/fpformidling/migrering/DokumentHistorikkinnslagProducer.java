@@ -16,7 +16,6 @@ import org.apache.kafka.common.errors.AuthorizationException;
 import org.apache.kafka.common.errors.RetriableException;
 import org.apache.kafka.common.serialization.StringSerializer;
 
-import no.nav.foreldrepenger.fpformidling.migrering.KafkaProducerFeil;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
 
 @ApplicationScoped

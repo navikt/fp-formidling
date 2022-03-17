@@ -76,8 +76,11 @@ public class ForvaltningRestTjeneste {
     }
 
     @GET
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @Path("historikk/migrer")
     @Operation(description = "Sender journalposter over til fpsak", tags = "forvaltning")
+    @BeskyttetRessurs(action = READ, resource = DRIFT)
     public Response migrer() {
         migrerTjeneste.migrerHistorikk();
         return Response.ok().build();

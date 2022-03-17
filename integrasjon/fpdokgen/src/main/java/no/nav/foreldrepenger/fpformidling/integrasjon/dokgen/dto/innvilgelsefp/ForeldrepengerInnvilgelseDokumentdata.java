@@ -44,6 +44,8 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private int antallArbeidsgivere;
     private int dagerTaptFørTermin;
     private int disponibleDager;
+    private int disponibleDagerUtenAktivitetskrav;
+    private int disponibleDagerMedAktivitetskrav;
     private int disponibleFellesDager;
     private String sisteDagAvSistePeriode;
     private String stønadsperiodeFom;
@@ -196,6 +198,14 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return disponibleDager;
     }
 
+    public int getDisponibleDagerUtenAktivitetskrav() {
+        return disponibleDagerUtenAktivitetskrav;
+    }
+
+    public int getDisponibleDagerMedAktivitetskrav() {
+        return disponibleDagerMedAktivitetskrav;
+    }
+
     public int getDisponibleFellesDager() {
         return disponibleFellesDager;
     }
@@ -319,6 +329,8 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 && Objects.equals(antallArbeidsgivere, that.antallArbeidsgivere)
                 && Objects.equals(dagerTaptFørTermin, that.dagerTaptFørTermin)
                 && Objects.equals(disponibleDager, that.disponibleDager)
+                && Objects.equals(disponibleDagerUtenAktivitetskrav, that.disponibleDagerUtenAktivitetskrav)
+                && Objects.equals(disponibleDagerMedAktivitetskrav, that.disponibleDagerMedAktivitetskrav)
                 && Objects.equals(disponibleFellesDager, that.disponibleFellesDager)
                 && Objects.equals(sisteDagAvSistePeriode, that.sisteDagAvSistePeriode)
                 && Objects.equals(stønadsperiodeFom, that.stønadsperiodeFom)
@@ -354,7 +366,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 disponibleFellesDager, sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker,
                 antallBarn, prematurDager, antallDødeBarn, dødsdato, kreverSammenhengendeUttak, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler,
                 klagefristUker, lovhjemlerUttak, lovhjemlerBeregning, inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget,
-                inkludereAvslag, inkludereNyeOpplysningerUtbet);
+                inkludereAvslag, inkludereNyeOpplysningerUtbet, disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav);
     }
 
     public static Builder ny() {
@@ -525,6 +537,16 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medDisponibleDager(int disponibleDager) {
             this.kladd.disponibleDager = disponibleDager;
+            return this;
+        }
+
+        public Builder medDisponibleDagerUtenAktivitetskrav(int disponibleDagerUtenAktivitetskrav) {
+            this.kladd.disponibleDagerUtenAktivitetskrav = disponibleDagerUtenAktivitetskrav;
+            return this;
+        }
+
+        public Builder medDisponibleDagerMedAktivitetskrav(int disponibleDagerMedAktivitetskrav) {
+            this.kladd.disponibleDagerMedAktivitetskrav = disponibleDagerMedAktivitetskrav;
             return this;
         }
 

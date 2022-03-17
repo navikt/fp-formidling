@@ -18,6 +18,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.StønadskontoMapper.finnDisponibleFellesDager;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.StønadskontoMapper.finnForeldrepengeperiodenUtvidetUkerHvisFinnes;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.StønadskontoMapper.finnPrematurDagerHvisFinnes;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.StønadskontoMapper.finnSaldo;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UndermalInkluderingMapper.skalInkludereAvslag;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInnvilget;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UndermalInkluderingMapper.skalInkludereNyeOpplysningerUtbet;
@@ -67,18 +68,23 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
 import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.ytelsefordeling.YtelseFordeling;
+import no.nav.foreldrepenger.konfig.Environment;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE)
 public class ForeldrepengerInnvilgelseDokumentdataMapper implements DokumentdataMapper {
-    private BrevParametere brevParametere;
-    private DomeneobjektProvider domeneobjektProvider;
+
+    private static final Environment ENV = Environment.current();
+
+    private final BrevParametere brevParametere;
+    private final DomeneobjektProvider domeneobjektProvider;
 
     @Inject
     public ForeldrepengerInnvilgelseDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
@@ -122,6 +128,16 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         int antallBarn = familieHendelse.getAntallBarn().intValue();
         int antallDødeBarn = familieHendelse.getAntallDødeBarn();
 
+        final int utenAktKrav;
+        final int medAktKrav;
+        if (ENV.isProd()) {
+            utenAktKrav = 0;
+            medAktKrav = 0;
+        } else {
+            utenAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV);
+            medAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.FORELDREPENGER) - utenAktKrav;
+        }
+
         var dokumentdataBuilder = ForeldrepengerInnvilgelseDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
                 .medBehandlingType(behandling.getBehandlingType().name())
@@ -152,6 +168,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medAntallArbeidsgivere(finnAntallArbeidsgivere(tilkjentYtelseForeldrepenger))
                 .medDagerTaptFørTermin(saldoer.tapteDagerFpff())
                 .medDisponibleDager(finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()))
+                .medDisponibleDagerUtenAktivitetskrav(utenAktKrav)
+                .medDisponibleDagerMedAktivitetskrav(medAktKrav)
                 .medDisponibleFellesDager(finnDisponibleFellesDager(saldoer))
                 .medForeldrepengeperiodenUtvidetUker(finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer))
                 .medAntallBarn(antallBarn)

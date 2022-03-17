@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk;
+package no.nav.foreldrepenger.fpformidling.migrering;
 
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.RetriableException;

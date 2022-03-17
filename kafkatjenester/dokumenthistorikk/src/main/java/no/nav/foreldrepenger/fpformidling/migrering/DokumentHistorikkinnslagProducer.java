@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk;
+package no.nav.foreldrepenger.fpformidling.migrering;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -16,6 +16,7 @@ import org.apache.kafka.common.errors.AuthorizationException;
 import org.apache.kafka.common.errors.RetriableException;
 import org.apache.kafka.common.serialization.StringSerializer;
 
+import no.nav.foreldrepenger.fpformidling.migrering.KafkaProducerFeil;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
 
 @ApplicationScoped

@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.historikk;
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -21,6 +23,10 @@ public class HistorikkRepository {
     @Inject
     public HistorikkRepository(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+
+    public List<DokumentHistorikkinnslag> all() {
+        return entityManager.createQuery("from DokumentHistorikkinnslag", DokumentHistorikkinnslag.class).getResultList();
     }
 
     public DokumentHistorikkinnslag hent(long historikkinnslagId) {

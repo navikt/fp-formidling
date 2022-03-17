@@ -22,16 +22,14 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.historikk.HistorikkRepository;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.OpprettJournalpostResponse;
-import no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk.task.PubliserHistorikkTask;
+import no.nav.foreldrepenger.fpformidling.historikk.task.PubliserHistorikkTask;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.felles.prosesstask.api.CommonTaskProperties;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
@@ -156,20 +154,6 @@ public class DokgenBrevproduksjonTjeneste {
         taskTjeneste.lagre(taskGruppe);
     }
 
-    private ProsessTaskData opprettPubliserHistorikkTask(UUID behandlingUuid,
-                                                         UUID bestillingUuid,
-                                                         DokumentMalType dokumentMal,
-                                                         String journalpostId,
-                                                         String dokumentId) {
-        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(PubliserHistorikkTask.class);
-        prosessTaskData.setProperty(CommonTaskProperties.BEHANDLING_UUID, behandlingUuid.toString());
-        prosessTaskData.setProperty(PubliserHistorikkTask.BESTILLING_UUID, bestillingUuid.toString());
-        prosessTaskData.setProperty(PubliserHistorikkTask.DOKUMENT_MAL_TYPE, dokumentMal.getKode());
-        prosessTaskData.setProperty(PubliserHistorikkTask.JOURNALPOST_ID, journalpostId);
-        prosessTaskData.setProperty(PubliserHistorikkTask.DOKUMENT_ID, dokumentId);
-        return prosessTaskData;
-    }
-
     private void leggTilVedleggOgFerdigstillForsendelse(UUID behandlingUid, JournalpostId journalpostId) {
         ProsessTaskGruppe taskGruppe = new ProsessTaskGruppe();
         taskGruppe.addNesteSekvensiell(opprettTilknyttVedleggTask(behandlingUid, journalpostId));
@@ -200,6 +184,20 @@ public class DokgenBrevproduksjonTjeneste {
         if (innsynMedVedlegg) {
             prosessTaskData.setNesteKjøringEtter(LocalDateTime.now().plusMinutes(1));
         }
+        return prosessTaskData;
+    }
+
+    private ProsessTaskData opprettPubliserHistorikkTask(UUID behandlingUuid,
+                                                         UUID bestillingUuid,
+                                                         DokumentMalType dokumentMal,
+                                                         String journalpostId,
+                                                         String dokumentId) {
+        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(PubliserHistorikkTask.class);
+        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, behandlingUuid.toString());
+        prosessTaskData.setProperty(PubliserHistorikkTask.BESTILLING_UUID, bestillingUuid.toString());
+        prosessTaskData.setProperty(PubliserHistorikkTask.DOKUMENT_MAL_TYPE, dokumentMal.getKode());
+        prosessTaskData.setProperty(PubliserHistorikkTask.JOURNALPOST_ID, journalpostId);
+        prosessTaskData.setProperty(PubliserHistorikkTask.DOKUMENT_ID, dokumentId);
         return prosessTaskData;
     }
 

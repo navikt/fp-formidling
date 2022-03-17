@@ -10,6 +10,7 @@ import no.nav.historikk.kodeverk.HistorikkAktørEnum;
 import no.nav.historikk.v1.HistorikkInnslagDokumentLink;
 import no.nav.historikk.v1.HistorikkInnslagV1;
 
+@Deprecated(forRemoval = true)
 public class HistorikkTilDtoMapper {
 
     public static HistorikkInnslagV1 mapHistorikkinnslag(DokumentHistorikkinnslag dokumentHistorikkinnslag) {

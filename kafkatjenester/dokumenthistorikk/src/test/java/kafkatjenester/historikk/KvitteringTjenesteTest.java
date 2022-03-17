@@ -16,17 +16,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.fpformidling.historikk.DokumentHistorikkinnslag;
 import no.nav.foreldrepenger.fpformidling.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.fpformidling.historikk.HistorikkinnslagType;
-import no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk.DokumentHistorikkTjeneste;
+import no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk.KvitteringTjeneste;
 import no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk.DokumentHistorikkinnslagProducer;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.foreldrepenger.fpsak.Behandlinger;
-import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 
 @ExtendWith(MockitoExtension.class)
-public class DokumentHistorikkTjenesteTest {
+public class KvitteringTjenesteTest {
 
-    private DokumentHistorikkTjeneste historikkTjeneste;
+    private KvitteringTjeneste historikkTjeneste;
     @Spy
     private DokumentHistorikkinnslagProducer historikkMeldingProducer;
 
@@ -35,7 +34,7 @@ public class DokumentHistorikkTjenesteTest {
 
     @BeforeEach
     public void setup() {
-        historikkTjeneste = new DokumentHistorikkTjeneste(historikkMeldingProducer, behandlinger);
+        historikkTjeneste = new KvitteringTjeneste(historikkMeldingProducer, behandlinger);
         lenient().doNothing().when(historikkMeldingProducer).sendJson(Mockito.any());
         lenient().doNothing().when(behandlinger).kvitterDokument(Mockito.any());
     }

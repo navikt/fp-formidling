@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.kafkatjenester.historikk;
+package no.nav.foreldrepenger.fpformidling.migrering;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;

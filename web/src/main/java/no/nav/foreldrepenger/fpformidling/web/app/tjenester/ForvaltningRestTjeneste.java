@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -22,6 +23,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
+import no.nav.foreldrepenger.fpformidling.migrering.MigrerJournalposterTilFpsakTjeneste;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
@@ -33,14 +35,17 @@ public class ForvaltningRestTjeneste {
     private static final Environment ENVIRONMENT = Environment.current();
 
     private Dokgen dokgenRestKlient;
+    private MigrerJournalposterTilFpsakTjeneste migrerTjeneste;
 
     public ForvaltningRestTjeneste() {
         // CDI
     }
 
     @Inject
-    public ForvaltningRestTjeneste(/* @Jersey */ Dokgen dokgenRestKlient) {
+    public ForvaltningRestTjeneste(/* @Jersey */ Dokgen dokgenRestKlient,
+                                                 MigrerJournalposterTilFpsakTjeneste migrerTjeneste) {
         this.dokgenRestKlient = dokgenRestKlient;
+        this.migrerTjeneste = migrerTjeneste;
     }
 
     @POST
@@ -68,5 +73,16 @@ public class ForvaltningRestTjeneste {
         responseBuilder.type("application/pdf");
         responseBuilder.header("Content-Disposition", "attachment; filename=dokument.pdf");
         return responseBuilder.build();
+    }
+
+    @GET
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    @Path("historikk/migrer")
+    @Operation(description = "Sender journalposter over til fpsak", tags = "forvaltning")
+    @BeskyttetRessurs(action = READ, resource = DRIFT)
+    public Response migrer() {
+        migrerTjeneste.migrerHistorikk();
+        return Response.ok().build();
     }
 }

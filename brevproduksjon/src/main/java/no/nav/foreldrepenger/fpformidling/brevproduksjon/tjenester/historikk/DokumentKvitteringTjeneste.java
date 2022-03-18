@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.historikk;
+package no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

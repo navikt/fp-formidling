@@ -41,7 +41,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokument
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.DokumentOpprettResponse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.OpprettJournalpostResponse;
-import no.nav.foreldrepenger.fpformidling.historikk.task.PubliserHistorikkTask;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.PubliserHistorikkTask;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.personopplysning.NavBrukerKjønn;

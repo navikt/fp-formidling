@@ -13,7 +13,6 @@
         <module>brevproduksjon</module>
         <module>domene</module>
         <module>integrasjon</module>
-        <module>kafkatjenester</module>
         <module>migreringer</module>
         <module>prosesstask</module>
         <module>web</module>

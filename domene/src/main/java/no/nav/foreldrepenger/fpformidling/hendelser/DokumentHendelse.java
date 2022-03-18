@@ -170,7 +170,7 @@ public class DokumentHendelse extends BaseEntitet {
                 ", ytelseType=" + ytelseType +
                 ", gjelderVedtak=" + gjelderVedtak +
                 ", tittel='" + tittel + '\'' +
-                ", fritekst='" + fritekst + '\'' +
+                ", fritekst='" + (fritekst != null ? "****** fritekst ***** " : "null") + '\'' +
                 ", historikkAktør=" + historikkAktør +
                 ", revurderingVarslingÅrsak=" + revurderingVarslingÅrsak +
                 ", behandlendeEnhetNavn=" + behandlendeEnhetNavn +

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.historikk;
+package no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk;
 
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;

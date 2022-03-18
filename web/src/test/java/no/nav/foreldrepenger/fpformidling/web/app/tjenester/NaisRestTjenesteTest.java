@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.vedtak.log.metrics.LivenessAware;
 import no.nav.vedtak.log.metrics.ReadinessAware;
 
 @ExtendWith(MockitoExtension.class)
@@ -27,25 +26,16 @@ public class NaisRestTjenesteTest {
     private ApplicationServiceStarter starter;
 
     @Mock
-    private LivenessAware kafka;
-    @Mock
     private ReadinessAware db;
 
     @BeforeEach
     public void setup() {
-        restTjeneste = new NaisRestTjeneste(starter, List.of(kafka), List.of(db));
+        restTjeneste = new NaisRestTjeneste(starter, List.of(), List.of(db));
     }
 
     @Test
     public void isAlive_skal_returnere_status_200() {
-        when(kafka.isAlive()).thenReturn(true);
         assertThat(restTjeneste.isAlive().getStatus()).isEqualTo(OK.getStatusCode());
-    }
-
-    @Test
-    public void isAlive_skal_returnere_server_error_når_kafka_feiler() {
-        when(kafka.isAlive()).thenReturn(false);
-        assertThat(restTjeneste.isAlive().getStatus()).isEqualTo(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
     }
 
     @Test

@@ -13,7 +13,6 @@
         <module>brevproduksjon</module>
         <module>domene</module>
         <module>integrasjon</module>
-        <module>kafkatjenester</module>
         <module>migreringer</module>
         <module>prosesstask</module>
         <module>web</module>
@@ -30,7 +29,7 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
         <!-- Felles artefakter -->
-        <felles.version>4.1.20</felles.version>
+        <felles.version>4.1.21</felles.version>
         <prosesstask.version>3.1.7</prosesstask.version>
         <kontrakter.version>6.1.19</kontrakter.version>
         <konfig.version>1.1.5</konfig.version>
@@ -39,7 +38,6 @@
         <prometheus.version>0.15.0</prometheus.version>
         <swagger.version>2.1.13</swagger.version>
         <swagger-ui.version>4.5.2</swagger-ui.version>
-        <kafka.version>3.1.0</kafka.version>
         <logstash.version>7.0.1</logstash.version>
         <logback-syslog4j.version>1.0.0</logback-syslog4j.version>
         <handlebars.version>4.3.0</handlebars.version>
@@ -139,11 +137,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>dokumenthistorikk</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>fpdokgen</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -236,16 +229,6 @@
             </dependency>
 
             <!-- Diverse -->
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka-streams</artifactId>
-                <version>${kafka.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.kafka</groupId>
-                <artifactId>kafka-clients</artifactId>
-                <version>${kafka.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.github.jknack</groupId>
                 <artifactId>handlebars</artifactId>

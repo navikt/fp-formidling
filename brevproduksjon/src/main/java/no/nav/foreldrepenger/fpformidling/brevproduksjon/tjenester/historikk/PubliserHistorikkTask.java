@@ -1,11 +1,10 @@
-package no.nav.foreldrepenger.fpformidling.historikk.task;
+package no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk;
 
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpformidling.historikk.DokumentKvitteringTjeneste;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;

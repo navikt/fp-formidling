@@ -16,10 +16,6 @@ public class ProduserBrevTask implements ProsessTaskHandler {
     private BrevBestillerTjeneste brevBestillerApplikasjonTjeneste;
     private HendelseRepository hendelseRepository;
 
-    public ProduserBrevTask() {
-        //CDI
-    }
-
     @Inject
     public ProduserBrevTask(BrevBestillerTjeneste brevBestillerApplikasjonTjeneste,
                             HendelseRepository hendelseRepository) {

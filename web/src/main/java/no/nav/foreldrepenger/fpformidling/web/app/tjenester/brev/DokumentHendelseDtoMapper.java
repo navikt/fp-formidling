@@ -6,7 +6,6 @@ import java.util.UUID;
 import no.nav.foreldrepenger.fpformidling.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.YtelseType;
@@ -34,7 +33,6 @@ public class DokumentHendelseDtoMapper {
                 .medYtelseType(utledYtelseType(brevDto.getFagsakYtelseType()))
                 .medFritekst(brevDto.getFritekst())
                 .medTittel(brevDto.getTittel())
-                .medHistorikkAktør(utledHistorikkAktør(brevDto.getHistorikkAktør()))
                 .medDokumentMalType(utleddokumentMalType(brevDto.getDokumentMal()))
                 .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(brevDto.getArsakskode()))
                 .medGjelderVedtak(brevDto.isGjelderVedtak())
@@ -73,12 +71,5 @@ public class DokumentHendelseDtoMapper {
             return null;
         }
         return DokumentMalType.fraKode(dokumentmal);
-    }
-
-    private static HistorikkAktør utledHistorikkAktør(String historikkAktør) {
-        if (historikkAktør == null || historikkAktør.isEmpty()) {
-            return HistorikkAktør.UDEFINERT;
-        }
-        return HistorikkAktør.fraKode(historikkAktør);
     }
 }

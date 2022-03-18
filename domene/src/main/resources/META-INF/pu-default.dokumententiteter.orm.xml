@@ -13,6 +13,4 @@
     <entity class="no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData"/>
     <entity class="no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles"/>
     <entity class="no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse"/>
-    <entity class="no.nav.foreldrepenger.fpformidling.historikk.DokumentHistorikkinnslag"/>
-
 </entity-mappings>

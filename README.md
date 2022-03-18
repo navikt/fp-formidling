@@ -1,7 +1,7 @@
 Bestilling og produksjon av Brev og Dokumenter for foreldrepenger
 ================
 
-Applikasjonen bestiller brev basert på hendelser fra en kafka-kø, eller via et REST-grensesnitt for forhåndsvisning.
+Applikasjonen bestiller brev basert på hendelser via et REST-grensesnitt.
 
 ## Henvendelser
 

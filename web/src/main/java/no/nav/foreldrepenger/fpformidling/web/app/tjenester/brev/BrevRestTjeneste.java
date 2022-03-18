@@ -20,9 +20,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokgenBrevproduksjonTjeneste;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.brevmal.BrevmalTjeneste;
@@ -44,6 +48,8 @@ import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 @Transactional
 @ApplicationScoped
 public class BrevRestTjeneste {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BrevRestTjeneste.class);
 
     private BrevmalTjeneste brevmalTjeneste;
     private BrevBestillerTjeneste brevBestillerTjeneste;
@@ -88,6 +94,8 @@ public class BrevRestTjeneste {
             @Valid DokumentbestillingDto dokumentbestillingDto) { // NOSONAR
 
         var dokumentHendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
+
+        LOGGER.info("Forhåndsvis hendelse: {}", dokumentHendelse);
 
         byte[] dokument = brevBestillerTjeneste.forhandsvisBrev(dokumentHendelse);
 

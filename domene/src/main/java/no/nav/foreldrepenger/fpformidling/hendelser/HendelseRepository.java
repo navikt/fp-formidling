@@ -17,7 +17,7 @@ public class HendelseRepository {
 
     private EntityManager entityManager;
 
-    public HendelseRepository() {
+    HendelseRepository() {
         //CDI
     }
 

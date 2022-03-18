@@ -47,10 +47,6 @@
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>organisasjon</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>dokumenthistorikk</artifactId>
-        </dependency>
 
         <!-- Felles -->
         <dependency>

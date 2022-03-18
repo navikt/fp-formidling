@@ -8,7 +8,6 @@
     <sequence-generator name="SEQ_DOKUMENT_DATA" allocation-size="50" sequence-name="SEQ_DOKUMENT_DATA"/>
     <sequence-generator name="SEQ_DOKUMENT_FELLES" allocation-size="50" sequence-name="SEQ_DOKUMENT_FELLES"/>
     <sequence-generator name="SEQ_DOKUMENT_HENDELSE" allocation-size="50" sequence-name="SEQ_DOKUMENT_HENDELSE"/>
-    <sequence-generator name="SEQ_DOKUMENT_HISTORIKK" allocation-size="50" sequence-name="SEQ_DOKUMENT_HISTORIKK"/>
 
     <entity class="no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData"/>
     <entity class="no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles"/>

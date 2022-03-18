@@ -166,6 +166,8 @@ public class DokumentdataSerializationTest {
                 .medAntallArbeidsgivere(3)
                 .medDagerTaptFørTermin(4)
                 .medDisponibleDager(5)
+                .medDisponibleDagerUtenAktivitetskrav(11)
+                .medDisponibleDagerMedAktivitetskrav(15)
                 .medDisponibleFellesDager(6)
                 .medSisteDagAvSistePeriode(formaterDatoNorsk(LocalDate.now().minusDays(10)))
                 .medStønadsperiodeFom(formaterDatoNorsk(LocalDate.now().minusDays(9)))

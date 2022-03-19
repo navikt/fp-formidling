@@ -127,7 +127,7 @@ public class BeregningsgrunnlagV2DtoMapper {
     }
 
     private static OpptjeningAktivitetType mapArbeidforholdTypeFraDto(OpptjeningAktivitetDto arbeidsforholdType) {
-        if (arbeidsforholdType == null) return null;
+        if (arbeidsforholdType == null) return OpptjeningAktivitetType.UDEFINERT;
         return switch (arbeidsforholdType) {
             case VENTELØNN_VARTPENGER -> OpptjeningAktivitetType.VENTELØNN_VARTPENGER;
             case DAGPENGER -> OpptjeningAktivitetType.DAGPENGER;

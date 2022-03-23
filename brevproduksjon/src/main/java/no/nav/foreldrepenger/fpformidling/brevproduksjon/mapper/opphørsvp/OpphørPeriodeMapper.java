@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphørsvp;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -86,7 +87,7 @@ public class OpphørPeriodeMapper {
                 .collect(Collectors.toList());
 
         if (!opphørtePerioder.isEmpty()) {
-            PeriodeIkkeOppfyltÅrsak årsak = finnPeriodeIkkeOppfyltÅrsak(opphørtePerioder);
+            PeriodeIkkeOppfyltÅrsak årsak = finnNyestePeriodeIkkeOppfyltÅrsak(opphørtePerioder);
             if (årsak != null) {
                 lovReferanser.add(årsak.getLovHjemmelData());
                 return mapOpphørtPeriode(tilkjentYtelsePerioder, uttakResultatArbeidsforhold, språkKode, årsak.getKode(), iay);
@@ -95,8 +96,10 @@ public class OpphørPeriodeMapper {
         return null;
     }
 
-    private static PeriodeIkkeOppfyltÅrsak finnPeriodeIkkeOppfyltÅrsak(List<SvpUttakResultatPeriode> opphørtePerioder) {
-        return opphørtePerioder.stream().map(SvpUttakResultatPeriode::getPeriodeIkkeOppfyltÅrsak).findFirst().orElse(null);
+    private static PeriodeIkkeOppfyltÅrsak finnNyestePeriodeIkkeOppfyltÅrsak(List<SvpUttakResultatPeriode> opphørtePerioder) {
+        return opphørtePerioder.stream()
+                .max(Comparator.comparing(SvpUttakResultatPeriode::getTidsperiode))
+                .map(SvpUttakResultatPeriode::getPeriodeIkkeOppfyltÅrsak).orElse(null);
     }
 
     private static OpphørPeriode mapOpphørtPeriode(List<TilkjentYtelsePeriode> tilkjentYtelse, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkkode, String opphørÅrsak, Inntektsmeldinger iay) {

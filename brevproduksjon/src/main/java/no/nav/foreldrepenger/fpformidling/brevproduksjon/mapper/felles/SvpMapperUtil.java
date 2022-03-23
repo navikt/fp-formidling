@@ -12,6 +12,7 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmelding;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
@@ -39,11 +40,10 @@ public final class SvpMapperUtil {
         return minsteDatoFraÅvslåttUttak.isPresent() ? minsteDatoFraÅvslåttUttak : finnMinsteFraDatoFraInnvilgetUttak(perioder);
     }
 
-//Henter ut alle avslåtte perioder her fordi det kan være en ferie midt i perioden som tidligere har blitt avslått(8311), men som ikke er en opphørsavslagsgrunn.
-// Siste opphørsdato vil da se merkelig ut siden bruker ikke får svp penger i den avslåtte perioden
     private static Optional<LocalDate> finnMinsteFraDatoAvslåttUttak(List<SvpUttakResultatPeriode> uttaksperioder) {
         return uttaksperioder.stream()
                 .filter(p-> PeriodeResultatType.AVSLÅTT.equals(p.getPeriodeResultatType()))
+                .filter(ur -> PeriodeIkkeOppfyltÅrsak.opphørsAvslagÅrsaker().contains(ur.getPeriodeIkkeOppfyltÅrsak()))
                 .map(p -> p.getTidsperiode().getFomDato())
                 .min(LocalDate::compareTo);
     }

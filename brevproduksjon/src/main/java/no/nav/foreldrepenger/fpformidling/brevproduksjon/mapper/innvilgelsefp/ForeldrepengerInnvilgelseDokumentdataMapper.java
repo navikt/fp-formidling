@@ -81,8 +81,6 @@ import no.nav.foreldrepenger.konfig.Environment;
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE)
 public class ForeldrepengerInnvilgelseDokumentdataMapper implements DokumentdataMapper {
 
-    private static final Environment ENV = Environment.current();
-
     private final BrevParametere brevParametere;
     private final DomeneobjektProvider domeneobjektProvider;
 
@@ -128,15 +126,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         int antallBarn = familieHendelse.getAntallBarn().intValue();
         int antallDødeBarn = familieHendelse.getAntallDødeBarn();
 
-        final int utenAktKrav;
-        final int medAktKrav;
-        if (ENV.isProd()) {
-            utenAktKrav = 0;
-            medAktKrav = 0;
-        } else {
-            utenAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV);
-            medAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.FORELDREPENGER) - utenAktKrav;
-        }
+        var utenAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV);
+        var medAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.FORELDREPENGER) - utenAktKrav;
 
         var dokumentdataBuilder = ForeldrepengerInnvilgelseDokumentdata.ny()
                 .medFelles(fellesBuilder.build())

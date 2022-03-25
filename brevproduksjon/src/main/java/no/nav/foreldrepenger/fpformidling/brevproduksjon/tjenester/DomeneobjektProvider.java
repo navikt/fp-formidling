@@ -107,10 +107,8 @@ public class DomeneobjektProvider {
         try {
             beregningsgrunnlagV2 = hentBeregningsgrunnlagV2HvisFinnes(behandling);
 
-            if (beregningsgrunnlag.isPresent() && beregningsgrunnlagV2.isPresent()) {
-                if (!beregningsgrunnlag.get().equals(beregningsgrunnlagV2.get())) {
-                    LOGGER.info("FORMIDLING-BG: beregningsgrunnlagV2 {} er ulik beregningsgrunnlag: {}", beregningsgrunnlagV2, beregningsgrunnlag);
-                }
+            if (!beregningsgrunnlag.equals(beregningsgrunnlagV2)) {
+                LOGGER.info("FORMIDLING-BG: beregningsgrunnlagV2 {} er ulik beregningsgrunnlag: {}", beregningsgrunnlagV2, beregningsgrunnlag);
             }
         } catch (Exception ex) {
             LOGGER.info("FORMIDLING-BG: Feil ved innhenting av beregningsgrunnlagV2");

@@ -111,8 +111,6 @@ public class DomeneobjektProvider {
                 if (!beregningsgrunnlag.get().equals(beregningsgrunnlagV2.get())) {
                     LOGGER.info("FORMIDLING-BG: beregningsgrunnlagV2 {} er ulik beregningsgrunnlag: {}", beregningsgrunnlagV2, beregningsgrunnlag);
                 }
-            } else {
-                LOGGER.info("FORMIDLING-BG: beregningsgrunnlag finnes ikke: v2:{} v1:{}", beregningsgrunnlagV2, beregningsgrunnlag);
             }
         } catch (Exception ex) {
             LOGGER.info("FORMIDLING-BG: Feil ved innhenting av beregningsgrunnlagV2");

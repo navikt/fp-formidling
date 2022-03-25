@@ -90,7 +90,7 @@ public class BeregningsgrunnlagV2DtoMapper {
             case REFUSJON_OPPHØRER -> PeriodeÅrsak.REFUSJON_OPPHØRER;
             case GRADERING -> PeriodeÅrsak.GRADERING;
             case GRADERING_OPPHØRER -> PeriodeÅrsak.GRADERING_OPPHØRER;
-            case REFUSJON_AVSLÅTT -> PeriodeÅrsak.REFUSJON_OPPHØRER;
+            case REFUSJON_AVSLÅTT -> PeriodeÅrsak.REFUSJON_AVSLÅTT;
         };
     }
 

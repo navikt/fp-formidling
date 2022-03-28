@@ -37,7 +37,7 @@
         <!-- Eksterne -->
         <prometheus.version>0.15.0</prometheus.version>
         <swagger.version>2.1.13</swagger.version>
-        <swagger-ui.version>4.8.1</swagger-ui.version>
+        <swagger-ui.version>4.9.1</swagger-ui.version>
         <logstash.version>7.0.1</logstash.version>
         <logback-syslog4j.version>1.0.0</logback-syslog4j.version>
         <handlebars.version>4.3.0</handlebars.version>

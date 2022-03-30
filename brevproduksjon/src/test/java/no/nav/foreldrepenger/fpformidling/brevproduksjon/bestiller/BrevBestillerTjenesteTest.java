@@ -30,6 +30,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParam
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapperProvider;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.DistribuerBrevTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.PubliserHistorikkTask;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
@@ -41,7 +42,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokument
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.DokumentOpprettResponse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.OpprettJournalpostResponse;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.PubliserHistorikkTask;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.personopplysning.NavBrukerKjønn;
@@ -98,6 +98,7 @@ public class BrevBestillerTjenesteTest {
     private DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste;
     private BrevBestillerTjeneste tjeneste;
 
+
     @BeforeEach
     public void beforeEach() {
         dokumentdataMapper = new EngangsstønadInnvilgelseDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)),
@@ -111,9 +112,10 @@ public class BrevBestillerTjenesteTest {
     @Test
     public void skal_generere_og_sende_brev_til_både_søker_og_verge() {
         // Arrange
+        UUID randomBestillingsUuid = UUID.randomUUID();
         Personinfo personinfo = mockPdl(true);
         Behandling behandling = mockDomeneobjektProvider(personinfo, true);
-        DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
+        DokumentHendelse dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
         when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
@@ -126,19 +128,22 @@ public class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(2)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(2))
-                .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null));
+                .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any());
         verify(taskTjeneste, times(2)).lagre(taskCaptor.capture());
+
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
         assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
+        assertThat(taskCaptor.getAllValues().get(1).getTasks().get(0).task().getPropertyValue("bestillingId")).isEqualTo(randomBestillingsUuid + "-" + 1);
     }
 
     @Test
     public void skal_ikke_sende_til_verge_når_verge_ikke_er_definert() {
         // Arrange
+        UUID randomBestillingsUuid = UUID.randomUUID();
         Personinfo personinfo = mockPdl(false);
         Behandling behandling = mockDomeneobjektProvider(personinfo, false);
-        DokumentHendelse dokumentHendelse = opprettDokumentHendelse();
+        DokumentHendelse dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
         when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
@@ -151,11 +156,12 @@ public class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(1))
-                .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null));
+                .journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any());
         verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
         assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
+        assertThat(taskCaptor.getAllValues().get(0).getTasks().get(0).task().getPropertyValue("bestillingId")).isEqualTo(String.valueOf(randomBestillingsUuid));
     }
 
     private Personinfo mockPdl(boolean harVerge) {
@@ -199,10 +205,10 @@ public class BrevBestillerTjenesteTest {
         return behandling;
     }
 
-    private DokumentHendelse opprettDokumentHendelse() {
+    private DokumentHendelse opprettDokumentHendelse(UUID randomBestillingsUuid) {
         DokumentHendelse dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(BEHANDLING_UUID)
-                .medBestillingUuid(UUID.randomUUID())
+                .medBestillingUuid(randomBestillingsUuid)
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
                 .medBehandlendeEnhetNavn("Navkontoret")
                 .build();
@@ -215,7 +221,7 @@ public class BrevBestillerTjenesteTest {
         OpprettJournalpostResponse opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), "", true,
                 List.of(dokumentOpprettResponse));
         when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse),
-                eq(SAKSNUMMER), eq(true), eq(null)))
+                eq(SAKSNUMMER), eq(true), eq(null), any()))
                 .thenReturn(opprettJournalpostResponse);
     }
 }

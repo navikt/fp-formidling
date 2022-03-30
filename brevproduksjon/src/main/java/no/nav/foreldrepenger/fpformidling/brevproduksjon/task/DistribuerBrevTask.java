@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
-import java.util.UUID;
+import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -25,7 +25,7 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
         JournalpostId journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(BrevTaskProperties.JOURNALPOST_ID));
-        var bestillingUuid = prosessTaskData.getPropertyValue(BrevTaskProperties.BESTILLING_UUID);
-        dokdist.distribuerJournalpost(journalpostId, UUID.fromString(bestillingUuid));
+        var bestillingId = Optional.ofNullable(prosessTaskData.getPropertyValue(BrevTaskProperties.BESTILLING_ID)).orElse(prosessTaskData.getPropertyValue(BrevTaskProperties.BESTILLING_UUID));
+        dokdist.distribuerJournalpost(journalpostId, bestillingId);
     }
 }

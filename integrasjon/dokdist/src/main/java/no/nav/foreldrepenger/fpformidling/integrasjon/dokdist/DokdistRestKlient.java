@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokdist;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -39,8 +38,8 @@ public class DokdistRestKlient implements Dokdist {
     }
 
     @Override
-    public void distribuerJournalpost(JournalpostId journalpostId, UUID bestillingUuid) {
-        DistribuerJournalpostRequest request = lagRequest(journalpostId, bestillingUuid);
+    public void distribuerJournalpost(JournalpostId journalpostId, String bestillingId) {
+        DistribuerJournalpostRequest request = lagRequest(journalpostId, bestillingId);
         try {
             URIBuilder uriBuilder = new URIBuilder(endpointDokdistRestBase + "/distribuerjournalpost");
             Optional<DistribuerJournalpostResponse> response = oidcRestClient.postReturnsOptional(uriBuilder.build(), request,
@@ -55,8 +54,8 @@ public class DokdistRestKlient implements Dokdist {
         }
     }
 
-    private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId, UUID bestillingUuid) {
-        LOGGER.info("Bestiller distribusjon av {} med batchId {}", journalpostId, bestillingUuid);
-        return new DistribuerJournalpostRequest(journalpostId.getVerdi(), String.valueOf(bestillingUuid), Fagsystem.FPSAK.getOffisiellKode(), Fagsystem.FPSAK.getKode());
+    private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId, String bestillingId) {
+        LOGGER.info("Bestiller distribusjon av {} med batchId {}", journalpostId, bestillingId);
+        return new DistribuerJournalpostRequest(journalpostId.getVerdi(),  bestillingId, Fagsystem.FPSAK.getOffisiellKode(), Fagsystem.FPSAK.getKode());
     }
 }

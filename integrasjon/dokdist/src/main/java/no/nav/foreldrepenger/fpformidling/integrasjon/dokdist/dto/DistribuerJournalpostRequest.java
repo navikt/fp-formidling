@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto;
 
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -35,8 +33,8 @@ public class DistribuerJournalpostRequest {
         this.dokumentProdApp = dokumentProdApp;
     }
 
-    public DistribuerJournalpostRequest(JournalpostId id, Fagsystem fagsystem, UUID bestillingUuid) {
-        this(id.getVerdi(), String.valueOf(bestillingUuid), fagsystem.getOffisiellKode(), fagsystem.getKode());
+    public DistribuerJournalpostRequest(JournalpostId id, Fagsystem fagsystem, String bestillingId) {
+        this(id.getVerdi(), bestillingId, fagsystem.getOffisiellKode(), fagsystem.getKode());
     }
 
     public String getJournalpostId() {

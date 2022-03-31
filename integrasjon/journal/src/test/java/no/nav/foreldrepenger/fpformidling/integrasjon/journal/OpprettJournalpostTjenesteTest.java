@@ -56,11 +56,13 @@ public class OpprettJournalpostTjenesteTest {
                 .medTittel("Innvilget Engangsstønad")
                 .build();
 
+        var unikBestillingsId = dokumentHendelse.getBestillingUuid().toString() + "-" + 1;
+
         Saksnummer saksnummer = new Saksnummer("153456789");
 
         // Act
         OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
-                dokumentFelles, dokumentHendelse, saksnummer, true, null);
+                dokumentFelles, dokumentHendelse, saksnummer, true, null, unikBestillingsId);
 
         // Assert
         Mockito.verify(journalpostRestKlient).opprettJournalpost(requestCaptor.capture(), eq(true));
@@ -76,7 +78,7 @@ public class OpprettJournalpostTjenesteTest {
         assertThat(genRequest.getAvsenderMottaker().idType()).isEqualByComparingTo(AvsenderMottakerIdType.FNR);
         assertThat(genRequest.getJournalfoerendeEnhet()).isEqualTo("9999");
         assertThat(genRequest.getBruker().id()).isEqualTo(FNR);
-        assertThat(genRequest.getEksternReferanseId()).isEqualTo(dokumentHendelse.getBestillingUuid().toString());
+        assertThat(genRequest.getEksternReferanseId()).isEqualTo(unikBestillingsId);
         assertThat(genRequest.getDokumenter().get(0).getBrevkode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getKode());
         byte[] brev = genRequest.getDokumenter().get(0).getDokumentvarianter().get(0).getFysiskDokument();
         assertThat(brev).contains(GEN_BREV);

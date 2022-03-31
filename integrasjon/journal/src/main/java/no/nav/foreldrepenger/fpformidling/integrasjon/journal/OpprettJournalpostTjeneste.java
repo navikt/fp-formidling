@@ -26,6 +26,7 @@ import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped
+@SuppressWarnings("java:S107")
 public class OpprettJournalpostTjeneste {
     private static final Logger LOG = LoggerFactory.getLogger(OpprettJournalpostTjeneste.class);
     private Journalpost journalpostRestKlient;
@@ -43,12 +44,12 @@ public class OpprettJournalpostTjeneste {
     }
 
     public OpprettJournalpostResponse journalførUtsendelse(byte[] brev, DokumentMalType dokumentMalType, DokumentFelles dokumentFelles,
-                                                           DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill, String overskriftVedFritekstBrev) {
+                                                           DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill, String overskriftVedFritekstBrev, String unikReferanse) {
         LOG.info("Starter journalføring av brev for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode());
 
         try {
             OpprettJournalpostResponse response = journalpostRestKlient
-                    .opprettJournalpost(lagRequest(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer, ferdigstill, overskriftVedFritekstBrev), ferdigstill);
+                    .opprettJournalpost(lagRequest(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer, ferdigstill, overskriftVedFritekstBrev, unikReferanse), ferdigstill);
 
             if (ferdigstill && !response.erFerdigstilt()) {
                 LOG.warn("Journalpost {} ble ikke ferdigstilt", response.getJournalpostId());
@@ -64,7 +65,7 @@ public class OpprettJournalpostTjeneste {
     }
 
     private OpprettJournalpostRequest lagRequest(byte[] brev, DokumentMalType dokumentMalType, DokumentFelles dokumentFelles,
-            DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill, String overskriftVedFritekstbrev) {
+            DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill, String overskriftVedFritekstbrev, String bestillingsUidMedUnikReferanse) {
         DokumentOpprettRequest dokument = new DokumentOpprettRequest(getTittel(dokumentHendelse, dokumentMalType, overskriftVedFritekstbrev), dokumentMalType.getKode(), null,
                 brev);
 
@@ -82,7 +83,7 @@ public class OpprettJournalpostTjeneste {
                 lagSak(saksnummer),
                 List.of(dokument));
 
-        journalpostRequest.setEksternReferanseId(String.valueOf(dokumentHendelse.getBestillingUuid()));
+        journalpostRequest.setEksternReferanseId(bestillingsUidMedUnikReferanse);
         return journalpostRequest;
     }
 

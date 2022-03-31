@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import java.net.URI;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,7 @@ public class DokdistRestKlientTest {
                 eq(DistribuerJournalpostResponse.class))).thenReturn(Optional.of(response));
 
         // Act
-        dokdistRestKlient.distribuerJournalpost(JOURNALPOST_ID, UUID.randomUUID());
+        dokdistRestKlient.distribuerJournalpost(JOURNALPOST_ID, "12345");
 
         // Assert
         assertThat(uriCaptor.getValue().toURL().toString()).isEqualTo(BASE_URL + "/distribuerjournalpost");
@@ -64,6 +63,6 @@ public class DokdistRestKlientTest {
                 eq(DistribuerJournalpostResponse.class))).thenReturn(Optional.empty());
 
         // Act
-        assertThrows(VLException.class, () -> dokdistRestKlient.distribuerJournalpost(JOURNALPOST_ID, UUID.randomUUID()));
+        assertThrows(VLException.class, () -> dokdistRestKlient.distribuerJournalpost(JOURNALPOST_ID, "12345"));
     }
 }

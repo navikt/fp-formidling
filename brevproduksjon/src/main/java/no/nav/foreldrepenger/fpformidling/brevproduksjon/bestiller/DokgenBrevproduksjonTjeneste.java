@@ -17,6 +17,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.DistribuerBrevTask
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.FerdigstillForsendelseTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.TilknyttVedleggTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.PubliserHistorikkTask;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
@@ -26,7 +27,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.OpprettJournalpostResponse;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.PubliserHistorikkTask;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.exception.TekniskException;
@@ -74,9 +74,15 @@ public class DokgenBrevproduksjonTjeneste {
     public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
         var bestill = BestillingType.BESTILL;
         DokumentData dokumentData = lagreDokumentDataFor(behandling, dokumentMal, bestill);
-
+        int teller = 0;
         for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
             byte[] brev = genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentFelles, bestill);
+
+            var unikBestillingsUuidPerDokFelles = dokumentHendelse.getBestillingUuid().toString();
+            if( teller > 0) {
+                unikBestillingsUuidPerDokFelles = dokumentHendelse.getBestillingUuid() + "-" + teller;
+            }
+            teller++;
 
             boolean innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
             OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev,
@@ -85,7 +91,9 @@ public class DokgenBrevproduksjonTjeneste {
                     dokumentHendelse,
                     behandling.getFagsakBackend().getSaksnummer(),
                     !innsynMedVedlegg,
-                    behandling.getBehandlingsresultat() != null ? behandling.getBehandlingsresultat().getOverskrift() : null);
+                    behandling.getBehandlingsresultat() != null ? behandling.getBehandlingsresultat().getOverskrift() : null,
+                    unikBestillingsUuidPerDokFelles) // NoSonar
+            ;
 
             JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
 
@@ -93,7 +101,7 @@ public class DokgenBrevproduksjonTjeneste {
                 leggTilVedleggOgFerdigstillForsendelse(dokumentHendelse.getBehandlingUuid(), journalpostId);
             }
 
-            distribuerBrevOgLagHistorikk(dokumentHendelse, dokumentMal, response, journalpostId, innsynMedVedlegg, dokumentFelles.getSaksnummer().getVerdi());
+            distribuerBrevOgLagHistorikk(dokumentHendelse, dokumentMal, response, journalpostId, innsynMedVedlegg, dokumentFelles.getSaksnummer().getVerdi(), unikBestillingsUuidPerDokFelles);
         }
     }
 
@@ -136,14 +144,14 @@ public class DokgenBrevproduksjonTjeneste {
                 .build();
     }
 
-    private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMal, OpprettJournalpostResponse response, JournalpostId journalpostId, boolean innsynMedVedlegg, String saksnummer) {
+    private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMal, OpprettJournalpostResponse response, JournalpostId journalpostId, boolean innsynMedVedlegg, String saksnummer, String unikBestillingsId) {
         ProsessTaskGruppe taskGruppe = new ProsessTaskGruppe();
         taskGruppe.addNesteSekvensiell(
                 opprettDistribuerBrevTask(journalpostId,
                         innsynMedVedlegg,
                         dokumentHendelse.getBehandlingUuid(),
                         saksnummer,
-                        dokumentHendelse.getBestillingUuid()));
+                        unikBestillingsId));
 
         taskGruppe.addNesteSekvensiell(
                 opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(),
@@ -174,12 +182,12 @@ public class DokgenBrevproduksjonTjeneste {
         return prosessTaskData;
     }
 
-    private ProsessTaskData opprettDistribuerBrevTask(JournalpostId journalpostId, boolean innsynMedVedlegg, UUID behandlingUuId, String saksnummer, UUID bestillingUuid) {
+    private ProsessTaskData opprettDistribuerBrevTask(JournalpostId journalpostId, boolean innsynMedVedlegg, UUID behandlingUuId, String saksnummer, String unikBestillingsId) {
         ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
         prosessTaskData.setProperty(BrevTaskProperties.SAKSNUMMER, saksnummer);
-        prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_UUID, String.valueOf(bestillingUuid));
+        prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, unikBestillingsId);
         // må vente til vedlegg er knyttet og journalpost er ferdigstilt
         if (innsynMedVedlegg) {
             prosessTaskData.setNesteKjøringEtter(LocalDateTime.now().plusMinutes(1));

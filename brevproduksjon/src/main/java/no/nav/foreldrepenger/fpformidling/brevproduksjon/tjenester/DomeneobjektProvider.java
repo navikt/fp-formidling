@@ -7,9 +7,6 @@ import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.fpformidling.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.fpformidling.anke.Anke;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;

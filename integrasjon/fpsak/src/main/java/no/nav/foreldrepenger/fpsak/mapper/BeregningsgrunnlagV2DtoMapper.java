@@ -42,10 +42,11 @@ public class BeregningsgrunnlagV2DtoMapper {
         return builder.build();
     }
 
-    private static Hjemmel mapHjemmelFraDto(HjemmelDto hjemmel) {
+    static Hjemmel mapHjemmelFraDto(HjemmelDto hjemmel) {
         if (hjemmel == null) return Hjemmel.UDEFINERT;
         return switch (hjemmel) {
             case F_14_7 -> Hjemmel.F_14_7;
+            case F_14_7_8_28_8_30 -> Hjemmel.F_14_7_8_28_8_30;
             case F_14_7_8_30 -> Hjemmel.F_14_7_8_30;
             case F_14_7_8_35 -> Hjemmel.F_14_7_8_35;
             case F_14_7_8_38 -> Hjemmel.F_14_7_8_38;
@@ -55,7 +56,6 @@ public class BeregningsgrunnlagV2DtoMapper {
             case F_14_7_8_43 -> Hjemmel.F_14_7_8_43;
             case F_14_7_8_47 -> Hjemmel.F_14_7_8_47;
             case F_14_7_8_49 -> Hjemmel.F_14_7_8_49;
-            case F_14_7_8_28_8_30 -> Hjemmel.F_14_7_8_28_8_30;
         };
     }
 
@@ -79,18 +79,18 @@ public class BeregningsgrunnlagV2DtoMapper {
         return periodeårsaker.stream().map(BeregningsgrunnlagV2DtoMapper::mapPeriodeårsakFraDto).toList();
     }
 
-    private static PeriodeÅrsak mapPeriodeårsakFraDto(PeriodeÅrsakDto periodeÅrsak) {
+    static PeriodeÅrsak mapPeriodeårsakFraDto(PeriodeÅrsakDto periodeÅrsak) {
         if (periodeÅrsak == null) return null;
         return switch (periodeÅrsak) {
             case ARBEIDSFORHOLD_AVSLUTTET -> PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET;
-            case NATURALYTELSE_TILKOMMER -> PeriodeÅrsak.NATURALYTELSE_TILKOMMER;
-            case NATURALYTELSE_BORTFALT -> PeriodeÅrsak.NATURALYTELSE_BORTFALT;
             case ENDRING_I_AKTIVITETER_SØKT_FOR -> PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR;
             case ENDRING_I_REFUSJONSKRAV -> PeriodeÅrsak.ENDRING_I_REFUSJONSKRAV;
-            case REFUSJON_OPPHØRER -> PeriodeÅrsak.REFUSJON_OPPHØRER;
             case GRADERING -> PeriodeÅrsak.GRADERING;
             case GRADERING_OPPHØRER -> PeriodeÅrsak.GRADERING_OPPHØRER;
+            case NATURALYTELSE_BORTFALT -> PeriodeÅrsak.NATURALYTELSE_BORTFALT;
+            case NATURALYTELSE_TILKOMMER -> PeriodeÅrsak.NATURALYTELSE_TILKOMMER;
             case REFUSJON_AVSLÅTT -> PeriodeÅrsak.REFUSJON_AVSLÅTT;
+            case REFUSJON_OPPHØRER -> PeriodeÅrsak.REFUSJON_OPPHØRER;
         };
     }
 
@@ -126,7 +126,7 @@ public class BeregningsgrunnlagV2DtoMapper {
         return builder.build();
     }
 
-    private static OpptjeningAktivitetType mapArbeidforholdTypeFraDto(OpptjeningAktivitetDto arbeidsforholdType) {
+    static OpptjeningAktivitetType mapArbeidforholdTypeFraDto(OpptjeningAktivitetDto arbeidsforholdType) {
         if (arbeidsforholdType == null) return OpptjeningAktivitetType.UDEFINERT;
         return switch (arbeidsforholdType) {
             case VENTELØNN_VARTPENGER -> OpptjeningAktivitetType.VENTELØNN_VARTPENGER;
@@ -150,23 +150,23 @@ public class BeregningsgrunnlagV2DtoMapper {
         };
     }
 
-    private static AktivitetStatus mapAktivitetStatusFraDto(AktivitetStatusDto aktivitetStatus) {
+    static AktivitetStatus mapAktivitetStatusFraDto(AktivitetStatusDto aktivitetStatus) {
         if (aktivitetStatus == null) return null;
         return switch (aktivitetStatus) {
-            case DAGPENGER -> AktivitetStatus.DAGPENGER;
-            case VENTELØNN_VARTPENGER -> AktivitetStatus.VENTELØNN_VARTPENGER;
-            case TTLSTØTENDE_YTELSE -> AktivitetStatus.TTLSTØTENDE_YTELSE;
-            case BRUKERS_ANDEL -> AktivitetStatus.BRUKERS_ANDEL;
-            case FRILANSER -> AktivitetStatus.FRILANSER;
-            case ARBEIDSTAKER -> AktivitetStatus.ARBEIDSTAKER;
             case ARBEIDSAVKLARINGSPENGER -> AktivitetStatus.ARBEIDSAVKLARINGSPENGER;
-            case KUN_YTELSE -> AktivitetStatus.KUN_YTELSE;
+            case ARBEIDSTAKER -> AktivitetStatus.ARBEIDSTAKER;
+            case BRUKERS_ANDEL -> AktivitetStatus.BRUKERS_ANDEL;
+            case DAGPENGER -> AktivitetStatus.DAGPENGER;
+            case FRILANSER -> AktivitetStatus.FRILANSER;
             case KOMBINERT_AT_FL -> AktivitetStatus.KOMBINERT_AT_FL;
+            case KOMBINERT_AT_FL_SN -> AktivitetStatus.KOMBINERT_AT_FL_SN;
             case KOMBINERT_AT_SN -> AktivitetStatus.KOMBINERT_AT_SN;
             case KOMBINERT_FL_SN -> AktivitetStatus.KOMBINERT_FL_SN;
-            case KOMBINERT_AT_FL_SN -> AktivitetStatus.KOMBINERT_AT_FL_SN;
+            case KUN_YTELSE -> AktivitetStatus.KUN_YTELSE;
             case MILITÆR_ELLER_SIVIL -> AktivitetStatus.MILITÆR_ELLER_SIVIL;
             case SELVSTENDIG_NÆRINGSDRIVENDE -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE;
+            case TTLSTØTENDE_YTELSE -> AktivitetStatus.TTLSTØTENDE_YTELSE;
+            case VENTELØNN_VARTPENGER -> AktivitetStatus.VENTELØNN_VARTPENGER;
         };
     }
 

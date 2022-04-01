@@ -30,7 +30,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParam
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapperProvider;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.DistribuerBrevTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.PubliserHistorikkTask;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.SendKvitteringTask;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
@@ -71,7 +71,7 @@ public class BrevBestillerTjenesteTest {
     private static final long HENDELSE_ID = 1L;
     private static final String DOKUMENT_INFO_ID = "987";
 
-    private static final TaskType HISTORIKK_TASK = TaskType.forProsessTask(PubliserHistorikkTask.class);
+    private static final TaskType HISTORIKK_TASK = TaskType.forProsessTask(SendKvitteringTask.class);
     private static final TaskType DIST_TASK = TaskType.forProsessTask(DistribuerBrevTask.class);
 
     @Mock

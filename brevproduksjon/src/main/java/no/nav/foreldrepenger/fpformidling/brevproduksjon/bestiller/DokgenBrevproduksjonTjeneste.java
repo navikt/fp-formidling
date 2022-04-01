@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.DistribuerBrevTask
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.FerdigstillForsendelseTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.TilknyttVedleggTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.PubliserHistorikkTask;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.SendKvitteringTask;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
@@ -200,12 +200,12 @@ public class DokgenBrevproduksjonTjeneste {
                                                          DokumentMalType dokumentMal,
                                                          String journalpostId,
                                                          String dokumentId) {
-        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(PubliserHistorikkTask.class);
+        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(SendKvitteringTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, behandlingUuid.toString());
-        prosessTaskData.setProperty(PubliserHistorikkTask.BESTILLING_UUID, bestillingUuid.toString());
-        prosessTaskData.setProperty(PubliserHistorikkTask.DOKUMENT_MAL_TYPE, dokumentMal.getKode());
-        prosessTaskData.setProperty(PubliserHistorikkTask.JOURNALPOST_ID, journalpostId);
-        prosessTaskData.setProperty(PubliserHistorikkTask.DOKUMENT_ID, dokumentId);
+        prosessTaskData.setProperty(SendKvitteringTask.BESTILLING_UUID, bestillingUuid.toString());
+        prosessTaskData.setProperty(SendKvitteringTask.DOKUMENT_MAL_TYPE, dokumentMal.getKode());
+        prosessTaskData.setProperty(SendKvitteringTask.JOURNALPOST_ID, journalpostId);
+        prosessTaskData.setProperty(SendKvitteringTask.DOKUMENT_ID, dokumentId);
         return prosessTaskData;
     }
 

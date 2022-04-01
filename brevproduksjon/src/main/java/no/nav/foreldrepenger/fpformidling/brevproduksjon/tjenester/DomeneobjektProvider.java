@@ -38,7 +38,6 @@ import no.nav.foreldrepenger.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpsak.mapper.AnkeDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.BeregningsgrunnlagDtoMapper;
-import no.nav.foreldrepenger.fpsak.mapper.BeregningsgrunnlagV2DtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.FagsakDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.FamiliehendelseDtoMapper;
 import no.nav.foreldrepenger.fpsak.mapper.InnsynDtoMapper;
@@ -55,8 +54,6 @@ import no.nav.foreldrepenger.fpsak.mapper.YtelseFordelingDtoMapper;
 
 @ApplicationScoped
 public class DomeneobjektProvider {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DomeneobjektProvider.class);
 
     private Behandlinger behandlingRestKlient;
     private ArbeidsgiverTjeneste arbeidsgiverTjeneste;
@@ -82,48 +79,13 @@ public class DomeneobjektProvider {
     }
 
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        var beregningsgrunnlag = BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(
-                behandlingRestKlient.hentBeregningsgrunnlag(behandling.getFormidlingRessurser()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
-
-        Beregningsgrunnlag beregningsgrunnlagV2;
-        try {
-            beregningsgrunnlagV2 = hentBeregningsgrunnlagV2(behandling);
-
-            if (!beregningsgrunnlag.equals(beregningsgrunnlagV2)) {
-                LOGGER.info("FORMIDLING-BG: beregningsgrunnlagV2 {} er ulik beregningsgrunnlag: {}", beregningsgrunnlagV2, beregningsgrunnlag);
-            }
-        } catch (Exception ex) {
-            LOGGER.warn("FORMIDLING-BG: Feil ved innhenting av beregningsgrunnlagV2");
-        }
-
-        return beregningsgrunnlag;
-    }
-
-    public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
-        var beregningsgrunnlag = behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getFormidlingRessurser())
-                .map(dto -> BeregningsgrunnlagDtoMapper.mapBeregningsgrunnlagFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
-
-        Optional<Beregningsgrunnlag> beregningsgrunnlagV2;
-        try {
-            beregningsgrunnlagV2 = hentBeregningsgrunnlagV2HvisFinnes(behandling);
-
-            if (!beregningsgrunnlag.equals(beregningsgrunnlagV2)) {
-                LOGGER.info("FORMIDLING-BG: beregningsgrunnlagV2 {} er ulik beregningsgrunnlag: {}", beregningsgrunnlagV2, beregningsgrunnlag);
-            }
-        } catch (Exception ex) {
-            LOGGER.info("FORMIDLING-BG: Feil ved innhenting av beregningsgrunnlagV2");
-        }
-        return beregningsgrunnlag;
-    }
-
-    public Beregningsgrunnlag hentBeregningsgrunnlagV2(Behandling behandling) {
-        return BeregningsgrunnlagV2DtoMapper.mapBeregningsgrunnlagFraDto(
+        return BeregningsgrunnlagDtoMapper.mapFraDto(
                 behandlingRestKlient.hentBeregningsgrunnlagV2(behandling.getUuid()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
-    public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagV2HvisFinnes(Behandling behandling) {
+    public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentBeregningsgrunnlagV2HvisFinnes(behandling.getUuid())
-                .map(dto -> BeregningsgrunnlagV2DtoMapper.mapBeregningsgrunnlagFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+                .map(dto -> BeregningsgrunnlagDtoMapper.mapFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public Behandling hentBehandling(UUID behandlingUuid) {

@@ -121,8 +121,8 @@ public class DokgenBrevproduksjonTjeneste {
         } catch (Exception e) {
             dokumentdata.getFelles().anonymiser();
             SECURE_LOGGER.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
-            throw new TekniskException("FPFORMIDLING-221006", String.format("Klarte ikke hente %s generere mal %s for behandling %s.",
-                    bestillingType, dokumentMal.getKode(), behandling.getUuid().toString()), e);
+            throw new TekniskException("FPFORMIDLING-221006", String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s",
+                    dokumentMal.getKode(), behandling.getUuid().toString(), bestillingType), e);
         }
         LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getUuid().toString());
         return brev;

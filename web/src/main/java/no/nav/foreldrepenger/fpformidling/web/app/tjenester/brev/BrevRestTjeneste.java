@@ -3,20 +3,15 @@ package no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.CREATE;
 import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
 
-import java.util.List;
 import java.util.function.Function;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -28,12 +23,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.brevmal.BrevmalTjeneste;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.DokumentHendelseTjeneste;
-import no.nav.foreldrepenger.kontrakter.formidling.v1.BehandlingUuidDto;
-import no.nav.foreldrepenger.kontrakter.formidling.v1.BrevmalDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingV2Dto;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
@@ -50,7 +42,6 @@ public class BrevRestTjeneste {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BrevRestTjeneste.class);
 
-    private BrevmalTjeneste brevmalTjeneste;
     private BrevBestillerTjeneste brevBestillerTjeneste;
     private DokumentHendelseTjeneste dokumentHendelseTjeneste;
     private ProsessTaskTjeneste taskTjeneste;
@@ -60,25 +51,12 @@ public class BrevRestTjeneste {
     }
 
     @Inject
-    public BrevRestTjeneste(BrevmalTjeneste brevmalTjeneste,
-                            BrevBestillerTjeneste brevBestillerApplikasjonTjeneste,
+    public BrevRestTjeneste(BrevBestillerTjeneste brevBestillerApplikasjonTjeneste,
                             DokumentHendelseTjeneste dokumentHendelseTjeneste,
                             ProsessTaskTjeneste taskTjeneste) {
-        this.brevmalTjeneste = brevmalTjeneste;
         this.brevBestillerTjeneste = brevBestillerApplikasjonTjeneste;
         this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
         this.taskTjeneste = taskTjeneste;
-    }
-
-    @GET
-    @Path("/maler")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Henter liste over tilgjengelige brevtyper", tags = "brev")
-    @BeskyttetRessurs(action = READ, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK, sporingslogg = false)
-    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public List<BrevmalDto> hentMaler(@TilpassetAbacAttributt(supplierClass = BehandlingUuidAbacDataSupplier.class)
-                                      @NotNull @QueryParam("uuid") @Parameter(description = "behandlingUUID") @Valid BehandlingUuidDto uuidDto) {
-        return brevmalTjeneste.hentBrevmalerFor(uuidDto.getBehandlingUuid()); // NOSONAR
     }
 
     @POST
@@ -129,14 +107,6 @@ public class BrevRestTjeneste {
         prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
         taskTjeneste.lagre(prosessTaskData);
-    }
-
-    public static class BehandlingUuidAbacDataSupplier implements Function<Object, AbacDataAttributter> {
-        @Override
-        public AbacDataAttributter apply(Object obj) {
-            var req = (BehandlingUuidDto) obj;
-            return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid());
-        }
     }
 
     public static class BestillingSupplier implements Function<Object, AbacDataAttributter> {

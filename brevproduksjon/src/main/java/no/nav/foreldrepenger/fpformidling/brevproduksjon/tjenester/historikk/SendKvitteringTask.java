@@ -12,7 +12,7 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 
 @ApplicationScoped
 @ProsessTask("formidling.publiserHistorikk")
-public class PubliserHistorikkTask implements ProsessTaskHandler {
+public class SendKvitteringTask implements ProsessTaskHandler {
 
     public static final String BESTILLING_UUID = "bestillingUuid";
     public static final String DOKUMENT_MAL_TYPE = "dokumentMalType";
@@ -21,12 +21,12 @@ public class PubliserHistorikkTask implements ProsessTaskHandler {
 
     private DokumentKvitteringTjeneste kvitteringTjeneste;
 
-    public PubliserHistorikkTask() {
+    public SendKvitteringTask() {
         //CDI
     }
 
     @Inject
-    public PubliserHistorikkTask(DokumentKvitteringTjeneste kvitteringTjeneste) {
+    public SendKvitteringTask(DokumentKvitteringTjeneste kvitteringTjeneste) {
         this.kvitteringTjeneste = kvitteringTjeneste;
     }
 

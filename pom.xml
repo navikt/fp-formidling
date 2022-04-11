@@ -78,11 +78,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>journal</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>migreringer</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>

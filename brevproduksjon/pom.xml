@@ -29,10 +29,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>journal</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>organisasjon</artifactId>
         </dependency>
 

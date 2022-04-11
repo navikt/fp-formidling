@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.FritekstbrevDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
@@ -37,7 +37,7 @@ public class FritekstbrevDokumentdataMapper implements DokumentdataMapper {
         return FritekstbrevDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
                 .medOverskrift(finnOverskrift(hendelse, behandling))
-                .medBrødtekst(Fritekst.fra(finnBrødtekst(hendelse, behandling)))
+                .medBrødtekst(FritekstDto.fra(finnBrødtekst(hendelse, behandling)))
                 .build();
     }
 

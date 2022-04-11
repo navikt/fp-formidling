@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 public class FellesDokumentdata {
     private String søkerNavn;
     private String søkerPersonnummer;
-    private Fritekst fritekst;
+    private FritekstDto fritekst;
     private String brevDato;
     private boolean erAutomatiskBehandlet;
     private boolean erKopi;
@@ -23,7 +23,7 @@ public class FellesDokumentdata {
 
     public String getSøkerPersonnummer() { return søkerPersonnummer; }
 
-    public Fritekst getFritekst() { return fritekst; }
+    public FritekstDto getFritekst() { return fritekst; }
 
     public String getBrevDato() { return brevDato; }
 
@@ -104,7 +104,7 @@ public class FellesDokumentdata {
             return this;
         }
 
-        public Builder medFritekst(Fritekst fritekst) {
+        public Builder medFritekst(FritekstDto fritekst) {
             this.kladd.fritekst = fritekst;
             return this;
         }

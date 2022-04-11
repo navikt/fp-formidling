@@ -108,18 +108,18 @@ public class SelvstendigNæringsdrivende {
             return this;
         }
 
-        public Builder medInntektLavere_AT_SN(boolean inntektLavere_AT_SN) {
-            this.kladd.inntektLavere_AT_SN = inntektLavere_AT_SN;
+        public Builder medInntektLavere_AT_SN(boolean inntektLavereATSN) {
+            this.kladd.inntektLavere_AT_SN = inntektLavereATSN;
             return this;
         }
 
-        public Builder medInntektLavere_AT_FL_SN(boolean inntektLavere_AT_FL_SN) {
-            this.kladd.inntektLavere_AT_FL_SN = inntektLavere_AT_FL_SN;
+        public Builder medInntektLavere_AT_FL_SN(boolean inntektLavereATFLSN) {
+            this.kladd.inntektLavere_AT_FL_SN = inntektLavereATFLSN;
             return this;
         }
 
-        public Builder medInntektLavere_FL_SN(boolean inntektLavere_FL_SN) {
-            this.kladd.inntektLavere_FL_SN = inntektLavere_FL_SN;
+        public Builder medInntektLavere_FL_SN(boolean inntektLavereFLSN) {
+            this.kladd.inntektLavere_FL_SN = inntektLavereFLSN;
             return this;
         }
 

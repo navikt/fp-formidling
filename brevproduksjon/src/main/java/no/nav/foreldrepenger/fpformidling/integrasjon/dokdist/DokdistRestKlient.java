@@ -19,10 +19,10 @@ import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 @Dependent
 @Deprecated
-/**
+/*
  *
  * @see JerseyDokdistKlient
- *
+ * @deprecated
  */
 public class DokdistRestKlient implements Dokdist {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokdistRestKlient.class);

@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
@@ -344,7 +344,7 @@ public class DokumentdataSerializationTest {
         return FellesDokumentdata.ny()
                 .medSøkerNavn("Søker Søkersen")
                 .medSøkerPersonnummer("11111111111")
-                .medFritekst(Fritekst.fra("Fritekst"))
+                .medFritekst(FritekstDto.fra("Fritekst"))
                 .medBrevDato(formaterDatoNorsk(LocalDate.now()))
                 .medErAutomatiskBehandlet(true)
                 .medErKopi(true)

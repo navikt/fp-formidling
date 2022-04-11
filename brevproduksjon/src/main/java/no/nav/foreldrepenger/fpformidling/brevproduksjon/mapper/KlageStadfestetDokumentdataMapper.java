@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst.fra;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto.fra;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 
 import javax.enterprise.context.ApplicationScoped;

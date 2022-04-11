@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles;
 
-import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst.fra;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst.ivaretaLinjeskiftIFritekst;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto.fra;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto.ivaretaLinjeskiftIFritekst;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.UUID;

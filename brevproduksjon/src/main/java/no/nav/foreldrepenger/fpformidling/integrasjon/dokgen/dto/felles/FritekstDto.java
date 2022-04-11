@@ -12,12 +12,12 @@ import no.nav.foreldrepenger.fpformidling.klage.Klage;
 /**
  * Hjelpeklasse for håndtering av fritekst som sikrer at formatering blir riktig i Dokgen.
  */
-public class Fritekst {
+public class FritekstDto {
 
     @JsonValue
     private String fritekst;
 
-    private Fritekst(String fritekst) {
+    private FritekstDto(String fritekst) {
         this.fritekst = fritekst;
     }
 
@@ -25,7 +25,7 @@ public class Fritekst {
         return fritekst;
     }
 
-    public static Optional<Fritekst> fra(DokumentHendelse dokumentHendelse, Behandling behandling) {
+    public static Optional<FritekstDto> fra(DokumentHendelse dokumentHendelse, Behandling behandling) {
         if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
             return Optional.of(fra(dokumentHendelse.getFritekst()));
         } else if (behandling.getBehandlingsresultat() != null && behandling.getBehandlingsresultat().getAvslagarsakFritekst() != null) {
@@ -34,7 +34,7 @@ public class Fritekst {
         return Optional.empty();
     }
 
-    public static Optional<Fritekst> fra(DokumentHendelse dokumentHendelse, Klage klage) {
+    public static Optional<FritekstDto> fra(DokumentHendelse dokumentHendelse, Klage klage) {
         if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
             return Optional.of(fra(dokumentHendelse.getFritekst()));
         } else if (klage.getGjeldendeKlageVurderingsresultat() != null && klage.getGjeldendeKlageVurderingsresultat().fritekstTilBrev() != null) {
@@ -43,21 +43,21 @@ public class Fritekst {
         return Optional.empty();
     }
 
-    public static Fritekst fra(String fritekst) {
+    public static FritekstDto fra(String fritekst) {
         if (fritekst == null) {
             return null;
         }
         fritekst = konverterOverskrifterTilDokgenFormat(fritekst);
         fritekst = ivaretaLinjeskiftIFritekst(fritekst);
         fritekst = fiksNavNoLinker(fritekst);
-        return new Fritekst(fritekst);
+        return new FritekstDto(fritekst);
     }
 
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        var that = (Fritekst) object;
+        var that = (FritekstDto) object;
         return Objects.equals(fritekst, that.fritekst);
     }
 

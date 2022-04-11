@@ -23,10 +23,10 @@ import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 @Dependent
 @Deprecated
-/**
+/*
  *
  * @see JerseyBehandlinger
- *
+ * @deprecated
  */
 public class BehandlingRestKlient implements Behandlinger {
     private static final Logger LOGGER = LoggerFactory.getLogger(BehandlingRestKlient.class);

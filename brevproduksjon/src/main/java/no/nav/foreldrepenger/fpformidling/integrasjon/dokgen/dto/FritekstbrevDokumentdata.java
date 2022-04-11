@@ -6,18 +6,18 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class FritekstbrevDokumentdata extends Dokumentdata {
     private String overskrift;
-    private Fritekst brødtekst;
+    private FritekstDto brødtekst;
 
     public String getOverskrift() {
         return overskrift;
     }
 
-    public Fritekst getBrødtekst() {
+    public FritekstDto getBrødtekst() {
         return brødtekst;
     }
 
@@ -57,7 +57,7 @@ public class FritekstbrevDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medBrødtekst(Fritekst brødtekst) {
+        public Builder medBrødtekst(FritekstDto brødtekst) {
             this.kladd.brødtekst = brødtekst;
             return this;
         }

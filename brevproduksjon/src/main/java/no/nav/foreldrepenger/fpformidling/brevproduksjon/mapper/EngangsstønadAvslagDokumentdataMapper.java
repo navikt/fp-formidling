@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
@@ -65,7 +65,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         fellesBuilder.medBrevDato(
                 dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
-        Fritekst.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
+        FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
         FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         List<Vilkår> vilkår = domeneobjektProvider.hentVilkår(behandling);

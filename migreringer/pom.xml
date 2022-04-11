@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>migreringer</artifactId>
-    <name>FP-FORMIDLING :: Database migreringer</name>
+    <name>Fpformidling :: Database migreringer</name>
     <packaging>jar</packaging>
     <description>Inneholder migreringsfiler for alle datasources brukt i fp-formidling</description>
 

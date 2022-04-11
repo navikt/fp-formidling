@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>integrasjon</artifactId>
-    <name>FP-FORMIDLING :: Integrasjon</name>
+    <name>Fpformidling :: Integrasjon</name>
     <packaging>pom</packaging>
 
     <modules>

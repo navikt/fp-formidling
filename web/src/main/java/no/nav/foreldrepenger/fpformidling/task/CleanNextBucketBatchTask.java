@@ -1,4 +1,4 @@
-package no.nav.vedtak.felles.prosesstask.batch;
+package no.nav.foreldrepenger.fpformidling.task;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

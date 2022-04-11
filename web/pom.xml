@@ -11,11 +11,11 @@
     </parent>
 
     <artifactId>webapp</artifactId>
-    <name>FP-FORMIDLING :: Web</name>
+    <name>Fpformidling :: Web</name>
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- Fp-formidling internt -->
+        <!-- Fpformidling internt -->
         <dependency>
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>migreringer</artifactId>
@@ -35,10 +35,6 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>fpdokgen</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>prosesstask</artifactId>
         </dependency>
 
         <!-- NAV -->
@@ -159,7 +155,7 @@
             <artifactId>simpleclient_common</artifactId>
         </dependency>
 
-        <!-- Diverse -->
+        <!-- Diverse logging encodere -->
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
@@ -184,11 +180,6 @@
         </dependency>
 
         <!-- Test -->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.felles</groupId>
             <artifactId>felles-testutilities</artifactId>

@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>domene</artifactId>
-    <name>FP-FORMIDLING :: Domene</name>
+    <name>Fpformidling :: Domene</name>
 
     <dependencies>
         <dependency>

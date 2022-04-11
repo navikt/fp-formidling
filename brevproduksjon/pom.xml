@@ -11,10 +11,14 @@
     </parent>
 
     <artifactId>brevproduksjon</artifactId>
-    <name>FP-FORMIDLING :: Brevproduksjon</name>
+    <name>Fpformidling :: Brevproduksjon</name>
     <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>no.nav.vedtak.prosesstask</groupId>
+            <artifactId>prosesstask</artifactId>
+        </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>domene</artifactId>
@@ -26,10 +30,6 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>pdl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>prosesstask</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>

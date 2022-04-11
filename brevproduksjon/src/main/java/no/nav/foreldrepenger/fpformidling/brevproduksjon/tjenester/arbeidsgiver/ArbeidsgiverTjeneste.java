@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.PersonAdapter;
+import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.OrganisasjonsNummerValidator;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;

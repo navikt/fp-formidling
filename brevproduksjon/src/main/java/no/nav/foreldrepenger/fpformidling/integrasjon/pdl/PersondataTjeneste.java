@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.pdl;
+package no.nav.foreldrepenger.fpformidling.integrasjon.pdl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

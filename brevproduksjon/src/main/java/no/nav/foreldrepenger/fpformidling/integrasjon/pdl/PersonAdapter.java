@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger;
+package no.nav.foreldrepenger.fpformidling.integrasjon.pdl;
 
 import java.util.Optional;
 
@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
-import no.nav.foreldrepenger.pdl.PersondataTjeneste;
 import no.nav.vedtak.felles.integrasjon.pdl.PdlException;
 
 @ApplicationScoped

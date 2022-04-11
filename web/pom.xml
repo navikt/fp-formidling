@@ -36,10 +36,6 @@
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>fpdokgen</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>prosesstask</artifactId>
-        </dependency>
 
         <!-- NAV -->
         <dependency>

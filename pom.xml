@@ -20,7 +20,6 @@
         <module>domene</module>
         <module>integrasjon</module>
         <module>migreringer</module>
-        <module>prosesstask</module>
         <module>web</module>
     </modules>
 

@@ -29,7 +29,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnsynDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
@@ -86,7 +86,7 @@ class InnsynDokumentdataMapperTest {
 
         assertThat(innsynsDokumentData.getInnsynResultat()).isEqualTo(InnsynResultatType.AVVIST.getKode());
         assertThat(innsynsDokumentData.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.ENGANGSTØNAD.getKode());
-        assertThat(innsynsDokumentData.getFelles().getFritekst()).isEqualTo(Fritekst.fra(FRITEKST));
+        assertThat(innsynsDokumentData.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
     }
 
     private Behandling opprettBehandling() {

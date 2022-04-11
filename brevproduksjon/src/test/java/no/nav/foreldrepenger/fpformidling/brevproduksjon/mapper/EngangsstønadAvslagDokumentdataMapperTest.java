@@ -19,7 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.PersonAdapter;
+import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
@@ -32,7 +32,7 @@ import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.personopplysning.NavBrukerKjønn;
@@ -98,7 +98,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         assertThat(avslagDokumentdata.getRelasjonsRolle()).isEqualTo(RelasjonsRolleType.MORA.getKode());
         assertThat(avslagDokumentdata.getVilkårTyper()).hasSize(1);
         assertThat(avslagDokumentdata.getVilkårTyper()).containsExactly("FP_VK_3");
-        assertThat(avslagDokumentdata.getFelles().getFritekst()).isEqualTo(Fritekst.fra(avslagsfritekst));
+        assertThat(avslagDokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(avslagsfritekst));
     }
 
     @Test

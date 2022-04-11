@@ -14,7 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpsak.Behandlinger;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 
 @ExtendWith(MockitoExtension.class)

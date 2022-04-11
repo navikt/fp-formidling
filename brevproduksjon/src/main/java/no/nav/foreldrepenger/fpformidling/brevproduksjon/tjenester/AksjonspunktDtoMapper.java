@@ -6,7 +6,7 @@ import java.util.List;
 import no.nav.foreldrepenger.fpformidling.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.fpformidling.aksjonspunkt.AksjonspunktDefinisjon;
 import no.nav.foreldrepenger.fpformidling.aksjonspunkt.AksjonspunktStatus;
-import no.nav.foreldrepenger.fpsak.dto.behandling.aksjonspunkt.AksjonspunktDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.aksjonspunkt.AksjonspunktDto;
 
 public class AksjonspunktDtoMapper {
 

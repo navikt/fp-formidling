@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.AnkeOpphevetDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
@@ -47,7 +47,7 @@ public class AnkeOpphevetDokumentdataMapper implements DokumentdataMapper {
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
-        fellesBuilder.medFritekst(Fritekst.fra(anke.map(Anke::getFritekstTilBrev).orElse(hendelse.getFritekst())));
+        fellesBuilder.medFritekst(FritekstDto.fra(anke.map(Anke::getFritekstTilBrev).orElse(hendelse.getFritekst())));
 
         return AnkeOpphevetDokumentdata.ny()
                 .medFelles(fellesBuilder.build())

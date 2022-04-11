@@ -6,15 +6,15 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.PersonAdapter;
+import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
-import no.nav.foreldrepenger.fpformidling.organisasjon.Virksomhet;
-import no.nav.foreldrepenger.fpformidling.organisasjon.VirksomhetTjeneste;
+import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.Virksomhet;
+import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 import no.nav.foreldrepenger.fpformidling.verge.Verge;

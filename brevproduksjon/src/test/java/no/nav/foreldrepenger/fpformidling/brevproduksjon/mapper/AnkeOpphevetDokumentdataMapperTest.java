@@ -31,7 +31,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.AnkeOpphevetDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
@@ -76,7 +76,7 @@ public class AnkeOpphevetDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
         assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(false);
-        assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(Fritekst.fra(FRITEKST));
+        assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
 
         assertThat(dokumentdata.getOppheve()).isTrue();
     }
@@ -108,7 +108,7 @@ public class AnkeOpphevetDokumentdataMapperTest {
         AnkeOpphevetDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
-        assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(Fritekst.fra(ALTERNATIV_FRITEKST));
+        assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(ALTERNATIV_FRITEKST));
     }
 
     private void mockDomeneobjektProvider(boolean oppheve, String fritekst) {

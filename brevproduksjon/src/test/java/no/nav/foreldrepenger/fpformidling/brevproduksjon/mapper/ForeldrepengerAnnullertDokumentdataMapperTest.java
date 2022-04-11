@@ -30,7 +30,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerAnnullertDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpsak.dto.uttak.StartdatoUtsattDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 
 @ExtendWith(MockitoExtension.class)
 public class ForeldrepengerAnnullertDokumentdataMapperTest {

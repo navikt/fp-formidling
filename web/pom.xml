@@ -26,15 +26,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>fpsak</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>brevproduksjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>fpdokgen</artifactId>
         </dependency>
 
         <!-- NAV -->

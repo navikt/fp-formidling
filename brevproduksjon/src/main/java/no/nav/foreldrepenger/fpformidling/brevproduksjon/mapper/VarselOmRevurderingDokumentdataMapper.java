@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.VarselOmRevurderingDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
@@ -49,7 +49,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
-        fellesBuilder.medFritekst(Fritekst.fra(hendelse.getFritekst()));
+        fellesBuilder.medFritekst(FritekstDto.fra(hendelse.getFritekst()));
 
         FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
 

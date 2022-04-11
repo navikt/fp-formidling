@@ -52,7 +52,7 @@ import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Naturalytelse;
@@ -148,7 +148,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getErKopi()).isEqualTo(true);
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(Fritekst.fra(FRITEKST));
+        assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
         assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
         assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(false);
 

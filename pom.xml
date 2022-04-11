@@ -16,10 +16,9 @@
     <version>${revision}</version>
 
     <modules>
-        <module>brevproduksjon</module>
-        <module>domene</module>
-        <module>integrasjon</module>
         <module>migreringer</module>
+        <module>domene</module>
+        <module>brevproduksjon</module>
         <module>web</module>
     </modules>
 
@@ -78,21 +77,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>fpdokgen</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>dokdist</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>journal</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>migreringer</artifactId>
                 <version>${project.version}</version>
                 <type>test-jar</type>
@@ -100,22 +84,6 @@
             <dependency>
                 <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>brevproduksjon</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>fpsak</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>pdl</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>organisasjon</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

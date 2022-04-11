@@ -50,7 +50,7 @@ import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.avslagfp.ForeldrepengerAvslagDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
@@ -123,7 +123,7 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getErKopi()).isEqualTo(true);
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(Fritekst.fra(FRITEKST));
+        assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
         assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
         assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(true);
 

@@ -41,7 +41,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnhenteOpplysningerDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -95,7 +95,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isEqualTo(true);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getFritekst()).isEqualTo(Fritekst.fra(FRITEKST));
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getErUtkast()).isEqualTo(false);
 

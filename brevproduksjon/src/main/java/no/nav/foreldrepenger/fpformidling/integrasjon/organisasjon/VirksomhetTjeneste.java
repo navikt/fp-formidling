@@ -5,19 +5,20 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import no.nav.vedtak.felles.integrasjon.organisasjon.OrgInfo;
 import no.nav.vedtak.felles.integrasjon.organisasjon.OrganisasjonRestKlient;
 
 @ApplicationScoped
 public class VirksomhetTjeneste {
 
-    private OrganisasjonRestKlient eregRestKlient;
+    private OrgInfo eregRestKlient;
 
     public VirksomhetTjeneste() {
         // CDI
     }
 
     @Inject
-    public VirksomhetTjeneste(OrganisasjonRestKlient eregRestKlient) {
+    public VirksomhetTjeneste( /*Jersey*/ OrgInfo eregRestKlient) {
         this.eregRestKlient = eregRestKlient;
     }
 

@@ -19,7 +19,7 @@ import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 @Dependent
 @Deprecated
-/*
+/**
  *
  * @see JerseyDokdistKlient
  * @deprecated

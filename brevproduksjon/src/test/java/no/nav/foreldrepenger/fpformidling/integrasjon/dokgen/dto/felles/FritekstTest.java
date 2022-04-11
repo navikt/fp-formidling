@@ -28,7 +28,7 @@ public class FritekstTest {
         dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
-        assertThat(Fritekst.fra(dokumentHendelse, behandling)).isNotPresent();
+        assertThat(fra(dokumentHendelse, behandling)).isNotPresent();
     }
 
     @Test
@@ -44,7 +44,7 @@ public class FritekstTest {
                 .build();
 
         // Act + Assert
-        assertThat(Fritekst.fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(HENDELSE_FRITEKST);
+        assertThat(fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(HENDELSE_FRITEKST);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class FritekstTest {
         DokumentHendelse dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
-        assertThat(Fritekst.fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(BEHANDLING_FRITEKST);
+        assertThat(fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(BEHANDLING_FRITEKST);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class FritekstTest {
         DokumentHendelse dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
-        assertThat(Fritekst.fra(dokumentHendelse, behandling).get().getFritekst())
+        assertThat(fra(dokumentHendelse, behandling).get().getFritekst())
                 .isEqualTo("Tekst\n##### Overskrift\nMer tekst\n- Punkt 1\n- Punkt 2\n##### Ny overskrift\nTekst-med-bindestrek_og_underscore");
     }
 
@@ -87,7 +87,7 @@ public class FritekstTest {
         DokumentHendelse dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
-        assertThat(Fritekst.fra(dokumentHendelse, behandling).get().getFritekst())
+        assertThat(fra(dokumentHendelse, behandling).get().getFritekst())
                 .isEqualTo("Les mer om dette på [nav.no/foreldrepenger](https://nav.no/foreldrepenger).\\\nDu finner mer informasjon på [nav.no/klage](https://nav.no/klage) og [nav.no/familie](https://nav.no/familie).");
     }
 

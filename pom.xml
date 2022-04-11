@@ -78,16 +78,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>fpdokgen</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>dokdist</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>journal</artifactId>
                 <version>${project.version}</version>
             </dependency>

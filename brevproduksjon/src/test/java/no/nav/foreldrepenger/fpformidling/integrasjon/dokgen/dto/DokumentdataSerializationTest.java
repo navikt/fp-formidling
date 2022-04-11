@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -90,7 +91,7 @@ public class DokumentdataSerializationTest {
                 .medPrioritertUtbetalingsgrad(Prosent.HUNDRE)
                 .medArbeidsforhold(of(arbeidsforhold1, arbeidsforhold2))
                 .medNæring(næring)
-                .medAnnenAktivitet(of(annenAktivitet))
+                .medAnnenAktivitet(List.of(annenAktivitet))
                 .build();
         Utbetalingsperiode periode2 = Utbetalingsperiode.ny()
                 .medInnvilget(false)
@@ -100,9 +101,9 @@ public class DokumentdataSerializationTest {
                 .medPeriodeDagsats(234L)
                 .medAntallTapteDager(11)
                 .medPrioritertUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(80)))
-                .medArbeidsforhold(of(arbeidsforhold1))
+                .medArbeidsforhold(List.of(arbeidsforhold1))
                 .medNæring(næring)
-                .medAnnenAktivitet(of(annenAktivitet))
+                .medAnnenAktivitet(List.of(annenAktivitet))
                 .build();
         BeregningsgrunnlagAndel andel1 = BeregningsgrunnlagAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name())
@@ -132,7 +133,7 @@ public class DokumentdataSerializationTest {
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
                 .medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(3)
                 .medSnNyoppstartet(true)
-                .medAndelListe(of(andel2))
+                .medAndelListe(List.of(andel2))
                 .build();
         ForeldrepengerInnvilgelseDokumentdata dokumentdata = ForeldrepengerInnvilgelseDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())

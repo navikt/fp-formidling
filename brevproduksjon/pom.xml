@@ -33,14 +33,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>fpdokgen</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>dokdist</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>journal</artifactId>
         </dependency>
         <dependency>

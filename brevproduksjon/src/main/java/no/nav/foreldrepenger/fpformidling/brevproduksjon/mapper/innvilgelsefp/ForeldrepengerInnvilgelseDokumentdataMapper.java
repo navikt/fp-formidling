@@ -75,7 +75,6 @@ import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.ytelsefordeling.YtelseFordeling;
-import no.nav.foreldrepenger.konfig.Environment;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE)

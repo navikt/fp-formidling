@@ -15,8 +15,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>dokdist</module>
-        <module>fpdokgen</module>
         <module>fpsak</module>
         <module>journal</module>
         <module>organisasjon</module>

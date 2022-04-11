@@ -88,11 +88,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>prosesstask</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>fpdokgen</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -117,11 +112,7 @@
                 <artifactId>brevproduksjon</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>brevbestiller-xsd</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>fpsak</artifactId>

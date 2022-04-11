@@ -25,10 +25,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>fpsak</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>pdl</artifactId>
         </dependency>
         <dependency>

@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforho
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
-import no.nav.foreldrepenger.fpsak.mapper.UttakSvpDtoMapper;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakSvpDtoMapper;
 
 public class UttaksperiodeMapperTest {
 

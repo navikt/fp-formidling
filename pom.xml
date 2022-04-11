@@ -95,11 +95,6 @@
 
             <dependency>
                 <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>fpsak</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
                 <artifactId>pdl</artifactId>
                 <version>${project.version}</version>
             </dependency>

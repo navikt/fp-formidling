@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerAnnullertDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.foreldrepenger.fpsak.dto.uttak.StartdatoUtsattDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_ANNULLERT)

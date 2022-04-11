@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.fpformidling.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
-import no.nav.foreldrepenger.fpsak.BehandlingRestKlient;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BehandlingRestKlient;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
 

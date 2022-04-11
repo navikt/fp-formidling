@@ -17,10 +17,10 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
-import no.nav.foreldrepenger.fpsak.dto.klage.KlageFormkravResultatDto;
-import no.nav.foreldrepenger.fpsak.dto.klage.KlageVurderingResultatDto;
-import no.nav.foreldrepenger.fpsak.dto.klage.KlagebehandlingDto;
-import no.nav.foreldrepenger.fpsak.mapper.KlageDtoMapper;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.KlageFormkravResultatDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.KlageVurderingResultatDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.KlagebehandlingDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.KlageDtoMapper;
 
 public class KlageMapperTest {
 

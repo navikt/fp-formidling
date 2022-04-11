@@ -16,6 +16,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
+            <artifactId>ereg-klient</artifactId>
+            <version>${felles.version}</version>
+        </dependency>
+        <dependency>
             <groupId>no.nav.vedtak.prosesstask</groupId>
             <artifactId>prosesstask</artifactId>
         </dependency>
@@ -26,10 +31,6 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.fpformidling</groupId>
             <artifactId>pdl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-            <artifactId>organisasjon</artifactId>
         </dependency>
 
         <!-- Felles -->

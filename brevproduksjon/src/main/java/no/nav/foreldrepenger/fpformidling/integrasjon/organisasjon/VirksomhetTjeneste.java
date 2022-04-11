@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.organisasjon;
+package no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon;
 
 import java.util.Optional;
 

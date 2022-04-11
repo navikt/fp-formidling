@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.OrganisasjonsNummerValidator;
-import no.nav.foreldrepenger.fpformidling.organisasjon.VirksomhetTjeneste;
+import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.util.LRUCache;

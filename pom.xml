@@ -93,11 +93,6 @@
                 <artifactId>pdl</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.fpformidling</groupId>
-                <artifactId>organisasjon</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <!-- Kontrakter -->
             <dependency>

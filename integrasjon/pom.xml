@@ -15,7 +15,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>organisasjon</module>
         <module>pdl</module>
     </modules>
 </project>

@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>journal</artifactId>
-    <name>FP-FORMIDLING :: Integrasjon - Journal</name>
+    <name>Fpformidling :: Integrasjon - Journal</name>
 
     <dependencies>
         <dependency>

@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>fpdokgen</artifactId>
-    <name>FP-FORMIDLING :: Integrasjon - Fpdokgen</name>
+    <name>Fpformidling :: Integrasjon - Fpdokgen</name>
 
     <dependencies>
         <dependency>

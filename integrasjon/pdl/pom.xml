@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>pdl</artifactId>
-    <name>FP-FORMIDLING :: Integrasjon - PDL</name>
+    <name>Fpformidling :: Integrasjon - PDL</name>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -23,6 +23,7 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>pdl-klient</artifactId>
+            <version>${felles.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.codehaus.plexus</groupId>

@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>prosesstask</artifactId>
-    <name>FP-FORMIDLING :: Prosesstask</name>
+    <name>Fpformidling :: Prosesstask</name>
     <packaging>jar</packaging>
 
     <dependencies>

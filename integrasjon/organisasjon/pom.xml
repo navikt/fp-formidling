@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>organisasjon</artifactId>
-    <name>FP-FORMIDLING :: Integrasjon - Organisasjon</name>
+    <name>Fpformidling :: Integrasjon - Organisasjon</name>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -22,6 +22,7 @@
         <dependency>
             <groupId>no.nav.foreldrepenger.felles.integrasjon</groupId>
             <artifactId>ereg-klient</artifactId>
+            <version>${felles.version}</version>
         </dependency>
     </dependencies>
 </project>

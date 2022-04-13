@@ -32,10 +32,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create settings.xml
+      - name: Setup maven
         uses: whelk-io/maven-settings-xml-action@v20
         with:
-          repositories: '[{ "id": "github", "name": "github", "url": "https://maven.pkg.github.com/navikt/fp-felles", "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" } }]'
+          repositories: '[{ "id": "github", "name": "github", "url": "https://maven.pkg.github.com/${{ github.repository }}", "releases": { "enabled": "true" }, "snapshots": { "enabled": "false" } }]'
           servers: '[{ "id": "github", "username": "${{ github.actor }}", "password": "${{ secrets.READER_TOKEN }}" }]'
           output_file: settings.xml
 
@@ -55,7 +55,6 @@ jobs:
           mvn jacoco:prepare-agent verify jacoco:report sonar:sonar -e -B -s settings.xml -Drevision=${BUILD_VERSION} -Dsonar.login=${SONAR_TOKEN}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DATASOURCE_HOST: localhost
           DATASOURCE_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
 
@@ -65,7 +64,6 @@ jobs:
           echo "Building $BUILD_VERSION"
           mvn verify -e -B -s settings.xml -Drevision=${BUILD_VERSION}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DATASOURCE_HOST: localhost
           DATASOURCE_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
 

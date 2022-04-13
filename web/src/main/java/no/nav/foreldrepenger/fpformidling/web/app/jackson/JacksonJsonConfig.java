@@ -21,6 +21,8 @@ import no.nav.foreldrepenger.fpformidling.web.app.IndexClasses;
 @Provider
 public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
 
+    private static final String REGEX = "^[\\p{Punct}\\p{L}\\p{M}\\p{N}\\p{Sc}\\p{Space}–§\u2018\u2019\u201a\u201b\u201c\u201d\u201e\u201f\u00b4\u2026]*$";
+
     private static final SimpleModule SER_DESER = createModule();
     private final ObjectMapper objectMapper;
 

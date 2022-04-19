@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.felles</groupId>
         <artifactId>fp-bom</artifactId>
-        <version>0.1.8</version>
+        <version>0.2.0</version>
     </parent>
 
     <groupId>no.nav.foreldrepenger.fpformidling</groupId>
@@ -23,8 +23,6 @@
     </modules>
 
     <properties>
-        <fp-parent.version>0.1.8</fp-parent.version>
-
         <revision>2.0-SNAPSHOT</revision>
 
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
@@ -46,14 +44,6 @@
     over arv) da de overstyrer andre scope definisjoner. Sett det heller der det brukes. -->
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>no.nav.foreldrepenger.felles</groupId>
-                <artifactId>starter-parent-pom</artifactId>
-                <version>${fp-parent.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
-
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>felles</artifactId>

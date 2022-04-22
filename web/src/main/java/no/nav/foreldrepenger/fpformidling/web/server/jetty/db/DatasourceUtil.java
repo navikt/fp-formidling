@@ -28,7 +28,7 @@ public class DatasourceUtil {
     }
 
     private static HikariConfig initConnectionPoolConfig(int maxPoolSize) {
-        HikariConfig config = new HikariConfig();
+        var config = new HikariConfig();
         config.setJdbcUrl(ENV.getRequiredProperty("defaultDS.url"));
         config.setMinimumIdle(0);
         config.setMaximumPoolSize(maxPoolSize);
@@ -36,10 +36,12 @@ public class DatasourceUtil {
         config.setMaxLifetime(30001);
         config.setConnectionTestQuery("select 1");
         config.setDriverClassName("org.postgresql.Driver");
+
         config.setMetricRegistry(Metrics.globalRegistry);
-        Properties dsProperties = new Properties();
+
+        var dsProperties = new Properties();
         dsProperties.setProperty("reWriteBatchedInserts", "true");
-        dsProperties.setProperty("logServerErrorDetail", "false");
+        dsProperties.setProperty("logServerErrorDetail", "false"); // skrur av batch exceptions som lekker statements i åpen logg
         config.setDataSourceProperties(dsProperties);
         // skrur av autocommit her, da kan vi bypasse dette senere når hibernate setter opp entitymanager for bedre conn mgmt
         config.setAutoCommit(false);

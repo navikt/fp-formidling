@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:12
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=admin
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./lokalutvikling/postgres-init:/docker-entrypoint-initdb.d/
+    container_name: postgres_formidling
+  vtp:
+    image: ghcr.io/navikt/vtp
+    environment:
+      - "TZ=Europe/Oslo"
+      - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/root/.modig/keystore.jks"
+      - "JAVAX_NET_SSL_TRUSTSTORE=/root/.modig/truststore.jks"
+    env_file:
+      - "./lokalutvikling/vtp.env"
+    volumes:
+      - "~/.modig:/root/.modig"
+    ports:
+      - "8060:8060"
+      - "8063:8063"
+      - "8636:8636"
+      - "9093:9093"
+      - "9092:9092"
+      - "8389:8389"
+    container_name: vtp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8060/rest/isReady"]
+      interval: 30s
+      timeout: 5s
+

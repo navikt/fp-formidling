@@ -77,12 +77,12 @@ public class JettyServer {
         return new JettyServer(ENV.getProperty("server.port", Integer.class, 8080));
     }
 
-    private JettyServer(int serverPort) {
+    JettyServer(int serverPort) {
         this.serverPort = serverPort;
         ContextPathHolder.instance(CONTEXT_PATH);
     }
 
-    private void bootStrap() throws Exception {
+    void bootStrap() throws Exception {
         konfigurerSikkerhet();
         konfigurerJndi();
         migrerDatabaser();
@@ -124,7 +124,7 @@ public class JettyServer {
         new EnvEntry("jdbc/defaultDS", DatasourceUtil.createDatasource(DatasourceRole.USER, 4));
     }
 
-    private void migrerDatabaser() {
+    void migrerDatabaser() {
         var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN,1);
         try {
             var flyway = Flyway.configure()
@@ -171,24 +171,25 @@ public class JettyServer {
     }
 
     private static WebAppContext createContext() throws IOException {
-        var webAppContext = new WebAppContext();
-        webAppContext.setParentLoaderPriority(true);
+        var ctx = new WebAppContext();
+        ctx.setParentLoaderPriority(true);
 
         // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra filsystem.
         String descriptor;
         try (var resource = Resource.newClassPathResource("/WEB-INF/web.xml")) {
             descriptor = resource.getURI().toURL().toExternalForm();
         }
-        webAppContext.setDescriptor(descriptor);
-        webAppContext.setContextPath(CONTEXT_PATH);
-        webAppContext.setBaseResource(createResourceCollection());
-        webAppContext.setInitParameter("pathInfoOnly", "true");
-        webAppContext.setInitParameter("dirAllowed", "false");
-        webAppContext.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
+        ctx.setDescriptor(descriptor);
+        ctx.setContextPath(CONTEXT_PATH);
+        ctx.setBaseResource(createResourceCollection());
+        ctx.setInitParameter("pathInfoOnly", "true");
+        ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
+        ctx.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
                 "^.*jersey-.*.jar$|^.*felles-.*.jar$");
-        webAppContext.setSecurityHandler(createSecurityHandler());
-        updateMetaData(webAppContext.getMetaData());
-        return webAppContext;
+        ctx.setSecurityHandler(createSecurityHandler());
+        updateMetaData(ctx.getMetaData());
+        ctx.setThrowUnavailableOnStartupException(true);
+        return ctx;
     }
 
     private static ResourceCollection createResourceCollection() {

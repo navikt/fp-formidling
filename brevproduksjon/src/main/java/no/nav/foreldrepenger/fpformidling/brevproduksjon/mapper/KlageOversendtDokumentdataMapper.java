@@ -47,7 +47,9 @@ public class KlageOversendtDokumentdataMapper implements DokumentdataMapper {
         Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
+        // fpsak sender NKS som behandlende enhet - dette fører til at avsender blir satt feil til NKS.
         fellesBuilder.medBehandlesAvKA(false);
+
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
         fra(hendelse, klage).ifPresent(fellesBuilder::medFritekst);
 

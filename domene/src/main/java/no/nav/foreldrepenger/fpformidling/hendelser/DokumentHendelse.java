@@ -14,7 +14,6 @@ import javax.persistence.Transient;
 
 import no.nav.foreldrepenger.fpformidling.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.historikk.HistorikkAktør;
 import no.nav.foreldrepenger.fpformidling.jpa.BaseEntitet;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
@@ -49,10 +48,6 @@ public class DokumentHendelse extends BaseEntitet {
 
     @Column
     private String fritekst;
-
-    @Convert(converter = HistorikkAktør.KodeverdiConverter.class)
-    @Column(name = "historikk_aktoer", nullable = false)
-    private HistorikkAktør historikkAktør = HistorikkAktør.VEDTAKSLØSNINGEN;
 
     @Convert(converter = RevurderingVarslingÅrsak.KodeverdiConverter.class)
     @Column(name = "revurdering_varsling_arsak", nullable = false)
@@ -145,14 +140,13 @@ public class DokumentHendelse extends BaseEntitet {
                 Objects.equals(gjelderVedtak, that.gjelderVedtak) &&
                 Objects.equals(tittel, that.tittel) &&
                 Objects.equals(fritekst, that.fritekst) &&
-                Objects.equals(historikkAktør, that.historikkAktør) &&
                 Objects.equals(behandlendeEnhetNavn, that.behandlendeEnhetNavn) &&
                 Objects.equals(vedtaksbrev, that.vedtaksbrev);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, historikkAktør,
+        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst,
                 behandlendeEnhetNavn, vedtaksbrev);
     }
 
@@ -167,7 +161,6 @@ public class DokumentHendelse extends BaseEntitet {
                 ", gjelderVedtak=" + gjelderVedtak +
                 ", tittel='" + tittel + '\'' +
                 ", fritekst='" + (fritekst != null ? "****** fritekst ***** " : "null") + '\'' +
-                ", historikkAktør=" + historikkAktør +
                 ", revurderingVarslingÅrsak=" + revurderingVarslingÅrsak +
                 ", behandlendeEnhetNavn=" + behandlendeEnhetNavn +
                 ", vedtaksbrev=" + vedtaksbrev +

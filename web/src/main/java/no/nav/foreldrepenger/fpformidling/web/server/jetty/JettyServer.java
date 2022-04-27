@@ -196,7 +196,7 @@ public class JettyServer {
                 Resource.newClassPathResource("META-INF/resources/webjars/"),
                 Resource.newClassPathResource("/web"));
     }
-œ
+
     private static SecurityHandler createSecurityHandler() {
         var securityHandler = new ConstraintSecurityHandler();
         securityHandler.setAuthenticatorFactory(new JaspiAuthenticatorFactory());

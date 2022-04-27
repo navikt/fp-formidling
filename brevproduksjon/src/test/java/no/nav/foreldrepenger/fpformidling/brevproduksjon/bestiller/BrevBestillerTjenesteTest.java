@@ -94,8 +94,6 @@ public class BrevBestillerTjenesteTest {
     private ProsessTaskTjeneste taskTjeneste;
 
     private EngangsstønadInnvilgelseDokumentdataMapper dokumentdataMapper;
-    private DokumentFellesDataMapper dokumentFellesDataMapper;
-    private DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste;
     private BrevBestillerTjeneste tjeneste;
 
 
@@ -103,8 +101,8 @@ public class BrevBestillerTjenesteTest {
     public void beforeEach() {
         dokumentdataMapper = new EngangsstønadInnvilgelseDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)),
                 domeneobjektProvider);
-        dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, virksomhetTjeneste);
-        dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
+        DokumentFellesDataMapper dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, virksomhetTjeneste);
+        DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
                 dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste);
         tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
     }

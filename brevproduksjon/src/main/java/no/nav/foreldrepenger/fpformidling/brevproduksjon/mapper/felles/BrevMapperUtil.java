@@ -81,9 +81,6 @@ public class BrevMapperUtil {
     }
 
     private static boolean behandlesAvKlageinstans(DokumentHendelse hendelse, Behandling behandling) {
-        if (hendelse.getDokumentMalType().equals(DokumentMalType.KLAGE_OVERSENDT)) {
-            return false; // Klage oversendt sendes av NFP. Noe usikker på hvorfor fpsak sender KI. Saneres etter full kabal overgang.
-        }
         // Behandlende enhet vil være angitt på DokumentHendelse ved bestilling av brev,
         // og dette skal overstyre behandlende enhet på Behandling, da denne kan ha endret seg
         // siden brevet ble bestilt. Ved forhåndsvisning må det hentes fra Behandling.

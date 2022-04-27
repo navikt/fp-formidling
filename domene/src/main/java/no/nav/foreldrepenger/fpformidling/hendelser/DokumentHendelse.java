@@ -114,10 +114,6 @@ public class DokumentHendelse extends BaseEntitet {
         return fritekst;
     }
 
-    public HistorikkAktør getHistorikkAktør() {
-        return historikkAktør;
-    }
-
     public RevurderingVarslingÅrsak getRevurderingVarslingÅrsak() {
         return revurderingVarslingÅrsak;
     }
@@ -224,11 +220,6 @@ public class DokumentHendelse extends BaseEntitet {
 
         public DokumentHendelse.Builder medGjelderVedtak(Boolean gjelderVedtak) {
             this.kladd.gjelderVedtak = gjelderVedtak;
-            return this;
-        }
-
-        public DokumentHendelse.Builder medHistorikkAktør(HistorikkAktør historikkAktør) {
-            this.kladd.historikkAktør = historikkAktør;
             return this;
         }
 

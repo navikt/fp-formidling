@@ -11,9 +11,9 @@
 
     <groupId>no.nav.foreldrepenger.fpformidling</groupId>
     <artifactId>fpformidling</artifactId>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <name>Fpformidling :: Root</name>
-    <version>${revision}</version>
 
     <modules>
         <module>migreringer</module>

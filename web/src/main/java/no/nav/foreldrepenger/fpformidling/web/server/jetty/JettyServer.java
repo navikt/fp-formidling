@@ -182,7 +182,6 @@ public class JettyServer {
         ctx.setDescriptor(descriptor);
         ctx.setContextPath(CONTEXT_PATH);
         ctx.setBaseResource(createResourceCollection());
-        ctx.setInitParameter("pathInfoOnly", "true");
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         ctx.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
                 "^.*jersey-.*.jar$|^.*felles-.*.jar$");
@@ -197,7 +196,7 @@ public class JettyServer {
                 Resource.newClassPathResource("META-INF/resources/webjars/"),
                 Resource.newClassPathResource("/web"));
     }
-
+œ
     private static SecurityHandler createSecurityHandler() {
         var securityHandler = new ConstraintSecurityHandler();
         securityHandler.setAuthenticatorFactory(new JaspiAuthenticatorFactory());

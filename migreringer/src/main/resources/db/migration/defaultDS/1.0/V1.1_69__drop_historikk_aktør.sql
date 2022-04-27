@@ -1,0 +1,1 @@
+alter table dokument_hendelse drop column historikk_aktoer;

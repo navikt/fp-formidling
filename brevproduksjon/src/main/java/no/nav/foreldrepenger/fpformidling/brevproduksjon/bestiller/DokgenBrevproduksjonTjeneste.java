@@ -67,8 +67,8 @@ public class DokgenBrevproduksjonTjeneste {
     public byte[] forhåndsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
         var utkast = BestillingType.UTKAST;
         DokumentData dokumentData = lagreDokumentDataFor(behandling, dokumentMal, utkast);
-        DokumentFelles førsteDokumentFelles = dokumentData.getFørsteDokumentFelles();
-        return genererDokument(dokumentHendelse, behandling, dokumentMal, førsteDokumentFelles, utkast);
+        // hvis verge finnes produseres det 2 brev. Vi forhåndsviser kun en av dem.
+        return genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentData.getFørsteDokumentFelles(), utkast);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {

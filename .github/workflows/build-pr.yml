@@ -52,7 +52,8 @@ jobs:
         if: github.actor != 'dependabot[bot]'
         run: |
           echo "Building $BUILD_VERSION"
-          mvn jacoco:prepare-agent verify jacoco:report sonar:sonar -e -B -s settings.xml -Drevision=${BUILD_VERSION} -Dsonar.login=${SONAR_TOKEN}
+##          mvn jacoco:prepare-agent verify jacoco:report sonar:sonar -e -B -s settings.xml -Drevision=${BUILD_VERSION} -Dsonar.login=${SONAR_TOKEN}
+            mvn verify -e -B -s settings.xml -Drevision=${BUILD_VERSION}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

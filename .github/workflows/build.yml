@@ -52,7 +52,7 @@ jobs:
       - name: Build artifacts & deploy
         run: |
           echo "Building artifacts $BUILD_VERSION"
-##          mvn jacoco:prepare-agent deploy jacoco:report sonar:sonar -e -B -s settings.xml -Drevision=${BUILD_VERSION} -Dsonar.login=${SONAR_TOKEN}
+            ## mvn jacoco:prepare-agent deploy jacoco:report sonar:sonar -e -B -s settings.xml -Drevision=${BUILD_VERSION} -Dsonar.login=${SONAR_TOKEN}
             mvn package -e -B -s settings.xml -Drevision=${BUILD_VERSION}
           echo "Deployed artifacts"
         env:

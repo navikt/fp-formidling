@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
 import java.math.BigInteger;
+import java.util.Objects;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.PeriodeBeregner;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
@@ -26,6 +27,13 @@ public final class StønadskontoMapper {
 
     public static int finnDisponibleFellesDager(Saldoer saldoer) {
         return finnSaldo(saldoer, SaldoVisningStønadskontoType.FELLESPERIODE);
+    }
+
+    public static boolean kontoEksisterer(Saldoer saldoer, SaldoVisningStønadskontoType stønadskontoType) {
+        return saldoer.stønadskontoer().stream()
+                .map(stønadskonto -> Objects.equals(stønadskonto.stønadskontoType(), stønadskontoType))
+                .findFirst()
+                .isPresent();
     }
 
     public static int finnForeldrepengeperiodenUtvidetUkerHvisFinnes(Saldoer saldoer) {

@@ -182,7 +182,6 @@ public class JettyServer {
         ctx.setDescriptor(descriptor);
         ctx.setContextPath(CONTEXT_PATH);
         ctx.setBaseResource(createResourceCollection());
-        ctx.setInitParameter("pathInfoOnly", "true");
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         ctx.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
                 "^.*jersey-.*.jar$|^.*felles-.*.jar$");

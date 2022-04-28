@@ -1,4 +1,5 @@
 {
+  "environment": "dev",
   "serviceuserkv": "/serviceuser/data/dev/srvfpformidling",
   "minReplicas": "1",
   "maxReplicas": "3",

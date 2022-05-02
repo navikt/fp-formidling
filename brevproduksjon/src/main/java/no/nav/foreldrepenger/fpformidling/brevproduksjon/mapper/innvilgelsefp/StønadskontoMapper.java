@@ -31,9 +31,7 @@ public final class StønadskontoMapper {
 
     public static boolean kontoEksisterer(Saldoer saldoer, SaldoVisningStønadskontoType stønadskontoType) {
         return saldoer.stønadskontoer().stream()
-                .map(stønadskonto -> Objects.equals(stønadskonto.stønadskontoType(), stønadskontoType))
-                .findFirst()
-                .isPresent();
+                .anyMatch(stønadskonto -> Objects.equals(stønadskonto.stønadskontoType(), stønadskontoType));
     }
 
     public static int finnForeldrepengeperiodenUtvidetUkerHvisFinnes(Saldoer saldoer) {

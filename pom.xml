@@ -25,11 +25,12 @@
     <properties>
         <revision>2.0-SNAPSHOT</revision>
 
+        <sonar.organization>navikt</sonar.organization>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <sonar.projectKey>navikt_fp-formidling</sonar.projectKey>
 
         <!-- Felles artefakter -->
-        <felles.version>4.1.24</felles.version>
+        <felles.version>4.1.25</felles.version>
         <prosesstask.version>3.1.7</prosesstask.version>
         <kontrakter.version>6.1.19</kontrakter.version>
         <konfig.version>1.1.5</konfig.version>

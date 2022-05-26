@@ -16,18 +16,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
-import no.nav.foreldrepenger.fpformidling.klage.Klage;
-import no.nav.foreldrepenger.fpformidling.klage.KlageDokument;
-import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
-import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
-import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
-import no.nav.foreldrepenger.fpformidling.verge.Verge;
-import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
-import no.nav.foreldrepenger.fpformidling.ytelsefordeling.YtelseFordeling;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.KlagebehandlingDto;
@@ -47,7 +35,17 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.TilkjentYtels
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakSvpDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.VilkårDtoMapper;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.YtelseFordelingDtoMapper;
+import no.nav.foreldrepenger.fpformidling.klage.Klage;
+import no.nav.foreldrepenger.fpformidling.klage.KlageDokument;
+import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
+import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
+import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
+import no.nav.foreldrepenger.fpformidling.verge.Verge;
+import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
 
 @ApplicationScoped
 public class DomeneobjektProvider {
@@ -176,10 +174,6 @@ public class DomeneobjektProvider {
                 .map(svangerskapspengerUttakResultatDto -> UttakSvpDtoMapper.mapSvpUttaksresultatFraDto(svangerskapspengerUttakResultatDto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
-    public YtelseFordeling hentYtelseFordeling(Behandling behandling) {
-        return YtelseFordelingDtoMapper.mapYtelseFordelingFraDto(behandlingRestKlient.hentYtelseFordeling(behandling.getResourceLinker()));
-    }
-
     public Saldoer hentSaldoer(Behandling behandling) {
         return StønadskontoDtoMapper.mapSaldoerFraDto(behandlingRestKlient.hentSaldoer(behandling.getResourceLinker()));
     }
@@ -199,6 +193,10 @@ public class DomeneobjektProvider {
 
     public boolean kreverSammenhengendeUttak(Behandling behandling) {
         return behandlingRestKlient.kreverSammenhengendeUttak(behandling.getResourceLinker()).kreverSammenhengendeUttak();
+    }
+
+    public boolean utenMinsterett(Behandling behandling) {
+        return behandlingRestKlient.utenMinsterett(behandling.getResourceLinker()).utenMinsterett();
     }
 
     public StartdatoUtsattDto hentStartdatoUtsatt(Behandling behandling) {

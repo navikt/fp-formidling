@@ -143,7 +143,7 @@ public class BeregningsgrunnlagDtoMapper {
             case OMSORGSPENGER -> OpptjeningAktivitetType.OMSORGSPENGER;
             case PLEIEPENGER -> OpptjeningAktivitetType.PLEIEPENGER;
             case SYKEPENGER -> OpptjeningAktivitetType.SYKEPENGER;
-            case FRISINN -> OpptjeningAktivitetType.FRISINN;
+            case FRISINN, FRILOPP -> OpptjeningAktivitetType.FRISINN;
             case FRILANS -> OpptjeningAktivitetType.FRILANS;
             case NÆRING -> OpptjeningAktivitetType.NÆRING;
             case SVANGERSKAPSPENGER -> OpptjeningAktivitetType.SVANGERSKAPSPENGER;

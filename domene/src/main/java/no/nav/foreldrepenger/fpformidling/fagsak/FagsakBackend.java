@@ -6,9 +6,10 @@ import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 
 public class FagsakBackend {
 
-    private RelasjonsRolleType brukerRolle;
-    private Saksnummer saksnummer;
     private AktørId aktørId;
+    private Saksnummer saksnummer;
+    private RelasjonsRolleType brukerRolle;
+    private Integer dekningsgrad;
 
     private FagsakBackend() {
     }
@@ -27,6 +28,10 @@ public class FagsakBackend {
 
     public AktørId getAktørId() {
         return aktørId;
+    }
+
+    public Integer getDekningsgrad() {
+        return dekningsgrad;
     }
 
     public static final class Builder {
@@ -48,6 +53,11 @@ public class FagsakBackend {
 
         public Builder medAktørId(AktørId aktørId) {
             this.kladd.aktørId = aktørId;
+            return this;
+        }
+
+        public Builder medDekningsgrad(Integer dekningsgrad) {
+            this.kladd.dekningsgrad = dekningsgrad;
             return this;
         }
 

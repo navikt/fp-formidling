@@ -56,7 +56,7 @@ public interface Behandlinger {
     default Optional<BeregningsgrunnlagDto> hentFormidlingBeregningsgrunnlagHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker
                 .stream()
-                .filter(dto -> "beregningsgrunnlag".equals(dto.getRel()))
+                .filter(dto -> "beregningsgrunnlag-formidling".equals(dto.getRel()))
                 .findFirst()
                 .flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDto.class));
     }

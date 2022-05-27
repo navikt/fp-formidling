@@ -12,6 +12,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.anke.Ankebehandl
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.MottattDokumentDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.aksjonspunkt.AksjonspunktDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.vilkår.VilkårDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.fagsak.FagsakDto;
@@ -24,13 +25,10 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.T
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelseMedUttaksplanDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.KreverSammenhengendeUttakDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UtenMinsterettDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.saldo.SaldoerDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.ytelsefordeling.YtelseFordelingDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.DokumentMalTypeDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.beregningsgrunnlag.v2.BeregningsgrunnlagDtoV2;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 
@@ -47,6 +45,21 @@ public interface Behandlinger {
     }
 
     Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagV2HvisFinnes(UUID behandlingUuid);
+
+    // TODO: ta i bruk denne framfor hentBeregningsgrunnlagV2HvisFinnes når fpsak har prodsatt lenke beregningsgrunnlag
+    default BeregningsgrunnlagDto hentBeregningsgrunnlag(List<BehandlingResourceLink> resourceLinker) {
+        return hentFormidlingBeregningsgrunnlagHvisFinnes(resourceLinker)
+                .orElseThrow(
+                        () -> new IllegalStateException("Klarte ikke hente beregningsgrunnlag for behandling: " + hentBehandlingId(resourceLinker)));
+    }
+
+    default Optional<BeregningsgrunnlagDto> hentFormidlingBeregningsgrunnlagHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker
+                .stream()
+                .filter(dto -> "beregningsgrunnlag-formidling".equals(dto.getRel()))
+                .findFirst()
+                .flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDto.class));
+    }
 
     BehandlingDto hentBehandling(UUID behandlingId);
 
@@ -153,20 +166,6 @@ public interface Behandlinger {
                 .orElseThrow(() -> new IllegalStateException("Klarte ikke hente innsyn for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
-    default BeregningsgrunnlagDtoV2 hentBeregningsgrunnlag(List<BehandlingResourceLink> resourceLinker) {
-        return hentFormidlingBeregningsgrunnlagHvisFinnes(resourceLinker)
-                .orElseThrow(
-                        () -> new IllegalStateException("Klarte ikke hente beregningsgrunnlag for behandling: " + hentBehandlingId(resourceLinker)));
-    }
-
-    default Optional<BeregningsgrunnlagDtoV2> hentFormidlingBeregningsgrunnlagHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "beregningsgrunnlag".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDtoV2.class));
-    }
-
     default List<VilkårDto> hentVilkår(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker
                 .stream()
@@ -211,16 +210,6 @@ public interface Behandlinger {
                 .findFirst()
                 .flatMap(link -> hentDtoFraLink(link, FagsakDto.class))
                 .orElseThrow(() -> new IllegalStateException("Klarte ikke hente fagsak for behandling: " + hentBehandlingId(resourceLinker)));
-    }
-
-    default YtelseFordelingDto hentYtelseFordeling(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "ytelsefordeling".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, YtelseFordelingDto.class))
-                .orElseThrow(
-                        () -> new IllegalStateException("Klarte ikke hente ytelsefordeling for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default SaldoerDto hentSaldoer(List<BehandlingResourceLink> resourceLinker) {
@@ -269,14 +258,6 @@ public interface Behandlinger {
                 .flatMap(link -> hentDtoFraLink(link, Boolean.class));
     }
 
-    default Optional<DokumentMalTypeDto> hentInnvilgelseForeldrepengerDokumentmal(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "dokmal-innvfp".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, DokumentMalTypeDto.class));
-    }
-
     default KreverSammenhengendeUttakDto kreverSammenhengendeUttak(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker
                 .stream()
@@ -284,6 +265,15 @@ public interface Behandlinger {
                 .findFirst()
                 .flatMap(link -> hentDtoFraLink(link, KreverSammenhengendeUttakDto.class))
                 .orElseThrow(() -> new IllegalStateException("Klarte ikke hente om behandlingen krever sammenhengende uttak: " + hentBehandlingId(resourceLinker)));
+    }
+
+    default UtenMinsterettDto utenMinsterett(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker
+                .stream()
+                .filter(dto -> "uten-minsterett".equals(dto.getRel()))
+                .findFirst()
+                .flatMap(link -> hentDtoFraLink(link, UtenMinsterettDto.class))
+                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente om behandlingen er uten minsteretter: " + hentBehandlingId(resourceLinker)));
     }
 
     default StartdatoUtsattDto hentStartdatoUtsatt(List<BehandlingResourceLink> resourceLinker) {

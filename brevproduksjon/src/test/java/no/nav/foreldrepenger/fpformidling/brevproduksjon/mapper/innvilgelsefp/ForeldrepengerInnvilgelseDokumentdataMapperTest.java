@@ -52,7 +52,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParam
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.fagsak.Dekningsgrad;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelseType;
@@ -82,14 +81,12 @@ import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
-import no.nav.foreldrepenger.fpformidling.ytelsefordeling.OppgittRettighet;
-import no.nav.foreldrepenger.fpformidling.ytelsefordeling.YtelseFordeling;
 
 @ExtendWith(MockitoExtension.class)
 public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     private static final LocalDate SØKNADSDATO = LocalDate.now().minusDays(1);
-    private static final Dekningsgrad DEKNINGSGRAD = Dekningsgrad._100;
+    private static final int DEKNINGSGRAD = 100;
     private static final int DISPONIBLE_DAGER = 5;
     private static final int DISPONIBLE_DAGER_FELLES = 10;
     private static final int TAPTE_DAGER_FPFF = 2;
@@ -128,7 +125,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(tilkjentYtelseFP);
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentUttaksresultat(any(Behandling.class))).thenReturn(opprettUttaksresultat());
-        when(domeneobjektProvider.hentYtelseFordeling(any(Behandling.class))).thenReturn(opprettYtelseFordeling());
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
         when(domeneobjektProvider.hentAksjonspunkter(any(Behandling.class))).thenReturn(opprettAksjonspunkter());
     }
@@ -157,7 +153,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getBehandlingResultatType()).isEqualTo(behandling.getBehandlingsresultat().getBehandlingResultatType().name());
         assertThat(dokumentdata.getKonsekvensForInnvilgetYtelse()).isEqualTo("ENDRING_I_BEREGNING_OG_UTTAK");
         assertThat(dokumentdata.getSøknadsdato()).isEqualTo(formaterDatoNorsk(SØKNADSDATO));
-        assertThat(dokumentdata.getDekningsgrad()).isEqualTo(DEKNINGSGRAD.getVerdi());
+        assertThat(dokumentdata.getDekningsgrad()).isEqualTo(DEKNINGSGRAD);
         assertThat(dokumentdata.getDagsats()).isEqualTo(finnDagsats(tilkjentYtelseFP));
         assertThat(dokumentdata.getMånedsbeløp()).isEqualTo(finnMånedsbeløp(tilkjentYtelseFP));
         assertThat(dokumentdata.getForMyeUtbetalt()).isEqualTo(ForMyeUtbetalt.GENERELL);
@@ -212,7 +208,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     }
 
     private FagsakBackend opprettFagsakBackend() {
-        return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).build();
+        return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).medDekningsgrad(DEKNINGSGRAD).build();
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
@@ -221,7 +217,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     }
 
     private Optional<Søknad> opprettSøknad() {
-        return Optional.of(new Søknad(SØKNADSDATO, LocalDate.now(), new OppgittRettighet(true)));
+        return Optional.of(new Søknad(SØKNADSDATO, true));
     }
 
     private TilkjentYtelseForeldrepenger opprettTilkjentYtelseFP() {
@@ -320,10 +316,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .medAnnenForelderHarRett(true)
                 .medAleneomsorg(true)
                 .build();
-    }
-
-    private YtelseFordeling opprettYtelseFordeling() {
-        return new YtelseFordeling(DEKNINGSGRAD);
     }
 
     private Saldoer opprettSaldoer() {

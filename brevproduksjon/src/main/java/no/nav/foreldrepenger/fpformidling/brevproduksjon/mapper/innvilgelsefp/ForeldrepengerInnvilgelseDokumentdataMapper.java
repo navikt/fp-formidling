@@ -75,7 +75,6 @@ import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.fpformidling.ytelsefordeling.YtelseFordeling;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE)
@@ -98,7 +97,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     @Override
     public ForeldrepengerInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
                                                                     Behandling behandling, boolean erUtkast) {
-        YtelseFordeling ytelseFordeling = domeneobjektProvider.hentYtelseFordeling(behandling);
         TilkjentYtelseForeldrepenger tilkjentYtelseForeldrepenger = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
         Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
@@ -139,7 +137,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medBehandlingResultatType(behandling.getBehandlingsresultat().getBehandlingResultatType().name())
                 .medKonsekvensForInnvilgetYtelse(konsekvensForInnvilgetYtelse)
                 .medSøknadsdato(formaterDato(søknad.mottattDato(), språkkode))
-                .medDekningsgrad(ytelseFordeling.dekningsgrad().getVerdi())
+                .medDekningsgrad(Optional.ofNullable(fagsak.getDekningsgrad()).orElseThrow())
                 .medHarUtbetaling(harUtbetaling(tilkjentYtelseForeldrepenger))
                 .medDagsats(dagsats)
                 .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelseForeldrepenger))
@@ -262,7 +260,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
     private VurderingsKode erAleneomsorg(Søknad søknad, UttakResultatPerioder uttakResultatPerioder) {
         VurderingsKode vurderingsKode;
-        if (søknad.oppgittRettighet().harAleneomsorgForBarnet()) {
+        if (søknad.oppgittAleneomsorg()) {
             vurderingsKode = uttakResultatPerioder.isAleneomsorg() ? VurderingsKode.JA : VurderingsKode.NEI;
         } else {
             vurderingsKode = VurderingsKode.IKKE_VURDERT;

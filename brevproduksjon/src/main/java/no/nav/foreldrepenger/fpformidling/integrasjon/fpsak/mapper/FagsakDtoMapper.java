@@ -11,9 +11,10 @@ public class FagsakDtoMapper {
 
     public static FagsakBackend mapFagsakBackendFraDto(FagsakDto fagsakDto) {
         return FagsakBackend.ny()
-                .medSaksnummer(fagsakDto.getSaksnummer())
-                .medBrukerRolle(fagsakDto.getRelasjonsRolleType())
-                .medAktørId(new AktørId(fagsakDto.getAktoerId()))
+                .medSaksnummer(fagsakDto.saksnummer())
+                .medBrukerRolle(fagsakDto.relasjonsRolleType())
+                .medAktørId(new AktørId(fagsakDto.aktoerId()))
+                .medDekningsgrad(fagsakDto.dekningsgrad())
                 .build();
     }
 

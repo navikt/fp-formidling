@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokdist;
 
-import java.util.Optional;
-
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -18,11 +16,8 @@ import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 @Dependent
-@Deprecated
 /**
  *
- * @see JerseyDokdistKlient
- * @deprecated
  */
 public class DokdistRestKlient implements Dokdist {
     private static final Logger LOGGER = LoggerFactory.getLogger(DokdistRestKlient.class);
@@ -42,13 +37,9 @@ public class DokdistRestKlient implements Dokdist {
         DistribuerJournalpostRequest request = lagRequest(journalpostId, bestillingId);
         try {
             URIBuilder uriBuilder = new URIBuilder(endpointDokdistRestBase + "/distribuerjournalpost");
-            Optional<DistribuerJournalpostResponse> response = oidcRestClient.postReturnsOptional(uriBuilder.build(), request,
+            var response = oidcRestClient.postAcceptConflict(uriBuilder.build(), request,
                     DistribuerJournalpostResponse.class);
-            if (response.isPresent()) {
-                LOGGER.info("Distribuert {} med bestillingsId {}", journalpostId, response);
-            } else {
-                throw new TekniskException("FPFORMIDLING-647352", String.format("Fikk tomt svar ved kall til dokdist for %s.", journalpostId));
-            }
+            LOGGER.info("Distribuert {} med bestillingsId {}", journalpostId, response);
         } catch (Exception e) {
             throw new TekniskException("FPFORMIDLING-647353", String.format("Fikk feil ved kall til dokdist for %s.", journalpostId), e);
         }

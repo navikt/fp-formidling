@@ -1,14 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokdist;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +15,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJour
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostResponse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
-import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 public class DokdistRestKlientTest {
@@ -42,8 +38,8 @@ public class DokdistRestKlientTest {
         ArgumentCaptor<DistribuerJournalpostRequest> requestCaptor = ArgumentCaptor.forClass(
                 DistribuerJournalpostRequest.class);
         DistribuerJournalpostResponse response = new DistribuerJournalpostResponse("123");
-        when(oidcRestClient.postReturnsOptional(uriCaptor.capture(), requestCaptor.capture(),
-                eq(DistribuerJournalpostResponse.class))).thenReturn(Optional.of(response));
+        when(oidcRestClient.postAcceptConflict(uriCaptor.capture(), requestCaptor.capture(),
+                eq(DistribuerJournalpostResponse.class))).thenReturn(response);
 
         // Act
         dokdistRestKlient.distribuerJournalpost(JOURNALPOST_ID, "12345");
@@ -56,13 +52,4 @@ public class DokdistRestKlientTest {
         assertThat(requestCaptor.getValue().getDokumentProdApp()).isEqualTo(Fagsystem.FPSAK.getKode());
     }
 
-    @Test
-    public void skal_kaste_exception_hvis_svaret_er_tomt() {
-        // Arrange
-        when(oidcRestClient.postReturnsOptional(any(URI.class), any(DistribuerJournalpostRequest.class),
-                eq(DistribuerJournalpostResponse.class))).thenReturn(Optional.empty());
-
-        // Act
-        assertThrows(VLException.class, () -> dokdistRestKlient.distribuerJournalpost(JOURNALPOST_ID, "12345"));
-    }
 }

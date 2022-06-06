@@ -18,7 +18,7 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
     private Dokdist dokdist;
 
     @Inject
-    public DistribuerBrevTask(/* @Jersey */Dokdist dokdist) {
+    public DistribuerBrevTask(Dokdist dokdist) {
         this.dokdist = dokdist;
     }
 

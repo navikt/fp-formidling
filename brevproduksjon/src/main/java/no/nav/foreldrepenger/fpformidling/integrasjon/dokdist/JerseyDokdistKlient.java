@@ -44,7 +44,7 @@ public class JerseyDokdistKlient extends AbstractJerseyOidcRestClient implements
                 invoke(target
                         .request(APPLICATION_JSON_TYPE)
                         .buildPost(json(new DistribuerJournalpostRequest(id, FPSAK, bestillingId, distribusjonstype))), DistribuerJournalpostResponse.class))
-                .ifPresentOrElse(v -> LOG.info("Distribuert {} med bestillingsId {}", id, v.getBestillingsId()),
+                .ifPresentOrElse(v -> LOG.info("Distribuert {} med bestillingsId {}", id, v.bestillingsId()),
                         () -> { throw new TekniskException("FPFORMIDLING-647352", String.format("Fikk tomt svar ved kall til dokdist for %s.", id)); });
         LOG.info("Distribuerert journalpost {} til {} OK", id, target.getUri());
     }

@@ -22,7 +22,7 @@ import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
  *
  */
 public class DokdistRestKlient implements Dokdist {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DokdistRestKlient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DokdistRestKlient.class);
 
     private final OidcRestClient oidcRestClient;
     private final String endpointDokdistRestBase;
@@ -41,14 +41,14 @@ public class DokdistRestKlient implements Dokdist {
             URIBuilder uriBuilder = new URIBuilder(endpointDokdistRestBase + "/distribuerjournalpost");
             var response = oidcRestClient.postAcceptConflict(uriBuilder.build(), request,
                     DistribuerJournalpostResponse.class);
-            LOGGER.info("Distribuert {} med bestillingsId {}", journalpostId, response);
+            LOG.info("Distribuert {} med bestillingsId {}", journalpostId, response.bestillingsId());
         } catch (Exception e) {
             throw new TekniskException("FPFORMIDLING-647353", String.format("Fikk feil ved kall til dokdist for %s.", journalpostId), e);
         }
     }
 
     private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {
-        LOGGER.info("Bestiller distribusjon av {} med batchId {}", journalpostId, bestillingId);
+        LOG.info("Bestiller distribusjon av {} med batchId {}", journalpostId, bestillingId);
         return new DistribuerJournalpostRequest(journalpostId.getVerdi(),
                 bestillingId,
                 Fagsystem.FPSAK.getOffisiellKode(),

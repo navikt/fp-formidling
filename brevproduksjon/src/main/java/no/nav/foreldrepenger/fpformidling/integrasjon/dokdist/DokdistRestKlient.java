@@ -41,7 +41,9 @@ public class DokdistRestKlient implements Dokdist {
             URIBuilder uriBuilder = new URIBuilder(endpointDokdistRestBase + "/distribuerjournalpost");
             var response = oidcRestClient.postAcceptConflict(uriBuilder.build(), request,
                     DistribuerJournalpostResponse.class);
-            LOG.info("Distribuert {} med bestillingsId {}", journalpostId, response.bestillingsId());
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Distribuert {} med bestillingsId {}", journalpostId, response.bestillingsId());
+            }
         } catch (Exception e) {
             throw new TekniskException("FPFORMIDLING-647353", String.format("Fikk feil ved kall til dokdist for %s.", journalpostId), e);
         }

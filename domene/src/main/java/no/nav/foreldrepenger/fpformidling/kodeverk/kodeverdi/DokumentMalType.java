@@ -1,12 +1,9 @@
 package no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -33,7 +30,7 @@ public enum DokumentMalType implements Kodeverdi {
     FORLENGET_SAKSBEHANDLINGSTID(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID, "Forlenget saksbehandlingstid"),
     FORLENGET_SAKSBEHANDLINGSTID_MEDL(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_MEDL, "Forlenget saksbehandlingstid - medlemskap"),
     FORLENGET_SAKSBEHANDLINGSTID_TIDLIG(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG, "Forlenget saksbehandlingstid - Tidlig søknad"),
-    KLAGE_AVVIST(DokumentMalTypeKode.KLAGE_AVVIST, "Vedtak om avvist klage"),
+    KLAGE_AVVIST(DokumentMalTypeKode.KLAGE_AVVIST, Constants.VEDTAK_OM_AVVIST_KLAGE),
     KLAGE_HJEMSENDT(DokumentMalTypeKode.KLAGE_HJEMSENDT, "Klage hjemsendt/opphevet"),
     KLAGE_OMGJORT(DokumentMalTypeKode.KLAGE_OMGJORT, "Vedtak om omgjøring av klage"),
     KLAGE_OVERSENDT(DokumentMalTypeKode.KLAGE_OVERSENDT, "Klage oversendt til klageinstans"),
@@ -78,9 +75,9 @@ public enum DokumentMalType implements Kodeverdi {
     @Deprecated
     FORLENGET_SAKSBEHANDLINGSTID_TIDLIG_DOK(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG_DOK, "Forlenget saksbehandlingstid - Tidlig søknad"), //NOSONAR
     @Deprecated
-    KLAGE_AVVIST_DOK(DokumentMalTypeKode.KLAGE_AVVIST_DOK, "Vedtak om avvist klage"), //NOSONAR
+    KLAGE_AVVIST_DOK(DokumentMalTypeKode.KLAGE_AVVIST_DOK, Constants.VEDTAK_OM_AVVIST_KLAGE), //NOSONAR
     @Deprecated
-    KLAGE_AVVIST_FRITEKST(DokumentMalTypeKode.KLAGE_AVVIST_FRITEKST, "Vedtak om avvist klage"), //NOSONAR
+    KLAGE_AVVIST_FRITEKST(DokumentMalTypeKode.KLAGE_AVVIST_FRITEKST, Constants.VEDTAK_OM_AVVIST_KLAGE), //NOSONAR
     @Deprecated
     KLAGE_HJEMSENDT_DOK(DokumentMalTypeKode.KLAGE_HJEMSENDT_DOK, "Vedtak opphevet, sendt til ny behandling"), //NOSONAR
     @Deprecated
@@ -181,5 +178,9 @@ public enum DokumentMalType implements Kodeverdi {
         public DokumentMalType convertToEntityAttribute(String dbData) {
             return dbData == null ? null : fraKode(dbData);
         }
+    }
+
+    private static class Constants {
+        protected static final String VEDTAK_OM_AVVIST_KLAGE = "Vedtak om avvist klage";
     }
 }

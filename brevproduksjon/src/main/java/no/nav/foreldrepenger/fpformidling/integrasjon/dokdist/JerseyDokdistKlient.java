@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostRequest;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostResponse;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
 import no.nav.vedtak.exception.TekniskException;
@@ -37,12 +38,12 @@ public class JerseyDokdistKlient extends AbstractJerseyOidcRestClient implements
     }
 
     @Override
-    public void distribuerJournalpost(JournalpostId id, String bestillingId) {
+    public void distribuerJournalpost(JournalpostId id, String bestillingId, Distribusjonstype distribusjonstype) {
         LOG.trace("Distribuerer journalpost {} til {}", id, target.getUri());
         Optional.ofNullable(
                 invoke(target
                         .request(APPLICATION_JSON_TYPE)
-                        .buildPost(json(new DistribuerJournalpostRequest(id, FPSAK, bestillingId))), DistribuerJournalpostResponse.class))
+                        .buildPost(json(new DistribuerJournalpostRequest(id, FPSAK, bestillingId, distribusjonstype))), DistribuerJournalpostResponse.class))
                 .ifPresentOrElse(v -> LOG.info("Distribuert {} med bestillingsId {}", id, v.getBestillingsId()),
                         () -> { throw new TekniskException("FPFORMIDLING-647352", String.format("Fikk tomt svar ved kall til dokdist for %s.", id)); });
         LOG.info("Distribuerert journalpost {} til {} OK", id, target.getUri());

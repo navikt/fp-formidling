@@ -13,6 +13,8 @@ import org.mockito.ArgumentCaptor;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostRequest;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostResponse;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstidspunkt;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
@@ -42,14 +44,16 @@ public class DokdistRestKlientTest {
                 eq(DistribuerJournalpostResponse.class))).thenReturn(response);
 
         // Act
-        dokdistRestKlient.distribuerJournalpost(JOURNALPOST_ID, "12345");
+        dokdistRestKlient.distribuerJournalpost(JOURNALPOST_ID, "12345", Distribusjonstype.VEDTAK);
 
         // Assert
         assertThat(uriCaptor.getValue().toURL().toString()).isEqualTo(BASE_URL + "/distribuerjournalpost");
-        assertThat(requestCaptor.getValue().getJournalpostId()).isEqualTo(JOURNALPOST_ID.getVerdi());
-        assertThat(requestCaptor.getValue().getBatchId()).isNotNull();
-        assertThat(requestCaptor.getValue().getBestillendeFagsystem()).isEqualTo(Fagsystem.FPSAK.getOffisiellKode());
-        assertThat(requestCaptor.getValue().getDokumentProdApp()).isEqualTo(Fagsystem.FPSAK.getKode());
+        assertThat(requestCaptor.getValue().journalpostId()).isEqualTo(JOURNALPOST_ID.getVerdi());
+        assertThat(requestCaptor.getValue().batchId()).isNotNull();
+        assertThat(requestCaptor.getValue().bestillendeFagsystem()).isEqualTo(Fagsystem.FPSAK.getOffisiellKode());
+        assertThat(requestCaptor.getValue().dokumentProdApp()).isEqualTo(Fagsystem.FPSAK.getKode());
+        assertThat(requestCaptor.getValue().distribusjonstype()).isEqualTo(Distribusjonstype.VEDTAK);
+        assertThat(requestCaptor.getValue().distribusjonstidspunkt()).isEqualTo(Distribusjonstidspunkt.KJERNETID);
     }
 
 }

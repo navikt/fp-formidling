@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostRequest;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostResponse;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstidspunkt;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
@@ -16,7 +18,7 @@ import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.rest.OidcRestClient;
 
 @Dependent
-/**
+/*
  *
  */
 public class DokdistRestKlient implements Dokdist {
@@ -33,8 +35,8 @@ public class DokdistRestKlient implements Dokdist {
     }
 
     @Override
-    public void distribuerJournalpost(JournalpostId journalpostId, String bestillingId) {
-        DistribuerJournalpostRequest request = lagRequest(journalpostId, bestillingId);
+    public void distribuerJournalpost(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {
+        DistribuerJournalpostRequest request = lagRequest(journalpostId, bestillingId, distribusjonstype);
         try {
             URIBuilder uriBuilder = new URIBuilder(endpointDokdistRestBase + "/distribuerjournalpost");
             var response = oidcRestClient.postAcceptConflict(uriBuilder.build(), request,
@@ -45,8 +47,13 @@ public class DokdistRestKlient implements Dokdist {
         }
     }
 
-    private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId, String bestillingId) {
+    private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {
         LOGGER.info("Bestiller distribusjon av {} med batchId {}", journalpostId, bestillingId);
-        return new DistribuerJournalpostRequest(journalpostId.getVerdi(),  bestillingId, Fagsystem.FPSAK.getOffisiellKode(), Fagsystem.FPSAK.getKode());
+        return new DistribuerJournalpostRequest(journalpostId.getVerdi(),
+                bestillingId,
+                Fagsystem.FPSAK.getOffisiellKode(),
+                Fagsystem.FPSAK.getKode(),
+                distribusjonstype,
+                Distribusjonstidspunkt.KJERNETID);
     }
 }

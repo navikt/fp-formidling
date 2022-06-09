@@ -32,6 +32,6 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
         JournalpostId journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(JOURNALPOST_ID));
         var bestillingId = prosessTaskData.getPropertyValue(BESTILLING_ID);
         var distribusjonstype = prosessTaskData.getPropertyValue(DISTRIBUSJONSTYPE);
-        dokdist.distribuerJournalpost(journalpostId, bestillingId, Distribusjonstype.valueOf(distribusjonstype));
+        dokdist.distribuerJournalpost(journalpostId, bestillingId, Optional.ofNullable(distribusjonstype).map(Distribusjonstype::valueOf).orElse(null));
     }
 }

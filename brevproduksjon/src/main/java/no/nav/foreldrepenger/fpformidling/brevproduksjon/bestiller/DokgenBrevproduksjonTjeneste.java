@@ -192,10 +192,11 @@ public class DokgenBrevproduksjonTjeneste {
                                                       String unikBestillingsId) {
         ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
-        prosessTaskData.setProperty(BrevTaskProperties.DISTRIBUSJONSTYPE, distribusjonstype.name());
-        prosessTaskData.setProperty(BrevTaskProperties.SAKSNUMMER, saksnummer);
         prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, unikBestillingsId);
+        prosessTaskData.setProperty(BrevTaskProperties.DISTRIBUSJONSTYPE, distribusjonstype.name());
+        // For logging context
+        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
+        prosessTaskData.setProperty(BrevTaskProperties.SAKSNUMMER, saksnummer);
         // må vente til vedlegg er knyttet og journalpost er ferdigstilt
         if (innsynMedVedlegg) {
             prosessTaskData.setNesteKjøringEtter(LocalDateTime.now().plusMinutes(1));

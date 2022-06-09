@@ -23,6 +23,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
@@ -150,6 +151,7 @@ public class DokgenBrevproduksjonTjeneste {
                 opprettDistribuerBrevTask(journalpostId,
                         innsynMedVedlegg,
                         dokumentHendelse.getBehandlingUuid(),
+                        DistribusjonstypeUtleder.utledFor(dokumentMal),
                         saksnummer,
                         unikBestillingsId));
 
@@ -182,12 +184,19 @@ public class DokgenBrevproduksjonTjeneste {
         return prosessTaskData;
     }
 
-    private ProsessTaskData opprettDistribuerBrevTask(JournalpostId journalpostId, boolean innsynMedVedlegg, UUID behandlingUuId, String saksnummer, String unikBestillingsId) {
+    private ProsessTaskData opprettDistribuerBrevTask(JournalpostId journalpostId,
+                                                      boolean innsynMedVedlegg,
+                                                      UUID behandlingUuId,
+                                                      Distribusjonstype distribusjonstype,
+                                                      String saksnummer,
+                                                      String unikBestillingsId) {
         ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
+        prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, unikBestillingsId);
+        prosessTaskData.setProperty(BrevTaskProperties.DISTRIBUSJONSTYPE, distribusjonstype.name());
+        // For logging context
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
         prosessTaskData.setProperty(BrevTaskProperties.SAKSNUMMER, saksnummer);
-        prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, unikBestillingsId);
         // må vente til vedlegg er knyttet og journalpost er ferdigstilt
         if (innsynMedVedlegg) {
             prosessTaskData.setNesteKjøringEtter(LocalDateTime.now().plusMinutes(1));

@@ -74,6 +74,8 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean inkludereAvslag;
     private boolean inkludereNyeOpplysningerUtbet;
 
+    private boolean utenMinsterett;
+
     public String getBehandlingType() {
         return behandlingType;
     }
@@ -292,6 +294,14 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     public boolean getInkludereNyeOpplysningerUtbet() { return inkludereNyeOpplysningerUtbet; }
 
+    /**
+     * Leverer tilbake "true" for behandlinger "før" WLB eller "false" etter WLB
+     * WLB - Work Life Balance = FAB - Familie Arbeid Balanse
+     */
+    public boolean erUtenMinsterett() {
+        return utenMinsterett;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -353,7 +363,9 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 && Objects.equals(inkludereUtbetNårGradering, that.inkludereUtbetNårGradering)
                 && Objects.equals(inkludereInnvilget, that.inkludereInnvilget)
                 && Objects.equals(inkludereAvslag, that.inkludereAvslag)
-                && Objects.equals(inkludereNyeOpplysningerUtbet, that.inkludereNyeOpplysningerUtbet);
+                && Objects.equals(inkludereNyeOpplysningerUtbet, that.inkludereNyeOpplysningerUtbet)
+                && Objects.equals(utenMinsterett, that.utenMinsterett);
+
     }
 
     @Override
@@ -366,7 +378,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 disponibleFellesDager, sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker,
                 antallBarn, prematurDager, antallDødeBarn, dødsdato, kreverSammenhengendeUttak, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler,
                 klagefristUker, lovhjemlerUttak, lovhjemlerBeregning, inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget,
-                inkludereAvslag, inkludereNyeOpplysningerUtbet, disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav);
+                inkludereAvslag, inkludereNyeOpplysningerUtbet, disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav, utenMinsterett);
     }
 
     public static Builder ny() {
@@ -374,7 +386,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     }
 
     public static class Builder {
-        private ForeldrepengerInnvilgelseDokumentdata kladd;
+        private final ForeldrepengerInnvilgelseDokumentdata kladd;
 
         private Builder() {
             this.kladd = new ForeldrepengerInnvilgelseDokumentdata();
@@ -662,6 +674,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medInkludereNyeOpplysningerUtbet(boolean inkludereNyeOpplysningerUtbet) {
             this.kladd.inkludereNyeOpplysningerUtbet = inkludereNyeOpplysningerUtbet;
+            return this;
+        }
+
+        public Builder medUtenMinsterett(boolean utenMinsterett) {
+            this.kladd.utenMinsterett = utenMinsterett;
             return this;
         }
 

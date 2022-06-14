@@ -176,18 +176,12 @@ public interface Behandlinger {
                 .orElseThrow(() -> new IllegalStateException("Klarte ikke hente vilkår for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
-    default UttakResultatPerioderDto hentUttaksresultat(List<BehandlingResourceLink> resourceLinker) {
-        return hentUttaksresultatHvisFinnes(resourceLinker)
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente uttaksperioder for behandling: " + hentBehandlingId(resourceLinker)));
-    }
-
     default Optional<UttakResultatPerioderDto> hentUttaksresultatHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker
                 .stream()
                 .filter(dto -> "uttaksresultat-perioder-formidling".equals(dto.getRel()))
                 .findFirst()
                 .flatMap(link -> hentDtoFraLink(link, UttakResultatPerioderDto.class));
-
     }
 
     default SvangerskapspengerUttakResultatDto hentUttaksresultatSvp(List<BehandlingResourceLink> resourceLinker) {

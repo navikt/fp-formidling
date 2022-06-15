@@ -126,8 +126,11 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         int utenAktKrav = 0;
         int medAktKrav = 0;
-        if (kontoEksisterer(saldoer, SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV)) {
+        if (kontoEksisterer(saldoer, SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV) || kontoEksisterer(saldoer, SaldoVisningStønadskontoType.MINSTERETT)) {
             utenAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV);
+            if (utenAktKrav == 0) {
+                utenAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.MINSTERETT);
+            }
             medAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.FORELDREPENGER) - utenAktKrav;
         }
 
@@ -201,7 +204,10 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     private void mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(List<Utbetalingsperiode> utbetalingsperioder, ForeldrepengerInnvilgelseDokumentdata.Builder builder) {
-        boolean morTarIkkeAlleUkene = utbetalingsperioder.stream().filter(Utbetalingsperiode::isAvslått).anyMatch(p -> PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE.getKode().equals(p.getÅrsak().getKode()));
+        boolean morTarIkkeAlleUkene = utbetalingsperioder
+                .stream().filter(Utbetalingsperiode::isAvslått)
+                .anyMatch(p -> PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE.getKode()
+                        .equals(p.getÅrsak().getKode()));
         boolean innenforFristTilÅSøke = false;
 
         if (morTarIkkeAlleUkene) {
@@ -213,7 +219,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                     .map(md -> (LocalDate.now().isBefore(md.plusMonths(3))))
                     .orElse(false);
         }
-
         builder.medMorKanSøkeOmDagerFørFødsel(innenforFristTilÅSøke);
     }
 

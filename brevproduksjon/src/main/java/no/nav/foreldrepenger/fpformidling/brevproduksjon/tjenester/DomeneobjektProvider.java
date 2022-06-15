@@ -54,8 +54,7 @@ public class DomeneobjektProvider {
     private ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
-    public DomeneobjektProvider(Behandlinger behandlingRestKlient,
-                                ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+    public DomeneobjektProvider(Behandlinger behandlingRestKlient, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         this.behandlingRestKlient = behandlingRestKlient;
         this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }
@@ -74,8 +73,8 @@ public class DomeneobjektProvider {
     }
 
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        return BeregningsgrunnlagDtoMapper.mapFraDto(
-                behandlingRestKlient.hentBeregningsgrunnlagV2(behandling.getUuid()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+        return BeregningsgrunnlagDtoMapper.mapFraDto(behandlingRestKlient.hentBeregningsgrunnlagV2(behandling.getUuid()),
+                arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
@@ -94,8 +93,8 @@ public class DomeneobjektProvider {
     }
 
     public TilkjentYtelseEngangsstønad hentTilkjentYtelseEngangsstønad(Behandling behandling) {
-        return TilkjentYtelseDtoMapper
-                .mapTilkjentYtelseESFraDto(behandlingRestKlient.hentTilkjentYtelseEngangsstønad(behandling.getResourceLinker()));
+        return TilkjentYtelseDtoMapper.mapTilkjentYtelseESFraDto(
+                behandlingRestKlient.hentTilkjentYtelseEngangsstønad(behandling.getResourceLinker()));
     }
 
     public Optional<TilkjentYtelseEngangsstønad> hentTilkjentYtelseESHvisFinnes(Behandling behandling) {
@@ -115,7 +114,8 @@ public class DomeneobjektProvider {
     }
 
     public FamilieHendelse hentFamiliehendelse(Behandling behandling) {
-        return FamiliehendelseDtoMapper.mapFamiliehendelsefraDto(behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinker()));
+        return FamiliehendelseDtoMapper.mapFamiliehendelsefraDto(
+                behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinker()));
     }
 
     public Optional<FamilieHendelse> hentFamiliehendelseHvisFinnes(Behandling behandling) {
@@ -155,13 +155,14 @@ public class DomeneobjektProvider {
     }
 
     public Optional<UttakResultatPerioder> hentUttaksresultatHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentUttaksresultatHvisFinnes(behandling.getResourceLinker())
-                .map(r -> UttakDtoMapper.mapUttaksresultatPerioderFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+        var uttakResultatPerioderDto = behandlingRestKlient.hentUttaksresultatHvisFinnes(behandling.getResourceLinker());
+        return uttakResultatPerioderDto.map(
+                r -> UttakDtoMapper.mapUttaksresultatPerioderFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public UttakResultatPerioder hentUttaksresultat(Behandling behandling) {
-        return UttakDtoMapper.mapUttaksresultatPerioderFraDto(behandlingRestKlient.hentUttaksresultat(behandling.getResourceLinker()),
-                arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+        return hentUttaksresultatHvisFinnes(behandling).orElseThrow(
+                () -> new IllegalStateException("Klarte ikke hente uttaksperioder for behandling: " + behandling.getUuid()));
     }
 
     public SvpUttaksresultat hentUttaksresultatSvp(Behandling behandling) {
@@ -171,7 +172,8 @@ public class DomeneobjektProvider {
 
     public Optional<SvpUttaksresultat> hentUttaksresultatSvpHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentUttaksresultatSvpHvisFinnes(behandling.getResourceLinker())
-                .map(svangerskapspengerUttakResultatDto -> UttakSvpDtoMapper.mapSvpUttaksresultatFraDto(svangerskapspengerUttakResultatDto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+                .map(svangerskapspengerUttakResultatDto -> UttakSvpDtoMapper.mapSvpUttaksresultatFraDto(
+                        svangerskapspengerUttakResultatDto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public Saldoer hentSaldoer(Behandling behandling) {
@@ -188,7 +190,8 @@ public class DomeneobjektProvider {
     }
 
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {
-        return MottattDokumentDtoMapper.mapMottattedokumenterFraDto(behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
+        return MottattDokumentDtoMapper.mapMottattedokumenterFraDto(
+                behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
     }
 
     public boolean kreverSammenhengendeUttak(Behandling behandling) {

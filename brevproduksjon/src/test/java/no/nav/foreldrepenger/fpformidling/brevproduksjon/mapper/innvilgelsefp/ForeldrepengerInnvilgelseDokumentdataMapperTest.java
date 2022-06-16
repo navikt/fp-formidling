@@ -127,6 +127,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentUttaksresultat(any(Behandling.class))).thenReturn(opprettUttaksresultat());
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
         when(domeneobjektProvider.hentAksjonspunkter(any(Behandling.class))).thenReturn(opprettAksjonspunkter());
+        when(domeneobjektProvider.utenMinsterett(any(Behandling.class))).thenReturn(true);
     }
 
     @Test
@@ -205,6 +206,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getInntektOverSeksG()).isFalse();
         assertThat(dokumentdata.getErBesteberegning()).isTrue();
         assertThat(dokumentdata.getHarBruktBruttoBeregningsgrunnlag()).isFalse();
+        assertThat(dokumentdata.erUtenMinsterett()).isTrue();
     }
 
     private FagsakBackend opprettFagsakBackend() {

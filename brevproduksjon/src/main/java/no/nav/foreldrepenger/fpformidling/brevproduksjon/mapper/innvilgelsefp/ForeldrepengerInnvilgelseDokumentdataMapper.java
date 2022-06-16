@@ -57,7 +57,6 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
@@ -68,9 +67,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakTyp
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType;
-import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
 import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
@@ -97,17 +94,18 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     @Override
     public ForeldrepengerInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
                                                                     Behandling behandling, boolean erUtkast) {
-        TilkjentYtelseForeldrepenger tilkjentYtelseForeldrepenger = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
-        Beregningsgrunnlag beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
-        UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
-        Søknad søknad = hentNyesteSøknad(behandling);
-        List<Aksjonspunkt> aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
-        FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        Optional<FamilieHendelse> originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
+        var tilkjentYtelseForeldrepenger = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
+        var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
+        var uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
+        var søknad = hentNyesteSøknad(behandling);
+        var aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
+        var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        var originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
                 .map(domeneobjektProvider::hentFamiliehendelse);
-        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
-        Saldoer saldoer = domeneobjektProvider.hentSaldoer(behandling);
-        Språkkode språkkode = behandling.getSpråkkode();
+        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var saldoer = domeneobjektProvider.hentSaldoer(behandling);
+        var språkkode = behandling.getSpråkkode();
+        var utenMinsterett = domeneobjektProvider.utenMinsterett(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, dokumentHendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(
@@ -115,14 +113,14 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        List<Utbetalingsperiode> utbetalingsperioder = UtbetalingsperiodeMapper.mapUtbetalingsperioder(
+        var utbetalingsperioder = UtbetalingsperiodeMapper.mapUtbetalingsperioder(
                 tilkjentYtelseForeldrepenger.getPerioder(), uttakResultatPerioder,
                 beregningsgrunnlag.getBeregningsgrunnlagPerioder(), språkkode);
-        String konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
-        boolean erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
-        long dagsats = finnDagsats(tilkjentYtelseForeldrepenger);
-        int antallBarn = familieHendelse.getAntallBarn().intValue();
-        int antallDødeBarn = familieHendelse.getAntallDødeBarn();
+        var konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
+        var erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
+        var dagsats = finnDagsats(tilkjentYtelseForeldrepenger);
+        var antallBarn = familieHendelse.getAntallBarn().intValue();
+        var antallDødeBarn = familieHendelse.getAntallDødeBarn();
 
         int utenAktKrav = 0;
         int medAktKrav = 0;
@@ -182,7 +180,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medInkludereUtbetNårGradering(skalInkludereUtbetNårGradering(behandling, utbetalingsperioder))
                 .medInkludereInnvilget(skalInkludereInnvilget(behandling, utbetalingsperioder, konsekvensForInnvilgetYtelse))
                 .medInkludereAvslag(skalInkludereAvslag(utbetalingsperioder, konsekvensForInnvilgetYtelse))
-                .medInkludereNyeOpplysningerUtbet(skalInkludereNyeOpplysningerUtbet(behandling, utbetalingsperioder, dagsats));
+                .medInkludereNyeOpplysningerUtbet(skalInkludereNyeOpplysningerUtbet(behandling, utbetalingsperioder, dagsats))
+                .medUtenMinsterett(utenMinsterett);
 
         finnSisteDagAvSistePeriode(uttakResultatPerioder).ifPresent(dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
         finnStønadsperiodeFom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));

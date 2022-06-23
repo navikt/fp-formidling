@@ -46,7 +46,7 @@ public class DokgenRestKlientTest {
         dokgenRestKlient.genererPdf(MAL_TYPE, SPRÅKKODE, dokumentdata);
 
         // Assert
-        assertThat(uriCaptor.getValue().toURL().toString()).isEqualTo(BASE_URL + "/template/" + MAL_TYPE + "/template_" + SPRÅKKODE.getKode().toLowerCase() + "/create-pdf-variation");
+        assertThat(uriCaptor.getValue().toURL().toString()).isEqualTo(BASE_URL + "/template/" + MAL_TYPE + "/template_" + SPRÅKKODE.name().toLowerCase() + "/create-pdf-variation");
     }
 
     @Test
@@ -57,10 +57,10 @@ public class DokgenRestKlientTest {
         when(oidcRestClient.postReturnsOptionalOfByteArray(uriCaptor.capture(), eq(dokumentdata))).thenReturn(Optional.of(RESPONSE));
 
         // Act
-        dokgenRestKlient.genererPdf(MAL_TYPE, Språkkode.UDEFINERT, dokumentdata);
+        dokgenRestKlient.genererPdf(MAL_TYPE, null, dokumentdata);
 
         // Assert
-        assertThat(uriCaptor.getValue().toURL().toString()).isEqualTo(BASE_URL + "/template/" + MAL_TYPE + "/template_" + Språkkode.NB.getKode().toLowerCase() + "/create-pdf-variation");
+        assertThat(uriCaptor.getValue().toURL().toString()).isEqualTo(BASE_URL + "/template/" + MAL_TYPE + "/template_" + Språkkode.NB.name().toLowerCase() + "/create-pdf-variation");
     }
 
     @Test

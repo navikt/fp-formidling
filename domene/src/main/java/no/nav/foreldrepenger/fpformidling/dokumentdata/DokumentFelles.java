@@ -12,6 +12,8 @@ import javax.persistence.Convert;
 import javax.persistence.Converter;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -67,9 +69,9 @@ public class DokumentFelles extends BaseEntitet {
     @Column(name = "versjon", nullable = false)
     private long versjon;
 
-    @Convert(converter = Språkkode.KodeverdiConverter.class)
+    @Enumerated(EnumType.STRING)
     @Column(name = "sprak_kode", nullable = false)
-    private Språkkode språkkode = Språkkode.UDEFINERT;
+    private Språkkode språkkode;
 
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "saksnummer", column = @Column(name = "saksnummer", nullable = false, updatable = false)))
@@ -240,7 +242,7 @@ public class DokumentFelles extends BaseEntitet {
         }
 
         public Builder medSpråkkode(Språkkode språkkode) {
-            this.dokumentFelles.språkkode = språkkode == null ? Språkkode.UDEFINERT : språkkode;
+            this.dokumentFelles.språkkode = språkkode;
             return this;
         }
 

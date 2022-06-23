@@ -2,14 +2,11 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen;
 
 import static javax.ws.rs.client.Entity.json;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
-import static no.nav.foreldrepenger.fpformidling.geografisk.Språkkode.EN;
-import static no.nav.foreldrepenger.fpformidling.geografisk.Språkkode.NB;
-import static no.nav.foreldrepenger.fpformidling.geografisk.Språkkode.NN;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -24,7 +21,6 @@ import no.nav.vedtak.felles.integrasjon.rest.jersey.Jersey;
 @Jersey
 @Dependent
 public class JerseyDokgenKlient extends AbstractJerseyOidcRestClient implements Dokgen {
-    private static final Set<Språkkode> STØTTEDE_SPRÅK = Set.of(NB, NN, EN);
     private final URI baseUri;
 
     @Inject
@@ -40,11 +36,11 @@ public class JerseyDokgenKlient extends AbstractJerseyOidcRestClient implements 
                 .request(APPLICATION_JSON_TYPE)
                 .buildPost(json(data)), byte[].class))
                 .orElseThrow(() -> new TekniskException("FPFORMIDLING-946543",
-                        String.format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", mal, språk.getKode())));
+                        String.format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", mal, språk)));
     }
 
-    private static String språkkode(Språkkode kode) {
-        return STØTTEDE_SPRÅK.contains(kode) ? kode.getKode().toLowerCase() : Språkkode.NB.getKode().toLowerCase();
+    private String språkkode(Språkkode språkkode) {
+        return Objects.requireNonNullElse(språkkode, Språkkode.NB).name().toLowerCase();
     }
 
     @Override

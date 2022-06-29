@@ -5,10 +5,12 @@ import java.util.List;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
+import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 
 /**
  * Klassen utleder hvorvidt for forskjellige blokker / undermaler i innvilgelse foreldrepenger brevet skal inkluderes:
@@ -32,7 +34,14 @@ public final class UndermalInkluderingMapper {
     }
 
     public static boolean skalInkludereAvslag(List<Utbetalingsperiode> utbetalingsperioder, String konsekvens) {
-        return utbetalingsperioder.stream().anyMatch(periode -> !periode.isInnvilget()) && (!KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvens)) ;
+        return utbetalingsperioder.stream()
+                .filter(periode -> !periodeMed4102UtenTapteDager(periode))
+                .anyMatch(Utbetalingsperiode::isAvslått)
+                && (!KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvens)) ;
+    }
+
+    private static boolean periodeMed4102UtenTapteDager(Utbetalingsperiode periode) {
+        return Årsak.of(PeriodeResultatÅrsak.BARE_FAR_RETT_IKKE_SØKT.getKode()).equals(periode.getÅrsak()) && periode.getAntallTapteDager() == 0;
     }
 
     public static boolean skalInkludereNyeOpplysningerUtbet(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder, long dagsats) {

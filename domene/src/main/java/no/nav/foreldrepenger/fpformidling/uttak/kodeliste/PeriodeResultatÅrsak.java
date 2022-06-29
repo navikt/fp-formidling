@@ -42,6 +42,7 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
     public static final PeriodeResultatÅrsak AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4080", PERIODE_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak BARN_OVER_3_ÅR = new PeriodeResultatÅrsak("4022", PERIODE_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak STØNADSPERIODE_NYTT_BARN = new PeriodeResultatÅrsak("4104", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak BARE_FAR_RETT_IKKE_SØKT = new PeriodeResultatÅrsak("4102", PERIODE_ÅRSAK_DISCRIMINATOR, null);
 
     private String kodeverk;
     private String kode;

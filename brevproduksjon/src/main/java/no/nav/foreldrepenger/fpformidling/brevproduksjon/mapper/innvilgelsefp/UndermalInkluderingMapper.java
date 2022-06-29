@@ -28,7 +28,7 @@ public final class UndermalInkluderingMapper {
         return !KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvens)
                 && (harMerEnnEnPeriodeOgMinstEnInnvilget(utbetalingsperioder)
                 || erRevurderingMedEndring(konsekvens, behandling)
-                || utbetalingsperioder.stream().anyMatch(UndermalInkluderingMapper::periodeHarUtbetalingÅrsakEllerGradering)); //TODO: Dobbeltsjekke med CCM at dette ble riktig
+                || utbetalingsperioder.stream().anyMatch(UndermalInkluderingMapper::periodeHarUtbetalingÅrsakEllerGradering));
     }
 
     public static boolean skalInkludereAvslag(List<Utbetalingsperiode> utbetalingsperioder, String konsekvens) {

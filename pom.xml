@@ -89,12 +89,17 @@
                 <version>${kontrakter.version}</version>
             </dependency>
 
-
             <!-- Diverse -->
             <dependency>
                 <groupId>com.github.jknack</groupId>
                 <artifactId>handlebars</artifactId>
                 <version>${handlebars.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>mockwebserver</artifactId>
+                <version>4.9.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

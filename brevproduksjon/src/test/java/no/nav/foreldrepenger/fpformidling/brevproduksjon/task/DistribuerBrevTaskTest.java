@@ -1,9 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -13,12 +17,15 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Dokdist;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 
 @ExtendWith(MockitoExtension.class)
 class DistribuerBrevTaskTest {
 
     @Mock
     private Dokdist dokdist;
+    @Mock
+    ProsessTaskTjeneste taskTjeneste;
 
     @Test
     void testKlientKallMedDokdisttype() {
@@ -26,14 +33,12 @@ class DistribuerBrevTaskTest {
         var bestillingsid = "456789";
         var distribusjonstype = Distribusjonstype.VEDTAK;
 
-        var prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
-        prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId);
-        prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, bestillingsid);
-        prosessTaskData.setProperty(BrevTaskProperties.DISTRIBUSJONSTYPE, distribusjonstype.name());
+        ProsessTaskData prosessTaskData = opprettProsessTaskData(journalpostId, bestillingsid, distribusjonstype);
 
-        new DistribuerBrevTask(dokdist).doTask(prosessTaskData);
+        new DistribuerBrevTask(dokdist, taskTjeneste).doTask(prosessTaskData);
 
         verify(dokdist).distribuerJournalpost(new JournalpostId(journalpostId), bestillingsid, distribusjonstype);
+        verify(taskTjeneste, never()).lagre(any(ProsessTaskData.class));
     }
 
     @Test
@@ -45,7 +50,52 @@ class DistribuerBrevTaskTest {
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId);
         prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, bestillingsid);
 
-        new DistribuerBrevTask(dokdist).doTask(prosessTaskData);
-        verify(dokdist).distribuerJournalpost(eq(new JournalpostId(journalpostId)), eq(bestillingsid), isNull());
+        Exception thrown = Assertions.assertThrows(NullPointerException.class, () -> {
+            new DistribuerBrevTask(dokdist, taskTjeneste).doTask(prosessTaskData);
+        });
+
+        Assertions.assertEquals("Name is null", thrown.getMessage());
+        verify(taskTjeneste, never()).lagre(any(ProsessTaskData.class));
+    }
+
+    @Test
+    void testKlientKallOpprettGosysOppgaveHvisAdresseMangler() {
+        var journalpostId = "12345";
+        var bestillingsid = "456789";
+        var distribusjonstype = Distribusjonstype.VEDTAK;
+
+        when(dokdist.distribuerJournalpost(new JournalpostId(journalpostId), bestillingsid, distribusjonstype)).thenReturn(
+                Dokdist.Resultat.MANGLER_ADRESSE);
+
+        ProsessTaskData prosessTaskData = opprettProsessTaskData(journalpostId, bestillingsid, distribusjonstype);
+
+        new DistribuerBrevTask(dokdist, taskTjeneste).doTask(prosessTaskData);
+
+        verify(taskTjeneste, times(1)).lagre(any(ProsessTaskData.class));
+    }
+
+    @Test
+    void testKlientKallIkkeOpprettOppgaveHvisResultatetErOk() {
+        var journalpostId = "12345";
+        var bestillingsid = "456789";
+        var distribusjonstype = Distribusjonstype.VEDTAK;
+
+        when(dokdist.distribuerJournalpost(new JournalpostId(journalpostId), bestillingsid, distribusjonstype)).thenReturn(
+                Dokdist.Resultat.OK);
+
+        ProsessTaskData prosessTaskData = opprettProsessTaskData(journalpostId, bestillingsid, distribusjonstype);
+
+        new DistribuerBrevTask(dokdist, taskTjeneste).doTask(prosessTaskData);
+
+        verify(taskTjeneste, never()).lagre(any(ProsessTaskData.class));
+    }
+
+    @NotNull
+    private ProsessTaskData opprettProsessTaskData(String journalpostId, String bestillingsid, Distribusjonstype distribusjonstype) {
+        var prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
+        prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId);
+        prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, bestillingsid);
+        prosessTaskData.setProperty(BrevTaskProperties.DISTRIBUSJONSTYPE, distribusjonstype.name());
+        return prosessTaskData;
     }
 }

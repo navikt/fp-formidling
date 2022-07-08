@@ -4,27 +4,32 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskPro
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.DISTRIBUSJONSTYPE;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.JOURNALPOST_ID;
 
-import java.util.Optional;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Dokdist;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
+import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 
 @ApplicationScoped
 @ProsessTask(value = "formidling.distribuerBrev", maxFailedRuns = 2)
 public class DistribuerBrevTask implements ProsessTaskHandler {
 
-    private Dokdist dokdist;
+    private final Dokdist dokdist;
+    private ProsessTaskTjeneste taskTjeneste;
 
     @Inject
-    public DistribuerBrevTask(Dokdist dokdist) {
+    public DistribuerBrevTask(@JavaClient Dokdist dokdist,
+                              ProsessTaskTjeneste taskTjeneste) {
         this.dokdist = dokdist;
+        this.taskTjeneste = taskTjeneste;
     }
 
     @Override
@@ -32,6 +37,21 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
         JournalpostId journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(JOURNALPOST_ID));
         var bestillingId = prosessTaskData.getPropertyValue(BESTILLING_ID);
         var distribusjonstype = prosessTaskData.getPropertyValue(DISTRIBUSJONSTYPE);
-        dokdist.distribuerJournalpost(journalpostId, bestillingId, Optional.ofNullable(distribusjonstype).map(Distribusjonstype::valueOf).orElse(null));
+        var resultat = dokdist.distribuerJournalpost(journalpostId, bestillingId, Distribusjonstype.valueOf(distribusjonstype));
+
+        if (Dokdist.Resultat.MANGLER_ADRESSE.equals(resultat)) {
+            var behandlingUuid = prosessTaskData.getBehandlingUuid();
+            var saksnummer = prosessTaskData.getSaksnummer();
+            opprettGosysOppgaveTask(journalpostId, behandlingUuid, saksnummer);
+        }
+    }
+
+    private void opprettGosysOppgaveTask(JournalpostId journalpostId, UUID behandlingUuId, String saksnummer) {
+        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
+        prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
+        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
+        prosessTaskData.setProperty(BrevTaskProperties.SAKSNUMMER, saksnummer);
+        prosessTaskData.setCallIdFraEksisterende();
+        taskTjeneste.lagre(prosessTaskData);
     }
 }

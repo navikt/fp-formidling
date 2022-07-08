@@ -44,6 +44,7 @@ public class BehandlingDtoMapper {
                 .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
                 .medAnsvarligBeslutter(dto.getAnsvarligBeslutter())
                 .medToTrinnsBehandling(dto.getToTrinnsBehandling())
+                .medBehandlendeEnhetId(dto.getBehandlendeEnhetId())
                 .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingÅrsaker()))
                 .medEndretAv(dto.getEndretAvBrukernavn())

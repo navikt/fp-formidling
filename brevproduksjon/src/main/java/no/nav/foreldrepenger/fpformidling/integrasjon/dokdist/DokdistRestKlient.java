@@ -35,7 +35,7 @@ public class DokdistRestKlient implements Dokdist {
     }
 
     @Override
-    public void distribuerJournalpost(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {
+    public Dokdist.Resultat distribuerJournalpost(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {
         DistribuerJournalpostRequest request = lagRequest(journalpostId, bestillingId, distribusjonstype);
         try {
             URIBuilder uriBuilder = new URIBuilder(endpointDokdistRestBase + "/distribuerjournalpost");
@@ -47,6 +47,7 @@ public class DokdistRestKlient implements Dokdist {
         } catch (Exception e) {
             throw new TekniskException("FPFORMIDLING-647353", String.format("Fikk feil ved kall til dokdist for %s.", journalpostId), e);
         }
+        return Resultat.OK;
     }
 
     private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {

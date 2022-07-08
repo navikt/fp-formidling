@@ -161,6 +161,7 @@ public class DokgenBrevproduksjonTjeneste {
                         dokumentMal,
                         response.getJournalpostId(),
                         response.getDokumenter().get(0).getDokumentInfoId()));
+        taskGruppe.setCallIdFraEksisterende();
         taskTjeneste.lagre(taskGruppe);
     }
 
@@ -175,12 +176,14 @@ public class DokgenBrevproduksjonTjeneste {
         ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(TilknyttVedleggTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, (String.valueOf(behandlingUuId)));
+        prosessTaskData.setCallIdFraEksisterende();
         return prosessTaskData;
     }
 
     private ProsessTaskData opprettFerdigstillForsendelseTask(JournalpostId journalpostId) {
         ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(FerdigstillForsendelseTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
+        prosessTaskData.setCallIdFraEksisterende();
         return prosessTaskData;
     }
 
@@ -201,6 +204,7 @@ public class DokgenBrevproduksjonTjeneste {
         if (innsynMedVedlegg) {
             prosessTaskData.setNesteKjøringEtter(LocalDateTime.now().plusMinutes(1));
         }
+        prosessTaskData.setCallIdFraEksisterende();
         return prosessTaskData;
     }
 
@@ -215,6 +219,7 @@ public class DokgenBrevproduksjonTjeneste {
         prosessTaskData.setProperty(SendKvitteringTask.DOKUMENT_MAL_TYPE, dokumentMal.getKode());
         prosessTaskData.setProperty(SendKvitteringTask.JOURNALPOST_ID, journalpostId);
         prosessTaskData.setProperty(SendKvitteringTask.DOKUMENT_ID, dokumentId);
+        prosessTaskData.setCallIdFraEksisterende();
         return prosessTaskData;
     }
 

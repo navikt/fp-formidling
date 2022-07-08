@@ -22,6 +22,7 @@ public class BehandlingDto {
     private LocalDateTime avsluttet;
     private LocalDateTime endret;
     private String endretAvBrukernavn;
+    private String behandlendeEnhetId;
     private String behandlendeEnhetNavn;
     private String ansvarligSaksbehandler;
     private String ansvarligBeslutter;
@@ -32,7 +33,6 @@ public class BehandlingDto {
     private List<BehandlingResourceLinkDto> formidlingRessurser = new ArrayList<>();
     private List<BehandlingÅrsakDto> behandlingÅrsaker = new ArrayList<>();
     private LocalDate originalVedtaksDato;
-
 
     public BehandlingType getType() {
         return type;
@@ -169,6 +169,12 @@ public class BehandlingDto {
     public void setFormidlingRessurser(List<BehandlingResourceLinkDto> formidlingRessurser) {
         this.formidlingRessurser = formidlingRessurser;
     }
+    public String getBehandlendeEnhetId() {
+        return behandlendeEnhetId;
+    }
+    public void setBehandlendeEnhetId(String behandlendeEnhetId) {
+        this.behandlendeEnhetId = behandlendeEnhetId;
+    }
 
     @Override
     public String toString() {
@@ -179,6 +185,7 @@ public class BehandlingDto {
                 ", opprettet=" + opprettet +
                 ", avsluttet=" + avsluttet +
                 ", endret=" + endret +
+                ", behandlendeEnhetId='" + behandlendeEnhetId + '\'' +
                 ", behandlendeEnhetNavn='" + behandlendeEnhetNavn + '\'' +
                 ", ansvarligSaksbehandler='" + ansvarligSaksbehandler + '\'' +
                 ", ansvarligBeslutter='" + ansvarligBeslutter + '\'' +

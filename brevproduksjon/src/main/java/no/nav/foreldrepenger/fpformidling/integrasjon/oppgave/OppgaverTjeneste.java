@@ -23,7 +23,11 @@ public class OppgaverTjeneste {
     private static final Logger LOG = LoggerFactory.getLogger(OppgaverTjeneste.class);
     private static final int DEFAULT_OPPGAVEFRIST_DAGER = 1;
 
-     private final Oppgaver restKlient;
+    private Oppgaver restKlient;
+
+    OppgaverTjeneste() {
+        // for cdi proxy
+    }
 
     @Inject
     public OppgaverTjeneste(@JavaClient Oppgaver restKlient) {
@@ -32,12 +36,8 @@ public class OppgaverTjeneste {
 
     public Oppgave opprettOppgave(Behandling behandling, JournalpostId journalpostId, String oppgaveBeskrivelse) {
 
-        var request = createRequest(
-                journalpostId,
-                behandling.getFagsakBackend().getAktørId(),
-                behandling.getFagsakBackend().getSaksnummer().getVerdi(),
-                behandling.getBehandlendeEnhetId(),
-                oppgaveBeskrivelse);
+        var request = createRequest(journalpostId, behandling.getFagsakBackend().getAktørId(),
+                behandling.getFagsakBackend().getSaksnummer().getVerdi(), behandling.getBehandlendeEnhetId(), oppgaveBeskrivelse);
 
         var oppgave = restKlient.opprettetOppgave(request);
         LOG.info("Oprettet GOSYS oppgave: {}", oppgave);
@@ -49,21 +49,8 @@ public class OppgaverTjeneste {
                                                 String saksnummer,
                                                 String enhet,
                                                 String beskrivelse) {
-        return new OpprettOppgaveRequest(
-                enhet,
-                enhet,
-                journalpostId.getVerdi(),
-                null,
-                saksnummer,
-                aktørId.getId(),
-                beskrivelse,
-                "FMLI",
-                "FOR",
-                null,
-                "VUR_KONS_YTE",
-                null,
-                LocalDate.now(),
-                Prioritet.NORM,
+        return new OpprettOppgaveRequest(enhet, enhet, journalpostId.getVerdi(), null, saksnummer, aktørId.getId(), beskrivelse,
+                "FMLI", "FOR", null, "VUR_KONS_YTE", null, LocalDate.now(), Prioritet.NORM,
                 VirkedagUtil.fomVirkedag(LocalDate.now().plusDays(DEFAULT_OPPGAVEFRIST_DAGER)));
     }
 }

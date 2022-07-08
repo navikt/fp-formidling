@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDate;
-
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,10 +14,6 @@ import org.mockito.Mockito;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostResponse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.ErrorResponse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.VirkedagUtil;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2.OpprettOppgaveRequest;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2.Prioritet;
-import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.ManglerTilgangException;
@@ -31,20 +26,26 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
 class JavaDokdistRestKlientTest {
-
+    private static MockedStatic<TokenProvider> TOKEN_PROVIDER_MOCKED_STATIC;
+    private static MockedStatic<MDCOperations> MDC_MOCK;
     private MockWebServer mockWebServer;
     private Dokdist klient;
 
     @BeforeAll
     static void initStaticMocks() {
-        MockedStatic<MDCOperations> mdcMock = Mockito.mockStatic(MDCOperations.class);
-        mdcMock.when(MDCOperations::getCallId).thenReturn("test");
+        MDC_MOCK = Mockito.mockStatic(MDCOperations.class);
+        MDC_MOCK.when(MDCOperations::getCallId).thenReturn("test");
 
         var idToken = Mockito.mock(OpenIDToken.class);
         when(idToken.token()).thenReturn("token_string");
+        TOKEN_PROVIDER_MOCKED_STATIC = Mockito.mockStatic(TokenProvider.class);
+        TOKEN_PROVIDER_MOCKED_STATIC.when(TokenProvider::getStsSystemToken).thenReturn(idToken);
+    }
 
-        MockedStatic<TokenProvider> tokenProviderMockedStatic = Mockito.mockStatic(TokenProvider.class);
-        tokenProviderMockedStatic.when(TokenProvider::getStsSystemToken).thenReturn(idToken);
+    @AfterAll
+    static void deregisterStaticMocks() {
+        MDC_MOCK.close();
+        TOKEN_PROVIDER_MOCKED_STATIC.close();
     }
 
     @BeforeEach

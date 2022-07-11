@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
@@ -26,6 +25,8 @@ public class Behandling {
     private List<BehandlingÅrsak> behandlingÅrsaker;
     private String ansvarligSaksbehandler;
     private boolean toTrinnsBehandling;
+
+    private String behandlendeEnhetId;
     private String behandlendeEnhetNavn;
     private String ansvarligBeslutter;
     private FagsakBackend fagsakBackend;
@@ -49,6 +50,7 @@ public class Behandling {
     public boolean behandlesAvKlageinstans() {
         return behandlendeEnhetNavn != null && behandlendeEnhetNavn.startsWith("NAV Klageinstans");
     }
+
     public Behandlingsresultat getBehandlingsresultat() {
         return behandlingsresultat;
     }
@@ -98,9 +100,7 @@ public class Behandling {
     }
 
     public boolean harBehandlingÅrsak(BehandlingÅrsakType behandlingÅrsak) {
-        return getBehandlingÅrsaker().stream()
-                .map(BehandlingÅrsak::getBehandlingÅrsakType)
-                .anyMatch(behandlingÅrsak::equals);
+        return getBehandlingÅrsaker().stream().map(BehandlingÅrsak::getBehandlingÅrsakType).anyMatch(behandlingÅrsak::equals);
     }
 
     public boolean erFørstegangssøknad() {
@@ -154,6 +154,10 @@ public class Behandling {
         return endretAv;
     }
 
+    public String getBehandlendeEnhetId() {
+        return behandlendeEnhetId;
+    }
+
     public void leggtilFagsakBackend(FagsakBackend fagsak) {
         if (this.fagsakBackend == null) {
             this.fagsakBackend = fagsak;
@@ -173,10 +177,7 @@ public class Behandling {
     }
 
     public boolean erManueltOpprettet() {
-        return getBehandlingÅrsaker().stream()
-                .map(BehandlingÅrsak::getManueltOpprettet)
-                .collect(Collectors.toList())
-                .contains(true);
+        return getBehandlingÅrsaker().stream().map(BehandlingÅrsak::getManueltOpprettet).toList().contains(true);
     }
 
     public static Behandling.Builder builder() {
@@ -191,6 +192,11 @@ public class Behandling {
             this.kladd.resourceLinker = new ArrayList<>();
             this.kladd.formidlingRessurser = new ArrayList<>();
             this.kladd.behandlingÅrsaker = new ArrayList<>();
+        }
+
+        public Behandling.Builder medBehandlendeEnhetId(String behandlendeEnhetId) {
+            this.kladd.behandlendeEnhetId = behandlendeEnhetId;
+            return this;
         }
 
         public Behandling.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {

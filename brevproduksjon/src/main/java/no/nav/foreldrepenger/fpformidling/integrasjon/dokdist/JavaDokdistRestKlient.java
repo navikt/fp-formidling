@@ -2,30 +2,27 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokdist;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.Optional;
+import java.util.function.Function;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostRequest;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostResponse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstidspunkt;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.ErrorResponse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaHttpKlient;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
 import no.nav.vedtak.exception.IntegrasjonException;
-import no.nav.vedtak.exception.ManglerTilgangException;
-import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.log.mdc.MDCOperations;
 import no.nav.vedtak.sikkerhet.context.SubjectHandler;
 import no.nav.vedtak.sikkerhet.oidc.token.TokenProvider;
@@ -43,54 +40,46 @@ public class JavaDokdistRestKlient extends JavaHttpKlient implements Dokdist {
         this.dokdistRestBaseUri = endpoint;
     }
 
-    public Dokdist.Resultat distribuerJournalpost(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {
+    public Dokdist.Resultat distribuerJournalpost(DistribuerJournalpostRequest dto) {
         var endpoint = URI.create(dokdistRestBaseUri + "/distribuerjournalpost");
         var request = getRequestBuilder()
                 .uri(endpoint)
-                .POST(ofFormData(journalpostId, bestillingId, distribusjonstype))
+                .POST(HttpRequest.BodyPublishers.ofString(toJson(dto), UTF_8))
                 .build();
 
-        var response = sendRequest(request);
+        var journalpostId = new JournalpostId(dto.journalpostId());
+        var batchId = dto.batchId();
+        LOG.info("Bestiller distribusjon av {} med batchId {}", journalpostId, batchId);
+        var response = sendStringRequest(request);
 
-        int status = response.statusCode();
+        if (response.statusCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+            return consumeError(response, journalpostId);
+        } else if (response.statusCode() == HttpURLConnection.HTTP_CONFLICT) {
+            return getResultFunction(journalpostId).apply(response);
+        }
+        return handleResponse(response, getResultFunction(journalpostId));
+    }
 
-        if ((status >= HttpStatus.SC_OK && status < HttpStatus.SC_MULTIPLE_CHOICES) || status == HttpStatus.SC_CONFLICT) {
-            var bestillingsId = fromJson(response.body(), DistribuerJournalpostResponse.class).bestillingsId();
+    private Function<HttpResponse<String>, Resultat> getResultFunction(JournalpostId journalpostId) {
+        return httpResponse -> {
+            var status = httpResponse.statusCode();
+            var bestillingsId = fromJson(httpResponse.body(), DistribuerJournalpostResponse.class).bestillingsId();
             LOG.info("[HTTP {}] Distribuert {} med bestillingsId {}", status, journalpostId, bestillingsId);
             return Resultat.OK;
-        } else if (status == HttpStatus.SC_BAD_REQUEST) {
-            var message = fromJson(response.body(), ErrorResponse.class).message();
-            LOG.warn("[HTTP {}] Brevdistribusjon feilet: Fikk svar '{}'.", status, message);
-            if (message.contains("Mottaker har ukjent adresse")) {
-                LOG.warn("[HTTP {}] Brevdistribusjon feilet. Bruker mangler adresse. Sjekk med fag om GOSYS oppgaven er opprettet for {}",
-                        status, journalpostId);
-                return Resultat.MANGLER_ADRESSE;
-            } else {
-                throw new IntegrasjonException("FP-468815", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", status, endpoint, message));
-            }
-        } else if (status == HttpStatus.SC_UNAUTHORIZED) {
-            var message = fromJson(response.body(), ErrorResponse.class).message();
-            throw new ManglerTilgangException("FP-468816", String.format("[HTTP %s] Feilet mot %s pga <%s>", status, endpoint, message));
-        } else if (status == HttpStatus.SC_FORBIDDEN) {
-            throw new ManglerTilgangException("FP-468817", String.format("[HTTP %s] Feilet mot %s", status, endpoint));
-        } else if (status == HttpStatus.SC_NOT_FOUND) {
-            throw new TekniskException("FP-468818", String.format("[HTTP %s] Feilet mot %s. %s finnes ikke.", status, endpoint, journalpostId));
+        };
+    }
+    private Resultat consumeError(HttpResponse<String> response, JournalpostId journalpostId) {
+        var message = fromJson(response.body(), ErrorResponse.class).message();
+        var statusCode = response.statusCode();
+        var endpoint = response.uri();
+        LOG.warn("[HTTP {}] Brevdistribusjon feilet: Fikk svar '{}'.", statusCode, message);
+        if (message.contains("Mottaker har ukjent adresse")) {
+            LOG.warn("[HTTP {}] Brevdistribusjon feilet. Bruker mangler adresse. Sjekk med fag om GOSYS oppgaven er opprettet for {}",
+                    statusCode, journalpostId);
+            return Resultat.MANGLER_ADRESSE;
         } else {
-            throw new IntegrasjonException("FP-468819", String.format("[HTTP %s] Uventet respons fra %s", status, endpoint));
+            throw new IntegrasjonException("FP-468815", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", statusCode, endpoint, message));
         }
-    }
-
-    private HttpRequest.BodyPublisher ofFormData(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {
-        var dto = payload(journalpostId, bestillingId, distribusjonstype);
-        return HttpRequest.BodyPublishers.ofString(toJson(dto), UTF_8);
-    }
-
-    private static DistribuerJournalpostRequest payload(JournalpostId journalpostId,
-                                                        String bestillingId,
-                                                        Distribusjonstype distribusjonstype) {
-        LOG.info("Bestiller distribusjon av {} med batchId {}", journalpostId, bestillingId);
-        return new DistribuerJournalpostRequest(journalpostId.getVerdi(), bestillingId, Fagsystem.FPSAK.getOffisiellKode(),
-                Fagsystem.FPSAK.getKode(), distribusjonstype, Distribusjonstidspunkt.KJERNETID);
     }
 
     @Override

@@ -26,6 +26,7 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.OpprettJournalpostResponse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
@@ -44,7 +45,7 @@ public class DokgenBrevproduksjonTjeneste {
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DomeneobjektProvider domeneobjektProvider;
     private DokumentRepository dokumentRepository;
-    private Dokgen dokgenRestKlient;
+    private Dokgen dokgenKlient;
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
     private DokumentdataMapperProvider dokumentdataMapperProvider;
     private ProsessTaskTjeneste taskTjeneste;
@@ -54,12 +55,17 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     @Inject
-    public DokgenBrevproduksjonTjeneste(DokumentFellesDataMapper dokumentFellesDataMapper, DomeneobjektProvider domeneobjektProvider, DokumentRepository dokumentRepository,
-            /* @Jersey */Dokgen dokgenRestKlient, OpprettJournalpostTjeneste opprettJournalpostTjeneste, DokumentdataMapperProvider dokumentdataMapperProvider, ProsessTaskTjeneste taskTjeneste) {
+    public DokgenBrevproduksjonTjeneste(DokumentFellesDataMapper dokumentFellesDataMapper,
+                                        DomeneobjektProvider domeneobjektProvider,
+                                        DokumentRepository dokumentRepository,
+                                        @JavaClient Dokgen dokgenKlient,
+                                        OpprettJournalpostTjeneste opprettJournalpostTjeneste,
+                                        DokumentdataMapperProvider dokumentdataMapperProvider,
+                                        ProsessTaskTjeneste taskTjeneste) {
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentRepository = dokumentRepository;
-        this.dokgenRestKlient = dokgenRestKlient;
+        this.dokgenKlient = dokgenKlient;
         this.opprettJournalpostTjeneste = opprettJournalpostTjeneste;
         this.dokumentdataMapperProvider = dokumentdataMapperProvider;
         this.taskTjeneste = taskTjeneste;
@@ -118,7 +124,7 @@ public class DokgenBrevproduksjonTjeneste {
 
         byte[] brev;
         try {
-            brev = dokgenRestKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
+            brev = dokgenKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
         } catch (Exception e) {
             dokumentdata.getFelles().anonymiser();
             SECURE_LOGGER.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));

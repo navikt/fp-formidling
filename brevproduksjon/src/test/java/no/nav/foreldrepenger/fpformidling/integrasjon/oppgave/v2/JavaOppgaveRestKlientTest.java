@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -55,7 +55,7 @@ class JavaOppgaveRestKlientTest {
     @Test
     void opprettOppgave_401() {
         var statusCode = 401;
-        var message = "Bruker mangler tilgang.";
+        var message = "Mangler tilgang.";
         var body = DefaultJsonMapper.toJson(new ErrorResponse(UUID.randomUUID(), message));
 
         mockWebServer.enqueue(new MockResponse()

@@ -26,8 +26,6 @@ import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.log.mdc.MDCOperations;
 import no.nav.vedtak.sikkerhet.context.SubjectHandler;
-import no.nav.vedtak.sikkerhet.oidc.token.SikkerhetContext;
-import no.nav.vedtak.sikkerhet.oidc.token.TokenProvider;
 
 @ApplicationScoped
 @JavaClient

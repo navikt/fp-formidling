@@ -10,16 +10,4 @@ public record DistribuerJournalpostRequest(@NotNull String journalpostId,
                                            @NotNull String bestillendeFagsystem,
                                            @NotNull String dokumentProdApp,
                                            @NotNull Distribusjonstype distribusjonstype,
-                                           @NotNull Distribusjonstidspunkt distribusjonstidspunkt) {
-    public DistribuerJournalpostRequest(JournalpostId id,
-                                        Fagsystem fagsystem,
-                                        String bestillingId,
-                                        Distribusjonstype distribusjonstype) {
-        this(id.getVerdi(),
-                bestillingId,
-                fagsystem.getOffisiellKode(),
-                fagsystem.getKode(),
-                distribusjonstype,
-                Distribusjonstidspunkt.KJERNETID);
-    }
-}
+                                           @NotNull Distribusjonstidspunkt distribusjonstidspunkt) {}

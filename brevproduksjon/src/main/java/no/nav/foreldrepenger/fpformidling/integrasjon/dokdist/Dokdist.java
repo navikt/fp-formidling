@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokdist;
 
-import javax.validation.constraints.NotNull;
-
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostRequest;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
-import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 
+/**
+ * Brukes til distribuering av journalførte dokumenter.
+ * Swagger dokumentasjon: <a href="https://dokdistfordeling-q1.dev.adeo.no/swagger-ui/index.html">Swagger API dokumentasjon i dev.</a>
+ */
 public interface Dokdist {
 
     Resultat distribuerJournalpost(DistribuerJournalpostRequest dto);

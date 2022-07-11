@@ -66,7 +66,7 @@ class JavaDokdistRestKlientTest {
                 .setResponseCode(statusCode));
 
         var journalpostId = new JournalpostId("12334233");
-        var request = lagRequest(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
+        var request = lagRequest(journalpostId);
         Exception exception = assertThrows(ManglerTilgangException.class, () -> {
             klient.distribuerJournalpost(request);
         });
@@ -83,7 +83,7 @@ class JavaDokdistRestKlientTest {
                 .setResponseCode(statusCode));
 
         var journalpostId = new JournalpostId("12334233");
-        var request = lagRequest(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
+        var request = lagRequest(journalpostId);
         Exception exception = assertThrows(ManglerTilgangException.class, () -> {
             klient.distribuerJournalpost(request);
         });
@@ -103,7 +103,7 @@ class JavaDokdistRestKlientTest {
                 .setResponseCode(statusCode));
 
         var journalpostId = new JournalpostId("12334233");
-        var request = lagRequest(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
+        var request = lagRequest(journalpostId);
         Exception exception = assertThrows(IntegrasjonException.class, () -> {
             klient.distribuerJournalpost(request);
         });
@@ -124,7 +124,7 @@ class JavaDokdistRestKlientTest {
                 .setResponseCode(statusCode));
 
         var journalpostId = new JournalpostId("12334233");
-        var request = lagRequest(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
+        var request = lagRequest(journalpostId);
         var resultat = klient.distribuerJournalpost(request);
 
         assertThat(resultat).isEqualTo(Dokdist.Resultat.MANGLER_ADRESSE);
@@ -142,31 +142,13 @@ class JavaDokdistRestKlientTest {
                 .setBody(body)
                 .setResponseCode(statusCode));
 
-        var request = lagRequest(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
+        var request = lagRequest(journalpostId);
         Exception exception = assertThrows(TekniskException.class, () -> {
             klient.distribuerJournalpost(request);
         });
 
         assertThat(exception.getMessage()).contains("404");
         assertThat(exception.getMessage()).contains(message);
-    }
-
-    @Test
-    void distribuerJournalpost_409_accept_conflict() {
-        var statusCode = 409;
-        var journalpostId = new JournalpostId("12334233");
-        var bestillingsId = "123456645654";
-        var body = DefaultJsonMapper.toJson(new DistribuerJournalpostResponse(bestillingsId));
-
-        mockWebServer.enqueue(new MockResponse()
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .setBody(body)
-                .setResponseCode(statusCode));
-
-        var request = lagRequest(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
-        var resultat = klient.distribuerJournalpost(request);
-
-        assertThat(resultat).isEqualTo(Dokdist.Resultat.OK);
     }
 
     @Test
@@ -181,15 +163,18 @@ class JavaDokdistRestKlientTest {
                 .setResponseCode(statusCode));
 
         var journalpostId = new JournalpostId("1231");
-        var request = lagRequest(journalpostId, "test_bestillingId",
-                Distribusjonstype.VEDTAK);
+        var request = lagRequest(journalpostId);
         var resultat = klient.distribuerJournalpost(request);
 
         assertThat(resultat).isEqualTo(Dokdist.Resultat.OK);
     }
 
-    private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {
-        return new DistribuerJournalpostRequest(journalpostId.getVerdi(), bestillingId, Fagsystem.FPSAK.getOffisiellKode(),
-                Fagsystem.FPSAK.getKode(), distribusjonstype, Distribusjonstidspunkt.KJERNETID);
+    private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId) {
+        return new DistribuerJournalpostRequest(journalpostId.getVerdi(),
+                "test_bestillingId",
+                Fagsystem.FPSAK.getOffisiellKode(),
+                Fagsystem.FPSAK.getKode(),
+                Distribusjonstype.VEDTAK,
+                Distribusjonstidspunkt.KJERNETID);
     }
 }

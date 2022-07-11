@@ -55,28 +55,28 @@ public class JavaDokdistRestKlient extends JavaHttpKlient implements Dokdist {
         int status = response.statusCode();
 
         if ((status >= HttpStatus.SC_OK && status < HttpStatus.SC_MULTIPLE_CHOICES) || status == HttpStatus.SC_CONFLICT) {
-            var okResponse = fromJson(response.body(), DistribuerJournalpostResponse.class);
-            LOG.info("[HTTP {}] Distribuert {} med bestillingsId {}", status, journalpostId, okResponse.bestillingsId());
+            var bestillingsId = fromJson(response.body(), DistribuerJournalpostResponse.class).bestillingsId();
+            LOG.info("[HTTP {}] Distribuert {} med bestillingsId {}", status, journalpostId, bestillingsId);
             return Resultat.OK;
         } else if (status == HttpStatus.SC_BAD_REQUEST) {
-            var errorResponse = fromJson(response.body(), ErrorResponse.class);
-            LOG.warn("[HTTP {}] Brevdistribusjon feilet: Fikk svar '{}'.", status, errorResponse.message());
-            if (errorResponse.message().contains("Mottaker har ukjent adresse")) {
-                LOG.warn("[HTTP {}] Brevdistribusjon feilet. Bruker mangler adresse. Sjekk med fag om GOSYS oppgaven er opprettet for journalpostId {}",
+            var message = fromJson(response.body(), ErrorResponse.class).message();
+            LOG.warn("[HTTP {}] Brevdistribusjon feilet: Fikk svar '{}'.", status, message);
+            if (message.contains("Mottaker har ukjent adresse")) {
+                LOG.warn("[HTTP {}] Brevdistribusjon feilet. Bruker mangler adresse. Sjekk med fag om GOSYS oppgaven er opprettet for {}",
                         status, journalpostId);
                 return Resultat.MANGLER_ADRESSE;
             } else {
-                throw new IntegrasjonException("F-468815", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", status, endpoint, errorResponse.message()));
+                throw new IntegrasjonException("FP-468815", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", status, endpoint, message));
             }
         } else if (status == HttpStatus.SC_UNAUTHORIZED) {
-            var errorResponse = fromJson(response.body(), ErrorResponse.class);
-            throw new ManglerTilgangException("F-468815", String.format("[HTTP %s] Feilet mot %s pga <%s>", status, endpoint, errorResponse.message()));
+            var message = fromJson(response.body(), ErrorResponse.class).message();
+            throw new ManglerTilgangException("FP-468816", String.format("[HTTP %s] Feilet mot %s pga <%s>", status, endpoint, message));
         } else if (status == HttpStatus.SC_FORBIDDEN) {
-            throw new ManglerTilgangException("F-468815", String.format("[HTTP %s] Feilet mot %s", status, endpoint));
+            throw new ManglerTilgangException("FP-468817", String.format("[HTTP %s] Feilet mot %s", status, endpoint));
         } else if (status == HttpStatus.SC_NOT_FOUND) {
-            throw new TekniskException("F-468815", String.format("[HTTP %s] Feilet mot %s. Journalpost<%s> finnes ikke.", status, endpoint, journalpostId.getVerdi()));
+            throw new TekniskException("FP-468818", String.format("[HTTP %s] Feilet mot %s. %s finnes ikke.", status, endpoint, journalpostId));
         } else {
-            throw new IntegrasjonException("F-468815", String.format("[HTTP %s] Uventet respons fra %s", status, endpoint));
+            throw new IntegrasjonException("FP-468819", String.format("[HTTP %s] Uventet respons fra %s", status, endpoint));
         }
     }
 

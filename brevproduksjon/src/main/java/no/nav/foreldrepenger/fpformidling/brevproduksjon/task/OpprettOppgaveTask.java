@@ -13,24 +13,22 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 
 @ApplicationScoped
-@ProsessTask(value = "formidling.opprettOppgave", maxFailedRuns = 1)
+@ProsessTask(value = "formidling.opprettOppgave", maxFailedRuns = 2)
 public class OpprettOppgaveTask implements ProsessTaskHandler {
 
     private static final String OPPGAVEBESKRIVELSE = "Bruker har ukjent adresse. Kunne ikke sende brev. Send brev iht rutine.";
-
     private final OppgaverTjeneste oppgaverTjeneste;
     private final DomeneobjektProvider domeneobjektProvider;
 
     @Inject
-    public OpprettOppgaveTask(OppgaverTjeneste oppgaverTjeneste,
-                              DomeneobjektProvider domeneobjektProvider) {
+    public OpprettOppgaveTask(OppgaverTjeneste oppgaverTjeneste, DomeneobjektProvider domeneobjektProvider) {
         this.oppgaverTjeneste = oppgaverTjeneste;
         this.domeneobjektProvider = domeneobjektProvider;
     }
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
-        JournalpostId journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(JOURNALPOST_ID));
+        var journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(JOURNALPOST_ID));
         var behandlingUuid = prosessTaskData.getBehandlingUuid();
 
         var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);

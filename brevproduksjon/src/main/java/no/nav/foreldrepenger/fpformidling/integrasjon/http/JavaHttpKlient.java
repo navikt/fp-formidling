@@ -35,8 +35,8 @@ public abstract class JavaHttpKlient implements RequestKonfig, AuthKonfig {
                 .header(DEFAULT_NAV_CALLID, getCallId())
                 .header(ALT_NAV_CALL_ID, getCallId())
                 .timeout(Duration.ofSeconds(getTimeout()));
-                getAuthorization().map(token -> requestBuilder.header(AUTHORIZATION, OIDC_AUTH_HEADER_PREFIX + token));
-                getConsumerId().map(consumer -> requestBuilder.header(DEFAULT_NAV_CONSUMERID, consumer));
+                getAuthorization().ifPresent(token -> requestBuilder.header(AUTHORIZATION, OIDC_AUTH_HEADER_PREFIX + token));
+                getConsumerId().ifPresent(consumer -> requestBuilder.header(DEFAULT_NAV_CONSUMERID, consumer));
         return requestBuilder;
     }
 
@@ -58,11 +58,4 @@ public abstract class JavaHttpKlient implements RequestKonfig, AuthKonfig {
     protected <T> T fromJson(String json, Class<T> clazz) {
         return DefaultJsonMapper.fromJson(json, clazz);
     }
-
-    @Override
-    public abstract Optional<String> getAuthorization();
-    @Override
-    public abstract Optional<String> getConsumerId();
-    @Override
-    public abstract String getCallId();
 }

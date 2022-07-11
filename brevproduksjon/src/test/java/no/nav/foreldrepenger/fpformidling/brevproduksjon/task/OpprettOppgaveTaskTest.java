@@ -48,6 +48,6 @@ class OpprettOppgaveTaskTest {
 
         verify(tjeneste).opprettOppgave(eq(behandling), eq(journalpostId), any(String.class));
         verify(provider, times(1)).hentBehandling(behandlingUuId);
-        verify(provider, times(1)).hentFagsakBackend(eq(behandling));
+        verify(provider, times(1)).hentFagsakBackend(behandling);
     }
 }

@@ -28,14 +28,12 @@ import okhttp3.mockwebserver.MockWebServer;
 
 class JavaOppgaveRestKlientTest {
     private static MockedStatic<TokenProvider> TOKEN_PROVIDER_MOCKED_STATIC;
-    private static MockedStatic<MDCOperations> MDC_MOCK;
     private MockWebServer mockWebServer;
     private Oppgaver klient;
 
     @BeforeAll
     static void initStaticMocks() {
-        MDC_MOCK = Mockito.mockStatic(MDCOperations.class);
-        MDC_MOCK.when(MDCOperations::getCallId).thenReturn("test");
+        MDCOperations.putCallId();
 
         var idToken = Mockito.mock(OpenIDToken.class);
         when(idToken.token()).thenReturn("token_string");
@@ -45,7 +43,6 @@ class JavaOppgaveRestKlientTest {
 
     @AfterAll
     static void deregisterStaticMocks() {
-        MDC_MOCK.close();
         TOKEN_PROVIDER_MOCKED_STATIC.close();
     }
 
@@ -66,9 +63,11 @@ class JavaOppgaveRestKlientTest {
                 .setBody(body)
                 .setResponseCode(statusCode));
 
+        var request = createRequest(new JournalpostId("1234"), new AktørId("123456"));
         Exception exception = assertThrows(ManglerTilgangException.class, () -> {
-            klient.opprettetOppgave(createRequest(new JournalpostId("1234"), new AktørId("123456")));
+            klient.opprettetOppgave(request);
         });
+
         assertThat(exception.getMessage()).contains("401");
         assertThat(exception.getMessage()).contains(message);
     }
@@ -81,8 +80,9 @@ class JavaOppgaveRestKlientTest {
                 .addHeader("Content-Type", "application/json; charset=utf-8")
                 .setResponseCode(statusCode));
 
+        var request = createRequest(new JournalpostId("1234"), new AktørId("123456"));
         Exception exception = assertThrows(ManglerTilgangException.class, () -> {
-            klient.opprettetOppgave(createRequest(new JournalpostId("1234"), new AktørId("123456")));
+            klient.opprettetOppgave(request);
         });
         assertThat(exception.getMessage()).contains("403");
     }
@@ -98,8 +98,9 @@ class JavaOppgaveRestKlientTest {
                 .setBody(body)
                 .setResponseCode(statusCode));
 
+        var request = createRequest(new JournalpostId("1234"), new AktørId("123456"));
         Exception exception = assertThrows(IntegrasjonException.class, () -> {
-            klient.opprettetOppgave(createRequest(new JournalpostId("1234"), new AktørId("123456")));
+            klient.opprettetOppgave(request);
         });
         assertThat(exception.getMessage()).contains("400");
         assertThat(exception.getMessage()).contains(message);
@@ -108,7 +109,8 @@ class JavaOppgaveRestKlientTest {
     @Test
     void opprettOppgave_200() {
         var statusCode = 200;
-        var body = DefaultJsonMapper.toJson(new Oppgave(1234, "VURD_KONS", "FOR", Oppgavestatus.OPPRETTET, Prioritet.NORM));
+        var oppgavetype = "VURD_KONS";
+        var body = DefaultJsonMapper.toJson(new Oppgave(1234, oppgavetype, "FOR", Oppgavestatus.OPPRETTET, Prioritet.NORM));
 
         mockWebServer.enqueue(new MockResponse()
                 .addHeader("Content-Type", "application/json; charset=utf-8")
@@ -116,6 +118,12 @@ class JavaOppgaveRestKlientTest {
                 .setResponseCode(statusCode));
 
         var resultat = klient.opprettetOppgave(createRequest(new JournalpostId("1234"), new AktørId("123456")));
+
+        assertThat(resultat).isNotNull();
+        assertThat(resultat.oppgavetype()).isEqualTo(oppgavetype);
+        assertThat(resultat.status()).isEqualTo(Oppgavestatus.OPPRETTET);
+        assertThat(resultat.prioritet()).isEqualTo(Prioritet.NORM);
+
     }
 
     private OpprettOppgaveRequest createRequest(JournalpostId journalpostId,

@@ -58,16 +58,16 @@ class JavaOppgaveRestKlient extends JavaHttpKlient implements Oppgaver {
             LOG.info("[HTTP {}] Oppgave med id: {} opprettet.", status, okResponse.id());
             return okResponse;
         } else if (status == HttpStatus.SC_BAD_REQUEST) {
-            var errorResponse = fromJson(response.body(), ErrorResponse.class);
-            LOG.info("[HTTP {}] Oppretting av oppgave feilet: Fikk svar '{}'.", status, errorResponse.feilmelding());
-            throw new IntegrasjonException("F-468815", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", status, endpoint, errorResponse.feilmelding()));
+            var feilmelding = fromJson(response.body(), ErrorResponse.class).feilmelding();
+            LOG.info("[HTTP {}] Oppretting av oppgave feilet: Fikk svar '{}'.", status, feilmelding);
+            throw new IntegrasjonException("FP-468820", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", status, endpoint, feilmelding));
         } else if (status == HttpStatus.SC_UNAUTHORIZED) {
             var errorResponse = fromJson(response.body(), ErrorResponse.class);
-            throw new ManglerTilgangException("F-468815", String.format("[HTTP %s] Feilet mot %s pga <%s>", status, endpoint, errorResponse.feilmelding()));
+            throw new ManglerTilgangException("F-468821", String.format("[HTTP %s] Feilet mot %s pga <%s>", status, endpoint, errorResponse.feilmelding()));
         } else if (status == HttpStatus.SC_FORBIDDEN) {
-            throw new ManglerTilgangException("F-468815", String.format("[HTTP %s] Feilet mot %s", status, endpoint));
+            throw new ManglerTilgangException("F-468822", String.format("[HTTP %s] Feilet mot %s", status, endpoint));
         } else {
-            throw new IntegrasjonException("F-468815", String.format("[HTTP %s] Uventet respons fra %s", status, endpoint));
+            throw new IntegrasjonException("F-468823", String.format("[HTTP %s] Uventet respons fra %s", status, endpoint));
         }
     }
 

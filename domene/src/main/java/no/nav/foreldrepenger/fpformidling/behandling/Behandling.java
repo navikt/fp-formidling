@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
@@ -51,6 +50,7 @@ public class Behandling {
     public boolean behandlesAvKlageinstans() {
         return behandlendeEnhetNavn != null && behandlendeEnhetNavn.startsWith("NAV Klageinstans");
     }
+
     public Behandlingsresultat getBehandlingsresultat() {
         return behandlingsresultat;
     }
@@ -100,9 +100,7 @@ public class Behandling {
     }
 
     public boolean harBehandlingÅrsak(BehandlingÅrsakType behandlingÅrsak) {
-        return getBehandlingÅrsaker().stream()
-                .map(BehandlingÅrsak::getBehandlingÅrsakType)
-                .anyMatch(behandlingÅrsak::equals);
+        return getBehandlingÅrsaker().stream().map(BehandlingÅrsak::getBehandlingÅrsakType).anyMatch(behandlingÅrsak::equals);
     }
 
     public boolean erFørstegangssøknad() {

@@ -27,14 +27,12 @@ import okhttp3.mockwebserver.MockWebServer;
 
 class JavaDokdistRestKlientTest {
     private static MockedStatic<TokenProvider> TOKEN_PROVIDER_MOCKED_STATIC;
-    private static MockedStatic<MDCOperations> MDC_MOCK;
     private MockWebServer mockWebServer;
     private Dokdist klient;
 
     @BeforeAll
     static void initStaticMocks() {
-        MDC_MOCK = Mockito.mockStatic(MDCOperations.class);
-        MDC_MOCK.when(MDCOperations::getCallId).thenReturn("test");
+        MDCOperations.putCallId();
 
         var idToken = Mockito.mock(OpenIDToken.class);
         when(idToken.token()).thenReturn("token_string");
@@ -44,7 +42,6 @@ class JavaDokdistRestKlientTest {
 
     @AfterAll
     static void deregisterStaticMocks() {
-        MDC_MOCK.close();
         TOKEN_PROVIDER_MOCKED_STATIC.close();
     }
 
@@ -65,8 +62,9 @@ class JavaDokdistRestKlientTest {
                 .setBody(body)
                 .setResponseCode(statusCode));
 
+        var journalpostId = new JournalpostId("12334233");
         Exception exception = assertThrows(ManglerTilgangException.class, () -> {
-            klient.distribuerJournalpost(new JournalpostId("12334233"), "test_bestillingId", Distribusjonstype.VEDTAK);
+            klient.distribuerJournalpost(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
         });
         assertThat(exception.getMessage()).contains("401");
         assertThat(exception.getMessage()).contains(message);
@@ -80,8 +78,9 @@ class JavaDokdistRestKlientTest {
                 .addHeader("Content-Type", "application/json; charset=utf-8")
                 .setResponseCode(statusCode));
 
+        var journalpostId = new JournalpostId("12334233");
         Exception exception = assertThrows(ManglerTilgangException.class, () -> {
-            klient.distribuerJournalpost(new JournalpostId("12334233"), "test_bestillingId", Distribusjonstype.VEDTAK);
+            klient.distribuerJournalpost(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
         });
         assertThat(exception.getMessage()).contains("403");
     }
@@ -97,8 +96,9 @@ class JavaDokdistRestKlientTest {
                 .setBody(body)
                 .setResponseCode(statusCode));
 
+        var journalpostId = new JournalpostId("12334233");
         Exception exception = assertThrows(IntegrasjonException.class, () -> {
-            klient.distribuerJournalpost(new JournalpostId("12334233"), "test_bestillingId", Distribusjonstype.VEDTAK);
+            klient.distribuerJournalpost(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
         });
         assertThat(exception.getMessage()).contains("400");
         assertThat(exception.getMessage()).contains(message);
@@ -115,7 +115,8 @@ class JavaDokdistRestKlientTest {
                 .setBody(body)
                 .setResponseCode(statusCode));
 
-        var resultat = klient.distribuerJournalpost(new JournalpostId("12334233"), "test_bestillingId",
+        var journalpostId = new JournalpostId("12334233");
+        var resultat = klient.distribuerJournalpost(journalpostId, "test_bestillingId",
                 Distribusjonstype.VEDTAK);
 
         assertThat(resultat).isEqualTo(Dokdist.Resultat.MANGLER_ADRESSE);
@@ -124,8 +125,8 @@ class JavaDokdistRestKlientTest {
     @Test
     void distribuerJournalpost_404() {
         var statusCode = 404;
-        var journalpostId = "12334233";
-        var message = "Journalpost<" + journalpostId + "> finnes ikke.";
+        var journalpostId = new JournalpostId("12334233");
+        var message = journalpostId + " finnes ikke.";
         var body = DefaultJsonMapper.toJson(new ErrorResponse(statusCode, "Unauthorized", message, "/"));
 
         mockWebServer.enqueue(new MockResponse()
@@ -134,7 +135,7 @@ class JavaDokdistRestKlientTest {
                 .setResponseCode(statusCode));
 
         Exception exception = assertThrows(TekniskException.class, () -> {
-            klient.distribuerJournalpost(new JournalpostId(journalpostId), "test_bestillingId", Distribusjonstype.VEDTAK);
+            klient.distribuerJournalpost(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
         });
         assertThat(exception.getMessage()).contains("404");
         assertThat(exception.getMessage()).contains(message);

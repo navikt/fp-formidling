@@ -50,8 +50,10 @@ class DistribuerBrevTaskTest {
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId);
         prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, bestillingsid);
 
+        var distribuerBrevTask = new DistribuerBrevTask(dokdist, taskTjeneste);
+
         Exception thrown = Assertions.assertThrows(NullPointerException.class, () -> {
-            new DistribuerBrevTask(dokdist, taskTjeneste).doTask(prosessTaskData);
+            distribuerBrevTask.doTask(prosessTaskData);
         });
 
         Assertions.assertEquals("Name is null", thrown.getMessage());

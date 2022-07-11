@@ -131,7 +131,7 @@ public class DokgenBrevproduksjonTjeneste {
             throw new TekniskException("FPFORMIDLING-221006", String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s",
                     dokumentMal.getKode(), behandling.getUuid().toString(), bestillingType), e);
         }
-        LOGGER.info("Dokument av type {} i behandling id {} er forhåndsvist", dokumentMal.getKode(), behandling.getUuid().toString());
+        LOGGER.info("Dokument av type {} i behandling id {} er generert.", dokumentMal.getKode(), behandling.getUuid().toString());
         return brev;
     }
 

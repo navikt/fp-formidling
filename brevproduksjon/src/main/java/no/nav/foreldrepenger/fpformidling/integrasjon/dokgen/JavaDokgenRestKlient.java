@@ -2,13 +2,12 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -53,13 +52,8 @@ public class JavaDokgenRestKlient extends JavaHttpKlient implements Dokgen {
                     .build();
 
             LOG.info("Kaller Dokgen for generering av mal {} på språk {}", maltype, språkkode);
-            var response= sendByteArrayRequest(request);
-
-            if (response.statusCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                consumeError(response);
-            }
-            pdf = Optional.ofNullable(handleResponse(response, HttpResponse::body));
-
+            var fileString = handleResponse(sendStringRequest(request), HttpResponse::body, consumeError());
+            pdf = Optional.ofNullable(fileString != null ? fileString.getBytes(UTF_8) : null);
         } catch (Exception e) {
             throw new TekniskException("FPFORMIDLING-946544",
                     String.format("Fikk feil ved kall til dokgen for mal %s og språkkode %s", maltype, språkkode), e);
@@ -72,14 +66,14 @@ public class JavaDokgenRestKlient extends JavaHttpKlient implements Dokgen {
         return pdf.get();
     }
 
-    private void consumeError(HttpResponse<byte[]> response) {
-        if (response.body() != null) {
+    private Consumer<HttpResponse<String>> consumeError() {
+        return response -> {
             var statusCode = response.statusCode();
             var endpoint = response.uri();
-            var error = fromJson(Arrays.toString(response.body()), ErrorResponse.class).message();
+            var error = fromJson(response.body(), ErrorResponse.class).message();
             throw new IntegrasjonException("FP-468820", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", statusCode,
                     endpoint, error));
-        }
+        };
     }
 
     private String getSpråkkode(Språkkode språkkode) {

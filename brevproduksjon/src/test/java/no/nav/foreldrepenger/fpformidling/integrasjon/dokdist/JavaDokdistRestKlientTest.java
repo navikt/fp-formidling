@@ -1,19 +1,19 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokdist;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostResponse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.ErrorResponse;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.ManglerTilgangException;
@@ -54,7 +54,7 @@ class JavaDokdistRestKlientTest {
     @Test
     void distribuerJournalpost_401() {
         var statusCode = 401;
-        var message = "Bruker mangler tilgang.";
+        var message = "Mangler tilgang.";
         var body = DefaultJsonMapper.toJson(new ErrorResponse(statusCode, "Unauthorized", message, "/"));
 
         mockWebServer.enqueue(new MockResponse()
@@ -63,8 +63,9 @@ class JavaDokdistRestKlientTest {
                 .setResponseCode(statusCode));
 
         var journalpostId = new JournalpostId("12334233");
+        var request = lagRequest(journalpostId);
         Exception exception = assertThrows(ManglerTilgangException.class, () -> {
-            klient.distribuerJournalpost(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
+            klient.distribuerJournalpost(request);
         });
         assertThat(exception.getMessage()).contains("401");
         assertThat(exception.getMessage()).contains(message);
@@ -79,9 +80,11 @@ class JavaDokdistRestKlientTest {
                 .setResponseCode(statusCode));
 
         var journalpostId = new JournalpostId("12334233");
+        var request = lagRequest(journalpostId);
         Exception exception = assertThrows(ManglerTilgangException.class, () -> {
-            klient.distribuerJournalpost(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
+            klient.distribuerJournalpost(request);
         });
+
         assertThat(exception.getMessage()).contains("403");
     }
 
@@ -97,9 +100,11 @@ class JavaDokdistRestKlientTest {
                 .setResponseCode(statusCode));
 
         var journalpostId = new JournalpostId("12334233");
+        var request = lagRequest(journalpostId);
         Exception exception = assertThrows(IntegrasjonException.class, () -> {
-            klient.distribuerJournalpost(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
+            klient.distribuerJournalpost(request);
         });
+
         assertThat(exception.getMessage()).contains("400");
         assertThat(exception.getMessage()).contains(message);
     }
@@ -116,27 +121,52 @@ class JavaDokdistRestKlientTest {
                 .setResponseCode(statusCode));
 
         var journalpostId = new JournalpostId("12334233");
-        var resultat = klient.distribuerJournalpost(journalpostId, "test_bestillingId",
-                Distribusjonstype.VEDTAK);
+        var request = lagRequest(journalpostId);
+        var resultat = klient.distribuerJournalpost(request);
 
         assertThat(resultat).isEqualTo(Dokdist.Resultat.MANGLER_ADRESSE);
     }
 
     @Test
-    void distribuerJournalpost_404() {
-        var statusCode = 404;
+    @DisplayName("""
+            409 Conflict
+            Journalposten er allerede distribuert så man kan hoppe over distribueringen.
+            Kan håndteres som at en distribusjon har gått OK.
+            Man skal også få samme svar i respons payload som en OK distribusjon (idempotent receiver).""")
+    void distribuerJournalpost_409_accept_conflict() {
+        var statusCode = 409;
         var journalpostId = new JournalpostId("12334233");
-        var message = journalpostId + " finnes ikke.";
-        var body = DefaultJsonMapper.toJson(new ErrorResponse(statusCode, "Unauthorized", message, "/"));
+        var bestillingsId = "123456645654";
+        var body = DefaultJsonMapper.toJson(new DistribuerJournalpostResponse(bestillingsId));
 
         mockWebServer.enqueue(new MockResponse()
                 .addHeader("Content-Type", "application/json; charset=utf-8")
                 .setBody(body)
                 .setResponseCode(statusCode));
 
+        var request = lagRequest(journalpostId);
+        var resultat = klient.distribuerJournalpost(request);
+
+        assertThat(resultat).isEqualTo(Dokdist.Resultat.OK);
+    }
+
+    @Test
+    void distribuerJournalpost_404() {
+        var statusCode = 404;
+        var journalpostId = new JournalpostId("12334233");
+        var message = "[HTTP 404] Feilet";
+        var body = DefaultJsonMapper.toJson(new ErrorResponse(statusCode, "not_found", message, "/"));
+
+        mockWebServer.enqueue(new MockResponse()
+                .addHeader("Content-Type", "application/json; charset=utf-8")
+                .setBody(body)
+                .setResponseCode(statusCode));
+
+        var request = lagRequest(journalpostId);
         Exception exception = assertThrows(TekniskException.class, () -> {
-            klient.distribuerJournalpost(journalpostId, "test_bestillingId", Distribusjonstype.VEDTAK);
+            klient.distribuerJournalpost(request);
         });
+
         assertThat(exception.getMessage()).contains("404");
         assertThat(exception.getMessage()).contains(message);
     }
@@ -152,9 +182,19 @@ class JavaDokdistRestKlientTest {
                 .setBody(body)
                 .setResponseCode(statusCode));
 
-        var resultat = klient.distribuerJournalpost(new JournalpostId("1231"), "test_bestillingId",
-                Distribusjonstype.VEDTAK);
+        var journalpostId = new JournalpostId("1231");
+        var request = lagRequest(journalpostId);
+        var resultat = klient.distribuerJournalpost(request);
 
         assertThat(resultat).isEqualTo(Dokdist.Resultat.OK);
+    }
+
+    private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId) {
+        return new DistribuerJournalpostRequest(journalpostId.getVerdi(),
+                "test_bestillingId",
+                Fagsystem.FPSAK.getOffisiellKode(),
+                Fagsystem.FPSAK.getKode(),
+                Distribusjonstype.VEDTAK,
+                Distribusjonstidspunkt.KJERNETID);
     }
 }

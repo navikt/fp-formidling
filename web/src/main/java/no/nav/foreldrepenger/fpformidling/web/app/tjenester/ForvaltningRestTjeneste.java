@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
@@ -39,7 +40,7 @@ public class ForvaltningRestTjeneste {
     }
 
     @Inject
-    public ForvaltningRestTjeneste(/* @Jersey */ Dokgen dokgenRestKlient) {
+    public ForvaltningRestTjeneste(@JavaClient Dokgen dokgenRestKlient) {
         this.dokgenRestKlient = dokgenRestKlient;
     }
 

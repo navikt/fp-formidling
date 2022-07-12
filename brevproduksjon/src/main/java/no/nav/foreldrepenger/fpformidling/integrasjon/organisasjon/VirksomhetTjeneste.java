@@ -6,7 +6,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.vedtak.felles.integrasjon.organisasjon.OrgInfo;
-import no.nav.vedtak.felles.integrasjon.organisasjon.OrganisasjonRestKlient;
 
 @ApplicationScoped
 public class VirksomhetTjeneste {

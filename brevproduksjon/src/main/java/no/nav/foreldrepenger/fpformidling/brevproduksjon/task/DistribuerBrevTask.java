@@ -10,8 +10,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Dokdist;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.DistribuerJournalpostRequest;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstidspunkt;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
@@ -37,13 +40,18 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
         JournalpostId journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(JOURNALPOST_ID));
         var bestillingId = prosessTaskData.getPropertyValue(BESTILLING_ID);
         var distribusjonstype = prosessTaskData.getPropertyValue(DISTRIBUSJONSTYPE);
-        var resultat = dokdist.distribuerJournalpost(journalpostId, bestillingId, Distribusjonstype.valueOf(distribusjonstype));
+        var resultat = dokdist.distribuerJournalpost(lagRequest(journalpostId, bestillingId, Distribusjonstype.valueOf(distribusjonstype)));
 
         if (Dokdist.Resultat.MANGLER_ADRESSE.equals(resultat)) {
             var behandlingUuid = prosessTaskData.getBehandlingUuid();
             var saksnummer = prosessTaskData.getSaksnummer();
             opprettGosysOppgaveTask(journalpostId, behandlingUuid, saksnummer);
         }
+    }
+
+    private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {
+        return new DistribuerJournalpostRequest(journalpostId.getVerdi(), bestillingId, Fagsystem.FPSAK.getOffisiellKode(),
+                Fagsystem.FPSAK.getKode(), distribusjonstype, Distribusjonstidspunkt.KJERNETID);
     }
 
     private void opprettGosysOppgaveTask(JournalpostId journalpostId, UUID behandlingUuId, String saksnummer) {

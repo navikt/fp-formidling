@@ -14,8 +14,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Dokdist;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
-import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.DistribuerJournalpostRequest;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 
@@ -37,7 +37,7 @@ class DistribuerBrevTaskTest {
 
         new DistribuerBrevTask(dokdist, taskTjeneste).doTask(prosessTaskData);
 
-        verify(dokdist).distribuerJournalpost(new JournalpostId(journalpostId), bestillingsid, distribusjonstype);
+        verify(dokdist).distribuerJournalpost(any(DistribuerJournalpostRequest.class));
         verify(taskTjeneste, never()).lagre(any(ProsessTaskData.class));
     }
 
@@ -52,9 +52,7 @@ class DistribuerBrevTaskTest {
 
         var distribuerBrevTask = new DistribuerBrevTask(dokdist, taskTjeneste);
 
-        Exception thrown = Assertions.assertThrows(NullPointerException.class, () -> {
-            distribuerBrevTask.doTask(prosessTaskData);
-        });
+        Exception thrown = Assertions.assertThrows(NullPointerException.class, () -> distribuerBrevTask.doTask(prosessTaskData));
 
         Assertions.assertEquals("Name is null", thrown.getMessage());
         verify(taskTjeneste, never()).lagre(any(ProsessTaskData.class));
@@ -66,7 +64,7 @@ class DistribuerBrevTaskTest {
         var bestillingsid = "456789";
         var distribusjonstype = Distribusjonstype.VEDTAK;
 
-        when(dokdist.distribuerJournalpost(new JournalpostId(journalpostId), bestillingsid, distribusjonstype)).thenReturn(
+        when(dokdist.distribuerJournalpost(any(DistribuerJournalpostRequest.class))).thenReturn(
                 Dokdist.Resultat.MANGLER_ADRESSE);
 
         ProsessTaskData prosessTaskData = opprettProsessTaskData(journalpostId, bestillingsid, distribusjonstype);
@@ -82,7 +80,7 @@ class DistribuerBrevTaskTest {
         var bestillingsid = "456789";
         var distribusjonstype = Distribusjonstype.VEDTAK;
 
-        when(dokdist.distribuerJournalpost(new JournalpostId(journalpostId), bestillingsid, distribusjonstype)).thenReturn(
+        when(dokdist.distribuerJournalpost(any(DistribuerJournalpostRequest.class))).thenReturn(
                 Dokdist.Resultat.OK);
 
         ProsessTaskData prosessTaskData = opprettProsessTaskData(journalpostId, bestillingsid, distribusjonstype);

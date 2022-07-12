@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2.Oppgave;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2.Oppgaver;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2.OpprettOppgaveRequest;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2.Prioritet;
+import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient.Oppgave;
+import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient.Oppgaver;
+import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient.OpprettOppgaveRequest;
+import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient.Prioritet;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 

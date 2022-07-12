@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DistribusjonstypeUtleder.utledFor;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype.ANNET;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype.VEDTAK;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype.VIKTIG;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype.ANNET;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype.VEDTAK;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype.VIKTIG;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;

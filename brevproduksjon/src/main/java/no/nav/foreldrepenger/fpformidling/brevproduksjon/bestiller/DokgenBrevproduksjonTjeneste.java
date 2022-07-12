@@ -104,6 +104,8 @@ public class DokgenBrevproduksjonTjeneste {
 
             JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
 
+            LOG.info("Journalført {} for bestilling {}", journalpostId, unikBestillingsUuidPerDokFelles);
+
             if (innsynMedVedlegg) {
                 leggTilVedleggOgFerdigstillForsendelse(dokumentHendelse.getBehandlingUuid(), journalpostId);
             }

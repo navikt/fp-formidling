@@ -86,7 +86,7 @@ public class DokgenBrevproduksjonTjeneste {
             byte[] brev = genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentFelles, bestill);
 
             var unikBestillingsUuidPerDokFelles = dokumentHendelse.getBestillingUuid().toString();
-            if( teller > 0) {
+            if (teller > 0) {
                 unikBestillingsUuidPerDokFelles = dokumentHendelse.getBestillingUuid() + "-" + teller;
             }
             teller++;

@@ -40,4 +40,8 @@ public class DokumentHendelseTjeneste {
         LOGGER.info("Lagret hendelse: {} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingUuid());
         return Optional.of(hendelse);
     }
+
+    public Optional<DokumentHendelse> hentHendelse(Long id) {
+        return Optional.ofNullable(hendelseRepository.hentDokumentHendelseMedId(id));
+    }
 }

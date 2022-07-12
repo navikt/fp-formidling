@@ -154,7 +154,6 @@ public class ForvaltningRestTjeneste {
     public static class AbacSupplier implements Function<Object, AbacDataAttributter> {
         @Override
         public AbacDataAttributter apply(Object obj) {
-            var req = (Long) obj;
             return AbacDataAttributter.opprett();
         }
     }

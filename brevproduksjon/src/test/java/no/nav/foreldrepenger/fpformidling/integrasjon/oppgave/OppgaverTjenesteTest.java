@@ -12,9 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2.Oppgave;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2.Oppgaver;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2.OpprettOppgaveRequest;
+import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient.Oppgave;
+import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient.Oppgaver;
+import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient.OpprettOppgaveRequest;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 

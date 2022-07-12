@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2;
+package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

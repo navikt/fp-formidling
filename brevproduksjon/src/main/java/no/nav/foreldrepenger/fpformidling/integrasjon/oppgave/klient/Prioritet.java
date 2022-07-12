@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2;
+package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient;
 
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 

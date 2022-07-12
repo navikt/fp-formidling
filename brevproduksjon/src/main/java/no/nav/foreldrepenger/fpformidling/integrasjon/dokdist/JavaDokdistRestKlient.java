@@ -15,9 +15,6 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostRequest;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.DistribuerJournalpostResponse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.ErrorResponse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaHttpKlient;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
@@ -29,7 +26,7 @@ import no.nav.vedtak.sikkerhet.oidc.token.TokenProvider;
 
 @ApplicationScoped
 @JavaClient
-public class JavaDokdistRestKlient extends JavaHttpKlient implements Dokdist {
+class JavaDokdistRestKlient extends JavaHttpKlient implements Dokdist {
 
     private static final Logger LOG = LoggerFactory.getLogger(JavaDokdistRestKlient.class);
 

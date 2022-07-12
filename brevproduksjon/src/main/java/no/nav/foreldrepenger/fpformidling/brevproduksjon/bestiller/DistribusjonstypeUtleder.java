@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto.Distribusjonstype;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 class DistribusjonstypeUtleder {

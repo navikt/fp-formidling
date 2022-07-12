@@ -1,9 +1,6 @@
-package no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.dto;
+package no.nav.foreldrepenger.fpformidling.integrasjon.dokdist;
 
 import javax.validation.constraints.NotNull;
-
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
-import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 
 public record DistribuerJournalpostRequest(@NotNull String journalpostId,
                                            @NotNull String batchId,

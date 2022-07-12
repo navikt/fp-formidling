@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.v2;
+package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

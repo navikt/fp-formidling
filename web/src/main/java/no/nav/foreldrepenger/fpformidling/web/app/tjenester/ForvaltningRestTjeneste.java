@@ -7,6 +7,7 @@ import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -41,11 +42,14 @@ import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRes
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev.BrevRestTjeneste;
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingV2Dto;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
+import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
+import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 
 @Path("/forvaltning")
@@ -110,6 +114,7 @@ public class ForvaltningRestTjeneste {
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response rebestillDokument(
             @Parameter(description = "Hendelse ID til den opprinelige bestillingen.")
+            @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class)
             @Valid @NotNull Long hendelseId) {
 
         var originalHendelse = dokumentHendelseTjeneste.hentHendelse(hendelseId);
@@ -144,5 +149,13 @@ public class ForvaltningRestTjeneste {
         prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
         taskTjeneste.lagre(prosessTaskData);
+    }
+
+    public static class AbacSupplier implements Function<Object, AbacDataAttributter> {
+        @Override
+        public AbacDataAttributter apply(Object obj) {
+            var req = (Long) obj;
+            return AbacDataAttributter.opprett();
+        }
     }
 }

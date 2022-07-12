@@ -39,7 +39,7 @@ import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DokgenBrevproduksjonTjeneste.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DokgenBrevproduksjonTjeneste.class);
     private static final Logger SECURE_LOGGER = LoggerFactory.getLogger("secureLogger");
 
     private DokumentFellesDataMapper dokumentFellesDataMapper;
@@ -129,9 +129,11 @@ public class DokgenBrevproduksjonTjeneste {
             dokumentdata.getFelles().anonymiser();
             SECURE_LOGGER.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
             throw new TekniskException("FPFORMIDLING-221006", String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s",
-                    dokumentMal.getKode(), behandling.getUuid().toString(), bestillingType), e);
+                    dokumentMal.getKode(), behandling.getUuid(), bestillingType), e);
         }
-        LOGGER.info("Dokument av type {} i behandling id {} er generert.", dokumentMal.getKode(), behandling.getUuid().toString());
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Dokument av type {} i behandling id {} er generert.", dokumentMal.getKode(), behandling.getUuid());
+        }
         return brev;
     }
 

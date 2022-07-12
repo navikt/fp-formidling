@@ -79,7 +79,7 @@ public abstract class JavaHttpKlient implements RequestKonfig, AuthKonfig {
         var statusCode = response.statusCode();
         var endpoint = response.uri();
         if (response.body() == null || statusCode == HttpURLConnection.HTTP_NO_CONTENT) {
-            LOG.info(String.format("[HTTP %s] Ingen resultat fra %s", statusCode, endpoint));
+            LOG.info("[HTTP {}] Ingen resultat fra {}", statusCode, endpoint);
             return null;
         }
         if (statusCode == HttpURLConnection.HTTP_UNAUTHORIZED || statusCode == HttpURLConnection.HTTP_FORBIDDEN) {
@@ -91,10 +91,8 @@ public abstract class JavaHttpKlient implements RequestKonfig, AuthKonfig {
         if (statusCode == HttpURLConnection.HTTP_NOT_FOUND) {
             throw new TekniskException("NOT-FOUND", String.format("[HTTP %s] Feilet mot %s.", statusCode, endpoint));
         }
-        if (statusCode == HttpURLConnection.HTTP_BAD_REQUEST) {
-            if (errorConsumer != null) {
-                errorConsumer.accept(response);
-            }
+        if (statusCode == HttpURLConnection.HTTP_BAD_REQUEST && errorConsumer != null) {
+            errorConsumer.accept(response);
         }
         throw new IntegrasjonException("REST-FEIL", String.format("[HTTP %s] Uventet respons fra %s", statusCode, endpoint));
     }

@@ -42,7 +42,7 @@ public class JavaDokgenRestKlient extends JavaHttpKlient implements Dokgen {
 
     @Override
     public byte[] genererPdf(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
-        Optional<byte[]> pdf;
+        byte[] pdf;
         try {
             String templatePath = String.format("/template/%s/template_%s", maltype.toLowerCase(), getSpråkkode(språkkode));
             var endpoint = URI.create(dokgenBaseUri + templatePath + "/create-pdf-variation");
@@ -53,18 +53,16 @@ public class JavaDokgenRestKlient extends JavaHttpKlient implements Dokgen {
                     .build();
 
             LOG.info("Kaller Dokgen for generering av mal {} på språk {}", maltype, språkkode);
-            var response = sendByteArrayRequest(request);
-            pdf = Optional.ofNullable(handleResponse(response, HttpResponse::body, consumeError()));
+            pdf = handleResponse(sendByteArrayRequest(request), HttpResponse::body, consumeError());
         } catch (Exception e) {
             throw new TekniskException("FPFORMIDLING-946544",
                     String.format("Fikk feil ved kall til dokgen for mal %s og språkkode %s", maltype, språkkode), e);
         }
-
-        if (pdf.isEmpty()) {
+        if (pdf == null || pdf.length == 0) {
             throw new TekniskException("FPFORMIDLING-946543",
                     String.format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", maltype, språkkode));
         }
-        return pdf.get();
+        return pdf;
     }
 
     private Consumer<HttpResponse<byte[]>> consumeError() {

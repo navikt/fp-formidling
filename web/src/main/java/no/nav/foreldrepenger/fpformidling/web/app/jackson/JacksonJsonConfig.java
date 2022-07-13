@@ -9,7 +9,6 @@ import javax.ws.rs.ext.Provider;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -34,14 +33,8 @@ public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
         objectMapper.registerSubtypes(getJsonTypeNameClasses());
     }
 
-    public static Module defaultModule() {
-        return SER_DESER;
-    }
-
     private static SimpleModule createModule() {
-        SimpleModule module = new SimpleModule("VL-REST", new Version(1, 0, 0, null, null, null));
-
-        return module;
+        return new SimpleModule("VL-REST", new Version(1, 0, 0, null, null, null));
     }
 
     /**
@@ -56,10 +49,6 @@ public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Kunne ikke konvertere CodeSource location til URI", e);
         }
-    }
-
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
     }
 
     @Override

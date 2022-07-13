@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpformidling.hendelser;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.EntityManager;
@@ -13,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import no.nav.foreldrepenger.fpformidling.dbstoette.JpaExtension;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(JpaExtension.class)
 public class HendelseRepositoryImplTest {
@@ -33,15 +33,18 @@ public class HendelseRepositoryImplTest {
                 .medBehandlingUuid(behandlingUuid)
                 .medBestillingUuid(bestiilingUuid)
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+                .medDokumentMalType(DokumentMalType.FORELDREPENGER_ANNULLERT)
                 .build();
         hendelseRepository.lagre(dokumentHendelse);
 
-        List<DokumentHendelse> hendelseListe = hendelseRepository.hentDokumentHendelserForBehandling(behandlingUuid);
+        DokumentHendelse hendelse = hendelseRepository.hentDokumentHendelseMedId(dokumentHendelse.getId());
 
-        assertThat(hendelseListe).hasSize(1);
+        assertThat(hendelse).isNotNull();
 
-        assertThat(hendelseRepository.hentDokumentHendelseMedId(hendelseListe.get(0).getId()))
-                .isNotNull();
+        assertThat(hendelseRepository.erDokumentHendelseMottatt(behandlingUuid, DokumentMalType.FORELDREPENGER_ANNULLERT))
+                .isTrue();
+        assertThat(hendelseRepository.erDokumentHendelseMottatt(behandlingUuid, DokumentMalType.FORELDREPENGER_AVSLAG))
+                .isFalse();
         assertThat(hendelseRepository.finnesHendelseMedUuidAllerede(bestiilingUuid)).isTrue();
 
     }

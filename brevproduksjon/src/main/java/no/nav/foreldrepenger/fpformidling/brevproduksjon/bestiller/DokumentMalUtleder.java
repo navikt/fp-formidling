@@ -14,14 +14,14 @@ import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.hendelser.HendelseRepository;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BehandlingRestKlient;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
 import no.nav.foreldrepenger.fpformidling.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BehandlingRestKlient;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
 
@@ -30,7 +30,7 @@ class DokumentMalUtleder {
 
     private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingUuid: ";
     private DomeneobjektProvider domeneobjektProvider;
-    private HendelseRepository hendelseRepository;
+    private DokumentHendelseTjeneste dokumentHendelseTjeneste;
     private BehandlingRestKlient behandlingRestKlient;
 
     public DokumentMalUtleder() {
@@ -39,10 +39,10 @@ class DokumentMalUtleder {
 
     @Inject
     public DokumentMalUtleder(DomeneobjektProvider domeneobjektProvider,
-                              HendelseRepository hendelseRepository,
+                              DokumentHendelseTjeneste dokumentHendelseTjeneste,
                               BehandlingRestKlient behandlingRestKlient) {
         this.domeneobjektProvider = domeneobjektProvider;
-        this.hendelseRepository = hendelseRepository;
+        this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
         this.behandlingRestKlient = behandlingRestKlient;
     }
 
@@ -152,9 +152,7 @@ class DokumentMalUtleder {
     }
 
     private boolean harSendtVarselOmRevurdering(Behandling behandling) {
-        return hendelseRepository.hentDokumentHendelserForBehandling(behandling.getUuid())
-                .stream().map(DokumentHendelse::getDokumentMalType)
-                .anyMatch(DokumentMalType.VARSEL_OM_REVURDERING::equals)
+        return dokumentHendelseTjeneste.erDokumentHendelseMottatt(behandling.getUuid(), DokumentMalType.VARSEL_OM_REVURDERING)
                 || Boolean.TRUE.equals(behandlingRestKlient.harSendtVarselOmRevurdering(behandling.getResourceLinker()).orElse(false));
     }
 

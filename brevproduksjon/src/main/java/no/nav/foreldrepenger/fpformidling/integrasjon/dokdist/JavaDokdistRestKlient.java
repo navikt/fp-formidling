@@ -65,6 +65,7 @@ class JavaDokdistRestKlient extends JavaHttpKlient implements Dokdist {
             return Resultat.OK;
         };
     }
+
     private Resultat consumeError(HttpResponse<String> response, JournalpostId journalpostId) {
         var message = fromJson(response.body(), ErrorResponse.class).message();
         var statusCode = response.statusCode();

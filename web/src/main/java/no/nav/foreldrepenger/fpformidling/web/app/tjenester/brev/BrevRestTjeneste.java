@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
-import no.nav.foreldrepenger.fpformidling.web.app.tjenester.DokumentHendelseTjeneste;
+import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingV2Dto;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.hendelser;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -41,12 +40,6 @@ public class HendelseRepository {
         TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where id=:hendelseId", DokumentHendelse.class);
         query.setParameter("hendelseId", hendelseId);
         return HibernateVerktøy.hentEksaktResultat(query);
-    }
-
-    public List<DokumentHendelse> hentDokumentHendelserForBehandling(UUID behandlingUuid) {
-        TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid", DokumentHendelse.class);
-        query.setParameter("behandlingUuid", behandlingUuid);
-        return query.getResultList();
     }
 
     public boolean erDokumentHendelseMottatt(UUID behandlingUuid, DokumentMalType dokumentMal) {

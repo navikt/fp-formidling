@@ -4,7 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
-import no.nav.foreldrepenger.fpformidling.hendelser.HendelseRepository;
+import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
@@ -14,18 +14,18 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 public class ProduserBrevTask implements ProsessTaskHandler {
 
     private BrevBestillerTjeneste brevBestillerApplikasjonTjeneste;
-    private HendelseRepository hendelseRepository;
+    private DokumentHendelseTjeneste dokumentHendelseTjeneste;
 
     @Inject
     public ProduserBrevTask(BrevBestillerTjeneste brevBestillerApplikasjonTjeneste,
-                            HendelseRepository hendelseRepository) {
+                            DokumentHendelseTjeneste dokumentHendelseTjeneste) {
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
-        this.hendelseRepository = hendelseRepository;
+        this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
     }
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
         long hendelseId = Long.parseLong(prosessTaskData.getPropertyValue(BrevTaskProperties.HENDELSE_ID));
-        brevBestillerApplikasjonTjeneste.bestillBrev(hendelseRepository.hentDokumentHendelseMedId(hendelseId));
+        brevBestillerApplikasjonTjeneste.bestillBrev(dokumentHendelseTjeneste.hentHendelse(hendelseId).orElseThrow());
     }
 }

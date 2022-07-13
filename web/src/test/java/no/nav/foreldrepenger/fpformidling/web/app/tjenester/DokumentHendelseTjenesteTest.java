@@ -19,6 +19,7 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.hendelser.HendelseRepository;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 
 @ExtendWith(MockitoExtension.class)
 class DokumentHendelseTjenesteTest {

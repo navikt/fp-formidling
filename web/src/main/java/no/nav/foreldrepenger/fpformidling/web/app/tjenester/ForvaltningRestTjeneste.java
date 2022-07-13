@@ -18,6 +18,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -37,6 +38,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
+import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
@@ -102,13 +104,17 @@ public class ForvaltningRestTjeneste {
     @POST
     @Path("/rebestill")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Sender brev på nytt med oppdatert bestilling id. Brukes kun i situasjoner hvor brevet ", tags = "brev")
+    @Operation(description = "Sender brev på nytt med oppdatert bestilling id. Brukes kun i situasjoner hvor brevet ", tags = "forvaltning")
     @BeskyttetRessurs(action = CREATE, resource = FPFormidlingBeskyttetRessursAttributt.DRIFT, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response rebestillDokument(
             @Parameter(description = "Hendelse ID til den opprinelige bestillingen.")
             @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class)
-            @Valid @NotNull Long hendelseId) {
+            @QueryParam("hendelseId") @Valid @NotNull Long hendelseId) {
+
+        if (ENVIRONMENT.isProd()) {
+            return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
+        }
 
         var originalHendelse = dokumentHendelseTjeneste.hentHendelse(hendelseId);
 

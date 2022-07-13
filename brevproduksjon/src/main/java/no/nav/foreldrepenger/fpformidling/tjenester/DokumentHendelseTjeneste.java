@@ -1,6 +1,7 @@
-package no.nav.foreldrepenger.fpformidling.web.app.tjenester;
+package no.nav.foreldrepenger.fpformidling.tjenester;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.hendelser.HendelseRepository;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 public class DokumentHendelseTjeneste {
@@ -43,5 +45,9 @@ public class DokumentHendelseTjeneste {
 
     public Optional<DokumentHendelse> hentHendelse(Long id) {
         return Optional.ofNullable(hendelseRepository.hentDokumentHendelseMedId(id));
+    }
+
+    public boolean erDokumentHendelseMottatt(UUID behandlingUuid, DokumentMalType dokumentMal) {
+        return hendelseRepository.erDokumentHendelseMottatt(behandlingUuid, dokumentMal);
     }
 }

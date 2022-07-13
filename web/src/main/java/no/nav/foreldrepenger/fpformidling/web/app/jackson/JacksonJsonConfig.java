@@ -17,6 +17,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import no.nav.foreldrepenger.fpformidling.web.app.IndexClasses;
+import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
 @Provider
 public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
@@ -34,14 +35,8 @@ public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
         objectMapper.registerSubtypes(getJsonTypeNameClasses());
     }
 
-    public static Module defaultModule() {
-        return SER_DESER;
-    }
-
     private static SimpleModule createModule() {
-        SimpleModule module = new SimpleModule("VL-REST", new Version(1, 0, 0, null, null, null));
-
-        return module;
+        return new SimpleModule("VL-REST", new Version(1, 0, 0, null, null, null));
     }
 
     /**
@@ -56,10 +51,6 @@ public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException("Kunne ikke konvertere CodeSource location til URI", e);
         }
-    }
-
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
     }
 
     @Override

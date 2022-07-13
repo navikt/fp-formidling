@@ -43,12 +43,6 @@ public class HendelseRepository {
         return HibernateVerktøy.hentEksaktResultat(query);
     }
 
-    public List<DokumentHendelse> hentDokumentHendelserForBehandling(UUID behandlingUuid) {
-        TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid", DokumentHendelse.class);
-        query.setParameter("behandlingUuid", behandlingUuid);
-        return query.getResultList();
-    }
-
     public boolean erDokumentHendelseMottatt(UUID behandlingUuid, DokumentMalType dokumentMal) {
         TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid and dokumentMalType=:dokumentMalType", DokumentHendelse.class);
         query.setParameter("behandlingUuid", behandlingUuid);

@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.hendelser;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 

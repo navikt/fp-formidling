@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ErrorResponse;
@@ -33,76 +35,17 @@ class JavaDokgenRestKlientTest {
         this.klient = new JavaDokgenRestKlient(mockWebServer.url("/fpformidling").toString());
     }
 
-    @Test
-    void generatePdf_404() {
-        var statusCode = 404;
+    @ParameterizedTest
+    @CsvSource({
+            "401, Unauthorized",
+            "403, Forbidden",
+            "404, Kan ikke finne template med navn abc",
+            "500, Feil",
+    })
+    void generatePdf(int statusCode, String message) {
         var template = "abc";
         var variation = "template_nb";
-        var message = "Kan ikke finne template med navn " + template;
-        var body = DefaultJsonMapper.toJson(new ErrorResponse(statusCode, "Not found", message, String.format("/template/%s/%s/create-pdf-variation", template, variation)));
-
-        mockWebServer.enqueue(new MockResponse()
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .setBody(body)
-                .setResponseCode(statusCode));
-
-        var språkkode = Språkkode.defaultNorsk("nb");
-        var dokumentdata = new TestDokumentdata();
-        Exception exception = assertThrows(TekniskException.class, () -> {
-            klient.genererPdf(template, språkkode, dokumentdata);
-        });
-        assertThat(exception.getMessage()).contains(String.format("Fikk feil ved kall til dokgen for mal %s og språkkode %s", template, språkkode));
-    }
-
-    @Test
-    void generatePdf_401() {
-        var statusCode = 401;
-        var template = "abc";
-        var variation = "template_nb";
-        var message = "Ikke authorisert";
-        var body = DefaultJsonMapper.toJson(new ErrorResponse(statusCode, "Unauthorized", message, String.format("/template/%s/%s/create-pdf-variation", template, variation)));
-
-        mockWebServer.enqueue(new MockResponse()
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .setBody(body)
-                .setResponseCode(statusCode));
-
-        var språkkode = Språkkode.defaultNorsk("nb");
-        var dokumentdata = new TestDokumentdata();
-        Exception exception = assertThrows(TekniskException.class, () -> {
-            klient.genererPdf(template, språkkode, dokumentdata);
-        });
-        assertThat(exception.getMessage()).contains(String.format("Fikk feil ved kall til dokgen for mal %s og språkkode %s", template, språkkode));
-    }
-
-    @Test
-    void generatePdf_403() {
-        var statusCode = 403;
-        var template = "abc";
-        var variation = "template_nb";
-        var message = "Forbidden";
-        var body = DefaultJsonMapper.toJson(new ErrorResponse(statusCode, "Forbidden", message, String.format("/template/%s/%s/create-pdf-variation", template, variation)));
-
-        mockWebServer.enqueue(new MockResponse()
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .setBody(body)
-                .setResponseCode(statusCode));
-
-        var språkkode = Språkkode.defaultNorsk("nb");
-        var dokumentdata = new TestDokumentdata();
-        Exception exception = assertThrows(TekniskException.class, () -> {
-            klient.genererPdf(template, språkkode, dokumentdata);
-        });
-        assertThat(exception.getMessage()).contains(String.format("Fikk feil ved kall til dokgen for mal %s og språkkode %s", template, språkkode));
-    }
-
-    @Test
-    void generatePdf_500() {
-        var statusCode = 500;
-        var template = "abc";
-        var variation = "template_nb";
-        var message = "Forbidden";
-        var body = DefaultJsonMapper.toJson(new ErrorResponse(statusCode, "Forbidden", message, String.format("/template/%s/%s/create-pdf-variation", template, variation)));
+        var body = DefaultJsonMapper.toJson(new ErrorResponse(statusCode, message, message, String.format("/template/%s/%s/create-pdf-variation", template, variation)));
 
         mockWebServer.enqueue(new MockResponse()
                 .addHeader("Content-Type", "application/json; charset=utf-8")

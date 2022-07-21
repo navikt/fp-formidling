@@ -35,11 +35,13 @@ public final class StønadskontoMapper {
     }
 
     public static int finnForeldrepengeperiodenUtvidetUkerHvisFinnes(Saldoer saldoer) {
-        return PeriodeBeregner.finnStønadsKontoMedType(saldoer.stønadskontoer(), SaldoVisningStønadskontoType.FLERBARNSDAGER)
-                .map(Stønadskonto::maxDager)
+        return saldoer.stønadskontoer().stream()
+                .map(s -> s.flerbarnsDager())
+                .filter(flerbarnsdager -> flerbarnsdager > 0)
                 .map(BigInteger::valueOf)
                 .map(dager -> dager.divide(BigInteger.valueOf(5)))
-                .map(BigInteger::intValue).orElse(0);
+                .map(BigInteger::intValue)
+                .findFirst().orElse(0);
     }
 
     public static Integer finnPrematurDagerHvisFinnes(Saldoer saldoer) {

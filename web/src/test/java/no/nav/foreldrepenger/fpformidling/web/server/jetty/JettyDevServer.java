@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 
-import java.sql.SQLException;
-
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
 import org.slf4j.Logger;
@@ -37,8 +35,7 @@ public class JettyDevServer extends JettyServer {
             super.migrerDatabaser();
         } catch (Exception e) {
             log.info("Migreringer feilet, cleaner og prøver på nytt for lokal db.");
-            var migreringDs = DatasourceUtil.createDatasource(DatasourceRole.ADMIN, 1);
-            try {
+            try (var migreringDs = DatasourceUtil.createDatasource(DatasourceRole.ADMIN, 1)) {
                 var flyway = Flyway.configure()
                         .dataSource(migreringDs)
                         .locations("classpath:/db/migration/")
@@ -49,14 +46,8 @@ public class JettyDevServer extends JettyServer {
                 } catch (FlywayException fwe) {
                     throw new IllegalStateException("Migrering feiler.", fwe);
                 }
-            } finally {
-                try {
-                    migreringDs.getConnection().close();
-                } catch (SQLException sqlException) {
-                    log.warn("Klarte ikke stenge connection etter migrering.", sqlException);
-                }
+                super.migrerDatabaser();
             }
-            super.migrerDatabaser();
         }
     }
 }

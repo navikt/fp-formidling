@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,8 +124,7 @@ public class JettyServer {
     }
 
     void migrerDatabaser() {
-        var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN,1);
-        try {
+        try (var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN,1)) {
             var flyway = Flyway.configure()
                     .dataSource(dataSource)
                     .locations("classpath:/db/migration/defaultDS")
@@ -135,9 +133,6 @@ public class JettyServer {
                 flyway.initSql(String.format("SET ROLE \"%s\"", DatasourceUtil.getRole(DatasourceRole.ADMIN)));
             }
             flyway.load().migrate();
-            dataSource.getConnection().close();
-        } catch (SQLException e) {
-            LOG.warn("Klarte ikke stenge connection etter migrering", e);
         } catch (FlywayException e) {
             LOG.error("Feil under migrering av databasen.");
             throw e;

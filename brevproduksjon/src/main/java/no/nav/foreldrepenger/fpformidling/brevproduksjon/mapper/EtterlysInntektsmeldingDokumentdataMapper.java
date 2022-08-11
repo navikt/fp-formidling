@@ -66,6 +66,6 @@ public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMa
 
     private LocalDate getSøknadsdato(Behandling behandling) {
         List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
-        return MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter(behandling, mottatteDokumenter);
+        return MottattdokumentMapper.finnSisteMottatteSøknad(mottatteDokumenter);
     }
 }

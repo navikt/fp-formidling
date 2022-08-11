@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -71,8 +72,9 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new InnhenteOpplysningerDokumentdataMapper(brevMapperUtil, domeneobjektProvider);
 
-        MottattDokument mottattDokument = new MottattDokument(SØKNAD_DATO, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD);
-        when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(of(mottattDokument));
+        List<MottattDokument> mottattDokumenter = List.of(new MottattDokument(SØKNAD_DATO.minusDays(10), DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD),
+                                                            new MottattDokument(SØKNAD_DATO, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD ));
+        when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(mottattDokumenter);
     }
 
     @Test

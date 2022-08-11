@@ -5,7 +5,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Be
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erTermindatoEndret;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper.finnSisteMottatteSøknad;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnAntallRefusjonerTilArbeidsgivere;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnMånedsbeløp;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harBrukerAndel;
@@ -96,7 +96,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
                 .medAntallRefusjonerTilArbeidsgivere(finnAntallRefusjonerTilArbeidsgivere(tilkjentYtelse))
                 .medStønadsperiodeTom(formaterDato(finnStønadsperiodeTom(utbetalingsperioder), språkkode))
                 .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelse))
-                .medMottattDato(formaterDato(finnSøknadsdatoFraMottatteDokumenter(behandling, mottatteDokumenter), språkkode))
+                .medMottattDato(formaterDato(finnSisteMottatteSøknad(mottatteDokumenter), språkkode))
                 .medKlagefristUker(brevParametere.getKlagefristUker())
                 .medAntallUttaksperioder(tellAntallUttaksperioder(uttaksaktiviteter))
                 .medUttaksaktiviteter(uttaksaktiviteter)

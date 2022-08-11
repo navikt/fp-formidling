@@ -78,7 +78,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
         }
 
         LocalDate mottattDato = klageDokument.map(kd -> hentMottattDatoFraKlage(kd, behandling))
-                .orElseGet(() -> MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter(behandling, mottatteDokumenter));
+                .orElseGet(() -> MottattdokumentMapper.finnSisteMottatteSøknad(mottatteDokumenter));
         return formaterDato(mottattDato, behandling.getSpråkkode());
     }
 

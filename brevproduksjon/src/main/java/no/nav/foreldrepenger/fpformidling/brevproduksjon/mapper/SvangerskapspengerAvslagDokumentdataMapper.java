@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.erDød;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper.finnførsteMottatteSøknad;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.util.Collections;
@@ -78,7 +78,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
         var dokumentdataBuilder = SvangerskapspengerAvslagDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
                 .medErSøkerDød(erDød(dokumentFelles))
-                .medMottattDato(formaterDato(finnSøknadsdatoFraMottatteDokumenter(behandling, mottatteDokumenter), språkkode))
+                .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), språkkode))
                 .medAntallArbeidsgivere(SvpMapperUtil.finnAntallArbeidsgivere(svpUttaksresultat.map(SvpUttaksresultat::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()), iay))
                 .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
                 .medKlagefristUker(brevParametere.getKlagefristUker());

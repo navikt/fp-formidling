@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.avslagfp;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper.finnSøknadsdatoFraMottatteDokumenter;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper.finnførsteMottatteSøknad;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.util.Collections;
@@ -84,7 +84,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
         var dokumentdataBuilder = ForeldrepengerAvslagDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
                 .medRelasjonskode(finnRelasjonskode(fagsak))
-                .medMottattDato(formaterDato(finnSøknadsdatoFraMottatteDokumenter(behandling, mottatteDokumenter), behandling.getSpråkkode()))
+                .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), behandling.getSpråkkode()))
                 .medGjelderFødsel(familiehendelse.isGjelderFødsel())
                 .medBarnErFødt(familiehendelse.isBarnErFødt())
                 .medAnnenForelderHarRett(uttakResultatPerioder.map(UttakResultatPerioder::isAnnenForelderHarRett).orElse(false))

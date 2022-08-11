@@ -13,25 +13,18 @@ import javax.enterprise.context.Dependent;
 
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
 import no.nav.vedtak.sikkerhet.pdp.XacmlRequestBuilderTjeneste;
-import no.nav.vedtak.sikkerhet.pdp2.xacml.XacmlAttributeSet;
+import no.nav.vedtak.sikkerhet.pdp.xacml.XacmlAttributeSet;
 import no.nav.vedtak.sikkerhet.pdp.xacml.XacmlRequestBuilder;
-import no.nav.vedtak.sikkerhet.pdp2.XacmlRequestBuilder2Tjeneste;
-import no.nav.vedtak.sikkerhet.pdp2.xacml.XacmlRequestBuilder2;
 
 @Dependent
-public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjeneste, XacmlRequestBuilder2Tjeneste {
+public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjeneste {
 
     public XacmlRequestBuilderTjenesteImpl() {
     }
 
     @Override
     public XacmlRequestBuilder lagXacmlRequestBuilder(PdpRequest pdpRequest) {
-        return new XacmlRequestBuilder();
-    }
-
-    @Override
-    public XacmlRequestBuilder2 lagXacmlRequestBuilder2(PdpRequest pdpRequest) {
-        XacmlRequestBuilder2 xacmlBuilder = new XacmlRequestBuilder2();
+        XacmlRequestBuilder xacmlBuilder = new XacmlRequestBuilder();
 
         XacmlAttributeSet actionAttributeSet = new XacmlAttributeSet();
         actionAttributeSet.addAttribute(XACML10_ACTION_ACTION_ID, pdpRequest.getString(XACML10_ACTION_ACTION_ID));
@@ -50,7 +43,7 @@ public class XacmlRequestBuilderTjenesteImpl implements XacmlRequestBuilderTjene
         return xacmlBuilder;
     }
 
-    private void populerResources(XacmlRequestBuilder2 xacmlBuilder, PdpRequest pdpRequest, IdentKey ident) {
+    private void populerResources(XacmlRequestBuilder xacmlBuilder, PdpRequest pdpRequest, IdentKey ident) {
         xacmlBuilder.addResourceAttributeSet(byggRessursAttributter(pdpRequest, ident));
     }
 

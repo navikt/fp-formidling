@@ -35,11 +35,12 @@ public class JettyDevServer extends JettyServer {
             super.migrerDatabaser();
         } catch (Exception e) {
             log.info("Migreringer feilet, cleaner og prøver på nytt for lokal db.");
-            try (var migreringDs = DatasourceUtil.createDatasource(DatasourceRole.ADMIN, 1)) {
+            try (var migreringDs = DatasourceUtil.createDatasource(DatasourceRole.ADMIN, 2)) {
                 var flyway = Flyway.configure()
                         .dataSource(migreringDs)
                         .locations("classpath:/db/migration/")
                         .baselineOnMigrate(true)
+                        .cleanDisabled(false)
                         .load();
                 try {
                     flyway.clean();

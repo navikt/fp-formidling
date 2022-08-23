@@ -4,7 +4,7 @@
   "minReplicas": "2",
   "maxReplicas": "3",
   "ingresses": [
-    "https://fpformidling.dev.intern.nav.no/"
+    "https://fpformidling.dev.intern.nav.no"
   ],
   "env": {
     "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD"

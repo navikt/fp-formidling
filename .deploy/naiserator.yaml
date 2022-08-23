@@ -51,6 +51,15 @@ spec:
   azure:
     application:
       enabled: true
+      claims:
+        extra:
+          - NAVident
+          - azp_name
+      replyURLs:
+        {{#each ingresses as |url|}}
+          - {{url}}/oauth2/callback
+        {{/each}}
+          - https://fpswagger.dev.intern.nav.no/oauth2-redirect.html
   env:
   {{#each env}}
    - name: {{@key}}

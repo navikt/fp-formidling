@@ -4,8 +4,6 @@
   "minReplicas": "2",
   "maxReplicas": "3",
   "ingresses": [
-    "https://app.adeo.no/fpformidling",
-    "https://fpformidling.nais.adeo.no/",
     "https://fpformidling.intern.nav.no/"
   ],
   "env": {

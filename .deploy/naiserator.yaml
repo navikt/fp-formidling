@@ -49,8 +49,8 @@ spec:
   secureLogs:
     enabled: true
   azure:
-      application:
-          enabled: true
+    application:
+      enabled: true
   env:
   {{#each env}}
    - name: {{@key}}

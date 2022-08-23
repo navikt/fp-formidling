@@ -3,10 +3,12 @@ package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import javax.naming.NamingException;
 import javax.security.auth.message.config.AuthConfigFactory;
+import javax.servlet.DispatcherType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,6 +29,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.MetaData;
@@ -183,6 +186,7 @@ public class JettyServer {
         ctx.setSecurityHandler(createSecurityHandler());
         updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
+        addFilters(ctx);
         return ctx;
     }
 
@@ -211,6 +215,11 @@ public class JettyServer {
                 .toList();
 
         metaData.setWebInfClassesResources(resources);
+    }
+
+    private static void addFilters(WebAppContext ctx) {
+        var corsFilter = ctx.addFilter(CrossOriginFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+        corsFilter.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, ENV.getProperty("allowed.origins", "*"));
     }
 
     private static List<Class<?>> getWebInfClasses() {

@@ -59,7 +59,7 @@ spec:
     {{#each ingresses as |url|}}
         - {{url}}/oauth2/callback
     {{/each}}
-        - https://fpswagger.dev.intern.nav.no/swagger/oauth2-redirect.html
+        - https://fpswagger.dev.intern.nav.no/oauth2-redirect.html
   env:
   {{#each env}}
    - name: {{@key}}

@@ -106,7 +106,8 @@ public class ForvaltningRestTjeneste {
 
     @POST
     @Path("/rebestill")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
     @Operation(description = "Sender brev på nytt med oppdatert bestilling id. Brukes kun i situasjoner hvor brevet ", tags = "forvaltning")
     @BeskyttetRessurs(action = CREATE, resource = FPFormidlingBeskyttetRessursAttributt.DRIFT, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")

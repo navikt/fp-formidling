@@ -52,6 +52,7 @@ Vennligst se dokumentasjonen her: [Link til lokal utvikling i fpsak-autotest](ht
 
 I Java base imagene så er remote debugging skrudd på for port 5005 i development clustrene "dev-fss" og "dev-gcp".
 For å kunne remote debugge en kjørende applikasjon så må man først port-forwarde til podden hvor applikasjonen kjører.
+Dette innebærer at du har naisdevice kjørende på maskinen.
 
 ```shell script
 kubectl -nteamforeldrepenger port-forward service/fpformidling 5005:5005

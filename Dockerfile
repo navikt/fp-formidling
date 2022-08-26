@@ -1,8 +1,8 @@
-FROM navikt/java:17
+FROM navikt/java:17-appdynamics
 
 LABEL org.opencontainers.image.source=https://github.com/navikt/fp-formidling
 ENV TZ=Europe/Oslo
-ENV APPD_ENABLED=true
+ENV APPD_ENABLED=false
 
 RUN mkdir lib
 RUN mkdir conf

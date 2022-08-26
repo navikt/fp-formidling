@@ -19,7 +19,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
@@ -52,7 +51,7 @@ import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 @Path("/forvaltning")
 @ApplicationScoped
 @Transactional
-@SecurityRequirements(@SecurityRequirement(name = "openId", scopes = "openid"))
+@SecurityRequirements(@SecurityRequirement(name = "apiKey"))
 public class ForvaltningRestTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(ForvaltningRestTjeneste.class);
@@ -108,7 +107,7 @@ public class ForvaltningRestTjeneste {
     @Path("/rebestill")
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
-    @Operation(description = "Sender brev på nytt med oppdatert bestilling id. Brukes kun i situasjoner hvor brevet ", tags = "forvaltning")
+    @Operation(description = "Sender brev på nytt med oppdatert bestilling id. Brukes kun i situasjoner hvor brevet ble helt feil.", tags = "forvaltning")
     @BeskyttetRessurs(action = CREATE, resource = FPFormidlingBeskyttetRessursAttributt.DRIFT, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response rebestillDokument(

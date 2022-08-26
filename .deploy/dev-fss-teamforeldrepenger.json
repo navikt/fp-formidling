@@ -8,6 +8,7 @@
       "https://app-q1.adeo.no/fpformidling"
   ],
   "env": {
-    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD"
+    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD",
+    "APPD_ENABLED": "false"
   }
 }

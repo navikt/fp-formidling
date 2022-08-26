@@ -51,7 +51,7 @@ import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 @Path("/forvaltning")
 @ApplicationScoped
 @Transactional
-@SecurityRequirements(@SecurityRequirement(name = "apiKey"))
+@SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
 public class ForvaltningRestTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(ForvaltningRestTjeneste.class);

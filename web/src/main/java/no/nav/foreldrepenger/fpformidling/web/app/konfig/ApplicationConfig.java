@@ -53,8 +53,8 @@ public class ApplicationConfig extends Application {
                                             .description("REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede."))
                                     .servers(List.of(new Server().url("/fpformidling")))
                                     .components(new Components()
-                                            .securitySchemes(Map.of("openId", openId()))))
-
+                                            .securitySchemes(Map.of("openId", openId(),
+                                                                    "apiKey", bearerToken()))))
                             .prettyPrint(true)
                             .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
                             .resourcePackages(Stream.of("no.nav")
@@ -72,6 +72,15 @@ public class ApplicationConfig extends Application {
                 .openIdConnectUrl(ENV.getProperty("AZURE_APP_WELL_KNOWN_URL", ENV.getProperty("oidc.open.am.well.known.url")))
                 .name("openIdConnect");
     }
+
+    private SecurityScheme bearerToken() {
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.APIKEY)
+                .in(SecurityScheme.In.HEADER)
+                .name("Authorization");
+    }
+
+
 
     @Override
     public Set<Class<?>> getClasses() {

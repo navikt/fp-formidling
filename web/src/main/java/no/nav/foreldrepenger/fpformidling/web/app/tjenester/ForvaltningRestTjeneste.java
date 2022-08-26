@@ -19,7 +19,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
@@ -30,6 +29,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
@@ -50,6 +51,7 @@ import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 @Path("/forvaltning")
 @ApplicationScoped
 @Transactional
+@SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
 public class ForvaltningRestTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(ForvaltningRestTjeneste.class);
@@ -103,8 +105,9 @@ public class ForvaltningRestTjeneste {
 
     @POST
     @Path("/rebestill")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Sender brev på nytt med oppdatert bestilling id. Brukes kun i situasjoner hvor brevet ", tags = "forvaltning")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    @Operation(description = "Sender brev på nytt med oppdatert bestilling id. Brukes kun i situasjoner hvor brevet ble helt feil.", tags = "forvaltning")
     @BeskyttetRessurs(action = CREATE, resource = FPFormidlingBeskyttetRessursAttributt.DRIFT, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response rebestillDokument(

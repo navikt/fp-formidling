@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.fpformidling.web.app.konfig;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,8 +18,10 @@ import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import io.swagger.v3.oas.integration.GenericOpenApiContextBuilder;
 import io.swagger.v3.oas.integration.OpenApiConfigurationException;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import no.nav.foreldrepenger.fpformidling.web.app.exceptions.ConstraintViolationMapper;
 import no.nav.foreldrepenger.fpformidling.web.app.exceptions.GeneralRestExceptionMapper;
@@ -28,10 +31,13 @@ import no.nav.foreldrepenger.fpformidling.web.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.ForvaltningRestTjeneste;
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev.BrevRestTjeneste;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.TimingFilter;
+import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 
 @ApplicationPath(ApplicationConfig.API_URI)
 public class ApplicationConfig extends Application {
+
+    private static final Environment ENV = Environment.current();
 
     static final String API_URI = "/api";
 
@@ -42,11 +48,14 @@ public class ApplicationConfig extends Application {
                     .openApiConfiguration(new SwaggerConfiguration()
                             .openAPI(new OpenAPI()
                                     .info(new Info()
-                                            .title("Foreldrepenger formidling")
+                                            .title("Foreldrepenger - Formidling")
                                             .version("1.0")
-                                            .description("REST grensesnitt for formidling."))
-                                    .addServersItem(new Server()
-                                            .url("/fpformidling")))
+                                            .description("REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede."))
+                                    .servers(List.of(new Server().url("/fpformidling")))
+                                    .components(new Components()
+                                            .securitySchemes(Map.of("openId", openId(),
+                                                                    /*"apiKey", apiKey(),*/
+                                                                    "bearerAuth", bearerAuth()))))
                             .prettyPrint(true)
                             .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
                             .resourcePackages(Stream.of("no.nav")
@@ -56,6 +65,27 @@ public class ApplicationConfig extends Application {
         } catch (OpenApiConfigurationException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
+    }
+
+    private SecurityScheme openId() {
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.OPENIDCONNECT)
+                .openIdConnectUrl(ENV.getProperty("AZURE_APP_WELL_KNOWN_URL", ENV.getProperty("oidc.open.am.well.known.url")));
+    }
+
+    private SecurityScheme apiKey() {
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.APIKEY)
+                .in(SecurityScheme.In.HEADER)
+                .name("Authorization"); // name of cookie, quereParam og header
+    }
+
+    private SecurityScheme bearerAuth() {
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .name("bearerAuth");
     }
 
     @Override

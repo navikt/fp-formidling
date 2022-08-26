@@ -20,7 +20,7 @@ Konfigurasjonen i app-vtp.properties skal du ikke trenge å endre.
 Sett $MODULE_DIR$ som working directory, og bruk classpath til webapp.
 Kjører på Java 17. Kan korte ned classpathen med jar manifest.
 
-### Database 
+### Database
 Bruk Docker Compose i fpsak-autotest for lokal utvikling - da får du PostgreSQL-container automatisk (se lengre ned).
 
 For tilgang til vedlikehold og feilsøking ute i miljø, kreves det midlertidig brukernavn og passord fra Vault.
@@ -31,7 +31,7 @@ Eksempel (Windows): Koble til fpformidling-databasen i prod med readonly-tilgang
 
 1. I IntelliJ, åpne Database-fanen og trykk på pluss-ikonet for å legge til en ny PostgreSQL-"data source"
 2. Fyll inn Name (valgfritt), Host (a01dbfl039.adeo.no), Port (5432) og Database (fpformidling)
-3. Åpne Powershell og kjør "vault login -method=oidc" (forutsetter at CLI-klienten og miljøvariabelen VAULT_ADDR er satt opp) 
+3. Åpne Powershell og kjør "vault login -method=oidc" (forutsetter at CLI-klienten og miljøvariabelen VAULT_ADDR er satt opp)
 4. Kjør deretter "vault read postgresql/prod-fss/creds/fpformidling-readonly"
 5. Tilbake i IntelliJ, fyll inn User og Password med verdiene generert av Vault og trykk OK.
 
@@ -48,4 +48,15 @@ https://confluence.adeo.no/display/TVF/FP-Formidling
 Dette gjøres nå i _fpsak-autotest_-prosjektet. Her finnes det en felles docker-compose som skal brukes for lokalt utvikling.
 Vennligst se dokumentasjonen her: [Link til lokal utvikling i fpsak-autotest](https://github.com/navikt/fpsak-autotest/tree/master/docs).
 
+### Remote debugging med Java base image
 
+I Java base imagene så er remote debugging skrudd på for port 5005 i development clustrene "dev-fss" og "dev-gcp".
+For å kunne remote debugge en kjørende applikasjon så må man først port-forwarde til podden hvor applikasjonen kjører.
+Dette innebærer at du har naisdevice kjørende på maskinen.
+
+```shell script
+kubectl -nteamforeldrepenger port-forward service/fpformidling 5005:5005
+```
+
+Hvis ikke allerede gjort, opprett en ny configuration i IntelliJ av type "Remote".
+Start debuggingen slik som man vanligvis ville gjort lokalt.

@@ -54,7 +54,8 @@ public class ApplicationConfig extends Application {
                                     .servers(List.of(new Server().url("/fpformidling")))
                                     .components(new Components()
                                             .securitySchemes(Map.of("openId", openId(),
-                                                                    "apiKey", bearerToken()))))
+                                                                    /*"apiKey", apiKey(),*/
+                                                                    "bearerAuth", bearerAuth()))))
                             .prettyPrint(true)
                             .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
                             .resourcePackages(Stream.of("no.nav")
@@ -69,18 +70,23 @@ public class ApplicationConfig extends Application {
     private SecurityScheme openId() {
         return new SecurityScheme()
                 .type(SecurityScheme.Type.OPENIDCONNECT)
-                .openIdConnectUrl(ENV.getProperty("AZURE_APP_WELL_KNOWN_URL", ENV.getProperty("oidc.open.am.well.known.url")))
-                .name("openIdConnect");
+                .openIdConnectUrl(ENV.getProperty("AZURE_APP_WELL_KNOWN_URL", ENV.getProperty("oidc.open.am.well.known.url")));
     }
 
-    private SecurityScheme bearerToken() {
+    private SecurityScheme apiKey() {
         return new SecurityScheme()
                 .type(SecurityScheme.Type.APIKEY)
                 .in(SecurityScheme.In.HEADER)
-                .name("Authorization");
+                .name("Authorization"); // name of cookie, quereParam og header
     }
 
-
+    private SecurityScheme bearerAuth() {
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .scheme("bearer")
+                .bearerFormat("JWT")
+                .name("bearerAuth");
+    }
 
     @Override
     public Set<Class<?>> getClasses() {

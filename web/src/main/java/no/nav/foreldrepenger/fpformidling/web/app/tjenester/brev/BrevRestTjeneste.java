@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev;
 
-import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.CREATE;
-import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
-
 import java.util.function.Function;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -24,7 +21,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestiller
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingV2Dto;
@@ -34,6 +30,8 @@ import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
+import no.nav.vedtak.sikkerhet.abac.beskyttet.ActionType;
+import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 
 @Path("/brev")
 @Transactional
@@ -63,7 +61,7 @@ public class BrevRestTjeneste {
     @Path("/forhaandsvis")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Returnerer en pdf som er en forhåndsvisning av brevet", tags = "brev")
-    @BeskyttetRessurs(action = READ, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK)
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response forhaandsvisDokument(
             @Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.")
@@ -89,7 +87,7 @@ public class BrevRestTjeneste {
     @Path("/bestill")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Bestiller, produserer og journalfører brevet", tags = "brev")
-    @BeskyttetRessurs(action = CREATE, resource = FPFormidlingBeskyttetRessursAttributt.FAGSAK)
+    @BeskyttetRessurs(actionType = ActionType.CREATE, resourceType = ResourceType.FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response bestillDokument(
             @Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.")

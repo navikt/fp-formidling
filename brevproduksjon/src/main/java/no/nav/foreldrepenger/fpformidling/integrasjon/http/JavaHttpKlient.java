@@ -7,6 +7,7 @@ import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.ProxySelector;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -33,7 +34,7 @@ public abstract class JavaHttpKlient implements RequestKonfig, AuthKonfig {
 
     private static final HttpClient client;
     static {
-        client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).connectTimeout(Duration.ofSeconds(10)).build();
+        client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).proxy(HttpClient.Builder.NO_PROXY).connectTimeout(Duration.ofSeconds(10)).build();
     }
 
     protected HttpRequest.Builder getRequestBuilder() {

@@ -7,8 +7,10 @@ import static no.nav.vedtak.sikkerhet.abac.NavAbacCommonAttributter.XACML10_ACTI
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -17,10 +19,14 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.AppAbacAttributtType;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.vedtak.sikkerhet.abac.AbacAttributtSamling;
+import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.PdpKlient;
 import no.nav.vedtak.sikkerhet.abac.PdpRequest;
 import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
 import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
+import no.nav.vedtak.sikkerhet.abac.pdp.AppRessursData;
+import no.nav.vedtak.sikkerhet.abac.pdp.BehandlingStatus;
+import no.nav.vedtak.sikkerhet.abac.pdp.FagsakStatus;
 
 
 /**
@@ -54,9 +60,9 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
         List<String> aktørIder = new ArrayList<>();
         behandling.ifPresent(b -> {
                     var dto = pipRestKlient.hentPipdataForBehandling(b.getUuid().toString());
-                    aktørIder.addAll(dto.getAktørIder().stream().map(AktørId::getId).toList());
-                    pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_SAKSSTATUS, dto.getFagsakStatus());
-                    pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_BEHANDLINGSSTATUS, dto.getBehandlingStatus());
+                    aktørIder.addAll(dto.aktørIder().stream().map(AktørId::getId).toList());
+                    pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_SAKSSTATUS, dto.fagsakStatus());
+                    pdpRequest.put(AppAbacAttributtType.RESOURCE_FORELDREPENGER_SAK_BEHANDLINGSSTATUS, dto.behandlingStatus());
                 }
         );
 
@@ -68,5 +74,29 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
         return pdpRequest;
     }
 
+    @Override
+    public boolean nyttAbacGrensesnitt() {
+        return true;
+    }
+
+    @Override
+    public AppRessursData lagAppRessursData(AbacDataAttributter dataAttributter) {
+        Set<UUID> uuids = dataAttributter.getVerdier(StandardAbacAttributtType.BEHANDLING_UUID);
+        var behandlingUuids = uuids.stream().distinct().toList();
+        if (behandlingUuids.size() > 1) {
+            throw new IllegalArgumentException("Støtter ikke request med to ulike behandlinger. Må utvides");
+        }
+
+        var appRessursData = AppRessursData.builder();
+        behandlingUuids.stream().findFirst()
+                .map(domeneobjektProvider::hentBehandling).ifPresent(b -> {
+                    var dto = pipRestKlient.hentPipdataForBehandling(b.getUuid().toString());
+                    appRessursData.leggTilAktørIdSet(dto.aktørIder().stream().map(AktørId::getId).collect(Collectors.toSet()));
+                    Optional.ofNullable(dto.fagsakStatus()).map(FagsakStatus::valueOf).ifPresent(appRessursData::medFagsakStatus);
+                    Optional.ofNullable(dto.behandlingStatus()).map(BehandlingStatus::valueOf).ifPresent(appRessursData::medBehandlingStatus);
+                }
+        );
+        return appRessursData.build();
+    }
 }
 

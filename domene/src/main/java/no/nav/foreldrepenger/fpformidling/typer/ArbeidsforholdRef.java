@@ -35,16 +35,6 @@ public class ArbeidsforholdRef implements Serializable {
         return referanse != null && !referanse.isEmpty();
     }
 
-    public boolean gjelderFor(ArbeidsforholdRef ref) {
-        if (ref == null) {
-            return true;
-        }
-        if (!gjelderForSpesifiktArbeidsforhold() || !ref.gjelderForSpesifiktArbeidsforhold()) {
-            return true;
-        }
-        return Objects.equals(referanse, ref.referanse);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o)

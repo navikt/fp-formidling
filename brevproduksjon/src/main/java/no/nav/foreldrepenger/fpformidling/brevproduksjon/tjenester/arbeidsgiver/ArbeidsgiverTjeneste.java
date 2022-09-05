@@ -22,8 +22,8 @@ public class ArbeidsgiverTjeneste {
     private static final long CACHE_ELEMENT_LIVE_TIME_MS = TimeUnit.MILLISECONDS.convert(12, TimeUnit.HOURS);
     private static final long SHORT_CACHE_ELEMENT_LIVE_TIME_MS = TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
     private PersonAdapter personAdapter;
-    private LRUCache<String, ArbeidsgiverOpplysninger> cache = new LRUCache<>(1000, CACHE_ELEMENT_LIVE_TIME_MS);
-    private LRUCache<String, ArbeidsgiverOpplysninger> failBackoffCache = new LRUCache<>(100, SHORT_CACHE_ELEMENT_LIVE_TIME_MS);
+    private final LRUCache<String, String> cache = new LRUCache<>(1000, CACHE_ELEMENT_LIVE_TIME_MS);
+    private final LRUCache<String, String> failBackoffCache = new LRUCache<>(100, SHORT_CACHE_ELEMENT_LIVE_TIME_MS);
     private VirksomhetTjeneste virksomhetTjeneste;
 
     ArbeidsgiverTjeneste() {
@@ -37,43 +37,37 @@ public class ArbeidsgiverTjeneste {
     }
 
     public String hentArbeidsgiverNavn(String arbeidsgiverReferanse) {
-        var arbeidsgiver = hent(arbeidsgiverReferanse);
-        return arbeidsgiver != null ? arbeidsgiver.getNavn() : null;
-    }
-
-    public ArbeidsgiverOpplysninger hent(String arbeidsgiver) {
-        if (arbeidsgiver == null) {
+        if (arbeidsgiverReferanse == null) {
             return null;
         }
-        ArbeidsgiverOpplysninger arbeidsgiverOpplysninger = cache.get(arbeidsgiver);
+        var arbeidsgiverOpplysninger = cache.get(arbeidsgiverReferanse);
         if (arbeidsgiverOpplysninger != null) {
             return arbeidsgiverOpplysninger;
         }
-        arbeidsgiverOpplysninger = failBackoffCache.get(arbeidsgiver);
+        arbeidsgiverOpplysninger = failBackoffCache.get(arbeidsgiverReferanse);
         if (arbeidsgiverOpplysninger != null) {
             return arbeidsgiverOpplysninger;
         }
-        if (OrganisasjonsNummerValidator.erGyldig(arbeidsgiver) && !KUNSTIG_ORG.equals(arbeidsgiver)) {
-            var virksomhet = hentVirksomhetNavn(arbeidsgiver);
-            ArbeidsgiverOpplysninger nyOpplysninger = new ArbeidsgiverOpplysninger(arbeidsgiver, virksomhet.orElse("Ikke tilgjengelig"));
-            cache.put(arbeidsgiver, nyOpplysninger);
-            return nyOpplysninger;
-        } else if (OrganisasjonsNummerValidator.erGyldig(arbeidsgiver) && KUNSTIG_ORG.equals(arbeidsgiver)) {
-            return new ArbeidsgiverOpplysninger(KUNSTIG_ORG, "Arbeidsgiver utenom register");
-        } else {
-            Optional<Personinfo> personinfo = hentInformasjonFraTps(arbeidsgiver);
-            if (personinfo.isPresent()) {
-                Personinfo info = personinfo.get();
-                ArbeidsgiverOpplysninger nyOpplysninger = new ArbeidsgiverOpplysninger(new AktørId(arbeidsgiver), info.getNavn());
-                cache.put(arbeidsgiver, nyOpplysninger);
-                return nyOpplysninger;
-            } else {
-                // Putter bevist ikke denne i cache da denne aktøren ikke er kjent, men legger denne i en backoff cache som benyttes for at vi ikke skal hamre på tps ved sikkerhetsbegrensning
-                ArbeidsgiverOpplysninger opplysninger = new ArbeidsgiverOpplysninger(arbeidsgiver, "N/A");
-                failBackoffCache.put(arbeidsgiver, opplysninger);
-                return opplysninger;
-            }
+        if (OrganisasjonsNummerValidator.erGyldig(arbeidsgiverReferanse) && !KUNSTIG_ORG.equals(arbeidsgiverReferanse)) {
+            var virksomhet = hentVirksomhetNavn(arbeidsgiverReferanse);
+            var nyttNavn = virksomhet.orElse("Ikke tilgjengelig");
+            cache.put(arbeidsgiverReferanse, nyttNavn);
+            return nyttNavn;
         }
+        if (OrganisasjonsNummerValidator.erGyldig(arbeidsgiverReferanse) && KUNSTIG_ORG.equals(arbeidsgiverReferanse)) {
+            return "Arbeidsgiver utenom register";
+        }
+        var personinfo = hentInformasjonFraTps(arbeidsgiverReferanse);
+        if (personinfo.isPresent()) {
+            var info = personinfo.get();
+            var nyttNavn = info.getNavn();
+            cache.put(arbeidsgiverReferanse, nyttNavn);
+            return nyttNavn;
+        }
+        // Putter bevist ikke denne i cache da denne aktøren ikke er kjent, men legger denne i en backoff cache som benyttes for at vi ikke skal hamre på tps ved sikkerhetsbegrensning
+        var nyttNavn = "N/A";
+        failBackoffCache.put(arbeidsgiverReferanse, nyttNavn);
+        return nyttNavn;
     }
 
     private Optional<String> hentVirksomhetNavn(String orgNummer) {

@@ -1,9 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.web.app.tjenester;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt.DRIFT;
-import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.CREATE;
-import static no.nav.vedtak.sikkerhet.abac.BeskyttetRessursActionAttributt.READ;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -38,7 +35,6 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
-import no.nav.foreldrepenger.fpformidling.sikkerhet.pdp.FPFormidlingBeskyttetRessursAttributt;
 import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
@@ -47,6 +43,8 @@ import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
+import no.nav.vedtak.sikkerhet.abac.beskyttet.ActionType;
+import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 
 @Path("/forvaltning")
 @ApplicationScoped
@@ -83,7 +81,7 @@ public class ForvaltningRestTjeneste {
     @Operation(description = "Tar imot en FP-Dokgen JSON og sender den til FP-Dokgen for å lage PDF. Tjenesten er ikke tilgjengelig i produksjon - bruk DEV eller lokalt miljø.", tags = "forvaltning", responses = {
             @ApiResponse(responseCode = "200", description = "Returnerer PDF", content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "byte")))
     })
-    @BeskyttetRessurs(action = READ, resource = DRIFT, sporingslogg = false)
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.DRIFT, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response dokgenJsonTilPdf(@BeanParam @Valid DokgenJsonTilPdfDto dokgenJsonTilPdfDto) throws Exception {
         if (ENVIRONMENT.isProd()) {
@@ -108,7 +106,7 @@ public class ForvaltningRestTjeneste {
     @Consumes(APPLICATION_JSON)
     @Produces(APPLICATION_JSON)
     @Operation(description = "Sender brev på nytt med oppdatert bestilling id. Brukes kun i situasjoner hvor brevet ble helt feil.", tags = "forvaltning")
-    @BeskyttetRessurs(action = CREATE, resource = FPFormidlingBeskyttetRessursAttributt.DRIFT, sporingslogg = false)
+    @BeskyttetRessurs(actionType = ActionType.CREATE, resourceType = ResourceType.DRIFT, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response rebestillDokument(
             @Parameter(description = "Hendelse ID til den opprinelige bestillingen.")

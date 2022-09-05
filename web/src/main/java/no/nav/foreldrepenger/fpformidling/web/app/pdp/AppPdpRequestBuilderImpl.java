@@ -27,6 +27,7 @@ import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.pdp.AppRessursData;
 import no.nav.vedtak.sikkerhet.abac.pdp.BehandlingStatus;
 import no.nav.vedtak.sikkerhet.abac.pdp.FagsakStatus;
+import no.nav.vedtak.sikkerhet.abac.pdp.ForeldrepengerDataKeys;
 
 
 /**
@@ -92,8 +93,8 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
                 .map(domeneobjektProvider::hentBehandling).ifPresent(b -> {
                     var dto = pipRestKlient.hentPipdataForBehandling(b.getUuid().toString());
                     appRessursData.leggTilAktørIdSet(dto.aktørIder().stream().map(AktørId::getId).collect(Collectors.toSet()));
-                    Optional.ofNullable(dto.fagsakStatus()).map(FagsakStatus::valueOf).ifPresent(appRessursData::medFagsakStatus);
-                    Optional.ofNullable(dto.behandlingStatus()).map(BehandlingStatus::valueOf).ifPresent(appRessursData::medBehandlingStatus);
+                    Optional.ofNullable(dto.fagsakStatus()).ifPresent(fss -> appRessursData.leggTilRessurs(ForeldrepengerDataKeys.FAGSAK_STATUS, fss));
+                    Optional.ofNullable(dto.behandlingStatus()).ifPresent(bhs -> appRessursData.leggTilRessurs(ForeldrepengerDataKeys.BEHANDLING_STATUS, bhs));
                 }
         );
         return appRessursData.build();

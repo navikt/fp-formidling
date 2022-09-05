@@ -93,8 +93,8 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
                 .map(domeneobjektProvider::hentBehandling).ifPresent(b -> {
                     var dto = pipRestKlient.hentPipdataForBehandling(b.getUuid().toString());
                     appRessursData.leggTilAktørIdSet(dto.aktørIder().stream().map(AktørId::getId).collect(Collectors.toSet()));
-                    Optional.ofNullable(dto.fagsakStatus()).ifPresent(fss -> ressursData.leggTilRessurs(ForeldrepengerDataKeys.FAGSAK_STATUS, fss));
-                    Optional.ofNullable(dto.behandlingStatus()).ifPresent(bhs -> ressursData.leggTilRessurs(ForeldrepengerDataKeys.BEHANDLING_STATUS, bhs));
+                    Optional.ofNullable(dto.fagsakStatus()).ifPresent(fss -> appRessursData.leggTilRessurs(ForeldrepengerDataKeys.FAGSAK_STATUS, fss));
+                    Optional.ofNullable(dto.behandlingStatus()).ifPresent(bhs -> appRessursData.leggTilRessurs(ForeldrepengerDataKeys.BEHANDLING_STATUS, bhs));
                 }
         );
         return appRessursData.build();

@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingV2Dto;
+import no.nav.security.token.support.core.api.Protected;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
@@ -36,6 +37,7 @@ import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 @Path("/brev")
 @Transactional
 @ApplicationScoped
+@Protected
 public class BrevRestTjeneste {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BrevRestTjeneste.class);

@@ -2,6 +2,8 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokdist;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.AfterAll;
@@ -12,8 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
+import no.nav.foreldrepenger.fpformidling.integrasjon.oauth2.ClientConfiguration;
+import no.nav.foreldrepenger.fpformidling.integrasjon.oauth2.OAuth2Token;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
+import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenResponse;
 import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.ManglerTilgangException;
 import no.nav.vedtak.exception.TekniskException;
@@ -24,7 +29,7 @@ import no.nav.vedtak.sikkerhet.oidc.token.TokenProvider;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-class JavaDokdistRestKlientTest {
+class DokdistRestKlientTest {
     private static MockedStatic<TokenProvider> TOKEN_PROVIDER_MOCKED_STATIC;
     private MockWebServer mockWebServer;
     private Dokdist klient;
@@ -33,7 +38,7 @@ class JavaDokdistRestKlientTest {
     static void initStaticMocks() {
         MDCOperations.putCallId();
 
-        var idToken = Mockito.mock(OpenIDToken.class);
+        var idToken = mock(OpenIDToken.class);
         when(idToken.token()).thenReturn("token_string");
         TOKEN_PROVIDER_MOCKED_STATIC = Mockito.mockStatic(TokenProvider.class);
         TOKEN_PROVIDER_MOCKED_STATIC.when(TokenProvider::getStsSystemToken).thenReturn(idToken);
@@ -47,7 +52,11 @@ class JavaDokdistRestKlientTest {
     @BeforeEach
     void setup() {
         this.mockWebServer = new MockWebServer();
-        this.klient = new JavaDokdistRestKlient(mockWebServer.url("/fpformidling").toString());
+        var oAuth2Client = mock(OAuth2Token.class);
+        when(oAuth2Client.getAccessToken(any())).thenReturn(OAuth2AccessTokenResponse.builder().accessToken("test_token").build());
+
+        this.klient = new DokdistRestKlient(mockWebServer.url("/fpformidling").toString(), oAuth2Client, mock(
+                ClientConfiguration.class));
     }
 
     @Test

@@ -14,7 +14,6 @@ import javax.ws.rs.core.Application;
 
 import org.glassfish.jersey.server.ServerProperties;
 
-import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import io.swagger.v3.oas.integration.GenericOpenApiContextBuilder;
 import io.swagger.v3.oas.integration.OpenApiConfigurationException;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
@@ -32,6 +31,7 @@ import no.nav.foreldrepenger.fpformidling.web.app.tjenester.ForvaltningRestTjene
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev.BrevRestTjeneste;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.TimingFilter;
 import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.security.token.support.jaxrs.JwtTokenContainerRequestFilter;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 
 @ApplicationPath(ApplicationConfig.API_URI)
@@ -41,30 +41,28 @@ public class ApplicationConfig extends Application {
 
     static final String API_URI = "/api";
 
-    public ApplicationConfig() {
-
-        try {
-            new GenericOpenApiContextBuilder<>()
-                    .openApiConfiguration(new SwaggerConfiguration()
-                            .openAPI(new OpenAPI()
-                                    .info(new Info()
-                                            .title("Foreldrepenger - Formidling")
-                                            .version("1.0")
-                                            .description("REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede."))
-                                    .servers(List.of(new Server().url("/fpformidling")))
-                                    .components(new Components()
-                                            .securitySchemes(Map.of("openId", openId(),
-                                                                    /*"apiKey", apiKey(),*/
-                                                                    "bearerAuth", bearerAuth()))))
-                            .prettyPrint(true)
-                            .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
-                            .resourcePackages(Stream.of("no.nav")
-                                    .collect(Collectors.toSet())))
-                    .buildContext(true)
-                    .read();
-        } catch (OpenApiConfigurationException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
+    public ApplicationConfig() { try {
+        new GenericOpenApiContextBuilder<>()
+                .openApiConfiguration(new SwaggerConfiguration()
+                        .openAPI(new OpenAPI()
+                                .info(new Info()
+                                        .title("Foreldrepenger - Formidling")
+                                        .version("1.0")
+                                        .description("REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede."))
+                                .servers(List.of(new Server().url("/fpformidling")))
+                                .components(new Components()
+                                        .securitySchemes(Map.of("openId", openId(),
+                                                /*"apiKey", apiKey(),*/
+                                                "bearerAuth", bearerAuth()))))
+                        .prettyPrint(true)
+                        .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
+                        .resourcePackages(Stream.of("no.nav")
+                                .collect(Collectors.toSet())))
+                .buildContext(true)
+                .read();
+    } catch (OpenApiConfigurationException e) {
+        throw new IllegalStateException(e.getMessage(), e);
+    }
     }
 
     private SecurityScheme openId() {
@@ -96,11 +94,12 @@ public class ApplicationConfig extends Application {
         classes.add(ForvaltningRestTjeneste.class);
         classes.add(ProsessTaskRestTjeneste.class);
 
-        // swagger
-        classes.add(OpenApiResource.class);
+        //swagger
+        classes.add(SwaggerApiResource.class);
 
         // Applikasjonsoppsett
         classes.add(TimingFilter.class);
+        classes.add(JwtTokenContainerRequestFilter.class);
         classes.add(JacksonJsonConfig.class);
 
         // ExceptionMappers pga de som finnes i Jackson+Jersey-media

@@ -62,6 +62,7 @@ spec:
             cluster: dev-fss
           - application: fp-frontend-azure
             cluster: dev-gcp
+  webproxy: true
   env:
   {{#each env}}
    - name: {{@key}}

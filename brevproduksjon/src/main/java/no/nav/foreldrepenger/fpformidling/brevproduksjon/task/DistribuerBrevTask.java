@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.DistribuerJournalp
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstidspunkt;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Dokdist;
-import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Dokdist;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
@@ -29,7 +29,7 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
     private ProsessTaskTjeneste taskTjeneste;
 
     @Inject
-    public DistribuerBrevTask(@JavaClient Dokdist dokdist,
+    public DistribuerBrevTask(Dokdist dokdist,
                               ProsessTaskTjeneste taskTjeneste) {
         this.dokdist = dokdist;
         this.taskTjeneste = taskTjeneste;

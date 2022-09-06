@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.web.app.tjenester;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static no.nav.foreldrepenger.fpformidling.web.server.jetty.JettyServer.AZUREAD;
 
 import java.util.UUID;
 import java.util.function.Function;
@@ -36,7 +37,10 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
+import no.nav.foreldrepenger.fpformidling.web.server.jetty.JettyServer;
 import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.security.token.support.core.api.Protected;
+import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
@@ -50,6 +54,7 @@ import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 @ApplicationScoped
 @Transactional
 @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
+@ProtectedWithClaims(issuer = AZUREAD)
 public class ForvaltningRestTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(ForvaltningRestTjeneste.class);

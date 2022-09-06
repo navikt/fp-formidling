@@ -1,25 +1,21 @@
 package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 
+import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.NamingException;
-import javax.security.auth.message.config.AuthConfigFactory;
 import javax.servlet.DispatcherType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jetty.jaas.JAASLoginService;
 import org.eclipse.jetty.plus.jndi.EnvEntry;
-import org.eclipse.jetty.security.ConstraintSecurityHandler;
-import org.eclipse.jetty.security.DefaultIdentityService;
-import org.eclipse.jetty.security.SecurityHandler;
-import org.eclipse.jetty.security.jaspi.DefaultAuthConfigFactory;
-import org.eclipse.jetty.security.jaspi.JaspiAuthenticatorFactory;
-import org.eclipse.jetty.security.jaspi.provider.JaspiAuthConfigProvider;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.ForwardedRequestCustomizer;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -29,6 +25,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.util.resource.ResourceCollection;
@@ -41,19 +38,26 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import no.nav.foreldrepenger.fpformidling.web.app.konfig.ApplicationConfig;
+import no.nav.foreldrepenger.fpformidling.web.server.HeadersToMDCFilterBean;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceRole;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceUtil;
 import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.security.token.support.core.configuration.IssuerProperties;
+import no.nav.security.token.support.core.configuration.MultiIssuerConfiguration;
+import no.nav.security.token.support.jaxrs.servlet.JaxrsJwtTokenValidationFilter;
 import no.nav.vedtak.isso.IssoApplication;
 import no.nav.vedtak.sikkerhet.ContextPathHolder;
-import no.nav.vedtak.sikkerhet.jaspic.OidcAuthModule;
 
 public class JettyServer {
+
+    public static final String AZUREAD = "azuread";
+    public static final String OPENAM = "openam";
 
     private static final Environment ENV = Environment.current();
     private static final Logger LOG = LoggerFactory.getLogger(JettyServer.class);
 
     private static final String CONTEXT_PATH = ENV.getProperty("context.path","/fpformidling");
+    private static final String STS = "sts";
 
     /**
      * Legges først slik at alltid resetter context før prosesserer nye requests.
@@ -95,14 +99,6 @@ public class JettyServer {
         if (ENV.isLocal()) {
             initTrustStore();
         }
-
-        var factory = new DefaultAuthConfigFactory();
-        factory.registerConfigProvider(new JaspiAuthConfigProvider(new OidcAuthModule()),
-                "HttpServlet",
-                "server " + CONTEXT_PATH,
-                "OIDC Authentication");
-
-        AuthConfigFactory.setFactory(factory);
     }
 
     private static void initTrustStore() {
@@ -171,19 +167,12 @@ public class JettyServer {
     private static WebAppContext createContext() throws IOException {
         var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
-
-        // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra filsystem.
-        String descriptor;
-        try (var resource = Resource.newClassPathResource("/WEB-INF/web.xml")) {
-            descriptor = resource.getURI().toURL().toExternalForm();
-        }
-        ctx.setDescriptor(descriptor);
         ctx.setContextPath(CONTEXT_PATH);
         ctx.setBaseResource(createResourceCollection());
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
-        ctx.setAttribute("org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern",
-                "^.*jersey-.*.jar$|^.*felles-.*.jar$");
-        ctx.setSecurityHandler(createSecurityHandler());
+        ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*.jar$|^.*felles-.*.jar$");
+        ctx.addEventListener(new org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener());
+        ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());
         updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
         addFilters(ctx);
@@ -194,17 +183,6 @@ public class JettyServer {
         return new ResourceCollection(
                 Resource.newClassPathResource("META-INF/resources/webjars/"),
                 Resource.newClassPathResource("/web"));
-    }
-
-    private static SecurityHandler createSecurityHandler() {
-        var securityHandler = new ConstraintSecurityHandler();
-        securityHandler.setAuthenticatorFactory(new JaspiAuthenticatorFactory());
-        var loginService = new JAASLoginService();
-        loginService.setName("jetty-login");
-        loginService.setLoginModuleName("jetty-login");
-        loginService.setIdentityService(new DefaultIdentityService());
-        securityHandler.setLoginService(loginService);
-        return securityHandler;
     }
 
     private static void updateMetaData(MetaData metaData) {
@@ -218,10 +196,46 @@ public class JettyServer {
     }
 
     private static void addFilters(WebAppContext ctx) {
-        var corsFilter = ctx.addFilter(CrossOriginFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+        var dispatcherType = EnumSet.of(DispatcherType.REQUEST);
+
+        LOG.trace("Installerer JaxrsJwtTokenValidationFilter");
+        ctx.addFilter(new FilterHolder(new JaxrsJwtTokenValidationFilter(config())),
+                "/api/*",
+                dispatcherType);
+        ctx.addFilter(new FilterHolder(new HeadersToMDCFilterBean()),
+                "/api/*",
+                dispatcherType);
+        var corsFilter = ctx.addFilter(CrossOriginFilter.class, "/*", dispatcherType);
+
         corsFilter.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, ENV.getProperty("cors.allowed.origins", "*"));
         corsFilter.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, ENV.getProperty("cors.allowed.headers", "*"));
         corsFilter.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, ENV.getProperty("cors.allowed.methods", "*"));
+    }
+
+    private static MultiIssuerConfiguration config() {
+        return new MultiIssuerConfiguration(
+                Map.of(
+                        STS, stsIssuerProperties(),
+                        AZUREAD, azureIssuerProperties(),
+                        OPENAM, openAmIssuerProperties()));
+    }
+
+    private static IssuerProperties stsIssuerProperties() {
+        return new IssuerProperties(ENV.getRequiredProperty("oidc.sts.well.known.url", URL.class));
+    }
+
+    private static IssuerProperties azureIssuerProperties() {
+        var issuerProperties = new IssuerProperties(ENV.getRequiredProperty("azure.app.well.known.url", URL.class),
+                List.of(ENV.getRequiredProperty("azure.app.client.id")));
+        if (!ENV.isLocal()) {
+            issuerProperties.setProxyUrl(ENV.getRequiredProperty("http.proxy", URL.class));
+        }
+        return issuerProperties;
+    }
+
+    private static IssuerProperties openAmIssuerProperties() {
+        return new IssuerProperties(ENV.getRequiredProperty("oidc.open.am.well.known.url", URL.class), List.of(ENV.getRequiredProperty(
+                "oidc.open.am.client.id")), "ID_token");
     }
 
     private static List<Class<?>> getWebInfClasses() {

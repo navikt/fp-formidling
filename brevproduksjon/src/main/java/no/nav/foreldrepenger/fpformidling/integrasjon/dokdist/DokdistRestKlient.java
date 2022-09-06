@@ -15,26 +15,35 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaHttpKlient;
+import no.nav.foreldrepenger.fpformidling.integrasjon.oauth2.ClientConfiguration;
+import no.nav.foreldrepenger.fpformidling.integrasjon.oauth2.OAuth2Token;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
+import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
+import no.nav.security.token.support.client.core.ClientProperties;
 import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.log.mdc.MDCOperations;
 import no.nav.vedtak.sikkerhet.context.SubjectHandler;
 import no.nav.vedtak.sikkerhet.oidc.token.TokenProvider;
 
 @ApplicationScoped
-@JavaClient
-class JavaDokdistRestKlient extends JavaHttpKlient implements Dokdist {
+class DokdistRestKlient extends JavaHttpKlient implements Dokdist {
+    public static final String DOKDIST_CLIENT_ID = "dokdist";
 
-    private static final Logger LOG = LoggerFactory.getLogger(JavaDokdistRestKlient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DokdistRestKlient.class);
 
     private final String dokdistRestBaseUri;
+    private final OAuth2Token tokenService;
+    private final ClientConfiguration clientProps;
 
     @Inject
-    public JavaDokdistRestKlient(@KonfigVerdi("dokdist.rest.base.url") String endpoint) {
+    public DokdistRestKlient(@KonfigVerdi("dokdist.rest.base.url") String endpoint,
+                             OAuth2Token tokenService,
+                             ClientConfiguration clientProperties) {
         this.dokdistRestBaseUri = endpoint;
+        this.tokenService = tokenService;
+        this.clientProps = clientProperties;
     }
 
     public Dokdist.Resultat distribuerJournalpost(DistribuerJournalpostRequest dto) {
@@ -82,7 +91,15 @@ class JavaDokdistRestKlient extends JavaHttpKlient implements Dokdist {
 
     @Override
     public Optional<String> getAuthorization() {
-        return Optional.ofNullable(TokenProvider.getStsSystemToken().token());
+        if (!Environment.current().isProd()) {
+            return Optional.ofNullable(tokenService.getAccessToken(getClientProps()).getAccessToken());
+        } else {
+            return Optional.ofNullable(TokenProvider.getStsSystemToken().token());
+        }
+    }
+
+    private ClientProperties getClientProps() {
+        return clientProps.registrations().get(DOKDIST_CLIENT_ID);
     }
 
     @Override

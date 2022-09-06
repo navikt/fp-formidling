@@ -14,7 +14,7 @@ import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 
 public class RestApiTester {
 
-    static final List<Class<?>> UNNTATT = Collections.singletonList(OpenApiResource.class);
+    static final List<Class<?>> UNNTATT = List.of(OpenApiResource.class, SwaggerApiResource.class);
 
     static Collection<Method> finnAlleRestMetoder() {
         List<Method> liste = new ArrayList<>();
@@ -29,13 +29,7 @@ public class RestApiTester {
     }
 
     static Collection<Class<?>> finnAlleRestTjenester() {
-
-
-        List<Class<?>> klasser = new ArrayList<>();
-
-        klasser.addAll(finnAlleRestTjenester(new ApplicationConfig()));
-
-        return klasser;
+        return new ArrayList<>(finnAlleRestTjenester(new ApplicationConfig()));
     }
 
     static Collection<Class<?>> finnAlleRestTjenester(Application config) {

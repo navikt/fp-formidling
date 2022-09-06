@@ -9,9 +9,9 @@ import org.apache.http.client.utils.URIBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import no.nav.foreldrepenger.fpformidling.web.app.pdp.dto.PipDto;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
 import no.nav.vedtak.felles.integrasjon.rest.SystemUserOidcRestClient;
+import no.nav.vedtak.sikkerhet.abac.pipdata.AbacPipDto;
 
 @ApplicationScoped
 //For Future Use
@@ -33,11 +33,11 @@ public class PipRestKlient {
         this.endpointFpsakRestBase = endpointFpsakRestBase;
     }
 
-    public PipDto hentPipdataForBehandling(String behandlingUUid) {
+    public AbacPipDto hentPipdataForBehandling(String behandlingUUid) {
         try {
-            URIBuilder pipUriBuilder = new URIBuilder(endpointFpsakRestBase + "/fpsak/api/pip/pipdata-for-behandling");
+            URIBuilder pipUriBuilder = new URIBuilder(endpointFpsakRestBase + "/fpsak/api/pip/pipdata-for-behandling-appintern");
             pipUriBuilder.setParameter("behandlingUuid", behandlingUUid);
-            return oidcRestClient.getReturnsOptional(pipUriBuilder.build(), PipDto.class)
+            return oidcRestClient.getReturnsOptional(pipUriBuilder.build(), AbacPipDto.class)
                     .orElseThrow(IllegalStateException::new);
         } catch (URISyntaxException e) {
             LOGGER.error("Feil ved oppretting av URI.", e);

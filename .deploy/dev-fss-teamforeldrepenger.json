@@ -1,8 +1,8 @@
 {
   "environment": "dev",
   "serviceuserkv": "/serviceuser/data/dev/srvfpformidling",
-  "minReplicas": "2",
-  "maxReplicas": "3",
+  "minReplicas": "1",
+  "maxReplicas": "2",
   "ingresses": [
       "https://fpformidling.dev.intern.nav.no",
       "https://app-q1.adeo.no/fpformidling"

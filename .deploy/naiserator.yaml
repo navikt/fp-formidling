@@ -59,7 +59,6 @@ spec:
     inbound:
       rules:
         - application: fp-frontend-azure
-          cluster: dev-fss
   env:
   {{#each env}}
    - name: {{@key}}

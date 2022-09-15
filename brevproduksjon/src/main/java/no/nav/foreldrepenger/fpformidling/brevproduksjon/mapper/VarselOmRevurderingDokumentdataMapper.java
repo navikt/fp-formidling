@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
+import java.util.Optional;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -63,9 +65,9 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         String advarselKode = utledAdvarselkode(hendelse);
         var dokumentdataBuilder = VarselOmRevurderingDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
-                .medTerminDato(finnTermindato(familieHendelse, behandling.getSpråkkode()))
+                .medTerminDato(finnTermindato(familieHendelse, behandling.getSpråkkode()).orElse(null))
                 .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()))
-                .medAntallBarn(familieHendelse.getAntallBarn().intValue())
+                .medAntallBarn(familieHendelse.antallBarn())
                 .medAdvarselKode(advarselKode)
                 .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode))
                 .medKreverSammenhengendeUttak(kreverSammenhengendeUttak);
@@ -73,11 +75,8 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         return dokumentdataBuilder.build();
     }
 
-    private String finnTermindato(FamilieHendelse familieHendelse, Språkkode språkkode) {
-        if (familieHendelse.getTermindato() != null && familieHendelse.getTermindato().isPresent()) {
-            return formaterDato(familieHendelse.getTermindato().get(), språkkode);
-        }
-        return null;
+    private Optional<String> finnTermindato(FamilieHendelse familieHendelse, Språkkode språkkode) {
+        return familieHendelse.termindato().map(termindato -> formaterDato(termindato, språkkode));
     }
 
     private String utledAdvarselkode(DokumentHendelse hendelse) {

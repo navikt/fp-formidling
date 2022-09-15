@@ -19,7 +19,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -298,8 +297,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamilieHendelse(LocalDate termindato) {
-        return new FamilieHendelse(BigInteger.ONE, 0,  true, true, FamilieHendelseType.TERMIN,
-                new FamilieHendelse.OptionalDatoer(Optional.of(LocalDate.now()), Optional.of(termindato), Optional.empty(), Optional.empty()));
+        return new FamilieHendelse(FamilieHendelseType.TERMIN, 1, 0, LocalDate.now(), termindato, null, null,true, true);
     }
 
     private Beregningsgrunnlag opprettBeregningsgrunnlag() {

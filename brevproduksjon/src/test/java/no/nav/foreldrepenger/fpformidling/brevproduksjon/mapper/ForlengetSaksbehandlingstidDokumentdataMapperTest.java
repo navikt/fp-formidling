@@ -14,7 +14,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -87,7 +86,6 @@ public class ForlengetSaksbehandlingstidDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        FamilieHendelse.OptionalDatoer optionalDatoer = new FamilieHendelse.OptionalDatoer(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
-        return new FamilieHendelse(BigInteger.valueOf(ANTALL_BARN), 0, false, false, FamilieHendelseType.TERMIN, optionalDatoer);
+        return new FamilieHendelse(FamilieHendelseType.TERMIN, ANTALL_BARN, 0, null, null, null, null, false, false);
     }
 }

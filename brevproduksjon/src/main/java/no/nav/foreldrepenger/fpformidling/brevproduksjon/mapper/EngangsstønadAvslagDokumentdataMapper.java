@@ -74,20 +74,20 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
                 .medAvslagsÅrsak(mapAvslagsårsakerBrev(behandling.getBehandlingsresultat().getAvslagsårsak()))
                 .medFelles(fellesBuilder.build())
                 .medFørstegangsbehandling(behandling.erFørstegangssøknad())
-                .medGjelderFødsel(familieHendelse.isGjelderFødsel())
+                .medGjelderFødsel(familieHendelse.gjelderFødsel())
                 .medRelasjonsRolle(utledRelasjonsRolle(behandling.getFagsakBackend()))
                 .medVilkårTyper(utledVilkårTilBrev(vilkår, behandling.getBehandlingsresultat().getAvslagsårsak(), behandling))
-                .medAntallBarn(familieHendelse.getAntallBarn().intValue())
+                .medAntallBarn(familieHendelse.antallBarn())
                 .medKlagefristUker(brevParametere.getKlagefristUker());
 
         utledAvslagsgrunnHvisMedlVilkår(behandling.getBehandlingsresultat().getAvslagsårsak(), isSkjæringstidspunktPassert(familieHendelse),
-                familieHendelse.isGjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
+                familieHendelse.gjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
 
         return dokumentdataBuilder.build();
     }
 
     private boolean isSkjæringstidspunktPassert(FamilieHendelse familieHendelse) {
-        return familieHendelse.getSkjæringstidspunkt().isPresent() && familieHendelse.getSkjæringstidspunkt().get().isBefore(LocalDate.now());
+        return familieHendelse.skjæringstidspunkt().map(stp -> stp.isBefore(LocalDate.now())).orElse(false);
     }
 
     String utledRelasjonsRolle(FagsakBackend fagsak) {

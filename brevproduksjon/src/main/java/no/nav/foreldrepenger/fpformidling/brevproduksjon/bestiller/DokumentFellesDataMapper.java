@@ -47,20 +47,20 @@ public class DokumentFellesDataMapper {
 
         Optional<Verge> vergeOpt = domeneobjektProvider.hentVerge(behandling);
         if (vergeOpt.isEmpty()) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId, Optional.empty());
+            opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
             return;
         }
 
         // kopien går til søker
-        opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId,Optional.of( DokumentFelles.Kopi.JA));
+        opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId, DokumentFelles.Kopi.JA);
 
         // orginalen går til verge
         Verge verge = vergeOpt.get();
         if (verge.aktoerId() != null) {
             AktørId vergesAktørId = new AktørId(verge.aktoerId());
-            opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId, Optional.of( DokumentFelles.Kopi.NEI));
+            opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId, DokumentFelles.Kopi.NEI);
         } else if (verge.organisasjonsnummer() != null) {
-            opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, verge, søkersAktørId, Optional.of( DokumentFelles.Kopi.NEI));
+            opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, verge, søkersAktørId, DokumentFelles.Kopi.NEI);
         }
     }
 
@@ -68,7 +68,7 @@ public class DokumentFellesDataMapper {
                                                              DokumentData dokumentData,
                                                              Verge verge,
                                                              AktørId aktørIdBruker,
-                                                             Optional<DokumentFelles.Kopi> erKopi) {
+                                                             DokumentFelles.Kopi erKopi) {
         Virksomhet virksomhet = getVirksomhet(verge);
 
         Personinfo personinfoBruker = personAdapter.hentBrukerForAktør(aktørIdBruker)
@@ -90,8 +90,16 @@ public class DokumentFellesDataMapper {
     private void opprettDokumentDataForMottaker(Behandling behandling,
                                                 DokumentData dokumentData,
                                                 AktørId aktørIdMottaker,
+                                                AktørId aktørIdBruker) {
+
+        opprettDokumentDataForMottaker(behandling, dokumentData, aktørIdMottaker, aktørIdBruker, null);
+    }
+
+    private void opprettDokumentDataForMottaker(Behandling behandling,
+                                                DokumentData dokumentData,
+                                                AktørId aktørIdMottaker,
                                                 AktørId aktørIdBruker,
-                                                Optional<DokumentFelles.Kopi> erKopi) {
+                                                DokumentFelles.Kopi erKopi) {
 
         var personinfoMottaker = personAdapter.hentBrukerForAktør(aktørIdMottaker)
                 .orElseThrow(() -> new TekniskException("FPFORMIDLING-119013", String.format(FANT_IKKE_BRUKER, aktørIdMottaker)));
@@ -110,7 +118,7 @@ public class DokumentFellesDataMapper {
                                                Personinfo personinfoBruker,
                                                Virksomhet virksomhet,
                                                String vergeNavn,
-                                               Optional<DokumentFelles.Kopi> erKopi) {
+                                               DokumentFelles.Kopi erKopi) {
 
         FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
 
@@ -139,7 +147,7 @@ public class DokumentFellesDataMapper {
                                            DokumentData dokumentData,
                                            Personinfo personinfoBruker,
                                            Personinfo personinfoMottaker,
-                                           Optional<DokumentFelles.Kopi> erKopi) {
+                                           DokumentFelles.Kopi erKopi) {
 
         FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
 

@@ -85,10 +85,10 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
                 .medFelles(fellesBuilder.build())
                 .medRelasjonskode(finnRelasjonskode(fagsak))
                 .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), behandling.getSpråkkode()))
-                .medGjelderFødsel(familiehendelse.isGjelderFødsel())
-                .medBarnErFødt(familiehendelse.isBarnErFødt())
+                .medGjelderFødsel(familiehendelse.gjelderFødsel())
+                .medBarnErFødt(familiehendelse.barnErFødt())
                 .medAnnenForelderHarRett(uttakResultatPerioder.map(ForeldrepengerUttak::annenForelderHarRett).orElse(false))
-                .medAntallBarn(familiehendelse.getAntallBarn().intValue())
+                .medAntallBarn(familiehendelse.antallBarn())
                 .medHalvG(halvG)
                 .medKlagefristUker(brevParametere.getKlagefristUker())
                 .medKreverSammenhengendeUttak(domeneobjektProvider.kreverSammenhengendeUttak(behandling));

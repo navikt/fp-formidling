@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.mockito.Mockito;
@@ -63,7 +62,7 @@ public class DatamapperTestUtil {
                 .medSaksnummer(new Saksnummer(SAKSNUMMER))
                 .medSakspartId(PersonIdent.fra(SØKERS_FNR))
                 .medSakspartNavn(SØKERS_NAVN)
-                .medErKopi(kopi != null ? Optional.of(kopi) : null)
+                .medErKopi(kopi)
                 .medMottakerType(DokumentFelles.MottakerType.PERSON)
                 .medSpråkkode(Språkkode.NB)
                 .medSakspartPersonStatus(ANNET)

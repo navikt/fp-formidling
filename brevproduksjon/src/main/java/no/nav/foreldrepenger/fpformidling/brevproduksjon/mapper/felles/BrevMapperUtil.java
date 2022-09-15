@@ -62,11 +62,12 @@ public class BrevMapperUtil {
                                                                   DokumentHendelse dokumentHendelse,
                                                                   Behandling behandling,
                                                                   boolean erUtkast) {
+        var erKopi = dokumentFelles.getErKopi();
         FellesDokumentdata.Builder fellesBuilder = FellesDokumentdata.ny()
                 .medSøkerNavn(dokumentFelles.getSakspartNavn())
                 .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medErKopi(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent() && erKopi(dokumentFelles.getErKopi().get()))
-                .medHarVerge(dokumentFelles.getErKopi() != null && dokumentFelles.getErKopi().isPresent())
+                .medErKopi(erKopi.isPresent() && erKopi(erKopi.get()))
+                .medHarVerge(erKopi.isPresent())
                 .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
                 .medYtelseType(dokumentHendelse.getYtelseType().getKode())
                 .medBehandlesAvKA(behandlesAvKlageinstans(dokumentHendelse, behandling))

@@ -101,6 +101,6 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     private boolean antallBarnEndret(FamilieHendelse famHendelse, FamilieHendelse orgFamhendelse) {
-        return famHendelse.getAntallBarn().intValue()!= orgFamhendelse.getAntallBarn().intValue();
+        return famHendelse.antallBarn() != orgFamhendelse.antallBarn();
     }
 }

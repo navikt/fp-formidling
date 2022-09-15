@@ -16,7 +16,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -140,8 +139,8 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        FamilieHendelse.OptionalDatoer optionalDatoer = new FamilieHendelse.OptionalDatoer(Optional.of(LocalDate.now()), Optional.of(LocalDate.now()), Optional.empty(), Optional.of(LocalDate.now()));
-        return new FamilieHendelse(BigInteger.valueOf(2), 0, false, true, FamilieHendelseType.TERMIN, optionalDatoer);
+        var now = LocalDate.now();
+        return new FamilieHendelse(FamilieHendelseType.TERMIN, 2, 0, now, now, null, now, false, true);
     }
 
     private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {

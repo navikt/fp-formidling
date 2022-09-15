@@ -119,8 +119,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
         var erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
         var dagsats = finnDagsats(tilkjentYtelseForeldrepenger);
-        var antallBarn = familieHendelse.getAntallBarn().intValue();
-        var antallDødeBarn = familieHendelse.getAntallDødeBarn();
+        var antallBarn = familieHendelse.antallBarn();
+        var antallDødeBarn = familieHendelse.antallDødeBarn();
 
         int utenAktKrav = 0;
         int medAktKrav = 0;
@@ -147,11 +147,11 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(aksjonspunkter, uttakResultatPerioder))
                 .medAnnenForelderHarRett(uttakResultatPerioder.annenForelderHarRett())
                 .medAleneomsorgKode(erAleneomsorg(søknad, uttakResultatPerioder))
-                .medBarnErFødt(familieHendelse.isBarnErFødt())
+                .medBarnErFødt(familieHendelse.barnErFødt())
                 .medÅrsakErFødselshendelse(erRevurderingPgaFødselshendelse(behandling, familieHendelse, originalFamiliehendelse))
                 .medIkkeOmsorg(finnesPeriodeMedIkkeOmsorg(utbetalingsperioder))
                 .medGjelderMor(gjelderMor(fagsak))
-                .medGjelderFødsel(familieHendelse.isGjelderFødsel())
+                .medGjelderFødsel(familieHendelse.gjelderFødsel())
                 .medIngenRefusjon(harIngenRefusjon(tilkjentYtelseForeldrepenger))
                 .medDelvisRefusjon(harDelvisRefusjon(tilkjentYtelseForeldrepenger))
                 .medFullRefusjon(harFullRefusjon(tilkjentYtelseForeldrepenger))
@@ -194,7 +194,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         //Dersom alle barna er døde skal vi sette dødsdato og faktisk antallDødeBarn. Det er kun i disse tilfellene at innvilgelsesbrevet skal informere om at barnet/barna er døde, ellers er saken fortsatt løpende
         if (antallBarn == antallDødeBarn) {
-            familieHendelse.getDødsdato().ifPresent(d -> dokumentdataBuilder.medDødsdato(formaterDato(d, språkkode)));
+            familieHendelse.dødsdato().ifPresent(d -> dokumentdataBuilder.medDødsdato(formaterDato(d, språkkode)));
             dokumentdataBuilder.medAntallDødeBarn(antallDødeBarn);
         } else {
             dokumentdataBuilder.medAntallDødeBarn(0);
@@ -247,7 +247,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     private boolean erRevurderingPgaFødselshendelse(Behandling behandling, FamilieHendelse familieHendelse,
                                                     Optional<FamilieHendelse> originalFamiliehendelse) {
         return behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_HENDELSE_FØDSEL) ||
-                familieHendelse.isBarnErFødt() && originalFamiliehendelse.map(fh -> !fh.isBarnErFødt()).orElse(false);
+                familieHendelse.barnErFødt() && originalFamiliehendelse.map(fh -> !fh.barnErFødt()).orElse(false);
     }
 
     private VurderingsKode utledAnnenForelderRettVurdertKode(List<Aksjonspunkt> aksjonspunkter, ForeldrepengerUttak foreldrepengerUttak) {

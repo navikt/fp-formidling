@@ -7,7 +7,6 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -77,7 +76,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     void mapTilDokumentdata_avslag_ESFB_søknadsfrist_med_Fritekst_mappes_ok() {
         //Arrange
         FagsakBackend fagsak = opprettFagsak(RelasjonsRolleType.MORA);
-        FamilieHendelse familieHendelse = new FamilieHendelse(BigInteger.ONE, 0, false, true, FamilieHendelseType.TERMIN, new FamilieHendelse.OptionalDatoer(Optional.of(LocalDate.now()), Optional.empty(), Optional.empty(), Optional.empty()));
+        FamilieHendelse familieHendelse = new FamilieHendelse(FamilieHendelseType.TERMIN, 1, 0, LocalDate.now(), null, null, null, false, true);
         List<Vilkår> vilkårFraBehandling = List.of(new Vilkår(VilkårType.SØKNADSFRISTVILKÅRET));
 
         String avslagsfritekst = "Vi har ikke motatt informasjon som begrunner at du ikke har kunnet søke i tide. Derfor avslås saken.";

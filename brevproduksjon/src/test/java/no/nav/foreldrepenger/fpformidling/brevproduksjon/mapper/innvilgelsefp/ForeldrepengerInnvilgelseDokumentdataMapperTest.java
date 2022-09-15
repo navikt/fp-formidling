@@ -214,8 +214,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        FamilieHendelse.OptionalDatoer optionalDatoer = new FamilieHendelse.OptionalDatoer(Optional.empty(), Optional.of(LocalDate.now()), Optional.empty(), Optional.empty());
-        return new FamilieHendelse(BigInteger.valueOf(1), 0, false, true, FamilieHendelseType.TERMIN, optionalDatoer);
+        return new FamilieHendelse(FamilieHendelseType.TERMIN, 1, 0, null, LocalDate.now(), null, null, false, true);
     }
 
     private Optional<Søknad> opprettSøknad() {

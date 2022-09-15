@@ -95,8 +95,8 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
                 .medFelles(fellesBuilder.build())
                 .medErSøkerDød(erSøkerDød)
                 .medRelasjonskode(finnRelasjonskode(fagsak))
-                .medGjelderFødsel(familiehendelse.isGjelderFødsel())
-                .medAntallBarn(familiehendelse.getAntallBarn().intValue())
+                .medGjelderFødsel(familiehendelse.gjelderFødsel())
+                .medAntallBarn(familiehendelse.antallBarn())
                 .medHalvG(halvG)
                 .medKlagefristUker(brevParametere.getKlagefristUker());
 
@@ -144,14 +144,14 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
     private Optional<LocalDate> finnDødsdatoHvisFinnes(final FamilieHendelse familieHendelse, List<String> årsakListe) {
         Optional<LocalDate> dødsdato = Optional.empty();
         if (årsakListe.contains(PeriodeResultatÅrsak.BARNET_ER_DØD.getKode())) {
-            dødsdato = familieHendelse.getDødsdato();
+            dødsdato = familieHendelse.dødsdato();
         }
         return dødsdato;
     }
 
     private Optional<LocalDate> finnOpphørsdatoHvisFinnes(ForeldrepengerUttak foreldrepengerUttak, FamilieHendelse familiehendelse) {
         LocalDate opphørsdato = utledOpphørsdatoFraUttak(foreldrepengerUttak);
-        return Optional.ofNullable(opphørsdato).or(familiehendelse::getSkjæringstidspunkt);
+        return Optional.ofNullable(opphørsdato).or(familiehendelse::skjæringstidspunkt);
     }
 
     private LocalDate utledOpphørsdatoFraUttak(ForeldrepengerUttak foreldrepengerUttak) {

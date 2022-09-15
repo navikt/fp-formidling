@@ -7,8 +7,8 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMap
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelUtil;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 
 public class UttakMapper {
@@ -17,9 +17,9 @@ public class UttakMapper {
         //CDI
     }
 
-    public static String mapLovhjemlerForUttak(UttakResultatPerioder uttakResultatPerioder, String konsekvensForYtelse, boolean innvilgetRevurdering) {
+    public static String mapLovhjemlerForUttak(ForeldrepengerUttak foreldrepengerUttak, String konsekvensForYtelse, boolean innvilgetRevurdering) {
         Set<String> lovhjemler = new TreeSet<>(new LovhjemmelComparator());
-        for (UttakResultatPeriode periode : uttakResultatPerioder.getPerioder()) {
+        for (UttakResultatPeriode periode : foreldrepengerUttak.perioder()) {
             PeriodeResultatÅrsak årsak = utledÅrsakskode(periode);
             if (årsak.erUkjent()) {
                 continue;

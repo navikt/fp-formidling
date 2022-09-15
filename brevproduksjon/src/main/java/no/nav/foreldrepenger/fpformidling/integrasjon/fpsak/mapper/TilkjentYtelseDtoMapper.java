@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelseAndelDto;
@@ -34,7 +33,7 @@ public class TilkjentYtelseDtoMapper {
         List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = Arrays.stream(dto.getPerioder())
                 .map(p -> mapPeriodeFraDto(p, hentNavn))
                 .sorted(PeriodeComparator.TILKJENTYTELSERESULTAT)
-                .collect(Collectors.toList());
+                .toList();
         return TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(tilkjentYtelsePerioder)
                 .build();

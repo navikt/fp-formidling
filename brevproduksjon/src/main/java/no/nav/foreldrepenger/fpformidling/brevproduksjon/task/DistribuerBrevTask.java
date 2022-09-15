@@ -9,10 +9,10 @@ import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Dokdist;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.DistribuerJournalpostRequest;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstidspunkt;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Dokdist;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;

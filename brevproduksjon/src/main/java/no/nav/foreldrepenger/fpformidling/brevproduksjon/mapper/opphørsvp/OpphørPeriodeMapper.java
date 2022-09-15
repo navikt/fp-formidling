@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
@@ -31,7 +30,7 @@ import no.nav.vedtak.exception.TekniskException;
 
 public class OpphørPeriodeMapper {
     private static Set<String> lovReferanser;
-    
+
     public static Tuple<OpphørPeriode, String> mapOpphørtePerioderOgLovhjemmel(Behandling behandling, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, Inntektsmeldinger iay, List<TilkjentYtelsePeriode> tilkjentYtelsePerioder) {
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
@@ -84,7 +83,7 @@ public class OpphørPeriodeMapper {
             .flatMap(ura -> ura.getPerioder().stream())
                 .filter(ur -> PeriodeResultatType.AVSLÅTT.equals(ur.getPeriodeResultatType()))
                 .filter(ur -> PeriodeIkkeOppfyltÅrsak.opphørsAvslagÅrsaker().contains(ur.getPeriodeIkkeOppfyltÅrsak()))
-                .collect(Collectors.toList());
+                .toList();
 
         if (!opphørtePerioder.isEmpty()) {
             PeriodeIkkeOppfyltÅrsak årsak = finnNyestePeriodeIkkeOppfyltÅrsak(opphørtePerioder);

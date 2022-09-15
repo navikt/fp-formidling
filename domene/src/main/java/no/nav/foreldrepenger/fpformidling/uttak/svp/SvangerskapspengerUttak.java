@@ -6,22 +6,21 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
-public class SvpUttaksresultat {
+public class SvangerskapspengerUttak {
 
-    private List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold;
+    private final List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold;
 
-    private SvpUttaksresultat(Builder builder) {
+    private SvangerskapspengerUttak(Builder builder) {
         uttakResultatArbeidsforhold = builder.uttakResultatArbeidsforhold;
     }
 
     public List<SvpUttakResultatArbeidsforhold> getUttakResultatArbeidsforhold() {
         return uttakResultatArbeidsforhold.stream()
                 .sorted(Comparator.comparing(getSammenligningsDato()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private Function<SvpUttakResultatArbeidsforhold, DatoIntervall> getSammenligningsDato() {
@@ -31,7 +30,7 @@ public class SvpUttaksresultat {
     }
 
     public static final class Builder {
-        private List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold = new ArrayList<>();
+        private final List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold = new ArrayList<>();
 
         private Builder() {
             // Skjul default constructor
@@ -46,8 +45,8 @@ public class SvpUttaksresultat {
             return this;
         }
 
-        public SvpUttaksresultat build() {
-            return new SvpUttaksresultat(this);
+        public SvangerskapspengerUttak build() {
+            return new SvangerskapspengerUttak(this);
         }
     }
 }

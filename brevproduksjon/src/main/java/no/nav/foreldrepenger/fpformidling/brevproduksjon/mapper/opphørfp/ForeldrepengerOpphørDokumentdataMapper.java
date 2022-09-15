@@ -33,8 +33,8 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerO
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.typer.Dato;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.exception.VLException;
@@ -80,10 +80,10 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
 
-        UttakResultatPerioder uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)
-                .orElseGet(() -> UttakResultatPerioder.ny().build()); // bestående av tomme lister.
-        Optional<UttakResultatPerioder> originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
-                .flatMap(domeneobjektProvider::hentUttaksresultatHvisFinnes);
+        ForeldrepengerUttak foreldrepengerUttak = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)
+                .orElseGet(ForeldrepengerUttak::tomtUttak); // bestående av tomme lister.
+        Optional<ForeldrepengerUttak> originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
+                .flatMap(domeneobjektProvider::hentForeldrepengerUttakHvisFinnes);
 
         Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         long halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
@@ -100,13 +100,13 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
                 .medHalvG(halvG)
                 .medKlagefristUker(brevParametere.getKlagefristUker());
 
-        var årsakListe = mapAvslagårsaker(behandling.getBehandlingsresultat(), uttakResultatPerioder, dokumentdataBuilder);
+        var årsakListe = mapAvslagårsaker(behandling.getBehandlingsresultat(), foreldrepengerUttak, dokumentdataBuilder);
 
         finnDødsdatoHvisFinnes(familiehendelse, årsakListe)
                 .map(d -> Dato.formaterDato(d, språkkode))
                 .ifPresent(dokumentdataBuilder::medBarnDødsdato);
 
-        var opphørsdato = finnOpphørsdatoHvisFinnes(uttakResultatPerioder, familiehendelse);
+        var opphørsdato = finnOpphørsdatoHvisFinnes(foreldrepengerUttak, familiehendelse);
         opphørsdato.map(d -> Dato.formaterDato(d, språkkode))
                 .ifPresent(dokumentdataBuilder::medOpphørDato);
 
@@ -122,11 +122,10 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
     }
 
     private List<String> mapAvslagårsaker(Behandlingsresultat behandlingsresultat,
-                                  UttakResultatPerioder uttakResultatPerioder,
+                                  ForeldrepengerUttak foreldrepengerUttak,
                                   ForeldrepengerOpphørDokumentdata.Builder builder) {
         Tuple<List<String>, String> aarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapÅrsakslisteOgLovhjemmelFra(
-                behandlingsresultat,
-                uttakResultatPerioder);
+                behandlingsresultat, foreldrepengerUttak);
         List<String> årsakListe = aarsakListeOgLovhjemmel.getElement1();
 
         builder.medAvslagÅrsaker(årsakListe);
@@ -150,14 +149,14 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         return dødsdato;
     }
 
-    private Optional<LocalDate> finnOpphørsdatoHvisFinnes(UttakResultatPerioder uttakResultatPerioder, FamilieHendelse familiehendelse) {
-        LocalDate opphørsdato = utledOpphørsdatoFraUttak(uttakResultatPerioder);
+    private Optional<LocalDate> finnOpphørsdatoHvisFinnes(ForeldrepengerUttak foreldrepengerUttak, FamilieHendelse familiehendelse) {
+        LocalDate opphørsdato = utledOpphørsdatoFraUttak(foreldrepengerUttak);
         return Optional.ofNullable(opphørsdato).or(familiehendelse::getSkjæringstidspunkt);
     }
 
-    private LocalDate utledOpphørsdatoFraUttak(UttakResultatPerioder uttakResultatPerioder) {
+    private LocalDate utledOpphørsdatoFraUttak(ForeldrepengerUttak foreldrepengerUttak) {
         Set<String> opphørsårsaker = PeriodeResultatÅrsak.opphørsAvslagÅrsaker();
-        List<UttakResultatPeriode> perioder = uttakResultatPerioder.getPerioder();
+        List<UttakResultatPeriode> perioder = foreldrepengerUttak.perioder();
 
         // Finn fom-dato i første periode av de siste sammenhengende periodene med
         // opphørårsaker
@@ -175,8 +174,8 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         return null;
     }
 
-    private Optional<LocalDate> finnStønadFomDatoHvisFinnes(Optional<UttakResultatPerioder> originaltUttakResultat) {
-        return originaltUttakResultat.map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList()).stream()
+    private Optional<LocalDate> finnStønadFomDatoHvisFinnes(Optional<ForeldrepengerUttak> originaltUttakResultat) {
+        return originaltUttakResultat.map(ForeldrepengerUttak::perioder).orElse(Collections.emptyList()).stream()
                 .filter(UttakResultatPeriode::isInnvilget)
                 .map(UttakResultatPeriode::getFom)
                 .findFirst();

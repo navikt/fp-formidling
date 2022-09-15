@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
@@ -30,21 +29,21 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.N
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public final class UtbetalingsperiodeMapper {
 
     public static List<Utbetalingsperiode> mapUtbetalingsperioder(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
-                                                                  UttakResultatPerioder uttakResultatPerioder,
+                                                                  ForeldrepengerUttak foreldrepengerUttak,
                                                                   List<BeregningsgrunnlagPeriode> beregningingsgrunnlagPerioder,
                                                                   Språkkode språkkode) {
         List<Utbetalingsperiode> periodelisteFørSammenslåing = new ArrayList<>();
-        List<UttakResultatPeriode> uttaksperioder = uttakResultatPerioder.getPerioder();
+        List<UttakResultatPeriode> uttaksperioder = foreldrepengerUttak.perioder();
         // er avhengig av at listen er sortert med tidligste periode først
         List<TilkjentYtelsePeriode> tilkjentYtelsePerioderSortert = tilkjentYtelsePerioder.stream()
                 .sorted(Comparator.comparing(TilkjentYtelsePeriode::getPeriodeFom)).toList();
@@ -146,7 +145,7 @@ public final class UtbetalingsperiodeMapper {
     private static List<UttakResultatPeriode> filtrerBortUkjentÅrsak(List<UttakResultatPeriode> uttaksperioder) {
         return uttaksperioder.stream()
                 .filter(Predicate.not(up -> up.getPeriodeResultatÅrsak().erUkjent()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static boolean avslåttManglendeSøktUtenTrekkdager(UttakResultatPeriode uttakperiode) {
@@ -299,7 +298,7 @@ public final class UtbetalingsperiodeMapper {
     private static List<TilkjentYtelseAndel> finnNæringsandeler(TilkjentYtelsePeriode tilkjentYtelsePeriode) {
         return tilkjentYtelsePeriode.getAndeler().stream()
                 .filter(andel -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<Arbeidsforhold> mapArbeidsforholdliste(TilkjentYtelsePeriode tilkjentYtelsePeriode,
@@ -321,7 +320,7 @@ public final class UtbetalingsperiodeMapper {
     private static List<TilkjentYtelseAndel> finnArbeidsandeler(TilkjentYtelsePeriode tilkjentYtelsePeriode) {
         return tilkjentYtelsePeriode.getAndeler().stream()
                 .filter(andel -> AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static Arbeidsforhold mapArbeidsforholdAndel(TilkjentYtelsePeriode tilkjentYtelsePeriode,

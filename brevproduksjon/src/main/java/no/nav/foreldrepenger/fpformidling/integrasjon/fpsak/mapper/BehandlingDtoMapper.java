@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
@@ -61,7 +60,7 @@ public class BehandlingDtoMapper {
         if (!behandlingÅrsakDtoer.isEmpty()) {
             return behandlingÅrsakDtoer.stream()
                     .map(BehandlingDtoMapper::mapBehandlingÅrsakFraDto)
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return Collections.emptyList();
     }

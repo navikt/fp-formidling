@@ -24,10 +24,10 @@ import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.avslagfp.AvslåttPeriode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 
@@ -36,7 +36,7 @@ public class AvslåttPeriodeMapper {
 
     public static Tuple<List<AvslåttPeriode>, String> mapAvslåttePerioderOgLovhjemmel(Behandling behandling,
                                                                                       List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
-                                                                                      Optional<UttakResultatPerioder> uttakResultatPerioder) {
+                                                                                      Optional<ForeldrepengerUttak> uttakResultatPerioder) {
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
 
@@ -54,7 +54,7 @@ public class AvslåttPeriodeMapper {
     }
 
     private static List<AvslåttPeriode> årsakerFra(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
-                                                   Optional<UttakResultatPerioder> uttakResultatPerioder,
+                                                   Optional<ForeldrepengerUttak> uttakResultatPerioder,
                                                    Språkkode språkkode) {
         List<AvslåttPeriode> avslåttePerioder = new ArrayList<>();
         for (TilkjentYtelsePeriode tilkjentYtelsePeriode : tilkjentYtelsePerioder) {
@@ -66,14 +66,14 @@ public class AvslåttPeriodeMapper {
     }
 
     private static List<AvslåttPeriode> årsakerFra(Behandlingsresultat behandlingsresultat,
-                                                   Optional<UttakResultatPerioder> uttakResultatPerioder) {
+                                                   Optional<ForeldrepengerUttak> uttakResultatPerioder) {
         List<AvslåttPeriode> avslagsAarsaker = new ArrayList<>();
 
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
         if (avslagsårsak != null) {
             avslagsAarsaker.add(årsaktypeFra(avslagsårsak));
         }
-        for (UttakResultatPeriode periode : uttakResultatPerioder.map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList())) {
+        for (UttakResultatPeriode periode : uttakResultatPerioder.map(ForeldrepengerUttak::perioder).orElse(Collections.emptyList())) {
             PeriodeResultatÅrsak periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
             if (PeriodeResultatType.AVSLÅTT.equals(periode.getPeriodeResultatType()) && periodeResultatÅrsak != null) {
                 avslagsAarsaker.add(årsaktypeFra(periodeResultatÅrsak));
@@ -117,9 +117,9 @@ public class AvslåttPeriodeMapper {
                         .orElse(0) : 0;
     }
 
-    private static UttakResultatPeriode finnUttakResultatPeriode(Optional<UttakResultatPerioder> uttakResultatPerioder,
+    private static UttakResultatPeriode finnUttakResultatPeriode(Optional<ForeldrepengerUttak> uttakResultatPerioder,
                                                                  TilkjentYtelsePeriode tilkjentYtelsePeriode) {
         return PeriodeBeregner.finnUttaksperiode(tilkjentYtelsePeriode, uttakResultatPerioder
-                .map(UttakResultatPerioder::getPerioder).orElse(Collections.emptyList()));
+                .map(ForeldrepengerUttak::perioder).orElse(Collections.emptyList()));
     }
 }

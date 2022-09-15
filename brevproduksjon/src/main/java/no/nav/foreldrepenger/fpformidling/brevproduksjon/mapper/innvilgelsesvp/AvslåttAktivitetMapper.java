@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.AvslåttAktivitet;
@@ -21,7 +20,7 @@ public final class AvslåttAktivitetMapper {
         return uttakResultatArbeidsforhold.stream()
                 .filter(ura -> RELEVANTE_ARBEIDSFORHOLD_ÅRSAKER.contains(ura.getArbeidsforholdIkkeOppfyltÅrsak()))
                 .map(AvslåttAktivitetMapper::opprettSvpAvslagArbeidsforhold)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static AvslåttAktivitet opprettSvpAvslagArbeidsforhold(SvpUttakResultatArbeidsforhold ura) {

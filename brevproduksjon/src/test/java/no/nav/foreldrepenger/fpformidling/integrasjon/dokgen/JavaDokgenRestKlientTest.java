@@ -61,7 +61,7 @@ class JavaDokgenRestKlientTest {
     }
 
     @Test
-    @DisplayName("No body returned. Body fra serveren er aldri null, den er en tom array. Dvs at man må teste på lenght isteden.")
+    @DisplayName("No body returned. Body fra serveren er aldri null, den er en tomtUttak array. Dvs at man må teste på lenght isteden.")
     void generatePdf_no_body_returned() {
         var statusCode = 200;
         var template = "abc";

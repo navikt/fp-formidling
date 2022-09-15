@@ -57,9 +57,9 @@ import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
@@ -87,7 +87,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
 
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        when(domeneobjektProvider.hentUttaksresultatSvpHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
+        when(domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
         when(domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
     }
 
@@ -156,7 +156,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
                 .build());
     }
 
-    private Optional<SvpUttaksresultat> opprettUttaksresultat() {
+    private Optional<SvangerskapspengerUttak> opprettUttaksresultat() {
         SvpUttakResultatPeriode uttakResultatPeriode1 = SvpUttakResultatPeriode.Builder.ny()
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medArbeidsgiverNavn(ARBEIDSGIVER_1_NAVN)
@@ -169,7 +169,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .build();
 
-        SvpUttaksresultat uttaksresultat = SvpUttaksresultat.Builder.ny()
+        SvangerskapspengerUttak uttaksresultat = SvangerskapspengerUttak.Builder.ny()
                 .leggTilUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold.Builder.ny()
                         .medArbeidsgiver(new Arbeidsgiver("1234", ARBEIDSGIVER_1_NAVN))
                         .leggTilPerioder(List.of(uttakResultatPeriode1, uttakResultatPeriode2))

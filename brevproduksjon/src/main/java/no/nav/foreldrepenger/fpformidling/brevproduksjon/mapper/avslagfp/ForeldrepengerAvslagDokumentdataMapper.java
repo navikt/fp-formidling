@@ -32,7 +32,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode
 import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_AVSLAG)
@@ -79,7 +79,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
         FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         long halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
-        Optional<UttakResultatPerioder> uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling);
+        Optional<ForeldrepengerUttak> uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling);
 
         var dokumentdataBuilder = ForeldrepengerAvslagDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
@@ -87,7 +87,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
                 .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), behandling.getSpråkkode()))
                 .medGjelderFødsel(familiehendelse.isGjelderFødsel())
                 .medBarnErFødt(familiehendelse.isBarnErFødt())
-                .medAnnenForelderHarRett(uttakResultatPerioder.map(UttakResultatPerioder::isAnnenForelderHarRett).orElse(false))
+                .medAnnenForelderHarRett(uttakResultatPerioder.map(ForeldrepengerUttak::annenForelderHarRett).orElse(false))
                 .medAntallBarn(familiehendelse.getAntallBarn().intValue())
                 .medHalvG(halvG)
                 .medKlagefristUker(brevParametere.getKlagefristUker())
@@ -99,7 +99,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
     }
 
     private void mapAvslåttePerioder(Behandling behandling, ForeldrepengerAvslagDokumentdata.Builder dokumentdataBuilder,
-                                     Optional<UttakResultatPerioder> uttakResultatPerioder) {
+                                     Optional<ForeldrepengerUttak> uttakResultatPerioder) {
         Optional<TilkjentYtelseForeldrepenger> tilkjentYtelseFP = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling);
         Tuple<List<AvslåttPeriode>, String> avslåttePerioderOgLovhjemmel = AvslåttPeriodeMapper.mapAvslåttePerioderOgLovhjemmel(
                 behandling,

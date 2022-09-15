@@ -41,9 +41,9 @@ import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.verge.Verge;
 import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
 
@@ -154,23 +154,23 @@ public class DomeneobjektProvider {
         return VilkårDtoMapper.mapVilkårFraDto(behandlingRestKlient.hentVilkår(behandling.getResourceLinker()));
     }
 
-    public Optional<UttakResultatPerioder> hentUttaksresultatHvisFinnes(Behandling behandling) {
-        var uttakResultatPerioderDto = behandlingRestKlient.hentUttaksresultatHvisFinnes(behandling.getResourceLinker());
+    public Optional<ForeldrepengerUttak> hentForeldrepengerUttakHvisFinnes(Behandling behandling) {
+        var uttakResultatPerioderDto = behandlingRestKlient.hentUttaksresultatFpHvisFinnes(behandling.getResourceLinker());
         return uttakResultatPerioderDto.map(
                 r -> UttakDtoMapper.mapUttaksresultatPerioderFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
-    public UttakResultatPerioder hentUttaksresultat(Behandling behandling) {
-        return hentUttaksresultatHvisFinnes(behandling).orElseThrow(
-                () -> new IllegalStateException("Klarte ikke hente uttaksperioder for behandling: " + behandling.getUuid()));
+    public ForeldrepengerUttak hentForeldrepengerUttak(Behandling behandling) {
+        return hentForeldrepengerUttakHvisFinnes(behandling).orElseThrow(
+                () -> new IllegalStateException("Klarte ikke hente fp uttak for behandling: " + behandling.getUuid()));
     }
 
-    public SvpUttaksresultat hentUttaksresultatSvp(Behandling behandling) {
-        return UttakSvpDtoMapper.mapSvpUttaksresultatFraDto(behandlingRestKlient.hentUttaksresultatSvp(behandling.getResourceLinker()),
-                arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+    public SvangerskapspengerUttak hentSvangerskapspengerUttak(Behandling behandling) {
+        return hentSvangerskapspengerUttakHvisFinnes(behandling).orElseThrow(
+                () -> new IllegalStateException("Klarte ikke hente svp uttak for behandling: " + behandling.getUuid()));
     }
 
-    public Optional<SvpUttaksresultat> hentUttaksresultatSvpHvisFinnes(Behandling behandling) {
+    public Optional<SvangerskapspengerUttak> hentSvangerskapspengerUttakHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentUttaksresultatSvpHvisFinnes(behandling.getResourceLinker())
                 .map(svangerskapspengerUttakResultatDto -> UttakSvpDtoMapper.mapSvpUttaksresultatFraDto(
                         svangerskapspengerUttakResultatDto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));

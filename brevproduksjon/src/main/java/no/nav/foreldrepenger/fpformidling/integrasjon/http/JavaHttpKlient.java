@@ -7,7 +7,6 @@ import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.ProxySelector;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;

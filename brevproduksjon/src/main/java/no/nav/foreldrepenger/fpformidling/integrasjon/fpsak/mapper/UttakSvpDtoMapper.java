@@ -7,9 +7,9 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.Svange
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 
@@ -18,8 +18,8 @@ public class UttakSvpDtoMapper {
     public static final String NÆRINGSDRIVENDE = "næringsdrivende";
     public static final String FRILANSER = "frilanser";
 
-    public static SvpUttaksresultat mapSvpUttaksresultatFraDto(SvangerskapspengerUttakResultatDto svpUttaksresultatresultatDto, UnaryOperator<String> hentNavn) {
-        final var svpUttaksresultatBuilder = SvpUttaksresultat.Builder.ny();
+    public static SvangerskapspengerUttak mapSvpUttaksresultatFraDto(SvangerskapspengerUttakResultatDto svpUttaksresultatresultatDto, UnaryOperator<String> hentNavn) {
+        final var svpUttaksresultatBuilder = SvangerskapspengerUttak.Builder.ny();
         final var uttaksResultatArbeidsforhold = svpUttaksresultatresultatDto.getUttaksResultatArbeidsforhold();
         if (uttaksResultatArbeidsforhold != null) {
             uttaksResultatArbeidsforhold.forEach(arbeidsforhold -> {

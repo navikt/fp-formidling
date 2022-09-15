@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,12 +52,12 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatT
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 
 @ExtendWith(MockitoExtension.class)
@@ -95,7 +96,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        when(domeneobjektProvider.hentUttaksresultatHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
+        when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
     }
 
     @Test
@@ -152,7 +153,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
                 .build());
     }
 
-    private Optional<UttakResultatPerioder> opprettUttaksresultat() {
+    private Optional<ForeldrepengerUttak> opprettUttaksresultat() {
         UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(TREKKDAGER)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
@@ -183,10 +184,8 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .medPeriodeResultatÅrsak(ÅRSAK_4)
                 .build();
-        return Optional.of(UttakResultatPerioder.ny()
-                .medPerioder(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4))
-                .medAnnenForelderHarRett(true)
-                .build());
+        return Optional.of(new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4),
+                List.of(), false, true, false));
     }
 
     private Behandling opprettBehandling() {

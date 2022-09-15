@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,16 +13,16 @@ import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Uttaksaktivitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Uttaksperiode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakSvpDtoMapper;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakSvpDtoMapper;
 
 public class UttaksperiodeMapperTest {
 
@@ -47,15 +46,15 @@ public class UttaksperiodeMapperTest {
     @Test
     public void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_utbetalingsgrad_innenfor_samme_aktivitetstype() {
         // Arrange
-        SvpUttaksresultat svpUttaksresultat = getSvpUttaksresultat();
+        SvangerskapspengerUttak svangerskapspengerUttak = getSvpUttaksresultat();
         TilkjentYtelseForeldrepenger tilkjentYtelseFP = getTilkjentYtelse();
 
         // Act
-        List<Uttaksaktivitet> resultat = UttaksperiodeMapper.mapUttaksaktivteterMedPerioder(svpUttaksresultat, tilkjentYtelseFP, Språkkode.NB);
+        List<Uttaksaktivitet> resultat = UttaksperiodeMapper.mapUttaksaktivteterMedPerioder(svangerskapspengerUttak, tilkjentYtelseFP, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(3);
-        assertThat(resultat.stream().map(Uttaksaktivitet::getAktivitetsbeskrivelse).collect(Collectors.toList()))
+        assertThat(resultat.stream().map(Uttaksaktivitet::getAktivitetsbeskrivelse).toList())
                 .containsExactlyInAnyOrder(ARBEIDSGIVER_NAVN, FORVENTET_FRILANSER_TEKST, FORVENTET_NÆRINGSDRIVENDE_TEKST);
 
         for (Uttaksaktivitet uttaksaktivitet : resultat) {
@@ -85,7 +84,7 @@ public class UttaksperiodeMapperTest {
         }
     }
 
-    private SvpUttaksresultat getSvpUttaksresultat() {
+    private SvangerskapspengerUttak getSvpUttaksresultat() {
         // Arbeidstaker
         SvpUttakResultatPeriode uttakPeriode1 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
@@ -144,7 +143,7 @@ public class UttaksperiodeMapperTest {
                 .leggTilPerioder(of(uttakPeriode1, uttakPeriode2, uttakPeriode3, uttakPeriode4, uttakPeriode5, uttakPeriode6,
                         uttakPeriode7, uttakPeriode8))
                 .build();
-        return SvpUttaksresultat.Builder.ny()
+        return SvangerskapspengerUttak.Builder.ny()
                 .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold)
                 .build();
     }

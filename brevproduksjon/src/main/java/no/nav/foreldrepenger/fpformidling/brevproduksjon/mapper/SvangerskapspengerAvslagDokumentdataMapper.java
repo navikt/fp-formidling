@@ -31,8 +31,8 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 import no.nav.vedtak.exception.TekniskException;
 
@@ -66,7 +66,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         var behandlingsresultat = behandling.getBehandlingsresultat();
-        var svpUttaksresultat = domeneobjektProvider.hentUttaksresultatSvpHvisFinnes(behandling);
+        var svpUttaksresultat = domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(behandling);
         var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
@@ -79,7 +79,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
                 .medFelles(fellesBuilder.build())
                 .medErSøkerDød(erDød(dokumentFelles))
                 .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), språkkode))
-                .medAntallArbeidsgivere(SvpMapperUtil.finnAntallArbeidsgivere(svpUttaksresultat.map(SvpUttaksresultat::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()), iay))
+                .medAntallArbeidsgivere(SvpMapperUtil.finnAntallArbeidsgivere(svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()), iay))
                 .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
                 .medKlagefristUker(brevParametere.getKlagefristUker());
 

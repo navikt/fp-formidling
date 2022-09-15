@@ -19,9 +19,9 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerInfoTilAnnenForelderDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INFO_TIL_ANNEN_FORELDER)
@@ -55,11 +55,11 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
             aarsak = BehandlingÅrsakType.INFOBREV_OPPHOLD;
         }
 
-        Optional<UttakResultatPerioder> uttakResultatPerioder = domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling);
+        Optional<ForeldrepengerUttak> uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling);
 
         String sisteUttaksdagMor = null;
         if (uttakResultatPerioder.isPresent() && BehandlingÅrsakType.INFOBREV_BEHANDLING.equals(aarsak)) {
-            sisteUttaksdagMor = uttakResultatPerioder.get().getPerioderAnnenPart().stream()
+            sisteUttaksdagMor = uttakResultatPerioder.get().perioderAnnenPart().stream()
                     .filter(up -> PeriodeResultatType.INNVILGET.equals(up.getPeriodeResultatType()) ||
                             up.getAktiviteter().stream().anyMatch(upa -> upa.getTrekkdager().compareTo(BigDecimal.ZERO) > 0))
                     .map(UttakResultatPeriode::getTom).max(LocalDate::compareTo)

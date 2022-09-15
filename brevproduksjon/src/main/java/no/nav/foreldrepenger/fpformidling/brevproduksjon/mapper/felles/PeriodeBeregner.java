@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
@@ -75,7 +74,7 @@ public class PeriodeBeregner {
                 }
             }
             if (!kandidater.isEmpty()) {
-                return kandidater.stream().filter(SvpUttakResultatPeriode::isInnvilget).collect(Collectors.toList());
+                return kandidater.stream().filter(SvpUttakResultatPeriode::isInnvilget).toList();
             }
             throw new TekniskException(FEILKODE, String.format(FEILMELDING, "uttaksperiode"));
         }

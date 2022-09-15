@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 
 import java.util.List;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BGAndelArbeidsforhold;
@@ -71,7 +70,7 @@ public class BeregningsgrunnlagDtoMapper {
                 .medperiodeÅrsaker(mapPeriodeårsakerFraDto(dto.periodeårsaker()))
                 .medBeregningsgrunnlagPrStatusOgAndelList(dto.beregningsgrunnlagandeler().stream()
                         .map(andel -> mapBgpsaFraDto(andel, hentNavn))
-                        .collect(Collectors.toList()))
+                        .toList())
                 .build();
     }
 

@@ -69,9 +69,9 @@ import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
@@ -123,7 +123,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
         MottattDokument mottattDokument = new MottattDokument(SØKNAD_DATO, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD);
         when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(of(mottattDokument));
-        when(domeneobjektProvider.hentUttaksresultatSvp(any(Behandling.class))).thenReturn(opprettSvpUttaksresultat());
+        when(domeneobjektProvider.hentSvangerskapspengerUttak(any(Behandling.class))).thenReturn(opprettSvpUttaksresultat());
     }
 
     @Test
@@ -504,7 +504,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .build();
     }
 
-    private SvpUttaksresultat opprettSvpUttaksresultat() {
+    private SvangerskapspengerUttak opprettSvpUttaksresultat() {
         SvpUttakResultatPeriode uttakPeriode1 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
@@ -541,7 +541,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .medArbeidsforholdIkkeOppfyltÅrsak(ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK)
                 .medArbeidsgiver(ARBEIDSGIVER3)
                 .build();
-        return SvpUttaksresultat.Builder.ny()
+        return SvangerskapspengerUttak.Builder.ny()
                 .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold1)
                 .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold2)
                 .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold3)

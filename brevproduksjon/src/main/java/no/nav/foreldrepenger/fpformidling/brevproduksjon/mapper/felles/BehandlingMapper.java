@@ -8,7 +8,10 @@ import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 
-public class BehandlingMapper {
+public final class BehandlingMapper {
+
+    private BehandlingMapper() {
+    }
 
     public static final String ENDRING_BEREGNING_OG_UTTAK = "ENDRING_BEREGNING_OG_UTTAK";
 

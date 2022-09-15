@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Br
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -18,10 +17,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode
 @DokumentMalTypeRef(DokumentMalTypeKode.INFO_OM_HENLEGGELSE)
 public class HenleggeDokumentdataMapper implements DokumentdataMapper {
     private static final String FAMPEN = "NAV Familie- og pensjonsytelser";
-
-    @Inject
-    public HenleggeDokumentdataMapper() {
-    }
 
     @Override
     public String getTemplateNavn() {

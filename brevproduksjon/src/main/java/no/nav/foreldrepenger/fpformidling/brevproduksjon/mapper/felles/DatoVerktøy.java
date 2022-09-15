@@ -3,7 +3,11 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
-public class DatoVerktøy {
+public final class DatoVerktøy {
+
+    private DatoVerktøy() {
+    }
+
     public static boolean erFomRettEtterTomDato(LocalDate periodeEnTom, LocalDate periodeToFom) {
         return periodeEnTom.plusDays(1).isEqual(periodeToFom) ||
                 periodeEnTom.plusDays(2).isEqual(periodeToFom) && erLørdagEllerSøndag(periodeEnTom.plusDays(1)) ||

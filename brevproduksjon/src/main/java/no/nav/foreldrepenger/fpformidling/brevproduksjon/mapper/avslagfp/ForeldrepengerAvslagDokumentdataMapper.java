@@ -5,7 +5,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Mo
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -40,7 +40,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
 
     private static final Map<RelasjonsRolleType, String> relasjonskodeTypeMap;
     static {
-        relasjonskodeTypeMap = new HashMap<>();
+        relasjonskodeTypeMap = new EnumMap<>(RelasjonsRolleType.class);
         relasjonskodeTypeMap.put(RelasjonsRolleType.MORA, "MOR");
         relasjonskodeTypeMap.put(RelasjonsRolleType.FARA, "FAR");
         relasjonskodeTypeMap.put(RelasjonsRolleType.MEDMOR, "MEDMOR");

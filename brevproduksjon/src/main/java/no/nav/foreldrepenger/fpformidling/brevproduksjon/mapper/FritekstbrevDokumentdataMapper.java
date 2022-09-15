@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Br
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -18,10 +17,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FRITEKSTBREV)
 public class FritekstbrevDokumentdataMapper implements DokumentdataMapper {
-
-    @Inject
-    public FritekstbrevDokumentdataMapper() {
-    }
 
     @Override
     public String getTemplateNavn() {

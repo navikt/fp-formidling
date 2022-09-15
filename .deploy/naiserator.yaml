@@ -58,7 +58,10 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: fp-frontend-azure
+          - application: fp-frontend-azure
+            cluster: dev-fss
+          - application: fp-frontend-azure
+            cluster: dev-gcp
   env:
   {{#each env}}
    - name: {{@key}}

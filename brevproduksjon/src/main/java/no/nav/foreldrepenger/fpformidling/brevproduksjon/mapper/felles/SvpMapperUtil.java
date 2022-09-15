@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
@@ -13,16 +12,16 @@ import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmelding;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
 import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.vilkår.VilkårType;
 
 public final class SvpMapperUtil {
 
-    public static List<SvpUttakResultatPeriode> hentUttaksperioder(Optional<SvpUttaksresultat> svpUttaksresultat) {
-        return svpUttaksresultat.map(SvpUttaksresultat::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()).stream().flatMap(ura->ura.getPerioder().stream()).collect(Collectors.toList());
+    public static List<SvpUttakResultatPeriode> hentUttaksperioder(Optional<SvangerskapspengerUttak> svpUttaksresultat) {
+        return svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()).stream().flatMap(ura->ura.getPerioder().stream()).toList();
     }
 
     public static String leggTilLovreferanse(Avslagsårsak avslagsårsak) {

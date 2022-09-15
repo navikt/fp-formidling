@@ -12,7 +12,6 @@ import java.util.Set;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
@@ -25,6 +24,7 @@ import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;

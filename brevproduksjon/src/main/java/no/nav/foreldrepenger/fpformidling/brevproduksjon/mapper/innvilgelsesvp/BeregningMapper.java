@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
@@ -120,7 +119,7 @@ public final class BeregningMapper {
         beregningsgrunnlag.getAktivitetStatuser()
                 .forEach(bgAktivitetStatus -> andeler.addAll(finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaList).stream()
                         .filter(andel -> getBgBruttoPrÅr(andel) != null)
-                        .collect(Collectors.toList())));
+                        .toList()));
         return andeler;
     }
 

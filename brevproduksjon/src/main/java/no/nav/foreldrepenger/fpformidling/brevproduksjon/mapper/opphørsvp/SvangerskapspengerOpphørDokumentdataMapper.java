@@ -27,8 +27,8 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.opphørsvp.Svan
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.SVANGERSKAPSPENGER_OPPHØR)
@@ -56,7 +56,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
     public SvangerskapspengerOpphørDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
                                                                   Behandling behandling, boolean erUtkast) {
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
-        var svpUttaksresultat = domeneobjektProvider.hentUttaksresultatSvpHvisFinnes(behandling);
+        var svpUttaksresultat = domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(behandling);
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
         var tilkjentYtelsePerioder = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling).map(TilkjentYtelseForeldrepenger::getPerioder).orElse(Collections.emptyList());
@@ -76,7 +76,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
                 .medKlagefristUker(brevParametere.getKlagefristUker());
 
          mapOpphørtPeriodeOgLovhjemmel(dokumentdatabuilder, behandling,
-                svpUttaksresultat.map(SvpUttaksresultat::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()),
+                svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()),
                  språkkode, iay, tilkjentYtelsePerioder);
 
         SvpMapperUtil.finnFørsteUttakssdato(uttaksperioder, behandling.getBehandlingsresultat())

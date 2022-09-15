@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.beregningsgrunnlag;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -66,7 +65,7 @@ public enum AktivitetStatus implements Kodeverdi {
     }
 
     public static boolean erKombinertStatus(String aktivitetStatus) {
-        return KOMBINERTE_STATUSER.stream().map(AktivitetStatus::name).collect(Collectors.toSet()).contains(aktivitetStatus);
+        return KOMBINERTE_STATUSER.stream().map(AktivitetStatus::name).anyMatch(as -> as.equals(aktivitetStatus));
     }
 
     @Override

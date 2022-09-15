@@ -16,9 +16,9 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMap
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 
@@ -28,16 +28,16 @@ public class ÅrsakMapperOpphør {
     private static Set<String> lovReferanser;
 
     public static Tuple<List<String>, String> mapÅrsakslisteOgLovhjemmelFra(Behandlingsresultat behandlingsresultat,
-                                                                      UttakResultatPerioder uttakResultatPerioder) {
+                                                                      ForeldrepengerUttak foreldrepengerUttak) {
         lovReferanser = new TreeSet<>(new LovhjemmelComparator());
         List<String> årsaksliste = new ArrayList<>();
-        årsaksliste.addAll(årsakerFra(behandlingsresultat, uttakResultatPerioder));
+        årsaksliste.addAll(årsakerFra(behandlingsresultat, foreldrepengerUttak));
 
         return new Tuple<>(årsaksliste, FellesMapper.formaterLovhjemlerUttak(lovReferanser));
     }
 
     private static Collection<String> årsakerFra(Behandlingsresultat behandlingsresultat,
-                                                 UttakResultatPerioder uttakResultatPerioder) {
+                                                 ForeldrepengerUttak foreldrepengerUttak) {
         Map<String, String> avslagårsaker = new HashMap<>();
 
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
@@ -45,7 +45,7 @@ public class ÅrsakMapperOpphør {
             String avslagKode = avslagsårsak.getKode();
             avslagårsaker.put(avslagKode, årsaktypeFra(avslagsårsak));
         }
-        for (UttakResultatPeriode periode : uttakResultatPerioder.getPerioder()) {
+        for (UttakResultatPeriode periode : foreldrepengerUttak.perioder()) {
             PeriodeResultatÅrsak periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
             if (PeriodeResultatType.AVSLÅTT.equals(periode.getPeriodeResultatType()) && periodeResultatÅrsak != null) {
                 String avslagKode = periodeResultatÅrsak.getKode();

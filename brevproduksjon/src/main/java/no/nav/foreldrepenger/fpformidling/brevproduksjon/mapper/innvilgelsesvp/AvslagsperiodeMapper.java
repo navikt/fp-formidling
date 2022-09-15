@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
@@ -32,7 +31,7 @@ public final class AvslagsperiodeMapper {
                 .filter(Predicate.not(SvpUttakResultatPeriode::isInnvilget))
                 .filter(p -> RELEVANTE_PERIODE_ÅRSAKER.contains(p.getPeriodeIkkeOppfyltÅrsak()))
                 .map(p -> opprettAvslagsperiode(p, språkkode))
-                .collect(Collectors.toList());
+                .toList();
         return slåSammenPerioder(filtrertePerioder);
     }
 
@@ -55,7 +54,7 @@ public final class AvslagsperiodeMapper {
             List<Avslagsperiode> sortertePerioder = filtrertePerioder.stream()
                     .filter(p -> årsak.getKode().equals(String.valueOf(p.getÅrsak().getKode())))
                     .sorted(Comparator.comparing(Avslagsperiode::getPeriodeFom))
-                    .collect(Collectors.toList());
+                    .toList();
 
             ArrayList<Avslagsperiode> nyePerioder = new ArrayList<>();
 

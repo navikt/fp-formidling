@@ -67,10 +67,10 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakTyp
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 
 @ApplicationScoped
@@ -96,7 +96,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                                                                     Behandling behandling, boolean erUtkast) {
         var tilkjentYtelseForeldrepenger = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
-        var uttakResultatPerioder = domeneobjektProvider.hentUttaksresultat(behandling);
+        var uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttak(behandling);
         var søknad = hentNyesteSøknad(behandling);
         var aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
@@ -145,7 +145,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medForMyeUtbetalt(forMyeUtbetalt(utbetalingsperioder, behandling))
                 .medInntektMottattArbeidsgiver(erEndringMedEndretInntektsmelding(behandling))
                 .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(aksjonspunkter, uttakResultatPerioder))
-                .medAnnenForelderHarRett(uttakResultatPerioder.isAnnenForelderHarRett())
+                .medAnnenForelderHarRett(uttakResultatPerioder.annenForelderHarRett())
                 .medAleneomsorgKode(erAleneomsorg(søknad, uttakResultatPerioder))
                 .medBarnErFødt(familieHendelse.isBarnErFødt())
                 .medÅrsakErFødselshendelse(erRevurderingPgaFødselshendelse(behandling, familieHendelse, originalFamiliehendelse))
@@ -232,10 +232,10 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         builder.medHarBruktBruttoBeregningsgrunnlag(harBruktBruttoBeregningsgrunnlag(beregningsgrunnlagregler));
     }
 
-    private Optional<LocalDate> finnSisteDagAvSistePeriode(UttakResultatPerioder uttakResultatPerioder) {
+    private Optional<LocalDate> finnSisteDagAvSistePeriode(ForeldrepengerUttak foreldrepengerUttak) {
         return Stream.concat(
-                        uttakResultatPerioder.getPerioder().stream(),
-                        uttakResultatPerioder.getPerioderAnnenPart().stream()).filter(UttakResultatPeriode::isInnvilget)
+                        foreldrepengerUttak.perioder().stream(),
+                        foreldrepengerUttak.perioderAnnenPart().stream()).filter(UttakResultatPeriode::isInnvilget)
                 .map(UttakResultatPeriode::getTom)
                 .max(LocalDate::compareTo);
     }
@@ -250,22 +250,22 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 familieHendelse.isBarnErFødt() && originalFamiliehendelse.map(fh -> !fh.isBarnErFødt()).orElse(false);
     }
 
-    private VurderingsKode utledAnnenForelderRettVurdertKode(List<Aksjonspunkt> aksjonspunkter, UttakResultatPerioder uttakResultatPerioder) {
+    private VurderingsKode utledAnnenForelderRettVurdertKode(List<Aksjonspunkt> aksjonspunkter, ForeldrepengerUttak foreldrepengerUttak) {
         VurderingsKode annenForelderHarRettVurdert;
         if (aksjonspunkter.stream()
                 .filter(ap -> Objects.equals(ap.getAksjonspunktDefinisjon(), AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT))
                 .anyMatch(ap -> Objects.equals(ap.getAksjonspunktStatus(), AksjonspunktStatus.UTFØRT))) {
-            annenForelderHarRettVurdert = uttakResultatPerioder.isAnnenForelderHarRett() ? VurderingsKode.JA : VurderingsKode.NEI;
+            annenForelderHarRettVurdert = foreldrepengerUttak.annenForelderHarRett() ? VurderingsKode.JA : VurderingsKode.NEI;
         } else {
             annenForelderHarRettVurdert = VurderingsKode.IKKE_VURDERT;
         }
         return annenForelderHarRettVurdert;
     }
 
-    private VurderingsKode erAleneomsorg(Søknad søknad, UttakResultatPerioder uttakResultatPerioder) {
+    private VurderingsKode erAleneomsorg(Søknad søknad, ForeldrepengerUttak foreldrepengerUttak) {
         VurderingsKode vurderingsKode;
         if (søknad.oppgittAleneomsorg()) {
-            vurderingsKode = uttakResultatPerioder.isAleneomsorg() ? VurderingsKode.JA : VurderingsKode.NEI;
+            vurderingsKode = foreldrepengerUttak.aleneomsorg() ? VurderingsKode.JA : VurderingsKode.NEI;
         } else {
             vurderingsKode = VurderingsKode.IKKE_VURDERT;
         }

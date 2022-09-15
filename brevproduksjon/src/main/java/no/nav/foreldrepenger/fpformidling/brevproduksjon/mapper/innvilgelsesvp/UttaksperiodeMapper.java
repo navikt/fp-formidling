@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.PeriodeBeregner;
@@ -21,19 +20,19 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttaksresultat;
 
 public final class UttaksperiodeMapper {
 
-    public static List<Uttaksaktivitet> mapUttaksaktivteterMedPerioder(SvpUttaksresultat uttaksresultat,
+    public static List<Uttaksaktivitet> mapUttaksaktivteterMedPerioder(SvangerskapspengerUttak uttaksresultat,
                                                                        TilkjentYtelseForeldrepenger tilkjentYtelse,
                                                                        Språkkode språkkode) {
         Map<String, List<Uttaksperiode>> resultat = new HashMap<>();
 
         List<SvpUttakResultatPeriode> uttakPerioder = uttaksresultat.getUttakResultatArbeidsforhold().stream()
                 .flatMap(ur -> ur.getPerioder().stream())
-                .collect(Collectors.toList());
+                .toList();
 
         for (TilkjentYtelsePeriode periode : tilkjentYtelse.getPerioder()) {
             var uttakPeriodeKandidater = PeriodeBeregner.finnUttakPeriodeKandidater(periode, uttakPerioder);
@@ -52,7 +51,7 @@ public final class UttaksperiodeMapper {
                     .medAktivitetsbeskrivelse(entry.getKey())
                     .medUttaksperioder(entry.getValue())
                     .build())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static Optional<SvpUttakResultatPeriode> finnUttakPeriode(List<SvpUttakResultatPeriode> matchendeUttaksperioder,

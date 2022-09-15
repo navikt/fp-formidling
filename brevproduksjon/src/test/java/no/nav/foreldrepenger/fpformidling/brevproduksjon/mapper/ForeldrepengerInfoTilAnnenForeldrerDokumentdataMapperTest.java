@@ -29,9 +29,9 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatT
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 
 class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
     private DokumentFelles dokumentFelles;
@@ -54,9 +54,9 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
     void mapInfoTilAnnenForelder() {
         // Arrange
         Behandling behandling = opprettBehandling(lagBehÅrsak(BehandlingÅrsakType.INFOBREV_BEHANDLING));
-        UttakResultatPerioder uttakResultatPerioder = settOppUttaksperioder(DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(20)),
+        ForeldrepengerUttak foreldrepengerUttak = settOppUttaksperioder(DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(20)),
                                                                             DatoIntervall.fraOgMedTilOgMed(LocalDate.now().plusDays(20), LocalDate.now().plusDays(40)));
-        when(domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)).thenReturn(Optional.of(uttakResultatPerioder));
+        when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)).thenReturn(Optional.of(foreldrepengerUttak));
 
         //Act
         ForeldrepengerInfoTilAnnenForelderDokumentdata infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -70,9 +70,9 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
     void mapInfoTilAnnenForelderOpphold() {
         // Arrange
         Behandling behandling = opprettBehandling(lagBehÅrsak(BehandlingÅrsakType.INFOBREV_OPPHOLD));
-        UttakResultatPerioder uttakResultatPerioder = settOppUttaksperioder(DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(20)),
+        ForeldrepengerUttak foreldrepengerUttak = settOppUttaksperioder(DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(20)),
                 DatoIntervall.fraOgMedTilOgMed(LocalDate.now().plusDays(20), LocalDate.now().plusDays(30)));
-        when(domeneobjektProvider.hentUttaksresultatHvisFinnes(behandling)).thenReturn(Optional.of(uttakResultatPerioder));
+        when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)).thenReturn(Optional.of(foreldrepengerUttak));
 
         //Act
         ForeldrepengerInfoTilAnnenForelderDokumentdata infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -100,11 +100,9 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
 
         return behandlingBuilder.build();
     }
-    private UttakResultatPerioder settOppUttaksperioder(DatoIntervall periodeEn, DatoIntervall periodeTo) {
-        return UttakResultatPerioder.ny().medPerioder(
-                List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)))
-                .medPerioderAnnenPart(List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)))
-                .build();
+    private ForeldrepengerUttak settOppUttaksperioder(DatoIntervall periodeEn, DatoIntervall periodeTo) {
+        return new ForeldrepengerUttak(List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)),
+                List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)), false, false, false);
     }
 
     private UttakResultatPeriode lagUttakResPeriode(DatoIntervall periode) {

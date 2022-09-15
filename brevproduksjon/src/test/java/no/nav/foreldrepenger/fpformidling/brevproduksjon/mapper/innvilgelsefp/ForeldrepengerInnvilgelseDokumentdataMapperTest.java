@@ -69,6 +69,7 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
@@ -78,7 +79,6 @@ import no.nav.foreldrepenger.fpformidling.uttak.UttakAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
@@ -124,7 +124,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(tilkjentYtelseFP);
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        when(domeneobjektProvider.hentUttaksresultat(any(Behandling.class))).thenReturn(opprettUttaksresultat());
+        when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat());
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
         when(domeneobjektProvider.hentAksjonspunkter(any(Behandling.class))).thenReturn(opprettAksjonspunkter());
         when(domeneobjektProvider.utenMinsterett(any(Behandling.class))).thenReturn(true);
@@ -279,7 +279,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .build());
     }
 
-    private UttakResultatPerioder opprettUttaksresultat() {
+    private ForeldrepengerUttak opprettUttaksresultat() {
         UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.TEN)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
@@ -313,11 +313,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE)
                 .build();
-        return UttakResultatPerioder.ny()
-                .medPerioder(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3))
-                .medAnnenForelderHarRett(true)
-                .medAleneomsorg(true)
-                .build();
+        return new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3),
+                of(), true, true, false);
     }
 
     private Saldoer opprettSaldoer() {

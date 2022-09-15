@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultat
 
 import java.util.List;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResultatPeriodeAktivitetDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResultatPeriodeDto;
@@ -13,25 +12,24 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResul
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
+import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPerioder;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public class UttakDtoMapper {
 
-    public static UttakResultatPerioder mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto,
-                                                                        UnaryOperator<String> hentNavn) {
-        var uttakResultatPerioder = getUttakResultatPerioder(resultatPerioderDto.getPerioderSøker(), hentNavn);
-        var perioderAnnenPart = getUttakResultatPerioder(resultatPerioderDto.getPerioderAnnenpart(), hentNavn);
-        return UttakResultatPerioder.ny()
-                .medPerioder(uttakResultatPerioder)
-                .medPerioderAnnenPart(perioderAnnenPart)
-                .medAleneomsorg(resultatPerioderDto.isAleneomsorg())
-                .medAnnenForelderHarRett(resultatPerioderDto.isAnnenForelderHarRett())
-                .build();
+    public static ForeldrepengerUttak mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto,
+                                                                      UnaryOperator<String> hentNavn) {
+        var uttakResultatPerioder = getUttakResultatPerioder(resultatPerioderDto.perioderSøker(), hentNavn);
+        var perioderAnnenPart = getUttakResultatPerioder(resultatPerioderDto.perioderAnnenpart(), hentNavn);
+        var aleneomsorg = resultatPerioderDto.aleneomsorg();
+        var annenForelderHarRett = resultatPerioderDto.annenForelderHarRett();
+        var annenForelderRettEØS = resultatPerioderDto.annenForelderRettEØS();
+        return new ForeldrepengerUttak(uttakResultatPerioder, perioderAnnenPart, aleneomsorg, annenForelderHarRett,
+                annenForelderRettEØS);
     }
 
     private static List<UttakResultatPeriode> getUttakResultatPerioder(List<UttakResultatPeriodeDto> resultatPerioderDto,
@@ -43,7 +41,7 @@ public class UttakDtoMapper {
     }
 
     private static UttakResultatPeriode periodeFraDto(UttakResultatPeriodeDto dto, UnaryOperator<String> hentNavn) {
-        var aktiviteter = dto.getAktiviteter().stream().map(a -> aktivitetFraDto(a, hentNavn)).collect(Collectors.toList());
+        var aktiviteter = dto.getAktiviteter().stream().map(a -> aktivitetFraDto(a, hentNavn)).toList();
         var mappetPeriode = UttakResultatPeriode.ny()
                 .medGraderingAvslagÅrsak(velgGraderingsavslagÅrsak(dto))
                 .medPeriodeResultatType(dto.getPeriodeResultatType())

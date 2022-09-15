@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpformidling.uttak.svp;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
@@ -34,7 +33,7 @@ public class SvpUttakResultatArbeidsforhold {
     }
 
     public List<SvpUttakResultatPeriode> getPerioder() {
-        return perioder.stream().sorted().collect(Collectors.toList());
+        return perioder.stream().sorted().toList();
     }
 
     public static final class Builder {

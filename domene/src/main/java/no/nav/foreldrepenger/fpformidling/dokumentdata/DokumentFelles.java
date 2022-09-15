@@ -114,7 +114,7 @@ public class DokumentFelles extends BaseEntitet {
     private String brevData;
 
     @Transient
-    private Optional<Kopi> erKopi;
+    private Kopi erKopi;
 
     @Transient
     private MottakerType mottakerType;
@@ -188,9 +188,13 @@ public class DokumentFelles extends BaseEntitet {
         return sakspartPersonStatus;
     }
 
-    public Optional<Kopi> getErKopi() { return erKopi; }
+    public Optional<Kopi> getErKopi() {
+        return Optional.ofNullable(erKopi);
+    }
 
-    public MottakerType getMottakerType() { return mottakerType; }
+    public MottakerType getMottakerType() {
+        return mottakerType;
+    }
 
     public void setBrevData(String brevData) {
         this.brevData = brevData;
@@ -301,7 +305,7 @@ public class DokumentFelles extends BaseEntitet {
             return this;
         }
 
-        public Builder medErKopi(Optional<Kopi> kopi) {
+        public Builder medErKopi(Kopi kopi) {
             this.dokumentFelles.erKopi = kopi;
             return this;
         }

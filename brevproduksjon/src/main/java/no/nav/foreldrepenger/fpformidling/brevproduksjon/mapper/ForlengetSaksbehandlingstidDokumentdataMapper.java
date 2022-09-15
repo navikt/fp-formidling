@@ -4,9 +4,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Br
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
-import java.math.BigInteger;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -77,9 +75,6 @@ public class ForlengetSaksbehandlingstidDokumentdataMapper implements Dokumentda
     }
 
     private int getAntallBarn(Behandling behandling) {
-        Optional<FamilieHendelse> familieHendelse = domeneobjektProvider.hentFamiliehendelseHvisFinnes(behandling);
-        return familieHendelse.map(FamilieHendelse::getAntallBarn)
-                .filter(antall -> antall.intValue() > 0)
-                .orElse(BigInteger.ONE).intValue();
+        return domeneobjektProvider.hentFamiliehendelseHvisFinnes(behandling).map(FamilieHendelse::antallBarn).orElse(0);
     }
 }

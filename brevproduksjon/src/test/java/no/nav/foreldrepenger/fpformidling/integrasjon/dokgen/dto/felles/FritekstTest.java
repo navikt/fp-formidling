@@ -143,12 +143,7 @@ public class FritekstTest {
 
     @Test
     public void skal_gi_null_hvis_fritekst_er_null() {
-        // Arrange
-        String fritekstInn = null;
-        String fritekstUt = null;
-
-        // Act + Assert
-        assertThat(fra(fritekstInn)).isEqualTo(fritekstUt);
+        assertThat(fra(null)).isNull();
     }
 
     private DokumentHendelse.Builder standardHendelseBuilder() {

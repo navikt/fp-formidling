@@ -16,10 +16,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -141,8 +139,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        FamilieHendelse.OptionalDatoer optionalDatoer = new FamilieHendelse.OptionalDatoer(Optional.empty(), Optional.of(TERMINDATO), Optional.empty(), Optional.empty());
-        return new FamilieHendelse(BigInteger.valueOf(ANTALL_BARN), 0, false, false, FamilieHendelseType.TERMIN, optionalDatoer);
+        return new FamilieHendelse(FamilieHendelseType.TERMIN, ANTALL_BARN, 0, null, TERMINDATO, null, null, false, false);
     }
 
     private Behandling opprettBehandling() {

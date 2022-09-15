@@ -1,88 +1,73 @@
 package no.nav.foreldrepenger.fpformidling.familiehendelse;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Optional;
 
 public class FamilieHendelse {
 
-    private FamilieHendelseType familieHendelseType; //Kodeliste.FamilieHendelseType
-    private BigInteger antallBarn;
-    private int antallDødeBarn;
+    private final FamilieHendelseType familieHendelseType;
+    private final int antallBarn;
+    private final int antallDødeBarn;
+    private final LocalDate skjæringstidspunkt;
+    private final LocalDate termindato;
+    private final LocalDate fødselsdato;
+    private final LocalDate dødsdato;
+    private final boolean barnErFødt;
+    private final boolean gjelderFødsel;
 
-    private Optional<LocalDate> skjæringstidspunkt;
-    private Optional<LocalDate> termindato;
-    private Optional<LocalDate> fødselsdato;
-    private Optional<LocalDate> dødsdato;
-    private boolean barnErFødt;
-    private boolean gjelderFødsel;
-
-    public FamilieHendelse(BigInteger antallBarn,
+    public FamilieHendelse(FamilieHendelseType familieHendelseType,
+                           int antallBarn,
                            int antallDødeBarn,
+                           LocalDate skjæringstidspunkt,
+                           LocalDate termindato,
+                           LocalDate fødselsdato,
+                           LocalDate dødsdato,
                            boolean barnErFødt,
-                           boolean gjelderFødsel,
-                           FamilieHendelseType familieHendelseType,
-                           OptionalDatoer optionalDato) {
+                           boolean gjelderFødsel) {
+        this.familieHendelseType = familieHendelseType;
         this.antallBarn = antallBarn;
         this.antallDødeBarn = antallDødeBarn;
-        this.skjæringstidspunkt = optionalDato.skjæringstidspunkt;
-        this.termindato = optionalDato.termindato;
+        this.skjæringstidspunkt = skjæringstidspunkt;
+        this.termindato = termindato;
+        this.fødselsdato = fødselsdato;
+        this.dødsdato = dødsdato;
         this.barnErFødt = barnErFødt;
         this.gjelderFødsel = gjelderFødsel;
-        this.familieHendelseType = familieHendelseType;
-        this.fødselsdato = optionalDato.fødselsdato;
-        this.dødsdato = optionalDato.dødsdato;
     }
 
-    public boolean isGjelderFødsel() {
+    public boolean gjelderFødsel() {
         return gjelderFødsel;
     }
 
-    public boolean isBarnErFødt() {
+    public boolean barnErFødt() {
         return barnErFødt;
     }
 
-    public Optional<LocalDate> getSkjæringstidspunkt() {
-        return skjæringstidspunkt;
+    public Optional<LocalDate> skjæringstidspunkt() {
+        return Optional.ofNullable(skjæringstidspunkt);
     }
 
-    public Optional<LocalDate> getTermindato() {
-        return termindato;
+    public Optional<LocalDate> termindato() {
+        return Optional.ofNullable(termindato);
     }
 
-    public Optional<LocalDate> getFødselsdato() {
-        return fødselsdato;
+    public Optional<LocalDate> fødselsdato() {
+        return Optional.ofNullable(fødselsdato);
     }
 
-    public Optional<LocalDate> getDødsdato() {
-        return dødsdato;
+    public Optional<LocalDate> dødsdato() {
+        return Optional.ofNullable(dødsdato);
     }
 
-    public FamilieHendelseType getFamilieHendelseType() {
+    public FamilieHendelseType familieHendelseType() {
         return familieHendelseType;
     }
 
-    public BigInteger getAntallBarn() {
+    public int antallBarn() {
         return antallBarn;
     }
 
-    public int getAntallDødeBarn() {
+    public int antallDødeBarn() {
         return antallDødeBarn;
-    }
-
-
-    public static final class OptionalDatoer {
-        private Optional<LocalDate> skjæringstidspunkt;
-        private Optional<LocalDate> termindato;
-        private Optional<LocalDate> fødselsdato;
-        private Optional<LocalDate> dødsdato;
-
-        public OptionalDatoer(Optional<LocalDate> skjæringstidspunkt, Optional<LocalDate> termindato,
-                              Optional<LocalDate> fødselsdato, Optional<LocalDate> dødsdato) {
-            this.skjæringstidspunkt = skjæringstidspunkt;
-            this.termindato = termindato;
-            this.fødselsdato = fødselsdato;
-            this.dødsdato = dødsdato;
-        }
     }
 }

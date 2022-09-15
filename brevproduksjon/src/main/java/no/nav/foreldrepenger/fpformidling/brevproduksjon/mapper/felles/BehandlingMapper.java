@@ -12,16 +12,11 @@ public class BehandlingMapper {
 
     public static final String ENDRING_BEREGNING_OG_UTTAK = "ENDRING_BEREGNING_OG_UTTAK";
 
-    public static boolean gjelderEndringsøknad(Behandling behandling) {
-        // endringssøknad kan være satt ved førstegangsbehandling og henleggelse pga håndtering av tapte dager
-        return behandling.erRevurdering() && behandling.harBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER);
-    }
-
     public static boolean erTermindatoEndret(FamilieHendelse familieHendelse, Optional<FamilieHendelse> originalFamiliehendelse) {
         if (originalFamiliehendelse.isEmpty()) {
             return false;
         }
-        return !originalFamiliehendelse.get().getTermindato().equals(familieHendelse.getTermindato());
+        return !originalFamiliehendelse.get().termindato().equals(familieHendelse.termindato());
     }
 
     public static Boolean erEndretFraAvslått(Optional<Behandling> orginalBehandling) {
@@ -31,10 +26,7 @@ public class BehandlingMapper {
 
     public static boolean erRevurderingPgaEndretBeregningsgrunnlag(Behandling revurdering) {
         List<KonsekvensForYtelsen> konsekvenserForYtelsen = revurdering.getBehandlingsresultat().getKonsekvenserForYtelsen();
-        boolean kunEndringIBeregning = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING) &&
-                konsekvenserForYtelsen.size() == 1;
-
-        return kunEndringIBeregning;
+        return konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING) && konsekvenserForYtelsen.size() == 1;
     }
 
     public static boolean erMedhold(Behandling behandling) {
@@ -45,9 +37,8 @@ public class BehandlingMapper {
         if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING)) { // viktigst å få med endring i beregning
             return konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_UTTAK) ?
                     ENDRING_BEREGNING_OG_UTTAK : KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode();
-        } else {
-            return konsekvenserForYtelsen.isEmpty() ?
-                    KonsekvensForYtelsen.UDEFINERT.getKode() : konsekvenserForYtelsen.get(0).getKode(); // velger bare den første i listen (finnes ikke koder for andre ev. kombinasjoner)
         }
+        return konsekvenserForYtelsen.isEmpty() ?
+                KonsekvensForYtelsen.UDEFINERT.getKode() : konsekvenserForYtelsen.get(0).getKode(); // velger bare den første i listen (finnes ikke koder for andre ev. kombinasjoner)
     }
 }

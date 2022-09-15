@@ -9,7 +9,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,8 +60,8 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
 
         dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE));
 
-        FamilieHendelse familieHendelse = lagFamHendelse(BigInteger.ONE);
-        FamilieHendelse orgfamilieHendelse = lagFamHendelse(BigInteger.ONE);
+        FamilieHendelse familieHendelse = lagFamHendelse(1);
+        FamilieHendelse orgfamilieHendelse = lagFamHendelse(1);
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(eq(innvilgetES))).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(eq(innvilgetES))).thenReturn(Optional.of(orgBehES));
@@ -145,8 +144,8 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
         //Arrange
         Behandling orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         Behandling innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
-        FamilieHendelse familieHendelse = lagFamHendelse(BigInteger.TWO);
-        FamilieHendelse orgfamilieHendelse = lagFamHendelse(BigInteger.ONE);
+        FamilieHendelse familieHendelse = lagFamHendelse(2);
+        FamilieHendelse orgfamilieHendelse = lagFamHendelse(1);
         dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE));
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(eq(innvilgetES))).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
@@ -172,9 +171,8 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
                 .build();
     }
 
-    private FamilieHendelse lagFamHendelse(BigInteger antallBarn) {
-        return new FamilieHendelse(antallBarn, 0, true, true, FamilieHendelseType.TERMIN,
-                new FamilieHendelse.OptionalDatoer(Optional.of(LocalDate.now()), Optional.empty(), Optional.empty(), Optional.empty()));
+    private FamilieHendelse lagFamHendelse(int antallBarn) {
+        return new FamilieHendelse(FamilieHendelseType.TERMIN, antallBarn, 0, LocalDate.now(), null, null, null, true, true);
     }
 
     private String formaterBeløp(long beløp) {

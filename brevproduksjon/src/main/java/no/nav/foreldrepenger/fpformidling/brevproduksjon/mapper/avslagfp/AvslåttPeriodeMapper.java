@@ -31,21 +31,23 @@ import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 
-public class AvslåttPeriodeMapper {
-    private static Set<String> lovReferanser;
+public final class AvslåttPeriodeMapper {
+
+    private AvslåttPeriodeMapper() {
+    }
 
     public static Tuple<List<AvslåttPeriode>, String> mapAvslåttePerioderOgLovhjemmel(Behandling behandling,
                                                                                       List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
                                                                                       Optional<ForeldrepengerUttak> uttakResultatPerioder) {
-        lovReferanser = new TreeSet<>(new LovhjemmelComparator());
+        var lovReferanser = new TreeSet<>(new LovhjemmelComparator());
         Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
 
-        List<AvslåttPeriode> avslåttePerioder = årsakerFra(tilkjentYtelsePerioder, uttakResultatPerioder, behandling.getSpråkkode());
+        List<AvslåttPeriode> avslåttePerioder = årsakerFra(tilkjentYtelsePerioder, uttakResultatPerioder, behandling.getSpråkkode(), lovReferanser);
         String lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
                 BehandlingMapper.kodeFra(behandlingsresultat.getKonsekvenserForYtelsen()),
                 false);
         if (avslåttePerioder.isEmpty()) {
-            avslåttePerioder = årsakerFra(behandlingsresultat, uttakResultatPerioder);
+            avslåttePerioder = årsakerFra(behandlingsresultat, uttakResultatPerioder, lovReferanser);
             lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser);
         }
         avslåttePerioder = AvslåttPeriodeMerger.mergePerioder(avslåttePerioder);
@@ -55,56 +57,59 @@ public class AvslåttPeriodeMapper {
 
     private static List<AvslåttPeriode> årsakerFra(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
                                                    Optional<ForeldrepengerUttak> uttakResultatPerioder,
-                                                   Språkkode språkkode) {
+                                                   Språkkode språkkode,
+                                                   TreeSet<String> lovReferanser) {
         List<AvslåttPeriode> avslåttePerioder = new ArrayList<>();
         for (TilkjentYtelsePeriode tilkjentYtelsePeriode : tilkjentYtelsePerioder) {
             AvslåttPeriode avslåttPeriode = årsaktypeFra(tilkjentYtelsePeriode,
-                    finnUttakResultatPeriode(uttakResultatPerioder, tilkjentYtelsePeriode), språkkode);
+                    finnUttakResultatPeriode(uttakResultatPerioder, tilkjentYtelsePeriode), språkkode, lovReferanser);
             avslåttePerioder.add(avslåttPeriode);
         }
         return avslåttePerioder;
     }
 
     private static List<AvslåttPeriode> årsakerFra(Behandlingsresultat behandlingsresultat,
-                                                   Optional<ForeldrepengerUttak> uttakResultatPerioder) {
+                                                   Optional<ForeldrepengerUttak> uttakResultatPerioder,
+                                                   TreeSet<String> lovReferanser) {
         List<AvslåttPeriode> avslagsAarsaker = new ArrayList<>();
 
         Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
         if (avslagsårsak != null) {
-            avslagsAarsaker.add(årsaktypeFra(avslagsårsak));
+            avslagsAarsaker.add(årsaktypeFra(avslagsårsak, lovReferanser));
         }
         for (UttakResultatPeriode periode : uttakResultatPerioder.map(ForeldrepengerUttak::perioder).orElse(Collections.emptyList())) {
             PeriodeResultatÅrsak periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
             if (PeriodeResultatType.AVSLÅTT.equals(periode.getPeriodeResultatType()) && periodeResultatÅrsak != null) {
-                avslagsAarsaker.add(årsaktypeFra(periodeResultatÅrsak));
+                avslagsAarsaker.add(årsaktypeFra(periodeResultatÅrsak, lovReferanser));
             }
         }
         return avslagsAarsaker;
     }
 
-    private static AvslåttPeriode årsaktypeFra(ÅrsakMedLovReferanse årsakKode) {
+    private static AvslåttPeriode årsaktypeFra(ÅrsakMedLovReferanse årsakKode, TreeSet<String> lovReferanser) {
         AvslåttPeriode avslåttPeriode = AvslåttPeriode.ny()
                 .medAvslagsårsak(Årsak.of(årsakKode.getKode()))
                 .build();
-        leggTilLovReferanse(årsakKode);
+        lovReferanser.addAll(mapLovReferanse(årsakKode));
         return avslåttPeriode;
     }
 
     private static AvslåttPeriode årsaktypeFra(TilkjentYtelsePeriode tilkjentYtelsePeriode,
                                                UttakResultatPeriode uttakResultatPeriode,
-                                               Språkkode språkkode) {
+                                               Språkkode språkkode,
+                                               TreeSet<String> lovReferanser) {
         AvslåttPeriode avslåttPeriode = AvslåttPeriode.ny()
                 .medAvslagsårsak(Årsak.of(uttakResultatPeriode.getPeriodeResultatÅrsak().getKode()))
                 .medPeriodeFom(tilkjentYtelsePeriode.getPeriodeFom(), språkkode)
                 .medPeriodeTom(tilkjentYtelsePeriode.getPeriodeTom(), språkkode)
                 .medAntallTapteDager(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter()))
                 .build();
-        leggTilLovReferanse(uttakResultatPeriode.getPeriodeResultatÅrsak());
+        lovReferanser.addAll(mapLovReferanse(uttakResultatPeriode.getPeriodeResultatÅrsak()));
         return avslåttPeriode;
     }
 
-    private static void leggTilLovReferanse(ÅrsakMedLovReferanse periodeResultatÅrsak) {
-        lovReferanser.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(periodeResultatÅrsak, "FP"));
+    private static Set<String> mapLovReferanse(ÅrsakMedLovReferanse periodeResultatÅrsak) {
+        return LovhjemmelUtil.hentLovhjemlerFraJson(periodeResultatÅrsak, "FP");
     }
 
     private static int mapAntallTapteDagerFra(List<UttakResultatPeriodeAktivitet> uttakAktiviteter) {

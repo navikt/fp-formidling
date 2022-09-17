@@ -9,8 +9,7 @@ import no.nav.security.token.support.core.context.TokenValidationContextHolder;
 import no.nav.security.token.support.core.jwt.JwtToken;
 import no.nav.security.token.support.jaxrs.JaxrsTokenValidationContextHolder;
 
-@ApplicationScoped
-public class JwtBearerTokenResolverService implements JwtBearerTokenResolver {
+class JwtBearerTokenResolverService implements JwtBearerTokenResolver {
 
     private final TokenValidationContextHolder tokenValidationContextHolder = JaxrsTokenValidationContextHolder.getHolder();
 

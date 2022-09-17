@@ -15,10 +15,10 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.oauth2.ClientConfiguration;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oauth2.OAuth2Token;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenResponse;
+import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService;
 import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.ManglerTilgangException;
 import no.nav.vedtak.exception.TekniskException;
@@ -52,7 +52,7 @@ class DokdistRestKlientTest {
     @BeforeEach
     void setup() {
         this.mockWebServer = new MockWebServer();
-        var oAuth2Client = mock(OAuth2Token.class);
+        var oAuth2Client = mock(OAuth2AccessTokenService.class);
         when(oAuth2Client.getAccessToken(any())).thenReturn(OAuth2AccessTokenResponse.builder().accessToken("test_token").build());
 
         this.klient = new DokdistRestKlient(mockWebServer.url("/fpformidling").toString(), oAuth2Client, mock(

@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 
 import no.nav.foreldrepenger.konfig.Environment;
@@ -17,10 +14,9 @@ import no.nav.security.token.support.client.core.ClientAuthenticationProperties;
 import no.nav.security.token.support.client.core.ClientProperties;
 import no.nav.security.token.support.client.core.OAuth2GrantType;
 
-@ApplicationScoped
-public class ClientConfigurationService implements OAuth2ClientProps {
+class ClientConfigurationService {
 
-    private static final String REGISTRATION_PREFIX = "no.nav.security.jwt.client.registration.";
+    private static final String REGISTRATION_PREFIX = "jwt.client.registration.";
     private static final Environment ENV = Environment.current();
     private static final String TOKEN_X_CLIENT_JWK = ENV.getProperty("token.x.private.jwk");
     private static final String TOKEN_X_CLIENT_ID = ENV.getProperty("token.x.client.id");
@@ -38,7 +34,7 @@ public class ClientConfigurationService implements OAuth2ClientProps {
 
     private volatile ClientConfiguration clientConfiguration;
 
-    ClientConfigurationService() {
+    public ClientConfigurationService() {
         registrer();
     }
 
@@ -82,7 +78,7 @@ public class ClientConfigurationService implements OAuth2ClientProps {
                 propertiesBuilder
                         .tokenEndpointUrl(ENV.getProperty(prefix + ".token-endpoint-url", URI.class, AZURE_TOKEN_ENDPOINT_URI))
                         .wellKnownUrl(ENV.getProperty(prefix + ".well-known-url", URI.class, AZURE_WELL_KNOWN_URI))
-                        .grantType(new OAuth2GrantType(ENV.getRequiredProperty(prefix + ".grant-type")));
+                        .grantType(new OAuth2GrantType(ENV.getProperty(prefix + ".grant-type", OAuth2GrantType.JWT_BEARER.value())));
                 var authMethod = ClientAuthenticationMethod.parse(ENV.getProperty(prefix + ".authentication.client-auth-method"));
                 propertiesBuilder.authentication(ClientAuthenticationProperties.builder()
                         .clientAuthMethod(authMethod != null ? authMethod : ClientAuthenticationMethod.CLIENT_SECRET_POST)
@@ -140,7 +136,6 @@ public class ClientConfigurationService implements OAuth2ClientProps {
                 .collect(Collectors.toSet());
     }
 
-    @Produces
     public ClientConfiguration clientProperties() {
         if (clientConfiguration == null) {
             registrer();

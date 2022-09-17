@@ -17,11 +17,11 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaHttpKlient;
 import no.nav.foreldrepenger.fpformidling.integrasjon.oauth2.ClientConfiguration;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oauth2.OAuth2Token;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
 import no.nav.security.token.support.client.core.ClientProperties;
+import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService;
 import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.log.mdc.MDCOperations;
 import no.nav.vedtak.sikkerhet.context.SubjectHandler;
@@ -34,12 +34,12 @@ class DokdistRestKlient extends JavaHttpKlient implements Dokdist {
     private static final Logger LOG = LoggerFactory.getLogger(DokdistRestKlient.class);
 
     private final String dokdistRestBaseUri;
-    private final OAuth2Token tokenService;
+    private final OAuth2AccessTokenService tokenService;
     private final ClientConfiguration clientProps;
 
     @Inject
     public DokdistRestKlient(@KonfigVerdi("dokdist.rest.base.url") String endpoint,
-                             OAuth2Token tokenService,
+                             OAuth2AccessTokenService tokenService,
                              ClientConfiguration clientProperties) {
         this.dokdistRestBaseUri = endpoint;
         this.tokenService = tokenService;

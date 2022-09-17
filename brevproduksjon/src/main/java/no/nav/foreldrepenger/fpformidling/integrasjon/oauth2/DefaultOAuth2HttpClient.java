@@ -16,9 +16,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectReader;
 
@@ -30,8 +27,7 @@ import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
-@ApplicationScoped
-public class DefaultOAuth2HttpClient implements OAuth2HttpClient {
+class DefaultOAuth2HttpClient implements OAuth2HttpClient {
 
     private static final ObjectReader READER = DefaultJsonMapper.getObjectMapper().readerFor(OAuth2AccessTokenResponse.class);
     private static final Environment ENV = Environment.current();
@@ -40,8 +36,7 @@ public class DefaultOAuth2HttpClient implements OAuth2HttpClient {
     private final HttpClient client;
     private final HttpClient clientProxy;
 
-    @Inject
-    public DefaultOAuth2HttpClient() {
+    protected DefaultOAuth2HttpClient() {
         var useProxySelector = Optional.ofNullable(!ENV.isLocal() ? null : ENV.getProperty("http.proxy", URI.class))
                 .map(p -> new InetSocketAddress(p.getHost(), p.getPort()))
                 .map(ProxySelector::of)

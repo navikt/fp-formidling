@@ -221,11 +221,13 @@ public class JettyServer {
     }
 
     private static IssuerProperties stsIssuerProperties() {
-        return new IssuerProperties(ENV.getRequiredProperty("oidc.sts.well.known.url", URL.class));
+        return new IssuerProperties(ENV.getRequiredProperty("oidc.sts.well.known.url", URL.class),
+                new IssuerProperties.Validation(List.of("azp", "identType")));
     }
 
     private static IssuerProperties azureIssuerProperties() {
-        var issuerProperties = new IssuerProperties(ENV.getRequiredProperty("azure.app.well.known.url", URL.class),
+        var issuerProperties = new IssuerProperties(
+                ENV.getRequiredProperty("azure.app.well.known.url", URL.class),
                 List.of(ENV.getRequiredProperty("azure.app.client.id")));
         if (!ENV.isLocal()) {
             issuerProperties.setProxyUrl(ENV.getRequiredProperty("http.proxy", URL.class));

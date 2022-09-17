@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.oauth2;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.security.token.support.client.core.OAuth2CacheFactory;
@@ -10,8 +9,7 @@ import no.nav.security.token.support.client.core.oauth2.ClientCredentialsTokenCl
 import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService;
 import no.nav.security.token.support.client.core.oauth2.OnBehalfOfTokenClient;
 
-@ApplicationScoped
-public class DefaultOAuth2AccessTokenService extends OAuth2AccessTokenService implements OAuth2Token {
+class DefaultOAuth2AccessTokenService extends OAuth2AccessTokenService {
 
     @Inject
     public DefaultOAuth2AccessTokenService(JwtBearerTokenResolver tokenResolver, OAuth2HttpClient oAuth2HttpClient) {

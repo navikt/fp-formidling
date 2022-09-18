@@ -1,15 +1,30 @@
 {
-  "environment": "prod",
-  "serviceuserkv": "/serviceuser/data/prod/srvfpformidling",
-  "minReplicas": "2",
-  "maxReplicas": "3",
-  "ingresses": [
-      "https://fpformidling.intern.nav.no",
-      "https://fpformidling.prod-fss-pub.nais.io",
-      "https://app.adeo.no/fpformidling"
-  ],
-  "env": {
-    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "PROD",
-    "APPD_ENABLED": "true"
-  }
+    "environment": "prod",
+    "serviceuserkv": "/serviceuser/data/prod/srvfpformidling",
+    "minReplicas": "2",
+    "maxReplicas": "3",
+    "ingresses": [
+        "https://fpformidling.intern.nav.no",
+        "https://fpformidling.prod-fss-pub.nais.io",
+        "https://app.adeo.no/fpformidling"
+    ],
+    "env": {
+        "APPDYNAMICS_AGENT_ACCOUNT_NAME": "PROD",
+        "APPD_ENABLED": "true"
+    },
+    "AZURE_IAC_RULES": [
+        {
+            "app": "fp-swagger",
+            "namespace": "teamforeldrepenger",
+            "cluster": "prod-fss",
+            "scopes": [
+                "swagger"
+            ]
+        },
+        {
+            "app": "fp-frontend",
+            "namespace": "teamforeldrepenger",
+            "cluster": "prod-gcp"
+        }
+    ]
 }

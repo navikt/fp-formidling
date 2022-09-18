@@ -1,15 +1,35 @@
 {
-  "environment": "dev",
-  "serviceuserkv": "/serviceuser/data/dev/srvfpformidling",
-  "minReplicas": "1",
-  "maxReplicas": "2",
-  "ingresses": [
-      "https://fpformidling.dev.intern.nav.no",
-      "https://fpformidling.dev-fss-pub.nais.io",
-      "https://app-q1.adeo.no/fpformidling"
-  ],
-  "env": {
-    "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD",
-    "APPD_ENABLED": "false"
-  }
+    "environment": "dev",
+    "serviceuserkv": "/serviceuser/data/dev/srvfpformidling",
+    "minReplicas": "1",
+    "maxReplicas": "2",
+    "ingresses": [
+        "https://fpformidling.dev.intern.nav.no",
+        "https://fpformidling.dev-fss-pub.nais.io",
+        "https://app-q1.adeo.no/fpformidling"
+    ],
+    "env": {
+        "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD",
+        "APPD_ENABLED": "false"
+    },
+    "AZURE_IAC_RULES": [
+        {
+            "app": "fp-swagger",
+            "namespace": "teamforeldrepenger",
+            "cluster": "dev-fss",
+            "scopes": [
+                "swagger"
+            ]
+        },
+        {
+            "app": "fp-frontend-azure",
+            "namespace": "teamforeldrepenger",
+            "cluster": "dev-gcp"
+        },
+        {
+            "app": "fp-frontend-azure",
+            "namespace": "teamforeldrepenger",
+            "cluster": "dev-fss"
+        }
+    ]
 }

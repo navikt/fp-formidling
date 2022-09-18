@@ -57,15 +57,16 @@ spec:
           - "azp_name"
   accessPolicy:
     inbound:
-      rules:
-          - application: fp-frontend-azure
-            cluster: dev-fss
-          - application: fp-frontend-azure
-            cluster: dev-gcp
-          - application: fp-swagger
-            cluster: dev-fss
-          - application: fp-swagger
-            cluster: dev-gcp
+        rules:
+            - application: fp-swagger
+              cluster: {{environment}}-fss
+              permissions:
+                scopes:
+                  - "swagger"
+            - application: fp-frontend-azure
+              cluster: {{environment}}-fss
+            - application: fp-frontend-azure
+              cluster: {{environment}}-gcp
   env:
   {{#each env}}
    - name: {{@key}}

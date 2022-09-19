@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Fagsystem;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.felles.integrasjon.rest.NativeClient;
 
 @ApplicationScoped
 @SuppressWarnings("java:S107")
@@ -39,7 +40,7 @@ public class OpprettJournalpostTjeneste {
     }
 
     @Inject
-    public OpprettJournalpostTjeneste(/* @Jersey */ Journalpost journalpostRestKlient) {
+    public OpprettJournalpostTjeneste(@NativeClient Journalpost journalpostRestKlient) {
         this.journalpostRestKlient = journalpostRestKlient;
     }
 

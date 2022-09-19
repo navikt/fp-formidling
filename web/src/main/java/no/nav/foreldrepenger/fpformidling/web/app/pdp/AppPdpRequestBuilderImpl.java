@@ -44,7 +44,7 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
         behandlingUuids.stream().findFirst()
                 .map(domeneobjektProvider::hentBehandling)
                 .ifPresent(b -> {
-                    var dto = pipRestKlient.hentPipdataForBehandling(b.getUuid().toString());
+                    var dto = pipRestKlient.hentPipdataForBehandling(b.getUuid());
                     appRessursData.leggTilAbacAktørIdSet(dto.aktørIder());
                     Optional.ofNullable(dto.fagsakStatus()).ifPresent(appRessursData::medFagsakStatus);
                     Optional.ofNullable(dto.behandlingStatus()).ifPresent(appRessursData::medBehandlingStatus);

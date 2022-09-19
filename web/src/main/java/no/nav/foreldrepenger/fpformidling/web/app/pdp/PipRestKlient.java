@@ -25,7 +25,7 @@ public class PipRestKlient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PipRestKlient.class);
 
-    private static final String PIP_PATH = "/api/pip";
+    private static final String PIP_PATH = "/fpsak/api/pip";
 
     private RestClient restClient;
     private URI contextPath;

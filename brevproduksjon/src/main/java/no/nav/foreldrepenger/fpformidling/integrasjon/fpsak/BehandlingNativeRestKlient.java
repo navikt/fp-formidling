@@ -24,7 +24,7 @@ import no.nav.vedtak.felles.integrasjon.rest.RestConfig;
 import no.nav.vedtak.felles.integrasjon.rest.RestRequest;
 import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 
-// TODO: lande konvensjon for fp-interne scopes. Legge inn i FpApplication i felles.
+// TODO: standardiser på contextpath. VTP har et unntak for pg-apps som gjør at env heter noe annet enn  vtp.
 @Dependent
 @NativeClient
 @RestClientConfig(tokenConfig = TokenFlow.CONTEXT, endpointProperty = "fpsak.rest.base.url", endpointDefault = "http://fpsak")
@@ -66,12 +66,12 @@ public class BehandlingNativeRestKlient implements Behandlinger {
 
     @Override
     public <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
-
+        var builder = UriBuilder.fromUri(endpointFpsakRestBase).path(link.getHref());
         if ("POST".equals(link.getType())) {
-            var request = RestRequest.newPOSTJson(link.getRequestPayload(), UriBuilder.fromUri(endpointFpsakRestBase + link.getHref()), BehandlingNativeRestKlient.class);
+            var request = RestRequest.newPOSTJson(link.getRequestPayload(), builder.build(), BehandlingNativeRestKlient.class);
             return restClient.sendReturnOptional(request, clazz);
         }
-        return restClient.sendReturnOptional(saksnummerRequest(endpointFpsakRestBase + link.getHref(), link.getRequestPayload()), clazz);
+        return restClient.sendReturnOptional(saksnummerRequest(builder, link.getRequestPayload()), clazz);
     }
 
     @Override
@@ -86,9 +86,8 @@ public class BehandlingNativeRestKlient implements Behandlinger {
         }
     }
 
-    private static RestRequest saksnummerRequest(String endpoint, BehandlingRelLinkPayload payload) {
+    private static RestRequest saksnummerRequest(UriBuilder uriBuilder, BehandlingRelLinkPayload payload) {
         try {
-            var uriBuilder = UriBuilder.fromUri(endpoint);
             if (payload != null) {
                 // Hvis payloaden er null, er GET parameterne antagelivis allerede satt i urlen
                 if (payload.saksnummer() != null) {

@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokdist;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;
@@ -39,7 +38,7 @@ class JavaDokdistRestKlient extends JavaHttpKlient implements Dokdist {
     }
 
     public Dokdist.Resultat distribuerJournalpost(DistribuerJournalpostRequest dto) {
-        var endpoint = UriBuilder.fromUri(dokdistRestBaseUri + "/distribuerjournalpost").build();
+        var endpoint = UriBuilder.fromUri(dokdistRestBaseUri).path("/distribuerjournalpost").build();
         var request = getRequestBuilder()
                 .uri(endpoint)
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(dto), UTF_8))

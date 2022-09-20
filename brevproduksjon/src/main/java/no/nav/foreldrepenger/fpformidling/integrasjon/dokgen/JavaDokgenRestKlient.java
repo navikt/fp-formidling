@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,7 @@ public class JavaDokgenRestKlient extends JavaHttpKlient implements Dokgen {
         byte[] pdf;
         try {
             String templatePath = String.format("/template/%s/template_%s", maltype.toLowerCase(), getSpråkkode(språkkode));
-            var endpoint = URI.create(dokgenBaseUri + templatePath + "/create-pdf-variation");
+            var endpoint = UriBuilder.fromUri(dokgenBaseUri + templatePath + "/create-pdf-variation").build();
 
             var request = getRequestBuilder()
                     .uri(endpoint)

@@ -66,12 +66,12 @@ public class BehandlingNativeRestKlient implements Behandlinger {
 
     @Override
     public <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
-        var builder = UriBuilder.fromUri(endpointFpsakRestBase).path(link.getHref());
+        var uri = URI.create(endpointFpsakRestBase + link.getHref());
         if ("POST".equals(link.getType())) {
-            var request = RestRequest.newPOSTJson(link.getRequestPayload(), builder.build(), BehandlingNativeRestKlient.class);
+            var request = RestRequest.newPOSTJson(link.getRequestPayload(), uri, BehandlingNativeRestKlient.class);
             return restClient.sendReturnOptional(request, clazz);
         }
-        return restClient.sendReturnOptional(saksnummerRequest(builder, link.getRequestPayload()), clazz);
+        return restClient.sendReturnOptional(saksnummerRequest(uri, link.getRequestPayload()), clazz);
     }
 
     @Override
@@ -86,9 +86,11 @@ public class BehandlingNativeRestKlient implements Behandlinger {
         }
     }
 
-    private static RestRequest saksnummerRequest(UriBuilder uriBuilder, BehandlingRelLinkPayload payload) {
+    private static RestRequest saksnummerRequest(URI uri, BehandlingRelLinkPayload payload) {
         try {
+            var brukUri = uri;
             if (payload != null) {
+                var uriBuilder = UriBuilder.fromUri(uri);
                 // Hvis payloaden er null, er GET parameterne antagelivis allerede satt i urlen
                 if (payload.saksnummer() != null) {
                     uriBuilder.queryParam("saksnummer", String.valueOf(payload.saksnummer()));
@@ -96,8 +98,9 @@ public class BehandlingNativeRestKlient implements Behandlinger {
                 if (payload.behandlingUuid() != null) {
                     uriBuilder.queryParam("behandlingId", String.valueOf(payload.behandlingUuid()));
                 }
+                brukUri = uriBuilder.build();
             }
-            return RestRequest.newGET(uriBuilder.build(), BehandlingNativeRestKlient.class);
+            return RestRequest.newGET(brukUri, BehandlingNativeRestKlient.class);
         } catch (IllegalArgumentException|UriBuilderException e) {
             throw new IllegalArgumentException(e);
         }

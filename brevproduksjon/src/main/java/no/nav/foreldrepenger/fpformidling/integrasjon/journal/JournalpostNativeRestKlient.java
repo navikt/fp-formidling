@@ -80,7 +80,7 @@ public class JournalpostNativeRestKlient implements Journalpost {
     public void ferdigstillJournalpost(JournalpostId journalpostId) {
         try {
             LOG.info("Ferdigstiller journalpost {}", journalpostId);
-            var ferdigstill = UriBuilder.fromUri(endpoint + String.format("/%s/ferdigstill", journalpostId.getVerdi())).build();
+            var ferdigstill = UriBuilder.fromUri(endpoint).path(String.format("/%s/ferdigstill", journalpostId.getVerdi())).build();
             var method = new RestRequest.Method(RestRequest.WebMethod.PATCH, RestRequest.jsonPublisher(new FerdigstillJournalpostRequest("9999")));
             var rrequest = RestRequest.newRequest(method, ferdigstill, JournalpostNativeRestKlient.class);
             restKlient.send(rrequest, String.class);

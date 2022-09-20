@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Arrays;
@@ -46,7 +45,7 @@ public class JavaDokgenRestKlient extends JavaHttpKlient implements Dokgen {
         byte[] pdf;
         try {
             String templatePath = String.format("/template/%s/template_%s", maltype.toLowerCase(), getSpråkkode(språkkode));
-            var endpoint = UriBuilder.fromUri(dokgenBaseUri + templatePath + "/create-pdf-variation").build();
+            var endpoint = UriBuilder.fromUri(dokgenBaseUri).path(templatePath).path("/create-pdf-variation").build();
 
             var request = getRequestBuilder()
                     .uri(endpoint)

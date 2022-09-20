@@ -68,7 +68,7 @@ public class BehandlingNativeRestKlient implements Behandlinger {
     public <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
 
         if ("POST".equals(link.getType())) {
-            var request = RestRequest.newPOSTJson(link.getRequestPayload(), UriBuilder.fromUri(endpointFpsakRestBase + link.getHref()), BehandlingNativeRestKlient.class);
+            var request = RestRequest.newPOSTJson(link.getRequestPayload(), UriBuilder.fromUri(endpointFpsakRestBase + link.getHref()).build(), BehandlingNativeRestKlient.class);
             return restClient.sendReturnOptional(request, clazz);
         }
         return restClient.sendReturnOptional(saksnummerRequest(endpointFpsakRestBase + link.getHref(), link.getRequestPayload()), clazz);

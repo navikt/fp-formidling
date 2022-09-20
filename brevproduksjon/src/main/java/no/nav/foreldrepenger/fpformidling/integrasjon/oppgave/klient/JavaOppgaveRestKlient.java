@@ -11,6 +11,7 @@ import java.util.function.Function;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ class JavaOppgaveRestKlient extends JavaHttpKlient implements Oppgaver {
 
     @Override
     public Oppgave opprettetOppgave(OpprettOppgaveRequest oppgave) {
-        var endpoint = URI.create(oppgaveBaseUri);
+        var endpoint = UriBuilder.fromUri(oppgaveBaseUri).build();
         var request = getRequestBuilder()
                 .uri(endpoint)
                 .header(HEADER_CORRELATION_ID, getCallId())

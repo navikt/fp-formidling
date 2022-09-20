@@ -64,7 +64,7 @@ public class BehandlingRestKlient implements Behandlinger {
     public <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
 
         if ("POST".equals(link.getType())) {
-            return oidcRestClient.postReturnsOptional(URI.create(endpointFpsakRestBase + link.getHref()), link.getRequestPayload(), clazz);
+            return oidcRestClient.postReturnsOptional(UriBuilder.fromUri(endpointFpsakRestBase + link.getHref()).build(), link.getRequestPayload(), clazz);
         }
         return oidcRestClient.getReturnsOptional(saksnummerRequest(endpointFpsakRestBase + link.getHref(), link.getRequestPayload()), clazz);
     }

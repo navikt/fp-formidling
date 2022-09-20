@@ -11,6 +11,7 @@ import java.util.function.Function;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ class JavaDokdistRestKlient extends JavaHttpKlient implements Dokdist {
     }
 
     public Dokdist.Resultat distribuerJournalpost(DistribuerJournalpostRequest dto) {
-        var endpoint = URI.create(dokdistRestBaseUri + "/distribuerjournalpost");
+        var endpoint = UriBuilder.fromUri(dokdistRestBaseUri + "/distribuerjournalpost").build();
         var request = getRequestBuilder()
                 .uri(endpoint)
                 .POST(HttpRequest.BodyPublishers.ofString(toJson(dto), UTF_8))

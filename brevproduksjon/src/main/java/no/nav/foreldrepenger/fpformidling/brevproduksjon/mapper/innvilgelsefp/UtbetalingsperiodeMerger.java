@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatoVerktøy.erFomRettEtterTomDato;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak.erRegnetSomLike;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -53,13 +55,24 @@ public final class UtbetalingsperiodeMerger {
                 .medPeriodeFom(periodeEn.getPeriodeFom(), periodeEn.getSpråkkode())
                 .medPeriodeTom(periodeTo.getPeriodeTom(), periodeEn.getSpråkkode())
                 .medPeriodeDagsats(periodeEn.getPeriodeDagsats())
-                .medAntallTapteDager(periodeEn.getAntallTapteDager() + (periodeTo.getAntallTapteDager()))
+                .medAntallTapteDager(finnRiktigAntallTapteDager(periodeEn, periodeTo), BigDecimal.ZERO)
                 .medPrioritertUtbetalingsgrad(periodeEn.getPrioritertUtbetalingsgrad())
                 .medStønadskontoType(periodeEn.getStønadskontoType())
                 .medArbeidsforhold(periodeEn.getArbeidsforholdsliste())
                 .medNæring(periodeEn.getNæring())
                 .medAnnenAktivitet(periodeEn.getAnnenAktivitetsliste())
                 .build();
+    }
+
+    private static int finnRiktigAntallTapteDager(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+        BigDecimal tapteDagerPeriodeEn = periodeEn.getTapteDagerTemp();
+        BigDecimal tapteDagerPeriodeTo = periodeTo.getTapteDagerTemp();
+
+        if (!Objects.equals(tapteDagerPeriodeEn, BigDecimal.ZERO) && !Objects.equals(tapteDagerPeriodeTo, BigDecimal.ZERO)) {
+            return  tapteDagerPeriodeEn.add(tapteDagerPeriodeTo).setScale(1, RoundingMode.DOWN).intValue();
+        } else {
+            return periodeEn.getAntallTapteDager() + periodeTo.getAntallTapteDager();
+        }
     }
 
     private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {

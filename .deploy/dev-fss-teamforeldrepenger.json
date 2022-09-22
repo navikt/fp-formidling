@@ -30,6 +30,11 @@
             "app": "fp-frontend-azure",
             "namespace": "teamforeldrepenger",
             "cluster": "dev-fss"
+        },
+        {
+            "app": "fpsak",
+            "namespace": "teamforeldrepenger",
+            "cluster": "dev-fss"
         }
     ]
 }

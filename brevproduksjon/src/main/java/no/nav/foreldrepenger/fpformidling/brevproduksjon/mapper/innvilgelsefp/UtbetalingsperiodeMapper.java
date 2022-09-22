@@ -5,6 +5,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -63,11 +64,13 @@ public final class UtbetalingsperiodeMapper {
 
             if (i == 0) {
                 periodeTilListen = mapFørstePeriode(tilkjentYtelsePeriode,
+                        tilkjentYtelsePerioder,
                         matchetUttaksperiode,
                         beregningsgrunnlagPeriode,
                         språkkode);
             } else {
                 periodeTilListen = mapPerioderEtterFørste(tilkjentYtelsePeriode,
+                        tilkjentYtelsePerioder,
                         matchetUttaksperiode,
                         beregningsgrunnlagPeriode,
                         språkkode);
@@ -125,7 +128,7 @@ public final class UtbetalingsperiodeMapper {
 
     private static Utbetalingsperiode mapEnkelUttaksperiode(UttakResultatPeriode uttakperiode, Språkkode språkkode) {
         var utbetalingsPerioder = Utbetalingsperiode.ny()
-                .medAntallTapteDager(((mapAntallTapteDagerFra(uttakperiode.getAktiviteter()))))
+                .medAntallTapteDager(mapAntallTapteDagerFra(uttakperiode.getAktiviteter()), BigDecimal.ZERO)
                 .medInnvilget((uttakperiode.isInnvilget() && !erGraderingAvslått(uttakperiode)))
                 .medPeriodeFom(uttakperiode.getFom(), språkkode)
                 .medPeriodeTom(uttakperiode.getTom(), språkkode)
@@ -135,10 +138,11 @@ public final class UtbetalingsperiodeMapper {
     }
 
     private static Utbetalingsperiode mapPerioderEtterFørste(TilkjentYtelsePeriode tilkjentYtelsePeriode,
+                                                             List<TilkjentYtelsePeriode> tilkjentPeriodeListe,
                                                              UttakResultatPeriode matchetUttaksperiode,
                                                              BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
                                                              Språkkode språkkode) {
-        return mapEnkelPeriode(tilkjentYtelsePeriode, matchetUttaksperiode, beregningsgrunnlagPeriode,
+        return mapEnkelPeriode(tilkjentYtelsePeriode, tilkjentPeriodeListe, matchetUttaksperiode, beregningsgrunnlagPeriode,
                 tilkjentYtelsePeriode.getPeriodeFom(), språkkode);
     }
 
@@ -164,24 +168,26 @@ public final class UtbetalingsperiodeMapper {
         return alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ? uttakAktiviteter.stream()
                 .map(UttakResultatPeriodeAktivitet::getTrekkdager)
                 .filter(Objects::nonNull)
-                .mapToInt(BigDecimal::intValue)
-                .max()
+                .max(BigDecimal::compareTo)
+                .map(bd -> bd.setScale(1, RoundingMode.DOWN).intValue())
                 .orElse(0) : 0;
     }
 
     private static Utbetalingsperiode mapFørstePeriode(TilkjentYtelsePeriode tilkjentYtelsePeriode,
+                                                       List<TilkjentYtelsePeriode> tilkjentPeriodeListe,
                                                        UttakResultatPeriode uttakResultatPeriode,
                                                        BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
                                                        Språkkode språkkode) {
         if (uttakResultatPeriode.getFom().isBefore(tilkjentYtelsePeriode.getPeriodeFom())) {
-            return mapEnkelPeriode(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode,
+            return mapEnkelPeriode(tilkjentYtelsePeriode, tilkjentPeriodeListe, uttakResultatPeriode, beregningsgrunnlagPeriode,
                     uttakResultatPeriode.getFom(), språkkode);
         }
-        return mapEnkelPeriode(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode,
+        return mapEnkelPeriode(tilkjentYtelsePeriode, tilkjentPeriodeListe, uttakResultatPeriode, beregningsgrunnlagPeriode,
                 tilkjentYtelsePeriode.getPeriodeFom(), språkkode);
     }
 
     private static Utbetalingsperiode mapEnkelPeriode(TilkjentYtelsePeriode tilkjentYtelsePeriode,
+                                                      List<TilkjentYtelsePeriode> tilkjentPeriodeListe,
                                                       UttakResultatPeriode uttakResultatPeriode,
                                                       BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
                                                       LocalDate fomDate,
@@ -191,9 +197,16 @@ public final class UtbetalingsperiodeMapper {
         List<Arbeidsforhold> arbeidsfoholdListe = mapArbeidsforholdliste(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, språkkode);
         Næring næring = mapNæring(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode);
         List<AnnenAktivitet> annenAktivitetListe = mapAnnenAktivtetListe(tilkjentYtelsePeriode, uttakResultatPeriode);
+        //TFP-5200 Hack for å forhindre dobbelt antall tapte dager om det er flere tilkjentperioder for en uttaksperiode
+        int antallTilkjentPerioder = PeriodeBeregner.finnAntallTilkjentePerioderForUttaksperioden(tilkjentPeriodeListe, uttakResultatPeriode);
+        int tapteDagerForUttaksperioden = mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter());
+        BigDecimal tapteDagerHvisFlereTilkjentPerioder = BigDecimal.ZERO;
+        if (antallTilkjentPerioder > 1 ) {
+            tapteDagerHvisFlereTilkjentPerioder= BigDecimal.valueOf(tapteDagerForUttaksperioden).divide(BigDecimal.valueOf(antallTilkjentPerioder), 2, RoundingMode.HALF_UP);
+        }
 
         var utbetalingsPerioder = Utbetalingsperiode.ny()
-                .medAntallTapteDager(mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter()))
+                .medAntallTapteDager(tapteDagerForUttaksperioden, tapteDagerHvisFlereTilkjentPerioder)
                 .medInnvilget(uttakResultatPeriode.isInnvilget() && !erGraderingAvslått(uttakResultatPeriode))
                 .medÅrsak(Årsak.of(periodeResultatÅrsak.getKode()))
                 .medStønadskontoType(hentStønadskontoType(uttakResultatPeriode))

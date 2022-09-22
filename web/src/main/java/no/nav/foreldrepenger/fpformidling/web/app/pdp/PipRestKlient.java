@@ -11,6 +11,7 @@ import javax.ws.rs.core.UriBuilderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import no.nav.vedtak.felles.integrasjon.rest.FpApplication;
 import no.nav.vedtak.felles.integrasjon.rest.RestClient;
 import no.nav.vedtak.felles.integrasjon.rest.RestClientConfig;
 import no.nav.vedtak.felles.integrasjon.rest.RestConfig;
@@ -19,13 +20,12 @@ import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 import no.nav.vedtak.sikkerhet.abac.pipdata.AbacPipDto;
 
 @ApplicationScoped
-@RestClientConfig(tokenConfig = TokenFlow.STS_CC, endpointProperty = "fpsak.rest.base.url", endpointDefault = "http://fpsak")
-// TODO: forsøk å fikse hack i autotest som setter nais-cluster-name til localhost-fss. Da kan man bruke application = FpApplication.FPSAK
+@RestClientConfig(tokenConfig = TokenFlow.STS_CC, application = FpApplication.FPSAK)
 public class PipRestKlient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PipRestKlient.class);
 
-    private static final String PIP_PATH = "/fpsak/api/pip";
+    private static final String PIP_PATH = "/api/pip";
 
     private RestClient restClient;
     private URI contextPath;
@@ -37,7 +37,7 @@ public class PipRestKlient {
     @Inject
     public PipRestKlient(RestClient restClient) {
         this.restClient = restClient;
-        this.contextPath = RestConfig.endpointFromAnnotation(PipRestKlient.class);
+        this.contextPath = RestConfig.contextPathFromAnnotation(PipRestKlient.class);
     }
 
 

@@ -3,8 +3,9 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpformidling.integrasjon.journal.JournalpostRestKlient;
+import no.nav.foreldrepenger.fpformidling.integrasjon.journal.Journalpost;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
+import no.nav.vedtak.felles.integrasjon.rest.NativeClient;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
@@ -13,10 +14,10 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 @ProsessTask(value = "formidling.ferdigstillForsendelse", maxFailedRuns = 2)
 public class FerdigstillForsendelseTask implements ProsessTaskHandler {
 
-    JournalpostRestKlient journalpostRestKlient;
+    Journalpost journalpostRestKlient;
 
     @Inject
-    public FerdigstillForsendelseTask(JournalpostRestKlient journalpostRestKlient) {
+    public FerdigstillForsendelseTask(@NativeClient Journalpost journalpostRestKlient) {
         this.journalpostRestKlient = journalpostRestKlient;
     }
 

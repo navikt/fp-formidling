@@ -14,19 +14,20 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.DokumentTilkny
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.TilknyttVedleggRequest;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.felles.integrasjon.rest.NativeClient;
 
 @ApplicationScoped
 public class TilknyttVedleggTjeneste {
     private static final Logger LOG = LoggerFactory.getLogger(TilknyttVedleggTjeneste.class);
 
-    private JournalpostRestKlient journalpostRestKlient;
+    private Journalpost journalpostRestKlient;
 
     TilknyttVedleggTjeneste() {
         //CDI
     }
 
     @Inject
-    public TilknyttVedleggTjeneste(JournalpostRestKlient journalpostRestKlient) {
+    public TilknyttVedleggTjeneste(@NativeClient Journalpost journalpostRestKlient) {
         this.journalpostRestKlient = journalpostRestKlient;
     }
 

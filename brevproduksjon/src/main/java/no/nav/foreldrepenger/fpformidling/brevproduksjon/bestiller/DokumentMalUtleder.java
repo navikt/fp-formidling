@@ -14,7 +14,7 @@ import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.BehandlingRestKlient;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
 import no.nav.foreldrepenger.fpformidling.klage.KlageVurderingResultat;
@@ -24,6 +24,7 @@ import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.felles.integrasjon.rest.NativeClient;
 
 @ApplicationScoped
 class DokumentMalUtleder {
@@ -31,7 +32,7 @@ class DokumentMalUtleder {
     private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingUuid: ";
     private DomeneobjektProvider domeneobjektProvider;
     private DokumentHendelseTjeneste dokumentHendelseTjeneste;
-    private BehandlingRestKlient behandlingRestKlient;
+    private Behandlinger behandlingRestKlient;
 
     public DokumentMalUtleder() {
         //CDI
@@ -40,7 +41,7 @@ class DokumentMalUtleder {
     @Inject
     public DokumentMalUtleder(DomeneobjektProvider domeneobjektProvider,
                               DokumentHendelseTjeneste dokumentHendelseTjeneste,
-                              BehandlingRestKlient behandlingRestKlient) {
+                              @NativeClient Behandlinger behandlingRestKlient) {
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
         this.behandlingRestKlient = behandlingRestKlient;

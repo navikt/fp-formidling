@@ -13,6 +13,7 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -79,7 +80,8 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
     private static final LocalDate PERIODE3_TOM = LocalDate.now().plusDays(7);
     private static final PeriodeResultatÅrsak ÅRSAK_1 = PeriodeResultatÅrsak.FOR_SEN_SØKNAD;
     private static final PeriodeResultatÅrsak ÅRSAK_2_OG_3 = PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG;
-    private static final BigDecimal TREKKDAGER = BigDecimal.TEN;
+    private static final BigDecimal TREKKDAGER = BigDecimal.valueOf(10.5);
+    private static final BigDecimal TREKKDAGER_FORRVENTET = BigDecimal.TEN;
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
@@ -99,7 +101,7 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
+        lenient().when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
     }
 
     @Test
@@ -139,14 +141,33 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getAvslåttePerioder().get(0).getAvslagsårsak().getKode()).isEqualTo(ÅRSAK_1.getKode());
         assertThat(dokumentdata.getAvslåttePerioder().get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
         assertThat(dokumentdata.getAvslåttePerioder().get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
-        assertThat(dokumentdata.getAvslåttePerioder().get(0).getAntallTapteDager()).isEqualTo(TREKKDAGER.intValue());
+        assertThat(dokumentdata.getAvslåttePerioder().get(0).getAntallTapteDager()).isEqualTo(TREKKDAGER_FORRVENTET.intValue());
         assertThat(dokumentdata.getAvslåttePerioder().get(1).getAvslagsårsak().getKode()).isEqualTo(ÅRSAK_2_OG_3.getKode());
         assertThat(dokumentdata.getAvslåttePerioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
         assertThat(dokumentdata.getAvslåttePerioder().get(1).getPeriodeTom()).isEqualTo(PERIODE3_TOM);
-        assertThat(dokumentdata.getAvslåttePerioder().get(1).getAntallTapteDager()).isEqualTo(TREKKDAGER.intValue() * 2);
+        assertThat(dokumentdata.getAvslåttePerioder().get(1).getAntallTapteDager()).isEqualTo(TREKKDAGER_FORRVENTET.intValue() * 2);
     }
 
-    private List<MottattDokument> opprettMottattDokument() {
+    @Test
+    public void SjekkAtTotilkjentPerioderMedEnUttaksperiodeFårRiktigTapteDager() {
+        // Arrange
+        Behandling behandling = opprettBehandling();
+        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+
+        when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat2());
+
+        // Act
+        ForeldrepengerAvslagDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse,
+                behandling, true);
+
+        assertThat(dokumentdata.getAvslåttePerioder()).hasSize(2);
+        assertThat(dokumentdata.getAvslåttePerioder().get(0).getAntallTapteDager()).isEqualTo(TREKKDAGER_FORRVENTET.intValue());
+        assertThat(dokumentdata.getAvslåttePerioder().get(1).getAntallTapteDager()).isEqualTo(TREKKDAGER_FORRVENTET.intValue());
+
+    }
+
+        private List<MottattDokument> opprettMottattDokument() {
         return of(new MottattDokument(SØKNAD_DATO, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD));
     }
 
@@ -211,6 +232,29 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
                 .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
                 .build();
         return Optional.of(new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3), List.of(),
+                false, true, false));
+    }
+
+    private Optional<ForeldrepengerUttak> opprettUttaksresultat2() {
+        UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
+                .medTrekkdager(TREKKDAGER)
+                .medUtbetalingsprosent(BigDecimal.ZERO)
+                .medUttakAktivitet(UttakAktivitet.ny().medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID).build())
+                .medArbeidsprosent(BigDecimal.valueOf(100))
+                .build();
+        UttakResultatPeriode uttakResultatPeriode1 = UttakResultatPeriode.ny()
+                .medAktiviteter(of(uttakAktivitet))
+                .medTidsperiode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE2_TOM))
+                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+                .medPeriodeResultatÅrsak(ÅRSAK_1)
+                .build();
+        UttakResultatPeriode uttakResultatPeriode3 = UttakResultatPeriode.ny()
+                .medAktiviteter(of(uttakAktivitet))
+                .medTidsperiode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
+                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+                .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
+                .build();
+        return Optional.of(new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode3), List.of(),
                 false, true, false));
     }
 

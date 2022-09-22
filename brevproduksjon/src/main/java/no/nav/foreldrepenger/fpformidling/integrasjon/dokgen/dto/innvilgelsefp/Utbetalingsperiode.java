@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp;
 
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,8 @@ public class Utbetalingsperiode {
     private List<AnnenAktivitet> annenAktivitetsliste = new ArrayList<>();
     @JsonIgnore
     private Språkkode språkkode;
+    @JsonIgnore
+    private BigDecimal tapteDagerTemp;
 
     public boolean isInnvilget() {
         return innvilget;
@@ -87,6 +90,8 @@ public class Utbetalingsperiode {
     public Språkkode getSpråkkode() {
         return språkkode;
     }
+
+    public BigDecimal getTapteDagerTemp() { return tapteDagerTemp; }
 
     @Override
     public boolean equals(Object object) {
@@ -158,8 +163,9 @@ public class Utbetalingsperiode {
             return this;
         }
 
-        public Builder medAntallTapteDager(int antallTapteDager) {
+        public Builder medAntallTapteDager(int antallTapteDager, BigDecimal tapteDagerTemp) {
             this.kladd.antallTapteDager = antallTapteDager;
+            this.kladd.tapteDagerTemp = tapteDagerTemp;
             return this;
         }
 

@@ -16,11 +16,11 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -104,8 +104,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
-    private final TilkjentYtelseForeldrepenger tilkjentYtelseFP = opprettTilkjentYtelseFP();
-
     private DokumentData dokumentData;
 
     private ForeldrepengerInnvilgelseDokumentdataMapper dokumentdataMapper;
@@ -122,9 +120,9 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
-        when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(tilkjentYtelseFP);
+        lenient().when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat());
+        lenient().when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat());
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
         when(domeneobjektProvider.hentAksjonspunkter(any(Behandling.class))).thenReturn(opprettAksjonspunkter());
         when(domeneobjektProvider.utenMinsterett(any(Behandling.class))).thenReturn(true);
@@ -135,6 +133,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         // Act
         ForeldrepengerInnvilgelseDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, true);
+
+        TilkjentYtelseForeldrepenger tilkjentYtelseFP = opprettTilkjentYtelseFP();
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -209,7 +209,23 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.erUtenMinsterett()).isTrue();
     }
 
-    private FagsakBackend opprettFagsakBackend() {
+    @Test
+    public void SjekkAtTotilkjentPerioderMedEnUttaksperiodeFårRiktigTapteDager()
+        {
+
+            when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
+            when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP2());
+            when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat2());
+
+            //Act
+            ForeldrepengerInnvilgelseDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, true);
+
+            assertThat(dokumentdata.getPerioder()).hasSize(2);
+            assertThat(dokumentdata.getPerioder().get(0).getAntallTapteDager()).isEqualTo(23);
+            assertThat(dokumentdata.getPerioder().get(1).getAntallTapteDager()).isEqualTo(23);
+    }
+
+        private FagsakBackend opprettFagsakBackend() {
         return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).medDekningsgrad(DEKNINGSGRAD).build();
     }
 
@@ -248,6 +264,43 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .build();
     }
 
+    private TilkjentYtelseForeldrepenger opprettTilkjentYtelseFP2() {
+        Arbeidsgiver arbeidsgiver = new Arbeidsgiver("1", "navn");
+        return TilkjentYtelseForeldrepenger.ny()
+                .leggTilPerioder(of(
+                        TilkjentYtelsePeriode.ny()
+                                .medDagsats(100L)
+                                .medPeriode(fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1)))
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
+                                        .medErBrukerMottaker(true)
+                                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                                        .medStillingsprosent(BigDecimal.valueOf(100))
+                                        .medArbeidsgiver(arbeidsgiver)
+                                        .build()))
+                                .build(),
+                        TilkjentYtelsePeriode.ny()
+                                .medDagsats(100L)
+                                .medPeriode(fraOgMedTilOgMed(LocalDate.now().plusDays(2), LocalDate.now().plusDays(4)))
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
+                                        .medErArbeidsgiverMottaker(true)
+                                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                                        .medStillingsprosent(BigDecimal.valueOf(100))
+                                        .medArbeidsgiver(arbeidsgiver)
+                                        .build()))
+                                .build(),
+                        TilkjentYtelsePeriode.ny()
+                                .medDagsats(100L * 2)
+                                .medPeriode(fraOgMedTilOgMed(LocalDate.now().plusDays(5), LocalDate.now().plusDays(10)))
+                                .medAndeler(of(TilkjentYtelseAndel.ny()
+                                        .medErArbeidsgiverMottaker(true)
+                                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                                        .medStillingsprosent(BigDecimal.valueOf(100))
+                                        .medArbeidsgiver(arbeidsgiver)
+                                        .build()))
+                                .build()))
+                .build();
+    }
+
     private Beregningsgrunnlag opprettBeregningsgrunnlag() {
         return Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
@@ -262,7 +315,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode() {
         return BeregningsgrunnlagPeriode.ny()
-                .medPeriode(fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1)))
+                .medPeriode(fraOgMedTilOgMed(LocalDate.now(), PERIODE_TOM))
                 .medDagsats(100L)
                 .medBruttoPrÅr(new BigDecimal(200))
                 .medAvkortetPrÅr(new BigDecimal(300))
@@ -315,6 +368,34 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         return new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3),
                 of(), true, true, false);
     }
+
+    private ForeldrepengerUttak opprettUttaksresultat2() {
+        UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
+                .medTrekkdager(BigDecimal.valueOf(23L))
+                .medUtbetalingsprosent(BigDecimal.ZERO)
+                .medUttakAktivitet(UttakAktivitet.ny().medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID).build())
+                .medArbeidsprosent(BigDecimal.valueOf(100))
+                .medTrekkonto(StønadskontoType.FORELDREPENGER)
+                .build();
+
+        UttakResultatPeriode uttakResultatPeriode1 = UttakResultatPeriode.ny()
+                .medAktiviteter(of(uttakAktivitet))
+                .medTidsperiode(fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(4)))
+                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+                .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.FOR_SEN_SØKNAD)
+                .medGraderingAvslagÅrsak(PeriodeResultatÅrsak.FOR_SEN_SØKNAD)
+                .build();
+        UttakResultatPeriode uttakResultatPeriode2 = UttakResultatPeriode.ny()
+                .medAktiviteter(of(uttakAktivitet))
+                .medTidsperiode(fraOgMedTilOgMed(LocalDate.now().plusDays(5), LocalDate.now().plusDays(10)))
+                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
+                .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG)
+                .build();
+
+        return new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2),
+                of(), true, true, false);
+    }
+
 
     private Saldoer opprettSaldoer() {
         Set<Stønadskonto> stønadskontoer = Set.of(

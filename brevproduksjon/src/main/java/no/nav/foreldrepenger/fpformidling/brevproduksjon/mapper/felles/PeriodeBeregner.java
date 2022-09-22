@@ -41,26 +41,33 @@ public class PeriodeBeregner {
         // for sonar
     }
 
-    public static BeregningsgrunnlagPeriode finnBeregningsgrunnlagperiode(TilkjentYtelsePeriode periode,
+    public static BeregningsgrunnlagPeriode finnBeregningsgrunnlagperiode(TilkjentYtelsePeriode tilkjentPeriode,
                                                                           List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
         for (BeregningsgrunnlagPeriode beregningsgrunnlagPeriode : beregningsgrunnlagPerioder) {
-            if (!periode.getPeriodeFom().isBefore(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom()) &&
+            if (!tilkjentPeriode.getPeriodeFom().isBefore(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom()) &&
                     (beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom() == null
-                            || (!periode.getPeriodeTom().isAfter(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom())))) {
+                            || (!tilkjentPeriode.getPeriodeTom().isAfter(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom())))) {
                 return beregningsgrunnlagPeriode;
             }
         }
         throw new TekniskException(FEILKODE, String.format(FEILMELDING, "beregningsgrunnlagperiode"));
     }
 
-    public static UttakResultatPeriode finnUttaksperiode(TilkjentYtelsePeriode periode, List<UttakResultatPeriode> uttakPerioder) {
+    public static UttakResultatPeriode finnUttaksperiode(TilkjentYtelsePeriode tilkjentPeriode, List<UttakResultatPeriode> uttakPerioder) {
         for (UttakResultatPeriode uttakPeriode : uttakPerioder) {
-            if (!periode.getPeriodeFom().isBefore(uttakPeriode.getFom())
-                    && !periode.getPeriodeTom().isAfter(uttakPeriode.getTom())) {
+            if (!tilkjentPeriode.getPeriodeFom().isBefore(uttakPeriode.getFom())
+                    && !tilkjentPeriode.getPeriodeTom().isAfter(uttakPeriode.getTom())) {
                 return uttakPeriode;
             }
         }
         throw new TekniskException(FEILKODE, String.format(FEILMELDING, "uttaksperiode"));
+    }
+
+    public static int finnAntallTilkjentePerioderForUttaksperioden(List<TilkjentYtelsePeriode> tilkjentPeriodeListe, UttakResultatPeriode uttakPeriode) {
+        return (int) tilkjentPeriodeListe.stream()
+                .filter(tp ->uttakPeriode.getFom().isEqual(tp.getPeriodeFom()) && uttakPeriode.getTom().isAfter(tp.getPeriodeTom())
+                || uttakPeriode.getTom().isEqual(tp.getPeriodeTom()) && uttakPeriode.getFom().isBefore(tp.getPeriodeFom()))
+                .count();
     }
 
     public static List<SvpUttakResultatPeriode> finnUttakPeriodeKandidater(TilkjentYtelsePeriode periode,

@@ -25,6 +25,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private ForMyeUtbetalt forMyeUtbetalt;
     private boolean inntektMottattArbeidsgiver;
     private boolean annenForelderHarRett;
+    private boolean annenForelderRettEØS;
     private VurderingsKode annenForelderHarRettVurdert;
     private VurderingsKode aleneomsorgKode;
     private boolean ikkeOmsorg;
@@ -130,6 +131,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     public VurderingsKode getAnnenForelderHarRettVurdert() {
         return annenForelderHarRettVurdert;
+    }
+
+    public boolean isAnnenForelderRettEØS() {
+        return annenForelderRettEØS;
     }
 
     public VurderingsKode getAleneomsorgKode() {
@@ -321,6 +326,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 && Objects.equals(forMyeUtbetalt, that.forMyeUtbetalt)
                 && Objects.equals(inntektMottattArbeidsgiver, that.inntektMottattArbeidsgiver)
                 && Objects.equals(annenForelderHarRett, that.annenForelderHarRett)
+                && Objects.equals(annenForelderRettEØS, that.annenForelderRettEØS)
                 && Objects.equals(annenForelderHarRettVurdert, that.annenForelderHarRettVurdert)
                 && Objects.equals(aleneomsorgKode, that.aleneomsorgKode)
                 && Objects.equals(ikkeOmsorg, that.ikkeOmsorg)
@@ -373,7 +379,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, søknadsdato,
                 dekningsgrad, harUtbetaling, dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver,
                 annenForelderHarRett, annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse,
-                gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget,
+                gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget, annenForelderRettEØS,
                 antallPerioder, antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager,
                 disponibleFellesDager, sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker,
                 antallBarn, prematurDager, antallDødeBarn, dødsdato, kreverSammenhengendeUttak, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler,
@@ -459,6 +465,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medAnnenForelderHarRett(boolean annenForelderHarRett) {
             this.kladd.annenForelderHarRett = annenForelderHarRett;
+            return this;
+        }
+
+        public Builder medAnnenForelderRettEØS(boolean annenForelderRettEØS) {
+            this.kladd.annenForelderRettEØS = annenForelderRettEØS;
             return this;
         }
 

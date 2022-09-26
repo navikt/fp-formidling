@@ -16,10 +16,6 @@ public class KlageFormkravResultatDto {
     @JsonProperty("avvistArsaker")
     private List<KlageAvvistÅrsak> avvistArsaker;
 
-
-    public KlageFormkravResultatDto() {
-    }
-
     public List<KlageAvvistÅrsak> getAvvistArsaker() {
         return avvistArsaker != null ? avvistArsaker : List.of();
     }

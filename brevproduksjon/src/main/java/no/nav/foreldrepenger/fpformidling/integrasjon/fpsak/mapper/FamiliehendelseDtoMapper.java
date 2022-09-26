@@ -58,9 +58,9 @@ public class FamiliehendelseDtoMapper {
     }
 
     public static FamilieHendelse mapFamiliehendelsefraDto(FamilieHendelseGrunnlagDto grunnlagDto) {
-        var gjeldendeHendelseDto = grunnlagDto.getGjeldende();
+        var gjeldendeHendelseDto = grunnlagDto.gjeldende();
         if (alleFelterErNull(gjeldendeHendelseDto)) {
-            gjeldendeHendelseDto = grunnlagDto.getOppgitt();
+            gjeldendeHendelseDto = grunnlagDto.oppgitt();
         }
         if (alleFelterErNull(gjeldendeHendelseDto)) {
             return new FamilieHendelse(FamilieHendelseType.UDEFINERT,

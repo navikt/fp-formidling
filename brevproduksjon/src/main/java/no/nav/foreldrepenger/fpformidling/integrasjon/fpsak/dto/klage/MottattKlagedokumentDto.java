@@ -11,9 +11,6 @@ public class MottattKlagedokumentDto {
     @JsonProperty("mottattDato")
     private LocalDate mottattDato;
 
-    public MottattKlagedokumentDto() {
-    }
-
     public LocalDate getMottattDato() {
         return mottattDato;
     }

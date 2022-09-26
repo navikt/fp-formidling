@@ -232,7 +232,7 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
                 .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
                 .build();
         return Optional.of(new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3), List.of(),
-                false, true, false));
+                false, true, false, false));
     }
 
     private Optional<ForeldrepengerUttak> opprettUttaksresultat2() {
@@ -255,7 +255,7 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
                 .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
                 .build();
         return Optional.of(new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode3), List.of(),
-                false, true, false));
+                false, true, false, false));
     }
 
     private Behandling opprettBehandling() {

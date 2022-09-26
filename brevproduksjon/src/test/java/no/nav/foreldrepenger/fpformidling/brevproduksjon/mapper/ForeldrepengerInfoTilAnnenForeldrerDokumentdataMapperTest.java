@@ -102,7 +102,7 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
     }
     private ForeldrepengerUttak settOppUttaksperioder(DatoIntervall periodeEn, DatoIntervall periodeTo) {
         return new ForeldrepengerUttak(List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)),
-                List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)), false, false, false);
+                List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)), false, false, false, false);
     }
 
     private UttakResultatPeriode lagUttakResPeriode(DatoIntervall periode) {

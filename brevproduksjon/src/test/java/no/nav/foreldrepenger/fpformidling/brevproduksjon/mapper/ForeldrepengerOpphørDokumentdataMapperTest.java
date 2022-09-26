@@ -184,7 +184,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
                 .medPeriodeResultatÅrsak(ÅRSAK_4)
                 .build();
         return Optional.of(new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4),
-                List.of(), false, true, false));
+                List.of(), false, true, false, false));
     }
 
     private Behandling opprettBehandling() {

@@ -54,7 +54,7 @@ public class DatoIntervallEntitet extends AbstractLocalDateInterval {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DatoIntervallEntitet that = (DatoIntervallEntitet) o;
+        var that = (DatoIntervallEntitet) o;
         return Objects.equals(getFomDato(), that.getFomDato()) &&
             Objects.equals(getTomDato(), that.getTomDato());
     }

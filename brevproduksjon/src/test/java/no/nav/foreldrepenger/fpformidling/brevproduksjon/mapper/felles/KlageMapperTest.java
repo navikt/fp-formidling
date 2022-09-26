@@ -54,7 +54,7 @@ public class KlageMapperTest {
 
     @Test
     public void formaterLovhjemlerKlageAvvistTest() {
-        Klage klage = lagKlageNFP(false, List.of(KlageAvvistÅrsak.KLAGET_FOR_SENT, KlageAvvistÅrsak.IKKE_KONKRET));
+        var klage = lagKlageNFP(false, List.of(KlageAvvistÅrsak.KLAGET_FOR_SENT, KlageAvvistÅrsak.IKKE_KONKRET));
         assertLovFormateringKlage(KlageMapper.hentKlageHjemler(klage), false, "forvaltningsloven §§ 31, 32 og 33");
 
         klage = lagKlageNFP(false, List.of(KlageAvvistÅrsak.KLAGER_IKKE_PART));
@@ -66,21 +66,21 @@ public class KlageMapperTest {
     }
 
     private KlagebehandlingDto lagKlageDto(boolean opphevet, List<KlageAvvistÅrsak> avvistÅrsaker) {
-        KlagebehandlingDto dto = new KlagebehandlingDto();
+        var dto = new KlagebehandlingDto();
         dto.setKlageVurderingResultatNFP(lagKlagevurderingResultatDto(opphevet));
         dto.setKlageFormkravResultatNFP(lagFormkravResultatDto(avvistÅrsaker));
         return dto;
     }
 
     private KlageFormkravResultatDto lagFormkravResultatDto(List<KlageAvvistÅrsak> avvistÅrsaker) {
-        KlageFormkravResultatDto dto = new KlageFormkravResultatDto();
+        var dto = new KlageFormkravResultatDto();
         dto.setAvvistArsaker(avvistÅrsaker);
         dto.setPaklagdBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD);
         return dto;
     }
 
     private KlageVurderingResultatDto lagKlagevurderingResultatDto(boolean opphevet) {
-        KlageVurderingResultatDto resultatDto = new KlageVurderingResultatDto();
+        var resultatDto = new KlageVurderingResultatDto();
         if (opphevet) {
             resultatDto.setKlageVurdering(KlageVurdering.OPPHEVE_YTELSESVEDTAK);
         } else {
@@ -90,7 +90,7 @@ public class KlageMapperTest {
     }
 
     private void assertLovFormateringKlage(Set<String> input, boolean klagetEtterKlagefrist, String forventetOutput) {
-        String lovhjemler = KlageMapper.formaterLovhjemlerForAvvistKlage(input, klagetEtterKlagefrist, Språkkode.NB).get();
+        var lovhjemler = KlageMapper.formaterLovhjemlerForAvvistKlage(input, klagetEtterKlagefrist, Språkkode.NB).get();
         assertThat(lovhjemler).isEqualTo(forventetOutput);
     }
 }

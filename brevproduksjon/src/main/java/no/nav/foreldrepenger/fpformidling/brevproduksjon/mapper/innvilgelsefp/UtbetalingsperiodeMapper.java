@@ -44,22 +44,22 @@ public final class UtbetalingsperiodeMapper {
                                                                   List<BeregningsgrunnlagPeriode> beregningingsgrunnlagPerioder,
                                                                   Språkkode språkkode) {
         List<Utbetalingsperiode> periodelisteFørSammenslåing = new ArrayList<>();
-        List<UttakResultatPeriode> uttaksperioder = foreldrepengerUttak.perioder();
+        var uttaksperioder = foreldrepengerUttak.perioder();
         // er avhengig av at listen er sortert med tidligste periode først
-        List<TilkjentYtelsePeriode> tilkjentYtelsePerioderSortert = tilkjentYtelsePerioder.stream()
+        var tilkjentYtelsePerioderSortert = tilkjentYtelsePerioder.stream()
                 .sorted(Comparator.comparing(TilkjentYtelsePeriode::getPeriodeFom)).toList();
 
         List<UttakResultatPeriode> uttaksperioderMedÅrsak = new ArrayList<>(filtrerBortUkjentÅrsak(uttaksperioder));
 
-        for (int i = 0; i < tilkjentYtelsePerioderSortert.size(); i++) {
+        for (var i = 0; i < tilkjentYtelsePerioderSortert.size(); i++) {
             var tilkjentYtelsePeriode = tilkjentYtelsePerioderSortert.get(i);
-            UttakResultatPeriode matchetUttaksperiode = PeriodeBeregner.finnUttaksperiode(tilkjentYtelsePeriode, uttaksperioder);
+            var matchetUttaksperiode = PeriodeBeregner.finnUttaksperiode(tilkjentYtelsePeriode, uttaksperioder);
             if (matchetUttaksperiode.getPeriodeResultatÅrsak().erUkjent() || avslåttManglendeSøktUtenTrekkdager(matchetUttaksperiode)) {
                 continue;
             }
             uttaksperioderMedÅrsak.remove(matchetUttaksperiode);
             Utbetalingsperiode periodeTilListen;
-            BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = PeriodeBeregner.finnBeregningsgrunnlagperiode(tilkjentYtelsePeriode,
+            var beregningsgrunnlagPeriode = PeriodeBeregner.finnBeregningsgrunnlagperiode(tilkjentYtelsePeriode,
                     beregningingsgrunnlagPerioder);
 
             if (i == 0) {
@@ -118,7 +118,7 @@ public final class UtbetalingsperiodeMapper {
     private static List<Utbetalingsperiode> mapPerioderUtenBeregningsgrunnlag(List<UttakResultatPeriode> perioderUtenBeregningsgrunnlag,
                                                                               Språkkode språkkode) {
         List<Utbetalingsperiode> perioder = new ArrayList<>();
-        for (UttakResultatPeriode uttakperiode : perioderUtenBeregningsgrunnlag) {
+        for (var uttakperiode : perioderUtenBeregningsgrunnlag) {
             if (!avslåttManglendeSøktUtenTrekkdager(uttakperiode)) {
                 perioder.add(mapEnkelUttaksperiode(uttakperiode, språkkode));
             }
@@ -192,15 +192,15 @@ public final class UtbetalingsperiodeMapper {
                                                       BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
                                                       LocalDate fomDate,
                                                       Språkkode språkkode) {
-        PeriodeResultatÅrsak periodeResultatÅrsak = utledÅrsakskode(uttakResultatPeriode);
+        var periodeResultatÅrsak = utledÅrsakskode(uttakResultatPeriode);
 
-        List<Arbeidsforhold> arbeidsfoholdListe = mapArbeidsforholdliste(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, språkkode);
-        Næring næring = mapNæring(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode);
-        List<AnnenAktivitet> annenAktivitetListe = mapAnnenAktivtetListe(tilkjentYtelsePeriode, uttakResultatPeriode);
+        var arbeidsfoholdListe = mapArbeidsforholdliste(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode, språkkode);
+        var næring = mapNæring(tilkjentYtelsePeriode, uttakResultatPeriode, beregningsgrunnlagPeriode);
+        var annenAktivitetListe = mapAnnenAktivtetListe(tilkjentYtelsePeriode, uttakResultatPeriode);
         //TFP-5200 Hack for å forhindre dobbelt antall tapte dager om det er flere tilkjentperioder for en uttaksperiode
-        int antallTilkjentPerioder = PeriodeBeregner.finnAntallTilkjentePerioderForUttaksperioden(tilkjentPeriodeListe, uttakResultatPeriode);
-        int tapteDagerForUttaksperioden = mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter());
-        BigDecimal tapteDagerHvisFlereTilkjentPerioder = BigDecimal.ZERO;
+        var antallTilkjentPerioder = PeriodeBeregner.finnAntallTilkjentePerioderForUttaksperioden(tilkjentPeriodeListe, uttakResultatPeriode);
+        var tapteDagerForUttaksperioden = mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter());
+        var tapteDagerHvisFlereTilkjentPerioder = BigDecimal.ZERO;
         if (antallTilkjentPerioder > 1 ) {
             tapteDagerHvisFlereTilkjentPerioder= BigDecimal.valueOf(tapteDagerForUttaksperioden).divide(BigDecimal.valueOf(antallTilkjentPerioder), 2, RoundingMode.HALF_UP);
         }
@@ -245,7 +245,7 @@ public final class UtbetalingsperiodeMapper {
                                                               UttakResultatPeriode uttakPeriode) {
         List<AnnenAktivitet> annenAktivitetListe = new ArrayList<>();
         // - for å reverse rekkefølgen-gradering først i listen:
-        Comparator<AnnenAktivitet> annenAktiviteTypeIsGraderingComparator = (a, b) -> - Boolean.compare(a.isGradering(), b.isGradering());
+        var annenAktiviteTypeIsGraderingComparator = (Comparator<AnnenAktivitet>) (a, b) -> - Boolean.compare(a.isGradering(), b.isGradering());
         finnAndelerOgUttakAnnenAktivitet(tilkjentYtelsePeriode, uttakPeriode)
                 .map(UtbetalingsperiodeMapper::mapAnnenAktivitet)
                 .sorted(annenAktiviteTypeIsGraderingComparator)
@@ -317,7 +317,7 @@ public final class UtbetalingsperiodeMapper {
     private static List<Arbeidsforhold> mapArbeidsforholdliste(TilkjentYtelsePeriode tilkjentYtelsePeriode,
                                                                UttakResultatPeriode uttakResultatPeriode, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode, Språkkode språkkode) {
         List<Arbeidsforhold> arbeidsforholdListe = new ArrayList<>();
-        for (TilkjentYtelseAndel andel : finnArbeidsandeler(tilkjentYtelsePeriode)) {
+        for (var andel : finnArbeidsandeler(tilkjentYtelsePeriode)) {
             arbeidsforholdListe
                     .add(mapArbeidsforholdAndel(tilkjentYtelsePeriode, andel,
                             PeriodeBeregner.finnAktivitetMedStatusHvisFinnes(uttakResultatPeriode.getAktiviteter(), andel), PeriodeBeregner
@@ -325,7 +325,7 @@ public final class UtbetalingsperiodeMapper {
                             beregningsgrunnlagPeriode, språkkode));
         }
         // - for reverse order:
-        Comparator<Arbeidsforhold> arbeidsforholdTypeIsGraderingComparator = (a, b) -> - Boolean.compare(a.isGradering(), b.isGradering());
+        var arbeidsforholdTypeIsGraderingComparator = (Comparator<Arbeidsforhold>) (a, b) -> - Boolean.compare(a.isGradering(), b.isGradering());
         arbeidsforholdListe.sort(arbeidsforholdTypeIsGraderingComparator);
         return arbeidsforholdListe;
     }
@@ -352,7 +352,7 @@ public final class UtbetalingsperiodeMapper {
         }
         arbeidsforhold.medStillingsprosent(Prosent.of(tilkjentYtelseAndel.getStillingsprosent()));
         beregningsgrunnlagAndel.ifPresent(bgAndel -> {
-            final BeregningsgrunnlagPrStatusOgAndel statusOgAndel = beregningsgrunnlagAndel.get();
+            final var statusOgAndel = beregningsgrunnlagAndel.get();
             statusOgAndel.getBgAndelArbeidsforhold().ifPresent(bgAndelArbeidsforhold -> {
                 if (bgAndelArbeidsforhold.naturalytelseBortfaltPrÅr() != null ||
                         bgAndelArbeidsforhold.naturalytelseTilkommetPrÅr() != null)
@@ -364,7 +364,7 @@ public final class UtbetalingsperiodeMapper {
 
     private static void mapNaturalytelse(Arbeidsforhold.Builder arbeidsforholdBuilder, BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
                                          TilkjentYtelsePeriode tilkjentYtelsePeriode, Språkkode språkkode) {
-        for (PeriodeÅrsak årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
+        for (var årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
             if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.equals(årsak)) {
                 arbeidsforholdBuilder.medNaturalytelseEndringType(NaturalytelseEndringType.STOPP);
                 arbeidsforholdBuilder.medNaturalytelseNyDagsats((beregningsgrunnlagPeriode.getDagsats()));
@@ -380,11 +380,11 @@ public final class UtbetalingsperiodeMapper {
     }
 
     public static Prosent finnPrioritertUtbetalingsgrad(List<Arbeidsforhold> arbeidsfoholdListe, Næring næring, List<AnnenAktivitet> annenAktivitetListe) {
-        Prosent resultat = Prosent.NULL;
+        var resultat = Prosent.NULL;
         if (arbeidsfoholdListe != null && arbeidsfoholdListe.size() == 1) {
             resultat = arbeidsfoholdListe.get(0).getUtbetalingsgrad() != null ? arbeidsfoholdListe.get(0).getUtbetalingsgrad() : Prosent.NULL;
         } else if (arbeidsfoholdListe != null && arbeidsfoholdListe.size() > 1) {
-            Optional<Arbeidsforhold> arbeidsforholdMedGradering = arbeidsfoholdListe.stream().filter(Arbeidsforhold::isGradering).findFirst();
+            var arbeidsforholdMedGradering = arbeidsfoholdListe.stream().filter(Arbeidsforhold::isGradering).findFirst();
             if (arbeidsforholdMedGradering.isPresent()) {
                 resultat = arbeidsforholdMedGradering.get().getUtbetalingsgrad() != null ? arbeidsforholdMedGradering.get().getUtbetalingsgrad() : Prosent.NULL;
             } else {
@@ -399,7 +399,7 @@ public final class UtbetalingsperiodeMapper {
         if (resultat.equals(Prosent.NULL) && annenAktivitetListe != null && annenAktivitetListe.size() == 1) {
             resultat = annenAktivitetListe.get(0).getUtbetalingsgrad() != null ? annenAktivitetListe.get(0).getUtbetalingsgrad() : Prosent.NULL;
         } else if (annenAktivitetListe != null && annenAktivitetListe.size() > 1) {
-            Optional<AnnenAktivitet> annenAktivitetMedGradering = annenAktivitetListe.stream().filter(AnnenAktivitet::isGradering).findFirst();
+            var annenAktivitetMedGradering = annenAktivitetListe.stream().filter(AnnenAktivitet::isGradering).findFirst();
             if (annenAktivitetMedGradering.isPresent()) {
                 resultat = annenAktivitetMedGradering.get().getUtbetalingsgrad() != null ? annenAktivitetMedGradering.get().getUtbetalingsgrad() : Prosent.NULL ;
             } else {

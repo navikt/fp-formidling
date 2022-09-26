@@ -122,8 +122,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var antallBarn = familieHendelse.antallBarn();
         var antallDødeBarn = familieHendelse.antallDødeBarn();
 
-        int utenAktKrav = 0;
-        int medAktKrav = 0;
+        var utenAktKrav = 0;
+        var medAktKrav = 0;
         if (kontoEksisterer(saldoer, SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV) || kontoEksisterer(saldoer, SaldoVisningStønadskontoType.MINSTERETT)) {
             utenAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV);
             if (utenAktKrav == 0) {
@@ -205,11 +205,11 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     private void mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(List<Utbetalingsperiode> utbetalingsperioder, ForeldrepengerInnvilgelseDokumentdata.Builder builder) {
-        boolean morTarIkkeAlleUkene = utbetalingsperioder
+        var morTarIkkeAlleUkene = utbetalingsperioder
                 .stream().filter(Utbetalingsperiode::isAvslått)
                 .anyMatch(p -> PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE.getKode()
                         .equals(p.getÅrsak().getKode()));
-        boolean innenforFristTilÅSøke = false;
+        var innenforFristTilÅSøke = false;
 
         if (morTarIkkeAlleUkene) {
             innenforFristTilÅSøke = utbetalingsperioder.stream()
@@ -225,7 +225,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
     private void mapFelterRelatertTilBeregningsgrunnlag(Beregningsgrunnlag beregningsgrunnlag,
                                                         ForeldrepengerInnvilgelseDokumentdata.Builder builder) {
-        List<BeregningsgrunnlagRegel> beregningsgrunnlagregler = mapRegelListe(beregningsgrunnlag);
+        var beregningsgrunnlagregler = mapRegelListe(beregningsgrunnlag);
         builder.medBeregningsgrunnlagregler(beregningsgrunnlagregler);
         builder.medBruttoBeregningsgrunnlag(finnBrutto(beregningsgrunnlag));
         builder.medSekgG(finnSeksG(beregningsgrunnlag).longValue());
@@ -275,14 +275,14 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     private Søknad hentNyesteSøknad(Behandling behandling) {
-        int maxForsøk = 100;
-        int nåværendeForsøk = 0;
+        var maxForsøk = 100;
+        var nåværendeForsøk = 0;
         Optional<Søknad> søknad = Optional.empty();
-        Behandling nåværendeBehandling = behandling;
+        var nåværendeBehandling = behandling;
         while (søknad.isEmpty() && nåværendeForsøk < maxForsøk) {
             søknad = domeneobjektProvider.hentSøknad(nåværendeBehandling);
             if (søknad.isEmpty()) {
-                Behandling nesteBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(nåværendeBehandling)
+                var nesteBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(nåværendeBehandling)
                         .orElseThrow(IllegalStateException::new);
                 if (nåværendeBehandling.getUuid() == nesteBehandling.getUuid()) {
                     throw new IllegalStateException();

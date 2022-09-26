@@ -17,7 +17,7 @@ public class KlageDtoMapper {
     }
 
     public static Klage mapKlagefraDto(KlagebehandlingDto dto) {
-        Klage.Builder builder = Klage.ny();
+        var builder = Klage.ny();
         if (dto.getKlageFormkravResultatNFP() != null) {
             builder.medFormkravNFP(mapKlageFormkravResultatfraDto(dto.getKlageFormkravResultatNFP()));
             leggTilPåklagdBehandlingType(builder, dto.getKlageFormkravResultatNFP());
@@ -36,7 +36,7 @@ public class KlageDtoMapper {
     }
 
     private static void leggTilPåklagdBehandlingType(Klage.Builder builder, KlageFormkravResultatDto klageFormkravResultat) {
-        BehandlingType paklagdBehandlingType = klageFormkravResultat.getPaklagdBehandlingType();
+        var paklagdBehandlingType = klageFormkravResultat.getPaklagdBehandlingType();
         if (paklagdBehandlingType != null) {
             builder.medPåklagdBehandlingType(paklagdBehandlingType);
         }

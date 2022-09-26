@@ -41,7 +41,7 @@ public class JacksonJsonConfig implements ContextResolver<ObjectMapper> {
      * Scan subtyper dynamisk fra WAR slik at superklasse slipper å deklarere @JsonSubtypes.
      */
     public static List<Class<?>> getJsonTypeNameClasses() {
-        Class<JacksonJsonConfig> cls = JacksonJsonConfig.class;
+        var cls = JacksonJsonConfig.class;
         IndexClasses indexClasses;
         try {
             indexClasses = IndexClasses.getIndexFor(cls.getProtectionDomain().getCodeSource().getLocation().toURI());

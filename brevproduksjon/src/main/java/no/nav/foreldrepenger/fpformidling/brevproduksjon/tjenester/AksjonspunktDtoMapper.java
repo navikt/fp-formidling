@@ -38,7 +38,7 @@ public class AksjonspunktDtoMapper {
 
     public static List<Aksjonspunkt> mapAksjonspunktFraDto(List<AksjonspunktDto> dtoer) {
         List<Aksjonspunkt> aksjonspunktList = new ArrayList<>();
-        for (AksjonspunktDto aksjonspunktDto : dtoer) {
+        for (var aksjonspunktDto : dtoer) {
             aksjonspunktList.add(Aksjonspunkt.ny()
                     .medAksjonspunktDefinisjon(finnAksjonspunktDefinisjon(aksjonspunktDto.definisjon()))
                     .medAksjonspunktStatus(finnAksjonspunktStatus(aksjonspunktDto.status()))

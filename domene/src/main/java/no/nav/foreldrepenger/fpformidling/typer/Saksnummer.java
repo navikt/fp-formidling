@@ -44,7 +44,7 @@ public class Saksnummer implements SakId {
         } else if (obj == null || !getClass().equals(obj.getClass())) {
             return false;
         }
-        Saksnummer other = (Saksnummer) obj;
+        var other = (Saksnummer) obj;
         return Objects.equals(saksnummer, other.saksnummer);
     }
 

@@ -53,16 +53,16 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medFritekst(FritekstDto.fra(hendelse.getFritekst()));
 
-        FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
 
         //Om behandlingen krever sammenhengende uttak er nødvendig å vite på foreldrepenger, men brukes ikke for svp eller es
-        boolean kreverSammenhengendeUttak = true;
+        var kreverSammenhengendeUttak = true;
 
         if (FagsakYtelseType.FORELDREPENGER.equals(hendelse.getYtelseType())) {
             kreverSammenhengendeUttak = domeneobjektProvider.kreverSammenhengendeUttak(behandling);
         }
 
-        String advarselKode = utledAdvarselkode(hendelse);
+        var advarselKode = utledAdvarselkode(hendelse);
         var dokumentdataBuilder = VarselOmRevurderingDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
                 .medTerminDato(finnTermindato(familieHendelse, behandling.getSpråkkode()).orElse(null))

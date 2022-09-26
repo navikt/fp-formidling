@@ -44,9 +44,7 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.opphørsvp.SvangerskapspengerOpphørDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
@@ -80,7 +78,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
 
     @BeforeEach
     public void before() {
-        BrevParametere brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
+        var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         dokumentData = lagStandardDokumentData(DokumentMalType.SVANGERSKAPSPENGER_OPPHØR);
         dokumentdataMapper = new SvangerskapspengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
 
@@ -93,12 +91,12 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev() {
         // Arrange
-        Behandling behandling = opprettBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseSVPBuilder().build();
+        var behandling = opprettBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseSVPBuilder().build();
 
         // Act
-        SvangerskapspengerOpphørDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -156,19 +154,19 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
     }
 
     private Optional<SvangerskapspengerUttak> opprettUttaksresultat() {
-        SvpUttakResultatPeriode uttakResultatPeriode1 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakResultatPeriode1 = SvpUttakResultatPeriode.Builder.ny()
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medArbeidsgiverNavn(ARBEIDSGIVER_1_NAVN)
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .build();
-        SvpUttakResultatPeriode uttakResultatPeriode2 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakResultatPeriode2 = SvpUttakResultatPeriode.Builder.ny()
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak._8309)
                 .medArbeidsgiverNavn(ARBEIDSGIVER_1_NAVN)
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .build();
 
-        SvangerskapspengerUttak uttaksresultat = SvangerskapspengerUttak.Builder.ny()
+        var uttaksresultat = SvangerskapspengerUttak.Builder.ny()
                 .leggTilUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold.Builder.ny()
                         .medArbeidsgiver(new Arbeidsgiver("1234", ARBEIDSGIVER_1_NAVN))
                         .leggTilPerioder(List.of(uttakResultatPeriode1, uttakResultatPeriode2))

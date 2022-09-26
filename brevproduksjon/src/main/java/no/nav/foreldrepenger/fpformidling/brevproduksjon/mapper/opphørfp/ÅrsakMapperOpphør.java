@@ -38,15 +38,15 @@ public final class ÅrsakMapperOpphør {
                                                  TreeSet<String> lovReferanser) {
         Map<String, String> avslagårsaker = new HashMap<>();
 
-        Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
+        var avslagsårsak = behandlingsresultat.getAvslagsårsak();
         if (avslagsårsak != null) {
-            String avslagKode = avslagsårsak.getKode();
+            var avslagKode = avslagsårsak.getKode();
             avslagårsaker.put(avslagKode, årsaktypeFra(avslagsårsak, lovReferanser));
         }
-        for (UttakResultatPeriode periode : foreldrepengerUttak.perioder()) {
-            PeriodeResultatÅrsak periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
+        for (var periode : foreldrepengerUttak.perioder()) {
+            var periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
             if (PeriodeResultatType.AVSLÅTT.equals(periode.getPeriodeResultatType()) && periodeResultatÅrsak != null) {
-                String avslagKode = periodeResultatÅrsak.getKode();
+                var avslagKode = periodeResultatÅrsak.getKode();
                 avslagårsaker.put(avslagKode, årsaktypeFra(periodeResultatÅrsak, lovReferanser));
             }
         }

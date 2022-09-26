@@ -208,7 +208,7 @@ public class DokumentFelles extends BaseEntitet {
         if (!(object instanceof DokumentFelles)) {
             return false;
         }
-        DokumentFelles dokFelles = (DokumentFelles) object;
+        var dokFelles = (DokumentFelles) object;
         return Objects.equals(getSpråkkode(), dokFelles.getSpråkkode())
                 && Objects.equals(saksnummer, dokFelles.getSaksnummer())
                 && Objects.equals(signerendeSaksbehandlerNavn, dokFelles.getSignerendeSaksbehandlerNavn())

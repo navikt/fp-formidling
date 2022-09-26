@@ -33,10 +33,10 @@ public class TilknyttVedleggTask implements ProsessTaskHandler {
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
-        UUID behandlingUuid = prosessTaskData.getBehandlingUuid();
-        JournalpostId journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(BrevTaskProperties.JOURNALPOST_ID));
-        Behandling behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
-        Collection<InnsynDokument> vedlegg = filtrerUtDuplikater(domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter());
+        var behandlingUuid = prosessTaskData.getBehandlingUuid();
+        var journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(BrevTaskProperties.JOURNALPOST_ID));
+        var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
+        var vedlegg = filtrerUtDuplikater(domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter());
 
         tilknyttVedleggTjeneste.knyttAlleVedleggTilDokument(vedlegg, journalpostId);
     }

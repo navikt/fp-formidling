@@ -42,12 +42,12 @@ public class IngenEndringDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        IngenEndringDokumentdata ingenEndringDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var ingenEndringDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(ingenEndringDokumentdata.getFelles()).isNotNull();
@@ -66,12 +66,12 @@ public class IngenEndringDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.NEI, true);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.NEI, true);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        IngenEndringDokumentdata ingenEndringDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var ingenEndringDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(ingenEndringDokumentdata.getFelles()).isNotNull();

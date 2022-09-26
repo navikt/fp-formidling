@@ -47,7 +47,7 @@ public class KodeverdiValidator implements ConstraintValidator<ValidKodeverk, Ko
         if (Objects.equals(null, kodeliste)) {
             return true;
         }
-        boolean ok = true;
+        var ok = true;
 
         if (!gyldigKode(kodeliste.getKode())) {
             context.buildConstraintViolationWithTemplate(invKode);

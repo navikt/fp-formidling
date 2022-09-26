@@ -23,10 +23,10 @@ public class AvslåttAktivitetMapperTest {
     @Test
     public void skal_mappe_aktiviteter_med_riktig_årsak() {
         // Arrange
-        List<SvpUttakResultatArbeidsforhold> svpUttakResultatArbeidsforhold = getSvpUttakResultatArbeidsforhold();
+        var svpUttakResultatArbeidsforhold = getSvpUttakResultatArbeidsforhold();
 
         // Act
-        List<AvslåttAktivitet> resultat = AvslåttAktivitetMapper.mapAvslåtteAktiviteter(svpUttakResultatArbeidsforhold);
+        var resultat = AvslåttAktivitetMapper.mapAvslåtteAktiviteter(svpUttakResultatArbeidsforhold);
 
         // Assert
         assertThat(resultat).hasSize(4);
@@ -49,34 +49,34 @@ public class AvslåttAktivitetMapperTest {
     }
 
     private List<SvpUttakResultatArbeidsforhold> getSvpUttakResultatArbeidsforhold() {
-        Arbeidsgiver arbeidsgiver1 = new Arbeidsgiver("ref1", ARBEIDSGIVER1_NAVN);
-        SvpUttakResultatArbeidsforhold arbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny()
+        var arbeidsgiver1 = new Arbeidsgiver("ref1", ARBEIDSGIVER1_NAVN);
+        var arbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny()
                 .medArbeidsforholdIkkeOppfyltÅrsak(ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE)
                 .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
                 .medArbeidsgiver(arbeidsgiver1)
                 .build();
 
-        SvpUttakResultatArbeidsforhold arbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny()
+        var arbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny()
                 .medArbeidsforholdIkkeOppfyltÅrsak(ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE_FREM_TIL_3_UKER_FØR_TERMIN)
                 .medUttakArbeidType(UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE)
                 .build();
 
-        SvpUttakResultatArbeidsforhold arbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny()
+        var arbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny()
                 .medArbeidsforholdIkkeOppfyltÅrsak(ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE)
                 .medUttakArbeidType(UttakArbeidType.FRILANS)
                 .build();
 
         //Årsak som tilsier at arbeidsgiverNavn/SN/FL ikke trengs da arbeidsgiver ikke kan tilrettelegge
-        Arbeidsgiver arbeidsgiver2 = new Arbeidsgiver("ref2", ARBEIDSGIVER2_NAVN);
-        SvpUttakResultatArbeidsforhold arbeidsforhold4 = SvpUttakResultatArbeidsforhold.Builder.ny()
+        var arbeidsgiver2 = new Arbeidsgiver("ref2", ARBEIDSGIVER2_NAVN);
+        var arbeidsforhold4 = SvpUttakResultatArbeidsforhold.Builder.ny()
                 .medArbeidsforholdIkkeOppfyltÅrsak(ArbeidsforholdIkkeOppfyltÅrsak.HELE_UTTAKET_ER_ETTER_3_UKER_FØR_TERMINDATO)
                 .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
                 .medArbeidsgiver(arbeidsgiver2)
                 .build();
 
         //Årsak som ikke skal mappes
-        Arbeidsgiver arbeidsgiver3 = new Arbeidsgiver("ref3", ARBEIDSGIVER3_NAVN);
-        SvpUttakResultatArbeidsforhold arbeidsforhold5 = SvpUttakResultatArbeidsforhold.Builder.ny()
+        var arbeidsgiver3 = new Arbeidsgiver("ref3", ARBEIDSGIVER3_NAVN);
+        var arbeidsforhold5 = SvpUttakResultatArbeidsforhold.Builder.ny()
                 .medArbeidsforholdIkkeOppfyltÅrsak(ArbeidsforholdIkkeOppfyltÅrsak.UTTAK_KUN_PÅ_HELG)
                 .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
                 .medArbeidsgiver(arbeidsgiver3)

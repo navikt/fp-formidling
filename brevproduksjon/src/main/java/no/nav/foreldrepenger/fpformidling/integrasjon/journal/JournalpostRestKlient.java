@@ -55,13 +55,13 @@ public class JournalpostRestKlient implements Journalpost {
     @Override
     public void tilknyttVedlegg(TilknyttVedleggRequest request, JournalpostId journalpostIdTil) {
         try {
-            String tilknyttPath = String.format("/%s/tilknyttVedlegg", journalpostIdTil.getVerdi());
+            var tilknyttPath = String.format("/%s/tilknyttVedlegg", journalpostIdTil.getVerdi());
             var uri = new URIBuilder(endpointProxy + tilknyttPath).build();
-            ObjectMapper mapper = new ObjectMapper();
+            var mapper = new ObjectMapper();
 
-            String response = restKlientProxy.put(uri, request);
+            var response = restKlientProxy.put(uri, request);
 
-            TilknyttVedleggResponse tilknyttVedleggResponse = mapper.readValue(response, TilknyttVedleggResponse.class);
+            var tilknyttVedleggResponse = mapper.readValue(response, TilknyttVedleggResponse.class);
 
             if (!tilknyttVedleggResponse.getFeiledeDokumenter().isEmpty()) {
                 throw new IllegalStateException(
@@ -79,7 +79,7 @@ public class JournalpostRestKlient implements Journalpost {
     public void ferdigstillJournalpost(JournalpostId journalpostId) {
         try {
             LOG.info("Ferdigstiller journalpost {}", journalpostId);
-            String tilknyttPath = String.format("/%s/ferdigstill", journalpostId.getVerdi());
+            var tilknyttPath = String.format("/%s/ferdigstill", journalpostId.getVerdi());
             var uri = new URIBuilder(endpoint + tilknyttPath).build();
             restKlient.patch(uri, new FerdigstillJournalpostRequest("9999"));
         } catch (Exception e) {

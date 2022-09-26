@@ -40,9 +40,9 @@ public class FamiliehendelseDtoMapperTest {
 
     @Test
     public void finnTermindato() {
-        int antallBarnFødsel = 1;
-        int antallBarnAdopsjon = 2;
-        int antallBarnOmsorg = 3;
+        var antallBarnFødsel = 1;
+        var antallBarnAdopsjon = 2;
+        var antallBarnOmsorg = 3;
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, false, antallBarnFødsel))).isEqualTo(antallBarnFødsel);
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, true, antallBarnFødsel))).isEqualTo(antallBarnFødsel);
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagAdopsjonsDtoMedAntallBarn(antallBarnAdopsjon))).isEqualTo(antallBarnAdopsjon);
@@ -50,9 +50,9 @@ public class FamiliehendelseDtoMapperTest {
     }
 
     private FamiliehendelseDto lagAdopsjonsDtoMedAntallBarn(int antallBarn) {
-        AvklartDataAdopsjonDto dto = new AvklartDataAdopsjonDto();
+        var dto = new AvklartDataAdopsjonDto();
         Map<Integer, LocalDate> adopsjonFodelsedatoer = new HashMap<>();
-        for (int i = 0; i < antallBarn; i++) {
+        for (var i = 0; i < antallBarn; i++) {
             adopsjonFodelsedatoer.put(i, LocalDate.now());
         }
         dto.setAdopsjonFodelsedatoer(adopsjonFodelsedatoer);
@@ -60,30 +60,30 @@ public class FamiliehendelseDtoMapperTest {
     }
 
     private FamiliehendelseDto lagOmsorgDtoMedAntallBarn(int antallBarn) {
-        AvklartDataOmsorgDto dto = new AvklartDataOmsorgDto();
+        var dto = new AvklartDataOmsorgDto();
         dto.setAntallBarnTilBeregning(antallBarn);
         return dto;
     }
 
     private FamiliehendelseDto lagFødselDtoMedBarnTerminOgFødsel(LocalDate termindato, int antallBarnTermin, int antallbarnFødsel) {
-        AvklartDataFodselDto dto = new AvklartDataFodselDto();
+        var dto = new AvklartDataFodselDto();
         dto.setTermindato(termindato);
         dto.setAntallBarnTermin(antallBarnTermin);
 
-        for (int i = 0; i < antallbarnFødsel; i++) {
+        for (var i = 0; i < antallbarnFødsel; i++) {
             dto.getAvklartBarn().add(new AvklartBarnDto(LocalDate.now(), null));
         }
         return dto;
     }
 
     private FamiliehendelseDto lagFødselDtoMedFødselOgDødsdato(int antallbarnFødsel, int antallDødeBarn) {
-        AvklartDataFodselDto dto = new AvklartDataFodselDto();
+        var dto = new AvklartDataFodselDto();
 
-        for (int i = 0; i < antallbarnFødsel; i++) {
+        for (var i = 0; i < antallbarnFødsel; i++) {
             dto.getAvklartBarn().add(new AvklartBarnDto(LocalDate.now(), null));
         }
 
-        for (int i = 0; i < antallDødeBarn; i++) {
+        for (var i = 0; i < antallDødeBarn; i++) {
             dto.getAvklartBarn().get(i).setDodsdato(LocalDate.now());
         }
 
@@ -91,7 +91,7 @@ public class FamiliehendelseDtoMapperTest {
     }
 
     private FamiliehendelseDto lagFødselDtoMedBarnOgTermindato(LocalDate termindato, boolean termin, int antallBarn) {
-        AvklartDataFodselDto dto = new AvklartDataFodselDto();
+        var dto = new AvklartDataFodselDto();
         dto.setTermindato(termindato);
         if (termin) {
             dto.setAntallBarnTermin(antallBarn);

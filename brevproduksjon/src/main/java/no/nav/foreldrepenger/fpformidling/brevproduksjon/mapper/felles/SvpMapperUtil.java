@@ -25,7 +25,7 @@ public final class SvpMapperUtil {
     }
 
     public static String leggTilLovreferanse(Avslagsårsak avslagsårsak) {
-        Set<VilkårType> vilkårTyper = VilkårType.getVilkårTyper(avslagsårsak);
+        var vilkårTyper = VilkårType.getVilkårTyper(avslagsårsak);
         return vilkårTyper.stream().map(vt -> vt.getLovReferanse(FagsakYtelseType.SVANGERSKAPSPENGER)).findFirst().orElse("");
     }
 
@@ -35,7 +35,7 @@ public final class SvpMapperUtil {
     }
 
     public static Optional<LocalDate> finnMinsteDatoFraUttak(List<SvpUttakResultatPeriode> perioder) {
-        Optional<LocalDate> minsteDatoFraÅvslåttUttak = finnMinsteFraDatoAvslåttUttak(perioder);
+        var minsteDatoFraÅvslåttUttak = finnMinsteFraDatoAvslåttUttak(perioder);
         return minsteDatoFraÅvslåttUttak.isPresent() ? minsteDatoFraÅvslåttUttak : finnMinsteFraDatoFraInnvilgetUttak(perioder);
     }
 
@@ -55,7 +55,7 @@ public final class SvpMapperUtil {
     }
 
     public static int finnAntallArbeidsgivere(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Inntektsmeldinger iay) {
-        int antallArbeidsgivere = (int) uttakResultatArbeidsforhold.stream()
+        var antallArbeidsgivere = (int) uttakResultatArbeidsforhold.stream()
                 .flatMap(ura -> ura.getPerioder().stream())
                 .map(SvpUttakResultatPeriode::getArbeidsgiverNavn)
                 .distinct()

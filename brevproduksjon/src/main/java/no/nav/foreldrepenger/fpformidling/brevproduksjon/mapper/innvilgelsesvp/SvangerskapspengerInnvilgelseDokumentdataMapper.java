@@ -85,9 +85,9 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        List<Utbetalingsperiode> utbetalingsperioder = mapUtbetalingsperioder(tilkjentYtelse.getPerioder(), språkkode);
-        List<Uttaksaktivitet> uttaksaktiviteter = mapUttaksaktivteterMedPerioder(uttaksresultatSvp, tilkjentYtelse, språkkode);
-        boolean inkludereBeregning = erNyEllerEndretBeregning(behandling);
+        var utbetalingsperioder = mapUtbetalingsperioder(tilkjentYtelse.getPerioder(), språkkode);
+        var uttaksaktiviteter = mapUttaksaktivteterMedPerioder(uttaksresultatSvp, tilkjentYtelse, språkkode);
+        var inkludereBeregning = erNyEllerEndretBeregning(behandling);
 
         var dokumentdataBuilder = SvangerskapspengerInnvilgelseDokumentdata.ny()
                 .medFelles(fellesBuilder.build())

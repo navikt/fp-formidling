@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 public final class AktivitetsbeskrivelseUtleder {
 
     public static String utledAktivitetsbeskrivelse(TilkjentYtelseAndel andel, AktivitetStatus aktivitetStatus) {
-        Optional<Arbeidsgiver> arbeidsgiverOpt = andel.getArbeidsgiver();
+        var arbeidsgiverOpt = andel.getArbeidsgiver();
         if (arbeidsgiverOpt.isPresent()) {
             return arbeidsgiverOpt.get().navn();
         }

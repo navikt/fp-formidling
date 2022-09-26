@@ -22,11 +22,11 @@ public class LovhjemmelUtil {
     }
 
     public static Set<String> hentLovhjemlerFraJson(ÅrsakMedLovReferanse årsak, String key) {
-        JsonNode jsonData = parseLovDataFor(årsak);
+        var jsonData = parseLovDataFor(årsak);
         if (jsonData != null) {
-            JsonNode hjemmelNode = jsonData.findValue(key);
+            var hjemmelNode = jsonData.findValue(key);
             if (hjemmelNode != null) {
-                List<JsonNode> hjemmelListe = !hjemmelNode.findValues("lovreferanse").isEmpty() ? hjemmelNode.findValues("lovreferanse")
+                var hjemmelListe = !hjemmelNode.findValues("lovreferanse").isEmpty() ? hjemmelNode.findValues("lovreferanse")
                         : hjemmelNode.findValues("lovreferanser");
                 return hjemmelListe.stream()
                         .flatMap(node -> node.isContainerNode() ? StreamSupport.stream(node.spliterator(), false).map(JsonNode::asText)
@@ -50,11 +50,11 @@ public class LovhjemmelUtil {
     }
 
     private static JsonNode parseLovDataFor(ÅrsakMedLovReferanse årsakKode) {
-        String lovData = årsakKode.getLovHjemmelData();
+        var lovData = årsakKode.getLovHjemmelData();
         if (lovData == null) {
             return null;
         }
-        ObjectMapper objectMapper = new ObjectMapper();
+        var objectMapper = new ObjectMapper();
         JsonNode jsonNode;
         try {
             jsonNode = objectMapper.readTree(lovData);

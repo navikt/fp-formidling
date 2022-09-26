@@ -43,7 +43,7 @@ public class PersonIdent implements Comparable<PersonIdent> {
         if (str == null) {
             return false;
         }
-        String s = str.trim();
+        var s = str.trim();
         return s.length() == FNR_LENGDE && !isFdatNummer(getPersonnummer(s)) && validerFnrStruktur(s);
     }
 
@@ -58,7 +58,7 @@ public class PersonIdent implements Comparable<PersonIdent> {
     }
 
     private static int sum(String foedselsnummer, int... faktors) {
-        int sum = 0;
+        var sum = 0;
         for (int i = 0, l = faktors.length; i < l; ++i) {
             sum += Character.digit(foedselsnummer.charAt(i), 10) * faktors[i];
         }
@@ -69,11 +69,11 @@ public class PersonIdent implements Comparable<PersonIdent> {
         if (foedselsnummer.length() != FNR_LENGDE) {
             return false;
         }
-        int checksumEn = FNR_LENGDE - (sum(foedselsnummer, CHECKSUM_EN_VECTOR) % FNR_LENGDE);
+        var checksumEn = FNR_LENGDE - (sum(foedselsnummer, CHECKSUM_EN_VECTOR) % FNR_LENGDE);
         if (checksumEn == FNR_LENGDE) {
             checksumEn = 0;
         }
-        int checksumTo = FNR_LENGDE - (sum(foedselsnummer, CHECKSUM_TO_VECTOR) % FNR_LENGDE);
+        var checksumTo = FNR_LENGDE - (sum(foedselsnummer, CHECKSUM_TO_VECTOR) % FNR_LENGDE);
         if (checksumTo == FNR_LENGDE) {
             checksumTo = 0;
         }
@@ -97,7 +97,7 @@ public class PersonIdent implements Comparable<PersonIdent> {
         } else if (obj == null || !this.getClass().equals(obj.getClass())) {
             return false;
         }
-        PersonIdent other = (PersonIdent) obj;
+        var other = (PersonIdent) obj;
         return Objects.equals(ident, other.ident);
     }
 
@@ -106,7 +106,7 @@ public class PersonIdent implements Comparable<PersonIdent> {
     }
 
     public boolean erDnr() {
-        int n = Character.digit(ident.charAt(0), 10);
+        var n = Character.digit(ident.charAt(0), 10);
         return n > 3 && n <= 7;
     }
 

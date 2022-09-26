@@ -53,7 +53,7 @@ public class JournalpostId implements Serializable {
         } else if (obj == null || !getClass().equals(obj.getClass())) {
             return false;
         }
-        JournalpostId other = (JournalpostId) obj;
+        var other = (JournalpostId) obj;
         return Objects.equals(journalpostId, other.journalpostId);
     }
 

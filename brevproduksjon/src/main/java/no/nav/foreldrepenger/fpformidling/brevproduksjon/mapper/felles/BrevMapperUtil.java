@@ -30,7 +30,7 @@ public class BrevMapperUtil {
 
     public static String formaterPersonnummer(String personnummer) {
         if (personnummer != null && personnummer.length() == 11) {
-            StringBuilder formatertPersonnummer = new StringBuilder(personnummer);
+            var formatertPersonnummer = new StringBuilder(personnummer);
             formatertPersonnummer.insert(6, " ");
             return formatertPersonnummer.toString();
         }
@@ -63,7 +63,7 @@ public class BrevMapperUtil {
                                                                   Behandling behandling,
                                                                   boolean erUtkast) {
         var erKopi = dokumentFelles.getErKopi();
-        FellesDokumentdata.Builder fellesBuilder = FellesDokumentdata.ny()
+        var fellesBuilder = FellesDokumentdata.ny()
                 .medSøkerNavn(dokumentFelles.getSakspartNavn())
                 .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
                 .medErKopi(erKopi.isPresent() && erKopi(erKopi.get()))

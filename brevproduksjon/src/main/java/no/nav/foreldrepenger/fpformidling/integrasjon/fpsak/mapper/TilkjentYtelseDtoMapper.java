@@ -30,7 +30,7 @@ public class TilkjentYtelseDtoMapper {
     }
 
     public static TilkjentYtelseForeldrepenger mapTilkjentYtelseFPFraDto(TilkjentYtelseMedUttaksplanDto dto, UnaryOperator<String> hentNavn) {
-        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = Arrays.stream(dto.getPerioder())
+        var tilkjentYtelsePerioder = Arrays.stream(dto.getPerioder())
                 .map(p -> mapPeriodeFraDto(p, hentNavn))
                 .sorted(PeriodeComparator.TILKJENTYTELSERESULTAT)
                 .toList();
@@ -42,7 +42,7 @@ public class TilkjentYtelseDtoMapper {
 
     private static TilkjentYtelsePeriode mapPeriodeFraDto(TilkjentYtelsePeriodeDto dto, UnaryOperator<String> hentNavn) {
         List<TilkjentYtelseAndel> andelListe = new ArrayList<>();
-        for (TilkjentYtelseAndelDto tilkjentYtelseAndelDto : dto.getAndeler()) {
+        for (var tilkjentYtelseAndelDto : dto.getAndeler()) {
             andelListe.add(mapAndelFraDto(tilkjentYtelseAndelDto, hentNavn));
         }
         return TilkjentYtelsePeriode.ny()
@@ -75,7 +75,7 @@ public class TilkjentYtelseDtoMapper {
     }
 
     private static int summerDagsats(TilkjentYtelseAndelDto dto) {
-        int sum = 0;
+        var sum = 0;
         if (dto.getTilSoker() != null) {
             sum += dto.getTilSoker();
         }

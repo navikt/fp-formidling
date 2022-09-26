@@ -60,13 +60,13 @@ public class KlageAvvistDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_vanlig_behandling() {
         // Arrange
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
         mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, of(KlageAvvistÅrsak.KLAGER_IKKE_PART));
 
         // Act
-        KlageAvvistDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -90,15 +90,15 @@ public class KlageAvvistDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_tilbakekreving_med_alle_avvist_grunner_og_spesialhåndtere_for_sent_og_ikke_signert() {
         // Arrange
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
         mockKlage(behandling, BehandlingType.TILBAKEKREVING, of(KlageAvvistÅrsak.KLAGET_FOR_SENT, KlageAvvistÅrsak.KLAGER_IKKE_PART,
                 KlageAvvistÅrsak.KLAGE_UGYLDIG, KlageAvvistÅrsak.IKKE_KONKRET, KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK,
                 KlageAvvistÅrsak.IKKE_SIGNERT));
 
         // Act
-        KlageAvvistDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getGjelderTilbakekreving()).isTrue();
@@ -109,9 +109,9 @@ public class KlageAvvistDokumentdataMapperTest {
     }
 
     private void mockKlage(Behandling behandling, BehandlingType behandlingType, List<KlageAvvistÅrsak> avvistÅrsaker) {
-        KlageVurderingResultat klageVurderingResultat = new KlageVurderingResultat(null, "FRITEKST");
-        KlageFormkravResultat klageFormkravResultat = new KlageFormkravResultat(avvistÅrsaker);
-        Klage klage = Klage.ny()
+        var klageVurderingResultat = new KlageVurderingResultat(null, "FRITEKST");
+        var klageFormkravResultat = new KlageFormkravResultat(avvistÅrsaker);
+        var klage = Klage.ny()
                 .medPåklagdBehandlingType(behandlingType)
                 .medKlageVurderingResultatNK(klageVurderingResultat)
                 .medFormkravNFP(klageFormkravResultat)

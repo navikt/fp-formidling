@@ -43,7 +43,7 @@ public class AnkeOpphevetDokumentdataMapper implements DokumentdataMapper {
     @Override
     public AnkeOpphevetDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
                                                        Behandling behandling, boolean erUtkast) {
-        Optional<Anke> anke = domeneobjektProvider.hentAnkebehandling(behandling);
+        var anke = domeneobjektProvider.hentAnkebehandling(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
@@ -56,7 +56,7 @@ public class AnkeOpphevetDokumentdataMapper implements DokumentdataMapper {
     }
 
     private boolean erOpphevet(Optional<Anke> anke) {
-        AnkeVurdering ankeVurdering = anke.map(Anke::getAnkeVurdering).orElse(AnkeVurdering.UDEFINERT);
+        var ankeVurdering = anke.map(Anke::getAnkeVurdering).orElse(AnkeVurdering.UDEFINERT);
         return !AnkeVurdering.ANKE_HJEMSEND_UTEN_OPPHEV.equals(ankeVurdering);
     }
 }

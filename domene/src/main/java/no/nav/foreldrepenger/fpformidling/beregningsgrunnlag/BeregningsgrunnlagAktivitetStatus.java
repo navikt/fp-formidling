@@ -7,7 +7,7 @@ public record BeregningsgrunnlagAktivitetStatus(AktivitetStatus aktivitetStatus)
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BeregningsgrunnlagAktivitetStatus that = (BeregningsgrunnlagAktivitetStatus) o;
+        var that = (BeregningsgrunnlagAktivitetStatus) o;
         return aktivitetStatus == that.aktivitetStatus;
     }
 

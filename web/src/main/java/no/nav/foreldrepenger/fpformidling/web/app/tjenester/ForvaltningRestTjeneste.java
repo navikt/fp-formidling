@@ -89,13 +89,13 @@ public class ForvaltningRestTjeneste {
             return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
         }
 
-        Dokumentdata dokumentdata = (Dokumentdata) DefaultJsonMapper.getObjectMapper().readValue(dokgenJsonTilPdfDto.getDokumentdataJson(),
+        var dokumentdata = (Dokumentdata) DefaultJsonMapper.getObjectMapper().readValue(dokgenJsonTilPdfDto.getDokumentdataJson(),
                 Class.forName(dokgenJsonTilPdfDto.getDokumentdataKlasse()));
 
-        byte[] resultat = dokgenRestKlient.genererPdf(dokgenJsonTilPdfDto.getMalType(), Språkkode.defaultNorsk(dokgenJsonTilPdfDto.getSpråkKode()),
+        var resultat = dokgenRestKlient.genererPdf(dokgenJsonTilPdfDto.getMalType(), Språkkode.defaultNorsk(dokgenJsonTilPdfDto.getSpråkKode()),
                 dokumentdata);
 
-        Response.ResponseBuilder responseBuilder = Response.ok(resultat);
+        var responseBuilder = Response.ok(resultat);
         responseBuilder.type("application/pdf");
         responseBuilder.header("Content-Disposition", "attachment; filename=dokument.pdf");
         return responseBuilder.build();
@@ -145,7 +145,7 @@ public class ForvaltningRestTjeneste {
     }
 
     private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {
-        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(ProduserBrevTask.class);
+        var prosessTaskData = ProsessTaskData.forProsessTask(ProduserBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
         taskTjeneste.lagre(prosessTaskData);

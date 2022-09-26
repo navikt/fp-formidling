@@ -67,12 +67,12 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
 
     @BeforeEach
     public void before() {
-        BrevParametere brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
+        var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         brevMapperUtil = new BrevMapperUtil(brevParametere);
         dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new InnhenteOpplysningerDokumentdataMapper(brevMapperUtil, domeneobjektProvider);
 
-        List<MottattDokument> mottattDokumenter = List.of(new MottattDokument(SØKNAD_DATO.minusDays(10), DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD),
+        var mottattDokumenter = List.of(new MottattDokument(SØKNAD_DATO.minusDays(10), DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD),
                                                             new MottattDokument(SØKNAD_DATO, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD ));
         when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(mottattDokumenter);
     }
@@ -80,12 +80,12 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
-        Behandling behandling = opprettBehandling(Språkkode.NB);
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse();
+        var behandling = opprettBehandling(Språkkode.NB);
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
+        var dokumentHendelse = lagDokumentHendelse();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getFelles()).isNotNull();
@@ -113,12 +113,12 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
-        Behandling behandling = opprettBehandling(Språkkode.NB);
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, true);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse();
+        var behandling = opprettBehandling(Språkkode.NB);
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, true);
+        var dokumentHendelse = lagDokumentHendelse();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getFelles()).isNotNull();
@@ -132,12 +132,12 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     @Test
     public void skal_mappe_datoer_med_engelsk_format() {
         // Arrange
-        Behandling behandling = opprettBehandling(Språkkode.EN);
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse();
+        var behandling = opprettBehandling(Språkkode.EN);
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
+        var dokumentHendelse = lagDokumentHendelse();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getFelles()).isNotNull();
@@ -149,13 +149,13 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     @Test
     public void skal_mappe_behandlesAvKA_når_det_er_angitt_på_hendelsen() {
         // Arrange
-        Behandling behandling = opprettKlageBehandling("NFP");
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().medBehandlendeEnhetNavn("NAV Klageinstans").build();
+        var behandling = opprettKlageBehandling("NFP");
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().medBehandlendeEnhetNavn("NAV Klageinstans").build();
         mockKlageDokument();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
@@ -165,13 +165,13 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     @Test
     public void skal_ikke_mappe_behandlesAvKA_når_det_er_angitt_noe_annet_på_hendelsen() {
         // Arrange
-        Behandling behandling = opprettKlageBehandling("NAV Klageinstans");
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().medBehandlendeEnhetNavn("NFP").build();
+        var behandling = opprettKlageBehandling("NAV Klageinstans");
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().medBehandlendeEnhetNavn("NFP").build();
         mockKlageDokument();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
@@ -181,13 +181,13 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     @Test
     public void skal_mappe_behandlesAvKA_fra_behandlingen_når_det_ikke_er_angitt_på_hendelsen() {
         // Arrange
-        Behandling behandling = opprettKlageBehandling("NAV Klageinstans");
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse();
+        var behandling = opprettKlageBehandling("NAV Klageinstans");
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
+        var dokumentHendelse = lagDokumentHendelse();
         mockKlageDokument();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
@@ -197,13 +197,13 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     @Test
     public void skal_ikke_mappe_behandlesAvKA_når_det_ikke_er_angitt_på_verken_hendelsen_eller_behandlingen() {
         // Arrange
-        Behandling behandling = opprettKlageBehandling("NFP");
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse();
+        var behandling = opprettKlageBehandling("NFP");
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
+        var dokumentHendelse = lagDokumentHendelse();
         mockKlageDokument();
 
         // Act
-        InnhenteOpplysningerDokumentdata innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
@@ -236,7 +236,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     }
 
     private void mockKlageDokument() {
-        KlageDokument klageDokument = new KlageDokument(KLAGE_DATO);
+        var klageDokument = new KlageDokument(KLAGE_DATO);
         when(domeneobjektProvider.hentKlageDokument(any(Behandling.class))).thenReturn(klageDokument);
     }
 }

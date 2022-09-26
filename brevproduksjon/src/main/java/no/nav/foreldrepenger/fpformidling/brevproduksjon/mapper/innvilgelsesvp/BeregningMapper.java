@@ -30,7 +30,7 @@ public final class BeregningMapper {
 
     public static List<Arbeidsforhold> mapArbeidsforhold(Beregningsgrunnlag beregningsgrunnlag) {
         List<Arbeidsforhold> resultat = new ArrayList<>();
-        for (BeregningsgrunnlagPrStatusOgAndel andel : getAndeler(beregningsgrunnlag)) {
+        for (var andel : getAndeler(beregningsgrunnlag)) {
             if (andel.getAktivitetStatus().erArbeidstaker()) {
                 getArbeidsgiverNavn(andel).ifPresent(navn -> resultat.add(Arbeidsforhold.ny()
                         .medArbeidsgiverNavn(navn)
@@ -44,7 +44,7 @@ public final class BeregningMapper {
 
     public static SelvstendigNæringsdrivende mapSelvstendigNæringsdrivende(Beregningsgrunnlag beregningsgrunnlag) {
         SelvstendigNæringsdrivende resultat = null;
-        for (BeregningsgrunnlagPrStatusOgAndel andel : getAndeler(beregningsgrunnlag)) {
+        for (var andel : getAndeler(beregningsgrunnlag)) {
             if (andel.getAktivitetStatus().erSelvstendigNæringsdrivende()) {
                 resultat = SelvstendigNæringsdrivende.ny(resultat)
                         .medNyoppstartet(TRUE.equals(andel.getNyIArbeidslivet()))
@@ -61,7 +61,7 @@ public final class BeregningMapper {
 
     public static Frilanser mapFrilanser(Beregningsgrunnlag beregningsgrunnlag) {
         Frilanser resultat = null;
-        for (BeregningsgrunnlagPrStatusOgAndel andel : getAndeler(beregningsgrunnlag)) {
+        for (var andel : getAndeler(beregningsgrunnlag)) {
             if (andel.getAktivitetStatus().erFrilanser()) {
                 resultat = Frilanser.ny(resultat)
                         .leggTilMånedsinntekt(getMånedsinntekt(andel))
@@ -95,16 +95,16 @@ public final class BeregningMapper {
     }
 
     public static String utledLovhjemmelForBeregning(Beregningsgrunnlag beregningsgrunnlag, Behandling behandling) {
-        boolean revurdering = BehandlingType.REVURDERING.equals(behandling.getBehandlingType());
-        boolean innvilget = BehandlingResultatType.INNVILGET.equals(behandling.getBehandlingsresultat().getBehandlingResultatType());
-        String konsekvensForYtelsen = BehandlingMapper.kodeFra(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
+        var revurdering = BehandlingType.REVURDERING.equals(behandling.getBehandlingType());
+        var innvilget = BehandlingResultatType.INNVILGET.equals(behandling.getBehandlingsresultat().getBehandlingResultatType());
+        var konsekvensForYtelsen = BehandlingMapper.kodeFra(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
 
         // Workaround for å unngå manuelt arbeid for saksbehandlere - Se TFP-1032
         // Fpsak sender hjemmel 14-7, men SVP skal referere til hjemmel 14-4. Fpsak burde egentlig sende 14-4 for SVP,
         // men hjemmelen blir utledet kun for FP (dvs. 14-7) i dag. Denne hacken erstatter 14-7 med 14-4 for SVP før
         // brevet blir generert. Dette er en workaround inntil hjemmel for flere ytelsestyper (SVP, ES, FP, etc.) blir
         // implementert i Fpsak.
-        String hjemmel = beregningsgrunnlag.getHjemmel().getNavn();
+        var hjemmel = beregningsgrunnlag.getHjemmel().getNavn();
         if (hjemmel != null) {
             hjemmel = hjemmel.replace("14-7", "14-4");
         }
@@ -113,7 +113,7 @@ public final class BeregningMapper {
     }
 
     private static List<BeregningsgrunnlagPrStatusOgAndel> getAndeler(Beregningsgrunnlag beregningsgrunnlag) {
-        List<BeregningsgrunnlagPrStatusOgAndel> bgpsaList = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
+        var bgpsaList = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
                 .getBeregningsgrunnlagPrStatusOgAndelList();
         List<BeregningsgrunnlagPrStatusOgAndel> andeler = new ArrayList<>();
         beregningsgrunnlag.getAktivitetStatuser()

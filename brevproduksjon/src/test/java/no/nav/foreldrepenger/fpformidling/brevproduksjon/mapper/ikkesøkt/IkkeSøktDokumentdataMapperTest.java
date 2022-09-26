@@ -52,7 +52,7 @@ public class IkkeSøktDokumentdataMapperTest {
         dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new IkkeSøktDokumentdataMapper(domeneobjektProvider);
 
-        Inntektsmelding inntektsmelding = new Inntektsmelding(ARBEIDSGIVER, "", INNSENDINGSTIDSPUNKT);
+        var inntektsmelding = new Inntektsmelding(ARBEIDSGIVER, "", INNSENDINGSTIDSPUNKT);
         var inntektsmeldinger = new Inntektsmeldinger(List.of(inntektsmelding));
         when(domeneobjektProvider.hentInntektsmeldinger(any(Behandling.class))).thenReturn(inntektsmeldinger);
     }
@@ -60,12 +60,12 @@ public class IkkeSøktDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        IkkeSøktDokumentdata ikkeSøktDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var ikkeSøktDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(ikkeSøktDokumentdata.getFelles()).isNotNull();
@@ -87,12 +87,12 @@ public class IkkeSøktDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.NEI, true);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.NEI, true);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        IkkeSøktDokumentdata ikkeSøktDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var ikkeSøktDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(ikkeSøktDokumentdata.getFelles()).isNotNull();

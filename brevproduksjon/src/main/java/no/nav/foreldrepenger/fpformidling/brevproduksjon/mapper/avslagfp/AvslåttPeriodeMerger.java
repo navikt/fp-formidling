@@ -21,12 +21,12 @@ public class AvslåttPeriodeMerger {
 
     private static List<AvslåttPeriode> slåSammenSammenhengendePerioder(List<AvslåttPeriode> perioder) {
         List<AvslåttPeriode> resultat = new ArrayList<>();
-        for (int index = 0; index < perioder.size() - 1; index++) {
-            boolean sistePeriode = (index == perioder.size() - 2);
-            AvslåttPeriode periodeEn = perioder.get(index);
-            AvslåttPeriode periodeTo = perioder.get(index + 1);
+        for (var index = 0; index < perioder.size() - 1; index++) {
+            var sistePeriode = (index == perioder.size() - 2);
+            var periodeEn = perioder.get(index);
+            var periodeTo = perioder.get(index + 1);
             if (erPerioderSammenhengendeOgSkalSlåSammen(periodeEn, periodeTo)) {
-                AvslåttPeriode nyPeriode = slåSammenPerioder(periodeEn, periodeTo);
+                var nyPeriode = slåSammenPerioder(periodeEn, periodeTo);
                 perioder.set(index + 1, nyPeriode);
                 if (sistePeriode) {
                     resultat.add(nyPeriode);
@@ -61,8 +61,8 @@ public class AvslåttPeriodeMerger {
     }
 
     private static int finnRiktigAntallTapteDager(AvslåttPeriode periodeEn, AvslåttPeriode periodeTo) {
-        BigDecimal tapteDagerPeriodeEn = periodeEn.getTapteDagerTemp();
-        BigDecimal tapteDagerPeriodeTo = periodeTo.getTapteDagerTemp();
+        var tapteDagerPeriodeEn = periodeEn.getTapteDagerTemp();
+        var tapteDagerPeriodeTo = periodeTo.getTapteDagerTemp();
 
         if (!Objects.equals(tapteDagerPeriodeEn, BigDecimal.ZERO) && !Objects.equals(tapteDagerPeriodeTo, BigDecimal.ZERO)) {
             return  tapteDagerPeriodeEn.add(tapteDagerPeriodeTo).setScale(1, RoundingMode.DOWN).intValue();

@@ -134,12 +134,12 @@ public class DomeneobjektProvider {
     }
 
     public Klage hentKlagebehandling(Behandling behandling) {
-        KlagebehandlingDto klagebehandlingDto = behandlingRestKlient.hentKlagebehandling(behandling.getResourceLinker());
+        var klagebehandlingDto = behandlingRestKlient.hentKlagebehandling(behandling.getResourceLinker());
         return KlageDtoMapper.mapKlagefraDto(klagebehandlingDto);
     }
 
     public Optional<Anke> hentAnkebehandling(Behandling behandling) {
-        AnkebehandlingDto ankebehandlingDto = behandlingRestKlient.hentAnkebehandling(behandling.getResourceLinker());
+        var ankebehandlingDto = behandlingRestKlient.hentAnkebehandling(behandling.getResourceLinker());
         return AnkeDtoMapper.mapAnkeFraDto(ankebehandlingDto);
     }
 

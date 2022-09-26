@@ -74,11 +74,11 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
 
     @BeforeEach
     public void before() {
-        BrevParametere brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
+        var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         dokumentData = lagStandardDokumentData(DokumentMalType.SVANGERSKAPSPENGER_AVSLAG);
         dokumentdataMapper = new SvangerskapspengerAvslagDokumentdataMapper(brevParametere, domeneobjektProvider);
 
-        MottattDokument mottattDokument = new MottattDokument(LocalDate.now(), DokumentTypeId.SØKNAD_SVANGERSKAPSPENGER, DokumentKategori.SØKNAD);
+        var mottattDokument = new MottattDokument(LocalDate.now(), DokumentTypeId.SØKNAD_SVANGERSKAPSPENGER, DokumentKategori.SØKNAD);
 
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
@@ -89,11 +89,11 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_med_årsak_fra_behandling() {
         // Arrange
-        Behandling behandling = opprettBehandling(Avslagsårsak.ARBEIDSTAKER_KAN_OMPLASSERES);
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseSVPBuilder().build();
+        var behandling = opprettBehandling(Avslagsårsak.ARBEIDSTAKER_KAN_OMPLASSERES);
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseSVPBuilder().build();
 
-        SvangerskapspengerAvslagDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -120,11 +120,11 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_med_årsak_fra_uttaket() {
         // Arrange
-        Behandling behandling = opprettBehandling(Avslagsårsak.UDEFINERT);
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseSVPBuilder().build();
+        var behandling = opprettBehandling(Avslagsårsak.UDEFINERT);
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseSVPBuilder().build();
 
-        SvangerskapspengerAvslagDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -163,19 +163,19 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
     }
 
     private Optional<SvangerskapspengerUttak> opprettUttaksresultat(PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak) {
-        SvpUttakResultatPeriode uttakResultatPeriode1 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakResultatPeriode1 = SvpUttakResultatPeriode.Builder.ny()
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medArbeidsgiverNavn(ARBEIDSGIVER_1)
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .build();
-        SvpUttakResultatPeriode uttakResultatPeriode2 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakResultatPeriode2 = SvpUttakResultatPeriode.Builder.ny()
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .medPeriodeIkkeOppfyltÅrsak(periodeIkkeOppfyltÅrsak)
                 .medArbeidsgiverNavn(ARBEIDSGIVER_1)
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .build();
 
-        SvangerskapspengerUttak uttaksresultat = SvangerskapspengerUttak.Builder.ny()
+        var uttaksresultat = SvangerskapspengerUttak.Builder.ny()
                 .leggTilUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold.Builder.ny()
                         .medArbeidsgiver(new Arbeidsgiver("1234", ARBEIDSGIVER_1))
                         .leggTilPerioder(List.of(uttakResultatPeriode1, uttakResultatPeriode2))

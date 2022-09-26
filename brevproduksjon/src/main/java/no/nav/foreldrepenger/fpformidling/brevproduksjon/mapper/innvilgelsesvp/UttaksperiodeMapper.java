@@ -30,17 +30,17 @@ public final class UttaksperiodeMapper {
                                                                        Språkkode språkkode) {
         Map<String, List<Uttaksperiode>> resultat = new HashMap<>();
 
-        List<SvpUttakResultatPeriode> uttakPerioder = uttaksresultat.getUttakResultatArbeidsforhold().stream()
+        var uttakPerioder = uttaksresultat.getUttakResultatArbeidsforhold().stream()
                 .flatMap(ur -> ur.getPerioder().stream())
                 .toList();
 
-        for (TilkjentYtelsePeriode periode : tilkjentYtelse.getPerioder()) {
+        for (var periode : tilkjentYtelse.getPerioder()) {
             var uttakPeriodeKandidater = PeriodeBeregner.finnUttakPeriodeKandidater(periode, uttakPerioder);
-            for (TilkjentYtelseAndel andel : periode.getAndeler()) {
-                AktivitetStatus aktivitetStatus = andel.getAktivitetStatus();
-                String aktivitetsbeskrivelse = utledAktivitetsbeskrivelse(andel, aktivitetStatus);
+            for (var andel : periode.getAndeler()) {
+                var aktivitetStatus = andel.getAktivitetStatus();
+                var aktivitetsbeskrivelse = utledAktivitetsbeskrivelse(andel, aktivitetStatus);
 
-                Optional<SvpUttakResultatPeriode> matchetUttaksperiode = finnUttakPeriode(uttakPeriodeKandidater, aktivitetsbeskrivelse);
+                var matchetUttaksperiode = finnUttakPeriode(uttakPeriodeKandidater, aktivitetsbeskrivelse);
                 matchetUttaksperiode.ifPresent(svpUttakResultatPeriode ->
                         mapAktivitet(resultat, svpUttakResultatPeriode, periode, aktivitetsbeskrivelse, språkkode));
             }
@@ -64,7 +64,7 @@ public final class UttaksperiodeMapper {
     private static void mapAktivitet(Map<String, List<Uttaksperiode>> map, SvpUttakResultatPeriode matchetUttaksperiode,
                                      TilkjentYtelsePeriode tilkjentYtelsePeriode,
                                      String aktivitetsbeskrivelse, Språkkode språkkode) {
-        Uttaksperiode uttaksperiode = Uttaksperiode.ny()
+        var uttaksperiode = Uttaksperiode.ny()
                 .medPeriodeFom(tilkjentYtelsePeriode.getPeriode().getFomDato(), språkkode)
                 .medPeriodeTom(tilkjentYtelsePeriode.getPeriode().getTomDato(), språkkode)
                 .medUtbetalingsgrad(Prosent.of(matchetUttaksperiode.getUtbetalingsgrad()))
@@ -107,7 +107,7 @@ public final class UttaksperiodeMapper {
     }
 
     private static boolean erPerioderSammenhengendeEllerLikeOgSkalSlåSammen(Uttaksperiode periodeEn, Uttaksperiode periodeTo) {
-        boolean sammeUtbetalingsgrad = periodeEn.getUtbetalingsgrad().equals(periodeTo.getUtbetalingsgrad());
+        var sammeUtbetalingsgrad = periodeEn.getUtbetalingsgrad().equals(periodeTo.getUtbetalingsgrad());
         return sammeUtbetalingsgrad && (erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom())
                 || erFomOgTomLike(periodeEn, periodeTo));
     }

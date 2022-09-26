@@ -19,12 +19,12 @@ public final class UtbetalingsperiodeMapper {
         tilkjentYtelsePerioder.forEach(tilkjentYtelsePeriode -> {
             if (tilkjentYtelsePeriode.getDagsats() > 0) {
                 if (utbetalingsperioder.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(getSisteUtbetalingsperiode(utbetalingsperioder), tilkjentYtelsePeriode)) {
-                    Utbetalingsperiode utbetalingsperiode = opprettUtbetalingsperiode(språkkode, tilkjentYtelsePeriode,
+                    var utbetalingsperiode = opprettUtbetalingsperiode(språkkode, tilkjentYtelsePeriode,
                             tilkjentYtelsePeriode.getPeriodeFom());
                     utbetalingsperioder.add(utbetalingsperiode);
                 } else {
                     var sammenhengendeFom = getSisteUtbetalingsperiode(utbetalingsperioder).getPeriodeFom();
-                    Utbetalingsperiode utbetalingsperiode = opprettUtbetalingsperiode(språkkode, tilkjentYtelsePeriode, sammenhengendeFom);
+                    var utbetalingsperiode = opprettUtbetalingsperiode(språkkode, tilkjentYtelsePeriode, sammenhengendeFom);
                     utbetalingsperioder.remove(utbetalingsperioder.size()-1);
                     utbetalingsperioder.add(utbetalingsperiode);
                 }
@@ -38,8 +38,8 @@ public final class UtbetalingsperiodeMapper {
     }
 
     private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Utbetalingsperiode periodeEn, TilkjentYtelsePeriode periodeTo) {
-        boolean sammeDagsats = Objects.equals(periodeEn.getPeriodeDagsats(), periodeTo.getDagsats());
-        boolean sammeUtbetaltTilSoker = Objects.equals(periodeEn.getUtbetaltTilSøker(), periodeTo.getUtbetaltTilSøker());
+        var sammeDagsats = Objects.equals(periodeEn.getPeriodeDagsats(), periodeTo.getDagsats());
+        var sammeUtbetaltTilSoker = Objects.equals(periodeEn.getUtbetaltTilSøker(), periodeTo.getUtbetaltTilSøker());
         return sammeDagsats && sammeUtbetaltTilSoker &&
                 erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriode().getFomDato());
     }

@@ -29,7 +29,7 @@ import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.Per
 public class BeregningsgrunnlagDtoMapper {
 
     public static Beregningsgrunnlag mapFraDto(BeregningsgrunnlagDto dto, UnaryOperator<String> hentNavn) {
-        Beregningsgrunnlag.Builder builder = Beregningsgrunnlag.ny();
+        var builder = Beregningsgrunnlag.ny();
         builder.medGrunnbeløp(new Beløp(dto.grunnbeløp()));
         dto.aktivitetstatusListe().stream().map(BeregningsgrunnlagDtoMapper::mapBeregningsgrunnlagAktivitetStatusFraDto).forEach(builder::leggTilBeregningsgrunnlagAktivitetStatus);
         dto.beregningsgrunnlagperioder().stream()
@@ -59,7 +59,7 @@ public class BeregningsgrunnlagDtoMapper {
     }
 
     private static BeregningsgrunnlagPeriode mapBeregningsgrunnlagPeriodeFraDto(BeregningsgrunnlagPeriodeDto dto, UnaryOperator<String> hentNavn) {
-        DatoIntervall intervall = dto.beregningsgrunnlagperiodeTom() != null ?
+        var intervall = dto.beregningsgrunnlagperiodeTom() != null ?
                 DatoIntervall.fraOgMedTilOgMed(dto.beregningsgrunnlagperiodeFom(), dto.beregningsgrunnlagperiodeTom()) :
                 DatoIntervall.fraOgMed(dto.beregningsgrunnlagperiodeFom());
         return BeregningsgrunnlagPeriode.ny()
@@ -108,7 +108,7 @@ public class BeregningsgrunnlagDtoMapper {
     }
 
     private static BeregningsgrunnlagPrStatusOgAndel mapBgpsaFraDto(BeregningsgrunnlagAndelDto dto, UnaryOperator<String> hentNavn) {
-        BeregningsgrunnlagPrStatusOgAndel.Builder builder = BeregningsgrunnlagPrStatusOgAndel.ny();
+        var builder = BeregningsgrunnlagPrStatusOgAndel.ny();
         BGAndelArbeidsforhold bgAndelArbeidsforhold = null;
         if (dto.arbeidsforhold() != null) {
             bgAndelArbeidsforhold = mapBgAndelArbeidsforholdfraDto(dto.arbeidsforhold(), hentNavn);

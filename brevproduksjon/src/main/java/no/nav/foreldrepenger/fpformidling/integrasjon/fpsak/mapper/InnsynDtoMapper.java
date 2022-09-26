@@ -17,7 +17,7 @@ public class InnsynDtoMapper {
     }
 
     private static List<InnsynDokument> mapInnsyndokumenterFraDto(List<InnsynDokumentDto> dokumenter) {
-        ArrayList<InnsynDokument> dokumentliste = new ArrayList<>();
+        var dokumentliste = new ArrayList<InnsynDokument>();
         dokumenter.stream().filter(InnsynDokumentDto::isFikkInnsyn).map(InnsynDtoMapper::mapDokumentFraDto).forEach(dokumentliste::add);
         return dokumentliste;
     }

@@ -46,7 +46,7 @@ public class Beløp implements Serializable, IndexKey {
 
     @Override
     public String getIndexKey() {
-        BigDecimal skalertVerdi = skalertVerdi();
+        var skalertVerdi = skalertVerdi();
         return skalertVerdi != null ? skalertVerdi.toString() : null;
     }
 
@@ -61,7 +61,7 @@ public class Beløp implements Serializable, IndexKey {
         } else if (obj == null || !getClass().equals(obj.getClass())) {
             return false;
         }
-        Beløp other = (Beløp) obj;
+        var other = (Beløp) obj;
         return Objects.equals(skalertVerdi(), other.skalertVerdi());
     }
 

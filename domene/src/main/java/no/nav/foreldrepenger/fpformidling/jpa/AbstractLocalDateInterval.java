@@ -29,8 +29,8 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
         if (antallArbeidsdager < 1) {
             throw new IllegalArgumentException("Antall arbeidsdager må være 1 eller større.");
         }
-        LocalDate tom = fom;
-        int antallArbeidsdagerTmp = antallArbeidsdager;
+        var tom = fom;
+        var antallArbeidsdagerTmp = antallArbeidsdager;
 
         while (antallArbeidsdagerTmp > 0) {
             if (antallArbeidsdagerTmp > antallArbeidsdager) {
@@ -50,8 +50,8 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
         if (antallArbeidsdager < 1) {
             throw new IllegalArgumentException("Antall arbeidsdager må være 1 eller større.");
         }
-        LocalDate fom = tom;
-        int antallArbeidsdagerTmp = antallArbeidsdager;
+        var fom = tom;
+        var antallArbeidsdagerTmp = antallArbeidsdager;
 
         while (antallArbeidsdagerTmp > 0) {
             if (antallArbeidsdagerTmp > antallArbeidsdager) {
@@ -116,12 +116,12 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
         if (!(object instanceof AbstractLocalDateInterval)) {
             return false;
         }
-        AbstractLocalDateInterval annen = (AbstractLocalDateInterval) object;
+        var annen = (AbstractLocalDateInterval) object;
         return likFom(annen) && likTom(annen);
     }
 
     private boolean likFom(AbstractLocalDateInterval annen) {
-        boolean likFom = Objects.equals(this.getFomDato(), annen.getFomDato());
+        var likFom = Objects.equals(this.getFomDato(), annen.getFomDato());
         if (this.getFomDato() == null || annen.getFomDato() == null) {
             return likFom;
         }
@@ -130,7 +130,7 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
     }
 
     private boolean likTom(AbstractLocalDateInterval annen) {
-        boolean likTom = Objects.equals(getTomDato(), annen.getTomDato());
+        var likTom = Objects.equals(getTomDato(), annen.getTomDato());
         if (this.getTomDato() == null || annen.getTomDato() == null) {
             return likTom;
         }

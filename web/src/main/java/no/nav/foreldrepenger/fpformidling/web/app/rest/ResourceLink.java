@@ -104,7 +104,7 @@ public class ResourceLink {
         } else if (obj == null || !this.getClass().equals(obj.getClass())) {
             return false;
         }
-        ResourceLink other = (ResourceLink) obj;
+        var other = (ResourceLink) obj;
         return Objects.equals(this.href, other.href)
                 && Objects.equals(this.rel, other.rel)
                 && Objects.equals(this.type, other.type);

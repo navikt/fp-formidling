@@ -25,7 +25,7 @@ public class CleanNextBucketBatchTask implements ProsessTaskHandler {
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
-        int antallSlettet = taskTjeneste.tømNestePartisjon();
+        var antallSlettet = taskTjeneste.tømNestePartisjon();
         log.info("Tømmer neste partisjon med ferdige tasks, slettet {}", antallSlettet);
     }
 }

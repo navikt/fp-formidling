@@ -160,7 +160,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BeregningsgrunnlagPrStatusOgAndel that = (BeregningsgrunnlagPrStatusOgAndel) o;
+        var that = (BeregningsgrunnlagPrStatusOgAndel) o;
         return Objects.equals(dagsats, that.dagsats) && aktivitetStatus == that.aktivitetStatus && Objects.equals(bruttoPrÅr, that.bruttoPrÅr) && Objects.equals(avkortetPrÅr, that.avkortetPrÅr) && Objects.equals(nyIArbeidslivet, that.nyIArbeidslivet) && arbeidsforholdType == that.arbeidsforholdType && Objects.equals(beregningsperiode, that.beregningsperiode) && Objects.equals(bgAndelArbeidsforhold, that.bgAndelArbeidsforhold) && Objects.equals(erTilkommetAndel, that.erTilkommetAndel);
     }
 

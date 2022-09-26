@@ -73,7 +73,7 @@ public class Beregningsgrunnlag {
         }
 
         public Beregningsgrunnlag build() {
-            Beregningsgrunnlag beregningsgrunnlag = new Beregningsgrunnlag();
+            var beregningsgrunnlag = new Beregningsgrunnlag();
             beregningsgrunnlag.grunnbeløp = grunnbeløp;
             beregningsgrunnlag.beregningsgrunnlagPerioder = beregningsgrunnlagPerioder;
             beregningsgrunnlag.aktivitetStatuser = aktivitetStatuser;
@@ -88,7 +88,7 @@ public class Beregningsgrunnlag {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Beregningsgrunnlag that = (Beregningsgrunnlag) o;
+        var that = (Beregningsgrunnlag) o;
         return erBesteberegnet == that.erBesteberegnet &&
                 Objects.equals(grunnbeløp, that.grunnbeløp) &&
                 Objects.equals(beregningsgrunnlagPerioder, that.beregningsgrunnlagPerioder) &&

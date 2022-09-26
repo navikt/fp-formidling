@@ -36,18 +36,18 @@ public class SjekkDtoStrukturTest {
         IndexClasses indexClasses;
         indexClasses = IndexClasses.getIndexFor(
                 IndexClasses.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-        List<Class<?>> classes = indexClasses.getClasses(ci -> ci.name().toString().endsWith("Dto"),
+        var classes = indexClasses.getClasses(ci -> ci.name().toString().endsWith("Dto"),
                 c -> !c.isInterface());
 
-        for (Class<?> aClass : classes) {
+        for (var aClass : classes) {
             params.add(new Object[]{aClass});
         }
         return params;
     }
 
     private void sjekkJsonProperties(Class<?> c) throws IntrospectionException {
-        List<Field> fields = List.of(c.getDeclaredFields());
-        Set<String> fieldNames = fields.stream()
+        var fields = List.of(c.getDeclaredFields());
+        var fieldNames = fields.stream()
                 .filter(f -> !f.isSynthetic() && !Modifier.isStatic(f.getModifiers()))
                 .filter(f -> f.getAnnotation(JsonProperty.class) == null)
                 .filter(f -> f.getAnnotation(JsonValue.class) == null)
@@ -56,10 +56,10 @@ public class SjekkDtoStrukturTest {
                 .collect(Collectors.toSet());
 
         if (!fieldNames.isEmpty()) {
-            for (PropertyDescriptor prop : Introspector.getBeanInfo(c, c.getSuperclass()).getPropertyDescriptors()) {
+            for (var prop : Introspector.getBeanInfo(c, c.getSuperclass()).getPropertyDescriptors()) {
                 if (prop.getReadMethod() != null) {
-                    Method readName = prop.getReadMethod();
-                    String propName = prop.getName();
+                    var readName = prop.getReadMethod();
+                    var propName = prop.getName();
                     if (!SKIPPED.contains(propName)) {
                         if (readName.getAnnotation(JsonIgnore.class) == null && readName.getAnnotation(
                                 JsonProperty.class) == null) {
@@ -72,8 +72,8 @@ public class SjekkDtoStrukturTest {
                 }
 
                 if (prop.getWriteMethod() != null) {
-                    Method readName = prop.getWriteMethod();
-                    String propName = prop.getName();
+                    var readName = prop.getWriteMethod();
+                    var propName = prop.getName();
                     if (!SKIPPED.contains(propName)) {
                         if (readName.getAnnotation(JsonIgnore.class) == null && readName.getAnnotation(
                                 JsonProperty.class) == null) {

@@ -8,7 +8,7 @@ public record Arbeidsgiver(String arbeidsgiverReferanse, String navn) {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Arbeidsgiver that = (Arbeidsgiver) o;
+        var that = (Arbeidsgiver) o;
         return Objects.equals(arbeidsgiverReferanse, that.arbeidsgiverReferanse) && Objects.equals(navn, that.navn);
     }
 

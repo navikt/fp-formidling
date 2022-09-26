@@ -48,13 +48,13 @@ public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMa
     @Override
     public EtterlysInntektsmeldingDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
                                                    Behandling behandling, boolean erUtkast) {
-        Språkkode språkkode = behandling.getSpråkkode();
+        var språkkode = behandling.getSpråkkode();
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
 
-        LocalDate søknadDato = getSøknadsdato(behandling);
-        LocalDate fristDato = brevMapperUtil.getSvarFrist();
+        var søknadDato = getSøknadsdato(behandling);
+        var fristDato = brevMapperUtil.getSvarFrist();
 
         var dokumentdataBuilder = EtterlysInntektsmeldingDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
@@ -65,7 +65,7 @@ public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMa
     }
 
     private LocalDate getSøknadsdato(Behandling behandling) {
-        List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
+        var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         return MottattdokumentMapper.finnSisteMottatteSøknad(mottatteDokumenter);
     }
 }

@@ -43,7 +43,7 @@ public class DatamapperTestUtil {
     }
 
     public static DokumentFelles getDokumentFelles() {
-        DokumentFelles dokumentFelles = Mockito.mock(DokumentFelles.class);
+        var dokumentFelles = Mockito.mock(DokumentFelles.class);
         when(dokumentFelles.getSakspartNavn()).thenReturn(SØKERS_NAVN);
         when(dokumentFelles.getSakspartPersonStatus()).thenReturn(ANNET);
         return dokumentFelles;

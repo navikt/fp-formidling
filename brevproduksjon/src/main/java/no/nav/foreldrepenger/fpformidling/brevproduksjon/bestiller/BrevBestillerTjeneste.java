@@ -29,14 +29,14 @@ public class BrevBestillerTjeneste {
     }
 
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse) {
-        Behandling behandling = hentBehandling(dokumentHendelse);
-        DokumentMalType dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
+        var behandling = hentBehandling(dokumentHendelse);
+        var dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
         return dokgenBrevproduksjonTjeneste.forhåndsvisBrev(dokumentHendelse, behandling, dokumentMal);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse) {
-        Behandling behandling = hentBehandling(dokumentHendelse);
-        DokumentMalType dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
+        var behandling = hentBehandling(dokumentHendelse);
+        var dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
         dokgenBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, dokumentMal);
     }
 

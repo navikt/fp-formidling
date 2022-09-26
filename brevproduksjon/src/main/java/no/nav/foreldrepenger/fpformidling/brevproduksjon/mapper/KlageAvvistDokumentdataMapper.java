@@ -51,8 +51,8 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
 
-        Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
-        Set<String> avvistGrunner = getAvvistGrunner(klage);
+        var klage = domeneobjektProvider.hentKlagebehandling(behandling);
+        var avvistGrunner = getAvvistGrunner(klage);
 
         var dokumentdataBuilder = KlageAvvistDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
@@ -65,7 +65,7 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
     }
 
     private String getLovhjemler(Behandling behandling, Klage klage) {
-        Optional<String> lovhjemler = KlageMapper.hentOgFormaterLovhjemlerForAvvistKlage(klage, behandling.getSpråkkode());
+        var lovhjemler = KlageMapper.hentOgFormaterLovhjemlerForAvvistKlage(klage, behandling.getSpråkkode());
         return lovhjemler.map(String::toString).orElse(null);
     }
 

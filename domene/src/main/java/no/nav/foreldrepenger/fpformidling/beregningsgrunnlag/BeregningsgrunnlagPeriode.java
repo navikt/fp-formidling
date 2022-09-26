@@ -111,7 +111,7 @@ public class BeregningsgrunnlagPeriode {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BeregningsgrunnlagPeriode that = (BeregningsgrunnlagPeriode) o;
+        var that = (BeregningsgrunnlagPeriode) o;
         return Objects.equals(dagsats, that.dagsats) &&
                 Objects.equals(bruttoPrÅr, that.bruttoPrÅr) &&
                 Objects.equals(avkortetPrÅr, that.avkortetPrÅr) &&

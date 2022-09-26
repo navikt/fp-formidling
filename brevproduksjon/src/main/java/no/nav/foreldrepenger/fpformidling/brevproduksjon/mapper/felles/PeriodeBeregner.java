@@ -43,7 +43,7 @@ public class PeriodeBeregner {
 
     public static BeregningsgrunnlagPeriode finnBeregningsgrunnlagperiode(TilkjentYtelsePeriode tilkjentPeriode,
                                                                           List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
-        for (BeregningsgrunnlagPeriode beregningsgrunnlagPeriode : beregningsgrunnlagPerioder) {
+        for (var beregningsgrunnlagPeriode : beregningsgrunnlagPerioder) {
             if (!tilkjentPeriode.getPeriodeFom().isBefore(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom()) &&
                     (beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom() == null
                             || (!tilkjentPeriode.getPeriodeTom().isAfter(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom())))) {
@@ -54,7 +54,7 @@ public class PeriodeBeregner {
     }
 
     public static UttakResultatPeriode finnUttaksperiode(TilkjentYtelsePeriode tilkjentPeriode, List<UttakResultatPeriode> uttakPerioder) {
-        for (UttakResultatPeriode uttakPeriode : uttakPerioder) {
+        for (var uttakPeriode : uttakPerioder) {
             if (!tilkjentPeriode.getPeriodeFom().isBefore(uttakPeriode.getFom())
                     && !tilkjentPeriode.getPeriodeTom().isAfter(uttakPeriode.getTom())) {
                 return uttakPeriode;
@@ -74,7 +74,7 @@ public class PeriodeBeregner {
                                                                            List<SvpUttakResultatPeriode> uttakPerioder) {
         if (periode.getDagsats() > 0) {
             List<SvpUttakResultatPeriode> kandidater = new ArrayList<>();
-            for (SvpUttakResultatPeriode uttakPeriode : uttakPerioder) {
+            for (var uttakPeriode : uttakPerioder) {
                 if (!periode.getPeriodeFom().isBefore(uttakPeriode.getFom())
                         && !periode.getPeriodeTom().isAfter(uttakPeriode.getTom())) {
                     kandidater.add(uttakPeriode);
@@ -92,7 +92,7 @@ public class PeriodeBeregner {
     public static Optional<BeregningsgrunnlagPrStatusOgAndel> finnBgPerStatusOgAndelHvisFinnes(
             List<BeregningsgrunnlagPrStatusOgAndel> bgPerStatusOgAndelListe,
             TilkjentYtelseAndel andel) {
-        for (BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel : bgPerStatusOgAndelListe) {
+        for (var bgPerStatusOgAndel : bgPerStatusOgAndelListe) {
             if (andel.getAktivitetStatus().equals(bgPerStatusOgAndel.getAktivitetStatus())) {
                 if (AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())) {
                     if (sammeArbeidsforhold(andel, bgPerStatusOgAndel)) {
@@ -108,11 +108,11 @@ public class PeriodeBeregner {
     }
 
     private static boolean sammeArbeidsforhold(TilkjentYtelseAndel andel, BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel) {
-        Optional<Arbeidsgiver> arbeidsgiver = andel.getArbeidsgiver();
+        var arbeidsgiver = andel.getArbeidsgiver();
         if (arbeidsgiver.isEmpty()) {
             return false;
         }
-        ArbeidsforholdRef arbeidsforholdRef = andel.getArbeidsforholdRef();
+        var arbeidsforholdRef = andel.getArbeidsforholdRef();
         return sammeArbeidsforhold(arbeidsgiver.get(), arbeidsforholdRef, bgPerStatusOgAndel);
     }
 
@@ -127,10 +127,10 @@ public class PeriodeBeregner {
 
     public static Optional<UttakResultatPeriodeAktivitet> finnAktivitetMedStatusHvisFinnes(List<UttakResultatPeriodeAktivitet> uttakAktiviteter,
             TilkjentYtelseAndel andel) {
-        Optional<Arbeidsgiver> arbeidsgiver = andel.getArbeidsgiver();
-        ArbeidsforholdRef arbeidsforholdRef = andel.getArbeidsforholdRef();
+        var arbeidsgiver = andel.getArbeidsgiver();
+        var arbeidsforholdRef = andel.getArbeidsforholdRef();
 
-        for (UttakResultatPeriodeAktivitet aktivitet : uttakAktiviteter) {
+        for (var aktivitet : uttakAktiviteter) {
             if (uttakAktivitetStatusMap.getOrDefault(andel.getAktivitetStatus(), UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType())
                     && (arbeidsgiver.isEmpty()
                             || Objects.equals(arbeidsgiver.get().arbeidsgiverReferanse(), aktivitet.getArbeidsgiverIdentifikator()))

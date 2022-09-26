@@ -32,7 +32,7 @@ public record BGAndelArbeidsforhold(Arbeidsgiver arbeidsgiver,
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BGAndelArbeidsforhold that = (BGAndelArbeidsforhold) o;
+        var that = (BGAndelArbeidsforhold) o;
         return Objects.equals(arbeidsgiver, that.arbeidsgiver) &&
                 Objects.equals(arbeidsforholdRef, that.arbeidsforholdRef) &&
                 Objects.equals(naturalytelseBortfaltPrÅr, that.naturalytelseBortfaltPrÅr) &&

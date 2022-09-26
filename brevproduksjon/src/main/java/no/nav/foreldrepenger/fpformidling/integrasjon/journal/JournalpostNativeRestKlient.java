@@ -57,7 +57,7 @@ public class JournalpostNativeRestKlient implements Journalpost {
     @Override
     public void tilknyttVedlegg(TilknyttVedleggRequest request, JournalpostId journalpostIdTil) {
         try {
-            String tilknyttPath = String.format("/%s/tilknyttVedlegg", journalpostIdTil.getVerdi());
+            var tilknyttPath = String.format("/%s/tilknyttVedlegg", journalpostIdTil.getVerdi());
             var uri = UriBuilder.fromUri(endpointProxy).path(tilknyttPath).build();
 
             var method = new RestRequest.Method(RestRequest.WebMethod.PUT, RestRequest.jsonPublisher(request));

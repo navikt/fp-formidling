@@ -49,13 +49,13 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
-        BehandlingÅrsakType aarsak = BehandlingÅrsakType.INFOBREV_BEHANDLING;
+        var aarsak = BehandlingÅrsakType.INFOBREV_BEHANDLING;
 
         if (behandling.harBehandlingÅrsak(BehandlingÅrsakType.INFOBREV_OPPHOLD)) {
             aarsak = BehandlingÅrsakType.INFOBREV_OPPHOLD;
         }
 
-        Optional<ForeldrepengerUttak> uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling);
+        var uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling);
 
         String sisteUttaksdagMor = null;
         if (uttakResultatPerioder.isPresent() && BehandlingÅrsakType.INFOBREV_BEHANDLING.equals(aarsak)) {

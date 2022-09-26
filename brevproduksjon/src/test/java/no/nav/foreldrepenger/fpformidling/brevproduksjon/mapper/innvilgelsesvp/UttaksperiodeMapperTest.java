@@ -46,19 +46,19 @@ public class UttaksperiodeMapperTest {
     @Test
     public void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_utbetalingsgrad_innenfor_samme_aktivitetstype() {
         // Arrange
-        SvangerskapspengerUttak svangerskapspengerUttak = getSvpUttaksresultat();
-        TilkjentYtelseForeldrepenger tilkjentYtelseFP = getTilkjentYtelse();
+        var svangerskapspengerUttak = getSvpUttaksresultat();
+        var tilkjentYtelseFP = getTilkjentYtelse();
 
         // Act
-        List<Uttaksaktivitet> resultat = UttaksperiodeMapper.mapUttaksaktivteterMedPerioder(svangerskapspengerUttak, tilkjentYtelseFP, Språkkode.NB);
+        var resultat = UttaksperiodeMapper.mapUttaksaktivteterMedPerioder(svangerskapspengerUttak, tilkjentYtelseFP, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(3);
         assertThat(resultat.stream().map(Uttaksaktivitet::getAktivitetsbeskrivelse).toList())
                 .containsExactlyInAnyOrder(ARBEIDSGIVER_NAVN, FORVENTET_FRILANSER_TEKST, FORVENTET_NÆRINGSDRIVENDE_TEKST);
 
-        for (Uttaksaktivitet uttaksaktivitet : resultat) {
-            List<Uttaksperiode> uttaksperioder = uttaksaktivitet.getUttaksperioder();
+        for (var uttaksaktivitet : resultat) {
+            var uttaksperioder = uttaksaktivitet.getUttaksperioder();
             if (ARBEIDSGIVER_NAVN.equals(uttaksaktivitet.getAktivitetsbeskrivelse())) {
                 assertThat(uttaksperioder).hasSize(3);
                 assertThat(uttaksperioder.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
@@ -86,25 +86,25 @@ public class UttaksperiodeMapperTest {
 
     private SvangerskapspengerUttak getSvpUttaksresultat() {
         // Arbeidstaker
-        SvpUttakResultatPeriode uttakPeriode1 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode1 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .medArbeidsgiverNavn(ARBEIDSGIVER_NAVN)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medUtbetalingsgrad(UTBETALINGSGRAD_100)
                 .build();
-        SvpUttakResultatPeriode uttakPeriode2 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode2 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medArbeidsgiverNavn(ARBEIDSGIVER_NAVN)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medUtbetalingsgrad(UTBETALINGSGRAD_100)
                 .build();
-        SvpUttakResultatPeriode uttakPeriode3 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode3 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
                 .medArbeidsgiverNavn(ARBEIDSGIVER_NAVN)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medUtbetalingsgrad(UTBETALINGSGRAD_100)
                 .build();
-        SvpUttakResultatPeriode uttakPeriode4 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode4 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
                 .medArbeidsgiverNavn(ARBEIDSGIVER_NAVN)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
@@ -112,19 +112,19 @@ public class UttaksperiodeMapperTest {
                 .build();
 
         // Frilanser
-        SvpUttakResultatPeriode uttakPeriode5 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode5 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medArbeidsgiverNavn(UttakSvpDtoMapper.FRILANSER)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medUtbetalingsgrad(UTBETALINGSGRAD_10)
                 .build();
-        SvpUttakResultatPeriode uttakPeriode6 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode6 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
                 .medArbeidsgiverNavn(UttakSvpDtoMapper.FRILANSER)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medUtbetalingsgrad(UTBETALINGSGRAD_10)
                 .build();
-        SvpUttakResultatPeriode uttakPeriode7 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode7 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
                 .medArbeidsgiverNavn(UttakSvpDtoMapper.FRILANSER)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
@@ -132,14 +132,14 @@ public class UttaksperiodeMapperTest {
                 .build();
 
         // Næringsdrivende
-        SvpUttakResultatPeriode uttakPeriode8 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode8 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medArbeidsgiverNavn(UttakSvpDtoMapper.NÆRINGSDRIVENDE)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medUtbetalingsgrad(UTBETALINGSGRAD_10)
                 .build();
 
-        SvpUttakResultatArbeidsforhold svpUttakResultatArbeidsforhold = SvpUttakResultatArbeidsforhold.Builder.ny()
+        var svpUttakResultatArbeidsforhold = SvpUttakResultatArbeidsforhold.Builder.ny()
                 .leggTilPerioder(of(uttakPeriode1, uttakPeriode2, uttakPeriode3, uttakPeriode4, uttakPeriode5, uttakPeriode6,
                         uttakPeriode7, uttakPeriode8))
                 .build();
@@ -150,56 +150,56 @@ public class UttaksperiodeMapperTest {
 
     private TilkjentYtelseForeldrepenger getTilkjentYtelse() {
         // Arbeidstaker
-        TilkjentYtelseAndel arbeidsgiverAndel = TilkjentYtelseAndel.ny()
+        var arbeidsgiverAndel = TilkjentYtelseAndel.ny()
                 .medArbeidsgiver(ARBEIDSGIVER)
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                 .build();
-        TilkjentYtelsePeriode resultatPeriode1 = TilkjentYtelsePeriode.ny()
+        var resultatPeriode1 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .medDagsats(DAGSATS)
                 .medAndeler(of(arbeidsgiverAndel))
                 .build();
-        TilkjentYtelsePeriode resultatPeriode2 = TilkjentYtelsePeriode.ny()
+        var resultatPeriode2 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medDagsats(DAGSATS)
                 .medAndeler(of(arbeidsgiverAndel))
                 .build();
-        TilkjentYtelsePeriode resultatPeriode3 = TilkjentYtelsePeriode.ny()
+        var resultatPeriode3 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
                 .medDagsats(DAGSATS)
                 .medAndeler(of(arbeidsgiverAndel))
                 .build();
-        TilkjentYtelsePeriode resultatPeriode4 = TilkjentYtelsePeriode.ny()
+        var resultatPeriode4 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
                 .medDagsats(DAGSATS)
                 .medAndeler(of(arbeidsgiverAndel))
                 .build();
 
         // Frilanser
-        TilkjentYtelseAndel frilanserAndel = TilkjentYtelseAndel.ny()
+        var frilanserAndel = TilkjentYtelseAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.FRILANSER)
                 .build();
-        TilkjentYtelsePeriode resultatPeriode5 = TilkjentYtelsePeriode.ny()
+        var resultatPeriode5 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medDagsats(DAGSATS)
                 .medAndeler(of(frilanserAndel))
                 .build();
-        TilkjentYtelsePeriode resultatPeriode6 = TilkjentYtelsePeriode.ny()
+        var resultatPeriode6 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
                 .medDagsats(DAGSATS)
                 .medAndeler(of(frilanserAndel))
                 .build();
-        TilkjentYtelsePeriode resultatPeriode7 = TilkjentYtelsePeriode.ny()
+        var resultatPeriode7 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
                 .medDagsats(DAGSATS)
                 .medAndeler(of(frilanserAndel))
                 .build();
 
         // Næringsdrivende
-        TilkjentYtelseAndel næringsdrivendeAndel = TilkjentYtelseAndel.ny()
+        var næringsdrivendeAndel = TilkjentYtelseAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
                 .build();
-        TilkjentYtelsePeriode resultatPeriode8 = TilkjentYtelsePeriode.ny()
+        var resultatPeriode8 = TilkjentYtelsePeriode.ny()
                 .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medDagsats(DAGSATS)
                 .medAndeler(of(næringsdrivendeAndel))

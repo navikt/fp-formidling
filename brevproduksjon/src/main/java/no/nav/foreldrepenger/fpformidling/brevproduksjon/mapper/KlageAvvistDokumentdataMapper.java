@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 

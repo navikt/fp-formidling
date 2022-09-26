@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

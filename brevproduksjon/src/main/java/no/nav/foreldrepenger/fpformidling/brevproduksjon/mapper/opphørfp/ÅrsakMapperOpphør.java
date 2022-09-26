@@ -15,9 +15,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Lovhjemme
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
 import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 
 public final class ÅrsakMapperOpphør {
 

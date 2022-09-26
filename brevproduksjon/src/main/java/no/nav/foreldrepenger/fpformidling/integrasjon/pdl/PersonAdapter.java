@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
-import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.vedtak.felles.integrasjon.pdl.PdlException;
 
 @ApplicationScoped

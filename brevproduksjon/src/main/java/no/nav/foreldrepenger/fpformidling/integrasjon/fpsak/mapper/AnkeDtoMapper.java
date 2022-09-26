@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.anke.Anke;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.anke.AnkeVurderingResultatDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.anke.AnkebehandlingDto;
 
 public class AnkeDtoMapper {

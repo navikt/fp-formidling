@@ -6,7 +6,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Br
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -24,7 +23,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnhenteOpplysn
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.INNHENTE_OPPLYSNINGER)

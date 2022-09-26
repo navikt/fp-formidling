@@ -13,8 +13,8 @@ public class MottattDokumentDtoMapper {
     }
 
     private static MottattDokument mapMottattDokumentFraDto(MottattDokumentDto dto) {
-        return new MottattDokument(dto.getMottattDato(), new DokumentTypeId(dto.getDokumentTypeId()),
-                dto.getDokumentKategori());
+        return new MottattDokument(dto.mottattDato(), new DokumentTypeId(dto.dokumentTypeId()),
+                dto.dokumentKategori());
     }
 
 }

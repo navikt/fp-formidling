@@ -13,9 +13,6 @@ public class KlageVurderingResultatDto {
     @JsonProperty("fritekstTilBrev")
     private String fritekstTilBrev;
 
-    public KlageVurderingResultatDto() {
-    }
-
     public KlageVurdering getKlageVurdering() {
         return klageVurdering;
     }

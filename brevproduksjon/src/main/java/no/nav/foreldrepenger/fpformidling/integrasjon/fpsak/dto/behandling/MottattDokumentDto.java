@@ -4,24 +4,6 @@ import java.time.LocalDate;
 
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentKategori;
 
-public class MottattDokumentDto {
+public record MottattDokumentDto(LocalDate mottattDato, String dokumentTypeId, DokumentKategori dokumentKategori) {
 
-    private LocalDate mottattDato;
-    private String dokumentTypeId;
-    private DokumentKategori dokumentKategori;
-
-    public MottattDokumentDto() {
-    }
-
-    public LocalDate getMottattDato() {
-        return mottattDato;
-    }
-
-    public String getDokumentTypeId() {
-        return dokumentTypeId;
-    }
-
-    public DokumentKategori getDokumentKategori() {
-        return dokumentKategori;
-    }
 }

@@ -21,11 +21,11 @@ public class StønadskontoDtoMapper {
     }
 
     private static int mapPrematurDager(StønadskontoDto dto) {
-        return dto.kontoUtvidelser() == null ? 0 : dto.kontoUtvidelser().getPrematurdager();
+        return dto.kontoUtvidelser() == null ? 0 : dto.kontoUtvidelser().prematurdager();
     }
 
     private static int mapFlerbarnsdager(StønadskontoDto dto) {
-        return dto.kontoUtvidelser() == null ? 0 : dto.kontoUtvidelser().getFlerbarnsdager();
+        return dto.kontoUtvidelser() == null ? 0 : dto.kontoUtvidelser().flerbarnsdager();
     }
 
 }

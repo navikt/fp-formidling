@@ -11,7 +11,11 @@ import java.util.Objects;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.avslagfp.AvslåttPeriode;
 
-public class AvslåttPeriodeMerger {
+public final class AvslåttPeriodeMerger {
+
+    private AvslåttPeriodeMerger() {
+    }
+
     public static List<AvslåttPeriode> mergePerioder(List<AvslåttPeriode> avslåttePerioder) {
         if (avslåttePerioder.size() <= 1) {
             return avslåttePerioder; // ikke noe å se på.

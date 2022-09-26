@@ -21,10 +21,6 @@ public class AnkeVurderingResultatDto {
     @JsonProperty("påAnketKlageBehandlingUuid")
     private UUID påAnketKlageBehandlingUuid;
 
-
-    public AnkeVurderingResultatDto() {
-    }
-
     public AnkeVurdering getAnkeVurdering() {
         return ankeVurdering;
     }

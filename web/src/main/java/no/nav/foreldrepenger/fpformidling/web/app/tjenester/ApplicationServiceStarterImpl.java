@@ -22,7 +22,7 @@ import no.nav.vedtak.apptjeneste.AppServiceHandler;
 @ApplicationScoped
 public class ApplicationServiceStarterImpl implements ApplicationServiceStarter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationServiceStarterImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationServiceStarterImpl.class);
     private List<AppServiceHandler> handlers;
 
     private ApplicationServiceStarterImpl() {
@@ -41,22 +41,22 @@ public class ApplicationServiceStarterImpl implements ApplicationServiceStarter 
     public void startServices() {
         DefaultExports.initialize();
         handlers.forEach(h -> {
-            LOGGER.info("Starter service: {}", h.getClass().getSimpleName());
+            LOG.info("Starter service: {}", h.getClass().getSimpleName());
             h.start();
         });
     }
 
     @Override
     public void stopServices() {
-        LOGGER.info("Stopper {} services", handlers.size());
+        LOG.info("Stopper {} services", handlers.size());
         var appHandlers = handlers.stream()
                 .map(h -> CompletableFuture.runAsync(() -> {
-                    LOGGER.info("Stopper service {}", h.getClass().getSimpleName());
+                    LOG.info("Stopper service {}", h.getClass().getSimpleName());
                     h.stop();
                 })).collect(toList());
 
         CompletableFuture.allOf(appHandlers.toArray(new CompletableFuture[appHandlers.size()])).join();
-        LOGGER.info("Stoppet {} services", handlers.size());
+        LOG.info("Stoppet {} services", handlers.size());
 
     }
 

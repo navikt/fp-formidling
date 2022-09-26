@@ -24,10 +24,13 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrep
 
 public final class NaturalytelseMapper {
 
+    private NaturalytelseMapper() {
+    }
+
     public static List<Naturalytelse> mapNaturalytelser(TilkjentYtelseForeldrepenger tilkjentYtelse,
                                                         Beregningsgrunnlag beregningsgrunnlag,
                                                         Språkkode språkkode) {
-        var naturalytelser = new TreeSet<Naturalytelse>(Comparator.comparing(Naturalytelse::getEndringsdatoDate));
+        var naturalytelser = new TreeSet<>(Comparator.comparing(Naturalytelse::getEndringsdatoDate));
 
         var beregningingsgrunnlagperioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
         var startFørstePeriode = finnStartFørstePeriode(beregningingsgrunnlagperioder);
@@ -45,10 +48,16 @@ public final class NaturalytelseMapper {
 
     private static LocalDate finnStartFørstePeriode(List<BeregningsgrunnlagPeriode> beregningingsgrunnlagperioder) {
         return beregningingsgrunnlagperioder.stream()
-                .map(BeregningsgrunnlagPeriode::getBeregningsgrunnlagPeriodeFom).toList().stream().min(Comparator.naturalOrder()).orElse(null);
+                .map(BeregningsgrunnlagPeriode::getBeregningsgrunnlagPeriodeFom)
+                .toList()
+                .stream()
+                .min(Comparator.naturalOrder())
+                .orElse(null);
     }
 
-    private static boolean harNaturalytelse(BeregningsgrunnlagPeriode matchetBgPeriode, TilkjentYtelseAndel andel, LocalDate startFørstePeriode) {
+    private static boolean harNaturalytelse(BeregningsgrunnlagPeriode matchetBgPeriode,
+                                            TilkjentYtelseAndel andel,
+                                            LocalDate startFørstePeriode) {
         return PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(matchetBgPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel)
                 .flatMap(BeregningsgrunnlagPrStatusOgAndel::getBgAndelArbeidsforhold)
                 .filter(bgAndelArbeidsforhold -> bgAndelArbeidsforhold.naturalytelseBortfaltPrÅr() != null
@@ -61,7 +70,8 @@ public final class NaturalytelseMapper {
     }
 
     private static Optional<Naturalytelse> opprettNaturalytelse(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
-                                                                TilkjentYtelseAndel andel, Språkkode språkkode) {
+                                                                TilkjentYtelseAndel andel,
+                                                                Språkkode språkkode) {
         Optional<Naturalytelse> naturalytelse = Optional.empty();
         var naturalytelseStatus = utledNaturalytelseStatus(beregningsgrunnlagPeriode);
 
@@ -93,12 +103,14 @@ public final class NaturalytelseMapper {
 
         for (var andel : beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
             var bortfaltPrÅr = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforhold::getNaturalytelseBortfaltPrÅr).orElse(null);
-            var tilkommetPrÅr = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforhold::getNaturalytelseTilkommetPrÅr).orElse(null);
-            if ((bortfaltPrÅr != null && tilkommetPrÅr == null) ||
-                    (beggeHarVerdi(bortfaltPrÅr, tilkommetPrÅr) && tilkommetPrÅr.compareTo(bortfaltPrÅr) < 0)) {
+            var tilkommetPrÅr = andel.getBgAndelArbeidsforhold()
+                    .map(BGAndelArbeidsforhold::getNaturalytelseTilkommetPrÅr)
+                    .orElse(null);
+            if ((bortfaltPrÅr != null && tilkommetPrÅr == null) || (beggeHarVerdi(bortfaltPrÅr, tilkommetPrÅr)
+                    && tilkommetPrÅr.compareTo(bortfaltPrÅr) < 0)) {
                 naturalytelseStatus = NaturalytelseStatus.BORTFALLER;
-            } else if ((bortfaltPrÅr == null && tilkommetPrÅr != null) ||
-                    (beggeHarVerdi(bortfaltPrÅr, tilkommetPrÅr) && tilkommetPrÅr.compareTo(bortfaltPrÅr) >= 0)) {
+            } else if ((bortfaltPrÅr == null && tilkommetPrÅr != null) || (beggeHarVerdi(bortfaltPrÅr, tilkommetPrÅr)
+                    && tilkommetPrÅr.compareTo(bortfaltPrÅr) >= 0)) {
                 naturalytelseStatus = NaturalytelseStatus.TILKOMMER;
             }
         }

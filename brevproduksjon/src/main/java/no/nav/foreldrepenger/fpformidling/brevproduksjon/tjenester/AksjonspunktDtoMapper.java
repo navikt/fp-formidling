@@ -10,6 +10,9 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.aksjo
 
 public class AksjonspunktDtoMapper {
 
+    private AksjonspunktDtoMapper() {
+    }
+
     static AksjonspunktStatus finnAksjonspunktStatus(String kode) {
         if (AksjonspunktStatus.UTFØRT.getKode().equals(kode)) {
             return AksjonspunktStatus.UTFØRT;

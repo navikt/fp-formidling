@@ -38,7 +38,7 @@ import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 @ApplicationScoped
 public class BrevRestTjeneste {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BrevRestTjeneste.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BrevRestTjeneste.class);
 
     private BrevBestillerTjeneste brevBestillerTjeneste;
     private DokumentHendelseTjeneste dokumentHendelseTjeneste;
@@ -70,7 +70,7 @@ public class BrevRestTjeneste {
 
         var dokumentHendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
 
-        LOGGER.info("Forhåndsvis hendelse: {}", dokumentHendelse);
+        LOG.info("Forhåndsvis hendelse: {}", dokumentHendelse);
 
         var dokument = brevBestillerTjeneste.forhandsvisBrev(dokumentHendelse);
 

@@ -17,7 +17,6 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.AnkeDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.BehandlingDtoMapper;
@@ -67,7 +66,7 @@ public class DomeneobjektProvider {
         if (behandling.harFagsakBackend()) {
             return behandling.getFagsakBackend();
         }
-        FagsakDto fagsakDto = behandlingRestKlient.hentFagsak(behandling.getResourceLinker());
+        var fagsakDto = behandlingRestKlient.hentFagsak(behandling.getResourceLinker());
         var fagsak = FagsakBackend.ny()
                 .medSaksnummer(fagsakDto.saksnummer())
                 .medBrukerRolle(fagsakDto.relasjonsRolleType())

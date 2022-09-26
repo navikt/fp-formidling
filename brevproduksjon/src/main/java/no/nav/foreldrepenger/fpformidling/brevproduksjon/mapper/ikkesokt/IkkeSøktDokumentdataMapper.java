@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.ikkesøkt;
+package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.ikkesokt;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;

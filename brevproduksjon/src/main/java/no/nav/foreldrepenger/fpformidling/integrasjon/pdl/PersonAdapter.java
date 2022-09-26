@@ -15,7 +15,7 @@ import no.nav.vedtak.felles.integrasjon.pdl.PdlException;
 @ApplicationScoped
 public class PersonAdapter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PersonAdapter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PersonAdapter.class);
 
     private PersondataTjeneste persondataTjeneste;
 
@@ -33,7 +33,7 @@ public class PersonAdapter {
             var funnetFnr = persondataTjeneste.hentPersonIdentForAktørId(aktørId);
             return funnetFnr.map(pi -> persondataTjeneste.hentPersoninfo(aktørId,pi));
         } catch (PdlException pdlException) {
-            LOGGER.error("Fikk feil ved kall til PDL. Detaljer: type={}, cause={}, policy={}", pdlException.getDetails().type(), pdlException.getDetails().cause(), pdlException.getDetails().policy());
+            LOG.error("Fikk feil ved kall til PDL. Detaljer: type={}, cause={}, policy={}", pdlException.getDetails().type(), pdlException.getDetails().cause(), pdlException.getDetails().policy());
             throw pdlException;
         }
     }

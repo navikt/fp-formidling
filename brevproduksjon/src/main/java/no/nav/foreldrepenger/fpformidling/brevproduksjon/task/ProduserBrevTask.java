@@ -13,8 +13,8 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 @ProsessTask("formidling.bestillBrev")
 public class ProduserBrevTask implements ProsessTaskHandler {
 
-    private BrevBestillerTjeneste brevBestillerApplikasjonTjeneste;
-    private DokumentHendelseTjeneste dokumentHendelseTjeneste;
+    private final BrevBestillerTjeneste brevBestillerApplikasjonTjeneste;
+    private final DokumentHendelseTjeneste dokumentHendelseTjeneste;
 
     @Inject
     public ProduserBrevTask(BrevBestillerTjeneste brevBestillerApplikasjonTjeneste,

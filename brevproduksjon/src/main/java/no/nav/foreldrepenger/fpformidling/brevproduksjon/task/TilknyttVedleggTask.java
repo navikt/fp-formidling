@@ -20,8 +20,8 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 @ProsessTask(value = "formidling.tilknyttVedlegg", maxFailedRuns = 2)
 public class TilknyttVedleggTask implements ProsessTaskHandler {
 
-    private TilknyttVedleggTjeneste tilknyttVedleggTjeneste;
-    private DomeneobjektProvider domeneobjektProvider;
+    private final TilknyttVedleggTjeneste tilknyttVedleggTjeneste;
+    private final DomeneobjektProvider domeneobjektProvider;
 
     @Inject
     public TilknyttVedleggTask(TilknyttVedleggTjeneste tilknyttVedleggTjeneste, DomeneobjektProvider domeneobjektProvider) {

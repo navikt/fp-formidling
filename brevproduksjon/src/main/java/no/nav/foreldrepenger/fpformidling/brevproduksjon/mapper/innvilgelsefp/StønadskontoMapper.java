@@ -10,6 +10,10 @@ import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
 import no.nav.foreldrepenger.fpformidling.uttak.Stønadskonto;
 
 public final class StønadskontoMapper {
+
+    private StønadskontoMapper() {
+    }
+
     public static int finnDisponibleDager(Saldoer saldoer, RelasjonsRolleType rolleType) {
         var saldoForeldrepenger = finnSaldo(saldoer, SaldoVisningStønadskontoType.FORELDREPENGER);
 

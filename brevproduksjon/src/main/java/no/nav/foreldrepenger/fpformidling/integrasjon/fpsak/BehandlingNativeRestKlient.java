@@ -29,7 +29,7 @@ import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 @NativeClient
 @RestClientConfig(tokenConfig = TokenFlow.ADAPTIVE, application = FpApplication.FPSAK)
 public class BehandlingNativeRestKlient implements Behandlinger {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BehandlingNativeRestKlient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BehandlingNativeRestKlient.class);
     protected static final String FPSAK_API = "/api";
 
     private RestClient restClient;

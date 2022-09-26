@@ -14,18 +14,23 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 
 public final class UtbetalingsperiodeMapper {
 
-    public static List<Utbetalingsperiode> mapUtbetalingsperioder(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder, Språkkode språkkode) {
+    private UtbetalingsperiodeMapper() {
+    }
+
+    public static List<Utbetalingsperiode> mapUtbetalingsperioder(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
+                                                                  Språkkode språkkode) {
         List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
         tilkjentYtelsePerioder.forEach(tilkjentYtelsePeriode -> {
             if (tilkjentYtelsePeriode.getDagsats() > 0) {
-                if (utbetalingsperioder.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(getSisteUtbetalingsperiode(utbetalingsperioder), tilkjentYtelsePeriode)) {
+                if (utbetalingsperioder.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(
+                        getSisteUtbetalingsperiode(utbetalingsperioder), tilkjentYtelsePeriode)) {
                     var utbetalingsperiode = opprettUtbetalingsperiode(språkkode, tilkjentYtelsePeriode,
                             tilkjentYtelsePeriode.getPeriodeFom());
                     utbetalingsperioder.add(utbetalingsperiode);
                 } else {
                     var sammenhengendeFom = getSisteUtbetalingsperiode(utbetalingsperioder).getPeriodeFom();
                     var utbetalingsperiode = opprettUtbetalingsperiode(språkkode, tilkjentYtelsePeriode, sammenhengendeFom);
-                    utbetalingsperioder.remove(utbetalingsperioder.size()-1);
+                    utbetalingsperioder.remove(utbetalingsperioder.size() - 1);
                     utbetalingsperioder.add(utbetalingsperiode);
                 }
             }
@@ -40,15 +45,16 @@ public final class UtbetalingsperiodeMapper {
     private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Utbetalingsperiode periodeEn, TilkjentYtelsePeriode periodeTo) {
         var sammeDagsats = Objects.equals(periodeEn.getPeriodeDagsats(), periodeTo.getDagsats());
         var sammeUtbetaltTilSoker = Objects.equals(periodeEn.getUtbetaltTilSøker(), periodeTo.getUtbetaltTilSøker());
-        return sammeDagsats && sammeUtbetaltTilSoker &&
-                erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriode().getFomDato());
+        return sammeDagsats && sammeUtbetaltTilSoker && erFomRettEtterTomDato(periodeEn.getPeriodeTom(),
+                periodeTo.getPeriode().getFomDato());
     }
 
     private static Utbetalingsperiode getSisteUtbetalingsperiode(List<Utbetalingsperiode> utbetalingsperioder) {
         return utbetalingsperioder.get(utbetalingsperioder.size() - 1);
     }
 
-    private static Utbetalingsperiode opprettUtbetalingsperiode(Språkkode språkkode, TilkjentYtelsePeriode tilkjentYtelsePeriode,
+    private static Utbetalingsperiode opprettUtbetalingsperiode(Språkkode språkkode,
+                                                                TilkjentYtelsePeriode tilkjentYtelsePeriode,
                                                                 LocalDate periodeFom) {
         return Utbetalingsperiode.ny()
                 .medPeriodeFom(periodeFom, språkkode)

@@ -16,6 +16,9 @@ import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
 
 public class KlageMapper {
 
+    private KlageMapper() {
+    }
+
     public static List<KlageAvvistÅrsak> listeAvAvvisteÅrsaker(Klage klage) {
         if (klage.getFormkravKA() != null) {
             return klage.getFormkravKA().avvistÅrsaker();

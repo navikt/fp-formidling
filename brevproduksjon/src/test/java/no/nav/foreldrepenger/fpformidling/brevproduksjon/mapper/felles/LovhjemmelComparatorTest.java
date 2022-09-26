@@ -41,7 +41,7 @@ public class LovhjemmelComparatorTest {
 
     @Test
     public void skal_sortere_stigende_etter_kapittel_og_paragraf_som_kan_inkludere_en_bokstav_tilslutt_og_legge_ugyldige_først_og_fjerne_duplikater() {
-        var set = new TreeSet<String>(new LovhjemmelComparator());
+        var set = new TreeSet<>(new LovhjemmelComparator());
         set.addAll(lovhjemler);
         var iterator = set.iterator();
         assertThat(iterator.next()).isEqualTo("14-test");

@@ -14,7 +14,7 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 @ProsessTask(value = "formidling.ferdigstillForsendelse", maxFailedRuns = 2)
 public class FerdigstillForsendelseTask implements ProsessTaskHandler {
 
-    Journalpost journalpostRestKlient;
+    private final Journalpost journalpostRestKlient;
 
     @Inject
     public FerdigstillForsendelseTask(@NativeClient Journalpost journalpostRestKlient) {

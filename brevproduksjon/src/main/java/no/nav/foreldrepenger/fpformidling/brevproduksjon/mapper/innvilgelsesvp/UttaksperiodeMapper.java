@@ -23,6 +23,9 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 
 public final class UttaksperiodeMapper {
 
+    private UttaksperiodeMapper() {
+    }
+
     public static List<Uttaksaktivitet> mapUttaksaktivteterMedPerioder(SvangerskapspengerUttak uttaksresultat,
                                                                        TilkjentYtelseForeldrepenger tilkjentYtelse,
                                                                        Språkkode språkkode) {

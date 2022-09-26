@@ -26,7 +26,7 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 public class DistribuerBrevTask implements ProsessTaskHandler {
 
     private final Dokdist dokdist;
-    private ProsessTaskTjeneste taskTjeneste;
+    private final ProsessTaskTjeneste taskTjeneste;
 
     @Inject
     public DistribuerBrevTask(@JavaClient Dokdist dokdist,

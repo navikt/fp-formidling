@@ -36,6 +36,9 @@ public final class ForMyeUtbetaltMapper {
             Årsak.of(UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID.getKode()),
             Årsak.of(UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode()));
 
+    private ForMyeUtbetaltMapper() {
+    }
+
     public static ForMyeUtbetalt forMyeUtbetalt(List<Utbetalingsperiode> periodeListe, Behandling behandling) {
         if (!behandling.erRevurdering()) {
             return null;

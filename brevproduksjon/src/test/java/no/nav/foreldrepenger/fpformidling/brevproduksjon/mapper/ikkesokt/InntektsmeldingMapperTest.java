@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.ikkesøkt;
+package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.ikkesokt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

@@ -5,6 +5,9 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 
 public final class AktivitetsbeskrivelseUtleder {
 
+    private AktivitetsbeskrivelseUtleder() {
+    }
+
     public static String utledAktivitetsbeskrivelse(TilkjentYtelseAndel andel, AktivitetStatus aktivitetStatus) {
         var arbeidsgiverOpt = andel.getArbeidsgiver();
         if (arbeidsgiverOpt.isPresent()) {

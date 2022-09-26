@@ -11,13 +11,21 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Hjemmel;
 
 public class FellesMapper {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FellesMapper.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FellesMapper.class);
 
-    public static String formaterLovhjemlerForBeregning(String lovhjemmelBeregning, String konsekvensForYtelse, boolean innvilgetRevurdering, Behandling behandling) {
+    private FellesMapper() {
+    }
+
+    public static String formaterLovhjemlerForBeregning(String lovhjemmelBeregning,
+                                                        String konsekvensForYtelse,
+                                                        boolean innvilgetRevurdering,
+                                                        Behandling behandling) {
         if (lovhjemmelBeregning == null) {
             lovhjemmelBeregning = "";
-        } else if (Hjemmel.UDEFINERT.getNavn().equals(lovhjemmelBeregning) && !KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode().equals(konsekvensForYtelse)) {
-            LOGGER.warn("Behandling " + behandling.getUuid() + " har udefinert hjemmel. Fint om du sjekker på TFP-4569 om dette er en NY sak, og i så fall melder det der så vi kan se hvor ofte det skjer.");
+        } else if (Hjemmel.UDEFINERT.getNavn().equals(lovhjemmelBeregning) && !KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()
+                .equals(konsekvensForYtelse)) {
+            LOG.warn("Behandling {} har udefinert hjemmel. Fint om du sjekker på TFP-4569 om dette er en NY sak, "
+                    + "og i så fall melder det der så vi kan se hvor ofte det skjer.", behandling.getUuid());
             lovhjemmelBeregning = "";
         }
         if (endringIBeregning(konsekvensForYtelse) || innvilgetRevurdering) {
@@ -27,15 +35,14 @@ public class FellesMapper {
     }
 
     public static String formaterLovhjemlerUttak(Set<String> hjemler) {
-        return formaterLovhjemlerUttak(hjemler, null,false);
+        return formaterLovhjemlerUttak(hjemler, null, false);
     }
 
     public static String formaterLovhjemlerUttak(Set<String> hjemler, String konsekvensForYtelse, boolean innvilgetRevurdering) {
         var lovHjemmelBuilder = new StringBuilder();
-        var forvaltningslovenTillegg = endringIBeregningEllerInnvilgetRevurdering(innvilgetRevurdering, konsekvensForYtelse) ?
-                "forvaltningsloven § 35" : null;
-        var antallLovreferanser = formaterLovhjemler(hjemler, lovHjemmelBuilder,
-                null, forvaltningslovenTillegg);
+        var forvaltningslovenTillegg = endringIBeregningEllerInnvilgetRevurdering(innvilgetRevurdering,
+                konsekvensForYtelse) ? "forvaltningsloven § 35" : null;
+        var antallLovreferanser = formaterLovhjemler(hjemler, lovHjemmelBuilder, null, forvaltningslovenTillegg);
         if (antallLovreferanser == 0 && forvaltningslovenTillegg == null) {
             return "";
         }
@@ -51,8 +58,7 @@ public class FellesMapper {
                 || BehandlingMapper.ENDRING_BEREGNING_OG_UTTAK.equals(konsekvensForYtelse);
     }
 
-    public static int formaterLovhjemler(Set<String> hjemler, StringBuilder builder,
-                                         String startTillegg, String sluttTillegg) {
+    public static int formaterLovhjemler(Set<String> hjemler, StringBuilder builder, String startTillegg, String sluttTillegg) {
         var antall = 0;
         for (var hjemmel : hjemler) {
             if (hjemmel.trim().isEmpty()) {
@@ -60,8 +66,8 @@ public class FellesMapper {
             } else if (antall > 0) {
                 builder.append(", ");
             }
-            if (antall==0) {
-                if(!hjemmel.contains("§")) {
+            if (antall == 0) {
+                if (!hjemmel.contains("§")) {
                     builder.append("§ ");
                 }
             }

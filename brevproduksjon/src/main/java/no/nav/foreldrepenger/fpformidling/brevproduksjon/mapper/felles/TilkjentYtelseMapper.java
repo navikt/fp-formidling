@@ -14,6 +14,9 @@ import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public final class TilkjentYtelseMapper {
 
+    private TilkjentYtelseMapper() {
+    }
+
     public static long finnMånedsbeløp(TilkjentYtelseForeldrepenger tilkjentYtelse) {
         return finnFørsteInnvilgedePeriode(tilkjentYtelse).map(TilkjentYtelseMapper::getMånedsbeløp).orElse(0L);
     }

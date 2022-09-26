@@ -28,6 +28,9 @@ import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public final class BeregningMapper {
 
+    private BeregningMapper() {
+    }
+
     public static List<Arbeidsforhold> mapArbeidsforhold(Beregningsgrunnlag beregningsgrunnlag) {
         List<Arbeidsforhold> resultat = new ArrayList<>();
         for (var andel : getAndeler(beregningsgrunnlag)) {

@@ -16,6 +16,9 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.U
 
 public final class UtbetalingsperiodeMerger {
 
+    private UtbetalingsperiodeMerger() {
+    }
+
     public static List<Utbetalingsperiode> mergePerioder(List<Utbetalingsperiode> perioder) {
         if (perioder.size() <= 1) {
             return perioder; // ikke noe å se på.

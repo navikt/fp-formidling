@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.ikkesøkt;
+package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.ikkesokt;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SAKSNUMMER;

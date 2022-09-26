@@ -24,6 +24,9 @@ public final class AvslagsperiodeMapper {
             PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE
     );
 
+    private AvslagsperiodeMapper() {
+    }
+
     public static List<Avslagsperiode> mapAvslagsperioder(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold,
                                                           Språkkode språkkode) {
         var filtrertePerioder = uttakResultatArbeidsforhold.stream()

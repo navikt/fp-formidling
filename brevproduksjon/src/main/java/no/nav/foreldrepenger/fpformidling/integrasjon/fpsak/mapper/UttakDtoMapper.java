@@ -28,8 +28,9 @@ public class UttakDtoMapper {
         var aleneomsorg = resultatPerioderDto.aleneomsorg();
         var annenForelderHarRett = resultatPerioderDto.annenForelderHarRett();
         var annenForelderRettEØS = resultatPerioderDto.annenForelderRettEØS();
+        var oppgittAnnenForelderRettEØS = resultatPerioderDto.oppgittAnnenForelderRettEØS();
         return new ForeldrepengerUttak(uttakResultatPerioder, perioderAnnenPart, aleneomsorg, annenForelderHarRett,
-                annenForelderRettEØS);
+                annenForelderRettEØS, oppgittAnnenForelderRettEØS);
     }
 
     private static List<UttakResultatPeriode> getUttakResultatPerioder(List<UttakResultatPeriodeDto> resultatPerioderDto,

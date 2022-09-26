@@ -147,6 +147,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(aksjonspunkter, uttakResultatPerioder))
                 .medAnnenForelderHarRett(uttakResultatPerioder.annenForelderHarRett())
                 .medAnnenForelderRettEØS(uttakResultatPerioder.annenForelderRettEØS())
+                .medOppgittAnnenForelderRettEØS(uttakResultatPerioder.oppgittAnnenForelderRettEØS())
                 .medAleneomsorgKode(erAleneomsorg(søknad, uttakResultatPerioder))
                 .medBarnErFødt(familieHendelse.barnErFødt())
                 .medÅrsakErFødselshendelse(erRevurderingPgaFødselshendelse(behandling, familieHendelse, originalFamiliehendelse))

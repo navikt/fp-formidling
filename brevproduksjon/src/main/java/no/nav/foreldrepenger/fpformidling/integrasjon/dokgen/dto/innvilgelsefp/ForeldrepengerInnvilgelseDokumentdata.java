@@ -26,6 +26,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean inntektMottattArbeidsgiver;
     private boolean annenForelderHarRett;
     private boolean annenForelderRettEØS;
+    private boolean oppgittAnnenForelderRettEØS;
     private VurderingsKode annenForelderHarRettVurdert;
     private VurderingsKode aleneomsorgKode;
     private boolean ikkeOmsorg;
@@ -135,6 +136,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     public boolean isAnnenForelderRettEØS() {
         return annenForelderRettEØS;
+    }
+
+    public boolean isOppgittAnnenForelderRettEØS() {
+        return oppgittAnnenForelderRettEØS;
     }
 
     public VurderingsKode getAleneomsorgKode() {
@@ -327,6 +332,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 && Objects.equals(inntektMottattArbeidsgiver, that.inntektMottattArbeidsgiver)
                 && Objects.equals(annenForelderHarRett, that.annenForelderHarRett)
                 && Objects.equals(annenForelderRettEØS, that.annenForelderRettEØS)
+                && Objects.equals(oppgittAnnenForelderRettEØS, that.oppgittAnnenForelderRettEØS)
                 && Objects.equals(annenForelderHarRettVurdert, that.annenForelderHarRettVurdert)
                 && Objects.equals(aleneomsorgKode, that.aleneomsorgKode)
                 && Objects.equals(ikkeOmsorg, that.ikkeOmsorg)
@@ -376,15 +382,17 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, søknadsdato,
-                dekningsgrad, harUtbetaling, dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver,
+        return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, søknadsdato, dekningsgrad,
+                harUtbetaling, dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver,
                 annenForelderHarRett, annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse,
-                gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget, annenForelderRettEØS,
-                antallPerioder, antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager,
-                disponibleFellesDager, sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker,
-                antallBarn, prematurDager, antallDødeBarn, dødsdato, kreverSammenhengendeUttak, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler,
-                klagefristUker, lovhjemlerUttak, lovhjemlerBeregning, inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget,
-                inkludereAvslag, inkludereNyeOpplysningerUtbet, disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav, utenMinsterett);
+                gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget,
+                annenForelderRettEØS, oppgittAnnenForelderRettEØS, antallPerioder, antallInnvilgedePerioder, antallAvslåttePerioder,
+                antallArbeidsgivere, dagerTaptFørTermin, disponibleDager, disponibleFellesDager, sisteDagAvSistePeriode,
+                stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker, antallBarn, prematurDager, antallDødeBarn,
+                dødsdato, kreverSammenhengendeUttak, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag,
+                harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler, klagefristUker, lovhjemlerUttak, lovhjemlerBeregning,
+                inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget, inkludereAvslag, inkludereNyeOpplysningerUtbet,
+                disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav, utenMinsterett);
     }
 
     public static Builder ny() {
@@ -470,6 +478,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medAnnenForelderRettEØS(boolean annenForelderRettEØS) {
             this.kladd.annenForelderRettEØS = annenForelderRettEØS;
+            return this;
+        }
+
+        public Builder medOppgittAnnenForelderRettEØS(boolean oppgittAnnenForelderRettEØS) {
+            this.kladd.oppgittAnnenForelderRettEØS = oppgittAnnenForelderRettEØS;
             return this;
         }
 

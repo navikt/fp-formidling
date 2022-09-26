@@ -207,6 +207,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getErBesteberegning()).isTrue();
         assertThat(dokumentdata.getHarBruktBruttoBeregningsgrunnlag()).isFalse();
         assertThat(dokumentdata.erUtenMinsterett()).isTrue();
+        assertThat(dokumentdata.isAnnenForelderRettEØS()).isTrue();
+        assertThat(dokumentdata.isOppgittAnnenForelderRettEØS()).isTrue();
     }
 
     @Test
@@ -366,7 +368,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE)
                 .build();
         return new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3),
-                of(), true, true, false);
+                of(), true, true, true, true);
     }
 
     private ForeldrepengerUttak opprettUttaksresultat2() {
@@ -393,7 +395,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                 .build();
 
         return new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2),
-                of(), true, true, false);
+                of(), true, true, false, false);
     }
 
 

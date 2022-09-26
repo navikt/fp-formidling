@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
@@ -91,7 +92,7 @@ public class UtbetalingsperiodeMapperTest {
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .build();
-        var uttaksPerioder = new ForeldrepengerUttak(of(uPeriode, uPeriode2), List.of(), false, false, false);
+        var uttaksPerioder = uttak(of(uPeriode, uPeriode2), of());
 
         // Act
         List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
@@ -162,7 +163,7 @@ public class UtbetalingsperiodeMapperTest {
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .build();
-        ForeldrepengerUttak uttaksPerioder = new ForeldrepengerUttak(of(uPeriode2, uPeriode), of(), false, false, false);
+        ForeldrepengerUttak uttaksPerioder = uttak(of(uPeriode2, uPeriode), of());
 
         // Act
         List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
@@ -171,6 +172,11 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(resultat).hasSize(2);
         assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(uPeriode.getFom());
         assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(tyPeriode3.getPeriodeFom());
+    }
+
+    @NotNull
+    private ForeldrepengerUttak uttak(List<UttakResultatPeriode> søkersPerioder, List<UttakResultatPeriode> annenPartPerioder) {
+        return new ForeldrepengerUttak(søkersPerioder, annenPartPerioder, false, false, false, false);
     }
 
     @Test
@@ -213,7 +219,7 @@ public class UtbetalingsperiodeMapperTest {
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG)
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .build();
-        ForeldrepengerUttak uttaksPerioder = new ForeldrepengerUttak(of(uPeriode1, uPeriode2), of(), false, false, false);
+        ForeldrepengerUttak uttaksPerioder = uttak(of(uPeriode1, uPeriode2), of());
 
         // Act
         List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
@@ -284,7 +290,7 @@ public class UtbetalingsperiodeMapperTest {
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .build();
 
-        ForeldrepengerUttak uttaksPerioder = new ForeldrepengerUttak(of(uPeriode), of(), false, false, false);
+        ForeldrepengerUttak uttaksPerioder = uttak(of(uPeriode), of());
 
         // Act
         List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
@@ -316,7 +322,7 @@ public class UtbetalingsperiodeMapperTest {
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER)
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .build();
-        ForeldrepengerUttak uttaksPerioder = new ForeldrepengerUttak(of(uPeriode), of(), false, false, false);
+        ForeldrepengerUttak uttaksPerioder = uttak(of(uPeriode), of());
         BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(tidsperiode)
                 .build();
@@ -347,7 +353,7 @@ public class UtbetalingsperiodeMapperTest {
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER)
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .build();
-        ForeldrepengerUttak uttaksPerioder = new ForeldrepengerUttak(of(uPeriode), of(), false, false, false);
+        ForeldrepengerUttak uttaksPerioder = uttak(of(uPeriode), of());
         BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(tidsperiode)
                 .build();

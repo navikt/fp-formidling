@@ -6,5 +6,7 @@ public record UttakResultatPerioderDto(List<UttakResultatPeriodeDto> perioderSø
                                        List<UttakResultatPeriodeDto> perioderAnnenpart,
                                        boolean annenForelderHarRett,
                                        boolean aleneomsorg,
-                                       boolean annenForelderRettEØS) {
+                                       boolean annenForelderRettEØS,
+                                       boolean oppgittAnnenForelderRettEØS
+                                       ) {
 }

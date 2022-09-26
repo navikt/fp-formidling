@@ -9,15 +9,15 @@ public class LovhjemmelComparator implements Comparator<String>, Serializable {
 
     @Override
     public int compare(String hjemmel1, String hjemmel2) {
-        String[] lovOgParagraf1 = hjemmel1.split("-|\\s");
-        String[] lovOgParagraf2 = hjemmel2.split("-|\\s");
+        var lovOgParagraf1 = hjemmel1.split("-|\\s");
+        var lovOgParagraf2 = hjemmel2.split("-|\\s");
         if (!gyldigLovOgParagraf(lovOgParagraf1)) {
             return -1;
         } else if (!gyldigLovOgParagraf(lovOgParagraf2)) {
             return 1;
         }
 
-        int lovResultat = sammenlikneKapittel(lovOgParagraf1, lovOgParagraf2);
+        var lovResultat = sammenlikneKapittel(lovOgParagraf1, lovOgParagraf2);
         if (lovResultat == 0) {
             // Likt kapittel - sjekker antall deler:
             lovResultat = Integer.compare(lovOgParagraf1.length, lovOgParagraf2.length);

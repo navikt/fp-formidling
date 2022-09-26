@@ -50,7 +50,7 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
     @Override
     public EngangsstønadInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
                                                                    Behandling behandling, boolean erUtkast) {
-        TilkjentYtelseEngangsstønad tilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling);
+        var tilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
@@ -68,14 +68,14 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medErEndretSats(false);
 
         if (behandling.erRevurdering()) {
-            Behandling originalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
+            var originalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
                     .orElseThrow(()-> new IllegalArgumentException("Utviklerfeil:Finner ikke informasjon om orginal behandling for revurdering "));
 
-            Long differanse = sjekkOmDifferanseHvisRevurdering(originalBehandling, tilkjentYtelse);
+            var differanse = sjekkOmDifferanseHvisRevurdering(originalBehandling, tilkjentYtelse);
 
             if (differanse != 0L) {
-                FamilieHendelse famHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-                FamilieHendelse orgFamHendelse = domeneobjektProvider.hentFamiliehendelse(originalBehandling);
+                var famHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+                var orgFamHendelse = domeneobjektProvider.hentFamiliehendelse(originalBehandling);
                 //dersom årsaken til differanse er økning av antall barn er det ikke endret sats
                 if (!antallBarnEndret(famHendelse, orgFamHendelse)) {
                     dokumentdataBuilder.medErEndretSats(true);
@@ -94,7 +94,7 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     private Long sjekkOmDifferanseHvisRevurdering(Behandling originalBehandling, TilkjentYtelseEngangsstønad tilkjentYtelse) {
-        Optional<TilkjentYtelseEngangsstønad> originaltTilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseESHvisFinnes(originalBehandling);
+        var originaltTilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseESHvisFinnes(originalBehandling);
 
         return originaltTilkjentYtelse.map(orgTilkjentYtelse -> Math.abs(tilkjentYtelse.beløp() - orgTilkjentYtelse.beløp()))
                 .orElse(0L);

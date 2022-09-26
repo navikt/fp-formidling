@@ -41,7 +41,7 @@ public final class BeregningsgrunnlagMapper {
         }
 
         if (bgAktivitetStatus.aktivitetStatus().harKombinertStatus()) {
-            List<AktivitetStatus> relevanteStatuser = KOMBINERTE_REGEL_STATUSER_MAP.get(bgAktivitetStatus.aktivitetStatus());
+            var relevanteStatuser = KOMBINERTE_REGEL_STATUSER_MAP.get(bgAktivitetStatus.aktivitetStatus());
             resultatListe = bgpsaListe.stream().filter(andel -> relevanteStatuser.contains(andel.getAktivitetStatus())).toList();
         } else {
             resultatListe = bgpsaListe.stream()
@@ -51,12 +51,12 @@ public final class BeregningsgrunnlagMapper {
             // Spesialhåndtering av tilkommet arbeidsforhold for Dagpenger og AAP - andeler som ikke kan mappes gjennom
             // aktivitetesstatuslisten på beregningsgrunnlag da de er tilkommet etter skjæringstidspunkt. Typisk dersom arbeidsgiver er
             // tilkommet etter start permisjon og krever refusjon i permisjonstiden.
-            List<AktivitetStatus> aktuelleStatuserForTilkommetArbForhold = List.of(AktivitetStatus.DAGPENGER,
+            var aktuelleStatuserForTilkommetArbForhold = List.of(AktivitetStatus.DAGPENGER,
                     AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
 
             if (resultatListe.stream().anyMatch(br -> aktuelleStatuserForTilkommetArbForhold.contains(br.getAktivitetStatus()))
                     && hentSummertDagsats(resultatListe) != hentSummertDagsats(bgpsaListe)) {
-                long sumTilkommetDagsats = hentSumTilkommetDagsats(bgpsaListe);
+                var sumTilkommetDagsats = hentSumTilkommetDagsats(bgpsaListe);
                 if (sumTilkommetDagsats != 0) {
                     resultatListe.forEach(rl -> {
                         if (aktuelleStatuserForTilkommetArbForhold.contains(rl.getAktivitetStatus())) {
@@ -68,7 +68,7 @@ public final class BeregningsgrunnlagMapper {
         }
 
         if (resultatListe.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             bgpsaListe.stream()
                     .map(BeregningsgrunnlagPrStatusOgAndel::getAktivitetStatus)
                     .map(AktivitetStatus::getKode)

@@ -19,8 +19,8 @@ public class UttakMapper {
 
     public static String mapLovhjemlerForUttak(ForeldrepengerUttak foreldrepengerUttak, String konsekvensForYtelse, boolean innvilgetRevurdering) {
         Set<String> lovhjemler = new TreeSet<>(new LovhjemmelComparator());
-        for (UttakResultatPeriode periode : foreldrepengerUttak.perioder()) {
-            PeriodeResultatÅrsak årsak = utledÅrsakskode(periode);
+        for (var periode : foreldrepengerUttak.perioder()) {
+            var årsak = utledÅrsakskode(periode);
             if (årsak.erUkjent()) {
                 continue;
             }

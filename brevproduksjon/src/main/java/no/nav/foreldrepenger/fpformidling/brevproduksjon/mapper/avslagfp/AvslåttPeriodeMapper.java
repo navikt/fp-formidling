@@ -41,10 +41,10 @@ public final class AvslåttPeriodeMapper {
                                                                                       List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
                                                                                       Optional<ForeldrepengerUttak> uttakResultatPerioder) {
         var lovReferanser = new TreeSet<>(new LovhjemmelComparator());
-        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        var behandlingsresultat = behandling.getBehandlingsresultat();
 
-        List<AvslåttPeriode> avslåttePerioder = finnAvslåttePerioder(tilkjentYtelsePerioder, uttakResultatPerioder, behandling.getSpråkkode(), lovReferanser);
-        String lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
+        var avslåttePerioder = finnAvslåttePerioder(tilkjentYtelsePerioder, uttakResultatPerioder, behandling.getSpråkkode(), lovReferanser);
+        var lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
                 BehandlingMapper.kodeFra(behandlingsresultat.getKonsekvenserForYtelsen()),
                 false);
 
@@ -62,10 +62,10 @@ public final class AvslåttPeriodeMapper {
                                                              Språkkode språkkode,
                                                              TreeSet<String> lovReferanser) {
         List<AvslåttPeriode> avslåttePerioder = new ArrayList<>();
-        for (TilkjentYtelsePeriode tilkjentYtelsePeriode : tilkjentYtelsePerioder) {
-            UttakResultatPeriode matchetUttaksperiode = finnUttakResultatPeriode(uttakResultatPerioder, tilkjentYtelsePeriode);
+        for (var tilkjentYtelsePeriode : tilkjentYtelsePerioder) {
+            var matchetUttaksperiode = finnUttakResultatPeriode(uttakResultatPerioder, tilkjentYtelsePeriode);
 
-            AvslåttPeriode avslåttPeriode = mapAvslåttPeriode(tilkjentYtelsePeriode, tilkjentYtelsePerioder, matchetUttaksperiode, språkkode, lovReferanser);
+            var avslåttPeriode = mapAvslåttPeriode(tilkjentYtelsePeriode, tilkjentYtelsePerioder, matchetUttaksperiode, språkkode, lovReferanser);
             avslåttePerioder.add(avslåttPeriode);
         }
         return avslåttePerioder;
@@ -76,12 +76,12 @@ public final class AvslåttPeriodeMapper {
                                                              TreeSet<String> lovReferanser) {
         List<AvslåttPeriode> avslagsAarsaker = new ArrayList<>();
 
-        Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
+        var avslagsårsak = behandlingsresultat.getAvslagsårsak();
         if (avslagsårsak != null) {
             avslagsAarsaker.add(årsaktypeFra(avslagsårsak, lovReferanser));
         }
-        for (UttakResultatPeriode periode : uttakResultatPerioder.map(ForeldrepengerUttak::perioder).orElse(Collections.emptyList())) {
-            PeriodeResultatÅrsak periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
+        for (var periode : uttakResultatPerioder.map(ForeldrepengerUttak::perioder).orElse(Collections.emptyList())) {
+            var periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
             if (PeriodeResultatType.AVSLÅTT.equals(periode.getPeriodeResultatType()) && periodeResultatÅrsak != null) {
                 avslagsAarsaker.add(årsaktypeFra(periodeResultatÅrsak, lovReferanser));
             }
@@ -90,7 +90,7 @@ public final class AvslåttPeriodeMapper {
     }
 
     private static AvslåttPeriode årsaktypeFra(ÅrsakMedLovReferanse årsakKode, TreeSet<String> lovReferanser) {
-        AvslåttPeriode avslåttPeriode = AvslåttPeriode.ny()
+        var avslåttPeriode = AvslåttPeriode.ny()
                 .medAvslagsårsak(Årsak.of(årsakKode.getKode()))
                 .build();
         lovReferanser.addAll(mapLovReferanse(årsakKode));
@@ -103,13 +103,13 @@ public final class AvslåttPeriodeMapper {
                                                     Språkkode språkkode,
                                                     TreeSet<String> lovReferanser) {
         //TFP-5200 Hack for å forhindre dobbelt antall tapte dager om det er flere tilkjentperioder for en uttaksperiode
-        int antallTilkjentPerioderForUttaksperioden = PeriodeBeregner.finnAntallTilkjentePerioderForUttaksperioden(tilkjentPeriodeListe, uttakResultatPeriode);
-        int antallTapteDager = mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter());
-        BigDecimal tapteDagerHvisFlereTilkjentPerioder = BigDecimal.ZERO;
+        var antallTilkjentPerioderForUttaksperioden = PeriodeBeregner.finnAntallTilkjentePerioderForUttaksperioden(tilkjentPeriodeListe, uttakResultatPeriode);
+        var antallTapteDager = mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter());
+        var tapteDagerHvisFlereTilkjentPerioder = BigDecimal.ZERO;
         if (antallTilkjentPerioderForUttaksperioden > 1 ) {
             tapteDagerHvisFlereTilkjentPerioder= BigDecimal.valueOf(antallTapteDager).divide(BigDecimal.valueOf(antallTilkjentPerioderForUttaksperioden), 2, RoundingMode.HALF_UP);
         }
-        AvslåttPeriode avslåttPeriode = AvslåttPeriode.ny()
+        var avslåttPeriode = AvslåttPeriode.ny()
                 .medAvslagsårsak(Årsak.of(uttakResultatPeriode.getPeriodeResultatÅrsak().getKode()))
                 .medPeriodeFom(tilkjentYtelsePeriode.getPeriodeFom(), språkkode)
                 .medPeriodeTom(tilkjentYtelsePeriode.getPeriodeTom(), språkkode)

@@ -23,7 +23,7 @@ public class Virksomhet {
         } else if (!(obj instanceof Virksomhet)) {
             return false;
         }
-        Virksomhet other = (Virksomhet) obj;
+        var other = (Virksomhet) obj;
         return Objects.equals(this.getOrgnr(), other.getOrgnr());
     }
 

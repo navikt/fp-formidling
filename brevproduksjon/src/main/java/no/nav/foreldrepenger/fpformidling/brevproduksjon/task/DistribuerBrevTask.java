@@ -37,7 +37,7 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
-        JournalpostId journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(JOURNALPOST_ID));
+        var journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(JOURNALPOST_ID));
         var bestillingId = prosessTaskData.getPropertyValue(BESTILLING_ID);
         var distribusjonstype = prosessTaskData.getPropertyValue(DISTRIBUSJONSTYPE);
         var resultat = dokdist.distribuerJournalpost(lagRequest(journalpostId, bestillingId, Distribusjonstype.valueOf(distribusjonstype)));
@@ -55,7 +55,7 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
     }
 
     private void opprettGosysOppgaveTask(JournalpostId journalpostId, UUID behandlingUuId, String saksnummer) {
-        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
+        var prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
         prosessTaskData.setProperty(BrevTaskProperties.SAKSNUMMER, saksnummer);

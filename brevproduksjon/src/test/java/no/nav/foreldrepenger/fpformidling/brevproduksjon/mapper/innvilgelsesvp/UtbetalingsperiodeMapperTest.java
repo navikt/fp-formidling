@@ -19,7 +19,7 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_dagsats_og_beløp_til_søker() {
         // Arrange
-        List<TilkjentYtelsePeriode> beregningsperioder = of(
+        var beregningsperioder = of(
                 TilkjentYtelsePeriode.ny()
                         .medDagsats(500L)
                         .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(10), LocalDate.now().minusDays(1)))
@@ -79,7 +79,7 @@ public class UtbetalingsperiodeMapperTest {
         );
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsperioder, Språkkode.NB);
+        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsperioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(5);

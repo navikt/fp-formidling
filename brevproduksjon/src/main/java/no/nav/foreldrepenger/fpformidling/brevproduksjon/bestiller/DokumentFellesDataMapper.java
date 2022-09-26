@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -11,7 +10,6 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.Virksomhet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
@@ -43,9 +41,9 @@ public class DokumentFellesDataMapper {
 
     void opprettDokumentDataForBehandling(Behandling behandling, DokumentData dokumentData) {
 
-        final AktørId søkersAktørId = domeneobjektProvider.hentFagsakBackend(behandling).getAktørId();
+        final var søkersAktørId = domeneobjektProvider.hentFagsakBackend(behandling).getAktørId();
 
-        Optional<Verge> vergeOpt = domeneobjektProvider.hentVerge(behandling);
+        var vergeOpt = domeneobjektProvider.hentVerge(behandling);
         if (vergeOpt.isEmpty()) {
             opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
             return;
@@ -55,9 +53,9 @@ public class DokumentFellesDataMapper {
         opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId, DokumentFelles.Kopi.JA);
 
         // orginalen går til verge
-        Verge verge = vergeOpt.get();
+        var verge = vergeOpt.get();
         if (verge.aktoerId() != null) {
-            AktørId vergesAktørId = new AktørId(verge.aktoerId());
+            var vergesAktørId = new AktørId(verge.aktoerId());
             opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId, DokumentFelles.Kopi.NEI);
         } else if (verge.organisasjonsnummer() != null) {
             opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, verge, søkersAktørId, DokumentFelles.Kopi.NEI);
@@ -69,9 +67,9 @@ public class DokumentFellesDataMapper {
                                                              Verge verge,
                                                              AktørId aktørIdBruker,
                                                              DokumentFelles.Kopi erKopi) {
-        Virksomhet virksomhet = getVirksomhet(verge);
+        var virksomhet = getVirksomhet(verge);
 
-        Personinfo personinfoBruker = personAdapter.hentBrukerForAktør(aktørIdBruker)
+        var personinfoBruker = personAdapter.hentBrukerForAktør(aktørIdBruker)
                 .orElseThrow(() -> new TekniskException("FPFORMIDLING-109013",
                 String.format("Fant ikke fødselsnummer for aktørId: %s. Kan ikke bestille dokument", aktørIdBruker)));
 
@@ -120,9 +118,9 @@ public class DokumentFellesDataMapper {
                                                String vergeNavn,
                                                DokumentFelles.Kopi erKopi) {
 
-        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
 
-        DokumentFelles.Builder builder = DokumentFelles.builder(dokumentData)
+        var builder = DokumentFelles.builder(dokumentData)
                 .medAutomatiskBehandlet(Boolean.TRUE)
                 .medDokumentDato(LocalDate.now())
                 .medMottakerId(virksomhet.getOrgnr())
@@ -149,9 +147,9 @@ public class DokumentFellesDataMapper {
                                            Personinfo personinfoMottaker,
                                            DokumentFelles.Kopi erKopi) {
 
-        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
 
-        DokumentFelles.Builder builder = DokumentFelles.builder(dokumentData)
+        var builder = DokumentFelles.builder(dokumentData)
                 .medAutomatiskBehandlet(Boolean.TRUE)
                 .medDokumentDato(LocalDate.now())
                 .medMottakerId(personinfoMottaker.getPersonIdent())

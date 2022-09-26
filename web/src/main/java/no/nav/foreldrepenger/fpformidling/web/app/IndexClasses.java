@@ -65,13 +65,13 @@ public class IndexClasses {
 
     private Index scanIndexFromFilesystem(URI location) {
         try {
-            Indexer indexer = new Indexer();
-            Path source = Paths.get(location);
-            try (Stream<Path> paths = Files.walk(source)) {
+            var indexer = new Indexer();
+            var source = Paths.get(location);
+            try (var paths = Files.walk(source)) {
                 paths.filter(Files::isRegularFile).forEach(f -> {
-                    Path fileName = f.getFileName();
+                    var fileName = f.getFileName();
                     if (fileName != null && fileName.toString().endsWith(".class")) {
-                        try (InputStream newInputStream = Files.newInputStream(f, StandardOpenOption.READ)) {
+                        try (var newInputStream = Files.newInputStream(f, StandardOpenOption.READ)) {
                             indexer.index(newInputStream);
                         } catch (IOException e) {
                             throw new IllegalStateException("Fikk ikke indeksert klasse " + f + ", kan ikke scanne klasser", e);
@@ -87,10 +87,10 @@ public class IndexClasses {
 
     // fra pre-generert index, slipper runtime scanning for raskere startup
     private Index getPersistedJandexIndex(URI location) {
-        URL jandexIdxUrl = getJandexIndexUrl(location);
+        var jandexIdxUrl = getJandexIndexUrl(location);
 
-        try (InputStream jandexStream = jandexIdxUrl.openStream()) {
-            IndexReader reader = new IndexReader(jandexStream);
+        try (var jandexStream = jandexIdxUrl.openStream()) {
+            var reader = new IndexReader(jandexStream);
             return reader.read();
         } catch (IOException e) {
             throw new IllegalStateException("Fikk ikke lest jandex index, kan ikke scanne klasser", e);
@@ -98,8 +98,8 @@ public class IndexClasses {
     }
 
     private URL getJandexIndexUrl(URI location) {
-        String uriString = location.toString();
-        LinkedHashSet<ClassLoader> classLoaders = new LinkedHashSet<>();
+        var uriString = location.toString();
+        var classLoaders = new LinkedHashSet<ClassLoader>();
         classLoaders.add(getClass().getClassLoader());
         classLoaders.add(Thread.currentThread().getContextClassLoader());
 
@@ -128,13 +128,13 @@ public class IndexClasses {
 
     public List<Class<?>> getClassesWithAnnotation(Class<?> annotationClass) {
 
-        DotName search = DotName.createSimple(annotationClass.getName());
-        List<AnnotationInstance> annotations = getIndex().getAnnotations(search);
+        var search = DotName.createSimple(annotationClass.getName());
+        var annotations = getIndex().getAnnotations(search);
 
         List<Class<?>> jsonTypes = new ArrayList<>();
-        for (AnnotationInstance annotation : annotations) {
+        for (var annotation : annotations) {
             if (Kind.CLASS.equals(annotation.target().kind())) {
-                String className = annotation.target().asClass().name().toString();
+                var className = annotation.target().asClass().name().toString();
                 try {
                     jsonTypes.add(Class.forName(className));
                 } catch (ClassNotFoundException e) {
@@ -147,14 +147,14 @@ public class IndexClasses {
     }
 
     public List<Class<?>> getClasses(Predicate<ClassInfo> predicate, Predicate<Class<?>> classPredicate) {
-        Collection<ClassInfo> knownClasses = getIndex().getKnownClasses();
+        var knownClasses = getIndex().getKnownClasses();
 
         List<Class<?>> cls = new ArrayList<>();
-        for (ClassInfo ci : knownClasses) {
-            String className = ci.name().toString();
+        for (var ci : knownClasses) {
+            var className = ci.name().toString();
             try {
                 if (predicate.test(ci)) {
-                    Class<?> c = Class.forName(className);
+                    var c = Class.forName(className);
                     if (classPredicate.test(c)) {
                         cls.add(c);
                     }

@@ -10,8 +10,8 @@ public class VilkårDtoMapper {
 
     public static List<Vilkår> mapVilkårFraDto(List<VilkårDto> dto) {
         List<Vilkår> vilkårList = new ArrayList<>();
-        for (VilkårDto vilkårDto : dto) {
-            Vilkår vilkår = new Vilkår(vilkårDto.vilkarType());
+        for (var vilkårDto : dto) {
+            var vilkår = new Vilkår(vilkårDto.vilkarType());
             vilkårList.add(vilkår);
         }
         return vilkårList;

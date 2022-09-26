@@ -39,7 +39,7 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_finne_brutto() {
         // Arrange
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeFrilanser()))
                 .build();
 
@@ -50,7 +50,7 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_finne_seksG() {
         // Arrange
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .medGrunnbeløp(new Beløp(GRUNNBELØP))
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeFrilanser()))
                 .build();
@@ -62,7 +62,7 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_identifisere_brutto_over_6g() {
         // Arrange
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .medGrunnbeløp(new Beløp(GRUNNBELØP))
                 .leggTilBeregningsgrunnlagPeriode(
                         BeregningsgrunnlagPeriode.ny()
@@ -77,7 +77,7 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_identifisere_ikke_brutto_over_6g() {
         // Arrange
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .medGrunnbeløp(new Beløp(GRUNNBELØP))
                 .leggTilBeregningsgrunnlagPeriode(
                         BeregningsgrunnlagPeriode.ny()
@@ -92,14 +92,14 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_mappe_regelListe() {
         // Arrange
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER))
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeFrilanser()))
                 .build();
 
         // Act
-        List<BeregningsgrunnlagRegel> regler = mapRegelListe(beregningsgrunnlag);
+        var regler = mapRegelListe(beregningsgrunnlag);
 
         // Assert
         assertThat(regler).hasSize(2);
@@ -120,13 +120,13 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_mappe_regelListe_for_dagpenger_med_tilkommet_arbforhold() {
         // Arrange
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.DAGPENGER))
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeDPOgTilkommetArbforhold()))
                 .build();
 
         // Act
-        List<BeregningsgrunnlagRegel> regler = mapRegelListe(beregningsgrunnlag);
+        var regler = mapRegelListe(beregningsgrunnlag);
 
         // Assert
         assertThat(regler).hasSize(1);
@@ -140,13 +140,13 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_mappe_regelListe_med_for_dagpenger_uten_tilkommet_arbforhold() {
         // Arrange
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.DAGPENGER))
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatus.DAGPENGER, 1002, AktivitetStatus.ARBEIDSTAKER)))
                 .build();
 
         // Act
-        List<BeregningsgrunnlagRegel> regler = mapRegelListe(beregningsgrunnlag);
+        var regler = mapRegelListe(beregningsgrunnlag);
 
         // Assert
         assertThat(regler).hasSize(1);
@@ -160,7 +160,7 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_mappe_sistLignedeÅr_når_selvstendig_næringsdrivende() {
         // Arrange
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(of(lagBgpsandel(BigDecimal.valueOf(254232), null, 978, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE, false),
@@ -168,7 +168,7 @@ public class BeregningsgrunnlagMapperTest {
                 .build();
 
         // Act
-        List<BeregningsgrunnlagRegel> regler = mapRegelListe(beregningsgrunnlag);
+        var regler = mapRegelListe(beregningsgrunnlag);
 
         // Assert
         assertThat(regler.get(0).getAndelListe().get(0).getSistLignedeÅr()).isEqualTo(BER_PERIODE.getTomDato().getYear());
@@ -178,15 +178,15 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_finne_at_brutto_beregningsgrunnlag_er_brukt_fordi_det_er_mer_enn_en_regel() {
         // Arrange
-        BeregningsgrunnlagRegel regel1 = BeregningsgrunnlagRegel.ny()
+        var regel1 = BeregningsgrunnlagRegel.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER.name())
                 .build();
-        BeregningsgrunnlagRegel regel2 = BeregningsgrunnlagRegel.ny()
+        var regel2 = BeregningsgrunnlagRegel.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name())
                 .build();
 
         // Act
-        boolean resultat = harBruktBruttoBeregningsgrunnlag(of(regel1, regel2));
+        var resultat = harBruktBruttoBeregningsgrunnlag(of(regel1, regel2));
 
         // Assert
         assertThat(resultat).isTrue();
@@ -195,12 +195,12 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_finne_at_brutto_beregningsgrunnlag_er_brukt_fordi_det_er_kombinert_status() {
         // Arrange
-        BeregningsgrunnlagRegel regel1 = BeregningsgrunnlagRegel.ny()
+        var regel1 = BeregningsgrunnlagRegel.ny()
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
                 .build();
 
         // Act
-        boolean resultat = harBruktBruttoBeregningsgrunnlag(of(regel1));
+        var resultat = harBruktBruttoBeregningsgrunnlag(of(regel1));
 
         // Assert
         assertThat(resultat).isTrue();
@@ -209,12 +209,12 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void skal_finne_at_brutto_beregningsgrunnlag_ikke_er_brukt() {
         // Arrange
-        BeregningsgrunnlagRegel regel1 = BeregningsgrunnlagRegel.ny()
+        var regel1 = BeregningsgrunnlagRegel.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name())
                 .build();
 
         // Act
-        boolean resultat = harBruktBruttoBeregningsgrunnlag(of(regel1));
+        var resultat = harBruktBruttoBeregningsgrunnlag(of(regel1));
 
         // Assert
         assertThat(resultat).isFalse();
@@ -223,17 +223,17 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void beregningsgrunnlag_med_militærstatus_med_dagsats_skal_ignorere_andre_statuser() {
         // Arrange
-        BeregningsgrunnlagAktivitetStatus arbeidstaker = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
-        BeregningsgrunnlagAktivitetStatus militærEllerSivil = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL);
+        var arbeidstaker = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
+        var militærEllerSivil = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL);
 
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(arbeidstaker)
                 .leggTilBeregningsgrunnlagAktivitetStatus(militærEllerSivil)
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatus.MILITÆR_ELLER_SIVIL, 1002, AktivitetStatus.ARBEIDSTAKER)))
                 .build();
 
         // Act
-        List<BeregningsgrunnlagRegel> beregningsgrunnlagRegler = mapRegelListe(beregningsgrunnlag);
+        var beregningsgrunnlagRegler = mapRegelListe(beregningsgrunnlag);
 
         // Assert
         assertThat(beregningsgrunnlagRegler).hasSize(1);
@@ -244,17 +244,17 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     public void beregningsgrunnlag_med_militærstatus_uten_dagsats_skal_fungere_som_før() {
         // Arrange
-        BeregningsgrunnlagAktivitetStatus arbeidstaker = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
-        BeregningsgrunnlagAktivitetStatus militærEllerSivil = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL);
+        var arbeidstaker = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
+        var militærEllerSivil = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL);
 
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(arbeidstaker)
                 .leggTilBeregningsgrunnlagAktivitetStatus(militærEllerSivil)
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeFor2Statuser(AktivitetStatus.MILITÆR_ELLER_SIVIL, 0, AktivitetStatus.ARBEIDSTAKER)))
                 .build();
 
         // Act
-        List<BeregningsgrunnlagRegel> beregningsgrunnlagRegler = mapRegelListe(beregningsgrunnlag);
+        var beregningsgrunnlagRegler = mapRegelListe(beregningsgrunnlag);
 
         // Assert
         assertThat(beregningsgrunnlagRegler).hasSize(2);

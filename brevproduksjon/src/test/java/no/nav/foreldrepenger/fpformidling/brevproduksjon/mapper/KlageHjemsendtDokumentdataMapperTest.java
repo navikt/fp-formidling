@@ -59,13 +59,13 @@ public class KlageHjemsendtDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brevet() {
         // Arrange
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().medErOpphevetKlage(true).build();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().medErOpphevetKlage(true).build();
         mockKlage(behandling);
 
         // Act
-        KlageHjemsendtDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -87,7 +87,7 @@ public class KlageHjemsendtDokumentdataMapperTest {
     }
 
     private void mockKlage(Behandling behandling) {
-        Klage klage = Klage.ny()
+        var klage = Klage.ny()
                 .medPåklagdBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medKlageVurderingResultatNK(new KlageVurderingResultat(null, FRITEKST_TIL_BREV))
                 .build();

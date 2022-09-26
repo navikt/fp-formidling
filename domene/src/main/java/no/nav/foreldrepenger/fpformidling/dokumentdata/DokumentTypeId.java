@@ -26,7 +26,7 @@ public class DokumentTypeId {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DokumentTypeId that = (DokumentTypeId) o;
+        var that = (DokumentTypeId) o;
         return Objects.equals(kode, that.kode);
     }
 

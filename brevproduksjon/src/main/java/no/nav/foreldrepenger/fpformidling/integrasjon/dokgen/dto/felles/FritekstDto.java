@@ -75,11 +75,11 @@ public class FritekstDto {
 
     // I Dokprod brukes _ til overskrift. Metoden viderefører dette ved å konvertere til ##### for Dokgen:
     private static String konverterOverskrifterTilDokgenFormat(String fritekst) {
-        String[] linjer = fritekst.split("\n");
-        StringBuilder resultat = new StringBuilder();
-        boolean førsteLinje = true;
+        var linjer = fritekst.split("\n");
+        var resultat = new StringBuilder();
+        var førsteLinje = true;
 
-        for (String linje : linjer) {
+        for (var linje : linjer) {
             if (!førsteLinje) {
                 resultat.append("\n");
             } else {
@@ -95,16 +95,16 @@ public class FritekstDto {
         if (fritekst.equals("")) {
             return fritekst;
         }
-        String[] linjer = fritekst.split("\n");
+        var linjer = fritekst.split("\n");
         if (linjer.length <= 1) {
             return fritekst;
         }
 
-        StringBuilder resultat = new StringBuilder();
+        var resultat = new StringBuilder();
         resultat.append(linjer[0]);
-        for (int i = 1; i < linjer.length; i++) {
-            String linje = linjer[i];
-            String forrigeLinje = linjer[i-1];
+        for (var i = 1; i < linjer.length; i++) {
+            var linje = linjer[i];
+            var forrigeLinje = linjer[i-1];
 
             if (forrigeLinje.startsWith("#####") || linje.startsWith("#####") || linje.startsWith("- ") || forrigeLinje.equals("")) {
                 // Overskrifter og punktlister skal bare ha et enkelt linjeskift for at det skal bli riktig

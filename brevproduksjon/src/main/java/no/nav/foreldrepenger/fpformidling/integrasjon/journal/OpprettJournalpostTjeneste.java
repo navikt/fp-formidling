@@ -49,7 +49,7 @@ public class OpprettJournalpostTjeneste {
         LOG.info("Starter journalføring av brev for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode());
 
         try {
-            OpprettJournalpostResponse response = journalpostRestKlient
+            var response = journalpostRestKlient
                     .opprettJournalpost(lagRequest(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer, ferdigstill, overskriftVedFritekstBrev, unikReferanse), ferdigstill);
 
             if (ferdigstill && !response.erFerdigstilt()) {
@@ -67,12 +67,12 @@ public class OpprettJournalpostTjeneste {
 
     private OpprettJournalpostRequest lagRequest(byte[] brev, DokumentMalType dokumentMalType, DokumentFelles dokumentFelles,
             DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill, String overskriftVedFritekstbrev, String bestillingsUidMedUnikReferanse) {
-        DokumentOpprettRequest dokument = new DokumentOpprettRequest(getTittel(dokumentHendelse, dokumentMalType, overskriftVedFritekstbrev), dokumentMalType.getKode(), null,
+        var dokument = new DokumentOpprettRequest(getTittel(dokumentHendelse, dokumentMalType, overskriftVedFritekstbrev), dokumentMalType.getKode(), null,
                 brev);
 
-        AvsenderMottaker avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), dokumentFelles.getMottakerNavn(),
+        var avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), dokumentFelles.getMottakerNavn(),
                 hentAvsenderMotakkerType(dokumentFelles.getMottakerType()));
-        Bruker bruker = new Bruker(dokumentFelles.getSakspartId(), BrukerIdType.FNR);
+        var bruker = new Bruker(dokumentFelles.getSakspartId(), BrukerIdType.FNR);
 
         var journalpostRequest = new OpprettJournalpostRequest(
                 avsenderMottaker,

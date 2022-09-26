@@ -22,8 +22,8 @@ public class RestApiInputValideringAnnoteringTest extends RestApiTester {
      */
     @Test
     public void alle_felter_i_objekter_som_brukes_som_inputDTO_skal_enten_ha_valideringsannotering_eller_være_av_godkjent_type() throws Exception {
-        for (Method method : finnAlleRestMetoder()) {
-            for (int i = 0; i < method.getParameterCount(); i++) {
+        for (var method : finnAlleRestMetoder()) {
+            for (var i = 0; i < method.getParameterCount(); i++) {
                 assertThat(method.getParameterTypes()[i].isAssignableFrom(String.class)).as(
                         "REST-metoder skal ikke har parameter som er String eller mer generelt. Bruk DTO-er og valider. " + printKlasseOgMetodeNavn.apply(method))
                         .isFalse();
@@ -35,9 +35,9 @@ public class RestApiInputValideringAnnoteringTest extends RestApiTester {
     }
 
     private boolean isRequiredAnnotationPresent(Parameter parameter) {
-        final Valid validAnnotation = parameter.getAnnotation(Valid.class);
+        final var validAnnotation = parameter.getAnnotation(Valid.class);
         if (validAnnotation == null) {
-            final Context contextAnnotation = parameter.getAnnotation(Context.class);
+            final var contextAnnotation = parameter.getAnnotation(Context.class);
             return contextAnnotation != null;
         }
         return true;

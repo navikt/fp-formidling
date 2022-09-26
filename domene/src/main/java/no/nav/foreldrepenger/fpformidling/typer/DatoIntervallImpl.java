@@ -49,7 +49,7 @@ public class DatoIntervallImpl implements DatoIntervall {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DatoIntervall that = (DatoIntervall) o;
+        var that = (DatoIntervall) o;
         return Objects.equals(getFom(), that.getFom()) &&
                 Objects.equals(getTom(), that.getTom());
     }

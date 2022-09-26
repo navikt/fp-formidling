@@ -102,7 +102,7 @@ public class DokumentData extends BaseEntitet {
         if (!(object instanceof DokumentData)) {
             return false;
         }
-        DokumentData dokData = (DokumentData) object;
+        var dokData = (DokumentData) object;
         return Objects.equals(dokumentMalType, dokData.getDokumentMalType())
                 && Objects.equals(behandlingUuid, dokData.getBehandlingUuid())
                 && Objects.equals(bestiltTid, dokData.getBestiltTid())

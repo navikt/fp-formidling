@@ -70,14 +70,14 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
     }
 
     private String finnSøknadDato(Behandling behandling) {
-        List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
+        var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
 
         Optional<KlageDokument> klageDokument = Optional.empty();
         if (behandling.erKlage()) {
             klageDokument = Optional.of(domeneobjektProvider.hentKlageDokument(behandling));
         }
 
-        LocalDate mottattDato = klageDokument.map(kd -> hentMottattDatoFraKlage(kd, behandling))
+        var mottattDato = klageDokument.map(kd -> hentMottattDatoFraKlage(kd, behandling))
                 .orElseGet(() -> MottattdokumentMapper.finnSisteMottatteSøknad(mottatteDokumenter));
         return formaterDato(mottattDato, behandling.getSpråkkode());
     }

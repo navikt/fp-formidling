@@ -26,15 +26,15 @@ public class KlageMapper {
     }
 
     public static Optional<String> hentOgFormaterLovhjemlerForAvvistKlage(Klage klage, Språkkode språkkode) {
-        Set<String> klagehjemler = hentKlageHjemler(klage);
-        boolean klagetEtterKlagefrist = listeAvAvvisteÅrsaker(klage).stream()
+        var klagehjemler = hentKlageHjemler(klage);
+        var klagetEtterKlagefrist = listeAvAvvisteÅrsaker(klage).stream()
                 .anyMatch(KLAGET_FOR_SENT::equals);
         return formaterLovhjemlerForAvvistKlage(klagehjemler, klagetEtterKlagefrist, språkkode);
     }
 
     static Set<String> hentKlageHjemler(Klage klage) {
         Set<String> klageHjemler = new TreeSet<>();
-        String klageVurdertAv = klage.getFormkravKA() != null ? "KA" : "NFP";
+        var klageVurdertAv = klage.getFormkravKA() != null ? "KA" : "NFP";
         listeAvAvvisteÅrsaker(klage).forEach(årsak -> klageHjemler.addAll(LovhjemmelUtil.hentLovhjemlerFraJson(årsak, klageVurdertAv)));
         return klageHjemler;
     }
@@ -48,8 +48,8 @@ public class KlageMapper {
             startTillegg = klagetEtterKlagefrist ?
                     "folketrygdloven § 21-12 og forvaltningsloven" : "forvaltningsloven";
         }
-        StringBuilder lovhjemmelBuiloer = new StringBuilder();
-        int antallLovreferanser = FellesMapper.formaterLovhjemler(hjemler, lovhjemmelBuiloer, startTillegg, null);
+        var lovhjemmelBuiloer = new StringBuilder();
+        var antallLovreferanser = FellesMapper.formaterLovhjemler(hjemler, lovhjemmelBuiloer, startTillegg, null);
         if (antallLovreferanser == 0) {
             return Optional.empty();
         }
@@ -63,7 +63,7 @@ public class KlageMapper {
         if (klage.getGjeldendeKlageVurderingsresultat() == null) {
             throw new IllegalStateException();
         }
-        KlageVurdering klageVurdering = klage.getGjeldendeKlageVurderingsresultat().klageVurdering();
+        var klageVurdering = klage.getGjeldendeKlageVurderingsresultat().klageVurdering();
         return KlageVurdering.OPPHEVE_YTELSESVEDTAK.equals(klageVurdering);
     }
 }

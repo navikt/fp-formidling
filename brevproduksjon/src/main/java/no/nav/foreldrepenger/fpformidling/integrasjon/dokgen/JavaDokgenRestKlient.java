@@ -44,7 +44,7 @@ public class JavaDokgenRestKlient extends JavaHttpKlient implements Dokgen {
     public byte[] genererPdf(String maltype, Språkkode språkkode, Dokumentdata dokumentdata) {
         byte[] pdf;
         try {
-            String templatePath = String.format("/template/%s/template_%s", maltype.toLowerCase(), getSpråkkode(språkkode));
+            var templatePath = String.format("/template/%s/template_%s", maltype.toLowerCase(), getSpråkkode(språkkode));
             var endpoint = UriBuilder.fromUri(dokgenBaseUri).path(templatePath).path("/create-pdf-variation").build();
 
             var request = getRequestBuilder()

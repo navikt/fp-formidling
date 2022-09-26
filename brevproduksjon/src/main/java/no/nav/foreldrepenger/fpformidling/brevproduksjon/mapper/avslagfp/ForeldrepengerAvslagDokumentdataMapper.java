@@ -74,12 +74,12 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
-        List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
-        FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
-        long halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
-        Optional<ForeldrepengerUttak> uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling);
+        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
+        var familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        var beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
+        var halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
+        var uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling);
 
         var dokumentdataBuilder = ForeldrepengerAvslagDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
@@ -100,8 +100,8 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
 
     private void mapAvslåttePerioder(Behandling behandling, ForeldrepengerAvslagDokumentdata.Builder dokumentdataBuilder,
                                      Optional<ForeldrepengerUttak> uttakResultatPerioder) {
-        Optional<TilkjentYtelseForeldrepenger> tilkjentYtelseFP = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling);
-        Tuple<List<AvslåttPeriode>, String> avslåttePerioderOgLovhjemmel = AvslåttPeriodeMapper.mapAvslåttePerioderOgLovhjemmel(
+        var tilkjentYtelseFP = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling);
+        var avslåttePerioderOgLovhjemmel = AvslåttPeriodeMapper.mapAvslåttePerioderOgLovhjemmel(
                 behandling,
                 tilkjentYtelseFP.map(TilkjentYtelseForeldrepenger::getPerioder).orElse(Collections.emptyList()),
                 uttakResultatPerioder);

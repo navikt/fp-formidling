@@ -45,48 +45,48 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void skal_hente_dato_fra_uttaksperiode_når_denne_er_før_tilkjentytelseperioden_og_det_er_første_tilkjentYtelsePeriode() {
         // Arrange
-        DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
-        DatoIntervall tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 3), LocalDate.of(2019, 10, 4));
-        DatoIntervall tidsperiodeBp3 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
-        DatoIntervall tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
-        DatoIntervall tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
-        DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
+        var tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
+        var tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 3), LocalDate.of(2019, 10, 4));
+        var tidsperiodeBp3 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+        var tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
+        var tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+        var beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
 
-        TilkjentYtelsePeriode tyPeriode = TilkjentYtelsePeriode.ny()
+        var tyPeriode = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp1)
                 .medDagsats(0L)
                 .build();
-        TilkjentYtelsePeriode tyPeriode2 = TilkjentYtelsePeriode.ny()
+        var tyPeriode2 = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp2)
                 .medDagsats(0L)
                 .build();
-        TilkjentYtelsePeriode tyPeriode3 = TilkjentYtelsePeriode.ny()
+        var tyPeriode3 = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp3)
                 .medDagsats(620L)
                 .build();
-        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode, tyPeriode2, tyPeriode3);
+        var tilkjentYtelsePerioder = of(tyPeriode, tyPeriode2, tyPeriode3);
 
-        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+        var bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(beregningPer)
                 .medDagsats(620L)
                 .build();
-        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
+        var beregningsgrunnlagPerioder = of(bgPeriode);
 
-        UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
+        var uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.TEN)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
                 .build();
-        UttakResultatPeriode uPeriode = UttakResultatPeriode.ny()
+        var uPeriode = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet))
                 .medTidsperiode(tidsperiodeUp1)
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER)
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .build();
-        UttakResultatPeriodeAktivitet uttakAktivitet2 = UttakResultatPeriodeAktivitet.ny()
+        var uttakAktivitet2 = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.ZERO)
                 .medUtbetalingsprosent(BigDecimal.valueOf(100L))
                 .build();
-        UttakResultatPeriode uPeriode2 = UttakResultatPeriode.ny()
+        var uPeriode2 = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet2))
                 .medTidsperiode(tidsperiodeUp2)
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT)
@@ -95,7 +95,7 @@ public class UtbetalingsperiodeMapperTest {
         var uttaksPerioder = uttak(of(uPeriode, uPeriode2), of());
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(2);
@@ -116,57 +116,57 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void verifisere_at_resultatet_blir_det_samme_om_periodene_ikke_er_sortert() {
         // Arrange
-        DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
-        DatoIntervall tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 3), LocalDate.of(2019, 10, 4));
-        DatoIntervall tidsperiodeBp3 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
-        DatoIntervall tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
-        DatoIntervall tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
-        DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
+        var tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
+        var tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 3), LocalDate.of(2019, 10, 4));
+        var tidsperiodeBp3 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+        var tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
+        var tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+        var beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
 
-        TilkjentYtelsePeriode tyPeriode = TilkjentYtelsePeriode.ny()
+        var tyPeriode = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp1)
                 .medDagsats(0L)
                 .build();
-        TilkjentYtelsePeriode tyPeriode2 = TilkjentYtelsePeriode.ny()
+        var tyPeriode2 = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp2)
                 .medDagsats(0L)
                 .build();
-        TilkjentYtelsePeriode tyPeriode3 = TilkjentYtelsePeriode.ny()
+        var tyPeriode3 = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp3)
                 .medDagsats(620L)
                 .build();
-        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode3, tyPeriode2, tyPeriode);
+        var tilkjentYtelsePerioder = of(tyPeriode3, tyPeriode2, tyPeriode);
 
-        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+        var bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(beregningPer)
                 .medDagsats(620L)
                 .build();
-        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
+        var beregningsgrunnlagPerioder = of(bgPeriode);
 
-        UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
+        var uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.TEN)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
                 .build();
-        UttakResultatPeriode uPeriode = UttakResultatPeriode.ny()
+        var uPeriode = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet))
                 .medTidsperiode(tidsperiodeUp1)
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER)
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .build();
-        UttakResultatPeriodeAktivitet uttakAktivitet2 = UttakResultatPeriodeAktivitet.ny()
+        var uttakAktivitet2 = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.ZERO)
                 .medUtbetalingsprosent(BigDecimal.valueOf(100L))
                 .build();
-        UttakResultatPeriode uPeriode2 = UttakResultatPeriode.ny()
+        var uPeriode2 = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet2))
                 .medTidsperiode(tidsperiodeUp2)
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .build();
-        ForeldrepengerUttak uttaksPerioder = uttak(of(uPeriode2, uPeriode), of());
+        var uttaksPerioder = uttak(of(uPeriode2, uPeriode), of());
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(2);
@@ -182,47 +182,47 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void skal_sortere_perioder_uten_beregningsgrunnlag_også() {
         // Arrange
-        DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
-        DatoIntervall tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
-        DatoIntervall tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 6, 20), LocalDate.of(2019, 6, 29)); // Skal sorteres først
-        DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
+        var tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+        var tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
+        var tidsperiodeUp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 6, 20), LocalDate.of(2019, 6, 29)); // Skal sorteres først
+        var beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
 
-        TilkjentYtelsePeriode tyPeriode1 = TilkjentYtelsePeriode.ny()
+        var tyPeriode1 = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp1)
                 .medDagsats(620L)
                 .build();
-        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode1);
+        var tilkjentYtelsePerioder = of(tyPeriode1);
 
-        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+        var bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(beregningPer)
                 .medDagsats(620L)
                 .build();
-        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
+        var beregningsgrunnlagPerioder = of(bgPeriode);
 
-        UttakResultatPeriodeAktivitet uttakAktivitet1 = UttakResultatPeriodeAktivitet.ny()
+        var uttakAktivitet1 = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.ZERO)
                 .medUtbetalingsprosent(BigDecimal.valueOf(100L))
                 .build();
-        UttakResultatPeriode uPeriode1 = UttakResultatPeriode.ny()
+        var uPeriode1 = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet1))
                 .medTidsperiode(tidsperiodeUp1)
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .build();
-        UttakResultatPeriodeAktivitet uttakAktivitet2 = UttakResultatPeriodeAktivitet.ny()
+        var uttakAktivitet2 = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.TEN)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
                 .build();
-        UttakResultatPeriode uPeriode2 = UttakResultatPeriode.ny()
+        var uPeriode2 = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet2))
                 .medTidsperiode(tidsperiodeUp2)
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG)
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .build();
-        ForeldrepengerUttak uttaksPerioder = uttak(of(uPeriode1, uPeriode2), of());
+        var uttaksPerioder = uttak(of(uPeriode1, uPeriode2), of());
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(2);
@@ -243,34 +243,34 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void skal_mappe_annenAktitetListe_når_den_inneholder_annet() {
         // Arrange
-        DatoIntervall tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
-        DatoIntervall tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
-        DatoIntervall beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
+        var tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
+        var tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
+        var beregningPer = DatoIntervall.fraOgMed(LocalDate.of(2019, 9, 30));
 
-        TilkjentYtelseAndel tilkjentYtelseAndel = TilkjentYtelseAndel.ny()
+        var tilkjentYtelseAndel = TilkjentYtelseAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL).build();
-        TilkjentYtelsePeriode tyPeriode = TilkjentYtelsePeriode.ny()
+        var tyPeriode = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiodeBp1)
                 .medDagsats(0L)
                 .medAndeler(of(tilkjentYtelseAndel))
                 .build();
 
-        BeregningsgrunnlagPrStatusOgAndel prStatusOgAndel = BeregningsgrunnlagPrStatusOgAndel.ny().medBeregningsperiode(tidsperiodeUp1).build();
+        var prStatusOgAndel = BeregningsgrunnlagPrStatusOgAndel.ny().medBeregningsperiode(tidsperiodeUp1).build();
 
-        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode);
+        var tilkjentYtelsePerioder = of(tyPeriode);
 
-        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+        var bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(beregningPer)
                 .medDagsats(620L)
                 .medBeregningsgrunnlagPrStatusOgAndelList(of(prStatusOgAndel))
                 .build();
-        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
+        var beregningsgrunnlagPerioder = of(bgPeriode);
 
-        UttakAktivitet uttakAktivitet = UttakAktivitet.ny()
+        var uttakAktivitet = UttakAktivitet.ny()
                 .medUttakArbeidType(UttakArbeidType.ANNET)
                 .build();
 
-        UttakResultatPeriodeAktivitet uttakResultatPeriodeAktivitet = UttakResultatPeriodeAktivitet.ny()
+        var uttakResultatPeriodeAktivitet = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.TEN)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
                 .medUttakAktivitet(uttakAktivitet)
@@ -278,22 +278,22 @@ public class UtbetalingsperiodeMapperTest {
                 .medArbeidsprosent(BigDecimal.valueOf(20))
                 .build();
 
-        UttakResultatPeriodeAktivitet uttakResultatPeriodeAktivitet2 = UttakResultatPeriodeAktivitet.ny()
+        var uttakResultatPeriodeAktivitet2 = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.TEN)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
                 .medUttakAktivitet(uttakAktivitet)
                 .build();
-        UttakResultatPeriode uPeriode = UttakResultatPeriode.ny()
+        var uPeriode = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakResultatPeriodeAktivitet, uttakResultatPeriodeAktivitet2))
                 .medTidsperiode(tidsperiodeUp1)
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .build();
 
-        ForeldrepengerUttak uttaksPerioder = uttak(of(uPeriode), of());
+        var uttaksPerioder = uttak(of(uPeriode), of());
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(1);
@@ -307,29 +307,29 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void skal_ignorere_avslåtte_manglende_søkte_perioder_med_null_trekkdager_ved_mapping_av_periodeliste() {
         // Arrange
-        DatoIntervall tidsperiode = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 16), LocalDate.of(2019, 9, 16));
-        TilkjentYtelsePeriode tyPeriode = TilkjentYtelsePeriode.ny()
+        var tidsperiode = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 16), LocalDate.of(2019, 9, 16));
+        var tyPeriode = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiode)
                 .build();
-        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode);
-        UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
+        var tilkjentYtelsePerioder = of(tyPeriode);
+        var uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.ZERO)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
                 .build();
-        UttakResultatPeriode uPeriode = UttakResultatPeriode.ny()
+        var uPeriode = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet))
                 .medTidsperiode(tidsperiode)
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER)
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .build();
-        ForeldrepengerUttak uttaksPerioder = uttak(of(uPeriode), of());
-        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+        var uttaksPerioder = uttak(of(uPeriode), of());
+        var bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(tidsperiode)
                 .build();
-        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
+        var beregningsgrunnlagPerioder = of(bgPeriode);
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(0);
@@ -338,29 +338,29 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void skal_ta_med_avslåtte_manglende_søkte_perioder_med_trekkdager_ved_mapping_av_periodeliste() {
         // Arrange
-        DatoIntervall tidsperiode = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 16), LocalDate.of(2019, 9, 16));
-        TilkjentYtelsePeriode tyPeriode = TilkjentYtelsePeriode.ny()
+        var tidsperiode = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 16), LocalDate.of(2019, 9, 16));
+        var tyPeriode = TilkjentYtelsePeriode.ny()
                 .medPeriode(tidsperiode)
                 .build();
-        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = of(tyPeriode);
-        UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
+        var tilkjentYtelsePerioder = of(tyPeriode);
+        var uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(BigDecimal.TEN)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
                 .build();
-        UttakResultatPeriode uPeriode = UttakResultatPeriode.ny()
+        var uPeriode = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet))
                 .medTidsperiode(tidsperiode)
                 .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER)
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .build();
-        ForeldrepengerUttak uttaksPerioder = uttak(of(uPeriode), of());
-        BeregningsgrunnlagPeriode bgPeriode = BeregningsgrunnlagPeriode.ny()
+        var uttaksPerioder = uttak(of(uPeriode), of());
+        var bgPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(tidsperiode)
                 .build();
-        List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = of(bgPeriode);
+        var beregningsgrunnlagPerioder = of(bgPeriode);
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
+        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(1);
@@ -370,8 +370,8 @@ public class UtbetalingsperiodeMapperTest {
     public void skal_finne_første_og_siste_stønadsdato_og_håndtere_null() {
         // Arrange
         List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
-        LocalDate førsteJanuarTjueAtten = LocalDate.of(2018, 1, 1);
-        LocalDate trettiendeAprilTjueAtten = LocalDate.of(2018, 4, 30);
+        var førsteJanuarTjueAtten = LocalDate.of(2018, 1, 1);
+        var trettiendeAprilTjueAtten = LocalDate.of(2018, 4, 30);
 
         leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, utbetalingsperioder);
         leggtilPeriode(førsteJanuarTjueAtten, LocalDate.of(2018, 1, 30), true, utbetalingsperioder);
@@ -424,7 +424,7 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void skal_finne_periode_med_ikke_omsorg_mor() {
         // Arrange
-        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
+        var utbetalingsperiode = Utbetalingsperiode.ny()
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
                 .medÅrsak(Årsak.of(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode()))
@@ -437,7 +437,7 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void skal_finne_periode_med_ikke_omsorg_far() {
         // Arrange
-        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
+        var utbetalingsperiode = Utbetalingsperiode.ny()
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
                 .medÅrsak(Årsak.of(PeriodeResultatÅrsak.FAR_HAR_IKKE_OMSORG.getKode()))
@@ -450,7 +450,7 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void skal_ikke_finne_periode_med_ikke_omsorg() {
         // Arrange
-        Utbetalingsperiode utbetalingsperiode = Utbetalingsperiode.ny()
+        var utbetalingsperiode = Utbetalingsperiode.ny()
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
                 .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
                 .medÅrsak(Årsak.of(PeriodeResultatÅrsak.FØDSELSVILKÅRET_IKKE_OPPFYLT.getKode()))
@@ -462,7 +462,7 @@ public class UtbetalingsperiodeMapperTest {
 
     @Test
     public void skal_hente_prioritert_utbetalingsgrad_fra_arbeidsforholdet_med_gradering_om_finnes() {
-        List <Arbeidsforhold> arbeidsforholdListe =
+        var arbeidsforholdListe =
                 List.of(opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(0)), Prosent.of(BigDecimal.valueOf(80))),
                         opprettArbeidsforhold(true, Prosent.of(BigDecimal.valueOf(20)), Prosent.of(BigDecimal.valueOf(100))),
                         opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(0.0)), Prosent.of(BigDecimal.valueOf(100))));
@@ -472,7 +472,7 @@ public class UtbetalingsperiodeMapperTest {
 
     @Test
     public void skal_hente_prioritert_utbetalingsgrad_fra_første_arbeidsfohold_med_utbetalingsgrad() {
-        List <Arbeidsforhold> arbeidsforholdListe =
+        var arbeidsforholdListe =
                 List.of(opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(0.0)), Prosent.of(BigDecimal.valueOf(0.0))),
                         opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(20)), Prosent.of(BigDecimal.valueOf(100))),
                         opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(0.0)), Prosent.of(BigDecimal.valueOf(0.0))));
@@ -481,7 +481,7 @@ public class UtbetalingsperiodeMapperTest {
     }
     @Test
     public void skal_hente_prioritert_utbetalingsgrad_fra_næring_når_arbeidsforhold_ikke_finnes() {
-        Næring næring = Næring.ny().medSistLignedeÅr(LocalDate.now().getYear())
+        var næring = Næring.ny().medSistLignedeÅr(LocalDate.now().getYear())
                 .medGradering(false)
                 .medUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(100)))
                 .medProsentArbeid(Prosent.of(BigDecimal.valueOf(0.0)))
@@ -492,21 +492,21 @@ public class UtbetalingsperiodeMapperTest {
 
     @Test
     public void skal_hente_prioritert_utbetalingsgrad_fra_annen_aktivitet_når_verken_arbeidsforhold_eller_næring_finnes() {
-        List<AnnenAktivitet> annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(100))));
+        var annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(100))));
 
         assertThat(finnPrioritertUtbetalingsgrad(null, null, annenAktivitetListe)).isEqualTo(Prosent.of(BigDecimal.valueOf(100)));
     }
 
     @Test
     public void skal_hente_prioritert_utbetalingsgrad_fra_aktiviteten_med_gradering_hvis_finnes() {
-        List<AnnenAktivitet> annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(0))), opprettAnnenAktivitet(true, Prosent.of(BigDecimal.valueOf(60))));
+        var annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(0))), opprettAnnenAktivitet(true, Prosent.of(BigDecimal.valueOf(60))));
 
         assertThat(finnPrioritertUtbetalingsgrad(null, null, annenAktivitetListe)).isEqualTo(Prosent.of(BigDecimal.valueOf(60)));
     }
 
     @Test
     public void skal_hente_prioritert_utbetalingsgrad_fra_første_aktivitet_med_utbetalingsgrad() {
-        List<AnnenAktivitet> annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(0))), opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(100))));
+        var annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(0))), opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(100))));
 
         assertThat(finnPrioritertUtbetalingsgrad(null, null, annenAktivitetListe)).isEqualTo(Prosent.of(BigDecimal.valueOf(100)));
     }

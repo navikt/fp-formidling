@@ -31,10 +31,10 @@ public class FellesMapper {
     }
 
     public static String formaterLovhjemlerUttak(Set<String> hjemler, String konsekvensForYtelse, boolean innvilgetRevurdering) {
-        StringBuilder lovHjemmelBuilder = new StringBuilder();
-        String forvaltningslovenTillegg = endringIBeregningEllerInnvilgetRevurdering(innvilgetRevurdering, konsekvensForYtelse) ?
+        var lovHjemmelBuilder = new StringBuilder();
+        var forvaltningslovenTillegg = endringIBeregningEllerInnvilgetRevurdering(innvilgetRevurdering, konsekvensForYtelse) ?
                 "forvaltningsloven § 35" : null;
-        int antallLovreferanser = formaterLovhjemler(hjemler, lovHjemmelBuilder,
+        var antallLovreferanser = formaterLovhjemler(hjemler, lovHjemmelBuilder,
                 null, forvaltningslovenTillegg);
         if (antallLovreferanser == 0 && forvaltningslovenTillegg == null) {
             return "";
@@ -53,8 +53,8 @@ public class FellesMapper {
 
     public static int formaterLovhjemler(Set<String> hjemler, StringBuilder builder,
                                          String startTillegg, String sluttTillegg) {
-        int antall = 0;
-        for (String hjemmel : hjemler) {
+        var antall = 0;
+        for (var hjemmel : hjemler) {
             if (hjemmel.trim().isEmpty()) {
                 continue;
             } else if (antall > 0) {
@@ -74,7 +74,7 @@ public class FellesMapper {
 
         if (antall > 1 && (sluttTillegg == null || sluttTillegg.isEmpty())) {
             // bytt ut siste kommaforekomst med " og ".
-            int pos = builder.lastIndexOf(",");
+            var pos = builder.lastIndexOf(",");
             builder.replace(pos, pos + 2, " og ");
         }
         return antall;

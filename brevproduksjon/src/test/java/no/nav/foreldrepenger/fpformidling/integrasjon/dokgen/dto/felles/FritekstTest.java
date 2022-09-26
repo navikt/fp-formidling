@@ -55,7 +55,7 @@ public class FritekstTest {
                         .medAvslagarsakFritekst(BEHANDLING_FRITEKST)
                         .build())
                 .build();
-        DokumentHendelse dokumentHendelse = standardHendelseBuilder().build();
+        var dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
         assertThat(fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(BEHANDLING_FRITEKST);
@@ -69,7 +69,7 @@ public class FritekstTest {
                         .medAvslagarsakFritekst("Tekst\n_Overskrift\nMer tekst\n- Punkt 1\n- Punkt 2\n_Ny overskrift\nTekst-med-bindestrek_og_underscore")
                         .build())
                 .build();
-        DokumentHendelse dokumentHendelse = standardHendelseBuilder().build();
+        var dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
         assertThat(fra(dokumentHendelse, behandling).get().getFritekst())
@@ -84,7 +84,7 @@ public class FritekstTest {
                         .medAvslagarsakFritekst("Les mer om dette på nav.no/foreldrepenger.\nDu finner mer informasjon på nav.no/klage og nav.no/familie.")
                         .build())
                 .build();
-        DokumentHendelse dokumentHendelse = standardHendelseBuilder().build();
+        var dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
         assertThat(fra(dokumentHendelse, behandling).get().getFritekst())
@@ -94,8 +94,8 @@ public class FritekstTest {
     @Test
     public void skal_sette_inn_ekstra_linjeskift_i_fritekst_der_det_ikke_er_punktliste() {
         // Arrange
-        String fritekstInn = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\nTekst 2.\nTekst 3\n- Vedlegg 3\nTekst 4";
-        String fritekstUt = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\n\nTekst 2.\\\nTekst 3\n- Vedlegg 3\n\nTekst 4";
+        var fritekstInn = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\nTekst 2.\nTekst 3\n- Vedlegg 3\nTekst 4";
+        var fritekstUt = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\n\nTekst 2.\\\nTekst 3\n- Vedlegg 3\n\nTekst 4";
 
         // Act + Assert
         assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
@@ -104,8 +104,8 @@ public class FritekstTest {
     @Test
     public void skal_ikke_sette_inn_ekstra_linjeskift_når_det_bare_er_en_linje_uten_punktliste() {
         // Arrange
-        String fritekstInn = "Tekst 1.";
-        String fritekstUt = "Tekst 1.";
+        var fritekstInn = "Tekst 1.";
+        var fritekstUt = "Tekst 1.";
 
         // Act + Assert
         assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
@@ -114,8 +114,8 @@ public class FritekstTest {
     @Test
     public void skal_erstatte_vanlig_linjeskift_med_slash_linjeskift() {
         // Arrange
-        String fritekstInn = "Dette er en setning\nmed et linjeskift midt i.\nNy setning.";
-        String fritekstUt = "Dette er en setning\\\nmed et linjeskift midt i.\\\nNy setning.";
+        var fritekstInn = "Dette er en setning\nmed et linjeskift midt i.\nNy setning.";
+        var fritekstUt = "Dette er en setning\\\nmed et linjeskift midt i.\\\nNy setning.";
 
         // Act + Assert
         assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
@@ -124,8 +124,8 @@ public class FritekstTest {
     @Test
     public void skal_beholde_dobbelt_linjeskift_så_det_blir_ekstra_luft() {
         // Arrange
-        String fritekstInn = "Dette er en setning.\n\nNy setning som skal ha 'luft'.";
-        String fritekstUt = "Dette er en setning.\n\n\nNy setning som skal ha 'luft'.";
+        var fritekstInn = "Dette er en setning.\n\nNy setning som skal ha 'luft'.";
+        var fritekstUt = "Dette er en setning.\n\n\nNy setning som skal ha 'luft'.";
 
         // Act + Assert
         assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
@@ -134,8 +134,8 @@ public class FritekstTest {
     @Test
     public void skal_ikke_sette_inn_ekstra_linjeskift_når_det_bare_er_en_linje_med_punktliste() {
         // Arrange
-        String fritekstInn = "- Vedlegg1";
-        String fritekstUt = "- Vedlegg1";
+        var fritekstInn = "- Vedlegg1";
+        var fritekstUt = "- Vedlegg1";
 
         // Act + Assert
         assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);

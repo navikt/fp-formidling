@@ -26,9 +26,9 @@ public class HendelseRepositoryImplTest {
 
     @Test
     public void skalLagreOgHenteOppIgjen() {
-        UUID behandlingUuid = UUID.randomUUID();
-        UUID bestiilingUuid = UUID.randomUUID();
-        DokumentHendelse dokumentHendelse = DokumentHendelse
+        var behandlingUuid = UUID.randomUUID();
+        var bestiilingUuid = UUID.randomUUID();
+        var dokumentHendelse = DokumentHendelse
                 .builder()
                 .medBehandlingUuid(behandlingUuid)
                 .medBestillingUuid(bestiilingUuid)
@@ -37,7 +37,7 @@ public class HendelseRepositoryImplTest {
                 .build();
         hendelseRepository.lagre(dokumentHendelse);
 
-        DokumentHendelse hendelse = hendelseRepository.hentDokumentHendelseMedId(dokumentHendelse.getId());
+        var hendelse = hendelseRepository.hentDokumentHendelseMedId(dokumentHendelse.getId());
 
         assertThat(hendelse).isNotNull();
 

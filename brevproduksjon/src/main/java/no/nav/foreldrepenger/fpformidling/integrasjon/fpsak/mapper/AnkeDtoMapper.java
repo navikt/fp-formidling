@@ -14,7 +14,7 @@ public class AnkeDtoMapper {
             return Optional.empty();
         }
 
-        AnkeVurderingResultatDto ankeResultat = dto.getAnkeVurderingResultat();
+        var ankeResultat = dto.getAnkeVurderingResultat();
 
         var builder = Anke.ny()
                 .medAnkeVurdering(ankeResultat.getAnkeVurdering())

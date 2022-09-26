@@ -14,7 +14,7 @@ public class DatasourceUtil {
     private static final Environment ENV = Environment.current();
 
     public static HikariDataSource createDatasource(DatasourceRole role, int maxPoolSize) {
-        HikariConfig config = initConnectionPoolConfig(maxPoolSize);
+        var config = initConnectionPoolConfig(maxPoolSize);
         if (ENV.isVTP() || ENV.isLocal()) {
             return createLocalDatasource(config);
         }

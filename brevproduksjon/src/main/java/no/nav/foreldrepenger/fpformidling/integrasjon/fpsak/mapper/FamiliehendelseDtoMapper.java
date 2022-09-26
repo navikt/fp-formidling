@@ -58,7 +58,7 @@ public class FamiliehendelseDtoMapper {
     }
 
     public static FamilieHendelse mapFamiliehendelsefraDto(FamilieHendelseGrunnlagDto grunnlagDto) {
-        FamiliehendelseDto gjeldendeHendelseDto = grunnlagDto.getGjeldende();
+        var gjeldendeHendelseDto = grunnlagDto.getGjeldende();
         if (alleFelterErNull(gjeldendeHendelseDto)) {
             gjeldendeHendelseDto = grunnlagDto.getOppgitt();
         }
@@ -75,9 +75,9 @@ public class FamiliehendelseDtoMapper {
                     );
         }
         var antallBarnFraDto = utledAntallBarnFraDto(gjeldendeHendelseDto);
-        int antallDødeBarn = utledAntallDødeBarnFraDto(gjeldendeHendelseDto);
+        var antallDødeBarn = utledAntallDødeBarnFraDto(gjeldendeHendelseDto);
         boolean barnErFødtFraDto;
-        boolean gjelderFødsel = false;
+        var gjelderFødsel = false;
         if (gjeldendeHendelseDto instanceof AvklartDataFodselDto) {
             barnErFødtFraDto = erBarnFraDto((AvklartDataFodselDto) gjeldendeHendelseDto);
             gjelderFødsel = true;
@@ -86,7 +86,7 @@ public class FamiliehendelseDtoMapper {
         } else {
             barnErFødtFraDto = true;
         }
-        FamilieHendelseType familiehendelseType = mapFamiliehendelseType(gjeldendeHendelseDto);
+        var familiehendelseType = mapFamiliehendelseType(gjeldendeHendelseDto);
         return new FamilieHendelse(familiehendelseType, antallBarnFraDto, antallDødeBarn, hentSkjæringstidspunkt(gjeldendeHendelseDto).orElse(null),
                 finnTermindato(gjeldendeHendelseDto).orElse(null), finnFødselsdatoFraDto(gjeldendeHendelseDto).orElse(null),
                 finnDødsdatoFraDto(gjeldendeHendelseDto).orElse(null), barnErFødtFraDto, gjelderFødsel);

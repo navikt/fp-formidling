@@ -44,7 +44,7 @@ public class ArbeidsforholdRef implements Serializable {
         }
         if (o == null || getClass() != o.getClass())
             return false;
-        ArbeidsforholdRef that = (ArbeidsforholdRef) o;
+        var that = (ArbeidsforholdRef) o;
         return Objects.equals(referanse, that.referanse);
     }
 

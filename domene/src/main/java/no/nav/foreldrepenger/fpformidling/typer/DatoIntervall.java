@@ -27,8 +27,8 @@ public interface DatoIntervall extends Comparable<DatoIntervall> {
 
     @Override
     default int compareTo(DatoIntervall o) {
-        int compareFom = this.getFomDato().compareTo(o.getFomDato());
-        int compareTom = this.getTomDato().compareTo(o.getTomDato());
+        var compareFom = this.getFomDato().compareTo(o.getFomDato());
+        var compareTom = this.getTomDato().compareTo(o.getTomDato());
         return compareFom != 0 ? compareFom : compareTom;
     }
 }

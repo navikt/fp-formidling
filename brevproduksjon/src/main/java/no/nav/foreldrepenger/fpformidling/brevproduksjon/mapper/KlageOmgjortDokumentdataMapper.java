@@ -43,7 +43,7 @@ public class KlageOmgjortDokumentdataMapper implements DokumentdataMapper {
     @Override
     public KlageOmgjortDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
                                                        Behandling behandling, boolean erUtkast) {
-        Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
+        var klage = domeneobjektProvider.hentKlagebehandling(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);

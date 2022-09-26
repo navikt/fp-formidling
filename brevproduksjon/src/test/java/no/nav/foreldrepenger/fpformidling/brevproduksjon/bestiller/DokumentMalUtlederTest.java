@@ -58,7 +58,7 @@ public class DokumentMalUtlederTest {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medBehandlingsresultat(Behandlingsresultat.builder().medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.INGEN_ENDRING)).build())
@@ -71,7 +71,7 @@ public class DokumentMalUtlederTest {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
                 .build();
@@ -87,7 +87,7 @@ public class DokumentMalUtlederTest {
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
                 .build();
@@ -103,7 +103,7 @@ public class DokumentMalUtlederTest {
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
                 .build();
@@ -118,7 +118,7 @@ public class DokumentMalUtlederTest {
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.OPPHØR).build())
                 .build();
@@ -133,7 +133,7 @@ public class DokumentMalUtlederTest {
                 .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET).build())
                 .build();
@@ -145,7 +145,7 @@ public class DokumentMalUtlederTest {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
                 .build();
@@ -158,7 +158,7 @@ public class DokumentMalUtlederTest {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.OPPHØR).build())
                 .build();
@@ -170,7 +170,7 @@ public class DokumentMalUtlederTest {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(
                         Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
@@ -185,7 +185,7 @@ public class DokumentMalUtlederTest {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(
                         Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
@@ -200,7 +200,7 @@ public class DokumentMalUtlederTest {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_SENERE).build())
                 .build();
@@ -213,7 +213,7 @@ public class DokumentMalUtlederTest {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medBehandlingsresultat(Behandlingsresultat.builder().medVedtaksbrev(Vedtaksbrev.FRITEKST).build())
@@ -225,7 +225,7 @@ public class DokumentMalUtlederTest {
     public void kast_error_hvis_ugyldig() {
         hendelse = standardBuilder()
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .build();
         assertThatThrownBy(() -> dokumentMalUtleder.utledDokumentmal(behandling, hendelse)).isInstanceOf(VLException.class);
@@ -247,11 +247,11 @@ public class DokumentMalUtlederTest {
                 .medGjelderVedtak(true)
                 .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER)
                 .build();
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+        var behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
                 .medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.ENDRING_I_UTTAK))
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingType(BehandlingType.REVURDERING)
                 .medBehandlingsresultat(behandlingsresultat)
@@ -266,10 +266,10 @@ public class DokumentMalUtlederTest {
                 .medGjelderVedtak(true)
                 .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER)
                 .build();
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+        var behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medBehandlingsresultat(behandlingsresultat)
@@ -282,13 +282,13 @@ public class DokumentMalUtlederTest {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(UUID.randomUUID())
                 .medBehandlingType(BehandlingType.KLAGE)
                 .medBehandlingsresultat(Behandlingsresultat.builder().build())
                 .build();
 
-        Klage klage = Klage.ny()
+        var klage = Klage.ny()
                 .medKlageVurderingResultatNK(new KlageVurderingResultat(klageVurdering, null))
                 .build();
         when(domeneobjektProvider.hentKlagebehandling(behandling)).thenReturn(klage);

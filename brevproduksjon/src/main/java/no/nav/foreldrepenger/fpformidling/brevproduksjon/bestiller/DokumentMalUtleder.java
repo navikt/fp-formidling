@@ -53,7 +53,7 @@ class DokumentMalUtleder {
     }
 
     private DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandling) {
-        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        var behandlingsresultat = behandling.getBehandlingsresultat();
         if (behandlingsresultat.erInnvilget()) {
             return DokumentMalType.ENGANGSSTØNAD_INNVILGELSE;
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
@@ -64,7 +64,7 @@ class DokumentMalUtleder {
     }
 
     private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling) {
-        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        var behandlingsresultat = behandling.getBehandlingsresultat();
         if (behandlingsresultat.erForeldrepengerSenere()) {
             return DokumentMalType.FORELDREPENGER_ANNULLERT;
         } else if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
@@ -79,7 +79,7 @@ class DokumentMalUtleder {
     }
 
     private DokumentMalType mapSvangerskapspengerVedtaksbrev(Behandling behandling) {
-        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        var behandlingsresultat = behandling.getBehandlingsresultat();
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
             return DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE;
         } else if (behandlingsresultat.erOpphørt()) {
@@ -131,12 +131,12 @@ class DokumentMalUtleder {
         if (!BehandlingType.REVURDERING.equals(behandling.getBehandlingType())) {
             return false;
         }
-        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        var behandlingsresultat = behandling.getBehandlingsresultat();
 
-        Boolean erRevurderingMedUendretUtfall = behandlingsresultat.erRevurderingMedUendretUtfall();
+        var erRevurderingMedUendretUtfall = behandlingsresultat.erRevurderingMedUendretUtfall();
 
-        List<KonsekvensForYtelsen> konsekvenserForYtelsen = behandlingsresultat.getKonsekvenserForYtelsen();
-        boolean ingenKonsekvensForYtelsen = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.INGEN_ENDRING);
+        var konsekvenserForYtelsen = behandlingsresultat.getKonsekvenserForYtelsen();
+        var ingenKonsekvensForYtelsen = konsekvenserForYtelsen.contains(KonsekvensForYtelsen.INGEN_ENDRING);
         if (ingenKonsekvensForYtelsen && konsekvenserForYtelsen.size() > 1) {
             throw new IllegalStateException(UTVIKLERFEIL_INGEN_ENDRING_SAMMEN + behandling.getUuid());
         }
@@ -145,7 +145,7 @@ class DokumentMalUtleder {
     }
 
     private boolean erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(Behandling behandling) {
-        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
+        var behandlingsresultat = behandling.getBehandlingsresultat();
         return behandlingsresultat != null &&
                 foreldrepengerErEndret(behandlingsresultat)
                 && erKunEndringIFordelingAvYtelsen(behandlingsresultat)
@@ -162,13 +162,13 @@ class DokumentMalUtleder {
     }
 
     private DokumentMalType mapKlageBrev(Behandling behandling) {
-        Klage klage = domeneobjektProvider.hentKlagebehandling(behandling);
-        KlageVurderingResultat klageVurderingResultat = klage.getGjeldendeKlageVurderingsresultat();
+        var klage = domeneobjektProvider.hentKlagebehandling(behandling);
+        var klageVurderingResultat = klage.getGjeldendeKlageVurderingsresultat();
         if (klageVurderingResultat == null) {
             throw new FunksjonellException("FPFORMIDLING-100507",
             String.format("Klagebehandling med id %s mangler resultat av klagevurderingen", behandling.getUuid().toString()), "Fortsett saksbehandlingen");
         }
-        KlageVurdering klagevurdering = klageVurderingResultat.klageVurdering();
+        var klagevurdering = klageVurderingResultat.klageVurdering();
 
         if (KlageVurdering.AVVIS_KLAGE.equals(klagevurdering)) {
             return DokumentMalType.KLAGE_AVVIST;

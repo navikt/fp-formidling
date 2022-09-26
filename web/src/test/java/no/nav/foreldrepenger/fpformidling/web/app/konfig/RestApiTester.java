@@ -18,8 +18,8 @@ public class RestApiTester {
 
     static Collection<Method> finnAlleRestMetoder() {
         List<Method> liste = new ArrayList<>();
-        for (Class<?> klasse : finnAlleRestTjenester()) {
-            for (Method method : klasse.getDeclaredMethods()) {
+        for (var klasse : finnAlleRestTjenester()) {
+            for (var method : klasse.getDeclaredMethods()) {
                 if (Modifier.isPublic(method.getModifiers())) {
                     liste.add(method);
                 }

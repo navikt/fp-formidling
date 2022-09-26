@@ -12,26 +12,26 @@ public final class OrganisasjonsNummerValidator {
             return false;
         }
 
-        int sisteSiffer = Character.getNumericValue(orgnummer.charAt(orgnummer.length() - 1));
+        var sisteSiffer = Character.getNumericValue(orgnummer.charAt(orgnummer.length() - 1));
 
         return getKontrollSiffer(orgnummer) == sisteSiffer;
     }
 
     private static int getKontrollSiffer(String number) {
-        int lastIndex = number.length() - 1;
-        int sum = 0;
+        var lastIndex = number.length() - 1;
+        var sum = 0;
 
-        for (int i = 0; i < lastIndex; i++) {
+        for (var i = 0; i < lastIndex; i++) {
             sum += Character.getNumericValue(number.charAt(i)) * getVektTall(i);
         }
 
-        int rest = sum % 11;
+        var rest = sum % 11;
 
         return getKontrollSifferFraRest(rest);
     }
 
     private static int getVektTall(int i) {
-        int[] vekttall = {3, 2, 7, 6, 5, 4, 3, 2};
+        var vekttall = new int[]{3, 2, 7, 6, 5, 4, 3, 2};
         return vekttall[i];
     }
 

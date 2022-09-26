@@ -25,7 +25,7 @@ public class ProduserBrevTask implements ProsessTaskHandler {
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
-        long hendelseId = Long.parseLong(prosessTaskData.getPropertyValue(BrevTaskProperties.HENDELSE_ID));
+        var hendelseId = Long.parseLong(prosessTaskData.getPropertyValue(BrevTaskProperties.HENDELSE_ID));
         brevBestillerApplikasjonTjeneste.bestillBrev(dokumentHendelseTjeneste.hentHendelse(hendelseId).orElseThrow());
     }
 }

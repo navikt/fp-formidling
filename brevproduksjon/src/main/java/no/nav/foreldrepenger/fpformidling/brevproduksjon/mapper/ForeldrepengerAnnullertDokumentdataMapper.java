@@ -46,8 +46,8 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
-        StartdatoUtsattDto startdatoUtsatt = domeneobjektProvider.hentStartdatoUtsatt(behandling);
-        boolean harSøktOmNyPeriode = startdatoUtsatt.nyStartdato() != null;
+        var startdatoUtsatt = domeneobjektProvider.hentStartdatoUtsatt(behandling);
+        var harSøktOmNyPeriode = startdatoUtsatt.nyStartdato() != null;
 
         var dokumentdataBuilder = ForeldrepengerAnnullertDokumentdata.ny()
                 .medFelles(fellesBuilder.build())

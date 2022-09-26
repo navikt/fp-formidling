@@ -45,9 +45,9 @@ public class RestApiAbacTest {
      */
     @Test
     public void test_at_alle_restmetoder_er_annotert_med_BeskyttetRessurs() {
-        String feilmelding = "Mangler @%s-annotering på %s";
-        StringBuilder feilmeldinger = new StringBuilder();
-        for (Method restMethod : RestApiTester.finnAlleRestMetoder()) {
+        var feilmelding = "Mangler @%s-annotering på %s";
+        var feilmeldinger = new StringBuilder();
+        for (var restMethod : RestApiTester.finnAlleRestMetoder()) {
             if (restMethod.getAnnotation(BeskyttetRessurs.class) == null) {
                 feilmeldinger.append(String.format(feilmelding, BeskyttetRessurs.class.getSimpleName(), restMethod));
             }
@@ -58,7 +58,7 @@ public class RestApiAbacTest {
 
     @Test
     public void sjekk_at_ingen_metoder_er_annotert_med_dummy_verdier() {
-        for (Method metode : RestApiTester.finnAlleRestMetoder()) {
+        for (var metode : RestApiTester.finnAlleRestMetoder()) {
             assertAtIngenBrukerDummyVerdierPåBeskyttetRessurs(metode);
         }
     }
@@ -70,13 +70,13 @@ public class RestApiAbacTest {
      */
     @Test
     public void test_at_alle_input_parametre_til_restmetoder_implementer_AbacDto() {
-        String feilmelding = "Parameter på %s.%s av type %s må implementere " + AbacDto.class.getSimpleName() + ".\n";
-        StringBuilder feilmeldinger = new StringBuilder();
+        var feilmelding = "Parameter på %s.%s av type %s må implementere " + AbacDto.class.getSimpleName() + ".\n";
+        var feilmeldinger = new StringBuilder();
 
-        for (Method restMethode : RestApiTester.finnAlleRestMetoder()) {
-            for (Parameter parameter : restMethode.getParameters()) {
+        for (var restMethode : RestApiTester.finnAlleRestMetoder()) {
+            for (var parameter : restMethode.getParameters()) {
                 if (Collection.class.isAssignableFrom(parameter.getType())) {
-                    ParameterizedType type = (ParameterizedType) parameter.getParameterizedType();
+                    var type = (ParameterizedType) parameter.getParameterizedType();
                     @SuppressWarnings("rawtypes")
                     Class<?> aClass = (Class) (type.getActualTypeArguments()[0]);
                     if (!AbacDto.class.isAssignableFrom(aClass)
@@ -98,8 +98,8 @@ public class RestApiAbacTest {
     }
 
     private void assertAtIngenBrukerDummyVerdierPåBeskyttetRessurs(Method metode) {
-        Class<?> klasse = metode.getDeclaringClass();
-        BeskyttetRessurs annotation = metode.getAnnotation(BeskyttetRessurs.class);
+        var klasse = metode.getDeclaringClass();
+        var annotation = metode.getAnnotation(BeskyttetRessurs.class);
         if (annotation != null && annotation.actionType() == ActionType.DUMMY) {
             fail(klasse.getSimpleName() + "." + metode.getName() + " Ikke bruk DUMMY-verdi for "
                     + ActionType.class.getSimpleName());

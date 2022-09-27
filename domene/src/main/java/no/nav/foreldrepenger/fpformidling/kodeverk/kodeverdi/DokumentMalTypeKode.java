@@ -27,8 +27,6 @@ public class DokumentMalTypeKode {
     public static final String KLAGE_OMGJORT = "KGEOMG";
     public static final String KLAGE_OVERSENDT = "KGEOVE";
     public static final String KLAGE_STADFESTET = "KGESTA";
-    public static final String ANKE_OMGJORT = "ANKOMG";
-    public static final String ANKE_OPPHEVET = "ANKOPP";
     public static final String ETTERLYS_INNTEKTSMELDING = "ELYSIM";
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
@@ -92,5 +90,9 @@ public class DokumentMalTypeKode {
     public static final String ANKE_OPPHEVET_FRITEKST = "ANKEBO"; //NOSONAR
     @Deprecated
     public static final String ETTERLYS_INNTEKTSMELDING_FRITEKST = "INNLYS"; //NOSONAR
+    @Deprecated
+    public static final String ANKE_OMGJORT = "ANKOMG"; //NOSONAR
+    @Deprecated
+    public static final String ANKE_OPPHEVET = "ANKOPP"; //NOSONAR
 
 }

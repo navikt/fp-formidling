@@ -14,10 +14,8 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.HenleggelseDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
@@ -36,12 +34,12 @@ class HenleggeDokumentdataMapperTest {
     @Test
     public void henlegg_mapper_vanligBehandling() {
         //Arrange
-        Behandling behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, "NAV Familie- og pensjonsytelser");
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, null, false);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.FORELDREPENGER);
+        var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, "NAV Familie- og pensjonsytelser");
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, null, false);
+        var dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.FORELDREPENGER);
 
         //Act
-        HenleggelseDokumentdata henleggelseDokumentdata = mapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var henleggelseDokumentdata = mapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         //Assert
         assertThat(henleggelseDokumentdata.getVanligBehandling()).isTrue();
@@ -55,12 +53,12 @@ class HenleggeDokumentdataMapperTest {
     @Test
     public void henlegg_mapper_anke_med_opphav_klage() {
         //Arrange
-        Behandling behandling = opprettBehandling(BehandlingType.ANKE, "NAV Klageinstans");
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, null, false);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.SVANGERSKAPSPENGER);
+        var behandling = opprettBehandling(BehandlingType.ANKE, "NAV Klageinstans");
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, null, false);
+        var dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.SVANGERSKAPSPENGER);
 
         //Act
-        HenleggelseDokumentdata henleggelseDokumentdata = mapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var henleggelseDokumentdata = mapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         //Assert
         assertThat(henleggelseDokumentdata.getVanligBehandling()).isFalse();

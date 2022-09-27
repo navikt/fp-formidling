@@ -19,12 +19,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.FritekstbrevDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,12 +44,12 @@ public class FritekstbrevDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_fritekstbrev_til_bruker_fra_hendelsen() {
         // Arrange
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().medTittel(OVERSKRIFT).medFritekst(BRØDTEKST_INN).build();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().medTittel(OVERSKRIFT).medFritekst(BRØDTEKST_INN).build();
 
         // Act
-        FritekstbrevDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -74,18 +71,18 @@ public class FritekstbrevDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_fritekstbrev_fra_behandlingsresultatet_når_hendelsen_ikke_har_dem() {
         // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+        var behandlingsresultat = Behandlingsresultat.builder()
                 .medOverskrift(OVERSKRIFT)
                 .medFritekstbrev(BRØDTEKST_INN)
                 .build();
-        Behandling behandling = standardBehandlingBuilder()
+        var behandling = standardBehandlingBuilder()
                 .medBehandlingsresultat(behandlingsresultat)
                 .build();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().medTittel(null).medFritekst(null).build();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().medTittel(null).medFritekst(null).build();
 
         // Act
-        FritekstbrevDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getOverskrift()).isEqualTo(OVERSKRIFT);

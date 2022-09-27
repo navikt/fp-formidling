@@ -39,7 +39,7 @@ class OpprettOppgaveTaskTest {
         when(provider.hentBehandling(behandlingUuId)).thenReturn(behandling);
         when(provider.hentFagsakBackend(behandling)).thenReturn(FagsakBackend.ny().medSaksnummer(saksnummer).build());
 
-        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
+        var prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
         prosessTaskData.setProperty(BrevTaskProperties.SAKSNUMMER, saksnummer);

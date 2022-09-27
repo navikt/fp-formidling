@@ -10,6 +10,9 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.aksjo
 
 public class AksjonspunktDtoMapper {
 
+    private AksjonspunktDtoMapper() {
+    }
+
     static AksjonspunktStatus finnAksjonspunktStatus(String kode) {
         if (AksjonspunktStatus.UTFØRT.getKode().equals(kode)) {
             return AksjonspunktStatus.UTFØRT;
@@ -38,7 +41,7 @@ public class AksjonspunktDtoMapper {
 
     public static List<Aksjonspunkt> mapAksjonspunktFraDto(List<AksjonspunktDto> dtoer) {
         List<Aksjonspunkt> aksjonspunktList = new ArrayList<>();
-        for (AksjonspunktDto aksjonspunktDto : dtoer) {
+        for (var aksjonspunktDto : dtoer) {
             aksjonspunktList.add(Aksjonspunkt.ny()
                     .medAksjonspunktDefinisjon(finnAksjonspunktDefinisjon(aksjonspunktDto.definisjon()))
                     .medAksjonspunktStatus(finnAksjonspunktStatus(aksjonspunktDto.status()))

@@ -14,7 +14,7 @@ public class BehandlingsresultatDtoMapper {
 
 
     public static Behandlingsresultat mapBehandlingsresultatFraDto(BehandlingsresultatDto dto) {
-        Behandlingsresultat.Builder builder = builder();
+        var builder = builder();
         if (dto.getAvslagsarsak() != null) {
             builder.medAvslagsårsak(dto.getAvslagsarsak());
         }

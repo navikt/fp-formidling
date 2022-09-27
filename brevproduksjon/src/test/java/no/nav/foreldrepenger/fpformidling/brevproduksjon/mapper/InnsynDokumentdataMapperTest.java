@@ -28,7 +28,6 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnsynDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
@@ -49,10 +48,10 @@ class InnsynDokumentdataMapperTest {
 
     @BeforeEach
     void setUp() {
-        BrevParametere brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
+        var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         dokumentData = lagStandardDokumentData(DokumentMalType.INNSYN_SVAR);
-        InnsynDokument dokument1 = new InnsynDokument(new JournalpostId(124L), "1");
-        InnsynDokument dokument2 = new InnsynDokument(new JournalpostId(125L), "2");
+        var dokument1 = new InnsynDokument(new JournalpostId(124L), "1");
+        var dokument2 = new InnsynDokument(new JournalpostId(125L), "2");
         innsynDokumentList = List.of(dokument1, dokument2);
         behandling = opprettBehandling();
 
@@ -61,13 +60,13 @@ class InnsynDokumentdataMapperTest {
 
     @Test
     public void mappingAvInnsynInnvilgetForeldrePenger() {
-        Innsyn innsynsBehandling = new Innsyn(InnsynResultatType.INNVILGET, innsynDokumentList);
+        var innsynsBehandling = new Innsyn(InnsynResultatType.INNVILGET, innsynDokumentList);
         when(domeneobjektProvider.hentInnsyn(behandling)).thenReturn(innsynsBehandling);
 
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.FORELDREPENGER);
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.FORELDREPENGER);
 
-        InnsynDokumentdata innsynsDokumentData = innsynDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var innsynsDokumentData = innsynDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         assertThat(innsynsDokumentData.getInnsynResultat()).isEqualTo(InnsynResultatType.INNVILGET.getKode());
         assertThat(innsynsDokumentData.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.FORELDREPENGER.getKode());
@@ -76,13 +75,13 @@ class InnsynDokumentdataMapperTest {
 
     @Test
     public void mappingAvInnsynAvvistEngangsstønadMedFritekst() {
-        Innsyn innsynsBehandling = new Innsyn(InnsynResultatType.AVVIST, innsynDokumentList);
+        var innsynsBehandling = new Innsyn(InnsynResultatType.AVVIST, innsynDokumentList);
         when(domeneobjektProvider.hentInnsyn(behandling)).thenReturn(innsynsBehandling);
 
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.ENGANGSTØNAD);
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.ENGANGSTØNAD);
 
-        InnsynDokumentdata innsynsDokumentData = innsynDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var innsynsDokumentData = innsynDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         assertThat(innsynsDokumentData.getInnsynResultat()).isEqualTo(InnsynResultatType.AVVIST.getKode());
         assertThat(innsynsDokumentData.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.ENGANGSTØNAD.getKode());

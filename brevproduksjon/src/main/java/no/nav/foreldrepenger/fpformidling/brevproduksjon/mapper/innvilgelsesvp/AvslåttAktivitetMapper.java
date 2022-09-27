@@ -16,6 +16,9 @@ public final class AvslåttAktivitetMapper {
             ArbeidsforholdIkkeOppfyltÅrsak.HELE_UTTAKET_ER_ETTER_3_UKER_FØR_TERMINDATO
     );
 
+    private AvslåttAktivitetMapper() {
+    }
+
     public static List<AvslåttAktivitet> mapAvslåtteAktiviteter(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold) {
         return uttakResultatArbeidsforhold.stream()
                 .filter(ura -> RELEVANTE_ARBEIDSFORHOLD_ÅRSAKER.contains(ura.getArbeidsforholdIkkeOppfyltÅrsak()))

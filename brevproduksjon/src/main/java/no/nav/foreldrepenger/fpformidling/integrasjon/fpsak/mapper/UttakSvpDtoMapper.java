@@ -20,7 +20,7 @@ public class UttakSvpDtoMapper {
 
     public static SvangerskapspengerUttak mapSvpUttaksresultatFraDto(SvangerskapspengerUttakResultatDto svpUttaksresultatresultatDto, UnaryOperator<String> hentNavn) {
         final var svpUttaksresultatBuilder = SvangerskapspengerUttak.Builder.ny();
-        final var uttaksResultatArbeidsforhold = svpUttaksresultatresultatDto.getUttaksResultatArbeidsforhold();
+        final var uttaksResultatArbeidsforhold = svpUttaksresultatresultatDto.uttaksResultatArbeidsforhold();
         if (uttaksResultatArbeidsforhold != null) {
             uttaksResultatArbeidsforhold.forEach(arbeidsforhold -> {
                 final var uttakResultatArbeidsforholdBuild = SvpUttakResultatArbeidsforhold.Builder.ny();
@@ -43,10 +43,10 @@ public class UttakSvpDtoMapper {
         }
         return arbeidsforhold.getPerioder().stream()
                 .map(periodeDto -> SvpUttakResultatPeriode.Builder.ny()
-                        .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(periodeDto.getFom(), periodeDto.getTom()))
-                        .medUtbetalingsgrad(periodeDto.getUtbetalingsgrad().longValue())
-                        .medPeriodeResultatType(periodeDto.getPeriodeResultatType())
-                        .medPeriodeIkkeOppfyltÅrsak(periodeDto.getPeriodeIkkeOppfyltÅrsak())
+                        .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(periodeDto.fom(), periodeDto.tom()))
+                        .medUtbetalingsgrad(periodeDto.utbetalingsgrad().longValue())
+                        .medPeriodeResultatType(periodeDto.periodeResultatType())
+                        .medPeriodeIkkeOppfyltÅrsak(periodeDto.periodeIkkeOppfyltÅrsak())
                         .medArbeidsgiverNavn(getArbeidsgiverNavn(arbeidsforhold, arbeidsgiver))
                         .build())
                 .toList();

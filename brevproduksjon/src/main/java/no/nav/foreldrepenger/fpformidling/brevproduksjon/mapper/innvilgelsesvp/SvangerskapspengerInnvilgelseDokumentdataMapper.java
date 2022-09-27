@@ -40,7 +40,6 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.SvangerskapspengerInnvilgelseDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Utbetalingsperiode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Uttaksaktivitet;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 
@@ -85,9 +84,9 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        List<Utbetalingsperiode> utbetalingsperioder = mapUtbetalingsperioder(tilkjentYtelse.getPerioder(), språkkode);
-        List<Uttaksaktivitet> uttaksaktiviteter = mapUttaksaktivteterMedPerioder(uttaksresultatSvp, tilkjentYtelse, språkkode);
-        boolean inkludereBeregning = erNyEllerEndretBeregning(behandling);
+        var utbetalingsperioder = mapUtbetalingsperioder(tilkjentYtelse.getPerioder(), språkkode);
+        var uttaksaktiviteter = mapUttaksaktivteterMedPerioder(uttaksresultatSvp, tilkjentYtelse, språkkode);
+        var inkludereBeregning = erNyEllerEndretBeregning(behandling);
 
         var dokumentdataBuilder = SvangerskapspengerInnvilgelseDokumentdata.ny()
                 .medFelles(fellesBuilder.build())

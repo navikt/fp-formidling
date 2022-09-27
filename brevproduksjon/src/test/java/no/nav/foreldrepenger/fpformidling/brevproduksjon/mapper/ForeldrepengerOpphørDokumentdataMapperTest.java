@@ -45,8 +45,6 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerOpphørDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
@@ -87,7 +85,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
 
     @BeforeEach
     public void before() {
-        BrevParametere brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
+        var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
 
         dokumentdataMapper = new ForeldrepengerOpphørDokumentdataMapper(brevParametere, domeneobjektProvider);
@@ -101,14 +99,14 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
-        Behandling behandling = opprettBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder()
+        var behandling = opprettBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder()
                 .medDokumentMalType(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL)
                 .build();
 
         // Act
-        ForeldrepengerOpphørDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -153,38 +151,38 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
     }
 
     private Optional<ForeldrepengerUttak> opprettUttaksresultat() {
-        UttakResultatPeriodeAktivitet uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
+        var uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
                 .medTrekkdager(TREKKDAGER)
                 .medUtbetalingsprosent(BigDecimal.ZERO)
                 .medUttakAktivitet(UttakAktivitet.ny().medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID).build())
                 .medArbeidsprosent(BigDecimal.valueOf(100))
                 .build();
-        UttakResultatPeriode uttakResultatPeriode1 = UttakResultatPeriode.ny()
+        var uttakResultatPeriode1 = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet))
                 .medTidsperiode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .medPeriodeResultatÅrsak(ÅRSAK_1)
                 .build();
-        UttakResultatPeriode uttakResultatPeriode2 = UttakResultatPeriode.ny()
+        var uttakResultatPeriode2 = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet))
                 .medTidsperiode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
                 .build();
-        UttakResultatPeriode uttakResultatPeriode3 = UttakResultatPeriode.ny()
+        var uttakResultatPeriode3 = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet))
                 .medTidsperiode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
                 .build();
-        UttakResultatPeriode uttakResultatPeriode4 = UttakResultatPeriode.ny()
+        var uttakResultatPeriode4 = UttakResultatPeriode.ny()
                 .medAktiviteter(of(uttakAktivitet))
                 .medTidsperiode(fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .medPeriodeResultatÅrsak(ÅRSAK_4)
                 .build();
         return Optional.of(new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4),
-                List.of(), false, true, false));
+                List.of(), false, true, false, false));
     }
 
     private Behandling opprettBehandling() {

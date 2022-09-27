@@ -16,6 +16,9 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.U
 
 public final class UtbetalingsperiodeMerger {
 
+    private UtbetalingsperiodeMerger() {
+    }
+
     public static List<Utbetalingsperiode> mergePerioder(List<Utbetalingsperiode> perioder) {
         if (perioder.size() <= 1) {
             return perioder; // ikke noe å se på.
@@ -28,12 +31,12 @@ public final class UtbetalingsperiodeMerger {
         if (perioder.isEmpty()) {
             return resultat;
         }
-        for (int index = 0; index < perioder.size() - 1; index++) {
-            boolean sistePeriode = (index == perioder.size() - 2);
-            Utbetalingsperiode periodeEn = perioder.get(index);
-            Utbetalingsperiode periodeTo = perioder.get(index + 1);
+        for (var index = 0; index < perioder.size() - 1; index++) {
+            var sistePeriode = (index == perioder.size() - 2);
+            var periodeEn = perioder.get(index);
+            var periodeTo = perioder.get(index + 1);
             if (erPerioderSammenhengendeOgSkalSlåSammen(periodeEn, periodeTo)) {
-                Utbetalingsperiode nyPeriode = slåSammenPerioder(periodeEn, periodeTo);
+                var nyPeriode = slåSammenPerioder(periodeEn, periodeTo);
                 perioder.set(index + 1, nyPeriode);
                 if (sistePeriode) {
                     resultat.add(nyPeriode);
@@ -65,8 +68,8 @@ public final class UtbetalingsperiodeMerger {
     }
 
     private static int finnRiktigAntallTapteDager(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
-        BigDecimal tapteDagerPeriodeEn = periodeEn.getTapteDagerTemp();
-        BigDecimal tapteDagerPeriodeTo = periodeTo.getTapteDagerTemp();
+        var tapteDagerPeriodeEn = periodeEn.getTapteDagerTemp();
+        var tapteDagerPeriodeTo = periodeTo.getTapteDagerTemp();
 
         if (!Objects.equals(tapteDagerPeriodeEn, BigDecimal.ZERO) && !Objects.equals(tapteDagerPeriodeTo, BigDecimal.ZERO)) {
             return  tapteDagerPeriodeEn.add(tapteDagerPeriodeTo).setScale(1, RoundingMode.DOWN).intValue();
@@ -96,14 +99,14 @@ public final class UtbetalingsperiodeMerger {
     }
 
     private static boolean likeAndreAktiviteter(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
-        boolean alleMatcher = likAktivitetsliste(periodeEn, periodeTo);
+        var alleMatcher = likAktivitetsliste(periodeEn, periodeTo);
         if (!alleMatcher) {
             return false;
         }
         if (periodeEn.getAnnenAktivitetsliste() == null) {
             return true;
         }
-        for (AnnenAktivitet akt : periodeEn.getAnnenAktivitetsliste()) {
+        for (var akt : periodeEn.getAnnenAktivitetsliste()) {
             if (!finnesMatch(akt, periodeTo)) {
                 alleMatcher = false;
             }
@@ -146,14 +149,14 @@ public final class UtbetalingsperiodeMerger {
     }
 
     private static boolean likeArbeidsforhold(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
-        boolean alleMatcher = harLikeMangeArbeidsforhold(periodeEn, periodeTo);
+        var alleMatcher = harLikeMangeArbeidsforhold(periodeEn, periodeTo);
         if (!alleMatcher) {
             return false;
         }
         if (periodeEn.getArbeidsforholdsliste() == null) {
             return true;
         }
-        for (Arbeidsforhold arb : periodeEn.getArbeidsforholdsliste()) {
+        for (var arb : periodeEn.getArbeidsforholdsliste()) {
             if (!finnesMatch(arb, periodeTo)) {
                 alleMatcher = false;
             }
@@ -162,8 +165,8 @@ public final class UtbetalingsperiodeMerger {
     }
 
     private static boolean finnesMatch(AnnenAktivitet akt, Utbetalingsperiode periode) {
-        boolean match = false;
-        for (AnnenAktivitet akt2 : periode.getAnnenAktivitetsliste()) {
+        var match = false;
+        for (var akt2 : periode.getAnnenAktivitetsliste()) {
             if (likAnnenAktivitetType(akt, akt2)) {
                 match = true;
             }
@@ -172,8 +175,8 @@ public final class UtbetalingsperiodeMerger {
     }
 
     private static boolean finnesMatch(Arbeidsforhold arb, Utbetalingsperiode periode) {
-        boolean match = false;
-        for (Arbeidsforhold arb2 : periode.getArbeidsforholdsliste()) {
+        var match = false;
+        for (var arb2 : periode.getArbeidsforholdsliste()) {
             if (likArbeidsforholdType(arb, arb2)) {
                 match = true;
             }

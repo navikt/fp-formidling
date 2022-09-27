@@ -15,14 +15,12 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Beregning
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.SvpMapperUtil;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.opphørsvp.OpphørPeriode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.opphørsvp.SvangerskapspengerOpphørDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
@@ -53,45 +51,56 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
     }
 
     @Override
-    public SvangerskapspengerOpphørDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                                  Behandling behandling, boolean erUtkast) {
+    public SvangerskapspengerOpphørDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                                   DokumentHendelse hendelse,
+                                                                   Behandling behandling,
+                                                                   boolean erUtkast) {
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         var svpUttaksresultat = domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(behandling);
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
-        var tilkjentYtelsePerioder = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling).map(TilkjentYtelseForeldrepenger::getPerioder).orElse(Collections.emptyList());
+        var tilkjentYtelsePerioder = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling)
+                .map(TilkjentYtelseForeldrepenger::getPerioder)
+                .orElse(Collections.emptyList());
 
-        Språkkode språkkode = behandling.getSpråkkode();
+        var språkkode = behandling.getSpråkkode();
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-            fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
-            fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
+        fellesBuilder.medBrevDato(
+                dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
+        fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
 
         var uttaksperioder = SvpMapperUtil.hentUttaksperioder(svpUttaksresultat);
 
-         var dokumentdatabuilder = SvangerskapspengerOpphørDokumentdata.ny()
+        var dokumentdatabuilder = SvangerskapspengerOpphørDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
                 .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
                 .medErSøkerDød(erDød(dokumentFelles))
                 .medKlagefristUker(brevParametere.getKlagefristUker());
 
-         mapOpphørtPeriodeOgLovhjemmel(dokumentdatabuilder, behandling,
+        mapOpphørtPeriodeOgLovhjemmel(dokumentdatabuilder, behandling,
                 svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()),
-                 språkkode, iay, tilkjentYtelsePerioder);
+                språkkode, iay, tilkjentYtelsePerioder);
 
         SvpMapperUtil.finnFørsteUttakssdato(uttaksperioder, behandling.getBehandlingsresultat())
-                 .ifPresent(d -> dokumentdatabuilder.medOpphørsdato(formaterDato(d, språkkode)));
+                .ifPresent(d -> dokumentdatabuilder.medOpphørsdato(formaterDato(d, språkkode)));
 
-        familieHendelse.dødsdato().ifPresent(d-> dokumentdatabuilder.medDødsdatoBarn(formaterDato(d, språkkode)));
+        familieHendelse.dødsdato().ifPresent(d -> dokumentdatabuilder.medDødsdatoBarn(formaterDato(d, språkkode)));
 
         familieHendelse.fødselsdato().ifPresent(d -> dokumentdatabuilder.medFødselsdato(formaterDato(d, språkkode)));
 
         return dokumentdatabuilder.build();
     }
 
-    private void mapOpphørtPeriodeOgLovhjemmel(SvangerskapspengerOpphørDokumentdata.Builder dokumentdataBuilder, Behandling behandling, List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkKode, Inntektsmeldinger iay, List <TilkjentYtelsePeriode> tilkjentYtelsePerioder) {
+    private void mapOpphørtPeriodeOgLovhjemmel(SvangerskapspengerOpphørDokumentdata.Builder dokumentdataBuilder,
+                                               Behandling behandling,
+                                               List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold,
+                                               Språkkode språkKode,
+                                               Inntektsmeldinger iay,
+                                               List<TilkjentYtelsePeriode> tilkjentYtelsePerioder) {
 
-        Tuple <OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakResultatArbeidsforhold, språkKode, iay, tilkjentYtelsePerioder);
+        var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakResultatArbeidsforhold,
+                språkKode, iay, tilkjentYtelsePerioder);
 
         dokumentdataBuilder.medLovhjemmel(opphørtePerioderOgLovhjemmel.element2());
         dokumentdataBuilder.medOpphørPerioder(opphørtePerioderOgLovhjemmel.element1());

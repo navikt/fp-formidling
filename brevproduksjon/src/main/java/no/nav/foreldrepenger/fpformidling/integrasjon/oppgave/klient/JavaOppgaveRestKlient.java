@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Optional;

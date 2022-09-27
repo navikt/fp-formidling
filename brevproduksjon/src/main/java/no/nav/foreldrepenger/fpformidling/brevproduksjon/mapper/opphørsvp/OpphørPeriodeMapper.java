@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.TreeSet;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.LovhjemmelComparator;
@@ -24,7 +23,6 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.ArbeidsforholdIkkeOppfyltÅr
 import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 import no.nav.vedtak.exception.TekniskException;
 
 public final class OpphørPeriodeMapper {
@@ -38,11 +36,11 @@ public final class OpphørPeriodeMapper {
                                                                                Inntektsmeldinger iay,
                                                                                List<TilkjentYtelsePeriode> tilkjentYtelsePerioder) {
         var lovReferanser = new TreeSet<>(new LovhjemmelComparator());
-        Behandlingsresultat behandlingsresultat = behandling.getBehandlingsresultat();
-        Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
+        var behandlingsresultat = behandling.getBehandlingsresultat();
+        var avslagsårsak = behandlingsresultat.getAvslagsårsak();
 
         //Sjekker om periodeIkkeOppfyltÅrsak finnes fra uttak - oppretter i såfall opphørt periode.
-        OpphørPeriode opphørtPeriode = mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(uttakResultatArbeidsforhold, språkKode,
+        var opphørtPeriode = mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(uttakResultatArbeidsforhold, språkKode,
                 tilkjentYtelsePerioder, iay, lovReferanser);
 
         //I en del tilfeller er behandlingen opphørt før det har kommet så langt som å beregne uttak
@@ -65,7 +63,7 @@ public final class OpphørPeriodeMapper {
             }
         }
 
-        String lovhjemmelForOpphør = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
+        var lovhjemmelForOpphør = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
                 BehandlingMapper.kodeFra(behandlingsresultat.getKonsekvenserForYtelsen()), true);
 
         return new Tuple<>(opphørtPeriode, lovhjemmelForOpphør);
@@ -90,14 +88,14 @@ public final class OpphørPeriodeMapper {
                                                                           List<TilkjentYtelsePeriode> tilkjentYtelsePerioder,
                                                                           Inntektsmeldinger iay,
                                                                           TreeSet<String> lovReferanser) {
-        List<SvpUttakResultatPeriode> opphørtePerioder = uttakResultatArbeidsforhold.stream()
+        var opphørtePerioder = uttakResultatArbeidsforhold.stream()
                 .flatMap(ura -> ura.getPerioder().stream())
                 .filter(ur -> PeriodeResultatType.AVSLÅTT.equals(ur.getPeriodeResultatType()))
                 .filter(ur -> PeriodeIkkeOppfyltÅrsak.opphørsAvslagÅrsaker().contains(ur.getPeriodeIkkeOppfyltÅrsak()))
                 .toList();
 
         if (!opphørtePerioder.isEmpty()) {
-            PeriodeIkkeOppfyltÅrsak årsak = finnNyestePeriodeIkkeOppfyltÅrsak(opphørtePerioder);
+            var årsak = finnNyestePeriodeIkkeOppfyltÅrsak(opphørtePerioder);
             if (årsak != null) {
                 lovReferanser.add(årsak.getLovHjemmelData());
                 return mapOpphørtPeriode(tilkjentYtelsePerioder, uttakResultatArbeidsforhold, språkKode, årsak.getKode(), iay);
@@ -118,8 +116,8 @@ public final class OpphørPeriodeMapper {
                                                    Språkkode språkkode,
                                                    String opphørÅrsak,
                                                    Inntektsmeldinger iay) {
-        Optional<LocalDate> førsteDato = finnFørsteStønadDato(tilkjentYtelse);
-        Optional<LocalDate> sisteDato = finnSisteStønadDato(tilkjentYtelse);
+        var førsteDato = finnFørsteStønadDato(tilkjentYtelse);
+        var sisteDato = finnSisteStønadDato(tilkjentYtelse);
 
         if (førsteDato.isEmpty() && sisteDato.isEmpty() && !PeriodeIkkeOppfyltÅrsak._8304.getKode().equals(opphørÅrsak)) {
             førsteDato = finnførsteUttaksDatoFraInnvilget(uttakResultatArbeidsforhold);
@@ -127,7 +125,7 @@ public final class OpphørPeriodeMapper {
         }
 
         if (opphørÅrsak != null) {
-            int antallArbeidsgivere = tilkjentYtelse.isEmpty() ? SvpMapperUtil.finnAntallArbeidsgivere(uttakResultatArbeidsforhold,
+            var antallArbeidsgivere = tilkjentYtelse.isEmpty() ? SvpMapperUtil.finnAntallArbeidsgivere(uttakResultatArbeidsforhold,
                     iay) : finnAntallArbeidsgivereFraTilkjentYtelse(tilkjentYtelse);
             var builder = OpphørPeriode.ny().medÅrsak(Årsak.of(opphørÅrsak)).medAntallArbeidsgivere(antallArbeidsgivere);
 

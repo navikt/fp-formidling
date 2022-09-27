@@ -36,19 +36,22 @@ public final class ForMyeUtbetaltMapper {
             Årsak.of(UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID.getKode()),
             Årsak.of(UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode()));
 
+    private ForMyeUtbetaltMapper() {
+    }
+
     public static ForMyeUtbetalt forMyeUtbetalt(List<Utbetalingsperiode> periodeListe, Behandling behandling) {
         if (!behandling.erRevurdering()) {
             return null;
         }
 
-        LocalDate vedtaksdato = behandling.getAvsluttet() != null ? behandling.getAvsluttet().toLocalDate() : null;
+        var vedtaksdato = behandling.getAvsluttet() != null ? behandling.getAvsluttet().toLocalDate() : null;
         LocalDate innvilgetUtsettelseFOM = null;
 
-        boolean generell = false;
-        boolean ferie = false;
-        boolean jobb = false;
+        var generell = false;
+        var ferie = false;
+        var jobb = false;
 
-        for (Utbetalingsperiode periode : periodeListe) {
+        for (var periode : periodeListe) {
             if (periodeHarGradering(periode) || manglendeEllerForSenSøknadOmGraderingÅrsaker.contains(periode.getÅrsak())) {
                 generell = true;
                 break;
@@ -80,7 +83,7 @@ public final class ForMyeUtbetaltMapper {
     }
 
     private static boolean erInnvilgetUtsettelseInneværendeMånedEllerTidligere(LocalDate innvilgetUtsettelseFOM, LocalDate vedtaksdato) {
-        LocalDate iDag = vedtaksdato != null ? vedtaksdato : LocalDate.now();
+        var iDag = vedtaksdato != null ? vedtaksdato : LocalDate.now();
         return innvilgetUtsettelseFOM.isBefore(iDag.plusMonths(1).withDayOfMonth(1));
     }
 

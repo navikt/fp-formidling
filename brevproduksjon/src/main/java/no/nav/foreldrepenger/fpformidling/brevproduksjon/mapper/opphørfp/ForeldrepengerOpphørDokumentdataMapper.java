@@ -10,24 +10,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerOpphørDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
@@ -76,17 +72,17 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
                                                                Behandling behandling,
                                                                boolean erUtkast) {
 
-        Språkkode språkkode = behandling.getSpråkkode();
-        FagsakBackend fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
-        FamilieHendelse familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        var språkkode = behandling.getSpråkkode();
+        var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        var familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
 
-        ForeldrepengerUttak foreldrepengerUttak = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)
+        var foreldrepengerUttak = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)
                 .orElseGet(ForeldrepengerUttak::tomtUttak); // bestående av tomme lister.
-        Optional<ForeldrepengerUttak> originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
+        var originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
                 .flatMap(domeneobjektProvider::hentForeldrepengerUttakHvisFinnes);
 
-        Optional<Beregningsgrunnlag> beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
-        long halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
+        var beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
+        var halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         var erSøkerDød = erDød(dokumentFelles);
@@ -124,9 +120,9 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
     private List<String> mapAvslagårsaker(Behandlingsresultat behandlingsresultat,
                                   ForeldrepengerUttak foreldrepengerUttak,
                                   ForeldrepengerOpphørDokumentdata.Builder builder) {
-        Tuple<List<String>, String> aarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapÅrsakslisteOgLovhjemmelFra(
+        var aarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapÅrsakslisteOgLovhjemmelFra(
                 behandlingsresultat, foreldrepengerUttak);
-        List<String> årsakListe = aarsakListeOgLovhjemmel.getElement1();
+        var årsakListe = aarsakListeOgLovhjemmel.getElement1();
 
         builder.medAvslagÅrsaker(årsakListe);
         builder.medLovhjemmelForAvslag(aarsakListeOgLovhjemmel.getElement2());
@@ -150,19 +146,19 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
     }
 
     private Optional<LocalDate> finnOpphørsdatoHvisFinnes(ForeldrepengerUttak foreldrepengerUttak, FamilieHendelse familiehendelse) {
-        LocalDate opphørsdato = utledOpphørsdatoFraUttak(foreldrepengerUttak);
+        var opphørsdato = utledOpphørsdatoFraUttak(foreldrepengerUttak);
         return Optional.ofNullable(opphørsdato).or(familiehendelse::skjæringstidspunkt);
     }
 
     private LocalDate utledOpphørsdatoFraUttak(ForeldrepengerUttak foreldrepengerUttak) {
-        Set<String> opphørsårsaker = PeriodeResultatÅrsak.opphørsAvslagÅrsaker();
-        List<UttakResultatPeriode> perioder = foreldrepengerUttak.perioder();
+        var opphørsårsaker = PeriodeResultatÅrsak.opphørsAvslagÅrsaker();
+        var perioder = foreldrepengerUttak.perioder();
 
         // Finn fom-dato i første periode av de siste sammenhengende periodene med
         // opphørårsaker
         LocalDate fom = null;
-        for (int i = perioder.size() - 1; i >= 0; i--) {
-            UttakResultatPeriode periode = perioder.get(i);
+        for (var i = perioder.size() - 1; i >= 0; i--) {
+            var periode = perioder.get(i);
             if (opphørsårsaker.contains(periode.getPeriodeResultatÅrsak().getKode())) {
                 fom = periode.getFom();
             } else if (fom != null && periode.isInnvilget()) {

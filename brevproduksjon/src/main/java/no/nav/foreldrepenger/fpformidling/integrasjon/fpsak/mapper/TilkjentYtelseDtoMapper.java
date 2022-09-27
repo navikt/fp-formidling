@@ -26,11 +26,11 @@ public class TilkjentYtelseDtoMapper {
     }
 
     public static TilkjentYtelseEngangsstønad mapTilkjentYtelseESFraDto(TilkjentYtelseEngangsstønadDto dto) {
-        return new TilkjentYtelseEngangsstønad(dto.getBeregnetTilkjentYtelse());
+        return new TilkjentYtelseEngangsstønad(dto.beregnetTilkjentYtelse());
     }
 
     public static TilkjentYtelseForeldrepenger mapTilkjentYtelseFPFraDto(TilkjentYtelseMedUttaksplanDto dto, UnaryOperator<String> hentNavn) {
-        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = Arrays.stream(dto.getPerioder())
+        var tilkjentYtelsePerioder = Arrays.stream(dto.getPerioder())
                 .map(p -> mapPeriodeFraDto(p, hentNavn))
                 .sorted(PeriodeComparator.TILKJENTYTELSERESULTAT)
                 .toList();
@@ -42,7 +42,7 @@ public class TilkjentYtelseDtoMapper {
 
     private static TilkjentYtelsePeriode mapPeriodeFraDto(TilkjentYtelsePeriodeDto dto, UnaryOperator<String> hentNavn) {
         List<TilkjentYtelseAndel> andelListe = new ArrayList<>();
-        for (TilkjentYtelseAndelDto tilkjentYtelseAndelDto : dto.getAndeler()) {
+        for (var tilkjentYtelseAndelDto : dto.getAndeler()) {
             andelListe.add(mapAndelFraDto(tilkjentYtelseAndelDto, hentNavn));
         }
         return TilkjentYtelsePeriode.ny()
@@ -55,32 +55,32 @@ public class TilkjentYtelseDtoMapper {
     //Fpsak slår sammen andeler i dto, så vi må eventuelt splitte dem opp igjen
     private static TilkjentYtelseAndel mapAndelFraDto(TilkjentYtelseAndelDto dto, UnaryOperator<String> hentNavn) {
         return TilkjentYtelseAndel.ny()
-                .medAktivitetStatus(dto.getAktivitetStatus())
-                .medArbeidsforholdRef(dto.getArbeidsforholdId() != null && !dto.getArbeidsforholdId().isEmpty() ? ArbeidsforholdRef.ref(dto.getArbeidsforholdId()) : null)
+                .medAktivitetStatus(dto.aktivitetStatus())
+                .medArbeidsforholdRef(dto.arbeidsforholdId() != null && !dto.arbeidsforholdId().isEmpty() ? ArbeidsforholdRef.ref(dto.arbeidsforholdId()) : null)
                 .medArbeidsgiver(mapArbeidsgiverFraDto(dto, hentNavn))
-                .medStillingsprosent(dto.getStillingsprosent())
-                .medErBrukerMottaker(dto.getTilSoker() != null && dto.getTilSoker() != 0)
-                .medErArbeidsgiverMottaker(dto.getRefusjon() != null && dto.getRefusjon() != 0)
+                .medStillingsprosent(dto.stillingsprosent())
+                .medErBrukerMottaker(dto.tilSoker() != null && dto.tilSoker() != 0)
+                .medErArbeidsgiverMottaker(dto.refusjon() != null && dto.refusjon() != 0)
                 .medDagsats(summerDagsats(dto))
-                .medUtbetalesTilBruker(dto.getTilSoker())
+                .medUtbetalesTilBruker(dto.tilSoker())
                 .build();
     }
 
     private static Arbeidsgiver mapArbeidsgiverFraDto(TilkjentYtelseAndelDto dto, UnaryOperator<String> hentNavn) {
-        if (!AktivitetStatus.ARBEIDSTAKER.equals(dto.getAktivitetStatus())
-                || dto.getArbeidsgiverReferanse() == null) {
+        if (!AktivitetStatus.ARBEIDSTAKER.equals(dto.aktivitetStatus())
+                || dto.arbeidsgiverReferanse() == null) {
             return null;
         }
-        return new Arbeidsgiver(dto.getArbeidsgiverReferanse(), hentNavn.apply(dto.getArbeidsgiverReferanse()));
+        return new Arbeidsgiver(dto.arbeidsgiverReferanse(), hentNavn.apply(dto.arbeidsgiverReferanse()));
     }
 
     private static int summerDagsats(TilkjentYtelseAndelDto dto) {
-        int sum = 0;
-        if (dto.getTilSoker() != null) {
-            sum += dto.getTilSoker();
+        var sum = 0;
+        if (dto.tilSoker() != null) {
+            sum += dto.tilSoker();
         }
-        if (dto.getRefusjon() != null) {
-            sum += dto.getRefusjon();
+        if (dto.refusjon() != null) {
+            sum += dto.refusjon();
         }
         return sum;
     }

@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.web.app.selftest.checks;
 
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
@@ -32,7 +31,7 @@ public class DatabaseHealthCheck implements ReadinessAware {
 
     private boolean performCheck() {
         try (var connection = ds.getConnection()) {
-            try (Statement statement = connection.createStatement()) {
+            try (var statement = connection.createStatement()) {
                 if (!statement.execute(SQL_QUERY)) {
                     throw new SQLException("SQL-spørring ga ikke et resultatsett");
                 }

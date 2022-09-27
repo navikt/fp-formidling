@@ -74,10 +74,10 @@ public class BeregningsgrunnlagMapperTest {
 
     @Test
     public void skal_identifsere_statuser() {
-        List<BeregningsgrunnlagPrStatusOgAndel> arbeidstakerAndeler = BeregningsgrunnlagMapper
+        var arbeidstakerAndeler = BeregningsgrunnlagMapper
                 .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER),
                         beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
-        List<BeregningsgrunnlagPrStatusOgAndel> frilansAndeler = BeregningsgrunnlagMapper
+        var frilansAndeler = BeregningsgrunnlagMapper
                 .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER),
                         beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
 
@@ -90,26 +90,26 @@ public class BeregningsgrunnlagMapperTest {
 
     @Test
     public void skal_matche_aap() {
-        BeregningsgrunnlagAktivitetStatus bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+        var bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
         assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
     }
 
     @Test
     public void skal_matche_alt_på_kun_ytelse() {
-        BeregningsgrunnlagAktivitetStatus bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.KUN_YTELSE);
+        var bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.KUN_YTELSE);
         assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
         assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaSN()))).isNotEmpty();
     }
 
     @Test
     public void skal_kaste_exception_matcher_ikke() {
-        BeregningsgrunnlagAktivitetStatus bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER);
+        var bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER);
         assertThatThrownBy(() -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     public void skal_matche_AT_SN() {
-        BeregningsgrunnlagAktivitetStatus bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.KOMBINERT_AT_SN);
+        var bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.KOMBINERT_AT_SN);
         assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).hasSize(2);
     }
 

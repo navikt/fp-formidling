@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapperProvider;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.DistribuerBrevTask;
@@ -25,7 +24,6 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.repository.DokumentReposi
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.OpprettJournalpostResponse;
@@ -40,7 +38,7 @@ import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste {
     private static final Logger LOG = LoggerFactory.getLogger(DokgenBrevproduksjonTjeneste.class);
-    private static final Logger SECURE_LOGGER = LoggerFactory.getLogger("secureLogger");
+    private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");
 
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DomeneobjektProvider domeneobjektProvider;
@@ -73,17 +71,17 @@ public class DokgenBrevproduksjonTjeneste {
 
     public byte[] forhåndsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
         var utkast = BestillingType.UTKAST;
-        DokumentData dokumentData = lagreDokumentDataFor(behandling, dokumentMal, utkast);
+        var dokumentData = lagreDokumentDataFor(behandling, dokumentMal, utkast);
         // hvis verge finnes produseres det 2 brev. Vi forhåndsviser kun en av dem.
         return genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentData.getFørsteDokumentFelles(), utkast);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
         var bestill = BestillingType.BESTILL;
-        DokumentData dokumentData = lagreDokumentDataFor(behandling, dokumentMal, bestill);
-        int teller = 0;
-        for (DokumentFelles dokumentFelles : dokumentData.getDokumentFelles()) {
-            byte[] brev = genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentFelles, bestill);
+        var dokumentData = lagreDokumentDataFor(behandling, dokumentMal, bestill);
+        var teller = 0;
+        for (var dokumentFelles : dokumentData.getDokumentFelles()) {
+            var brev = genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentFelles, bestill);
 
             var unikBestillingsUuidPerDokFelles = dokumentHendelse.getBestillingUuid().toString();
             if (teller > 0) {
@@ -91,8 +89,8 @@ public class DokgenBrevproduksjonTjeneste {
             }
             teller++;
 
-            boolean innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
-            OpprettJournalpostResponse response = opprettJournalpostTjeneste.journalførUtsendelse(brev,
+            var innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
+            var response = opprettJournalpostTjeneste.journalførUtsendelse(brev,
                     dokumentMal,
                     dokumentFelles,
                     dokumentHendelse,
@@ -102,7 +100,7 @@ public class DokgenBrevproduksjonTjeneste {
                     unikBestillingsUuidPerDokFelles) // NoSonar
             ;
 
-            JournalpostId journalpostId = new JournalpostId(response.getJournalpostId());
+            var journalpostId = new JournalpostId(response.getJournalpostId());
 
             LOG.info("Journalført {} for bestilling {}", journalpostId, unikBestillingsUuidPerDokFelles);
 
@@ -120,8 +118,8 @@ public class DokgenBrevproduksjonTjeneste {
                                    DokumentFelles dokumentFelles,
                                    BestillingType bestillingType) {
 
-        DokumentdataMapper dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
-        Dokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, BestillingType.UTKAST == bestillingType);
+        var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, BestillingType.UTKAST == bestillingType);
         dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
 
         byte[] brev;
@@ -129,7 +127,7 @@ public class DokgenBrevproduksjonTjeneste {
             brev = dokgenKlient.genererPdf(dokumentdataMapper.getTemplateNavn(), behandling.getSpråkkode(), dokumentdata);
         } catch (Exception e) {
             dokumentdata.getFelles().anonymiser();
-            SECURE_LOGGER.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
+            SECURE_LOG.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
             throw new TekniskException("FPFORMIDLING-221006", String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s",
                     dokumentMal.getKode(), behandling.getUuid(), bestillingType), e);
         }
@@ -140,7 +138,7 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     private DokumentData lagreDokumentDataFor(Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {
-        DokumentData dokumentData = lagDokumentData(behandling, dokumentMal, bestillingType);
+        var dokumentData = lagDokumentData(behandling, dokumentMal, bestillingType);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
         dokumentRepository.lagre(dokumentData);
         return dokumentData;
@@ -156,7 +154,7 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMal, OpprettJournalpostResponse response, JournalpostId journalpostId, boolean innsynMedVedlegg, String saksnummer, String unikBestillingsId) {
-        ProsessTaskGruppe taskGruppe = new ProsessTaskGruppe();
+        var taskGruppe = new ProsessTaskGruppe();
         taskGruppe.addNesteSekvensiell(
                 opprettDistribuerBrevTask(journalpostId,
                         innsynMedVedlegg,
@@ -176,14 +174,14 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     private void leggTilVedleggOgFerdigstillForsendelse(UUID behandlingUid, JournalpostId journalpostId) {
-        ProsessTaskGruppe taskGruppe = new ProsessTaskGruppe();
+        var taskGruppe = new ProsessTaskGruppe();
         taskGruppe.addNesteSekvensiell(opprettTilknyttVedleggTask(behandlingUid, journalpostId));
         taskGruppe.addNesteSekvensiell(opprettFerdigstillForsendelseTask(journalpostId));
         taskTjeneste.lagre(taskGruppe);
     }
 
     private ProsessTaskData opprettTilknyttVedleggTask(UUID behandlingUuId, JournalpostId journalpostId) {
-        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(TilknyttVedleggTask.class);
+        var prosessTaskData = ProsessTaskData.forProsessTask(TilknyttVedleggTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, (String.valueOf(behandlingUuId)));
         prosessTaskData.setCallIdFraEksisterende();
@@ -191,7 +189,7 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     private ProsessTaskData opprettFerdigstillForsendelseTask(JournalpostId journalpostId) {
-        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(FerdigstillForsendelseTask.class);
+        var prosessTaskData = ProsessTaskData.forProsessTask(FerdigstillForsendelseTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setCallIdFraEksisterende();
         return prosessTaskData;
@@ -203,7 +201,7 @@ public class DokgenBrevproduksjonTjeneste {
                                                       Distribusjonstype distribusjonstype,
                                                       String saksnummer,
                                                       String unikBestillingsId) {
-        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
+        var prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, unikBestillingsId);
         prosessTaskData.setProperty(BrevTaskProperties.DISTRIBUSJONSTYPE, distribusjonstype.name());
@@ -223,7 +221,7 @@ public class DokgenBrevproduksjonTjeneste {
                                                          DokumentMalType dokumentMal,
                                                          String journalpostId,
                                                          String dokumentId) {
-        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(SendKvitteringTask.class);
+        var prosessTaskData = ProsessTaskData.forProsessTask(SendKvitteringTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, behandlingUuid.toString());
         prosessTaskData.setProperty(SendKvitteringTask.BESTILLING_UUID, bestillingUuid.toString());
         prosessTaskData.setProperty(SendKvitteringTask.DOKUMENT_MAL_TYPE, dokumentMal.getKode());

@@ -7,7 +7,9 @@ public record ForeldrepengerUttak(List<UttakResultatPeriode> perioder,
                                   List<UttakResultatPeriode> perioderAnnenPart,
                                   boolean aleneomsorg,
                                   boolean annenForelderHarRett,
-                                  boolean annenForelderRettEØS) {
+                                  boolean annenForelderRettEØS,
+                                  boolean oppgittAnnenForelderRettEØS
+                                  ) {
 
     @Override
     public List<UttakResultatPeriode> perioder() {
@@ -25,6 +27,6 @@ public record ForeldrepengerUttak(List<UttakResultatPeriode> perioder,
     }
 
     public static ForeldrepengerUttak tomtUttak() {
-        return new ForeldrepengerUttak(List.of(), List.of(), false, false, false);
+        return new ForeldrepengerUttak(List.of(), List.of(), false, false, false, false);
     }
 }

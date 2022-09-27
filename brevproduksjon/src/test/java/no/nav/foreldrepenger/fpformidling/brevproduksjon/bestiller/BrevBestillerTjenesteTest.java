@@ -101,8 +101,8 @@ public class BrevBestillerTjenesteTest {
     public void beforeEach() {
         dokumentdataMapper = new EngangsstønadInnvilgelseDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)),
                 domeneobjektProvider);
-        DokumentFellesDataMapper dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, virksomhetTjeneste);
-        DokgenBrevproduksjonTjeneste dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
+        var dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, virksomhetTjeneste);
+        var dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
                 dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste);
         tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
     }
@@ -110,15 +110,15 @@ public class BrevBestillerTjenesteTest {
     @Test
     public void skal_generere_og_sende_brev_til_både_søker_og_verge() {
         // Arrange
-        UUID randomBestillingsUuid = UUID.randomUUID();
-        Personinfo personinfo = mockPdl(true);
-        Behandling behandling = mockDomeneobjektProvider(personinfo, true);
-        DokumentHendelse dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
+        var randomBestillingsUuid = UUID.randomUUID();
+        var personinfo = mockPdl(true);
+        var behandling = mockDomeneobjektProvider(personinfo, true);
+        var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
         when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(eq(DOKUMENT_MAL_TYPE))).thenReturn(dokumentdataMapper);
-        ArgumentCaptor<ProsessTaskGruppe> taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
+        var taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
 
         // Act
         tjeneste.bestillBrev(dokumentHendelse);
@@ -138,15 +138,15 @@ public class BrevBestillerTjenesteTest {
     @Test
     public void skal_ikke_sende_til_verge_når_verge_ikke_er_definert() {
         // Arrange
-        UUID randomBestillingsUuid = UUID.randomUUID();
-        Personinfo personinfo = mockPdl(false);
-        Behandling behandling = mockDomeneobjektProvider(personinfo, false);
-        DokumentHendelse dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
+        var randomBestillingsUuid = UUID.randomUUID();
+        var personinfo = mockPdl(false);
+        var behandling = mockDomeneobjektProvider(personinfo, false);
+        var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
         when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(eq(DOKUMENT_MAL_TYPE))).thenReturn(dokumentdataMapper);
-        ArgumentCaptor<ProsessTaskGruppe> taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
+        var taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
 
         // Act
         tjeneste.bestillBrev(dokumentHendelse);
@@ -163,7 +163,7 @@ public class BrevBestillerTjenesteTest {
     }
 
     private Personinfo mockPdl(boolean harVerge) {
-        Personinfo personinfoSøker = Personinfo.getbuilder(SØKER)
+        var personinfoSøker = Personinfo.getbuilder(SØKER)
                 .medPersonIdent(SØKER_FNR)
                 .medNavn(NAVN)
                 .medNavBrukerKjønn(NavBrukerKjønn.MANN)
@@ -171,7 +171,7 @@ public class BrevBestillerTjenesteTest {
         lenient().when(personAdapter.hentBrukerForAktør(eq(SØKER))).thenReturn(Optional.of(personinfoSøker));
 
         if (harVerge) {
-            Personinfo personinfoVerge = Personinfo.getbuilder(VERGE)
+            var personinfoVerge = Personinfo.getbuilder(VERGE)
                     .medPersonIdent(VERGE_FNR)
                     .medNavn("Verge Vergesen")
                     .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
@@ -182,11 +182,11 @@ public class BrevBestillerTjenesteTest {
     }
 
     private Behandling mockDomeneobjektProvider(Personinfo personinfo, boolean harVerge) {
-        FagsakBackend fagsakBackend = FagsakBackend.ny()
+        var fagsakBackend = FagsakBackend.ny()
                 .medSaksnummer(SAKSNUMMER.getVerdi())
                 .medAktørId(personinfo.getAktørId())
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medUuid(BEHANDLING_UUID)
                 .medFagsakBackend(fagsakBackend)
                 .medSpråkkode(Språkkode.NB)
@@ -196,7 +196,7 @@ public class BrevBestillerTjenesteTest {
         when(domeneobjektProvider.hentFagsakBackend(eq(behandling))).thenReturn(fagsakBackend);
         when(domeneobjektProvider.hentBehandling(any(UUID.class))).thenReturn(behandling);
         if (harVerge) {
-            Verge verge = new Verge(VERGE.getId(), "", "");
+            var verge = new Verge(VERGE.getId(), "", "");
             when(domeneobjektProvider.hentVerge(eq(behandling))).thenReturn(Optional.of(verge));
         }
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(eq(behandling))).thenReturn(new TilkjentYtelseEngangsstønad(1L));
@@ -204,7 +204,7 @@ public class BrevBestillerTjenesteTest {
     }
 
     private DokumentHendelse opprettDokumentHendelse(UUID randomBestillingsUuid) {
-        DokumentHendelse dokumentHendelse = DokumentHendelse.builder()
+        var dokumentHendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(BEHANDLING_UUID)
                 .medBestillingUuid(randomBestillingsUuid)
                 .medYtelseType(FagsakYtelseType.FORELDREPENGER)
@@ -215,8 +215,8 @@ public class BrevBestillerTjenesteTest {
     }
 
     private void mockJournal(DokumentHendelse dokumentHendelse) {
-        DokumentOpprettResponse dokumentOpprettResponse = new DokumentOpprettResponse(DOKUMENT_INFO_ID);
-        OpprettJournalpostResponse opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), "", true,
+        var dokumentOpprettResponse = new DokumentOpprettResponse(DOKUMENT_INFO_ID);
+        var opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), "", true,
                 List.of(dokumentOpprettResponse));
         when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse),
                 eq(SAKSNUMMER), eq(true), eq(null), any()))

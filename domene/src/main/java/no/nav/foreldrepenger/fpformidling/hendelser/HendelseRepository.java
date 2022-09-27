@@ -6,7 +6,6 @@ import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
@@ -31,19 +30,19 @@ public class HendelseRepository {
     }
 
     public boolean finnesHendelseMedUuidAllerede(UUID bestillingUuid) {
-        TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where bestilling_uuid=:bestillingUuid", DokumentHendelse.class);
+        var query = entityManager.createQuery("from DokumentHendelse where bestilling_uuid=:bestillingUuid", DokumentHendelse.class);
         query.setParameter("bestillingUuid", bestillingUuid);
         return !query.getResultList().isEmpty();
     }
 
     public DokumentHendelse hentDokumentHendelseMedId(long hendelseId) {
-        TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where id=:hendelseId", DokumentHendelse.class);
+        var query = entityManager.createQuery("from DokumentHendelse where id=:hendelseId", DokumentHendelse.class);
         query.setParameter("hendelseId", hendelseId);
         return HibernateVerktøy.hentEksaktResultat(query);
     }
 
     public boolean erDokumentHendelseMottatt(UUID behandlingUuid, DokumentMalType dokumentMal) {
-        TypedQuery<DokumentHendelse> query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid and dokumentMalType=:dokumentMalType", DokumentHendelse.class);
+        var query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid and dokumentMalType=:dokumentMalType", DokumentHendelse.class);
         query.setParameter("behandlingUuid", behandlingUuid);
         query.setParameter("dokumentMalType", dokumentMal);
         return !query.getResultList().isEmpty();

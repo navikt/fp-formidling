@@ -22,14 +22,17 @@
             ]
         },
         {
-            "app": "fp-frontend-azure",
+            "app": "fp-swagger",
             "namespace": "teamforeldrepenger",
-            "cluster": "dev-gcp"
+            "cluster": "dev-gcp",
+            "scopes": [
+                "swagger"
+            ]
         },
         {
-            "app": "fp-frontend-azure",
+            "app": "fp-frontend",
             "namespace": "teamforeldrepenger",
-            "cluster": "dev-fss"
+            "cluster": "dev-gcp"
         },
         {
             "app": "fpsak",

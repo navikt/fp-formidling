@@ -53,9 +53,9 @@ public final class UndermalInkluderingMapper {
     }
 
     private static boolean ikkeHarGradering(Utbetalingsperiode utbetalingsperiode) {
-        return (utbetalingsperiode.getArbeidsforholdsliste().size() == 0 || utbetalingsperiode.getArbeidsforholdsliste().stream().noneMatch(Arbeidsforhold::isGradering))
+        return utbetalingsperiode.getArbeidsforholdsliste().stream().noneMatch(Arbeidsforhold::isGradering)
                 && (utbetalingsperiode.getNæring() == null || !utbetalingsperiode.getNæring().isGradering())
-                && (utbetalingsperiode.getAnnenAktivitetsliste().size() == 0 || utbetalingsperiode.getAnnenAktivitetsliste().stream().noneMatch(AnnenAktivitet::isGradering));
+                && utbetalingsperiode.getAnnenAktivitetsliste().stream().noneMatch(AnnenAktivitet::isGradering);
     }
 
     private static boolean harMerEnnEnPeriodeOgMinstEnInnvilget(List<Utbetalingsperiode> utbetalingsperioder) {
@@ -81,8 +81,8 @@ public final class UndermalInkluderingMapper {
     }
 
     private static boolean harGradering(Utbetalingsperiode utbetalingsperiode) {
-        return (utbetalingsperiode.getArbeidsforholdsliste().size() > 0 && utbetalingsperiode.getArbeidsforholdsliste().stream().anyMatch(Arbeidsforhold::isGradering))
+        return utbetalingsperiode.getArbeidsforholdsliste().stream().anyMatch(Arbeidsforhold::isGradering)
                 || (utbetalingsperiode.getNæring() != null && utbetalingsperiode.getNæring().isGradering())
-                || (utbetalingsperiode.getAnnenAktivitetsliste().size() > 0 && utbetalingsperiode.getAnnenAktivitetsliste().stream().anyMatch(AnnenAktivitet::isGradering));
+                || utbetalingsperiode.getAnnenAktivitetsliste().stream().anyMatch(AnnenAktivitet::isGradering);
     }
 }

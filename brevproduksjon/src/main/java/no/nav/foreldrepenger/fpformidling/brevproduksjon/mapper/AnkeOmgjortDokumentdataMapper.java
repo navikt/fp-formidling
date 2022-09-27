@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 
 import java.time.LocalDate;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -45,7 +44,7 @@ public class AnkeOmgjortDokumentdataMapper implements DokumentdataMapper {
     @Override
     public AnkeOmgjortDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
                                                       Behandling behandling, boolean erUtkast) {
-        Optional<Anke> anke = domeneobjektProvider.hentAnkebehandling(behandling);
+        var anke = domeneobjektProvider.hentAnkebehandling(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
@@ -63,7 +62,7 @@ public class AnkeOmgjortDokumentdataMapper implements DokumentdataMapper {
     }
 
     private LocalDate getVedtaksdato(Optional<Anke> anke) {
-        UUID påAnketKlageBehandlingUuid = anke.map(Anke::getPåAnketKlageBehandlingUuid).orElse(null);
+        var påAnketKlageBehandlingUuid = anke.map(Anke::getPåAnketKlageBehandlingUuid).orElse(null);
         if (påAnketKlageBehandlingUuid != null) {
             return domeneobjektProvider.hentBehandling(påAnketKlageBehandlingUuid).getOriginalVedtaksDato();
         } else {

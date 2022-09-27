@@ -50,12 +50,10 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Naturalytelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.SvangerskapspengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
@@ -116,11 +114,11 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
     @BeforeEach
     public void before() {
-        BrevParametere brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
+        var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         dokumentData = lagStandardDokumentData(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE);
         dokumentdataMapper = new SvangerskapspengerInnvilgelseDokumentdataMapper(domeneobjektProvider, brevParametere);
 
-        MottattDokument mottattDokument = new MottattDokument(SØKNAD_DATO, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD);
+        var mottattDokument = new MottattDokument(SØKNAD_DATO, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD);
         when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(of(mottattDokument));
         when(domeneobjektProvider.hentSvangerskapspengerUttak(any(Behandling.class))).thenReturn(opprettSvpUttaksresultat());
     }
@@ -128,14 +126,14 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_førstegangsbehandling() {
         // Arrange
-        Behandling behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
 
         // Act
-        SvangerskapspengerInnvilgelseDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -216,18 +214,18 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_revurdering() {
         // Arrange
-        Behandling behandling = opprettBehandling(BehandlingType.REVURDERING)
+        var behandling = opprettBehandling(BehandlingType.REVURDERING)
                 .medBehandlingsresultat(Behandlingsresultat.builder()
                         .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
                         .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING))
                         .build())
                 .build();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
 
-        Behandling originalBehandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD)
+        var originalBehandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medBehandlingsresultat(Behandlingsresultat.builder()
                         .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
                         .build())
@@ -240,7 +238,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .thenReturn(opprettFamilieHendelse(LocalDate.now().minusDays(2)));
 
         // Act
-        SvangerskapspengerInnvilgelseDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getRevurdering()).isTrue();
@@ -252,14 +250,14 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     @Test
     public void skal_mappe_selvstendig_næringsdrivende_når_det_er_i_første_periode() {
         // Arrange
-        Behandling behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlagMedSNIFørstePeriode());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseMedSNIFørstePeriode());
 
         // Act
-        SvangerskapspengerInnvilgelseDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getSelvstendigNæringsdrivende()).isNotNull();
@@ -274,14 +272,14 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     @Test
     public void skal_mappe_frilanser_når_det_er_i_første_periode() {
         // Arrange
-        Behandling behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlagMedFLIFørstePeriode());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseMedFLIFørstePeriode());
 
         // Act
-        SvangerskapspengerInnvilgelseDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFrilanser()).isNotNull();
@@ -503,38 +501,38 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     }
 
     private SvangerskapspengerUttak opprettSvpUttaksresultat() {
-        SvpUttakResultatPeriode uttakPeriode1 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode1 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE1)
                 .build();
-        SvpUttakResultatPeriode uttakPeriode2 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode2 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
                 .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE2)
                 .build();
-        SvpUttakResultatPeriode uttakPeriode3 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode3 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
                 .medArbeidsgiverNavn(ARBEIDSGIVER2_NAVN)
                 .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
                 .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE3)
                 .medPeriodeIkkeOppfyltÅrsak(PERIODE_IKKE_OPPFYLT_ÅRSAK)
                 .build();
-        SvpUttakResultatPeriode uttakPeriode4 = SvpUttakResultatPeriode.Builder.ny()
+        var uttakPeriode4 = SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
                 .medArbeidsgiverNavn(ARBEIDSGIVER3_NAVN)
                 .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
                 .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE4)
                 .build();
-        SvpUttakResultatArbeidsforhold svpUttakResultatArbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny()
+        var svpUttakResultatArbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny()
                 .leggTilPerioder(of(uttakPeriode1, uttakPeriode2))
                 .build();
-        SvpUttakResultatArbeidsforhold svpUttakResultatArbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny()
+        var svpUttakResultatArbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny()
                 .leggTilPerioder(of(uttakPeriode3))
                 .build();
-        SvpUttakResultatArbeidsforhold svpUttakResultatArbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny()
+        var svpUttakResultatArbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny()
                 .leggTilPerioder(of(uttakPeriode4))
                 .medArbeidsforholdIkkeOppfyltÅrsak(ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK)
                 .medArbeidsgiver(ARBEIDSGIVER3)

@@ -133,7 +133,7 @@ public class DokumentHendelse extends BaseEntitet {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DokumentHendelse that = (DokumentHendelse) o;
+        var that = (DokumentHendelse) o;
         return behandlingUuid.equals(that.behandlingUuid) &&
                 Objects.equals(dokumentMalType, that.dokumentMalType) &&
                 Objects.equals(ytelseType, that.ytelseType) &&

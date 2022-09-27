@@ -8,7 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +21,6 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagA
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
@@ -37,13 +35,13 @@ public class BeregningMapperTest {
     @Test
     public void skal_mappe_arbeidsforhold_med_høyest_inntekt_først() {
         // Arrange
-        Arbeidsgiver arbeidsgiver1 = new Arbeidsgiver("1", ARBEIDSGIVER_1);
-        BGAndelArbeidsforhold bgAndelArbeidsforhold1 = new BGAndelArbeidsforhold(arbeidsgiver1, ArbeidsforholdRef.ref("1"),
+        var arbeidsgiver1 = new Arbeidsgiver("1", ARBEIDSGIVER_1);
+        var bgAndelArbeidsforhold1 = new BGAndelArbeidsforhold(arbeidsgiver1, ArbeidsforholdRef.ref("1"),
                 BigDecimal.ZERO, BigDecimal.ZERO);
-        Arbeidsgiver arbeidsgiver2 = new Arbeidsgiver("1", ARBEIDSGIVER_2);
-        BGAndelArbeidsforhold bgAndelArbeidsforhold2 = new BGAndelArbeidsforhold(arbeidsgiver2, ArbeidsforholdRef.ref("1"),
+        var arbeidsgiver2 = new Arbeidsgiver("1", ARBEIDSGIVER_2);
+        var bgAndelArbeidsforhold2 = new BGAndelArbeidsforhold(arbeidsgiver2, ArbeidsforholdRef.ref("1"),
                 BigDecimal.ZERO, BigDecimal.ZERO);
-        List<BeregningsgrunnlagPrStatusOgAndel> andel = of(
+        var andel = of(
                 BeregningsgrunnlagPrStatusOgAndel.ny()
                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                         .medBgAndelArbeidsforhold(bgAndelArbeidsforhold1)
@@ -58,18 +56,18 @@ public class BeregningMapperTest {
                         .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
                         .build()
         );
-        BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
+        var beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(20), LocalDate.now().plusDays(20)))
                 .medBeregningsgrunnlagPrStatusOgAndelList(andel)
                 .build();
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriode)
                 .build();
 
         // Act
-        List<Arbeidsforhold> resultat = BeregningMapper.mapArbeidsforhold(beregningsgrunnlag);
+        var resultat = BeregningMapper.mapArbeidsforhold(beregningsgrunnlag);
 
         // Assert
         assertThat(resultat).hasSize(2);
@@ -83,7 +81,7 @@ public class BeregningMapperTest {
     @Test
     public void er_militær() {
         // Arrange
-        List<BeregningsgrunnlagPrStatusOgAndel> andel = of(
+        var andel = of(
                 BeregningsgrunnlagPrStatusOgAndel.ny()
                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                         .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1))
@@ -95,11 +93,11 @@ public class BeregningMapperTest {
                         .medDagsats(1000L)
                         .build());
 
-        BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
+        var beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(20), LocalDate.now().plusDays(20)))
                 .medBeregningsgrunnlagPrStatusOgAndelList(andel)
                 .build();
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriode)
@@ -111,7 +109,7 @@ public class BeregningMapperTest {
     @Test
     public void er_ikke_militær() {
         // Arrange
-        List<BeregningsgrunnlagPrStatusOgAndel> andel = of(
+        var andel = of(
                 BeregningsgrunnlagPrStatusOgAndel.ny()
                         .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                         .medBruttoPrÅr(BigDecimal.valueOf(BRUTTO_ÅR_ARBEIDSFORHOLD1))
@@ -123,11 +121,11 @@ public class BeregningMapperTest {
                         .medDagsats(0L)
                         .build());
 
-        BeregningsgrunnlagPeriode beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
+        var beregningsgrunnlagPeriode = BeregningsgrunnlagPeriode.ny()
                 .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(20), LocalDate.now().plusDays(20)))
                 .medBeregningsgrunnlagPrStatusOgAndelList(andel)
                 .build();
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
                 .leggTilBeregningsgrunnlagPeriode(beregningsgrunnlagPeriode)
@@ -139,19 +137,19 @@ public class BeregningMapperTest {
     @Test
     public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_30() {
         // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+        var behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medBehandlingsresultat(behandlingsresultat)
                 .build();
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .medhHjemmel(Hjemmel.F_14_7_8_30)
                 .build();
 
         // Act
-        String hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);
+        var hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);
 
         // Assert
         assertThat(hjemmel).containsOnlyOnce("§§ 14-4 og 8-30");
@@ -160,19 +158,19 @@ public class BeregningMapperTest {
     @Test
     public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_49() {
         // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+        var behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medBehandlingsresultat(behandlingsresultat)
                 .build();
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .medhHjemmel(Hjemmel.F_14_7_8_49)
                 .build();
 
         // Act
-        String hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);
+        var hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);
 
         // Assert
         assertThat(hjemmel).containsOnlyOnce("§§ 14-4 og 8-49");
@@ -181,19 +179,19 @@ public class BeregningMapperTest {
     @Test
     public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7() {
         // Arrange
-        Behandlingsresultat behandlingsresultat = Behandlingsresultat.builder()
+        var behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
                 .build();
-        Behandling behandling = Behandling.builder()
+        var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
                 .medBehandlingsresultat(behandlingsresultat)
                 .build();
-        Beregningsgrunnlag beregningsgrunnlag = Beregningsgrunnlag.ny()
+        var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .medhHjemmel(Hjemmel.F_14_7)
                 .build();
 
         // Act
-        String hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);
+        var hjemmel = utledLovhjemmelForBeregning(beregningsgrunnlag, behandling);
 
         // Assert
         assertThat(hjemmel).containsOnlyOnce("§ 14-4");

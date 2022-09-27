@@ -29,8 +29,6 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.AnkeOpphevetDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
@@ -57,12 +55,12 @@ public class AnkeOpphevetDokumentdataMapperTest {
     public void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         mockDomeneobjektProvider(true, FRITEKST);
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        AnkeOpphevetDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -85,12 +83,12 @@ public class AnkeOpphevetDokumentdataMapperTest {
     public void skal_mappe_ikke_oppheve() {
         // Arrange
         mockDomeneobjektProvider(false, FRITEKST);
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().build();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         // Act
-        AnkeOpphevetDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getOppheve()).isFalse();
@@ -100,19 +98,19 @@ public class AnkeOpphevetDokumentdataMapperTest {
     public void skal_hente_fritekst_fra_hendelse_når_den_ikke_kommer_i_anke() {
         // Arrange
         mockDomeneobjektProvider(false, null);
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder().medFritekst(ALTERNATIV_FRITEKST).build();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = lagStandardHendelseBuilder().medFritekst(ALTERNATIV_FRITEKST).build();
 
         // Act
-        AnkeOpphevetDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(ALTERNATIV_FRITEKST));
     }
 
     private void mockDomeneobjektProvider(boolean oppheve, String fritekst) {
-        Anke anke = Anke.ny()
+        var anke = Anke.ny()
                 .medFritekstTilBrev(fritekst)
                 .medAnkeVurdering(oppheve ? AnkeVurdering.ANKE_OPPHEVE_OG_HJEMSENDE : AnkeVurdering.ANKE_HJEMSEND_UTEN_OPPHEV)
                 .build();

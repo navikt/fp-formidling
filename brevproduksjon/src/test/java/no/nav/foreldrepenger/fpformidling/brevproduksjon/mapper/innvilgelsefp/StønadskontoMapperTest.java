@@ -15,28 +15,28 @@ public class StønadskontoMapperTest {
 
     @Test
     public void skal_finne_disponible_dager_mødrekvote() {
-        Set<Stønadskonto> stønadskontoer = Set.of(new Stønadskonto(10, SaldoVisningStønadskontoType.MØDREKVOTE, 5, 0, 0));
+        var stønadskontoer = Set.of(new Stønadskonto(10, SaldoVisningStønadskontoType.MØDREKVOTE, 5, 0, 0));
         var dager = StønadskontoMapper.finnDisponibleDager(new Saldoer(stønadskontoer, 0), RelasjonsRolleType.MORA);
         assertThat(dager).isEqualTo(5);
     }
 
     @Test
     public void skal_finne_disponible_dager_fellesperiode() {
-        Set<Stønadskonto> stønadskontoer = Set.of(new Stønadskonto(10, SaldoVisningStønadskontoType.FELLESPERIODE, 5, 0, 0));
+        var stønadskontoer = Set.of(new Stønadskonto(10, SaldoVisningStønadskontoType.FELLESPERIODE, 5, 0, 0));
         var dager = StønadskontoMapper.finnDisponibleFellesDager(new Saldoer(stønadskontoer, 0));
         assertThat(dager).isEqualTo(5);
     }
 
     @Test
     public void skal_finne_disponible_dager_foreldrepenger() {
-        Set<Stønadskonto> stønadskontoer = Set.of(new Stønadskonto(10, SaldoVisningStønadskontoType.FORELDREPENGER, 5, 0, 0));
+        var stønadskontoer = Set.of(new Stønadskonto(10, SaldoVisningStønadskontoType.FORELDREPENGER, 5, 0, 0));
         var dager = StønadskontoMapper.finnDisponibleDager(new Saldoer(stønadskontoer, 0), RelasjonsRolleType.MORA);
         assertThat(dager).isEqualTo(5);
     }
 
     @Test
     public void skal_finne_disponible_dager_fedrekvote() {
-        Set<Stønadskonto> stønadskontoer = Set.of(new Stønadskonto(10, SaldoVisningStønadskontoType.FEDREKVOTE, 5, 0, 0));
+        var stønadskontoer = Set.of(new Stønadskonto(10, SaldoVisningStønadskontoType.FEDREKVOTE, 5, 0, 0));
         var dager = StønadskontoMapper.finnDisponibleDager(new Saldoer(stønadskontoer, 0), RelasjonsRolleType.FARA);
         assertThat(dager).isEqualTo(5);
     }

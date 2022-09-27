@@ -24,7 +24,7 @@ public class EtterlysInntektsmeldingDokumentdata extends Dokumentdata {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final EtterlysInntektsmeldingDokumentdata that = (EtterlysInntektsmeldingDokumentdata) o;
+        final var that = (EtterlysInntektsmeldingDokumentdata) o;
         return Objects.equals(getSøknadDato(), that.getSøknadDato()) && Objects.equals(getFristDato(), that.getFristDato());
     }
 

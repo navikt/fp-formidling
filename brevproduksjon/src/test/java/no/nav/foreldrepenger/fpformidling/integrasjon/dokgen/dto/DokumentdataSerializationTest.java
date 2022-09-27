@@ -50,7 +50,7 @@ public class DokumentdataSerializationTest {
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_foreldrepenger() throws IOException {
         // Arrange
-        Arbeidsforhold arbeidsforhold1 = Arbeidsforhold.ny()
+        var arbeidsforhold1 = Arbeidsforhold.ny()
                 .medArbeidsgiverNavn("Arbeidsgiver 1")
                 .medGradering(true)
                 .medProsentArbeid(Prosent.HUNDRE)
@@ -60,7 +60,7 @@ public class DokumentdataSerializationTest {
                 .medNaturalytelseEndringDato(formaterDatoNorsk(LocalDate.now().minusDays(5)))
                 .medNaturalytelseNyDagsats(500)
                 .build();
-        Arbeidsforhold arbeidsforhold2 = Arbeidsforhold.ny()
+        var arbeidsforhold2 = Arbeidsforhold.ny()
                 .medArbeidsgiverNavn("Arbeidsgiver 2")
                 .medGradering(true)
                 .medProsentArbeid(Prosent.of(BigDecimal.TEN))
@@ -70,18 +70,18 @@ public class DokumentdataSerializationTest {
                 .medNaturalytelseEndringDato(formaterDatoNorsk(LocalDate.now().minusDays(50)))
                 .medNaturalytelseNyDagsats(200)
                 .build();
-        Næring næring = Næring.ny()
+        var næring = Næring.ny()
                 .medGradering(true)
                 .medUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(60)))
                 .medProsentArbeid(Prosent.of(BigDecimal.valueOf(70)))
                 .build();
-        AnnenAktivitet annenAktivitet = AnnenAktivitet.ny()
+        var annenAktivitet = AnnenAktivitet.ny()
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
                 .medGradering(true)
                 .medUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(20)))
                 .medProsentArbeid(Prosent.of(BigDecimal.valueOf(30)))
                 .build();
-        Utbetalingsperiode periode1 = Utbetalingsperiode.ny()
+        var periode1 = Utbetalingsperiode.ny()
                 .medInnvilget(true)
                 .medÅrsak(Årsak.of("2001"))
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
@@ -93,7 +93,7 @@ public class DokumentdataSerializationTest {
                 .medNæring(næring)
                 .medAnnenAktivitet(List.of(annenAktivitet))
                 .build();
-        Utbetalingsperiode periode2 = Utbetalingsperiode.ny()
+        var periode2 = Utbetalingsperiode.ny()
                 .medInnvilget(false)
                 .medÅrsak(Årsak.of("2002"))
                 .medPeriodeFom(LocalDate.now().minusDays(7), Språkkode.NB)
@@ -105,7 +105,7 @@ public class DokumentdataSerializationTest {
                 .medNæring(næring)
                 .medAnnenAktivitet(List.of(annenAktivitet))
                 .build();
-        BeregningsgrunnlagAndel andel1 = BeregningsgrunnlagAndel.ny()
+        var andel1 = BeregningsgrunnlagAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name())
                 .medArbeidsgiverNavn("Arbeidsgiver 1")
                 .medDagsats(400)
@@ -114,7 +114,7 @@ public class DokumentdataSerializationTest {
                 .medEtterlønnSluttpakke(true)
                 .medSistLignedeÅr(2019)
                 .build();
-        BeregningsgrunnlagAndel andel2 = BeregningsgrunnlagAndel.ny()
+        var andel2 = BeregningsgrunnlagAndel.ny()
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
                 .medArbeidsgiverNavn("Arbeidsgiver 2")
                 .medDagsats(200)
@@ -123,19 +123,19 @@ public class DokumentdataSerializationTest {
                 .medEtterlønnSluttpakke(true)
                 .medSistLignedeÅr(2020)
                 .build();
-        BeregningsgrunnlagRegel regel1 = BeregningsgrunnlagRegel.ny()
+        var regel1 = BeregningsgrunnlagRegel.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name())
                 .medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(10)
                 .medSnNyoppstartet(true)
                 .medAndelListe(of(andel1, andel2))
                 .build();
-        BeregningsgrunnlagRegel regel2 = BeregningsgrunnlagRegel.ny()
+        var regel2 = BeregningsgrunnlagRegel.ny()
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
                 .medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(3)
                 .medSnNyoppstartet(true)
                 .medAndelListe(List.of(andel2))
                 .build();
-        ForeldrepengerInnvilgelseDokumentdata dokumentdata = ForeldrepengerInnvilgelseDokumentdata.ny()
+        var dokumentdata = ForeldrepengerInnvilgelseDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD.name())
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET.name())
@@ -189,7 +189,7 @@ public class DokumentdataSerializationTest {
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_avslag_engangsstønad() throws IOException {
         // Arrange
-        EngangsstønadAvslagDokumentdata dokumentdata = EngangsstønadAvslagDokumentdata.ny()
+        var dokumentdata = EngangsstønadAvslagDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medAvslagsÅrsak(Avslagsårsak.SØKER_ER_IKKE_MEDLEM.getKode())
                 .medFørstegangsbehandling(true)
@@ -208,7 +208,7 @@ public class DokumentdataSerializationTest {
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_engangsstønad() throws IOException {
         // Arrange
-        EngangsstønadInnvilgelseDokumentdata dokumentdata = EngangsstønadInnvilgelseDokumentdata.ny()
+        var dokumentdata = EngangsstønadInnvilgelseDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medRevurdering(true)
                 .medFørstegangsbehandling(true)
@@ -227,7 +227,7 @@ public class DokumentdataSerializationTest {
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_forlenget_saksbehandlingstid() throws IOException {
         // Arrange
-        ForlengetSaksbehandlingstidDokumentdata dokumentdata = ForlengetSaksbehandlingstidDokumentdata.ny()
+        var dokumentdata = ForlengetSaksbehandlingstidDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medVariantType(ForlengetSaksbehandlingstidDokumentdata.VariantType.FORLENGET)
                 .medDød(true)
@@ -242,7 +242,7 @@ public class DokumentdataSerializationTest {
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_henleggelse() throws IOException {
         // Arrange
-        HenleggelseDokumentdata dokumentdata = HenleggelseDokumentdata.ny()
+        var dokumentdata = HenleggelseDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medVanligBehandling(true)
                 .medKlage(true)
@@ -258,7 +258,7 @@ public class DokumentdataSerializationTest {
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_ikke_søkt() throws IOException {
         // Arrange
-        IkkeSøktDokumentdata dokumentdata = IkkeSøktDokumentdata.ny()
+        var dokumentdata = IkkeSøktDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medArbeidsgiverNavn("Arbeidsgiver1")
                 .medMottattDato(formaterDatoNorsk(LocalDate.now()))
@@ -271,7 +271,7 @@ public class DokumentdataSerializationTest {
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_info_til_annen_forelder() throws IOException {
         // Arrange
-        ForeldrepengerInfoTilAnnenForelderDokumentdata dokumentdata = ForeldrepengerInfoTilAnnenForelderDokumentdata.ny()
+        var dokumentdata = ForeldrepengerInfoTilAnnenForelderDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medBehandlingÅrsak(BehandlingÅrsakType.RE_ENDRET_INNTEKTSMELDING.getKode())
                 .medSisteUttaksdagMor(formaterDatoNorsk(LocalDate.now()))
@@ -284,7 +284,7 @@ public class DokumentdataSerializationTest {
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_innhente_opplysninger() throws IOException {
         // Arrange
-        InnhenteOpplysningerDokumentdata dokumentdata = InnhenteOpplysningerDokumentdata.ny()
+        var dokumentdata = InnhenteOpplysningerDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medFørstegangsbehandling(true)
                 .medRevurdering(true)
@@ -302,7 +302,7 @@ public class DokumentdataSerializationTest {
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_innsyn() throws IOException {
         // Arrange
-        InnsynDokumentdata dokumentdata = InnsynDokumentdata.ny()
+        var dokumentdata = InnsynDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medInnsynResultat(InnsynResultatType.INNVILGET.getKode())
                 .medKlagefrist(6)
@@ -315,7 +315,7 @@ public class DokumentdataSerializationTest {
     @Test
     public void skal_serialisere_og_deserialisere_dokumentdata_for_varsel_om_revurdering() throws IOException {
         // Arrange
-        VarselOmRevurderingDokumentdata dokumentdata = VarselOmRevurderingDokumentdata.ny()
+        var dokumentdata = VarselOmRevurderingDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
                 .medTerminDato(formaterDatoNorsk(LocalDate.now().minusDays(10)))
                 .medFristDato(formaterDatoNorsk(LocalDate.now()))

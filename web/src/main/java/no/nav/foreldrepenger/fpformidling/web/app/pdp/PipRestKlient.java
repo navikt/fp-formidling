@@ -23,7 +23,7 @@ import no.nav.vedtak.sikkerhet.abac.pipdata.AbacPipDto;
 @RestClientConfig(tokenConfig = TokenFlow.STS_CC, application = FpApplication.FPSAK)
 public class PipRestKlient {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PipRestKlient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PipRestKlient.class);
 
     private static final String PIP_PATH = "/api/pip";
 
@@ -51,7 +51,7 @@ public class PipRestKlient {
             return restClient.sendReturnOptional(RestRequest.newGET(uri, TokenFlow.STS_CC, null), AbacPipDto.class)
                     .orElseThrow(IllegalStateException::new);
         } catch (IllegalArgumentException| UriBuilderException e) {
-            LOGGER.error("Feil ved oppretting av URI.", e);
+            LOG.error("Feil ved oppretting av URI.", e);
         }
         return null;
     }

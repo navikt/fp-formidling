@@ -24,13 +24,16 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrep
 
 public final class NaturalytelseMapper {
 
+    private NaturalytelseMapper() {
+    }
+
     public static List<Naturalytelse> mapNaturalytelser(TilkjentYtelseForeldrepenger tilkjentYtelse,
                                                         Beregningsgrunnlag beregningsgrunnlag,
                                                         Språkkode språkkode) {
-        TreeSet<Naturalytelse> naturalytelser = new TreeSet<>(Comparator.comparing(Naturalytelse::getEndringsdatoDate));
+        var naturalytelser = new TreeSet<>(Comparator.comparing(Naturalytelse::getEndringsdatoDate));
 
-        List<BeregningsgrunnlagPeriode> beregningingsgrunnlagperioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
-        LocalDate startFørstePeriode = finnStartFørstePeriode(beregningingsgrunnlagperioder);
+        var beregningingsgrunnlagperioder = beregningsgrunnlag.getBeregningsgrunnlagPerioder();
+        var startFørstePeriode = finnStartFørstePeriode(beregningingsgrunnlagperioder);
         tilkjentYtelse.getPerioder().forEach(tilkjentYtelsePeriode -> {
             var matchetBgPeriode = finnBeregningsgrunnlagperiode(tilkjentYtelsePeriode, beregningingsgrunnlagperioder);
             tilkjentYtelsePeriode.getAndeler().forEach(andel -> {
@@ -45,10 +48,16 @@ public final class NaturalytelseMapper {
 
     private static LocalDate finnStartFørstePeriode(List<BeregningsgrunnlagPeriode> beregningingsgrunnlagperioder) {
         return beregningingsgrunnlagperioder.stream()
-                .map(BeregningsgrunnlagPeriode::getBeregningsgrunnlagPeriodeFom).toList().stream().min(Comparator.naturalOrder()).orElse(null);
+                .map(BeregningsgrunnlagPeriode::getBeregningsgrunnlagPeriodeFom)
+                .toList()
+                .stream()
+                .min(Comparator.naturalOrder())
+                .orElse(null);
     }
 
-    private static boolean harNaturalytelse(BeregningsgrunnlagPeriode matchetBgPeriode, TilkjentYtelseAndel andel, LocalDate startFørstePeriode) {
+    private static boolean harNaturalytelse(BeregningsgrunnlagPeriode matchetBgPeriode,
+                                            TilkjentYtelseAndel andel,
+                                            LocalDate startFørstePeriode) {
         return PeriodeBeregner.finnBgPerStatusOgAndelHvisFinnes(matchetBgPeriode.getBeregningsgrunnlagPrStatusOgAndelList(), andel)
                 .flatMap(BeregningsgrunnlagPrStatusOgAndel::getBgAndelArbeidsforhold)
                 .filter(bgAndelArbeidsforhold -> bgAndelArbeidsforhold.naturalytelseBortfaltPrÅr() != null
@@ -61,9 +70,10 @@ public final class NaturalytelseMapper {
     }
 
     private static Optional<Naturalytelse> opprettNaturalytelse(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode,
-                                                                TilkjentYtelseAndel andel, Språkkode språkkode) {
+                                                                TilkjentYtelseAndel andel,
+                                                                Språkkode språkkode) {
         Optional<Naturalytelse> naturalytelse = Optional.empty();
-        NaturalytelseStatus naturalytelseStatus = utledNaturalytelseStatus(beregningsgrunnlagPeriode);
+        var naturalytelseStatus = utledNaturalytelseStatus(beregningsgrunnlagPeriode);
 
         if (naturalytelseStatus != null) {
             naturalytelse = Optional.of(Naturalytelse.ny()
@@ -79,7 +89,7 @@ public final class NaturalytelseMapper {
     private static NaturalytelseStatus utledNaturalytelseStatus(BeregningsgrunnlagPeriode beregningsgrunnlagPeriode) {
         NaturalytelseStatus naturalytelseStatus = null;
 
-        for (PeriodeÅrsak årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
+        for (var årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
             if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.equals(årsak)) {
                 naturalytelseStatus = NaturalytelseStatus.BORTFALLER;
             } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.equals(årsak)) {
@@ -91,14 +101,16 @@ public final class NaturalytelseMapper {
             return naturalytelseStatus;
         }
 
-        for (BeregningsgrunnlagPrStatusOgAndel andel : beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
-            BigDecimal bortfaltPrÅr = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforhold::getNaturalytelseBortfaltPrÅr).orElse(null);
-            BigDecimal tilkommetPrÅr = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforhold::getNaturalytelseTilkommetPrÅr).orElse(null);
-            if ((bortfaltPrÅr != null && tilkommetPrÅr == null) ||
-                    (beggeHarVerdi(bortfaltPrÅr, tilkommetPrÅr) && tilkommetPrÅr.compareTo(bortfaltPrÅr) < 0)) {
+        for (var andel : beregningsgrunnlagPeriode.getBeregningsgrunnlagPrStatusOgAndelList()) {
+            var bortfaltPrÅr = andel.getBgAndelArbeidsforhold().map(BGAndelArbeidsforhold::getNaturalytelseBortfaltPrÅr).orElse(null);
+            var tilkommetPrÅr = andel.getBgAndelArbeidsforhold()
+                    .map(BGAndelArbeidsforhold::getNaturalytelseTilkommetPrÅr)
+                    .orElse(null);
+            if ((bortfaltPrÅr != null && tilkommetPrÅr == null) || (beggeHarVerdi(bortfaltPrÅr, tilkommetPrÅr)
+                    && tilkommetPrÅr.compareTo(bortfaltPrÅr) < 0)) {
                 naturalytelseStatus = NaturalytelseStatus.BORTFALLER;
-            } else if ((bortfaltPrÅr == null && tilkommetPrÅr != null) ||
-                    (beggeHarVerdi(bortfaltPrÅr, tilkommetPrÅr) && tilkommetPrÅr.compareTo(bortfaltPrÅr) >= 0)) {
+            } else if ((bortfaltPrÅr == null && tilkommetPrÅr != null) || (beggeHarVerdi(bortfaltPrÅr, tilkommetPrÅr)
+                    && tilkommetPrÅr.compareTo(bortfaltPrÅr) >= 0)) {
                 naturalytelseStatus = NaturalytelseStatus.TILKOMMER;
             }
         }

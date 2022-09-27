@@ -29,7 +29,6 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
@@ -62,7 +61,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_AVSLAG));
         dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).build();
 
-        Personinfo personinfo = Personinfo.getbuilder(AKTØR_ID)
+        var personinfo = Personinfo.getbuilder(AKTØR_ID)
                 .medPersonIdent( new PersonIdent("9999999999"))
                 .medNavn("Nav Navesen")
                 .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
@@ -75,19 +74,19 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     @Test
     void mapTilDokumentdata_avslag_ESFB_søknadsfrist_med_Fritekst_mappes_ok() {
         //Arrange
-        FagsakBackend fagsak = opprettFagsak(RelasjonsRolleType.MORA);
-        FamilieHendelse familieHendelse = new FamilieHendelse(FamilieHendelseType.TERMIN, 1, 0, LocalDate.now(), null, null, null, false, true);
-        List<Vilkår> vilkårFraBehandling = List.of(new Vilkår(VilkårType.SØKNADSFRISTVILKÅRET));
+        var fagsak = opprettFagsak(RelasjonsRolleType.MORA);
+        var familieHendelse = new FamilieHendelse(FamilieHendelseType.TERMIN, 1, 0, LocalDate.now(), null, null, null, false, true);
+        var vilkårFraBehandling = List.of(new Vilkår(VilkårType.SØKNADSFRISTVILKÅRET));
 
-        String avslagsfritekst = "Vi har ikke motatt informasjon som begrunner at du ikke har kunnet søke i tide. Derfor avslås saken.";
+        var avslagsfritekst = "Vi har ikke motatt informasjon som begrunner at du ikke har kunnet søke i tide. Derfor avslås saken.";
 
-        Behandling avslagESFB = opprettBehandling(Avslagsårsak.SØKT_FOR_SENT, avslagsfritekst, fagsak );
+        var avslagESFB = opprettBehandling(Avslagsårsak.SØKT_FOR_SENT, avslagsfritekst, fagsak );
 
         when(domeneobjektProvider.hentFamiliehendelse(avslagESFB)).thenReturn(familieHendelse);
         when(domeneobjektProvider.hentVilkår(avslagESFB)).thenReturn(vilkårFraBehandling);
 
         //Act
-        EngangsstønadAvslagDokumentdata avslagDokumentdata = engangsstønadAvslagDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, avslagESFB, false);
+        var avslagDokumentdata = engangsstønadAvslagDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, avslagESFB, false);
 
         //Verify
         assertThat(avslagDokumentdata.getAvslagÅrsak()).isEqualTo(Avslagsårsak.SØKT_FOR_SENT.name());
@@ -102,17 +101,17 @@ class EngangsstønadAvslagDokumentdataMapperTest {
 
     @Test
     void mapAvslagsårsakerBrev_mapper_riktig() {
-        String avslagsårsak = engangsstønadAvslagDokumentdataMapper.mapAvslagsårsakerBrev(Avslagsårsak.SØKER_ER_MEDMOR);
+        var avslagsårsak = engangsstønadAvslagDokumentdataMapper.mapAvslagsårsakerBrev(Avslagsårsak.SØKER_ER_MEDMOR);
 
         assertThat(avslagsårsak).isEqualTo("IKKE_ALENEOMSORG");
     }
 
      @Test
     void mapVilkårTIlBrev_skal_mappe_riktig_vilkår_string() {
-        List<Vilkår> vilkårFraBehandling = List.of(new Vilkår(VilkårType.FØDSELSVILKÅRET_MOR));
-        Behandling fbbehandling = opprettBehandling(Avslagsårsak.SØKER_ER_MEDMOR, null, null);
+         var vilkårFraBehandling = List.of(new Vilkår(VilkårType.FØDSELSVILKÅRET_MOR));
+         var fbbehandling = opprettBehandling(Avslagsårsak.SØKER_ER_MEDMOR, null, null);
 
-        List<String> vilkårTilBrev = engangsstønadAvslagDokumentdataMapper.utledVilkårTilBrev(vilkårFraBehandling, Avslagsårsak.SØKER_ER_MEDMOR, fbbehandling);
+         var vilkårTilBrev = engangsstønadAvslagDokumentdataMapper.utledVilkårTilBrev(vilkårFraBehandling, Avslagsårsak.SØKER_ER_MEDMOR, fbbehandling);
 
         assertThat(vilkårTilBrev).hasSize(1);
         assertThat(vilkårTilBrev.get(0)).isEqualTo("FPVK1_4");
@@ -120,8 +119,8 @@ class EngangsstønadAvslagDokumentdataMapperTest {
 
     @Test
     void utledRelasjonsRolle_skal_utlede_riktig_rolle() {
-        FagsakBackend fagsak = opprettFagsak(RelasjonsRolleType.SAMBOER);
-        String rolle = engangsstønadAvslagDokumentdataMapper.utledRelasjonsRolle(fagsak);
+        var fagsak = opprettFagsak(RelasjonsRolleType.SAMBOER);
+        var rolle = engangsstønadAvslagDokumentdataMapper.utledRelasjonsRolle(fagsak);
 
         assertThat(rolle).isEqualTo(RelasjonsRolleType.MEDMOR.getKode());
     }

@@ -35,12 +35,10 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMappe
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
-import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles.Kopi;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.VarselOmRevurderingDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -63,12 +61,12 @@ public class VarselOmRevurderingDokumentdataMapperTest {
 
     @BeforeEach
     public void before() {
-        BrevParametere brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
+        var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         brevMapperUtil = new BrevMapperUtil(brevParametere);
         dokumentData = lagStandardDokumentData(DokumentMalType.VARSEL_OM_REVURDERING);
         dokumentdataMapper = new VarselOmRevurderingDokumentdataMapper(brevMapperUtil, domeneobjektProvider);
 
-        FamilieHendelse familieHendelse = opprettFamiliehendelse();
+        var familieHendelse = opprettFamiliehendelse();
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(familieHendelse);
         when(domeneobjektProvider.kreverSammenhengendeUttak(any())).thenReturn(true);
     }
@@ -76,12 +74,12 @@ public class VarselOmRevurderingDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
-        Behandling behandling = opprettBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
+        var behandling = opprettBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
+        var dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
         // Act
-        VarselOmRevurderingDokumentdata varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(varselOmRevurderingDokumentdata.getFelles()).isNotNull();
@@ -108,12 +106,12 @@ public class VarselOmRevurderingDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
-        Behandling behandling = opprettBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, true);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
+        var behandling = opprettBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, true);
+        var dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
         // Act
-        VarselOmRevurderingDokumentdata varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(varselOmRevurderingDokumentdata.getFelles()).isNotNull();
@@ -127,12 +125,12 @@ public class VarselOmRevurderingDokumentdataMapperTest {
     @Test
     public void skal_gi_flere_opplysninger_når_ikke_JOBBFULLTID_er_årasak() {
         // Arrange
-        Behandling behandling = opprettBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData);
-        DokumentHendelse dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEID_I_UTLANDET);
+        var behandling = opprettBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData);
+        var dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEID_I_UTLANDET);
 
         // Act
-        VarselOmRevurderingDokumentdata varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(varselOmRevurderingDokumentdata.getFlereOpplysninger()).isTrue();

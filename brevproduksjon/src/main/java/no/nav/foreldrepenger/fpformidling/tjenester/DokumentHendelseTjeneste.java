@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 public class DokumentHendelseTjeneste {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DokumentHendelseTjeneste.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DokumentHendelseTjeneste.class);
     private HendelseRepository hendelseRepository;
 
     public DokumentHendelseTjeneste() {
@@ -35,11 +35,11 @@ public class DokumentHendelseTjeneste {
      */
     public Optional<DokumentHendelse> validerUnikOgLagre(DokumentHendelse hendelse) {
         if (hendelseRepository.finnesHendelseMedUuidAllerede(hendelse.getBestillingUuid())) {
-            LOGGER.info("Lagrer ikke hendelse med duplikat bestillingUuid: {} for behandling: {} OK", hendelse.getBestillingUuid(), hendelse.getBehandlingUuid());
+            LOG.info("Lagrer ikke hendelse med duplikat bestillingUuid: {} for behandling: {} OK", hendelse.getBestillingUuid(), hendelse.getBehandlingUuid());
             return Optional.empty();
         }
         hendelseRepository.lagre(hendelse);
-        LOGGER.info("Lagret hendelse: {} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingUuid());
+        LOG.info("Lagret hendelse: {} for behandling: {} OK", hendelse.getId(), hendelse.getBehandlingUuid());
         return Optional.of(hendelse);
     }
 

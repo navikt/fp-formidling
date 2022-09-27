@@ -17,13 +17,10 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.anke.AnkebehandlingDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.KlagebehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.AnkeDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.BeregningsgrunnlagDtoMapper;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.FagsakDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.FamiliehendelseDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.InnsynDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.InntektsmeldingDtoMapper;
@@ -41,8 +38,10 @@ import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
+import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
+import no.nav.foreldrepenger.fpformidling.uttak.YtelseFordeling;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.verge.Verge;
 import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
@@ -68,7 +67,13 @@ public class DomeneobjektProvider {
         if (behandling.harFagsakBackend()) {
             return behandling.getFagsakBackend();
         }
-        var fagsak = FagsakDtoMapper.mapFagsakBackendFraDto(behandlingRestKlient.hentFagsak(behandling.getResourceLinker()));
+        var fagsakDto = behandlingRestKlient.hentFagsak(behandling.getResourceLinker());
+        var fagsak = FagsakBackend.ny()
+                .medSaksnummer(fagsakDto.saksnummer())
+                .medBrukerRolle(fagsakDto.relasjonsRolleType())
+                .medAktørId(new AktørId(fagsakDto.aktoerId()))
+                .medDekningsgrad(fagsakDto.dekningsgrad())
+                .build();
         behandling.leggtilFagsakBackend(fagsak);
         return fagsak;
     }
@@ -134,12 +139,12 @@ public class DomeneobjektProvider {
     }
 
     public Klage hentKlagebehandling(Behandling behandling) {
-        KlagebehandlingDto klagebehandlingDto = behandlingRestKlient.hentKlagebehandling(behandling.getResourceLinker());
+        var klagebehandlingDto = behandlingRestKlient.hentKlagebehandling(behandling.getResourceLinker());
         return KlageDtoMapper.mapKlagefraDto(klagebehandlingDto);
     }
 
     public Optional<Anke> hentAnkebehandling(Behandling behandling) {
-        AnkebehandlingDto ankebehandlingDto = behandlingRestKlient.hentAnkebehandling(behandling.getResourceLinker());
+        var ankebehandlingDto = behandlingRestKlient.hentAnkebehandling(behandling.getResourceLinker());
         return AnkeDtoMapper.mapAnkeFraDto(ankebehandlingDto);
     }
 
@@ -201,6 +206,11 @@ public class DomeneobjektProvider {
 
     public boolean utenMinsterett(Behandling behandling) {
         return behandlingRestKlient.utenMinsterett(behandling.getResourceLinker()).utenMinsterett();
+    }
+
+    public YtelseFordeling ytelseFordeling(Behandling behandling) {
+        var dto = behandlingRestKlient.ytelseFordeling(behandling.getResourceLinker());
+        return new YtelseFordeling(dto.ønskerJustertVedFødsel());
     }
 
     public StartdatoUtsattDto hentStartdatoUtsatt(Behandling behandling) {

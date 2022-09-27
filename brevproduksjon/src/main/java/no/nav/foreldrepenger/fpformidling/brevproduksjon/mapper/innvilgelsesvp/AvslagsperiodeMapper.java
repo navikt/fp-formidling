@@ -24,9 +24,12 @@ public final class AvslagsperiodeMapper {
             PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE
     );
 
+    private AvslagsperiodeMapper() {
+    }
+
     public static List<Avslagsperiode> mapAvslagsperioder(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold,
                                                           Språkkode språkkode) {
-        List<Avslagsperiode> filtrertePerioder = uttakResultatArbeidsforhold.stream()
+        var filtrertePerioder = uttakResultatArbeidsforhold.stream()
                 .flatMap(ura -> ura.getPerioder().stream())
                 .filter(Predicate.not(SvpUttakResultatPeriode::isInnvilget))
                 .filter(p -> RELEVANTE_PERIODE_ÅRSAKER.contains(p.getPeriodeIkkeOppfyltÅrsak()))
@@ -50,21 +53,21 @@ public final class AvslagsperiodeMapper {
 
         List<Avslagsperiode> sammenslåttePerioder = new ArrayList<>();
 
-        for (PeriodeIkkeOppfyltÅrsak årsak : RELEVANTE_PERIODE_ÅRSAKER) {
-            List<Avslagsperiode> sortertePerioder = filtrertePerioder.stream()
+        for (var årsak : RELEVANTE_PERIODE_ÅRSAKER) {
+            var sortertePerioder = filtrertePerioder.stream()
                     .filter(p -> årsak.getKode().equals(String.valueOf(p.getÅrsak().getKode())))
                     .sorted(Comparator.comparing(Avslagsperiode::getPeriodeFom))
                     .toList();
 
-            ArrayList<Avslagsperiode> nyePerioder = new ArrayList<>();
+            var nyePerioder = new ArrayList<Avslagsperiode>();
 
-            for (Avslagsperiode avslagsperiode : sortertePerioder) {
+            for (var avslagsperiode : sortertePerioder) {
                 if (!nyePerioder.isEmpty()) {
-                    int sisteIndex = nyePerioder.size() - 1;
-                    Avslagsperiode forrigePeriode = nyePerioder.get(sisteIndex);
+                    var sisteIndex = nyePerioder.size() - 1;
+                    var forrigePeriode = nyePerioder.get(sisteIndex);
 
                     if (skalSlåSammenPerioder(forrigePeriode, avslagsperiode.getPeriodeFom())) {
-                        LocalDate nyTom = Stream.of(forrigePeriode.getPeriodeTom(), avslagsperiode.getPeriodeTom())
+                        var nyTom = Stream.of(forrigePeriode.getPeriodeTom(), avslagsperiode.getPeriodeTom())
                                 .max(Comparator.naturalOrder())
                                 .orElseThrow();
                         nyePerioder.remove(sisteIndex);
@@ -82,7 +85,7 @@ public final class AvslagsperiodeMapper {
     }
 
     private static boolean skalSlåSammenPerioder(Avslagsperiode forrigePeriode, LocalDate nestePeriodeFom) {
-        DatoIntervallEntitet forrigePeriodeIntervall = DatoIntervallEntitet.fraOgMedTilOgMed(forrigePeriode.getPeriodeFom(),
+        var forrigePeriodeIntervall = DatoIntervallEntitet.fraOgMedTilOgMed(forrigePeriode.getPeriodeFom(),
                 forrigePeriode.getPeriodeTom());
         return forrigePeriodeIntervall.inkluderer(nestePeriodeFom)
                 || erFomRettEtterTomDato(forrigePeriode.getPeriodeTom(), nestePeriodeFom);

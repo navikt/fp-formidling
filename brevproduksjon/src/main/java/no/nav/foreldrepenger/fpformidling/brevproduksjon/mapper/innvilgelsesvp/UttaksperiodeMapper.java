@@ -11,13 +11,11 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.PeriodeBeregner;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Uttaksaktivitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Uttaksperiode;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
@@ -25,22 +23,25 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 
 public final class UttaksperiodeMapper {
 
+    private UttaksperiodeMapper() {
+    }
+
     public static List<Uttaksaktivitet> mapUttaksaktivteterMedPerioder(SvangerskapspengerUttak uttaksresultat,
                                                                        TilkjentYtelseForeldrepenger tilkjentYtelse,
                                                                        Språkkode språkkode) {
         Map<String, List<Uttaksperiode>> resultat = new HashMap<>();
 
-        List<SvpUttakResultatPeriode> uttakPerioder = uttaksresultat.getUttakResultatArbeidsforhold().stream()
+        var uttakPerioder = uttaksresultat.getUttakResultatArbeidsforhold().stream()
                 .flatMap(ur -> ur.getPerioder().stream())
                 .toList();
 
-        for (TilkjentYtelsePeriode periode : tilkjentYtelse.getPerioder()) {
+        for (var periode : tilkjentYtelse.getPerioder()) {
             var uttakPeriodeKandidater = PeriodeBeregner.finnUttakPeriodeKandidater(periode, uttakPerioder);
-            for (TilkjentYtelseAndel andel : periode.getAndeler()) {
-                AktivitetStatus aktivitetStatus = andel.getAktivitetStatus();
-                String aktivitetsbeskrivelse = utledAktivitetsbeskrivelse(andel, aktivitetStatus);
+            for (var andel : periode.getAndeler()) {
+                var aktivitetStatus = andel.getAktivitetStatus();
+                var aktivitetsbeskrivelse = utledAktivitetsbeskrivelse(andel, aktivitetStatus);
 
-                Optional<SvpUttakResultatPeriode> matchetUttaksperiode = finnUttakPeriode(uttakPeriodeKandidater, aktivitetsbeskrivelse);
+                var matchetUttaksperiode = finnUttakPeriode(uttakPeriodeKandidater, aktivitetsbeskrivelse);
                 matchetUttaksperiode.ifPresent(svpUttakResultatPeriode ->
                         mapAktivitet(resultat, svpUttakResultatPeriode, periode, aktivitetsbeskrivelse, språkkode));
             }
@@ -64,7 +65,7 @@ public final class UttaksperiodeMapper {
     private static void mapAktivitet(Map<String, List<Uttaksperiode>> map, SvpUttakResultatPeriode matchetUttaksperiode,
                                      TilkjentYtelsePeriode tilkjentYtelsePeriode,
                                      String aktivitetsbeskrivelse, Språkkode språkkode) {
-        Uttaksperiode uttaksperiode = Uttaksperiode.ny()
+        var uttaksperiode = Uttaksperiode.ny()
                 .medPeriodeFom(tilkjentYtelsePeriode.getPeriode().getFomDato(), språkkode)
                 .medPeriodeTom(tilkjentYtelsePeriode.getPeriode().getTomDato(), språkkode)
                 .medUtbetalingsgrad(Prosent.of(matchetUttaksperiode.getUtbetalingsgrad()))
@@ -107,7 +108,7 @@ public final class UttaksperiodeMapper {
     }
 
     private static boolean erPerioderSammenhengendeEllerLikeOgSkalSlåSammen(Uttaksperiode periodeEn, Uttaksperiode periodeTo) {
-        boolean sammeUtbetalingsgrad = periodeEn.getUtbetalingsgrad().equals(periodeTo.getUtbetalingsgrad());
+        var sammeUtbetalingsgrad = periodeEn.getUtbetalingsgrad().equals(periodeTo.getUtbetalingsgrad());
         return sammeUtbetalingsgrad && (erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom())
                 || erFomOgTomLike(periodeEn, periodeTo));
     }

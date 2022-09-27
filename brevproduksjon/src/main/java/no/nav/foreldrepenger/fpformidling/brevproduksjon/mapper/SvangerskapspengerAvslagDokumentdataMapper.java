@@ -30,7 +30,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.Svangerskapspen
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
@@ -61,7 +60,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
     public SvangerskapspengerAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling, boolean erUtkast) {
 
         //TODO: Erstatte med behandling.getSpråkkode() når engelsk mal er på plass
-        Språkkode språkkode = Språkkode.EN.equals(behandling.getSpråkkode()) ? Språkkode.NB : behandling.getSpråkkode();
+        var språkkode = Språkkode.EN.equals(behandling.getSpråkkode()) ? Språkkode.NB : behandling.getSpråkkode();
 
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
@@ -95,7 +94,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
     private void mapÅrsakOgLovhjemmel(Avslagsårsak årsak, List<SvpUttakResultatPeriode> perioder, SvangerskapspengerAvslagDokumentdata.Builder dokumentdataBuilder, UUID uuid) {
         Set<String> lovreferanse = new TreeSet<>(new LovhjemmelComparator());
         if (Avslagsårsak.UDEFINERT.equals(årsak) || årsak == null) {
-            PeriodeIkkeOppfyltÅrsak periodeÅrsak = perioder.stream()
+            var periodeÅrsak = perioder.stream()
                     .filter(p-> PeriodeResultatType.AVSLÅTT.equals(p.getPeriodeResultatType()))
                     .map(SvpUttakResultatPeriode::getPeriodeIkkeOppfyltÅrsak)
                     .findFirst()

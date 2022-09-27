@@ -28,7 +28,7 @@ public final class BehandlingMapper {
     }
 
     public static boolean erRevurderingPgaEndretBeregningsgrunnlag(Behandling revurdering) {
-        List<KonsekvensForYtelsen> konsekvenserForYtelsen = revurdering.getBehandlingsresultat().getKonsekvenserForYtelsen();
+        var konsekvenserForYtelsen = revurdering.getBehandlingsresultat().getKonsekvenserForYtelsen();
         return konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING) && konsekvenserForYtelsen.size() == 1;
     }
 

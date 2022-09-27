@@ -22,13 +22,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerAnnullertDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
@@ -46,7 +43,7 @@ public class ForeldrepengerAnnullertDokumentdataMapperTest {
 
     @BeforeEach
     public void before() {
-        BrevParametere brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
+        var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         dokumentData = lagStandardDokumentData(DokumentMalType.FORELDREPENGER_ANNULLERT);
         dokumentdataMapper = new ForeldrepengerAnnullertDokumentdataMapper(brevParametere, domeneobjektProvider);
     }
@@ -54,14 +51,14 @@ public class ForeldrepengerAnnullertDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_bruker_med_ny_startdato() {
         // Arrange
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = standardDokumenthendelse();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = standardDokumenthendelse();
         when(domeneobjektProvider.hentStartdatoUtsatt(behandling))
                 .thenReturn(new StartdatoUtsattDto(true, NY_STARTDATO));
 
         // Act
-        ForeldrepengerAnnullertDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getFelles()).isNotNull();
@@ -85,14 +82,14 @@ public class ForeldrepengerAnnullertDokumentdataMapperTest {
     @Test
     public void skal_mappe_felter_for_brev_til_bruker_uten_ny_startdato() {
         // Arrange
-        Behandling behandling = standardBehandling();
-        DokumentFelles dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        DokumentHendelse dokumentHendelse = standardDokumenthendelse();
+        var behandling = standardBehandling();
+        var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
+        var dokumentHendelse = standardDokumenthendelse();
         when(domeneobjektProvider.hentStartdatoUtsatt(behandling))
                 .thenReturn(new StartdatoUtsattDto(true, null));
 
         // Act
-        ForeldrepengerAnnullertDokumentdata dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         // Assert
         assertThat(dokumentdata.getHarSøktOmNyPeriode()).isFalse();

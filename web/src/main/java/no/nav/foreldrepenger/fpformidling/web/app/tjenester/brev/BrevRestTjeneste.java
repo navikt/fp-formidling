@@ -38,7 +38,7 @@ import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 @ApplicationScoped
 public class BrevRestTjeneste {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BrevRestTjeneste.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BrevRestTjeneste.class);
 
     private BrevBestillerTjeneste brevBestillerTjeneste;
     private DokumentHendelseTjeneste dokumentHendelseTjeneste;
@@ -70,12 +70,12 @@ public class BrevRestTjeneste {
 
         var dokumentHendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
 
-        LOGGER.info("Forhåndsvis hendelse: {}", dokumentHendelse);
+        LOG.info("Forhåndsvis hendelse: {}", dokumentHendelse);
 
-        byte[] dokument = brevBestillerTjeneste.forhandsvisBrev(dokumentHendelse);
+        var dokument = brevBestillerTjeneste.forhandsvisBrev(dokumentHendelse);
 
         if (dokument != null && dokument.length != 0) {
-            Response.ResponseBuilder responseBuilder = Response.ok(dokument);
+            var responseBuilder = Response.ok(dokument);
             responseBuilder.type("application/pdf");
             responseBuilder.header("Content-Disposition", "filename=dokument.pdf");
             return responseBuilder.build();
@@ -101,7 +101,7 @@ public class BrevRestTjeneste {
     }
 
     private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {
-        ProsessTaskData prosessTaskData = ProsessTaskData.forProsessTask(ProduserBrevTask.class);
+        var prosessTaskData = ProsessTaskData.forProsessTask(ProduserBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
         taskTjeneste.lagre(prosessTaskData);

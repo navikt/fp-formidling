@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -67,8 +66,8 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        FamilieHendelse familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        List<Vilkår> vilkår = domeneobjektProvider.hentVilkår(behandling);
+        var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
+        var vilkår = domeneobjektProvider.hentVilkår(behandling);
 
         var dokumentdataBuilder = EngangsstønadAvslagDokumentdata.ny()
                 .medAvslagsÅrsak(mapAvslagsårsakerBrev(behandling.getBehandlingsresultat().getAvslagsårsak()))
@@ -104,7 +103,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
     }
 
     List<String> utledVilkårTilBrev(List<Vilkår> vilkårFraBehandling, Avslagsårsak avslagsÅrsakKode, Behandling behandling) {
-        Set<VilkårType> vilkårTyper = VilkårType.getVilkårTyper(avslagsÅrsakKode);
+        var vilkårTyper = VilkårType.getVilkårTyper(avslagsÅrsakKode);
         List<String> vilkårTilBrev = new ArrayList<>();
         vilkårFraBehandling.stream()
                 .filter(v -> vilkårTyper.contains(v.vilkårType()))

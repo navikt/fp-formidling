@@ -2,14 +2,12 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.TilknyttVedleggTjeneste;
@@ -22,8 +20,8 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 @ProsessTask(value = "formidling.tilknyttVedlegg", maxFailedRuns = 2)
 public class TilknyttVedleggTask implements ProsessTaskHandler {
 
-    private TilknyttVedleggTjeneste tilknyttVedleggTjeneste;
-    private DomeneobjektProvider domeneobjektProvider;
+    private final TilknyttVedleggTjeneste tilknyttVedleggTjeneste;
+    private final DomeneobjektProvider domeneobjektProvider;
 
     @Inject
     public TilknyttVedleggTask(TilknyttVedleggTjeneste tilknyttVedleggTjeneste, DomeneobjektProvider domeneobjektProvider) {
@@ -33,10 +31,10 @@ public class TilknyttVedleggTask implements ProsessTaskHandler {
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
-        UUID behandlingUuid = prosessTaskData.getBehandlingUuid();
-        JournalpostId journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(BrevTaskProperties.JOURNALPOST_ID));
-        Behandling behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
-        Collection<InnsynDokument> vedlegg = filtrerUtDuplikater(domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter());
+        var behandlingUuid = prosessTaskData.getBehandlingUuid();
+        var journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(BrevTaskProperties.JOURNALPOST_ID));
+        var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
+        var vedlegg = filtrerUtDuplikater(domeneobjektProvider.hentInnsyn(behandling).getInnsynDokumenter());
 
         tilknyttVedleggTjeneste.knyttAlleVedleggTilDokument(vedlegg, journalpostId);
     }

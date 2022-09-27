@@ -28,7 +28,7 @@ public class TilkjentYtelseMapperTest {
     @Test
     public void skal_finne_månedsbeløp() {
         // Arrange
-        TilkjentYtelseForeldrepenger tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
+        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
                         TilkjentYtelsePeriode.ny()
                                 .medDagsats(100L)
@@ -47,7 +47,7 @@ public class TilkjentYtelseMapperTest {
     @Test
     public void skal_finne_dagsats() {
         // Arrange
-        TilkjentYtelseForeldrepenger tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
+        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
                         TilkjentYtelsePeriode.ny()
                                 .medDagsats(100L)
@@ -66,7 +66,7 @@ public class TilkjentYtelseMapperTest {
     @Test
     public void skal_finne_antall_arbeidsgivere() {
         // Arrange
-        TilkjentYtelseForeldrepenger tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
+        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
                         TilkjentYtelsePeriode.ny()
                                 .medPeriode(UBETYDELIG_PERIODE)
@@ -107,7 +107,7 @@ public class TilkjentYtelseMapperTest {
     @Test
     public void skal_finne_at_bruker_har_full_refusjon() {
         // Arrange
-        TilkjentYtelseForeldrepenger tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
+        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
                         TilkjentYtelsePeriode.ny()
                                 .medPeriode(UBETYDELIG_PERIODE)
@@ -138,7 +138,7 @@ public class TilkjentYtelseMapperTest {
     @Test
     public void skal_finne_at_bruker_har_ingen_refusjon() {
         // Arrange
-        TilkjentYtelseForeldrepenger tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
+        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
                         TilkjentYtelsePeriode.ny()
                                 .medPeriode(UBETYDELIG_PERIODE)
@@ -169,7 +169,7 @@ public class TilkjentYtelseMapperTest {
     @Test
     public void skal_finne_at_bruker_har_ingen_refusjon_når_ingen_er_mottakere() {
         // Arrange
-        TilkjentYtelseForeldrepenger tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
+        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
                         TilkjentYtelsePeriode.ny()
                                 .medPeriode(UBETYDELIG_PERIODE)
@@ -200,7 +200,7 @@ public class TilkjentYtelseMapperTest {
     @Test
     public void skal_finne_at_bruker_har_delvis_refusjon() {
         // Arrange
-        TilkjentYtelseForeldrepenger tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
+        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
                         TilkjentYtelsePeriode.ny()
                                 .medPeriode(UBETYDELIG_PERIODE)
@@ -231,7 +231,7 @@ public class TilkjentYtelseMapperTest {
     @Test
     public void skal_finne_at_bruker_har_utbetaling() {
         // Arrange
-        TilkjentYtelseForeldrepenger tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
+        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
                         TilkjentYtelsePeriode.ny()
                                 .medPeriode(UBETYDELIG_PERIODE)
@@ -264,7 +264,7 @@ public class TilkjentYtelseMapperTest {
     @Test
     public void skal_finne_at_bruker_ikke_har_utbetaling() {
         // Arrange
-        TilkjentYtelseForeldrepenger tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
+        var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
                         TilkjentYtelsePeriode.ny()
                                 .medPeriode(UBETYDELIG_PERIODE)

@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.Behan
 public class BehandlingDtoMapper {
 
     private static BehandlingResourceLink mapResourceLinkFraDto(BehandlingResourceLinkDto dto) {
-        BehandlingResourceLink.Builder linkBuilder = BehandlingResourceLink.ny()
+        var linkBuilder = BehandlingResourceLink.ny()
                 .medHref(dto.getHref())
                 .medRel(dto.getRel())
                 .medType(dto.getType());
@@ -30,9 +30,9 @@ public class BehandlingDtoMapper {
     }
 
     public static Behandling mapBehandlingFraDto(BehandlingDto dto) {
-        Behandling.Builder builder = Behandling.builder();
-        Supplier<Stream<BehandlingResourceLink>> behandlingResourceLinkStreamSupplier = () -> dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
-        Supplier<Stream<BehandlingResourceLink>> behandlingFormidlingResourceLinkStreamSupplier = () -> dto.getFormidlingRessurser().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
+        var builder = Behandling.builder();
+        var behandlingResourceLinkStreamSupplier = (Supplier<Stream<BehandlingResourceLink>>) () -> dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
+        var behandlingFormidlingResourceLinkStreamSupplier = (Supplier<Stream<BehandlingResourceLink>>) () -> dto.getFormidlingRessurser().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
         behandlingFormidlingResourceLinkStreamSupplier.get().forEach(builder::leggTilFormidlingResourceLink);
         builder.medUuid(dto.getUuid())

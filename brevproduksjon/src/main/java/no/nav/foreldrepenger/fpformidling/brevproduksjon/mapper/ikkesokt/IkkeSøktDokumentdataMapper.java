@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.ikkesøkt;
+package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.ikkesokt;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
@@ -12,8 +12,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmelding;
-import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.IkkeSøktDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 
@@ -44,8 +42,8 @@ public class IkkeSøktDokumentdataMapper implements DokumentdataMapper {
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
 
-        Inntektsmeldinger iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
-        Inntektsmelding inntektsmelding = InntektsmeldingMapper.hentNyesteInntektsmelding(iay);
+        var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
+        var inntektsmelding = InntektsmeldingMapper.hentNyesteInntektsmelding(iay);
 
         var dokumentdataBuilder = IkkeSøktDokumentdata.ny()
                 .medFelles(fellesBuilder.build())

@@ -75,7 +75,7 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final ForeldrepengerOpphørDokumentdata that = (ForeldrepengerOpphørDokumentdata) o;
+        final var that = (ForeldrepengerOpphørDokumentdata) o;
         return erSøkerDød() == that.erSøkerDød()
                 && erGjelderFødsel() == that.erGjelderFødsel()
                 && getAntallBarn() == that.getAntallBarn()

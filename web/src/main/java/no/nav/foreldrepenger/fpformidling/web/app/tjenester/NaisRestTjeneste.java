@@ -85,7 +85,7 @@ public class NaisRestTjeneste {
     }
 
     private static CacheControl cacheControl() {
-        CacheControl cc = new CacheControl();
+        var cc = new CacheControl();
         cc.setNoCache(true);
         cc.setNoStore(true);
         cc.setMustRevalidate(true);

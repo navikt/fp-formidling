@@ -6,7 +6,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Br
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -24,7 +23,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnhenteOpplysn
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.INNHENTE_OPPLYSNINGER)
@@ -70,14 +68,14 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
     }
 
     private String finnSøknadDato(Behandling behandling) {
-        List<MottattDokument> mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
+        var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
 
         Optional<KlageDokument> klageDokument = Optional.empty();
         if (behandling.erKlage()) {
             klageDokument = Optional.of(domeneobjektProvider.hentKlageDokument(behandling));
         }
 
-        LocalDate mottattDato = klageDokument.map(kd -> hentMottattDatoFraKlage(kd, behandling))
+        var mottattDato = klageDokument.map(kd -> hentMottattDatoFraKlage(kd, behandling))
                 .orElseGet(() -> MottattdokumentMapper.finnSisteMottatteSøknad(mottatteDokumenter));
         return formaterDato(mottattDato, behandling.getSpråkkode());
     }

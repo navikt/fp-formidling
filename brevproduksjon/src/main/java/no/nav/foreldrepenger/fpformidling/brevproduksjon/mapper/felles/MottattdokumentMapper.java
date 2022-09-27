@@ -9,6 +9,9 @@ import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
 
 public class MottattdokumentMapper {
 
+    private MottattdokumentMapper() {
+    }
+
     public static LocalDate finnSisteMottatteSøknad(List<MottattDokument> mottatteDokumenter) {
         return mottatteDokumenter.stream()
                 .filter(dok -> DokumentKategori.SØKNAD.equals(dok.dokumentKategori()))

@@ -26,6 +26,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean inntektMottattArbeidsgiver;
     private boolean annenForelderHarRett;
     private boolean annenForelderRettEØS;
+    private boolean oppgittAnnenForelderRettEØS;
     private VurderingsKode annenForelderHarRettVurdert;
     private VurderingsKode aleneomsorgKode;
     private boolean ikkeOmsorg;
@@ -76,6 +77,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean inkludereNyeOpplysningerUtbet;
 
     private boolean utenMinsterett;
+    private boolean ønskerJustertVedFødsel;
 
     public String getBehandlingType() {
         return behandlingType;
@@ -135,6 +137,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     public boolean isAnnenForelderRettEØS() {
         return annenForelderRettEØS;
+    }
+
+    public boolean isOppgittAnnenForelderRettEØS() {
+        return oppgittAnnenForelderRettEØS;
     }
 
     public VurderingsKode getAleneomsorgKode() {
@@ -307,6 +313,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return utenMinsterett;
     }
 
+    public boolean isØnskerJustertVedFødsel() {
+        return ønskerJustertVedFødsel;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -327,6 +337,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 && Objects.equals(inntektMottattArbeidsgiver, that.inntektMottattArbeidsgiver)
                 && Objects.equals(annenForelderHarRett, that.annenForelderHarRett)
                 && Objects.equals(annenForelderRettEØS, that.annenForelderRettEØS)
+                && Objects.equals(oppgittAnnenForelderRettEØS, that.oppgittAnnenForelderRettEØS)
                 && Objects.equals(annenForelderHarRettVurdert, that.annenForelderHarRettVurdert)
                 && Objects.equals(aleneomsorgKode, that.aleneomsorgKode)
                 && Objects.equals(ikkeOmsorg, that.ikkeOmsorg)
@@ -370,21 +381,25 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 && Objects.equals(inkludereInnvilget, that.inkludereInnvilget)
                 && Objects.equals(inkludereAvslag, that.inkludereAvslag)
                 && Objects.equals(inkludereNyeOpplysningerUtbet, that.inkludereNyeOpplysningerUtbet)
-                && Objects.equals(utenMinsterett, that.utenMinsterett);
+                && Objects.equals(utenMinsterett, that.utenMinsterett)
+                && Objects.equals(ønskerJustertVedFødsel, that.ønskerJustertVedFødsel)
+                ;
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, søknadsdato,
-                dekningsgrad, harUtbetaling, dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver,
+        return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, søknadsdato, dekningsgrad,
+                harUtbetaling, dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver,
                 annenForelderHarRett, annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse,
-                gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget, annenForelderRettEØS,
-                antallPerioder, antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager,
-                disponibleFellesDager, sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker,
-                antallBarn, prematurDager, antallDødeBarn, dødsdato, kreverSammenhengendeUttak, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler,
-                klagefristUker, lovhjemlerUttak, lovhjemlerBeregning, inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget,
-                inkludereAvslag, inkludereNyeOpplysningerUtbet, disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav, utenMinsterett);
+                gjelderMor, gjelderFødsel, erBesteberegning, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget,
+                annenForelderRettEØS, oppgittAnnenForelderRettEØS, antallPerioder, antallInnvilgedePerioder, antallAvslåttePerioder,
+                antallArbeidsgivere, dagerTaptFørTermin, disponibleDager, disponibleFellesDager, sisteDagAvSistePeriode,
+                stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker, antallBarn, prematurDager, antallDødeBarn,
+                dødsdato, kreverSammenhengendeUttak, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag,
+                harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler, klagefristUker, lovhjemlerUttak, lovhjemlerBeregning,
+                inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget, inkludereAvslag, inkludereNyeOpplysningerUtbet,
+                disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav, utenMinsterett, ønskerJustertVedFødsel);
     }
 
     public static Builder ny() {
@@ -470,6 +485,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medAnnenForelderRettEØS(boolean annenForelderRettEØS) {
             this.kladd.annenForelderRettEØS = annenForelderRettEØS;
+            return this;
+        }
+
+        public Builder medOppgittAnnenForelderRettEØS(boolean oppgittAnnenForelderRettEØS) {
+            this.kladd.oppgittAnnenForelderRettEØS = oppgittAnnenForelderRettEØS;
             return this;
         }
 
@@ -690,6 +710,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medUtenMinsterett(boolean utenMinsterett) {
             this.kladd.utenMinsterett = utenMinsterett;
+            return this;
+        }
+
+        public Builder medØnskerJustertVedFødsel(boolean ønskerJustertVedFødsel) {
+            this.kladd.ønskerJustertVedFødsel = ønskerJustertVedFødsel;
             return this;
         }
 

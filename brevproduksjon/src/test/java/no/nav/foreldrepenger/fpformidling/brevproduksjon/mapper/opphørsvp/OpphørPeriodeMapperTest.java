@@ -16,10 +16,8 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.opphørsvp.OpphørPeriode;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
@@ -47,20 +45,20 @@ class OpphørPeriodeMapperTest {
     @Test
     public void  opphør_uten_uttak_og_tilkjent_ytelse() {
         //Arrange
-        List<SvpUttakResultatArbeidsforhold> svpUttakResultatArbeidsforholdList = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_1, Collections.emptyList()));
+        var svpUttakResultatArbeidsforholdList = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_1, Collections.emptyList()));
 
-        Behandling behandling  = standardBehandlingBuilder()
+        var behandling  = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
                         .medAvslagsårsak(Avslagsårsak.SØKER_SKULLE_IKKE_SØKT_SVP)
                         .build())
                 .build();
 
         //Act
-        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, svpUttakResultatArbeidsforholdList, Språkkode.NB, null, Collections.emptyList());
+        var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, svpUttakResultatArbeidsforholdList, Språkkode.NB, null, Collections.emptyList());
 
         //Assert
-        OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
-        String lovhjemler = opphørtePerioderOgLovhjemmel.element2();
+        var opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
+        var lovhjemler = opphørtePerioderOgLovhjemmel.element2();
 
         assertThat(opphørtPeriode).isNotNull();
         assertThat(opphørtPeriode.getAntallArbeidsgivere()).isEqualTo(1);
@@ -73,23 +71,23 @@ class OpphørPeriodeMapperTest {
     @Test
     public void  en_opphørt_Periode_med_en_arbeidsgiver_fra_tikjent_ytelse() {
         //Arrange
-        Behandling behandling  = standardBehandlingBuilder()
+        var behandling  = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
                         .build())
                 .build();
 
-        List<SvpUttakResultatArbeidsforhold> uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_1,
+        var uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_1,
                 List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_1_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )),
                         opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8309, ARBGIVER_1_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM )))));
 
-        List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = opprettTilkjentYtelse(1).getPerioder();
+        var tilkjentYtelsePerioder = opprettTilkjentYtelse(1).getPerioder();
 
         //Act
-        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null, tilkjentYtelsePerioder);
+        var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null, tilkjentYtelsePerioder);
 
         //Assert
-        OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
-        String lovhjemler = opphørtePerioderOgLovhjemmel.element2();
+        var opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
+        var lovhjemler = opphørtePerioderOgLovhjemmel.element2();
         assertThat(lovhjemler).isEqualTo(LOVHJEMLER);
         assertThat(opphørtPeriode).isNotNull();
         assertThat(opphørtPeriode.getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak._8309.getKode()));
@@ -102,13 +100,13 @@ class OpphørPeriodeMapperTest {
     @Test
     public void  en_opphørt_periode_med_2_arbeidsgivere_fra_uttak_innvilget() {
         //Arrange
-        Behandling behandling  = standardBehandlingBuilder()
+        var behandling  = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
                         .medAvslagsårsak(Avslagsårsak.SØKER_ER_IKKE_BOSATT)
                         .build())
                 .build();
 
-        List<SvpUttakResultatArbeidsforhold> uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_1,
+        var uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_1,
                 List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_1_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )),
                         opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_1_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )))
         ), opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_2,
@@ -118,11 +116,11 @@ class OpphørPeriodeMapperTest {
         List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = Collections.emptyList();
 
         //Act
-        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null, tilkjentYtelsePerioder);
+        var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null, tilkjentYtelsePerioder);
 
         //Assert
-        OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
-        String lovhjemler = opphørtePerioderOgLovhjemmel.element2();
+        var opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
+        var lovhjemler = opphørtePerioderOgLovhjemmel.element2();
 
         assertThat(opphørtPeriode).isNotNull();
         assertThat(lovhjemler).isEqualTo("§ 14-2 og forvaltningsloven § 35");
@@ -135,13 +133,13 @@ class OpphørPeriodeMapperTest {
     @Test
     public void  opphør_død_før_uten_tilkjent_ytelse_ingen_stønadsdatoer() {
         //Arrange
-        Behandling behandling  = standardBehandlingBuilder()
+        var behandling  = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
                         .medAvslagsårsak(Avslagsårsak.SØKER_ER_IKKE_BOSATT)
                         .build())
                 .build();
 
-        List<SvpUttakResultatArbeidsforhold> uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_1,
+        var uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_1,
                 List.of(opprettUttaksperiode(PeriodeResultatType.INNVILGET, null, ARBGIVER_1_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )),
                         opprettUttaksperiode(PeriodeResultatType.AVSLÅTT, PeriodeIkkeOppfyltÅrsak._8304, ARBGIVER_1_NAVN, DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM )))
         ), opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_2,
@@ -151,11 +149,11 @@ class OpphørPeriodeMapperTest {
         List<TilkjentYtelsePeriode> tilkjentYtelsePerioder = Collections.emptyList();
 
         //Act
-        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null, tilkjentYtelsePerioder);
+        var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null, tilkjentYtelsePerioder);
 
         //Assert
-        OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
-        String lovhjemler = opphørtePerioderOgLovhjemmel.element2();
+        var opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
+        var lovhjemler = opphørtePerioderOgLovhjemmel.element2();
 
         assertThat(opphørtPeriode).isNotNull();
         assertThat(lovhjemler).isEqualTo(LOVHJEMLER);
@@ -168,18 +166,18 @@ class OpphørPeriodeMapperTest {
     @Test
     public void  en_opphørsperiode_pga_avslag_på_arbeidsforholdet() {
         //Arrange
-        List<SvpUttakResultatArbeidsforhold> uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE, ARBEIDSGIVER_1, Collections.emptyList()));
+        var uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE, ARBEIDSGIVER_1, Collections.emptyList()));
 
-        Behandling behandling  = standardBehandlingBuilder()
+        var behandling  = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
                         .build())
                 .build();
         //Act
-        Tuple<OpphørPeriode, String> opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null, Collections.emptyList());
+        var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakArbeidsforhold, Språkkode.NB, null, Collections.emptyList());
 
         //Assert
-        OpphørPeriode opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
-        String lovhjemler = opphørtePerioderOgLovhjemmel.element2();
+        var opphørtPeriode = opphørtePerioderOgLovhjemmel.element1();
+        var lovhjemler = opphørtePerioderOgLovhjemmel.element2();
 
         assertThat(lovhjemler).isEqualTo(LOVHJEMLER);
         assertThat(opphørtPeriode).isNotNull();

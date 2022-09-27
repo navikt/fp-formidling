@@ -42,32 +42,32 @@ public class OpprettJournalpostTjenesteTest {
     public void setup() {
         opprettJournalpost = new OpprettJournalpostTjeneste(journalpostRestKlient);
 
-        OpprettJournalpostResponse response = new OpprettJournalpostResponse(JOURNALPOST_ID, "", true, List.of(new DokumentOpprettResponse("1111")));
+        var response = new OpprettJournalpostResponse(JOURNALPOST_ID, "", true, List.of(new DokumentOpprettResponse("1111")));
         when(journalpostRestKlient.opprettJournalpost(any(OpprettJournalpostRequest.class), eq(true))).thenReturn(response);
     }
 
     @Test
     public void skal_journalføre_generert_INNVES_brev() {
         // Arrange
-        ArgumentCaptor<OpprettJournalpostRequest> requestCaptor = ArgumentCaptor.forClass(OpprettJournalpostRequest.class);
+        var requestCaptor = ArgumentCaptor.forClass(OpprettJournalpostRequest.class);
 
-        DokumentFelles dokumentFelles = getDokumentFelles();
-        DokumentHendelse dokumentHendelse = lagStandardHendelseBuilder()
+        var dokumentFelles = getDokumentFelles();
+        var dokumentHendelse = lagStandardHendelseBuilder()
                 .medTittel("Innvilget Engangsstønad")
                 .build();
 
         var unikBestillingsId = dokumentHendelse.getBestillingUuid().toString() + "-" + 1;
 
-        Saksnummer saksnummer = new Saksnummer("153456789");
+        var saksnummer = new Saksnummer("153456789");
 
         // Act
-        OpprettJournalpostResponse responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
+        var responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
                 dokumentFelles, dokumentHendelse, saksnummer, true, null, unikBestillingsId);
 
         // Assert
         Mockito.verify(journalpostRestKlient).opprettJournalpost(requestCaptor.capture(), eq(true));
 
-        OpprettJournalpostRequest genRequest = requestCaptor.getValue();
+        var genRequest = requestCaptor.getValue();
         assertThat(genRequest.getTema()).isEqualTo("FOR");
         assertThat(genRequest.getBehandlingstema()).isEqualTo(BehandlingTema.ENGANGSSTØNAD.getOffisiellKode());
         assertThat(genRequest.getSak().getSakstype()).isEqualTo("FAGSAK");
@@ -80,7 +80,7 @@ public class OpprettJournalpostTjenesteTest {
         assertThat(genRequest.getBruker().id()).isEqualTo(FNR);
         assertThat(genRequest.getEksternReferanseId()).isEqualTo(unikBestillingsId);
         assertThat(genRequest.getDokumenter().get(0).getBrevkode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getKode());
-        byte[] brev = genRequest.getDokumenter().get(0).getDokumentvarianter().get(0).getFysiskDokument();
+        var brev = genRequest.getDokumenter().get(0).getDokumentvarianter().get(0).getFysiskDokument();
         assertThat(brev).contains(GEN_BREV);
         assertThat(genRequest.getDokumenter().get(0).getDokumentvarianter().get(0).getVariantformat()).isEqualTo("ARKIV");
         assertThat(genRequest.getDokumenter().get(0).getDokumentvarianter().get(0).getFiltype()).isEqualTo("PDFA");
@@ -92,7 +92,7 @@ public class OpprettJournalpostTjenesteTest {
     }
 
     private DokumentFelles getDokumentFelles() {
-        DokumentFelles dokumentFelles = Mockito.mock(DokumentFelles.class);
+        var dokumentFelles = Mockito.mock(DokumentFelles.class);
         when(dokumentFelles.getMottakerNavn()).thenReturn(MOTTAKER_NAVN);
         when(dokumentFelles.getSakspartId()).thenReturn(FNR);
         when(dokumentFelles.getMottakerId()).thenReturn(MOTTAKER_ID);

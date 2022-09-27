@@ -21,7 +21,7 @@ public class DokumentOpprettRequest {
     private List<DokumentVariantPDF> dokumentvarianter;
 
     public DokumentOpprettRequest(String tittel, String brevkode, String dokumentKategori, byte[] brev) {
-        DokumentVariantPDF dokumentVariantPDF = new DokumentVariantPDF(brev);
+        var dokumentVariantPDF = new DokumentVariantPDF(brev);
         this.tittel = tittel;
         this.brevkode = brevkode;
         this.dokumentKategori = dokumentKategori;

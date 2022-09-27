@@ -5,12 +5,10 @@ import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTil
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Utbetalingsperiode;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 
@@ -19,7 +17,7 @@ public class UtbetalingsperiodeMapperTest {
     @Test
     public void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_dagsats_og_beløp_til_søker() {
         // Arrange
-        List<TilkjentYtelsePeriode> beregningsperioder = of(
+        var beregningsperioder = of(
                 TilkjentYtelsePeriode.ny()
                         .medDagsats(500L)
                         .medPeriode(fraOgMedTilOgMed(LocalDate.now().minusDays(10), LocalDate.now().minusDays(1)))
@@ -79,7 +77,7 @@ public class UtbetalingsperiodeMapperTest {
         );
 
         // Act
-        List<Utbetalingsperiode> resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsperioder, Språkkode.NB);
+        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(beregningsperioder, Språkkode.NB);
 
         // Assert
         assertThat(resultat).hasSize(5);

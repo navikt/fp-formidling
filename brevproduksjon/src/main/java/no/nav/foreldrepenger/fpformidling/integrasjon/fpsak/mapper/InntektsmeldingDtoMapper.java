@@ -18,7 +18,7 @@ public class InntektsmeldingDtoMapper {
     }
 
     public static Inntektsmelding mapInntektsmeldingFraDto(InntektsmeldingDto dto, UnaryOperator<String> hentNavn) {
-        LocalDate innsendingstidspunkt = dto.innsendingstidspunkt() != null ? dto.innsendingstidspunkt().toLocalDate() : LocalDate.now(); //TODO burde ikke være nødvendig
+        var innsendingstidspunkt = dto.innsendingstidspunkt() != null ? dto.innsendingstidspunkt().toLocalDate() : LocalDate.now(); //TODO burde ikke være nødvendig
         return new Inntektsmelding(hentNavn.apply(dto.arbeidsgiverReferanse()), dto.arbeidsgiverReferanse(), innsendingstidspunkt);
     }
 }

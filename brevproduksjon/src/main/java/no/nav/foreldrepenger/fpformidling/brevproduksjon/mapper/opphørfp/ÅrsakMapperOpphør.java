@@ -15,9 +15,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Lovhjemme
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Tuple;
 import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 
 public final class ÅrsakMapperOpphør {
 
@@ -38,15 +36,15 @@ public final class ÅrsakMapperOpphør {
                                                  TreeSet<String> lovReferanser) {
         Map<String, String> avslagårsaker = new HashMap<>();
 
-        Avslagsårsak avslagsårsak = behandlingsresultat.getAvslagsårsak();
+        var avslagsårsak = behandlingsresultat.getAvslagsårsak();
         if (avslagsårsak != null) {
-            String avslagKode = avslagsårsak.getKode();
+            var avslagKode = avslagsårsak.getKode();
             avslagårsaker.put(avslagKode, årsaktypeFra(avslagsårsak, lovReferanser));
         }
-        for (UttakResultatPeriode periode : foreldrepengerUttak.perioder()) {
-            PeriodeResultatÅrsak periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
+        for (var periode : foreldrepengerUttak.perioder()) {
+            var periodeResultatÅrsak = periode.getPeriodeResultatÅrsak();
             if (PeriodeResultatType.AVSLÅTT.equals(periode.getPeriodeResultatType()) && periodeResultatÅrsak != null) {
-                String avslagKode = periodeResultatÅrsak.getKode();
+                var avslagKode = periodeResultatÅrsak.getKode();
                 avslagårsaker.put(avslagKode, årsaktypeFra(periodeResultatÅrsak, lovReferanser));
             }
         }

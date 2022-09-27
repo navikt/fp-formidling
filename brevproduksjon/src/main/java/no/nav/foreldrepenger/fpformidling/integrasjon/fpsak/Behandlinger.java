@@ -27,6 +27,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.KreverSamm
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UtenMinsterettDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResultatPerioderDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.YtelseFordelingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.saldo.SaldoerDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
@@ -263,6 +264,15 @@ public interface Behandlinger {
                 .findFirst()
                 .flatMap(link -> hentDtoFraLink(link, UtenMinsterettDto.class))
                 .orElseThrow(() -> new IllegalStateException("Klarte ikke hente om behandlingen er uten minsteretter: " + hentBehandlingId(resourceLinker)));
+    }
+
+    default YtelseFordelingDto ytelseFordeling(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker
+                .stream()
+                .filter(dto -> "ytelsefordeling".equals(dto.getRel()))
+                .findFirst()
+                .flatMap(link -> hentDtoFraLink(link, YtelseFordelingDto.class))
+                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente ytelse fordeling for behandling " + hentBehandlingId(resourceLinker)));
     }
 
     default StartdatoUtsattDto hentStartdatoUtsatt(List<BehandlingResourceLink> resourceLinker) {

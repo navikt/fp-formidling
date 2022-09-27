@@ -77,6 +77,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.UttakAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.fpformidling.uttak.YtelseFordeling;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
@@ -123,6 +124,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
         when(domeneobjektProvider.hentAksjonspunkter(any(Behandling.class))).thenReturn(opprettAksjonspunkter());
         when(domeneobjektProvider.utenMinsterett(any(Behandling.class))).thenReturn(true);
+        when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
     }
 
     @Test
@@ -207,6 +209,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.erUtenMinsterett()).isTrue();
         assertThat(dokumentdata.isAnnenForelderRettEØS()).isTrue();
         assertThat(dokumentdata.isOppgittAnnenForelderRettEØS()).isTrue();
+        assertThat(dokumentdata.isØnskerJustertVedFødsel()).isTrue();
     }
 
     @Test

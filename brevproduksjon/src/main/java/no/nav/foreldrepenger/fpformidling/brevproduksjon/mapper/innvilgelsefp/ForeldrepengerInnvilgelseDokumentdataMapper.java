@@ -105,6 +105,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var saldoer = domeneobjektProvider.hentSaldoer(behandling);
         var språkkode = behandling.getSpråkkode();
         var utenMinsterett = domeneobjektProvider.utenMinsterett(behandling);
+        var ytelseFordeling = domeneobjektProvider.ytelseFordeling(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, dokumentHendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(
@@ -182,7 +183,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medInkludereInnvilget(skalInkludereInnvilget(behandling, utbetalingsperioder, konsekvensForInnvilgetYtelse))
                 .medInkludereAvslag(skalInkludereAvslag(utbetalingsperioder, konsekvensForInnvilgetYtelse))
                 .medInkludereNyeOpplysningerUtbet(skalInkludereNyeOpplysningerUtbet(behandling, utbetalingsperioder, dagsats))
-                .medUtenMinsterett(utenMinsterett);
+                .medUtenMinsterett(utenMinsterett)
+                .medØnskerJustertVedFødsel(ytelseFordeling.ønskerJustertVedFødsel());
 
         finnSisteDagAvSistePeriode(uttakResultatPerioder).ifPresent(dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
         finnStønadsperiodeFom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));

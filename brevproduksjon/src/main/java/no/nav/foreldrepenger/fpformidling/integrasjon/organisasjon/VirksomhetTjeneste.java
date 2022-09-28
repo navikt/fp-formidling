@@ -17,7 +17,7 @@ public class VirksomhetTjeneste {
     }
 
     @Inject
-    public VirksomhetTjeneste( /*Jersey*/ OrgInfo eregRestKlient) {
+    public VirksomhetTjeneste(@NativeClient OrgInfo eregRestKlient) {
         this.eregRestKlient = eregRestKlient;
     }
 

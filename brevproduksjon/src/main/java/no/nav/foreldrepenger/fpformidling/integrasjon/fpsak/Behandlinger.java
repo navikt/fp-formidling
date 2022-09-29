@@ -1,14 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.anke.AnkebehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.MottattDokumentDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.aksjonspunkt.AksjonspunktDto;
@@ -32,6 +25,12 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.saldo.Sald
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface Behandlinger {
 
@@ -146,15 +145,6 @@ public interface Behandlinger {
                 .filter(dto -> "klage-vurdering".equals(dto.getRel()))
                 .findFirst()
                 .flatMap(link -> hentDtoFraLink(link, KlagebehandlingDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente klage for behandling: " + hentBehandlingId(resourceLinker)));
-    }
-
-    default AnkebehandlingDto hentAnkebehandling(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "anke-vurdering".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, AnkebehandlingDto.class))
                 .orElseThrow(() -> new IllegalStateException("Klarte ikke hente klage for behandling: " + hentBehandlingId(resourceLinker)));
     }
 

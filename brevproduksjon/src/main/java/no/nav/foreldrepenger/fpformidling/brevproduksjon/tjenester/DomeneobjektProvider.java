@@ -8,7 +8,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.aksjonspunkt.Aksjonspunkt;
-import no.nav.foreldrepenger.fpformidling.anke.Anke;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
@@ -18,7 +17,6 @@ import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.AnkeDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.BehandlingDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.BeregningsgrunnlagDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.FamiliehendelseDtoMapper;
@@ -141,11 +139,6 @@ public class DomeneobjektProvider {
     public Klage hentKlagebehandling(Behandling behandling) {
         var klagebehandlingDto = behandlingRestKlient.hentKlagebehandling(behandling.getResourceLinker());
         return KlageDtoMapper.mapKlagefraDto(klagebehandlingDto);
-    }
-
-    public Optional<Anke> hentAnkebehandling(Behandling behandling) {
-        var ankebehandlingDto = behandlingRestKlient.hentAnkebehandling(behandling.getResourceLinker());
-        return AnkeDtoMapper.mapAnkeFraDto(ankebehandlingDto);
     }
 
     public KlageDokument hentKlageDokument(Behandling behandling) {

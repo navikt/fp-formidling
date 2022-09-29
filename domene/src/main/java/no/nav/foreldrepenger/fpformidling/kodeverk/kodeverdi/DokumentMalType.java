@@ -35,8 +35,6 @@ public enum DokumentMalType implements Kodeverdi {
     KLAGE_OMGJORT(DokumentMalTypeKode.KLAGE_OMGJORT, "Vedtak om omgjøring av klage"),
     KLAGE_OVERSENDT(DokumentMalTypeKode.KLAGE_OVERSENDT, "Klage oversendt til klageinstans"),
     KLAGE_STADFESTET(DokumentMalTypeKode.KLAGE_STADFESTET, "Vedtak om stadfestelse i klagesak"),
-    ANKE_OMGJORT(DokumentMalTypeKode.ANKE_OMGJORT, "Vedtak om omgjøring i ankesak"),
-    ANKE_OPPHEVET(DokumentMalTypeKode.ANKE_OPPHEVET, "Ankebrev om beslutning om oppheving"),
     ETTERLYS_INNTEKTSMELDING(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING, "Etterlys inntektsmelding"),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
@@ -100,6 +98,10 @@ public enum DokumentMalType implements Kodeverdi {
     ANKE_OPPHEVET_FRITEKST(DokumentMalTypeKode.ANKE_OPPHEVET_FRITEKST, "Ankebrev om beslutning om oppheving"), //NOSONAR
     @Deprecated
     ETTERLYS_INNTEKTSMELDING_FRITEKST(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING_FRITEKST, "Etterlys inntektsmelding"), //NOSONAR
+    @Deprecated
+    ANKE_OMGJORT(DokumentMalTypeKode.ANKE_OMGJORT, "Vedtak om omgjøring i ankesak"), //NOSONAR
+    @Deprecated
+    ANKE_OPPHEVET(DokumentMalTypeKode.ANKE_OPPHEVET, "Ankebrev om beslutning om oppheving"),  //NOSONAR
 
     UDEFINERT("-")
     ;
@@ -109,13 +111,11 @@ public enum DokumentMalType implements Kodeverdi {
 
     private static final Set<DokumentMalType> KLAGE_VEDTAKSBREV = Set.of(KLAGE_STADFESTET, KLAGE_AVVIST, KLAGE_HJEMSENDT, KLAGE_OMGJORT);
 
-    private static final Set<DokumentMalType> ANKE_VEDTAKSBREV = Set.of(ANKE_OMGJORT, ANKE_OPPHEVET);
 
 
     public static boolean erVedtaksBrev(DokumentMalType brev) {
         return VEDTAKSBREV.contains(brev) ||
-                KLAGE_VEDTAKSBREV.contains(brev) ||
-                ANKE_VEDTAKSBREV.contains(brev);
+                KLAGE_VEDTAKSBREV.contains(brev);
     }
 
     public static final Set<DokumentMalType> FORLENGET_SAKSBEHANDLINGSTID_BREVMALER = Set.of(

@@ -39,6 +39,7 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrep
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
+import no.nav.foreldrepenger.fpformidling.uttak.YtelseFordeling;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.verge.Verge;
 import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
@@ -198,6 +199,11 @@ public class DomeneobjektProvider {
 
     public boolean utenMinsterett(Behandling behandling) {
         return behandlingRestKlient.utenMinsterett(behandling.getResourceLinker()).utenMinsterett();
+    }
+
+    public YtelseFordeling ytelseFordeling(Behandling behandling) {
+        var dto = behandlingRestKlient.ytelseFordeling(behandling.getResourceLinker());
+        return new YtelseFordeling(dto.ønskerJustertVedFødsel());
     }
 
     public StartdatoUtsattDto hentStartdatoUtsatt(Behandling behandling) {

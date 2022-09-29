@@ -6,6 +6,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.vedtak.felles.integrasjon.organisasjon.OrgInfo;
+import no.nav.vedtak.felles.integrasjon.rest.NativeClient;
 
 @ApplicationScoped
 public class VirksomhetTjeneste {
@@ -17,7 +18,7 @@ public class VirksomhetTjeneste {
     }
 
     @Inject
-    public VirksomhetTjeneste( /*Jersey*/ OrgInfo eregRestKlient) {
+    public VirksomhetTjeneste(@NativeClient OrgInfo eregRestKlient) {
         this.eregRestKlient = eregRestKlient;
     }
 

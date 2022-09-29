@@ -53,6 +53,8 @@ class JavaDokdistRestKlient extends JavaHttpKlient implements Dokdist {
             return consumeError(response, journalpostId);
         } else if (response.statusCode() == HttpURLConnection.HTTP_CONFLICT) {
             return getResultFunction(journalpostId).apply(response);
+        } else if (response.statusCode() == HttpURLConnection.HTTP_GONE) {
+            return Resultat.MANGLER_ADRESSE;
         }
         return handleResponse(response, getResultFunction(journalpostId));
     }

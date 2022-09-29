@@ -24,9 +24,9 @@ public class UttakSvpDtoMapper {
         if (uttaksResultatArbeidsforhold != null) {
             uttaksResultatArbeidsforhold.forEach(arbeidsforhold -> {
                 final var uttakResultatArbeidsforholdBuild = SvpUttakResultatArbeidsforhold.Builder.ny();
-                final var arbeidsforholdIkkeOppfyltÅrsak = arbeidsforhold.getArbeidsforholdIkkeOppfyltÅrsak();
-                final var uttakArbeidType = arbeidsforhold.getArbeidType();
-                final var arbeidsgiver = UttakDtoMapper.mapArbeidsgiver(arbeidsforhold.getArbeidsgiverReferanse(), hentNavn);
+                final var arbeidsforholdIkkeOppfyltÅrsak = arbeidsforhold.arbeidsforholdIkkeOppfyltÅrsak();
+                final var uttakArbeidType = arbeidsforhold.arbeidType();
+                final var arbeidsgiver = UttakDtoMapper.mapArbeidsgiver(arbeidsforhold.arbeidsgiverReferanse(), hentNavn);
                 uttakResultatArbeidsforholdBuild.medArbeidsgiver(arbeidsgiver);
                 uttakResultatArbeidsforholdBuild.medUttakArbeidType(uttakArbeidType);
                 uttakResultatArbeidsforholdBuild.medArbeidsforholdIkkeOppfyltÅrsak(arbeidsforholdIkkeOppfyltÅrsak);
@@ -38,10 +38,10 @@ public class UttakSvpDtoMapper {
     }
 
     private static List<SvpUttakResultatPeriode> utledSvpUttakResultatPeriode(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold, Arbeidsgiver arbeidsgiver) {
-        if (arbeidsforhold.getPerioder() == null) {
+        if (arbeidsforhold.perioder() == null) {
             return List.of();
         }
-        return arbeidsforhold.getPerioder().stream()
+        return arbeidsforhold.perioder().stream()
                 .map(periodeDto -> SvpUttakResultatPeriode.Builder.ny()
                         .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(periodeDto.fom(), periodeDto.tom()))
                         .medUtbetalingsgrad(periodeDto.utbetalingsgrad().longValue())
@@ -57,10 +57,10 @@ public class UttakSvpDtoMapper {
     }
 
     private static String brukUttakArbeidType(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold) {
-        if (UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.getKode().equals(arbeidsforhold.getArbeidType().getKode())) {
+        if (UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.getKode().equals(arbeidsforhold.arbeidType().getKode())) {
             return NÆRINGSDRIVENDE;
         }
-        if (UttakArbeidType.FRILANS.getKode().equals(arbeidsforhold.getArbeidType().getKode())) {
+        if (UttakArbeidType.FRILANS.getKode().equals(arbeidsforhold.arbeidType().getKode())) {
             return FRILANSER;
         }
         return null;

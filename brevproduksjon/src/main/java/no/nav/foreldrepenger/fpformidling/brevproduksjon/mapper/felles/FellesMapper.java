@@ -66,10 +66,8 @@ public class FellesMapper {
             } else if (antall > 0) {
                 builder.append(", ");
             }
-            if (antall == 0) {
-                if (!hjemmel.contains("§")) {
-                    builder.append("§ ");
-                }
+            if (antall == 0 && !hjemmel.contains("§")) {
+                builder.append("§ ");
             }
             builder.append(hjemmel.trim());
             antall++;

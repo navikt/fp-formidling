@@ -9,9 +9,6 @@ import javax.inject.Inject;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriBuilderException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
@@ -29,7 +26,6 @@ import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 @NativeClient
 @RestClientConfig(tokenConfig = TokenFlow.ADAPTIVE, application = FpApplication.FPSAK)
 public class BehandlingNativeRestKlient implements Behandlinger {
-    private static final Logger LOG = LoggerFactory.getLogger(BehandlingNativeRestKlient.class);
     protected static final String FPSAK_API = "/api";
 
     private RestClient restClient;

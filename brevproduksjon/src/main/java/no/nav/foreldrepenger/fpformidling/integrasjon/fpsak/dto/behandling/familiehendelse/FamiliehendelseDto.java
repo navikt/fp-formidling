@@ -14,23 +14,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public abstract class FamiliehendelseDto {
 
-    private SøknadType soknadType;
     private LocalDate skjæringstidspunkt;
 
-    public FamiliehendelseDto() {
-    }
-
-    public boolean erSoknadsType(SøknadType søknadType) {
-        return søknadType.equals(this.soknadType);
+    FamiliehendelseDto() {
     }
 
     @JsonProperty("skjaringstidspunkt")
     public LocalDate getSkjæringstidspunkt() {
         return skjæringstidspunkt;
-    }
-
-    public void setSkjæringstidspunkt(LocalDate skjæringstidspunkt) {
-        this.skjæringstidspunkt = skjæringstidspunkt;
     }
 
 }

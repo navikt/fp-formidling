@@ -17,6 +17,9 @@ import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
  */
 public final class UndermalInkluderingMapper {
 
+    private UndermalInkluderingMapper() {
+    }
+
     public static boolean skalInkludereUtbetaling(Behandling behandling, List<Utbetalingsperiode> utbetalingsperioder) {
         return behandling.getBehandlingsresultat().erInnvilget()
                 && (utbetalingsperioder.size() > 1 || harKunEnPeriodeUtenGraderingOgUtenUtbetalingÅrsak(utbetalingsperioder));

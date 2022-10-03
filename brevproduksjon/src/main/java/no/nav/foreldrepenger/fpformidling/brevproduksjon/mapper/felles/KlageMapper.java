@@ -9,10 +9,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageAvvistÅrsak;
-import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
 
 public class KlageMapper {
 
@@ -34,7 +32,6 @@ public class KlageMapper {
                 .anyMatch(KLAGET_FOR_SENT::equals);
         return formaterLovhjemlerForAvvistKlage(klagehjemler, klagetEtterKlagefrist, språkkode);
     }
-
     static Set<String> hentKlageHjemler(Klage klage) {
         Set<String> klageHjemler = new TreeSet<>();
         var klageVurdertAv = klage.getFormkravKA() != null ? "KA" : "NFP";
@@ -57,16 +54,5 @@ public class KlageMapper {
             return Optional.empty();
         }
         return Optional.of(lovhjemmelBuiloer.toString());
-    }
-
-    public static boolean erOpphevet(Klage klage, DokumentHendelse hendelse) {
-        if (hendelse.getErOpphevetKlage()) {
-            return true;
-        }
-        if (klage.getGjeldendeKlageVurderingsresultat() == null) {
-            throw new IllegalStateException();
-        }
-        var klageVurdering = klage.getGjeldendeKlageVurderingsresultat().klageVurdering();
-        return KlageVurdering.OPPHEVE_YTELSESVEDTAK.equals(klageVurdering);
     }
 }

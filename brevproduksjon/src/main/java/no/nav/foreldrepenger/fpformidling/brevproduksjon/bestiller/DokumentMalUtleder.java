@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -14,7 +13,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
-import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
@@ -54,7 +52,7 @@ class DokumentMalUtleder {
         if (behandlingsresultat.erInnvilget()) {
             return DokumentMalType.ENGANGSSTØNAD_INNVILGELSE;
         } else if (behandlingsresultat.erOpphørt() || behandlingsresultat.erAvslått()) {
-                return DokumentMalType.ENGANGSSTØNAD_AVSLAG;
+            return DokumentMalType.ENGANGSSTØNAD_AVSLAG;
         }
         throw ukjentMalException(behandling);
     }
@@ -86,8 +84,8 @@ class DokumentMalUtleder {
     }
 
     private boolean skalBenytteInnvilgelsesbrev(Behandlingsresultat behandlingsresultat) {
-        return behandlingsresultat.erInnvilget() || (behandlingsresultat.erEndretForeldrepenger() &&
-                !erKunEndringIFordelingAvYtelsen(behandlingsresultat));
+        return behandlingsresultat.erInnvilget() || (behandlingsresultat.erEndretForeldrepenger() && !erKunEndringIFordelingAvYtelsen(
+                behandlingsresultat));
     }
 
     DokumentMalType utledDokumentmal(Behandling behandling, DokumentHendelse hendelse) {
@@ -106,8 +104,7 @@ class DokumentMalUtleder {
     }
 
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
-        if (!Objects.equals(hendelse.getVedtaksbrev(), Vedtaksbrev.AUTOMATISK) &&
-                Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST)) {
+        if (!Objects.equals(hendelse.getVedtaksbrev(), Vedtaksbrev.AUTOMATISK) && Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST)) {
             return DokumentMalType.FRITEKSTBREV;
         }
         if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {
@@ -122,7 +119,8 @@ class DokumentMalUtleder {
             return mapSvangerskapspengerVedtaksbrev(behandling);
         }
         throw new TekniskException("FPFORMIDLING-666916",
-        String.format("Ingen brevmal for ytelse %s for behandling %s.", hendelse.getYtelseType().getKode(), behandling.getUuid().toString()));
+                String.format("Ingen brevmal for ytelse %s for behandling %s.", hendelse.getYtelseType().getKode(),
+                        behandling.getUuid().toString()));
     }
 
     private boolean erRevurderingMedUendretUtfall(Behandling behandling) {
@@ -144,10 +142,8 @@ class DokumentMalUtleder {
 
     private boolean erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(Behandling behandling) {
         var behandlingsresultat = behandling.getBehandlingsresultat();
-        return behandlingsresultat != null &&
-                foreldrepengerErEndret(behandlingsresultat)
-                && erKunEndringIFordelingAvYtelsen(behandlingsresultat)
-                && harSendtVarselOmRevurdering(behandling);
+        return behandlingsresultat != null && foreldrepengerErEndret(behandlingsresultat) && erKunEndringIFordelingAvYtelsen(
+                behandlingsresultat) && harSendtVarselOmRevurdering(behandling);
     }
 
     private boolean harSendtVarselOmRevurdering(Behandling behandling) {
@@ -163,21 +159,14 @@ class DokumentMalUtleder {
         var klage = domeneobjektProvider.hentKlagebehandling(behandling);
         var klageVurderingResultat = klage.getGjeldendeKlageVurderingsresultat();
         if (klageVurderingResultat == null) {
-            throw new FunksjonellException("FPFORMIDLING-100507",
-            String.format("Klagebehandling med id %s mangler resultat av klagevurderingen", behandling.getUuid().toString()), "Fortsett saksbehandlingen");
-        }
-        var klagevurdering = klageVurderingResultat.klageVurdering();
-
-        if (KlageVurdering.AVVIS_KLAGE.equals(klagevurdering)) {
-            return DokumentMalType.KLAGE_AVVIST;
-        } else if (Arrays.asList(KlageVurdering.OPPHEVE_YTELSESVEDTAK, KlageVurdering.HJEMSENDE_UTEN_Å_OPPHEVE).contains(klagevurdering)) {
-            return DokumentMalType.KLAGE_HJEMSENDT;
-        } else if (KlageVurdering.MEDHOLD_I_KLAGE.equals(klagevurdering)) {
-            return DokumentMalType.KLAGE_OMGJORT;
-        } else if (KlageVurdering.STADFESTE_YTELSESVEDTAK.equals(klagevurdering)) {
-            return DokumentMalType.KLAGE_STADFESTET;
+            throw new FunksjonellException("FPFORMIDLING-100507", String.format("Klagebehandling med id %s mangler resultat av klagevurderingen", behandling.getUuid().toString()),
+                    "Fortsett saksbehandlingen");
         }
 
-        throw ukjentMalException(behandling);
+        return switch (klageVurderingResultat.klageVurdering()) {
+            case MEDHOLD_I_KLAGE -> DokumentMalType.KLAGE_OMGJORT;
+            case AVVIS_KLAGE -> DokumentMalType.KLAGE_AVVIST;
+            case UDEFINERT -> throw ukjentMalException(behandling);
+        };
     }
 }

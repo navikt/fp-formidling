@@ -2,37 +2,36 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ErrorResponse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
+import no.nav.vedtak.exception.IntegrasjonException;
 import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.log.mdc.MDCOperations;
+import no.nav.vedtak.felles.integrasjon.rest.RestClient;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 
-class JavaDokgenRestKlientTest {
+@ExtendWith(MockitoExtension.class)
+class DokgenRestKlientTest {
 
-    private MockWebServer mockWebServer;
+    @Mock
+    private RestClient restClient;
     private Dokgen klient;
-
-    @BeforeAll
-    static void setupStatics() {
-        MDCOperations.putCallId();
-    }
 
     @BeforeEach
     void setup() {
-        this.mockWebServer = new MockWebServer();
-        this.klient = new JavaDokgenRestKlient(mockWebServer.url("/fpformidling").toString());
+        this.klient = new DokgenRestKlient(restClient);
     }
 
     @ParameterizedTest
@@ -47,29 +46,22 @@ class JavaDokgenRestKlientTest {
         var variation = "template_nb";
         var body = DefaultJsonMapper.toJson(new ErrorResponse(statusCode, message, message, String.format("/template/%s/%s/create-pdf-variation", template, variation)));
 
-        mockWebServer.enqueue(new MockResponse()
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .setBody(body)
-                .setResponseCode(statusCode));
+        when(restClient.sendReturnByteArray(any())).thenThrow(new IntegrasjonException("F-468817", String.format("Uventet respons %s fra %s", statusCode, "/endpoint")));
 
         var språkkode = Språkkode.defaultNorsk("nb");
         var dokumentdata = new TestDokumentdata();
-        Exception exception = assertThrows(TekniskException.class, () -> {
+        Exception exception = assertThrows(IntegrasjonException.class, () -> {
             klient.genererPdf(template, språkkode, dokumentdata);
         });
-        assertThat(exception.getMessage()).contains(String.format("Fikk feil ved kall til dokgen for mal %s og språkkode %s", template, språkkode));
+        assertThat(exception.getMessage()).contains("F-468817");
     }
 
     @Test
     @DisplayName("No body returned. Body fra serveren er aldri null, den er en tomtUttak array. Dvs at man må teste på lenght isteden.")
     void generatePdf_no_body_returned() {
-        var statusCode = 200;
         var template = "abc";
 
-        mockWebServer.enqueue(new MockResponse()
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .setResponseCode(statusCode));
-
+        when(restClient.sendReturnByteArray(any())).thenReturn(new byte[]{});
         var språkkode = Språkkode.defaultNorsk("nb");
         var dokumentdata = new TestDokumentdata();
         Exception exception = assertThrows(TekniskException.class, () -> {

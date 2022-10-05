@@ -1,5 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
+import java.util.Objects;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
@@ -14,12 +19,6 @@ import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.felles.integrasjon.rest.NativeClient;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
-import java.util.Objects;
 
 @ApplicationScoped
 class DokumentMalUtleder {
@@ -36,7 +35,7 @@ class DokumentMalUtleder {
     @Inject
     public DokumentMalUtleder(DomeneobjektProvider domeneobjektProvider,
                               DokumentHendelseTjeneste dokumentHendelseTjeneste,
-                              @NativeClient Behandlinger behandlingRestKlient) {
+                              Behandlinger behandlingRestKlient) {
         this.domeneobjektProvider = domeneobjektProvider;
         this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
         this.behandlingRestKlient = behandlingRestKlient;

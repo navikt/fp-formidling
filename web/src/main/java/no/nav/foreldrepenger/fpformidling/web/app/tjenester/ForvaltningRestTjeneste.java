@@ -34,7 +34,6 @@ import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
@@ -66,7 +65,7 @@ public class ForvaltningRestTjeneste {
     }
 
     @Inject
-    public ForvaltningRestTjeneste(@JavaClient Dokgen dokgenRestKlient,
+    public ForvaltningRestTjeneste(Dokgen dokgenRestKlient,
                                    DokumentHendelseTjeneste dokumentHendelseTjeneste,
                                    ProsessTaskTjeneste taskTjeneste) {
         this.dokgenRestKlient = dokgenRestKlient;

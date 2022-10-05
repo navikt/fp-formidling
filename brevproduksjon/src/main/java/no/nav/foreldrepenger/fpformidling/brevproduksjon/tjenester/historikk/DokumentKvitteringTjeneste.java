@@ -5,7 +5,6 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
-import no.nav.vedtak.felles.integrasjon.rest.NativeClient;
 
 @ApplicationScoped
 public class DokumentKvitteringTjeneste {
@@ -17,7 +16,7 @@ public class DokumentKvitteringTjeneste {
     }
 
     @Inject
-    public DokumentKvitteringTjeneste(@NativeClient Behandlinger restKlient) {
+    public DokumentKvitteringTjeneste(Behandlinger restKlient) {
         this.fpsakKlient = restKlient;
     }
 

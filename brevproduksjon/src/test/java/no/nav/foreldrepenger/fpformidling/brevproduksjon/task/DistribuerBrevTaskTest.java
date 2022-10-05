@@ -6,7 +6,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -90,7 +89,6 @@ class DistribuerBrevTaskTest {
         verify(taskTjeneste, never()).lagre(any(ProsessTaskData.class));
     }
 
-    @NotNull
     private ProsessTaskData opprettProsessTaskData(String journalpostId, String bestillingsid, Distribusjonstype distribusjonstype) {
         var prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId);

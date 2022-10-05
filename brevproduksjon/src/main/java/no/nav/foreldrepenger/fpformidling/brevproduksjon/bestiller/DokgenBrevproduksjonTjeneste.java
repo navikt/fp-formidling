@@ -24,7 +24,6 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.repository.DokumentReposi
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
-import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.OpprettJournalpostResponse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
@@ -56,7 +55,7 @@ public class DokgenBrevproduksjonTjeneste {
     public DokgenBrevproduksjonTjeneste(DokumentFellesDataMapper dokumentFellesDataMapper,
                                         DomeneobjektProvider domeneobjektProvider,
                                         DokumentRepository dokumentRepository,
-                                        @JavaClient Dokgen dokgenKlient,
+                                        Dokgen dokgenKlient,
                                         OpprettJournalpostTjeneste opprettJournalpostTjeneste,
                                         DokumentdataMapperProvider dokumentdataMapperProvider,
                                         ProsessTaskTjeneste taskTjeneste) {

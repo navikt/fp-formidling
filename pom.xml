@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.felles</groupId>
         <artifactId>fp-bom</artifactId>
-        <version>0.3.5</version>
+        <version>0.3.6</version>
     </parent>
 
     <groupId>no.nav.foreldrepenger.fpformidling</groupId>
@@ -29,9 +29,9 @@
         <sonar.projectKey>navikt_fp-formidling</sonar.projectKey>
 
         <!-- Felles artefakter -->
-        <felles.version>4.1.49</felles.version>
-        <prosesstask.version>3.1.10</prosesstask.version>
-        <kontrakter.version>6.1.25</kontrakter.version>
+        <felles.version>4.2.2</felles.version>
+        <prosesstask.version>3.1.11</prosesstask.version>
+        <kontrakter.version>6.1.27</kontrakter.version>
         <konfig.version>1.1.5</konfig.version>
 
         <!-- Eksterne -->
@@ -95,18 +95,6 @@
                 <version>${handlebars.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.squareup.okhttp3</groupId>
-                <artifactId>mockwebserver</artifactId>
-                <version>4.10.0</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>junit</groupId>
-                        <artifactId>junit</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-migrationsupport</artifactId>

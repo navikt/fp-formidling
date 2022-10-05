@@ -36,7 +36,7 @@ public class OpprettJournalpostTjenesteTest {
     private OpprettJournalpostTjeneste opprettJournalpost; // objektet vi tester
 
     // Mocks
-    private Journalpost journalpostRestKlient = mock(JournalpostRestKlient.class);
+    private Journalpost journalpostRestKlient = mock(Journalpost.class);
 
     @BeforeEach
     public void setup() {

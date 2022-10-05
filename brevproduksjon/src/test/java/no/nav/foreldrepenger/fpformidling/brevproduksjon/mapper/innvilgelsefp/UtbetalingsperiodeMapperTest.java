@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
@@ -174,7 +173,6 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(tyPeriode3.getPeriodeFom());
     }
 
-    @NotNull
     private ForeldrepengerUttak uttak(List<UttakResultatPeriode> søkersPerioder, List<UttakResultatPeriode> annenPartPerioder) {
         return new ForeldrepengerUttak(søkersPerioder, annenPartPerioder, false, false, false, false);
     }

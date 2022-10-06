@@ -39,7 +39,7 @@ public class OpprettJournalpostTjenesteTest {
     private Journalpost journalpostRestKlient = mock(Journalpost.class);
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         opprettJournalpost = new OpprettJournalpostTjeneste(journalpostRestKlient);
 
         var response = new OpprettJournalpostResponse(JOURNALPOST_ID, "", true, List.of(new DokumentOpprettResponse("1111")));
@@ -47,7 +47,7 @@ public class OpprettJournalpostTjenesteTest {
     }
 
     @Test
-    public void skal_journalføre_generert_INNVES_brev() {
+    void skal_journalføre_generert_INNVES_brev() {
         // Arrange
         var requestCaptor = ArgumentCaptor.forClass(OpprettJournalpostRequest.class);
 
@@ -84,7 +84,7 @@ public class OpprettJournalpostTjenesteTest {
         assertThat(brev).contains(GEN_BREV);
         assertThat(genRequest.getDokumenter().get(0).getDokumentvarianter().get(0).getVariantformat()).isEqualTo("ARKIV");
         assertThat(genRequest.getDokumenter().get(0).getDokumentvarianter().get(0).getFiltype()).isEqualTo("PDFA");
-        assertThat(genRequest.getKanal()).isEqualTo(null);
+        assertThat(genRequest.getKanal()).isNull();
         assertThat(genRequest.getTittel()).isEqualTo("Innvilget Engangsstønad");
 
         assertThat(responseMocked.erFerdigstilt()).isTrue();

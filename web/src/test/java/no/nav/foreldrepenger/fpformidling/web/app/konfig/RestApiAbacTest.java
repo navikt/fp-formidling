@@ -43,7 +43,7 @@ public class RestApiAbacTest {
      * Spør på Slack hvis du trenger hjelp til å endre koden din slik at den går igjennom her
      */
     @Test
-    public void test_at_alle_restmetoder_er_annotert_med_BeskyttetRessurs() {
+    void test_at_alle_restmetoder_er_annotert_med_BeskyttetRessurs() {
         var feilmelding = "Mangler @%s-annotering på %s";
         var feilmeldinger = new StringBuilder();
         for (var restMethod : RestApiTester.finnAlleRestMetoder()) {
@@ -56,7 +56,7 @@ public class RestApiAbacTest {
     }
 
     @Test
-    public void sjekk_at_ingen_metoder_er_annotert_med_dummy_verdier() {
+    void sjekk_at_ingen_metoder_er_annotert_med_dummy_verdier() {
         for (var metode : RestApiTester.finnAlleRestMetoder()) {
             assertAtIngenBrukerDummyVerdierPåBeskyttetRessurs(metode);
         }
@@ -68,7 +68,7 @@ public class RestApiAbacTest {
      * Spør på Slack hvis du trenger hjelp til å endre koden din slik at den går igjennom her
      */
     @Test
-    public void test_at_alle_input_parametre_til_restmetoder_implementer_AbacDto() {
+    void test_at_alle_input_parametre_til_restmetoder_implementer_AbacDto() {
         var feilmelding = "Parameter på %s.%s av type %s må implementere " + AbacDto.class.getSimpleName() + ".\n";
         var feilmeldinger = new StringBuilder();
 

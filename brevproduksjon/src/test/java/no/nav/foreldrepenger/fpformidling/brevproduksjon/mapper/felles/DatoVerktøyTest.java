@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class DatoVerktøyTest {
 
     @Test
-    public void skal_finne_at_dato_2_er_rett_etter_dato_1() {
+    void skal_finne_at_dato_2_er_rett_etter_dato_1() {
         // Act
         var resultat = DatoVerktøy.erFomRettEtterTomDato(LocalDate.now().plusDays(5), LocalDate.now().plusDays(6));
 
@@ -18,7 +18,7 @@ public class DatoVerktøyTest {
     }
 
     @Test
-    public void skal_finne_at_dato_2_er_rett_etter_dato_1_når_det_er_en_hel_helg_imellom() {
+    void skal_finne_at_dato_2_er_rett_etter_dato_1_når_det_er_en_hel_helg_imellom() {
         // Act
         var resultat = DatoVerktøy.erFomRettEtterTomDato(LocalDate.of(2021, 12, 17), LocalDate.of(2021, 12, 20));
 
@@ -27,7 +27,7 @@ public class DatoVerktøyTest {
     }
 
     @Test
-    public void skal_finne_at_dato_2_er_rett_etter_dato_1_når_det_er_en_søndag_imellom() {
+    void skal_finne_at_dato_2_er_rett_etter_dato_1_når_det_er_en_søndag_imellom() {
         // Act
         var resultat = DatoVerktøy.erFomRettEtterTomDato(LocalDate.of(2021, 12, 18), LocalDate.of(2021, 12, 20));
 
@@ -36,7 +36,7 @@ public class DatoVerktøyTest {
     }
 
     @Test
-    public void skal_finne_at_dato_2_ikke_er_rett_etter_dato_1() {
+    void skal_finne_at_dato_2_ikke_er_rett_etter_dato_1() {
         // Act
         var resultat = DatoVerktøy.erFomRettEtterTomDato(LocalDate.now().plusDays(3), LocalDate.now().plusDays(8));
 

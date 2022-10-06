@@ -14,13 +14,13 @@ import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 public class InntektsmeldingMapperTest {
 
     @Test
-    public void skal_kaste_exception_hvis_det_ikke_finnes_inntektsmelding() {
+    void skal_kaste_exception_hvis_det_ikke_finnes_inntektsmelding() {
         assertThatThrownBy(() -> InntektsmeldingMapper.hentNyesteInntektsmelding(new Inntektsmeldinger(List.of())))
                 .isInstanceOf(IllegalStateException.class);
     }
 
     @Test
-    public void skal_returnere_nyeste_inntektsmelding() {
+    void skal_returnere_nyeste_inntektsmelding() {
         // Arrange
         var inntektsmelding1 = new Inntektsmelding("Feil", "", LocalDate.now().minusDays(10));
         var inntektsmelding2 = new Inntektsmelding("Fasit", "", LocalDate.now().minusDays(1));

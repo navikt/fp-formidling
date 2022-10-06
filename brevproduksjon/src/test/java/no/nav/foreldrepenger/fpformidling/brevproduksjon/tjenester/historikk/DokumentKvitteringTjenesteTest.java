@@ -26,13 +26,13 @@ public class DokumentKvitteringTjenesteTest {
     private Behandlinger behandlinger;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         historikkTjeneste = new DokumentKvitteringTjeneste(behandlinger);
         lenient().doNothing().when(behandlinger).kvitterDokument(Mockito.any());
     }
 
     @Test
-    public void publiserHistorikk() {
+    void publiserHistorikk() {
         var kvittering = new DokumentProdusertDto(
                 UUID.randomUUID(),
                 UUID.randomUUID(),

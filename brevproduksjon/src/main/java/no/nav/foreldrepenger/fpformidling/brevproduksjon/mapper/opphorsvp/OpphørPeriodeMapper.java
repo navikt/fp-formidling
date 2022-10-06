@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphørsvp;
+package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorsvp;
 
 import java.time.LocalDate;
 import java.util.Comparator;

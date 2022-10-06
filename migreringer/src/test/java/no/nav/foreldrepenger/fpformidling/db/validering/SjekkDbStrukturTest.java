@@ -32,7 +32,7 @@ public class SjekkDbStrukturTest {
     }
 
     @Test
-    public void sjekk_at_alle_tabeller_er_dokumentert() throws Exception {
+    void sjekk_at_alle_tabeller_er_dokumentert() throws Exception {
         var sql = """
                 select t.table_name from information_schema.tables t
                 join pg_class c on t.table_name = c.relname
@@ -56,7 +56,7 @@ public class SjekkDbStrukturTest {
     }
 
     @Test
-    public void sjekk_at_alle_relevante_kolonner_er_dokumentert() throws Exception {
+    void sjekk_at_alle_relevante_kolonner_er_dokumentert() throws Exception {
         List<String> avvik = new ArrayList<>();
 
         var sql = """
@@ -100,7 +100,7 @@ public class SjekkDbStrukturTest {
 
     @Disabled("Denne må tilpasses til Postgresql")
     @Test
-    public void sjekk_at_alle_FK_kolonner_har_fornuftig_indekser() throws Exception {
+    void sjekk_at_alle_FK_kolonner_har_fornuftig_indekser() throws Exception {
         var sql = "SELECT "
                 + "  uc.table_name, uc.constraint_name, LISTAGG(dcc.column_name, ',') WITHIN GROUP (ORDER BY dcc.position) as columns" +
                 " FROM all_Constraints Uc" +
@@ -146,7 +146,7 @@ public class SjekkDbStrukturTest {
     }
 
     @Test
-    public void skal_ha_KL_prefiks_for_kodeverk_kolonne_i_source_tabell() throws Exception {
+    void skal_ha_KL_prefiks_for_kodeverk_kolonne_i_source_tabell() throws Exception {
         var sql = "select t1.relname as tabname, cs1.column_name as tabcol from\n" +
                 "    pg_class t1, pg_class t2, information_schema.columns cs1, information_schema.columns cs2,\n" +
                 "    lateral (select c.conname, c.conrelid, unnest(c.conkey) as conkeypos, c.confrelid, unnest(c.confkey) as confkeypos from pg_constraint c where c.contype = 'f') as fk\n" +
@@ -184,7 +184,7 @@ public class SjekkDbStrukturTest {
     }
 
     @Test
-    public void skal_ha_primary_key_i_hver_tabell_som_begynner_med_PK() throws Exception {
+    void skal_ha_primary_key_i_hver_tabell_som_begynner_med_PK() throws Exception {
         var sql = "SELECT t.table_name FROM information_schema.tables t where t.table_schema = current_schema\n" +
                 "and t.table_name not like 'schema_%' AND t.table_name not like 'flyway_%'\n" +
                 "AND t.table_name not like 'prosess_task_partition_%'\n" +
@@ -213,7 +213,7 @@ public class SjekkDbStrukturTest {
     }
 
     @Test
-    public void skal_ha_alle_foreign_keys_begynne_med_FK() throws Exception {
+    void skal_ha_alle_foreign_keys_begynne_med_FK() throws Exception {
         var sql = "select table_name, constraint_name from information_schema.table_constraints\n" +
                 "where constraint_type = 'FOREIGN KEY' and table_catalog=lower(?) and constraint_name NOT LIKE 'fk_%'";
         // ev. bytt ut table_catalog med table_schema
@@ -242,7 +242,7 @@ public class SjekkDbStrukturTest {
     }
 
     @Test
-    public void skal_ha_korrekt_index_navn() throws Exception {
+    void skal_ha_korrekt_index_navn() throws Exception {
         var sql = "select\n" +
                 "       t.relname as table_name,\n" +
                 "       i.relname as index_name,\n" +
@@ -290,7 +290,7 @@ public class SjekkDbStrukturTest {
     }
 
     @Test
-    public void skal_ha_samme_data_type_for_begge_sider_av_en_FK() throws Exception {
+    void skal_ha_samme_data_type_for_begge_sider_av_en_FK() throws Exception {
         var sql = "select t1.relname, cs1.column_name, cs1.data_type, cs1.character_maximum_length, cs1.character_octet_length,\n" +
                 "    cs2.column_name, cs2.data_type, cs2.character_maximum_length, cs2.character_octet_length from\n" +
                 "     pg_class t1, pg_class t2, information_schema.columns cs1, information_schema.columns cs2,\n" +
@@ -336,7 +336,7 @@ public class SjekkDbStrukturTest {
     }
 
     @Test
-    public void skal_ikke_bruke_FLOAT_REAL_eller_DOUBLEPRECISION() throws Exception {
+    void skal_ikke_bruke_FLOAT_REAL_eller_DOUBLEPRECISION() throws Exception {
         var sql = "select table_name, column_name, data_type From information_schema.columns where table_schema = current_schema and data_type in ('real', 'double precision')";
 
         List<String> avvik = new ArrayList<>();

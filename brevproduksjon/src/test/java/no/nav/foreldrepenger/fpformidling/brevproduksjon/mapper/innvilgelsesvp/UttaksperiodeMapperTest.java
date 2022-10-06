@@ -42,7 +42,7 @@ public class UttaksperiodeMapperTest {
     private static final int UTBETALINGSGRAD_10 = 10;
 
     @Test
-    public void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_utbetalingsgrad_innenfor_samme_aktivitetstype() {
+    void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_utbetalingsgrad_innenfor_samme_aktivitetstype() {
         // Arrange
         var svangerskapspengerUttak = getSvpUttaksresultat();
         var tilkjentYtelseFP = getTilkjentYtelse();

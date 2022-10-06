@@ -31,13 +31,13 @@ public class IngenEndringDokumentdataMapperTest {
     private IngenEndringDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
-    public void before() {
+    void before() {
         dokumentData = lagStandardDokumentData(DokumentMalType.INGEN_ENDRING);
         dokumentdataMapper = new IngenEndringDokumentdataMapper();
     }
 
     @Test
-    public void skal_mappe_felter_for_brev_til_bruker() {
+    void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
@@ -52,16 +52,16 @@ public class IngenEndringDokumentdataMapperTest {
         assertThat(ingenEndringDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(ingenEndringDokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(ingenEndringDokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(ingenEndringDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(ingenEndringDokumentdata.getFelles().getErKopi()).isEqualTo(true);
+        assertThat(ingenEndringDokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(ingenEndringDokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(ingenEndringDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(ingenEndringDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(ingenEndringDokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
-        assertThat(ingenEndringDokumentdata.getFelles().getErUtkast()).isEqualTo(false);
+        assertThat(ingenEndringDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
+        assertThat(ingenEndringDokumentdata.getFelles().getErUtkast()).isFalse();
     }
 
     @Test
-    public void skal_mappe_felter_for_brev_til_verge() {
+    void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.NEI, true);
@@ -75,7 +75,7 @@ public class IngenEndringDokumentdataMapperTest {
         assertThat(ingenEndringDokumentdata.getFelles().getSøkerNavn()).isEqualTo(SØKERS_NAVN);
         assertThat(ingenEndringDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(ingenEndringDokumentdata.getFelles().getMottakerNavn()).isEqualTo(VERGES_NAVN);
-        assertThat(ingenEndringDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(ingenEndringDokumentdata.getFelles().getErKopi()).isEqualTo(false);
+        assertThat(ingenEndringDokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(ingenEndringDokumentdata.getFelles().getErKopi()).isFalse();
     }
 }

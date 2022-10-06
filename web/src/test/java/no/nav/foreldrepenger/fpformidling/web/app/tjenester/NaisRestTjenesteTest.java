@@ -29,23 +29,23 @@ public class NaisRestTjenesteTest {
     private ReadinessAware db;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         restTjeneste = new NaisRestTjeneste(starter, List.of(), List.of(db));
     }
 
     @Test
-    public void isAlive_skal_returnere_status_200() {
+    void isAlive_skal_returnere_status_200() {
         assertThat(restTjeneste.isAlive().getStatus()).isEqualTo(OK.getStatusCode());
     }
 
     @Test
-    public void isReady_skal_returnere_service_unavailable_når_databasetest_feiler() {
+    void isReady_skal_returnere_service_unavailable_når_databasetest_feiler() {
         when(db.isReady()).thenReturn(false);
         assertThat(restTjeneste.isReady().getStatus()).isEqualTo(Response.Status.SERVICE_UNAVAILABLE.getStatusCode());
     }
 
     @Test
-    public void preStop_skal_kalle_stopServices_og_returnere_status_ok() {
+    void preStop_skal_kalle_stopServices_og_returnere_status_ok() {
         var response = restTjeneste.preStop();
         verify(starter).stopServices();
         assertThat(response.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());

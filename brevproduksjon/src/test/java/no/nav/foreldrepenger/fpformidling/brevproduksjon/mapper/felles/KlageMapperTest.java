@@ -21,7 +21,7 @@ public class KlageMapperTest {
 
 
     @Test
-    public void formaterLovhjemlerKlageAvvistTest() {
+    void formaterLovhjemlerKlageAvvistTest() {
         var klage = lagKlageNFP(List.of(KlageAvvistÅrsak.KLAGET_FOR_SENT, KlageAvvistÅrsak.IKKE_KONKRET));
         assertLovFormateringKlage(KlageMapper.hentKlageHjemler(klage),  "forvaltningsloven §§ 31, 32 og 33");
 

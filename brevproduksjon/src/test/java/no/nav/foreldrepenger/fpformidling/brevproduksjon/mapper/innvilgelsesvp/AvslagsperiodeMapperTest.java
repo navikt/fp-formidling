@@ -39,7 +39,7 @@ public class AvslagsperiodeMapperTest {
     private static final LocalDate PERIODE7_TOM = LocalDate.now().plusDays(14);
 
     @Test
-    public void skal_mappe_perioder_med_riktig_årsak_og_slå_sammen_sammenhengende_perioder_med_samme_årsak_på_tvers_av_arbeidsgivere() {
+    void skal_mappe_perioder_med_riktig_årsak_og_slå_sammen_sammenhengende_perioder_med_samme_årsak_på_tvers_av_arbeidsgivere() {
         // Arrange
         var svpUttakResultatArbeidsforhold = getSvpUttakResultatArbeidsforhold();
 

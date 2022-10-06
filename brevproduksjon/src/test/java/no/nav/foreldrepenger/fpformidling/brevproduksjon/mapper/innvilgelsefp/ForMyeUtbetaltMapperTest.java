@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 public class ForMyeUtbetaltMapperTest {
 
     @Test
-    public void skal_returnere_for_mye_utbetalt_GENERELL_når_periode_har_gradering() {
+    void skal_returnere_for_mye_utbetalt_GENERELL_når_periode_har_gradering() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -37,7 +37,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_for_mye_utbetalt_GENERELL_når_årsak_er_ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT() {
+    void skal_returnere_for_mye_utbetalt_GENERELL_når_årsak_er_ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -54,7 +54,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_for_mye_utbetalt_GENERELL_når_årsak_er_AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD() {
+    void skal_returnere_for_mye_utbetalt_GENERELL_når_årsak_er_AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -71,7 +71,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_for_mye_utbetalt_GENERELL_når_årsak_er_FOR_SEN_SØKNAD() {
+    void skal_returnere_for_mye_utbetalt_GENERELL_når_årsak_er_FOR_SEN_SØKNAD() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -88,7 +88,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_for_mye_utbetalt_FERIE_når_årsak_er_UTSETTELSE_GYLDIG_PGA_FERIE_og_perioden_er_tilbake_i_tid() {
+    void skal_returnere_for_mye_utbetalt_FERIE_når_årsak_er_UTSETTELSE_GYLDIG_PGA_FERIE_og_perioden_er_tilbake_i_tid() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -106,7 +106,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_for_mye_utbetalt_FERIE_når_årsak_er_UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT_og_perioden_er_tilbake_i_tid() {
+    void skal_returnere_for_mye_utbetalt_FERIE_når_årsak_er_UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT_og_perioden_er_tilbake_i_tid() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -124,7 +124,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_for_mye_utbetalt_FERIE_når_årsak_er_UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT_og_perioden_er_tilbake_i_tid_selv_om_det_også_finnes_periode_i_fremtiden() {
+    void skal_returnere_for_mye_utbetalt_FERIE_når_årsak_er_UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT_og_perioden_er_tilbake_i_tid_selv_om_det_også_finnes_periode_i_fremtiden() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -146,7 +146,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_null_når_årsak_er_UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT_og_perioden_er_i_fremtiden() {
+    void skal_returnere_null_når_årsak_er_UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT_og_perioden_er_i_fremtiden() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -164,7 +164,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_for_mye_utbetalt_JOBB_når_årsak_er_UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID_og_perioden_er_tilbake_i_tid() {
+    void skal_returnere_for_mye_utbetalt_JOBB_når_årsak_er_UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID_og_perioden_er_tilbake_i_tid() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -182,7 +182,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_for_mye_utbetalt_JOBB_når_årsak_er_UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT_og_perioden_er_tilbake_i_tid() {
+    void skal_returnere_for_mye_utbetalt_JOBB_når_årsak_er_UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT_og_perioden_er_tilbake_i_tid() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -200,7 +200,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_for_mye_utbetalt_FERIE_når_årsak_er_UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT_og_perioden_er_tilbake_i_tid_selv_om_det_også_finnes_periode_i_fremtiden() {
+    void skal_returnere_for_mye_utbetalt_FERIE_når_årsak_er_UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT_og_perioden_er_tilbake_i_tid_selv_om_det_også_finnes_periode_i_fremtiden() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -222,7 +222,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_null_når_årsak_er_UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT_og_perioden_er_i_fremtiden() {
+    void skal_returnere_null_når_årsak_er_UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT_og_perioden_er_i_fremtiden() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -240,7 +240,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_for_mye_utbetalt_GENERELL_når_årsak_er_både_FERIE_og_JOBB() {
+    void skal_returnere_for_mye_utbetalt_GENERELL_når_årsak_er_både_FERIE_og_JOBB() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.REVURDERING)
@@ -262,7 +262,7 @@ public class ForMyeUtbetaltMapperTest {
     }
 
     @Test
-    public void skal_returnere_ingen_når_førstegangsbehandling() {
+    void skal_returnere_ingen_når_førstegangsbehandling() {
         // Arrange
         var behandling = Behandling.builder()
                 .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)

@@ -64,7 +64,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     private InnhenteOpplysningerDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
-    public void before() {
+    void before() {
         var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         brevMapperUtil = new BrevMapperUtil(brevParametere);
         dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
@@ -76,7 +76,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_brev_til_bruker() {
+    void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var behandling = opprettBehandling(Språkkode.NB);
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
@@ -91,13 +91,13 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isEqualTo(true);
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getErUtkast()).isEqualTo(false);
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(innhenteOpplysningerDokumentdata.getFørstegangsbehandling()).isFalse();
         assertThat(innhenteOpplysningerDokumentdata.getRevurdering()).isTrue();
@@ -109,7 +109,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_brev_til_verge() {
+    void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
         var behandling = opprettBehandling(Språkkode.NB);
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, true);
@@ -123,12 +123,12 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSøkerNavn()).isEqualTo(SØKERS_NAVN);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getMottakerNavn()).isEqualTo(VERGES_NAVN);
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isEqualTo(false);
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(innhenteOpplysningerDokumentdata.getFelles().getErKopi()).isFalse();
     }
 
     @Test
-    public void skal_mappe_datoer_med_engelsk_format() {
+    void skal_mappe_datoer_med_engelsk_format() {
         // Arrange
         var behandling = opprettBehandling(Språkkode.EN);
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
@@ -145,7 +145,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_behandlesAvKA_når_det_er_angitt_på_hendelsen() {
+    void skal_mappe_behandlesAvKA_når_det_er_angitt_på_hendelsen() {
         // Arrange
         var behandling = opprettKlageBehandling("NFP");
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
@@ -161,7 +161,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_ikke_mappe_behandlesAvKA_når_det_er_angitt_noe_annet_på_hendelsen() {
+    void skal_ikke_mappe_behandlesAvKA_når_det_er_angitt_noe_annet_på_hendelsen() {
         // Arrange
         var behandling = opprettKlageBehandling("NAV Klageinstans");
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
@@ -177,7 +177,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_behandlesAvKA_fra_behandlingen_når_det_ikke_er_angitt_på_hendelsen() {
+    void skal_mappe_behandlesAvKA_fra_behandlingen_når_det_ikke_er_angitt_på_hendelsen() {
         // Arrange
         var behandling = opprettKlageBehandling("NAV Klageinstans");
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
@@ -193,7 +193,7 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_ikke_mappe_behandlesAvKA_når_det_ikke_er_angitt_på_verken_hendelsen_eller_behandlingen() {
+    void skal_ikke_mappe_behandlesAvKA_når_det_ikke_er_angitt_på_verken_hendelsen_eller_behandlingen() {
         // Arrange
         var behandling = opprettKlageBehandling("NFP");
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);

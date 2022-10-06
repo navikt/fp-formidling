@@ -78,7 +78,7 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
 
         //assert
         assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_OPPHOLD.getKode());
-        assertThat(infoTilAnnenForelderData.getSisteUttaksdagMor()).isEqualTo(null);
+        assertThat(infoTilAnnenForelderData.getSisteUttaksdagMor()).isNull();
     }
 
     private BehandlingÅrsak lagBehÅrsak(BehandlingÅrsakType årsakType) {

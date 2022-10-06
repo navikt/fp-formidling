@@ -59,7 +59,7 @@ class InnsynDokumentdataMapperTest {
     }
 
     @Test
-    public void mappingAvInnsynInnvilgetForeldrePenger() {
+    void mappingAvInnsynInnvilgetForeldrePenger() {
         var innsynsBehandling = new Innsyn(InnsynResultatType.INNVILGET, innsynDokumentList);
         when(domeneobjektProvider.hentInnsyn(behandling)).thenReturn(innsynsBehandling);
 
@@ -74,7 +74,7 @@ class InnsynDokumentdataMapperTest {
     }
 
     @Test
-    public void mappingAvInnsynAvvistEngangsstønadMedFritekst() {
+    void mappingAvInnsynAvvistEngangsstønadMedFritekst() {
         var innsynsBehandling = new Innsyn(InnsynResultatType.AVVIST, innsynDokumentList);
         when(domeneobjektProvider.hentInnsyn(behandling)).thenReturn(innsynsBehandling);
 

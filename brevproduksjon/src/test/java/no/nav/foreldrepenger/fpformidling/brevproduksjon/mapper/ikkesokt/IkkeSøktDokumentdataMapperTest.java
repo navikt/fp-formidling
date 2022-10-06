@@ -46,7 +46,7 @@ public class IkkeSøktDokumentdataMapperTest {
     private IkkeSøktDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
-    public void before() {
+    void before() {
         dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new IkkeSøktDokumentdataMapper(domeneobjektProvider);
 
@@ -56,7 +56,7 @@ public class IkkeSøktDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_brev_til_bruker() {
+    void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
@@ -71,19 +71,19 @@ public class IkkeSøktDokumentdataMapperTest {
         assertThat(ikkeSøktDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(ikkeSøktDokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(ikkeSøktDokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(ikkeSøktDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(ikkeSøktDokumentdata.getFelles().getErKopi()).isEqualTo(true);
+        assertThat(ikkeSøktDokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(ikkeSøktDokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(ikkeSøktDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(ikkeSøktDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(ikkeSøktDokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
-        assertThat(ikkeSøktDokumentdata.getFelles().getErUtkast()).isEqualTo(false);
+        assertThat(ikkeSøktDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
+        assertThat(ikkeSøktDokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(ikkeSøktDokumentdata.getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER);
         assertThat(ikkeSøktDokumentdata.getMottattDato()).isEqualTo(formaterDatoNorsk(INNSENDINGSTIDSPUNKT));
     }
 
     @Test
-    public void skal_mappe_felter_for_brev_til_verge() {
+    void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.NEI, true);
@@ -97,7 +97,7 @@ public class IkkeSøktDokumentdataMapperTest {
         assertThat(ikkeSøktDokumentdata.getFelles().getSøkerNavn()).isEqualTo(SØKERS_NAVN);
         assertThat(ikkeSøktDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(ikkeSøktDokumentdata.getFelles().getMottakerNavn()).isEqualTo(VERGES_NAVN);
-        assertThat(ikkeSøktDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(ikkeSøktDokumentdata.getFelles().getErKopi()).isEqualTo(false);
+        assertThat(ikkeSøktDokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(ikkeSøktDokumentdata.getFelles().getErKopi()).isFalse();
     }
 }

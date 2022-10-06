@@ -13,23 +13,22 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.famil
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 
-public class FamiliehendelseDtoMapper {
+public final class FamiliehendelseDtoMapper {
 
+    private FamiliehendelseDtoMapper() {
+    }
 
     private static Optional<LocalDate> hentSkjæringstidspunkt(FamiliehendelseDto gjeldendeHendelseDto) {
         return Optional.ofNullable(gjeldendeHendelseDto.getSkjæringstidspunkt());
     }
 
     static Optional<LocalDate> finnTermindato(FamiliehendelseDto dto) {
-        if (dto instanceof AvklartDataFodselDto && ((AvklartDataFodselDto) dto).getTermindato() != null) {
-            return Optional.of(((AvklartDataFodselDto) dto).getTermindato());
-        }
-        return Optional.empty();
+        return dto instanceof AvklartDataFodselDto d ? Optional.ofNullable(d.getTermindato()) : Optional.empty();
     }
 
     private static Optional<LocalDate> finnFødselsdatoFraDto(FamiliehendelseDto dto) {
-        if (dto instanceof AvklartDataFodselDto && ((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
-            return ((AvklartDataFodselDto) dto).getAvklartBarn().stream()
+        if (dto instanceof AvklartDataFodselDto d && d.getAvklartBarn() != null) {
+            return d.getAvklartBarn().stream()
                     .map(AvklartBarnDto::getFodselsdato)
                     .filter(Objects::nonNull)
                     .min(LocalDate::compareTo);
@@ -38,8 +37,8 @@ public class FamiliehendelseDtoMapper {
     }
 
     private static Optional<LocalDate> finnDødsdatoFraDto(FamiliehendelseDto dto) {
-        if (dto instanceof AvklartDataFodselDto && ((AvklartDataFodselDto) dto).getAvklartBarn() != null) {
-            return ((AvklartDataFodselDto) dto).getAvklartBarn().stream()
+        if (dto instanceof AvklartDataFodselDto d && d.getAvklartBarn() != null) {
+            return d.getAvklartBarn().stream()
                     .map(AvklartBarnDto::getDodsdato)
                     .filter(Objects::nonNull)
                     .min(LocalDate::compareTo);
@@ -93,19 +92,19 @@ public class FamiliehendelseDtoMapper {
     }
 
     static int utledAntallBarnFraDto(FamiliehendelseDto familiehendelseDto) {
-        if (familiehendelseDto instanceof AvklartDataAdopsjonDto) {
-            return ((AvklartDataAdopsjonDto) familiehendelseDto).getAdopsjonFodelsedatoer().size();
-        } else if (familiehendelseDto instanceof AvklartDataFodselDto) {
-            return utledAntallBarnFødsel((AvklartDataFodselDto) familiehendelseDto);
-        } else if (familiehendelseDto instanceof AvklartDataOmsorgDto) {
-            return ((AvklartDataOmsorgDto) familiehendelseDto).getAntallBarnTilBeregning();
+        if (familiehendelseDto instanceof AvklartDataAdopsjonDto dto) {
+            return dto.getAdopsjonFodelsedatoer().size();
+        } else if (familiehendelseDto instanceof AvklartDataFodselDto dto) {
+            return utledAntallBarnFødsel(dto);
+        } else if (familiehendelseDto instanceof AvklartDataOmsorgDto dto) {
+            return dto.getAntallBarnTilBeregning();
         }
         throw new IllegalStateException("Familihendelse er av ukjent type");
     }
 
     static int utledAntallDødeBarnFraDto(FamiliehendelseDto gjeldendeHendelseDto) {
-        if (gjeldendeHendelseDto instanceof AvklartDataFodselDto) {
-            return utledAntallDødeBarn((AvklartDataFodselDto) gjeldendeHendelseDto);
+        if (gjeldendeHendelseDto instanceof AvklartDataFodselDto dto) {
+            return utledAntallDødeBarn(dto);
         }
         return 0;
     }
@@ -176,7 +175,7 @@ public class FamiliehendelseDtoMapper {
         if (dto instanceof AvklartDataFodselDto) {
             return utledFødselEllerTermin((AvklartDataFodselDto) dto);
         }
-        throw new IllegalStateException();
+        throw new IllegalStateException("Ukjent familiehendelse dto");
     }
 
     private static FamilieHendelseType utledFødselEllerTermin(AvklartDataFodselDto dto) {

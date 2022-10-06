@@ -42,7 +42,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 public class UtbetalingsperiodeMapperTest {
 
     @Test
-    public void skal_hente_dato_fra_uttaksperiode_når_denne_er_før_tilkjentytelseperioden_og_det_er_første_tilkjentYtelsePeriode() {
+    void skal_hente_dato_fra_uttaksperiode_når_denne_er_før_tilkjentytelseperioden_og_det_er_første_tilkjentYtelsePeriode() {
         // Arrange
         var tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
         var tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 3), LocalDate.of(2019, 10, 4));
@@ -113,7 +113,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void verifisere_at_resultatet_blir_det_samme_om_periodene_ikke_er_sortert() {
+    void verifisere_at_resultatet_blir_det_samme_om_periodene_ikke_er_sortert() {
         // Arrange
         var tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
         var tidsperiodeBp2 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 3), LocalDate.of(2019, 10, 4));
@@ -178,7 +178,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_sortere_perioder_uten_beregningsgrunnlag_også() {
+    void skal_sortere_perioder_uten_beregningsgrunnlag_også() {
         // Arrange
         var tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
         var tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 10, 7), LocalDate.of(2019, 12, 31));
@@ -239,7 +239,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_mappe_annenAktitetListe_når_den_inneholder_annet() {
+    void skal_mappe_annenAktitetListe_når_den_inneholder_annet() {
         // Arrange
         var tidsperiodeBp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 30), LocalDate.of(2019, 10, 2));
         var tidsperiodeUp1 = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 7, 3), LocalDate.of(2019, 10, 4));
@@ -303,7 +303,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_ignorere_avslåtte_manglende_søkte_perioder_med_null_trekkdager_ved_mapping_av_periodeliste() {
+    void skal_ignorere_avslåtte_manglende_søkte_perioder_med_null_trekkdager_ved_mapping_av_periodeliste() {
         // Arrange
         var tidsperiode = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 16), LocalDate.of(2019, 9, 16));
         var tyPeriode = TilkjentYtelsePeriode.ny()
@@ -334,7 +334,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_ta_med_avslåtte_manglende_søkte_perioder_med_trekkdager_ved_mapping_av_periodeliste() {
+    void skal_ta_med_avslåtte_manglende_søkte_perioder_med_trekkdager_ved_mapping_av_periodeliste() {
         // Arrange
         var tidsperiode = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2019, 9, 16), LocalDate.of(2019, 9, 16));
         var tyPeriode = TilkjentYtelsePeriode.ny()
@@ -365,7 +365,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_finne_første_og_siste_stønadsdato_og_håndtere_null() {
+    void skal_finne_første_og_siste_stønadsdato_og_håndtere_null() {
         // Arrange
         List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
         var førsteJanuarTjueAtten = LocalDate.of(2018, 1, 1);
@@ -384,7 +384,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_finne_antall_perioder() {
+    void skal_finne_antall_perioder() {
         // Arrange
         List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
         leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, utbetalingsperioder);
@@ -396,7 +396,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_finne_antall_innvilgede_perioder() {
+    void skal_finne_antall_innvilgede_perioder() {
         // Arrange
         List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
         leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, utbetalingsperioder);
@@ -408,7 +408,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_finne_antall_avslåtte_perioder() {
+    void skal_finne_antall_avslåtte_perioder() {
         // Arrange
         List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
         leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, utbetalingsperioder);
@@ -420,7 +420,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_finne_periode_med_ikke_omsorg_mor() {
+    void skal_finne_periode_med_ikke_omsorg_mor() {
         // Arrange
         var utbetalingsperiode = Utbetalingsperiode.ny()
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
@@ -433,7 +433,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_finne_periode_med_ikke_omsorg_far() {
+    void skal_finne_periode_med_ikke_omsorg_far() {
         // Arrange
         var utbetalingsperiode = Utbetalingsperiode.ny()
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
@@ -446,7 +446,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_ikke_finne_periode_med_ikke_omsorg() {
+    void skal_ikke_finne_periode_med_ikke_omsorg() {
         // Arrange
         var utbetalingsperiode = Utbetalingsperiode.ny()
                 .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
@@ -459,7 +459,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_hente_prioritert_utbetalingsgrad_fra_arbeidsforholdet_med_gradering_om_finnes() {
+    void skal_hente_prioritert_utbetalingsgrad_fra_arbeidsforholdet_med_gradering_om_finnes() {
         var arbeidsforholdListe =
                 List.of(opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(0)), Prosent.of(BigDecimal.valueOf(80))),
                         opprettArbeidsforhold(true, Prosent.of(BigDecimal.valueOf(20)), Prosent.of(BigDecimal.valueOf(100))),
@@ -469,7 +469,7 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_hente_prioritert_utbetalingsgrad_fra_første_arbeidsfohold_med_utbetalingsgrad() {
+    void skal_hente_prioritert_utbetalingsgrad_fra_første_arbeidsfohold_med_utbetalingsgrad() {
         var arbeidsforholdListe =
                 List.of(opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(0.0)), Prosent.of(BigDecimal.valueOf(0.0))),
                         opprettArbeidsforhold(false, Prosent.of(BigDecimal.valueOf(20)), Prosent.of(BigDecimal.valueOf(100))),
@@ -478,7 +478,7 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(finnPrioritertUtbetalingsgrad(arbeidsforholdListe, null, null)).isEqualTo(Prosent.of(BigDecimal.valueOf(20)));
     }
     @Test
-    public void skal_hente_prioritert_utbetalingsgrad_fra_næring_når_arbeidsforhold_ikke_finnes() {
+    void skal_hente_prioritert_utbetalingsgrad_fra_næring_når_arbeidsforhold_ikke_finnes() {
         var næring = Næring.ny().medSistLignedeÅr(LocalDate.now().getYear())
                 .medGradering(false)
                 .medUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(100)))
@@ -489,21 +489,21 @@ public class UtbetalingsperiodeMapperTest {
     }
 
     @Test
-    public void skal_hente_prioritert_utbetalingsgrad_fra_annen_aktivitet_når_verken_arbeidsforhold_eller_næring_finnes() {
+    void skal_hente_prioritert_utbetalingsgrad_fra_annen_aktivitet_når_verken_arbeidsforhold_eller_næring_finnes() {
         var annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(100))));
 
         assertThat(finnPrioritertUtbetalingsgrad(null, null, annenAktivitetListe)).isEqualTo(Prosent.of(BigDecimal.valueOf(100)));
     }
 
     @Test
-    public void skal_hente_prioritert_utbetalingsgrad_fra_aktiviteten_med_gradering_hvis_finnes() {
+    void skal_hente_prioritert_utbetalingsgrad_fra_aktiviteten_med_gradering_hvis_finnes() {
         var annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(0))), opprettAnnenAktivitet(true, Prosent.of(BigDecimal.valueOf(60))));
 
         assertThat(finnPrioritertUtbetalingsgrad(null, null, annenAktivitetListe)).isEqualTo(Prosent.of(BigDecimal.valueOf(60)));
     }
 
     @Test
-    public void skal_hente_prioritert_utbetalingsgrad_fra_første_aktivitet_med_utbetalingsgrad() {
+    void skal_hente_prioritert_utbetalingsgrad_fra_første_aktivitet_med_utbetalingsgrad() {
         var annenAktivitetListe = List.of(opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(0))), opprettAnnenAktivitet(false, Prosent.of(BigDecimal.valueOf(100))));
 
         assertThat(finnPrioritertUtbetalingsgrad(null, null, annenAktivitetListe)).isEqualTo(Prosent.of(BigDecimal.valueOf(100)));

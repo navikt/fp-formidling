@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.fpformidling.aksjonspunkt.AksjonspunktStatus;
 public class AksjonspunktDtoMapperTest {
 
     @Test
-    public void skal_mappe_riktig_ap_status() {
+    void skal_mappe_riktig_ap_status() {
         assertThat(AksjonspunktDtoMapper.finnAksjonspunktStatus("OPPR")).isEqualTo(AksjonspunktStatus.OPPRETTET);
         assertThat(AksjonspunktDtoMapper.finnAksjonspunktStatus("UTFO")).isEqualTo(AksjonspunktStatus.UTFØRT);
         assertThat(AksjonspunktDtoMapper.finnAksjonspunktStatus("AVBR")).isEqualTo(AksjonspunktStatus.AVBRUTT);

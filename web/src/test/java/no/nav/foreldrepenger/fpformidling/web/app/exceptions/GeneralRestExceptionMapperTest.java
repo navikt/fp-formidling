@@ -22,7 +22,7 @@ public class GeneralRestExceptionMapperTest {
     private final GeneralRestExceptionMapper exceptionMapper = new GeneralRestExceptionMapper();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         logSniffer = MemoryAppender.sniff(GeneralRestExceptionMapper.class);
     }
 
@@ -32,7 +32,7 @@ public class GeneralRestExceptionMapperTest {
     }
 
     @Test
-    public void skalIkkeMappeManglerTilgangFeil() {
+    void skalIkkeMappeManglerTilgangFeil() {
         var response = exceptionMapper.toResponse(manglerTilgangFeil());
 
         assertThat(response.getStatus()).isEqualTo(403);
@@ -45,7 +45,7 @@ public class GeneralRestExceptionMapperTest {
     }
 
     @Test
-    public void skalMappeFunksjonellFeil() {
+    void skalMappeFunksjonellFeil() {
         var response = exceptionMapper.toResponse(funksjonellFeil());
 
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
@@ -58,7 +58,7 @@ public class GeneralRestExceptionMapperTest {
     }
 
     @Test
-    public void skalMappeVLException() {
+    void skalMappeVLException() {
         var response = exceptionMapper.toResponse(tekniskFeil());
 
         assertThat(response.getEntity()).isInstanceOf(FeilDto.class);
@@ -70,7 +70,7 @@ public class GeneralRestExceptionMapperTest {
     }
 
     @Test
-    public void skalMappeWrappedGenerellFeil() {
+    void skalMappeWrappedGenerellFeil() {
         var feilmelding = "en helt generell feil";
         var generellFeil = new RuntimeException(feilmelding);
 
@@ -85,7 +85,7 @@ public class GeneralRestExceptionMapperTest {
     }
 
     @Test
-    public void skalMappeWrappedFeilUtenCause() {
+    void skalMappeWrappedFeilUtenCause() {
         var feilmelding = "en helt generell feil";
 
         var response = exceptionMapper.toResponse(new TekniskException("KODE", feilmelding));
@@ -99,7 +99,7 @@ public class GeneralRestExceptionMapperTest {
     }
 
     @Test
-    public void skalMappeGenerellFeil() {
+    void skalMappeGenerellFeil() {
         var feilmelding = "en helt generell feil";
         RuntimeException generellFeil = new IllegalArgumentException(feilmelding);
 

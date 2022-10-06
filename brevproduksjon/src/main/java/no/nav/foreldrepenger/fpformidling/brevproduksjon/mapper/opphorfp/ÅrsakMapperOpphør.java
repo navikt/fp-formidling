@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphørfp;
+package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorfp;
 
 import java.util.ArrayList;
 import java.util.Collection;

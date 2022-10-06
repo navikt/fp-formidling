@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 public class UtbetalingsperiodeMapperTest {
 
     @Test
-    public void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_dagsats_og_beløp_til_søker() {
+    void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_dagsats_og_beløp_til_søker() {
         // Arrange
         var beregningsperioder = of(
                 TilkjentYtelsePeriode.ny()

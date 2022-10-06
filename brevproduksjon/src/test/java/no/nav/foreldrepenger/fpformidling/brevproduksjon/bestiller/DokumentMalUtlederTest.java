@@ -33,12 +33,12 @@ public class DokumentMalUtlederTest {
     private DokumentHendelse hendelse;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         dokumentMalUtleder = new DokumentMalUtleder(domeneobjektProvider, null, null);
     }
 
     @Test
-    public void utledfra_input_mal() {
+    void utledfra_input_mal() {
         sjekkAtVelgerValgtMal(DokumentMalType.INGEN_ENDRING);
         sjekkAtVelgerValgtMal(DokumentMalType.FRITEKSTBREV);
         sjekkAtVelgerValgtMal(DokumentMalType.KLAGE_AVVIST);
@@ -54,7 +54,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_ingen_endring() {
+    void utled_ingen_endring() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
@@ -67,7 +67,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_innvilget_fp() {
+    void utled_innvilget_fp() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
@@ -80,7 +80,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_innvilget_es() {
+    void utled_innvilget_es() {
         hendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
@@ -96,7 +96,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_avslått_es() {
+    void utled_avslått_es() {
         hendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
@@ -111,7 +111,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_avslått_opphør_es() {
+    void utled_avslått_opphør_es() {
         hendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
@@ -126,7 +126,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void kast_exception_hvis_ugyldig_es() {
+    void kast_exception_hvis_ugyldig_es() {
         hendelse = DokumentHendelse.builder()
                 .medBehandlingUuid(UUID.randomUUID())
                 .medBestillingUuid(UUID.randomUUID())
@@ -141,7 +141,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_avslått_fp() {
+    void utled_avslått_fp() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
@@ -154,7 +154,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_opphør_fp() {
+    void utled_opphør_fp() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
@@ -166,7 +166,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_innvilget_fp_endret() {
+    void utled_innvilget_fp_endret() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
@@ -181,7 +181,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void ikke_innvilget_fp_hvis_kun_endring_av_ytelsen() {
+    void ikke_innvilget_fp_hvis_kun_endring_av_ytelsen() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
@@ -196,7 +196,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_annullert_fp() {
+    void utled_annullert_fp() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
@@ -209,7 +209,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_fritekstbrev() {
+    void utled_fritekstbrev() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .build();
@@ -222,7 +222,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void kast_error_hvis_ugyldig() {
+    void kast_error_hvis_ugyldig() {
         hendelse = standardBuilder()
                 .build();
         var behandling = Behandling.builder()
@@ -232,14 +232,14 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_klage() {
+    void utled_klage() {
         sjekkKlageDokument(KlageVurdering.AVVIS_KLAGE, DokumentMalType.KLAGE_AVVIST);
         sjekkKlageDokument(KlageVurdering.MEDHOLD_I_KLAGE, DokumentMalType.KLAGE_OMGJORT);
         assertThatThrownBy(() -> sjekkKlageDokument(KlageVurdering.UDEFINERT, DokumentMalType.KLAGE_AVVIST)).isInstanceOf(VLException.class);
     }
 
     @Test
-    public void utled_SVP_revurdering_med_endring() {
+    void utled_SVP_revurdering_med_endring() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER)
@@ -258,7 +258,7 @@ public class DokumentMalUtlederTest {
     }
 
     @Test
-    public void utled_SVP_førstegangsbehandling_innvilget() {
+    void utled_SVP_førstegangsbehandling_innvilget() {
         hendelse = standardBuilder()
                 .medGjelderVedtak(true)
                 .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER)

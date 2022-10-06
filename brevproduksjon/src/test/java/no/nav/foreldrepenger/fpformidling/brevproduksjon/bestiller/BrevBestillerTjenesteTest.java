@@ -98,7 +98,7 @@ public class BrevBestillerTjenesteTest {
 
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         dokumentdataMapper = new EngangsstønadInnvilgelseDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)),
                 domeneobjektProvider);
         var dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, virksomhetTjeneste);
@@ -108,7 +108,7 @@ public class BrevBestillerTjenesteTest {
     }
 
     @Test
-    public void skal_generere_og_sende_brev_til_både_søker_og_verge() {
+    void skal_generere_og_sende_brev_til_både_søker_og_verge() {
         // Arrange
         var randomBestillingsUuid = UUID.randomUUID();
         var personinfo = mockPdl(true);
@@ -136,7 +136,7 @@ public class BrevBestillerTjenesteTest {
     }
 
     @Test
-    public void skal_ikke_sende_til_verge_når_verge_ikke_er_definert() {
+    void skal_ikke_sende_til_verge_når_verge_ikke_er_definert() {
         // Arrange
         var randomBestillingsUuid = UUID.randomUUID();
         var personinfo = mockPdl(false);

@@ -43,7 +43,6 @@ import no.nav.foreldrepenger.fpformidling.uttak.YtelseFordeling;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.verge.Verge;
 import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
-import no.nav.vedtak.felles.integrasjon.rest.NativeClient;
 
 @ApplicationScoped
 public class DomeneobjektProvider {
@@ -52,7 +51,7 @@ public class DomeneobjektProvider {
     private ArbeidsgiverTjeneste arbeidsgiverTjeneste;
 
     @Inject
-    public DomeneobjektProvider(@NativeClient Behandlinger behandlingRestKlient, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
+    public DomeneobjektProvider(Behandlinger behandlingRestKlient, ArbeidsgiverTjeneste arbeidsgiverTjeneste) {
         this.behandlingRestKlient = behandlingRestKlient;
         this.arbeidsgiverTjeneste = arbeidsgiverTjeneste;
     }

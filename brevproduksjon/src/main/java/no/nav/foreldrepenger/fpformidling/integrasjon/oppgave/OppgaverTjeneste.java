@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave;
 
-import java.time.LocalDate;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -9,19 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.integrasjon.http.JavaClient;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient.Oppgave;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient.Oppgaver;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient.OpprettOppgaveRequest;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.klient.Prioritet;
-import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
+import no.nav.vedtak.felles.integrasjon.oppgave.v1.Oppgave;
+import no.nav.vedtak.felles.integrasjon.oppgave.v1.Oppgaver;
+import no.nav.vedtak.felles.integrasjon.oppgave.v1.Oppgavetype;
+import no.nav.vedtak.felles.integrasjon.oppgave.v1.OpprettOppgave;
 
 @ApplicationScoped
 public class OppgaverTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(OppgaverTjeneste.class);
-    private static final int DEFAULT_OPPGAVEFRIST_DAGER = 1;
 
     private Oppgaver restKlient;
 
@@ -30,27 +25,24 @@ public class OppgaverTjeneste {
     }
 
     @Inject
-    public OppgaverTjeneste(@JavaClient Oppgaver restKlient) {
+    public OppgaverTjeneste(Oppgaver restKlient) {
         this.restKlient = restKlient;
     }
 
     public Oppgave opprettOppgave(Behandling behandling, JournalpostId journalpostId, String oppgaveBeskrivelse) {
 
-        var request = createRequest(journalpostId, behandling.getFagsakBackend().getAktørId(),
-                behandling.getFagsakBackend().getSaksnummer().getVerdi(), behandling.getBehandlendeEnhetId(), oppgaveBeskrivelse);
+        var request = OpprettOppgave.getBuilderTemaFOR(Oppgavetype.VURDER_KONSEKVENS_YTELSE, no.nav.vedtak.felles.integrasjon.oppgave.v1.Prioritet.NORM, 1)
+                .medAktoerId(behandling.getFagsakBackend().getAktørId().getId())
+                .medSaksreferanse(behandling.getFagsakBackend().getSaksnummer().getVerdi())
+                .medOpprettetAvEnhetsnr(behandling.getBehandlendeEnhetId())
+                .medTildeltEnhetsnr(behandling.getBehandlendeEnhetId())
+                .medJournalpostId(journalpostId.getVerdi())
+                .medBeskrivelse(oppgaveBeskrivelse)
+                .build();
 
         var oppgave = restKlient.opprettetOppgave(request);
         LOG.info("Oprettet GOSYS oppgave: {}", oppgave);
         return oppgave;
     }
 
-    private OpprettOppgaveRequest createRequest(JournalpostId journalpostId,
-                                                AktørId aktørId,
-                                                String saksnummer,
-                                                String enhet,
-                                                String beskrivelse) {
-        return new OpprettOppgaveRequest(enhet, enhet, journalpostId.getVerdi(), null, saksnummer, aktørId.getId(), beskrivelse,
-                "FMLI", "FOR", null, "VUR_KONS_YTE", null, LocalDate.now(), Prioritet.NORM,
-                VirkedagUtil.fomVirkedag(LocalDate.now().plusDays(DEFAULT_OPPGAVEFRIST_DAGER)));
-    }
 }

@@ -1,10 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.web.app.pdp;
 
-import java.net.URI;
 import java.util.UUID;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriBuilderException;
 
@@ -27,28 +25,23 @@ public class PipRestKlient {
 
     private static final String PIP_PATH = "/api/pip";
 
-    private RestClient restClient;
-    private URI contextPath;
+    private final RestClient restClient;
+    private final RestConfig restConfig;
 
     public PipRestKlient() {
-        //CDI
-    }
-
-    @Inject
-    public PipRestKlient(RestClient restClient) {
-        this.restClient = restClient;
-        this.contextPath = RestConfig.contextPathFromAnnotation(PipRestKlient.class);
+        this.restClient = RestClient.client();
+        this.restConfig = RestConfig.forClient(this.getClass());
     }
 
 
     public AbacPipDto hentPipdataForBehandling(UUID behandlingUUid) {
         try {
-            var uri = UriBuilder.fromUri(contextPath)
+            var uri = UriBuilder.fromUri(restConfig.fpContextPath())
                     .path(PIP_PATH)
                     .path("/pipdata-for-behandling-appintern")
                     .queryParam("behandlingUuid", behandlingUUid.toString())
                     .build();
-            return restClient.sendReturnOptional(RestRequest.newGET(uri, TokenFlow.STS_CC, null), AbacPipDto.class)
+            return restClient.sendReturnOptional(RestRequest.newGET(uri, restConfig), AbacPipDto.class)
                     .orElseThrow(IllegalStateException::new);
         } catch (IllegalArgumentException| UriBuilderException e) {
             LOG.error("Feil ved oppretting av URI.", e);

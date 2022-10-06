@@ -14,7 +14,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.DokumentTilkny
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.TilknyttVedleggRequest;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.felles.integrasjon.rest.NativeClient;
 
 @ApplicationScoped
 public class TilknyttVedleggTjeneste {
@@ -27,7 +26,7 @@ public class TilknyttVedleggTjeneste {
     }
 
     @Inject
-    public TilknyttVedleggTjeneste(@NativeClient Journalpost journalpostRestKlient) {
+    public TilknyttVedleggTjeneste(Journalpost journalpostRestKlient) {
         this.journalpostRestKlient = journalpostRestKlient;
     }
 

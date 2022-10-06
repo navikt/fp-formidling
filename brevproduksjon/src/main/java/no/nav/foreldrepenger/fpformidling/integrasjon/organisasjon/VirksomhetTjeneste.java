@@ -6,7 +6,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.vedtak.felles.integrasjon.organisasjon.OrgInfo;
-import no.nav.vedtak.felles.integrasjon.rest.NativeClient;
 
 @ApplicationScoped
 public class VirksomhetTjeneste {
@@ -18,20 +17,20 @@ public class VirksomhetTjeneste {
     }
 
     @Inject
-    public VirksomhetTjeneste(@NativeClient OrgInfo eregRestKlient) {
+    public VirksomhetTjeneste(OrgInfo eregRestKlient) {
         this.eregRestKlient = eregRestKlient;
     }
 
     public Virksomhet getOrganisasjon(String orgNummer)  {
-        var response = eregRestKlient.hentOrganisasjonAdresse(orgNummer);
+        var response = eregRestKlient.hentOrganisasjonNavn(orgNummer);
         return new Virksomhet.Builder()
                 .medOrgnr(orgNummer)
-                .medNavn(response.getNavn())
+                .medNavn(response)
                 .build();
     }
 
     public Optional<String> getNavnFor(String orgNummer)  {
-        var response = eregRestKlient.hentOrganisasjonAdresse(orgNummer);
-        return Optional.ofNullable(response.getNavn());
+        var response = eregRestKlient.hentOrganisasjonNavn(orgNummer);
+        return Optional.ofNullable(response);
     }
 }

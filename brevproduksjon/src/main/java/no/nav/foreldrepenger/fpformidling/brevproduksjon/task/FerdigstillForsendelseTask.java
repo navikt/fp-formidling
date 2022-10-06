@@ -5,7 +5,6 @@ import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.Journalpost;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
-import no.nav.vedtak.felles.integrasjon.rest.NativeClient;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
@@ -17,7 +16,7 @@ public class FerdigstillForsendelseTask implements ProsessTaskHandler {
     private final Journalpost journalpostRestKlient;
 
     @Inject
-    public FerdigstillForsendelseTask(@NativeClient Journalpost journalpostRestKlient) {
+    public FerdigstillForsendelseTask(Journalpost journalpostRestKlient) {
         this.journalpostRestKlient = journalpostRestKlient;
     }
 

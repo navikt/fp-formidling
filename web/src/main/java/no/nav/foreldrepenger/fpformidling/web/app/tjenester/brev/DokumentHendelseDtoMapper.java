@@ -12,7 +12,10 @@ import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.YtelseType;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingV2Dto;
 
-public class DokumentHendelseDtoMapper {
+public final class DokumentHendelseDtoMapper {
+
+    private DokumentHendelseDtoMapper() {
+    }
 
     public static DokumentHendelse mapFra(DokumentbestillingV2Dto dokumentbestilling) {
         return DokumentHendelse.builder()

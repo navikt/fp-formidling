@@ -22,7 +22,7 @@ public class FritekstTest {
     private DokumentHendelse dokumentHendelse;
 
     @Test
-    public void skal_velge_ingen_fritekst_når_ingen_finnes() {
+    void skal_velge_ingen_fritekst_når_ingen_finnes() {
         // Arrange
         behandling = standardBehandlingBuilder().build();
         dokumentHendelse = standardHendelseBuilder().build();
@@ -32,7 +32,7 @@ public class FritekstTest {
     }
 
     @Test
-    public void skal_prioritere_hendelse() {
+    void skal_prioritere_hendelse() {
         // Arrange
         behandling = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
@@ -48,7 +48,7 @@ public class FritekstTest {
     }
 
     @Test
-    public void skal_ta_fritekst_fra_behandling_når_mangler_i_hendelse() {
+    void skal_ta_fritekst_fra_behandling_når_mangler_i_hendelse() {
         // Arrange
         behandling = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
@@ -62,7 +62,7 @@ public class FritekstTest {
     }
 
     @Test
-    public void skal_bytte_ut_dokprod_formatering_med_dokgen_i_fritekst() {
+    void skal_bytte_ut_dokprod_formatering_med_dokgen_i_fritekst() {
         // Arrange
         behandling = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
@@ -77,7 +77,7 @@ public class FritekstTest {
     }
 
     @Test
-    public void skal_lage_linker_av_nav_no() {
+    void skal_lage_linker_av_nav_no() {
         // Arrange
         behandling = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
@@ -92,7 +92,7 @@ public class FritekstTest {
     }
 
     @Test
-    public void skal_sette_inn_ekstra_linjeskift_i_fritekst_der_det_ikke_er_punktliste() {
+    void skal_sette_inn_ekstra_linjeskift_i_fritekst_der_det_ikke_er_punktliste() {
         // Arrange
         var fritekstInn = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\nTekst 2.\nTekst 3\n- Vedlegg 3\nTekst 4";
         var fritekstUt = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\n\nTekst 2.\\\nTekst 3\n- Vedlegg 3\n\nTekst 4";
@@ -102,7 +102,7 @@ public class FritekstTest {
     }
 
     @Test
-    public void skal_ikke_sette_inn_ekstra_linjeskift_når_det_bare_er_en_linje_uten_punktliste() {
+    void skal_ikke_sette_inn_ekstra_linjeskift_når_det_bare_er_en_linje_uten_punktliste() {
         // Arrange
         var fritekstInn = "Tekst 1.";
         var fritekstUt = "Tekst 1.";
@@ -112,7 +112,7 @@ public class FritekstTest {
     }
 
     @Test
-    public void skal_erstatte_vanlig_linjeskift_med_slash_linjeskift() {
+    void skal_erstatte_vanlig_linjeskift_med_slash_linjeskift() {
         // Arrange
         var fritekstInn = "Dette er en setning\nmed et linjeskift midt i.\nNy setning.";
         var fritekstUt = "Dette er en setning\\\nmed et linjeskift midt i.\\\nNy setning.";
@@ -122,7 +122,7 @@ public class FritekstTest {
     }
 
     @Test
-    public void skal_beholde_dobbelt_linjeskift_så_det_blir_ekstra_luft() {
+    void skal_beholde_dobbelt_linjeskift_så_det_blir_ekstra_luft() {
         // Arrange
         var fritekstInn = "Dette er en setning.\n\nNy setning som skal ha 'luft'.";
         var fritekstUt = "Dette er en setning.\n\n\nNy setning som skal ha 'luft'.";
@@ -132,7 +132,7 @@ public class FritekstTest {
     }
 
     @Test
-    public void skal_ikke_sette_inn_ekstra_linjeskift_når_det_bare_er_en_linje_med_punktliste() {
+    void skal_ikke_sette_inn_ekstra_linjeskift_når_det_bare_er_en_linje_med_punktliste() {
         // Arrange
         var fritekstInn = "- Vedlegg1";
         var fritekstUt = "- Vedlegg1";
@@ -142,7 +142,7 @@ public class FritekstTest {
     }
 
     @Test
-    public void skal_gi_null_hvis_fritekst_er_null() {
+    void skal_gi_null_hvis_fritekst_er_null() {
         assertThat(fra(null)).isNull();
     }
 

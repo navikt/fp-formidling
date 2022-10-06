@@ -10,8 +10,10 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingsresultatDto;
 
-public class BehandlingsresultatDtoMapper {
+public final class BehandlingsresultatDtoMapper {
 
+    private BehandlingsresultatDtoMapper() {
+    }
 
     public static Behandlingsresultat mapBehandlingsresultatFraDto(BehandlingsresultatDto dto) {
         var builder = builder();

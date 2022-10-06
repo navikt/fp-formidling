@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
@@ -141,7 +142,7 @@ public final class BeregningsgrunnlagMapper {
         return bgpsaListe.stream()
                 .filter(andel -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus()))
                 .map(BeregningsgrunnlagPrStatusOgAndel::getNyIArbeidslivet)
-                .filter(nyIArbeidslivet -> nyIArbeidslivet != null)
+                .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(false);
     }

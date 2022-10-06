@@ -21,7 +21,7 @@ public class RestApiInputValideringAnnoteringTest extends RestApiTester {
      * Spør på Slack hvis du trenger hjelp til å endre koden din slik at den går igjennom her
      */
     @Test
-    public void alle_felter_i_objekter_som_brukes_som_inputDTO_skal_enten_ha_valideringsannotering_eller_være_av_godkjent_type() throws Exception {
+    void alle_felter_i_objekter_som_brukes_som_inputDTO_skal_enten_ha_valideringsannotering_eller_være_av_godkjent_type() throws Exception {
         for (var method : finnAlleRestMetoder()) {
             for (var i = 0; i < method.getParameterCount(); i++) {
                 assertThat(method.getParameterTypes()[i].isAssignableFrom(String.class)).as(

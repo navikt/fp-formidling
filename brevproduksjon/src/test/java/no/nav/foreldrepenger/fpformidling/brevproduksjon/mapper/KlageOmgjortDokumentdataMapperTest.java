@@ -47,14 +47,14 @@ public class KlageOmgjortDokumentdataMapperTest {
     private KlageOmgjortDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
-    public void before() {
+    void before() {
         dokumentData = lagStandardDokumentData(DokumentMalType.KLAGE_OMGJORT);
         when(brevParametere.getKlagefristUker()).thenReturn(6);
         dokumentdataMapper = new KlageOmgjortDokumentdataMapper(brevParametere, domeneobjektProvider);
     }
 
     @Test
-    public void skal_mappe_felter_for_brevet() {
+    void skal_mappe_felter_for_brevet() {
         // Arrange
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
@@ -70,12 +70,12 @@ public class KlageOmgjortDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(dokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(dokumentdata.getFelles().getErKopi()).isEqualTo(true);
+        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
-        assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(false);
+        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
+        assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
         assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST_TIL_BREV));
 
         assertThat(dokumentdata.getGjelderTilbakekreving()).isFalse();

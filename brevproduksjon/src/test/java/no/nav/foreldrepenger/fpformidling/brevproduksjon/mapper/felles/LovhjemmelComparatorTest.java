@@ -14,7 +14,7 @@ public class LovhjemmelComparatorTest {
     List<String> lovhjemler = new ArrayList();
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         lovhjemler.add("1-1");
         lovhjemler.add("1-3");
         lovhjemler.add("1-2");
@@ -40,7 +40,7 @@ public class LovhjemmelComparatorTest {
     }
 
     @Test
-    public void skal_sortere_stigende_etter_kapittel_og_paragraf_som_kan_inkludere_en_bokstav_tilslutt_og_legge_ugyldige_først_og_fjerne_duplikater() {
+    void skal_sortere_stigende_etter_kapittel_og_paragraf_som_kan_inkludere_en_bokstav_tilslutt_og_legge_ugyldige_først_og_fjerne_duplikater() {
         var set = new TreeSet<>(new LovhjemmelComparator());
         set.addAll(lovhjemler);
         var iterator = set.iterator();

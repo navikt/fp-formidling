@@ -10,11 +10,8 @@ import no.nav.foreldrepenger.fpformidling.dbstoette.JpaExtension;
 @ExtendWith(JpaExtension.class)
 public class DatabaseHealthCheckTest {
 
-
     @Test
-    public void test_working_query() throws Exception {
+    void test_working_query() throws Exception {
         assertThat(new DatabaseHealthCheck().isReady()).isTrue();
     }
-
-
 }

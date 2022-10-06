@@ -26,7 +26,7 @@ public class TilkjentYtelseMapperTest {
     private static final DatoIntervall UBETYDELIG_PERIODE = DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1));
 
     @Test
-    public void skal_finne_månedsbeløp() {
+    void skal_finne_månedsbeløp() {
         // Arrange
         var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
@@ -45,7 +45,7 @@ public class TilkjentYtelseMapperTest {
     }
 
     @Test
-    public void skal_finne_dagsats() {
+    void skal_finne_dagsats() {
         // Arrange
         var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
@@ -64,7 +64,7 @@ public class TilkjentYtelseMapperTest {
     }
 
     @Test
-    public void skal_finne_antall_arbeidsgivere() {
+    void skal_finne_antall_arbeidsgivere() {
         // Arrange
         var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
@@ -105,7 +105,7 @@ public class TilkjentYtelseMapperTest {
     }
 
     @Test
-    public void skal_finne_at_bruker_har_full_refusjon() {
+    void skal_finne_at_bruker_har_full_refusjon() {
         // Arrange
         var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
@@ -136,7 +136,7 @@ public class TilkjentYtelseMapperTest {
     }
 
     @Test
-    public void skal_finne_at_bruker_har_ingen_refusjon() {
+    void skal_finne_at_bruker_har_ingen_refusjon() {
         // Arrange
         var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
@@ -167,7 +167,7 @@ public class TilkjentYtelseMapperTest {
     }
 
     @Test
-    public void skal_finne_at_bruker_har_ingen_refusjon_når_ingen_er_mottakere() {
+    void skal_finne_at_bruker_har_ingen_refusjon_når_ingen_er_mottakere() {
         // Arrange
         var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
@@ -198,7 +198,7 @@ public class TilkjentYtelseMapperTest {
     }
 
     @Test
-    public void skal_finne_at_bruker_har_delvis_refusjon() {
+    void skal_finne_at_bruker_har_delvis_refusjon() {
         // Arrange
         var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
@@ -229,7 +229,7 @@ public class TilkjentYtelseMapperTest {
     }
 
     @Test
-    public void skal_finne_at_bruker_har_utbetaling() {
+    void skal_finne_at_bruker_har_utbetaling() {
         // Arrange
         var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(
@@ -262,7 +262,7 @@ public class TilkjentYtelseMapperTest {
     }
 
     @Test
-    public void skal_finne_at_bruker_ikke_har_utbetaling() {
+    void skal_finne_at_bruker_ikke_har_utbetaling() {
         // Arrange
         var tilkjentYtelse = TilkjentYtelseForeldrepenger.ny()
                 .leggTilPerioder(of(

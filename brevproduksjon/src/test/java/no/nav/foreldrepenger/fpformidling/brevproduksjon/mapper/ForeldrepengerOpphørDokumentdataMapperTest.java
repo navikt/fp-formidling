@@ -37,7 +37,7 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphørfp.ForeldrepengerOpphørDokumentdataMapper;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorfp.ForeldrepengerOpphørDokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
@@ -84,7 +84,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
     private ForeldrepengerOpphørDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
-    public void before() {
+    void before() {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
 
@@ -97,7 +97,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_brev_til_bruker() {
+    void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var behandling = opprettBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
@@ -114,12 +114,12 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDato(LocalDate.now(), behandling.getSpråkkode()));
-        assertThat(dokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(dokumentdata.getFelles().getErKopi()).isEqualTo(true);
+        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
-        assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(false);
+        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
+        assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(dokumentdata.getAvslagÅrsaker()).contains(ÅRSAK_1.getKode(), ÅRSAK_2_OG_3.getKode(), ÅRSAK_4.getKode());
         assertThat(dokumentdata.erSøkerDød()).isFalse();

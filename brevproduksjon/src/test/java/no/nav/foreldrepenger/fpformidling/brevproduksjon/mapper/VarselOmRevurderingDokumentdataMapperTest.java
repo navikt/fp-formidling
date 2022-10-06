@@ -60,7 +60,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
     private VarselOmRevurderingDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
-    public void before() {
+    void before() {
         var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         brevMapperUtil = new BrevMapperUtil(brevParametere);
         dokumentData = lagStandardDokumentData(DokumentMalType.VARSEL_OM_REVURDERING);
@@ -72,7 +72,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_brev_til_bruker() {
+    void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
         var behandling = opprettBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
@@ -87,13 +87,13 @@ public class VarselOmRevurderingDokumentdataMapperTest {
         assertThat(varselOmRevurderingDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(varselOmRevurderingDokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(varselOmRevurderingDokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(varselOmRevurderingDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(varselOmRevurderingDokumentdata.getFelles().getErKopi()).isEqualTo(true);
+        assertThat(varselOmRevurderingDokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(varselOmRevurderingDokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(varselOmRevurderingDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(varselOmRevurderingDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(varselOmRevurderingDokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
-        assertThat(varselOmRevurderingDokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
-        assertThat(varselOmRevurderingDokumentdata.getFelles().getErUtkast()).isEqualTo(false);
+        assertThat(varselOmRevurderingDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
+        assertThat(varselOmRevurderingDokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(varselOmRevurderingDokumentdata.getTerminDato()).isEqualTo(formaterDatoNorsk(TERMINDATO));
         assertThat(varselOmRevurderingDokumentdata.getFristDato()).isEqualTo(formaterDatoNorsk(brevMapperUtil.getSvarFrist()));
@@ -104,7 +104,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_brev_til_verge() {
+    void skal_mappe_felter_for_brev_til_verge() {
         // Arrange
         var behandling = opprettBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, true);
@@ -118,12 +118,12 @@ public class VarselOmRevurderingDokumentdataMapperTest {
         assertThat(varselOmRevurderingDokumentdata.getFelles().getSøkerNavn()).isEqualTo(SØKERS_NAVN);
         assertThat(varselOmRevurderingDokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(varselOmRevurderingDokumentdata.getFelles().getMottakerNavn()).isEqualTo(VERGES_NAVN);
-        assertThat(varselOmRevurderingDokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(varselOmRevurderingDokumentdata.getFelles().getErKopi()).isEqualTo(false);
+        assertThat(varselOmRevurderingDokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(varselOmRevurderingDokumentdata.getFelles().getErKopi()).isFalse();
     }
 
     @Test
-    public void skal_gi_flere_opplysninger_når_ikke_JOBBFULLTID_er_årasak() {
+    void skal_gi_flere_opplysninger_når_ikke_JOBBFULLTID_er_årasak() {
         // Arrange
         var behandling = opprettBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData);

@@ -49,14 +49,14 @@ public class KlageAvvistDokumentdataMapperTest {
     private KlageAvvistDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
-    public void before() {
+    void before() {
         dokumentData = lagStandardDokumentData(DokumentMalType.KLAGE_AVVIST);
         when(brevParametere.getKlagefristUker()).thenReturn(6);
         dokumentdataMapper = new KlageAvvistDokumentdataMapper(brevParametere, domeneobjektProvider);
     }
 
     @Test
-    public void skal_mappe_felter_for_vanlig_behandling() {
+    void skal_mappe_felter_for_vanlig_behandling() {
         // Arrange
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
@@ -72,12 +72,12 @@ public class KlageAvvistDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(dokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(dokumentdata.getFelles().getErKopi()).isEqualTo(true);
+        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
-        assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(false);
+        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
+        assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(dokumentdata.getGjelderTilbakekreving()).isFalse();
         assertThat(dokumentdata.getLovhjemler()).isEqualTo("forvaltningsloven §§ 28 og 33");
@@ -86,7 +86,7 @@ public class KlageAvvistDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_tilbakekreving_med_alle_avvist_grunner_og_spesialhåndtere_for_sent_og_ikke_signert() {
+    void skal_mappe_felter_for_tilbakekreving_med_alle_avvist_grunner_og_spesialhåndtere_for_sent_og_ikke_signert() {
         // Arrange
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);

@@ -22,7 +22,7 @@ public class AvslåttPeriodeMergerTest {
     private static final LocalDate PERIODE3_TOM = LocalDate.now().plusDays(30);
 
     @Test
-    public void skal_slå_sammen_perioder_som_er_sammenhengende() {
+    void skal_slå_sammen_perioder_som_er_sammenhengende() {
         // Arrange
         var periode1 = AvslåttPeriode.ny().medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4, BigDecimal.ZERO).build();
         var periode2 = AvslåttPeriode.ny().medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5, BigDecimal.ZERO).build();
@@ -42,7 +42,7 @@ public class AvslåttPeriodeMergerTest {
     }
 
     @Test
-    public void skal_slå_sammen_perioder_med_samme_avslagsårsak() {
+    void skal_slå_sammen_perioder_med_samme_avslagsårsak() {
         // Arrange
         var periode1 = AvslåttPeriode.ny().medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAvslagsårsak(Årsak.of("4086")).medAntallTapteDager(4, BigDecimal.ZERO).build();
         var periode2 = AvslåttPeriode.ny().medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAvslagsårsak(Årsak.of("4086")).medAntallTapteDager(5, BigDecimal.ZERO).build();
@@ -59,7 +59,7 @@ public class AvslåttPeriodeMergerTest {
     }
 
     @Test
-    public void skal_ikke_slå_sammen_perioder_med_forskjellig_avslagsårsak() {
+    void skal_ikke_slå_sammen_perioder_med_forskjellig_avslagsårsak() {
         // Arrange
         var periode1 = AvslåttPeriode.ny().medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAvslagsårsak(Årsak.of("4086")).medAntallTapteDager(4, BigDecimal.ZERO).build();
         var periode2 = AvslåttPeriode.ny().medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAvslagsårsak(Årsak.of("4055")).medAntallTapteDager(5, BigDecimal.ZERO).build();
@@ -80,7 +80,7 @@ public class AvslåttPeriodeMergerTest {
     }
 
     @Test
-    public void skal_slå_sammen_perioder_med_forskjellige_årsaker_som_er_regnet_som_like() {
+    void skal_slå_sammen_perioder_med_forskjellige_årsaker_som_er_regnet_som_like() {
         // Arrange
         var periode1 = AvslåttPeriode.ny().medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAvslagsårsak(Årsak.of("4040")).medAntallTapteDager(4, BigDecimal.valueOf(4)).build();
         var periode2 = AvslåttPeriode.ny().medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAvslagsårsak(Årsak.of("4112")).medAntallTapteDager(5, BigDecimal.valueOf(5.5)).build();

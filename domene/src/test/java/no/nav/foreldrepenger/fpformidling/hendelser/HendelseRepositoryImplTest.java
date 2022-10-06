@@ -20,12 +20,12 @@ public class HendelseRepositoryImplTest {
     private HendelseRepository hendelseRepository;
 
     @BeforeEach
-    public void setup(EntityManager entityManager) {
+    void setup(EntityManager entityManager) {
         hendelseRepository = new HendelseRepository(entityManager);
     }
 
     @Test
-    public void skalLagreOgHenteOppIgjen() {
+    void skalLagreOgHenteOppIgjen() {
         var behandlingUuid = UUID.randomUUID();
         var bestiilingUuid = UUID.randomUUID();
         var dokumentHendelse = DokumentHendelse

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
 public class JsonMappingExceptionMapperTest {
 
     @Test
-    public void skal_mappe_InvalidTypeIdException() {
+    void skal_mappe_InvalidTypeIdException() {
         var mapper = new JsonMappingExceptionMapper();
         var resultat = mapper.toResponse(new InvalidTypeIdException(null, "Ukjent type-kode", null, "23525"));
         var dto = (FeilDto) resultat.getEntity();

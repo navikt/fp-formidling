@@ -48,7 +48,7 @@ public class DokumentdataSerializationTest {
     private static final ObjectMapper OBJECT_MAPPER = DefaultJsonMapper.getObjectMapper();
 
     @Test
-    public void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_foreldrepenger() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_foreldrepenger() throws IOException {
         // Arrange
         var arbeidsforhold1 = Arbeidsforhold.ny()
                 .medArbeidsgiverNavn("Arbeidsgiver 1")
@@ -187,7 +187,7 @@ public class DokumentdataSerializationTest {
     }
 
     @Test
-    public void skal_serialisere_og_deserialisere_dokumentdata_for_avslag_engangsstønad() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_avslag_engangsstønad() throws IOException {
         // Arrange
         var dokumentdata = EngangsstønadAvslagDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
@@ -206,7 +206,7 @@ public class DokumentdataSerializationTest {
     }
 
     @Test
-    public void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_engangsstønad() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_engangsstønad() throws IOException {
         // Arrange
         var dokumentdata = EngangsstønadInnvilgelseDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
@@ -225,7 +225,7 @@ public class DokumentdataSerializationTest {
     }
 
     @Test
-    public void skal_serialisere_og_deserialisere_dokumentdata_for_forlenget_saksbehandlingstid() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_forlenget_saksbehandlingstid() throws IOException {
         // Arrange
         var dokumentdata = ForlengetSaksbehandlingstidDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
@@ -240,7 +240,7 @@ public class DokumentdataSerializationTest {
     }
 
     @Test
-    public void skal_serialisere_og_deserialisere_dokumentdata_for_henleggelse() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_henleggelse() throws IOException {
         // Arrange
         var dokumentdata = HenleggelseDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
@@ -256,7 +256,7 @@ public class DokumentdataSerializationTest {
     }
 
     @Test
-    public void skal_serialisere_og_deserialisere_dokumentdata_for_ikke_søkt() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_ikke_søkt() throws IOException {
         // Arrange
         var dokumentdata = IkkeSøktDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
@@ -269,7 +269,7 @@ public class DokumentdataSerializationTest {
     }
 
     @Test
-    public void skal_serialisere_og_deserialisere_dokumentdata_for_info_til_annen_forelder() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_info_til_annen_forelder() throws IOException {
         // Arrange
         var dokumentdata = ForeldrepengerInfoTilAnnenForelderDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
@@ -282,7 +282,7 @@ public class DokumentdataSerializationTest {
     }
 
     @Test
-    public void skal_serialisere_og_deserialisere_dokumentdata_for_innhente_opplysninger() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_innhente_opplysninger() throws IOException {
         // Arrange
         var dokumentdata = InnhenteOpplysningerDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
@@ -300,7 +300,7 @@ public class DokumentdataSerializationTest {
     }
 
     @Test
-    public void skal_serialisere_og_deserialisere_dokumentdata_for_innsyn() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_innsyn() throws IOException {
         // Arrange
         var dokumentdata = InnsynDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())
@@ -313,7 +313,7 @@ public class DokumentdataSerializationTest {
     }
 
     @Test
-    public void skal_serialisere_og_deserialisere_dokumentdata_for_varsel_om_revurdering() throws IOException {
+    void skal_serialisere_og_deserialisere_dokumentdata_for_varsel_om_revurdering() throws IOException {
         // Arrange
         var dokumentdata = VarselOmRevurderingDokumentdata.ny()
                 .medFelles(opprettFellesDokumentdata())

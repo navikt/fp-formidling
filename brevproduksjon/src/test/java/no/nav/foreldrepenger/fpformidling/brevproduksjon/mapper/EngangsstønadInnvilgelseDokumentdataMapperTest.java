@@ -46,13 +46,13 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     private DokumentFelles dokumentFelles;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         dokumentHendelse = lagStandardHendelseBuilder().build();
         dokumentdataMapperTest = new EngangsstønadInnvilgelseDokumentdataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider);
     }
 
     @Test
-    public void case_med_endret_sats_blir_satt_riktig() {
+    void case_med_endret_sats_blir_satt_riktig() {
         //Arrange
         var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
@@ -84,7 +84,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_ikke_flagge_endret_sats_hvis_forrige_behandling_manglet_tilkjent_ytelse() {
+    void skal_ikke_flagge_endret_sats_hvis_forrige_behandling_manglet_tilkjent_ytelse() {
         //Arrange
         var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
@@ -103,7 +103,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_sende_original_til_verge() {
+    void skal_sende_original_til_verge() {
         //Arrange
         dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE), DokumentFelles.Kopi.NEI, true);
         var innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV);
@@ -121,7 +121,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_sende_kopi_til_søker() {
+    void skal_sende_kopi_til_søker() {
         //Arrange
         dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE), DokumentFelles.Kopi.JA, false);
         var innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV);
@@ -139,7 +139,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     }
 
     @Test
-    public void endring_antall_barn_ikke_endretSats() {
+    void endring_antall_barn_ikke_endretSats() {
         //Arrange
         var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);

@@ -11,7 +11,7 @@ import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 public class DatoTest {
 
     @Test
-    public void skal_formatere_dato_med_norsk_format_for_februar() {
+    void skal_formatere_dato_med_norsk_format_for_februar() {
         // Arrange
         var dato = LocalDate.of(2021, 2, 10);
 
@@ -23,7 +23,7 @@ public class DatoTest {
     }
 
     @Test
-    public void skal_formatere_dato_med_norsk_format_for_juli() {
+    void skal_formatere_dato_med_norsk_format_for_juli() {
         // Arrange
         var dato = LocalDate.of(2021, 7, 15);
 
@@ -35,7 +35,7 @@ public class DatoTest {
     }
 
     @Test
-    public void skal_formatere_dato_med_norsk_format_for_desember() {
+    void skal_formatere_dato_med_norsk_format_for_desember() {
         // Arrange
         var dato = LocalDate.of(2021, 12, 2);
 
@@ -47,7 +47,7 @@ public class DatoTest {
     }
 
     @Test
-    public void skal_formatere_dato_med_engelsk_format() {
+    void skal_formatere_dato_med_engelsk_format() {
         // Arrange
         var dato = LocalDate.of(2021, 2, 10);
 
@@ -59,7 +59,7 @@ public class DatoTest {
     }
 
     @Test
-    public void skal_formatere_dato_med_engelsk_format_1st() {
+    void skal_formatere_dato_med_engelsk_format_1st() {
         // Arrange
         var dato = LocalDate.of(2021, 2, 1);
 
@@ -71,7 +71,7 @@ public class DatoTest {
     }
 
     @Test
-    public void skal_formatere_dato_med_engelsk_format_2nd() {
+    void skal_formatere_dato_med_engelsk_format_2nd() {
         // Arrange
         var dato = LocalDate.of(2021, 2, 2);
 
@@ -83,7 +83,7 @@ public class DatoTest {
     }
 
     @Test
-    public void skal_formatere_dato_med_engelsk_format_3rd() {
+    void skal_formatere_dato_med_engelsk_format_3rd() {
         // Arrange
         var dato = LocalDate.of(2021, 2, 3);
 
@@ -95,7 +95,7 @@ public class DatoTest {
     }
 
     @Test
-    public void skal_formatere_dato_med_engelsk_format_11th() {
+    void skal_formatere_dato_med_engelsk_format_11th() {
         // Arrange
         var dato = LocalDate.of(2021, 2, 11);
 
@@ -107,7 +107,7 @@ public class DatoTest {
     }
 
     @Test
-    public void skal_formatere_dato_med_engelsk_format_13th() {
+    void skal_formatere_dato_med_engelsk_format_13th() {
         // Arrange
         var dato = LocalDate.of(2021, 2, 13);
 
@@ -119,7 +119,7 @@ public class DatoTest {
     }
 
     @Test
-    public void skal_formatere_dato_med_engelsk_format_31st() {
+    void skal_formatere_dato_med_engelsk_format_31st() {
         // Arrange
         var dato = LocalDate.of(2021, 3, 31);
 
@@ -131,7 +131,7 @@ public class DatoTest {
     }
 
     @Test
-    public void skal_formatere_dato_med_engelsk_format_22nd() {
+    void skal_formatere_dato_med_engelsk_format_22nd() {
         // Arrange
         var dato = LocalDate.of(2021, 2, 22);
 
@@ -143,7 +143,7 @@ public class DatoTest {
     }
 
     @Test
-    public void skal_formatere_dato_med_formatet_som_er_angitt_eksplisitt() {
+    void skal_formatere_dato_med_formatet_som_er_angitt_eksplisitt() {
         // Arrange
         var dato = LocalDate.of(2021, 9, 14);
 

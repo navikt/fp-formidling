@@ -106,7 +106,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     private ForeldrepengerInnvilgelseDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
-    public void before() {
+    void before() {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         var dokumentData = lagStandardDokumentData(DokumentMalType.FORELDREPENGER_INNVILGELSE);
         dokumentdataMapper = new ForeldrepengerInnvilgelseDokumentdataMapper(brevParametere, domeneobjektProvider);
@@ -128,7 +128,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_brev() {
+    void skal_mappe_felter_for_brev() {
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, true);
@@ -141,13 +141,13 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(dokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(dokumentdata.getFelles().getErKopi()).isEqualTo(true);
+        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
-        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
-        assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(true);
+        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
+        assertThat(dokumentdata.getFelles().getErUtkast()).isTrue();
 
         assertThat(dokumentdata.getBehandlingType()).isEqualTo(behandling.getBehandlingType().name());
         assertThat(dokumentdata.getBehandlingResultatType()).isEqualTo(
@@ -185,7 +185,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(1);
         assertThat(dokumentdata.getPrematurDager()).isEqualTo(PREMATUR_DAGER);
         assertThat(dokumentdata.getAntallDødeBarn()).isEqualTo(0);
-        assertThat(dokumentdata.getDødsdato()).isEqualTo(null);
+        assertThat(dokumentdata.getDødsdato()).isNull();
         assertThat(dokumentdata.getMorKanSøkeOmDagerFørFødsel()).isTrue();
         assertThat(dokumentdata.getPerioder()).hasSize(4);
         assertThat(dokumentdata.getPerioder().get(0).getStønadskontoType()).isEqualTo(StønadskontoType.FORELDREPENGER);
@@ -213,7 +213,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     }
 
     @Test
-    public void SjekkAtTotilkjentPerioderMedEnUttaksperiodeFårRiktigTapteDager() {
+    void SjekkAtTotilkjentPerioderMedEnUttaksperiodeFårRiktigTapteDager() {
 
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP2());

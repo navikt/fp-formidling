@@ -26,7 +26,10 @@ import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.Hje
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.OpptjeningAktivitetDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.kodeverk.PeriodeÅrsakDto;
 
-public class BeregningsgrunnlagDtoMapper {
+public final class BeregningsgrunnlagDtoMapper {
+
+    private BeregningsgrunnlagDtoMapper() {
+    }
 
     public static Beregningsgrunnlag mapFraDto(BeregningsgrunnlagDto dto, UnaryOperator<String> hentNavn) {
         var builder = Beregningsgrunnlag.ny();

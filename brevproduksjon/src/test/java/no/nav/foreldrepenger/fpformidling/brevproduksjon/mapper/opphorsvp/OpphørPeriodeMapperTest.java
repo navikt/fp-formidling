@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphørsvp;
+package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorsvp;
 
 import static java.util.List.of;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
@@ -43,7 +43,7 @@ class OpphørPeriodeMapperTest {
     private static final String LOVHJEMLER = "§ 14-4 og forvaltningsloven § 35";
 
     @Test
-    public void  opphør_uten_uttak_og_tilkjent_ytelse() {
+    void  opphør_uten_uttak_og_tilkjent_ytelse() {
         //Arrange
         var svpUttakResultatArbeidsforholdList = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.INGEN, ARBEIDSGIVER_1, Collections.emptyList()));
 
@@ -69,7 +69,7 @@ class OpphørPeriodeMapperTest {
 
 
     @Test
-    public void  en_opphørt_Periode_med_en_arbeidsgiver_fra_tikjent_ytelse() {
+    void  en_opphørt_Periode_med_en_arbeidsgiver_fra_tikjent_ytelse() {
         //Arrange
         var behandling  = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
@@ -98,7 +98,7 @@ class OpphørPeriodeMapperTest {
     }
 
     @Test
-    public void  en_opphørt_periode_med_2_arbeidsgivere_fra_uttak_innvilget() {
+    void  en_opphørt_periode_med_2_arbeidsgivere_fra_uttak_innvilget() {
         //Arrange
         var behandling  = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
@@ -131,7 +131,7 @@ class OpphørPeriodeMapperTest {
     }
 
     @Test
-    public void  opphør_død_før_uten_tilkjent_ytelse_ingen_stønadsdatoer() {
+    void  opphør_død_før_uten_tilkjent_ytelse_ingen_stønadsdatoer() {
         //Arrange
         var behandling  = standardBehandlingBuilder()
                 .medBehandlingsresultat(Behandlingsresultat.builder()
@@ -164,7 +164,7 @@ class OpphørPeriodeMapperTest {
     }
 
     @Test
-    public void  en_opphørsperiode_pga_avslag_på_arbeidsforholdet() {
+    void  en_opphørsperiode_pga_avslag_på_arbeidsforholdet() {
         //Arrange
         var uttakArbeidsforhold = List.of(opprettUttakArbeidsforhold(ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE, ARBEIDSGIVER_1, Collections.emptyList()));
 

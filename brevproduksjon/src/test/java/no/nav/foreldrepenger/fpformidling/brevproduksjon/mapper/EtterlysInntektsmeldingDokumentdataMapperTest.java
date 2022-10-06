@@ -34,14 +34,14 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
     private EtterlysInntektsmeldingDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         var brevParametere = new BrevParametere(6, 2, Period.parse("P3W"), Period.ZERO);
         dokumentData = lagStandardDokumentData(DokumentMalType.ETTERLYS_INNTEKTSMELDING);
         dokumentdataMapper = new EtterlysInntektsmeldingDokumentdataMapper(domeneobjektProvider, new BrevMapperUtil(brevParametere));
     }
 
     @Test
-    public void test_map_fagtype_foreldrepenger() {
+    void test_map_fagtype_foreldrepenger() {
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = standardDokumenthendelse();
@@ -54,7 +54,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
     }
 
     @Test
-    public void test_map_fagtype_svangerskapspenger() {
+    void test_map_fagtype_svangerskapspenger() {
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagStandardHendelseSVPBuilder().build();

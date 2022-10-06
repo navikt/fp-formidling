@@ -113,7 +113,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     private SvangerskapspengerInnvilgelseDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
-    public void before() {
+    void before() {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         dokumentData = lagStandardDokumentData(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE);
         dokumentdataMapper = new SvangerskapspengerInnvilgelseDokumentdataMapper(domeneobjektProvider, brevParametere);
@@ -124,7 +124,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_førstegangsbehandling() {
+    void skal_mappe_felter_for_førstegangsbehandling() {
         // Arrange
         var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
@@ -141,13 +141,13 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(dokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(dokumentdata.getFelles().getErKopi()).isEqualTo(true);
+        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
         assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
-        assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(false);
+        assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(dokumentdata.getRevurdering()).isFalse();
         assertThat(dokumentdata.getRefusjonTilBruker()).isTrue();
@@ -212,7 +212,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_revurdering() {
+    void skal_mappe_felter_for_revurdering() {
         // Arrange
         var behandling = opprettBehandling(BehandlingType.REVURDERING)
                 .medBehandlingsresultat(Behandlingsresultat.builder()
@@ -248,7 +248,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_selvstendig_næringsdrivende_når_det_er_i_første_periode() {
+    void skal_mappe_selvstendig_næringsdrivende_når_det_er_i_første_periode() {
         // Arrange
         var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
@@ -270,7 +270,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_frilanser_når_det_er_i_første_periode() {
+    void skal_mappe_frilanser_når_det_er_i_første_periode() {
         // Arrange
         var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).build();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);

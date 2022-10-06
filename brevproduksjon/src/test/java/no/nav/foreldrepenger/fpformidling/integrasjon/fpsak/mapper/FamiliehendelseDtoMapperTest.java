@@ -18,12 +18,12 @@ public class FamiliehendelseDtoMapperTest {
     private static final LocalDate FØRSTE_JANUAR = LocalDate.of(2018, 1, 1);
 
     @Test
-    public void utledTermindato() {
+    void utledTermindato() {
         assertThat(FamiliehendelseDtoMapper.finnTermindato(lagDtoMedTermindato(FØRSTE_JANUAR)).get()).isEqualTo(FØRSTE_JANUAR);
     }
 
     @Test
-    public void finnAntallbarnFødt() {
+    void finnAntallbarnFødt() {
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 1, 2))).isEqualTo(2);
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 3, 0))).isEqualTo(3);
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 3, 3))).isEqualTo(3);
@@ -31,7 +31,7 @@ public class FamiliehendelseDtoMapperTest {
     }
 
     @Test
-    public void finnAntallDødeBarn() {
+    void finnAntallDødeBarn() {
         assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 1, 2))).isEqualTo(0);
         assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedFødselOgDødsdato(3, 2))).isEqualTo(2);
         assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedFødselOgDødsdato(3, 3))).isEqualTo(3);
@@ -39,7 +39,7 @@ public class FamiliehendelseDtoMapperTest {
     }
 
     @Test
-    public void finnTermindato() {
+    void finnTermindato() {
         var antallBarnFødsel = 1;
         var antallBarnAdopsjon = 2;
         var antallBarnOmsorg = 3;

@@ -36,7 +36,7 @@ public class NaturalytelseMapperTest {
     private static final long DAGSATS = 1000L;
 
     @Test
-    public void skal_ikke_utlede_naturalytelse_som_starter_med_første_periode() {
+    void skal_ikke_utlede_naturalytelse_som_starter_med_første_periode() {
         // Arrange
         var tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, false);
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT), false);
@@ -49,7 +49,7 @@ public class NaturalytelseMapperTest {
     }
 
     @Test
-    public void skal_utlede_at_naturalytelse_bortfaller_når_årsak_er_bortfaller() {
+    void skal_utlede_at_naturalytelse_bortfaller_når_årsak_er_bortfaller() {
         // Arrange
         var tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(PeriodeÅrsak.NATURALYTELSE_BORTFALT), true);
@@ -67,7 +67,7 @@ public class NaturalytelseMapperTest {
     }
 
     @Test
-    public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_er_tilkommer() {
+    void skal_utlede_at_naturalytelse_tilkommer_når_årsak_er_tilkommer() {
         // Arrange
         var tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, null, BigDecimal.valueOf(1000), of(PeriodeÅrsak.NATURALYTELSE_TILKOMMER), true);
@@ -82,7 +82,7 @@ public class NaturalytelseMapperTest {
     }
 
     @Test
-    public void skal_utlede_at_naturalytelse_bortfaller_når_årsak_ikke_er_angitt_og_bare_bortfaller_er_angitt() {
+    void skal_utlede_at_naturalytelse_bortfaller_når_årsak_ikke_er_angitt_og_bare_bortfaller_er_angitt() {
         // Arrange
         var tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), null, of(), true);
@@ -97,7 +97,7 @@ public class NaturalytelseMapperTest {
     }
 
     @Test
-    public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bare_tilkommer_er_angitt() {
+    void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bare_tilkommer_er_angitt() {
         // Arrange
         var tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, null, BigDecimal.valueOf(1000), of(), true);
@@ -112,7 +112,7 @@ public class NaturalytelseMapperTest {
     }
 
     @Test
-    public void skal_utlede_at_naturalytelse_bortfaller_når_årsak_ikke_er_angitt_og_bortfaller_er_større_enn_tilkommer() {
+    void skal_utlede_at_naturalytelse_bortfaller_når_årsak_ikke_er_angitt_og_bortfaller_er_større_enn_tilkommer() {
         // Arrange
         var tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), BigDecimal.valueOf(500), of(), true);
@@ -127,7 +127,7 @@ public class NaturalytelseMapperTest {
     }
 
     @Test
-    public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bortfaller_er_lik_tilkommer() {
+    void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bortfaller_er_lik_tilkommer() {
         // Arrange
         var tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(1000), BigDecimal.valueOf(1000), of(), true);
@@ -142,7 +142,7 @@ public class NaturalytelseMapperTest {
     }
 
     @Test
-    public void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bortfaller_er_mindre_enn_tilkommer() {
+    void skal_utlede_at_naturalytelse_tilkommer_når_årsak_ikke_er_angitt_og_bortfaller_er_mindre_enn_tilkommer() {
         // Arrange
         var tilkjentYtelseFP = gettilkjentYtelseFP(ARBEIDSGIVER, true);
         var beregningsgrunnlag = getBeregningsgrunnlag(ARBEIDSGIVER, BigDecimal.valueOf(500), BigDecimal.valueOf(1000), of(), true);

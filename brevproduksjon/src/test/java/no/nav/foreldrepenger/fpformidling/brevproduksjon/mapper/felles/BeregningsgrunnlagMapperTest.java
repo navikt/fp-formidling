@@ -24,7 +24,7 @@ public class BeregningsgrunnlagMapperTest {
     private static final long STANDARD_PERIODE_DAGSATS = 100L;
 
     @BeforeEach
-    public void standard_setup() {
+    void standard_setup() {
         beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode())
                 .build();
@@ -73,7 +73,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_identifsere_statuser() {
+    void skal_identifsere_statuser() {
         var arbeidstakerAndeler = BeregningsgrunnlagMapper
                 .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER),
                         beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
@@ -89,37 +89,37 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_matche_aap() {
+    void skal_matche_aap() {
         var bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
         assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
     }
 
     @Test
-    public void skal_matche_alt_på_kun_ytelse() {
+    void skal_matche_alt_på_kun_ytelse() {
         var bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.KUN_YTELSE);
         assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAap()))).isNotEmpty();
         assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaSN()))).isNotEmpty();
     }
 
     @Test
-    public void skal_kaste_exception_matcher_ikke() {
+    void skal_kaste_exception_matcher_ikke() {
         var bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER);
         assertThatThrownBy(() -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
-    public void skal_matche_AT_SN() {
+    void skal_matche_AT_SN() {
         var bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.KOMBINERT_AT_SN);
         assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).hasSize(2);
     }
 
     @Test
-    public void skal_ikke_finne_besteBeregning() {
+    void skal_ikke_finne_besteBeregning() {
         assertThat(beregningsgrunnlag.getErBesteberegnet()).isFalse();
     }
 
     @Test
-    public void skal_finne_besteBeregning() {
+    void skal_finne_besteBeregning() {
         beregningsgrunnlag = Beregningsgrunnlag.ny().medBesteberegnet(true)
                 .build();
         assertThat(beregningsgrunnlag.getErBesteberegnet()).isTrue();

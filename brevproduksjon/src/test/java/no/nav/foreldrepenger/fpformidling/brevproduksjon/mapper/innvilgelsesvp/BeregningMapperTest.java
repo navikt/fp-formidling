@@ -33,7 +33,7 @@ public class BeregningMapperTest {
     private static final int BRUTTO_ÅR_ARBEIDSFORHOLD2 = 310100;
 
     @Test
-    public void skal_mappe_arbeidsforhold_med_høyest_inntekt_først() {
+    void skal_mappe_arbeidsforhold_med_høyest_inntekt_først() {
         // Arrange
         var arbeidsgiver1 = new Arbeidsgiver("1", ARBEIDSGIVER_1);
         var bgAndelArbeidsforhold1 = new BGAndelArbeidsforhold(arbeidsgiver1, ArbeidsforholdRef.ref("1"),
@@ -79,7 +79,7 @@ public class BeregningMapperTest {
 
 
     @Test
-    public void er_militær() {
+    void er_militær() {
         // Arrange
         var andel = of(
                 BeregningsgrunnlagPrStatusOgAndel.ny()
@@ -107,7 +107,7 @@ public class BeregningMapperTest {
     }
 
     @Test
-    public void er_ikke_militær() {
+    void er_ikke_militær() {
         // Arrange
         var andel = of(
                 BeregningsgrunnlagPrStatusOgAndel.ny()
@@ -135,7 +135,7 @@ public class BeregningMapperTest {
     }
 
     @Test
-    public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_30() {
+    void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_30() {
         // Arrange
         var behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
@@ -156,7 +156,7 @@ public class BeregningMapperTest {
     }
 
     @Test
-    public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_49() {
+    void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7_og_8_49() {
         // Arrange
         var behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
@@ -177,7 +177,7 @@ public class BeregningMapperTest {
     }
 
     @Test
-    public void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7() {
+    void skal_utlede_SVP_hjemmel_for_beregning_når_fpsak_sender_14_7() {
         // Arrange
         var behandlingsresultat = Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.INNVILGET)

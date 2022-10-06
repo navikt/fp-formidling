@@ -32,7 +32,7 @@ class HenleggeDokumentdataMapperTest {
     }
 
     @Test
-    public void henlegg_mapper_vanligBehandling() {
+    void henlegg_mapper_vanligBehandling() {
         //Arrange
         var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, "NAV Familie- og pensjonsytelser");
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, null, false);
@@ -51,7 +51,7 @@ class HenleggeDokumentdataMapperTest {
     }
 
     @Test
-    public void henlegg_mapper_anke_med_opphav_klage() {
+    void henlegg_mapper_anke_med_opphav_klage() {
         //Arrange
         var behandling = opprettBehandling(BehandlingType.ANKE, "NAV Klageinstans");
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, null, false);

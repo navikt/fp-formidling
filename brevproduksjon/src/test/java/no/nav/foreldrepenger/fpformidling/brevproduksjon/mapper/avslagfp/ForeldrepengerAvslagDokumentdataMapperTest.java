@@ -89,7 +89,7 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
     private ForeldrepengerAvslagDokumentdataMapper dokumentdataMapper;
 
     @BeforeEach
-    public void before() {
+    void before() {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
         dokumentData = lagStandardDokumentData(DokumentMalType.FORELDREPENGER_AVSLAG);
         dokumentdataMapper = new ForeldrepengerAvslagDokumentdataMapper(brevParametere, domeneobjektProvider);
@@ -103,7 +103,7 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
     }
 
     @Test
-    public void skal_mappe_felter_for_brev() {
+    void skal_mappe_felter_for_brev() {
         // Arrange
         var behandling = opprettBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
@@ -118,13 +118,13 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSøkerPersonnummer()).isEqualTo(formaterPersonnummer(SØKERS_FNR));
         assertThat(dokumentdata.getFelles().getMottakerNavn()).isNull();
         assertThat(dokumentdata.getFelles().getBrevDato()).isEqualTo(formaterDatoNorsk(LocalDate.now()));
-        assertThat(dokumentdata.getFelles().getHarVerge()).isEqualTo(true);
-        assertThat(dokumentdata.getFelles().getErKopi()).isEqualTo(true);
+        assertThat(dokumentdata.getFelles().getHarVerge()).isTrue();
+        assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
-        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isEqualTo(false);
-        assertThat(dokumentdata.getFelles().getErUtkast()).isEqualTo(true);
+        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
+        assertThat(dokumentdata.getFelles().getErUtkast()).isTrue();
 
         assertThat(dokumentdata.getRelasjonskode()).isEqualTo("MOR");
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDatoNorsk(SØKNAD_DATO));
@@ -147,7 +147,7 @@ public class ForeldrepengerAvslagDokumentdataMapperTest {
     }
 
     @Test
-    public void SjekkAtTotilkjentPerioderMedEnUttaksperiodeFårRiktigTapteDager() {
+    void SjekkAtTotilkjentPerioderMedEnUttaksperiodeFårRiktigTapteDager() {
         // Arrange
         var behandling = opprettBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);

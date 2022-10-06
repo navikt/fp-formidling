@@ -15,49 +15,49 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Hjemmel;
 public class FellesMapperTest {
 
     @Test
-    public void formaterLovhjemlerBeregningEnkel() {
+    void formaterLovhjemlerBeregningEnkel() {
         var lovhjemmelFraBeregning = "folketrygdloven § 14-7";
         assertLovformateringBeregning(lovhjemmelFraBeregning, "", false, "§ 14-7");
     }
 
     @Test
-    public void formaterLovhjemlerInnvilgetRevurderingBeregning() {
+    void formaterLovhjemlerInnvilgetRevurderingBeregning() {
         var lovhjemmelFraBeregning = "folketrygdloven § 14-7";
         assertLovformateringBeregning(lovhjemmelFraBeregning, "", true, "§ 14-7 og forvaltningsloven § 35");
     }
 
     @Test
-    public void formaterLovhjemlerRevurderingEndringBeregning() {
+    void formaterLovhjemlerRevurderingEndringBeregning() {
         var lovhjemmelFraBeregning = "folketrygdloven § 14-7";
         assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false, "§ 14-7 og forvaltningsloven § 35");
     }
 
     @Test
-    public void formaterLovhjemlerUdefinert() {
+    void formaterLovhjemlerUdefinert() {
         var lovhjemmelFraBeregning = Hjemmel.UDEFINERT.getNavn();
         assertLovformateringBeregning(lovhjemmelFraBeregning, "", false, "");
     }
 
     @Test
-    public void formaterLovhjemlerNull() {
+    void formaterLovhjemlerNull() {
         String lovhjemmelFraBeregning = null;
         assertLovformateringBeregning(lovhjemmelFraBeregning, "", false, "");
     }
 
     @Test
-    public void formaterLovhjemlerRevurderingEndringBeregningOgLovhjemmelUdefinertFraBeregning() {
+    void formaterLovhjemlerRevurderingEndringBeregningOgLovhjemmelUdefinertFraBeregning() {
         var lovhjemmelFraBeregning = Hjemmel.UDEFINERT.getNavn();
         assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false, " og forvaltningsloven § 35");
     }
 
     @Test
-    public void formaterLovhjemlerRevurderingEndringBeregningOgLovhjemmelNullFraBeregning() {
+    void formaterLovhjemlerRevurderingEndringBeregningOgLovhjemmelNullFraBeregning() {
         String lovhjemmelFraBeregning = null;
         assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false, " og forvaltningsloven § 35");
     }
 
     @Test
-    public void skal_formatere_lovhjemmel_uttak_med_forvaltningsloven() {
+    void skal_formatere_lovhjemmel_uttak_med_forvaltningsloven() {
         Set<String> hjemmelSet = new TreeSet<>();
         hjemmelSet.add("14-16");
         hjemmelSet.add("14-18");
@@ -66,7 +66,7 @@ public class FellesMapperTest {
     }
 
     @Test
-    public void skal_formatere_lovhjemmel_uttak() {
+    void skal_formatere_lovhjemmel_uttak() {
         Set<String> hjemmelSet = new TreeSet<>();
         hjemmelSet.add("14-16");
         hjemmelSet.add("14-18");
@@ -76,7 +76,7 @@ public class FellesMapperTest {
     }
 
     @Test
-    public void skal_formatere_enkel_lovhjemmel() {
+    void skal_formatere_enkel_lovhjemmel() {
         Set<String> hjemmelSet = new TreeSet<>();
         hjemmelSet.add("14-16");
         var resultat = FellesMapper.formaterLovhjemlerUttak(hjemmelSet, "", false);

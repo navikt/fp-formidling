@@ -20,7 +20,7 @@ public class AvslåttAktivitetMapperTest {
     private static final String ARBEIDSGIVER3_NAVN = "Arbeidsgiver3 AS";
 
     @Test
-    public void skal_mappe_aktiviteter_med_riktig_årsak() {
+    void skal_mappe_aktiviteter_med_riktig_årsak() {
         // Arrange
         var svpUttakResultatArbeidsforhold = getSvpUttakResultatArbeidsforhold();
 

@@ -37,7 +37,7 @@ public class BeregningsgrunnlagMapperTest {
     private static final DatoIntervall BER_PERIODE = DatoIntervall.fraOgMedTilOgMed(LocalDate.of(2021, 1, 1), LocalDate.of(2021, 9, 1));
 
     @Test
-    public void skal_finne_brutto() {
+    void skal_finne_brutto() {
         // Arrange
         var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode(lagBraListeFrilanser()))
@@ -48,7 +48,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_finne_seksG() {
+    void skal_finne_seksG() {
         // Arrange
         var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .medGrunnbeløp(new Beløp(GRUNNBELØP))
@@ -60,7 +60,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_identifisere_brutto_over_6g() {
+    void skal_identifisere_brutto_over_6g() {
         // Arrange
         var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .medGrunnbeløp(new Beløp(GRUNNBELØP))
@@ -75,7 +75,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_identifisere_ikke_brutto_over_6g() {
+    void skal_identifisere_ikke_brutto_over_6g() {
         // Arrange
         var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .medGrunnbeløp(new Beløp(GRUNNBELØP))
@@ -90,7 +90,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_mappe_regelListe() {
+    void skal_mappe_regelListe() {
         // Arrange
         var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER))
@@ -118,7 +118,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_mappe_regelListe_for_dagpenger_med_tilkommet_arbforhold() {
+    void skal_mappe_regelListe_for_dagpenger_med_tilkommet_arbforhold() {
         // Arrange
         var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.DAGPENGER))
@@ -138,7 +138,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_mappe_regelListe_med_for_dagpenger_uten_tilkommet_arbforhold() {
+    void skal_mappe_regelListe_med_for_dagpenger_uten_tilkommet_arbforhold() {
         // Arrange
         var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.DAGPENGER))
@@ -158,7 +158,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_mappe_sistLignedeÅr_når_selvstendig_næringsdrivende() {
+    void skal_mappe_sistLignedeÅr_når_selvstendig_næringsdrivende() {
         // Arrange
         var beregningsgrunnlag = Beregningsgrunnlag.ny()
                 .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
@@ -176,7 +176,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_finne_at_brutto_beregningsgrunnlag_er_brukt_fordi_det_er_mer_enn_en_regel() {
+    void skal_finne_at_brutto_beregningsgrunnlag_er_brukt_fordi_det_er_mer_enn_en_regel() {
         // Arrange
         var regel1 = BeregningsgrunnlagRegel.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER.name())
@@ -193,7 +193,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_finne_at_brutto_beregningsgrunnlag_er_brukt_fordi_det_er_kombinert_status() {
+    void skal_finne_at_brutto_beregningsgrunnlag_er_brukt_fordi_det_er_kombinert_status() {
         // Arrange
         var regel1 = BeregningsgrunnlagRegel.ny()
                 .medAktivitetStatus(AktivitetStatus.KOMBINERT_AT_FL.name())
@@ -207,7 +207,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void skal_finne_at_brutto_beregningsgrunnlag_ikke_er_brukt() {
+    void skal_finne_at_brutto_beregningsgrunnlag_ikke_er_brukt() {
         // Arrange
         var regel1 = BeregningsgrunnlagRegel.ny()
                 .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name())
@@ -221,7 +221,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void beregningsgrunnlag_med_militærstatus_med_dagsats_skal_ignorere_andre_statuser() {
+    void beregningsgrunnlag_med_militærstatus_med_dagsats_skal_ignorere_andre_statuser() {
         // Arrange
         var arbeidstaker = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
         var militærEllerSivil = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL);
@@ -242,7 +242,7 @@ public class BeregningsgrunnlagMapperTest {
     }
 
     @Test
-    public void beregningsgrunnlag_med_militærstatus_uten_dagsats_skal_fungere_som_før() {
+    void beregningsgrunnlag_med_militærstatus_uten_dagsats_skal_fungere_som_før() {
         // Arrange
         var arbeidstaker = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER);
         var militærEllerSivil = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL);

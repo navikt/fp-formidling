@@ -6,7 +6,10 @@ import java.util.List;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.vilkår.VilkårDto;
 import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
 
-public class VilkårDtoMapper {
+public final class VilkårDtoMapper {
+
+    private VilkårDtoMapper() {
+    }
 
     public static List<Vilkår> mapVilkårFraDto(List<VilkårDto> dto) {
         List<Vilkår> vilkårList = new ArrayList<>();

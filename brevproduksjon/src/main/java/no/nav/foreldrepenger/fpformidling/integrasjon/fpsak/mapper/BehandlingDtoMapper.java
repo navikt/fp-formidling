@@ -13,7 +13,10 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.Behan
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingResourceLinkDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingÅrsakDto;
 
-public class BehandlingDtoMapper {
+public final class BehandlingDtoMapper {
+
+    private BehandlingDtoMapper() {
+    }
 
     private static BehandlingResourceLink mapResourceLinkFraDto(BehandlingResourceLinkDto dto) {
         var linkBuilder = BehandlingResourceLink.ny()

@@ -39,8 +39,6 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
-import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.DokumentOpprettResponse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.OpprettJournalpostResponse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
@@ -51,6 +49,7 @@ import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 import no.nav.foreldrepenger.fpformidling.verge.Verge;
+import no.nav.vedtak.felles.integrasjon.dokarkiv.dto.OpprettJournalpostResponse;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 import no.nav.vedtak.felles.prosesstask.api.TaskType;
@@ -215,8 +214,8 @@ public class BrevBestillerTjenesteTest {
     }
 
     private void mockJournal(DokumentHendelse dokumentHendelse) {
-        var dokumentOpprettResponse = new DokumentOpprettResponse(DOKUMENT_INFO_ID);
-        var opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), "", true,
+        var dokumentOpprettResponse = new OpprettJournalpostResponse.DokumentInfoResponse(DOKUMENT_INFO_ID);
+        var opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), true,
                 List.of(dokumentOpprettResponse));
         when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse),
                 eq(SAKSNUMMER), eq(true), eq(null), any()))

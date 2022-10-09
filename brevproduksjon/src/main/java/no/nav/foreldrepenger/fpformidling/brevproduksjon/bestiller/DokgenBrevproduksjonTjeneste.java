@@ -25,10 +25,10 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
-import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.OpprettJournalpostResponse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.felles.integrasjon.dokarkiv.dto.OpprettJournalpostResponse;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
@@ -99,7 +99,7 @@ public class DokgenBrevproduksjonTjeneste {
                     unikBestillingsUuidPerDokFelles) // NoSonar
             ;
 
-            var journalpostId = new JournalpostId(response.getJournalpostId());
+            var journalpostId = new JournalpostId(response.journalpostId());
 
             LOG.info("Journalført {} for bestilling {}", journalpostId, unikBestillingsUuidPerDokFelles);
 
@@ -166,8 +166,8 @@ public class DokgenBrevproduksjonTjeneste {
                 opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(),
                         dokumentHendelse.getBestillingUuid(),
                         dokumentMal,
-                        response.getJournalpostId(),
-                        response.getDokumenter().get(0).getDokumentInfoId()));
+                        response.journalpostId(),
+                        response.dokumenter().get(0).dokumentInfoId()));
         taskGruppe.setCallIdFraEksisterende();
         taskTjeneste.lagre(taskGruppe);
     }

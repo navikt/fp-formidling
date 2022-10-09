@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.behandling.innsyn.InnsynDokument;
-import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.DokumentTilknytt;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.dto.TilknyttVedleggRequest;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.exception.TekniskException;
@@ -19,14 +18,14 @@ import no.nav.vedtak.exception.TekniskException;
 public class TilknyttVedleggTjeneste {
     private static final Logger LOG = LoggerFactory.getLogger(TilknyttVedleggTjeneste.class);
 
-    private Journalpost journalpostRestKlient;
+    private JournalpostVedlegg journalpostRestKlient;
 
     TilknyttVedleggTjeneste() {
         //CDI
     }
 
     @Inject
-    public TilknyttVedleggTjeneste(Journalpost journalpostRestKlient) {
+    public TilknyttVedleggTjeneste(JournalpostVedlegg journalpostRestKlient) {
         this.journalpostRestKlient = journalpostRestKlient;
     }
 
@@ -48,6 +47,6 @@ public class TilknyttVedleggTjeneste {
     }
 
     private TilknyttVedleggRequest lagRequest(JournalpostId journalpostIdFra, String dokumentInfoId) {
-        return new TilknyttVedleggRequest(List.of(new DokumentTilknytt(journalpostIdFra.getVerdi(), dokumentInfoId)));
+        return new TilknyttVedleggRequest(List.of(new TilknyttVedleggRequest.DokumentTilknytt(journalpostIdFra.getVerdi(), dokumentInfoId)));
     }
 }

@@ -3,8 +3,9 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpformidling.integrasjon.journal.Journalpost;
+import no.nav.foreldrepenger.fpformidling.integrasjon.journal.DokArkivKlient;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
+import no.nav.vedtak.felles.integrasjon.dokarkiv.DokArkiv;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
@@ -13,16 +14,16 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 @ProsessTask(value = "formidling.ferdigstillForsendelse", maxFailedRuns = 2)
 public class FerdigstillForsendelseTask implements ProsessTaskHandler {
 
-    private final Journalpost journalpostRestKlient;
+    private final DokArkiv dokarkivKlient;
 
     @Inject
-    public FerdigstillForsendelseTask(Journalpost journalpostRestKlient) {
-        this.journalpostRestKlient = journalpostRestKlient;
+    public FerdigstillForsendelseTask(DokArkiv dokarkivKlient) {
+        this.dokarkivKlient = dokarkivKlient;
     }
 
     @Override
     public void doTask(ProsessTaskData prosessTaskData) {
         var journalpostId = new JournalpostId(prosessTaskData.getPropertyValue(BrevTaskProperties.JOURNALPOST_ID));
-        journalpostRestKlient.ferdigstillJournalpost(journalpostId);
+        dokarkivKlient.ferdigstillJournalpost(journalpostId.getVerdi(), DokArkivKlient.AUTOMATISK_JOURNALFØRENDE_ENHET);
     }
 }

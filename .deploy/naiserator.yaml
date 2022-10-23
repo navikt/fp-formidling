@@ -42,7 +42,7 @@ spec:
   vault:
     enabled: true
     paths:
-      - mountPath: /var/run/secrets/nais.io/systembruker
+      - mountPath: /var/run/secrets/nais.io/serviceuser
         kvPath: {{serviceuserkv}}
       - mountPath: /var/run/secrets/nais.io/appdynamics
         kvPath: /apikey/appdynamics/{{environment}}

@@ -9,6 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3.1.0
+      - uses: actions/setup-java@v3
+        with:
+            java-version: 17
+            distribution: temurin
+
+      - uses: snyk/actions/setup@master
 
       - name: Setup maven
         uses: whelk-io/maven-settings-xml-action@v21
@@ -23,11 +29,9 @@ jobs:
             mvn -B -s settings.xml versions:set -DnewVersion=snyk-snapshot
             mvn install -q -B -s settings.xml -DskipTests
 
-      - name: Run Snyk
-        uses: snyk/actions/maven@master
-        with:
-          command: monitor
-          args: |
+      - name: Run Snyk monitor
+        run: >
+            snyk monitor
             --org=teamforeldrepenger
             --all-projects
             --configuration-attributes=usage:java-runtime

@@ -21,7 +21,7 @@ jobs:
         run: |
             echo "Building snyk-snapshot"
             mvn -B -s settings.xml versions:set -DnewVersion=snyk-snapshot
-        ##    mvn install -q -B -s settings.xml -DskipTests
+            mvn install -q -B -s settings.xml -DskipTests
 
       - name: Run Snyk
         uses: snyk/actions/maven@master

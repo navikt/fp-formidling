@@ -6,7 +6,7 @@ ENV TZ=Europe/Oslo
 RUN mkdir lib
 RUN mkdir conf
 
-ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 \
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75 \
     -Djava.security.egd=file:/dev/urandom \
     -Duser.timezone=Europe/Oslo \
     -Dlogback.configurationFile=conf/logback.xml"

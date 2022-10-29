@@ -18,10 +18,8 @@ import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 import io.swagger.v3.oas.integration.GenericOpenApiContextBuilder;
 import io.swagger.v3.oas.integration.OpenApiConfigurationException;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
-import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import no.nav.foreldrepenger.fpformidling.web.app.exceptions.ConstraintViolationMapper;
 import no.nav.foreldrepenger.fpformidling.web.app.exceptions.GeneralRestExceptionMapper;
@@ -44,48 +42,20 @@ public class ApplicationConfig extends Application {
     public ApplicationConfig() {
 
         try {
-            new GenericOpenApiContextBuilder<>()
-                    .openApiConfiguration(new SwaggerConfiguration()
-                            .openAPI(new OpenAPI()
-                                    .info(new Info()
-                                            .title("Foreldrepenger - Formidling")
+            new GenericOpenApiContextBuilder<>().openApiConfiguration(
+                    new SwaggerConfiguration().openAPI(
+                            new OpenAPI().info(
+                                    new Info().title("Foreldrepenger - Formidling")
                                             .version("1.0")
-                                            .description("REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede."))
-                                    .servers(List.of(new Server().url("/fpformidling")))
-                                    .components(new Components()
-                                            .securitySchemes(Map.of("openId", openId(),
-                                                                    /*"apiKey", apiKey(),*/
-                                                                    "bearerAuth", bearerAuth()))))
-                            .prettyPrint(true)
-                            .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
-                            .resourcePackages(Stream.of("no.nav")
-                                    .collect(Collectors.toSet())))
-                    .buildContext(true)
-                    .read();
+                                            .description(
+                                                    "REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede."))
+                            .servers(List.of(new Server().url("/fpformidling"))))
+                    .prettyPrint(true)
+                    .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
+                    .resourcePackages(Stream.of("no.nav").collect(Collectors.toSet()))).buildContext(true).read();
         } catch (OpenApiConfigurationException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
-    }
-
-    private SecurityScheme openId() {
-        return new SecurityScheme()
-                .type(SecurityScheme.Type.OPENIDCONNECT)
-                .openIdConnectUrl(ENV.getProperty("AZURE_APP_WELL_KNOWN_URL", ENV.getProperty("oidc.open.am.well.known.url")));
-    }
-
-    private SecurityScheme apiKey() {
-        return new SecurityScheme()
-                .type(SecurityScheme.Type.APIKEY)
-                .in(SecurityScheme.In.HEADER)
-                .name("Authorization"); // name of cookie, quereParam og header
-    }
-
-    private SecurityScheme bearerAuth() {
-        return new SecurityScheme()
-                .type(SecurityScheme.Type.HTTP)
-                .scheme("bearer")
-                .bearerFormat("JWT")
-                .name("bearerAuth");
     }
 
     @Override

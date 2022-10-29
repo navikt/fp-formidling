@@ -30,6 +30,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.flywaydb.core.Flyway;
@@ -169,7 +170,6 @@ public class JettyServer {
     private static WebAppContext createContext() throws IOException {
         var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
-        ctx.setBaseResource(createResourceCollection());
 
         // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra filsystem.
         String descriptor;
@@ -178,6 +178,7 @@ public class JettyServer {
         }
         ctx.setDescriptor(descriptor);
         ctx.setContextPath(CONTEXT_PATH);
+        ctx.setBaseResource(createResourceCollection());
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*.jar$|^.*felles-.*.jar$");
 
@@ -191,8 +192,9 @@ public class JettyServer {
         return ctx;
     }
 
-    private static Resource createResourceCollection() {
-        return Resource.newClassPathResource("/META-INF/resources/");
+    private static ResourceCollection createResourceCollection() {
+        return new ResourceCollection(
+                Resource.newClassPathResource("META-INF/resources/webjars/"));
     }
 
     private static SecurityHandler createSecurityHandler() {

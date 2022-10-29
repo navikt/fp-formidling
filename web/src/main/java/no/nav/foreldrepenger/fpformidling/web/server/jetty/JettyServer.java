@@ -194,8 +194,13 @@ public class JettyServer {
 
     private static ResourceCollection createResourceCollection() {
         return new ResourceCollection(
-                Resource.newClassPathResource("META-INF/resources/webjars/"));
+                Resource.newClassPathResource("META-INF/resources/webjars/"),
+                Resource.newClassPathResource("META-INF/resources/"),
+                Resource.newClassPathResource("/web")
+                );
     }
+
+
 
     private static SecurityHandler createSecurityHandler() {
         var securityHandler = new ConstraintSecurityHandler();

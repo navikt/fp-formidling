@@ -29,13 +29,10 @@ import no.nav.foreldrepenger.fpformidling.web.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.ForvaltningRestTjeneste;
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev.BrevRestTjeneste;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.TimingFilter;
-import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 
 @ApplicationPath(ApplicationConfig.API_URI)
 public class ApplicationConfig extends Application {
-
-    private static final Environment ENV = Environment.current();
 
     static final String API_URI = "/api";
 

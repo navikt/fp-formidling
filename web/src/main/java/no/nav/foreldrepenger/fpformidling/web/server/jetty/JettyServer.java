@@ -169,6 +169,7 @@ public class JettyServer {
     private static WebAppContext createContext() throws IOException {
         var ctx = new WebAppContext();
         ctx.setParentLoaderPriority(true);
+        ctx.setBaseResource(createResourceCollection());
 
         // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra filsystem.
         String descriptor;
@@ -188,6 +189,10 @@ public class JettyServer {
         updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
         return ctx;
+    }
+
+    private static Resource createResourceCollection() {
+        return Resource.newClassPathResource("/META-INF/resources/");
     }
 
     private static SecurityHandler createSecurityHandler() {

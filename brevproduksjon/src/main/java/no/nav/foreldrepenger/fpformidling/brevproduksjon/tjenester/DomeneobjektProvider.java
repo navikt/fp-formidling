@@ -68,7 +68,7 @@ public class DomeneobjektProvider {
         var fagsak = FagsakBackend.ny()
                 .medSaksnummer(fagsakDto.saksnummer())
                 .medBrukerRolle(fagsakDto.relasjonsRolleType())
-                .medAktørId(new AktørId(fagsakDto.aktoerId()))
+                .medAktørId(new AktørId(fagsakDto.aktørId()))
                 .medDekningsgrad(fagsakDto.dekningsgrad())
                 .build();
         behandling.leggtilFagsakBackend(fagsak);

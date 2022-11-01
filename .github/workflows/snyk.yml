@@ -34,7 +34,7 @@ jobs:
             mvn -B -s settings.xml versions:set -DnewVersion=snyk-snapshot
             mvn install -q -B -s settings.xml -DskipTests
 
-      - name: Run Snyk monitor
+      - name: Run Snyk to check Maven Dependencies for vulnerabilities
         run: >
             snyk monitor
             --org=teamforeldrepenger
@@ -44,3 +44,12 @@ jobs:
             -- -s settings.xml
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run Snyk to check Docker images for vulnerabilities
+        uses: snyk/actions/docker@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+            command: monitor
+            image: ghcr.io/${{ github.repository }}:latest
+            args: --org=teamforeldrepenger --severity-threshold=critical --project-name=${{ github.repository }}

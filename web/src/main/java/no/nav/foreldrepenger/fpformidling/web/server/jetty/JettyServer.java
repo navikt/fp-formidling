@@ -181,16 +181,16 @@ public class JettyServer {
         ctx.setContextPath(CONTEXT_PATH);
         ctx.setResourceBase(".");
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
-        //ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$");
+        //ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$"); // den scanner i getResourceBase()/WEB-INF/lib så finner aldri noe hos oss.
 
-        ctx.setAttribute(CONTAINER_JAR_PATTERN, "^.*/target/classes/|^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$|^.*/app\\.jar$");
+        //ctx.setAttribute(CONTAINER_JAR_PATTERN, "^.*/target/classes/|^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$|^.*/app\\.jar$");
 
         ctx.addEventListener(new org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener());
         ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());
 
         ctx.setSecurityHandler(createSecurityHandler());
 
-        //updateMetaData(ctx.getMetaData());
+        updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
         return ctx;
     }

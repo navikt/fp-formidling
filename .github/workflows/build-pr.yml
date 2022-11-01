@@ -69,3 +69,14 @@ jobs:
           DATASOURCE_HOST: localhost
           DATASOURCE_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
 
+      -   name: Login to GitHub Packages Docker Registry
+          uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # Use commit-sha1 instead of tag for security concerns
+          with:
+              registry: ghcr.io
+              username: ${{ github.actor }}
+              password: ${{ secrets.GITHUB_TOKEN }}
+
+      -   name: Bygg docker image
+          run: |
+              docker build --pull .
+

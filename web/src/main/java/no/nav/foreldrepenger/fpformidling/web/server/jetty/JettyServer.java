@@ -187,7 +187,7 @@ public class JettyServer {
 
         ctx.setSecurityHandler(createSecurityHandler());
 
-        //updateMetaData(ctx.getMetaData());
+        updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
         return ctx;
     }

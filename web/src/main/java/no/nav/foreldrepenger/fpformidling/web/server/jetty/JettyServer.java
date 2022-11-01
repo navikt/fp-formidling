@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 
+import static org.eclipse.jetty.webapp.MetaInfConfiguration.CONTAINER_JAR_PATTERN;
+import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -176,13 +179,11 @@ public class JettyServer {
         }
         ctx.setDescriptor(descriptor);
         ctx.setContextPath(CONTEXT_PATH);
-        ctx.setResourceBase("./");
+        ctx.setResourceBase(".");
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         //ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$");
 
-        ctx.setAttribute(
-                "org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
-                ".*/target/classes/|^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$");
+        ctx.setAttribute(CONTAINER_JAR_PATTERN, ".*/target/classes/|^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$|^app\\.jar$");
 
         ctx.addEventListener(new org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener());
         ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());

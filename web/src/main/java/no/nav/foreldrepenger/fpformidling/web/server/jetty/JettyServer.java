@@ -210,7 +210,7 @@ public class JettyServer {
         // Find path to class-files while starting jetty from development environment.
         var resources = getWebInfClasses().stream()
                 .map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
-                .peek(resource -> LOG.info("Resource location: {}", resource.getURI().getRawPath()))
+                .peek(resource -> LOG.info("Resource location: {}", resource.getURI().toString()))
                 .distinct()
                 .toList();
 

@@ -1,7 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 
-import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +27,6 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
@@ -45,6 +42,7 @@ import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceRole;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceUtil;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.isso.IssoApplication;
+import no.nav.vedtak.sikkerhet.ContextPathHolder;
 import no.nav.vedtak.sikkerhet.jaspic.OidcAuthModule;
 
 public class JettyServer {
@@ -80,7 +78,7 @@ public class JettyServer {
 
     JettyServer(int serverPort) {
         this.serverPort = serverPort;
-//        ContextPathHolder.instance(CONTEXT_PATH);
+        ContextPathHolder.instance(CONTEXT_PATH);
     }
 
     void bootStrap() throws Exception {
@@ -178,16 +176,20 @@ public class JettyServer {
         }
         ctx.setDescriptor(descriptor);
         ctx.setContextPath(CONTEXT_PATH);
-        ctx.setResourceBase(".");
+        ctx.setResourceBase("./");
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
-        ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*.jar$|^.*felles-.*.jar$");
+        //ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$");
+
+        ctx.setAttribute(
+                "org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",
+                ".*/target/classes/|^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$");
 
         ctx.addEventListener(new org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener());
         ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());
 
         ctx.setSecurityHandler(createSecurityHandler());
 
-        updateMetaData(ctx.getMetaData());
+        //updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
         return ctx;
     }

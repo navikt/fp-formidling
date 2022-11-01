@@ -178,7 +178,7 @@ public class JettyServer {
         }
         ctx.setDescriptor(descriptor);
         ctx.setContextPath(CONTEXT_PATH);
-        ctx.setBaseResource(createResourceCollection());
+        ctx.setResourceBase(".");
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*.jar$|^.*felles-.*.jar$");
 
@@ -187,20 +187,10 @@ public class JettyServer {
 
         ctx.setSecurityHandler(createSecurityHandler());
 
-        updateMetaData(ctx.getMetaData());
+        //updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
         return ctx;
     }
-
-    private static ResourceCollection createResourceCollection() {
-        return new ResourceCollection(
-                Resource.newClassPathResource("META-INF/resources/webjars/"),
-                Resource.newClassPathResource("META-INF/resources/"),
-                Resource.newClassPathResource("/web")
-                );
-    }
-
-
 
     private static SecurityHandler createSecurityHandler() {
         var securityHandler = new ConstraintSecurityHandler();

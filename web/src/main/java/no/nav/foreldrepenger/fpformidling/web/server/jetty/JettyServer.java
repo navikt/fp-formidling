@@ -29,8 +29,8 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.flywaydb.core.Flyway;
@@ -40,11 +40,11 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import no.nav.foreldrepenger.fpformidling.web.app.konfig.ApplicationConfig;
+import no.nav.foreldrepenger.fpformidling.web.app.konfig.InternalApplication;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceRole;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceUtil;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.isso.IssoApplication;
-import no.nav.vedtak.sikkerhet.ContextPathHolder;
 import no.nav.vedtak.sikkerhet.jaspic.OidcAuthModule;
 
 public class JettyServer {
@@ -80,7 +80,7 @@ public class JettyServer {
 
     JettyServer(int serverPort) {
         this.serverPort = serverPort;
-        ContextPathHolder.instance(CONTEXT_PATH);
+//        ContextPathHolder.instance(CONTEXT_PATH);
     }
 
     void bootStrap() throws Exception {
@@ -207,6 +207,7 @@ public class JettyServer {
         // Find path to class-files while starting jetty from development environment.
         var resources = getWebInfClasses().stream()
                 .map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
+                .peek(resource -> LOG.info("Resource location: {}", resource.getURI().getRawPath()))
                 .distinct()
                 .toList();
 
@@ -214,7 +215,7 @@ public class JettyServer {
     }
 
     private static List<Class<?>> getWebInfClasses() {
-        return List.of(ApplicationConfig.class, IssoApplication.class);
+        return List.of(ApplicationConfig.class, InternalApplication.class, IssoApplication.class);
     }
 
     private Integer getServerPort() {

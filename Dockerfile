@@ -7,13 +7,14 @@ RUN mkdir lib
 RUN mkdir conf
 
 ENV JAVA_OPTS="-XX:MaxRAMPercentage=75 \
+    -XX:+PrintCommandLineFlags \
     -Djava.security.egd=file:/dev/urandom \
     -Duser.timezone=Europe/Oslo \
     -Dlogback.configurationFile=conf/logback.xml"
 
 # Config
-COPY web/target/classes/logback*.xml conf/
+COPY web/target/classes/logback*.xml ./conf/
 
 # Application Container (Jetty)
-COPY web/target/lib/*.jar ./
+COPY web/target/lib/*.jar ./lib/
 COPY web/target/app.jar .

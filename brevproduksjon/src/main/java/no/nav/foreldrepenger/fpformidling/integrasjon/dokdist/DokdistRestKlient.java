@@ -25,6 +25,7 @@ import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 class DokdistRestKlient implements Dokdist {
 
     private static final Logger LOG = LoggerFactory.getLogger(DokdistRestKlient.class);
+    private static final String MOTTAKER_HAR_UKJENT_ADRESSE = "Mottaker har ukjent adresse";
 
     private final RestClient restClient;
     private final RestConfig restConfig;
@@ -47,7 +48,7 @@ class DokdistRestKlient implements Dokdist {
         var journalpostId = dto.journalpostId();
         var batchId = dto.batchId();
         LOG.info("Bestiller distribusjon av {} med batchId {}", journalpostId, batchId);
-        var response  = restClient.sendReturnUnhandled(request);
+        var response = restClient.sendReturnUnhandled(request);
 
         var statusCode = response.statusCode();
         if (statusCode == HttpURLConnection.HTTP_BAD_REQUEST) {
@@ -73,14 +74,13 @@ class DokdistRestKlient implements Dokdist {
         var message = DefaultJsonMapper.fromJson(response.body(), ErrorResponse.class).message();
         var statusCode = response.statusCode();
         var endpoint = response.uri();
-        LOG.warn("[HTTP {}] Brevdistribusjon feilet: Fikk svar '{}'.", statusCode, message);
-        if (message.contains("Mottaker har ukjent adresse")) {
-            LOG.warn("[HTTP {}] Brevdistribusjon feilet. Bruker mangler adresse. Sjekk med fag om GOSYS oppgaven er opprettet for {}", statusCode, journalpostId);
+        LOG.info("[HTTP {}] Brevdistribusjon feilet: Fikk svar '{}'.", statusCode, message);
+        if (message.contains(MOTTAKER_HAR_UKJENT_ADRESSE)) {
+            LOG.info("[HTTP {}] Brevdistribusjon feilet. Bruker mangler adresse. Oppretter en GOSYS oppgave for journalpost: {}", statusCode, journalpostId);
             return Resultat.MANGLER_ADRESSE;
         } else {
             throw new IntegrasjonException("FP-468815", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", statusCode, endpoint, message));
         }
     }
-
 
 }

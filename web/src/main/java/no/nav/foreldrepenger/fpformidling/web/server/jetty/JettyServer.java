@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 
 import static org.eclipse.jetty.webapp.MetaInfConfiguration.CONTAINER_JAR_PATTERN;
-import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,13 +12,8 @@ import javax.security.auth.message.config.AuthConfigFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.jetty.jaas.JAASLoginService;
 import org.eclipse.jetty.plus.jndi.EnvEntry;
-import org.eclipse.jetty.security.ConstraintSecurityHandler;
-import org.eclipse.jetty.security.DefaultIdentityService;
-import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.security.jaspi.DefaultAuthConfigFactory;
-import org.eclipse.jetty.security.jaspi.JaspiAuthenticatorFactory;
 import org.eclipse.jetty.security.jaspi.provider.JaspiAuthConfigProvider;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.ForwardedRequestCustomizer;
@@ -31,7 +25,6 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
@@ -39,12 +32,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import no.nav.foreldrepenger.fpformidling.web.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.fpformidling.web.app.konfig.InternalApplication;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceRole;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceUtil;
 import no.nav.foreldrepenger.konfig.Environment;
-import no.nav.vedtak.isso.IssoApplication;
 import no.nav.vedtak.sikkerhet.ContextPathHolder;
 import no.nav.vedtak.sikkerhet.jaspic.OidcAuthModule;
 
@@ -181,44 +171,14 @@ public class JettyServer {
         ctx.setContextPath(CONTEXT_PATH);
         ctx.setResourceBase(".");
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
-        //ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$"); // den scanner i getResourceBase()/WEB-INF/lib så finner aldri noe hos oss.
 
-        //ctx.setAttribute(CONTAINER_JAR_PATTERN, "^.*/target/classes/|^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$|^.*/app\\.jar$");
+        ctx.setAttribute(CONTAINER_JAR_PATTERN, "^.*/target/classes/|^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$|^.*/app\\.jar$");
 
         ctx.addEventListener(new org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener());
         ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());
 
-        ctx.setSecurityHandler(createSecurityHandler());
-
-        updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
         return ctx;
-    }
-
-    private static SecurityHandler createSecurityHandler() {
-        var securityHandler = new ConstraintSecurityHandler();
-        securityHandler.setAuthenticatorFactory(new JaspiAuthenticatorFactory());
-        var loginService = new JAASLoginService();
-        loginService.setName("jetty-login");
-        loginService.setLoginModuleName("jetty-login");
-        loginService.setIdentityService(new DefaultIdentityService());
-        securityHandler.setLoginService(loginService);
-        return securityHandler;
-    }
-
-    private static void updateMetaData(MetaData metaData) {
-        // Find path to class-files while starting jetty from development environment.
-        var resources = getWebInfClasses().stream()
-                .map(c -> Resource.newResource(c.getProtectionDomain().getCodeSource().getLocation()))
-                .peek(resource -> LOG.info("Resource location: {}", resource.getURI().toString()))
-                .distinct()
-                .toList();
-
-        metaData.setWebInfClassesResources(resources);
-    }
-
-    private static List<Class<?>> getWebInfClasses() {
-        return List.of(ApplicationConfig.class, InternalApplication.class, IssoApplication.class);
     }
 
     private Integer getServerPort() {

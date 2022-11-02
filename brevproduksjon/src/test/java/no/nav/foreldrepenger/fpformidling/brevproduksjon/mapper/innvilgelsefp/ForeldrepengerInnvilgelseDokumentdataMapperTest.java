@@ -34,9 +34,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.aksjonspunkt.Aksjonspunkt;
-import no.nav.foreldrepenger.fpformidling.aksjonspunkt.AksjonspunktDefinisjon;
-import no.nav.foreldrepenger.fpformidling.aksjonspunkt.AksjonspunktStatus;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
@@ -122,7 +119,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         lenient().when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat());
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
-        when(domeneobjektProvider.hentAksjonspunkter(any(Behandling.class))).thenReturn(opprettAksjonspunkter());
         when(domeneobjektProvider.utenMinsterett(any(Behandling.class))).thenReturn(true);
         when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
     }
@@ -399,13 +395,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         return new Saldoer(stønadskontoer, TAPTE_DAGER_FPFF);
     }
 
-    private List<Aksjonspunkt> opprettAksjonspunkter() {
-        return of(Aksjonspunkt.ny()
-                .medAksjonspunktDefinisjon(AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT)
-                .medAksjonspunktStatus(AksjonspunktStatus.UTFØRT)
-                .build());
-    }
-
     private Behandling opprettBehandling() {
         return Behandling.builder()
                 .medUuid(UUID.randomUUID())
@@ -417,6 +406,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                         .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
                         .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK))
                         .build())
+                .medHarAvklartAnnenForelderRett(true)
                 .build();
     }
 }

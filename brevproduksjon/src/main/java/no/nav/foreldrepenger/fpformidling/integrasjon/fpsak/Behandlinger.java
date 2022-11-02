@@ -1,10 +1,15 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.MottattDokumentDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.aksjonspunkt.AksjonspunktDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.vilkår.VilkårDto;
@@ -25,12 +30,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.saldo.Sald
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
 
 public interface Behandlinger {
 
@@ -199,16 +198,6 @@ public interface Behandlinger {
                 .findFirst()
                 .flatMap(link -> hentDtoFraLink(link, SaldoerDto.class))
                 .orElseThrow(() -> new IllegalStateException("Klarte ikke hente uttakssaldoer for behandling: " + hentBehandlingId(resourceLinker)));
-    }
-
-    default List<AksjonspunktDto> hentAksjonspunkter(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "aksjonspunkter".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, AksjonspunktDto[].class))
-                .map(Arrays::asList)
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente vilkår for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default MottattKlagedokumentDto hentKlagedokument(List<BehandlingResourceLink> resourceLinker) {

@@ -35,16 +35,12 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpformidling.aksjonspunkt.Aksjonspunkt;
-import no.nav.foreldrepenger.fpformidling.aksjonspunkt.AksjonspunktDefinisjon;
-import no.nav.foreldrepenger.fpformidling.aksjonspunkt.AksjonspunktStatus;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
@@ -97,7 +93,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         var uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttak(behandling);
         var søknad = hentNyesteSøknad(behandling);
-        var aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         var originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
                 .map(domeneobjektProvider::hentFamiliehendelse);
@@ -144,7 +139,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelseForeldrepenger))
                 .medForMyeUtbetalt(forMyeUtbetalt(utbetalingsperioder, behandling))
                 .medInntektMottattArbeidsgiver(erEndringMedEndretInntektsmelding(behandling))
-                .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(aksjonspunkter, uttakResultatPerioder))
+                .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(behandling, uttakResultatPerioder))
                 .medAnnenForelderHarRett(uttakResultatPerioder.annenForelderHarRett())
                 .medAnnenForelderRettEØS(uttakResultatPerioder.annenForelderRettEØS())
                 .medOppgittAnnenForelderRettEØS(uttakResultatPerioder.oppgittAnnenForelderRettEØS())
@@ -253,11 +248,9 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 familieHendelse.barnErFødt() && originalFamiliehendelse.map(fh -> !fh.barnErFødt()).orElse(false);
     }
 
-    private VurderingsKode utledAnnenForelderRettVurdertKode(List<Aksjonspunkt> aksjonspunkter, ForeldrepengerUttak foreldrepengerUttak) {
+    private VurderingsKode utledAnnenForelderRettVurdertKode(Behandling behandling, ForeldrepengerUttak foreldrepengerUttak) {
         VurderingsKode annenForelderHarRettVurdert;
-        if (aksjonspunkter.stream()
-                .filter(ap -> Objects.equals(ap.getAksjonspunktDefinisjon(), AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT))
-                .anyMatch(ap -> Objects.equals(ap.getAksjonspunktStatus(), AksjonspunktStatus.UTFØRT))) {
+        if (behandling.getHarAvklartAnnenForelderRett()) {
             annenForelderHarRettVurdert = foreldrepengerUttak.annenForelderHarRett() ? VurderingsKode.JA : VurderingsKode.NEI;
         } else {
             annenForelderHarRettVurdert = VurderingsKode.IKKE_VURDERT;

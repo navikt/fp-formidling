@@ -34,6 +34,7 @@ public class Behandling {
     private String endretAv;
     private Språkkode språkkode;
     private LocalDate originalVedtaksDato;
+    private boolean harAvklartAnnenForelderRett;
 
     private Behandling() {
     }
@@ -85,6 +86,10 @@ public class Behandling {
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public boolean getHarAvklartAnnenForelderRett() {
+        return harAvklartAnnenForelderRett;
     }
 
     public List<BehandlingResourceLink> getResourceLinker() {
@@ -286,6 +291,11 @@ public class Behandling {
 
         public Behandling.Builder medOriginalVedtaksDato(LocalDate originalVedtaksDato) {
             this.kladd.originalVedtaksDato = originalVedtaksDato;
+            return this;
+        }
+
+        public Behandling.Builder medHarAvklartAnnenForelderRett(boolean harAvklartAnnenForelderRett) {
+            this.kladd.harAvklartAnnenForelderRett = harAvklartAnnenForelderRett;
             return this;
         }
 

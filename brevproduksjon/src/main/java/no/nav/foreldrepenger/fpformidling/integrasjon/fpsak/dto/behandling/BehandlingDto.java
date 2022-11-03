@@ -33,6 +33,7 @@ public class BehandlingDto {
     private List<BehandlingResourceLinkDto> formidlingRessurser = new ArrayList<>();
     private List<BehandlingÅrsakDto> behandlingÅrsaker = new ArrayList<>();
     private LocalDate originalVedtaksDato;
+    private boolean harAvklartAnnenForelderRett;
 
     public BehandlingType getType() {
         return type;
@@ -160,6 +161,14 @@ public class BehandlingDto {
 
     public void setOriginalVedtaksDato(LocalDate originalVedtaksDato) {
         this.originalVedtaksDato = originalVedtaksDato;
+    }
+
+    public boolean getHarAvklartAnnenForelderRett() {
+        return harAvklartAnnenForelderRett;
+    }
+
+    public void setHarAvklartAnnenForelderRett(boolean harAvklartAnnenForelderRett) {
+        this.harAvklartAnnenForelderRett = harAvklartAnnenForelderRett;
     }
 
     public List<BehandlingResourceLinkDto> getFormidlingRessurser() {

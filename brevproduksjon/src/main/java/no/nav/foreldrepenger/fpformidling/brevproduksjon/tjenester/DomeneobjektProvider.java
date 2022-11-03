@@ -7,7 +7,6 @@ import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpformidling.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
@@ -176,10 +175,6 @@ public class DomeneobjektProvider {
 
     public Saldoer hentSaldoer(Behandling behandling) {
         return StønadskontoDtoMapper.mapSaldoerFraDto(behandlingRestKlient.hentSaldoer(behandling.getResourceLinker()));
-    }
-
-    public List<Aksjonspunkt> hentAksjonspunkter(Behandling behandling) {
-        return AksjonspunktDtoMapper.mapAksjonspunktFraDto(behandlingRestKlient.hentAksjonspunkter(behandling.getResourceLinker()));
     }
 
     public Optional<Verge> hentVerge(Behandling behandling) {

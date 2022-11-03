@@ -31,6 +31,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.flywaydb.core.Flyway;
@@ -179,9 +180,9 @@ public class JettyServer {
         }
         ctx.setDescriptor(descriptor);
         ctx.setContextPath(CONTEXT_PATH);
-        ctx.setResourceBase(".");
+        ctx.setBaseResource(createResourceCollection());
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
-        //ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$"); // den scanner i getResourceBase()/WEB-INF/lib så finner aldri noe hos oss.
+        ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$"); // den scanner i getResourceBase()/WEB-INF/lib så finner aldri noe hos oss.
 
         //ctx.setAttribute(CONTAINER_JAR_PATTERN, "^.*/target/classes/|^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$|^.*/app\\.jar$");
 
@@ -193,6 +194,12 @@ public class JettyServer {
         updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
         return ctx;
+    }
+
+    private static ResourceCollection createResourceCollection() {
+        return new ResourceCollection(
+                Resource.newClassPathResource("META-INF/resources/webjars/"),
+                Resource.newClassPathResource("/web"));
     }
 
     private static SecurityHandler createSecurityHandler() {

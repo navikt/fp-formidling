@@ -34,7 +34,7 @@ public class Behandling {
     private String endretAv;
     private Språkkode språkkode;
     private LocalDate originalVedtaksDato;
-    private Boolean harAvklartAnnenForelderRett;
+    private boolean harAvklartAnnenForelderRett;
 
     private Behandling() {
     }
@@ -88,8 +88,8 @@ public class Behandling {
         return uuid;
     }
 
-    public Boolean getHarAvklartAnnenForelderRett() {
-        return Objects.equals(harAvklartAnnenForelderRett, Boolean.TRUE);
+    public boolean getHarAvklartAnnenForelderRett() {
+        return harAvklartAnnenForelderRett;
     }
 
     public List<BehandlingResourceLink> getResourceLinker() {
@@ -294,7 +294,7 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder medHarAvklartAnnenForelderRett(Boolean harAvklartAnnenForelderRett) {
+        public Behandling.Builder medHarAvklartAnnenForelderRett(boolean harAvklartAnnenForelderRett) {
             this.kladd.harAvklartAnnenForelderRett = harAvklartAnnenForelderRett;
             return this;
         }

@@ -51,6 +51,7 @@ public final class BehandlingDtoMapper {
                 .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingÅrsaker()))
                 .medEndretAv(dto.getEndretAvBrukernavn())
                 .medSpråkkode(dto.getSprakkode())
+                .medHarAvklartAnnenForelderRett(dto.getHarAvklartAnnenForelderRett())
                 .medOriginalVedtaksDato(dto.getOriginalVedtaksDato());
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(BehandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));

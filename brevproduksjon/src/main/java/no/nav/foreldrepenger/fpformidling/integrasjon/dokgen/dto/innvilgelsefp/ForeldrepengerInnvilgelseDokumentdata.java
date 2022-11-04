@@ -79,6 +79,8 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean utenMinsterett;
     private boolean ønskerJustertVedFødsel;
 
+    private boolean graderingOgFulltUttakIAnnenAktivitet;
+
     public String getBehandlingType() {
         return behandlingType;
     }
@@ -317,6 +319,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return ønskerJustertVedFødsel;
     }
 
+    public boolean isGraderingOgFulltUttakIAnnenAktivitet() {
+        return graderingOgFulltUttakIAnnenAktivitet;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
@@ -383,6 +389,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 && Objects.equals(inkludereNyeOpplysningerUtbet, that.inkludereNyeOpplysningerUtbet)
                 && Objects.equals(utenMinsterett, that.utenMinsterett)
                 && Objects.equals(ønskerJustertVedFødsel, that.ønskerJustertVedFødsel)
+                && Objects.equals(graderingOgFulltUttakIAnnenAktivitet, that.graderingOgFulltUttakIAnnenAktivitet)
                 ;
 
     }
@@ -399,7 +406,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
                 dødsdato, kreverSammenhengendeUttak, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag,
                 harBruktBruttoBeregningsgrunnlag, beregningsgrunnlagregler, klagefristUker, lovhjemlerUttak, lovhjemlerBeregning,
                 inkludereUtbetaling, inkludereUtbetNårGradering, inkludereInnvilget, inkludereAvslag, inkludereNyeOpplysningerUtbet,
-                disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav, utenMinsterett, ønskerJustertVedFødsel);
+                disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav, utenMinsterett, ønskerJustertVedFødsel, graderingOgFulltUttakIAnnenAktivitet);
     }
 
     public static Builder ny() {
@@ -715,6 +722,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medØnskerJustertVedFødsel(boolean ønskerJustertVedFødsel) {
             this.kladd.ønskerJustertVedFødsel = ønskerJustertVedFødsel;
+            return this;
+        }
+
+        public Builder medGraderingOgFulltUttak(boolean graderingOgFulltUttakIAnnenAktivitet) {
+            this.kladd.graderingOgFulltUttakIAnnenAktivitet = graderingOgFulltUttakIAnnenAktivitet;
             return this;
         }
 

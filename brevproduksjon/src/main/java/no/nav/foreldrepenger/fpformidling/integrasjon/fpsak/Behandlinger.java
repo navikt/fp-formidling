@@ -12,7 +12,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.Behan
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.MottattDokumentDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.FamilieHendelseGrunnlagDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.vilkår.VilkårDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.fagsak.FagsakDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.inntektarbeidytelse.InntektsmeldingerDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.KlagebehandlingDto;
@@ -154,16 +153,6 @@ public interface Behandlinger {
                 .findFirst()
                 .flatMap(link -> hentDtoFraLink(link, InnsynsbehandlingDto.class))
                 .orElseThrow(() -> new IllegalStateException("Klarte ikke hente innsyn for behandling: " + hentBehandlingId(resourceLinker)));
-    }
-
-    default List<VilkårDto> hentVilkår(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "vilkar".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, VilkårDto[].class))
-                .map(Arrays::asList)
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente vilkår for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default Optional<UttakResultatPerioderDto> hentUttaksresultatFpHvisFinnes(List<BehandlingResourceLink> resourceLinker) {

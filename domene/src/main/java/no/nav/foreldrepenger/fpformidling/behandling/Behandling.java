@@ -10,6 +10,7 @@ import java.util.UUID;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
+import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
 
 public class Behandling {
     private Behandlingsresultat behandlingsresultat;
@@ -35,6 +36,7 @@ public class Behandling {
     private Språkkode språkkode;
     private LocalDate originalVedtaksDato;
     private boolean harAvklartAnnenForelderRett;
+    private List<Vilkår> vilkår;
 
     private Behandling() {
     }
@@ -90,6 +92,10 @@ public class Behandling {
 
     public boolean getHarAvklartAnnenForelderRett() {
         return harAvklartAnnenForelderRett;
+    }
+
+    public List<Vilkår> getVilkår() {
+        return vilkår;
     }
 
     public List<BehandlingResourceLink> getResourceLinker() {
@@ -296,6 +302,11 @@ public class Behandling {
 
         public Behandling.Builder medHarAvklartAnnenForelderRett(boolean harAvklartAnnenForelderRett) {
             this.kladd.harAvklartAnnenForelderRett = harAvklartAnnenForelderRett;
+            return this;
+        }
+
+        public Behandling.Builder medVilkår(List<Vilkår> vilkår) {
+            this.kladd.vilkår = vilkår;
             return this;
         }
 

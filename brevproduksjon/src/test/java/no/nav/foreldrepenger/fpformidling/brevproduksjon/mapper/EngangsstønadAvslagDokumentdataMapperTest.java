@@ -80,10 +80,9 @@ class EngangsstønadAvslagDokumentdataMapperTest {
 
         var avslagsfritekst = "Vi har ikke motatt informasjon som begrunner at du ikke har kunnet søke i tide. Derfor avslås saken.";
 
-        var avslagESFB = opprettBehandling(Avslagsårsak.SØKT_FOR_SENT, avslagsfritekst, fagsak );
+        var avslagESFB = opprettBehandlingBuilder(Avslagsårsak.SØKT_FOR_SENT, avslagsfritekst, fagsak ).medVilkår(vilkårFraBehandling).build();
 
         when(domeneobjektProvider.hentFamiliehendelse(avslagESFB)).thenReturn(familieHendelse);
-        when(domeneobjektProvider.hentVilkår(avslagESFB)).thenReturn(vilkårFraBehandling);
 
         //Act
         var avslagDokumentdata = engangsstønadAvslagDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, avslagESFB, false);
@@ -125,7 +124,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         assertThat(rolle).isEqualTo(RelasjonsRolleType.MEDMOR.getKode());
     }
 
-    private Behandling opprettBehandling(Avslagsårsak avslagsårsak, String avslagsfritekst, FagsakBackend fagsak) {
+    private Behandling.Builder opprettBehandlingBuilder(Avslagsårsak avslagsårsak, String avslagsfritekst, FagsakBackend fagsak) {
         var behandlingresultat = Behandlingsresultat.builder()
                 .medAvslagsårsak(avslagsårsak)
                 .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT);
@@ -141,8 +140,11 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         if (fagsak != null) {
             behandlingBuilder.medFagsakBackend(fagsak);
         }
+        return behandlingBuilder;
+    }
 
-        return behandlingBuilder.build();
+    private Behandling opprettBehandling(Avslagsårsak avslagsårsak, String avslagsfritekst, FagsakBackend fagsak) {
+        return opprettBehandlingBuilder(avslagsårsak, avslagsfritekst, fagsak).build();
     }
 
     private FagsakBackend opprettFagsak(RelasjonsRolleType relasjonsRolleType) {

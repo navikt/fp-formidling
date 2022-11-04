@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingStatus;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.vilkår.VilkårDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingDto {
@@ -34,6 +35,7 @@ public class BehandlingDto {
     private List<BehandlingÅrsakDto> behandlingÅrsaker = new ArrayList<>();
     private LocalDate originalVedtaksDato;
     private boolean harAvklartAnnenForelderRett;
+    private List<VilkårDto> vilkår;
 
     public BehandlingType getType() {
         return type;
@@ -169,6 +171,14 @@ public class BehandlingDto {
 
     public void setHarAvklartAnnenForelderRett(boolean harAvklartAnnenForelderRett) {
         this.harAvklartAnnenForelderRett = harAvklartAnnenForelderRett;
+    }
+
+    public List<VilkårDto> getVilkår() {
+        return vilkår;
+    }
+
+    public void setVilkår(List<VilkårDto> vilkår) {
+        this.vilkår = vilkår;
     }
 
     public List<BehandlingResourceLinkDto> getFormidlingRessurser() {

@@ -28,7 +28,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.SøknadDtoMap
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.TilkjentYtelseDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakSvpDtoMapper;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.VilkårDtoMapper;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
@@ -41,7 +40,6 @@ import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
 import no.nav.foreldrepenger.fpformidling.uttak.YtelseFordeling;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.verge.Verge;
-import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
 
 @ApplicationScoped
 public class DomeneobjektProvider {
@@ -145,10 +143,6 @@ public class DomeneobjektProvider {
 
     public Optional<Søknad> hentSøknad(Behandling behandling) {
         return behandlingRestKlient.hentSoknadHvisFinnes(behandling.getResourceLinker()).map(SøknadDtoMapper::mapSøknadFraDto);
-    }
-
-    public List<Vilkår> hentVilkår(Behandling behandling) {
-        return VilkårDtoMapper.mapVilkårFraDto(behandlingRestKlient.hentVilkår(behandling.getResourceLinker()));
     }
 
     public Optional<ForeldrepengerUttak> hentForeldrepengerUttakHvisFinnes(Behandling behandling) {

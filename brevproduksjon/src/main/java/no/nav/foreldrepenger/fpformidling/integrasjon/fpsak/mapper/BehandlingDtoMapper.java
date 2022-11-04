@@ -52,6 +52,7 @@ public final class BehandlingDtoMapper {
                 .medEndretAv(dto.getEndretAvBrukernavn())
                 .medSpråkkode(dto.getSprakkode())
                 .medHarAvklartAnnenForelderRett(dto.getHarAvklartAnnenForelderRett())
+                .medVilkår(VilkårDtoMapper.mapVilkårFraDto(dto.getVilkår()))
                 .medOriginalVedtaksDato(dto.getOriginalVedtaksDato());
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(BehandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));

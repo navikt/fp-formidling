@@ -33,6 +33,10 @@ public class Prosent {
         return verdi.compareTo(HUNDRE.verdi) > 0;
     }
 
+    public boolean erStørreEnnNull() {
+        return verdi.compareTo(NULL.verdi) > 0;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;

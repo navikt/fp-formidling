@@ -35,6 +35,7 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -55,7 +56,11 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -179,7 +184,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medInkludereAvslag(skalInkludereAvslag(utbetalingsperioder, konsekvensForInnvilgetYtelse))
                 .medInkludereNyeOpplysningerUtbet(skalInkludereNyeOpplysningerUtbet(behandling, utbetalingsperioder, dagsats))
                 .medUtenMinsterett(utenMinsterett)
-                .medØnskerJustertVedFødsel(ytelseFordeling.ønskerJustertVedFødsel());
+                .medØnskerJustertVedFødsel(ytelseFordeling.ønskerJustertVedFødsel())
+                .medGraderingOgFulltUttak(vurderOmGraderingOgFulltUttak(finnInnvilgedePerioderMedUtbetaling(utbetalingsperioder)));
 
         finnSisteDagAvSistePeriode(uttakResultatPerioder).ifPresent(dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
         finnStønadsperiodeFom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));
@@ -198,6 +204,35 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             dokumentdataBuilder.medAntallDødeBarn(0);
         }
         return dokumentdataBuilder.build();
+    }
+
+    private List<Utbetalingsperiode> finnInnvilgedePerioderMedUtbetaling(List<Utbetalingsperiode> utbetalingsperioder) {
+        return utbetalingsperioder.stream().filter(Utbetalingsperiode::isInnvilget).filter(up -> up.getPrioritertUtbetalingsgrad().erStørreEnnNull()).toList();
+    }
+
+    private boolean vurderOmGraderingOgFulltUttak(List<Utbetalingsperiode> innvilgedeUtbetalingsperioder) {
+        if (innvilgedeUtbetalingsperioder != null) {
+            var arbeidsforhold = innvilgedeUtbetalingsperioder.stream()
+                    .flatMap(utbetalingsperiode -> utbetalingsperiode.getArbeidsforholdsliste().stream())
+                    .toList();
+            var annenAktivitet = innvilgedeUtbetalingsperioder.stream()
+                    .flatMap(utbetalingsperiode -> utbetalingsperiode.getAnnenAktivitetsliste().stream())
+                    .toList();
+            var næring = innvilgedeUtbetalingsperioder.stream().map(Utbetalingsperiode::getNæring).toList();
+
+            var gradering = arbeidsforhold.stream().filter(Objects::nonNull).anyMatch(Arbeidsforhold::isGradering)
+                    || annenAktivitet.stream().filter(Objects::nonNull).anyMatch(AnnenAktivitet::isGradering)
+                    || næring.stream().filter(Objects::nonNull).anyMatch(Næring::isGradering);
+
+            if (gradering) {
+                var fullUtbetalingArbforhold=  arbeidsforhold.stream().filter(Objects::nonNull).anyMatch(af -> af.getUtbetalingsgrad().equals(Prosent.HUNDRE));
+                var fullUtbetAnnenAktivitet = annenAktivitet.stream().filter(Objects::nonNull).anyMatch(aa -> aa.getUtbetalingsgrad().equals(Prosent.HUNDRE));
+                var fullUtbetalingNæring = næring.stream().filter(Objects::nonNull).anyMatch(n -> n.getUtbetalingsgrad().equals(Prosent.HUNDRE));
+
+                return fullUtbetalingArbforhold || fullUtbetAnnenAktivitet ||fullUtbetalingNæring;
+            }
+        }
+        return false;
     }
 
     private void mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(List<Utbetalingsperiode> utbetalingsperioder, ForeldrepengerInnvilgelseDokumentdata.Builder builder) {

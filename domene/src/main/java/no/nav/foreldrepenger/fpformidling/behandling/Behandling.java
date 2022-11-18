@@ -37,6 +37,7 @@ public class Behandling {
     private LocalDate originalVedtaksDato;
     private boolean harAvklartAnnenForelderRett;
     private List<Vilkår> vilkår;
+    private UUID originalBehandlingUuid;
 
     private Behandling() {
     }
@@ -169,6 +170,10 @@ public class Behandling {
         return behandlendeEnhetId;
     }
 
+    public UUID getOriginalBehandlingUuid() {
+        return originalBehandlingUuid;
+    }
+
     public void leggtilFagsakBackend(FagsakBackend fagsak) {
         if (this.fagsakBackend == null) {
             this.fagsakBackend = fagsak;
@@ -297,6 +302,11 @@ public class Behandling {
 
         public Behandling.Builder medOriginalVedtaksDato(LocalDate originalVedtaksDato) {
             this.kladd.originalVedtaksDato = originalVedtaksDato;
+            return this;
+        }
+
+        public Behandling.Builder medOriginalBehandlingUuid(UUID uuid) {
+            this.kladd.originalBehandlingUuid = uuid;
             return this;
         }
 

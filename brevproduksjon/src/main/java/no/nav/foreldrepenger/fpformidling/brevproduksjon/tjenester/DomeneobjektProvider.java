@@ -88,7 +88,6 @@ public class DomeneobjektProvider {
 
     public Optional<Behandling> hentOriginalBehandlingHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentOriginalBehandling(behandling.getResourceLinker())
-                .map(dto -> behandlingRestKlient.hentBehandling(dto.getUuid()))
                 .map(BehandlingDtoMapper::mapBehandlingFraDto);
     }
 

@@ -45,6 +45,7 @@ import javax.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -60,7 +61,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -121,6 +121,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var dagsats = finnDagsats(tilkjentYtelseForeldrepenger);
         var antallBarn = familieHendelse.antallBarn();
         var antallDødeBarn = familieHendelse.antallDødeBarn();
+        var innvilgedeUtbetalingsperioder = finnInnvilgedePerioderMedUtbetaling(utbetalingsperioder);
 
         var utenAktKrav = 0;
         var medAktKrav = 0;
@@ -185,7 +186,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medInkludereNyeOpplysningerUtbet(skalInkludereNyeOpplysningerUtbet(behandling, utbetalingsperioder, dagsats))
                 .medUtenMinsterett(utenMinsterett)
                 .medØnskerJustertVedFødsel(ytelseFordeling.ønskerJustertVedFødsel())
-                .medGraderingOgFulltUttak(vurderOmGraderingOgFulltUttak(finnInnvilgedePerioderMedUtbetaling(utbetalingsperioder)));
+                .medGraderingOgFulltUttak(vurderOmGraderingOgFulltUttakISammePeriode(beregningsgrunnlag, finnAntallArbeidsgivere(tilkjentYtelseForeldrepenger), innvilgedeUtbetalingsperioder));
 
         finnSisteDagAvSistePeriode(uttakResultatPerioder).ifPresent(dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
         finnStønadsperiodeFom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));
@@ -210,29 +211,35 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         return utbetalingsperioder.stream().filter(Utbetalingsperiode::isInnvilget).filter(up -> up.getPrioritertUtbetalingsgrad().erStørreEnnNull()).toList();
     }
 
-    private boolean vurderOmGraderingOgFulltUttak(List<Utbetalingsperiode> innvilgedeUtbetalingsperioder) {
-        if (innvilgedeUtbetalingsperioder != null) {
-            var arbeidsforhold = innvilgedeUtbetalingsperioder.stream()
-                    .flatMap(utbetalingsperiode -> utbetalingsperiode.getArbeidsforholdsliste().stream())
-                    .toList();
-            var annenAktivitet = innvilgedeUtbetalingsperioder.stream()
-                    .flatMap(utbetalingsperiode -> utbetalingsperiode.getAnnenAktivitetsliste().stream())
-                    .toList();
-            var næring = innvilgedeUtbetalingsperioder.stream().map(Utbetalingsperiode::getNæring).toList();
-
-            var gradering = arbeidsforhold.stream().filter(Objects::nonNull).anyMatch(Arbeidsforhold::isGradering)
-                    || annenAktivitet.stream().filter(Objects::nonNull).anyMatch(AnnenAktivitet::isGradering)
-                    || næring.stream().filter(Objects::nonNull).anyMatch(Næring::isGradering);
-
-            if (gradering) {
-                var fullUtbetalingArbforhold=  arbeidsforhold.stream().filter(Objects::nonNull).anyMatch(af -> af.getUtbetalingsgrad().equals(Prosent.HUNDRE));
-                var fullUtbetAnnenAktivitet = annenAktivitet.stream().filter(Objects::nonNull).anyMatch(aa -> aa.getUtbetalingsgrad().equals(Prosent.HUNDRE));
-                var fullUtbetalingNæring = næring.stream().filter(Objects::nonNull).anyMatch(n -> n.getUtbetalingsgrad().equals(Prosent.HUNDRE));
-
-                return fullUtbetalingArbforhold || fullUtbetAnnenAktivitet ||fullUtbetalingNæring;
-            }
+    private boolean vurderOmGraderingOgFulltUttakISammePeriode(Beregningsgrunnlag beregningsgrunnlag, int antallArbeidsgivere, List<Utbetalingsperiode> innvilgedeUtbetalingsperioder) {
+        if (innvilgedeUtbetalingsperioder != null && (harFlereAktivitetStatuser(beregningsgrunnlag) || antallArbeidsgivere > 1)) {
+            //Sjekk om gradering og fullt uttak i samme periode
+            return innvilgedeUtbetalingsperioder.stream()
+                    .filter(this::periodeHarGradering)
+                    .anyMatch(this::harPeriodeOgsåFulltUttak);
         }
         return false;
+    }
+
+    private boolean harPeriodeOgsåFulltUttak(Utbetalingsperiode periodeMedGradering) {
+        var fulltUttakArbforhold = periodeMedGradering.getArbeidsforholdsliste().stream()
+                .filter(Objects::nonNull)
+                .anyMatch(af -> af.getUtbetalingsgrad().equals(Prosent.HUNDRE));
+        var fulltUttakAktvitet = periodeMedGradering.getAnnenAktivitetsliste().stream()
+                .filter(Objects::nonNull)
+                .anyMatch(aa -> aa.getUtbetalingsgrad().equals(Prosent.HUNDRE));
+        var fulltUttakNæring = periodeMedGradering.getNæring() != null
+                && periodeMedGradering.getNæring().getUtbetalingsgrad().equals(Prosent.HUNDRE);
+
+        return fulltUttakArbforhold || fulltUttakAktvitet || fulltUttakNæring;
+    }
+
+    private boolean periodeHarGradering(Utbetalingsperiode periode) {
+        return periode.getArbeidsforholdsliste().stream().anyMatch(Arbeidsforhold::isGradering) ||periode.getAnnenAktivitetsliste().stream().anyMatch(AnnenAktivitet::isGradering) || periode.getNæring().isGradering();
+    }
+
+    private boolean harFlereAktivitetStatuser(Beregningsgrunnlag beregningsgrunnlag) {
+        return beregningsgrunnlag.getAktivitetStatuser().size() > 1 || beregningsgrunnlag.getAktivitetStatuser().stream().anyMatch(as -> AktivitetStatus.erKombinertStatus(as.aktivitetStatus().getKode()));
     }
 
     private void mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(List<Utbetalingsperiode> utbetalingsperioder, ForeldrepengerInnvilgelseDokumentdata.Builder builder) {

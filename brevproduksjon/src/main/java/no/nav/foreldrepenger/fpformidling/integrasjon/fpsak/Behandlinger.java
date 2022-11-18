@@ -61,14 +61,6 @@ public interface Behandlinger {
 
     BehandlingDto hentBehandling(UUID behandlingId);
 
-    default Optional<BehandlingDto> hentOriginalBehandling(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "original-behandling".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, BehandlingDto.class));
-    }
-
     default Optional<VergeDto> hentVergeHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker
                 .stream()

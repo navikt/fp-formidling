@@ -36,6 +36,7 @@ public class BehandlingDto {
     private LocalDate originalVedtaksDato;
     private boolean harAvklartAnnenForelderRett;
     private List<VilkårDto> vilkår;
+    private UUID originalBehandlingUuid;
 
     public BehandlingType getType() {
         return type;
@@ -193,6 +194,14 @@ public class BehandlingDto {
     }
     public void setBehandlendeEnhetId(String behandlendeEnhetId) {
         this.behandlendeEnhetId = behandlendeEnhetId;
+    }
+
+    public UUID getOriginalBehandlingUuid() {
+        return originalBehandlingUuid;
+    }
+
+    public void setOriginalBehandlingUuid(UUID originalBehandlingUuid) {
+        this.originalBehandlingUuid = originalBehandlingUuid;
     }
 
     @Override

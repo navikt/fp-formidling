@@ -87,8 +87,8 @@ public class DomeneobjektProvider {
     }
 
     public Optional<Behandling> hentOriginalBehandlingHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentOriginalBehandling(behandling.getResourceLinker())
-                .map(BehandlingDtoMapper::mapBehandlingFraDto);
+        return Optional.ofNullable(behandling.getOriginalBehandlingUuid())
+                .map(this::hentBehandling);
     }
 
     public TilkjentYtelseEngangsstønad hentTilkjentYtelseEngangsstønad(Behandling behandling) {

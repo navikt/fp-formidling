@@ -36,15 +36,6 @@ public interface Behandlinger {
 
     void kvitterDokument(DokumentProdusertDto kvittering);
 
-    default BeregningsgrunnlagDto hentBeregningsgrunnlagV2(UUID behandlingUuid) {
-        return hentBeregningsgrunnlagV2HvisFinnes(behandlingUuid)
-                .orElseThrow(
-                        () -> new IllegalStateException("Klarte ikke hente beregningsgrunnlag for behandling: " + behandlingUuid ));
-    }
-
-    Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagV2HvisFinnes(UUID behandlingUuid);
-
-    // TODO: ta i bruk denne framfor hentBeregningsgrunnlagV2HvisFinnes når fpsak har prodsatt lenke beregningsgrunnlag
     default BeregningsgrunnlagDto hentBeregningsgrunnlag(List<BehandlingResourceLink> resourceLinker) {
         return hentFormidlingBeregningsgrunnlagHvisFinnes(resourceLinker)
                 .orElseThrow(

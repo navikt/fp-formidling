@@ -12,7 +12,6 @@ import no.nav.foreldrepenger.fpformidling.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
-import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.vedtak.felles.integrasjon.rest.FpApplication;
 import no.nav.vedtak.felles.integrasjon.rest.RestClient;
 import no.nav.vedtak.felles.integrasjon.rest.RestClientConfig;
@@ -62,14 +61,6 @@ public class BehandlingRestKlient implements Behandlinger {
             return restClient.sendReturnOptional(request, clazz);
         }
         return restClient.sendReturnOptional(saksnummerRequest(uri, link.getRequestPayload()), clazz);
-    }
-
-    @Override
-    public Optional<BeregningsgrunnlagDto> hentBeregningsgrunnlagV2HvisFinnes(UUID behandlingUuid) {
-        var uriBuilder = UriBuilder.fromUri(restConfig.fpContextPath())
-                .path(FPSAK_API).path("/formidling/beregningsgrunnlag/v2")
-                .queryParam("uuid", behandlingUuid.toString());
-        return restClient.sendReturnOptional(RestRequest.newGET(uriBuilder.build(), restConfig), BeregningsgrunnlagDto.class);
     }
 
     private RestRequest saksnummerRequest(URI uri, BehandlingRelLinkPayload payload) {

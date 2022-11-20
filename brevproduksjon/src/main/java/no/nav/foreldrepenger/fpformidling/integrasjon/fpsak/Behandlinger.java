@@ -20,9 +20,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.personopplysning
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.soknad.SoknadBackendDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelseMedUttaksplanDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.KreverSammenhengendeUttakDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UtenMinsterettDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.YtelseFordelingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.saldo.SaldoerDto;
@@ -197,24 +195,6 @@ public interface Behandlinger {
                 .filter(dto -> "sendt-varsel-om-revurdering".equals(dto.getRel()))
                 .findFirst()
                 .flatMap(link -> hentDtoFraLink(link, Boolean.class));
-    }
-
-    default KreverSammenhengendeUttakDto kreverSammenhengendeUttak(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "krever-sammenhengende-uttak".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, KreverSammenhengendeUttakDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente om behandlingen krever sammenhengende uttak: " + hentBehandlingId(resourceLinker)));
-    }
-
-    default UtenMinsterettDto utenMinsterett(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "uten-minsterett".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, UtenMinsterettDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente om behandlingen er uten minsteretter: " + hentBehandlingId(resourceLinker)));
     }
 
     default YtelseFordelingDto ytelseFordeling(List<BehandlingResourceLink> resourceLinker) {

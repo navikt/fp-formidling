@@ -8,6 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
+import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
@@ -181,11 +182,11 @@ public class DomeneobjektProvider {
     }
 
     public boolean kreverSammenhengendeUttak(Behandling behandling) {
-        return behandlingRestKlient.kreverSammenhengendeUttak(behandling.getResourceLinker()).kreverSammenhengendeUttak();
+        return Optional.ofNullable(behandling.getBehandlingsresultat()).map(Behandlingsresultat::kreverSammenhengendeUttak).orElse(true);
     }
 
     public boolean utenMinsterett(Behandling behandling) {
-        return behandlingRestKlient.utenMinsterett(behandling.getResourceLinker()).utenMinsterett();
+        return Optional.ofNullable(behandling.getBehandlingsresultat()).map(Behandlingsresultat::utenMinsterett).orElse(true);
     }
 
     public YtelseFordeling ytelseFordeling(Behandling behandling) {

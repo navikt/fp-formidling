@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -96,10 +97,15 @@ public class BehandlingsresultatDto {
     }
 
     public LocalDate getSkjæringstidspunkt() {
-        if (skjæringstidspunkt!=null) {
-            return skjæringstidspunkt.dato();
-        }
-        return null;
+        return Optional.ofNullable(skjæringstidspunkt).map(SkjæringstidspunktDto::dato).orElse(null);
+    }
+
+    public boolean kreverSammenhengendeUttak() {
+        return Optional.ofNullable(skjæringstidspunkt).map(SkjæringstidspunktDto::kreverSammenhengendeUttak).orElse(true);
+    }
+
+    public boolean utenMinsterett() {
+        return Optional.ofNullable(skjæringstidspunkt).map(SkjæringstidspunktDto::utenMinsterett).orElse(true);
     }
 
     public void setSkjæringstidspunkt(SkjæringstidspunktDto skjæringstidspunkt) {

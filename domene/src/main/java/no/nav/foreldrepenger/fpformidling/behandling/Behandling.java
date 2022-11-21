@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
@@ -168,6 +169,14 @@ public class Behandling {
 
     public String getBehandlendeEnhetId() {
         return behandlendeEnhetId;
+    }
+
+    public boolean kreverSammenhengendeUttak() {
+        return Optional.ofNullable(getBehandlingsresultat()).map(Behandlingsresultat::kreverSammenhengendeUttak).orElse(true);
+    }
+
+    public boolean utenMinsterett() {
+        return Optional.ofNullable(getBehandlingsresultat()).map(Behandlingsresultat::utenMinsterett).orElse(true);
     }
 
     public UUID getOriginalBehandlingUuid() {

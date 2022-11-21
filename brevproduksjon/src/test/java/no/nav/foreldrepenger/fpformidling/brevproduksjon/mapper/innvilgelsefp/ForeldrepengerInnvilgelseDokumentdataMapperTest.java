@@ -119,7 +119,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         lenient().when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat());
         when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
-        when(domeneobjektProvider.utenMinsterett(any(Behandling.class))).thenReturn(true);
         when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
     }
 

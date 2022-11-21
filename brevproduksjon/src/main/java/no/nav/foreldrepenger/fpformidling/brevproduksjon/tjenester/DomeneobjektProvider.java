@@ -8,7 +8,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver.ArbeidsgiverTjeneste;
@@ -179,14 +178,6 @@ public class DomeneobjektProvider {
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {
         return MottattDokumentDtoMapper.mapMottattedokumenterFraDto(
                 behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
-    }
-
-    public boolean kreverSammenhengendeUttak(Behandling behandling) {
-        return Optional.ofNullable(behandling.getBehandlingsresultat()).map(Behandlingsresultat::kreverSammenhengendeUttak).orElse(true);
-    }
-
-    public boolean utenMinsterett(Behandling behandling) {
-        return Optional.ofNullable(behandling.getBehandlingsresultat()).map(Behandlingsresultat::utenMinsterett).orElse(true);
     }
 
     public YtelseFordeling ytelseFordeling(Behandling behandling) {

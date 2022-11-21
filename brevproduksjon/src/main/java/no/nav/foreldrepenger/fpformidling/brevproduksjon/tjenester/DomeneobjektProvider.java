@@ -73,12 +73,12 @@ public class DomeneobjektProvider {
     }
 
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        return BeregningsgrunnlagDtoMapper.mapFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinker()),
+        return BeregningsgrunnlagDtoMapper.mapFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getFormidlingRessurser()),
                 arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getResourceLinker())
+        return behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getFormidlingRessurser())
                 .map(dto -> BeregningsgrunnlagDtoMapper.mapFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 

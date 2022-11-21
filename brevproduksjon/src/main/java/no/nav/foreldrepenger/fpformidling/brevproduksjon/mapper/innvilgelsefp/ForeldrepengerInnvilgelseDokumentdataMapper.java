@@ -224,18 +224,18 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     private boolean harPeriodeOgsåFulltUttak(Utbetalingsperiode periodeMedGradering) {
         var fulltUttakArbforhold = periodeMedGradering.getArbeidsforholdsliste().stream()
                 .filter(Objects::nonNull)
-                .anyMatch(af -> af.getUtbetalingsgrad().equals(Prosent.HUNDRE));
+                .anyMatch(af -> Prosent.HUNDRE.equals(af.getUtbetalingsgrad()));
         var fulltUttakAktvitet = periodeMedGradering.getAnnenAktivitetsliste().stream()
                 .filter(Objects::nonNull)
-                .anyMatch(aa -> aa.getUtbetalingsgrad().equals(Prosent.HUNDRE));
+                .anyMatch(aa -> Prosent.HUNDRE.equals(aa.getUtbetalingsgrad()));
         var fulltUttakNæring = periodeMedGradering.getNæring() != null
-                && periodeMedGradering.getNæring().getUtbetalingsgrad().equals(Prosent.HUNDRE);
+                && Prosent.HUNDRE.equals(periodeMedGradering.getNæring().getUtbetalingsgrad());
 
         return fulltUttakArbforhold || fulltUttakAktvitet || fulltUttakNæring;
     }
 
     private boolean periodeHarGradering(Utbetalingsperiode periode) {
-        return periode.getArbeidsforholdsliste().stream().anyMatch(Arbeidsforhold::isGradering) ||periode.getAnnenAktivitetsliste().stream().anyMatch(AnnenAktivitet::isGradering) || periode.getNæring().isGradering();
+        return periode.getArbeidsforholdsliste().stream().anyMatch(Arbeidsforhold::isGradering) ||periode.getAnnenAktivitetsliste().stream().anyMatch(AnnenAktivitet::isGradering) || (periode.getNæring() != null && periode.getNæring().isGradering());
     }
 
     private boolean harFlereAktivitetStatuser(Beregningsgrunnlag beregningsgrunnlag) {

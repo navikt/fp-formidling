@@ -55,13 +55,6 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
 
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
 
-        //Om behandlingen krever sammenhengende uttak er nødvendig å vite på foreldrepenger, men brukes ikke for svp eller es
-        var kreverSammenhengendeUttak = true;
-
-        if (FagsakYtelseType.FORELDREPENGER.equals(hendelse.getYtelseType())) {
-            kreverSammenhengendeUttak = domeneobjektProvider.kreverSammenhengendeUttak(behandling);
-        }
-
         var advarselKode = utledAdvarselkode(hendelse);
         var dokumentdataBuilder = VarselOmRevurderingDokumentdata.ny()
                 .medFelles(fellesBuilder.build())
@@ -70,7 +63,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
                 .medAntallBarn(familieHendelse.antallBarn())
                 .medAdvarselKode(advarselKode)
                 .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode))
-                .medKreverSammenhengendeUttak(kreverSammenhengendeUttak);
+                .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttak());
 
         return dokumentdataBuilder.build();
     }

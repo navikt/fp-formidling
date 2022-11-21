@@ -104,7 +104,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         var saldoer = domeneobjektProvider.hentSaldoer(behandling);
         var språkkode = behandling.getSpråkkode();
-        var utenMinsterett = domeneobjektProvider.utenMinsterett(behandling);
+        var utenMinsterett = behandling.utenMinsterett();
         var ytelseFordeling = domeneobjektProvider.ytelseFordeling(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, dokumentHendelse, behandling, erUtkast);
@@ -171,7 +171,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medForeldrepengeperiodenUtvidetUker(finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer))
                 .medAntallBarn(antallBarn)
                 .medPrematurDager(finnPrematurDagerHvisFinnes(saldoer))
-                .medKreverSammenhengendeUttak(domeneobjektProvider.kreverSammenhengendeUttak(behandling))
+                .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttak())
                 .medUtbetalingsperioder(utbetalingsperioder)
 
                 .medKlagefristUker(brevParametere.getKlagefristUker())

@@ -18,7 +18,9 @@ public class Behandlingsresultat {
     private String avslagarsakFritekst;
     private List<KonsekvensForYtelsen> konsekvenserForYtelsen; //Kode BehandlingsresultatKonsekvensForYtelsen
     private Boolean erRevurderingMedUendretUtfall;
-    private Optional<LocalDate> skjæringstidspunkt;
+    private LocalDate skjæringstidspunkt;
+    private boolean kreverSammenhengendeUttak;
+    private boolean utenMinsterett;
 
     //Objekter
     private String beregning; //BeregningResultat
@@ -35,6 +37,8 @@ public class Behandlingsresultat {
         konsekvenserForYtelsen = builder.konsekvenserForYtelsen;
         erRevurderingMedUendretUtfall = builder.erRevurderingMedUendretUtfall;
         skjæringstidspunkt = builder.skjæringstidspunkt;
+        kreverSammenhengendeUttak = builder.kreverSammenhengendeUttak;
+        utenMinsterett = builder.utenMinsterett;
         beregning = builder.beregning;
         periode = builder.periode;
         behandling = builder.behandling;
@@ -89,7 +93,15 @@ public class Behandlingsresultat {
     }
 
     public Optional<LocalDate> getSkjæringstidspunkt() {
-        return skjæringstidspunkt;
+        return Optional.ofNullable(skjæringstidspunkt);
+    }
+
+    public boolean kreverSammenhengendeUttak() {
+        return kreverSammenhengendeUttak;
+    }
+
+    public boolean utenMinsterett() {
+        return utenMinsterett;
     }
 
     public boolean isBehandlingsresultatAvslåttOrOpphørt() {
@@ -146,7 +158,9 @@ public class Behandlingsresultat {
         private String avslagarsakFritekst;
         private List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>();
         private Boolean erRevurderingMedUendretUtfall;
-        private Optional<LocalDate> skjæringstidspunkt;
+        private LocalDate skjæringstidspunkt;
+        private boolean kreverSammenhengendeUttak = true;
+        private boolean utenMinsterett = true;
         private String beregning;
         private String periode;
         private Behandling behandling;
@@ -194,8 +208,18 @@ public class Behandlingsresultat {
             return this;
         }
 
-        public Builder medSkjæringstidspunkt(Optional<LocalDate> skjæringstidspunkt) {
+        public Builder medSkjæringstidspunkt(LocalDate skjæringstidspunkt) {
             this.skjæringstidspunkt = skjæringstidspunkt;
+            return this;
+        }
+
+        public Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
+            this.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
+            return this;
+        }
+
+        public Builder medUtenMinsterett(boolean utenMinsterett) {
+            this.utenMinsterett = utenMinsterett;
             return this;
         }
 

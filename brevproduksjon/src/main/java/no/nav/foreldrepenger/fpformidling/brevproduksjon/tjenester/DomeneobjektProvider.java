@@ -73,12 +73,12 @@ public class DomeneobjektProvider {
     }
 
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        return BeregningsgrunnlagDtoMapper.mapFraDto(behandlingRestKlient.hentBeregningsgrunnlagV2(behandling.getUuid()),
+        return BeregningsgrunnlagDtoMapper.mapFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getResourceLinker()),
                 arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentBeregningsgrunnlagV2HvisFinnes(behandling.getUuid())
+        return behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getResourceLinker())
                 .map(dto -> BeregningsgrunnlagDtoMapper.mapFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
@@ -178,14 +178,6 @@ public class DomeneobjektProvider {
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {
         return MottattDokumentDtoMapper.mapMottattedokumenterFraDto(
                 behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
-    }
-
-    public boolean kreverSammenhengendeUttak(Behandling behandling) {
-        return behandlingRestKlient.kreverSammenhengendeUttak(behandling.getResourceLinker()).kreverSammenhengendeUttak();
-    }
-
-    public boolean utenMinsterett(Behandling behandling) {
-        return behandlingRestKlient.utenMinsterett(behandling.getResourceLinker()).utenMinsterett();
     }
 
     public YtelseFordeling ytelseFordeling(Behandling behandling) {

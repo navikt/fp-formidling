@@ -68,7 +68,6 @@ public class VarselOmRevurderingDokumentdataMapperTest {
 
         var familieHendelse = opprettFamiliehendelse();
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(familieHendelse);
-        when(domeneobjektProvider.kreverSammenhengendeUttak(any())).thenReturn(true);
     }
 
     @Test

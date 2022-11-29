@@ -146,6 +146,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
                 .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
                 .medBehandlingsresultat(Behandlingsresultat.builder()
                         .medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+                .medKreverSammenhengendeUttak(true)
                 .build();
     }
 

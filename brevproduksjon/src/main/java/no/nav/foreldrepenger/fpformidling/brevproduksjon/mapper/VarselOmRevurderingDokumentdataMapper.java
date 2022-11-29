@@ -63,7 +63,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
                 .medAntallBarn(familieHendelse.antallBarn())
                 .medAdvarselKode(advarselKode)
                 .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode))
-                .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttak());
+                .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen());
 
         return dokumentdataBuilder.build();
     }

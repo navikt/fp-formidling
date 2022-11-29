@@ -37,6 +37,7 @@ public class BehandlingDto {
     private boolean harAvklartAnnenForelderRett;
     private List<VilkårDto> vilkår;
     private UUID originalBehandlingUuid;
+    private boolean kreverSammenhengendeUttak = false;
 
     public BehandlingType getType() {
         return type;
@@ -174,6 +175,13 @@ public class BehandlingDto {
         this.harAvklartAnnenForelderRett = harAvklartAnnenForelderRett;
     }
 
+    public boolean getKreverSammenhengendeUttak() {
+        return this.kreverSammenhengendeUttak;
+    }
+
+    public void setKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
+        this.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
+    }
     public List<VilkårDto> getVilkår() {
         return vilkår;
     }
@@ -223,6 +231,7 @@ public class BehandlingDto {
                 ", links=" + links +
                 ", behandlingÅrsaker=" + behandlingÅrsaker + '\'' +
                 ", originalVedtaksDato=" + originalVedtaksDato +
+                ", kreverSammenhengendeUttak =" + kreverSammenhengendeUttak +
                 '}';
     }
 }

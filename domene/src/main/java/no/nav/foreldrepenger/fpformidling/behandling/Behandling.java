@@ -40,6 +40,8 @@ public class Behandling {
     private List<Vilkår> vilkår;
     private UUID originalBehandlingUuid;
 
+    private boolean kreverSammenhengendeUttak;
+
     private Behandling() {
     }
 
@@ -144,6 +146,10 @@ public class Behandling {
         return fagsakBackend;
     }
 
+    public boolean kreverSammenhengendeUttakFraBehandlingen() {
+        return kreverSammenhengendeUttak;
+    }
+
     public boolean erSaksbehandlingAvsluttet() {
         if (behandlingsresultat == null) {
             return false;
@@ -169,10 +175,6 @@ public class Behandling {
 
     public String getBehandlendeEnhetId() {
         return behandlendeEnhetId;
-    }
-
-    public boolean kreverSammenhengendeUttak() {
-        return Optional.ofNullable(getBehandlingsresultat()).map(Behandlingsresultat::kreverSammenhengendeUttak).orElse(true);
     }
 
     public boolean utenMinsterett() {
@@ -326,6 +328,11 @@ public class Behandling {
 
         public Behandling.Builder medVilkår(List<Vilkår> vilkår) {
             this.kladd.vilkår = vilkår;
+            return this;
+        }
+
+        public Behandling.Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
+            this.kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
             return this;
         }
 

@@ -100,10 +100,6 @@ public class BehandlingsresultatDto {
         return Optional.ofNullable(skjæringstidspunkt).map(SkjæringstidspunktDto::dato).orElse(null);
     }
 
-    public boolean kreverSammenhengendeUttak() {
-        return Optional.ofNullable(skjæringstidspunkt).map(SkjæringstidspunktDto::kreverSammenhengendeUttak).orElse(true);
-    }
-
     public boolean utenMinsterett() {
         return Optional.ofNullable(skjæringstidspunkt).map(SkjæringstidspunktDto::utenMinsterett).orElse(true);
     }

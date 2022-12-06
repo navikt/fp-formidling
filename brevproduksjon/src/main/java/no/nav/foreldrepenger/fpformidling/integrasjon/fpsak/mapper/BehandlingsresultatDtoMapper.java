@@ -31,7 +31,6 @@ public final class BehandlingsresultatDtoMapper {
         builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);
         builder.medErRevurderingMedUendretUtfall(dto.getErRevurderingMedUendretUtfall());
         builder.medSkjæringstidspunkt(dto.getSkjæringstidspunkt());
-        builder.medKreverSammenhengendeUttak(dto.kreverSammenhengendeUttak());
         builder.medUtenMinsterett(dto.utenMinsterett());
         return builder.build();
     }

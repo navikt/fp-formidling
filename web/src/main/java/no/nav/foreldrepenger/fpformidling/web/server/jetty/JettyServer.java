@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 
-import static org.eclipse.jetty.webapp.MetaInfConfiguration.CONTAINER_JAR_PATTERN;
 import static org.eclipse.jetty.webapp.MetaInfConfiguration.WEBINF_JAR_PATTERN;
 
 import java.io.File;
@@ -45,8 +44,6 @@ import no.nav.foreldrepenger.fpformidling.web.app.konfig.InternalApplication;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceRole;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceUtil;
 import no.nav.foreldrepenger.konfig.Environment;
-import no.nav.vedtak.isso.IssoApplication;
-import no.nav.vedtak.sikkerhet.ContextPathHolder;
 import no.nav.vedtak.sikkerhet.jaspic.OidcAuthModule;
 
 public class JettyServer {
@@ -82,7 +79,6 @@ public class JettyServer {
 
     JettyServer(int serverPort) {
         this.serverPort = serverPort;
-        ContextPathHolder.instance(CONTEXT_PATH);
     }
 
     void bootStrap() throws Exception {
@@ -225,7 +221,7 @@ public class JettyServer {
     }
 
     private static List<Class<?>> getWebInfClasses() {
-        return List.of(ApplicationConfig.class, InternalApplication.class, IssoApplication.class);
+        return List.of(ApplicationConfig.class, InternalApplication.class);
     }
 
     private Integer getServerPort() {

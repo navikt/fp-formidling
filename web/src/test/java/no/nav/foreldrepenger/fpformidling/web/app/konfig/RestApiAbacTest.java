@@ -10,11 +10,8 @@ import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import no.nav.vedtak.isso.config.ServerInfo;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 import no.nav.vedtak.sikkerhet.abac.BeskyttetRessurs;
 import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
@@ -24,18 +21,6 @@ import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 public class RestApiAbacTest {
 
     private static String PREV_LB_URL;
-
-    @BeforeAll
-    public static void setup() {
-        PREV_LB_URL = System.setProperty(ServerInfo.PROPERTY_KEY_LOADBALANCER_URL, "http://localhost:8090");
-    }
-
-    @AfterAll
-    public static void teardown() {
-        if (PREV_LB_URL != null) {
-            System.setProperty(ServerInfo.PROPERTY_KEY_LOADBALANCER_URL, PREV_LB_URL);
-        }
-    }
 
     /**
      * IKKE ignorer denne testen, sikrer at REST-endepunkter får tilgangskontroll

@@ -20,22 +20,19 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse {
 
     INGEN("-", null),
-
-    BARNET_ER_DØD("4072", "14-9"),
-    SØKER_ER_DØD("4071", "14-10"),
-    OPPHØR_MEDLEMSKAP("4087", "14-2"),
-    SVANGERSKAPSVILKÅRET_IKKE_OPPFYLT("4098", "14-5"),
-    OPPTJENINGSVILKÅRET_IKKE_OPPFYLT("4099", "14-6"),
-    _8304("8304", "14-4"),
-    _8305("8305",  "14-4"),
-    _8306("8306", "14-4"),
+    BRUKER_ER_DØD("8304", "14-4"),
+    BARN_ER_DØDT("8305",  "14-4"),
+    BRUKER_ER_IKKE_MEDLEM("8306", "14-4"),
     SØKT_FOR_SENT("8308", "14-4"),
-    _8309("8309", "14-4"),
-    _8310("8310", "14-4"),
+    PERIODEN_ER_IKKE_FØR_FØDSEL("8309", "14-4"),
+
+    PERIODEN_MÅ_SLUTTE_SENEST_TRE_UKER_FØR_TERMIN("8310", "14-4"),
     PERIODE_SAMTIDIG_SOM_FERIE("8311", "14-4"),
-    _8313("8313", "14-4"),
-    _8314("8314", "14-4"),
-            ;
+
+    PERIODEN_ER_ETTER_ET_OPPHOLD_I_UTTAK("8313", "14-4"),
+    BEGYNT_ANNEN_SAK("8314", "14-4"),
+    SVANGERSKAPSVILKÅRET_IKKE_OPPFYLT("8315", "14-4"),
+    OPPTJENINGSVILKÅRET_IKKE_OPPFYLT("8316", "14-4");
 
     private static final Map<String, PeriodeIkkeOppfyltÅrsak> KODER = new LinkedHashMap<>();
 
@@ -70,12 +67,13 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse
 
     public static Set<PeriodeIkkeOppfyltÅrsak> opphørsAvslagÅrsaker() {
         return new HashSet<>(Arrays.asList(
-                _8304,
-                _8305,
-                _8306,
-                _8309,
-                _8314,
-                SØKT_FOR_SENT));
+                BRUKER_ER_DØD, BARN_ER_DØDT, BRUKER_ER_IKKE_MEDLEM, PERIODEN_ER_IKKE_FØR_FØDSEL, BEGYNT_ANNEN_SAK,
+                SØKT_FOR_SENT,
+                SVANGERSKAPSVILKÅRET_IKKE_OPPFYLT,
+                OPPTJENINGSVILKÅRET_IKKE_OPPFYLT));
+    }
+    public static Set<PeriodeIkkeOppfyltÅrsak> opphørSvpInngangsvilkårMedUttak() {
+        return new HashSet<>(Arrays.asList(SVANGERSKAPSVILKÅRET_IKKE_OPPFYLT, OPPTJENINGSVILKÅRET_IKKE_OPPFYLT));
     }
 
 }

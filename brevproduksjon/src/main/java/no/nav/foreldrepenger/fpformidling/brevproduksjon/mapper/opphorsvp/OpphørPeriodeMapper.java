@@ -1,11 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorsvp;
 
-import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.TreeSet;
-
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
@@ -25,6 +19,12 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforho
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.vedtak.exception.TekniskException;
 
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.TreeSet;
+
 public final class OpphørPeriodeMapper {
 
     private OpphørPeriodeMapper() {
@@ -43,15 +43,15 @@ public final class OpphørPeriodeMapper {
         var opphørtPeriode = mapOpphørtPeriodeMedÅrsakFraAvslåttUttak(uttakResultatArbeidsforhold, språkKode,
                 tilkjentYtelsePerioder, iay, lovReferanser);
 
-        //I en del tilfeller er behandlingen opphørt før det har kommet så langt som å beregne uttak
-        if (opphørtPeriode == null) {
+        //I en del tilfeller må vi hente opphørsårsak fra behandlingsresultatet (ingen uttak eller opphørt inngangsvilkår i en revurdering)
+        if (opphørtPeriode == null ) {
 
             if (avslagsårsak != null) {
                 opphørtPeriode = mapOpphørtPeriode(tilkjentYtelsePerioder, uttakResultatArbeidsforhold, språkKode,
                         avslagsårsak.getKode(), iay);
                 lovReferanser.add(SvpMapperUtil.leggTilLovreferanse(avslagsårsak));
             } else {
-                //TODO Anja Avklare om dette er nødvendig. Hvis ikke fjerne koden
+                //kan skje i uttak, men ingen tilfeller i prod
                 opphørtPeriode = mapOpphørteArbeidsforhold(uttakResultatArbeidsforhold, iay);
                 lovReferanser.add("§ 14-4");
             }
@@ -96,6 +96,10 @@ public final class OpphørPeriodeMapper {
 
         if (!opphørtePerioder.isEmpty()) {
             var årsak = finnNyestePeriodeIkkeOppfyltÅrsak(opphørtePerioder);
+            if (PeriodeIkkeOppfyltÅrsak.opphørSvpInngangsvilkårMedUttak().contains(årsak)) {
+                //spesialhåndtering dersom opphør av inngangsvilkår i en revurdering - henter faktisk årsak fra behandlingsresultat
+                return null;
+            }
             if (årsak != null) {
                 lovReferanser.add(årsak.getLovHjemmelData());
                 return mapOpphørtPeriode(tilkjentYtelsePerioder, uttakResultatArbeidsforhold, språkKode, årsak.getKode(), iay);
@@ -119,7 +123,7 @@ public final class OpphørPeriodeMapper {
         var førsteDato = finnFørsteStønadDato(tilkjentYtelse);
         var sisteDato = finnSisteStønadDato(tilkjentYtelse);
 
-        if (førsteDato.isEmpty() && sisteDato.isEmpty() && !PeriodeIkkeOppfyltÅrsak._8304.getKode().equals(opphørÅrsak)) {
+        if (førsteDato.isEmpty() && sisteDato.isEmpty() && !PeriodeIkkeOppfyltÅrsak.BRUKER_ER_DØD.getKode().equals(opphørÅrsak)) {
             førsteDato = finnførsteUttaksDatoFraInnvilget(uttakResultatArbeidsforhold);
             sisteDato = finnSisteUttaksDatoFraInnvilget(uttakResultatArbeidsforhold);
         }

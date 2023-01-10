@@ -8,8 +8,8 @@ import javax.ws.rs.core.Application;
 import no.nav.foreldrepenger.fpformidling.web.app.metrics.PrometheusRestService;
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.NaisRestTjeneste;
 
-@ApplicationPath(InternalApplication.API_URL)
-public class InternalApplication extends Application {
+@ApplicationPath(InternalAppConfig.API_URL)
+public class InternalAppConfig extends Application {
 
     public static final String API_URL = "/internal";
 

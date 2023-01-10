@@ -39,8 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import no.nav.foreldrepenger.fpformidling.web.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.fpformidling.web.app.konfig.InternalApplication;
+import no.nav.foreldrepenger.fpformidling.web.app.konfig.AppConfig;
+import no.nav.foreldrepenger.fpformidling.web.app.konfig.InternalAppConfig;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceRole;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceUtil;
 import no.nav.foreldrepenger.konfig.Environment;
@@ -176,7 +176,7 @@ public class JettyServer {
         }
         ctx.setDescriptor(descriptor);
         ctx.setContextPath(CONTEXT_PATH);
-        ctx.setBaseResource(createResourceCollection());
+        ctx.setResourceBase(".");
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$"); // den scanner i getResourceBase()/WEB-INF/lib så finner aldri noe hos oss.
 
@@ -221,7 +221,7 @@ public class JettyServer {
     }
 
     private static List<Class<?>> getWebInfClasses() {
-        return List.of(ApplicationConfig.class, InternalApplication.class);
+        return List.of(AppConfig.class, InternalAppConfig.class);
     }
 
     private Integer getServerPort() {

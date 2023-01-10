@@ -6,7 +6,6 @@
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Ubeskyttet</web-resource-name>
-            <url-pattern>/cb</url-pattern>
             <url-pattern>/internal/*</url-pattern>
             <url-pattern>/api/openapi.yaml</url-pattern>
             <url-pattern>/api/openapi.json</url-pattern>

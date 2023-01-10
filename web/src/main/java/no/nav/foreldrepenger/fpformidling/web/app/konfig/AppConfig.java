@@ -31,12 +31,12 @@ import no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev.BrevRestTjenest
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.TimingFilter;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 
-@ApplicationPath(ApplicationConfig.API_URI)
-public class ApplicationConfig extends Application {
+@ApplicationPath(AppConfig.API_URI)
+public class AppConfig extends Application {
 
     static final String API_URI = "/api";
 
-    public ApplicationConfig() {
+    public AppConfig() {
 
         try {
             new GenericOpenApiContextBuilder<>().openApiConfiguration(
@@ -51,7 +51,7 @@ public class ApplicationConfig extends Application {
                     .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
                     .resourcePackages(Stream.of("no.nav").collect(Collectors.toSet()))).buildContext(true).read();
         } catch (OpenApiConfigurationException e) {
-            throw new IllegalStateException(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

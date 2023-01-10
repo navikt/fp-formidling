@@ -30,7 +30,6 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.resource.ResourceCollection;
 import org.eclipse.jetty.webapp.MetaData;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.flywaydb.core.Flyway;
@@ -39,8 +38,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import no.nav.foreldrepenger.fpformidling.web.app.konfig.ApplicationConfig;
-import no.nav.foreldrepenger.fpformidling.web.app.konfig.InternalApplication;
+import no.nav.foreldrepenger.fpformidling.web.app.konfig.ApiConfig;
+import no.nav.foreldrepenger.fpformidling.web.app.konfig.InternalApiConfig;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceRole;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceUtil;
 import no.nav.foreldrepenger.konfig.Environment;
@@ -51,7 +50,7 @@ public class JettyServer {
     private static final Environment ENV = Environment.current();
     private static final Logger LOG = LoggerFactory.getLogger(JettyServer.class);
 
-    private static final String CONTEXT_PATH = ENV.getProperty("context.path","/fpformidling");
+    private static final String CONTEXT_PATH = ENV.getProperty("context.path", "/fpformidling");
 
     /**
      * Legges først slik at alltid resetter context før prosesserer nye requests.
@@ -94,9 +93,7 @@ public class JettyServer {
         }
 
         var factory = new DefaultAuthConfigFactory();
-        factory.registerConfigProvider(new JaspiAuthConfigProvider(new OidcAuthModule()),
-                "HttpServlet",
-                "server " + CONTEXT_PATH,
+        factory.registerConfigProvider(new JaspiAuthConfigProvider(new OidcAuthModule()), "HttpServlet", "server " + CONTEXT_PATH,
                 "OIDC Authentication");
 
         AuthConfigFactory.setFactory(factory);
@@ -110,9 +107,9 @@ public class JettyServer {
         var storePath = ENV.getProperty(trustStorePathProp, defaultLocation);
         var storeFile = new File(storePath);
         if (!storeFile.exists()) {
-            throw new IllegalStateException("Finner ikke truststore i " + storePath
-                    + "\n\tKonfrigurer enten som System property '" + trustStorePathProp + "' eller environment variabel '"
-                    + trustStorePathProp.toUpperCase().replace('.', '_') + "'");
+            throw new IllegalStateException(
+                    "Finner ikke truststore i " + storePath + "\n\tKonfrigurer enten som System property '" + trustStorePathProp
+                            + "' eller environment variabel '" + trustStorePathProp.toUpperCase().replace('.', '_') + "'");
         }
         var password = ENV.getProperty(trustStorePasswordProp, "changeit");
         System.setProperty(trustStorePathProp, storeFile.getAbsolutePath());
@@ -124,7 +121,7 @@ public class JettyServer {
     }
 
     void migrerDatabaser() {
-        try (var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN,2)) {
+        try (var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN, 2)) {
             var flyway = Flyway.configure()
                     .dataSource(dataSource)
                     .locations("classpath:/db/migration/defaultDS")
@@ -176,9 +173,10 @@ public class JettyServer {
         }
         ctx.setDescriptor(descriptor);
         ctx.setContextPath(CONTEXT_PATH);
-        ctx.setBaseResource(createResourceCollection());
+        ctx.setResourceBase(".");
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
-        ctx.setAttribute(WEBINF_JAR_PATTERN, "^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$"); // den scanner i getResourceBase()/WEB-INF/lib så finner aldri noe hos oss.
+        ctx.setAttribute(WEBINF_JAR_PATTERN,
+                "^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$"); // den scanner i getResourceBase()/WEB-INF/lib så finner aldri noe hos oss.
 
         //ctx.setAttribute(CONTAINER_JAR_PATTERN, "^.*/target/classes/|^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$|^.*/app\\.jar$");
 
@@ -190,12 +188,6 @@ public class JettyServer {
         updateMetaData(ctx.getMetaData());
         ctx.setThrowUnavailableOnStartupException(true);
         return ctx;
-    }
-
-    private static ResourceCollection createResourceCollection() {
-        return new ResourceCollection(
-                Resource.newClassPathResource("META-INF/resources/webjars/"),
-                Resource.newClassPathResource("/web"));
     }
 
     private static SecurityHandler createSecurityHandler() {
@@ -221,7 +213,7 @@ public class JettyServer {
     }
 
     private static List<Class<?>> getWebInfClasses() {
-        return List.of(ApplicationConfig.class, InternalApplication.class);
+        return List.of(ApiConfig.class, InternalApiConfig.class);
     }
 
     private Integer getServerPort() {

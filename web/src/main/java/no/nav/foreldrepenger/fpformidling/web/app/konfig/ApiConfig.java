@@ -58,7 +58,7 @@ public class ApiConfig extends Application {
     }
 
     @Override
-    public static Set<Class<?>> getClasses() {
+    public Set<Class<?>> getClasses() {
         // eksponert grensesnitt
 
         Set<Class<?>> classes = new HashSet<>(getAllClasses());

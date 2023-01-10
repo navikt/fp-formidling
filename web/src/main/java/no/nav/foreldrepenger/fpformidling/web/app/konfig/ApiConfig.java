@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.web.app.konfig;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -7,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -50,19 +50,18 @@ public class ApiConfig extends Application {
                             .servers(List.of(new Server().url("/fpformidling"))))
                     .prettyPrint(true)
                     .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
-                    .resourcePackages(Stream.of("no.nav").collect(Collectors.toSet()))).buildContext(true).read();
+                    .resourceClasses(ApiConfig.getAllClasses().stream().map(Class::getName).collect(Collectors.toSet())))
+                    .buildContext(true).read();
         } catch (OpenApiConfigurationException e) {
             throw new TekniskException("OPENAPI", e.getMessage(), e);
         }
     }
 
     @Override
-    public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<>();
+    public static Set<Class<?>> getClasses() {
         // eksponert grensesnitt
-        classes.add(BrevRestTjeneste.class);
-        classes.add(ForvaltningRestTjeneste.class);
-        classes.add(ProsessTaskRestTjeneste.class);
+
+        Set<Class<?>> classes = new HashSet<>(getAllClasses());
 
         // swagger
         classes.add(OpenApiResource.class);
@@ -80,6 +79,14 @@ public class ApiConfig extends Application {
         classes.add(GeneralRestExceptionMapper.class);
 
         return Collections.unmodifiableSet(classes);
+    }
+
+    private static Collection<Class<?>> getAllClasses() {
+        Set<Class<?>> classes = new HashSet<>();
+        classes.add(BrevRestTjeneste.class);
+        classes.add(ProsessTaskRestTjeneste.class);
+        classes.add(ForvaltningRestTjeneste.class);
+        return classes;
     }
 
     @Override

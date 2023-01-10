@@ -192,12 +192,6 @@ public class JettyServer {
         return ctx;
     }
 
-    private static ResourceCollection createResourceCollection() {
-        return new ResourceCollection(
-                Resource.newClassPathResource("META-INF/resources/webjars/"),
-                Resource.newClassPathResource("/web"));
-    }
-
     private static SecurityHandler createSecurityHandler() {
         var securityHandler = new ConstraintSecurityHandler();
         securityHandler.setAuthenticatorFactory(new JaspiAuthenticatorFactory());

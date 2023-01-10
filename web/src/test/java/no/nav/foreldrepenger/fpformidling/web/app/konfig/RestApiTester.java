@@ -29,7 +29,7 @@ public class RestApiTester {
     }
 
     static Collection<Class<?>> finnAlleRestTjenester() {
-        return new ArrayList<>(finnAlleRestTjenester(new AppConfig()));
+        return new ArrayList<>(finnAlleRestTjenester(new ApiConfig()));
     }
 
     static Collection<Class<?>> finnAlleRestTjenester(Application config) {

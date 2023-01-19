@@ -7,7 +7,6 @@
         <web-resource-collection>
             <web-resource-name>Ubeskyttet</web-resource-name>
             <url-pattern>/internal/*</url-pattern>
-            <url-pattern>/api/openapi.yaml</url-pattern>
             <url-pattern>/api/openapi.json</url-pattern>
         </web-resource-collection>
     </security-constraint>

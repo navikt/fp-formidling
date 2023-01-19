@@ -1,13 +1,12 @@
 package no.nav.foreldrepenger.fpformidling.web.app.konfig;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -29,39 +28,46 @@ import no.nav.foreldrepenger.fpformidling.web.app.jackson.JacksonJsonConfig;
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.ForvaltningRestTjeneste;
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev.BrevRestTjeneste;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.TimingFilter;
+import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 
-@ApplicationPath(ApplicationConfig.API_URI)
-public class ApplicationConfig extends Application {
+@ApplicationPath(ApiConfig.API_URI)
+public class ApiConfig extends Application {
 
+    private static final Environment ENV = Environment.current();
     static final String API_URI = "/api";
 
-    public ApplicationConfig() {
+    public ApiConfig() {
+        OpenAPI oas = new OpenAPI();
+        Info info = new Info()
+                .title("Vedtaksløsningen - Formidling")
+                .version("1.0")
+                .description("REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede.");
 
+        oas.info(info)
+                .addServersItem(new Server()
+                        .url(ENV.getProperty("context.path", "/fpformidling")));
+
+        SwaggerConfiguration oasConfig = new SwaggerConfiguration()
+                .openAPI(oas)
+                .prettyPrint(true)
+                .resourceClasses(getClasses().stream().map(Class::getName).collect(Collectors.toSet()));
         try {
-            new GenericOpenApiContextBuilder<>().openApiConfiguration(
-                    new SwaggerConfiguration().openAPI(
-                            new OpenAPI().info(
-                                    new Info().title("Foreldrepenger - Formidling")
-                                            .version("1.0")
-                                            .description(
-                                                    "REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede."))
-                            .servers(List.of(new Server().url("/fpformidling"))))
-                    .prettyPrint(true)
-                    .scannerClass("io.swagger.v3.jaxrs2.integration.JaxrsAnnotationScanner")
-                    .resourcePackages(Stream.of("no.nav").collect(Collectors.toSet()))).buildContext(true).read();
+            new GenericOpenApiContextBuilder<>()
+                    .openApiConfiguration(oasConfig)
+                    .buildContext(true)
+                    .read();
         } catch (OpenApiConfigurationException e) {
-            throw new IllegalStateException(e.getMessage(), e);
+            throw new TekniskException("OPEN-API", e.getMessage(), e);
         }
     }
 
     @Override
     public Set<Class<?>> getClasses() {
-        Set<Class<?>> classes = new HashSet<>();
         // eksponert grensesnitt
-        classes.add(BrevRestTjeneste.class);
-        classes.add(ForvaltningRestTjeneste.class);
-        classes.add(ProsessTaskRestTjeneste.class);
+
+        Set<Class<?>> classes = new HashSet<>(getAllClasses());
 
         // swagger
         classes.add(OpenApiResource.class);
@@ -79,6 +85,14 @@ public class ApplicationConfig extends Application {
         classes.add(GeneralRestExceptionMapper.class);
 
         return Collections.unmodifiableSet(classes);
+    }
+
+    private static Collection<Class<?>> getAllClasses() {
+        Set<Class<?>> classes = new HashSet<>();
+        classes.add(BrevRestTjeneste.class);
+        classes.add(ProsessTaskRestTjeneste.class);
+        classes.add(ForvaltningRestTjeneste.class);
+        return classes;
     }
 
     @Override

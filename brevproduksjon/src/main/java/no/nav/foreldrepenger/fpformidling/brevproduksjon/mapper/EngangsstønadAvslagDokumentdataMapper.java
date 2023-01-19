@@ -67,7 +67,6 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
-        var vilkår = domeneobjektProvider.hentVilkår(behandling);
 
         var dokumentdataBuilder = EngangsstønadAvslagDokumentdata.ny()
                 .medAvslagsÅrsak(mapAvslagsårsakerBrev(behandling.getBehandlingsresultat().getAvslagsårsak()))
@@ -75,7 +74,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
                 .medFørstegangsbehandling(behandling.erFørstegangssøknad())
                 .medGjelderFødsel(familieHendelse.gjelderFødsel())
                 .medRelasjonsRolle(utledRelasjonsRolle(behandling.getFagsakBackend()))
-                .medVilkårTyper(utledVilkårTilBrev(vilkår, behandling.getBehandlingsresultat().getAvslagsårsak(), behandling))
+                .medVilkårTyper(utledVilkårTilBrev(behandling.getVilkår(), behandling.getBehandlingsresultat().getAvslagsårsak(), behandling))
                 .medAntallBarn(familieHendelse.antallBarn())
                 .medKlagefristUker(brevParametere.getKlagefristUker());
 

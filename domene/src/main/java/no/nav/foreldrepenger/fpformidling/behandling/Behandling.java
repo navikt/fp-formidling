@@ -5,11 +5,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
+import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
 
 public class Behandling {
     private Behandlingsresultat behandlingsresultat;
@@ -34,6 +36,11 @@ public class Behandling {
     private String endretAv;
     private Språkkode språkkode;
     private LocalDate originalVedtaksDato;
+    private boolean harAvklartAnnenForelderRett;
+    private List<Vilkår> vilkår;
+    private UUID originalBehandlingUuid;
+
+    private boolean kreverSammenhengendeUttak;
 
     private Behandling() {
     }
@@ -87,6 +94,14 @@ public class Behandling {
         return uuid;
     }
 
+    public boolean getHarAvklartAnnenForelderRett() {
+        return harAvklartAnnenForelderRett;
+    }
+
+    public List<Vilkår> getVilkår() {
+        return vilkår;
+    }
+
     public List<BehandlingResourceLink> getResourceLinker() {
         return resourceLinker;
     }
@@ -131,6 +146,10 @@ public class Behandling {
         return fagsakBackend;
     }
 
+    public boolean kreverSammenhengendeUttakFraBehandlingen() {
+        return kreverSammenhengendeUttak;
+    }
+
     public boolean erSaksbehandlingAvsluttet() {
         if (behandlingsresultat == null) {
             return false;
@@ -156,6 +175,14 @@ public class Behandling {
 
     public String getBehandlendeEnhetId() {
         return behandlendeEnhetId;
+    }
+
+    public boolean utenMinsterett() {
+        return Optional.ofNullable(getBehandlingsresultat()).map(Behandlingsresultat::utenMinsterett).orElse(true);
+    }
+
+    public UUID getOriginalBehandlingUuid() {
+        return originalBehandlingUuid;
     }
 
     public void leggtilFagsakBackend(FagsakBackend fagsak) {
@@ -286,6 +313,26 @@ public class Behandling {
 
         public Behandling.Builder medOriginalVedtaksDato(LocalDate originalVedtaksDato) {
             this.kladd.originalVedtaksDato = originalVedtaksDato;
+            return this;
+        }
+
+        public Behandling.Builder medOriginalBehandlingUuid(UUID uuid) {
+            this.kladd.originalBehandlingUuid = uuid;
+            return this;
+        }
+
+        public Behandling.Builder medHarAvklartAnnenForelderRett(boolean harAvklartAnnenForelderRett) {
+            this.kladd.harAvklartAnnenForelderRett = harAvklartAnnenForelderRett;
+            return this;
+        }
+
+        public Behandling.Builder medVilkår(List<Vilkår> vilkår) {
+            this.kladd.vilkår = vilkår;
+            return this;
+        }
+
+        public Behandling.Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
+            this.kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
             return this;
         }
 

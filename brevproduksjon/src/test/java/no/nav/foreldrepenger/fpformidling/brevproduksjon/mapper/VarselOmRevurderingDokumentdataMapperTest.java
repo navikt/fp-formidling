@@ -68,7 +68,6 @@ public class VarselOmRevurderingDokumentdataMapperTest {
 
         var familieHendelse = opprettFamiliehendelse();
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(familieHendelse);
-        when(domeneobjektProvider.kreverSammenhengendeUttak(any())).thenReturn(true);
     }
 
     @Test
@@ -147,6 +146,7 @@ public class VarselOmRevurderingDokumentdataMapperTest {
                 .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
                 .medBehandlingsresultat(Behandlingsresultat.builder()
                         .medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+                .medKreverSammenhengendeUttak(true)
                 .build();
     }
 

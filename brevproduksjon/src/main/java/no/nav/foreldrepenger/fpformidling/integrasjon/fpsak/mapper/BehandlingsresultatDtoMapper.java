@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat.
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
@@ -31,7 +30,8 @@ public final class BehandlingsresultatDtoMapper {
 
         builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);
         builder.medErRevurderingMedUendretUtfall(dto.getErRevurderingMedUendretUtfall());
-        builder.medSkjæringstidspunkt(Optional.ofNullable(dto.getSkjæringstidspunkt()));
+        builder.medSkjæringstidspunkt(dto.getSkjæringstidspunkt());
+        builder.medUtenMinsterett(dto.utenMinsterett());
         return builder.build();
     }
 }

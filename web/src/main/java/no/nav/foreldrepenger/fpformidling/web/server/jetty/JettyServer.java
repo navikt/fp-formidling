@@ -43,7 +43,7 @@ public class JettyServer {
     private static final Environment ENV = Environment.current();
     private static final Logger LOG = LoggerFactory.getLogger(JettyServer.class);
 
-    private static final String CONTEXT_PATH = ENV.getProperty("context.path","/fpformidling");
+    private static final String CONTEXT_PATH = ENV.getProperty("context.path", "/fpformidling");
 
     /**
      * Legges først slik at alltid resetter context før prosesserer nye requests.
@@ -71,7 +71,6 @@ public class JettyServer {
 
     JettyServer(int serverPort) {
         this.serverPort = serverPort;
-        ContextPathHolder.instance(CONTEXT_PATH);
     }
 
     void bootStrap() throws Exception {
@@ -87,9 +86,7 @@ public class JettyServer {
         }
 
         var factory = new DefaultAuthConfigFactory();
-        factory.registerConfigProvider(new JaspiAuthConfigProvider(new OidcAuthModule()),
-                "HttpServlet",
-                "server " + CONTEXT_PATH,
+        factory.registerConfigProvider(new JaspiAuthConfigProvider(new OidcAuthModule()), "HttpServlet", "server " + CONTEXT_PATH,
                 "OIDC Authentication");
 
         AuthConfigFactory.setFactory(factory);
@@ -103,9 +100,9 @@ public class JettyServer {
         var storePath = ENV.getProperty(trustStorePathProp, defaultLocation);
         var storeFile = new File(storePath);
         if (!storeFile.exists()) {
-            throw new IllegalStateException("Finner ikke truststore i " + storePath
-                    + "\n\tKonfrigurer enten som System property '" + trustStorePathProp + "' eller environment variabel '"
-                    + trustStorePathProp.toUpperCase().replace('.', '_') + "'");
+            throw new IllegalStateException(
+                    "Finner ikke truststore i " + storePath + "\n\tKonfrigurer enten som System property '" + trustStorePathProp
+                            + "' eller environment variabel '" + trustStorePathProp.toUpperCase().replace('.', '_') + "'");
         }
         var password = ENV.getProperty(trustStorePasswordProp, "changeit");
         System.setProperty(trustStorePathProp, storeFile.getAbsolutePath());
@@ -117,7 +114,7 @@ public class JettyServer {
     }
 
     void migrerDatabaser() {
-        try (var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN,2)) {
+        try (var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN, 2)) {
             var flyway = Flyway.configure()
                     .dataSource(dataSource)
                     .locations("classpath:/db/migration/defaultDS")

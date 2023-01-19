@@ -7,7 +7,6 @@ import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpformidling.aksjonspunkt.Aksjonspunkt;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
@@ -29,7 +28,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.SøknadDtoMap
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.TilkjentYtelseDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakSvpDtoMapper;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.VilkårDtoMapper;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
@@ -42,7 +40,6 @@ import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
 import no.nav.foreldrepenger.fpformidling.uttak.YtelseFordeling;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.verge.Verge;
-import no.nav.foreldrepenger.fpformidling.vilkår.Vilkår;
 
 @ApplicationScoped
 public class DomeneobjektProvider {
@@ -76,12 +73,12 @@ public class DomeneobjektProvider {
     }
 
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
-        return BeregningsgrunnlagDtoMapper.mapFraDto(behandlingRestKlient.hentBeregningsgrunnlagV2(behandling.getUuid()),
+        return BeregningsgrunnlagDtoMapper.mapFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getFormidlingRessurser()),
                 arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentBeregningsgrunnlagV2HvisFinnes(behandling.getUuid())
+        return behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getFormidlingRessurser())
                 .map(dto -> BeregningsgrunnlagDtoMapper.mapFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
@@ -90,9 +87,8 @@ public class DomeneobjektProvider {
     }
 
     public Optional<Behandling> hentOriginalBehandlingHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentOriginalBehandling(behandling.getResourceLinker())
-                .map(dto -> behandlingRestKlient.hentBehandling(dto.getUuid()))
-                .map(BehandlingDtoMapper::mapBehandlingFraDto);
+        return Optional.ofNullable(behandling.getOriginalBehandlingUuid())
+                .map(this::hentBehandling);
     }
 
     public TilkjentYtelseEngangsstønad hentTilkjentYtelseEngangsstønad(Behandling behandling) {
@@ -148,10 +144,6 @@ public class DomeneobjektProvider {
         return behandlingRestKlient.hentSoknadHvisFinnes(behandling.getResourceLinker()).map(SøknadDtoMapper::mapSøknadFraDto);
     }
 
-    public List<Vilkår> hentVilkår(Behandling behandling) {
-        return VilkårDtoMapper.mapVilkårFraDto(behandlingRestKlient.hentVilkår(behandling.getResourceLinker()));
-    }
-
     public Optional<ForeldrepengerUttak> hentForeldrepengerUttakHvisFinnes(Behandling behandling) {
         var uttakResultatPerioderDto = behandlingRestKlient.hentUttaksresultatFpHvisFinnes(behandling.getResourceLinker());
         return uttakResultatPerioderDto.map(
@@ -178,10 +170,6 @@ public class DomeneobjektProvider {
         return StønadskontoDtoMapper.mapSaldoerFraDto(behandlingRestKlient.hentSaldoer(behandling.getResourceLinker()));
     }
 
-    public List<Aksjonspunkt> hentAksjonspunkter(Behandling behandling) {
-        return AksjonspunktDtoMapper.mapAksjonspunktFraDto(behandlingRestKlient.hentAksjonspunkter(behandling.getResourceLinker()));
-    }
-
     public Optional<Verge> hentVerge(Behandling behandling) {
         return behandlingRestKlient.hentVergeHvisFinnes(behandling.getResourceLinker())
                 .map(v -> new Verge(v.getAktoerId(), v.getOrganisasjonsnummer(), v.getNavn()));
@@ -190,14 +178,6 @@ public class DomeneobjektProvider {
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {
         return MottattDokumentDtoMapper.mapMottattedokumenterFraDto(
                 behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
-    }
-
-    public boolean kreverSammenhengendeUttak(Behandling behandling) {
-        return behandlingRestKlient.kreverSammenhengendeUttak(behandling.getResourceLinker()).kreverSammenhengendeUttak();
-    }
-
-    public boolean utenMinsterett(Behandling behandling) {
-        return behandlingRestKlient.utenMinsterett(behandling.getResourceLinker()).utenMinsterett();
     }
 
     public YtelseFordeling ytelseFordeling(Behandling behandling) {

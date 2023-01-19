@@ -42,9 +42,6 @@ import java.util.stream.Stream;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import no.nav.foreldrepenger.fpformidling.aksjonspunkt.Aksjonspunkt;
-import no.nav.foreldrepenger.fpformidling.aksjonspunkt.AksjonspunktDefinisjon;
-import no.nav.foreldrepenger.fpformidling.aksjonspunkt.AksjonspunktStatus;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
@@ -59,6 +56,9 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
@@ -97,14 +97,13 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         var uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttak(behandling);
         var søknad = hentNyesteSøknad(behandling);
-        var aksjonspunkter = domeneobjektProvider.hentAksjonspunkter(behandling);
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         var originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
                 .map(domeneobjektProvider::hentFamiliehendelse);
         var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         var saldoer = domeneobjektProvider.hentSaldoer(behandling);
         var språkkode = behandling.getSpråkkode();
-        var utenMinsterett = domeneobjektProvider.utenMinsterett(behandling);
+        var utenMinsterett = behandling.utenMinsterett();
         var ytelseFordeling = domeneobjektProvider.ytelseFordeling(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, dokumentHendelse, behandling, erUtkast);
@@ -121,6 +120,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var dagsats = finnDagsats(tilkjentYtelseForeldrepenger);
         var antallBarn = familieHendelse.antallBarn();
         var antallDødeBarn = familieHendelse.antallDødeBarn();
+        var innvilgedeUtbetalingsperioder = finnInnvilgedePerioderMedUtbetaling(utbetalingsperioder);
 
         var utenAktKrav = 0;
         var medAktKrav = 0;
@@ -144,7 +144,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelseForeldrepenger))
                 .medForMyeUtbetalt(forMyeUtbetalt(utbetalingsperioder, behandling))
                 .medInntektMottattArbeidsgiver(erEndringMedEndretInntektsmelding(behandling))
-                .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(aksjonspunkter, uttakResultatPerioder))
+                .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(behandling, uttakResultatPerioder))
                 .medAnnenForelderHarRett(uttakResultatPerioder.annenForelderHarRett())
                 .medAnnenForelderRettEØS(uttakResultatPerioder.annenForelderRettEØS())
                 .medOppgittAnnenForelderRettEØS(uttakResultatPerioder.oppgittAnnenForelderRettEØS())
@@ -170,7 +170,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medForeldrepengeperiodenUtvidetUker(finnForeldrepengeperiodenUtvidetUkerHvisFinnes(saldoer))
                 .medAntallBarn(antallBarn)
                 .medPrematurDager(finnPrematurDagerHvisFinnes(saldoer))
-                .medKreverSammenhengendeUttak(domeneobjektProvider.kreverSammenhengendeUttak(behandling))
+                .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen())
                 .medUtbetalingsperioder(utbetalingsperioder)
 
                 .medKlagefristUker(brevParametere.getKlagefristUker())
@@ -184,7 +184,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 .medInkludereAvslag(skalInkludereAvslag(utbetalingsperioder, konsekvensForInnvilgetYtelse))
                 .medInkludereNyeOpplysningerUtbet(skalInkludereNyeOpplysningerUtbet(behandling, utbetalingsperioder, dagsats))
                 .medUtenMinsterett(utenMinsterett)
-                .medØnskerJustertVedFødsel(ytelseFordeling.ønskerJustertVedFødsel());
+                .medØnskerJustertVedFødsel(ytelseFordeling.ønskerJustertVedFødsel())
+                .medGraderingOgFulltUttak(vurderOmGraderingOgFulltUttakISammePeriode(beregningsgrunnlag, finnAntallArbeidsgivere(tilkjentYtelseForeldrepenger), innvilgedeUtbetalingsperioder));
 
         finnSisteDagAvSistePeriode(uttakResultatPerioder).ifPresent(dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
         finnStønadsperiodeFom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));
@@ -203,6 +204,41 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             dokumentdataBuilder.medAntallDødeBarn(0);
         }
         return dokumentdataBuilder.build();
+    }
+
+    private List<Utbetalingsperiode> finnInnvilgedePerioderMedUtbetaling(List<Utbetalingsperiode> utbetalingsperioder) {
+        return utbetalingsperioder.stream().filter(Utbetalingsperiode::isInnvilget).filter(up -> up.getPrioritertUtbetalingsgrad().erStørreEnnNull()).toList();
+    }
+
+    private boolean vurderOmGraderingOgFulltUttakISammePeriode(Beregningsgrunnlag beregningsgrunnlag, int antallArbeidsgivere, List<Utbetalingsperiode> innvilgedeUtbetalingsperioder) {
+        if (innvilgedeUtbetalingsperioder != null && (harFlereAktivitetStatuser(beregningsgrunnlag) || antallArbeidsgivere > 1)) {
+            //Sjekk om gradering og fullt uttak i samme periode
+            return innvilgedeUtbetalingsperioder.stream()
+                    .filter(this::periodeHarGradering)
+                    .anyMatch(this::harPeriodeOgsåFulltUttak);
+        }
+        return false;
+    }
+
+    private boolean harPeriodeOgsåFulltUttak(Utbetalingsperiode periodeMedGradering) {
+        var fulltUttakArbforhold = periodeMedGradering.getArbeidsforholdsliste().stream()
+                .filter(Objects::nonNull)
+                .anyMatch(af -> Prosent.HUNDRE.equals(af.getUtbetalingsgrad()));
+        var fulltUttakAktvitet = periodeMedGradering.getAnnenAktivitetsliste().stream()
+                .filter(Objects::nonNull)
+                .anyMatch(aa -> Prosent.HUNDRE.equals(aa.getUtbetalingsgrad()));
+        var fulltUttakNæring = periodeMedGradering.getNæring() != null
+                && Prosent.HUNDRE.equals(periodeMedGradering.getNæring().getUtbetalingsgrad());
+
+        return fulltUttakArbforhold || fulltUttakAktvitet || fulltUttakNæring;
+    }
+
+    private boolean periodeHarGradering(Utbetalingsperiode periode) {
+        return periode.getArbeidsforholdsliste().stream().anyMatch(Arbeidsforhold::isGradering) ||periode.getAnnenAktivitetsliste().stream().anyMatch(AnnenAktivitet::isGradering) || (periode.getNæring() != null && periode.getNæring().isGradering());
+    }
+
+    private boolean harFlereAktivitetStatuser(Beregningsgrunnlag beregningsgrunnlag) {
+        return beregningsgrunnlag.getAktivitetStatuser().size() > 1 || beregningsgrunnlag.getAktivitetStatuser().stream().anyMatch(as -> (as.aktivitetStatus().harKombinertStatus()));
     }
 
     private void mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(List<Utbetalingsperiode> utbetalingsperioder, ForeldrepengerInnvilgelseDokumentdata.Builder builder) {
@@ -253,11 +289,9 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 familieHendelse.barnErFødt() && originalFamiliehendelse.map(fh -> !fh.barnErFødt()).orElse(false);
     }
 
-    private VurderingsKode utledAnnenForelderRettVurdertKode(List<Aksjonspunkt> aksjonspunkter, ForeldrepengerUttak foreldrepengerUttak) {
+    private VurderingsKode utledAnnenForelderRettVurdertKode(Behandling behandling, ForeldrepengerUttak foreldrepengerUttak) {
         VurderingsKode annenForelderHarRettVurdert;
-        if (aksjonspunkter.stream()
-                .filter(ap -> Objects.equals(ap.getAksjonspunktDefinisjon(), AksjonspunktDefinisjon.AVKLAR_FAKTA_ANNEN_FORELDER_HAR_IKKE_RETT))
-                .anyMatch(ap -> Objects.equals(ap.getAksjonspunktStatus(), AksjonspunktStatus.UTFØRT))) {
+        if (behandling.getHarAvklartAnnenForelderRett()) {
             annenForelderHarRettVurdert = foreldrepengerUttak.annenForelderHarRett() ? VurderingsKode.JA : VurderingsKode.NEI;
         } else {
             annenForelderHarRettVurdert = VurderingsKode.IKKE_VURDERT;

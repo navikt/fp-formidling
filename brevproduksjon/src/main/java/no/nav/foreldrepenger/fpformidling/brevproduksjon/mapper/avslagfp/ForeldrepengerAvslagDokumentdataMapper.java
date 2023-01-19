@@ -85,7 +85,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
                 .medAntallBarn(familiehendelse.antallBarn())
                 .medHalvG(halvG)
                 .medKlagefristUker(brevParametere.getKlagefristUker())
-                .medKreverSammenhengendeUttak(domeneobjektProvider.kreverSammenhengendeUttak(behandling));
+                .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen());
 
         mapAvslåttePerioder(behandling, dokumentdataBuilder, uttakResultatPerioder);
 

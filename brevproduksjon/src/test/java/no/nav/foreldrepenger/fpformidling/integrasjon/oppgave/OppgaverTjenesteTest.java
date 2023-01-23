@@ -3,6 +3,8 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +47,7 @@ class OppgaverTjenesteTest {
         var id = 1234L;
         var captor = ArgumentCaptor.forClass(OpprettOppgave.class);
         when(klient.opprettetOppgave(captor.capture())).thenReturn(new Oppgave(id, null, null, null, null,  null, null,
-                null, null, 1, null, null, null, null, null));
+                null, null, 1, null, null, null, null, null, "beskrivelse", LocalDateTime.now()));
 
         var journalpostId = "76543322";
         var oppgave = tjeneste.opprettOppgave(behandling, new JournalpostId(journalpostId), "beskrivelse");

@@ -47,7 +47,7 @@ class OppgaverTjenesteTest {
         var id = 1234L;
         var captor = ArgumentCaptor.forClass(OpprettOppgave.class);
         when(klient.opprettetOppgave(captor.capture())).thenReturn(new Oppgave(id, null, null, null, null,  null, null,
-                null, null, 1, null, null, null, null, null, "beskrivelse", LocalDateTime.now()));
+                null, null, 1, null, null, null, null, null, "beskrivelse"));
 
         var journalpostId = "76543322";
         var oppgave = tjeneste.opprettOppgave(behandling, new JournalpostId(journalpostId), "beskrivelse");

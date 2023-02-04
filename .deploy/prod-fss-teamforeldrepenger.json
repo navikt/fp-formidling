@@ -5,8 +5,7 @@
     "maxReplicas": "3",
     "ingresses": [
         "https://fpformidling.intern.nav.no",
-        "https://fpformidling.prod-fss-pub.nais.io",
-        "https://app.adeo.no/fpformidling"
+        "https://fpformidling.prod-fss-pub.nais.io"
     ],
     "env": {
         "APPDYNAMICS_AGENT_ACCOUNT_NAME": "PROD",

@@ -8,7 +8,6 @@
         "https://fpformidling.dev-fss-pub.nais.io"
     ],
     "env": {
-        "APPDYNAMICS_AGENT_ACCOUNT_NAME": "NON-PROD",
         "APPD_ENABLED": "false"
     },
     "AZURE_IAC_RULES": [

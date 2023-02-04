@@ -12,7 +12,6 @@ Spørsmål knyttet til koden eller prosjektet kan rettes til:
 ### Henvendelser for NAV-ansatte
 Interne henvendelser kan sendes via Slack i kanalen #fp-brev.
 
-
 ## Oppsett
 ### Run Config
 For å kjøre lokalt må du å ha VTP kjørende på forhånd.
@@ -60,3 +59,12 @@ kubectl -nteamforeldrepenger port-forward service/fpformidling 5005:5005
 
 Hvis ikke allerede gjort, opprett en ny configuration i IntelliJ av type "Remote".
 Start debuggingen slik som man vanligvis ville gjort lokalt.
+
+### Sikkerhet
+Det er mulig å kalle tjenesten med bruk av følgende tokens
+- Azure CC
+- Azure OBO med følgende rettigheter:
+    - fpsak-saksbehandler
+    - fpsak-veileder
+    - fpsak-drift
+- STS (fases ut)

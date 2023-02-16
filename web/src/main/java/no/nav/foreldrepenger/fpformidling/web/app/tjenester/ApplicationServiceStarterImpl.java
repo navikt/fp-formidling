@@ -53,7 +53,7 @@ public class ApplicationServiceStarterImpl implements ApplicationServiceStarter 
                 .map(h -> CompletableFuture.runAsync(() -> {
                     LOG.info("Stopper service {}", h.getClass().getSimpleName());
                     h.stop();
-                })).collect(toList());
+                })).toList();
 
         CompletableFuture.allOf(appHandlers.toArray(new CompletableFuture[appHandlers.size()])).join();
         LOG.info("Stoppet {} services", handlers.size());

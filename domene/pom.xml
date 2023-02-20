@@ -23,9 +23,8 @@
             <artifactId>felles-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger.felles.sikkerhet</groupId>
-            <artifactId>felles-sikkerhet</artifactId>
-            <scope>provided</scope>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-kontekst</artifactId>
         </dependency>
 
         <!-- Eksterne -->

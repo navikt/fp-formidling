@@ -1,5 +1,16 @@
-Bestilling og produksjon av Brev og Dokumenter for foreldrepenger
+FP-FORMIDLING Bestilling og produksjon av Brev og Dokumenter for foreldrepenger
 ================
+[![Bygg og deploy](https://github.com/navikt/fp-formidling/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/navikt/fp-formidling/actions/workflows/build.yml)
+[![Promote](https://github.com/navikt/fp-formidling/actions/workflows/promote.yml/badge.svg?branch=master)](https://github.com/navikt/fp-formidling/actions/workflows/promote.yml)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-formidling&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=navikt_fp-formidling)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-formidling&metric=coverage)](https://sonarcloud.io/summary/new_code?id=navikt_fp-formidling)
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-formidling&metric=alert_status)](https://sonarcloud.io/dashboard?id=navikt_fp-formidling)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-formidling&metric=bugs)](https://sonarcloud.io/dashboard?id=navikt_fp-formidling)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-formidling&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=navikt_fp-formidling)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-formidling&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=navikt_fp-formidling)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-formidling&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=navikt_fp-formidling)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-formidling&metric=sqale_index)](https://sonarcloud.io/dashboard?id=navikt_fp-formidling)
 
 Applikasjonen bestiller brev basert på hendelser via et REST-grensesnitt.
 

@@ -16,7 +16,7 @@ public class DatabaseHealthCheck implements LiveAndReadinessAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseHealthCheck.class);
     private static final String JDBC_DEFAULT_DS = "jdbc/defaultDS";
-    private static final String SQL_QUERY = "select 1 from DUAL";
+    private static final String SQL_QUERY = "select 1";
 
     @Resource(mappedName = JDBC_DEFAULT_DS)
     private DataSource dataSource;

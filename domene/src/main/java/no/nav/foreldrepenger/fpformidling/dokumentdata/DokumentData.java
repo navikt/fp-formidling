@@ -103,10 +103,8 @@ public class DokumentData extends BaseEntitet {
             return false;
         }
         var dokData = (DokumentData) object;
-        return Objects.equals(dokumentMalType, dokData.getDokumentMalType())
-                && Objects.equals(behandlingUuid, dokData.getBehandlingUuid())
-                && Objects.equals(bestiltTid, dokData.getBestiltTid())
-                && Objects.equals(bestillingType, dokData.getBestillingType());
+        return Objects.equals(dokumentMalType, dokData.getDokumentMalType()) && Objects.equals(behandlingUuid, dokData.getBehandlingUuid())
+            && Objects.equals(bestiltTid, dokData.getBestiltTid()) && Objects.equals(bestillingType, dokData.getBestillingType());
     }
 
     @Override

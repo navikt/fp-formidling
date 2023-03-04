@@ -25,8 +25,8 @@ import no.nav.foreldrepenger.fpformidling.web.app.exceptions.GeneralRestExceptio
 import no.nav.foreldrepenger.fpformidling.web.app.exceptions.JsonMappingExceptionMapper;
 import no.nav.foreldrepenger.fpformidling.web.app.exceptions.JsonParseExceptionMapper;
 import no.nav.foreldrepenger.fpformidling.web.app.jackson.JacksonJsonConfig;
-import no.nav.foreldrepenger.fpformidling.web.app.tjenester.ForvaltningRestTjeneste;
 import no.nav.foreldrepenger.fpformidling.web.app.tjenester.brev.BrevRestTjeneste;
+import no.nav.foreldrepenger.fpformidling.web.app.tjenester.forvaltning.ForvaltningRestTjeneste;
 import no.nav.foreldrepenger.fpformidling.web.server.jetty.TimingFilter;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.exception.TekniskException;
@@ -39,25 +39,18 @@ public class ApiConfig extends Application {
     static final String API_URI = "/api";
 
     public ApiConfig() {
-        OpenAPI oas = new OpenAPI();
-        Info info = new Info()
-                .title("Vedtaksløsningen - Formidling")
-                .version("1.0")
-                .description("REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede.");
+        var oas = new OpenAPI();
+        var info = new Info().title("Vedtaksløsningen - Formidling")
+            .version("1.0")
+            .description("REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede.");
 
-        oas.info(info)
-                .addServersItem(new Server()
-                        .url(ENV.getProperty("context.path", "/fpformidling")));
+        oas.info(info).addServersItem(new Server().url(ENV.getProperty("context.path", "/fpformidling")));
 
-        SwaggerConfiguration oasConfig = new SwaggerConfiguration()
-                .openAPI(oas)
-                .prettyPrint(true)
-                .resourceClasses(getClasses().stream().map(Class::getName).collect(Collectors.toSet()));
+        var oasConfig = new SwaggerConfiguration().openAPI(oas)
+            .prettyPrint(true)
+            .resourceClasses(getClasses().stream().map(Class::getName).collect(Collectors.toSet()));
         try {
-            new GenericOpenApiContextBuilder<>()
-                    .openApiConfiguration(oasConfig)
-                    .buildContext(true)
-                    .read();
+            new GenericOpenApiContextBuilder<>().openApiConfiguration(oasConfig).buildContext(true).read();
         } catch (OpenApiConfigurationException e) {
             throw new TekniskException("OPEN-API", e.getMessage(), e);
         }

@@ -40,7 +40,9 @@ public class TilkjentYtelseAndel {
         return stillingsprosent;
     }
 
-    public int getUtbetalesTilBruker() { return utbetalesTilBruker; }
+    public int getUtbetalesTilBruker() {
+        return utbetalesTilBruker;
+    }
 
     public AktivitetStatus getAktivitetStatus() {
         return aktivitetStatus;

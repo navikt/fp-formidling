@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.web.app.tjenester;
+package no.nav.foreldrepenger.fpformidling.web.app.tjenester.forvaltning;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.QueryParam;
@@ -6,7 +6,7 @@ import javax.ws.rs.QueryParam;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.AbacDto;
 
-public class DokgenJsonTilPdfDto implements AbacDto {
+class DokgenJsonTilPdfDto implements AbacDto {
 
     @NotNull
     @QueryParam("malType")
@@ -24,7 +24,7 @@ public class DokgenJsonTilPdfDto implements AbacDto {
     @QueryParam("dokumentdataJson")
     private String dokumentdataJson;
 
-    public DokgenJsonTilPdfDto(@NotNull String malType, @NotNull String språkKode, @NotNull String dokumentdataKlasse, @NotNull String dokumentdataJson) {
+    DokgenJsonTilPdfDto(@NotNull String malType, @NotNull String språkKode, @NotNull String dokumentdataKlasse, @NotNull String dokumentdataJson) {
         this.malType = malType;
         this.språkKode = språkKode;
         this.dokumentdataKlasse = dokumentdataKlasse;

@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForlengetSaksbe
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
-public class ForlengetSaksbehandlingstidDokumentdataMapperTest {
+class ForlengetSaksbehandlingstidDokumentdataMapperTest {
 
     private static final int ANTALL_BARN = 2;
 
@@ -58,9 +58,7 @@ public class ForlengetSaksbehandlingstidDokumentdataMapperTest {
         // Arrange
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        var dokumentHendelse = lagStandardHendelseBuilder()
-                .medDokumentMalType(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL)
-                .build();
+        var dokumentHendelse = lagStandardHendelseBuilder().medDokumentMalType(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);

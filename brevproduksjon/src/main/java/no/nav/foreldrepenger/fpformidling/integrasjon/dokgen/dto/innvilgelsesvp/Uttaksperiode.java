@@ -1,15 +1,15 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp;
 
-import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
-
-import java.time.LocalDate;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
+
+import java.time.LocalDate;
+import java.util.Objects;
+
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Uttaksperiode {
@@ -41,12 +41,15 @@ public class Uttaksperiode {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (Uttaksperiode) object;
-        return Objects.equals(periodeFom, that.periodeFom)
-                && Objects.equals(periodeTom, that.periodeTom)
-                && Objects.equals(utbetalingsgrad, that.utbetalingsgrad);
+        return Objects.equals(periodeFom, that.periodeFom) && Objects.equals(periodeTom, that.periodeTom) && Objects.equals(utbetalingsgrad,
+            that.utbetalingsgrad);
     }
 
     @Override

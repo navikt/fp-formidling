@@ -35,7 +35,8 @@ public class DokumentHendelseTjeneste {
      */
     public Optional<DokumentHendelse> validerUnikOgLagre(DokumentHendelse hendelse) {
         if (hendelseRepository.finnesHendelseMedUuidAllerede(hendelse.getBestillingUuid())) {
-            LOG.info("Lagrer ikke hendelse med duplikat bestillingUuid: {} for behandling: {} OK", hendelse.getBestillingUuid(), hendelse.getBehandlingUuid());
+            LOG.info("Lagrer ikke hendelse med duplikat bestillingUuid: {} for behandling: {} OK", hendelse.getBestillingUuid(),
+                hendelse.getBehandlingUuid());
             return Optional.empty();
         }
         hendelseRepository.lagre(hendelse);

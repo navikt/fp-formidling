@@ -32,8 +32,7 @@ public enum OpptjeningAktivitetType implements Kodeverdi {
     VIDERE_ETTERUTDANNING("VIDERE_ETTERUTDANNING"),
     UTENLANDSK_ARBEIDSFORHOLD("UTENLANDSK_ARBEIDSFORHOLD"),
     UTDANNINGSPERMISJON("UTDANNINGSPERMISJON"),
-    @JsonEnumDefaultValue
-    UDEFINERT("-"),
+    @JsonEnumDefaultValue UDEFINERT("-"),
     ;
 
     @JsonValue

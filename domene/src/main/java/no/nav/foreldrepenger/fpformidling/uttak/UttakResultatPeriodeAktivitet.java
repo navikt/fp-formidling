@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.uttak;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class UttakResultatPeriodeAktivitet {
     private StønadskontoType trekkonto;

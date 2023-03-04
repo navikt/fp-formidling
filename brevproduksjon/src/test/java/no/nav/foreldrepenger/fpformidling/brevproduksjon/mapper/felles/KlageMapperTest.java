@@ -17,16 +17,16 @@ import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
 
-public class KlageMapperTest {
+class KlageMapperTest {
 
 
     @Test
     void formaterLovhjemlerKlageAvvistTest() {
         var klage = lagKlageNFP(List.of(KlageAvvistÅrsak.KLAGET_FOR_SENT, KlageAvvistÅrsak.IKKE_KONKRET));
-        assertLovFormateringKlage(KlageMapper.hentKlageHjemler(klage),  "forvaltningsloven §§ 31, 32 og 33");
+        assertLovFormateringKlage(KlageMapper.hentKlageHjemler(klage), "forvaltningsloven §§ 31, 32 og 33");
 
         klage = lagKlageNFP(List.of(KlageAvvistÅrsak.KLAGER_IKKE_PART));
-        assertLovFormateringKlage(KlageMapper.hentKlageHjemler(klage),  "forvaltningsloven §§ 28 og 33");
+        assertLovFormateringKlage(KlageMapper.hentKlageHjemler(klage), "forvaltningsloven §§ 28 og 33");
     }
 
     private Klage lagKlageNFP(List<KlageAvvistÅrsak> avvistÅrsaker) {
@@ -52,10 +52,10 @@ public class KlageMapperTest {
 
         resultatDto.setKlageVurdering(KlageVurdering.AVVIS_KLAGE);
 
-       return resultatDto;
+        return resultatDto;
     }
 
-    private void assertLovFormateringKlage(Set<String> input,  String forventetOutput) {
+    private void assertLovFormateringKlage(Set<String> input, String forventetOutput) {
         var lovhjemler = KlageMapper.formaterLovhjemlerForAvvistKlage(input, false, Språkkode.NB).get();
         assertThat(lovhjemler).isEqualTo(forventetOutput);
     }

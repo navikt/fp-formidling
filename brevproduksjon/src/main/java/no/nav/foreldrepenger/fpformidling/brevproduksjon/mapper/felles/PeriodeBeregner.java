@@ -44,9 +44,9 @@ public class PeriodeBeregner {
     public static BeregningsgrunnlagPeriode finnBeregningsgrunnlagperiode(TilkjentYtelsePeriode tilkjentPeriode,
                                                                           List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder) {
         for (var beregningsgrunnlagPeriode : beregningsgrunnlagPerioder) {
-            if (!tilkjentPeriode.getPeriodeFom().isBefore(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom()) &&
-                    (beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom() == null
-                            || (!tilkjentPeriode.getPeriodeTom().isAfter(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom())))) {
+            if (!tilkjentPeriode.getPeriodeFom().isBefore(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeFom()) && (
+                beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom() == null || (!tilkjentPeriode.getPeriodeTom()
+                    .isAfter(beregningsgrunnlagPeriode.getBeregningsgrunnlagPeriodeTom())))) {
                 return beregningsgrunnlagPeriode;
             }
         }
@@ -55,19 +55,19 @@ public class PeriodeBeregner {
 
     public static UttakResultatPeriode finnUttaksperiode(TilkjentYtelsePeriode tilkjentPeriode, List<UttakResultatPeriode> uttakPerioder) {
         for (var uttakPeriode : uttakPerioder) {
-            if (!tilkjentPeriode.getPeriodeFom().isBefore(uttakPeriode.getFom())
-                    && !tilkjentPeriode.getPeriodeTom().isAfter(uttakPeriode.getTom())) {
+            if (!tilkjentPeriode.getPeriodeFom().isBefore(uttakPeriode.getFom()) && !tilkjentPeriode.getPeriodeTom().isAfter(uttakPeriode.getTom())) {
                 return uttakPeriode;
             }
         }
         throw new TekniskException(FEILKODE, String.format(FEILMELDING, "uttaksperiode"));
     }
 
-    public static int finnAntallTilkjentePerioderForUttaksperioden(List<TilkjentYtelsePeriode> tilkjentPeriodeListe, UttakResultatPeriode uttakPeriode) {
+    public static int finnAntallTilkjentePerioderForUttaksperioden(List<TilkjentYtelsePeriode> tilkjentPeriodeListe,
+                                                                   UttakResultatPeriode uttakPeriode) {
         return (int) tilkjentPeriodeListe.stream()
-                .filter(tp ->uttakPeriode.getFom().isEqual(tp.getPeriodeFom()) && uttakPeriode.getTom().isAfter(tp.getPeriodeTom())
+            .filter(tp -> uttakPeriode.getFom().isEqual(tp.getPeriodeFom()) && uttakPeriode.getTom().isAfter(tp.getPeriodeTom())
                 || uttakPeriode.getTom().isEqual(tp.getPeriodeTom()) && uttakPeriode.getFom().isBefore(tp.getPeriodeFom()))
-                .count();
+            .count();
     }
 
     public static List<SvpUttakResultatPeriode> finnUttakPeriodeKandidater(TilkjentYtelsePeriode periode,
@@ -75,8 +75,7 @@ public class PeriodeBeregner {
         if (periode.getDagsats() > 0) {
             List<SvpUttakResultatPeriode> kandidater = new ArrayList<>();
             for (var uttakPeriode : uttakPerioder) {
-                if (!periode.getPeriodeFom().isBefore(uttakPeriode.getFom())
-                        && !periode.getPeriodeTom().isAfter(uttakPeriode.getTom())) {
+                if (!periode.getPeriodeFom().isBefore(uttakPeriode.getFom()) && !periode.getPeriodeTom().isAfter(uttakPeriode.getTom())) {
                     kandidater.add(uttakPeriode);
                 }
             }
@@ -89,9 +88,8 @@ public class PeriodeBeregner {
     }
 
     // TODO - Skriv tester.. Dette oppfører seg annerledes i DTOene enn fpsak
-    public static Optional<BeregningsgrunnlagPrStatusOgAndel> finnBgPerStatusOgAndelHvisFinnes(
-            List<BeregningsgrunnlagPrStatusOgAndel> bgPerStatusOgAndelListe,
-            TilkjentYtelseAndel andel) {
+    public static Optional<BeregningsgrunnlagPrStatusOgAndel> finnBgPerStatusOgAndelHvisFinnes(List<BeregningsgrunnlagPrStatusOgAndel> bgPerStatusOgAndelListe,
+                                                                                               TilkjentYtelseAndel andel) {
         for (var bgPerStatusOgAndel : bgPerStatusOgAndelListe) {
             if (andel.getAktivitetStatus().equals(bgPerStatusOgAndel.getAktivitetStatus())) {
                 if (AktivitetStatus.ARBEIDSTAKER.equals(andel.getAktivitetStatus())) {
@@ -116,8 +114,9 @@ public class PeriodeBeregner {
         return sammeArbeidsforhold(arbeidsgiver.get(), arbeidsforholdRef, bgPerStatusOgAndel);
     }
 
-    private static boolean sammeArbeidsforhold(Arbeidsgiver arbeidsgiver, ArbeidsforholdRef arbeidsforholdRef,
-            BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel) {
+    private static boolean sammeArbeidsforhold(Arbeidsgiver arbeidsgiver,
+                                               ArbeidsforholdRef arbeidsforholdRef,
+                                               BeregningsgrunnlagPrStatusOgAndel bgPerStatusOgAndel) {
         return bgPerStatusOgAndel.gjelderSammeArbeidsforhold(arbeidsgiver, arbeidsforholdRef);
     }
 
@@ -126,17 +125,15 @@ public class PeriodeBeregner {
     }
 
     public static Optional<UttakResultatPeriodeAktivitet> finnAktivitetMedStatusHvisFinnes(List<UttakResultatPeriodeAktivitet> uttakAktiviteter,
-            TilkjentYtelseAndel andel) {
+                                                                                           TilkjentYtelseAndel andel) {
         var arbeidsgiver = andel.getArbeidsgiver();
         var arbeidsforholdRef = andel.getArbeidsforholdRef();
 
         for (var aktivitet : uttakAktiviteter) {
-            if (uttakAktivitetStatusMap.getOrDefault(andel.getAktivitetStatus(), UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType())
-                    && (arbeidsgiver.isEmpty()
-                            || Objects.equals(arbeidsgiver.get().arbeidsgiverReferanse(), aktivitet.getArbeidsgiverIdentifikator()))
-                    && (arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null
-                            || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold()
-                                    && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId())))) {
+            if (uttakAktivitetStatusMap.getOrDefault(andel.getAktivitetStatus(), UttakArbeidType.ANNET).equals(aktivitet.getUttakArbeidType()) && (
+                arbeidsgiver.isEmpty() || Objects.equals(arbeidsgiver.get().arbeidsgiverReferanse(), aktivitet.getArbeidsgiverIdentifikator())) && (
+                arbeidsforholdRef == null || arbeidsforholdRef.getReferanse() == null || (arbeidsforholdRef.gjelderForSpesifiktArbeidsforhold()
+                    && arbeidsforholdRef.getReferanse().equals(aktivitet.getArbeidsforholdId())))) {
                 return Optional.of(aktivitet);
             }
         }
@@ -144,7 +141,6 @@ public class PeriodeBeregner {
     }
 
     public static Optional<Stønadskonto> finnStønadsKontoMedType(Set<Stønadskonto> stønadskontoer, SaldoVisningStønadskontoType stønadskontoType) {
-        return stønadskontoer.stream().filter(stønadskonto -> stønadskontoType.equals(stønadskonto.stønadskontoType()))
-                .findFirst();
+        return stønadskontoer.stream().filter(stønadskonto -> stønadskontoType.equals(stønadskonto.stønadskontoType())).findFirst();
     }
 }

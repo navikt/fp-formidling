@@ -7,8 +7,7 @@ public class Innsyn {
     //Kun dokumenter der bruker fikk innsyn
     private List<InnsynDokument> innsynDokumenter;
 
-    public Innsyn(InnsynResultatType innsynResultatType,
-                  List<InnsynDokument> innsynDokumenter) {
+    public Innsyn(InnsynResultatType innsynResultatType, List<InnsynDokument> innsynDokumenter) {
         this.innsynResultatType = innsynResultatType;
         this.innsynDokumenter = innsynDokumenter;
     }

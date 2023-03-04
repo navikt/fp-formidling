@@ -9,7 +9,7 @@ import java.util.TreeSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class LovhjemmelComparatorTest {
+class LovhjemmelComparatorTest {
 
     List<String> lovhjemler = new ArrayList();
 

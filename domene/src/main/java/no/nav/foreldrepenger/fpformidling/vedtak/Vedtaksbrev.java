@@ -38,8 +38,7 @@ public enum Vedtaksbrev implements Kodeverdi {
         if (kode == null) {
             return null;
         }
-        return Optional.ofNullable(KODER.get(kode))
-                .orElseThrow(() -> new IllegalArgumentException("Ukjent Vedtaksbrev: " + kode));
+        return Optional.ofNullable(KODER.get(kode)).orElseThrow(() -> new IllegalArgumentException("Ukjent Vedtaksbrev: " + kode));
     }
 
     @Override

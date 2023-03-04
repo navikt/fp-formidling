@@ -70,8 +70,7 @@ public class PersondataTjeneste {
         request.setIdent(aktørId.getId());
         request.setGrupper(List.of(IdentGruppe.FOLKEREGISTERIDENT));
         request.setHistorikk(Boolean.FALSE);
-        var projection = new IdentlisteResponseProjection()
-                .identer(new IdentInformasjonResponseProjection().ident());
+        var projection = new IdentlisteResponseProjection().identer(new IdentInformasjonResponseProjection().ident());
 
         final Identliste identliste;
 
@@ -93,38 +92,48 @@ public class PersondataTjeneste {
 
         var query = new HentPersonQueryRequest();
         query.setIdent(aktørId.getId());
-        var projection = new PersonResponseProjection()
-                .navn(new NavnResponseProjection().forkortetNavn().fornavn().mellomnavn().etternavn())
-                .foedsel(new FoedselResponseProjection().foedselsdato())
-                .doedsfall(new DoedsfallResponseProjection().doedsdato())
-                .kjoenn(new KjoennResponseProjection().kjoenn())
-                .folkeregisterpersonstatus(new FolkeregisterpersonstatusResponseProjection().forenkletStatus());
+        var projection = new PersonResponseProjection().navn(new NavnResponseProjection().forkortetNavn().fornavn().mellomnavn().etternavn())
+            .foedsel(new FoedselResponseProjection().foedselsdato())
+            .doedsfall(new DoedsfallResponseProjection().doedsdato())
+            .kjoenn(new KjoennResponseProjection().kjoenn())
+            .folkeregisterpersonstatus(new FolkeregisterpersonstatusResponseProjection().forenkletStatus());
 
         var person = pdlKlient.hentPerson(query, projection);
 
-        var fødselsdato = person.getFoedsel().stream()
-                .map(Foedsel::getFoedselsdato)
-                .filter(Objects::nonNull)
-                .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
-        var dødssdato = person.getDoedsfall().stream()
-                .map(Doedsfall::getDoedsdato)
-                .filter(Objects::nonNull)
-                .findFirst().map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE)).orElse(null);
-        var pdlStatusDød = person.getFolkeregisterpersonstatus().stream()
-                .map(Folkeregisterpersonstatus::getForenkletStatus)
-                .findFirst().map(PersondataTjeneste::harPersonstatusDød).orElse(false);
-        return Personinfo.getbuilder(aktørId).medPersonIdent(personIdent)
-                .medNavn(person.getNavn().stream().map(PersondataTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN"))
-                .medFødselsdato(fødselsdato)
-                .medDødsdato(dødssdato)
-                .medNavBrukerKjønn(mapKjønn(person))
-                .medRegistrertDød(pdlStatusDød)
-                .build();
+        var fødselsdato = person.getFoedsel()
+            .stream()
+            .map(Foedsel::getFoedselsdato)
+            .filter(Objects::nonNull)
+            .findFirst()
+            .map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE))
+            .orElse(null);
+        var dødssdato = person.getDoedsfall()
+            .stream()
+            .map(Doedsfall::getDoedsdato)
+            .filter(Objects::nonNull)
+            .findFirst()
+            .map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE))
+            .orElse(null);
+        var pdlStatusDød = person.getFolkeregisterpersonstatus()
+            .stream()
+            .map(Folkeregisterpersonstatus::getForenkletStatus)
+            .findFirst()
+            .map(PersondataTjeneste::harPersonstatusDød)
+            .orElse(false);
+        return Personinfo.getbuilder(aktørId)
+            .medPersonIdent(personIdent)
+            .medNavn(person.getNavn().stream().map(PersondataTjeneste::mapNavn).filter(Objects::nonNull).findFirst().orElse("MANGLER NAVN"))
+            .medFødselsdato(fødselsdato)
+            .medDødsdato(dødssdato)
+            .medNavBrukerKjønn(mapKjønn(person))
+            .medRegistrertDød(pdlStatusDød)
+            .build();
     }
 
     private static String mapNavn(Navn navn) {
-        if (navn.getForkortetNavn() != null)
+        if (navn.getForkortetNavn() != null) {
             return navn.getForkortetNavn();
+        }
         return navn.getEtternavn() + " " + navn.getFornavn() + (navn.getMellomnavn() == null ? "" : " " + navn.getMellomnavn());
     }
 
@@ -133,12 +142,10 @@ public class PersondataTjeneste {
     }
 
     private static NavBrukerKjønn mapKjønn(Person person) {
-        var kode = person.getKjoenn().stream()
-                .map(Kjoenn::getKjoenn)
-                .filter(Objects::nonNull)
-                .findFirst().orElse(KjoennType.UKJENT);
-        if (KjoennType.MANN.equals(kode))
+        var kode = person.getKjoenn().stream().map(Kjoenn::getKjoenn).filter(Objects::nonNull).findFirst().orElse(KjoennType.UKJENT);
+        if (KjoennType.MANN.equals(kode)) {
             return NavBrukerKjønn.MANN;
+        }
         return KjoennType.KVINNE.equals(kode) ? NavBrukerKjønn.KVINNE : NavBrukerKjønn.UDEFINERT;
     }
 }

@@ -31,9 +31,7 @@ public final class UttaksperiodeMapper {
                                                                        Språkkode språkkode) {
         Map<String, List<Uttaksperiode>> resultat = new HashMap<>();
 
-        var uttakPerioder = uttaksresultat.getUttakResultatArbeidsforhold().stream()
-                .flatMap(ur -> ur.getPerioder().stream())
-                .toList();
+        var uttakPerioder = uttaksresultat.getUttakResultatArbeidsforhold().stream().flatMap(ur -> ur.getPerioder().stream()).toList();
 
         for (var periode : tilkjentYtelse.getPerioder()) {
             var uttakPeriodeKandidater = PeriodeBeregner.finnUttakPeriodeKandidater(periode, uttakPerioder);
@@ -42,34 +40,35 @@ public final class UttaksperiodeMapper {
                 var aktivitetsbeskrivelse = utledAktivitetsbeskrivelse(andel, aktivitetStatus);
 
                 var matchetUttaksperiode = finnUttakPeriode(uttakPeriodeKandidater, aktivitetsbeskrivelse);
-                matchetUttaksperiode.ifPresent(svpUttakResultatPeriode ->
-                        mapAktivitet(resultat, svpUttakResultatPeriode, periode, aktivitetsbeskrivelse, språkkode));
+                matchetUttaksperiode.ifPresent(
+                    svpUttakResultatPeriode -> mapAktivitet(resultat, svpUttakResultatPeriode, periode, aktivitetsbeskrivelse, språkkode));
             }
         }
 
-        return resultat.entrySet().stream()
-                .map(entry -> Uttaksaktivitet.ny()
-                    .medAktivitetsbeskrivelse(entry.getKey())
-                    .medUttaksperioder(entry.getValue())
-                    .build())
-                .toList();
+        return resultat.entrySet()
+            .stream()
+            .map(entry -> Uttaksaktivitet.ny().medAktivitetsbeskrivelse(entry.getKey()).medUttaksperioder(entry.getValue()).build())
+            .toList();
     }
 
     private static Optional<SvpUttakResultatPeriode> finnUttakPeriode(List<SvpUttakResultatPeriode> matchendeUttaksperioder,
                                                                       String aktivitetsbeskrivelse) {
-        return matchendeUttaksperioder.stream().filter(uttakPeriode -> !uttakPeriode.getArbeidsgiverNavn().isEmpty())
-                .filter(uttakPeriode -> aktivitetsbeskrivelse.contains(uttakPeriode.getArbeidsgiverNavn()))
-                .findFirst();
+        return matchendeUttaksperioder.stream()
+            .filter(uttakPeriode -> !uttakPeriode.getArbeidsgiverNavn().isEmpty())
+            .filter(uttakPeriode -> aktivitetsbeskrivelse.contains(uttakPeriode.getArbeidsgiverNavn()))
+            .findFirst();
     }
 
-    private static void mapAktivitet(Map<String, List<Uttaksperiode>> map, SvpUttakResultatPeriode matchetUttaksperiode,
+    private static void mapAktivitet(Map<String, List<Uttaksperiode>> map,
+                                     SvpUttakResultatPeriode matchetUttaksperiode,
                                      TilkjentYtelsePeriode tilkjentYtelsePeriode,
-                                     String aktivitetsbeskrivelse, Språkkode språkkode) {
+                                     String aktivitetsbeskrivelse,
+                                     Språkkode språkkode) {
         var uttaksperiode = Uttaksperiode.ny()
-                .medPeriodeFom(tilkjentYtelsePeriode.getPeriode().getFomDato(), språkkode)
-                .medPeriodeTom(tilkjentYtelsePeriode.getPeriode().getTomDato(), språkkode)
-                .medUtbetalingsgrad(Prosent.of(matchetUttaksperiode.getUtbetalingsgrad()))
-                .build();
+            .medPeriodeFom(tilkjentYtelsePeriode.getPeriode().getFomDato(), språkkode)
+            .medPeriodeTom(tilkjentYtelsePeriode.getPeriode().getTomDato(), språkkode)
+            .medUtbetalingsgrad(Prosent.of(matchetUttaksperiode.getUtbetalingsgrad()))
+            .build();
 
         var uttaksperioder = new ArrayList<Uttaksperiode>();
         uttaksperioder.add(uttaksperiode);
@@ -83,8 +82,7 @@ public final class UttaksperiodeMapper {
         return (eksisterendePerioder, nyPeriode) -> {
             eksisterendePerioder.add(nyPeriode.get(0));
             var perioderEtterSammenslåing = new ArrayList<Uttaksperiode>();
-            return eksisterendePerioder.stream()
-                    .reduce(perioderEtterSammenslåing, slåSammenSammenhengendePerioder(), dummyCombiner());
+            return eksisterendePerioder.stream().reduce(perioderEtterSammenslåing, slåSammenSammenhengendePerioder(), dummyCombiner());
         };
     }
 
@@ -109,8 +107,8 @@ public final class UttaksperiodeMapper {
 
     private static boolean erPerioderSammenhengendeEllerLikeOgSkalSlåSammen(Uttaksperiode periodeEn, Uttaksperiode periodeTo) {
         var sammeUtbetalingsgrad = periodeEn.getUtbetalingsgrad().equals(periodeTo.getUtbetalingsgrad());
-        return sammeUtbetalingsgrad && (erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom())
-                || erFomOgTomLike(periodeEn, periodeTo));
+        return sammeUtbetalingsgrad && (erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom()) || erFomOgTomLike(periodeEn,
+            periodeTo));
     }
 
     private static boolean erFomOgTomLike(Uttaksperiode periodeEn, Uttaksperiode periodeTo) {

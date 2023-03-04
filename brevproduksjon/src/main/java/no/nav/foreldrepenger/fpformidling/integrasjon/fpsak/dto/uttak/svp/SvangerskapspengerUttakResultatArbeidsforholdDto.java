@@ -6,8 +6,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
 
 public record SvangerskapspengerUttakResultatArbeidsforholdDto(ArbeidsforholdIkkeOppfyltÅrsak arbeidsforholdIkkeOppfyltÅrsak,
-                                                               String arbeidsgiverReferanse,
-                                                               UttakArbeidType arbeidType,
+                                                               String arbeidsgiverReferanse, UttakArbeidType arbeidType,
                                                                List<SvangerskapspengerUttakResultatPeriodeDto> perioder) {
 
 }

@@ -38,8 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceRole;
-import no.nav.foreldrepenger.fpformidling.web.server.jetty.db.DatasourceUtil;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.sikkerhet.jaspic.OidcAuthModule;
 
@@ -94,7 +92,7 @@ public class JettyServer {
 
         var factory = new DefaultAuthConfigFactory();
         factory.registerConfigProvider(new JaspiAuthConfigProvider(new OidcAuthModule()), "HttpServlet", "server " + CONTEXT_PATH,
-                "OIDC Authentication");
+            "OIDC Authentication");
 
         AuthConfigFactory.setFactory(factory);
     }
@@ -108,8 +106,8 @@ public class JettyServer {
         var storeFile = new File(storePath);
         if (!storeFile.exists()) {
             throw new IllegalStateException(
-                    "Finner ikke truststore i " + storePath + "\n\tKonfrigurer enten som System property '" + trustStorePathProp
-                            + "' eller environment variabel '" + trustStorePathProp.toUpperCase().replace('.', '_') + "'");
+                "Finner ikke truststore i " + storePath + "\n\tKonfrigurer enten som System property '" + trustStorePathProp
+                    + "' eller environment variabel '" + trustStorePathProp.toUpperCase().replace('.', '_') + "'");
         }
         var password = ENV.getProperty(trustStorePasswordProp, "changeit");
         System.setProperty(trustStorePathProp, storeFile.getAbsolutePath());
@@ -122,10 +120,7 @@ public class JettyServer {
 
     void migrerDatabaser() {
         try (var dataSource = DatasourceUtil.createDatasource(DatasourceRole.ADMIN, 2)) {
-            var flyway = Flyway.configure()
-                    .dataSource(dataSource)
-                    .locations("classpath:/db/migration/defaultDS")
-                    .baselineOnMigrate(true);
+            var flyway = Flyway.configure().dataSource(dataSource).locations("classpath:/db/migration/defaultDS").baselineOnMigrate(true);
             if (ENV.isProd() || ENV.isDev()) {
                 flyway.initSql(String.format("SET ROLE \"%s\"", DatasourceUtil.getRole(DatasourceRole.ADMIN)));
             }

@@ -27,9 +27,6 @@ public class BehandlingÅrsakDto {
 
     @Override
     public String toString() {
-        return "BehandlingÅrsakDto{" +
-                "behandlingArsakType=" + behandlingArsakType +
-                ", manueltOpprettet=" + manueltOpprettet +
-                '}';
+        return "BehandlingÅrsakDto{" + "behandlingArsakType=" + behandlingArsakType + ", manueltOpprettet=" + manueltOpprettet + '}';
     }
 }

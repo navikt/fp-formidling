@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
+
+import java.util.Objects;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Arbeidsforhold {
@@ -47,24 +47,24 @@ public class Arbeidsforhold {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (Arbeidsforhold) object;
-        return Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn)
-                && Objects.equals(gradering, that.gradering)
-                && Objects.equals(prosentArbeid, that.prosentArbeid)
-                && Objects.equals(stillingsprosent, that.stillingsprosent)
-                && Objects.equals(utbetalingsgrad, that.utbetalingsgrad)
-                && Objects.equals(naturalytelseEndringType, that.naturalytelseEndringType)
-                && Objects.equals(naturalytelseEndringDato, that.naturalytelseEndringDato)
-                && Objects.equals(naturalytelseNyDagsats, that.naturalytelseNyDagsats)
-                && Objects.equals(aktivitetDagsats, that.aktivitetDagsats);
+        return Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn) && Objects.equals(gradering, that.gradering) && Objects.equals(prosentArbeid,
+            that.prosentArbeid) && Objects.equals(stillingsprosent, that.stillingsprosent) && Objects.equals(utbetalingsgrad, that.utbetalingsgrad)
+            && Objects.equals(naturalytelseEndringType, that.naturalytelseEndringType) && Objects.equals(naturalytelseEndringDato,
+            that.naturalytelseEndringDato) && Objects.equals(naturalytelseNyDagsats, that.naturalytelseNyDagsats) && Objects.equals(aktivitetDagsats,
+            that.aktivitetDagsats);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(arbeidsgiverNavn, gradering, prosentArbeid, stillingsprosent, utbetalingsgrad,
-                naturalytelseEndringType, naturalytelseEndringDato, naturalytelseNyDagsats, aktivitetDagsats);
+        return Objects.hash(arbeidsgiverNavn, gradering, prosentArbeid, stillingsprosent, utbetalingsgrad, naturalytelseEndringType,
+            naturalytelseEndringDato, naturalytelseNyDagsats, aktivitetDagsats);
     }
 
     public static Builder ny() {

@@ -209,23 +209,18 @@ public class DokumentFelles extends BaseEntitet {
             return false;
         }
         var dokFelles = (DokumentFelles) object;
-        return Objects.equals(getSpråkkode(), dokFelles.getSpråkkode())
-                && Objects.equals(saksnummer, dokFelles.getSaksnummer())
-                && Objects.equals(signerendeSaksbehandlerNavn, dokFelles.getSignerendeSaksbehandlerNavn())
-                && Objects.equals(automatiskBehandlet, dokFelles.getAutomatiskBehandlet())
-                && Objects.equals(sakspartId, dokFelles.getSakspartId())
-                && Objects.equals(sakspartNavn, dokFelles.getSakspartNavn())
-                && Objects.equals(signerendeBeslutterNavn, dokFelles.getSignerendeBeslutterNavn())
-                && Objects.equals(mottakerId, dokFelles.getMottakerId())
-                && Objects.equals(mottakerNavn, dokFelles.getMottakerNavn())
-                && Objects.equals(dokumentDato, dokFelles.getDokumentDato())
-                && Objects.equals(sakspartPersonStatus, dokFelles.getSakspartPersonStatus());
+        return Objects.equals(getSpråkkode(), dokFelles.getSpråkkode()) && Objects.equals(saksnummer, dokFelles.getSaksnummer()) && Objects.equals(
+            signerendeSaksbehandlerNavn, dokFelles.getSignerendeSaksbehandlerNavn()) && Objects.equals(automatiskBehandlet,
+            dokFelles.getAutomatiskBehandlet()) && Objects.equals(sakspartId, dokFelles.getSakspartId()) && Objects.equals(sakspartNavn,
+            dokFelles.getSakspartNavn()) && Objects.equals(signerendeBeslutterNavn, dokFelles.getSignerendeBeslutterNavn()) && Objects.equals(
+            mottakerId, dokFelles.getMottakerId()) && Objects.equals(mottakerNavn, dokFelles.getMottakerNavn()) && Objects.equals(dokumentDato,
+            dokFelles.getDokumentDato()) && Objects.equals(sakspartPersonStatus, dokFelles.getSakspartPersonStatus());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getSpråkkode(), saksnummer, signerendeSaksbehandlerNavn, automatiskBehandlet, sakspartId, sakspartNavn,
-                signerendeBeslutterNavn, mottakerId, mottakerNavn, dokumentDato, sakspartPersonStatus);
+            signerendeBeslutterNavn, mottakerId, mottakerNavn, dokumentDato, sakspartPersonStatus);
     }
 
     @Override

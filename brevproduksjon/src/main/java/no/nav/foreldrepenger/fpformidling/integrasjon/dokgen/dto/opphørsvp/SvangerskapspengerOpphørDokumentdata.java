@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.opphørsvp;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
+
+import java.util.Objects;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -54,18 +54,17 @@ public class SvangerskapspengerOpphørDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (SvangerskapspengerOpphørDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(opphørsdato, that.opphørsdato)
-                && Objects.equals(dødsdatoBarn, that.dødsdatoBarn)
-                && Objects.equals(fødselsdato, that.fødselsdato)
-                && Objects.equals(erSøkerDød, that.erSøkerDød)
-                && Objects.equals(halvG, that.halvG)
-                && Objects.equals(lovhjemmel, that.lovhjemmel)
-                && Objects.equals(opphørtPeriode, that.opphørtPeriode)
-                && Objects.equals(klagefristUker, that.klagefristUker);
+        return Objects.equals(felles, that.felles) && Objects.equals(opphørsdato, that.opphørsdato) && Objects.equals(dødsdatoBarn, that.dødsdatoBarn)
+            && Objects.equals(fødselsdato, that.fødselsdato) && Objects.equals(erSøkerDød, that.erSøkerDød) && Objects.equals(halvG, that.halvG)
+            && Objects.equals(lovhjemmel, that.lovhjemmel) && Objects.equals(opphørtPeriode, that.opphørtPeriode) && Objects.equals(klagefristUker,
+            that.klagefristUker);
     }
 
     @Override

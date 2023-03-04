@@ -14,8 +14,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public enum DokumentKategori implements Kodeverdi {
 
-    @JsonEnumDefaultValue
-    UDEFINERT("-"),
+    @JsonEnumDefaultValue UDEFINERT("-"),
     KLAGE_ELLER_ANKE("KLGA"),
     SØKNAD("SOKN"),
     ;

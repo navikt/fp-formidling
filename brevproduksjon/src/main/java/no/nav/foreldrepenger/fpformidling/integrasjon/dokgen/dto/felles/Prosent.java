@@ -39,8 +39,12 @@ public class Prosent {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (Prosent) object;
         return Objects.equals(verdi, that.verdi);
     }
@@ -52,8 +56,6 @@ public class Prosent {
 
     @Override
     public String toString() {
-        return "Prosent{" +
-                "verdi=" + verdi.toPlainString() +
-                '}';
+        return "Prosent{" + "verdi=" + verdi.toPlainString() + '}';
     }
 }

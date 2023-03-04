@@ -31,9 +31,10 @@ public class PersonAdapter {
     public Optional<Personinfo> hentBrukerForAktør(AktørId aktørId) {
         try {
             var funnetFnr = persondataTjeneste.hentPersonIdentForAktørId(aktørId);
-            return funnetFnr.map(pi -> persondataTjeneste.hentPersoninfo(aktørId,pi));
+            return funnetFnr.map(pi -> persondataTjeneste.hentPersoninfo(aktørId, pi));
         } catch (PdlException pdlException) {
-            LOG.error("Fikk feil ved kall til PDL. Detaljer: type={}, cause={}, policy={}", pdlException.getDetails().type(), pdlException.getDetails().cause(), pdlException.getDetails().policy());
+            LOG.error("Fikk feil ved kall til PDL. Detaljer: type={}, cause={}, policy={}", pdlException.getDetails().type(),
+                pdlException.getDetails().cause(), pdlException.getDetails().policy());
             throw pdlException;
         }
     }

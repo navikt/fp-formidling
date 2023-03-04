@@ -17,10 +17,6 @@ public class JsonMappingExceptionMapper implements ExceptionMapper<JsonMappingEx
     public Response toResponse(JsonMappingException exception) {
         var feil = "FPFORMIDLING-252294: JSON-mapping feil";
         log.warn(feil);
-        return Response
-                .status(Response.Status.BAD_REQUEST)
-                .entity(new FeilDto(feil))
-                .type(MediaType.APPLICATION_JSON)
-                .build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new FeilDto(feil)).type(MediaType.APPLICATION_JSON).build();
     }
 }

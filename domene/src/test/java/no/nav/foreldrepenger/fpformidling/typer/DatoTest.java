@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 
-public class DatoTest {
+class DatoTest {
 
     @Test
     void skal_formatere_dato_med_norsk_format_for_februar() {

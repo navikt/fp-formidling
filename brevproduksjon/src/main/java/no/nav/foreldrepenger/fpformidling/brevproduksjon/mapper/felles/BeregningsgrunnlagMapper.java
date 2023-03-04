@@ -19,14 +19,13 @@ public final class BeregningsgrunnlagMapper {
     private static final Map<AktivitetStatus, List<AktivitetStatus>> KOMBINERTE_REGEL_STATUSER_MAP = new EnumMap<>(AktivitetStatus.class);
 
     static {
-        KOMBINERTE_REGEL_STATUSER_MAP.put(AktivitetStatus.KOMBINERT_AT_FL,
-                List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER));
+        KOMBINERTE_REGEL_STATUSER_MAP.put(AktivitetStatus.KOMBINERT_AT_FL, List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER));
         KOMBINERTE_REGEL_STATUSER_MAP.put(AktivitetStatus.KOMBINERT_AT_SN,
-                List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
+            List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
         KOMBINERTE_REGEL_STATUSER_MAP.put(AktivitetStatus.KOMBINERT_AT_FL_SN,
-                List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
+            List.of(AktivitetStatus.ARBEIDSTAKER, AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
         KOMBINERTE_REGEL_STATUSER_MAP.put(AktivitetStatus.KOMBINERT_FL_SN,
-                List.of(AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
+            List.of(AktivitetStatus.FRILANSER, AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE));
     }
 
     private BeregningsgrunnlagMapper() {
@@ -44,18 +43,15 @@ public final class BeregningsgrunnlagMapper {
             var relevanteStatuser = KOMBINERTE_REGEL_STATUSER_MAP.get(bgAktivitetStatus.aktivitetStatus());
             resultatListe = bgpsaListe.stream().filter(andel -> relevanteStatuser.contains(andel.getAktivitetStatus())).toList();
         } else {
-            resultatListe = bgpsaListe.stream()
-                    .filter(andel -> bgAktivitetStatus.aktivitetStatus().equals(andel.getAktivitetStatus()))
-                    .toList();
+            resultatListe = bgpsaListe.stream().filter(andel -> bgAktivitetStatus.aktivitetStatus().equals(andel.getAktivitetStatus())).toList();
 
             // Spesialhåndtering av tilkommet arbeidsforhold for Dagpenger og AAP - andeler som ikke kan mappes gjennom
             // aktivitetesstatuslisten på beregningsgrunnlag da de er tilkommet etter skjæringstidspunkt. Typisk dersom arbeidsgiver er
             // tilkommet etter start permisjon og krever refusjon i permisjonstiden.
-            var aktuelleStatuserForTilkommetArbForhold = List.of(AktivitetStatus.DAGPENGER,
-                    AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
+            var aktuelleStatuserForTilkommetArbForhold = List.of(AktivitetStatus.DAGPENGER, AktivitetStatus.ARBEIDSAVKLARINGSPENGER);
 
             if (resultatListe.stream().anyMatch(br -> aktuelleStatuserForTilkommetArbForhold.contains(br.getAktivitetStatus()))
-                    && hentSummertDagsats(resultatListe) != hentSummertDagsats(bgpsaListe)) {
+                && hentSummertDagsats(resultatListe) != hentSummertDagsats(bgpsaListe)) {
                 var sumTilkommetDagsats = hentSumTilkommetDagsats(bgpsaListe);
                 if (sumTilkommetDagsats != 0) {
                     resultatListe.forEach(rl -> {
@@ -69,22 +65,18 @@ public final class BeregningsgrunnlagMapper {
 
         if (resultatListe.isEmpty()) {
             var sb = new StringBuilder();
-            bgpsaListe.stream()
-                    .map(BeregningsgrunnlagPrStatusOgAndel::getAktivitetStatus)
-                    .map(AktivitetStatus::getKode)
-                    .forEach(sb::append);
-            throw new IllegalStateException(
-                    String.format("Fant ingen andeler for status: %s, andeler: %s", bgAktivitetStatus.aktivitetStatus(), sb));
+            bgpsaListe.stream().map(BeregningsgrunnlagPrStatusOgAndel::getAktivitetStatus).map(AktivitetStatus::getKode).forEach(sb::append);
+            throw new IllegalStateException(String.format("Fant ingen andeler for status: %s, andeler: %s", bgAktivitetStatus.aktivitetStatus(), sb));
         }
         return resultatListe;
     }
 
     public static long getHalvGOrElseZero(Optional<Beregningsgrunnlag> beregningsgrunnlag) {
         return beregningsgrunnlag.map(Beregningsgrunnlag::getGrunnbeløp)
-                .map(Beløp::getVerdi)
-                .orElse(BigDecimal.ZERO)
-                .divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP)
-                .longValue();
+            .map(Beløp::getVerdi)
+            .orElse(BigDecimal.ZERO)
+            .divide(BigDecimal.valueOf(2), RoundingMode.HALF_UP)
+            .longValue();
     }
 
     private static long hentSummertDagsats(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
@@ -93,11 +85,11 @@ public final class BeregningsgrunnlagMapper {
 
     private static long hentSumTilkommetDagsats(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         return bgpsaListe.stream()
-                .filter(andel -> andel.getDagsats() > 0)
-                .filter(BeregningsgrunnlagPrStatusOgAndel::getErTilkommetAndel)
-                .map(BeregningsgrunnlagPrStatusOgAndel::getDagsats)
-                .reduce(Long::sum)
-                .orElse(0L);
+            .filter(andel -> andel.getDagsats() > 0)
+            .filter(BeregningsgrunnlagPrStatusOgAndel::getErTilkommetAndel)
+            .map(BeregningsgrunnlagPrStatusOgAndel::getDagsats)
+            .reduce(Long::sum)
+            .orElse(0L);
     }
 
     public static List<BeregningsgrunnlagPrStatusOgAndel> finnBgpsaListe(Beregningsgrunnlag beregningsgrunnlag) {

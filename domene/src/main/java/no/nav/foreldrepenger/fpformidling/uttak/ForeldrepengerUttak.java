@@ -3,13 +3,8 @@ package no.nav.foreldrepenger.fpformidling.uttak;
 import java.util.Comparator;
 import java.util.List;
 
-public record ForeldrepengerUttak(List<UttakResultatPeriode> perioder,
-                                  List<UttakResultatPeriode> perioderAnnenPart,
-                                  boolean aleneomsorg,
-                                  boolean annenForelderHarRett,
-                                  boolean annenForelderRettEØS,
-                                  boolean oppgittAnnenForelderRettEØS
-                                  ) {
+public record ForeldrepengerUttak(List<UttakResultatPeriode> perioder, List<UttakResultatPeriode> perioderAnnenPart, boolean aleneomsorg,
+                                  boolean annenForelderHarRett, boolean annenForelderRettEØS, boolean oppgittAnnenForelderRettEØS) {
 
     @Override
     public List<UttakResultatPeriode> perioder() {

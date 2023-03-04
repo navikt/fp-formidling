@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 
 @ExtendWith(MockitoExtension.class)
-public class DokumentKvitteringTjenesteTest {
+class DokumentKvitteringTjenesteTest {
 
     private DokumentKvitteringTjeneste historikkTjeneste;
 
@@ -33,13 +33,7 @@ public class DokumentKvitteringTjenesteTest {
 
     @Test
     void publiserHistorikk() {
-        var kvittering = new DokumentProdusertDto(
-                UUID.randomUUID(),
-                UUID.randomUUID(),
-                DokumentMalType.INGEN_ENDRING.getKode(),
-                "123",
-                "123"
-        );
+        var kvittering = new DokumentProdusertDto(UUID.randomUUID(), UUID.randomUUID(), DokumentMalType.INGEN_ENDRING.getKode(), "123", "123");
 
         historikkTjeneste.sendKvittering(kvittering);
         verify(behandlinger, times(1)).kvitterDokument(Mockito.any());

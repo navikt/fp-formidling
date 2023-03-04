@@ -41,54 +41,65 @@ public class OpprettJournalpostTjeneste {
         this.dokArkivKlient = dokArkivKlient;
     }
 
-    public OpprettJournalpostResponse journalførUtsendelse(byte[] brev, DokumentMalType dokumentMalType, DokumentFelles dokumentFelles,
-                                                           DokumentHendelse dokumentHendelse, Saksnummer saksnummer, boolean ferdigstill, String overskriftVedFritekstBrev, String unikReferanse) {
+    public OpprettJournalpostResponse journalførUtsendelse(byte[] brev,
+                                                           DokumentMalType dokumentMalType,
+                                                           DokumentFelles dokumentFelles,
+                                                           DokumentHendelse dokumentHendelse,
+                                                           Saksnummer saksnummer,
+                                                           boolean ferdigstill,
+                                                           String overskriftVedFritekstBrev,
+                                                           String unikReferanse) {
         LOG.info("Starter journalføring av brev for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode());
 
         try {
-            var requestBuilder = lagRequestBuilder(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer, ferdigstill, overskriftVedFritekstBrev, unikReferanse);
+            var requestBuilder = lagRequestBuilder(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer, ferdigstill,
+                overskriftVedFritekstBrev, unikReferanse);
             var response = dokArkivKlient.opprettJournalpost(requestBuilder.build(), ferdigstill);
 
-            if (ferdigstill && !response.journalpostferdigstilt()) {
-                LOG.warn("Journalpost {} ble ikke ferdigstilt", response.journalpostId());
+            if (LOG.isWarnEnabled() && ferdigstill && !response.journalpostferdigstilt()) {
+                    LOG.warn("Journalpost {} ble ikke ferdigstilt", response.journalpostId());
+
+            }
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Journalføring for behandling {} med malkode {} ferdig med response: {}", dokumentHendelse.getBehandlingUuid(),
+                    dokumentMalType.getKode(), response);
             }
 
-            LOG.info("Journalføring for behandling {} med malkode {} ferdig med response: {}", dokumentHendelse.getBehandlingUuid(),
-                    dokumentMalType.getKode(), response.toString()); // NOSONAR
             return response;
         } catch (Exception e) {
-            throw new TekniskException("FPFORMIDLING-156533", String.format("Journalføring av brev for behandling %s med mal %s feilet.",
-                    dokumentHendelse.getBehandlingUuid().toString(), dokumentMalType.getKode()), e);
+            throw new TekniskException("FPFORMIDLING-156533",
+                String.format("Journalføring av brev for behandling %s med mal %s feilet.", dokumentHendelse.getBehandlingUuid().toString(),
+                    dokumentMalType.getKode()), e);
         }
     }
 
-    private OpprettJournalpostRequest.OpprettJournalpostRequestBuilder lagRequestBuilder(byte[] brev, DokumentMalType dokumentMalType,
+    private OpprettJournalpostRequest.OpprettJournalpostRequestBuilder lagRequestBuilder(byte[] brev,
+                                                                                         DokumentMalType dokumentMalType,
                                                                                          DokumentFelles dokumentFelles,
                                                                                          DokumentHendelse dokumentHendelse,
-                                                                                         Saksnummer saksnummer, boolean ferdigstill,
+                                                                                         Saksnummer saksnummer,
+                                                                                         boolean ferdigstill,
                                                                                          String overskriftVedFritekstbrev,
                                                                                          String bestillingsUidMedUnikReferanse) {
         var tittel = getTittel(dokumentHendelse, dokumentMalType, overskriftVedFritekstbrev);
         var dokument = DokumentInfoOpprett.builder()
-                .medTittel(tittel)
-                .medBrevkode(dokumentMalType.getKode())
-                .leggTilDokumentvariant(new Dokumentvariant(Dokumentvariant.Variantformat.ARKIV, Dokumentvariant.Filtype.PDFA, brev))
-                .build();
+            .medTittel(tittel)
+            .medBrevkode(dokumentMalType.getKode())
+            .leggTilDokumentvariant(new Dokumentvariant(Dokumentvariant.Variantformat.ARKIV, Dokumentvariant.Filtype.PDFA, brev))
+            .build();
         var bruker = new Bruker(dokumentFelles.getSakspartId(), Bruker.BrukerIdType.FNR);
         var avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), hentAvsenderMottakerType(dokumentFelles.getMottakerType()),
-                dokumentFelles.getMottakerNavn());
-        var request = OpprettJournalpostRequest.nyUtgående()
-                .medTittel(tittel)
-                .medSak(sak(saksnummer))
-                .medTema(DokArkivKlient.TEMA_FORELDREPENGER)
-                .medBehandlingstema(mapBehandlingsTema(dokumentHendelse.getYtelseType()))
-                .medJournalfoerendeEnhet(ferdigstill ? DokArkivKlient.AUTOMATISK_JOURNALFØRENDE_ENHET : null)
-                .medEksternReferanseId(bestillingsUidMedUnikReferanse)
-                .medBruker(bruker)
-                .medAvsenderMottaker(avsenderMottaker)
-                .medDokumenter(List.of(dokument));
-
-        return request;
+            dokumentFelles.getMottakerNavn());
+        return OpprettJournalpostRequest.nyUtgående()
+            .medTittel(tittel)
+            .medSak(sak(saksnummer))
+            .medTema(DokArkivKlient.TEMA_FORELDREPENGER)
+            .medBehandlingstema(mapBehandlingsTema(dokumentHendelse.getYtelseType()))
+            .medJournalfoerendeEnhet(ferdigstill ? DokArkivKlient.AUTOMATISK_JOURNALFØRENDE_ENHET : null)
+            .medEksternReferanseId(bestillingsUidMedUnikReferanse)
+            .medBruker(bruker)
+            .medAvsenderMottaker(avsenderMottaker)
+            .medDokumenter(List.of(dokument));
 
     }
 
@@ -96,12 +107,14 @@ public class OpprettJournalpostTjeneste {
         return new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), Sak.Sakstype.FAGSAK);
     }
 
-    private String getTittel(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMalType, String overskriftVedFritekstbrev ) {
+    private String getTittel(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMalType, String overskriftVedFritekstbrev) {
         if (dokumentHendelse.getTittel() != null) {
             return dokumentHendelse.getTittel();
         } else if (DokumentMalType.FRITEKSTBREV.equals(dokumentMalType) && overskriftVedFritekstbrev != null) {
             return overskriftVedFritekstbrev;
-        } else return dokumentMalType.getNavn();
+        } else {
+            return dokumentMalType.getNavn();
+        }
     }
 
     private String mapBehandlingsTema(FagsakYtelseType ytelseType) {
@@ -114,6 +127,7 @@ public class OpprettJournalpostTjeneste {
     }
 
     private AvsenderMottaker.AvsenderMottakerIdType hentAvsenderMottakerType(DokumentFelles.MottakerType mottakerType) {
-        return mottakerType.equals(DokumentFelles.MottakerType.PERSON) ? AvsenderMottaker.AvsenderMottakerIdType.FNR : AvsenderMottaker.AvsenderMottakerIdType.ORGNR;
+        return mottakerType.equals(
+            DokumentFelles.MottakerType.PERSON) ? AvsenderMottaker.AvsenderMottakerIdType.FNR : AvsenderMottaker.AvsenderMottakerIdType.ORGNR;
     }
 }

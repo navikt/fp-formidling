@@ -17,7 +17,7 @@ services:
       - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/root/.modig/keystore.jks"
       - "JAVAX_NET_SSL_TRUSTSTORE=/root/.modig/truststore.jks"
     env_file:
-      - "./lokalutvikling/vtp.env"
+      - "vtp.env"
     volumes:
       - "~/.modig:/root/.modig"
     ports:

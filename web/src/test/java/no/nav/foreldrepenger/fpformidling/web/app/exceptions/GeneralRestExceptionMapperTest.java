@@ -15,7 +15,7 @@ import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.log.util.MemoryAppender;
 
 @Execution(ExecutionMode.SAME_THREAD)
-public class GeneralRestExceptionMapperTest {
+class GeneralRestExceptionMapperTest {
 
     private static MemoryAppender logSniffer;
 
@@ -27,7 +27,7 @@ public class GeneralRestExceptionMapperTest {
     }
 
     @AfterEach
-    public void afterEach() {
+    void afterEach() {
         logSniffer.reset();
     }
 
@@ -123,7 +123,7 @@ public class GeneralRestExceptionMapperTest {
     }
 
     private static ManglerTilgangException manglerTilgangFeil() {
-        return new ManglerTilgangException("MANGLER_TILGANG_FEIL","ManglerTilgangFeilmeldingKode");
+        return new ManglerTilgangException("MANGLER_TILGANG_FEIL", "ManglerTilgangFeilmeldingKode");
     }
 
 }

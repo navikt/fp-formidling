@@ -48,7 +48,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
 
 @ExtendWith(MockitoExtension.class)
-public class InnhenteOpplysningerDokumentdataMapperTest {
+class InnhenteOpplysningerDokumentdataMapperTest {
 
     private static final String FRITEKST = "Tekst1\n- Vedlegg1\n- Vedlegg2\nTekst2\nTekst3\n- Vedlegg3\nTekst4";
     private static final LocalDate SØKNAD_DATO = LocalDate.now().minusDays(1);
@@ -70,8 +70,9 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
         dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new InnhenteOpplysningerDokumentdataMapper(brevMapperUtil, domeneobjektProvider);
 
-        var mottattDokumenter = List.of(new MottattDokument(SØKNAD_DATO.minusDays(10), DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD),
-                                                            new MottattDokument(SØKNAD_DATO, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD ));
+        var mottattDokumenter = List.of(
+            new MottattDokument(SØKNAD_DATO.minusDays(10), DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD),
+            new MottattDokument(SØKNAD_DATO, DokumentTypeId.FORELDREPENGER_ENDRING_SØKNAD, DokumentKategori.SØKNAD));
         when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(mottattDokumenter);
     }
 
@@ -210,27 +211,24 @@ public class InnhenteOpplysningerDokumentdataMapperTest {
 
     private Behandling opprettBehandling(Språkkode språkkode) {
         return Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.REVURDERING)
-                .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-                .medSpråkkode(språkkode)
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.REVURDERING)
+            .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+            .medSpråkkode(språkkode)
+            .build();
     }
 
     private Behandling opprettKlageBehandling(String behandlendeEnhet) {
         return Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.KLAGE)
-                .medBehandlendeEnhetNavn(behandlendeEnhet)
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.KLAGE)
+            .medBehandlendeEnhetNavn(behandlendeEnhet)
+            .build();
     }
 
     private DokumentHendelse lagDokumentHendelse() {
-        return lagStandardHendelseBuilder()
-                .medFritekst(FRITEKST)
-                .build();
+        return lagStandardHendelseBuilder().medFritekst(FRITEKST).build();
     }
 
     private void mockKlageDokument() {

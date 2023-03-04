@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
-public class IkkeSøktDokumentdataMapperTest {
+class IkkeSøktDokumentdataMapperTest {
 
     private static final String ARBEIDSGIVER = "Arbeidsgiver AS";
     private static final LocalDate INNSENDINGSTIDSPUNKT = LocalDate.now().minusDays(2);

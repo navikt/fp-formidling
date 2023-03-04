@@ -1,17 +1,17 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Set;
-
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
 import no.nav.foreldrepenger.fpformidling.uttak.Stønadskonto;
 
-public class StønadskontoMapperTest {
+import org.junit.jupiter.api.Test;
+
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class StønadskontoMapperTest {
 
     @Test
     void skal_finne_disponible_dager_mødrekvote() {

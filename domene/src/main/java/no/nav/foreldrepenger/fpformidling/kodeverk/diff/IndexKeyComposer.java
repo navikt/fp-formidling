@@ -48,7 +48,7 @@ final class IndexKeyComposer {
         } else if (DatoIntervallEntitet.class.isAssignableFrom(objClass)) {
             var periode = (DatoIntervallEntitet) obj;
             return "[" + periode.getFomDato().format(DateTimeFormatter.ISO_DATE) + //$NON-NLS-1$
-                    "," + periode.getTomDato().format(DateTimeFormatter.ISO_DATE) + "]"; //$NON-NLS-1$ //$NON-NLS-2$
+                "," + periode.getTomDato().format(DateTimeFormatter.ISO_DATE) + "]"; //$NON-NLS-1$ //$NON-NLS-2$
         } else if (LocalDate.class.isAssignableFrom(objClass)) {
             var dt = (LocalDate) obj;
             return dt.format(DateTimeFormatter.ISO_DATE);

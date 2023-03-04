@@ -42,15 +42,16 @@ public class SelvstendigNæringsdrivende {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (SelvstendigNæringsdrivende) object;
-        return Objects.equals(nyoppstartet, that.nyoppstartet)
-                && Objects.equals(årsinntekt, that.årsinntekt)
-                && Objects.equals(sistLignedeÅr, that.sistLignedeÅr)
-                && Objects.equals(inntektLavere_AT_SN, that.inntektLavere_AT_SN)
-                && Objects.equals(inntektLavere_AT_FL_SN, that.inntektLavere_AT_FL_SN)
-                && Objects.equals(inntektLavere_FL_SN, that.inntektLavere_FL_SN);
+        return Objects.equals(nyoppstartet, that.nyoppstartet) && Objects.equals(årsinntekt, that.årsinntekt) && Objects.equals(sistLignedeÅr,
+            that.sistLignedeÅr) && Objects.equals(inntektLavere_AT_SN, that.inntektLavere_AT_SN) && Objects.equals(inntektLavere_AT_FL_SN,
+            that.inntektLavere_AT_FL_SN) && Objects.equals(inntektLavere_FL_SN, that.inntektLavere_FL_SN);
     }
 
     @Override
@@ -108,17 +109,17 @@ public class SelvstendigNæringsdrivende {
             return this;
         }
 
-        public Builder medInntektLavere_AT_SN(boolean inntektLavereATSN) {
+        public Builder medInntektLavereAtSn(boolean inntektLavereATSN) {
             this.kladd.inntektLavere_AT_SN = inntektLavereATSN;
             return this;
         }
 
-        public Builder medInntektLavere_AT_FL_SN(boolean inntektLavereATFLSN) {
+        public Builder medInntektLavereAtFlSn(boolean inntektLavereATFLSN) {
             this.kladd.inntektLavere_AT_FL_SN = inntektLavereATFLSN;
             return this;
         }
 
-        public Builder medInntektLavere_FL_SN(boolean inntektLavereFLSN) {
+        public Builder medInntektLavereFlSn(boolean inntektLavereFLSN) {
             this.kladd.inntektLavere_FL_SN = inntektLavereFLSN;
             return this;
         }

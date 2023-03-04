@@ -47,22 +47,25 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
     }
 
     @Override
-    public InnhenteOpplysningerDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                               Behandling behandling, boolean erUtkast) {
+    public InnhenteOpplysningerDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                               DokumentHendelse hendelse,
+                                                               Behandling behandling,
+                                                               boolean erUtkast) {
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medFritekst(FritekstDto.fra(hendelse.getFritekst()));
 
         var dokumentdataBuilder = InnhenteOpplysningerDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medFørstegangsbehandling(behandling.erFørstegangssøknad())
-                .medRevurdering(behandling.erRevurdering())
-                .medEndringssøknad(erEndringssøknad(behandling))
-                .medDød(erDød(dokumentFelles))
-                .medKlage(behandling.erKlage())
-                .medSøknadDato(finnSøknadDato(behandling))
-                .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()));
+            .medFelles(fellesBuilder.build())
+            .medFørstegangsbehandling(behandling.erFørstegangssøknad())
+            .medRevurdering(behandling.erRevurdering())
+            .medEndringssøknad(erEndringssøknad(behandling))
+            .medDød(erDød(dokumentFelles))
+            .medKlage(behandling.erKlage())
+            .medSøknadDato(finnSøknadDato(behandling))
+            .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()));
 
         return dokumentdataBuilder.build();
     }
@@ -76,7 +79,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
         }
 
         var mottattDato = klageDokument.map(kd -> hentMottattDatoFraKlage(kd, behandling))
-                .orElseGet(() -> MottattdokumentMapper.finnSisteMottatteSøknad(mottatteDokumenter));
+            .orElseGet(() -> MottattdokumentMapper.finnSisteMottatteSøknad(mottatteDokumenter));
         return formaterDato(mottattDato, behandling.getSpråkkode());
     }
 

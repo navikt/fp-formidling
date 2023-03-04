@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
 public enum ArbeidsforholdIkkeOppfyltÅrsak implements Kodeverdi {
 
-    INGEN("-" ),
+    INGEN("-"),
     HELE_UTTAKET_ER_ETTER_3_UKER_FØR_TERMINDATO("8301"),
     UTTAK_KUN_PÅ_HELG("8302"),
     ARBEIDSGIVER_KAN_TILRETTELEGGE("8303"),

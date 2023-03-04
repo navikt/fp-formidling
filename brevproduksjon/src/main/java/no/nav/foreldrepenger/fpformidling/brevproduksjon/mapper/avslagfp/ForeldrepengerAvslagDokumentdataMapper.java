@@ -33,6 +33,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMapper {
 
     private static final Map<RelasjonsRolleType, String> relasjonskodeTypeMap;
+
     static {
         relasjonskodeTypeMap = new EnumMap<>(RelasjonsRolleType.class);
         relasjonskodeTypeMap.put(RelasjonsRolleType.MORA, "MOR");
@@ -48,8 +49,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
     }
 
     @Inject
-    public ForeldrepengerAvslagDokumentdataMapper(BrevParametere brevParametere,
-                                                  DomeneobjektProvider domeneobjektProvider) {
+    public ForeldrepengerAvslagDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
     }
@@ -60,11 +60,14 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
     }
 
     @Override
-    public ForeldrepengerAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse dokumentHendelse,
-                                                               Behandling behandling, boolean erUtkast) {
+    public ForeldrepengerAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                               DokumentHendelse dokumentHendelse,
+                                                               Behandling behandling,
+                                                               boolean erUtkast) {
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, dokumentHendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
@@ -76,29 +79,28 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
         var uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling);
 
         var dokumentdataBuilder = ForeldrepengerAvslagDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medRelasjonskode(finnRelasjonskode(fagsak))
-                .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), behandling.getSpråkkode()))
-                .medGjelderFødsel(familiehendelse.gjelderFødsel())
-                .medBarnErFødt(familiehendelse.barnErFødt())
-                .medAnnenForelderHarRett(uttakResultatPerioder.map(ForeldrepengerUttak::annenForelderHarRett).orElse(false))
-                .medAntallBarn(familiehendelse.antallBarn())
-                .medHalvG(halvG)
-                .medKlagefristUker(brevParametere.getKlagefristUker())
-                .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen());
+            .medFelles(fellesBuilder.build())
+            .medRelasjonskode(finnRelasjonskode(fagsak))
+            .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), behandling.getSpråkkode()))
+            .medGjelderFødsel(familiehendelse.gjelderFødsel())
+            .medBarnErFødt(familiehendelse.barnErFødt())
+            .medAnnenForelderHarRett(uttakResultatPerioder.map(ForeldrepengerUttak::annenForelderHarRett).orElse(false))
+            .medAntallBarn(familiehendelse.antallBarn())
+            .medHalvG(halvG)
+            .medKlagefristUker(brevParametere.getKlagefristUker())
+            .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen());
 
         mapAvslåttePerioder(behandling, dokumentdataBuilder, uttakResultatPerioder);
 
         return dokumentdataBuilder.build();
     }
 
-    private void mapAvslåttePerioder(Behandling behandling, ForeldrepengerAvslagDokumentdata.Builder dokumentdataBuilder,
+    private void mapAvslåttePerioder(Behandling behandling,
+                                     ForeldrepengerAvslagDokumentdata.Builder dokumentdataBuilder,
                                      Optional<ForeldrepengerUttak> uttakResultatPerioder) {
         var tilkjentYtelseFP = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling);
-        var avslåttePerioderOgLovhjemmel = AvslåttPeriodeMapper.mapAvslåttePerioderOgLovhjemmel(
-                behandling,
-                tilkjentYtelseFP.map(TilkjentYtelseForeldrepenger::getPerioder).orElse(Collections.emptyList()),
-                uttakResultatPerioder);
+        var avslåttePerioderOgLovhjemmel = AvslåttPeriodeMapper.mapAvslåttePerioderOgLovhjemmel(behandling,
+            tilkjentYtelseFP.map(TilkjentYtelseForeldrepenger::getPerioder).orElse(Collections.emptyList()), uttakResultatPerioder);
 
         dokumentdataBuilder.medLovhjemmelForAvslag(avslåttePerioderOgLovhjemmel.element2());
         dokumentdataBuilder.medAvslåttePerioder(avslåttePerioderOgLovhjemmel.element1());

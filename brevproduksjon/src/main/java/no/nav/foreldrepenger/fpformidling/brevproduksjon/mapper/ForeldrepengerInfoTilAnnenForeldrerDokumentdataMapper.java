@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
-import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
@@ -20,6 +11,15 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakTyp
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INFO_TIL_ANNEN_FORELDER)
@@ -41,11 +41,14 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
     }
 
     @Override
-    public ForeldrepengerInfoTilAnnenForelderDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                                             Behandling behandling, boolean erUtkast) {
+    public ForeldrepengerInfoTilAnnenForelderDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                                             DokumentHendelse hendelse,
+                                                                             Behandling behandling,
+                                                                             boolean erUtkast) {
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
         var aarsak = BehandlingÅrsakType.INFOBREV_BEHANDLING;
 
@@ -57,20 +60,24 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
 
         String sisteUttaksdagMor = null;
         if (uttakResultatPerioder.isPresent() && BehandlingÅrsakType.INFOBREV_BEHANDLING.equals(aarsak)) {
-            sisteUttaksdagMor = uttakResultatPerioder.get().perioderAnnenPart().stream()
-                    .filter(up -> PeriodeResultatType.INNVILGET.equals(up.getPeriodeResultatType()) ||
-                            up.getAktiviteter().stream().anyMatch(upa -> upa.getTrekkdager().compareTo(BigDecimal.ZERO) > 0))
-                    .map(UttakResultatPeriode::getTom).max(LocalDate::compareTo)
-                    .map(d-> formaterDato(d, behandling.getSpråkkode()))
-                    .orElse(null);
+            sisteUttaksdagMor = uttakResultatPerioder.get()
+                .perioderAnnenPart()
+                .stream()
+                .filter(up -> PeriodeResultatType.INNVILGET.equals(up.getPeriodeResultatType()) || up.getAktiviteter()
+                    .stream()
+                    .anyMatch(upa -> upa.getTrekkdager().compareTo(BigDecimal.ZERO) > 0))
+                .map(UttakResultatPeriode::getTom)
+                .max(LocalDate::compareTo)
+                .map(d -> formaterDato(d, behandling.getSpråkkode()))
+                .orElse(null);
         }
 
 
         return ForeldrepengerInfoTilAnnenForelderDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medBehandlingÅrsak(aarsak.getKode())
-                .medSisteUttaksdagMor(sisteUttaksdagMor)
-                .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen())
-                .build();
+            .medFelles(fellesBuilder.build())
+            .medBehandlingÅrsak(aarsak.getKode())
+            .medSisteUttaksdagMor(sisteUttaksdagMor)
+            .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen())
+            .build();
     }
 }

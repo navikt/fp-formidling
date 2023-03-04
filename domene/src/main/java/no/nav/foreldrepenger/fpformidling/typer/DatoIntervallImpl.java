@@ -47,11 +47,14 @@ public class DatoIntervallImpl implements DatoIntervall {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         var that = (DatoIntervall) o;
-        return Objects.equals(getFom(), that.getFom()) &&
-                Objects.equals(getTom(), that.getTom());
+        return Objects.equals(getFom(), that.getFom()) && Objects.equals(getTom(), that.getTom());
     }
 
     @Override
@@ -61,9 +64,6 @@ public class DatoIntervallImpl implements DatoIntervall {
 
     @Override
     public String toString() {
-        return "DatoIntervallImpl{" +
-                "fomDato=" + fomDato +
-                ", tomDato=" + tomDato +
-                '}';
+        return "DatoIntervallImpl{" + "fomDato=" + fomDato + ", tomDato=" + tomDato + '}';
     }
 }

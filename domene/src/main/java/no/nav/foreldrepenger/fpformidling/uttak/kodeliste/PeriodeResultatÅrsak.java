@@ -19,14 +19,19 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
     public static final PeriodeResultatÅrsak FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4501", GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR, null);
 
     // UTTAK periode innvilget
-    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID = new PeriodeResultatÅrsak("2011", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID = new PeriodeResultatÅrsak("2011", PERIODE_ÅRSAK_DISCRIMINATOR,
+        null);
     public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE = new PeriodeResultatÅrsak("2010", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2016", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2015", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT= new PeriodeResultatÅrsak("2004", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2016",
+        PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2015",
+        PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak OVERFORING_KVOTE_GYLDIG_KUN_FAR_HAR_RETT = new PeriodeResultatÅrsak("2004", PERIODE_ÅRSAK_DISCRIMINATOR,
+        null);
 
     // UTTAK periode avslått
-    public static final PeriodeResultatÅrsak ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT = new PeriodeResultatÅrsak("4023", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT = new PeriodeResultatÅrsak("4023",
+        PERIODE_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak FAR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4012", PERIODE_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak HULL_MELLOM_FORELDRENES_PERIODER = new PeriodeResultatÅrsak("4005", PERIODE_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak MOR_HAR_IKKE_OMSORG = new PeriodeResultatÅrsak("4003", PERIODE_ÅRSAK_DISCRIMINATOR, null);
@@ -37,9 +42,11 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
 
     public static final PeriodeResultatÅrsak FØDSELSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4096", PERIODE_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak ADOPSJONSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4097", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4098", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4098", PERIODE_ÅRSAK_DISCRIMINATOR,
+        null);
     public static final PeriodeResultatÅrsak OPPTJENINGSVILKÅRET_IKKE_OPPFYLT = new PeriodeResultatÅrsak("4099", PERIODE_ÅRSAK_DISCRIMINATOR, null);
-    public static final PeriodeResultatÅrsak AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4080", PERIODE_ÅRSAK_DISCRIMINATOR, null);
+    public static final PeriodeResultatÅrsak AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD = new PeriodeResultatÅrsak("4080",
+        PERIODE_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak BARN_OVER_3_ÅR = new PeriodeResultatÅrsak("4022", PERIODE_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak STØNADSPERIODE_NYTT_BARN = new PeriodeResultatÅrsak("4104", PERIODE_ÅRSAK_DISCRIMINATOR, null);
     public static final PeriodeResultatÅrsak BARE_FAR_RETT_IKKE_SØKT = new PeriodeResultatÅrsak("4102", PERIODE_ÅRSAK_DISCRIMINATOR, null);
@@ -55,19 +62,11 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
     }
 
     public static Set<String> opphørsAvslagÅrsaker() {
-        return new HashSet<>(Arrays.asList(
-                MOR_HAR_IKKE_OMSORG.getKode(),
-                FAR_HAR_IKKE_OMSORG.getKode(),
-                BARNET_ER_DØD.getKode(),
-                SØKER_ER_DØD.getKode(),
-                OPPHØR_MEDLEMSKAP.getKode(),
-                FØDSELSVILKÅRET_IKKE_OPPFYLT.getKode(),
-                ADOPSJONSVILKÅRET_IKKE_OPPFYLT.getKode(),
-                FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT.getKode(),
-                OPPTJENINGSVILKÅRET_IKKE_OPPFYLT.getKode(),
-                BARN_OVER_3_ÅR.getKode(),
-                STØNADSPERIODE_NYTT_BARN.getKode()
-        ));
+        return new HashSet<>(
+            Arrays.asList(MOR_HAR_IKKE_OMSORG.getKode(), FAR_HAR_IKKE_OMSORG.getKode(), BARNET_ER_DØD.getKode(), SØKER_ER_DØD.getKode(),
+                OPPHØR_MEDLEMSKAP.getKode(), FØDSELSVILKÅRET_IKKE_OPPFYLT.getKode(), ADOPSJONSVILKÅRET_IKKE_OPPFYLT.getKode(),
+                FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT.getKode(), OPPTJENINGSVILKÅRET_IKKE_OPPFYLT.getKode(), BARN_OVER_3_ÅR.getKode(),
+                STØNADSPERIODE_NYTT_BARN.getKode()));
     }
 
     public String getKodeverk() {

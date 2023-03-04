@@ -7,12 +7,14 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 
 public class PeriodeComparator {
-    public static final Comparator<TilkjentYtelsePeriode> TILKJENTYTELSERESULTAT =
-            Comparator.comparing(TilkjentYtelsePeriode::getPeriodeFom);
 
-    public static final Comparator<BeregningsgrunnlagPeriode> BEREGNINGSGRUNNLAG =
-            Comparator.comparing(BeregningsgrunnlagPeriode::getBeregningsgrunnlagPeriodeFom);
+    private PeriodeComparator() {
+    }
 
-    public static final Comparator<UttakResultatPeriode> UTTAKRESULTAT =
-            Comparator.comparing(UttakResultatPeriode::getFom);
+    public static final Comparator<TilkjentYtelsePeriode> TILKJENTYTELSERESULTAT = Comparator.comparing(TilkjentYtelsePeriode::getPeriodeFom);
+
+    public static final Comparator<BeregningsgrunnlagPeriode> BEREGNINGSGRUNNLAG = Comparator.comparing(
+        BeregningsgrunnlagPeriode::getBeregningsgrunnlagPeriodeFom);
+
+    public static final Comparator<UttakResultatPeriode> UTTAKRESULTAT = Comparator.comparing(UttakResultatPeriode::getFom);
 }

@@ -33,14 +33,15 @@ public class KlageAvvistDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (KlageAvvistDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(gjelderTilbakekreving, that.gjelderTilbakekreving)
-                && Objects.equals(lovhjemler, that.lovhjemler)
-                && Objects.equals(klagefristUker, that.klagefristUker)
-                && Objects.equals(avvistGrunner, that.avvistGrunner);
+        return Objects.equals(felles, that.felles) && Objects.equals(gjelderTilbakekreving, that.gjelderTilbakekreving) && Objects.equals(lovhjemler,
+            that.lovhjemler) && Objects.equals(klagefristUker, that.klagefristUker) && Objects.equals(avvistGrunner, that.avvistGrunner);
     }
 
     @Override

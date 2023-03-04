@@ -99,8 +99,7 @@ public class Behandlingsresultat {
     }
 
     public boolean isBehandlingsresultatAvslåttOrOpphørt() {
-        return BehandlingResultatType.AVSLÅTT.equals(behandlingResultatType)
-                || BehandlingResultatType.OPPHØR.equals(behandlingResultatType);
+        return BehandlingResultatType.AVSLÅTT.equals(behandlingResultatType) || BehandlingResultatType.OPPHØR.equals(behandlingResultatType);
     }
 
     public boolean isBehandlingsresultatAvslått() {
@@ -216,7 +215,7 @@ public class Behandlingsresultat {
             return this;
         }
 
-        public Builder Periode(String periode) {
+        public Builder periode(String periode) {
             this.periode = periode;
             return this;
         }

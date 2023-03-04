@@ -1,16 +1,16 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.JOURNALPOST_ID;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.OppgaverTjeneste;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.JOURNALPOST_ID;
 
 @ApplicationScoped
 @ProsessTask(value = "formidling.opprettOppgave", maxFailedRuns = 2)

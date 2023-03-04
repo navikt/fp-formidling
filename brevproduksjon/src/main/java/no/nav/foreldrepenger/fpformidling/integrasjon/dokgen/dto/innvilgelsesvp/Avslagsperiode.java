@@ -41,12 +41,14 @@ public class Avslagsperiode {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (Avslagsperiode) object;
-        return Objects.equals(periodeFom, that.periodeFom)
-                && Objects.equals(periodeTom, that.periodeTom)
-                && Objects.equals(årsak, that.årsak);
+        return Objects.equals(periodeFom, that.periodeFom) && Objects.equals(periodeTom, that.periodeTom) && Objects.equals(årsak, that.årsak);
     }
 
     @Override

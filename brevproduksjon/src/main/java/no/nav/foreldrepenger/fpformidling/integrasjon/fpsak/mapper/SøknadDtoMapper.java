@@ -4,6 +4,10 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.soknad.SoknadBac
 import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
 
 public class SøknadDtoMapper {
+
+    private SøknadDtoMapper() {
+    }
+
     public static Søknad mapSøknadFraDto(SoknadBackendDto dto) {
         return new Søknad(dto.mottattDato(), dto.oppgittAleneomsorg());
     }

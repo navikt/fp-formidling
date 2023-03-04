@@ -40,6 +40,7 @@ public class BeregningsgrunnlagPrStatusOgAndel {
     public Long getDagsats() {
         return dagsats;
     }
+
     public void setDagsats(long sats) {
         this.dagsats = dagsats + sats;
     }
@@ -90,7 +91,9 @@ public class BeregningsgrunnlagPrStatusOgAndel {
         return nyIArbeidslivet;
     }
 
-    public Boolean getErTilkommetAndel() { return erTilkommetAndel; }
+    public Boolean getErTilkommetAndel() {
+        return erTilkommetAndel;
+    }
 
     public static final class Builder {
         private Long dagsats;
@@ -158,29 +161,30 @@ public class BeregningsgrunnlagPrStatusOgAndel {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         var that = (BeregningsgrunnlagPrStatusOgAndel) o;
-        return Objects.equals(dagsats, that.dagsats) && aktivitetStatus == that.aktivitetStatus && Objects.equals(bruttoPrÅr, that.bruttoPrÅr) && Objects.equals(avkortetPrÅr, that.avkortetPrÅr) && Objects.equals(nyIArbeidslivet, that.nyIArbeidslivet) && arbeidsforholdType == that.arbeidsforholdType && Objects.equals(beregningsperiode, that.beregningsperiode) && Objects.equals(bgAndelArbeidsforhold, that.bgAndelArbeidsforhold) && Objects.equals(erTilkommetAndel, that.erTilkommetAndel);
+        return Objects.equals(dagsats, that.dagsats) && aktivitetStatus == that.aktivitetStatus && Objects.equals(bruttoPrÅr, that.bruttoPrÅr)
+            && Objects.equals(avkortetPrÅr, that.avkortetPrÅr) && Objects.equals(nyIArbeidslivet, that.nyIArbeidslivet)
+            && arbeidsforholdType == that.arbeidsforholdType && Objects.equals(beregningsperiode, that.beregningsperiode) && Objects.equals(
+            bgAndelArbeidsforhold, that.bgAndelArbeidsforhold) && Objects.equals(erTilkommetAndel, that.erTilkommetAndel);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dagsats, aktivitetStatus, bruttoPrÅr, avkortetPrÅr, nyIArbeidslivet, arbeidsforholdType, beregningsperiode, bgAndelArbeidsforhold, erTilkommetAndel);
+        return Objects.hash(dagsats, aktivitetStatus, bruttoPrÅr, avkortetPrÅr, nyIArbeidslivet, arbeidsforholdType, beregningsperiode,
+            bgAndelArbeidsforhold, erTilkommetAndel);
     }
 
     @Override
     public String toString() {
-        return "BeregningsgrunnlagPrStatusOgAndel{" +
-                "dagsats=" + dagsats +
-                ", aktivitetStatus=" + aktivitetStatus +
-                ", bruttoPrÅr=" + bruttoPrÅr +
-                ", avkortetPrÅr=" + avkortetPrÅr +
-                ", nyIArbeidslivet=" + nyIArbeidslivet +
-                ", arbeidsforholdType=" + arbeidsforholdType +
-                ", beregningsperiode=" + beregningsperiode +
-                ", bgAndelArbeidsforhold=" + bgAndelArbeidsforhold +
-                ", erTilkommetAndel=" + erTilkommetAndel +
-                '}';
+        return "BeregningsgrunnlagPrStatusOgAndel{" + "dagsats=" + dagsats + ", aktivitetStatus=" + aktivitetStatus + ", bruttoPrÅr=" + bruttoPrÅr
+            + ", avkortetPrÅr=" + avkortetPrÅr + ", nyIArbeidslivet=" + nyIArbeidslivet + ", arbeidsforholdType=" + arbeidsforholdType
+            + ", beregningsperiode=" + beregningsperiode + ", bgAndelArbeidsforhold=" + bgAndelArbeidsforhold + ", erTilkommetAndel="
+            + erTilkommetAndel + '}';
     }
 }

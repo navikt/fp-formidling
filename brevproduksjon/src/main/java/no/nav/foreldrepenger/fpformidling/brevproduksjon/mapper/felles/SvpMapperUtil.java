@@ -24,10 +24,10 @@ public final class SvpMapperUtil {
 
     public static List<SvpUttakResultatPeriode> hentUttaksperioder(Optional<SvangerskapspengerUttak> svpUttaksresultat) {
         return svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold)
-                .orElse(Collections.emptyList())
-                .stream()
-                .flatMap(ura -> ura.getPerioder().stream())
-                .toList();
+            .orElse(Collections.emptyList())
+            .stream()
+            .flatMap(ura -> ura.getPerioder().stream())
+            .toList();
     }
 
     public static String leggTilLovreferanse(Avslagsårsak avslagsårsak) {
@@ -35,8 +35,7 @@ public final class SvpMapperUtil {
         return vilkårTyper.stream().map(vt -> vt.getLovReferanse(FagsakYtelseType.SVANGERSKAPSPENGER)).findFirst().orElse("");
     }
 
-    public static Optional<LocalDate> finnFørsteUttakssdato(List<SvpUttakResultatPeriode> uttaksperioder,
-                                                            Behandlingsresultat behandlingsresultat) {
+    public static Optional<LocalDate> finnFørsteUttakssdato(List<SvpUttakResultatPeriode> uttaksperioder, Behandlingsresultat behandlingsresultat) {
         return finnMinsteDatoFraUttak(uttaksperioder).or(behandlingsresultat::getSkjæringstidspunkt);
 
     }
@@ -48,38 +47,30 @@ public final class SvpMapperUtil {
 
     private static Optional<LocalDate> finnMinsteFraDatoAvslåttUttak(List<SvpUttakResultatPeriode> uttaksperioder) {
         return uttaksperioder.stream()
-                .filter(p -> PeriodeResultatType.AVSLÅTT.equals(p.getPeriodeResultatType()))
-                .filter(ur -> PeriodeIkkeOppfyltÅrsak.opphørsAvslagÅrsaker().contains(ur.getPeriodeIkkeOppfyltÅrsak()))
-                .map(p -> p.getTidsperiode().getFomDato())
-                .min(LocalDate::compareTo);
+            .filter(p -> PeriodeResultatType.AVSLÅTT.equals(p.getPeriodeResultatType()))
+            .filter(ur -> PeriodeIkkeOppfyltÅrsak.opphørsAvslagÅrsaker().contains(ur.getPeriodeIkkeOppfyltÅrsak()))
+            .map(p -> p.getTidsperiode().getFomDato())
+            .min(LocalDate::compareTo);
     }
 
     private static Optional<LocalDate> finnMinsteFraDatoFraInnvilgetUttak(List<SvpUttakResultatPeriode> uttaksperioder) {
         return uttaksperioder.stream()
-                .filter(p -> PeriodeResultatType.INNVILGET.equals(p.getPeriodeResultatType()))
-                .map(p -> p.getTidsperiode().getFomDato())
-                .min(LocalDate::compareTo);
+            .filter(p -> PeriodeResultatType.INNVILGET.equals(p.getPeriodeResultatType()))
+            .map(p -> p.getTidsperiode().getFomDato())
+            .min(LocalDate::compareTo);
     }
 
-    public static int finnAntallArbeidsgivere(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold,
-                                              Inntektsmeldinger iay) {
+    public static int finnAntallArbeidsgivere(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Inntektsmeldinger iay) {
         var antallArbeidsgivere = (int) uttakResultatArbeidsforhold.stream()
-                .flatMap(ura -> ura.getPerioder().stream())
-                .map(SvpUttakResultatPeriode::getArbeidsgiverNavn)
-                .distinct()
-                .count();
+            .flatMap(ura -> ura.getPerioder().stream())
+            .map(SvpUttakResultatPeriode::getArbeidsgiverNavn)
+            .distinct()
+            .count();
         if (antallArbeidsgivere == 0) {
-            antallArbeidsgivere = (int) uttakResultatArbeidsforhold.stream()
-                    .map(SvpUttakResultatArbeidsforhold::getArbeidsgiver)
-                    .distinct()
-                    .count();
+            antallArbeidsgivere = (int) uttakResultatArbeidsforhold.stream().map(SvpUttakResultatArbeidsforhold::getArbeidsgiver).distinct().count();
         }
         if (antallArbeidsgivere == 0) {
-            antallArbeidsgivere = (int) iay.getInntektsmeldinger()
-                    .stream()
-                    .map(Inntektsmelding::arbeidsgiverReferanse)
-                    .distinct()
-                    .count();
+            antallArbeidsgivere = (int) iay.getInntektsmeldinger().stream().map(Inntektsmelding::arbeidsgiverReferanse).distinct().count();
         }
         return antallArbeidsgivere;
     }

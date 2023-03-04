@@ -55,8 +55,12 @@ public class FritekstDto {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (FritekstDto) object;
         return Objects.equals(fritekst, that.fritekst);
     }
@@ -68,9 +72,7 @@ public class FritekstDto {
 
     @Override
     public String toString() {
-        return "Fritekst{" +
-                "fritekst=" + fritekst +
-                '}';
+        return "Fritekst{" + "fritekst=" + fritekst + '}';
     }
 
     // I Dokprod brukes _ til overskrift. Metoden viderefører dette ved å konvertere til ##### for Dokgen:
@@ -104,7 +106,7 @@ public class FritekstDto {
         resultat.append(linjer[0]);
         for (var i = 1; i < linjer.length; i++) {
             var linje = linjer[i];
-            var forrigeLinje = linjer[i-1];
+            var forrigeLinje = linjer[i - 1];
 
             if (forrigeLinje.startsWith("#####") || linje.startsWith("#####") || linje.startsWith("- ") || forrigeLinje.equals("")) {
                 // Overskrifter og punktlister skal bare ha et enkelt linjeskift for at det skal bli riktig

@@ -2,5 +2,6 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.inntektarbeidyt
 
 import java.time.LocalDateTime;
 
-public record InntektsmeldingDto(String arbeidsgiverReferanse,  LocalDateTime innsendingstidspunkt) {}
+public record InntektsmeldingDto(String arbeidsgiverReferanse, LocalDateTime innsendingstidspunkt) {
+}
 

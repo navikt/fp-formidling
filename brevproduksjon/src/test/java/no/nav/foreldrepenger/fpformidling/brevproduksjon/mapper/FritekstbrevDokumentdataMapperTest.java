@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
-public class FritekstbrevDokumentdataMapperTest {
+class FritekstbrevDokumentdataMapperTest {
 
     private static final String OVERSKRIFT = "Hovedoverskrift";
     private static final String BRØDTEKST_INN = "_Overskrift\nEn setning.\nMer tekst.";
@@ -71,13 +71,8 @@ public class FritekstbrevDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_fritekstbrev_fra_behandlingsresultatet_når_hendelsen_ikke_har_dem() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medOverskrift(OVERSKRIFT)
-                .medFritekstbrev(BRØDTEKST_INN)
-                .build();
-        var behandling = standardBehandlingBuilder()
-                .medBehandlingsresultat(behandlingsresultat)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medOverskrift(OVERSKRIFT).medFritekstbrev(BRØDTEKST_INN).build();
+        var behandling = standardBehandlingBuilder().medBehandlingsresultat(behandlingsresultat).build();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagStandardHendelseBuilder().medTittel(null).medFritekst(null).build();
 

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.web.app.pdp;
+package no.nav.foreldrepenger.fpformidling.web.server.jetty.abac;
 
 import java.util.Optional;
 import java.util.Set;
@@ -26,8 +26,7 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
     private final PipRestKlient pipRestKlient;
 
     @Inject
-    public AppPdpRequestBuilderImpl(DomeneobjektProvider domeneobjektProvider,
-                                 PipRestKlient pipRestKlient) {
+    public AppPdpRequestBuilderImpl(DomeneobjektProvider domeneobjektProvider, PipRestKlient pipRestKlient) {
         this.domeneobjektProvider = domeneobjektProvider;
         this.pipRestKlient = pipRestKlient;
     }
@@ -41,15 +40,12 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
         }
 
         var appRessursData = AppRessursData.builder();
-        behandlingUuids.stream().findFirst()
-                .map(domeneobjektProvider::hentBehandling)
-                .ifPresent(b -> {
-                    var dto = pipRestKlient.hentPipdataForBehandling(b.getUuid());
-                    appRessursData.leggTilAbacAktørIdSet(dto.aktørIder());
-                    Optional.ofNullable(dto.fagsakStatus()).ifPresent(appRessursData::medFagsakStatus);
-                    Optional.ofNullable(dto.behandlingStatus()).ifPresent(appRessursData::medBehandlingStatus);
-                }
-        );
+        behandlingUuids.stream().findFirst().map(domeneobjektProvider::hentBehandling).ifPresent(b -> {
+            var dto = pipRestKlient.hentPipdataForBehandling(b.getUuid());
+            appRessursData.leggTilAbacAktørIdSet(dto.aktørIder());
+            Optional.ofNullable(dto.fagsakStatus()).ifPresent(appRessursData::medFagsakStatus);
+            Optional.ofNullable(dto.behandlingStatus()).ifPresent(appRessursData::medBehandlingStatus);
+        });
         return appRessursData.build();
     }
 }

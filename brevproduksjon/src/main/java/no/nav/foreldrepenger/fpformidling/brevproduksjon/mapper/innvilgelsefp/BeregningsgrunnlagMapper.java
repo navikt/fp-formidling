@@ -56,7 +56,7 @@ public final class BeregningsgrunnlagMapper {
         //3G. I disse tilfellene skal andre statuser ignoreres (Beregning fjerner ikke andre statuser). Gjelder både FP og SVP.
         if (harMilitærStatusMedDagsatsOgAnnenStatus(bgpsaListe)) {
             beregningsgrunnlagregler.add(
-                    opprettBeregningsregel(bgpsaListe, new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL)));
+                opprettBeregningsregel(bgpsaListe, new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.MILITÆR_ELLER_SIVIL)));
         } else {
             for (var bgAktivitetStatus : beregningsgrunnlag.getAktivitetStatuser()) {
                 beregningsgrunnlagregler.add(opprettBeregningsregel(bgpsaListe, bgAktivitetStatus));
@@ -71,16 +71,15 @@ public final class BeregningsgrunnlagMapper {
         var filtrertListe = finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe);
         builder.medAktivitetStatus(bgAktivitetStatus.aktivitetStatus().name());
         builder.medAndelListe(mapAndelListe(filtrertListe));
-        builder.medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(
-                tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
+        builder.medAntallArbeidsgivereIBeregningUtenEtterlønnSluttpakke(tellAntallArbeidsforholdIBeregningUtenSluttpakke(filtrertListe));
         builder.medSnNyoppstartet(nyoppstartetSelvstendingNæringsdrivende(filtrertListe));
         return builder.build();
     }
 
     private static boolean harMilitærStatusMedDagsatsOgAnnenStatus(List<BeregningsgrunnlagPrStatusOgAndel> andeler) {
         var harMilitærAndelerMedDagsats = andeler.stream()
-                .filter(status -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(status.getAktivitetStatus()))
-                .anyMatch(andel -> andel.getDagsats() > 0);
+            .filter(status -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(status.getAktivitetStatus()))
+            .anyMatch(andel -> andel.getDagsats() > 0);
 
         if (!harMilitærAndelerMedDagsats) {
             return false;
@@ -133,18 +132,18 @@ public final class BeregningsgrunnlagMapper {
 
     private static int tellAntallArbeidsforholdIBeregningUtenSluttpakke(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         return (int) bgpsaListe.stream()
-                .filter(bgpsa -> AktivitetStatus.ARBEIDSTAKER.equals(bgpsa.getAktivitetStatus()))
-                .filter(bgpsa -> !OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(bgpsa.getArbeidsforholdType()))
-                .count();
+            .filter(bgpsa -> AktivitetStatus.ARBEIDSTAKER.equals(bgpsa.getAktivitetStatus()))
+            .filter(bgpsa -> !OpptjeningAktivitetType.ETTERLØNN_SLUTTPAKKE.equals(bgpsa.getArbeidsforholdType()))
+            .count();
     }
 
     private static boolean nyoppstartetSelvstendingNæringsdrivende(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {
         return bgpsaListe.stream()
-                .filter(andel -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus()))
-                .map(BeregningsgrunnlagPrStatusOgAndel::getNyIArbeidslivet)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElse(false);
+            .filter(andel -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE.equals(andel.getAktivitetStatus()))
+            .map(BeregningsgrunnlagPrStatusOgAndel::getNyIArbeidslivet)
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElse(false);
     }
 
     private static List<BeregningsgrunnlagAndel> mapAndelListe(List<BeregningsgrunnlagPrStatusOgAndel> bgpsaListe) {

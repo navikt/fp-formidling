@@ -110,17 +110,10 @@ public class BehandlingsresultatDto {
 
     @Override
     public String toString() {
-        return "BehandlingsresultatDto{" +
-                "id=" + id +
-                ", type=" + (type != null ? type.toString() : null) +
-                ", avslagsarsak=" + (avslagsarsak != null ? avslagsarsak.toString() : null) +
-                ", vedtaksbrev=" + (vedtaksbrev != null ? vedtaksbrev.toString() : null) +
-                ", konsekvenserForYtelsen=" + (konsekvenserForYtelsen != null ? konsekvenserForYtelsen.toString() : null) +
-                ", avslagsarsakFritekst='" + avslagsarsakFritekst + '\'' +
-                ", overskrift='" + overskrift + '\'' +
-                ", fritekstbrev='" + fritekstbrev + '\'' +
-                ", erRevurderingMedUendretUtfall='" + erRevurderingMedUendretUtfall + '\'' +
-                ", skjæringstidspunkt=" + skjæringstidspunkt + '\'' +
-                '}';
+        return "BehandlingsresultatDto{" + "id=" + id + ", type=" + (type != null ? type.toString() : null) + ", avslagsarsak=" + (
+            avslagsarsak != null ? avslagsarsak.toString() : null) + ", vedtaksbrev=" + (vedtaksbrev != null ? vedtaksbrev.toString() : null)
+            + ", konsekvenserForYtelsen=" + (konsekvenserForYtelsen != null ? konsekvenserForYtelsen.toString() : null) + ", avslagsarsakFritekst='"
+            + avslagsarsakFritekst + '\'' + ", overskrift='" + overskrift + '\'' + ", fritekstbrev='" + fritekstbrev + '\''
+            + ", erRevurderingMedUendretUtfall='" + erRevurderingMedUendretUtfall + '\'' + ", skjæringstidspunkt=" + skjæringstidspunkt + '\'' + '}';
     }
 }

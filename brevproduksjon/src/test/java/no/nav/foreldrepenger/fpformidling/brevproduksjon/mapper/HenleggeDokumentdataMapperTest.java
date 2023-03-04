@@ -71,17 +71,14 @@ class HenleggeDokumentdataMapperTest {
 
     private Behandling opprettBehandling(BehandlingType behType, String behNavn) {
         return Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(behType)
-                .medBehandlendeEnhetNavn(behNavn)
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(behType)
+            .medBehandlendeEnhetNavn(behNavn)
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+            .build();
     }
 
     private DokumentHendelse lagDokumentHendelse(FagsakYtelseType ytelseType) {
-        return lagStandardHendelseBuilder()
-                .medYtelseType(ytelseType)
-                .build();
+        return lagStandardHendelseBuilder().medYtelseType(ytelseType).build();
     }
 }

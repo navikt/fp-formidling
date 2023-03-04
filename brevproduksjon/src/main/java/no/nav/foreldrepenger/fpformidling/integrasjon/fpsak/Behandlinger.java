@@ -35,195 +35,174 @@ public interface Behandlinger {
     void kvitterDokument(DokumentProdusertDto kvittering);
 
     default BeregningsgrunnlagDto hentBeregningsgrunnlag(List<BehandlingResourceLink> resourceLinker) {
-        return hentFormidlingBeregningsgrunnlagHvisFinnes(resourceLinker)
-                .orElseThrow(
-                        () -> new IllegalStateException("Klarte ikke hente beregningsgrunnlag for behandling: " + hentBehandlingId(resourceLinker)));
+        return hentFormidlingBeregningsgrunnlagHvisFinnes(resourceLinker).orElseThrow(
+            () -> new IllegalStateException("Klarte ikke hente beregningsgrunnlag for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default Optional<BeregningsgrunnlagDto> hentFormidlingBeregningsgrunnlagHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "beregningsgrunnlag-formidling".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDto.class));
+        return resourceLinker.stream()
+            .filter(dto -> "beregningsgrunnlag-formidling".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, BeregningsgrunnlagDto.class));
     }
 
     BehandlingDto hentBehandling(UUID behandlingId);
 
     default Optional<VergeDto> hentVergeHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "verge-backend".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, VergeDto.class));
+        return resourceLinker.stream()
+            .filter(dto -> "verge-backend".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, VergeDto.class));
     }
 
     default FamilieHendelseGrunnlagDto hentFamiliehendelse(List<BehandlingResourceLink> resourceLinker) {
-        return hentFamiliehendelseHvisFinnes(resourceLinker)
-                .orElseThrow(
-                        () -> new IllegalStateException("Klarte ikke hente Familiehendelse for behandling: " + hentBehandlingId(resourceLinker)));
+        return hentFamiliehendelseHvisFinnes(resourceLinker).orElseThrow(
+            () -> new IllegalStateException("Klarte ikke hente Familiehendelse for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default Optional<FamilieHendelseGrunnlagDto> hentFamiliehendelseHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "familiehendelse-v2".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, FamilieHendelseGrunnlagDto.class));
+        return resourceLinker.stream()
+            .filter(dto -> "familiehendelse-v2".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, FamilieHendelseGrunnlagDto.class));
     }
 
     default Optional<TilkjentYtelseEngangsstønadDto> hentTilkjentYtelseEngangsstønadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "beregningsresultat-engangsstonad".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, TilkjentYtelseEngangsstønadDto.class));
+        return resourceLinker.stream()
+            .filter(dto -> "beregningsresultat-engangsstonad".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, TilkjentYtelseEngangsstønadDto.class));
     }
 
     default TilkjentYtelseEngangsstønadDto hentTilkjentYtelseEngangsstønad(List<BehandlingResourceLink> resourceLinker) {
-        return hentTilkjentYtelseEngangsstønadHvisFinnes(resourceLinker)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Klarte ikke hente Tilkjent ytelse engangsstønad for behandling: " + hentBehandlingId(resourceLinker)));
+        return hentTilkjentYtelseEngangsstønadHvisFinnes(resourceLinker).orElseThrow(
+            () -> new IllegalStateException("Klarte ikke hente Tilkjent ytelse engangsstønad for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default TilkjentYtelseMedUttaksplanDto hentTilkjentYtelseForeldrepenger(List<BehandlingResourceLink> resourceLinker) {
         return hentTilkjentYtelseForeldrepengerHvisFinnes(resourceLinker).orElseThrow(() -> {
-            throw new IllegalStateException(
-                    "Klarte ikke hente Tilkjent ytelse foreldrepenger for behandling: " + hentBehandlingId(resourceLinker));
+            throw new IllegalStateException("Klarte ikke hente Tilkjent ytelse foreldrepenger for behandling: " + hentBehandlingId(resourceLinker));
         });
     }
 
     default Optional<TilkjentYtelseMedUttaksplanDto> hentTilkjentYtelseForeldrepengerHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "beregningsresultat-foreldrepenger".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, TilkjentYtelseMedUttaksplanDto.class));
+        return resourceLinker.stream()
+            .filter(dto -> "beregningsresultat-foreldrepenger".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, TilkjentYtelseMedUttaksplanDto.class));
     }
 
     default Optional<SoknadBackendDto> hentSoknadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "soknad-backend".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, SoknadBackendDto.class));
+        return resourceLinker.stream()
+            .filter(dto -> "soknad-backend".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, SoknadBackendDto.class));
     }
 
     default InntektsmeldingerDto hentInntektsmeldingerDto(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "inntektsmeldinger".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, InntektsmeldingerDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente Inntektsmeldinger dto for behandling: " + hentBehandlingId(resourceLinker)));
+        return resourceLinker.stream()
+            .filter(dto -> "inntektsmeldinger".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, InntektsmeldingerDto.class))
+            .orElseThrow(
+                () -> new IllegalStateException("Klarte ikke hente Inntektsmeldinger dto for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default KlagebehandlingDto hentKlagebehandling(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "klage-vurdering".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, KlagebehandlingDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente klage for behandling: " + hentBehandlingId(resourceLinker)));
+        return resourceLinker.stream()
+            .filter(dto -> "klage-vurdering".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, KlagebehandlingDto.class))
+            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente klage for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default InnsynsbehandlingDto hentInnsynsbehandling(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "innsyn".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, InnsynsbehandlingDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente innsyn for behandling: " + hentBehandlingId(resourceLinker)));
+        return resourceLinker.stream()
+            .filter(dto -> "innsyn".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, InnsynsbehandlingDto.class))
+            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente innsyn for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default Optional<UttakResultatPerioderDto> hentUttaksresultatFpHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "uttaksresultat-perioder-formidling".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, UttakResultatPerioderDto.class));
+        return resourceLinker.stream()
+            .filter(dto -> "uttaksresultat-perioder-formidling".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, UttakResultatPerioderDto.class));
     }
 
     default Optional<SvangerskapspengerUttakResultatDto> hentUttaksresultatSvpHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "uttaksresultat-svangerskapspenger".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, SvangerskapspengerUttakResultatDto.class));
+        return resourceLinker.stream()
+            .filter(dto -> "uttaksresultat-svangerskapspenger".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, SvangerskapspengerUttakResultatDto.class));
     }
 
     default FagsakDto hentFagsak(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "fagsak".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, FagsakDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente fagsak for behandling: " + hentBehandlingId(resourceLinker)));
+        return resourceLinker.stream()
+            .filter(dto -> "fagsak".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, FagsakDto.class))
+            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente fagsak for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default SaldoerDto hentSaldoer(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "uttak-stonadskontoer".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, SaldoerDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente uttakssaldoer for behandling: " + hentBehandlingId(resourceLinker)));
+        return resourceLinker.stream()
+            .filter(dto -> "uttak-stonadskontoer".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, SaldoerDto.class))
+            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente uttakssaldoer for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default MottattKlagedokumentDto hentKlagedokument(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "mottatt-klagedokument".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, MottattKlagedokumentDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente klagedokument for behandling: " + hentBehandlingId(resourceLinker)));
+        return resourceLinker.stream()
+            .filter(dto -> "mottatt-klagedokument".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, MottattKlagedokumentDto.class))
+            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente klagedokument for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default List<MottattDokumentDto> hentMottatteDokumenter(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "mottattdokument".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, MottattDokumentDto[].class))
-                .map(Arrays::asList)
-                .orElse(List.of());
+        return resourceLinker.stream()
+            .filter(dto -> "mottattdokument".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, MottattDokumentDto[].class))
+            .map(Arrays::asList)
+            .orElse(List.of());
     }
 
     default Optional<Boolean> harSendtVarselOmRevurdering(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "sendt-varsel-om-revurdering".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, Boolean.class));
+        return resourceLinker.stream()
+            .filter(dto -> "sendt-varsel-om-revurdering".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, Boolean.class));
     }
 
     default YtelseFordelingDto ytelseFordeling(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "ytelsefordeling".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, YtelseFordelingDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente ytelse fordeling for behandling " + hentBehandlingId(resourceLinker)));
+        return resourceLinker.stream()
+            .filter(dto -> "ytelsefordeling".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, YtelseFordelingDto.class))
+            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente ytelse fordeling for behandling " + hentBehandlingId(resourceLinker)));
     }
 
     default StartdatoUtsattDto hentStartdatoUtsatt(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .filter(dto -> "utsatt-oppstart".equals(dto.getRel()))
-                .findFirst()
-                .flatMap(link -> hentDtoFraLink(link, StartdatoUtsattDto.class))
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente informasjon om utsatt startdato for behandling: " + hentBehandlingId(resourceLinker)));
+        return resourceLinker.stream()
+            .filter(dto -> "utsatt-oppstart".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, StartdatoUtsattDto.class))
+            .orElseThrow(() -> new IllegalStateException(
+                "Klarte ikke hente informasjon om utsatt startdato for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     private static UUID hentBehandlingId(List<BehandlingResourceLink> resourceLinker) {
-        return resourceLinker
-                .stream()
-                .map(BehandlingResourceLink::getRequestPayload)
-                .filter(Objects::nonNull)
-                .map(BehandlingRelLinkPayload::behandlingUuid)
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElse(null);
+        return resourceLinker.stream()
+            .map(BehandlingResourceLink::getRequestPayload)
+            .filter(Objects::nonNull)
+            .map(BehandlingRelLinkPayload::behandlingUuid)
+            .filter(Objects::nonNull)
+            .findFirst()
+            .orElse(null);
     }
 
 }

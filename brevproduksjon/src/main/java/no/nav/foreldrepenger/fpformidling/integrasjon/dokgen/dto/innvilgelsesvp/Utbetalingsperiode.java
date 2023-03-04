@@ -45,13 +45,15 @@ public class Utbetalingsperiode {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (Utbetalingsperiode) object;
-        return Objects.equals(periodeFom, that.periodeFom)
-                && Objects.equals(periodeTom, that.periodeTom)
-                && Objects.equals(periodeDagsats, that.periodeDagsats)
-                && Objects.equals(utbetaltTilSøker, that.utbetaltTilSøker);
+        return Objects.equals(periodeFom, that.periodeFom) && Objects.equals(periodeTom, that.periodeTom) && Objects.equals(periodeDagsats,
+            that.periodeDagsats) && Objects.equals(utbetaltTilSøker, that.utbetaltTilSøker);
     }
 
     @Override

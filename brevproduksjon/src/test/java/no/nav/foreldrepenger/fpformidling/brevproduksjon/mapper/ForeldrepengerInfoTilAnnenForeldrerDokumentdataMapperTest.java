@@ -43,7 +43,8 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
 
     @BeforeEach
     void setUp() {
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER));
+        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(
+            DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER));
         dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).build();
 
         foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper = new ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper(domeneobjektProvider);
@@ -54,11 +55,12 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
         // Arrange
         var behandling = opprettBehandling(lagBehÅrsak(BehandlingÅrsakType.INFOBREV_BEHANDLING));
         var foreldrepengerUttak = settOppUttaksperioder(DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(20)),
-                                                                            DatoIntervall.fraOgMedTilOgMed(LocalDate.now().plusDays(20), LocalDate.now().plusDays(40)));
+            DatoIntervall.fraOgMedTilOgMed(LocalDate.now().plusDays(20), LocalDate.now().plusDays(40)));
         when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)).thenReturn(Optional.of(foreldrepengerUttak));
 
         //Act
-        var infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse,
+            behandling, false);
 
         //assert
         assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_BEHANDLING.getKode());
@@ -70,11 +72,12 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
         // Arrange
         var behandling = opprettBehandling(lagBehÅrsak(BehandlingÅrsakType.INFOBREV_OPPHOLD));
         var foreldrepengerUttak = settOppUttaksperioder(DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(20)),
-                DatoIntervall.fraOgMedTilOgMed(LocalDate.now().plusDays(20), LocalDate.now().plusDays(30)));
+            DatoIntervall.fraOgMedTilOgMed(LocalDate.now().plusDays(20), LocalDate.now().plusDays(30)));
         when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)).thenReturn(Optional.of(foreldrepengerUttak));
 
         //Act
-        var infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
+        var infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse,
+            behandling, false);
 
         //assert
         assertThat(infoTilAnnenForelderData.getBehandlingsÅrsak()).isEqualTo(BehandlingÅrsakType.INFOBREV_OPPHOLD.getKode());
@@ -82,32 +85,28 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
     }
 
     private BehandlingÅrsak lagBehÅrsak(BehandlingÅrsakType årsakType) {
-        return BehandlingÅrsak.builder()
-                .medBehandlingÅrsakType(årsakType)
-                .build();
+        return BehandlingÅrsak.builder().medBehandlingÅrsakType(årsakType).build();
     }
+
     private Behandling opprettBehandling(BehandlingÅrsak behÅrsak) {
-        var behandlingresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET);
+        var behandlingresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET);
 
         var behandlingBuilder = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medBehandlingsresultat(behandlingresultat.build())
-                .medSpråkkode(Språkkode.NB)
-                .medBehandlingÅrsaker(List.of(behÅrsak));
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .medBehandlingsresultat(behandlingresultat.build())
+            .medSpråkkode(Språkkode.NB)
+            .medBehandlingÅrsaker(List.of(behÅrsak));
 
         return behandlingBuilder.build();
     }
+
     private ForeldrepengerUttak settOppUttaksperioder(DatoIntervall periodeEn, DatoIntervall periodeTo) {
         return new ForeldrepengerUttak(List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)),
-                List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)), false, false, false, false);
+            List.of(lagUttakResPeriode(periodeEn), lagUttakResPeriode(periodeTo)), false, false, false, false);
     }
 
     private UttakResultatPeriode lagUttakResPeriode(DatoIntervall periode) {
-        return UttakResultatPeriode.ny()
-                .medTidsperiode(periode)
-                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .build();
+        return UttakResultatPeriode.ny().medTidsperiode(periode).medPeriodeResultatType(PeriodeResultatType.INNVILGET).build();
     }
 }

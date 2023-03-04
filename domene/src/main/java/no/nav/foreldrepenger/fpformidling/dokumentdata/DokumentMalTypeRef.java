@@ -66,7 +66,8 @@ public @interface DokumentMalTypeRef {
                     return Optional.of(getInstance(inst));
                 } else {
                     if (inst.isAmbiguous()) {
-                        throw new IllegalStateException("Har flere matchende instanser for klasse : " + cls.getName() + ", dokumentMalLiteral=" + dokumentMalLiteral);
+                        throw new IllegalStateException(
+                            "Har flere matchende instanser for klasse : " + cls.getName() + ", dokumentMalLiteral=" + dokumentMalLiteral);
                     }
                 }
             }
@@ -75,16 +76,14 @@ public @interface DokumentMalTypeRef {
         }
 
         private static <I> Instance<I> select(Class<I> cls, Instance<I> instances, Annotation anno) {
-            return cls != null
-                    ? instances.select(cls, anno)
-                    : instances.select(anno);
+            return cls != null ? instances.select(cls, anno) : instances.select(anno);
         }
 
         private static <I> I getInstance(Instance<I> inst) {
             var i = inst.get();
             if (i.getClass().isAnnotationPresent(Dependent.class)) {
                 throw new IllegalStateException(
-                        "Kan ikke ha @Dependent scope bean ved Instance lookup dersom en ikke også håndtere lifecycle selv: " + i.getClass());
+                    "Kan ikke ha @Dependent scope bean ved Instance lookup dersom en ikke også håndtere lifecycle selv: " + i.getClass());
             }
             return i;
         }

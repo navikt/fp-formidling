@@ -40,8 +40,10 @@ public class KlageOversendtDokumentdataMapper implements DokumentdataMapper {
     }
 
     @Override
-    public KlageOversendtDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                         Behandling behandling, boolean erUtkast) {
+    public KlageOversendtDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                         DokumentHendelse hendelse,
+                                                         Behandling behandling,
+                                                         boolean erUtkast) {
         var klageDokument = domeneobjektProvider.hentKlageDokument(behandling);
         var klage = domeneobjektProvider.hentKlagebehandling(behandling);
 
@@ -53,16 +55,14 @@ public class KlageOversendtDokumentdataMapper implements DokumentdataMapper {
         fra(hendelse, klage).ifPresent(fellesBuilder::medFritekst);
 
         var dokumentdataBuilder = KlageOversendtDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medGjelderTilbakekreving(klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType())
-                .medMottattDato(formaterDatoNorsk(utledMottattDato(klageDokument, behandling)));
+            .medFelles(fellesBuilder.build())
+            .medGjelderTilbakekreving(klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType())
+            .medMottattDato(formaterDatoNorsk(utledMottattDato(klageDokument, behandling)));
 
         return dokumentdataBuilder.build();
     }
 
     private LocalDate utledMottattDato(KlageDokument klageDokument, Behandling behandling) {
-        return klageDokument.mottattDato() != null
-                ? klageDokument.mottattDato()
-                : behandling.getOpprettetDato().toLocalDate();
+        return klageDokument.mottattDato() != null ? klageDokument.mottattDato() : behandling.getOpprettetDato().toLocalDate();
     }
 }

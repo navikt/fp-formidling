@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 
-public class AvslagsperiodeMapperTest {
+class AvslagsperiodeMapperTest {
 
     private static final String ARBEIDSGIVER1_NAVN = "Arbeidsgiver1 AS";
     private static final LocalDate PERIODE1_FOM = LocalDate.now().minusDays(10); //Slås sammen med periode 2 og 6
@@ -61,58 +61,52 @@ public class AvslagsperiodeMapperTest {
 
     private List<SvpUttakResultatArbeidsforhold> getSvpUttakResultatArbeidsforhold() {
         var uttakPeriode1 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT)
-                .build();
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT)
+            .build();
         var uttakPeriode2 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT)
-                .build();
-        var arbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny()
-                .leggTilPerioder(of(uttakPeriode1, uttakPeriode2))
-                .build();
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT)
+            .build();
+        var arbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode1, uttakPeriode2)).build();
 
         var uttakPeriode3 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER2_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE)
-                .build();
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER2_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE)
+            .build();
         var uttakPeriode4 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER2_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE)
-                .build();
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER2_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE)
+            .build();
         var uttakPeriode5 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE5_FOM, PERIODE5_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER2_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.OPPTJENINGSVILKÅRET_IKKE_OPPFYLT) //Mappes ikke
-                .build();
-        var arbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny()
-                .leggTilPerioder(of(uttakPeriode3, uttakPeriode4, uttakPeriode5))
-                .build();
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE5_FOM, PERIODE5_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER2_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.OPPTJENINGSVILKÅRET_IKKE_OPPFYLT) //Mappes ikke
+            .build();
+        var arbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode3, uttakPeriode4, uttakPeriode5)).build();
 
         var uttakPeriode6 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE6_FOM, PERIODE6_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER3_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT)
-                .build();
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE6_FOM, PERIODE6_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER3_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT)
+            .build();
         var uttakPeriode7 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE7_FOM, PERIODE7_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER3_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE)
-                .build();
-        var arbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny()
-                .leggTilPerioder(of(uttakPeriode6, uttakPeriode7))
-                .build();
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE7_FOM, PERIODE7_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER3_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE)
+            .build();
+        var arbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode6, uttakPeriode7)).build();
 
         return of(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
     }

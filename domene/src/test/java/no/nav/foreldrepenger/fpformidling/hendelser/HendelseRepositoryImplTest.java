@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(JpaExtension.class)
-public class HendelseRepositoryImplTest {
+class HendelseRepositoryImplTest {
 
     private HendelseRepository hendelseRepository;
 
@@ -28,23 +28,20 @@ public class HendelseRepositoryImplTest {
     void skalLagreOgHenteOppIgjen() {
         var behandlingUuid = UUID.randomUUID();
         var bestiilingUuid = UUID.randomUUID();
-        var dokumentHendelse = DokumentHendelse
-                .builder()
-                .medBehandlingUuid(behandlingUuid)
-                .medBestillingUuid(bestiilingUuid)
-                .medYtelseType(FagsakYtelseType.FORELDREPENGER)
-                .medDokumentMalType(DokumentMalType.FORELDREPENGER_ANNULLERT)
-                .build();
+        var dokumentHendelse = DokumentHendelse.builder()
+            .medBehandlingUuid(behandlingUuid)
+            .medBestillingUuid(bestiilingUuid)
+            .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+            .medDokumentMalType(DokumentMalType.FORELDREPENGER_ANNULLERT)
+            .build();
         hendelseRepository.lagre(dokumentHendelse);
 
         var hendelse = hendelseRepository.hentDokumentHendelseMedId(dokumentHendelse.getId());
 
         assertThat(hendelse).isNotNull();
 
-        assertThat(hendelseRepository.erDokumentHendelseMottatt(behandlingUuid, DokumentMalType.FORELDREPENGER_ANNULLERT))
-                .isTrue();
-        assertThat(hendelseRepository.erDokumentHendelseMottatt(behandlingUuid, DokumentMalType.FORELDREPENGER_AVSLAG))
-                .isFalse();
+        assertThat(hendelseRepository.erDokumentHendelseMottatt(behandlingUuid, DokumentMalType.FORELDREPENGER_ANNULLERT)).isTrue();
+        assertThat(hendelseRepository.erDokumentHendelseMottatt(behandlingUuid, DokumentMalType.FORELDREPENGER_AVSLAG)).isFalse();
         assertThat(hendelseRepository.finnesHendelseMedUuidAllerede(bestiilingUuid)).isTrue();
 
     }

@@ -39,19 +39,22 @@ public class ForeldrepengerAnnullertDokumentdataMapper implements DokumentdataMa
     }
 
     @Override
-    public ForeldrepengerAnnullertDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                                  Behandling behandling, boolean erUtkast) {
+    public ForeldrepengerAnnullertDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                                  DokumentHendelse hendelse,
+                                                                  Behandling behandling,
+                                                                  boolean erUtkast) {
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
         var startdatoUtsatt = domeneobjektProvider.hentStartdatoUtsatt(behandling);
         var harSøktOmNyPeriode = startdatoUtsatt.nyStartdato() != null;
 
         var dokumentdataBuilder = ForeldrepengerAnnullertDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medHarSøktOmNyPeriode(harSøktOmNyPeriode)
-                .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medFelles(fellesBuilder.build())
+            .medHarSøktOmNyPeriode(harSøktOmNyPeriode)
+            .medKlagefristUker(brevParametere.getKlagefristUker());
 
         if (harSøktOmNyPeriode) {
             dokumentdataBuilder.medPlanlagtOppstartDato(formaterDato(startdatoUtsatt.nyStartdato(), behandling.getSpråkkode()));

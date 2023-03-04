@@ -18,9 +18,7 @@ import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 import no.nav.vedtak.sikkerhet.abac.beskyttet.ActionType;
 import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 
-public class RestApiAbacTest {
-
-    private static String PREV_LB_URL;
+class RestApiAbacTest {
 
     /**
      * IKKE ignorer denne testen, sikrer at REST-endepunkter får tilgangskontroll
@@ -37,7 +35,7 @@ public class RestApiAbacTest {
             }
         }
 
-        assertThat(feilmeldinger).as("Følgende REST-tjenester passerte ikke validering:\n" + feilmeldinger).hasSize(0);
+        assertThat(feilmeldinger).as("Følgende REST-tjenester passerte ikke validering:\n" + feilmeldinger).isEmpty();
     }
 
     @Test
@@ -61,33 +59,32 @@ public class RestApiAbacTest {
             for (var parameter : restMethode.getParameters()) {
                 if (Collection.class.isAssignableFrom(parameter.getType())) {
                     var type = (ParameterizedType) parameter.getParameterizedType();
-                    @SuppressWarnings("rawtypes")
-                    Class<?> aClass = (Class) (type.getActualTypeArguments()[0]);
-                    if (!AbacDto.class.isAssignableFrom(aClass)
-                            && !parameter.isAnnotationPresent(TilpassetAbacAttributt.class)
-                            && !IgnorerteInputTyper.ignore(aClass)) {
-                        feilmeldinger.append(String.format(feilmelding, restMethode.getDeclaringClass().getSimpleName(), restMethode.getName(), aClass.getSimpleName()));
+                    @SuppressWarnings("rawtypes") Class<?> aClass = (Class) (type.getActualTypeArguments()[0]);
+                    if (!AbacDto.class.isAssignableFrom(aClass) && !parameter.isAnnotationPresent(TilpassetAbacAttributt.class)
+                        && !IgnorerteInputTyper.ignore(aClass)) {
+                        feilmeldinger.append(String.format(feilmelding, restMethode.getDeclaringClass().getSimpleName(), restMethode.getName(),
+                            aClass.getSimpleName()));
                     }
                 } else {
-                    if (!AbacDto.class.isAssignableFrom(parameter.getType())
-                            && !parameter.isAnnotationPresent(TilpassetAbacAttributt.class)
-                            && !IgnorerteInputTyper.ignore(parameter.getType())) {
-                        feilmeldinger.append(String.format(feilmelding, restMethode.getDeclaringClass().getSimpleName(), restMethode.getName(), parameter.getType().getSimpleName()));
+                    if (!AbacDto.class.isAssignableFrom(parameter.getType()) && !parameter.isAnnotationPresent(TilpassetAbacAttributt.class)
+                        && !IgnorerteInputTyper.ignore(parameter.getType())) {
+                        feilmeldinger.append(String.format(feilmelding, restMethode.getDeclaringClass().getSimpleName(), restMethode.getName(),
+                            parameter.getType().getSimpleName()));
                     }
                 }
             }
         }
 
-        assertThat(feilmeldinger).as("Følgende inputparametre til REST-tjenester mangler AbacDto-impl:\n" + feilmeldinger).hasSize(0);
+        assertThat(feilmeldinger).as("Følgende inputparametre til REST-tjenester mangler AbacDto-impl:\n" + feilmeldinger).isEmpty();
     }
 
     private void assertAtIngenBrukerDummyVerdierPåBeskyttetRessurs(Method metode) {
         var klasse = metode.getDeclaringClass();
         var annotation = metode.getAnnotation(BeskyttetRessurs.class);
         if (annotation != null && annotation.actionType() == ActionType.DUMMY) {
-            fail(klasse.getSimpleName() + "." + metode.getName() + " Ikke bruk DUMMY-verdi for "
-                    + ActionType.class.getSimpleName());
-        } else if (annotation != null && annotation.resource().isEmpty() && annotation.resourceType() == ResourceType.DUMMY && annotation.property().isEmpty()) {
+            fail(klasse.getSimpleName() + "." + metode.getName() + " Ikke bruk DUMMY-verdi for " + ActionType.class.getSimpleName());
+        } else if (annotation != null && annotation.resource().isEmpty() && annotation.resourceType() == ResourceType.DUMMY && annotation.property()
+            .isEmpty()) {
             fail(klasse.getSimpleName() + "." + metode.getName() + " En verdi for resource må være satt!");
         }
     }

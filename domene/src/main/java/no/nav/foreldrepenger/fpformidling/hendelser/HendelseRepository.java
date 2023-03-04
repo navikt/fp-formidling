@@ -42,7 +42,8 @@ public class HendelseRepository {
     }
 
     public boolean erDokumentHendelseMottatt(UUID behandlingUuid, DokumentMalType dokumentMal) {
-        var query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid and dokumentMalType=:dokumentMalType", DokumentHendelse.class);
+        var query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid and dokumentMalType=:dokumentMalType",
+            DokumentHendelse.class);
         query.setParameter("behandlingUuid", behandlingUuid);
         query.setParameter("dokumentMalType", dokumentMal);
         return !query.getResultList().isEmpty();

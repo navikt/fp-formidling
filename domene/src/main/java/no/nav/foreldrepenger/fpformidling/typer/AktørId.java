@@ -27,7 +27,7 @@ public class AktørId implements Serializable, Comparable<AktørId> {
     private static final Pattern INVALID = Pattern.compile(INVALID_REGEXP, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     @JsonValue
-    @javax.validation.constraints.Pattern(regexp = VALID_REGEXP, flags = { Flag.CASE_INSENSITIVE })
+    @javax.validation.constraints.Pattern(regexp = VALID_REGEXP, flags = {Flag.CASE_INSENSITIVE})
     @Column(name = "aktoer_id", updatable = false, length = 50)
     private String aktørId; // NOSONAR
 
@@ -45,7 +45,7 @@ public class AktørId implements Serializable, Comparable<AktørId> {
         if (!VALID.matcher(aktørId).matches()) {
             // skal ikke skje, funksjonelle feilmeldinger håndteres ikke her.
             throw new IllegalArgumentException(
-                    "Ugyldig aktørId, støtter kun A-Z/0-9/:/-/_ tegn. Var: " + aktørId.replaceAll(INVALID.pattern(), "?") + " (vasket)");
+                "Ugyldig aktørId, støtter kun A-Z/0-9/:/-/_ tegn. Var: " + aktørId.replaceAll(INVALID.pattern(), "?") + " (vasket)");
         }
         this.aktørId = aktørId;
     }

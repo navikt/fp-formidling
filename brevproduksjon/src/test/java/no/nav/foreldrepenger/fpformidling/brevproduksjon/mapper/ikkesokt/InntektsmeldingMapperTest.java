@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.ikkesokt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertThrows;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,12 +12,12 @@ import org.junit.jupiter.api.Test;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmelding;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
 
-public class InntektsmeldingMapperTest {
+class InntektsmeldingMapperTest {
 
     @Test
     void skal_kaste_exception_hvis_det_ikke_finnes_inntektsmelding() {
-        assertThatThrownBy(() -> InntektsmeldingMapper.hentNyesteInntektsmelding(new Inntektsmeldinger(List.of())))
-                .isInstanceOf(IllegalStateException.class);
+        var iay = new Inntektsmeldinger(List.of());
+        assertThrows(IllegalStateException.class, () -> InntektsmeldingMapper.hentNyesteInntektsmelding(iay));
     }
 
     @Test

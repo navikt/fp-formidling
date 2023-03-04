@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 
-import static no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat.builder;
+import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
+import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingsresultatDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingsresultatDto;
+import static no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat.builder;
 
 public final class BehandlingsresultatDtoMapper {
 
@@ -23,9 +23,9 @@ public final class BehandlingsresultatDtoMapper {
             builder.medBehandlingResultatType(dto.getType());
         }
         builder.medFritekstbrev(dto.getFritekstbrev())
-                .medOverskrift(dto.getOverskrift())
-                .medVedtaksbrev(dto.getVedtaksbrev())
-                .medAvslagarsakFritekst(dto.getAvslagsarsakFritekst());
+            .medOverskrift(dto.getOverskrift())
+            .medVedtaksbrev(dto.getVedtaksbrev())
+            .medAvslagarsakFritekst(dto.getAvslagsarsakFritekst());
         List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>(dto.getKonsekvenserForYtelsen());
 
         builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);

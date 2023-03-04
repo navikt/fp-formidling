@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
-public class NaturalytelseMapperTest {
+class NaturalytelseMapperTest {
 
     private static final LocalDate PERIODE1_FOM = LocalDate.now().minusDays(10);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().minusDays(1);
@@ -58,8 +58,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.BORTFALLER);
         assertThat(resultat.get(0).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_NAVN);
         assertThat(resultat.get(0).getNyDagsats()).isEqualTo(DAGSATS);
@@ -76,8 +75,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
@@ -91,8 +89,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.BORTFALLER);
     }
 
@@ -106,8 +103,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
@@ -121,8 +117,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.BORTFALLER);
     }
 
@@ -136,8 +131,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
@@ -151,49 +145,50 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
     private TilkjentYtelseForeldrepenger gettilkjentYtelseFP(Arbeidsgiver arbeidsgiver, boolean inkluderePeriode2) {
-        var andel = TilkjentYtelseAndel.ny()
-                .medArbeidsgiver(arbeidsgiver)
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .build();
+        var andel = TilkjentYtelseAndel.ny().medArbeidsgiver(arbeidsgiver).medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).build();
         var resultatPeriode1 = TilkjentYtelsePeriode.ny()
-                .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medDagsats(DAGSATS)
-                .medAndeler(of(andel))
-                .build();
+            .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .medDagsats(DAGSATS)
+            .medAndeler(of(andel))
+            .build();
         var resultatPeriode2 = TilkjentYtelsePeriode.ny()
-                .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                .medDagsats(DAGSATS)
-                .medAndeler(of(andel))
-                .build();
+            .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
+            .medDagsats(DAGSATS)
+            .medAndeler(of(andel))
+            .build();
         return TilkjentYtelseForeldrepenger.ny()
-                .leggTilPerioder(inkluderePeriode2 ? of(resultatPeriode1, resultatPeriode2) : of(resultatPeriode1))
-                .build();
+            .leggTilPerioder(inkluderePeriode2 ? of(resultatPeriode1, resultatPeriode2) : of(resultatPeriode1))
+            .build();
     }
 
-    private Beregningsgrunnlag getBeregningsgrunnlag(Arbeidsgiver arbeidsgiver, BigDecimal naturalytelseBortfaller, BigDecimal naturalytelseTilkommer, List<PeriodeÅrsak> periodeÅrsaker, boolean inkluderePeriode2) {
-        var bgAndelArbeidsforhold = new BGAndelArbeidsforhold(arbeidsgiver, ArbeidsforholdRef.ref("1"), naturalytelseBortfaller, naturalytelseTilkommer);
+    private Beregningsgrunnlag getBeregningsgrunnlag(Arbeidsgiver arbeidsgiver,
+                                                     BigDecimal naturalytelseBortfaller,
+                                                     BigDecimal naturalytelseTilkommer,
+                                                     List<PeriodeÅrsak> periodeÅrsaker,
+                                                     boolean inkluderePeriode2) {
+        var bgAndelArbeidsforhold = new BGAndelArbeidsforhold(arbeidsgiver, ArbeidsforholdRef.ref("1"), naturalytelseBortfaller,
+            naturalytelseTilkommer);
         var beregningsgrunnlagPrStatusOgAndel = BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .build();
+            .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
+            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+            .build();
         var grunnlagPeriode1 = BeregningsgrunnlagPeriode.ny()
-                .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medBeregningsgrunnlagPrStatusOgAndelList(of(beregningsgrunnlagPrStatusOgAndel))
-                .medperiodeÅrsaker(periodeÅrsaker)
-                .medDagsats(DAGSATS)
-                .build();
+            .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .medBeregningsgrunnlagPrStatusOgAndelList(of(beregningsgrunnlagPrStatusOgAndel))
+            .medperiodeÅrsaker(periodeÅrsaker)
+            .medDagsats(DAGSATS)
+            .build();
         var grunnlagPeriode2 = BeregningsgrunnlagPeriode.ny()
-                .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                .medBeregningsgrunnlagPrStatusOgAndelList(of(beregningsgrunnlagPrStatusOgAndel))
-                .medperiodeÅrsaker(periodeÅrsaker)
-                .medDagsats(DAGSATS)
-                .build();
+            .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
+            .medBeregningsgrunnlagPrStatusOgAndelList(of(beregningsgrunnlagPrStatusOgAndel))
+            .medperiodeÅrsaker(periodeÅrsaker)
+            .medDagsats(DAGSATS)
+            .build();
         var builder = Beregningsgrunnlag.ny().leggTilBeregningsgrunnlagPeriode(grunnlagPeriode1);
         return inkluderePeriode2 ? builder.leggTilBeregningsgrunnlagPeriode(grunnlagPeriode2).build() : builder.build();
     }

@@ -45,8 +45,10 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
     }
 
     @Override
-    public KlageAvvistDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                      Behandling behandling, boolean erUtkast) {
+    public KlageAvvistDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                      DokumentHendelse hendelse,
+                                                      Behandling behandling,
+                                                      boolean erUtkast) {
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
 
@@ -54,11 +56,11 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
         var avvistGrunner = getAvvistGrunner(klage);
 
         var dokumentdataBuilder = KlageAvvistDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medGjelderTilbakekreving(klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType())
-                .medLovhjemler(getLovhjemler(behandling, klage))
-                .medKlagefristUker(brevParametere.getKlagefristUker())
-                .medAvvistGrunner(avvistGrunner);
+            .medFelles(fellesBuilder.build())
+            .medGjelderTilbakekreving(klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType())
+            .medLovhjemler(getLovhjemler(behandling, klage))
+            .medKlagefristUker(brevParametere.getKlagefristUker())
+            .medAvvistGrunner(avvistGrunner);
 
         return dokumentdataBuilder.build();
     }
@@ -69,8 +71,9 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
     }
 
     private Set<String> getAvvistGrunner(Klage klage) {
-        return KlageMapper.listeAvAvvisteÅrsaker(klage).stream()
-                .map(å -> KlageAvvistÅrsak.IKKE_SIGNERT.equals(å) ? KlageAvvistÅrsak.KLAGE_UGYLDIG.getKode() : å.getKode())
-                .collect(Collectors.toSet());
+        return KlageMapper.listeAvAvvisteÅrsaker(klage)
+            .stream()
+            .map(å -> KlageAvvistÅrsak.IKKE_SIGNERT.equals(å) ? KlageAvvistÅrsak.KLAGE_UGYLDIG.getKode() : å.getKode())
+            .collect(Collectors.toSet());
     }
 }

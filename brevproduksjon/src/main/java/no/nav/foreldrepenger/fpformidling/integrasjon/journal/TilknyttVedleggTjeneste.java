@@ -37,12 +37,14 @@ public class TilknyttVedleggTjeneste {
         try {
             tilknyttVedlegg(knyttesTilJournalpostId, knyttesFraJournalpostId, dokumentId);
         } catch (Exception e) {
-            throw new TekniskException("FPFORMIDLING-156534", String.format("Klarte ikke knytte %s til %s med dokumentId %s.", knyttesFraJournalpostId, knyttesTilJournalpostId,dokumentId ), e);
+            throw new TekniskException("FPFORMIDLING-156534",
+                String.format("Klarte ikke knytte %s til %s med dokumentId %s.", knyttesFraJournalpostId, knyttesTilJournalpostId, dokumentId), e);
         }
     }
 
     private void tilknyttVedlegg(JournalpostId journalpostIdTil, JournalpostId journalpostIdFra, String dokumentInfoId) {
-        LOG.info("Knytter vedlegget med journalpostid {} og dokumentInfoId {} til innsynsbrev med journalpostId {}", journalpostIdFra.getVerdi(), dokumentInfoId, journalpostIdTil.getVerdi());
+        LOG.info("Knytter vedlegget med journalpostid {} og dokumentInfoId {} til innsynsbrev med journalpostId {}", journalpostIdFra.getVerdi(),
+            dokumentInfoId, journalpostIdTil.getVerdi());
         journalpostRestKlient.tilknyttVedlegg(lagRequest(journalpostIdFra, dokumentInfoId), journalpostIdTil);
     }
 

@@ -90,17 +90,13 @@ class InnsynDokumentdataMapperTest {
 
     private Behandling opprettBehandling() {
         return Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.INNSYN)
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.INNSYN)
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+            .build();
     }
 
     private DokumentHendelse lagDokumentHendelse(FagsakYtelseType ytelseType) {
-        return lagStandardHendelseBuilder()
-                .medYtelseType(ytelseType)
-                .medFritekst(FRITEKST)
-                .build();
+        return lagStandardHendelseBuilder().medYtelseType(ytelseType).medFritekst(FRITEKST).build();
     }
 }

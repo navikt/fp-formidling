@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.fpformidling.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
-public class KlageOversendtDokumentdataMapperTest {
+class KlageOversendtDokumentdataMapperTest {
 
     private static final String FRITEKST_TIL_BREV = "FRITEKST";
     private static final LocalDate MOTTATT_DATO = LocalDate.now();
@@ -83,9 +83,9 @@ public class KlageOversendtDokumentdataMapperTest {
 
     private void mockKlage(Behandling behandling) {
         var klage = Klage.ny()
-                .medPåklagdBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medKlageVurderingResultatNK(new KlageVurderingResultat(null, FRITEKST_TIL_BREV))
-                .build();
+            .medPåklagdBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .medKlageVurderingResultatNK(new KlageVurderingResultat(null, FRITEKST_TIL_BREV))
+            .build();
         when(domeneobjektProvider.hentKlagebehandling(behandling)).thenReturn(klage);
     }
 }

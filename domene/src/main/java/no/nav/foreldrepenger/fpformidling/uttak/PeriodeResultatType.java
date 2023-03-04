@@ -18,13 +18,15 @@ public enum PeriodeResultatType implements Kodeverdi {
     IKKE_FASTSATT("IKKE_FASTSATT"),
     MANUELL_BEHANDLING("MANUELL_BEHANDLING"),
 
-    /** @deprecated kan fjernes når beregning har sluttet å bruke. */
-    @Deprecated
-    GYLDIG_UTSETTELSE("GYLDIG_UTSETTELSE"),
+    /**
+     * @deprecated kan fjernes når beregning har sluttet å bruke.
+     */
+    @Deprecated GYLDIG_UTSETTELSE("GYLDIG_UTSETTELSE"),
 
-    /** @deprecated kan fjernes når beregning har sluttet å bruke. */
-    @Deprecated
-    UGYLDIG_UTSETTELSE("UGYLDIG_UTSETTELSE"),
+    /**
+     * @deprecated kan fjernes når beregning har sluttet å bruke.
+     */
+    @Deprecated UGYLDIG_UTSETTELSE("UGYLDIG_UTSETTELSE"),
     ;
 
     @JsonValue

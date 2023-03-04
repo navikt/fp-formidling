@@ -21,16 +21,18 @@ import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public class UttakDtoMapper {
 
-    public static ForeldrepengerUttak mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto,
-                                                                      UnaryOperator<String> hentNavn) {
+    private UttakDtoMapper() {
+    }
+
+    public static ForeldrepengerUttak mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto, UnaryOperator<String> hentNavn) {
         var uttakResultatPerioder = getUttakResultatPerioder(resultatPerioderDto.perioderSøker(), hentNavn);
         var perioderAnnenPart = getUttakResultatPerioder(resultatPerioderDto.perioderAnnenpart(), hentNavn);
         var aleneomsorg = resultatPerioderDto.aleneomsorg();
         var annenForelderHarRett = resultatPerioderDto.annenForelderHarRett();
         var annenForelderRettEØS = resultatPerioderDto.annenForelderRettEØS();
         var oppgittAnnenForelderRettEØS = resultatPerioderDto.oppgittAnnenForelderRettEØS();
-        return new ForeldrepengerUttak(uttakResultatPerioder, perioderAnnenPart, aleneomsorg, annenForelderHarRett,
-                annenForelderRettEØS, oppgittAnnenForelderRettEØS);
+        return new ForeldrepengerUttak(uttakResultatPerioder, perioderAnnenPart, aleneomsorg, annenForelderHarRett, annenForelderRettEØS,
+            oppgittAnnenForelderRettEØS);
     }
 
     private static List<UttakResultatPeriode> getUttakResultatPerioder(List<UttakResultatPeriodeDto> resultatPerioderDto,
@@ -44,42 +46,40 @@ public class UttakDtoMapper {
     private static UttakResultatPeriode periodeFraDto(UttakResultatPeriodeDto dto, UnaryOperator<String> hentNavn) {
         var aktiviteter = dto.getAktiviteter().stream().map(a -> aktivitetFraDto(a, hentNavn)).toList();
         var mappetPeriode = UttakResultatPeriode.ny()
-                .medGraderingAvslagÅrsak(velgGraderingsavslagÅrsak(dto))
-                .medPeriodeResultatType(dto.getPeriodeResultatType())
-                .medPeriodeResultatÅrsak(velgPerioderesultatÅrsak(dto))
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
-                .medAktiviteter(aktiviteter)
-                .build();
+            .medGraderingAvslagÅrsak(velgGraderingsavslagÅrsak(dto))
+            .medPeriodeResultatType(dto.getPeriodeResultatType())
+            .medPeriodeResultatÅrsak(velgPerioderesultatÅrsak(dto))
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
+            .medAktiviteter(aktiviteter)
+            .build();
         aktiviteter.forEach(aktivitet -> aktivitet.leggTilPeriode(mappetPeriode));
         return mappetPeriode;
     }
 
     private static PeriodeResultatÅrsak velgPerioderesultatÅrsak(UttakResultatPeriodeDto dto) {
-        return dto.getPeriodeResultatÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(
-                dto.getPeriodeResultatÅrsak(), PERIODE_ÅRSAK_DISCRIMINATOR, dto.getPeriodeResultatÅrsakLovhjemmel());
+        return dto.getPeriodeResultatÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getPeriodeResultatÅrsak(),
+            PERIODE_ÅRSAK_DISCRIMINATOR, dto.getPeriodeResultatÅrsakLovhjemmel());
     }
 
     private static PeriodeResultatÅrsak velgGraderingsavslagÅrsak(UttakResultatPeriodeDto dto) {
-        return dto.getGraderingAvslagÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(
-                dto.getGraderingAvslagÅrsak(), GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR, dto.getGraderingsAvslagÅrsakLovhjemmel());
+        return dto.getGraderingAvslagÅrsak() == null ? PeriodeResultatÅrsak.UKJENT : new PeriodeResultatÅrsak(dto.getGraderingAvslagÅrsak(),
+            GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR, dto.getGraderingsAvslagÅrsakLovhjemmel());
     }
 
-    private static UttakResultatPeriodeAktivitet aktivitetFraDto(UttakResultatPeriodeAktivitetDto dto,
-                                                                 UnaryOperator<String> hentNavn) {
+    private static UttakResultatPeriodeAktivitet aktivitetFraDto(UttakResultatPeriodeAktivitetDto dto, UnaryOperator<String> hentNavn) {
         return UttakResultatPeriodeAktivitet.ny()
-                .medArbeidsprosent(dto.getProsentArbeid())
-                .medTrekkdager(dto.getTrekkdagerDesimaler())
-                .medUtbetalingsprosent(dto.getUtbetalingsgrad())
-                .medGraderingInnvilget(dto.isGradering())
-                .medTrekkonto(dto.getStønadskontoType())
-                .medUttakAktivitet(UttakAktivitet.ny()
-                        .medArbeidsforholdRef(
-                                dto.getArbeidsforholdId() != null && !dto.getArbeidsforholdId().isEmpty() ? ArbeidsforholdRef.ref(
-                                        dto.getArbeidsforholdId()) : null)
-                        .medArbeidsgiver(mapArbeidsgiver(dto.getArbeidsgiverReferanse(), hentNavn))
-                        .medUttakArbeidType(dto.getUttakArbeidType())
-                        .build())
-                .build();
+            .medArbeidsprosent(dto.getProsentArbeid())
+            .medTrekkdager(dto.getTrekkdagerDesimaler())
+            .medUtbetalingsprosent(dto.getUtbetalingsgrad())
+            .medGraderingInnvilget(dto.isGradering())
+            .medTrekkonto(dto.getStønadskontoType())
+            .medUttakAktivitet(UttakAktivitet.ny()
+                .medArbeidsforholdRef(dto.getArbeidsforholdId() != null && !dto.getArbeidsforholdId().isEmpty() ? ArbeidsforholdRef.ref(
+                    dto.getArbeidsforholdId()) : null)
+                .medArbeidsgiver(mapArbeidsgiver(dto.getArbeidsgiverReferanse(), hentNavn))
+                .medUttakArbeidType(dto.getUttakArbeidType())
+                .build())
+            .build();
     }
 
     static Arbeidsgiver mapArbeidsgiver(String arbeidsgiverReferanse, UnaryOperator<String> hentNavn) {

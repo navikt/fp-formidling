@@ -45,7 +45,7 @@ public class BrevRestTjeneste {
     private ProsessTaskTjeneste taskTjeneste;
 
     public BrevRestTjeneste() {
-        //CDI
+        // CDI
     }
 
     @Inject
@@ -63,10 +63,7 @@ public class BrevRestTjeneste {
     @Operation(description = "Returnerer en pdf som er en forhåndsvisning av brevet", tags = "brev")
     @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response forhaandsvisDokument(
-            @Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.")
-            @TilpassetAbacAttributt(supplierClass = ForhåndsvisSupplier.class)
-            @Valid DokumentbestillingDto dokumentbestillingDto) { // NOSONAR
+    public Response forhaandsvisDokument(@Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = ForhåndsvisSupplier.class) @Valid DokumentbestillingDto dokumentbestillingDto) { // NOSONAR
 
         var dokumentHendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
 
@@ -89,10 +86,7 @@ public class BrevRestTjeneste {
     @Operation(description = "Bestiller, produserer og journalfører brevet", tags = "brev")
     @BeskyttetRessurs(actionType = ActionType.CREATE, resourceType = ResourceType.FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response bestillDokument(
-            @Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.")
-            @TilpassetAbacAttributt(supplierClass = BestillingSupplier.class)
-            @Valid DokumentbestillingV2Dto dokumentbestillingDto) { // NOSONAR
+    public Response bestillDokument(@Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = BestillingSupplier.class) @Valid DokumentbestillingV2Dto dokumentbestillingDto) { // NOSONAR
 
         var hendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
         dokumentHendelseTjeneste.validerUnikOgLagre(hendelse).ifPresent(this::opprettBestillBrevTask);

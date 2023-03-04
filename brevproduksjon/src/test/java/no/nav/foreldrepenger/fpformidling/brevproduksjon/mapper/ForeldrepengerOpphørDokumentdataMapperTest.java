@@ -101,9 +101,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         // Arrange
         var behandling = opprettBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        var dokumentHendelse = lagStandardHendelseBuilder()
-                .medDokumentMalType(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL)
-                .build();
+        var dokumentHendelse = lagStandardHendelseBuilder().medDokumentMalType(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -143,58 +141,59 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
 
     private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {
         return Optional.of(Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-                .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
-                .medhHjemmel(Hjemmel.F_14_7)
-                .medBesteberegnet(true)
-                .build());
+            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
+            .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
+            .medhHjemmel(Hjemmel.F_14_7)
+            .medBesteberegnet(true)
+            .build());
     }
 
     private Optional<ForeldrepengerUttak> opprettUttaksresultat() {
         var uttakAktivitet = UttakResultatPeriodeAktivitet.ny()
-                .medTrekkdager(TREKKDAGER)
-                .medUtbetalingsprosent(BigDecimal.ZERO)
-                .medUttakAktivitet(UttakAktivitet.ny().medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID).build())
-                .medArbeidsprosent(BigDecimal.valueOf(100))
-                .build();
+            .medTrekkdager(TREKKDAGER)
+            .medUtbetalingsprosent(BigDecimal.ZERO)
+            .medUttakAktivitet(UttakAktivitet.ny().medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID).build())
+            .medArbeidsprosent(BigDecimal.valueOf(100))
+            .build();
         var uttakResultatPeriode1 = UttakResultatPeriode.ny()
-                .medAktiviteter(of(uttakAktivitet))
-                .medTidsperiode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeResultatÅrsak(ÅRSAK_1)
-                .build();
+            .medAktiviteter(of(uttakAktivitet))
+            .medTidsperiode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeResultatÅrsak(ÅRSAK_1)
+            .build();
         var uttakResultatPeriode2 = UttakResultatPeriode.ny()
-                .medAktiviteter(of(uttakAktivitet))
-                .medTidsperiode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
-                .build();
+            .medAktiviteter(of(uttakAktivitet))
+            .medTidsperiode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
+            .build();
         var uttakResultatPeriode3 = UttakResultatPeriode.ny()
-                .medAktiviteter(of(uttakAktivitet))
-                .medTidsperiode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
-                .build();
+            .medAktiviteter(of(uttakAktivitet))
+            .medTidsperiode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
+            .build();
         var uttakResultatPeriode4 = UttakResultatPeriode.ny()
-                .medAktiviteter(of(uttakAktivitet))
-                .medTidsperiode(fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeResultatÅrsak(ÅRSAK_4)
-                .build();
-        return Optional.of(new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4),
-                List.of(), false, true, false, false));
+            .medAktiviteter(of(uttakAktivitet))
+            .medTidsperiode(fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeResultatÅrsak(ÅRSAK_4)
+            .build();
+        return Optional.of(
+            new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4), List.of(), false,
+                true, false, false));
     }
 
     private Behandling opprettBehandling() {
         return Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.REVURDERING)
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
-                        .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK))
-                        .build())
-                .medSpråkkode(Språkkode.NB)
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.REVURDERING)
+            .medBehandlingsresultat(Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
+                .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK))
+                .build())
+            .medSpråkkode(Språkkode.NB)
+            .build();
     }
 
 }

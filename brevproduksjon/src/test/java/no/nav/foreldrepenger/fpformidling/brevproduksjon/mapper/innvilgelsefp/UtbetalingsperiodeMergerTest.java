@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.A
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 
-public class UtbetalingsperiodeMergerTest {
+class UtbetalingsperiodeMergerTest {
 
     private static final LocalDate PERIODE1_FOM = LocalDate.now().minusDays(10);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().plusDays(5);
@@ -31,9 +31,21 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     void skal_slå_sammen_perioder_som_er_sammenhengende() {
         // Arrange
-        var utbetalingsperiode1 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4, BigDecimal.ZERO).build();
-        var utbetalingsperiode2 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5, BigDecimal.ZERO).build();
-        var utbetalingsperiode3 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE3_FOM, Språkkode.NB).medPeriodeTom(PERIODE3_TOM, Språkkode.NB).medAntallTapteDager(6, BigDecimal.ZERO).build();
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medPeriodeFom(PERIODE1_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE1_TOM, Språkkode.NB)
+            .medAntallTapteDager(4, BigDecimal.ZERO)
+            .build();
+        var utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medPeriodeFom(PERIODE2_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM, Språkkode.NB)
+            .medAntallTapteDager(5, BigDecimal.ZERO)
+            .build();
+        var utbetalingsperiode3 = Utbetalingsperiode.ny()
+            .medPeriodeFom(PERIODE3_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE3_TOM, Språkkode.NB)
+            .medAntallTapteDager(6, BigDecimal.ZERO)
+            .build();
 
         // Act
         var resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2, utbetalingsperiode3));
@@ -51,8 +63,16 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     void skal_ikke_slå_sammen_perioder_med_forskjellig_dagsats() {
         // Arrange
-        var utbetalingsperiode1 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medPeriodeDagsats(1000).build();
-        var utbetalingsperiode2 = Utbetalingsperiode.ny().medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medPeriodeDagsats(2000).build();
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medPeriodeFom(PERIODE1_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE1_TOM, Språkkode.NB)
+            .medPeriodeDagsats(1000)
+            .build();
+        var utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medPeriodeFom(PERIODE2_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM, Språkkode.NB)
+            .medPeriodeDagsats(2000)
+            .build();
 
         // Act
         var resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
@@ -68,7 +88,11 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     void skal_returnere_enkeltperiode() {
         // Arrange
-        var utbetalingsperiode = of(Utbetalingsperiode.ny().medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(5, BigDecimal.ZERO).build());
+        var utbetalingsperiode = of(Utbetalingsperiode.ny()
+            .medPeriodeFom(PERIODE1_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE1_TOM, Språkkode.NB)
+            .medAntallTapteDager(5, BigDecimal.ZERO)
+            .build());
 
         // Act
         var resultat = UtbetalingsperiodeMerger.mergePerioder(utbetalingsperiode);
@@ -111,7 +135,9 @@ public class UtbetalingsperiodeMergerTest {
         utbetalingsperiode1 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2020).build()).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
-        utbetalingsperiode1 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2020).medUtbetalingsgrad(Prosent.of(BigDecimal.ONE)).build()).build();
+        utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medNæring(Næring.ny().medSistLignedeÅr(2020).medUtbetalingsgrad(Prosent.of(BigDecimal.ONE)).build())
+            .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
         utbetalingsperiode1 = Utbetalingsperiode.ny().medNæring(Næring.ny().medSistLignedeÅr(2019).medAktivitetDagsats(100).build()).build();
@@ -131,16 +157,24 @@ public class UtbetalingsperiodeMergerTest {
 
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
-        utbetalingsperiode1 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(200).build())).build();
+        utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(200).build()))
+            .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
-        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.FRILANSER.name()).medAktivitetDagsats(100).build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.FRILANSER.name()).medAktivitetDagsats(100).build()))
+            .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
-        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(100).build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(100).build()))
+            .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
-        utbetalingsperiode2 = Utbetalingsperiode.ny().medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(200).build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER.name()).medAktivitetDagsats(200).build()))
+            .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
     }
 
@@ -150,14 +184,22 @@ public class UtbetalingsperiodeMergerTest {
         var utbetalingsperiode2 = Utbetalingsperiode.ny().medArbeidsforhold(of()).build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
-        utbetalingsperiode1 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("1").build())).build();
+        utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("1").build()))
+            .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
-        utbetalingsperiode2 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(true).medNaturalytelseEndringDato("1").build())).build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(true).medNaturalytelseEndringDato("1").build()))
+            .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
-        utbetalingsperiode1 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("2").medNaturalytelseNyDagsats(200L).build())).build();
-        utbetalingsperiode2 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("2").build())).build();
+        utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("2").medNaturalytelseNyDagsats(200L).build()))
+            .build();
+        utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("2").build()))
+            .build();
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isFalse();
 
         utbetalingsperiode1 = Utbetalingsperiode.ny().medArbeidsforhold(of(Arbeidsforhold.ny().medArbeidsgiverNavn("navn1").build())).build();
@@ -180,8 +222,18 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     void skal_slå_sammen_perioder_med_like_årsaker() {
         // Arrange
-        var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2001")).medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4, BigDecimal.valueOf(4.5)).build();
-        var utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2001")).medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5,  BigDecimal.valueOf(4.5)).build();
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("2001"))
+            .medPeriodeFom(PERIODE1_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE1_TOM, Språkkode.NB)
+            .medAntallTapteDager(4, BigDecimal.valueOf(4.5))
+            .build();
+        var utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("2001"))
+            .medPeriodeFom(PERIODE2_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM, Språkkode.NB)
+            .medAntallTapteDager(5, BigDecimal.valueOf(4.5))
+            .build();
 
         // Act
         var resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
@@ -196,13 +248,34 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     void skal_slå_sammen_perioder_med_forskjellige_årsaker_som_er_regnet_som_like() {
         // Arrange
-        var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("4040")).medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4, BigDecimal.ZERO).build();
-        var utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("4112")).medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5, BigDecimal.ZERO).build();
-        var utbetalingsperiode3 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2003")).medPeriodeFom(PERIODE2_TOM.plusDays(1), Språkkode.NB).medPeriodeTom(PERIODE2_TOM.plusDays(2), Språkkode.NB).medAntallTapteDager(1, BigDecimal.ZERO).build();
-        var utbetalingsperiode4 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2007")).medPeriodeFom(PERIODE2_TOM.plusDays(3), Språkkode.NB).medPeriodeTom(PERIODE2_TOM.plusDays(4), Språkkode.NB).medAntallTapteDager(2, BigDecimal.ZERO).build();
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("4040"))
+            .medPeriodeFom(PERIODE1_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE1_TOM, Språkkode.NB)
+            .medAntallTapteDager(4, BigDecimal.ZERO)
+            .build();
+        var utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("4112"))
+            .medPeriodeFom(PERIODE2_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM, Språkkode.NB)
+            .medAntallTapteDager(5, BigDecimal.ZERO)
+            .build();
+        var utbetalingsperiode3 = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("2003"))
+            .medPeriodeFom(PERIODE2_TOM.plusDays(1), Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM.plusDays(2), Språkkode.NB)
+            .medAntallTapteDager(1, BigDecimal.ZERO)
+            .build();
+        var utbetalingsperiode4 = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("2007"))
+            .medPeriodeFom(PERIODE2_TOM.plusDays(3), Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM.plusDays(4), Språkkode.NB)
+            .medAntallTapteDager(2, BigDecimal.ZERO)
+            .build();
 
         // Act
-        var resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2, utbetalingsperiode3, utbetalingsperiode4));
+        var resultat = UtbetalingsperiodeMerger.mergePerioder(
+            asList(utbetalingsperiode1, utbetalingsperiode2, utbetalingsperiode3, utbetalingsperiode4));
 
         // Assert
         assertThat(resultat).hasSize(2);
@@ -217,8 +290,18 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     void skal_ikke_slå_sammen_perioder_med_forskjellige_årsaker_som_ikke_er_regnet_som_like() {
         // Arrange
-        var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("4030")).medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4, BigDecimal.ZERO).build();
-        var utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("4502")).medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5, BigDecimal.ZERO).build();
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("4030"))
+            .medPeriodeFom(PERIODE1_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE1_TOM, Språkkode.NB)
+            .medAntallTapteDager(4, BigDecimal.ZERO)
+            .build();
+        var utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("4502"))
+            .medPeriodeFom(PERIODE2_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM, Språkkode.NB)
+            .medAntallTapteDager(5, BigDecimal.ZERO)
+            .build();
 
         // Act
         var resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
@@ -236,8 +319,18 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     void skal_slå_sammen_innvilgede_perioder() {
         // Arrange
-        var utbetalingsperiode1 = Utbetalingsperiode.ny().medInnvilget(true).medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4, BigDecimal.ZERO).build();
-        var utbetalingsperiode2 = Utbetalingsperiode.ny().medInnvilget(true).medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5, BigDecimal.ZERO).build();
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medInnvilget(true)
+            .medPeriodeFom(PERIODE1_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE1_TOM, Språkkode.NB)
+            .medAntallTapteDager(4, BigDecimal.ZERO)
+            .build();
+        var utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medInnvilget(true)
+            .medPeriodeFom(PERIODE2_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM, Språkkode.NB)
+            .medAntallTapteDager(5, BigDecimal.ZERO)
+            .build();
 
         // Act
         var resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
@@ -252,8 +345,18 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     void skal_slå_sammen_avslåtte_perioder() {
         // Arrange
-        var utbetalingsperiode1 = Utbetalingsperiode.ny().medInnvilget(false).medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4, BigDecimal.ZERO).build();
-        var utbetalingsperiode2 = Utbetalingsperiode.ny().medInnvilget(false).medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5, BigDecimal.ZERO).build();
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medInnvilget(false)
+            .medPeriodeFom(PERIODE1_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE1_TOM, Språkkode.NB)
+            .medAntallTapteDager(4, BigDecimal.ZERO)
+            .build();
+        var utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medInnvilget(false)
+            .medPeriodeFom(PERIODE2_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM, Språkkode.NB)
+            .medAntallTapteDager(5, BigDecimal.ZERO)
+            .build();
 
         // Act
         var resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
@@ -268,8 +371,18 @@ public class UtbetalingsperiodeMergerTest {
     @Test
     void skal_ikke_slå_sammen_innvilgede_perioder_med_avslåtte_perioder() {
         // Arrange
-        var utbetalingsperiode1 = Utbetalingsperiode.ny().medInnvilget(false).medPeriodeFom(PERIODE1_FOM, Språkkode.NB).medPeriodeTom(PERIODE1_TOM, Språkkode.NB).medAntallTapteDager(4, BigDecimal.ZERO).build();
-        var utbetalingsperiode2 = Utbetalingsperiode.ny().medInnvilget(true).medPeriodeFom(PERIODE2_FOM, Språkkode.NB).medPeriodeTom(PERIODE2_TOM, Språkkode.NB).medAntallTapteDager(5, BigDecimal.ZERO).build();
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medInnvilget(false)
+            .medPeriodeFom(PERIODE1_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE1_TOM, Språkkode.NB)
+            .medAntallTapteDager(4, BigDecimal.ZERO)
+            .build();
+        var utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medInnvilget(true)
+            .medPeriodeFom(PERIODE2_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM, Språkkode.NB)
+            .medAntallTapteDager(5, BigDecimal.ZERO)
+            .build();
 
         // Act
         var resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));

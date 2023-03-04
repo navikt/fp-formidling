@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.web.server.jetty.db;
+package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 
 import java.util.Properties;
 
@@ -10,10 +10,13 @@ import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vault.jdbc.hikaricp.HikariCPVaultUtil;
 import no.nav.vault.jdbc.hikaricp.VaultError;
 
-public class DatasourceUtil {
+class DatasourceUtil {
     private static final Environment ENV = Environment.current();
 
-    public static HikariDataSource createDatasource(DatasourceRole role, int maxPoolSize) {
+    private DatasourceUtil() {
+    }
+
+    static HikariDataSource createDatasource(DatasourceRole role, int maxPoolSize) {
         var config = initConnectionPoolConfig(maxPoolSize);
         if (ENV.isVTP() || ENV.isLocal()) {
             return createLocalDatasource(config);
@@ -21,7 +24,7 @@ public class DatasourceUtil {
         return createVaultDatasource(config, mountPath(), getRole(role));
     }
 
-    public static String getRole(DatasourceRole role) {
+    static String getRole(DatasourceRole role) {
         return String.format("%s-%s", getUsername(), role.name().toLowerCase());
     }
 

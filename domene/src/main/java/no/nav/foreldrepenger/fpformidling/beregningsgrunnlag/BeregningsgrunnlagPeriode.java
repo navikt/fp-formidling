@@ -109,32 +109,27 @@ public class BeregningsgrunnlagPeriode {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         var that = (BeregningsgrunnlagPeriode) o;
-        return Objects.equals(dagsats, that.dagsats) &&
-                Objects.equals(bruttoPrÅr, that.bruttoPrÅr) &&
-                Objects.equals(avkortetPrÅr, that.avkortetPrÅr) &&
-                Objects.equals(periodeÅrsakKoder, that.periodeÅrsakKoder) &&
-                Objects.equals(periode, that.periode) &&
-                Objects.equals(beregningsgrunnlagPrStatusOgAndelList, that.beregningsgrunnlagPrStatusOgAndelList);
+        return Objects.equals(dagsats, that.dagsats) && Objects.equals(bruttoPrÅr, that.bruttoPrÅr) && Objects.equals(avkortetPrÅr, that.avkortetPrÅr)
+            && Objects.equals(periodeÅrsakKoder, that.periodeÅrsakKoder) && Objects.equals(periode, that.periode) && Objects.equals(
+            beregningsgrunnlagPrStatusOgAndelList, that.beregningsgrunnlagPrStatusOgAndelList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dagsats, bruttoPrÅr, avkortetPrÅr, periodeÅrsakKoder, periode,
-                beregningsgrunnlagPrStatusOgAndelList);
+        return Objects.hash(dagsats, bruttoPrÅr, avkortetPrÅr, periodeÅrsakKoder, periode, beregningsgrunnlagPrStatusOgAndelList);
     }
 
     @Override
     public String toString() {
-        return "BeregningsgrunnlagPeriode{" +
-                "dagsats=" + dagsats +
-                ", bruttoPrÅr=" + bruttoPrÅr +
-                ", avkortetPrÅr=" + avkortetPrÅr +
-                ", periodeÅrsakKoder=" + periodeÅrsakKoder +
-                ", periode=" + periode +
-                ", beregningsgrunnlagPrStatusOgAndelList=" + beregningsgrunnlagPrStatusOgAndelList +
-                '}';
+        return "BeregningsgrunnlagPeriode{" + "dagsats=" + dagsats + ", bruttoPrÅr=" + bruttoPrÅr + ", avkortetPrÅr=" + avkortetPrÅr
+            + ", periodeÅrsakKoder=" + periodeÅrsakKoder + ", periode=" + periode + ", beregningsgrunnlagPrStatusOgAndelList="
+            + beregningsgrunnlagPrStatusOgAndelList + '}';
     }
 }

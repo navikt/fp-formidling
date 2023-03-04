@@ -30,9 +30,6 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<Throwable> {
             if (feil instanceof ManglerTilgangException) {
                 return ikkeTilgang(getExceptionMelding(feil));
             }
-            if (feil instanceof ForhåndsvisningsException fve) {
-                return forhåndsVisning(fve);
-            }
             loggTilApplikasjonslogg(feil);
             return serverError(getExceptionFullFeilmelding(feil));
         } finally {
@@ -41,34 +38,21 @@ public class GeneralRestExceptionMapper implements ExceptionMapper<Throwable> {
     }
 
     private static Response handleTomtResultatFeil(String feilmelding) {
-        return Response
-                .status(Response.Status.NOT_FOUND)
-                .entity(new FeilDto(FeilType.TOMT_RESULTAT_FEIL, feilmelding))
-                .type(MediaType.APPLICATION_JSON)
-                .build();
+        return Response.status(Response.Status.NOT_FOUND)
+            .entity(new FeilDto(FeilType.TOMT_RESULTAT_FEIL, feilmelding))
+            .type(MediaType.APPLICATION_JSON)
+            .build();
     }
 
     private static Response serverError(String feilmelding) {
-        return Response.serverError()
-                .entity(new FeilDto(FeilType.GENERELL_FEIL, feilmelding))
-                .type(MediaType.APPLICATION_JSON)
-                .build();
-    }
-
-    private static Response forhåndsVisning(ForhåndsvisningsException fve) {
-        var løsningsforslag = getTextForField(fve.getLøsningsforslag());
-        var feilmelding = String.format("Det oppstod en feil: %s - %s", getExceptionMelding(fve), løsningsforslag);
-        return Response.serverError()
-                .entity(new FeilDto(FeilType.GENERELL_FEIL, feilmelding))
-                .type(MediaType.APPLICATION_JSON)
-                .build();
+        return Response.serverError().entity(new FeilDto(FeilType.GENERELL_FEIL, feilmelding)).type(MediaType.APPLICATION_JSON).build();
     }
 
     private static Response ikkeTilgang(String feilmelding) {
         return Response.status(Response.Status.FORBIDDEN)
-                .entity(new FeilDto(FeilType.MANGLER_TILGANG_FEIL, feilmelding))
-                .type(MediaType.APPLICATION_JSON)
-                .build();
+            .entity(new FeilDto(FeilType.MANGLER_TILGANG_FEIL, feilmelding))
+            .type(MediaType.APPLICATION_JSON)
+            .build();
     }
 
     private static String getExceptionFullFeilmelding(Throwable feil) {

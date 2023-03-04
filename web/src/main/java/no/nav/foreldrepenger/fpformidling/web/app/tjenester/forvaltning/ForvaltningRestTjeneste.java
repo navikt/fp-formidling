@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.web.app.tjenester;
+package no.nav.foreldrepenger.fpformidling.web.app.tjenester.forvaltning;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -20,6 +20,8 @@ import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -62,9 +64,7 @@ public class ForvaltningRestTjeneste {
     }
 
     @Inject
-    public ForvaltningRestTjeneste(Dokgen dokgenRestKlient,
-                                   DokumentHendelseTjeneste dokumentHendelseTjeneste,
-                                   ProsessTaskTjeneste taskTjeneste) {
+    public ForvaltningRestTjeneste(Dokgen dokgenRestKlient, DokumentHendelseTjeneste dokumentHendelseTjeneste, ProsessTaskTjeneste taskTjeneste) {
         this.dokgenRestKlient = dokgenRestKlient;
         this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
         this.taskTjeneste = taskTjeneste;
@@ -74,22 +74,20 @@ public class ForvaltningRestTjeneste {
     @Path("/dokgen-json-til-pdf")
     @Consumes(APPLICATION_JSON)
     @Produces("application/pdf")
-    @Operation(description = "Tar imot en FP-Dokgen JSON og sender den til FP-Dokgen for å lage PDF. Tjenesten er ikke tilgjengelig i produksjon - bruk DEV eller lokalt miljø.", tags = "forvaltning", responses = {
-            @ApiResponse(responseCode = "200", description = "Returnerer PDF", content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "byte")))
-    })
+    @Operation(description = "Tar imot en FP-Dokgen JSON og sender den til FP-Dokgen for å lage PDF. Tjenesten er ikke tilgjengelig i produksjon - bruk DEV eller lokalt miljø.", tags = "forvaltning", responses = {@ApiResponse(responseCode = "200", description = "Returnerer PDF", content = @Content(mediaType = "application/pdf", schema = @Schema(type = "string", format = "byte")))})
     @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.DRIFT, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response dokgenJsonTilPdf(@BeanParam @Valid DokgenJsonTilPdfDto dokgenJsonTilPdfDto) throws Exception {
+    public Response dokgenJsonTilPdf(@BeanParam @Valid DokgenJsonTilPdfDto dokgenJsonTilPdfDto) throws ClassNotFoundException, JsonProcessingException {
         if (ENVIRONMENT.isProd()) {
             // Kjøring i prod vil potensielt gi unødvendig loggstøy, feks ved syntaksfeil
             return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
         }
 
-        var dokumentdata = (Dokumentdata) DefaultJsonMapper.getObjectMapper().readValue(dokgenJsonTilPdfDto.getDokumentdataJson(),
-                Class.forName(dokgenJsonTilPdfDto.getDokumentdataKlasse()));
+        var dokumentdata = (Dokumentdata) DefaultJsonMapper.getObjectMapper()
+            .readValue(dokgenJsonTilPdfDto.getDokumentdataJson(), Class.forName(dokgenJsonTilPdfDto.getDokumentdataKlasse()));
 
         var resultat = dokgenRestKlient.genererPdf(dokgenJsonTilPdfDto.getMalType(), Språkkode.defaultNorsk(dokgenJsonTilPdfDto.getSpråkKode()),
-                dokumentdata);
+            dokumentdata);
 
         var responseBuilder = Response.ok(resultat);
         responseBuilder.type("application/pdf");
@@ -104,10 +102,7 @@ public class ForvaltningRestTjeneste {
     @Operation(description = "Sender brev på nytt med oppdatert bestilling id. Brukes kun i situasjoner hvor brevet ble helt feil.", tags = "forvaltning")
     @BeskyttetRessurs(actionType = ActionType.CREATE, resourceType = ResourceType.DRIFT, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response rebestillDokument(
-            @Parameter(description = "Hendelse ID til den opprinelige bestillingen.")
-            @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class)
-            @QueryParam("hendelseId") @Valid @NotNull Long hendelseId) {
+    public Response rebestillDokument(@Parameter(description = "Hendelse ID til den opprinelige bestillingen.") @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class) @QueryParam("hendelseId") @Valid @NotNull Long hendelseId) {
 
         if (ENVIRONMENT.isProd()) {
             return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();
@@ -126,18 +121,18 @@ public class ForvaltningRestTjeneste {
         var originalBestillingUuid = originalHendelse.getBestillingUuid();
         LOG.info("Produserer ny brev for bestilling {} med ny bestillingsid {}", originalBestillingUuid, nyBestillingUuid);
         return DokumentHendelse.builder()
-                .medBehandlingUuid(originalHendelse.getBehandlingUuid())
-                .medBestillingUuid(nyBestillingUuid)
-                .medBehandlendeEnhetNavn(originalHendelse.getBehandlendeEnhetNavn())
-                .medDokumentMalType(originalHendelse.getDokumentMalType())
-                .medFritekst(originalHendelse.getFritekst())
-                .medErOpphevetKlage(originalHendelse.getErOpphevetKlage())
-                .medGjelderVedtak(originalHendelse.isGjelderVedtak())
-                .medTittel(originalHendelse.getTittel())
-                .medVedtaksbrev(originalHendelse.getVedtaksbrev())
-                .medRevurderingVarslingÅrsak(originalHendelse.getRevurderingVarslingÅrsak())
-                .medYtelseType(originalHendelse.getYtelseType())
-                .build();
+            .medBehandlingUuid(originalHendelse.getBehandlingUuid())
+            .medBestillingUuid(nyBestillingUuid)
+            .medBehandlendeEnhetNavn(originalHendelse.getBehandlendeEnhetNavn())
+            .medDokumentMalType(originalHendelse.getDokumentMalType())
+            .medFritekst(originalHendelse.getFritekst())
+            .medErOpphevetKlage(originalHendelse.getErOpphevetKlage())
+            .medGjelderVedtak(originalHendelse.isGjelderVedtak())
+            .medTittel(originalHendelse.getTittel())
+            .medVedtaksbrev(originalHendelse.getVedtaksbrev())
+            .medRevurderingVarslingÅrsak(originalHendelse.getRevurderingVarslingÅrsak())
+            .medYtelseType(originalHendelse.getYtelseType())
+            .build();
     }
 
     private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {

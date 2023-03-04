@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
 import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseTjeneste;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 @ApplicationScoped
 @ProsessTask("formidling.bestillBrev")
@@ -17,8 +17,7 @@ public class ProduserBrevTask implements ProsessTaskHandler {
     private final DokumentHendelseTjeneste dokumentHendelseTjeneste;
 
     @Inject
-    public ProduserBrevTask(BrevBestillerTjeneste brevBestillerApplikasjonTjeneste,
-                            DokumentHendelseTjeneste dokumentHendelseTjeneste) {
+    public ProduserBrevTask(BrevBestillerTjeneste brevBestillerApplikasjonTjeneste, DokumentHendelseTjeneste dokumentHendelseTjeneste) {
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
         this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
     }

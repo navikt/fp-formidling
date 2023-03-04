@@ -109,8 +109,12 @@ public class Dato implements ChronoLocalDate {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         var dato = (Dato) o;
         return Objects.equals(localDate, dato.localDate);
     }

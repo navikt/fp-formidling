@@ -63,8 +63,7 @@ class DistribuerBrevTaskTest {
         var bestillingsid = "456789";
         var distribusjonstype = Distribusjonstype.VEDTAK;
 
-        when(dokdist.distribuerJournalpost(any(DistribuerJournalpostRequest.class))).thenReturn(
-                Dokdist.Resultat.MANGLER_ADRESSE);
+        when(dokdist.distribuerJournalpost(any(DistribuerJournalpostRequest.class))).thenReturn(Dokdist.Resultat.MANGLER_ADRESSE);
 
         var prosessTaskData = opprettProsessTaskData(journalpostId, bestillingsid, distribusjonstype);
 
@@ -79,8 +78,7 @@ class DistribuerBrevTaskTest {
         var bestillingsid = "456789";
         var distribusjonstype = Distribusjonstype.VEDTAK;
 
-        when(dokdist.distribuerJournalpost(any(DistribuerJournalpostRequest.class))).thenReturn(
-                Dokdist.Resultat.OK);
+        when(dokdist.distribuerJournalpost(any(DistribuerJournalpostRequest.class))).thenReturn(Dokdist.Resultat.OK);
 
         var prosessTaskData = opprettProsessTaskData(journalpostId, bestillingsid, distribusjonstype);
 

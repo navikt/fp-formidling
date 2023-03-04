@@ -19,31 +19,28 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 
 public final class AvslagsperiodeMapper {
 
-    private static final List<PeriodeIkkeOppfyltÅrsak> RELEVANTE_PERIODE_ÅRSAKER = List.of(
-            PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT,
-            PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE
-    );
+    private static final List<PeriodeIkkeOppfyltÅrsak> RELEVANTE_PERIODE_ÅRSAKER = List.of(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT,
+        PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE);
 
     private AvslagsperiodeMapper() {
     }
 
-    public static List<Avslagsperiode> mapAvslagsperioder(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold,
-                                                          Språkkode språkkode) {
+    public static List<Avslagsperiode> mapAvslagsperioder(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkkode) {
         var filtrertePerioder = uttakResultatArbeidsforhold.stream()
-                .flatMap(ura -> ura.getPerioder().stream())
-                .filter(Predicate.not(SvpUttakResultatPeriode::isInnvilget))
-                .filter(p -> RELEVANTE_PERIODE_ÅRSAKER.contains(p.getPeriodeIkkeOppfyltÅrsak()))
-                .map(p -> opprettAvslagsperiode(p, språkkode))
-                .toList();
+            .flatMap(ura -> ura.getPerioder().stream())
+            .filter(Predicate.not(SvpUttakResultatPeriode::isInnvilget))
+            .filter(p -> RELEVANTE_PERIODE_ÅRSAKER.contains(p.getPeriodeIkkeOppfyltÅrsak()))
+            .map(p -> opprettAvslagsperiode(p, språkkode))
+            .toList();
         return slåSammenPerioder(filtrertePerioder);
     }
 
     private static Avslagsperiode opprettAvslagsperiode(SvpUttakResultatPeriode p, Språkkode språkkode) {
         return Avslagsperiode.ny()
-                .medÅrsak(Årsak.of(p.getPeriodeIkkeOppfyltÅrsak().getKode()))
-                .medPeriodeFom(p.getFom().toLocalDate(), språkkode)
-                .medPeriodeTom(p.getTom().toLocalDate(), språkkode)
-                .build();
+            .medÅrsak(Årsak.of(p.getPeriodeIkkeOppfyltÅrsak().getKode()))
+            .medPeriodeFom(p.getFom().toLocalDate(), språkkode)
+            .medPeriodeTom(p.getTom().toLocalDate(), språkkode)
+            .build();
     }
 
     private static List<Avslagsperiode> slåSammenPerioder(List<Avslagsperiode> filtrertePerioder) {
@@ -55,9 +52,9 @@ public final class AvslagsperiodeMapper {
 
         for (var årsak : RELEVANTE_PERIODE_ÅRSAKER) {
             var sortertePerioder = filtrertePerioder.stream()
-                    .filter(p -> årsak.getKode().equals(String.valueOf(p.getÅrsak().getKode())))
-                    .sorted(Comparator.comparing(Avslagsperiode::getPeriodeFom))
-                    .toList();
+                .filter(p -> årsak.getKode().equals(String.valueOf(p.getÅrsak().getKode())))
+                .sorted(Comparator.comparing(Avslagsperiode::getPeriodeFom))
+                .toList();
 
             var nyePerioder = new ArrayList<Avslagsperiode>();
 
@@ -68,8 +65,8 @@ public final class AvslagsperiodeMapper {
 
                     if (skalSlåSammenPerioder(forrigePeriode, avslagsperiode.getPeriodeFom())) {
                         var nyTom = Stream.of(forrigePeriode.getPeriodeTom(), avslagsperiode.getPeriodeTom())
-                                .max(Comparator.naturalOrder())
-                                .orElseThrow();
+                            .max(Comparator.naturalOrder())
+                            .orElseThrow();
                         nyePerioder.remove(sisteIndex);
                         nyePerioder.add(byggSammenslåttAvslagsperiode(forrigePeriode, nyTom));
                         continue;
@@ -85,15 +82,11 @@ public final class AvslagsperiodeMapper {
     }
 
     private static boolean skalSlåSammenPerioder(Avslagsperiode forrigePeriode, LocalDate nestePeriodeFom) {
-        var forrigePeriodeIntervall = DatoIntervallEntitet.fraOgMedTilOgMed(forrigePeriode.getPeriodeFom(),
-                forrigePeriode.getPeriodeTom());
-        return forrigePeriodeIntervall.inkluderer(nestePeriodeFom)
-                || erFomRettEtterTomDato(forrigePeriode.getPeriodeTom(), nestePeriodeFom);
+        var forrigePeriodeIntervall = DatoIntervallEntitet.fraOgMedTilOgMed(forrigePeriode.getPeriodeFom(), forrigePeriode.getPeriodeTom());
+        return forrigePeriodeIntervall.inkluderer(nestePeriodeFom) || erFomRettEtterTomDato(forrigePeriode.getPeriodeTom(), nestePeriodeFom);
     }
 
     private static Avslagsperiode byggSammenslåttAvslagsperiode(Avslagsperiode forrigePeriode, LocalDate nyTom) {
-        return Avslagsperiode.ny(forrigePeriode)
-                .medPeriodeTom(nyTom, forrigePeriode.getSpråkkode())
-                .build();
+        return Avslagsperiode.ny(forrigePeriode).medPeriodeTom(nyTom, forrigePeriode.getSpråkkode()).build();
     }
 }

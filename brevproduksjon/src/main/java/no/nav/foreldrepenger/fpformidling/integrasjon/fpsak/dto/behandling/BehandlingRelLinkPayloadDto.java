@@ -27,9 +27,6 @@ public class BehandlingRelLinkPayloadDto {
 
     @Override
     public String toString() {
-        return "BehandlingRelLinkPayloadDto{" +
-                "saksnummer=" + saksnummer +
-                ", behandlingUuid='" + behandlingUuid + '\'' +
-                '}';
+        return "BehandlingRelLinkPayloadDto{" + "saksnummer=" + saksnummer + ", behandlingUuid='" + behandlingUuid + '\'' + '}';
     }
 }

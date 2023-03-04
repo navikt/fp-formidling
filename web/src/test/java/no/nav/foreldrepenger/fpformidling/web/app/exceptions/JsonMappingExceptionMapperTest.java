@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.exc.InvalidTypeIdException;
 
-public class JsonMappingExceptionMapperTest {
+class JsonMappingExceptionMapperTest {
 
     @Test
     void skal_mappe_InvalidTypeIdException() {

@@ -31,9 +31,7 @@ public class DokumentFellesDataMapper {
     }
 
     @Inject
-    public DokumentFellesDataMapper(PersonAdapter personAdapter,
-                                    DomeneobjektProvider domeneobjektProvider,
-                                    VirksomhetTjeneste virksomhetTjeneste) {
+    public DokumentFellesDataMapper(PersonAdapter personAdapter, DomeneobjektProvider domeneobjektProvider, VirksomhetTjeneste virksomhetTjeneste) {
         this.personAdapter = personAdapter;
         this.domeneobjektProvider = domeneobjektProvider;
         this.virksomhetTjeneste = virksomhetTjeneste;
@@ -70,25 +68,17 @@ public class DokumentFellesDataMapper {
         var virksomhet = getVirksomhet(verge);
 
         var personinfoBruker = personAdapter.hentBrukerForAktør(aktørIdBruker)
-                .orElseThrow(() -> new TekniskException("FPFORMIDLING-109013",
+            .orElseThrow(() -> new TekniskException("FPFORMIDLING-109013",
                 String.format("Fant ikke fødselsnummer for aktørId: %s. Kan ikke bestille dokument", aktørIdBruker)));
 
-        buildDokumentFellesVirksomhet(behandling,
-                dokumentData,
-                personinfoBruker,
-                virksomhet,
-                verge.navn(),
-                erKopi);
+        buildDokumentFellesVirksomhet(behandling, dokumentData, personinfoBruker, virksomhet, verge.navn(), erKopi);
     }
 
     private Virksomhet getVirksomhet(Verge verge) {
         return virksomhetTjeneste.getOrganisasjon(verge.organisasjonsnummer());
     }
 
-    private void opprettDokumentDataForMottaker(Behandling behandling,
-                                                DokumentData dokumentData,
-                                                AktørId aktørIdMottaker,
-                                                AktørId aktørIdBruker) {
+    private void opprettDokumentDataForMottaker(Behandling behandling, DokumentData dokumentData, AktørId aktørIdMottaker, AktørId aktørIdBruker) {
 
         opprettDokumentDataForMottaker(behandling, dokumentData, aktørIdMottaker, aktørIdBruker, null);
     }
@@ -100,15 +90,11 @@ public class DokumentFellesDataMapper {
                                                 DokumentFelles.Kopi erKopi) {
 
         var personinfoMottaker = personAdapter.hentBrukerForAktør(aktørIdMottaker)
-                .orElseThrow(() -> new TekniskException("FPFORMIDLING-119013", String.format(FANT_IKKE_BRUKER, aktørIdMottaker)));
+            .orElseThrow(() -> new TekniskException("FPFORMIDLING-119013", String.format(FANT_IKKE_BRUKER, aktørIdMottaker)));
         var personinfoBruker = personAdapter.hentBrukerForAktør(aktørIdBruker)
-                .orElseThrow(() -> new TekniskException("FPFORMIDLING-109013", String.format(FANT_IKKE_BRUKER, aktørIdBruker)));
+            .orElseThrow(() -> new TekniskException("FPFORMIDLING-109013", String.format(FANT_IKKE_BRUKER, aktørIdBruker)));
 
-        buildDokumentFellesPerson(behandling,
-                dokumentData,
-                personinfoBruker,
-                personinfoMottaker,
-                erKopi);
+        buildDokumentFellesPerson(behandling, dokumentData, personinfoBruker, personinfoMottaker, erKopi);
     }
 
     private void buildDokumentFellesVirksomhet(Behandling behandling,
@@ -121,22 +107,22 @@ public class DokumentFellesDataMapper {
         var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
 
         var builder = DokumentFelles.builder(dokumentData)
-                .medAutomatiskBehandlet(Boolean.TRUE)
-                .medDokumentDato(LocalDate.now())
-                .medMottakerId(virksomhet.getOrgnr())
-                .medMottakerNavn(virksomhet.getNavn() + (vergeNavn == null || "".equals(vergeNavn) ? "" : " c/o " + vergeNavn))
-                .medSaksnummer(new Saksnummer(fagsak.getSaksnummer().getVerdi()))
-                .medSakspartId(personinfoBruker.getPersonIdent())
-                .medSakspartNavn(personinfoBruker.getNavn())
-                .medErKopi(erKopi)
-                .medMottakerType(DokumentFelles.MottakerType.ORGANISASJON)
-                .medSpråkkode(behandling.getSpråkkode())
-                .medSakspartPersonStatus(getPersonstatusVerdi(personinfoBruker));
+            .medAutomatiskBehandlet(Boolean.TRUE)
+            .medDokumentDato(LocalDate.now())
+            .medMottakerId(virksomhet.getOrgnr())
+            .medMottakerNavn(virksomhet.getNavn() + (vergeNavn == null || "".equals(vergeNavn) ? "" : " c/o " + vergeNavn))
+            .medSaksnummer(new Saksnummer(fagsak.getSaksnummer().getVerdi()))
+            .medSakspartId(personinfoBruker.getPersonIdent())
+            .medSakspartNavn(personinfoBruker.getNavn())
+            .medErKopi(erKopi)
+            .medMottakerType(DokumentFelles.MottakerType.ORGANISASJON)
+            .medSpråkkode(behandling.getSpråkkode())
+            .medSakspartPersonStatus(getPersonstatusVerdi(personinfoBruker));
 
         if (behandling.isToTrinnsBehandling() || behandling.erKlage()) {
             builder.medAutomatiskBehandlet(Boolean.FALSE)
-                    .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
-                    .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter());
+                .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
+                .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter());
         }
         builder.build();
     }
@@ -150,27 +136,27 @@ public class DokumentFellesDataMapper {
         var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
 
         var builder = DokumentFelles.builder(dokumentData)
-                .medAutomatiskBehandlet(Boolean.TRUE)
-                .medDokumentDato(LocalDate.now())
-                .medMottakerId(personinfoMottaker.getPersonIdent())
-                .medMottakerNavn(personinfoMottaker.getNavn())
-                .medSaksnummer(new Saksnummer(fagsak.getSaksnummer().getVerdi()))
-                .medSakspartId(personinfoBruker.getPersonIdent())
-                .medSakspartNavn(personinfoBruker.getNavn())
-                .medErKopi(erKopi)
-                .medMottakerType(DokumentFelles.MottakerType.PERSON)
-                .medSpråkkode(behandling.getSpråkkode())
-                .medSakspartPersonStatus(getPersonstatusVerdi(personinfoBruker));
+            .medAutomatiskBehandlet(Boolean.TRUE)
+            .medDokumentDato(LocalDate.now())
+            .medMottakerId(personinfoMottaker.getPersonIdent())
+            .medMottakerNavn(personinfoMottaker.getNavn())
+            .medSaksnummer(new Saksnummer(fagsak.getSaksnummer().getVerdi()))
+            .medSakspartId(personinfoBruker.getPersonIdent())
+            .medSakspartNavn(personinfoBruker.getNavn())
+            .medErKopi(erKopi)
+            .medMottakerType(DokumentFelles.MottakerType.PERSON)
+            .medSpråkkode(behandling.getSpråkkode())
+            .medSakspartPersonStatus(getPersonstatusVerdi(personinfoBruker));
 
         if (behandling.isToTrinnsBehandling() || behandling.erKlage()) {
             builder.medAutomatiskBehandlet(Boolean.FALSE)
-                    .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
-                    .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter());
+                .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
+                .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter());
         }
         builder.build();
     }
 
-//Todo når vi har koblet oss fra team CCM bør denne bruke faktiske koder og ikke gjøre om
+    //Todo når vi har koblet oss fra team CCM bør denne bruke faktiske koder og ikke gjøre om
     private DokumentFelles.PersonStatus getPersonstatusVerdi(Personinfo personinfo) {
         return personinfo.isRegistrertDød() ? DokumentFelles.PersonStatus.DOD : DokumentFelles.PersonStatus.ANNET;
     }

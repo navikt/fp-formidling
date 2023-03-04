@@ -80,7 +80,9 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
     }
 
     public static LocalDate forrigeArbeidsdag(LocalDate dato) {
-        if (dato == TIDENES_BEGYNNELSE || dato == TIDENES_ENDE) return dato;
+        if (dato == TIDENES_BEGYNNELSE || dato == TIDENES_ENDE) {
+            return dato;
+        }
 
         return switch (dato.getDayOfWeek()) {
             case SATURDAY -> dato.minusDays(1);
@@ -90,12 +92,14 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
     }
 
     public static LocalDate nesteArbeidsdag(LocalDate dato) {
-        if (dato == TIDENES_BEGYNNELSE || dato == TIDENES_ENDE) return dato;
+        if (dato == TIDENES_BEGYNNELSE || dato == TIDENES_ENDE) {
+            return dato;
+        }
 
-        return  switch (dato.getDayOfWeek()) {
+        return switch (dato.getDayOfWeek()) {
             case SATURDAY -> dato.plusDays(2);
             case SUNDAY -> dato.plusDays(1);
-             default -> dato;
+            default -> dato;
         };
     }
 
@@ -125,8 +129,7 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
         if (this.getFomDato() == null || annen.getFomDato() == null) {
             return likFom;
         }
-        return likFom
-                || Objects.equals(nesteArbeidsdag(this.getFomDato()), nesteArbeidsdag(annen.getFomDato()));
+        return likFom || Objects.equals(nesteArbeidsdag(this.getFomDato()), nesteArbeidsdag(annen.getFomDato()));
     }
 
     private boolean likTom(AbstractLocalDateInterval annen) {
@@ -134,8 +137,7 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
         if (this.getTomDato() == null || annen.getTomDato() == null) {
             return likTom;
         }
-        return likTom
-                || Objects.equals(forrigeArbeidsdag(this.getTomDato()), forrigeArbeidsdag(annen.getTomDato()));
+        return likTom || Objects.equals(forrigeArbeidsdag(this.getTomDato()), forrigeArbeidsdag(annen.getTomDato()));
     }
 
     @Override

@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.web.app.validering;
 
-import java.util.Objects;
-import java.util.regex.Pattern;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
+import no.nav.vedtak.util.InputValideringRegex;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
-import no.nav.vedtak.util.InputValideringRegex;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class KodeverdiValidator implements ConstraintValidator<ValidKodeverk, Kodeverdi> {
 

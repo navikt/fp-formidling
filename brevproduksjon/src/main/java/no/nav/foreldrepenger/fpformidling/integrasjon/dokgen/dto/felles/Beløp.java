@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Sikrer at beløp avrundes riktig.
@@ -43,8 +43,12 @@ public class Beløp {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (Beløp) object;
         return Objects.equals(verdi, that.verdi);
     }
@@ -56,8 +60,6 @@ public class Beløp {
 
     @Override
     public String toString() {
-        return "Beløp{" +
-                "verdi=" + verdi +
-                '}';
+        return "Beløp{" + "verdi=" + verdi + '}';
     }
 }

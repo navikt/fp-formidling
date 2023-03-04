@@ -34,18 +34,24 @@ public final class BeregningsgrunnlagDtoMapper {
     public static Beregningsgrunnlag mapFraDto(BeregningsgrunnlagDto dto, UnaryOperator<String> hentNavn) {
         var builder = Beregningsgrunnlag.ny();
         builder.medGrunnbeløp(new Beløp(dto.grunnbeløp()));
-        dto.aktivitetstatusListe().stream().map(BeregningsgrunnlagDtoMapper::mapBeregningsgrunnlagAktivitetStatusFraDto).forEach(builder::leggTilBeregningsgrunnlagAktivitetStatus);
-        dto.beregningsgrunnlagperioder().stream()
-                .map(periode -> mapBeregningsgrunnlagPeriodeFraDto(periode, hentNavn))
-                .sorted(PeriodeComparator.BEREGNINGSGRUNNLAG)
-                .forEach(builder::leggTilBeregningsgrunnlagPeriode);
+        dto.aktivitetstatusListe()
+            .stream()
+            .map(BeregningsgrunnlagDtoMapper::mapBeregningsgrunnlagAktivitetStatusFraDto)
+            .forEach(builder::leggTilBeregningsgrunnlagAktivitetStatus);
+        dto.beregningsgrunnlagperioder()
+            .stream()
+            .map(periode -> mapBeregningsgrunnlagPeriodeFraDto(periode, hentNavn))
+            .sorted(PeriodeComparator.BEREGNINGSGRUNNLAG)
+            .forEach(builder::leggTilBeregningsgrunnlagPeriode);
         builder.medhHjemmel(mapHjemmelFraDto(dto.hjemmel()));
         builder.medBesteberegnet(dto.erBesteberegnet());
         return builder.build();
     }
 
     static Hjemmel mapHjemmelFraDto(HjemmelDto hjemmel) {
-        if (hjemmel == null) return Hjemmel.UDEFINERT;
+        if (hjemmel == null) {
+            return Hjemmel.UDEFINERT;
+        }
         return switch (hjemmel) {
             case F_14_7 -> Hjemmel.F_14_7;
             case F_14_7_8_28_8_30 -> Hjemmel.F_14_7_8_28_8_30;
@@ -62,19 +68,16 @@ public final class BeregningsgrunnlagDtoMapper {
     }
 
     private static BeregningsgrunnlagPeriode mapBeregningsgrunnlagPeriodeFraDto(BeregningsgrunnlagPeriodeDto dto, UnaryOperator<String> hentNavn) {
-        var intervall = dto.beregningsgrunnlagperiodeTom() != null ?
-                DatoIntervall.fraOgMedTilOgMed(dto.beregningsgrunnlagperiodeFom(), dto.beregningsgrunnlagperiodeTom()) :
-                DatoIntervall.fraOgMed(dto.beregningsgrunnlagperiodeFom());
+        var intervall = dto.beregningsgrunnlagperiodeTom() != null ? DatoIntervall.fraOgMedTilOgMed(dto.beregningsgrunnlagperiodeFom(),
+            dto.beregningsgrunnlagperiodeTom()) : DatoIntervall.fraOgMed(dto.beregningsgrunnlagperiodeFom());
         return BeregningsgrunnlagPeriode.ny()
-                .medBruttoPrÅr(dto.bruttoPrÅr())
-                .medAvkortetPrÅr(dto.avkortetPrÅr())
-                .medDagsats(dto.dagsats())
-                .medPeriode(intervall)
-                .medperiodeÅrsaker(mapPeriodeårsakerFraDto(dto.periodeårsaker()))
-                .medBeregningsgrunnlagPrStatusOgAndelList(dto.beregningsgrunnlagandeler().stream()
-                        .map(andel -> mapBgpsaFraDto(andel, hentNavn))
-                        .toList())
-                .build();
+            .medBruttoPrÅr(dto.bruttoPrÅr())
+            .medAvkortetPrÅr(dto.avkortetPrÅr())
+            .medDagsats(dto.dagsats())
+            .medPeriode(intervall)
+            .medperiodeÅrsaker(mapPeriodeårsakerFraDto(dto.periodeårsaker()))
+            .medBeregningsgrunnlagPrStatusOgAndelList(dto.beregningsgrunnlagandeler().stream().map(andel -> mapBgpsaFraDto(andel, hentNavn)).toList())
+            .build();
     }
 
     private static List<PeriodeÅrsak> mapPeriodeårsakerFraDto(List<PeriodeÅrsakDto> periodeårsaker) {
@@ -82,7 +85,9 @@ public final class BeregningsgrunnlagDtoMapper {
     }
 
     static PeriodeÅrsak mapPeriodeårsakFraDto(PeriodeÅrsakDto periodeÅrsak) {
-        if (periodeÅrsak == null) return null;
+        if (periodeÅrsak == null) {
+            return null;
+        }
         return switch (periodeÅrsak) {
             case ARBEIDSFORHOLD_AVSLUTTET -> PeriodeÅrsak.ARBEIDSFORHOLD_AVSLUTTET;
             case ENDRING_I_AKTIVITETER_SØKT_FOR -> PeriodeÅrsak.ENDRING_I_AKTIVITETER_SØKT_FOR;
@@ -117,19 +122,21 @@ public final class BeregningsgrunnlagDtoMapper {
             bgAndelArbeidsforhold = mapBgAndelArbeidsforholdfraDto(dto.arbeidsforhold(), hentNavn);
         }
         builder.medAktivitetStatus(mapAktivitetStatusFraDto(dto.aktivitetStatus()))
-                .medBruttoPrÅr(dto.bruttoPrÅr())
-                .medAvkortetPrÅr(dto.avkortetPrÅr())
-                .medNyIArbeidslivet(dto.erNyIArbeidslivet())
-                .medDagsats(dto.dagsats())
-                .medBeregningsperiode(avklarBeregningsperiode(dto))
-                .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
-                .medArbeidsforholdType(mapArbeidforholdTypeFraDto(dto.arbeidsforholdType()))
-                .medErTilkommetAndel(dto.erTilkommetAndel());
+            .medBruttoPrÅr(dto.bruttoPrÅr())
+            .medAvkortetPrÅr(dto.avkortetPrÅr())
+            .medNyIArbeidslivet(dto.erNyIArbeidslivet())
+            .medDagsats(dto.dagsats())
+            .medBeregningsperiode(avklarBeregningsperiode(dto))
+            .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
+            .medArbeidsforholdType(mapArbeidforholdTypeFraDto(dto.arbeidsforholdType()))
+            .medErTilkommetAndel(dto.erTilkommetAndel());
         return builder.build();
     }
 
     static OpptjeningAktivitetType mapArbeidforholdTypeFraDto(OpptjeningAktivitetDto arbeidsforholdType) {
-        if (arbeidsforholdType == null) return OpptjeningAktivitetType.UDEFINERT;
+        if (arbeidsforholdType == null) {
+            return OpptjeningAktivitetType.UDEFINERT;
+        }
         return switch (arbeidsforholdType) {
             case VENTELØNN_VARTPENGER -> OpptjeningAktivitetType.VENTELØNN_VARTPENGER;
             case DAGPENGER -> OpptjeningAktivitetType.DAGPENGER;
@@ -153,7 +160,9 @@ public final class BeregningsgrunnlagDtoMapper {
     }
 
     static AktivitetStatus mapAktivitetStatusFraDto(AktivitetStatusDto aktivitetStatus) {
-        if (aktivitetStatus == null) return null;
+        if (aktivitetStatus == null) {
+            return null;
+        }
         return switch (aktivitetStatus) {
             case ARBEIDSAVKLARINGSPENGER -> AktivitetStatus.ARBEIDSAVKLARINGSPENGER;
             case ARBEIDSTAKER -> AktivitetStatus.ARBEIDSTAKER;
@@ -173,11 +182,8 @@ public final class BeregningsgrunnlagDtoMapper {
     }
 
     private static BGAndelArbeidsforhold mapBgAndelArbeidsforholdfraDto(BgAndelArbeidsforholdDto dto, UnaryOperator<String> hentNavn) {
-        return new BGAndelArbeidsforhold(mapArbeidsgiverFraDto(dto, hentNavn),
-                ArbeidsforholdRef.ref(dto.arbeidsforholdRef()),
-                dto.naturalytelseBortfaltPrÅr(),
-                dto.naturalytelseTilkommetPrÅr()
-        );
+        return new BGAndelArbeidsforhold(mapArbeidsgiverFraDto(dto, hentNavn), ArbeidsforholdRef.ref(dto.arbeidsforholdRef()),
+            dto.naturalytelseBortfaltPrÅr(), dto.naturalytelseTilkommetPrÅr());
     }
 
     private static BeregningsgrunnlagAktivitetStatus mapBeregningsgrunnlagAktivitetStatusFraDto(AktivitetStatusDto aktivitetStatus) {

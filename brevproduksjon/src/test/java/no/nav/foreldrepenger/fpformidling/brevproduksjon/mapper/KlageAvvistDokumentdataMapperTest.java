@@ -36,7 +36,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 
 @ExtendWith(MockitoExtension.class)
-public class KlageAvvistDokumentdataMapperTest {
+class KlageAvvistDokumentdataMapperTest {
 
     @Mock
     private BrevParametere brevParametere;
@@ -91,9 +91,9 @@ public class KlageAvvistDokumentdataMapperTest {
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
-        mockKlage(behandling, BehandlingType.TILBAKEKREVING, of(KlageAvvistÅrsak.KLAGET_FOR_SENT, KlageAvvistÅrsak.KLAGER_IKKE_PART,
-                KlageAvvistÅrsak.KLAGE_UGYLDIG, KlageAvvistÅrsak.IKKE_KONKRET, KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK,
-                KlageAvvistÅrsak.IKKE_SIGNERT));
+        mockKlage(behandling, BehandlingType.TILBAKEKREVING,
+            of(KlageAvvistÅrsak.KLAGET_FOR_SENT, KlageAvvistÅrsak.KLAGER_IKKE_PART, KlageAvvistÅrsak.KLAGE_UGYLDIG, KlageAvvistÅrsak.IKKE_KONKRET,
+                KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK, KlageAvvistÅrsak.IKKE_SIGNERT));
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -101,8 +101,8 @@ public class KlageAvvistDokumentdataMapperTest {
         // Assert
         assertThat(dokumentdata.getGjelderTilbakekreving()).isTrue();
         assertThat(dokumentdata.getLovhjemler()).isEqualTo("folketrygdloven § 21-12 og forvaltningsloven §§ 28, 31, 32 og 33");
-        assertThat(dokumentdata.getAvvistGrunner()).containsAll(of(KlageAvvistÅrsak.KLAGET_FOR_SENT.getKode(),
-                KlageAvvistÅrsak.KLAGER_IKKE_PART.getKode(), KlageAvvistÅrsak.KLAGE_UGYLDIG.getKode(),
+        assertThat(dokumentdata.getAvvistGrunner()).containsAll(
+            of(KlageAvvistÅrsak.KLAGET_FOR_SENT.getKode(), KlageAvvistÅrsak.KLAGER_IKKE_PART.getKode(), KlageAvvistÅrsak.KLAGE_UGYLDIG.getKode(),
                 KlageAvvistÅrsak.IKKE_KONKRET.getKode(), KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK.getKode()));
     }
 
@@ -110,10 +110,10 @@ public class KlageAvvistDokumentdataMapperTest {
         var klageVurderingResultat = new KlageVurderingResultat(null, "FRITEKST");
         var klageFormkravResultat = new KlageFormkravResultat(avvistÅrsaker);
         var klage = Klage.ny()
-                .medPåklagdBehandlingType(behandlingType)
-                .medKlageVurderingResultatNK(klageVurderingResultat)
-                .medFormkravNFP(klageFormkravResultat)
-                .build();
+            .medPåklagdBehandlingType(behandlingType)
+            .medKlageVurderingResultatNK(klageVurderingResultat)
+            .medFormkravNFP(klageFormkravResultat)
+            .build();
         when(domeneobjektProvider.hentKlagebehandling(behandling)).thenReturn(klage);
     }
 }

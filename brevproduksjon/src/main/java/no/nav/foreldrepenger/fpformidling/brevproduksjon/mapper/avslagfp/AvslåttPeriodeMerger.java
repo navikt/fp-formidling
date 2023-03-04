@@ -46,22 +46,21 @@ public final class AvslåttPeriodeMerger {
     }
 
     private static boolean erPerioderSammenhengendeOgSkalSlåSammen(AvslåttPeriode periodeEn, AvslåttPeriode periodeTo) {
-        return sammeAvslagsårsak(periodeEn, periodeTo)
-                && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
+        return sammeAvslagsårsak(periodeEn, periodeTo) && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
     }
 
     private static boolean sammeAvslagsårsak(AvslåttPeriode periodeEn, AvslåttPeriode periodeTo) {
-        return Objects.equals(periodeEn.getAvslagsårsak(), periodeTo.getAvslagsårsak())
-                || erRegnetSomLike(periodeEn.getAvslagsårsak(), periodeTo.getAvslagsårsak());
+        return Objects.equals(periodeEn.getAvslagsårsak(), periodeTo.getAvslagsårsak()) || erRegnetSomLike(periodeEn.getAvslagsårsak(),
+            periodeTo.getAvslagsårsak());
     }
 
     private static AvslåttPeriode slåSammenPerioder(AvslåttPeriode periodeEn, AvslåttPeriode periodeTo) {
         return AvslåttPeriode.ny()
-                .medAvslagsårsak(periodeEn.getAvslagsårsak())
-                .medPeriodeFom(periodeEn.getPeriodeFom(), periodeEn.getSpråkkode())
-                .medPeriodeTom(periodeTo.getPeriodeTom(), periodeEn.getSpråkkode())
-                .medAntallTapteDager(finnRiktigAntallTapteDager(periodeEn, periodeTo), BigDecimal.ZERO)
-                .build();
+            .medAvslagsårsak(periodeEn.getAvslagsårsak())
+            .medPeriodeFom(periodeEn.getPeriodeFom(), periodeEn.getSpråkkode())
+            .medPeriodeTom(periodeTo.getPeriodeTom(), periodeEn.getSpråkkode())
+            .medAntallTapteDager(finnRiktigAntallTapteDager(periodeEn, periodeTo), BigDecimal.ZERO)
+            .build();
     }
 
     private static int finnRiktigAntallTapteDager(AvslåttPeriode periodeEn, AvslåttPeriode periodeTo) {
@@ -69,7 +68,7 @@ public final class AvslåttPeriodeMerger {
         var tapteDagerPeriodeTo = periodeTo.getTapteDagerTemp();
 
         if (!Objects.equals(tapteDagerPeriodeEn, BigDecimal.ZERO) && !Objects.equals(tapteDagerPeriodeTo, BigDecimal.ZERO)) {
-            return  tapteDagerPeriodeEn.add(tapteDagerPeriodeTo).setScale(1, RoundingMode.DOWN).intValue();
+            return tapteDagerPeriodeEn.add(tapteDagerPeriodeTo).setScale(1, RoundingMode.DOWN).intValue();
         } else {
             return periodeEn.getAntallTapteDager() + periodeTo.getAntallTapteDager();
         }

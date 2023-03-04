@@ -31,13 +31,15 @@ public class AvslåttAktivitet {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (AvslåttAktivitet) object;
-        return Objects.equals(årsak, that.årsak)
-                && Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn)
-                && Objects.equals(erFL, that.erFL)
-                && Objects.equals(erSN, that.erSN);
+        return Objects.equals(årsak, that.årsak) && Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn) && Objects.equals(erFL, that.erFL)
+            && Objects.equals(erSN, that.erSN);
     }
 
     @Override

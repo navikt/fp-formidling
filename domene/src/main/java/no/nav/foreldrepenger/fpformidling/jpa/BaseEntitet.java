@@ -34,8 +34,7 @@ public class BaseEntitet implements Serializable {
     private LocalDateTime endretTidspunkt; // NOSONAR
 
     private static String finnBrukernavn() {
-        return Optional.ofNullable(KontekstHolder.getKontekst()).map(Kontekst::getKompaktUid)
-            .orElse(BRUKERNAVN_NÅR_SIKKERHETSKONTEKST_IKKE_FINNES);
+        return Optional.ofNullable(KontekstHolder.getKontekst()).map(Kontekst::getKompaktUid).orElse(BRUKERNAVN_NÅR_SIKKERHETSKONTEKST_IKKE_FINNES);
     }
 
     @PrePersist

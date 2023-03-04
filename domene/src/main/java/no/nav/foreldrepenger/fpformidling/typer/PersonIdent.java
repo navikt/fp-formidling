@@ -20,8 +20,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public class PersonIdent implements Comparable<PersonIdent> {
 
-    private static final int[] CHECKSUM_EN_VECTOR = new int[] { 3, 7, 6, 1, 8, 9, 4, 5, 2 };
-    private static final int[] CHECKSUM_TO_VECTOR = new int[] { 5, 4, 3, 2, 7, 6, 5, 4, 3, 2 };
+    private static final int[] CHECKSUM_EN_VECTOR = new int[]{3, 7, 6, 1, 8, 9, 4, 5, 2};
+    private static final int[] CHECKSUM_TO_VECTOR = new int[]{5, 4, 3, 2, 7, 6, 5, 4, 3, 2};
 
     private static final int FNR_LENGDE = 11;
 
@@ -37,7 +37,7 @@ public class PersonIdent implements Comparable<PersonIdent> {
 
     /**
      * @return true hvis angitt str er et fødselsnummer (F-Nr eller D-Nr). False
-     *         hvis ikke, eller er FDAT nummer.
+     * hvis ikke, eller er FDAT nummer.
      */
     public static boolean erGyldigFnr(final String str) {
         if (str == null) {
@@ -48,9 +48,7 @@ public class PersonIdent implements Comparable<PersonIdent> {
     }
 
     private static String getPersonnummer(String str) {
-        return (str == null || str.length() < PERSONNR_LENGDE)
-                ? null
-                : str.substring(str.length() - PERSONNR_LENGDE, str.length());
+        return (str == null || str.length() < PERSONNR_LENGDE) ? null : str.substring(str.length() - PERSONNR_LENGDE, str.length());
     }
 
     private static boolean isFdatNummer(String personnummer) {
@@ -77,8 +75,8 @@ public class PersonIdent implements Comparable<PersonIdent> {
         if (checksumTo == FNR_LENGDE) {
             checksumTo = 0;
         }
-        return checksumEn == Character.digit(foedselsnummer.charAt(FNR_LENGDE - 2), 10)
-                && checksumTo == Character.digit(foedselsnummer.charAt(FNR_LENGDE - 1), 10);
+        return checksumEn == Character.digit(foedselsnummer.charAt(FNR_LENGDE - 2), 10) && checksumTo == Character.digit(
+            foedselsnummer.charAt(FNR_LENGDE - 1), 10);
     }
 
     public static PersonIdent fra(String ident) {

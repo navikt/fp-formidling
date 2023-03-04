@@ -9,9 +9,9 @@ public final class DatoVerktøy {
     }
 
     public static boolean erFomRettEtterTomDato(LocalDate periodeEnTom, LocalDate periodeToFom) {
-        return periodeEnTom.plusDays(1).isEqual(periodeToFom) ||
-                periodeEnTom.plusDays(2).isEqual(periodeToFom) && erLørdagEllerSøndag(periodeEnTom.plusDays(1)) ||
-                periodeEnTom.plusDays(3).isEqual(periodeToFom) && erLørdag(periodeEnTom.plusDays(1)) && erSøndag(periodeEnTom.plusDays(2));
+        return periodeEnTom.plusDays(1).isEqual(periodeToFom) || periodeEnTom.plusDays(2).isEqual(periodeToFom) && erLørdagEllerSøndag(
+            periodeEnTom.plusDays(1)) || periodeEnTom.plusDays(3).isEqual(periodeToFom) && erLørdag(periodeEnTom.plusDays(1)) && erSøndag(
+            periodeEnTom.plusDays(2));
     }
 
     private static boolean erLørdagEllerSøndag(LocalDate date) {

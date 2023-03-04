@@ -24,21 +24,25 @@ public class HenleggeDokumentdataMapper implements DokumentdataMapper {
     }
 
     @Override
-    public HenleggelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                      Behandling behandling, boolean erUtkast) {
+    public HenleggelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                      DokumentHendelse hendelse,
+                                                      Behandling behandling,
+                                                      boolean erUtkast) {
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
 
         return HenleggelseDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medVanligBehandling(behandling.getBehandlingType().erYtelseBehandlingType())
-                .medAnke(behandling.erAnke())
-                .medInnsyn(behandling.erInnsyn())
-                .medKlage(behandling.erKlage())
-                .medOpphavType(utledOpphavType(hendelse.getBehandlendeEnhetNavn() == null || hendelse.getBehandlendeEnhetNavn().isEmpty() ? behandling.getBehandlendeEnhetNavn() : hendelse.getBehandlendeEnhetNavn()))
-                .build();
+            .medFelles(fellesBuilder.build())
+            .medVanligBehandling(behandling.getBehandlingType().erYtelseBehandlingType())
+            .medAnke(behandling.erAnke())
+            .medInnsyn(behandling.erInnsyn())
+            .medKlage(behandling.erKlage())
+            .medOpphavType(utledOpphavType(hendelse.getBehandlendeEnhetNavn() == null || hendelse.getBehandlendeEnhetNavn()
+                .isEmpty() ? behandling.getBehandlendeEnhetNavn() : hendelse.getBehandlendeEnhetNavn()))
+            .build();
     }
 
     private String utledOpphavType(String behandlendeEnhetNavn) {

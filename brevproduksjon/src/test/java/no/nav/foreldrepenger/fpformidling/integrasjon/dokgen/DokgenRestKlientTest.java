@@ -35,18 +35,15 @@ class DokgenRestKlientTest {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "401, Unauthorized",
-            "403, Forbidden",
-            "404, Kan ikke finne template med navn abc",
-            "500, Feil",
-    })
+    @CsvSource({"401, Unauthorized", "403, Forbidden", "404, Kan ikke finne template med navn abc", "500, Feil",})
     void generatePdf(int statusCode, String message) {
         var template = "abc";
         var variation = "template_nb";
-        var body = DefaultJsonMapper.toJson(new ErrorResponse(statusCode, message, message, String.format("/template/%s/%s/create-pdf-variation", template, variation)));
+        var body = DefaultJsonMapper.toJson(
+            new ErrorResponse(statusCode, message, message, String.format("/template/%s/%s/create-pdf-variation", template, variation)));
 
-        when(restClient.sendReturnByteArray(any())).thenThrow(new IntegrasjonException("F-468817", String.format("Uventet respons %s fra %s", statusCode, "/endpoint")));
+        when(restClient.sendReturnByteArray(any())).thenThrow(
+            new IntegrasjonException("F-468817", String.format("Uventet respons %s fra %s", statusCode, "/endpoint")));
 
         var språkkode = Språkkode.defaultNorsk("nb");
         var dokumentdata = new TestDokumentdata();
@@ -67,8 +64,10 @@ class DokgenRestKlientTest {
         Exception exception = assertThrows(TekniskException.class, () -> {
             klient.genererPdf(template, språkkode, dokumentdata);
         });
-        assertThat(exception.getMessage()).contains(String.format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", template, språkkode));
+        assertThat(exception.getMessage()).contains(
+            String.format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", template, språkkode));
     }
 
-    static class TestDokumentdata extends Dokumentdata {}
+    static class TestDokumentdata extends Dokumentdata {
+    }
 }

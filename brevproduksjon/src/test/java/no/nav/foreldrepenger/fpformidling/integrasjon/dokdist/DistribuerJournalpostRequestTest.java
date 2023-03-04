@@ -16,17 +16,17 @@ class DistribuerJournalpostRequestTest {
         var batchId = "67890";
         var bestillendeFagsystem = "FPSAK";
         var dokumentProdApp = "FFF";
-        var testRequest = new DistribuerJournalpostRequest(journalpostId, batchId, bestillendeFagsystem, dokumentProdApp, distribusjonstype, kjernetid);
+        var testRequest = new DistribuerJournalpostRequest(journalpostId, batchId, bestillendeFagsystem, dokumentProdApp, distribusjonstype,
+            kjernetid);
 
         var serieliser = DefaultJsonMapper.toJson(testRequest);
 
-        assertThat(serieliser)
-                .contains("distribusjonstype")
-                .contains("distribusjonstidspunkt")
-                .contains("journalpostId")
-                .contains("batchId")
-                .contains("bestillendeFagsystem")
-                .contains("dokumentProdApp");
+        assertThat(serieliser).contains("distribusjonstype")
+            .contains("distribusjonstidspunkt")
+            .contains("journalpostId")
+            .contains("batchId")
+            .contains("bestillendeFagsystem")
+            .contains("dokumentProdApp");
 
         var deserialisertRequest = DefaultJsonMapper.fromJson(serieliser, DistribuerJournalpostRequest.class);
 

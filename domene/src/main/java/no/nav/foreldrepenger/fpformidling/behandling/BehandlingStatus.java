@@ -18,9 +18,9 @@ public enum BehandlingStatus implements Kodeverdi {
     IVERKSETTER_VEDTAK("IVED"),
     OPPRETTET("OPPRE"),
     UTREDES("UTRED"),
-    
+
     ;
-    
+
     @JsonValue
     private String kode;
 

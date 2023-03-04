@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 
-import java.util.List;
-import java.util.function.UnaryOperator;
-
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatArbeidsforholdDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
@@ -12,13 +9,17 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforho
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
+import java.util.List;
+import java.util.function.UnaryOperator;
+
 
 public class UttakSvpDtoMapper {
 
     public static final String NÆRINGSDRIVENDE = "næringsdrivende";
     public static final String FRILANSER = "frilanser";
 
-    public static SvangerskapspengerUttak mapSvpUttaksresultatFraDto(SvangerskapspengerUttakResultatDto svpUttaksresultatresultatDto, UnaryOperator<String> hentNavn) {
+    public static SvangerskapspengerUttak mapSvpUttaksresultatFraDto(SvangerskapspengerUttakResultatDto svpUttaksresultatresultatDto,
+                                                                     UnaryOperator<String> hentNavn) {
         final var svpUttaksresultatBuilder = SvangerskapspengerUttak.Builder.ny();
         final var uttaksResultatArbeidsforhold = svpUttaksresultatresultatDto.uttaksResultatArbeidsforhold();
         if (uttaksResultatArbeidsforhold != null) {
@@ -37,19 +38,21 @@ public class UttakSvpDtoMapper {
         return svpUttaksresultatBuilder.build();
     }
 
-    private static List<SvpUttakResultatPeriode> utledSvpUttakResultatPeriode(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold, Arbeidsgiver arbeidsgiver) {
+    private static List<SvpUttakResultatPeriode> utledSvpUttakResultatPeriode(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold,
+                                                                              Arbeidsgiver arbeidsgiver) {
         if (arbeidsforhold.perioder() == null) {
             return List.of();
         }
-        return arbeidsforhold.perioder().stream()
-                .map(periodeDto -> SvpUttakResultatPeriode.Builder.ny()
-                        .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(periodeDto.fom(), periodeDto.tom()))
-                        .medUtbetalingsgrad(periodeDto.utbetalingsgrad().longValue())
-                        .medPeriodeResultatType(periodeDto.periodeResultatType())
-                        .medPeriodeIkkeOppfyltÅrsak(periodeDto.periodeIkkeOppfyltÅrsak())
-                        .medArbeidsgiverNavn(getArbeidsgiverNavn(arbeidsforhold, arbeidsgiver))
-                        .build())
-                .toList();
+        return arbeidsforhold.perioder()
+            .stream()
+            .map(periodeDto -> SvpUttakResultatPeriode.Builder.ny()
+                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(periodeDto.fom(), periodeDto.tom()))
+                .medUtbetalingsgrad(periodeDto.utbetalingsgrad().longValue())
+                .medPeriodeResultatType(periodeDto.periodeResultatType())
+                .medPeriodeIkkeOppfyltÅrsak(periodeDto.periodeIkkeOppfyltÅrsak())
+                .medArbeidsgiverNavn(getArbeidsgiverNavn(arbeidsforhold, arbeidsgiver))
+                .build())
+            .toList();
     }
 
     private static String getArbeidsgiverNavn(SvangerskapspengerUttakResultatArbeidsforholdDto arbeidsforhold, Arbeidsgiver arbeidsgiver) {

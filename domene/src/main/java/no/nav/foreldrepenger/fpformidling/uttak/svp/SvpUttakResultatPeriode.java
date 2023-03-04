@@ -71,12 +71,15 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         var that = (SvpUttakResultatPeriode) o;
-        return getUtbetalingsgrad() == that.getUtbetalingsgrad() &&
-                getAktivitetDagsats() == that.getAktivitetDagsats() &&
-                Objects.equals(getTidsperiode(), that.getTidsperiode());
+        return getUtbetalingsgrad() == that.getUtbetalingsgrad() && getAktivitetDagsats() == that.getAktivitetDagsats() && Objects.equals(
+            getTidsperiode(), that.getTidsperiode());
     }
 
     @Override

@@ -1,15 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorsvp;
 
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.erDød;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
-import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
-
-import java.util.Collections;
-import java.util.List;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
@@ -27,6 +17,16 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseForeldrep
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import java.util.Collections;
+import java.util.List;
+
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.erDød;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.SVANGERSKAPSPENGER_OPPHØR)
@@ -60,30 +60,29 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
         var tilkjentYtelsePerioder = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling)
-                .map(TilkjentYtelseForeldrepenger::getPerioder)
-                .orElse(Collections.emptyList());
+            .map(TilkjentYtelseForeldrepenger::getPerioder)
+            .orElse(Collections.emptyList());
 
         var språkkode = behandling.getSpråkkode();
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(
-                dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
+        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
 
         var uttaksperioder = SvpMapperUtil.hentUttaksperioder(svpUttaksresultat);
 
         var dokumentdatabuilder = SvangerskapspengerOpphørDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
-                .medErSøkerDød(erDød(dokumentFelles))
-                .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medFelles(fellesBuilder.build())
+            .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
+            .medErSøkerDød(erDød(dokumentFelles))
+            .medKlagefristUker(brevParametere.getKlagefristUker());
 
         mapOpphørtPeriodeOgLovhjemmel(dokumentdatabuilder, behandling,
-                svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()),
-                språkkode, iay, tilkjentYtelsePerioder);
+            svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()), språkkode, iay,
+            tilkjentYtelsePerioder);
 
         SvpMapperUtil.finnFørsteUttakssdato(uttaksperioder, behandling.getBehandlingsresultat())
-                .ifPresent(d -> dokumentdatabuilder.medOpphørsdato(formaterDato(d, språkkode)));
+            .ifPresent(d -> dokumentdatabuilder.medOpphørsdato(formaterDato(d, språkkode)));
 
         familieHendelse.dødsdato().ifPresent(d -> dokumentdatabuilder.medDødsdatoBarn(formaterDato(d, språkkode)));
 
@@ -99,8 +98,8 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
                                                Inntektsmeldinger iay,
                                                List<TilkjentYtelsePeriode> tilkjentYtelsePerioder) {
 
-        var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakResultatArbeidsforhold,
-                språkKode, iay, tilkjentYtelsePerioder);
+        var opphørtePerioderOgLovhjemmel = OpphørPeriodeMapper.mapOpphørtePerioderOgLovhjemmel(behandling, uttakResultatArbeidsforhold, språkKode,
+            iay, tilkjentYtelsePerioder);
 
         dokumentdataBuilder.medLovhjemmel(opphørtePerioderOgLovhjemmel.element2());
         dokumentdataBuilder.medOpphørPerioder(opphørtePerioderOgLovhjemmel.element1());

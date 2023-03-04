@@ -77,7 +77,7 @@ public class ArbeidsgiverTjeneste {
     private Optional<Personinfo> hentInformasjonFraTps(String arbeidsgiver) {
         try {
             return personAdapter.hentBrukerForAktør(new AktørId(arbeidsgiver));
-        } catch (VLException|IllegalArgumentException feil) {
+        } catch (VLException | IllegalArgumentException feil) {
             // Ønsker ikke å gi GUI problemer ved å eksponere exceptions
             return Optional.empty();
         }

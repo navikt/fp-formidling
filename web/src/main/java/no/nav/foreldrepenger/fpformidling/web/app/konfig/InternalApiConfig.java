@@ -5,8 +5,8 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import no.nav.foreldrepenger.fpformidling.web.app.metrics.PrometheusRestService;
 import no.nav.foreldrepenger.fpformidling.web.app.healthcheck.HealthCheckRestService;
+import no.nav.foreldrepenger.fpformidling.web.app.metrics.PrometheusRestService;
 
 @ApplicationPath(InternalApiConfig.API_URL)
 public class InternalApiConfig extends Application {

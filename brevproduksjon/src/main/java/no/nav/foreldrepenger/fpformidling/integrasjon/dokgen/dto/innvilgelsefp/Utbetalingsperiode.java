@@ -55,6 +55,7 @@ public class Utbetalingsperiode {
     public StønadskontoType getStønadskontoType() {
         return stønadskontoType;
     }
+
     public LocalDate getPeriodeFom() {
         return periodeFomDate;
     }
@@ -91,29 +92,30 @@ public class Utbetalingsperiode {
         return språkkode;
     }
 
-    public BigDecimal getTapteDagerTemp() { return tapteDagerTemp; }
+    public BigDecimal getTapteDagerTemp() {
+        return tapteDagerTemp;
+    }
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (Utbetalingsperiode) object;
-        return Objects.equals(innvilget, that.innvilget)
-                && Objects.equals(årsak, that.årsak)
-                && Objects.equals(periodeFom, that.periodeFom)
-                && Objects.equals(periodeTom, that.periodeTom)
-                && Objects.equals(periodeDagsats, that.periodeDagsats)
-                && Objects.equals(antallTapteDager, that.antallTapteDager)
-                && Objects.equals(prioritertUtbetalingsgrad, that.prioritertUtbetalingsgrad)
-                && Objects.equals(arbeidsforholdsliste, that.arbeidsforholdsliste)
-                && Objects.equals(næring, that.næring)
-                && Objects.equals(annenAktivitetsliste, that.annenAktivitetsliste);
+        return Objects.equals(innvilget, that.innvilget) && Objects.equals(årsak, that.årsak) && Objects.equals(periodeFom, that.periodeFom)
+            && Objects.equals(periodeTom, that.periodeTom) && Objects.equals(periodeDagsats, that.periodeDagsats) && Objects.equals(antallTapteDager,
+            that.antallTapteDager) && Objects.equals(prioritertUtbetalingsgrad, that.prioritertUtbetalingsgrad) && Objects.equals(
+            arbeidsforholdsliste, that.arbeidsforholdsliste) && Objects.equals(næring, that.næring) && Objects.equals(annenAktivitetsliste,
+            that.annenAktivitetsliste);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(innvilget, årsak, periodeFom, periodeTom, periodeDagsats, antallTapteDager,
-                prioritertUtbetalingsgrad, arbeidsforholdsliste, næring, annenAktivitetsliste);
+        return Objects.hash(innvilget, årsak, periodeFom, periodeTom, periodeDagsats, antallTapteDager, prioritertUtbetalingsgrad,
+            arbeidsforholdsliste, næring, annenAktivitetsliste);
     }
 
     public static Builder ny() {

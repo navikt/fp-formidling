@@ -55,15 +55,13 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
     }
 
     @Inject
-    public SvangerskapspengerInnvilgelseDokumentdataMapper(DomeneobjektProvider domeneobjektProvider,
-                                                           BrevParametere brevParametere) {
+    public SvangerskapspengerInnvilgelseDokumentdataMapper(DomeneobjektProvider domeneobjektProvider, BrevParametere brevParametere) {
         this.domeneobjektProvider = domeneobjektProvider;
         this.brevParametere = brevParametere;
     }
 
     private static boolean erNyEllerEndretBeregning(Behandling behandling) {
-        return behandling.erFørstegangssøknad() ||
-                behandling.getBehandlingsresultat().getKonsekvenserForYtelsen().contains(ENDRING_I_BEREGNING);
+        return behandling.erFørstegangssøknad() || behandling.getBehandlingsresultat().getKonsekvenserForYtelsen().contains(ENDRING_I_BEREGNING);
     }
 
     @Override
@@ -72,8 +70,10 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
     }
 
     @Override
-    public SvangerskapspengerInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                                        Behandling behandling, boolean erUtkast) {
+    public SvangerskapspengerInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                                        DokumentHendelse hendelse,
+                                                                        Behandling behandling,
+                                                                        boolean erUtkast) {
         var språkkode = behandling.getSpråkkode();
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
@@ -89,20 +89,20 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         var inkludereBeregning = erNyEllerEndretBeregning(behandling);
 
         var dokumentdataBuilder = SvangerskapspengerInnvilgelseDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medRevurdering(behandling.erRevurdering())
-                .medRefusjonTilBruker(harBrukerAndel(tilkjentYtelse))
-                .medAntallRefusjonerTilArbeidsgivere(finnAntallRefusjonerTilArbeidsgivere(tilkjentYtelse))
-                .medStønadsperiodeTom(formaterDato(finnStønadsperiodeTom(utbetalingsperioder), språkkode))
-                .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelse))
-                .medMottattDato(formaterDato(finnSisteMottatteSøknad(mottatteDokumenter), språkkode))
-                .medKlagefristUker(brevParametere.getKlagefristUker())
-                .medAntallUttaksperioder(tellAntallUttaksperioder(uttaksaktiviteter))
-                .medUttaksaktiviteter(uttaksaktiviteter)
-                .medUtbetalingsperioder(utbetalingsperioder)
-                .medAvslagsperioder(mapAvslagsperioder(uttaksresultatSvp.getUttakResultatArbeidsforhold(), språkkode))
-                .medAvslåtteAktiviteter(mapAvslåtteAktiviteter(uttaksresultatSvp.getUttakResultatArbeidsforhold()))
-                .medInkludereBeregning(inkludereBeregning);
+            .medFelles(fellesBuilder.build())
+            .medRevurdering(behandling.erRevurdering())
+            .medRefusjonTilBruker(harBrukerAndel(tilkjentYtelse))
+            .medAntallRefusjonerTilArbeidsgivere(finnAntallRefusjonerTilArbeidsgivere(tilkjentYtelse))
+            .medStønadsperiodeTom(formaterDato(finnStønadsperiodeTom(utbetalingsperioder), språkkode))
+            .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelse))
+            .medMottattDato(formaterDato(finnSisteMottatteSøknad(mottatteDokumenter), språkkode))
+            .medKlagefristUker(brevParametere.getKlagefristUker())
+            .medAntallUttaksperioder(tellAntallUttaksperioder(uttaksaktiviteter))
+            .medUttaksaktiviteter(uttaksaktiviteter)
+            .medUtbetalingsperioder(utbetalingsperioder)
+            .medAvslagsperioder(mapAvslagsperioder(uttaksresultatSvp.getUttakResultatArbeidsforhold(), språkkode))
+            .medAvslåtteAktiviteter(mapAvslåtteAktiviteter(uttaksresultatSvp.getUttakResultatArbeidsforhold()))
+            .medInkludereBeregning(inkludereBeregning);
 
         if (behandling.erRevurdering()) {
             var orginalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling);

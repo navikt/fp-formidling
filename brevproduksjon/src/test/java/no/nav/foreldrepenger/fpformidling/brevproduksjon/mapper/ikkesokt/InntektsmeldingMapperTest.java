@@ -15,8 +15,8 @@ public class InntektsmeldingMapperTest {
 
     @Test
     void skal_kaste_exception_hvis_det_ikke_finnes_inntektsmelding() {
-        assertThatThrownBy(() -> InntektsmeldingMapper.hentNyesteInntektsmelding(new Inntektsmeldinger(List.of())))
-                .isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> InntektsmeldingMapper.hentNyesteInntektsmelding(new Inntektsmeldinger(List.of()))).isInstanceOf(
+            IllegalStateException.class);
     }
 
     @Test

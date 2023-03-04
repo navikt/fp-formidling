@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp;
 
-import java.math.BigDecimal;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp;
+
+import java.math.BigDecimal;
+import java.util.Objects;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Frilanser {
@@ -17,8 +17,12 @@ public class Frilanser {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (Frilanser) object;
         return Objects.equals(månedsinntekt, that.månedsinntekt);
     }

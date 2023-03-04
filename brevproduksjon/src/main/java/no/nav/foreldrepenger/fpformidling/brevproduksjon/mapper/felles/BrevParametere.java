@@ -16,11 +16,10 @@ public class BrevParametere {
     private Integer søkAntallUker;
 
     @Inject
-    public BrevParametere(
-        @KonfigVerdi(value = "vedtak.klagefrist.uker", defaultVerdi = "6") Integer klagefrist,
-        @KonfigVerdi(value = "innsyn.klagefrist.uker", defaultVerdi = "3") Integer klagefristInnsyn,
-        @KonfigVerdi(value = "brev.svarfrist.dager", defaultVerdi = "P3W") Period svarfrist,
-        @KonfigVerdi(value = "søk.antall.uker", defaultVerdi = "P4W") Period søkAntallUker) {
+    public BrevParametere(@KonfigVerdi(value = "vedtak.klagefrist.uker", defaultVerdi = "6") Integer klagefrist,
+                          @KonfigVerdi(value = "innsyn.klagefrist.uker", defaultVerdi = "3") Integer klagefristInnsyn,
+                          @KonfigVerdi(value = "brev.svarfrist.dager", defaultVerdi = "P3W") Period svarfrist,
+                          @KonfigVerdi(value = "søk.antall.uker", defaultVerdi = "P4W") Period søkAntallUker) {
         this.klagefristUker = klagefrist;
         this.klagefristUkerInnsyn = klagefristInnsyn;
         this.svarfristDager = svarfrist.getDays();

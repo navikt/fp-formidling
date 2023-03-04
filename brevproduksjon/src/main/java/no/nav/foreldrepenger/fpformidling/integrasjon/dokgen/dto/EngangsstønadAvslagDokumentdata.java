@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto;
 
-import java.util.List;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
+
+import java.util.List;
+import java.util.Objects;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
@@ -43,28 +43,29 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
         return vilkårTyper;
     }
 
-    public int getKlagefristUker() { return klagefristUker; }
+    public int getKlagefristUker() {
+        return klagefristUker;
+    }
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (EngangsstønadAvslagDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(avslagÅrsak, that.avslagÅrsak)
-                && Objects.equals(førstegangsbehandling, that.førstegangsbehandling)
-                && Objects.equals(antallBarn, that.antallBarn)
-                && Objects.equals(relasjonsRolle, that.relasjonsRolle)
-                && Objects.equals(gjelderFødsel, that.gjelderFødsel)
-                && Objects.equals(vilkårTyper, that.vilkårTyper)
-                && Objects.equals(klagefristUker, that.klagefristUker)
-                && Objects.equals(avslagMedlemskap, that.avslagMedlemskap);
+        return Objects.equals(felles, that.felles) && Objects.equals(avslagÅrsak, that.avslagÅrsak) && Objects.equals(førstegangsbehandling,
+            that.førstegangsbehandling) && Objects.equals(antallBarn, that.antallBarn) && Objects.equals(relasjonsRolle, that.relasjonsRolle)
+            && Objects.equals(gjelderFødsel, that.gjelderFødsel) && Objects.equals(vilkårTyper, that.vilkårTyper) && Objects.equals(klagefristUker,
+            that.klagefristUker) && Objects.equals(avslagMedlemskap, that.avslagMedlemskap);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, avslagÅrsak, førstegangsbehandling, antallBarn, relasjonsRolle, gjelderFødsel,
-                vilkårTyper, klagefristUker, avslagMedlemskap);
+        return Objects.hash(felles, avslagÅrsak, førstegangsbehandling, antallBarn, relasjonsRolle, gjelderFødsel, vilkårTyper, klagefristUker,
+            avslagMedlemskap);
     }
 
     public static Builder ny() {

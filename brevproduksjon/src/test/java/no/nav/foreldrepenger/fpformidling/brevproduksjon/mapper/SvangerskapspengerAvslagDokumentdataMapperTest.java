@@ -80,7 +80,8 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
 
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        when(domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT));
+        when(domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(any(Behandling.class))).thenReturn(
+            opprettUttaksresultat(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT));
         when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(List.of(mottattDokument));
     }
 
@@ -109,7 +110,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDato(LocalDate.now(), SPRÅKKODE_NB));
         assertThat(dokumentdata.getAntallArbeidsgivere()).isEqualTo(1);
         assertThat(dokumentdata.getErSøkerDød()).isFalse();
-        assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP/2);
+        assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
         assertThat(dokumentdata.getLovhjemmel()).isEqualTo("§ 14-4");
         assertThat(dokumentdata.getStønadsdatoFom()).isEqualTo(formaterDato(PERIODE1_FOM, SPRÅKKODE_NB));
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(6);
@@ -140,7 +141,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDato(LocalDate.now(), SPRÅKKODE_NB));
         assertThat(dokumentdata.getAntallArbeidsgivere()).isEqualTo(1);
         assertThat(dokumentdata.getErSøkerDød()).isFalse();
-        assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP/2);
+        assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
         assertThat(dokumentdata.getLovhjemmel()).isEqualTo("§ 14-4");
         assertThat(dokumentdata.getStønadsdatoFom()).isEqualTo(formaterDato(PERIODE1_FOM, SPRÅKKODE_NB));
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(6);
@@ -153,45 +154,43 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
 
     private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {
         return Optional.of(Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-                .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
-                .medhHjemmel(Hjemmel.F_14_7)
-                .medBesteberegnet(true)
-                .build());
+            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
+            .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
+            .medhHjemmel(Hjemmel.F_14_7)
+            .medBesteberegnet(true)
+            .build());
     }
 
     private Optional<SvangerskapspengerUttak> opprettUttaksresultat(PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak) {
         var uttakResultatPeriode1 = SvpUttakResultatPeriode.Builder.ny()
-                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .medArbeidsgiverNavn(ARBEIDSGIVER_1)
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .build();
+            .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
+            .medArbeidsgiverNavn(ARBEIDSGIVER_1)
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .build();
         var uttakResultatPeriode2 = SvpUttakResultatPeriode.Builder.ny()
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeIkkeOppfyltÅrsak(periodeIkkeOppfyltÅrsak)
-                .medArbeidsgiverNavn(ARBEIDSGIVER_1)
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .build();
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeIkkeOppfyltÅrsak(periodeIkkeOppfyltÅrsak)
+            .medArbeidsgiverNavn(ARBEIDSGIVER_1)
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .build();
 
         var uttaksresultat = SvangerskapspengerUttak.Builder.ny()
-                .leggTilUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold.Builder.ny()
-                        .medArbeidsgiver(new Arbeidsgiver("1234", ARBEIDSGIVER_1))
-                        .leggTilPerioder(List.of(uttakResultatPeriode1, uttakResultatPeriode2))
-                        .build())
-                .build();
+            .leggTilUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold.Builder.ny()
+                .medArbeidsgiver(new Arbeidsgiver("1234", ARBEIDSGIVER_1))
+                .leggTilPerioder(List.of(uttakResultatPeriode1, uttakResultatPeriode2))
+                .build())
+            .build();
 
         return Optional.of(uttaksresultat);
     }
 
     private Behandling opprettBehandling(Avslagsårsak årsak) {
         return Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
-                        .medAvslagsårsak(årsak)
-                        .build())
-                .medSpråkkode(Språkkode.NB)
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .medBehandlingsresultat(
+                Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).medAvslagsårsak(årsak).build())
+            .medSpråkkode(Språkkode.NB)
+            .build();
     }
 }

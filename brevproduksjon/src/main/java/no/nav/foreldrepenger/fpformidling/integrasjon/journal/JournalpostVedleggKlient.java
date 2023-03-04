@@ -18,8 +18,7 @@ import no.nav.vedtak.felles.integrasjon.rest.RestRequest;
 import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 
 @Dependent
-@RestClientConfig(tokenConfig = TokenFlow.STS_CC, endpointProperty = "journalpost.rest.proxy.v1.url",
-        endpointDefault = "http://dokarkivproxy.teamdokumenthandtering/rest/journalpostapi/v1/journalpost")
+@RestClientConfig(tokenConfig = TokenFlow.STS_CC, endpointProperty = "journalpost.rest.proxy.v1.url", endpointDefault = "http://dokarkivproxy.teamdokumenthandtering/rest/journalpostapi/v1/journalpost")
 public class JournalpostVedleggKlient implements JournalpostVedlegg {
     private static final Logger LOG = LoggerFactory.getLogger(JournalpostVedleggKlient.class);
 
@@ -44,13 +43,13 @@ public class JournalpostVedleggKlient implements JournalpostVedlegg {
 
             if (!tilknyttVedleggResponse.feiledeDokumenter().isEmpty()) {
                 throw new IllegalStateException(
-                        "Følgende vedlegg feilet " + tilknyttVedleggResponse.toString() + " for journalpost " + journalpostIdTil);
+                    "Følgende vedlegg feilet " + tilknyttVedleggResponse.toString() + " for journalpost " + journalpostIdTil);
             } else {
                 LOG.info("Vedlegg tilknyttet {} OK", journalpostIdTil);
             }
-        } catch (UriBuilderException|IllegalArgumentException e) {
+        } catch (UriBuilderException | IllegalArgumentException e) {
             throw new TekniskException("FPFORMIDLING-156531",
-                    String.format("Feil ved oppretting av URI for tilknytning av vedlegg til %s: %s.", journalpostIdTil, request.toString()), e);
+                String.format("Feil ved oppretting av URI for tilknytning av vedlegg til %s: %s.", journalpostIdTil, request.toString()), e);
         }
     }
 

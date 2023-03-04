@@ -99,8 +99,7 @@ public class Behandlingsresultat {
     }
 
     public boolean isBehandlingsresultatAvslåttOrOpphørt() {
-        return BehandlingResultatType.AVSLÅTT.equals(behandlingResultatType)
-                || BehandlingResultatType.OPPHØR.equals(behandlingResultatType);
+        return BehandlingResultatType.AVSLÅTT.equals(behandlingResultatType) || BehandlingResultatType.OPPHØR.equals(behandlingResultatType);
     }
 
     public boolean isBehandlingsresultatAvslått() {

@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.uttak.svp;
 
-import static no.nav.vedtak.konfig.Tid.TIDENES_ENDE;
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
+import static no.nav.vedtak.konfig.Tid.TIDENES_ENDE;
 
 public class SvangerskapspengerUttak {
 
@@ -18,15 +18,11 @@ public class SvangerskapspengerUttak {
     }
 
     public List<SvpUttakResultatArbeidsforhold> getUttakResultatArbeidsforhold() {
-        return uttakResultatArbeidsforhold.stream()
-                .sorted(Comparator.comparing(getSammenligningsDato()))
-                .toList();
+        return uttakResultatArbeidsforhold.stream().sorted(Comparator.comparing(getSammenligningsDato())).toList();
     }
 
     private Function<SvpUttakResultatArbeidsforhold, DatoIntervall> getSammenligningsDato() {
-        return o -> !o.getPerioder().isEmpty()
-                ? o.getPerioder().get(0).getTidsperiode()
-                : DatoIntervall.fraOgMed(TIDENES_ENDE);
+        return o -> !o.getPerioder().isEmpty() ? o.getPerioder().get(0).getTidsperiode() : DatoIntervall.fraOgMed(TIDENES_ENDE);
     }
 
     public static final class Builder {

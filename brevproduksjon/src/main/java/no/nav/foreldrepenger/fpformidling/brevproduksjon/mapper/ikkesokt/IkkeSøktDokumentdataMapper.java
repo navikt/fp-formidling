@@ -36,8 +36,10 @@ public class IkkeSøktDokumentdataMapper implements DokumentdataMapper {
     }
 
     @Override
-    public IkkeSøktDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                   Behandling behandling, boolean erUtkast) {
+    public IkkeSøktDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                   DokumentHendelse hendelse,
+                                                   Behandling behandling,
+                                                   boolean erUtkast) {
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
@@ -46,9 +48,9 @@ public class IkkeSøktDokumentdataMapper implements DokumentdataMapper {
         var inntektsmelding = InntektsmeldingMapper.hentNyesteInntektsmelding(iay);
 
         var dokumentdataBuilder = IkkeSøktDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medArbeidsgiverNavn(inntektsmelding.arbeidsgiverNavn())
-                .medMottattDato(formaterDatoNorsk(inntektsmelding.innsendingstidspunkt()));
+            .medFelles(fellesBuilder.build())
+            .medArbeidsgiverNavn(inntektsmelding.arbeidsgiverNavn())
+            .medMottattDato(formaterDatoNorsk(inntektsmelding.innsendingstidspunkt()));
 
         return dokumentdataBuilder.build();
     }

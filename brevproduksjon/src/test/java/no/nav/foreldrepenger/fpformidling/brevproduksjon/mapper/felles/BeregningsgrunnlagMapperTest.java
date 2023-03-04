@@ -25,18 +25,16 @@ public class BeregningsgrunnlagMapperTest {
 
     @BeforeEach
     void standard_setup() {
-        beregningsgrunnlag = Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode())
-                .build();
+        beregningsgrunnlag = Beregningsgrunnlag.ny().leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode()).build();
     }
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode() {
         return BeregningsgrunnlagPeriode.ny()
-                .medDagsats(STANDARD_PERIODE_DAGSATS)
-                .medBruttoPrÅr(BRUTTO_PR_ÅR)
-                .medAvkortetPrÅr(AVKORTET_PR_ÅR)
-                .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListe())
-                .build();
+            .medDagsats(STANDARD_PERIODE_DAGSATS)
+            .medBruttoPrÅr(BRUTTO_PR_ÅR)
+            .medAvkortetPrÅr(AVKORTET_PR_ÅR)
+            .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListe())
+            .build();
     }
 
     private List<BeregningsgrunnlagPrStatusOgAndel> lagBgpsaListe() {
@@ -45,41 +43,35 @@ public class BeregningsgrunnlagMapperTest {
 
     private BeregningsgrunnlagPrStatusOgAndel lagBgpsaAap() {
         return BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medDagsats(STANDARD_PERIODE_DAGSATS)
-                .medBruttoPrÅr(BRUTTO_PR_ÅR)
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER)
-                .build();
+            .medDagsats(STANDARD_PERIODE_DAGSATS)
+            .medBruttoPrÅr(BRUTTO_PR_ÅR)
+            .medAktivitetStatus(AktivitetStatus.ARBEIDSAVKLARINGSPENGER)
+            .build();
     }
 
     private BeregningsgrunnlagPrStatusOgAndel lagBgpsaBruttoFrilanser() {
-        return BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medBruttoPrÅr(BRUTTO_PR_ÅR)
-                .medAktivitetStatus(AktivitetStatus.FRILANSER)
-                .build();
+        return BeregningsgrunnlagPrStatusOgAndel.ny().medBruttoPrÅr(BRUTTO_PR_ÅR).medAktivitetStatus(AktivitetStatus.FRILANSER).build();
     }
 
     private BeregningsgrunnlagPrStatusOgAndel lagBgpsaSN() {
         return BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medAvkortetPrÅr(AVKORTET_PR_ÅR)
-                .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
-                .build();
+            .medAvkortetPrÅr(AVKORTET_PR_ÅR)
+            .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
+            .build();
     }
 
     private BeregningsgrunnlagPrStatusOgAndel lagBgpsaAvkortetArbeidstaker() {
-        return BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medAvkortetPrÅr(AVKORTET_PR_ÅR)
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .build();
+        return BeregningsgrunnlagPrStatusOgAndel.ny().medAvkortetPrÅr(AVKORTET_PR_ÅR).medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).build();
     }
 
     @Test
     void skal_identifsere_statuser() {
-        var arbeidstakerAndeler = BeregningsgrunnlagMapper
-                .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER),
-                        beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
-        var frilansAndeler = BeregningsgrunnlagMapper
-                .finnAktivitetStatuserForAndeler(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER),
-                        beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
+        var arbeidstakerAndeler = BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(
+            new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER),
+            beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
+        var frilansAndeler = BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(
+            new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER),
+            beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList());
 
         assertThat(arbeidstakerAndeler).hasSize(1);
         assertThat(frilansAndeler).hasSize(1);
@@ -104,13 +96,15 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     void skal_kaste_exception_matcher_ikke() {
         var bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER);
-        assertThatThrownBy(() -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus,
+            List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).isInstanceOf(IllegalStateException.class);
     }
 
     @Test
     void skal_matche_AT_SN() {
         var bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.KOMBINERT_AT_SN);
-        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).hasSize(2);
+        assertThat(BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus,
+            List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).hasSize(2);
     }
 
     @Test
@@ -120,8 +114,7 @@ public class BeregningsgrunnlagMapperTest {
 
     @Test
     void skal_finne_besteBeregning() {
-        beregningsgrunnlag = Beregningsgrunnlag.ny().medBesteberegnet(true)
-                .build();
+        beregningsgrunnlag = Beregningsgrunnlag.ny().medBesteberegnet(true).build();
         assertThat(beregningsgrunnlag.getErBesteberegnet()).isTrue();
     }
 }

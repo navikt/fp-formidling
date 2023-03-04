@@ -131,41 +131,29 @@ public class DokumentHendelse extends BaseEntitet {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         var that = (DokumentHendelse) o;
-        return behandlingUuid.equals(that.behandlingUuid) &&
-                Objects.equals(dokumentMalType, that.dokumentMalType) &&
-                Objects.equals(ytelseType, that.ytelseType) &&
-                Objects.equals(gjelderVedtak, that.gjelderVedtak) &&
-                Objects.equals(tittel, that.tittel) &&
-                Objects.equals(fritekst, that.fritekst) &&
-                Objects.equals(behandlendeEnhetNavn, that.behandlendeEnhetNavn) &&
-                Objects.equals(vedtaksbrev, that.vedtaksbrev);
+        return behandlingUuid.equals(that.behandlingUuid) && Objects.equals(dokumentMalType, that.dokumentMalType) && Objects.equals(ytelseType,
+            that.ytelseType) && Objects.equals(gjelderVedtak, that.gjelderVedtak) && Objects.equals(tittel, that.tittel) && Objects.equals(fritekst,
+            that.fritekst) && Objects.equals(behandlendeEnhetNavn, that.behandlendeEnhetNavn) && Objects.equals(vedtaksbrev, that.vedtaksbrev);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst,
-                behandlendeEnhetNavn, vedtaksbrev);
+        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, behandlendeEnhetNavn, vedtaksbrev);
     }
 
     @Override
     public String toString() {
-        return "DokumentHendelse{" +
-                "id=" + id +
-                ", behandlingUuid=" + behandlingUuid +
-                ", bestillingUuid=" + bestillingUuid +
-                ", dokumentMalType=" + dokumentMalType +
-                ", ytelseType=" + ytelseType +
-                ", gjelderVedtak=" + gjelderVedtak +
-                ", tittel='" + tittel + '\'' +
-                ", fritekst='" + (fritekst != null ? "****** fritekst ***** " : "null") + '\'' +
-                ", revurderingVarslingÅrsak=" + revurderingVarslingÅrsak +
-                ", behandlendeEnhetNavn=" + behandlendeEnhetNavn +
-                ", vedtaksbrev=" + vedtaksbrev +
-                ", erOpphevetKlage=" + erOpphevetKlage +
-                '}';
+        return "DokumentHendelse{" + "id=" + id + ", behandlingUuid=" + behandlingUuid + ", bestillingUuid=" + bestillingUuid + ", dokumentMalType="
+            + dokumentMalType + ", ytelseType=" + ytelseType + ", gjelderVedtak=" + gjelderVedtak + ", tittel='" + tittel + '\'' + ", fritekst='" + (
+            fritekst != null ? "****** fritekst ***** " : "null") + '\'' + ", revurderingVarslingÅrsak=" + revurderingVarslingÅrsak
+            + ", behandlendeEnhetNavn=" + behandlendeEnhetNavn + ", vedtaksbrev=" + vedtaksbrev + ", erOpphevetKlage=" + erOpphevetKlage + '}';
     }
 
 

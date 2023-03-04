@@ -55,17 +55,15 @@ public class OpprettJournalpostTjenesteTest {
         var requestCaptor = ArgumentCaptor.forClass(OpprettJournalpostRequest.class);
 
         var dokumentFelles = getDokumentFelles();
-        var dokumentHendelse = lagStandardHendelseBuilder()
-                .medTittel("Innvilget Engangsstønad")
-                .build();
+        var dokumentHendelse = lagStandardHendelseBuilder().medTittel("Innvilget Engangsstønad").build();
 
         var unikBestillingsId = dokumentHendelse.getBestillingUuid().toString() + "-" + 1;
 
         var saksnummer = new Saksnummer("153456789");
 
         // Act
-        var responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE,
-                dokumentFelles, dokumentHendelse, saksnummer, true, null, unikBestillingsId);
+        var responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE, dokumentFelles,
+            dokumentHendelse, saksnummer, true, null, unikBestillingsId);
 
         // Assert
         Mockito.verify(dokArkivKlient).opprettJournalpost(requestCaptor.capture(), eq(true));
@@ -105,9 +103,9 @@ public class OpprettJournalpostTjenesteTest {
 
     private DokumentHendelse.Builder lagStandardHendelseBuilder() {
         return DokumentHendelse.builder()
-                .medBestillingUuid(UUID.randomUUID())
-                .medBehandlingUuid(UUID.randomUUID())
-                .medFritekst(FRITEKST)
-                .medYtelseType(FagsakYtelseType.ENGANGSTØNAD);
+            .medBestillingUuid(UUID.randomUUID())
+            .medBehandlingUuid(UUID.randomUUID())
+            .medFritekst(FRITEKST)
+            .medYtelseType(FagsakYtelseType.ENGANGSTØNAD);
     }
 }

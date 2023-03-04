@@ -141,18 +141,15 @@ public class VarselOmRevurderingDokumentdataMapperTest {
 
     private Behandling opprettBehandling() {
         return Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.REVURDERING)
-                .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-                .medKreverSammenhengendeUttak(true)
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.REVURDERING)
+            .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+            .medKreverSammenhengendeUttak(true)
+            .build();
     }
 
     private DokumentHendelse lagDokumentHendelse(RevurderingVarslingÅrsak varslingÅrsak) {
-        return lagStandardHendelseBuilder()
-                .medRevurderingVarslingÅrsak(varslingÅrsak)
-                .build();
+        return lagStandardHendelseBuilder().medRevurderingVarslingÅrsak(varslingÅrsak).build();
     }
 }

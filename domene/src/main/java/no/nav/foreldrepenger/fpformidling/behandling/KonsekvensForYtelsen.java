@@ -21,7 +21,7 @@ public enum KonsekvensForYtelsen implements Kodeverdi {
     ENDRING_I_BEREGNING_OG_UTTAK("ENDRING_I_BEREGNING_OG_UTTAK"),
     UDEFINERT("-"),
     ;
-    
+
     @JsonValue
     private String kode;
 
@@ -33,6 +33,6 @@ public enum KonsekvensForYtelsen implements Kodeverdi {
     public String getKode() {
         return kode;
     }
-    
+
 
 }

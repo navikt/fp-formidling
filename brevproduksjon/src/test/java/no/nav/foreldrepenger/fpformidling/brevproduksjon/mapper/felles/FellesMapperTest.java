@@ -29,7 +29,8 @@ public class FellesMapperTest {
     @Test
     void formaterLovhjemlerRevurderingEndringBeregning() {
         var lovhjemmelFraBeregning = "folketrygdloven § 14-7";
-        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false, "§ 14-7 og forvaltningsloven § 35");
+        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false,
+            "§ 14-7 og forvaltningsloven § 35");
     }
 
     @Test
@@ -47,13 +48,15 @@ public class FellesMapperTest {
     @Test
     void formaterLovhjemlerRevurderingEndringBeregningOgLovhjemmelUdefinertFraBeregning() {
         var lovhjemmelFraBeregning = Hjemmel.UDEFINERT.getNavn();
-        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false, " og forvaltningsloven § 35");
+        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false,
+            " og forvaltningsloven § 35");
     }
 
     @Test
     void formaterLovhjemlerRevurderingEndringBeregningOgLovhjemmelNullFraBeregning() {
         String lovhjemmelFraBeregning = null;
-        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false, " og forvaltningsloven § 35");
+        assertLovformateringBeregning(lovhjemmelFraBeregning, KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode(), false,
+            " og forvaltningsloven § 35");
     }
 
     @Test
@@ -84,7 +87,8 @@ public class FellesMapperTest {
     }
 
     private void assertLovformateringBeregning(String input, String konsekvensForYtelse, boolean innvilgetRevurdering, String forventetOutput) {
-        var lovhjemler = FellesMapper.formaterLovhjemlerForBeregning(input, konsekvensForYtelse, innvilgetRevurdering, Behandling.builder().medUuid(UUID.randomUUID()).build());
+        var lovhjemler = FellesMapper.formaterLovhjemlerForBeregning(input, konsekvensForYtelse, innvilgetRevurdering,
+            Behandling.builder().medUuid(UUID.randomUUID()).build());
         assertThat(lovhjemler).isEqualTo(forventetOutput);
     }
 }

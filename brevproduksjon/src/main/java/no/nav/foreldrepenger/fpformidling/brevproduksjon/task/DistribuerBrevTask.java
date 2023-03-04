@@ -1,14 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.BESTILLING_ID;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.DISTRIBUSJONSTYPE;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.JOURNALPOST_ID;
-
-import java.util.UUID;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.DistribuerJournalpostRequest;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstidspunkt;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
@@ -20,6 +11,13 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+
+import java.util.UUID;
+
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.*;
+
 @ApplicationScoped
 @ProsessTask(value = "formidling.distribuerBrev", maxFailedRuns = 2)
 public class DistribuerBrevTask implements ProsessTaskHandler {
@@ -28,8 +26,7 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
     private final ProsessTaskTjeneste taskTjeneste;
 
     @Inject
-    public DistribuerBrevTask(Dokdist dokdist,
-                              ProsessTaskTjeneste taskTjeneste) {
+    public DistribuerBrevTask(Dokdist dokdist, ProsessTaskTjeneste taskTjeneste) {
         this.dokdist = dokdist;
         this.taskTjeneste = taskTjeneste;
     }
@@ -49,8 +46,8 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
     }
 
     private DistribuerJournalpostRequest lagRequest(JournalpostId journalpostId, String bestillingId, Distribusjonstype distribusjonstype) {
-        return new DistribuerJournalpostRequest(journalpostId.getVerdi(), bestillingId, Fagsystem.FPSAK.getOffisiellKode(),
-                Fagsystem.FPSAK.getKode(), distribusjonstype, Distribusjonstidspunkt.KJERNETID);
+        return new DistribuerJournalpostRequest(journalpostId.getVerdi(), bestillingId, Fagsystem.FPSAK.getOffisiellKode(), Fagsystem.FPSAK.getKode(),
+            distribusjonstype, Distribusjonstidspunkt.KJERNETID);
     }
 
     private void opprettGosysOppgaveTask(JournalpostId journalpostId, UUID behandlingUuId, String saksnummer) {

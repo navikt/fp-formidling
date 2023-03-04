@@ -32,14 +32,15 @@ public class ForlengetSaksbehandlingstidDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (ForlengetSaksbehandlingstidDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(variantType, that.variantType)
-                && Objects.equals(død, that.død)
-                && Objects.equals(behandlingsfristUker, that.behandlingsfristUker)
-                && Objects.equals(antallBarn, that.antallBarn);
+        return Objects.equals(felles, that.felles) && Objects.equals(variantType, that.variantType) && Objects.equals(død, that.død)
+            && Objects.equals(behandlingsfristUker, that.behandlingsfristUker) && Objects.equals(antallBarn, that.antallBarn);
     }
 
     @Override

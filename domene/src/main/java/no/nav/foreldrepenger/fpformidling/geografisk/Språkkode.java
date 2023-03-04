@@ -1,15 +1,14 @@
 package no.nav.foreldrepenger.fpformidling.geografisk;
 
 
+import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
+
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
-
 public enum Språkkode {
 
-    @JsonEnumDefaultValue
-    NB,
+    @JsonEnumDefaultValue NB,
     NN,
     EN;
 

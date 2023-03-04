@@ -53,18 +53,18 @@ public final class UtbetalingsperiodeMerger {
 
     private static Utbetalingsperiode slåSammenPerioder(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
         return Utbetalingsperiode.ny()
-                .medInnvilget(periodeEn.isInnvilget())
-                .medÅrsak(periodeEn.getÅrsak())
-                .medPeriodeFom(periodeEn.getPeriodeFom(), periodeEn.getSpråkkode())
-                .medPeriodeTom(periodeTo.getPeriodeTom(), periodeEn.getSpråkkode())
-                .medPeriodeDagsats(periodeEn.getPeriodeDagsats())
-                .medAntallTapteDager(finnRiktigAntallTapteDager(periodeEn, periodeTo), BigDecimal.ZERO)
-                .medPrioritertUtbetalingsgrad(periodeEn.getPrioritertUtbetalingsgrad())
-                .medStønadskontoType(periodeEn.getStønadskontoType())
-                .medArbeidsforhold(periodeEn.getArbeidsforholdsliste())
-                .medNæring(periodeEn.getNæring())
-                .medAnnenAktivitet(periodeEn.getAnnenAktivitetsliste())
-                .build();
+            .medInnvilget(periodeEn.isInnvilget())
+            .medÅrsak(periodeEn.getÅrsak())
+            .medPeriodeFom(periodeEn.getPeriodeFom(), periodeEn.getSpråkkode())
+            .medPeriodeTom(periodeTo.getPeriodeTom(), periodeEn.getSpråkkode())
+            .medPeriodeDagsats(periodeEn.getPeriodeDagsats())
+            .medAntallTapteDager(finnRiktigAntallTapteDager(periodeEn, periodeTo), BigDecimal.ZERO)
+            .medPrioritertUtbetalingsgrad(periodeEn.getPrioritertUtbetalingsgrad())
+            .medStønadskontoType(periodeEn.getStønadskontoType())
+            .medArbeidsforhold(periodeEn.getArbeidsforholdsliste())
+            .medNæring(periodeEn.getNæring())
+            .medAnnenAktivitet(periodeEn.getAnnenAktivitetsliste())
+            .build();
     }
 
     private static int finnRiktigAntallTapteDager(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
@@ -72,15 +72,15 @@ public final class UtbetalingsperiodeMerger {
         var tapteDagerPeriodeTo = periodeTo.getTapteDagerTemp();
 
         if (!Objects.equals(tapteDagerPeriodeEn, BigDecimal.ZERO) && !Objects.equals(tapteDagerPeriodeTo, BigDecimal.ZERO)) {
-            return  tapteDagerPeriodeEn.add(tapteDagerPeriodeTo).setScale(1, RoundingMode.DOWN).intValue();
+            return tapteDagerPeriodeEn.add(tapteDagerPeriodeTo).setScale(1, RoundingMode.DOWN).intValue();
         } else {
             return periodeEn.getAntallTapteDager() + periodeTo.getAntallTapteDager();
         }
     }
 
     private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
-        return sammeStatusOgÅrsak(periodeEn, periodeTo) && likPeriodeDagsats(periodeEn, periodeTo)
-                && likeAktiviteter(periodeEn, periodeTo) && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
+        return sammeStatusOgÅrsak(periodeEn, periodeTo) && likPeriodeDagsats(periodeEn, periodeTo) && likeAktiviteter(periodeEn, periodeTo)
+            && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
     }
 
     static boolean likeAktiviteter(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
@@ -88,10 +88,8 @@ public final class UtbetalingsperiodeMerger {
     }
 
     private static boolean sammeStatusOgÅrsak(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
-        return (Objects.equals(periodeEn.isInnvilget(), periodeTo.isInnvilget())
-                    || Objects.equals(periodeEn.isAvslått(), periodeTo.isAvslått()))
-                && (Objects.equals(periodeEn.getÅrsak(), periodeTo.getÅrsak())
-                    || erRegnetSomLike(periodeEn.getÅrsak(), periodeTo.getÅrsak()));
+        return (Objects.equals(periodeEn.isInnvilget(), periodeTo.isInnvilget()) || Objects.equals(periodeEn.isAvslått(), periodeTo.isAvslått())) && (
+            Objects.equals(periodeEn.getÅrsak(), periodeTo.getÅrsak()) || erRegnetSomLike(periodeEn.getÅrsak(), periodeTo.getÅrsak()));
     }
 
     private static boolean likPeriodeDagsats(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
@@ -185,19 +183,18 @@ public final class UtbetalingsperiodeMerger {
     }
 
     private static boolean likNæringType(Næring næringEn, Næring næringTo) {
-        return Objects.equals(næringEn.getSistLignedeÅr(), næringTo.getSistLignedeÅr()) &&
-                Objects.equals(næringEn.getAktivitetDagsats(), næringTo.getAktivitetDagsats());
+        return Objects.equals(næringEn.getSistLignedeÅr(), næringTo.getSistLignedeÅr()) && Objects.equals(næringEn.getAktivitetDagsats(),
+            næringTo.getAktivitetDagsats());
     }
 
     private static boolean likAnnenAktivitetType(AnnenAktivitet akt, AnnenAktivitet akt2) {
-        return Objects.equals(akt.getAktivitetStatus(), akt2.getAktivitetStatus()) &&
-                Objects.equals(akt.getAktivitetDagsats(), akt2.getAktivitetDagsats());
+        return Objects.equals(akt.getAktivitetStatus(), akt2.getAktivitetStatus()) && Objects.equals(akt.getAktivitetDagsats(),
+            akt2.getAktivitetDagsats());
     }
 
     private static boolean likArbeidsforholdType(Arbeidsforhold arb, Arbeidsforhold arb2) {
-        return Objects.equals(arb.getArbeidsgiverNavn(), arb2.getArbeidsgiverNavn()) &&
-                Objects.equals(arb.getAktivitetDagsats(), arb2.getAktivitetDagsats()) &&
-                Objects.equals(arb.getNaturalytelseEndringType(), arb2.getNaturalytelseEndringType()) &&
-                Objects.equals(arb.getNaturalytelseNyDagsats(), arb2.getNaturalytelseNyDagsats());
+        return Objects.equals(arb.getArbeidsgiverNavn(), arb2.getArbeidsgiverNavn()) && Objects.equals(arb.getAktivitetDagsats(),
+            arb2.getAktivitetDagsats()) && Objects.equals(arb.getNaturalytelseEndringType(), arb2.getNaturalytelseEndringType()) && Objects.equals(
+            arb.getNaturalytelseNyDagsats(), arb2.getNaturalytelseNyDagsats());
     }
 }

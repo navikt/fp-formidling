@@ -35,10 +35,8 @@ public final class BeregningMapper {
         List<Arbeidsforhold> resultat = new ArrayList<>();
         for (var andel : getAndeler(beregningsgrunnlag)) {
             if (andel.getAktivitetStatus().erArbeidstaker()) {
-                getArbeidsgiverNavn(andel).ifPresent(navn -> resultat.add(Arbeidsforhold.ny()
-                        .medArbeidsgiverNavn(navn)
-                        .medMånedsinntekt(getMånedsinntekt(andel).longValue())
-                        .build()));
+                getArbeidsgiverNavn(andel).ifPresent(navn -> resultat.add(
+                    Arbeidsforhold.ny().medArbeidsgiverNavn(navn).medMånedsinntekt(getMånedsinntekt(andel).longValue()).build()));
             }
         }
         resultat.sort(Comparator.comparing(Arbeidsforhold::getMånedsinntekt).reversed()); // Høyeste månedsinntekt først
@@ -50,13 +48,13 @@ public final class BeregningMapper {
         for (var andel : getAndeler(beregningsgrunnlag)) {
             if (andel.getAktivitetStatus().erSelvstendigNæringsdrivende()) {
                 resultat = SelvstendigNæringsdrivende.ny(resultat)
-                        .medNyoppstartet(TRUE.equals(andel.getNyIArbeidslivet()))
-                        .leggTilÅrsinntekt(andel.getBruttoPrÅr())
-                        .medSistLignedeÅr(getSisteLignedeÅr(andel))
-                        .medInntektLavere_AT_SN(AktivitetStatus.KOMBINERT_AT_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
-                        .medInntektLavere_AT_FL_SN(AktivitetStatus.KOMBINERT_AT_FL_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
-                        .medInntektLavere_FL_SN(AktivitetStatus.KOMBINERT_FL_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
-                        .build();
+                    .medNyoppstartet(TRUE.equals(andel.getNyIArbeidslivet()))
+                    .leggTilÅrsinntekt(andel.getBruttoPrÅr())
+                    .medSistLignedeÅr(getSisteLignedeÅr(andel))
+                    .medInntektLavere_AT_SN(AktivitetStatus.KOMBINERT_AT_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
+                    .medInntektLavere_AT_FL_SN(AktivitetStatus.KOMBINERT_AT_FL_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
+                    .medInntektLavere_FL_SN(AktivitetStatus.KOMBINERT_FL_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
+                    .build();
             }
         }
         return resultat;
@@ -66,9 +64,7 @@ public final class BeregningMapper {
         Frilanser resultat = null;
         for (var andel : getAndeler(beregningsgrunnlag)) {
             if (andel.getAktivitetStatus().erFrilanser()) {
-                resultat = Frilanser.ny(resultat)
-                        .leggTilMånedsinntekt(getMånedsinntekt(andel))
-                        .build();
+                resultat = Frilanser.ny(resultat).leggTilMånedsinntekt(getMånedsinntekt(andel)).build();
             }
         }
         return resultat;
@@ -85,8 +81,8 @@ public final class BeregningMapper {
 
     private static boolean harMilitærStatusMedDagsatsOgAnnenStatus(List<BeregningsgrunnlagPrStatusOgAndel> andeler) {
         return andeler.stream()
-                .filter(status -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(status.getAktivitetStatus()))
-                .anyMatch(andel -> andel.getDagsats() > 0);
+            .filter(status -> AktivitetStatus.MILITÆR_ELLER_SIVIL.equals(status.getAktivitetStatus()))
+            .anyMatch(andel -> andel.getDagsats() > 0);
     }
 
     public static boolean inntektOverSeksG(Beregningsgrunnlag beregningsgrunnlag) {
@@ -116,13 +112,11 @@ public final class BeregningMapper {
     }
 
     private static List<BeregningsgrunnlagPrStatusOgAndel> getAndeler(Beregningsgrunnlag beregningsgrunnlag) {
-        var bgpsaList = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0)
-                .getBeregningsgrunnlagPrStatusOgAndelList();
+        var bgpsaList = beregningsgrunnlag.getBeregningsgrunnlagPerioder().get(0).getBeregningsgrunnlagPrStatusOgAndelList();
         List<BeregningsgrunnlagPrStatusOgAndel> andeler = new ArrayList<>();
         beregningsgrunnlag.getAktivitetStatuser()
-                .forEach(bgAktivitetStatus -> andeler.addAll(finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaList).stream()
-                        .filter(andel -> getBgBruttoPrÅr(andel) != null)
-                        .toList()));
+            .forEach(bgAktivitetStatus -> andeler.addAll(
+                finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaList).stream().filter(andel -> getBgBruttoPrÅr(andel) != null).toList()));
         return andeler;
     }
 

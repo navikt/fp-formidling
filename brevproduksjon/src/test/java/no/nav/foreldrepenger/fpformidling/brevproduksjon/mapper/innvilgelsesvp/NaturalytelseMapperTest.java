@@ -157,43 +157,45 @@ public class NaturalytelseMapperTest {
     }
 
     private TilkjentYtelseForeldrepenger gettilkjentYtelseFP(Arbeidsgiver arbeidsgiver, boolean inkluderePeriode2) {
-        var andel = TilkjentYtelseAndel.ny()
-                .medArbeidsgiver(arbeidsgiver)
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .build();
+        var andel = TilkjentYtelseAndel.ny().medArbeidsgiver(arbeidsgiver).medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER).build();
         var resultatPeriode1 = TilkjentYtelsePeriode.ny()
-                .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medDagsats(DAGSATS)
-                .medAndeler(of(andel))
-                .build();
+            .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .medDagsats(DAGSATS)
+            .medAndeler(of(andel))
+            .build();
         var resultatPeriode2 = TilkjentYtelsePeriode.ny()
-                .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                .medDagsats(DAGSATS)
-                .medAndeler(of(andel))
-                .build();
+            .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
+            .medDagsats(DAGSATS)
+            .medAndeler(of(andel))
+            .build();
         return TilkjentYtelseForeldrepenger.ny()
-                .leggTilPerioder(inkluderePeriode2 ? of(resultatPeriode1, resultatPeriode2) : of(resultatPeriode1))
-                .build();
+            .leggTilPerioder(inkluderePeriode2 ? of(resultatPeriode1, resultatPeriode2) : of(resultatPeriode1))
+            .build();
     }
 
-    private Beregningsgrunnlag getBeregningsgrunnlag(Arbeidsgiver arbeidsgiver, BigDecimal naturalytelseBortfaller, BigDecimal naturalytelseTilkommer, List<PeriodeÅrsak> periodeÅrsaker, boolean inkluderePeriode2) {
-        var bgAndelArbeidsforhold = new BGAndelArbeidsforhold(arbeidsgiver, ArbeidsforholdRef.ref("1"), naturalytelseBortfaller, naturalytelseTilkommer);
+    private Beregningsgrunnlag getBeregningsgrunnlag(Arbeidsgiver arbeidsgiver,
+                                                     BigDecimal naturalytelseBortfaller,
+                                                     BigDecimal naturalytelseTilkommer,
+                                                     List<PeriodeÅrsak> periodeÅrsaker,
+                                                     boolean inkluderePeriode2) {
+        var bgAndelArbeidsforhold = new BGAndelArbeidsforhold(arbeidsgiver, ArbeidsforholdRef.ref("1"), naturalytelseBortfaller,
+            naturalytelseTilkommer);
         var beregningsgrunnlagPrStatusOgAndel = BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .build();
+            .medBgAndelArbeidsforhold(bgAndelArbeidsforhold)
+            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+            .build();
         var grunnlagPeriode1 = BeregningsgrunnlagPeriode.ny()
-                .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medBeregningsgrunnlagPrStatusOgAndelList(of(beregningsgrunnlagPrStatusOgAndel))
-                .medperiodeÅrsaker(periodeÅrsaker)
-                .medDagsats(DAGSATS)
-                .build();
+            .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .medBeregningsgrunnlagPrStatusOgAndelList(of(beregningsgrunnlagPrStatusOgAndel))
+            .medperiodeÅrsaker(periodeÅrsaker)
+            .medDagsats(DAGSATS)
+            .build();
         var grunnlagPeriode2 = BeregningsgrunnlagPeriode.ny()
-                .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                .medBeregningsgrunnlagPrStatusOgAndelList(of(beregningsgrunnlagPrStatusOgAndel))
-                .medperiodeÅrsaker(periodeÅrsaker)
-                .medDagsats(DAGSATS)
-                .build();
+            .medPeriode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
+            .medBeregningsgrunnlagPrStatusOgAndelList(of(beregningsgrunnlagPrStatusOgAndel))
+            .medperiodeÅrsaker(periodeÅrsaker)
+            .medDagsats(DAGSATS)
+            .build();
         var builder = Beregningsgrunnlag.ny().leggTilBeregningsgrunnlagPeriode(grunnlagPeriode1);
         return inkluderePeriode2 ? builder.leggTilBeregningsgrunnlagPeriode(grunnlagPeriode2).build() : builder.build();
     }

@@ -23,12 +23,14 @@ public class FritekstbrevDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (FritekstbrevDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(overskrift, that.overskrift)
-                && Objects.equals(brødtekst, that.brødtekst);
+        return Objects.equals(felles, that.felles) && Objects.equals(overskrift, that.overskrift) && Objects.equals(brødtekst, that.brødtekst);
     }
 
     @Override

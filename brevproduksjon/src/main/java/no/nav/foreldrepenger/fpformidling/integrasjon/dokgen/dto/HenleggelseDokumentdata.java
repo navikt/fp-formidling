@@ -37,15 +37,15 @@ public class HenleggelseDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (HenleggelseDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(vanligBehandling, that.vanligBehandling)
-                && Objects.equals(klage, that.klage)
-                && Objects.equals(anke, that.anke)
-                && Objects.equals(innsyn, that.innsyn)
-                && Objects.equals(opphavType, that.opphavType);
+        return Objects.equals(felles, that.felles) && Objects.equals(vanligBehandling, that.vanligBehandling) && Objects.equals(klage, that.klage)
+            && Objects.equals(anke, that.anke) && Objects.equals(innsyn, that.innsyn) && Objects.equals(opphavType, that.opphavType);
     }
 
     @Override
@@ -94,6 +94,8 @@ public class HenleggelseDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public HenleggelseDokumentdata build() { return this.kladd; }
+        public HenleggelseDokumentdata build() {
+            return this.kladd;
+        }
     }
 }

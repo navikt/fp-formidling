@@ -17,10 +17,6 @@ public class JsonParseExceptionMapper implements ExceptionMapper<JsonParseExcept
     public Response toResponse(JsonParseException exception) {
         var feil = String.format("FPFORMIDLING-299955: JSON-parsing feil: %s", exception.getMessage());
         log.warn(feil);
-        return Response
-                .status(Response.Status.BAD_REQUEST)
-                .entity(new FeilDto(feil))
-                .type(MediaType.APPLICATION_JSON)
-                .build();
+        return Response.status(Response.Status.BAD_REQUEST).entity(new FeilDto(feil)).type(MediaType.APPLICATION_JSON).build();
     }
 }

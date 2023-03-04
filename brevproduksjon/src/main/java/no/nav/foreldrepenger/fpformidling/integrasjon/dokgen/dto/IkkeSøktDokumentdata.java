@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto;
 
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
+
+import java.util.Objects;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class IkkeSøktDokumentdata extends Dokumentdata {
@@ -22,12 +22,15 @@ public class IkkeSøktDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (IkkeSøktDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn)
-                && Objects.equals(mottattDato, that.mottattDato);
+        return Objects.equals(felles, that.felles) && Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn) && Objects.equals(mottattDato,
+            that.mottattDato);
     }
 
     @Override

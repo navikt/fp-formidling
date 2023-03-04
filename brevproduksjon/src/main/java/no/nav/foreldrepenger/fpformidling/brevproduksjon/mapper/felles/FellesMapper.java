@@ -23,9 +23,9 @@ public class FellesMapper {
         if (lovhjemmelBeregning == null) {
             lovhjemmelBeregning = "";
         } else if (Hjemmel.UDEFINERT.getNavn().equals(lovhjemmelBeregning) && !KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()
-                .equals(konsekvensForYtelse)) {
+            .equals(konsekvensForYtelse)) {
             LOG.warn("Behandling {} har udefinert hjemmel. Fint om du sjekker på TFP-4569 om dette er en NY sak, "
-                    + "og i så fall melder det der så vi kan se hvor ofte det skjer.", behandling.getUuid());
+                + "og i så fall melder det der så vi kan se hvor ofte det skjer.", behandling.getUuid());
             lovhjemmelBeregning = "";
         }
         if (endringIBeregning(konsekvensForYtelse) || innvilgetRevurdering) {
@@ -41,7 +41,7 @@ public class FellesMapper {
     public static String formaterLovhjemlerUttak(Set<String> hjemler, String konsekvensForYtelse, boolean innvilgetRevurdering) {
         var lovHjemmelBuilder = new StringBuilder();
         var forvaltningslovenTillegg = endringIBeregningEllerInnvilgetRevurdering(innvilgetRevurdering,
-                konsekvensForYtelse) ? "forvaltningsloven § 35" : null;
+            konsekvensForYtelse) ? "forvaltningsloven § 35" : null;
         var antallLovreferanser = formaterLovhjemler(hjemler, lovHjemmelBuilder, null, forvaltningslovenTillegg);
         if (antallLovreferanser == 0 && forvaltningslovenTillegg == null) {
             return "";
@@ -54,8 +54,8 @@ public class FellesMapper {
     }
 
     private static boolean endringIBeregning(String konsekvensForYtelse) {
-        return KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvensForYtelse)
-                || BehandlingMapper.ENDRING_BEREGNING_OG_UTTAK.equals(konsekvensForYtelse);
+        return KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvensForYtelse) || BehandlingMapper.ENDRING_BEREGNING_OG_UTTAK.equals(
+            konsekvensForYtelse);
     }
 
     public static int formaterLovhjemler(Set<String> hjemler, StringBuilder builder, String startTillegg, String sluttTillegg) {

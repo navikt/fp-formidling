@@ -38,7 +38,7 @@ public class SvangerskapspengerAvslagDokumentdata extends Dokumentdata {
     }
 
     public int getAntallArbeidsgivere() {
-            return antallArbeidsgivere;
+        return antallArbeidsgivere;
     }
 
     public long getHalvG() {
@@ -55,19 +55,19 @@ public class SvangerskapspengerAvslagDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (SvangerskapspengerAvslagDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(årsak, that.årsak)
-                && Objects.equals(erSøkerDød, that.erSøkerDød)
-                && Objects.equals(stønadsdatoFom, that.stønadsdatoFom)
-                && Objects.equals(mottattDato, that.mottattDato)
-                && Objects.equals(antallArbeidsgivere, that.antallArbeidsgivere)
-                && Objects.equals(halvG, that.halvG)
-                && Objects.equals(lovhjemmel, that.lovhjemmel)
-                && Objects.equals(klagefristUker, that.klagefristUker);
+        return Objects.equals(felles, that.felles) && Objects.equals(årsak, that.årsak) && Objects.equals(erSøkerDød, that.erSøkerDød)
+            && Objects.equals(stønadsdatoFom, that.stønadsdatoFom) && Objects.equals(mottattDato, that.mottattDato) && Objects.equals(
+            antallArbeidsgivere, that.antallArbeidsgivere) && Objects.equals(halvG, that.halvG) && Objects.equals(lovhjemmel, that.lovhjemmel)
+            && Objects.equals(klagefristUker, that.klagefristUker);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(felles, årsak, erSøkerDød, stønadsdatoFom, mottattDato, antallArbeidsgivere, halvG, lovhjemmel, klagefristUker);
@@ -113,10 +113,12 @@ public class SvangerskapspengerAvslagDokumentdata extends Dokumentdata {
             this.kladd.antallArbeidsgivere = antallArbeidsgivere;
             return this;
         }
+
         public Builder medHalvG(long halvG) {
             this.kladd.halvG = halvG;
             return this;
         }
+
         public Builder medLovhjemmel(String lovhjemmel) {
             this.kladd.lovhjemmel = lovhjemmel;
             return this;

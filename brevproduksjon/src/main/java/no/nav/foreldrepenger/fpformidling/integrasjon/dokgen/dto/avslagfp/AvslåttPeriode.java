@@ -47,17 +47,21 @@ public class AvslåttPeriode {
         return språkkode;
     }
 
-    public BigDecimal getTapteDagerTemp() { return tapteDagerTemp; }
+    public BigDecimal getTapteDagerTemp() {
+        return tapteDagerTemp;
+    }
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (AvslåttPeriode) object;
-        return Objects.equals(avslagsårsak, that.avslagsårsak)
-                && Objects.equals(periodeFom, that.periodeFom)
-                && Objects.equals(periodeTom, that.periodeTom)
-                && Objects.equals(antallTapteDager, that.antallTapteDager);
+        return Objects.equals(avslagsårsak, that.avslagsårsak) && Objects.equals(periodeFom, that.periodeFom) && Objects.equals(periodeTom,
+            that.periodeTom) && Objects.equals(antallTapteDager, that.antallTapteDager);
     }
 
     @Override

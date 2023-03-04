@@ -40,12 +40,8 @@ public class BehandlingResourceLink {
 
     @Override
     public String toString() {
-        return "BehandlingRelLinksDto{" +
-                "href='" + href + '\'' +
-                ", rel='" + rel + '\'' +
-                ", type='" + type + '\'' +
-                ", requestPayload=" + (requestPayload != null ? requestPayload.toString() : null) +
-                '}';
+        return "BehandlingRelLinksDto{" + "href='" + href + '\'' + ", rel='" + rel + '\'' + ", type='" + type + '\'' + ", requestPayload=" + (
+            requestPayload != null ? requestPayload.toString() : null) + '}';
     }
 
     public static final class Builder {

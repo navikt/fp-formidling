@@ -64,14 +64,14 @@ public class BrevMapperUtil {
                                                                   boolean erUtkast) {
         var erKopi = dokumentFelles.getErKopi();
         var fellesBuilder = FellesDokumentdata.ny()
-                .medSøkerNavn(dokumentFelles.getSakspartNavn())
-                .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
-                .medErKopi(erKopi.isPresent() && erKopi(erKopi.get()))
-                .medHarVerge(erKopi.isPresent())
-                .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
-                .medYtelseType(dokumentHendelse.getYtelseType().getKode())
-                .medBehandlesAvKA(behandlesAvKlageinstans(dokumentHendelse, behandling))
-                .medErUtkast(erUtkast);
+            .medSøkerNavn(dokumentFelles.getSakspartNavn())
+            .medSøkerPersonnummer(formaterPersonnummer(dokumentFelles.getSakspartId()))
+            .medErKopi(erKopi.isPresent() && erKopi(erKopi.get()))
+            .medHarVerge(erKopi.isPresent())
+            .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
+            .medYtelseType(dokumentHendelse.getYtelseType().getKode())
+            .medBehandlesAvKA(behandlesAvKlageinstans(dokumentHendelse, behandling))
+            .medErUtkast(erUtkast);
 
         if (brevSendesTilVerge(dokumentFelles)) {
             fellesBuilder.medMottakerNavn(dokumentFelles.getMottakerNavn());
@@ -84,7 +84,7 @@ public class BrevMapperUtil {
         // Behandlende enhet vil være angitt på DokumentHendelse ved bestilling av brev,
         // og dette skal overstyre behandlende enhet på Behandling, da denne kan ha endret seg
         // siden brevet ble bestilt. Ved forhåndsvisning må det hentes fra Behandling.
-        return (hendelse.getBehandlendeEnhetNavn() != null && hendelse.behandlesAvKlageinstans())
-                || (hendelse.getBehandlendeEnhetNavn() == null && behandling.getBehandlendeEnhetNavn() != null && behandling.behandlesAvKlageinstans());
+        return (hendelse.getBehandlendeEnhetNavn() != null && hendelse.behandlesAvKlageinstans()) || (hendelse.getBehandlendeEnhetNavn() == null
+            && behandling.getBehandlendeEnhetNavn() != null && behandling.behandlesAvKlageinstans());
     }
 }

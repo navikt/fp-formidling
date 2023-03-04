@@ -3,8 +3,6 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.oppgave;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.time.LocalDateTime;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,17 +35,14 @@ class OppgaverTjenesteTest {
         var behandlendeEnhetId = "1234";
         var aktørId = "12345678";
         var saksnummer = "98766544";
-        var behandling = new Behandling.Builder()
-                .medBehandlendeEnhetId(behandlendeEnhetId)
-                .medFagsakBackend(FagsakBackend.ny()
-                        .medAktørId(new AktørId(aktørId))
-                        .medSaksnummer(saksnummer).build())
-                .build();
+        var behandling = new Behandling.Builder().medBehandlendeEnhetId(behandlendeEnhetId)
+            .medFagsakBackend(FagsakBackend.ny().medAktørId(new AktørId(aktørId)).medSaksnummer(saksnummer).build())
+            .build();
 
         var id = 1234L;
         var captor = ArgumentCaptor.forClass(OpprettOppgave.class);
-        when(klient.opprettetOppgave(captor.capture())).thenReturn(new Oppgave(id, null, null, null, null,  null, null,
-                null, null, 1, null, null, null, null, null, "beskrivelse"));
+        when(klient.opprettetOppgave(captor.capture())).thenReturn(
+            new Oppgave(id, null, null, null, null, null, null, null, null, 1, null, null, null, null, null, "beskrivelse"));
 
         var journalpostId = "76543322";
         var oppgave = tjeneste.opprettOppgave(behandling, new JournalpostId(journalpostId), "beskrivelse");

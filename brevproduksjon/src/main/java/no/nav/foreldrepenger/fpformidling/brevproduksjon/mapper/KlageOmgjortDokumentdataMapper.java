@@ -40,8 +40,10 @@ public class KlageOmgjortDokumentdataMapper implements DokumentdataMapper {
     }
 
     @Override
-    public KlageOmgjortDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                       Behandling behandling, boolean erUtkast) {
+    public KlageOmgjortDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                       DokumentHendelse hendelse,
+                                                       Behandling behandling,
+                                                       boolean erUtkast) {
         var klage = domeneobjektProvider.hentKlagebehandling(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
@@ -49,9 +51,9 @@ public class KlageOmgjortDokumentdataMapper implements DokumentdataMapper {
         fra(hendelse, klage).ifPresent(fellesBuilder::medFritekst);
 
         var dokumentdataBuilder = KlageOmgjortDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medGjelderTilbakekreving(klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType())
-                .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medFelles(fellesBuilder.build())
+            .medGjelderTilbakekreving(klage.getPåklagdBehandlingType().erTilbakekrevingBehandlingType())
+            .medKlagefristUker(brevParametere.getKlagefristUker());
 
         return dokumentdataBuilder.build();
     }

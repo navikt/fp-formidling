@@ -28,10 +28,10 @@ public class KlageMapper {
 
     public static Optional<String> hentOgFormaterLovhjemlerForAvvistKlage(Klage klage, Språkkode språkkode) {
         var klagehjemler = hentKlageHjemler(klage);
-        var klagetEtterKlagefrist = listeAvAvvisteÅrsaker(klage).stream()
-                .anyMatch(KLAGET_FOR_SENT::equals);
+        var klagetEtterKlagefrist = listeAvAvvisteÅrsaker(klage).stream().anyMatch(KLAGET_FOR_SENT::equals);
         return formaterLovhjemlerForAvvistKlage(klagehjemler, klagetEtterKlagefrist, språkkode);
     }
+
     static Set<String> hentKlageHjemler(Klage klage) {
         Set<String> klageHjemler = new TreeSet<>();
         var klageVurdertAv = klage.getFormkravKA() != null ? "KA" : "NFP";
@@ -42,11 +42,9 @@ public class KlageMapper {
     static Optional<String> formaterLovhjemlerForAvvistKlage(Set<String> hjemler, boolean klagetEtterKlagefrist, Språkkode språkkode) {
         String startTillegg;
         if (Språkkode.NN.equals(språkkode)) {
-            startTillegg = klagetEtterKlagefrist ?
-                    "folketrygdlova § 21-12 og forvaltningslova" : "forvaltningslova";
+            startTillegg = klagetEtterKlagefrist ? "folketrygdlova § 21-12 og forvaltningslova" : "forvaltningslova";
         } else {
-            startTillegg = klagetEtterKlagefrist ?
-                    "folketrygdloven § 21-12 og forvaltningsloven" : "forvaltningsloven";
+            startTillegg = klagetEtterKlagefrist ? "folketrygdloven § 21-12 og forvaltningsloven" : "forvaltningsloven";
         }
         var lovhjemmelBuiloer = new StringBuilder();
         var antallLovreferanser = FellesMapper.formaterLovhjemler(hjemler, lovhjemmelBuiloer, startTillegg, null);

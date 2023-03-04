@@ -1,14 +1,14 @@
 package no.nav.foreldrepenger.fpformidling.web.app.rest;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Objects;
-
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.validation.constraints.NotNull;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Objects;
 
 /**
  * Representerer en link til en resource/action i en HATEOAS response.
@@ -105,9 +105,7 @@ public class ResourceLink {
             return false;
         }
         var other = (ResourceLink) obj;
-        return Objects.equals(this.href, other.href)
-                && Objects.equals(this.rel, other.rel)
-                && Objects.equals(this.type, other.type);
+        return Objects.equals(this.href, other.href) && Objects.equals(this.rel, other.rel) && Objects.equals(this.type, other.type);
     }
 
     @Override

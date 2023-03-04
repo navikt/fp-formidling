@@ -139,44 +139,33 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (SvangerskapspengerInnvilgelseDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(revurdering, that.revurdering)
-                && Objects.equals(endretFraAvslag, that.endretFraAvslag)
-                && Objects.equals(utbetalingEndret, that.utbetalingEndret)
-                && Objects.equals(termindatoEndret, that.termindatoEndret)
-                && Objects.equals(refusjonTilBruker, that.refusjonTilBruker)
-                && Objects.equals(antallRefusjonerTilArbeidsgivere, that.antallRefusjonerTilArbeidsgivere)
-                && Objects.equals(stønadsperiodeTom, that.stønadsperiodeTom)
-                && Objects.equals(månedsbeløp, that.månedsbeløp)
-                && Objects.equals(mottattDato, that.mottattDato)
-                && Objects.equals(klagefristUker, that.klagefristUker)
-                && Objects.equals(antallUttaksperioder, that.antallUttaksperioder)
-                && Objects.equals(uttaksaktiviteter, that.uttaksaktiviteter)
-                && Objects.equals(utbetalingsperioder, that.utbetalingsperioder)
-                && Objects.equals(avslagsperioder, that.avslagsperioder)
-                && Objects.equals(avslåtteAktiviteter, that.avslåtteAktiviteter)
-                && Objects.equals(inkludereBeregning, that.inkludereBeregning)
-                && Objects.equals(arbeidsforhold, that.arbeidsforhold)
-                && Objects.equals(selvstendigNæringsdrivende, that.selvstendigNæringsdrivende)
-                && Objects.equals(frilanser, that.frilanser)
-                && Objects.equals(naturalytelser, that.naturalytelser)
-                && Objects.equals(bruttoBeregningsgrunnlag, that.bruttoBeregningsgrunnlag)
-                && Objects.equals(militærSivil, that.militærSivil)
-                && Objects.equals(inntektOver6G, that.inntektOver6G)
-                && Objects.equals(seksG, that.seksG)
-                && Objects.equals(lovhjemmel, that.lovhjemmel);
+        return Objects.equals(felles, that.felles) && Objects.equals(revurdering, that.revurdering) && Objects.equals(endretFraAvslag,
+            that.endretFraAvslag) && Objects.equals(utbetalingEndret, that.utbetalingEndret) && Objects.equals(termindatoEndret,
+            that.termindatoEndret) && Objects.equals(refusjonTilBruker, that.refusjonTilBruker) && Objects.equals(antallRefusjonerTilArbeidsgivere,
+            that.antallRefusjonerTilArbeidsgivere) && Objects.equals(stønadsperiodeTom, that.stønadsperiodeTom) && Objects.equals(månedsbeløp,
+            that.månedsbeløp) && Objects.equals(mottattDato, that.mottattDato) && Objects.equals(klagefristUker, that.klagefristUker)
+            && Objects.equals(antallUttaksperioder, that.antallUttaksperioder) && Objects.equals(uttaksaktiviteter, that.uttaksaktiviteter)
+            && Objects.equals(utbetalingsperioder, that.utbetalingsperioder) && Objects.equals(avslagsperioder, that.avslagsperioder)
+            && Objects.equals(avslåtteAktiviteter, that.avslåtteAktiviteter) && Objects.equals(inkludereBeregning, that.inkludereBeregning)
+            && Objects.equals(arbeidsforhold, that.arbeidsforhold) && Objects.equals(selvstendigNæringsdrivende, that.selvstendigNæringsdrivende)
+            && Objects.equals(frilanser, that.frilanser) && Objects.equals(naturalytelser, that.naturalytelser) && Objects.equals(
+            bruttoBeregningsgrunnlag, that.bruttoBeregningsgrunnlag) && Objects.equals(militærSivil, that.militærSivil) && Objects.equals(
+            inntektOver6G, that.inntektOver6G) && Objects.equals(seksG, that.seksG) && Objects.equals(lovhjemmel, that.lovhjemmel);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(felles, revurdering, endretFraAvslag, utbetalingEndret, termindatoEndret, refusjonTilBruker,
-                antallRefusjonerTilArbeidsgivere, stønadsperiodeTom, månedsbeløp, mottattDato, klagefristUker, antallUttaksperioder,
-                uttaksaktiviteter, utbetalingsperioder, avslagsperioder, avslåtteAktiviteter, inkludereBeregning,
-                arbeidsforhold, selvstendigNæringsdrivende, frilanser, naturalytelser, bruttoBeregningsgrunnlag, militærSivil,
-                inntektOver6G, seksG, lovhjemmel);
+            antallRefusjonerTilArbeidsgivere, stønadsperiodeTom, månedsbeløp, mottattDato, klagefristUker, antallUttaksperioder, uttaksaktiviteter,
+            utbetalingsperioder, avslagsperioder, avslåtteAktiviteter, inkludereBeregning, arbeidsforhold, selvstendigNæringsdrivende, frilanser,
+            naturalytelser, bruttoBeregningsgrunnlag, militærSivil, inntektOver6G, seksG, lovhjemmel);
     }
 
     public static Builder ny() {

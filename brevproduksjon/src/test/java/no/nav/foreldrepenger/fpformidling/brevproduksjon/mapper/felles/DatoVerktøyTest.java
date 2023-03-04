@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DatoVerktøyTest {
 

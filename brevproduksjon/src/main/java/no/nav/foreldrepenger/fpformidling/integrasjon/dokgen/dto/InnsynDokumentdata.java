@@ -12,18 +12,25 @@ public class InnsynDokumentdata extends Dokumentdata {
     private String innsynResultat;
     private int klagefrist;
 
-    public String getInnsynResultat() { return innsynResultat; }
+    public String getInnsynResultat() {
+        return innsynResultat;
+    }
 
-    public int getKlagefrist() { return klagefrist; }
+    public int getKlagefrist() {
+        return klagefrist;
+    }
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (InnsynDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(innsynResultat, that.innsynResultat)
-                && Objects.equals(klagefrist, that.klagefrist);
+        return Objects.equals(felles, that.felles) && Objects.equals(innsynResultat, that.innsynResultat) && Objects.equals(klagefrist,
+            that.klagefrist);
     }
 
     @Override

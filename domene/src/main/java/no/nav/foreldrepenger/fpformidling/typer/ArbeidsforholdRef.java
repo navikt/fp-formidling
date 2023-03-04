@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.typer;
 
-import java.io.Serializable;
-import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Arbeidsforhold id fra AA-registeret. (ikke intern id)
@@ -37,13 +37,15 @@ public class ArbeidsforholdRef implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
+        }
         if (o == null && this.referanse == null) {
             return true;
         }
-        if (o == null || getClass() != o.getClass())
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
         var that = (ArbeidsforholdRef) o;
         return Objects.equals(referanse, that.referanse);
     }

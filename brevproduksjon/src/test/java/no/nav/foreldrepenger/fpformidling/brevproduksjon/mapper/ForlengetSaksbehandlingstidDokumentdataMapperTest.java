@@ -58,9 +58,7 @@ public class ForlengetSaksbehandlingstidDokumentdataMapperTest {
         // Arrange
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        var dokumentHendelse = lagStandardHendelseBuilder()
-                .medDokumentMalType(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL)
-                .build();
+        var dokumentHendelse = lagStandardHendelseBuilder().medDokumentMalType(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);

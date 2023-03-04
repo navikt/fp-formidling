@@ -44,8 +44,7 @@ public enum RevurderingVarslingÅrsak implements Kodeverdi {
         if (kode == null) {
             return null;
         }
-        return Optional.ofNullable(KODER.get(kode))
-                .orElseThrow(() ->  new IllegalArgumentException("Ukjent RevurderingVarslingÅrsak: " + kode));
+        return Optional.ofNullable(KODER.get(kode)).orElseThrow(() -> new IllegalArgumentException("Ukjent RevurderingVarslingÅrsak: " + kode));
     }
 
     @Override

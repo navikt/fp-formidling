@@ -164,10 +164,10 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
 
     private Behandling opprettBehandling(BehandlingType behType, UUID id) {
         return Behandling.builder()
-                .medUuid(id)
-                .medBehandlingType(behType)
-                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-                .build();
+            .medUuid(id)
+            .medBehandlingType(behType)
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+            .build();
     }
 
     private FamilieHendelse lagFamHendelse(int antallBarn) {

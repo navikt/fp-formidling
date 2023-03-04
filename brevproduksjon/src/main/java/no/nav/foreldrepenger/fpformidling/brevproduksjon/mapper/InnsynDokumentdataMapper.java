@@ -35,18 +35,18 @@ public class InnsynDokumentdataMapper implements DokumentdataMapper {
     }
 
     @Override
-    public InnsynDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                 Behandling behandling, boolean erUtkast) {
+    public InnsynDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling, boolean erUtkast) {
         var innsynsBehandling = domeneobjektProvider.hentInnsyn(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
         return InnsynDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medKlagefrist(brevParametere.getKlagefristUker())
-                .medInnsynResultat(innsynsBehandling.getInnsynResultatType().getKode())
-                .build();
+            .medFelles(fellesBuilder.build())
+            .medKlagefrist(brevParametere.getKlagefristUker())
+            .medInnsynResultat(innsynsBehandling.getInnsynResultatType().getKode())
+            .build();
     }
 }

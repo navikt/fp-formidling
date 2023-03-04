@@ -58,17 +58,19 @@ class EngangsstønadAvslagDokumentdataMapperTest {
 
     @BeforeEach
     void setUp() {
-        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_AVSLAG));
+        dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(
+            DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_AVSLAG));
         dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).build();
 
         var personinfo = Personinfo.getbuilder(AKTØR_ID)
-                .medPersonIdent( new PersonIdent("9999999999"))
-                .medNavn("Nav Navesen")
-                .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
-                .build();
+            .medPersonIdent(new PersonIdent("9999999999"))
+            .medNavn("Nav Navesen")
+            .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
+            .build();
         lenient().when(personAdapter.hentBrukerForAktør(any())).thenReturn(Optional.of(personinfo));
 
-        engangsstønadAvslagDokumentdataMapper = new EngangsstønadAvslagDokumentdataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider, personAdapter);
+        engangsstønadAvslagDokumentdataMapper = new EngangsstønadAvslagDokumentdataMapper(DatamapperTestUtil.getBrevParametere(),
+            domeneobjektProvider, personAdapter);
     }
 
     @Test
@@ -80,7 +82,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
 
         var avslagsfritekst = "Vi har ikke motatt informasjon som begrunner at du ikke har kunnet søke i tide. Derfor avslås saken.";
 
-        var avslagESFB = opprettBehandlingBuilder(Avslagsårsak.SØKT_FOR_SENT, avslagsfritekst, fagsak ).medVilkår(vilkårFraBehandling).build();
+        var avslagESFB = opprettBehandlingBuilder(Avslagsårsak.SØKT_FOR_SENT, avslagsfritekst, fagsak).medVilkår(vilkårFraBehandling).build();
 
         when(domeneobjektProvider.hentFamiliehendelse(avslagESFB)).thenReturn(familieHendelse);
 
@@ -105,12 +107,12 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         assertThat(avslagsårsak).isEqualTo("IKKE_ALENEOMSORG");
     }
 
-     @Test
+    @Test
     void mapVilkårTIlBrev_skal_mappe_riktig_vilkår_string() {
-         var vilkårFraBehandling = List.of(new Vilkår(VilkårType.FØDSELSVILKÅRET_MOR));
-         var fbbehandling = opprettBehandling(Avslagsårsak.SØKER_ER_MEDMOR, null, null);
+        var vilkårFraBehandling = List.of(new Vilkår(VilkårType.FØDSELSVILKÅRET_MOR));
+        var fbbehandling = opprettBehandling(Avslagsårsak.SØKER_ER_MEDMOR, null, null);
 
-         var vilkårTilBrev = engangsstønadAvslagDokumentdataMapper.utledVilkårTilBrev(vilkårFraBehandling, Avslagsårsak.SØKER_ER_MEDMOR, fbbehandling);
+        var vilkårTilBrev = engangsstønadAvslagDokumentdataMapper.utledVilkårTilBrev(vilkårFraBehandling, Avslagsårsak.SØKER_ER_MEDMOR, fbbehandling);
 
         assertThat(vilkårTilBrev).hasSize(1);
         assertThat(vilkårTilBrev.get(0)).isEqualTo("FPVK1_4");
@@ -126,16 +128,17 @@ class EngangsstønadAvslagDokumentdataMapperTest {
 
     private Behandling.Builder opprettBehandlingBuilder(Avslagsårsak avslagsårsak, String avslagsfritekst, FagsakBackend fagsak) {
         var behandlingresultat = Behandlingsresultat.builder()
-                .medAvslagsårsak(avslagsårsak)
-                .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT);
+            .medAvslagsårsak(avslagsårsak)
+            .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT);
 
         if (avslagsfritekst != null) {
             behandlingresultat.medAvslagarsakFritekst(avslagsfritekst);
         }
-        var behandlingBuilder = Behandling.builder().medUuid(EngangsstønadAvslagDokumentdataMapperTest.ID)
-                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medBehandlingsresultat(behandlingresultat.build())
-                .medFagsakBackend(fagsak);
+        var behandlingBuilder = Behandling.builder()
+            .medUuid(EngangsstønadAvslagDokumentdataMapperTest.ID)
+            .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .medBehandlingsresultat(behandlingresultat.build())
+            .medFagsakBackend(fagsak);
 
         if (fagsak != null) {
             behandlingBuilder.medFagsakBackend(fagsak);
@@ -148,10 +151,6 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     }
 
     private FagsakBackend opprettFagsak(RelasjonsRolleType relasjonsRolleType) {
-        return FagsakBackend.ny()
-                .medAktørId(AKTØR_ID)
-                .medSaksnummer("123456")
-                .medBrukerRolle(relasjonsRolleType)
-                .build();
+        return FagsakBackend.ny().medAktørId(AKTØR_ID).medSaksnummer("123456").medBrukerRolle(relasjonsRolleType).build();
     }
 }

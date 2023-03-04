@@ -57,7 +57,10 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
     }
 
     @Override
-    public SvangerskapspengerAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse, Behandling behandling, boolean erUtkast) {
+    public SvangerskapspengerAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                                   DokumentHendelse hendelse,
+                                                                   Behandling behandling,
+                                                                   boolean erUtkast) {
 
         //TODO: Erstatte med behandling.getSpråkkode() når engelsk mal er på plass
         var språkkode = Språkkode.EN.equals(behandling.getSpråkkode()) ? Språkkode.NB : behandling.getSpråkkode();
@@ -75,30 +78,35 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
         var uttaksperioder = SvpMapperUtil.hentUttaksperioder(svpUttaksresultat);
 
         var dokumentdataBuilder = SvangerskapspengerAvslagDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medErSøkerDød(erDød(dokumentFelles))
-                .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), språkkode))
-                .medAntallArbeidsgivere(SvpMapperUtil.finnAntallArbeidsgivere(svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()), iay))
-                .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
-                .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medFelles(fellesBuilder.build())
+            .medErSøkerDød(erDød(dokumentFelles))
+            .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), språkkode))
+            .medAntallArbeidsgivere(SvpMapperUtil.finnAntallArbeidsgivere(
+                svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()), iay))
+            .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
+            .medKlagefristUker(brevParametere.getKlagefristUker());
 
         mapÅrsakOgLovhjemmel(behandlingsresultat.getAvslagsårsak(), uttaksperioder, dokumentdataBuilder, behandling.getUuid());
 
         SvpMapperUtil.finnFørsteUttakssdato(uttaksperioder, behandling.getBehandlingsresultat())
-                .ifPresent(d -> dokumentdataBuilder.medStønadsdatoFom(formaterDato(d, språkkode)));
+            .ifPresent(d -> dokumentdataBuilder.medStønadsdatoFom(formaterDato(d, språkkode)));
 
 
         return dokumentdataBuilder.build();
     }
 
-    private void mapÅrsakOgLovhjemmel(Avslagsårsak årsak, List<SvpUttakResultatPeriode> perioder, SvangerskapspengerAvslagDokumentdata.Builder dokumentdataBuilder, UUID uuid) {
+    private void mapÅrsakOgLovhjemmel(Avslagsårsak årsak,
+                                      List<SvpUttakResultatPeriode> perioder,
+                                      SvangerskapspengerAvslagDokumentdata.Builder dokumentdataBuilder,
+                                      UUID uuid) {
         Set<String> lovreferanse = new TreeSet<>(new LovhjemmelComparator());
         if (Avslagsårsak.UDEFINERT.equals(årsak) || årsak == null) {
             var periodeÅrsak = perioder.stream()
-                    .filter(p-> PeriodeResultatType.AVSLÅTT.equals(p.getPeriodeResultatType()))
-                    .map(SvpUttakResultatPeriode::getPeriodeIkkeOppfyltÅrsak)
-                    .findFirst()
-                    .orElseThrow(() -> new TekniskException("FPFORMIDLING-100003", String.format("Kan ikke generere avslagsbrev uten avslagsårsak for behandling UUID %s", uuid)));
+                .filter(p -> PeriodeResultatType.AVSLÅTT.equals(p.getPeriodeResultatType()))
+                .map(SvpUttakResultatPeriode::getPeriodeIkkeOppfyltÅrsak)
+                .findFirst()
+                .orElseThrow(() -> new TekniskException("FPFORMIDLING-100003",
+                    String.format("Kan ikke generere avslagsbrev uten avslagsårsak for behandling UUID %s", uuid)));
 
             dokumentdataBuilder.medÅrsak(Årsak.of(periodeÅrsak.getKode()));
             lovreferanse.add(periodeÅrsak.getLovHjemmelData());

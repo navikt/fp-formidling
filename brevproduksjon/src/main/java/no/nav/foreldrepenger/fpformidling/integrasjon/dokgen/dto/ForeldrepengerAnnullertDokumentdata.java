@@ -32,14 +32,16 @@ public class ForeldrepengerAnnullertDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (ForeldrepengerAnnullertDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(harSøktOmNyPeriode, that.harSøktOmNyPeriode)
-                && Objects.equals(planlagtOppstartDato, that.planlagtOppstartDato)
-                && Objects.equals(kanBehandlesDato, that.kanBehandlesDato)
-                && Objects.equals(klagefristUker, that.klagefristUker);
+        return Objects.equals(felles, that.felles) && Objects.equals(harSøktOmNyPeriode, that.harSøktOmNyPeriode) && Objects.equals(
+            planlagtOppstartDato, that.planlagtOppstartDato) && Objects.equals(kanBehandlesDato, that.kanBehandlesDato) && Objects.equals(
+            klagefristUker, that.klagefristUker);
     }
 
     @Override

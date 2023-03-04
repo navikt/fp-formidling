@@ -37,13 +37,12 @@ public class PipRestKlient {
     public AbacPipDto hentPipdataForBehandling(UUID behandlingUUid) {
         try {
             var uri = UriBuilder.fromUri(restConfig.fpContextPath())
-                    .path(PIP_PATH)
-                    .path("/pipdata-for-behandling-appintern")
-                    .queryParam("behandlingUuid", behandlingUUid.toString())
-                    .build();
-            return restClient.sendReturnOptional(RestRequest.newGET(uri, restConfig), AbacPipDto.class)
-                    .orElseThrow(IllegalStateException::new);
-        } catch (IllegalArgumentException| UriBuilderException e) {
+                .path(PIP_PATH)
+                .path("/pipdata-for-behandling-appintern")
+                .queryParam("behandlingUuid", behandlingUUid.toString())
+                .build();
+            return restClient.sendReturnOptional(RestRequest.newGET(uri, restConfig), AbacPipDto.class).orElseThrow(IllegalStateException::new);
+        } catch (IllegalArgumentException | UriBuilderException e) {
             LOG.error("Feil ved oppretting av URI.", e);
         }
         return null;

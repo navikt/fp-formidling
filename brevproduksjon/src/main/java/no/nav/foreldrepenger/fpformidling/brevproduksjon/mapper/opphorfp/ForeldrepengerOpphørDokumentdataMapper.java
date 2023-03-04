@@ -40,6 +40,7 @@ import no.nav.vedtak.exception.VLException;
 public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapper {
 
     private static final Map<RelasjonsRolleType, String> relasjonskodeTypeMap;
+
     static {
         relasjonskodeTypeMap = new HashMap<>();
         relasjonskodeTypeMap.put(RelasjonsRolleType.MORA, "MOR");
@@ -55,8 +56,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
     }
 
     @Inject
-    public ForeldrepengerOpphørDokumentdataMapper(BrevParametere brevParametere,
-                                                  DomeneobjektProvider domeneobjektProvider) {
+    public ForeldrepengerOpphørDokumentdataMapper(BrevParametere brevParametere, DomeneobjektProvider domeneobjektProvider) {
         this.brevParametere = brevParametere;
         this.domeneobjektProvider = domeneobjektProvider;
     }
@@ -77,51 +77,46 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         var familiehendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
 
         var foreldrepengerUttak = domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)
-                .orElseGet(ForeldrepengerUttak::tomtUttak); // bestående av tomme lister.
+            .orElseGet(ForeldrepengerUttak::tomtUttak); // bestående av tomme lister.
         var originaltUttakResultat = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
-                .flatMap(domeneobjektProvider::hentForeldrepengerUttakHvisFinnes);
+            .flatMap(domeneobjektProvider::hentForeldrepengerUttakHvisFinnes);
 
         var beregningsgrunnlagOpt = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);
         var halvG = BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlagOpt);
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         var erSøkerDød = erDød(dokumentFelles);
 
         var dokumentdataBuilder = ForeldrepengerOpphørDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medErSøkerDød(erSøkerDød)
-                .medRelasjonskode(finnRelasjonskode(fagsak))
-                .medGjelderFødsel(familiehendelse.gjelderFødsel())
-                .medAntallBarn(familiehendelse.antallBarn())
-                .medHalvG(halvG)
-                .medKlagefristUker(brevParametere.getKlagefristUker());
+            .medFelles(fellesBuilder.build())
+            .medErSøkerDød(erSøkerDød)
+            .medRelasjonskode(finnRelasjonskode(fagsak))
+            .medGjelderFødsel(familiehendelse.gjelderFødsel())
+            .medAntallBarn(familiehendelse.antallBarn())
+            .medHalvG(halvG)
+            .medKlagefristUker(brevParametere.getKlagefristUker());
 
         var årsakListe = mapAvslagårsaker(behandling.getBehandlingsresultat(), foreldrepengerUttak, dokumentdataBuilder);
 
-        finnDødsdatoHvisFinnes(familiehendelse, årsakListe)
-                .map(d -> Dato.formaterDato(d, språkkode))
-                .ifPresent(dokumentdataBuilder::medBarnDødsdato);
+        finnDødsdatoHvisFinnes(familiehendelse, årsakListe).map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medBarnDødsdato);
 
         var opphørsdato = finnOpphørsdatoHvisFinnes(foreldrepengerUttak, familiehendelse);
-        opphørsdato.map(d -> Dato.formaterDato(d, språkkode))
-                .ifPresent(dokumentdataBuilder::medOpphørDato);
+        opphørsdato.map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medOpphørDato);
 
         var fomStønadsdato = finnStønadFomDatoHvisFinnes(originaltUttakResultat);
-        fomStønadsdato.map(d -> Dato.formaterDato(d, språkkode))
-                .ifPresent(dokumentdataBuilder::medFomStønadsdato);
+        fomStønadsdato.map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medFomStønadsdato);
 
-        finnStønadTomDatoHvisFinnes(opphørsdato, fomStønadsdato, erSøkerDød)
-                .map(d -> Dato.formaterDato(d, språkkode))
-                .ifPresent(dokumentdataBuilder::medTomStønadsdato);
+        finnStønadTomDatoHvisFinnes(opphørsdato, fomStønadsdato, erSøkerDød).map(d -> Dato.formaterDato(d, språkkode))
+            .ifPresent(dokumentdataBuilder::medTomStønadsdato);
 
         return dokumentdataBuilder.build();
     }
 
     private List<String> mapAvslagårsaker(Behandlingsresultat behandlingsresultat,
-                                  ForeldrepengerUttak foreldrepengerUttak,
-                                  ForeldrepengerOpphørDokumentdata.Builder builder) {
-        var aarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapÅrsakslisteOgLovhjemmelFra(
-                behandlingsresultat, foreldrepengerUttak);
+                                          ForeldrepengerUttak foreldrepengerUttak,
+                                          ForeldrepengerOpphørDokumentdata.Builder builder) {
+        var aarsakListeOgLovhjemmel = ÅrsakMapperOpphør.mapÅrsakslisteOgLovhjemmelFra(behandlingsresultat, foreldrepengerUttak);
         var årsakListe = aarsakListeOgLovhjemmel.getElement1();
 
         builder.medAvslagÅrsaker(årsakListe);
@@ -171,15 +166,15 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
     }
 
     private Optional<LocalDate> finnStønadFomDatoHvisFinnes(Optional<ForeldrepengerUttak> originaltUttakResultat) {
-        return originaltUttakResultat.map(ForeldrepengerUttak::perioder).orElse(Collections.emptyList()).stream()
-                .filter(UttakResultatPeriode::isInnvilget)
-                .map(UttakResultatPeriode::getFom)
-                .findFirst();
+        return originaltUttakResultat.map(ForeldrepengerUttak::perioder)
+            .orElse(Collections.emptyList())
+            .stream()
+            .filter(UttakResultatPeriode::isInnvilget)
+            .map(UttakResultatPeriode::getFom)
+            .findFirst();
     }
 
-    private Optional<LocalDate> finnStønadTomDatoHvisFinnes(Optional<LocalDate> opphørsDato,
-                                                            Optional<LocalDate> fomStønadsdato,
-                                                            boolean erSøkerDød) {
+    private Optional<LocalDate> finnStønadTomDatoHvisFinnes(Optional<LocalDate> opphørsDato, Optional<LocalDate> fomStønadsdato, boolean erSøkerDød) {
         if (fomStønadsdato.isPresent() && opphørsDato.isPresent()) {
             return Optional.of(opphørsDato.get().minusDays(!fomStønadsdato.equals(opphørsDato) ? 1 : 0));
         } else if (erSøkerDød) {
@@ -190,8 +185,8 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
 
     private VLException brevFeilPgaUtilstrekkeligTekstgrunnlag(boolean opphørsdatoFinnes) {
         return opphørsdatoFinnes ? new TekniskException("FPFORMIDLING-743452",
-                "Feil ved produksjon av opphørdokument: Klarte ikke utlede startdato fra det opprinnelige vedtaket. Påkrevd når personstatus = 'DØD'")
-                : new TekniskException("FPFORMIDLING-724872",
-                "Feil ved produksjon av opphørdokument: Klarte ikke utlede opphørsdato fra uttaksplanen. Påkrevd når personstatus = 'DØD'");
+            "Feil ved produksjon av opphørdokument: Klarte ikke utlede startdato fra det opprinnelige vedtaket. Påkrevd når personstatus = 'DØD'") : new TekniskException(
+            "FPFORMIDLING-724872",
+            "Feil ved produksjon av opphørdokument: Klarte ikke utlede opphørsdato fra uttaksplanen. Påkrevd når personstatus = 'DØD'");
     }
 }

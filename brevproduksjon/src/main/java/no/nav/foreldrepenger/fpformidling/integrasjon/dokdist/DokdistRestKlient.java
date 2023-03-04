@@ -39,7 +39,7 @@ class DokdistRestKlient implements Dokdist {
     DokdistRestKlient(RestClient restClient) {
         this.restClient = restClient;
         this.restConfig = RestConfig.forClient(DokdistRestKlient.class);
-        this.dokdistEndpoint =  UriBuilder.fromUri(restConfig.endpoint()).path("/distribuerjournalpost").build();
+        this.dokdistEndpoint = UriBuilder.fromUri(restConfig.endpoint()).path("/distribuerjournalpost").build();
     }
 
     public Resultat distribuerJournalpost(DistribuerJournalpostRequest dto) {
@@ -56,7 +56,8 @@ class DokdistRestKlient implements Dokdist {
         } else if (response.body() == null || statusCode == HttpURLConnection.HTTP_NO_CONTENT) {
             LOG.info("[HTTP {}] Ingen resultat fra {}", statusCode, dokdistEndpoint);
             return null;
-        } else if ((statusCode >= HttpURLConnection.HTTP_OK && statusCode < HttpURLConnection.HTTP_MULT_CHOICE) || statusCode == HttpURLConnection.HTTP_CONFLICT) {
+        } else if ((statusCode >= HttpURLConnection.HTTP_OK && statusCode < HttpURLConnection.HTTP_MULT_CHOICE)
+            || statusCode == HttpURLConnection.HTTP_CONFLICT) {
             var bestillingsId = DefaultJsonMapper.fromJson(response.body(), DistribuerJournalpostResponse.class).bestillingsId();
             LOG.info("[HTTP {}] Distribuert {} med bestillingsId {}", statusCode, journalpostId, bestillingsId);
             return Resultat.OK;
@@ -76,10 +77,12 @@ class DokdistRestKlient implements Dokdist {
         var endpoint = response.uri();
         LOG.info("[HTTP {}] Brevdistribusjon feilet: Fikk svar '{}'.", statusCode, message);
         if (message.contains(MOTTAKER_HAR_UKJENT_ADRESSE)) {
-            LOG.info("[HTTP {}] Brevdistribusjon feilet. Bruker mangler adresse. Oppretter en GOSYS oppgave for journalpost: {}", statusCode, journalpostId);
+            LOG.info("[HTTP {}] Brevdistribusjon feilet. Bruker mangler adresse. Oppretter en GOSYS oppgave for journalpost: {}", statusCode,
+                journalpostId);
             return Resultat.MANGLER_ADRESSE;
         } else {
-            throw new IntegrasjonException("FP-468815", String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", statusCode, endpoint, message));
+            throw new IntegrasjonException("FP-468815",
+                String.format("[HTTP %s] Uventet respons fra %s, med melding: %s", statusCode, endpoint, message));
         }
     }
 

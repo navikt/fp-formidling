@@ -1,14 +1,14 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.opphørsvp;
 
-import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
-
-import java.time.LocalDate;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
+
+import java.time.LocalDate;
+import java.util.Objects;
+
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class OpphørPeriode {
@@ -31,19 +31,22 @@ public class OpphørPeriode {
     }
 
     public int getAntallArbeidsgivere() {
-            return antallArbeidsgivere;
+        return antallArbeidsgivere;
     }
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (OpphørPeriode) object;
-        return Objects.equals(årsak, that.årsak)
-                && Objects.equals(stønadsperiodeFom, that.stønadsperiodeFom)
-                && Objects.equals(stønadsperiodeTom, that.stønadsperiodeTom)
-                && Objects.equals(antallArbeidsgivere, that.antallArbeidsgivere);
+        return Objects.equals(årsak, that.årsak) && Objects.equals(stønadsperiodeFom, that.stønadsperiodeFom) && Objects.equals(stønadsperiodeTom,
+            that.stønadsperiodeTom) && Objects.equals(antallArbeidsgivere, that.antallArbeidsgivere);
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(årsak, stønadsperiodeFom, stønadsperiodeTom, antallArbeidsgivere);

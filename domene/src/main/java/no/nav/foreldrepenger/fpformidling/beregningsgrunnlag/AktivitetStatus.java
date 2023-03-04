@@ -36,17 +36,13 @@ public enum AktivitetStatus implements Kodeverdi {
         this.kode = kode;
     }
 
-    private static final Set<AktivitetStatus> AT_STATUSER = Set.of(ARBEIDSTAKER,
-            KOMBINERT_AT_FL_SN, KOMBINERT_AT_SN, KOMBINERT_AT_FL);
+    private static final Set<AktivitetStatus> AT_STATUSER = Set.of(ARBEIDSTAKER, KOMBINERT_AT_FL_SN, KOMBINERT_AT_SN, KOMBINERT_AT_FL);
 
-    private static final Set<AktivitetStatus> SN_STATUSER = Set.of(SELVSTENDIG_NÆRINGSDRIVENDE,
-            KOMBINERT_AT_FL_SN, KOMBINERT_AT_SN, KOMBINERT_FL_SN);
+    private static final Set<AktivitetStatus> SN_STATUSER = Set.of(SELVSTENDIG_NÆRINGSDRIVENDE, KOMBINERT_AT_FL_SN, KOMBINERT_AT_SN, KOMBINERT_FL_SN);
 
-    private static final Set<AktivitetStatus> FL_STATUSER = Set.of(FRILANSER,
-            KOMBINERT_AT_FL_SN, KOMBINERT_AT_FL, KOMBINERT_FL_SN);
+    private static final Set<AktivitetStatus> FL_STATUSER = Set.of(FRILANSER, KOMBINERT_AT_FL_SN, KOMBINERT_AT_FL, KOMBINERT_FL_SN);
 
-    private static final Set<AktivitetStatus> KOMBINERTE_STATUSER =
-            Set.of(KOMBINERT_AT_FL_SN, KOMBINERT_AT_FL, KOMBINERT_AT_SN, KOMBINERT_FL_SN);
+    private static final Set<AktivitetStatus> KOMBINERTE_STATUSER = Set.of(KOMBINERT_AT_FL_SN, KOMBINERT_AT_FL, KOMBINERT_AT_SN, KOMBINERT_FL_SN);
 
     public boolean erArbeidstaker() {
         return AT_STATUSER.contains(this);

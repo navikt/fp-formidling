@@ -33,13 +33,7 @@ public class DokumentKvitteringTjenesteTest {
 
     @Test
     void publiserHistorikk() {
-        var kvittering = new DokumentProdusertDto(
-                UUID.randomUUID(),
-                UUID.randomUUID(),
-                DokumentMalType.INGEN_ENDRING.getKode(),
-                "123",
-                "123"
-        );
+        var kvittering = new DokumentProdusertDto(UUID.randomUUID(), UUID.randomUUID(), DokumentMalType.INGEN_ENDRING.getKode(), "123", "123");
 
         historikkTjeneste.sendKvittering(kvittering);
         verify(behandlinger, times(1)).kvitterDokument(Mockito.any());

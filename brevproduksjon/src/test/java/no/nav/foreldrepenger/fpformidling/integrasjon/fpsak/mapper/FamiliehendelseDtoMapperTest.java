@@ -43,8 +43,10 @@ public class FamiliehendelseDtoMapperTest {
         var antallBarnFødsel = 1;
         var antallBarnAdopsjon = 2;
         var antallBarnOmsorg = 3;
-        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, false, antallBarnFødsel))).isEqualTo(antallBarnFødsel);
-        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, true, antallBarnFødsel))).isEqualTo(antallBarnFødsel);
+        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, false, antallBarnFødsel))).isEqualTo(
+            antallBarnFødsel);
+        assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagFødselDtoMedBarnOgTermindato(FØRSTE_JANUAR, true, antallBarnFødsel))).isEqualTo(
+            antallBarnFødsel);
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagAdopsjonsDtoMedAntallBarn(antallBarnAdopsjon))).isEqualTo(antallBarnAdopsjon);
         assertThat(FamiliehendelseDtoMapper.utledAntallBarnFraDto(lagOmsorgDtoMedAntallBarn(antallBarnOmsorg))).isEqualTo(antallBarnOmsorg);
     }

@@ -52,9 +52,9 @@ class DokumentHendelseTjenesteTest {
 
     private DokumentHendelse.Builder dokumentHendelseBuilder() {
         return DokumentHendelse.builder()
-                .medBehandlingUuid(UUID.randomUUID())
-                .medBestillingUuid(UUID.randomUUID())
-                .medYtelseType(FagsakYtelseType.FORELDREPENGER)
-                .medDokumentMalType(DokumentMalType.FRITEKSTBREV);
+            .medBehandlingUuid(UUID.randomUUID())
+            .medBestillingUuid(UUID.randomUUID())
+            .medYtelseType(FagsakYtelseType.FORELDREPENGER)
+            .medDokumentMalType(DokumentMalType.FRITEKSTBREV);
     }
 }

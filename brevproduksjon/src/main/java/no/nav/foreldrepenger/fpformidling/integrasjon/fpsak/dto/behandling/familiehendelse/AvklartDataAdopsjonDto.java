@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse;
 
-import java.time.LocalDate;
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import java.time.LocalDate;
+import java.util.Map;
 
 @JsonTypeName(value = "AvklartDataAdopsjonDto")
 public class AvklartDataAdopsjonDto extends FamiliehendelseDto {

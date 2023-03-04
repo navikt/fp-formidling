@@ -1,18 +1,14 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen;
 
-import java.util.Objects;
+import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
+import no.nav.vedtak.exception.TekniskException;
+import no.nav.vedtak.felles.integrasjon.rest.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.UriBuilder;
 
-import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
-import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.felles.integrasjon.rest.RestClient;
-import no.nav.vedtak.felles.integrasjon.rest.RestClientConfig;
-import no.nav.vedtak.felles.integrasjon.rest.RestConfig;
-import no.nav.vedtak.felles.integrasjon.rest.RestRequest;
-import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
+import java.util.Objects;
 
 @ApplicationScoped
 @RestClientConfig(tokenConfig = TokenFlow.STS_CC, endpointProperty = "dokgen.rest.base.url", endpointDefault = "http://fpdokgen.teamforeldrepenger")
@@ -40,7 +36,7 @@ public class DokgenRestKlient implements Dokgen {
 
         if (pdf == null || pdf.length == 0) {
             throw new TekniskException("FPFORMIDLING-946543",
-                    String.format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", maltype, språkkode));
+                String.format("Fikk tomt svar ved kall til dokgen for mal %s og språkkode %s.", maltype, språkkode));
         }
         return pdf;
     }

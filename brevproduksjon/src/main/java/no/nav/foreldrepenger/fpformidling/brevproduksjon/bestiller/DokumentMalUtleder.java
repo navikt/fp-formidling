@@ -43,7 +43,7 @@ class DokumentMalUtleder {
 
     private static boolean erKunEndringIFordelingAvYtelsen(Behandlingsresultat behandlingsresultat) {
         return behandlingsresultat.getKonsekvenserForYtelsen().contains(KonsekvensForYtelsen.ENDRING_I_FORDELING_AV_YTELSEN)
-                && behandlingsresultat.getKonsekvenserForYtelsen().size() == 1;
+            && behandlingsresultat.getKonsekvenserForYtelsen().size() == 1;
     }
 
     private DokumentMalType mapEngangstønadVedtaksbrev(Behandling behandling) {
@@ -84,7 +84,7 @@ class DokumentMalUtleder {
 
     private boolean skalBenytteInnvilgelsesbrev(Behandlingsresultat behandlingsresultat) {
         return behandlingsresultat.erInnvilget() || (behandlingsresultat.erEndretForeldrepenger() && !erKunEndringIFordelingAvYtelsen(
-                behandlingsresultat));
+            behandlingsresultat));
     }
 
     DokumentMalType utledDokumentmal(Behandling behandling, DokumentHendelse hendelse) {
@@ -99,11 +99,12 @@ class DokumentMalUtleder {
 
     private TekniskException ukjentMalException(Behandling behandling) {
         return new TekniskException("FPFORMIDLING-666915",
-                String.format("Ingen brevmal konfigurert for denne type behandlingen %s.", behandling.getUuid().toString()));
+            String.format("Ingen brevmal konfigurert for denne type behandlingen %s.", behandling.getUuid().toString()));
     }
 
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
-        if (!Objects.equals(hendelse.getVedtaksbrev(), Vedtaksbrev.AUTOMATISK) && Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(), Vedtaksbrev.FRITEKST)) {
+        if (!Objects.equals(hendelse.getVedtaksbrev(), Vedtaksbrev.AUTOMATISK) && Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(),
+            Vedtaksbrev.FRITEKST)) {
             return DokumentMalType.FRITEKSTBREV;
         }
         if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {
@@ -118,8 +119,7 @@ class DokumentMalUtleder {
             return mapSvangerskapspengerVedtaksbrev(behandling);
         }
         throw new TekniskException("FPFORMIDLING-666916",
-                String.format("Ingen brevmal for ytelse %s for behandling %s.", hendelse.getYtelseType().getKode(),
-                        behandling.getUuid().toString()));
+            String.format("Ingen brevmal for ytelse %s for behandling %s.", hendelse.getYtelseType().getKode(), behandling.getUuid().toString()));
     }
 
     private boolean erRevurderingMedUendretUtfall(Behandling behandling) {
@@ -135,19 +135,18 @@ class DokumentMalUtleder {
         if (ingenKonsekvensForYtelsen && konsekvenserForYtelsen.size() > 1) {
             throw new IllegalStateException(UTVIKLERFEIL_INGEN_ENDRING_SAMMEN + behandling.getUuid());
         }
-        return erRevurderingMedUendretUtfall || ingenKonsekvensForYtelsen
-                || erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(behandling);
+        return erRevurderingMedUendretUtfall || ingenKonsekvensForYtelsen || erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(behandling);
     }
 
     private boolean erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(Behandling behandling) {
         var behandlingsresultat = behandling.getBehandlingsresultat();
-        return behandlingsresultat != null && foreldrepengerErEndret(behandlingsresultat) && erKunEndringIFordelingAvYtelsen(
-                behandlingsresultat) && harSendtVarselOmRevurdering(behandling);
+        return behandlingsresultat != null && foreldrepengerErEndret(behandlingsresultat) && erKunEndringIFordelingAvYtelsen(behandlingsresultat)
+            && harSendtVarselOmRevurdering(behandling);
     }
 
     private boolean harSendtVarselOmRevurdering(Behandling behandling) {
-        return dokumentHendelseTjeneste.erDokumentHendelseMottatt(behandling.getUuid(), DokumentMalType.VARSEL_OM_REVURDERING)
-                || Boolean.TRUE.equals(behandlingRestKlient.harSendtVarselOmRevurdering(behandling.getResourceLinker()).orElse(false));
+        return dokumentHendelseTjeneste.erDokumentHendelseMottatt(behandling.getUuid(), DokumentMalType.VARSEL_OM_REVURDERING) || Boolean.TRUE.equals(
+            behandlingRestKlient.harSendtVarselOmRevurdering(behandling.getResourceLinker()).orElse(false));
     }
 
     private boolean foreldrepengerErEndret(Behandlingsresultat behandlingsresultat) {
@@ -158,8 +157,9 @@ class DokumentMalUtleder {
         var klage = domeneobjektProvider.hentKlagebehandling(behandling);
         var klageVurderingResultat = klage.getGjeldendeKlageVurderingsresultat();
         if (klageVurderingResultat == null) {
-            throw new FunksjonellException("FPFORMIDLING-100507", String.format("Klagebehandling med id %s mangler resultat av klagevurderingen", behandling.getUuid().toString()),
-                    "Fortsett saksbehandlingen");
+            throw new FunksjonellException("FPFORMIDLING-100507",
+                String.format("Klagebehandling med id %s mangler resultat av klagevurderingen", behandling.getUuid().toString()),
+                "Fortsett saksbehandlingen");
         }
 
         return switch (klageVurderingResultat.klageVurdering()) {

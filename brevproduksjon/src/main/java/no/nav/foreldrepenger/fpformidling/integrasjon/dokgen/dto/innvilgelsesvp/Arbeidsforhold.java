@@ -19,11 +19,14 @@ public class Arbeidsforhold {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (Arbeidsforhold) object;
-        return Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn)
-                && Objects.equals(månedsinntekt, that.månedsinntekt);
+        return Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn) && Objects.equals(månedsinntekt, that.månedsinntekt);
     }
 
     @Override

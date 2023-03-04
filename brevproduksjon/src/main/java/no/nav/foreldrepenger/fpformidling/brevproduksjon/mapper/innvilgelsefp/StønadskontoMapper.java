@@ -21,8 +21,8 @@ public final class StønadskontoMapper {
             return saldoForeldrepenger;
         }
 
-        return RelasjonsRolleType.MORA.equals(rolleType) ? finnSaldo(saldoer, SaldoVisningStønadskontoType.MØDREKVOTE)
-                : finnSaldo(saldoer, SaldoVisningStønadskontoType.FEDREKVOTE);
+        return RelasjonsRolleType.MORA.equals(rolleType) ? finnSaldo(saldoer, SaldoVisningStønadskontoType.MØDREKVOTE) : finnSaldo(saldoer,
+            SaldoVisningStønadskontoType.FEDREKVOTE);
     }
 
     public static int finnSaldo(Saldoer saldoer, SaldoVisningStønadskontoType stønadskontoType) {
@@ -34,24 +34,22 @@ public final class StønadskontoMapper {
     }
 
     public static boolean kontoEksisterer(Saldoer saldoer, SaldoVisningStønadskontoType stønadskontoType) {
-        return saldoer.stønadskontoer().stream()
-                .anyMatch(stønadskonto -> Objects.equals(stønadskonto.stønadskontoType(), stønadskontoType));
+        return saldoer.stønadskontoer().stream().anyMatch(stønadskonto -> Objects.equals(stønadskonto.stønadskontoType(), stønadskontoType));
     }
 
     public static int finnForeldrepengeperiodenUtvidetUkerHvisFinnes(Saldoer saldoer) {
-        return saldoer.stønadskontoer().stream()
-                .map(s -> s.flerbarnsDager())
-                .filter(flerbarnsdager -> flerbarnsdager > 0)
-                .map(BigInteger::valueOf)
-                .map(dager -> dager.divide(BigInteger.valueOf(5)))
-                .map(BigInteger::intValue)
-                .findFirst().orElse(0);
+        return saldoer.stønadskontoer()
+            .stream()
+            .map(s -> s.flerbarnsDager())
+            .filter(flerbarnsdager -> flerbarnsdager > 0)
+            .map(BigInteger::valueOf)
+            .map(dager -> dager.divide(BigInteger.valueOf(5)))
+            .map(BigInteger::intValue)
+            .findFirst()
+            .orElse(0);
     }
 
     public static Integer finnPrematurDagerHvisFinnes(Saldoer saldoer) {
-        return saldoer.stønadskontoer()
-                .stream()
-                .map(Stønadskonto::prematurDager)
-                .max(Integer::compareTo).orElse(null);
+        return saldoer.stønadskontoer().stream().map(Stønadskonto::prematurDager).max(Integer::compareTo).orElse(null);
     }
 }

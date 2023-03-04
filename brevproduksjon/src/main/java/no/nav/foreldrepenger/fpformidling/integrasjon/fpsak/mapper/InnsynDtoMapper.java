@@ -12,8 +12,7 @@ import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 public class InnsynDtoMapper {
 
     public static Innsyn mapInnsynFraDto(InnsynsbehandlingDto dto) {
-        return new Innsyn(dto.getInnsynResultatType(),
-                mapInnsyndokumenterFraDto(dto.getDokumenter()));
+        return new Innsyn(dto.getInnsynResultatType(), mapInnsyndokumenterFraDto(dto.getDokumenter()));
     }
 
     private static List<InnsynDokument> mapInnsyndokumenterFraDto(List<InnsynDokumentDto> dokumenter) {

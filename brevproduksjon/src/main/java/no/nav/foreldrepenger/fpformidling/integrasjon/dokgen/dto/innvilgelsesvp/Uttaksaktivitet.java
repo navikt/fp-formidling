@@ -20,11 +20,14 @@ public class Uttaksaktivitet {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (Uttaksaktivitet) object;
-        return Objects.equals(aktivitetsbeskrivelse, that.aktivitetsbeskrivelse)
-                && Objects.equals(uttaksperioder, that.uttaksperioder);
+        return Objects.equals(aktivitetsbeskrivelse, that.aktivitetsbeskrivelse) && Objects.equals(uttaksperioder, that.uttaksperioder);
     }
 
     @Override

@@ -24,24 +24,28 @@ public class FritekstbrevDokumentdataMapper implements DokumentdataMapper {
     }
 
     @Override
-    public FritekstbrevDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                       Behandling behandling, boolean erUtkast) {
+    public FritekstbrevDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                       DokumentHendelse hendelse,
+                                                       Behandling behandling,
+                                                       boolean erUtkast) {
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
         return FritekstbrevDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medOverskrift(finnOverskrift(hendelse, behandling))
-                .medBrødtekst(FritekstDto.fra(finnBrødtekst(hendelse, behandling)))
-                .build();
+            .medFelles(fellesBuilder.build())
+            .medOverskrift(finnOverskrift(hendelse, behandling))
+            .medBrødtekst(FritekstDto.fra(finnBrødtekst(hendelse, behandling)))
+            .build();
     }
 
     private String finnOverskrift(DokumentHendelse hendelse, Behandling behandling) {
-        return hendelse.getTittel() != null && !hendelse.getTittel().isEmpty() ? hendelse.getTittel() : behandling.getBehandlingsresultat().getOverskrift();
+        return hendelse.getTittel() != null && !hendelse.getTittel().isEmpty() ? hendelse.getTittel() : behandling.getBehandlingsresultat()
+            .getOverskrift();
     }
 
     private String finnBrødtekst(DokumentHendelse hendelse, Behandling behandling) {
-        return hendelse.getFritekst() != null && !hendelse.getFritekst().isEmpty() ?
-                hendelse.getFritekst() : behandling.getBehandlingsresultat().getFritekstbrev();
+        return hendelse.getFritekst() != null && !hendelse.getFritekst().isEmpty() ? hendelse.getFritekst() : behandling.getBehandlingsresultat()
+            .getFritekstbrev();
     }
 }

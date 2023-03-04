@@ -1,13 +1,13 @@
 name: Promote
 on:
-    repository_dispatch:
-        types: [promote-command]
+  repository_dispatch:
+    types: [ promote-command ]
 
 jobs:
-    promote:
-        name: Deploy
-        uses: navikt/fp-gha-workflows/.github/workflows/promote.yml@main
-        with:
-            issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
-            cluster: ${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
-        secrets: inherit
+  promote:
+    name: Deploy
+    uses: navikt/fp-gha-workflows/.github/workflows/promote.yml@main
+    with:
+      issue-number: ${{ github.event.client_payload.github.payload.issue.number }}
+      cluster: ${{ github.event.client_payload.slash_command.args.unnamed.arg1 }}
+    secrets: inherit

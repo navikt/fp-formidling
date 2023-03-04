@@ -11,19 +11,18 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforho
 public final class AvslåttAktivitetMapper {
 
     private static final List<ArbeidsforholdIkkeOppfyltÅrsak> RELEVANTE_ARBEIDSFORHOLD_ÅRSAKER = List.of(
-            ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE,
-            ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE_FREM_TIL_3_UKER_FØR_TERMIN,
-            ArbeidsforholdIkkeOppfyltÅrsak.HELE_UTTAKET_ER_ETTER_3_UKER_FØR_TERMINDATO
-    );
+        ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE,
+        ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE_FREM_TIL_3_UKER_FØR_TERMIN,
+        ArbeidsforholdIkkeOppfyltÅrsak.HELE_UTTAKET_ER_ETTER_3_UKER_FØR_TERMINDATO);
 
     private AvslåttAktivitetMapper() {
     }
 
     public static List<AvslåttAktivitet> mapAvslåtteAktiviteter(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold) {
         return uttakResultatArbeidsforhold.stream()
-                .filter(ura -> RELEVANTE_ARBEIDSFORHOLD_ÅRSAKER.contains(ura.getArbeidsforholdIkkeOppfyltÅrsak()))
-                .map(AvslåttAktivitetMapper::opprettSvpAvslagArbeidsforhold)
-                .toList();
+            .filter(ura -> RELEVANTE_ARBEIDSFORHOLD_ÅRSAKER.contains(ura.getArbeidsforholdIkkeOppfyltÅrsak()))
+            .map(AvslåttAktivitetMapper::opprettSvpAvslagArbeidsforhold)
+            .toList();
     }
 
     private static AvslåttAktivitet opprettSvpAvslagArbeidsforhold(SvpUttakResultatArbeidsforhold ura) {
@@ -38,8 +37,8 @@ public final class AvslåttAktivitetMapper {
     }
 
     private static boolean kanArbeidsgiverTilrettelegge(ArbeidsforholdIkkeOppfyltÅrsak arbeidsforholdIkkeOppfyltÅrsak) {
-        return ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE.equals(arbeidsforholdIkkeOppfyltÅrsak) ||
-                ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE_FREM_TIL_3_UKER_FØR_TERMIN.equals(arbeidsforholdIkkeOppfyltÅrsak);
+        return ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE.equals(arbeidsforholdIkkeOppfyltÅrsak)
+            || ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE_FREM_TIL_3_UKER_FØR_TERMIN.equals(arbeidsforholdIkkeOppfyltÅrsak);
     }
 
     private static void utled_AT_FL_SN(SvpUttakResultatArbeidsforhold ura, AvslåttAktivitet.Builder builder) {

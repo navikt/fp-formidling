@@ -46,24 +46,27 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
     }
 
     @Override
-    public VarselOmRevurderingDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                              Behandling behandling, boolean erUtkast) {
+    public VarselOmRevurderingDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                              DokumentHendelse hendelse,
+                                                              Behandling behandling,
+                                                              boolean erUtkast) {
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medFritekst(FritekstDto.fra(hendelse.getFritekst()));
 
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
 
         var advarselKode = utledAdvarselkode(hendelse);
         var dokumentdataBuilder = VarselOmRevurderingDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medTerminDato(finnTermindato(familieHendelse, behandling.getSpråkkode()).orElse(null))
-                .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()))
-                .medAntallBarn(familieHendelse.antallBarn())
-                .medAdvarselKode(advarselKode)
-                .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode))
-                .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen());
+            .medFelles(fellesBuilder.build())
+            .medTerminDato(finnTermindato(familieHendelse, behandling.getSpråkkode()).orElse(null))
+            .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()))
+            .medAntallBarn(familieHendelse.antallBarn())
+            .medAdvarselKode(advarselKode)
+            .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode))
+            .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen());
 
         return dokumentdataBuilder.build();
     }
@@ -83,8 +86,8 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
     }
 
     private boolean utledFlereOpplysninger(DokumentHendelse hendelse, String advarselKode) {
-        return !RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN.getKode().equals(advarselKode) &&
-                (harFritekst(hendelse) || !FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType()));
+        return !RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN.getKode().equals(advarselKode) && (harFritekst(hendelse)
+            || !FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType()));
     }
 
     private boolean harFritekst(DokumentHendelse hendelse) {

@@ -42,19 +42,19 @@ public class BehandlingRestKlient implements Behandlinger {
     public BehandlingDto hentBehandling(UUID behandlingId) {
 
         var behandlingUri = UriBuilder.fromUri(restConfig.fpContextPath())
-                .path(FPSAK_API)
-                .path("/formidling/ressurser")
-                .queryParam("behandlingId", behandlingId.toString())
-                .build();
+            .path(FPSAK_API)
+            .path("/formidling/ressurser")
+            .queryParam("behandlingId", behandlingId.toString())
+            .build();
         var request = RestRequest.newGET(behandlingUri, restConfig);
         return restClient.sendReturnOptional(request, BehandlingDto.class)
-                .orElseThrow(() -> new IllegalStateException("Klarte ikke hente behandling: " + behandlingId));
+            .orElseThrow(() -> new IllegalStateException("Klarte ikke hente behandling: " + behandlingId));
     }
 
     @Override
     public <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz) {
         var linkpath = link.getHref();
-        var path = linkpath.startsWith("/fpsak") ?  linkpath.replaceFirst("/fpsak", "") : linkpath;
+        var path = linkpath.startsWith("/fpsak") ? linkpath.replaceFirst("/fpsak", "") : linkpath;
         var uri = URI.create(restConfig.fpContextPath() + path);
         if ("POST".equals(link.getType())) {
             var request = RestRequest.newPOSTJson(link.getRequestPayload(), uri, restConfig);
@@ -78,7 +78,7 @@ public class BehandlingRestKlient implements Behandlinger {
                 brukUri = uriBuilder.build();
             }
             return RestRequest.newGET(brukUri, restConfig);
-        } catch (IllegalArgumentException|UriBuilderException e) {
+        } catch (IllegalArgumentException | UriBuilderException e) {
             throw new IllegalArgumentException(e);
         }
     }

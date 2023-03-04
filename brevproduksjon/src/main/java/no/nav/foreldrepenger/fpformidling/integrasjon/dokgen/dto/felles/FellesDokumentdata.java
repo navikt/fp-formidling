@@ -19,23 +19,41 @@ public class FellesDokumentdata {
     private boolean behandlesAvKA;
     private boolean erUtkast;
 
-    public String getSøkerNavn() { return søkerNavn; }
+    public String getSøkerNavn() {
+        return søkerNavn;
+    }
 
-    public String getSøkerPersonnummer() { return søkerPersonnummer; }
+    public String getSøkerPersonnummer() {
+        return søkerPersonnummer;
+    }
 
-    public FritekstDto getFritekst() { return fritekst; }
+    public FritekstDto getFritekst() {
+        return fritekst;
+    }
 
-    public String getBrevDato() { return brevDato; }
+    public String getBrevDato() {
+        return brevDato;
+    }
 
-    public boolean getErAutomatiskBehandlet () { return erAutomatiskBehandlet; }
+    public boolean getErAutomatiskBehandlet() {
+        return erAutomatiskBehandlet;
+    }
 
-    public boolean getErKopi() { return erKopi; }
+    public boolean getErKopi() {
+        return erKopi;
+    }
 
-    public boolean getHarVerge() { return harVerge; }
+    public boolean getHarVerge() {
+        return harVerge;
+    }
 
-    public String getSaksnummer() { return saksnummer; }
+    public String getSaksnummer() {
+        return saksnummer;
+    }
 
-    public String getMottakerNavn() { return mottakerNavn; }
+    public String getMottakerNavn() {
+        return mottakerNavn;
+    }
 
     public String getYtelseType() {
         return ytelseType;
@@ -51,27 +69,24 @@ public class FellesDokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (FellesDokumentdata) object;
-        return Objects.equals(søkerNavn, that.søkerNavn)
-                && Objects.equals(søkerPersonnummer, that.søkerPersonnummer)
-                && Objects.equals(fritekst, that.fritekst)
-                && Objects.equals(brevDato, that.brevDato)
-                && Objects.equals(erAutomatiskBehandlet, that.erAutomatiskBehandlet)
-                && Objects.equals(erKopi, that.erKopi)
-                && Objects.equals(harVerge, that.harVerge)
-                && Objects.equals(saksnummer, that.saksnummer)
-                && Objects.equals(mottakerNavn, that.mottakerNavn)
-                && Objects.equals(ytelseType, that.ytelseType)
-                && Objects.equals(behandlesAvKA, that.behandlesAvKA)
-                && Objects.equals(erUtkast, that.erUtkast);
+        return Objects.equals(søkerNavn, that.søkerNavn) && Objects.equals(søkerPersonnummer, that.søkerPersonnummer) && Objects.equals(fritekst,
+            that.fritekst) && Objects.equals(brevDato, that.brevDato) && Objects.equals(erAutomatiskBehandlet, that.erAutomatiskBehandlet)
+            && Objects.equals(erKopi, that.erKopi) && Objects.equals(harVerge, that.harVerge) && Objects.equals(saksnummer, that.saksnummer)
+            && Objects.equals(mottakerNavn, that.mottakerNavn) && Objects.equals(ytelseType, that.ytelseType) && Objects.equals(behandlesAvKA,
+            that.behandlesAvKA) && Objects.equals(erUtkast, that.erUtkast);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(søkerNavn, søkerPersonnummer, fritekst, brevDato, erAutomatiskBehandlet, erKopi,
-                harVerge, saksnummer, mottakerNavn, ytelseType, behandlesAvKA, erUtkast);
+        return Objects.hash(søkerNavn, søkerPersonnummer, fritekst, brevDato, erAutomatiskBehandlet, erKopi, harVerge, saksnummer, mottakerNavn,
+            ytelseType, behandlesAvKA, erUtkast);
     }
 
     // Til bruk når alternativt ulansert brev skal genereres i testfasen av innvilgelse FP
@@ -90,7 +105,7 @@ public class FellesDokumentdata {
     public static class Builder {
         private FellesDokumentdata kladd;
 
-       private Builder() {
+        private Builder() {
             this.kladd = new FellesDokumentdata();
         }
 

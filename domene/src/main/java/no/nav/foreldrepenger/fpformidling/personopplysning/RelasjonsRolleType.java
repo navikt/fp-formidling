@@ -23,11 +23,11 @@ public enum RelasjonsRolleType implements Kodeverdi {
     REGISTRERT_PARTNER("REPA"),
     SAMBOER("SAMB"),
     MEDMOR("MMOR"),
-    @JsonEnumDefaultValue
-    UDEFINERT("-"),
+    @JsonEnumDefaultValue UDEFINERT("-"),
     ;
 
-    private static final Set<RelasjonsRolleType> FORELDRE_ROLLER = Set.of(RelasjonsRolleType.MORA, RelasjonsRolleType.FARA, RelasjonsRolleType.MEDMOR);
+    private static final Set<RelasjonsRolleType> FORELDRE_ROLLER = Set.of(RelasjonsRolleType.MORA, RelasjonsRolleType.FARA,
+        RelasjonsRolleType.MEDMOR);
 
     @JsonValue
     private String kode;
@@ -40,7 +40,7 @@ public enum RelasjonsRolleType implements Kodeverdi {
     public String getKode() {
         return kode;
     }
-    
+
     public static boolean erFar(RelasjonsRolleType relasjon) {
         return FARA.getKode().equals(relasjon.getKode());
     }

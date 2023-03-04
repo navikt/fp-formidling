@@ -1,10 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 
-import java.util.List;
-
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.MottattDokumentDto;
 import no.nav.foreldrepenger.fpformidling.mottattdokument.MottattDokument;
+
+import java.util.List;
 
 public class MottattDokumentDtoMapper {
 
@@ -13,8 +13,7 @@ public class MottattDokumentDtoMapper {
     }
 
     private static MottattDokument mapMottattDokumentFraDto(MottattDokumentDto dto) {
-        return new MottattDokument(dto.mottattDato(), new DokumentTypeId(dto.dokumentTypeId()),
-                dto.dokumentKategori());
+        return new MottattDokument(dto.mottattDato(), new DokumentTypeId(dto.dokumentTypeId()), dto.dokumentKategori());
     }
 
 }

@@ -16,8 +16,7 @@ public class DokumentdataMapperProvider {
     }
 
     private DokumentdataMapper getMapper(DokumentMalType dokumentMalType) {
-        return DokumentMalTypeRef.Lookup.find(DokumentdataMapper.class, dokumentMalType.getKode()).orElseThrow(
-                () -> new IllegalStateException("Kunne ikke finne en mapper for dokumentMalType: '{}'" + dokumentMalType.getKode())
-        );
+        return DokumentMalTypeRef.Lookup.find(DokumentdataMapper.class, dokumentMalType.getKode())
+            .orElseThrow(() -> new IllegalStateException("Kunne ikke finne en mapper for dokumentMalType: '{}'" + dokumentMalType.getKode()));
     }
 }

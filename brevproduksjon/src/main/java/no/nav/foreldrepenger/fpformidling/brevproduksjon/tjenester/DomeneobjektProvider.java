@@ -63,23 +63,23 @@ public class DomeneobjektProvider {
         }
         var fagsakDto = behandlingRestKlient.hentFagsak(behandling.getResourceLinker());
         var fagsak = FagsakBackend.ny()
-                .medSaksnummer(fagsakDto.saksnummer())
-                .medBrukerRolle(fagsakDto.relasjonsRolleType())
-                .medAktørId(new AktørId(fagsakDto.aktørId()))
-                .medDekningsgrad(fagsakDto.dekningsgrad())
-                .build();
+            .medSaksnummer(fagsakDto.saksnummer())
+            .medBrukerRolle(fagsakDto.relasjonsRolleType())
+            .medAktørId(new AktørId(fagsakDto.aktørId()))
+            .medDekningsgrad(fagsakDto.dekningsgrad())
+            .build();
         behandling.leggtilFagsakBackend(fagsak);
         return fagsak;
     }
 
     public Beregningsgrunnlag hentBeregningsgrunnlag(Behandling behandling) {
         return BeregningsgrunnlagDtoMapper.mapFraDto(behandlingRestKlient.hentBeregningsgrunnlag(behandling.getFormidlingRessurser()),
-                arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+            arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<Beregningsgrunnlag> hentBeregningsgrunnlagHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentFormidlingBeregningsgrunnlagHvisFinnes(behandling.getFormidlingRessurser())
-                .map(dto -> BeregningsgrunnlagDtoMapper.mapFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+            .map(dto -> BeregningsgrunnlagDtoMapper.mapFraDto(dto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public Behandling hentBehandling(UUID behandlingUuid) {
@@ -87,44 +87,41 @@ public class DomeneobjektProvider {
     }
 
     public Optional<Behandling> hentOriginalBehandlingHvisFinnes(Behandling behandling) {
-        return Optional.ofNullable(behandling.getOriginalBehandlingUuid())
-                .map(this::hentBehandling);
+        return Optional.ofNullable(behandling.getOriginalBehandlingUuid()).map(this::hentBehandling);
     }
 
     public TilkjentYtelseEngangsstønad hentTilkjentYtelseEngangsstønad(Behandling behandling) {
         return TilkjentYtelseDtoMapper.mapTilkjentYtelseESFraDto(
-                behandlingRestKlient.hentTilkjentYtelseEngangsstønad(behandling.getResourceLinker()));
+            behandlingRestKlient.hentTilkjentYtelseEngangsstønad(behandling.getResourceLinker()));
     }
 
     public Optional<TilkjentYtelseEngangsstønad> hentTilkjentYtelseESHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentTilkjentYtelseEngangsstønadHvisFinnes(behandling.getResourceLinker())
-                .map(TilkjentYtelseDtoMapper::mapTilkjentYtelseESFraDto);
+            .map(TilkjentYtelseDtoMapper::mapTilkjentYtelseESFraDto);
     }
 
     public TilkjentYtelseForeldrepenger hentTilkjentYtelseForeldrepenger(Behandling behandling) {
         return TilkjentYtelseDtoMapper.mapTilkjentYtelseFPFraDto(
-                behandlingRestKlient.hentTilkjentYtelseForeldrepenger(behandling.getResourceLinker()),
-                arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+            behandlingRestKlient.hentTilkjentYtelseForeldrepenger(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<TilkjentYtelseForeldrepenger> hentTilkjentYtelseFPHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentTilkjentYtelseForeldrepengerHvisFinnes(behandling.getResourceLinker())
-                .map(r -> TilkjentYtelseDtoMapper.mapTilkjentYtelseFPFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+            .map(r -> TilkjentYtelseDtoMapper.mapTilkjentYtelseFPFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public FamilieHendelse hentFamiliehendelse(Behandling behandling) {
-        return FamiliehendelseDtoMapper.mapFamiliehendelsefraDto(
-                behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinker()));
+        return FamiliehendelseDtoMapper.mapFamiliehendelsefraDto(behandlingRestKlient.hentFamiliehendelse(behandling.getResourceLinker()));
     }
 
     public Optional<FamilieHendelse> hentFamiliehendelseHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentFamiliehendelseHvisFinnes(behandling.getResourceLinker())
-                .map(FamiliehendelseDtoMapper::mapFamiliehendelsefraDto);
+            .map(FamiliehendelseDtoMapper::mapFamiliehendelsefraDto);
     }
 
     public Inntektsmeldinger hentInntektsmeldinger(Behandling behandling) {
         return InntektsmeldingDtoMapper.mapIAYFraDto(behandlingRestKlient.hentInntektsmeldingerDto(behandling.getResourceLinker()),
-                arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+            arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Innsyn hentInnsyn(Behandling behandling) {
@@ -146,24 +143,23 @@ public class DomeneobjektProvider {
 
     public Optional<ForeldrepengerUttak> hentForeldrepengerUttakHvisFinnes(Behandling behandling) {
         var uttakResultatPerioderDto = behandlingRestKlient.hentUttaksresultatFpHvisFinnes(behandling.getResourceLinker());
-        return uttakResultatPerioderDto.map(
-                r -> UttakDtoMapper.mapUttaksresultatPerioderFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+        return uttakResultatPerioderDto.map(r -> UttakDtoMapper.mapUttaksresultatPerioderFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public ForeldrepengerUttak hentForeldrepengerUttak(Behandling behandling) {
         return hentForeldrepengerUttakHvisFinnes(behandling).orElseThrow(
-                () -> new IllegalStateException("Klarte ikke hente fp uttak for behandling: " + behandling.getUuid()));
+            () -> new IllegalStateException("Klarte ikke hente fp uttak for behandling: " + behandling.getUuid()));
     }
 
     public SvangerskapspengerUttak hentSvangerskapspengerUttak(Behandling behandling) {
         return hentSvangerskapspengerUttakHvisFinnes(behandling).orElseThrow(
-                () -> new IllegalStateException("Klarte ikke hente svp uttak for behandling: " + behandling.getUuid()));
+            () -> new IllegalStateException("Klarte ikke hente svp uttak for behandling: " + behandling.getUuid()));
     }
 
     public Optional<SvangerskapspengerUttak> hentSvangerskapspengerUttakHvisFinnes(Behandling behandling) {
         return behandlingRestKlient.hentUttaksresultatSvpHvisFinnes(behandling.getResourceLinker())
-                .map(svangerskapspengerUttakResultatDto -> UttakSvpDtoMapper.mapSvpUttaksresultatFraDto(
-                        svangerskapspengerUttakResultatDto, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+            .map(svangerskapspengerUttakResultatDto -> UttakSvpDtoMapper.mapSvpUttaksresultatFraDto(svangerskapspengerUttakResultatDto,
+                arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public Saldoer hentSaldoer(Behandling behandling) {
@@ -172,12 +168,11 @@ public class DomeneobjektProvider {
 
     public Optional<Verge> hentVerge(Behandling behandling) {
         return behandlingRestKlient.hentVergeHvisFinnes(behandling.getResourceLinker())
-                .map(v -> new Verge(v.getAktoerId(), v.getOrganisasjonsnummer(), v.getNavn()));
+            .map(v -> new Verge(v.getAktoerId(), v.getOrganisasjonsnummer(), v.getNavn()));
     }
 
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {
-        return MottattDokumentDtoMapper.mapMottattedokumenterFraDto(
-                behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
+        return MottattDokumentDtoMapper.mapMottattedokumenterFraDto(behandlingRestKlient.hentMottatteDokumenter(behandling.getResourceLinker()));
     }
 
     public YtelseFordeling ytelseFordeling(Behandling behandling) {

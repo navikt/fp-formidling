@@ -23,13 +23,16 @@ public class BeregningsgrunnlagRegel {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (BeregningsgrunnlagRegel) object;
-        return Objects.equals(regelStatus, that.regelStatus)
-                && Objects.equals(antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke, that.antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke)
-                && Objects.equals(snNyoppstartet, that.snNyoppstartet)
-                && Objects.equals(andelListe, that.andelListe);
+        return Objects.equals(regelStatus, that.regelStatus) && Objects.equals(antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke,
+            that.antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke) && Objects.equals(snNyoppstartet, that.snNyoppstartet) && Objects.equals(
+            andelListe, that.andelListe);
     }
 
     @Override

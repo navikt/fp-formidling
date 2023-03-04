@@ -23,8 +23,7 @@ public final class BehandlingMapper {
     }
 
     public static Boolean erEndretFraAvslått(Optional<Behandling> orginalBehandling) {
-        return orginalBehandling.map(forrigeBehandling -> forrigeBehandling.getBehandlingsresultat().erAvslått())
-                .orElse(false);
+        return orginalBehandling.map(forrigeBehandling -> forrigeBehandling.getBehandlingsresultat().erAvslått()).orElse(false);
     }
 
     public static boolean erRevurderingPgaEndretBeregningsgrunnlag(Behandling revurdering) {
@@ -38,10 +37,10 @@ public final class BehandlingMapper {
 
     public static String kodeFra(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {
         if (konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_BEREGNING)) { // viktigst å få med endring i beregning
-            return konsekvenserForYtelsen.contains(KonsekvensForYtelsen.ENDRING_I_UTTAK) ?
-                    ENDRING_BEREGNING_OG_UTTAK : KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode();
+            return konsekvenserForYtelsen.contains(
+                KonsekvensForYtelsen.ENDRING_I_UTTAK) ? ENDRING_BEREGNING_OG_UTTAK : KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode();
         }
-        return konsekvenserForYtelsen.isEmpty() ?
-                KonsekvensForYtelsen.UDEFINERT.getKode() : konsekvenserForYtelsen.get(0).getKode(); // velger bare den første i listen (finnes ikke koder for andre ev. kombinasjoner)
+        return konsekvenserForYtelsen.isEmpty() ? KonsekvensForYtelsen.UDEFINERT.getKode() : konsekvenserForYtelsen.get(0)
+            .getKode(); // velger bare den første i listen (finnes ikke koder for andre ev. kombinasjoner)
     }
 }

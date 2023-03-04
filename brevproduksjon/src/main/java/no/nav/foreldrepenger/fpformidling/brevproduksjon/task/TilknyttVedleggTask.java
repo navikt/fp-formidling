@@ -40,8 +40,6 @@ public class TilknyttVedleggTask implements ProsessTaskHandler {
     }
 
     private Collection<InnsynDokument> filtrerUtDuplikater(List<InnsynDokument> dokumenter) {
-        return dokumenter.stream()
-                .collect(Collectors.toConcurrentMap(InnsynDokument::dokumentId, Function.identity(), (p, q) -> p))
-                .values();
+        return dokumenter.stream().collect(Collectors.toConcurrentMap(InnsynDokument::dokumentId, Function.identity(), (p, q) -> p)).values();
     }
 }

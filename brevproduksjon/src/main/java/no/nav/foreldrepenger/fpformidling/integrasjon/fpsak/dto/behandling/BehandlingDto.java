@@ -182,6 +182,7 @@ public class BehandlingDto {
     public void setKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
         this.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
     }
+
     public List<VilkårDto> getVilkår() {
         return vilkår;
     }
@@ -197,9 +198,11 @@ public class BehandlingDto {
     public void setFormidlingRessurser(List<BehandlingResourceLinkDto> formidlingRessurser) {
         this.formidlingRessurser = formidlingRessurser;
     }
+
     public String getBehandlendeEnhetId() {
         return behandlendeEnhetId;
     }
+
     public void setBehandlendeEnhetId(String behandlendeEnhetId) {
         this.behandlendeEnhetId = behandlendeEnhetId;
     }
@@ -214,24 +217,11 @@ public class BehandlingDto {
 
     @Override
     public String toString() {
-        return "BehandlingDto{" +
-                "id=" + uuid +
-                ", type=" + type +
-                ", status=" + status +
-                ", opprettet=" + opprettet +
-                ", avsluttet=" + avsluttet +
-                ", endret=" + endret +
-                ", behandlendeEnhetId='" + behandlendeEnhetId + '\'' +
-                ", behandlendeEnhetNavn='" + behandlendeEnhetNavn + '\'' +
-                ", ansvarligSaksbehandler='" + ansvarligSaksbehandler + '\'' +
-                ", ansvarligBeslutter='" + ansvarligBeslutter + '\'' +
-                ", behandlingsresultat=" + behandlingsresultat +
-                ", sprakkode=" + sprakkode +
-                ", toTrinnsBehandling=" + toTrinnsBehandling +
-                ", links=" + links +
-                ", behandlingÅrsaker=" + behandlingÅrsaker + '\'' +
-                ", originalVedtaksDato=" + originalVedtaksDato +
-                ", kreverSammenhengendeUttak =" + kreverSammenhengendeUttak +
-                '}';
+        return "BehandlingDto{" + "id=" + uuid + ", type=" + type + ", status=" + status + ", opprettet=" + opprettet + ", avsluttet=" + avsluttet
+            + ", endret=" + endret + ", behandlendeEnhetId='" + behandlendeEnhetId + '\'' + ", behandlendeEnhetNavn='" + behandlendeEnhetNavn + '\''
+            + ", ansvarligSaksbehandler='" + ansvarligSaksbehandler + '\'' + ", ansvarligBeslutter='" + ansvarligBeslutter + '\''
+            + ", behandlingsresultat=" + behandlingsresultat + ", sprakkode=" + sprakkode + ", toTrinnsBehandling=" + toTrinnsBehandling + ", links="
+            + links + ", behandlingÅrsaker=" + behandlingÅrsaker + '\'' + ", originalVedtaksDato=" + originalVedtaksDato
+            + ", kreverSammenhengendeUttak =" + kreverSammenhengendeUttak + '}';
     }
 }

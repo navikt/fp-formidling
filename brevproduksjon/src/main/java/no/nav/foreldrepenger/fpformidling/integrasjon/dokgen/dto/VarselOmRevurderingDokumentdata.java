@@ -42,16 +42,16 @@ public class VarselOmRevurderingDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (VarselOmRevurderingDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(terminDato, that.terminDato)
-                && Objects.equals(fristDato, that.fristDato)
-                && Objects.equals(antallBarn, that.antallBarn)
-                && Objects.equals(advarselKode, that.advarselKode)
-                && Objects.equals(flereOpplysninger, that.flereOpplysninger)
-                && Objects.equals(kreverSammenhengendeUttak, that.kreverSammenhengendeUttak);
+        return Objects.equals(felles, that.felles) && Objects.equals(terminDato, that.terminDato) && Objects.equals(fristDato, that.fristDato)
+            && Objects.equals(antallBarn, that.antallBarn) && Objects.equals(advarselKode, that.advarselKode) && Objects.equals(flereOpplysninger,
+            that.flereOpplysninger) && Objects.equals(kreverSammenhengendeUttak, that.kreverSammenhengendeUttak);
     }
 
     @Override

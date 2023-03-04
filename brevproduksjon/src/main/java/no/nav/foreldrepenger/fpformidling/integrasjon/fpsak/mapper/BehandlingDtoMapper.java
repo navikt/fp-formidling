@@ -19,43 +19,42 @@ public final class BehandlingDtoMapper {
     }
 
     private static BehandlingResourceLink mapResourceLinkFraDto(BehandlingResourceLinkDto dto) {
-        var linkBuilder = BehandlingResourceLink.ny()
-                .medHref(dto.getHref())
-                .medRel(dto.getRel())
-                .medType(dto.getType());
+        var linkBuilder = BehandlingResourceLink.ny().medHref(dto.getHref()).medRel(dto.getRel()).medType(dto.getType());
         if (dto.getRequestPayload() != null) {
             linkBuilder.medRequestPayload(
-                    new BehandlingRelLinkPayload(dto.getRequestPayload().getSaksnummer(),
-                            dto.getRequestPayload().getBehandlingUuid()));
+                new BehandlingRelLinkPayload(dto.getRequestPayload().getSaksnummer(), dto.getRequestPayload().getBehandlingUuid()));
         }
-        return linkBuilder
-                .build();
+        return linkBuilder.build();
     }
 
     public static Behandling mapBehandlingFraDto(BehandlingDto dto) {
         var builder = Behandling.builder();
-        var behandlingResourceLinkStreamSupplier = (Supplier<Stream<BehandlingResourceLink>>) () -> dto.getLinks().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
-        var behandlingFormidlingResourceLinkStreamSupplier = (Supplier<Stream<BehandlingResourceLink>>) () -> dto.getFormidlingRessurser().stream().map(BehandlingDtoMapper::mapResourceLinkFraDto);
+        var behandlingResourceLinkStreamSupplier = (Supplier<Stream<BehandlingResourceLink>>) () -> dto.getLinks()
+            .stream()
+            .map(BehandlingDtoMapper::mapResourceLinkFraDto);
+        var behandlingFormidlingResourceLinkStreamSupplier = (Supplier<Stream<BehandlingResourceLink>>) () -> dto.getFormidlingRessurser()
+            .stream()
+            .map(BehandlingDtoMapper::mapResourceLinkFraDto);
         behandlingResourceLinkStreamSupplier.get().forEach(builder::leggTilResourceLink);
         behandlingFormidlingResourceLinkStreamSupplier.get().forEach(builder::leggTilFormidlingResourceLink);
         builder.medUuid(dto.getUuid())
-                .medBehandlingType(dto.getType())
-                .medStatus(dto.getStatus())
-                .medOpprettetDato(dto.getOpprettet())
-                .medAvsluttet(dto.getAvsluttet())
-                .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
-                .medAnsvarligBeslutter(dto.getAnsvarligBeslutter())
-                .medToTrinnsBehandling(dto.getToTrinnsBehandling())
-                .medBehandlendeEnhetId(dto.getBehandlendeEnhetId())
-                .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
-                .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingÅrsaker()))
-                .medEndretAv(dto.getEndretAvBrukernavn())
-                .medSpråkkode(dto.getSprakkode())
-                .medHarAvklartAnnenForelderRett(dto.getHarAvklartAnnenForelderRett())
-                .medVilkår(VilkårDtoMapper.mapVilkårFraDto(dto.getVilkår()))
-                .medOriginalBehandlingUuid(dto.getOriginalBehandlingUuid())
-                .medOriginalVedtaksDato(dto.getOriginalVedtaksDato())
-                .medKreverSammenhengendeUttak(dto.getKreverSammenhengendeUttak());
+            .medBehandlingType(dto.getType())
+            .medStatus(dto.getStatus())
+            .medOpprettetDato(dto.getOpprettet())
+            .medAvsluttet(dto.getAvsluttet())
+            .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
+            .medAnsvarligBeslutter(dto.getAnsvarligBeslutter())
+            .medToTrinnsBehandling(dto.getToTrinnsBehandling())
+            .medBehandlendeEnhetId(dto.getBehandlendeEnhetId())
+            .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
+            .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingÅrsaker()))
+            .medEndretAv(dto.getEndretAvBrukernavn())
+            .medSpråkkode(dto.getSprakkode())
+            .medHarAvklartAnnenForelderRett(dto.getHarAvklartAnnenForelderRett())
+            .medVilkår(VilkårDtoMapper.mapVilkårFraDto(dto.getVilkår()))
+            .medOriginalBehandlingUuid(dto.getOriginalBehandlingUuid())
+            .medOriginalVedtaksDato(dto.getOriginalVedtaksDato())
+            .medKreverSammenhengendeUttak(dto.getKreverSammenhengendeUttak());
         ;
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(BehandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));
@@ -66,18 +65,13 @@ public final class BehandlingDtoMapper {
 
     private static List<BehandlingÅrsak> mapBehandlingÅrsakListe(List<BehandlingÅrsakDto> behandlingÅrsakDtoer) {
         if (!behandlingÅrsakDtoer.isEmpty()) {
-            return behandlingÅrsakDtoer.stream()
-                    .map(BehandlingDtoMapper::mapBehandlingÅrsakFraDto)
-                    .toList();
+            return behandlingÅrsakDtoer.stream().map(BehandlingDtoMapper::mapBehandlingÅrsakFraDto).toList();
         }
         return Collections.emptyList();
     }
 
     private static BehandlingÅrsak mapBehandlingÅrsakFraDto(BehandlingÅrsakDto dto) {
-        return BehandlingÅrsak.builder()
-                .medBehandlingÅrsakType(dto.getBehandlingArsakType())
-                .medManueltOpprettet(dto.getManueltOpprettet())
-                .build();
+        return BehandlingÅrsak.builder().medBehandlingÅrsakType(dto.getBehandlingArsakType()).medManueltOpprettet(dto.getManueltOpprettet()).build();
     }
 
 }

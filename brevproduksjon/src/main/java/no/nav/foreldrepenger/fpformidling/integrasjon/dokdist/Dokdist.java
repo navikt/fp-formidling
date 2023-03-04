@@ -8,5 +8,8 @@ public interface Dokdist {
 
     Resultat distribuerJournalpost(DistribuerJournalpostRequest dto);
 
-    enum Resultat {OK, MANGLER_ADRESSE }
+    enum Resultat {
+        OK,
+        MANGLER_ADRESSE
+    }
 }

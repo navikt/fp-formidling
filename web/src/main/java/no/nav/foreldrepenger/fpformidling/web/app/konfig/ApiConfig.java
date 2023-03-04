@@ -40,24 +40,17 @@ public class ApiConfig extends Application {
 
     public ApiConfig() {
         var oas = new OpenAPI();
-        var info = new Info()
-                .title("Vedtaksløsningen - Formidling")
-                .version("1.0")
-                .description("REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede.");
+        var info = new Info().title("Vedtaksløsningen - Formidling")
+            .version("1.0")
+            .description("REST grensesnitt for fp-formidling. Til å kunne bruke tjenestene må en gyldig token være tilstede.");
 
-        oas.info(info)
-                .addServersItem(new Server()
-                        .url(ENV.getProperty("context.path", "/fpformidling")));
+        oas.info(info).addServersItem(new Server().url(ENV.getProperty("context.path", "/fpformidling")));
 
-        var oasConfig = new SwaggerConfiguration()
-                .openAPI(oas)
-                .prettyPrint(true)
-                .resourceClasses(getClasses().stream().map(Class::getName).collect(Collectors.toSet()));
+        var oasConfig = new SwaggerConfiguration().openAPI(oas)
+            .prettyPrint(true)
+            .resourceClasses(getClasses().stream().map(Class::getName).collect(Collectors.toSet()));
         try {
-            new GenericOpenApiContextBuilder<>()
-                    .openApiConfiguration(oasConfig)
-                    .buildContext(true)
-                    .read();
+            new GenericOpenApiContextBuilder<>().openApiConfiguration(oasConfig).buildContext(true).read();
         } catch (OpenApiConfigurationException e) {
             throw new TekniskException("OPEN-API", e.getMessage(), e);
         }

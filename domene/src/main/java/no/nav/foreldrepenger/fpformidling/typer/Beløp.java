@@ -72,10 +72,7 @@ public class Beløp implements Serializable, IndexKey {
 
     @Override
     public String toString() {
-        return "Beløp{" +
-                "verdi=" + verdi +
-                ", skalertVerdi=" + skalertVerdi() +
-                '}';
+        return "Beløp{" + "verdi=" + verdi + ", skalertVerdi=" + skalertVerdi() + '}';
     }
 
     public int compareTo(Beløp annetBeløp) {

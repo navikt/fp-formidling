@@ -25,14 +25,14 @@ public class LovhjemmelUtil {
         if (jsonData != null) {
             var hjemmelNode = jsonData.findValue(key);
             if (hjemmelNode != null) {
-                var hjemmelListe = !hjemmelNode.findValues("lovreferanse").isEmpty() ? hjemmelNode.findValues("lovreferanse")
-                        : hjemmelNode.findValues("lovreferanser");
+                var hjemmelListe = !hjemmelNode.findValues("lovreferanse").isEmpty() ? hjemmelNode.findValues(
+                    "lovreferanse") : hjemmelNode.findValues("lovreferanser");
                 return hjemmelListe.stream()
-                        .flatMap(node -> node.isContainerNode() ? StreamSupport.stream(node.spliterator(), false).map(JsonNode::asText)
-                                : Arrays.stream(node.asText().split(",")))
-                        .map(String::trim)
-                        .filter(str -> !str.isEmpty())
-                        .collect(Collectors.toCollection(() -> new TreeSet<>(new LovhjemmelComparator())));
+                    .flatMap(node -> node.isContainerNode() ? StreamSupport.stream(node.spliterator(), false).map(JsonNode::asText) : Arrays.stream(
+                        node.asText().split(",")))
+                    .map(String::trim)
+                    .filter(str -> !str.isEmpty())
+                    .collect(Collectors.toCollection(() -> new TreeSet<>(new LovhjemmelComparator())));
             }
         }
         return Set.of();
@@ -45,7 +45,7 @@ public class LovhjemmelUtil {
             return hentLovhjemlerFraJson(årsak, "FP");
         }
         throw new TekniskException("FPFORMIDLING-693339",
-                String.format("Mangler informasjon om lovhjemmel for avslagsårsak med kode %s.", årsak.getKode()));
+            String.format("Mangler informasjon om lovhjemmel for avslagsårsak med kode %s.", årsak.getKode()));
     }
 
     private static JsonNode parseLovDataFor(ÅrsakMedLovReferanse årsakKode) {
@@ -58,10 +58,9 @@ public class LovhjemmelUtil {
         try {
             jsonNode = objectMapper.readTree(lovData);
         } catch (IOException e) {
-            throw new IllegalStateException(
-                    "Ugyldig format (forventet JSON) for kode=" + årsakKode.getKode() //$NON-NLS-1$ //$NON-NLS-2$
-                            + " " + lovData, //$NON-NLS-1$
-                    e); //$NON-NLS-2$
+            throw new IllegalStateException("Ugyldig format (forventet JSON) for kode=" + årsakKode.getKode() //$NON-NLS-1$ //$NON-NLS-2$
+                + " " + lovData, //$NON-NLS-1$
+                e); //$NON-NLS-2$
         }
         return jsonNode;
     }

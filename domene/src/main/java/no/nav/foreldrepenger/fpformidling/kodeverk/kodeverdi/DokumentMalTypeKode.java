@@ -9,7 +9,7 @@ public class DokumentMalTypeKode {
     public static final String FORELDREPENGER_AVSLAG = "AVSFOR";
     public static final String FORELDREPENGER_OPPHØR = "OPPFOR";
     public static final String FORELDREPENGER_ANNULLERT = "ANUFOR";
-    public static final String FORELDREPENGER_INFO_TIL_ANNEN_FORELDER ="INFOAF";
+    public static final String FORELDREPENGER_INFO_TIL_ANNEN_FORELDER = "INFOAF";
     public static final String SVANGERSKAPSPENGER_INNVILGELSE = "INVSVP";
     public static final String SVANGERSKAPSPENGER_OPPHØR = "OPPSVP";
     public static final String SVANGERSKAPSPENGER_AVSLAG = "AVSSVP";

@@ -1,18 +1,18 @@
 name: Snyk vulnerabilities scanning of dependencies
 on:
-    schedule:
-        - cron:  '0 0 * * *'
-    workflow_dispatch:
-    push:
-        branches:
-            - master
-        paths:
-            - '.github/workflows/snyk.yml'
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/snyk.yml'
 
 jobs:
-    snyk:
-        name: Snyk
-        uses: navikt/fp-gha-workflows/.github/workflows/snyk.yml@main
-        with:
-            build-version: snyk-snapshot
-        secrets: inherit
+  snyk:
+    name: Snyk
+    uses: navikt/fp-gha-workflows/.github/workflows/snyk.yml@main
+    with:
+      build-version: snyk-snapshot
+    secrets: inherit

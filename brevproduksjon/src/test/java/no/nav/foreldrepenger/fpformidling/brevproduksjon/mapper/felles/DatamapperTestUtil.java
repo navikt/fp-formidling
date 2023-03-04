@@ -1,15 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
-import static no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles.PersonStatus.ANNET;
-import static org.mockito.Mockito.when;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.UUID;
-
-import org.mockito.Mockito;
-
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
@@ -21,6 +11,16 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
+
+import org.mockito.Mockito;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.UUID;
+
+import static no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles.PersonStatus.ANNET;
+import static org.mockito.Mockito.when;
 
 public class DatamapperTestUtil {
 
@@ -55,43 +55,43 @@ public class DatamapperTestUtil {
 
     public static DokumentFelles lagStandardDokumentFelles(DokumentData dokumentdata, Kopi kopi, boolean tilVerge) {
         return DokumentFelles.builder(dokumentdata)
-                .medAutomatiskBehandlet(Boolean.TRUE)
-                .medDokumentDato(LocalDate.now())
-                .medMottakerId(tilVerge ? VERGES_FNR : SØKERS_FNR)
-                .medMottakerNavn(tilVerge ? VERGES_NAVN : SØKERS_NAVN)
-                .medSaksnummer(new Saksnummer(SAKSNUMMER))
-                .medSakspartId(PersonIdent.fra(SØKERS_FNR))
-                .medSakspartNavn(SØKERS_NAVN)
-                .medErKopi(kopi)
-                .medMottakerType(DokumentFelles.MottakerType.PERSON)
-                .medSpråkkode(Språkkode.NB)
-                .medSakspartPersonStatus(ANNET)
-                .build();
+            .medAutomatiskBehandlet(Boolean.TRUE)
+            .medDokumentDato(LocalDate.now())
+            .medMottakerId(tilVerge ? VERGES_FNR : SØKERS_FNR)
+            .medMottakerNavn(tilVerge ? VERGES_NAVN : SØKERS_NAVN)
+            .medSaksnummer(new Saksnummer(SAKSNUMMER))
+            .medSakspartId(PersonIdent.fra(SØKERS_FNR))
+            .medSakspartNavn(SØKERS_NAVN)
+            .medErKopi(kopi)
+            .medMottakerType(DokumentFelles.MottakerType.PERSON)
+            .medSpråkkode(Språkkode.NB)
+            .medSakspartPersonStatus(ANNET)
+            .build();
     }
 
     public static DokumentData lagStandardDokumentData(DokumentMalType dokumentMalType) {
         return DokumentData.builder()
-                .medDokumentMalType(dokumentMalType)
-                .medBehandlingUuid(UUID.randomUUID())
-                .medBestillingType("B")
-                .medBestiltTid(LocalDateTime.now())
-                .build();
+            .medDokumentMalType(dokumentMalType)
+            .medBehandlingUuid(UUID.randomUUID())
+            .medBestillingType("B")
+            .medBestiltTid(LocalDateTime.now())
+            .build();
     }
 
     public static DokumentHendelse.Builder lagStandardHendelseBuilder() {
         return DokumentHendelse.builder()
-                .medBestillingUuid(UUID.randomUUID())
-                .medBehandlingUuid(UUID.randomUUID())
-                .medFritekst(FRITEKST)
-                .medYtelseType(FagsakYtelseType.FORELDREPENGER);
+            .medBestillingUuid(UUID.randomUUID())
+            .medBehandlingUuid(UUID.randomUUID())
+            .medFritekst(FRITEKST)
+            .medYtelseType(FagsakYtelseType.FORELDREPENGER);
     }
 
     public static DokumentHendelse.Builder lagStandardHendelseSVPBuilder() {
         return DokumentHendelse.builder()
-                .medBestillingUuid(UUID.randomUUID())
-                .medBehandlingUuid(UUID.randomUUID())
-                .medFritekst(FRITEKST)
-                .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER);
+            .medBestillingUuid(UUID.randomUUID())
+            .medBehandlingUuid(UUID.randomUUID())
+            .medFritekst(FRITEKST)
+            .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER);
     }
 
     public static DokumentHendelse standardDokumenthendelse() {
@@ -99,10 +99,7 @@ public class DatamapperTestUtil {
     }
 
     public static Behandling.Builder standardBehandlingBuilder() {
-        return Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medSpråkkode(Språkkode.NB);
+        return Behandling.builder().medUuid(UUID.randomUUID()).medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD).medSpråkkode(Språkkode.NB);
     }
 
     public static Behandling standardBehandling() {

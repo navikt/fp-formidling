@@ -26,11 +26,9 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode
 @DokumentMalTypeRef(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID)
 public class ForlengetSaksbehandlingstidDokumentdataMapper implements DokumentdataMapper {
 
-    private static final Map<DokumentMalType, VariantType> MAL_TIL_VARIANT_MAP = Map.of(
-            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID, VariantType.FORLENGET,
-            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL, VariantType.MEDLEM,
-            DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG, VariantType.FORTIDLIG
-    );
+    private static final Map<DokumentMalType, VariantType> MAL_TIL_VARIANT_MAP = Map.of(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
+        VariantType.FORLENGET, DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL, VariantType.MEDLEM,
+        DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG, VariantType.FORTIDLIG);
 
     private DomeneobjektProvider domeneobjektProvider;
 
@@ -49,19 +47,22 @@ public class ForlengetSaksbehandlingstidDokumentdataMapper implements Dokumentda
     }
 
     @Override
-    public ForlengetSaksbehandlingstidDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                                      Behandling behandling, boolean erUtkast) {
+    public ForlengetSaksbehandlingstidDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                                      DokumentHendelse hendelse,
+                                                                      Behandling behandling,
+                                                                      boolean erUtkast) {
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
 
         return ForlengetSaksbehandlingstidDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medVariantType(mapVariantType(hendelse.getDokumentMalType(), behandling))
-                .medDød(erDød(dokumentFelles))
-                .medBehandlingsfristUker(behandling.getBehandlingType().getBehandlingstidFristUker())
-                .medAntallBarn(getAntallBarn(behandling))
-                .build();
+            .medFelles(fellesBuilder.build())
+            .medVariantType(mapVariantType(hendelse.getDokumentMalType(), behandling))
+            .medDød(erDød(dokumentFelles))
+            .medBehandlingsfristUker(behandling.getBehandlingType().getBehandlingstidFristUker())
+            .medAntallBarn(getAntallBarn(behandling))
+            .build();
     }
 
     private VariantType mapVariantType(DokumentMalType dokumentMalType, Behandling behandling) {

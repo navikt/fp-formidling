@@ -47,23 +47,21 @@ public class InnhenteOpplysningerDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (InnhenteOpplysningerDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(førstegangsbehandling, that.førstegangsbehandling)
-                && Objects.equals(revurdering, that.revurdering)
-                && Objects.equals(endringssøknad, that.endringssøknad)
-                && Objects.equals(død, that.død)
-                && Objects.equals(klage, that.klage)
-                && Objects.equals(søknadDato, that.søknadDato)
-                && Objects.equals(fristDato, that.fristDato);
+        return Objects.equals(felles, that.felles) && Objects.equals(førstegangsbehandling, that.førstegangsbehandling) && Objects.equals(revurdering,
+            that.revurdering) && Objects.equals(endringssøknad, that.endringssøknad) && Objects.equals(død, that.død) && Objects.equals(klage,
+            that.klage) && Objects.equals(søknadDato, that.søknadDato) && Objects.equals(fristDato, that.fristDato);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, førstegangsbehandling, revurdering, endringssøknad, død, klage,
-                søknadDato, fristDato);
+        return Objects.hash(felles, førstegangsbehandling, revurdering, endringssøknad, død, klage, søknadDato, fristDato);
     }
 
     public static Builder ny() {
@@ -88,7 +86,7 @@ public class InnhenteOpplysningerDokumentdata extends Dokumentdata {
         }
 
         public Builder medRevurdering(boolean revurdering) {
-            this.kladd.revurdering= revurdering;
+            this.kladd.revurdering = revurdering;
             return this;
         }
 

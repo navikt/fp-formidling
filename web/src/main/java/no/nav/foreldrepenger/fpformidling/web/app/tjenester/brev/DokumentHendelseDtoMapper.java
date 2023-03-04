@@ -19,29 +19,29 @@ public final class DokumentHendelseDtoMapper {
 
     public static DokumentHendelse mapFra(DokumentbestillingV2Dto dokumentbestilling) {
         return DokumentHendelse.builder()
-                .medBehandlingUuid(dokumentbestilling.behandlingUuid())
-                .medBestillingUuid(dokumentbestilling.dokumentbestillingUuid())
-                .medYtelseType(utledYtelseType(dokumentbestilling.ytelseType()))
-                .medFritekst(dokumentbestilling.fritekst())
-                .medDokumentMalType(utleddokumentMalType(dokumentbestilling.dokumentMal()))
-                .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(dokumentbestilling.arsakskode()))
-                .medBehandlendeEnhetNavn(dokumentbestilling.behandlendeEnhetNavn())
-                .build();
+            .medBehandlingUuid(dokumentbestilling.behandlingUuid())
+            .medBestillingUuid(dokumentbestilling.dokumentbestillingUuid())
+            .medYtelseType(utledYtelseType(dokumentbestilling.ytelseType()))
+            .medFritekst(dokumentbestilling.fritekst())
+            .medDokumentMalType(utleddokumentMalType(dokumentbestilling.dokumentMal()))
+            .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(dokumentbestilling.arsakskode()))
+            .medBehandlendeEnhetNavn(dokumentbestilling.behandlendeEnhetNavn())
+            .build();
     }
 
     public static DokumentHendelse mapFra(DokumentbestillingDto brevDto) {
         return DokumentHendelse.builder()
-                .medBehandlingUuid(brevDto.getBehandlingUuid())
-                .medBestillingUuid(brevDto.getDokumentbestillingUuid() != null ? brevDto.getDokumentbestillingUuid() : UUID.randomUUID())
-                .medYtelseType(utledYtelseType(brevDto.getFagsakYtelseType()))
-                .medFritekst(brevDto.getFritekst())
-                .medTittel(brevDto.getTittel())
-                .medDokumentMalType(utleddokumentMalType(brevDto.getDokumentMal()))
-                .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(brevDto.getArsakskode()))
-                .medGjelderVedtak(brevDto.isGjelderVedtak())
-                .medVedtaksbrev(utledVedtaksbrev(brevDto.getAutomatiskVedtaksbrev()))
-                .medErOpphevetKlage(brevDto.isErOpphevetKlage())
-                .build();
+            .medBehandlingUuid(brevDto.getBehandlingUuid())
+            .medBestillingUuid(brevDto.getDokumentbestillingUuid() != null ? brevDto.getDokumentbestillingUuid() : UUID.randomUUID())
+            .medYtelseType(utledYtelseType(brevDto.getFagsakYtelseType()))
+            .medFritekst(brevDto.getFritekst())
+            .medTittel(brevDto.getTittel())
+            .medDokumentMalType(utleddokumentMalType(brevDto.getDokumentMal()))
+            .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(brevDto.getArsakskode()))
+            .medGjelderVedtak(brevDto.isGjelderVedtak())
+            .medVedtaksbrev(utledVedtaksbrev(brevDto.getAutomatiskVedtaksbrev()))
+            .medErOpphevetKlage(brevDto.isErOpphevetKlage())
+            .build();
     }
 
     private static RevurderingVarslingÅrsak utledRevurderingVarslingsårsak(String varslingsårsak) {
@@ -63,10 +63,7 @@ public final class DokumentHendelseDtoMapper {
     }
 
     private static Vedtaksbrev utledVedtaksbrev(Boolean automatiskBrev) {
-        return Optional.ofNullable(automatiskBrev)
-                .filter(ab -> ab)
-                .map(ab -> Vedtaksbrev.AUTOMATISK)
-                .orElse(Vedtaksbrev.UDEFINERT);
+        return Optional.ofNullable(automatiskBrev).filter(ab -> ab).map(ab -> Vedtaksbrev.AUTOMATISK).orElse(Vedtaksbrev.UDEFINERT);
     }
 
     private static DokumentMalType utleddokumentMalType(String dokumentmal) {

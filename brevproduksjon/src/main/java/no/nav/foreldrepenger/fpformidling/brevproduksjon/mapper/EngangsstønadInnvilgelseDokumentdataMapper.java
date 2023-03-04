@@ -46,28 +46,31 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     @Override
-    public EngangsstønadInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                                   Behandling behandling, boolean erUtkast) {
+    public EngangsstønadInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                                   DokumentHendelse hendelse,
+                                                                   Behandling behandling,
+                                                                   boolean erUtkast) {
         var tilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling);
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
-        fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
+        fellesBuilder.medBrevDato(
+            dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
 
         var dokumentdataBuilder = EngangsstønadInnvilgelseDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medRevurdering(behandling.erRevurdering())
-                .medFørstegangsbehandling(behandling.erFørstegangssøknad())
-                .medMedhold(BehandlingMapper.erMedhold(behandling))
-                .medInnvilgetBeløp(formaterBeløp(tilkjentYtelse.beløp()))
-                .medKlagefristUker(brevParametere.getKlagefristUker())
-                .medDød(erDød(dokumentFelles))
-                .medFbEllerMedhold(erFBellerMedhold(behandling))
-                .medErEndretSats(false);
+            .medFelles(fellesBuilder.build())
+            .medRevurdering(behandling.erRevurdering())
+            .medFørstegangsbehandling(behandling.erFørstegangssøknad())
+            .medMedhold(BehandlingMapper.erMedhold(behandling))
+            .medInnvilgetBeløp(formaterBeløp(tilkjentYtelse.beløp()))
+            .medKlagefristUker(brevParametere.getKlagefristUker())
+            .medDød(erDød(dokumentFelles))
+            .medFbEllerMedhold(erFBellerMedhold(behandling))
+            .medErEndretSats(false);
 
         if (behandling.erRevurdering()) {
             var originalBehandling = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
-                    .orElseThrow(()-> new IllegalArgumentException("Utviklerfeil:Finner ikke informasjon om orginal behandling for revurdering "));
+                .orElseThrow(() -> new IllegalArgumentException("Utviklerfeil:Finner ikke informasjon om orginal behandling for revurdering "));
 
             var differanse = sjekkOmDifferanseHvisRevurdering(originalBehandling, tilkjentYtelse);
 
@@ -87,15 +90,15 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
     }
 
     private boolean erFBellerMedhold(Behandling behandling) {
-        return !BehandlingType.REVURDERING.equals(behandling.getBehandlingType())
-            || BehandlingÅrsakType.årsakerEtterKlageBehandling().stream().anyMatch(behandling::harBehandlingÅrsak);
+        return !BehandlingType.REVURDERING.equals(behandling.getBehandlingType()) || BehandlingÅrsakType.årsakerEtterKlageBehandling()
+            .stream()
+            .anyMatch(behandling::harBehandlingÅrsak);
     }
 
     private Long sjekkOmDifferanseHvisRevurdering(Behandling originalBehandling, TilkjentYtelseEngangsstønad tilkjentYtelse) {
         var originaltTilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseESHvisFinnes(originalBehandling);
 
-        return originaltTilkjentYtelse.map(orgTilkjentYtelse -> Math.abs(tilkjentYtelse.beløp() - orgTilkjentYtelse.beløp()))
-                .orElse(0L);
+        return originaltTilkjentYtelse.map(orgTilkjentYtelse -> Math.abs(tilkjentYtelse.beløp() - orgTilkjentYtelse.beløp())).orElse(0L);
     }
 
     private boolean antallBarnEndret(FamilieHendelse famHendelse, FamilieHendelse orgFamhendelse) {

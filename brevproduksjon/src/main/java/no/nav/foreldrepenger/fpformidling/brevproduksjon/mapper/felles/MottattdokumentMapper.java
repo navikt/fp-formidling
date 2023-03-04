@@ -14,15 +14,17 @@ public class MottattdokumentMapper {
 
     public static LocalDate finnSisteMottatteSøknad(List<MottattDokument> mottatteDokumenter) {
         return mottatteDokumenter.stream()
-                .filter(dok -> DokumentKategori.SØKNAD.equals(dok.dokumentKategori()))
-                .max(Comparator.comparing(MottattDokument::mottattDato))
-                .map(MottattDokument::mottattDato).orElse(LocalDate.now());
+            .filter(dok -> DokumentKategori.SØKNAD.equals(dok.dokumentKategori()))
+            .max(Comparator.comparing(MottattDokument::mottattDato))
+            .map(MottattDokument::mottattDato)
+            .orElse(LocalDate.now());
     }
 
     public static LocalDate finnførsteMottatteSøknad(List<MottattDokument> mottatteDokumenter) {
         return mottatteDokumenter.stream()
-                .filter(dok -> DokumentKategori.SØKNAD.equals(dok.dokumentKategori()))
-                .min(Comparator.comparing(MottattDokument::mottattDato))
-                .map(MottattDokument::mottattDato).orElse(LocalDate.now());
+            .filter(dok -> DokumentKategori.SØKNAD.equals(dok.dokumentKategori()))
+            .min(Comparator.comparing(MottattDokument::mottattDato))
+            .map(MottattDokument::mottattDato)
+            .orElse(LocalDate.now());
     }
 }

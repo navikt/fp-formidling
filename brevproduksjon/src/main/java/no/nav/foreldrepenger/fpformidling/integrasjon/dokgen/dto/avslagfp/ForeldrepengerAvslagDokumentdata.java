@@ -68,27 +68,24 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (ForeldrepengerAvslagDokumentdata) object;
-        return Objects.equals(felles, that.felles)
-                && Objects.equals(relasjonskode, that.relasjonskode)
-                && Objects.equals(mottattDato, that.mottattDato)
-                && Objects.equals(gjelderFødsel, that.gjelderFødsel)
-                && Objects.equals(barnErFødt, that.barnErFødt)
-                && Objects.equals(annenForelderHarRett, that.annenForelderHarRett)
-                && Objects.equals(antallBarn, that.antallBarn)
-                && Objects.equals(halvG, that.halvG)
-                && Objects.equals(klagefristUker, that.klagefristUker)
-                && Objects.equals(lovhjemmelForAvslag, that.lovhjemmelForAvslag)
-                && Objects.equals(kreverSammenhengendeUttak, that.kreverSammenhengendeUttak)
-                && Objects.equals(avslåttePerioder, that.avslåttePerioder);
+        return Objects.equals(felles, that.felles) && Objects.equals(relasjonskode, that.relasjonskode) && Objects.equals(mottattDato,
+            that.mottattDato) && Objects.equals(gjelderFødsel, that.gjelderFødsel) && Objects.equals(barnErFødt, that.barnErFødt) && Objects.equals(
+            annenForelderHarRett, that.annenForelderHarRett) && Objects.equals(antallBarn, that.antallBarn) && Objects.equals(halvG, that.halvG)
+            && Objects.equals(klagefristUker, that.klagefristUker) && Objects.equals(lovhjemmelForAvslag, that.lovhjemmelForAvslag) && Objects.equals(
+            kreverSammenhengendeUttak, that.kreverSammenhengendeUttak) && Objects.equals(avslåttePerioder, that.avslåttePerioder);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, relasjonskode, mottattDato, gjelderFødsel, barnErFødt, annenForelderHarRett,
-                antallBarn, halvG, klagefristUker, lovhjemmelForAvslag, kreverSammenhengendeUttak, avslåttePerioder);
+        return Objects.hash(felles, relasjonskode, mottattDato, gjelderFødsel, barnErFødt, annenForelderHarRett, antallBarn, halvG, klagefristUker,
+            lovhjemmelForAvslag, kreverSammenhengendeUttak, avslåttePerioder);
     }
 
     public static Builder ny() {

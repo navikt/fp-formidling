@@ -42,15 +42,16 @@ public class SelvstendigNæringsdrivende {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (SelvstendigNæringsdrivende) object;
-        return Objects.equals(nyoppstartet, that.nyoppstartet)
-                && Objects.equals(årsinntekt, that.årsinntekt)
-                && Objects.equals(sistLignedeÅr, that.sistLignedeÅr)
-                && Objects.equals(inntektLavere_AT_SN, that.inntektLavere_AT_SN)
-                && Objects.equals(inntektLavere_AT_FL_SN, that.inntektLavere_AT_FL_SN)
-                && Objects.equals(inntektLavere_FL_SN, that.inntektLavere_FL_SN);
+        return Objects.equals(nyoppstartet, that.nyoppstartet) && Objects.equals(årsinntekt, that.årsinntekt) && Objects.equals(sistLignedeÅr,
+            that.sistLignedeÅr) && Objects.equals(inntektLavere_AT_SN, that.inntektLavere_AT_SN) && Objects.equals(inntektLavere_AT_FL_SN,
+            that.inntektLavere_AT_FL_SN) && Objects.equals(inntektLavere_FL_SN, that.inntektLavere_FL_SN);
     }
 
     @Override

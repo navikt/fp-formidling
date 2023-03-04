@@ -21,7 +21,7 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse
 
     INGEN("-", null),
     BRUKER_ER_DØD("8304", "14-4"),
-    BARN_ER_DØDT("8305",  "14-4"),
+    BARN_ER_DØDT("8305", "14-4"),
     BRUKER_ER_IKKE_MEDLEM("8306", "14-4"),
     SØKT_FOR_SENT("8308", "14-4"),
     PERIODEN_ER_IKKE_FØR_FØDSEL("8309", "14-4"),
@@ -66,12 +66,11 @@ public enum PeriodeIkkeOppfyltÅrsak implements Kodeverdi, ÅrsakMedLovReferanse
     }
 
     public static Set<PeriodeIkkeOppfyltÅrsak> opphørsAvslagÅrsaker() {
-        return new HashSet<>(Arrays.asList(
-                BRUKER_ER_DØD, BARN_ER_DØDT, BRUKER_ER_IKKE_MEDLEM, PERIODEN_ER_IKKE_FØR_FØDSEL, BEGYNT_ANNEN_SAK,
-                SØKT_FOR_SENT,
-                SVANGERSKAPSVILKÅRET_IKKE_OPPFYLT,
-                OPPTJENINGSVILKÅRET_IKKE_OPPFYLT));
+        return new HashSet<>(
+            Arrays.asList(BRUKER_ER_DØD, BARN_ER_DØDT, BRUKER_ER_IKKE_MEDLEM, PERIODEN_ER_IKKE_FØR_FØDSEL, BEGYNT_ANNEN_SAK, SØKT_FOR_SENT,
+                SVANGERSKAPSVILKÅRET_IKKE_OPPFYLT, OPPTJENINGSVILKÅRET_IKKE_OPPFYLT));
     }
+
     public static Set<PeriodeIkkeOppfyltÅrsak> opphørSvpInngangsvilkårMedUttak() {
         return new HashSet<>(Arrays.asList(SVANGERSKAPSVILKÅRET_IKKE_OPPFYLT, OPPTJENINGSVILKÅRET_IKKE_OPPFYLT));
     }

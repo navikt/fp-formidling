@@ -31,8 +31,7 @@ public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMa
     }
 
     @Inject
-    public EtterlysInntektsmeldingDokumentdataMapper(DomeneobjektProvider domeneobjektProvider,
-                                                     BrevMapperUtil brevMapperUtil) {
+    public EtterlysInntektsmeldingDokumentdataMapper(DomeneobjektProvider domeneobjektProvider, BrevMapperUtil brevMapperUtil) {
         this.domeneobjektProvider = domeneobjektProvider;
         this.brevMapperUtil = brevMapperUtil;
     }
@@ -43,8 +42,10 @@ public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMa
     }
 
     @Override
-    public EtterlysInntektsmeldingDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles, DokumentHendelse hendelse,
-                                                   Behandling behandling, boolean erUtkast) {
+    public EtterlysInntektsmeldingDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
+                                                                  DokumentHendelse hendelse,
+                                                                  Behandling behandling,
+                                                                  boolean erUtkast) {
         var språkkode = behandling.getSpråkkode();
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
@@ -54,9 +55,9 @@ public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMa
         var fristDato = brevMapperUtil.getSvarFrist();
 
         var dokumentdataBuilder = EtterlysInntektsmeldingDokumentdata.ny()
-                .medFelles(fellesBuilder.build())
-                .medSøknadDato(formaterDato(søknadDato, språkkode))
-                .medFristDato(formaterDato(fristDato, språkkode));
+            .medFelles(fellesBuilder.build())
+            .medSøknadDato(formaterDato(søknadDato, språkkode))
+            .medFristDato(formaterDato(fristDato, språkkode));
 
         return dokumentdataBuilder.build();
     }

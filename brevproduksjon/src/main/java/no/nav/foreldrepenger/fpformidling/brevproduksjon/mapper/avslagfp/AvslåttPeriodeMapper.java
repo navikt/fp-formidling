@@ -43,8 +43,7 @@ public final class AvslåttPeriodeMapper {
 
         var avslåttePerioder = finnAvslåttePerioder(tilkjentYtelsePerioder, uttakResultatPerioder, behandling.getSpråkkode(), lovReferanser);
         var lovhjemmelForAvslag = FellesMapper.formaterLovhjemlerUttak(lovReferanser,
-                BehandlingMapper.kodeFra(behandlingsresultat.getKonsekvenserForYtelsen()),
-                false);
+            BehandlingMapper.kodeFra(behandlingsresultat.getKonsekvenserForYtelsen()), false);
 
         if (avslåttePerioder.isEmpty()) {
             avslåttePerioder = finnAvslåttePerioder(behandlingsresultat, uttakResultatPerioder, lovReferanser);
@@ -88,9 +87,7 @@ public final class AvslåttPeriodeMapper {
     }
 
     private static AvslåttPeriode årsaktypeFra(ÅrsakMedLovReferanse årsakKode, TreeSet<String> lovReferanser) {
-        var avslåttPeriode = AvslåttPeriode.ny()
-                .medAvslagsårsak(Årsak.of(årsakKode.getKode()))
-                .build();
+        var avslåttPeriode = AvslåttPeriode.ny().medAvslagsårsak(Årsak.of(årsakKode.getKode())).build();
         lovReferanser.addAll(mapLovReferanse(årsakKode));
         return avslåttPeriode;
     }
@@ -101,18 +98,20 @@ public final class AvslåttPeriodeMapper {
                                                     Språkkode språkkode,
                                                     TreeSet<String> lovReferanser) {
         //TFP-5200 Hack for å forhindre dobbelt antall tapte dager om det er flere tilkjentperioder for en uttaksperiode
-        var antallTilkjentPerioderForUttaksperioden = PeriodeBeregner.finnAntallTilkjentePerioderForUttaksperioden(tilkjentPeriodeListe, uttakResultatPeriode);
+        var antallTilkjentPerioderForUttaksperioden = PeriodeBeregner.finnAntallTilkjentePerioderForUttaksperioden(tilkjentPeriodeListe,
+            uttakResultatPeriode);
         var antallTapteDager = mapAntallTapteDagerFra(uttakResultatPeriode.getAktiviteter());
         var tapteDagerHvisFlereTilkjentPerioder = BigDecimal.ZERO;
-        if (antallTilkjentPerioderForUttaksperioden > 1 ) {
-            tapteDagerHvisFlereTilkjentPerioder= BigDecimal.valueOf(antallTapteDager).divide(BigDecimal.valueOf(antallTilkjentPerioderForUttaksperioden), 2, RoundingMode.HALF_UP);
+        if (antallTilkjentPerioderForUttaksperioden > 1) {
+            tapteDagerHvisFlereTilkjentPerioder = BigDecimal.valueOf(antallTapteDager)
+                .divide(BigDecimal.valueOf(antallTilkjentPerioderForUttaksperioden), 2, RoundingMode.HALF_UP);
         }
         var avslåttPeriode = AvslåttPeriode.ny()
-                .medAvslagsårsak(Årsak.of(uttakResultatPeriode.getPeriodeResultatÅrsak().getKode()))
-                .medPeriodeFom(tilkjentYtelsePeriode.getPeriodeFom(), språkkode)
-                .medPeriodeTom(tilkjentYtelsePeriode.getPeriodeTom(), språkkode)
-                .medAntallTapteDager(antallTapteDager, tapteDagerHvisFlereTilkjentPerioder)
-                .build();
+            .medAvslagsårsak(Årsak.of(uttakResultatPeriode.getPeriodeResultatÅrsak().getKode()))
+            .medPeriodeFom(tilkjentYtelsePeriode.getPeriodeFom(), språkkode)
+            .medPeriodeTom(tilkjentYtelsePeriode.getPeriodeTom(), språkkode)
+            .medAntallTapteDager(antallTapteDager, tapteDagerHvisFlereTilkjentPerioder)
+            .build();
         lovReferanser.addAll(mapLovReferanse(uttakResultatPeriode.getPeriodeResultatÅrsak()));
         return avslåttPeriode;
     }
@@ -122,18 +121,17 @@ public final class AvslåttPeriodeMapper {
     }
 
     private static int mapAntallTapteDagerFra(List<UttakResultatPeriodeAktivitet> uttakAktiviteter) {
-        return alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ?
-                uttakAktiviteter.stream()
-                        .map(UttakResultatPeriodeAktivitet::getTrekkdager)
-                        .filter(Objects::nonNull)
-                        .max(BigDecimal::compareTo)
-                        .map(bd -> bd.setScale(1, RoundingMode.DOWN).intValue())
-                        .orElse(0) : 0;
+        return alleAktiviteterHarNullUtbetaling(uttakAktiviteter) ? uttakAktiviteter.stream()
+            .map(UttakResultatPeriodeAktivitet::getTrekkdager)
+            .filter(Objects::nonNull)
+            .max(BigDecimal::compareTo)
+            .map(bd -> bd.setScale(1, RoundingMode.DOWN).intValue())
+            .orElse(0) : 0;
     }
 
     private static UttakResultatPeriode finnUttakResultatPeriode(Optional<ForeldrepengerUttak> uttakResultatPerioder,
                                                                  TilkjentYtelsePeriode tilkjentYtelsePeriode) {
-        return PeriodeBeregner.finnUttaksperiode(tilkjentYtelsePeriode, uttakResultatPerioder
-                .map(ForeldrepengerUttak::perioder).orElse(Collections.emptyList()));
+        return PeriodeBeregner.finnUttaksperiode(tilkjentYtelsePeriode,
+            uttakResultatPerioder.map(ForeldrepengerUttak::perioder).orElse(Collections.emptyList()));
     }
 }

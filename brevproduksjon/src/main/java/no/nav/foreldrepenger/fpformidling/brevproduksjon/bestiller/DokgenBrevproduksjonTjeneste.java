@@ -89,15 +89,11 @@ public class DokgenBrevproduksjonTjeneste {
             teller++;
 
             var innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
-            var response = opprettJournalpostTjeneste.journalførUtsendelse(brev,
-                    dokumentMal,
-                    dokumentFelles,
-                    dokumentHendelse,
-                    behandling.getFagsakBackend().getSaksnummer(),
-                    !innsynMedVedlegg,
-                    behandling.getBehandlingsresultat() != null ? behandling.getBehandlingsresultat().getOverskrift() : null,
-                    unikBestillingsUuidPerDokFelles) // NoSonar
-            ;
+            var response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
+                behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg,
+                behandling.getBehandlingsresultat() != null ? behandling.getBehandlingsresultat().getOverskrift() : null,
+                unikBestillingsUuidPerDokFelles) // NoSonar
+                ;
 
             var journalpostId = new JournalpostId(response.journalpostId());
 
@@ -107,7 +103,8 @@ public class DokgenBrevproduksjonTjeneste {
                 leggTilVedleggOgFerdigstillForsendelse(dokumentHendelse.getBehandlingUuid(), journalpostId);
             }
 
-            distribuerBrevOgLagHistorikk(dokumentHendelse, dokumentMal, response, journalpostId, innsynMedVedlegg, dokumentFelles.getSaksnummer().getVerdi(), unikBestillingsUuidPerDokFelles);
+            distribuerBrevOgLagHistorikk(dokumentHendelse, dokumentMal, response, journalpostId, innsynMedVedlegg,
+                dokumentFelles.getSaksnummer().getVerdi(), unikBestillingsUuidPerDokFelles);
         }
     }
 
@@ -118,7 +115,8 @@ public class DokgenBrevproduksjonTjeneste {
                                    BestillingType bestillingType) {
 
         var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
-        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, BestillingType.UTKAST == bestillingType);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling,
+            BestillingType.UTKAST == bestillingType);
         dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
 
         byte[] brev;
@@ -127,8 +125,9 @@ public class DokgenBrevproduksjonTjeneste {
         } catch (Exception e) {
             dokumentdata.getFelles().anonymiser();
             SECURE_LOG.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
-            throw new TekniskException("FPFORMIDLING-221006", String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s",
-                    dokumentMal.getKode(), behandling.getUuid(), bestillingType), e);
+            throw new TekniskException("FPFORMIDLING-221006",
+                String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s", dokumentMal.getKode(),
+                    behandling.getUuid(), bestillingType), e);
         }
         if (LOG.isInfoEnabled()) {
             LOG.info("Dokument av type {} i behandling id {} er generert.", dokumentMal.getKode(), behandling.getUuid());
@@ -145,29 +144,27 @@ public class DokgenBrevproduksjonTjeneste {
 
     private DokumentData lagDokumentData(Behandling behandling, DokumentMalType dokumentMalType, BestillingType bestillingType) {
         return DokumentData.builder()
-                .medDokumentMalType(dokumentMalType)
-                .medBehandlingUuid(behandling.getUuid())
-                .medBestiltTid(LocalDateTime.now())
-                .medBestillingType(bestillingType.name())
-                .build();
+            .medDokumentMalType(dokumentMalType)
+            .medBehandlingUuid(behandling.getUuid())
+            .medBestiltTid(LocalDateTime.now())
+            .medBestillingType(bestillingType.name())
+            .build();
     }
 
-    private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMal, OpprettJournalpostResponse response, JournalpostId journalpostId, boolean innsynMedVedlegg, String saksnummer, String unikBestillingsId) {
+    private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse,
+                                              DokumentMalType dokumentMal,
+                                              OpprettJournalpostResponse response,
+                                              JournalpostId journalpostId,
+                                              boolean innsynMedVedlegg,
+                                              String saksnummer,
+                                              String unikBestillingsId) {
         var taskGruppe = new ProsessTaskGruppe();
-        taskGruppe.addNesteSekvensiell(
-                opprettDistribuerBrevTask(journalpostId,
-                        innsynMedVedlegg,
-                        dokumentHendelse.getBehandlingUuid(),
-                        DistribusjonstypeUtleder.utledFor(dokumentMal),
-                        saksnummer,
-                        unikBestillingsId));
+        taskGruppe.addNesteSekvensiell(opprettDistribuerBrevTask(journalpostId, innsynMedVedlegg, dokumentHendelse.getBehandlingUuid(),
+            DistribusjonstypeUtleder.utledFor(dokumentMal), saksnummer, unikBestillingsId));
 
         taskGruppe.addNesteSekvensiell(
-                opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(),
-                        dokumentHendelse.getBestillingUuid(),
-                        dokumentMal,
-                        response.journalpostId(),
-                        response.dokumenter().get(0).dokumentInfoId()));
+            opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(), dokumentHendelse.getBestillingUuid(), dokumentMal,
+                response.journalpostId(), response.dokumenter().get(0).dokumentInfoId()));
         taskGruppe.setCallIdFraEksisterende();
         taskTjeneste.lagre(taskGruppe);
     }

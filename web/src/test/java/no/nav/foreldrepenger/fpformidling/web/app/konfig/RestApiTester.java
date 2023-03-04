@@ -1,16 +1,16 @@
 package no.nav.foreldrepenger.fpformidling.web.app.konfig;
 
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
+
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Application;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Application;
-
-import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
 
 class RestApiTester {
 
@@ -33,9 +33,6 @@ class RestApiTester {
     }
 
     static Collection<Class<?>> finnAlleRestTjenester(Application config) {
-        return config.getClasses().stream()
-                .filter(c -> c.getAnnotation(Path.class) != null)
-                .filter(c -> !UNNTATT.contains(c))
-                .toList();
+        return config.getClasses().stream().filter(c -> c.getAnnotation(Path.class) != null).filter(c -> !UNNTATT.contains(c)).toList();
     }
 }

@@ -73,27 +73,25 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
 
     @Override
     public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         final var that = (ForeldrepengerOpphørDokumentdata) o;
-        return erSøkerDød() == that.erSøkerDød()
-                && erGjelderFødsel() == that.erGjelderFødsel()
-                && getAntallBarn() == that.getAntallBarn()
-                && getHalvG() == that.getHalvG()
-                && getKlagefristUker() == that.getKlagefristUker()
-                && Objects.equals(getRelasjonskode(), that.getRelasjonskode())
-                && Objects.equals(getLovhjemmelForAvslag(), that.getLovhjemmelForAvslag())
-                && Objects.equals(getAvslagÅrsaker(), that.getAvslagÅrsaker())
-                && Objects.equals(getBarnDødsdato(), that.getBarnDødsdato())
-                && Objects.equals(getOpphørDato(), that.getOpphørDato())
-                && Objects.equals(getFomStønadsdato(), that.getFomStønadsdato())
-                && Objects.equals(getTomStønadsdato(), that.getTomStønadsdato())
-                && Objects.equals(getFelles(), that.getFelles());
+        return erSøkerDød() == that.erSøkerDød() && erGjelderFødsel() == that.erGjelderFødsel() && getAntallBarn() == that.getAntallBarn()
+            && getHalvG() == that.getHalvG() && getKlagefristUker() == that.getKlagefristUker() && Objects.equals(getRelasjonskode(),
+            that.getRelasjonskode()) && Objects.equals(getLovhjemmelForAvslag(), that.getLovhjemmelForAvslag()) && Objects.equals(getAvslagÅrsaker(),
+            that.getAvslagÅrsaker()) && Objects.equals(getBarnDødsdato(), that.getBarnDødsdato()) && Objects.equals(getOpphørDato(),
+            that.getOpphørDato()) && Objects.equals(getFomStønadsdato(), that.getFomStønadsdato()) && Objects.equals(getTomStønadsdato(),
+            that.getTomStønadsdato()) && Objects.equals(getFelles(), that.getFelles());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFelles(), erSøkerDød(), getRelasjonskode(), erGjelderFødsel(), getAntallBarn(), getHalvG(), getLovhjemmelForAvslag(), getAvslagÅrsaker(), getKlagefristUker(), getBarnDødsdato(), getOpphørDato(), getFomStønadsdato(), getTomStønadsdato());
+        return Objects.hash(getFelles(), erSøkerDød(), getRelasjonskode(), erGjelderFødsel(), getAntallBarn(), getHalvG(), getLovhjemmelForAvslag(),
+            getAvslagÅrsaker(), getKlagefristUker(), getBarnDødsdato(), getOpphørDato(), getFomStønadsdato(), getTomStønadsdato());
     }
 
     public static Builder ny() {

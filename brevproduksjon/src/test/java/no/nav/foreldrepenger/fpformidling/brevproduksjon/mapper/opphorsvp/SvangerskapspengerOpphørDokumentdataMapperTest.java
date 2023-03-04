@@ -115,7 +115,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getDødsdatoBarn()).isNull();
         assertThat(dokumentdata.getFødselsdato()).isEqualTo(formaterDato(LocalDate.now(), Språkkode.NB));
         assertThat(dokumentdata.getErSøkerDød()).isFalse();
-        assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP/2);
+        assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
         assertThat(dokumentdata.getLovhjemmel()).isEqualTo("§ 14-4 og forvaltningsloven § 35");
         assertThat(dokumentdata.getOpphørtPeriode().getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_IKKE_FØR_FØDSEL.getKode()));
         assertThat(dokumentdata.getOpphørtPeriode().getStønadsperiodeFom()).isEqualTo(formaterDato(PERIODE1_FOM, Språkkode.NB));
@@ -131,60 +131,59 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
 
     private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {
         return Optional.of(Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-                .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
-                .medhHjemmel(Hjemmel.F_14_7)
-                .medBesteberegnet(true)
-                .build());
+            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
+            .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
+            .medhHjemmel(Hjemmel.F_14_7)
+            .medBesteberegnet(true)
+            .build());
     }
 
     private Optional<TilkjentYtelseForeldrepenger> opprettTilkjentYtelse() {
         return Optional.of(TilkjentYtelseForeldrepenger.ny()
-                .leggTilPerioder(of(
-                        TilkjentYtelsePeriode.ny()
-                                .medDagsats(500L)
-                                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                                .medAndeler(of(TilkjentYtelseAndel.ny()
-                                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                                        .medArbeidsgiver(ARBEIDSGIVER_1)
-                                        .medStillingsprosent(BigDecimal.valueOf(50))
-                                        .build()))
-                                .build()))
-                .build());
+            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
+                .medDagsats(500L)
+                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+                .medAndeler(of(TilkjentYtelseAndel.ny()
+                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                    .medArbeidsgiver(ARBEIDSGIVER_1)
+                    .medStillingsprosent(BigDecimal.valueOf(50))
+                    .build()))
+                .build()))
+            .build());
     }
 
     private Optional<SvangerskapspengerUttak> opprettUttaksresultat() {
         var uttakResultatPeriode1 = SvpUttakResultatPeriode.Builder.ny()
-                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .medArbeidsgiverNavn(ARBEIDSGIVER_1_NAVN)
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .build();
+            .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
+            .medArbeidsgiverNavn(ARBEIDSGIVER_1_NAVN)
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .build();
         var uttakResultatPeriode2 = SvpUttakResultatPeriode.Builder.ny()
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_IKKE_FØR_FØDSEL)
-                .medArbeidsgiverNavn(ARBEIDSGIVER_1_NAVN)
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .build();
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_IKKE_FØR_FØDSEL)
+            .medArbeidsgiverNavn(ARBEIDSGIVER_1_NAVN)
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .build();
 
         var uttaksresultat = SvangerskapspengerUttak.Builder.ny()
-                .leggTilUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold.Builder.ny()
-                        .medArbeidsgiver(new Arbeidsgiver("1234", ARBEIDSGIVER_1_NAVN))
-                        .leggTilPerioder(List.of(uttakResultatPeriode1, uttakResultatPeriode2))
-                        .build())
-                .build();
+            .leggTilUttakResultatArbeidsforhold(SvpUttakResultatArbeidsforhold.Builder.ny()
+                .medArbeidsgiver(new Arbeidsgiver("1234", ARBEIDSGIVER_1_NAVN))
+                .leggTilPerioder(List.of(uttakResultatPeriode1, uttakResultatPeriode2))
+                .build())
+            .build();
 
         return Optional.of(uttaksresultat);
     }
 
     private Behandling opprettBehandling() {
         return Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.REVURDERING)
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medBehandlingResultatType(BehandlingResultatType.OPPHØR)
-                        .medAvslagsårsak(Avslagsårsak.UDEFINERT)
-                        .build())
-                .medSpråkkode(Språkkode.NB)
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.REVURDERING)
+            .medBehandlingsresultat(Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.OPPHØR)
+                .medAvslagsårsak(Avslagsårsak.UDEFINERT)
+                .build())
+            .medSpråkkode(Språkkode.NB)
+            .build();
     }
 }

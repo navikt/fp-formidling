@@ -1,46 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
-import static java.util.List.of;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.FRITEKST;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SAKSNUMMER;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_FNR;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_NAVN;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentData;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
-import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp.of;
-import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
-import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BGAndelArbeidsforhold;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.PeriodeÅrsak;
+import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.*;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
@@ -64,12 +28,31 @@ import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.svp.*;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import static java.util.List.of;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.*;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp.of;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
@@ -163,10 +146,12 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder()).hasSize(2);
         assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
         assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
-        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(0).getUtbetalingsgrad()).isEqualTo(Prosent.of(UTBETALINGSGRAD_PERIODE1.intValue()));
+        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(0).getUtbetalingsgrad()).isEqualTo(
+            Prosent.of(UTBETALINGSGRAD_PERIODE1.intValue()));
         assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
         assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
-        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(1).getUtbetalingsgrad()).isEqualTo(Prosent.of(UTBETALINGSGRAD_PERIODE2.intValue()));
+        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(1).getUtbetalingsgrad()).isEqualTo(
+            Prosent.of(UTBETALINGSGRAD_PERIODE2.intValue()));
 
         assertThat(dokumentdata.getUtbetalingsperioder()).hasSize(2);
         assertThat(dokumentdata.getUtbetalingsperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
@@ -214,28 +199,21 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_revurdering() {
         // Arrange
-        var behandling = opprettBehandling(BehandlingType.REVURDERING)
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                        .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING))
-                        .build())
-                .build();
+        var behandling = opprettBehandling(BehandlingType.REVURDERING).medBehandlingsresultat(Behandlingsresultat.builder()
+            .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
+            .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING))
+            .build()).build();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
 
-        var originalBehandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
-                        .build())
-                .build();
+        var originalBehandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD).medBehandlingsresultat(
+            Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build()).build();
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)).thenReturn(Optional.of(originalBehandling));
 
-        when(domeneobjektProvider.hentFamiliehendelse(eq(originalBehandling)))
-                .thenReturn(opprettFamilieHendelse(LocalDate.now().minusDays(1)));
-        when(domeneobjektProvider.hentFamiliehendelse(eq(behandling)))
-                .thenReturn(opprettFamilieHendelse(LocalDate.now().minusDays(2)));
+        when(domeneobjektProvider.hentFamiliehendelse(eq(originalBehandling))).thenReturn(opprettFamilieHendelse(LocalDate.now().minusDays(1)));
+        when(domeneobjektProvider.hentFamiliehendelse(eq(behandling))).thenReturn(opprettFamilieHendelse(LocalDate.now().minusDays(2)));
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -288,259 +266,246 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
     private Behandling.Builder opprettBehandling(BehandlingType behandlingType) {
         return Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(behandlingType)
-                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-                .medSpråkkode(Språkkode.NB);
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(behandlingType)
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+            .medSpråkkode(Språkkode.NB);
     }
 
     private FamilieHendelse opprettFamilieHendelse(LocalDate termindato) {
-        return new FamilieHendelse(FamilieHendelseType.TERMIN, 1, 0, LocalDate.now(), termindato, null, null,true, true);
+        return new FamilieHendelse(FamilieHendelseType.TERMIN, 1, 0, LocalDate.now(), termindato, null, null, true, true);
     }
 
     private Beregningsgrunnlag opprettBeregningsgrunnlag() {
         return Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
-                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode1())
-                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode2())
-                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode3())
-                .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
-                .medhHjemmel(Hjemmel.F_14_7)
-                .medBesteberegnet(true)
-                .build();
+            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.ARBEIDSTAKER))
+            .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode1())
+            .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode2())
+            .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriode3())
+            .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
+            .medhHjemmel(Hjemmel.F_14_7)
+            .medBesteberegnet(true)
+            .build();
     }
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode1() {
         return BeregningsgrunnlagPeriode.ny()
-                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medDagsats(DAGSATS_PERIODE1)
-                .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG))
-                .medAvkortetPrÅr(new BigDecimal(GRUNNBELØP * 6))
-                .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriode1())
-                .medperiodeÅrsaker(of(PeriodeÅrsak.NATURALYTELSE_TILKOMMER))
-                .build();
+            .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .medDagsats(DAGSATS_PERIODE1)
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG))
+            .medAvkortetPrÅr(new BigDecimal(GRUNNBELØP * 6))
+            .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriode1())
+            .medperiodeÅrsaker(of(PeriodeÅrsak.NATURALYTELSE_TILKOMMER))
+            .build();
     }
 
     private List<BeregningsgrunnlagPrStatusOgAndel> lagBgpsaListePeriode1() {
         return of(BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG))
-                .medDagsats(DAGSATS_PERIODE1)
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .medBgAndelArbeidsforhold(lagBgAndelArbeidsforholdPeriode1())
-                .build());
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG))
+            .medDagsats(DAGSATS_PERIODE1)
+            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+            .medBgAndelArbeidsforhold(lagBgAndelArbeidsforholdPeriode1())
+            .build());
     }
 
     private BGAndelArbeidsforhold lagBgAndelArbeidsforholdPeriode1() {
-        return new BGAndelArbeidsforhold(ARBEIDSGIVER1, ArbeidsforholdRef.ref("1"),
-                BigDecimal.valueOf(NATURALYTELSE_TILKOMMET), BigDecimal.ZERO);
+        return new BGAndelArbeidsforhold(ARBEIDSGIVER1, ArbeidsforholdRef.ref("1"), BigDecimal.valueOf(NATURALYTELSE_TILKOMMET), BigDecimal.ZERO);
     }
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode2() {
         return BeregningsgrunnlagPeriode.ny()
-                .medPeriode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                .medDagsats(DAGSATS_PERIODE2)
-                .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG))
-                .medAvkortetPrÅr(new BigDecimal(GRUNNBELØP * 6))
-                .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriode2())
-                .medperiodeÅrsaker(of(PeriodeÅrsak.NATURALYTELSE_BORTFALT))
-                .build();
+            .medPeriode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
+            .medDagsats(DAGSATS_PERIODE2)
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG))
+            .medAvkortetPrÅr(new BigDecimal(GRUNNBELØP * 6))
+            .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriode2())
+            .medperiodeÅrsaker(of(PeriodeÅrsak.NATURALYTELSE_BORTFALT))
+            .build();
     }
 
     private List<BeregningsgrunnlagPrStatusOgAndel> lagBgpsaListePeriode2() {
         return of(BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG))
-                .medDagsats(DAGSATS_PERIODE1)
-                .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                .medBgAndelArbeidsforhold(lagBgAndelArbeidsforholdPeriode2())
-                .build());
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG))
+            .medDagsats(DAGSATS_PERIODE1)
+            .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+            .medBgAndelArbeidsforhold(lagBgAndelArbeidsforholdPeriode2())
+            .build());
     }
 
     private BGAndelArbeidsforhold lagBgAndelArbeidsforholdPeriode2() {
-        return new BGAndelArbeidsforhold(ARBEIDSGIVER1, ArbeidsforholdRef.ref("1"),
-                BigDecimal.valueOf(NATURALYTELSE_BORTFALT), BigDecimal.ZERO);
+        return new BGAndelArbeidsforhold(ARBEIDSGIVER1, ArbeidsforholdRef.ref("1"), BigDecimal.valueOf(NATURALYTELSE_BORTFALT), BigDecimal.ZERO);
     }
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode3() {
         return BeregningsgrunnlagPeriode.ny()
-                .medPeriode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
-                .medDagsats(DAGSATS_PERIODE3)
-                .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
-                .medAvkortetPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
-                .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriode3())
-                .build();
+            .medPeriode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
+            .medDagsats(DAGSATS_PERIODE3)
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
+            .medAvkortetPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
+            .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriode3())
+            .build();
     }
 
     private List<BeregningsgrunnlagPrStatusOgAndel> lagBgpsaListePeriode3() {
         return of(BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
-                .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
-                .medNyIArbeidslivet(true)
-                .medBeregningsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
-                .build());
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
+            .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
+            .medNyIArbeidslivet(true)
+            .medBeregningsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
+            .build());
     }
 
     private Beregningsgrunnlag opprettBeregningsgrunnlagMedSNIFørstePeriode() {
         return Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
-                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriodeSN())
-                .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
-                .medhHjemmel(Hjemmel.F_14_7)
-                .medBesteberegnet(true)
-                .build();
+            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE))
+            .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriodeSN())
+            .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
+            .medhHjemmel(Hjemmel.F_14_7)
+            .medBesteberegnet(true)
+            .build();
     }
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriodeSN() {
         return BeregningsgrunnlagPeriode.ny()
-                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medDagsats(DAGSATS_PERIODE1)
-                .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
-                .medAvkortetPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
-                .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriodeSN())
-                .build();
+            .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .medDagsats(DAGSATS_PERIODE1)
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
+            .medAvkortetPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
+            .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriodeSN())
+            .build();
     }
 
     private List<BeregningsgrunnlagPrStatusOgAndel> lagBgpsaListePeriodeSN() {
         return of(BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
-                .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
-                .medNyIArbeidslivet(true)
-                .medBeregningsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .build());
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_SN))
+            .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
+            .medNyIArbeidslivet(true)
+            .medBeregningsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .build());
     }
 
     private Beregningsgrunnlag opprettBeregningsgrunnlagMedFLIFørstePeriode() {
         return Beregningsgrunnlag.ny()
-                .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER))
-                .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriodeFL())
-                .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
-                .medhHjemmel(Hjemmel.F_14_7)
-                .medBesteberegnet(true)
-                .build();
+            .leggTilBeregningsgrunnlagAktivitetStatus(new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER))
+            .leggTilBeregningsgrunnlagPeriode(lagBeregningsgrunnlagPeriodeFL())
+            .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
+            .medhHjemmel(Hjemmel.F_14_7)
+            .medBesteberegnet(true)
+            .build();
     }
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriodeFL() {
         return BeregningsgrunnlagPeriode.ny()
-                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medDagsats(DAGSATS_PERIODE1)
-                .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_FL))
-                .medAvkortetPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_FL))
-                .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriodeFL())
-                .build();
+            .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .medDagsats(DAGSATS_PERIODE1)
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_FL))
+            .medAvkortetPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_FL))
+            .medBeregningsgrunnlagPrStatusOgAndelList(lagBgpsaListePeriodeFL())
+            .build();
     }
 
     private List<BeregningsgrunnlagPrStatusOgAndel> lagBgpsaListePeriodeFL() {
         return of(BeregningsgrunnlagPrStatusOgAndel.ny()
-                .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_FL))
-                .medAktivitetStatus(AktivitetStatus.FRILANSER)
-                .medNyIArbeidslivet(true)
-                .medBeregningsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .build());
+            .medBruttoPrÅr(new BigDecimal(BRUTTO_BERENINGSGRUNNLAG_FL))
+            .medAktivitetStatus(AktivitetStatus.FRILANSER)
+            .medNyIArbeidslivet(true)
+            .medBeregningsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .build());
     }
 
     private TilkjentYtelseForeldrepenger opprettTilkjentYtelse() {
         return TilkjentYtelseForeldrepenger.ny()
-                .leggTilPerioder(of(
-                        TilkjentYtelsePeriode.ny()
-                                .medDagsats(DAGSATS_PERIODE1)
-                                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                                .medAndeler(of(TilkjentYtelseAndel.ny()
-                                        .medErBrukerMottaker(true)
-                                        .medUtbetalesTilBruker(DAGSATS_PERIODE1.intValue())
-                                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                                        .medStillingsprosent(BigDecimal.valueOf(100))
-                                        .medArbeidsgiver(ARBEIDSGIVER1)
-                                        .build()))
-                                .build(),
-                        TilkjentYtelsePeriode.ny()
-                                .medDagsats(DAGSATS_PERIODE2)
-                                .medPeriode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                                .medAndeler(of(TilkjentYtelseAndel.ny()
-                                        .medErArbeidsgiverMottaker(true)
-                                        .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
-                                        .medStillingsprosent(BigDecimal.valueOf(100))
-                                        .medArbeidsgiver(ARBEIDSGIVER1)
-                                        .build()))
-                                .build(),
-                        TilkjentYtelsePeriode.ny()
-                                .medDagsats(DAGSATS_PERIODE3)
-                                .medPeriode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
-                                .medAndeler(of(TilkjentYtelseAndel.ny()
-                                        .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
-                                        .medStillingsprosent(BigDecimal.valueOf(100))
-                                        .build()))
-                                .build()))
-                .build();
+            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
+                .medDagsats(DAGSATS_PERIODE1)
+                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+                .medAndeler(of(TilkjentYtelseAndel.ny()
+                    .medErBrukerMottaker(true)
+                    .medUtbetalesTilBruker(DAGSATS_PERIODE1.intValue())
+                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                    .medStillingsprosent(BigDecimal.valueOf(100))
+                    .medArbeidsgiver(ARBEIDSGIVER1)
+                    .build()))
+                .build(), TilkjentYtelsePeriode.ny()
+                .medDagsats(DAGSATS_PERIODE2)
+                .medPeriode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
+                .medAndeler(of(TilkjentYtelseAndel.ny()
+                    .medErArbeidsgiverMottaker(true)
+                    .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
+                    .medStillingsprosent(BigDecimal.valueOf(100))
+                    .medArbeidsgiver(ARBEIDSGIVER1)
+                    .build()))
+                .build(), TilkjentYtelsePeriode.ny()
+                .medDagsats(DAGSATS_PERIODE3)
+                .medPeriode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
+                .medAndeler(of(TilkjentYtelseAndel.ny()
+                    .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
+                    .medStillingsprosent(BigDecimal.valueOf(100))
+                    .build()))
+                .build()))
+            .build();
     }
 
     private TilkjentYtelseForeldrepenger opprettTilkjentYtelseMedSNIFørstePeriode() {
         return TilkjentYtelseForeldrepenger.ny()
-                .leggTilPerioder(of(
-                        TilkjentYtelsePeriode.ny()
-                                .medDagsats(DAGSATS_PERIODE1)
-                                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                                .medAndeler(of(TilkjentYtelseAndel.ny()
-                                        .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
-                                        .medStillingsprosent(BigDecimal.valueOf(100))
-                                        .build()))
-                                .build()))
-                .build();
+            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
+                .medDagsats(DAGSATS_PERIODE1)
+                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+                .medAndeler(of(TilkjentYtelseAndel.ny()
+                    .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
+                    .medStillingsprosent(BigDecimal.valueOf(100))
+                    .build()))
+                .build()))
+            .build();
     }
 
     private TilkjentYtelseForeldrepenger opprettTilkjentYtelseMedFLIFørstePeriode() {
         return TilkjentYtelseForeldrepenger.ny()
-                .leggTilPerioder(of(
-                        TilkjentYtelsePeriode.ny()
-                                .medDagsats(DAGSATS_PERIODE1)
-                                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                                .medAndeler(of(TilkjentYtelseAndel.ny()
-                                        .medAktivitetStatus(AktivitetStatus.FRILANSER)
-                                        .medStillingsprosent(BigDecimal.valueOf(100))
-                                        .build()))
-                                .build()))
-                .build();
+            .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
+                .medDagsats(DAGSATS_PERIODE1)
+                .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+                .medAndeler(
+                    of(TilkjentYtelseAndel.ny().medAktivitetStatus(AktivitetStatus.FRILANSER).medStillingsprosent(BigDecimal.valueOf(100)).build()))
+                .build()))
+            .build();
     }
 
     private SvangerskapspengerUttak opprettSvpUttaksresultat() {
         var uttakPeriode1 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE1)
-                .build();
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
+            .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE1)
+            .build();
         var uttakPeriode2 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE2)
-                .build();
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
+            .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE2)
+            .build();
         var uttakPeriode3 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER2_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-                .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE3)
-                .medPeriodeIkkeOppfyltÅrsak(PERIODE_IKKE_OPPFYLT_ÅRSAK)
-                .build();
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER2_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE3)
+            .medPeriodeIkkeOppfyltÅrsak(PERIODE_IKKE_OPPFYLT_ÅRSAK)
+            .build();
         var uttakPeriode4 = SvpUttakResultatPeriode.Builder.ny()
-                .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
-                .medArbeidsgiverNavn(ARBEIDSGIVER3_NAVN)
-                .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
-                .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE4)
-                .build();
-        var svpUttakResultatArbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny()
-                .leggTilPerioder(of(uttakPeriode1, uttakPeriode2))
-                .build();
-        var svpUttakResultatArbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny()
-                .leggTilPerioder(of(uttakPeriode3))
-                .build();
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER3_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
+            .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE4)
+            .build();
+        var svpUttakResultatArbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode1, uttakPeriode2)).build();
+        var svpUttakResultatArbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode3)).build();
         var svpUttakResultatArbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny()
-                .leggTilPerioder(of(uttakPeriode4))
-                .medArbeidsforholdIkkeOppfyltÅrsak(ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK)
-                .medArbeidsgiver(ARBEIDSGIVER3)
-                .build();
+            .leggTilPerioder(of(uttakPeriode4))
+            .medArbeidsforholdIkkeOppfyltÅrsak(ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK)
+            .medArbeidsgiver(ARBEIDSGIVER3)
+            .build();
         return SvangerskapspengerUttak.Builder.ny()
-                .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold1)
-                .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold2)
-                .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold3)
-                .build();
+            .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold1)
+            .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold2)
+            .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold3)
+            .build();
     }
 }

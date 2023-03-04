@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi;
 
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import java.util.Set;
 
 @JsonFormat(shape = Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
@@ -51,8 +51,7 @@ public enum BehandlingÅrsakType implements Kodeverdi {
     RE_HENDELSE_DØDFØDSEL("RE-HENDELSE-DØDFØD"),
 
     // La stå
-    @JsonEnumDefaultValue
-    UDEFINERT("-"),
+    @JsonEnumDefaultValue UDEFINERT("-"),
 
     ;
 

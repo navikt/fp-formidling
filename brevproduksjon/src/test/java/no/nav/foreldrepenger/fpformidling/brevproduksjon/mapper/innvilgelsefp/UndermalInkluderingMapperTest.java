@@ -26,9 +26,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_inkludere__utbetaling_når_det_er_innvilget_resultat_og_mer_enn_en_periode() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).build();
@@ -44,9 +42,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_ikke_inkludere_utbetaling_når_det_er_avslått_resultat() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).build();
@@ -62,9 +58,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_inkludere_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_næring_og_uten_gradering_og_uten_en_av_gitte_årsaker() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).medNæring(Næring.ny().medGradering(false).build()).build();
@@ -79,9 +73,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_ikke_inkludere_utbetaling_når_det_er_innvilget_resultat_og_en_periode_uten_gradering_med_en_av_gitte_årsaker() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2010")).medNæring(Næring.ny().medGradering(false).build()).build();
@@ -96,9 +88,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_ikke_inkludere_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_gradering_uten_en_av_gitte_årsaker() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).medNæring(Næring.ny().medGradering(true).build()).build();
@@ -113,12 +103,13 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_inkludere_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_arbeidsforhold_og_uten_gradering_og_uten_en_av_gitte_årsaker() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
-        var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).build())).build();
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("1234"))
+            .medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).build()))
+            .build();
 
         // Act
         var resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode1));
@@ -130,12 +121,13 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_inkludere_utbetaling_når_det_er_innvilget_resultat_og_en_periode_med_annen_aktivitet_og_uten_gradering_og_uten_en_av_gitte_årsaker() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
-        var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(false).build())).build();
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("1234"))
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(false).build()))
+            .build();
 
         // Act
         var resultat = skalInkludereUtbetaling(behandling, of(utbetalingsperiode1));
@@ -147,9 +139,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_inkludere_gradering_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_med_gitt_årsak() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2010")).build();
@@ -164,9 +154,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_ikke_inkludere_gradering_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_uten_gitt_årsak() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).build();
@@ -181,12 +169,13 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_inkludere_gradering_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_med_gradering() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
-        var utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(true).build())).build();
+        var utbetalingsperiode = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("1234"))
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(true).build()))
+            .build();
 
         // Act
         var resultat = skalInkludereUtbetNårGradering(behandling, of(utbetalingsperiode));
@@ -198,12 +187,13 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_ikke_inkludere_gradering_når_det_er_innvilget_resultat_og_nøyaktig_en_periode_uten_gradering() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
-        var utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(false).build())).build();
+        var utbetalingsperiode = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("1234"))
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(false).build()))
+            .build();
 
         // Act
         var resultat = skalInkludereUtbetNårGradering(behandling, of(utbetalingsperiode));
@@ -215,9 +205,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_ikke_inkludere_gradering_når_det_er_innvilget_resultat_og_mer_enn_en_periode() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2010")).build();
@@ -233,9 +221,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_ikke_inkludere_gradering_når_det_er_avslått_resultat() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2010")).build();
@@ -250,16 +236,15 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_inkludere_innvilget_når_det_ikke_er_konsekvens_for_ytelse_endring_i_beregning_og_har_mer_enn_en_periode_der_minst_en_er_innvilget() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
         var utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2011")).medInnvilget(false).build();
 
         // Act
-        var resultat = skalInkludereInnvilget(behandling, of(utbetalingsperiode1, utbetalingsperiode2), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode());
+        var resultat = skalInkludereInnvilget(behandling, of(utbetalingsperiode1, utbetalingsperiode2),
+            KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode());
 
         // Assert
         assertThat(resultat).isTrue();
@@ -268,16 +253,15 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_ikke_inkludere_innvilget_når_det_er_konsekvens_for_ytelse_endring_i_beregning() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
         var utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2011")).medInnvilget(false).build();
 
         // Act
-        var resultat = skalInkludereInnvilget(behandling, of(utbetalingsperiode1, utbetalingsperiode2), KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode());
+        var resultat = skalInkludereInnvilget(behandling, of(utbetalingsperiode1, utbetalingsperiode2),
+            KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode());
 
         // Assert
         assertThat(resultat).isFalse();
@@ -286,16 +270,15 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_ikke_inkludere_innvilget_når_det_er_ingen_innvilgede_perioder() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode1 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(false).build();
         var utbetalingsperiode2 = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2011")).medInnvilget(false).build();
 
         // Act
-        var resultat = skalInkludereInnvilget(behandling, of(utbetalingsperiode1, utbetalingsperiode2), KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode());
+        var resultat = skalInkludereInnvilget(behandling, of(utbetalingsperiode1, utbetalingsperiode2),
+            KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode());
 
         // Assert
         assertThat(resultat).isFalse();
@@ -304,9 +287,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_ikke_inkludere_innvilget_når_det_er_bare_en_periode_uten_gitte_årsaker() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).medInnvilget(true).build();
@@ -322,9 +303,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_inkludere_innvilget_når_det_er_bare_en_periode_med_gitte_årsaker() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
@@ -339,9 +318,7 @@ public class UndermalInkluderingMapperTest {
     @Test
     void skal_inkludere_innvilget_når_det_er_bare_en_periode_uten_gitte_årsaker_hvis_det_er_revurdering_med_endring() {
         // Arrange
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET).build();
         var behandling = Behandling.builder().medBehandlingType(BehandlingType.REVURDERING).medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).medInnvilget(true).build();
@@ -407,12 +384,13 @@ public class UndermalInkluderingMapperTest {
 
     @Test
     void skal_inkludere_skalInkludereNyeOpplysningerUtbet_når_det_er_en_periode_med_gradering() {
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
-        var utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak(Årsak.of("1234")).medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(true).build())).build();
+        var utbetalingsperiode = Utbetalingsperiode.ny()
+            .medÅrsak(Årsak.of("1234"))
+            .medAnnenAktivitet(of(AnnenAktivitet.ny().medGradering(true).build()))
+            .build();
 
         // Act
         var resultat = skalInkludereNyeOpplysningerUtbet(behandling, of(utbetalingsperiode), 123);
@@ -423,9 +401,7 @@ public class UndermalInkluderingMapperTest {
 
     @Test
     void skalInkludereNyeOpplysningerUtbet_når_en_periode_og_gyldig_utstettelse_årsak() {
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
@@ -439,9 +415,7 @@ public class UndermalInkluderingMapperTest {
 
     @Test
     void skal_ikke_inkludereNyeOpplysningerUtbet_når_flere_perioder() {
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder().medBehandlingsresultat(behandlingsresultat).build();
 
         var utbetalingsperiode = Utbetalingsperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();

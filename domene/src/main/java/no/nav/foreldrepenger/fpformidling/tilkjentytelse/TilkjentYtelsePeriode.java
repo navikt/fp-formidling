@@ -19,10 +19,10 @@ public class TilkjentYtelsePeriode {
         periode = builder.periode;
         andeler = builder.andeler;
         utbetaltTilSøker = ((Integer) andeler.stream()
-                .filter(TilkjentYtelseAndel::erBrukerMottaker)
-                .map(TilkjentYtelseAndel::getUtbetalesTilBruker)
-                .mapToInt(Integer::intValue).sum())
-                .longValue();
+            .filter(TilkjentYtelseAndel::erBrukerMottaker)
+            .map(TilkjentYtelseAndel::getUtbetalesTilBruker)
+            .mapToInt(Integer::intValue)
+            .sum()).longValue();
     }
 
     public static Builder ny() {

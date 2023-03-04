@@ -35,14 +35,15 @@ public class AnnenAktivitet {
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         var that = (AnnenAktivitet) object;
-        return Objects.equals(aktivitetStatus, that.aktivitetStatus)
-                && Objects.equals(gradering, that.gradering)
-                && Objects.equals(utbetalingsgrad, that.utbetalingsgrad)
-                && Objects.equals(prosentArbeid, that.prosentArbeid)
-                && Objects.equals(aktivitetDagsats, that.aktivitetDagsats);
+        return Objects.equals(aktivitetStatus, that.aktivitetStatus) && Objects.equals(gradering, that.gradering) && Objects.equals(utbetalingsgrad,
+            that.utbetalingsgrad) && Objects.equals(prosentArbeid, that.prosentArbeid) && Objects.equals(aktivitetDagsats, that.aktivitetDagsats);
     }
 
     @Override

@@ -1,16 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
@@ -25,6 +14,17 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatT
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.VLException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DokumentMalUtlederTest {
 
@@ -47,187 +47,162 @@ public class DokumentMalUtlederTest {
     }
 
     private void sjekkAtVelgerValgtMal(DokumentMalType malType) {
-        hendelse = standardBuilder()
-                .medDokumentMalType((malType))
-                .build();
+        hendelse = standardBuilder().medDokumentMalType((malType)).build();
         assertThat(dokumentMalUtleder.utledDokumentmal(null, hendelse).getKode()).isEqualTo(malType.getKode());
     }
 
     @Test
     void utled_ingen_endring() {
-        hendelse = standardBuilder()
-                .medGjelderVedtak(true)
-                .build();
+        hendelse = standardBuilder().medGjelderVedtak(true).build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.REVURDERING)
-                .medBehandlingsresultat(Behandlingsresultat.builder().medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.INGEN_ENDRING)).build())
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.REVURDERING)
+            .medBehandlingsresultat(Behandlingsresultat.builder().medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.INGEN_ENDRING)).build())
+            .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.INGEN_ENDRING.getKode());
     }
 
     @Test
     void utled_innvilget_fp() {
-        hendelse = standardBuilder()
-                .medGjelderVedtak(true)
-                .build();
+        hendelse = standardBuilder().medGjelderVedtak(true).build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-                .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.FORELDREPENGER_INNVILGELSE.getKode());
+            .medUuid(UUID.randomUUID())
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+            .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(
+            DokumentMalType.FORELDREPENGER_INNVILGELSE.getKode());
     }
 
     @Test
     void utled_innvilget_es() {
         hendelse = DokumentHendelse.builder()
-                .medBehandlingUuid(UUID.randomUUID())
-                .medBestillingUuid(UUID.randomUUID())
-                .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
-                .medGjelderVedtak(true)
-                .build();
+            .medBehandlingUuid(UUID.randomUUID())
+            .medBestillingUuid(UUID.randomUUID())
+            .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
+            .medGjelderVedtak(true)
+            .build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
-                .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getKode());
+            .medUuid(UUID.randomUUID())
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+            .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(
+            DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getKode());
     }
 
     @Test
     void utled_avslått_es() {
         hendelse = DokumentHendelse.builder()
-                .medBehandlingUuid(UUID.randomUUID())
-                .medBestillingUuid(UUID.randomUUID())
-                .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
-                .medGjelderVedtak(true)
-                .build();
+            .medBehandlingUuid(UUID.randomUUID())
+            .medBestillingUuid(UUID.randomUUID())
+            .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
+            .medGjelderVedtak(true)
+            .build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
+            .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_AVSLAG.getKode());
     }
 
     @Test
     void utled_avslått_opphør_es() {
         hendelse = DokumentHendelse.builder()
-                .medBehandlingUuid(UUID.randomUUID())
-                .medBestillingUuid(UUID.randomUUID())
-                .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
-                .medGjelderVedtak(true)
-                .build();
+            .medBehandlingUuid(UUID.randomUUID())
+            .medBestillingUuid(UUID.randomUUID())
+            .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
+            .medGjelderVedtak(true)
+            .build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.OPPHØR).build())
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.OPPHØR).build())
+            .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_AVSLAG.getKode());
     }
 
     @Test
     void kast_exception_hvis_ugyldig_es() {
         hendelse = DokumentHendelse.builder()
-                .medBehandlingUuid(UUID.randomUUID())
-                .medBestillingUuid(UUID.randomUUID())
-                .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
-                .medGjelderVedtak(true)
-                .build();
+            .medBehandlingUuid(UUID.randomUUID())
+            .medBestillingUuid(UUID.randomUUID())
+            .medYtelseType(FagsakYtelseType.ENGANGSTØNAD)
+            .medGjelderVedtak(true)
+            .build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET).build())
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET).build())
+            .build();
         assertThatThrownBy(() -> dokumentMalUtleder.utledDokumentmal(behandling, hendelse)).isInstanceOf(VLException.class);
     }
 
     @Test
     void utled_avslått_fp() {
-        hendelse = standardBuilder()
-                .medGjelderVedtak(true)
-                .build();
+        hendelse = standardBuilder().medGjelderVedtak(true).build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
-                .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.FORELDREPENGER_AVSLAG.getKode());
+            .medUuid(UUID.randomUUID())
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build())
+            .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FORELDREPENGER_AVSLAG.getKode());
     }
 
     @Test
     void utled_opphør_fp() {
-        hendelse = standardBuilder()
-                .medGjelderVedtak(true)
-                .build();
+        hendelse = standardBuilder().medGjelderVedtak(true).build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.OPPHØR).build())
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.OPPHØR).build())
+            .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FORELDREPENGER_OPPHØR.getKode());
     }
 
     @Test
     void utled_innvilget_fp_endret() {
-        hendelse = standardBuilder()
-                .medGjelderVedtak(true)
-                .build();
+        hendelse = standardBuilder().medGjelderVedtak(true).build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingsresultat(
-                        Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
-                                .build())
-                .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.FORELDREPENGER_INNVILGELSE.getKode());
+            .medUuid(UUID.randomUUID())
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET).build())
+            .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(
+            DokumentMalType.FORELDREPENGER_INNVILGELSE.getKode());
     }
 
     @Test
     void ikke_innvilget_fp_hvis_kun_endring_av_ytelsen() {
-        hendelse = standardBuilder()
-                .medGjelderVedtak(true)
-                .build();
+        hendelse = standardBuilder().medGjelderVedtak(true).build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingsresultat(
-                        Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
-                                .medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.ENDRING_I_FORDELING_AV_YTELSEN))
-                                .build())
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingsresultat(Behandlingsresultat.builder()
+                .medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
+                .medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.ENDRING_I_FORDELING_AV_YTELSEN))
+                .build())
+            .build();
         assertThatThrownBy(() -> dokumentMalUtleder.utledDokumentmal(behandling, hendelse)).isInstanceOf(VLException.class);
     }
 
     @Test
     void utled_annullert_fp() {
-        hendelse = standardBuilder()
-                .medGjelderVedtak(true)
-                .build();
+        hendelse = standardBuilder().medGjelderVedtak(true).build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_SENERE).build())
-                .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.FORELDREPENGER_ANNULLERT.getKode());
+            .medUuid(UUID.randomUUID())
+            .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_SENERE).build())
+            .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FORELDREPENGER_ANNULLERT.getKode());
     }
 
     @Test
     void utled_fritekstbrev() {
-        hendelse = standardBuilder()
-                .medGjelderVedtak(true)
-                .build();
+        hendelse = standardBuilder().medGjelderVedtak(true).build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.REVURDERING)
-                .medBehandlingsresultat(Behandlingsresultat.builder().medVedtaksbrev(Vedtaksbrev.FRITEKST).build())
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.REVURDERING)
+            .medBehandlingsresultat(Behandlingsresultat.builder().medVedtaksbrev(Vedtaksbrev.FRITEKST).build())
+            .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FRITEKSTBREV.getKode());
     }
 
     @Test
     void kast_error_hvis_ugyldig() {
-        hendelse = standardBuilder()
-                .build();
-        var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .build();
+        hendelse = standardBuilder().build();
+        var behandling = Behandling.builder().medUuid(UUID.randomUUID()).build();
         assertThatThrownBy(() -> dokumentMalUtleder.utledDokumentmal(behandling, hendelse)).isInstanceOf(VLException.class);
     }
 
@@ -240,62 +215,50 @@ public class DokumentMalUtlederTest {
 
     @Test
     void utled_SVP_revurdering_med_endring() {
-        hendelse = standardBuilder()
-                .medGjelderVedtak(true)
-                .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER)
-                .build();
+        hendelse = standardBuilder().medGjelderVedtak(true).medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build();
         var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
-                .medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.ENDRING_I_UTTAK))
-                .build();
+            .medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
+            .medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.ENDRING_I_UTTAK))
+            .build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.REVURDERING)
-                .medBehandlingsresultat(behandlingsresultat)
-                .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE.getKode());
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.REVURDERING)
+            .medBehandlingsresultat(behandlingsresultat)
+            .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(
+            DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE.getKode());
     }
 
     @Test
     void utled_SVP_førstegangsbehandling_innvilget() {
-        hendelse = standardBuilder()
-                .medGjelderVedtak(true)
-                .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER)
-                .build();
-        var behandlingsresultat = Behandlingsresultat.builder()
-                .medBehandlingResultatType(BehandlingResultatType.INNVILGET)
-                .build();
+        hendelse = standardBuilder().medGjelderVedtak(true).medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build();
+        var behandlingsresultat = Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
-                .medBehandlingsresultat(behandlingsresultat)
-                .build();
-        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode())
-                .isEqualTo(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE.getKode());
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .medBehandlingsresultat(behandlingsresultat)
+            .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(
+            DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE.getKode());
     }
 
     private void sjekkKlageDokument(KlageVurdering klageVurdering, DokumentMalType dokumentmal) {
-        hendelse = standardBuilder()
-                .medGjelderVedtak(true)
-                .build();
+        hendelse = standardBuilder().medGjelderVedtak(true).build();
         var behandling = Behandling.builder()
-                .medUuid(UUID.randomUUID())
-                .medBehandlingType(BehandlingType.KLAGE)
-                .medBehandlingsresultat(Behandlingsresultat.builder().build())
-                .build();
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.KLAGE)
+            .medBehandlingsresultat(Behandlingsresultat.builder().build())
+            .build();
 
-        var klage = Klage.ny()
-                .medKlageVurderingResultatNK(new KlageVurderingResultat(klageVurdering, null))
-                .build();
+        var klage = Klage.ny().medKlageVurderingResultatNK(new KlageVurderingResultat(klageVurdering, null)).build();
         when(domeneobjektProvider.hentKlagebehandling(behandling)).thenReturn(klage);
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(dokumentmal.getKode());
     }
 
     private DokumentHendelse.Builder standardBuilder() {
         return DokumentHendelse.builder()
-                .medBehandlingUuid(UUID.randomUUID())
-                .medBestillingUuid(UUID.randomUUID())
-                .medYtelseType(FagsakYtelseType.FORELDREPENGER);
+            .medBehandlingUuid(UUID.randomUUID())
+            .medBestillingUuid(UUID.randomUUID())
+            .medYtelseType(FagsakYtelseType.FORELDREPENGER);
     }
 }

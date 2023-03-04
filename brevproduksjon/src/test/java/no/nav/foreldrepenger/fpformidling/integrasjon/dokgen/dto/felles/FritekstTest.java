@@ -34,14 +34,9 @@ public class FritekstTest {
     @Test
     void skal_prioritere_hendelse() {
         // Arrange
-        behandling = standardBehandlingBuilder()
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medAvslagarsakFritekst(BEHANDLING_FRITEKST)
-                        .build())
-                .build();
-        dokumentHendelse = standardHendelseBuilder()
-                .medFritekst(HENDELSE_FRITEKST)
-                .build();
+        behandling = standardBehandlingBuilder().medBehandlingsresultat(
+            Behandlingsresultat.builder().medAvslagarsakFritekst(BEHANDLING_FRITEKST).build()).build();
+        dokumentHendelse = standardHendelseBuilder().medFritekst(HENDELSE_FRITEKST).build();
 
         // Act + Assert
         assertThat(fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(HENDELSE_FRITEKST);
@@ -50,11 +45,8 @@ public class FritekstTest {
     @Test
     void skal_ta_fritekst_fra_behandling_når_mangler_i_hendelse() {
         // Arrange
-        behandling = standardBehandlingBuilder()
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medAvslagarsakFritekst(BEHANDLING_FRITEKST)
-                        .build())
-                .build();
+        behandling = standardBehandlingBuilder().medBehandlingsresultat(
+            Behandlingsresultat.builder().medAvslagarsakFritekst(BEHANDLING_FRITEKST).build()).build();
         var dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
@@ -64,31 +56,27 @@ public class FritekstTest {
     @Test
     void skal_bytte_ut_dokprod_formatering_med_dokgen_i_fritekst() {
         // Arrange
-        behandling = standardBehandlingBuilder()
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medAvslagarsakFritekst("Tekst\n_Overskrift\nMer tekst\n- Punkt 1\n- Punkt 2\n_Ny overskrift\nTekst-med-bindestrek_og_underscore")
-                        .build())
-                .build();
+        behandling = standardBehandlingBuilder().medBehandlingsresultat(Behandlingsresultat.builder()
+            .medAvslagarsakFritekst("Tekst\n_Overskrift\nMer tekst\n- Punkt 1\n- Punkt 2\n_Ny overskrift\nTekst-med-bindestrek_og_underscore")
+            .build()).build();
         var dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
-        assertThat(fra(dokumentHendelse, behandling).get().getFritekst())
-                .isEqualTo("Tekst\n##### Overskrift\nMer tekst\n- Punkt 1\n- Punkt 2\n##### Ny overskrift\nTekst-med-bindestrek_og_underscore");
+        assertThat(fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(
+            "Tekst\n##### Overskrift\nMer tekst\n- Punkt 1\n- Punkt 2\n##### Ny overskrift\nTekst-med-bindestrek_og_underscore");
     }
 
     @Test
     void skal_lage_linker_av_nav_no() {
         // Arrange
-        behandling = standardBehandlingBuilder()
-                .medBehandlingsresultat(Behandlingsresultat.builder()
-                        .medAvslagarsakFritekst("Les mer om dette på nav.no/foreldrepenger.\nDu finner mer informasjon på nav.no/klage og nav.no/familie.")
-                        .build())
-                .build();
+        behandling = standardBehandlingBuilder().medBehandlingsresultat(Behandlingsresultat.builder()
+            .medAvslagarsakFritekst("Les mer om dette på nav.no/foreldrepenger.\nDu finner mer informasjon på nav.no/klage og nav.no/familie.")
+            .build()).build();
         var dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
-        assertThat(fra(dokumentHendelse, behandling).get().getFritekst())
-                .isEqualTo("Les mer om dette på [nav.no/foreldrepenger](https://nav.no/foreldrepenger).\\\nDu finner mer informasjon på [nav.no/klage](https://nav.no/klage) og [nav.no/familie](https://nav.no/familie).");
+        assertThat(fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(
+            "Les mer om dette på [nav.no/foreldrepenger](https://nav.no/foreldrepenger).\\\nDu finner mer informasjon på [nav.no/klage](https://nav.no/klage) og [nav.no/familie](https://nav.no/familie).");
     }
 
     @Test
@@ -148,9 +136,9 @@ public class FritekstTest {
 
     private DokumentHendelse.Builder standardHendelseBuilder() {
         return DokumentHendelse.builder()
-                .medBehandlingUuid(UUID.randomUUID())
-                .medBestillingUuid(UUID.randomUUID())
-                .medYtelseType(FagsakYtelseType.FORELDREPENGER);
+            .medBehandlingUuid(UUID.randomUUID())
+            .medBestillingUuid(UUID.randomUUID())
+            .medYtelseType(FagsakYtelseType.FORELDREPENGER);
     }
 
     private Behandling.Builder standardBehandlingBuilder() {

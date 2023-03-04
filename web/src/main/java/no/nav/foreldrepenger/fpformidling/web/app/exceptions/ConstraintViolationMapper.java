@@ -63,6 +63,6 @@ public class ConstraintViolationMapper implements ExceptionMapper<ConstraintViol
     }
 
     private static String getFeltNavn(Path propertyPath) {
-        return propertyPath instanceof PathImpl ? ((PathImpl) propertyPath).getLeafNode().toString() : null;
+        return propertyPath instanceof PathImpl path ? path.getLeafNode().toString() : null;
     }
 }

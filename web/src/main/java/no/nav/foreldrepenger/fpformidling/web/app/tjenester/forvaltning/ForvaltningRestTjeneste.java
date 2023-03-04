@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.web.app.tjenester;
+package no.nav.foreldrepenger.fpformidling.web.app.tjenester.forvaltning;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -17,6 +17,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +81,7 @@ public class ForvaltningRestTjeneste {
     })
     @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.DRIFT, sporingslogg = false)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response dokgenJsonTilPdf(@BeanParam @Valid DokgenJsonTilPdfDto dokgenJsonTilPdfDto) throws Exception {
+    public Response dokgenJsonTilPdf(@BeanParam @Valid DokgenJsonTilPdfDto dokgenJsonTilPdfDto) throws ClassNotFoundException, JsonProcessingException {
         if (ENVIRONMENT.isProd()) {
             // Kjøring i prod vil potensielt gi unødvendig loggstøy, feks ved syntaksfeil
             return Response.status(Response.Status.METHOD_NOT_ALLOWED).build();

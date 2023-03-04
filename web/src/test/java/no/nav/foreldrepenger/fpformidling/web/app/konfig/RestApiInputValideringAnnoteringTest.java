@@ -11,7 +11,7 @@ import javax.ws.rs.core.Context;
 
 import org.junit.jupiter.api.Test;
 
-public class RestApiInputValideringAnnoteringTest extends RestApiTester {
+class RestApiInputValideringAnnoteringTest extends RestApiTester {
 
     private Function<Method, String> printKlasseOgMetodeNavn = (method -> String.format("%s.%s", method.getDeclaringClass(), method.getName()));
 

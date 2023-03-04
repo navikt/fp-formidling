@@ -18,9 +18,7 @@ import no.nav.vedtak.sikkerhet.abac.TilpassetAbacAttributt;
 import no.nav.vedtak.sikkerhet.abac.beskyttet.ActionType;
 import no.nav.vedtak.sikkerhet.abac.beskyttet.ResourceType;
 
-public class RestApiAbacTest {
-
-    private static String PREV_LB_URL;
+class RestApiAbacTest {
 
     /**
      * IKKE ignorer denne testen, sikrer at REST-endepunkter får tilgangskontroll
@@ -37,7 +35,7 @@ public class RestApiAbacTest {
             }
         }
 
-        assertThat(feilmeldinger).as("Følgende REST-tjenester passerte ikke validering:\n" + feilmeldinger).hasSize(0);
+        assertThat(feilmeldinger).as("Følgende REST-tjenester passerte ikke validering:\n" + feilmeldinger).isEmpty();
     }
 
     @Test
@@ -78,7 +76,7 @@ public class RestApiAbacTest {
             }
         }
 
-        assertThat(feilmeldinger).as("Følgende inputparametre til REST-tjenester mangler AbacDto-impl:\n" + feilmeldinger).hasSize(0);
+        assertThat(feilmeldinger).as("Følgende inputparametre til REST-tjenester mangler AbacDto-impl:\n" + feilmeldinger).isEmpty();
     }
 
     private void assertAtIngenBrukerDummyVerdierPåBeskyttetRessurs(Method metode) {

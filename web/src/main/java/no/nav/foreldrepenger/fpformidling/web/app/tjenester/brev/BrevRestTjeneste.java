@@ -45,7 +45,7 @@ public class BrevRestTjeneste {
     private ProsessTaskTjeneste taskTjeneste;
 
     public BrevRestTjeneste() {
-        //CDI
+        // CDI
     }
 
     @Inject

@@ -19,20 +19,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class SjekkDtoStrukturTest {
+class SjekkDtoStrukturTest {
     private static final Set<String> SKIPPED = Set.of("class", "kode");
 
     @ParameterizedTest
     @MethodSource("parameters")
-    public void skal_ha_riktig_navn_på_properties_i_dto_eller_konfiguret_med_annotations(Class<?> cls) throws Exception {
+    void skal_ha_riktig_navn_på_properties_i_dto_eller_konfiguret_med_annotations(Class<?> cls) throws Exception {
         sjekkJsonProperties(cls);
     }
 
     public static Collection<Object[]> parameters() throws URISyntaxException {
         List<Object[]> params = new ArrayList<>();
 
-        IndexClasses indexClasses;
-        indexClasses = IndexClasses.getIndexFor(
+        var indexClasses = IndexClasses.getIndexFor(
                 IndexClasses.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         var classes = indexClasses.getClasses(ci -> ci.name().toString().endsWith("Dto"),
                 c -> !c.isInterface());

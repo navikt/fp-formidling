@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.web.app.pdp;
+package no.nav.foreldrepenger.fpformidling.web.server.jetty.abac;
 
 import java.util.UUID;
 

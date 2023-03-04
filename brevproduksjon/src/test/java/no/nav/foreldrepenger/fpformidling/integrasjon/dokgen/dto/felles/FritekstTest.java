@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 
-public class FritekstTest {
+class FritekstTest {
 
     private static final String HENDELSE_FRITEKST = "HENDELSE_FRITEKST";
     private static final String BEHANDLING_FRITEKST = "BEHANDLING_FRITEKST";

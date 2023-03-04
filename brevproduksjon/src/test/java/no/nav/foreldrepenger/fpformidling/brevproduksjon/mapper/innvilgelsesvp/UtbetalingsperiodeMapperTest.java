@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 
-public class UtbetalingsperiodeMapperTest {
+class UtbetalingsperiodeMapperTest {
 
     @Test
     void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_dagsats_og_beløp_til_søker() {
@@ -71,6 +71,6 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(resultat.get(4).getPeriodeFom()).isEqualTo(LocalDate.now().plusDays(15));
         assertThat(resultat.get(4).getPeriodeTom()).isEqualTo(LocalDate.now().plusDays(18));
         assertThat(resultat.get(4).getPeriodeDagsats()).isEqualTo(1000);
-        assertThat(resultat.get(4).getUtbetaltTilSøker()).isEqualTo(0);
+        assertThat(resultat.get(4).getUtbetaltTilSøker()).isZero();
     }
 }

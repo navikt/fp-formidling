@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
-public class IngenEndringDokumentdataMapperTest {
+class IngenEndringDokumentdataMapperTest {
 
     private DokumentData dokumentData;
 

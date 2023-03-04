@@ -19,7 +19,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BeregningMapperTest {
+class BeregningMapperTest {
 
     private static final String ARBEIDSGIVER_1 = "Arbeidsgiver1 AS";
     private static final String ARBEIDSGIVER_2 = "Arbeidsgiver2 AS";

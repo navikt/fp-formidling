@@ -15,7 +15,7 @@ import static java.util.List.of;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TilkjentYtelseMapperTest {
+class TilkjentYtelseMapperTest {
 
     private static final DatoIntervall UBETYDELIG_PERIODE = DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1));
 

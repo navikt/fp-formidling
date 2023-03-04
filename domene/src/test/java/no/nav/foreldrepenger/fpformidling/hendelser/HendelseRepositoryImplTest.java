@@ -15,7 +15,7 @@ import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(JpaExtension.class)
-public class HendelseRepositoryImplTest {
+class HendelseRepositoryImplTest {
 
     private HendelseRepository hendelseRepository;
 

@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.N
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 
-public class UndermalInkluderingMapperTest {
+class UndermalInkluderingMapperTest {
 
     @Test
     void skal_inkludere__utbetaling_når_det_er_innvilget_resultat_og_mer_enn_en_periode() {

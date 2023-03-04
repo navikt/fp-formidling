@@ -55,7 +55,7 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 import no.nav.vedtak.felles.prosesstask.api.TaskType;
 
 @ExtendWith(MockitoExtension.class)
-public class BrevBestillerTjenesteTest {
+class BrevBestillerTjenesteTest {
 
     private static final UUID BEHANDLING_UUID = UUID.randomUUID();
     private static final String NAVN = "Nav Navesen";
@@ -113,10 +113,10 @@ public class BrevBestillerTjenesteTest {
         var personinfo = mockPdl(true);
         var behandling = mockDomeneobjektProvider(personinfo, true);
         var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
-        when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
-        when(dokumentdataMapperProvider.getDokumentdataMapper(eq(DOKUMENT_MAL_TYPE))).thenReturn(dokumentdataMapper);
+        when(dokumentdataMapperProvider.getDokumentdataMapper(DOKUMENT_MAL_TYPE)).thenReturn(dokumentdataMapper);
         var taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
 
         // Act
@@ -142,10 +142,10 @@ public class BrevBestillerTjenesteTest {
         var personinfo = mockPdl(false);
         var behandling = mockDomeneobjektProvider(personinfo, false);
         var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
-        when(dokumentMalUtleder.utledDokumentmal(eq(behandling), eq(dokumentHendelse))).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
-        when(dokumentdataMapperProvider.getDokumentdataMapper(eq(DOKUMENT_MAL_TYPE))).thenReturn(dokumentdataMapper);
+        when(dokumentdataMapperProvider.getDokumentdataMapper(DOKUMENT_MAL_TYPE)).thenReturn(dokumentdataMapper);
         var taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
 
         // Act
@@ -187,13 +187,13 @@ public class BrevBestillerTjenesteTest {
             .leggTilResourceLink(
                 harVerge ? BehandlingResourceLink.ny().medRel("soeker-verge").build() : BehandlingResourceLink.ny().medRel("annet").build())
             .build();
-        when(domeneobjektProvider.hentFagsakBackend(eq(behandling))).thenReturn(fagsakBackend);
+        when(domeneobjektProvider.hentFagsakBackend(behandling)).thenReturn(fagsakBackend);
         when(domeneobjektProvider.hentBehandling(any(UUID.class))).thenReturn(behandling);
         if (harVerge) {
             var verge = new Verge(VERGE.getId(), "", "");
-            when(domeneobjektProvider.hentVerge(eq(behandling))).thenReturn(Optional.of(verge));
+            when(domeneobjektProvider.hentVerge(behandling)).thenReturn(Optional.of(verge));
         }
-        when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(eq(behandling))).thenReturn(new TilkjentYtelseEngangsstønad(1L));
+        when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling)).thenReturn(new TilkjentYtelseEngangsstønad(1L));
         return behandling;
     }
 

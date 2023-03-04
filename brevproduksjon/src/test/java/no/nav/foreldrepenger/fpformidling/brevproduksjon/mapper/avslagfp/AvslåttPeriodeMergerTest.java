@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.avslagfp.AvslåttPeriode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 
-public class AvslåttPeriodeMergerTest {
+class AvslåttPeriodeMergerTest {
 
     private static final LocalDate PERIODE1_FOM = LocalDate.now().minusDays(10);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().plusDays(5);

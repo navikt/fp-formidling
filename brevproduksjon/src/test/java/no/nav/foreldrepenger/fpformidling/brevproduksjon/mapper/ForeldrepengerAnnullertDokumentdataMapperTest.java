@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ForeldrepengerAnnullertDokumentdataMapperTest {
+class ForeldrepengerAnnullertDokumentdataMapperTest {
 
     private static final LocalDate NY_STARTDATO = LocalDate.now().plusWeeks(20);
 

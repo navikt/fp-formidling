@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.F
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 
-public class ForMyeUtbetaltMapperTest {
+class ForMyeUtbetaltMapperTest {
 
     @Test
     void skal_returnere_for_mye_utbetalt_GENERELL_når_periode_har_gradering() {

@@ -12,7 +12,7 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Hjemmel;
 
-public class FellesMapperTest {
+class FellesMapperTest {
 
     @Test
     void formaterLovhjemlerBeregningEnkel() {

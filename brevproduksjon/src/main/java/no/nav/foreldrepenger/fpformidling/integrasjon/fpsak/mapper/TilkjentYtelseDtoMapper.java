@@ -21,7 +21,7 @@ import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public class TilkjentYtelseDtoMapper {
 
-    public TilkjentYtelseDtoMapper() {
+    private TilkjentYtelseDtoMapper() {
         //CDI
     }
 

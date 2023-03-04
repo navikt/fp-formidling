@@ -79,7 +79,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 @ExtendWith(MockitoExtension.class)
-public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
+class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     private static final LocalDate SØKNADSDATO = LocalDate.now().minusDays(1);
     private static final int DEKNINGSGRAD = 100;
@@ -174,10 +174,10 @@ public class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getSisteDagAvSistePeriode()).isEqualTo(formaterDatoNorsk(PERIODE_TOM));
         assertThat(dokumentdata.getStønadsperiodeFom()).isEqualTo(formaterDatoNorsk(PERIODE_FOM));
         assertThat(dokumentdata.getStønadsperiodeTom()).isEqualTo(formaterDatoNorsk(PERIODE_TOM));
-        assertThat(dokumentdata.getForeldrepengeperiodenUtvidetUker()).isEqualTo(0);
+        assertThat(dokumentdata.getForeldrepengeperiodenUtvidetUker()).isZero();
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(1);
         assertThat(dokumentdata.getPrematurDager()).isEqualTo(PREMATUR_DAGER);
-        assertThat(dokumentdata.getAntallDødeBarn()).isEqualTo(0);
+        assertThat(dokumentdata.getAntallDødeBarn()).isZero();
         assertThat(dokumentdata.getDødsdato()).isNull();
         assertThat(dokumentdata.getMorKanSøkeOmDagerFørFødsel()).isTrue();
         assertThat(dokumentdata.getPerioder()).hasSize(4);

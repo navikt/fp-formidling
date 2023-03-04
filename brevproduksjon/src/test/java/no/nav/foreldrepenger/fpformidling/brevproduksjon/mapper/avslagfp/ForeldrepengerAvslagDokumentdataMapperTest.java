@@ -65,7 +65,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 
 @ExtendWith(MockitoExtension.class)
-public class ForeldrepengerAvslagDokumentdataMapperTest {
+class ForeldrepengerAvslagDokumentdataMapperTest {
 
     private static final int KLAGEFRIST = 6;
     private static final int GRUNNBELØP = 100000;

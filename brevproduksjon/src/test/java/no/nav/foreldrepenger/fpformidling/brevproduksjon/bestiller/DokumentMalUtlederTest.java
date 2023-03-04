@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class DokumentMalUtlederTest {
+class DokumentMalUtlederTest {
 
     private final DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
     private DokumentMalUtleder dokumentMalUtleder;

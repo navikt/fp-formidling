@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DatoVerktøyTest {
+class DatoVerktøyTest {
 
     @Test
     void skal_finne_at_dato_2_er_rett_etter_dato_1() {

@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.B
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
-public class BeregningsgrunnlagMapperTest {
+class BeregningsgrunnlagMapperTest {
 
     private static final BigDecimal AVKORTET_PR_ÅR = BigDecimal.valueOf(542987.4);
     private static final BigDecimal FRILANSER_BRUTTO_PR_ÅR = BigDecimal.valueOf(95406.6);
@@ -171,7 +171,7 @@ public class BeregningsgrunnlagMapperTest {
 
         // Assert
         assertThat(regler.get(0).getAndelListe().get(0).getSistLignedeÅr()).isEqualTo(BER_PERIODE.getTomDato().getYear());
-        assertThat(regler.get(1).getAndelListe().get(0).getSistLignedeÅr()).isEqualTo(0);
+        assertThat(regler.get(1).getAndelListe().get(0).getSistLignedeÅr()).isZero();
     }
 
     @Test
@@ -254,7 +254,7 @@ public class BeregningsgrunnlagMapperTest {
         assertThat(beregningsgrunnlagRegler.get(0).getRegelStatus()).isEqualTo("ARBEIDSTAKER");
         assertThat(beregningsgrunnlagRegler.get(0).getAndelListe().get(0).getDagsats()).isEqualTo(24);
         assertThat(beregningsgrunnlagRegler.get(1).getRegelStatus()).isEqualTo("MILITÆR_ELLER_SIVIL");
-        assertThat(beregningsgrunnlagRegler.get(1).getAndelListe().get(0).getDagsats()).isEqualTo(0);
+        assertThat(beregningsgrunnlagRegler.get(1).getAndelListe().get(0).getDagsats()).isZero();
     }
 
 

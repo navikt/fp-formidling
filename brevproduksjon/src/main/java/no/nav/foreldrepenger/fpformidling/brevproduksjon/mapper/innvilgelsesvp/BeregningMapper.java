@@ -51,9 +51,9 @@ public final class BeregningMapper {
                     .medNyoppstartet(TRUE.equals(andel.getNyIArbeidslivet()))
                     .leggTilÅrsinntekt(andel.getBruttoPrÅr())
                     .medSistLignedeÅr(getSisteLignedeÅr(andel))
-                    .medInntektLavere_AT_SN(AktivitetStatus.KOMBINERT_AT_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
-                    .medInntektLavere_AT_FL_SN(AktivitetStatus.KOMBINERT_AT_FL_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
-                    .medInntektLavere_FL_SN(AktivitetStatus.KOMBINERT_FL_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
+                    .medInntektLavereAtSn(AktivitetStatus.KOMBINERT_AT_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
+                    .medInntektLavereAtFlSn(AktivitetStatus.KOMBINERT_AT_FL_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
+                    .medInntektLavereFlSn(AktivitetStatus.KOMBINERT_FL_SN.equals(andel.getAktivitetStatus()) && dagsatsErNull(andel))
                     .build();
             }
         }

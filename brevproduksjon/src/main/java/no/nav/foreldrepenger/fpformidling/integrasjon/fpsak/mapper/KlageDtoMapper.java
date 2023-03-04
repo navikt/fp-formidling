@@ -11,6 +11,9 @@ import no.nav.foreldrepenger.fpformidling.klage.KlageVurderingResultat;
 
 public class KlageDtoMapper {
 
+    private KlageDtoMapper() {
+    }
+
     public static KlageDokument mapKlagedokumentFraDto(MottattKlagedokumentDto dto) {
         return new KlageDokument(dto.getMottattDato());
     }

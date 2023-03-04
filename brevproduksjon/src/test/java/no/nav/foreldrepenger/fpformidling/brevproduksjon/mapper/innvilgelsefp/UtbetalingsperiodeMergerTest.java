@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.A
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 
-public class UtbetalingsperiodeMergerTest {
+class UtbetalingsperiodeMergerTest {
 
     private static final LocalDate PERIODE1_FOM = LocalDate.now().minusDays(10);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().plusDays(5);

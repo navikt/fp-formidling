@@ -17,7 +17,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
 @JsonFormat(shape = Shape.OBJECT)
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
-@SuppressWarnings("java:S1192")
 public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
 
     SØKT_FOR_TIDLIG("1001", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_1\", \"lovreferanse\": \"14-5\"}]}]}"),
@@ -33,24 +32,23 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
     ENGANGSSTØNAD_ALLEREDE_UTBETALT_TIL_MOR("1011",
         "{\"fagsakYtelseType\": [{\"ES\": [{\"kategori\": \"FP_VK1\", \"lovreferanse\": \"§ 14-17 1. ledd\"}, {\"kategori\": \"FP_VK4\", \"lovreferanse\": \"§ 14-17 1. ledd\"}, {\"kategori\": \"FP_VK5\", \"lovreferanse\": \"§ 14-17 3. ledd\"}]}, {\"FP\": [{\"kategori\": \"FP_VK1\", \"lovreferanse\": \"§ 14-5 1. ledd\"}, {\"kategori\": \"FP_VK11\", \"lovreferanse\": \"§ 14-5 1. ledd\"}, {\"kategori\": \"FP_VK16\", \"lovreferanse\": \"§ 14-5 2. ledd\"}]}]}"),
     FAR_HAR_IKKE_OMSORG_FOR_BARNET("1012", null),
-    BARN_IKKE_UNDER_15_ÅR("1013", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_8\", \"lovreferanse\": \"14-5\"}]}]}"),
-    SØKER_HAR_IKKE_FORELDREANSVAR("1014", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_8\", \"lovreferanse\": \"14-5\"}]}]}"),
-    SØKER_HAR_HATT_VANLIG_SAMVÆR_MED_BARNET("1015", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_8\", \"lovreferanse\": \"14-5\"}]}]}"),
+    BARN_IKKE_UNDER_15_ÅR("1013", Constants.FP_VK_8_LOVREFERANSE_14_5),
+    SØKER_HAR_IKKE_FORELDREANSVAR("1014", Constants.FP_VK_8_LOVREFERANSE_14_5),
+    SØKER_HAR_HATT_VANLIG_SAMVÆR_MED_BARNET("1015", Constants.FP_VK_8_LOVREFERANSE_14_5),
     SØKER_ER_IKKE_BARNETS_FAR_F("1016", null),
     OMSORGSOVERTAKELSE_ETTER_56_UKER("1017", null),
     IKKE_FORELDREANSVAR_ALENE_ETTER_BARNELOVA("1018", null),
     MANGLENDE_DOKUMENTASJON("1019", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_34\", \"lovreferanse\": \"21-3\"}]}]}"),
-    SØKER_ER_IKKE_MEDLEM("1020", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_2\", \"lovreferanse\": \"14-2\"}]}]}"),
-    SØKER_ER_UTVANDRET("1021", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_2\", \"lovreferanse\": \"14-2\"}]}]}"),
-    SØKER_HAR_IKKE_LOVLIG_OPPHOLD("1023", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_2\", \"lovreferanse\": \"14-2\"}]}]}"),
-    SØKER_HAR_IKKE_OPPHOLDSRETT("1024", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_2\", \"lovreferanse\": \"14-2\"}]}]}"),
-    SØKER_ER_IKKE_BOSATT("1025", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_2\", \"lovreferanse\": \"14-2\"}]}]}"),
+    SØKER_ER_IKKE_MEDLEM("1020", Constants.FP_VK_2_LOVREFERANSE_14_2),
+    SØKER_ER_UTVANDRET("1021", Constants.FP_VK_2_LOVREFERANSE_14_2),
+    SØKER_HAR_IKKE_LOVLIG_OPPHOLD("1023", Constants.FP_VK_2_LOVREFERANSE_14_2),
+    SØKER_HAR_IKKE_OPPHOLDSRETT("1024", Constants.FP_VK_2_LOVREFERANSE_14_2),
+    SØKER_ER_IKKE_BOSATT("1025", Constants.FP_VK_2_LOVREFERANSE_14_2),
     FØDSELSDATO_IKKE_OPPGITT_ELLER_REGISTRERT("1026",
         "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_1\", \"lovreferanse\": \"14-5\"}]}]}"),
-    INGEN_BARN_DOKUMENTERT_PÅ_FAR_MEDMOR("1027", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_11\", \"lovreferanse\": \"14-5\"}]}]}"),
-    MOR_FYLLER_IKKE_VILKÅRET_FOR_SYKDOM("1028", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_11\", \"lovreferanse\": \"14-5\"}]}]}"),
-    BRUKER_ER_IKKE_REGISTRERT_SOM_FAR_MEDMOR_TIL_BARNET("1029",
-        "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_11\", \"lovreferanse\": \"14-5\"}]}]}"),
+    INGEN_BARN_DOKUMENTERT_PÅ_FAR_MEDMOR("1027", Constants.FP_VK_11_LOVREFERANSE_14_5),
+    MOR_FYLLER_IKKE_VILKÅRET_FOR_SYKDOM("1028", Constants.FP_VK_11_LOVREFERANSE_14_5),
+    BRUKER_ER_IKKE_REGISTRERT_SOM_FAR_MEDMOR_TIL_BARNET("1029", Constants.FP_VK_11_LOVREFERANSE_14_5),
     ENGANGSTØNAD_ER_ALLEREDE_UTBETAL_TIL_MOR("1031", "{\"fagsakYtelseType\": {\"FP\": {\"lovreferanse\": \"14-5\"}}}"),
     FORELDREPENGER_ER_ALLEREDE_UTBETALT_TIL_MOR("1032",
         "{\"fagsakYtelseType\": [{\"ES\": [{\"kategori\": \"FP_VK1\", \"lovreferanse\": \"§ 14-17 1. ledd\"}, {\"kategori\": \"FP_VK4\", \"lovreferanse\": \"§ 14-17 1. ledd\"}, {\"kategori\": \"FP_VK5\", \"lovreferanse\": \"§ 14-17 3. ledd\"}]}, {\"FP\": [{\"kategori\": \"FP_VK_8\", \"lovreferanse\": \"14-5\"}]}]}"),
@@ -61,12 +59,11 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
     IKKE_TILSTREKKELIG_OPPTJENING("1035", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_23\", \"lovreferanse\": \"14-6\"}]}]}"),
     FOR_LAVT_BEREGNINGSGRUNNLAG("1041", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_41\", \"lovreferanse\": \"14-7\"}]}]}"),
     STEBARNSADOPSJON_IKKE_FLERE_DAGER_IGJEN("1051", "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_16\", \"lovreferanse\": \"14-5\"}]}]}"),
-    SØKER_IKKE_GRAVID_KVINNE("1060", "{\"fagsakYtelseType\": [{\"SVP\": [{\"kategori\": \"SVP_VK_1\", \"lovreferanse\": \"14-4 1. ledd\"}]}]}"),
+    SØKER_IKKE_GRAVID_KVINNE("1060", Constants.SVP_VK_1_LOVREFERANSE_14_4_1_LEDD),
     SØKER_ER_IKKE_I_ARBEID("1061", "{\"fagsakYtelseType\": [{\"SVP\": [{\"kategori\": \"SVP_VK_1\", \"lovreferanse\": \"14-4 3. ledd\"}]}]}"),
-    SØKER_SKULLE_IKKE_SØKT_SVP("1062", "{\"fagsakYtelseType\": [{\"SVP\": [{\"kategori\": \"SVP_VK_1\", \"lovreferanse\": \"14-4 1. ledd\"}]}]}"),
-    ARBEIDSTAKER_HAR_IKKE_DOKUMENTERT_RISIKOFAKTORER("1063",
-        "{\"fagsakYtelseType\": [{\"SVP\": [{\"kategori\": \"SVP_VK_1\", \"lovreferanse\": \"14-4 1. ledd\"}]}]}"),
-    ARBEIDSTAKER_KAN_OMPLASSERES("1064", "{\"fagsakYtelseType\": [{\"SVP\": [{\"kategori\": \"SVP_VK_1\", \"lovreferanse\": \"14-4 1. ledd\"}]}]}"),
+    SØKER_SKULLE_IKKE_SØKT_SVP("1062", Constants.SVP_VK_1_LOVREFERANSE_14_4_1_LEDD),
+    ARBEIDSTAKER_HAR_IKKE_DOKUMENTERT_RISIKOFAKTORER("1063", Constants.SVP_VK_1_LOVREFERANSE_14_4_1_LEDD),
+    ARBEIDSTAKER_KAN_OMPLASSERES("1064", Constants.SVP_VK_1_LOVREFERANSE_14_4_1_LEDD),
     SN_FL_HAR_IKKE_DOKUMENTERT_RISIKOFAKTORER("1065",
         "{\"fagsakYtelseType\": [{\"SVP\": [{\"kategori\": \"SVP_VK_1\", \"lovreferanse\": \"14-4 2. ledd\"}]}]}"),
     SN_FL_HAR_MULIGHET_TIL_Å_TILRETTELEGGE_SITT_VIRKE("1066",
@@ -91,7 +88,6 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
     public static final Set<Avslagsårsak> IKKE_BARNETS_FAR = Collections.unmodifiableSet(
         new LinkedHashSet<>(Arrays.asList(SØKER_ER_IKKE_BARNETS_FAR_F, SØKER_ER_IKKE_BARNETS_FAR_O)));
 
-    // TODO endre fra raw json
     @JsonIgnore
     private String lovReferanse;
 
@@ -131,5 +127,12 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
 
     public static boolean ikkeBarnetsFar(Avslagsårsak avslagsårsak) {
         return IKKE_BARNETS_FAR.contains(avslagsårsak);
+    }
+
+    private static class Constants {
+        private static final String FP_VK_8_LOVREFERANSE_14_5 = "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_8\", \"lovreferanse\": \"14-5\"}]}]}";
+        private static final String FP_VK_2_LOVREFERANSE_14_2 = "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_2\", \"lovreferanse\": \"14-2\"}]}]}";
+        private static final String FP_VK_11_LOVREFERANSE_14_5 = "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_11\", \"lovreferanse\": \"14-5\"}]}]}";
+        private static final String SVP_VK_1_LOVREFERANSE_14_4_1_LEDD = "{\"fagsakYtelseType\": [{\"SVP\": [{\"kategori\": \"SVP_VK_1\", \"lovreferanse\": \"14-4 1. ledd\"}]}]}";
     }
 }

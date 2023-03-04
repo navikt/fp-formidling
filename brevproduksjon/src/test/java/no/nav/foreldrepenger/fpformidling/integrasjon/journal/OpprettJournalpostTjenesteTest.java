@@ -28,7 +28,7 @@ import no.nav.vedtak.felles.integrasjon.dokarkiv.dto.OpprettJournalpostRequest;
 import no.nav.vedtak.felles.integrasjon.dokarkiv.dto.OpprettJournalpostResponse;
 
 @ExtendWith(MockitoExtension.class)
-public class OpprettJournalpostTjenesteTest {
+class OpprettJournalpostTjenesteTest {
     private static final String MOTTAKER_ID = "1234";
     private static final String JOURNALPOST_ID = "234567";
     private static final String MOTTAKER_NAVN = "SOEKERS_NAVN";

@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
-public class FritekstbrevDokumentdataMapperTest {
+class FritekstbrevDokumentdataMapperTest {
 
     private static final String OVERSKRIFT = "Hovedoverskrift";
     private static final String BRØDTEKST_INN = "_Overskrift\nEn setning.\nMer tekst.";

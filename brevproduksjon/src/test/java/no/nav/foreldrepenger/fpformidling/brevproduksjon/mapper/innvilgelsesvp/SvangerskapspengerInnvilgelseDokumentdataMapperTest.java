@@ -54,7 +54,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
+class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
     private static final LocalDate PERIODE1_FOM = LocalDate.now().minusDays(10);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().minusDays(4);
@@ -161,7 +161,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getUtbetalingsperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
         assertThat(dokumentdata.getUtbetalingsperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
         assertThat(dokumentdata.getUtbetalingsperioder().get(1).getPeriodeDagsats()).isEqualTo(DAGSATS_PERIODE2);
-        assertThat(dokumentdata.getUtbetalingsperioder().get(1).getUtbetaltTilSøker()).isEqualTo(0);
+        assertThat(dokumentdata.getUtbetalingsperioder().get(1).getUtbetaltTilSøker()).isZero();
 
         assertThat(dokumentdata.getAvslagsperioder()).hasSize(1);
         assertThat(dokumentdata.getAvslagsperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE3_FOM);
@@ -212,8 +212,8 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
             Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.AVSLÅTT).build()).build();
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)).thenReturn(Optional.of(originalBehandling));
 
-        when(domeneobjektProvider.hentFamiliehendelse(eq(originalBehandling))).thenReturn(opprettFamilieHendelse(LocalDate.now().minusDays(1)));
-        when(domeneobjektProvider.hentFamiliehendelse(eq(behandling))).thenReturn(opprettFamilieHendelse(LocalDate.now().minusDays(2)));
+        when(domeneobjektProvider.hentFamiliehendelse(originalBehandling)).thenReturn(opprettFamilieHendelse(LocalDate.now().minusDays(1)));
+        when(domeneobjektProvider.hentFamiliehendelse(behandling)).thenReturn(opprettFamilieHendelse(LocalDate.now().minusDays(2)));
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);

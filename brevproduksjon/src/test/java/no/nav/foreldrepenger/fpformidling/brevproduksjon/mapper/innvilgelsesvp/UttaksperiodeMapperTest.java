@@ -22,7 +22,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforho
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
-public class UttaksperiodeMapperTest {
+class UttaksperiodeMapperTest {
 
     private static final LocalDate PERIODE1_FOM = LocalDate.now().minusDays(10);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().minusDays(5);

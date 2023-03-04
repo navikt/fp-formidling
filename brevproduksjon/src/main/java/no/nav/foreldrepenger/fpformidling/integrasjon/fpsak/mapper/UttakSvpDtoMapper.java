@@ -15,6 +15,9 @@ import java.util.function.UnaryOperator;
 
 public class UttakSvpDtoMapper {
 
+    private UttakSvpDtoMapper() {
+    }
+
     public static final String NÆRINGSDRIVENDE = "næringsdrivende";
     public static final String FRILANSER = "frilanser";
 

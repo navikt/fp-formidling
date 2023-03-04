@@ -25,7 +25,7 @@ import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
-public class NaturalytelseMapperTest {
+class NaturalytelseMapperTest {
 
     private static final LocalDate PERIODE1_FOM = LocalDate.now().minusDays(10);
     private static final LocalDate PERIODE1_TOM = LocalDate.now().minusDays(1);
@@ -58,8 +58,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.BORTFALLER);
         assertThat(resultat.get(0).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER_NAVN);
         assertThat(resultat.get(0).getNyDagsats()).isEqualTo(DAGSATS);
@@ -76,8 +75,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
@@ -91,8 +89,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.BORTFALLER);
     }
 
@@ -106,8 +103,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
@@ -121,8 +117,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.BORTFALLER);
     }
 
@@ -136,8 +131,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 
@@ -151,8 +145,7 @@ public class NaturalytelseMapperTest {
         var resultat = NaturalytelseMapper.mapNaturalytelser(tilkjentYtelseFP, beregningsgrunnlag, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).isNotNull();
-        assertThat(resultat).hasSize(1);
+        assertThat(resultat).isNotNull().hasSize(1);
         assertThat(resultat.get(0).getStatus()).isEqualTo(NaturalytelseStatus.TILKOMMER);
     }
 

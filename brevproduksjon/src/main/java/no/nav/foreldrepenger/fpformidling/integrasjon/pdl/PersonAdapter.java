@@ -35,7 +35,6 @@ public class PersonAdapter {
         } catch (PdlException pdlException) {
             LOG.error("Fikk feil ved kall til PDL. Detaljer: type={}, cause={}, policy={}", pdlException.getDetails().type(),
                 pdlException.getDetails().cause(), pdlException.getDetails().policy());
-            throw pdlException;
         }
     }
 }

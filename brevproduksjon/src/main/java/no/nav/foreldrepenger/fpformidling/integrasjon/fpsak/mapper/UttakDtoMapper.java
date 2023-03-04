@@ -21,6 +21,9 @@ import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public class UttakDtoMapper {
 
+    private UttakDtoMapper() {
+    }
+
     public static ForeldrepengerUttak mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto, UnaryOperator<String> hentNavn) {
         var uttakResultatPerioder = getUttakResultatPerioder(resultatPerioderDto.perioderSøker(), hentNavn);
         var perioderAnnenPart = getUttakResultatPerioder(resultatPerioderDto.perioderAnnenpart(), hentNavn);

@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 
-public class AvslagsperiodeMapperTest {
+class AvslagsperiodeMapperTest {
 
     private static final String ARBEIDSGIVER1_NAVN = "Arbeidsgiver1 AS";
     private static final LocalDate PERIODE1_FOM = LocalDate.now().minusDays(10); //Slås sammen med periode 2 og 6

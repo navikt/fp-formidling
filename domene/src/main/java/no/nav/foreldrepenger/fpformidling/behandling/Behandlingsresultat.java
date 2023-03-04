@@ -215,7 +215,7 @@ public class Behandlingsresultat {
             return this;
         }
 
-        public Builder Periode(String periode) {
+        public Builder periode(String periode) {
             this.periode = periode;
             return this;
         }

@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class KlageOmgjortDokumentdataMapperTest {
+class KlageOmgjortDokumentdataMapperTest {
 
     private static final String FRITEKST_TIL_BREV = "FRITEKST";
 

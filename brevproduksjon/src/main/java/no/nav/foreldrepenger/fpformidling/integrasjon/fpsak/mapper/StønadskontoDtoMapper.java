@@ -9,6 +9,9 @@ import no.nav.foreldrepenger.fpformidling.uttak.Stønadskonto;
 
 public class StønadskontoDtoMapper {
 
+    private StønadskontoDtoMapper() {
+    }
+
     public static Saldoer mapSaldoerFraDto(SaldoerDto dto) {
         return new Saldoer(dto.stonadskontoer().values().stream().map(StønadskontoDtoMapper::mapStønadskontoFradto).collect(Collectors.toSet()),
             dto.tapteDagerFpff());

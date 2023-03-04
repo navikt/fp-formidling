@@ -13,7 +13,7 @@ import java.util.List;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AvslåttAktivitetMapperTest {
+class AvslåttAktivitetMapperTest {
 
     private static final String ARBEIDSGIVER1_NAVN = "Arbeidsgiver1 AS";
     private static final String ARBEIDSGIVER2_NAVN = "Arbeidsgiver2 AS";

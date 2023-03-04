@@ -56,12 +56,15 @@ public class OpprettJournalpostTjeneste {
                 overskriftVedFritekstBrev, unikReferanse);
             var response = dokArkivKlient.opprettJournalpost(requestBuilder.build(), ferdigstill);
 
-            if (ferdigstill && !response.journalpostferdigstilt()) {
-                LOG.warn("Journalpost {} ble ikke ferdigstilt", response.journalpostId());
+            if (LOG.isWarnEnabled() && ferdigstill && !response.journalpostferdigstilt()) {
+                    LOG.warn("Journalpost {} ble ikke ferdigstilt", response.journalpostId());
+
+            }
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Journalføring for behandling {} med malkode {} ferdig med response: {}", dokumentHendelse.getBehandlingUuid(),
+                    dokumentMalType.getKode(), response);
             }
 
-            LOG.info("Journalføring for behandling {} med malkode {} ferdig med response: {}", dokumentHendelse.getBehandlingUuid(),
-                dokumentMalType.getKode(), response.toString()); // NOSONAR
             return response;
         } catch (Exception e) {
             throw new TekniskException("FPFORMIDLING-156533",
@@ -87,7 +90,7 @@ public class OpprettJournalpostTjeneste {
         var bruker = new Bruker(dokumentFelles.getSakspartId(), Bruker.BrukerIdType.FNR);
         var avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), hentAvsenderMottakerType(dokumentFelles.getMottakerType()),
             dokumentFelles.getMottakerNavn());
-        var request = OpprettJournalpostRequest.nyUtgående()
+        return OpprettJournalpostRequest.nyUtgående()
             .medTittel(tittel)
             .medSak(sak(saksnummer))
             .medTema(DokArkivKlient.TEMA_FORELDREPENGER)
@@ -97,8 +100,6 @@ public class OpprettJournalpostTjeneste {
             .medBruker(bruker)
             .medAvsenderMottaker(avsenderMottaker)
             .medDokumenter(List.of(dokument));
-
-        return request;
 
     }
 

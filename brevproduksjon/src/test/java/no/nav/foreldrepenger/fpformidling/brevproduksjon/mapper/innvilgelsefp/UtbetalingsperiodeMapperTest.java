@@ -28,7 +28,7 @@ import static java.util.List.of;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UtbetalingsperiodeMapperTest {
+class UtbetalingsperiodeMapperTest {
 
     @Test
     void skal_hente_dato_fra_uttaksperiode_når_denne_er_før_tilkjentytelseperioden_og_det_er_første_tilkjentYtelsePeriode() {
@@ -77,7 +77,7 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(uPeriode.getFom());
         assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(uPeriode.getTom());
         assertThat(resultat.get(0).isInnvilget()).isFalse();
-        assertThat(resultat.get(0).getPeriodeDagsats()).isEqualTo(0L);
+        assertThat(resultat.get(0).getPeriodeDagsats()).isZero();
         assertThat(resultat.get(0).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER.getKode());
 
         assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(tyPeriode3.getPeriodeFom());
@@ -181,7 +181,7 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(uPeriode2.getFom());
         assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(uPeriode2.getTom());
         assertThat(resultat.get(0).isInnvilget()).isFalse();
-        assertThat(resultat.get(0).getPeriodeDagsats()).isEqualTo(0L);
+        assertThat(resultat.get(0).getPeriodeDagsats()).isZero();
         assertThat(resultat.get(0).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode());
 
         assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(tyPeriode1.getPeriodeFom());
@@ -244,7 +244,7 @@ public class UtbetalingsperiodeMapperTest {
         assertThat(resultat).hasSize(1);
 
         assertThat(resultat.get(0).isInnvilget()).isTrue();
-        assertThat(resultat.get(0).getPeriodeDagsats()).isEqualTo(0L);
+        assertThat(resultat.get(0).getPeriodeDagsats()).isZero();
         assertThat(resultat.get(0).getÅrsak().getKode()).isEqualTo(PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT.getKode());
         assertThat(resultat.get(0).getAnnenAktivitetsliste()).hasSize(1);
     }
@@ -271,7 +271,7 @@ public class UtbetalingsperiodeMapperTest {
             Språkkode.NB);
 
         // Assert
-        assertThat(resultat).hasSize(0);
+        assertThat(resultat).isEmpty();
     }
 
     @Test

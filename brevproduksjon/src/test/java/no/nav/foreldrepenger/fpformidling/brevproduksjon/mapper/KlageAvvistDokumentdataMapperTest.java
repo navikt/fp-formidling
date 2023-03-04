@@ -36,7 +36,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 
 @ExtendWith(MockitoExtension.class)
-public class KlageAvvistDokumentdataMapperTest {
+class KlageAvvistDokumentdataMapperTest {
 
     @Mock
     private BrevParametere brevParametere;

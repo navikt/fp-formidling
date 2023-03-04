@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 
 @ExtendWith(MockitoExtension.class)
-public class DokumentKvitteringTjenesteTest {
+class DokumentKvitteringTjenesteTest {
 
     private DokumentKvitteringTjeneste historikkTjeneste;
 

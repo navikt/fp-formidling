@@ -55,7 +55,7 @@ public final class BehandlingDtoMapper {
             .medOriginalBehandlingUuid(dto.getOriginalBehandlingUuid())
             .medOriginalVedtaksDato(dto.getOriginalVedtaksDato())
             .medKreverSammenhengendeUttak(dto.getKreverSammenhengendeUttak());
-        ;
+
         if (dto.getBehandlingsresultat() != null) {
             builder.medBehandlingsresultat(BehandlingsresultatDtoMapper.mapBehandlingsresultatFraDto(dto.getBehandlingsresultat()));
         }

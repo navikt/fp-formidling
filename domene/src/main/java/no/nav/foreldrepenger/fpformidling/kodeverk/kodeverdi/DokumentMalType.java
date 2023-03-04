@@ -43,9 +43,9 @@ public enum DokumentMalType implements Kodeverdi {
     @Deprecated FORELDREPENGER_INNVILGELSE_DOK(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE_DOK, "Innvilgelsesbrev Foreldrepenger"), //NOSONAR
     @Deprecated FORELDREPENGER_AVSLAG_DOK(DokumentMalTypeKode.FORELDREPENGER_AVSLAG_DOK, "Avslagsbrev Foreldrepenger"), //NOSONAR
     @Deprecated FORELDREPENGER_OPPHØR_DOK(DokumentMalTypeKode.FORELDREPENGER_OPPHØR_DOK, "Opphør brev"), //NOSONAR
-    @Deprecated FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER_DOK(DokumentMalTypeKode.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER_DOK,
+    @Deprecated FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER_DOK(DokumentMalTypeKode.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER_DOK, //NOSONAR
         "Informasjonsbrev til den andre forelderen"), //NOSONAR
-    @Deprecated SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST(DokumentMalTypeKode.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST,
+    @Deprecated SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST(DokumentMalTypeKode.SVANGERSKAPSPENGER_INNVILGELSE_FRITEKST, //NOSONAR
         "Innvilgelsesbrev svangerskapspenger"), //NOSONAR
     @Deprecated INNHENTE_OPPLYSNINGER_DOK(DokumentMalTypeKode.INNHENTE_OPPLYSNINGER_DOK, "Innhent dokumentasjon"), //NOSONAR
     @Deprecated VARSEL_OM_REVURDERING_DOK(DokumentMalTypeKode.VARSEL_OM_REVURDERING_DOK, "Varsel om revurdering"), //NOSONAR
@@ -54,9 +54,9 @@ public enum DokumentMalType implements Kodeverdi {
     @Deprecated IKKE_SØKT_DOK(DokumentMalTypeKode.IKKE_SØKT_DOK, "Ikke mottatt søknad"), //NOSONAR
     @Deprecated INGEN_ENDRING_DOK(DokumentMalTypeKode.INGEN_ENDRING_DOK, "Uendret utfall"), //NOSONAR
     @Deprecated FORLENGET_SAKSBEHANDLINGSTID_DOK(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_DOK, "Forlenget saksbehandlingstid"), //NOSONAR
-    @Deprecated FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK,
+    @Deprecated FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_MEDL_DOK, //NOSONAR
         "Forlenget saksbehandlingstid - medlemskap"), //NOSONAR
-    @Deprecated FORLENGET_SAKSBEHANDLINGSTID_TIDLIG_DOK(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG_DOK,
+    @Deprecated FORLENGET_SAKSBEHANDLINGSTID_TIDLIG_DOK(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG_DOK, //NOSONAR
         "Forlenget saksbehandlingstid - Tidlig søknad"), //NOSONAR
     @Deprecated KLAGE_AVVIST_DOK(DokumentMalTypeKode.KLAGE_AVVIST_DOK, Constants.VEDTAK_OM_AVVIST_KLAGE), //NOSONAR
     @Deprecated KLAGE_AVVIST_FRITEKST(DokumentMalTypeKode.KLAGE_AVVIST_FRITEKST, Constants.VEDTAK_OM_AVVIST_KLAGE), //NOSONAR

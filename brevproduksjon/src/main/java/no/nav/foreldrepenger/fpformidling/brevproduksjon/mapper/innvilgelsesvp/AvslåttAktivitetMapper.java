@@ -30,7 +30,7 @@ public final class AvslåttAktivitetMapper {
         var builder = AvslåttAktivitet.ny().medÅrsak(Årsak.of(arbeidsforholdIkkeOppfyltÅrsak.getKode()));
 
         if (kanArbeidsgiverTilrettelegge(arbeidsforholdIkkeOppfyltÅrsak)) {
-            utled_AT_FL_SN(ura, builder);
+            utledAtFlSn(ura, builder);
         }
 
         return builder.build();
@@ -41,7 +41,7 @@ public final class AvslåttAktivitetMapper {
             || ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE_FREM_TIL_3_UKER_FØR_TERMIN.equals(arbeidsforholdIkkeOppfyltÅrsak);
     }
 
-    private static void utled_AT_FL_SN(SvpUttakResultatArbeidsforhold ura, AvslåttAktivitet.Builder builder) {
+    private static void utledAtFlSn(SvpUttakResultatArbeidsforhold ura, AvslåttAktivitet.Builder builder) {
         if (ura.getArbeidsgiver() != null) {
             builder.medArbeidsgiverNavn(ura.getArbeidsgiver().navn());
         } else if (UttakArbeidType.SELVSTENDIG_NÆRINGSDRIVENDE.equals(ura.getUttakArbeidType())) {

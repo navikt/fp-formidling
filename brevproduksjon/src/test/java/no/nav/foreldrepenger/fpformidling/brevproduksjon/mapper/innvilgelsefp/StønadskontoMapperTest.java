@@ -11,7 +11,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StønadskontoMapperTest {
+class StønadskontoMapperTest {
 
     @Test
     void skal_finne_disponible_dager_mødrekvote() {

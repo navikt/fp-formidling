@@ -45,7 +45,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakTyp
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
-public class VarselOmRevurderingDokumentdataMapperTest {
+class VarselOmRevurderingDokumentdataMapperTest {
 
     private static final LocalDate TERMINDATO = LocalDate.now();
     private static final int ANTALL_BARN = 1;

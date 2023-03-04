@@ -62,11 +62,11 @@ public final class FamiliehendelseDtoMapper {
         var antallDødeBarn = utledAntallDødeBarnFraDto(gjeldendeHendelseDto);
         boolean barnErFødtFraDto;
         var gjelderFødsel = false;
-        if (gjeldendeHendelseDto instanceof AvklartDataFodselDto) {
-            barnErFødtFraDto = erBarnFraDto((AvklartDataFodselDto) gjeldendeHendelseDto);
+        if (gjeldendeHendelseDto instanceof AvklartDataFodselDto avklartDataFodselDto) {
+            barnErFødtFraDto = erBarnFraDto(avklartDataFodselDto);
             gjelderFødsel = true;
-        } else if (gjeldendeHendelseDto instanceof AvklartDataAdopsjonDto) {
-            barnErFødtFraDto = erBarnFraDto((AvklartDataAdopsjonDto) gjeldendeHendelseDto);
+        } else if (gjeldendeHendelseDto instanceof AvklartDataAdopsjonDto avklartDataAdopsjonDto) {
+            barnErFødtFraDto = erBarnFraDto(avklartDataAdopsjonDto);
         } else {
             barnErFødtFraDto = true;
         }
@@ -146,8 +146,8 @@ public final class FamiliehendelseDtoMapper {
         if (dto instanceof AvklartDataOmsorgDto) {
             return FamilieHendelseType.OMSORG;
         }
-        if (dto instanceof AvklartDataFodselDto) {
-            return utledFødselEllerTermin((AvklartDataFodselDto) dto);
+        if (dto instanceof AvklartDataFodselDto avklartDataFodselDto) {
+            return utledFødselEllerTermin(avklartDataFodselDto);
         }
         throw new IllegalStateException("Ukjent familiehendelse dto");
     }

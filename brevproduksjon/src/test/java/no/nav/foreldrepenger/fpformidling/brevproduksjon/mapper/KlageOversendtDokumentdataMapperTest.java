@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.fpformidling.klage.KlageVurderingResultat;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
-public class KlageOversendtDokumentdataMapperTest {
+class KlageOversendtDokumentdataMapperTest {
 
     private static final String FRITEKST_TIL_BREV = "FRITEKST";
     private static final LocalDate MOTTATT_DATO = LocalDate.now();

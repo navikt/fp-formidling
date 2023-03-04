@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,7 +16,7 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagA
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 
-public class BeregningsgrunnlagMapperTest {
+class BeregningsgrunnlagMapperTest {
 
     private Beregningsgrunnlag beregningsgrunnlag;
     private static final BigDecimal AVKORTET_PR_ÅR = BigDecimal.valueOf(60);
@@ -96,8 +97,8 @@ public class BeregningsgrunnlagMapperTest {
     @Test
     void skal_kaste_exception_matcher_ikke() {
         var bgAktivitetStatus = new BeregningsgrunnlagAktivitetStatus(AktivitetStatus.FRILANSER);
-        assertThatThrownBy(() -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus,
-            List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN()))).isInstanceOf(IllegalStateException.class);
+        var bgpsaListe = List.of(lagBgpsaAvkortetArbeidstaker(), lagBgpsaSN());
+        assertThrows(IllegalStateException.class, () -> BeregningsgrunnlagMapper.finnAktivitetStatuserForAndeler(bgAktivitetStatus, bgpsaListe));
     }
 
     @Test

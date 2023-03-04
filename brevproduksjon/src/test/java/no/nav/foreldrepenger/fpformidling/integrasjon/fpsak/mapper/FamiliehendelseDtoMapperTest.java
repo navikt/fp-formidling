@@ -14,12 +14,12 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.famil
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.AvklartDataOmsorgDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.FamiliehendelseDto;
 
-public class FamiliehendelseDtoMapperTest {
+class FamiliehendelseDtoMapperTest {
     private static final LocalDate FØRSTE_JANUAR = LocalDate.of(2018, 1, 1);
 
     @Test
     void utledTermindato() {
-        assertThat(FamiliehendelseDtoMapper.finnTermindato(lagDtoMedTermindato(FØRSTE_JANUAR)).get()).isEqualTo(FØRSTE_JANUAR);
+        assertThat(FamiliehendelseDtoMapper.finnTermindato(lagDtoMedTermindato(FØRSTE_JANUAR))).contains(FØRSTE_JANUAR);
     }
 
     @Test
@@ -32,10 +32,10 @@ public class FamiliehendelseDtoMapperTest {
 
     @Test
     void finnAntallDødeBarn() {
-        assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 1, 2))).isEqualTo(0);
+        assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedBarnTerminOgFødsel(FØRSTE_JANUAR, 1, 2))).isZero();
         assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedFødselOgDødsdato(3, 2))).isEqualTo(2);
         assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedFødselOgDødsdato(3, 3))).isEqualTo(3);
-        assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedFødselOgDødsdato(3, 0))).isEqualTo(0);
+        assertThat(FamiliehendelseDtoMapper.utledAntallDødeBarnFraDto(lagFødselDtoMedFødselOgDødsdato(3, 0))).isZero();
     }
 
     @Test

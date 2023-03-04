@@ -33,7 +33,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForlengetSaksbe
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
-public class ForlengetSaksbehandlingstidDokumentdataMapperTest {
+class ForlengetSaksbehandlingstidDokumentdataMapperTest {
 
     private static final int ANTALL_BARN = 2;
 

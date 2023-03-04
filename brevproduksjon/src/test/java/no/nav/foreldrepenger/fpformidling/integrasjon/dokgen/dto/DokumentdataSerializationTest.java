@@ -43,7 +43,7 @@ import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.vilkår.VilkårType;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
-public class DokumentdataSerializationTest {
+class DokumentdataSerializationTest {
 
     private static final ObjectMapper OBJECT_MAPPER = DefaultJsonMapper.getObjectMapper();
 

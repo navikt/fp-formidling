@@ -7,6 +7,10 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 
 public class PeriodeComparator {
+
+    private PeriodeComparator() {
+    }
+
     public static final Comparator<TilkjentYtelsePeriode> TILKJENTYTELSERESULTAT = Comparator.comparing(TilkjentYtelsePeriode::getPeriodeFom);
 
     public static final Comparator<BeregningsgrunnlagPeriode> BEREGNINGSGRUNNLAG = Comparator.comparing(

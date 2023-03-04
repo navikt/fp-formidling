@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.fpformidling.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.klage.KlageVurdering;
 
-public class KlageMapperTest {
+class KlageMapperTest {
 
 
     @Test

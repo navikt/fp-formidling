@@ -8,6 +8,9 @@ import java.util.List;
 
 public class MottattDokumentDtoMapper {
 
+    private MottattDokumentDtoMapper() {
+    }
+
     public static List<MottattDokument> mapMottattedokumenterFraDto(List<MottattDokumentDto> dtoListe) {
         return dtoListe.stream().map(MottattDokumentDtoMapper::mapMottattDokumentFraDto).toList();
     }

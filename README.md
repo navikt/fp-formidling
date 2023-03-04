@@ -1,4 +1,4 @@
-FP-FORMIDLING Bestilling og produksjon av Brev og Dokumenter for foreldrepenger
+FP-FORMIDLING
 ================
 [![Bygg og deploy](https://github.com/navikt/fp-formidling/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/navikt/fp-formidling/actions/workflows/build.yml)
 [![Promote](https://github.com/navikt/fp-formidling/actions/workflows/promote.yml/badge.svg?branch=master)](https://github.com/navikt/fp-formidling/actions/workflows/promote.yml)
@@ -12,6 +12,7 @@ FP-FORMIDLING Bestilling og produksjon av Brev og Dokumenter for foreldrepenger
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-formidling&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=navikt_fp-formidling)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=navikt_fp-formidling&metric=sqale_index)](https://sonarcloud.io/dashboard?id=navikt_fp-formidling)
 
+Bestilling og produksjon av Brev og Dokumenter for foreldrepenger.
 Applikasjonen bestiller brev basert på hendelser via et REST-grensesnitt.
 
 ## Henvendelser

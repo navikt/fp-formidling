@@ -18,7 +18,7 @@ import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 import no.nav.vedtak.sikkerhet.abac.pipdata.AbacPipDto;
 
 @ApplicationScoped
-@RestClientConfig(tokenConfig = TokenFlow.STS_CC, application = FpApplication.FPSAK)
+@RestClientConfig(tokenConfig = TokenFlow.AZUREAD_CC, application = FpApplication.FPSAK)
 public class PipRestKlient {
 
     private static final Logger LOG = LoggerFactory.getLogger(PipRestKlient.class);

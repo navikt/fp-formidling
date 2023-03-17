@@ -99,12 +99,6 @@
             <artifactId>vault-jdbc</artifactId>
         </dependency>
 
-        <!-- Sikkerhet -->
-        <dependency>
-            <groupId>no.nav.security</groupId>
-            <artifactId>token-client-core</artifactId>
-        </dependency>
-
         <!-- Server -->
         <dependency>
             <groupId>org.eclipse.jetty</groupId>

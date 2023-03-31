@@ -18,20 +18,25 @@ Applikasjonen bestiller brev basert på hendelser via et REST-grensesnitt.
 ## Henvendelser
 
 Spørsmål knyttet til koden eller prosjektet kan rettes til:
+
 * Anja Gøtesen Aalerud (anja.gotesen.aalerud@nav.no)
 * Michal J. Sladek (michal.sladek@nav.no)
 
 ### Henvendelser for NAV-ansatte
+
 Interne henvendelser kan sendes via Slack i kanalen #fp-brev.
 
 ## Oppsett
+
 ### Run Config
+
 For å kjøre lokalt må du å ha VTP kjørende på forhånd.
 Konfigurasjonen i app-vtp.properties skal du ikke trenge å endre.
 Sett $MODULE_DIR$ som working directory, og bruk classpath til webapp.
 Kjører på Java 17. Kan korte ned classpathen med jar manifest.
 
 ### Database
+
 Bruk Docker Compose i fpsak-autotest for lokal utvikling - da får du PostgreSQL-container automatisk (se lengre ned).
 
 For tilgang til vedlikehold og feilsøking ute i miljø, kreves det midlertidig brukernavn og passord fra Vault.
@@ -49,13 +54,16 @@ Eksempel (Windows): Koble til fpformidling-databasen i prod med readonly-tilgang
 Alternativt kan man koble seg til via pgAdmin som følger med Postgres, eller DBeaver som er et GUI-verktøy ala Oracle SQL Developer.
 
 #### Lokale databaser
+
 Unit tester bruker en database som heter fpformidling_unit, og en bruker med det samme (fpformidling_unit) som brukernavn og passord.
 For å kjøre trenger du bruker vl_dba med vl_dba som passord, men denne bruker default database med eget schema.
 
 ### Dokumentasjon for interne
+
 https://confluence.adeo.no/display/TVF/FP-Formidling
 
 ### Kjør opp avhengigheter for lokal utvikling:
+
 Dette gjøres nå i _fpsak-autotest_-prosjektet. Her finnes det en felles docker-compose som skal brukes for lokalt utvikling.
 Vennligst se dokumentasjonen her: [Link til lokal utvikling i fpsak-autotest](https://github.com/navikt/fpsak-autotest/tree/master/docs).
 
@@ -73,7 +81,9 @@ Hvis ikke allerede gjort, opprett en ny configuration i IntelliJ av type "Remote
 Start debuggingen slik som man vanligvis ville gjort lokalt.
 
 ### Sikkerhet
+
 Det er mulig å kalle tjenesten med bruk av følgende tokens
+
 - Azure CC
 - Azure OBO med følgende rettigheter:
     - fpsak-saksbehandler

@@ -10,7 +10,7 @@ spec:
   port: 8080
   ingresses:
   {{#each ingresses as |url|}}
-     - {{url}}
+    - {{url}}
   {{/each}}
   liveness:
     path: /fpformidling/internal/health/isAlive

@@ -31,17 +31,15 @@ jobs:
 
   verdikjede:
     name: Verdikjedetester
-    if: github.ref_name == 'master'
-    needs: build-app
     uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
     with:
-      build-version: ${{ needs.build-app.outputs.build-version }}
+      build-version: latest
       test-suite: verdikjede
     secrets: inherit
 
   notify:
     name: Notify
-    if: github.ref_name == 'master' && (success() || failure()) && !contains(fromJSON(needs.*.result), 'skipped')
+    if: (success() || failure()) && !contains(fromJSON(needs.*.result), 'skipped')
     needs: [build-app, verdikjede]
     uses: navikt/fp-autotest/.github/workflows/report-and-notify.yml@master
     with:

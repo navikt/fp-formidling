@@ -40,7 +40,7 @@ jobs:
   notify:
     name: Notify
     needs: [build-app, verdikjede]
-    if: (success() || failure()) && !contains(needs.*.result, 'skipped')
+    if: (success() || failure()) && !contains(fromJSON(needs.*.result), 'skipped')
     uses: navikt/fp-autotest/.github/workflows/report-and-notify.yml@testinger
     with:
       verdikjede: ${{ needs.verdikjede.outputs.resultat }}

@@ -31,7 +31,7 @@ jobs:
 
   verdikjede:
     name: Verdikjedetester
-    uses: navikt/fp-autotest/.github/workflows/autotest.yml@master
+    uses: navikt/fp-autotest/.github/workflows/autotest.yml@testinger
     with:
       build-version: latest
       test-suite: verdikjede

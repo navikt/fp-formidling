@@ -15,8 +15,6 @@ on:
       - 'docs/**'
       - 'lokalutvikling/**'
       - '.github/dependabot.yml'
-  schedule:
-    - cron: '0 4 * * 1'
 
 jobs:
   build-app:

@@ -281,6 +281,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         builder.medSekgG(finnSeksG(beregningsgrunnlag).longValue());
         builder.medInntektOverSekgG(inntektOverSeksG(beregningsgrunnlag));
         builder.medErBesteberegning(beregningsgrunnlag.getErBesteberegnet());
+        builder.medSeksAvDeTiBeste(beregningsgrunnlag.getSeksAvDeTiBeste());
         builder.medHarBruktBruttoBeregningsgrunnlag(harBruktBruttoBeregningsgrunnlag(beregningsgrunnlagregler));
     }
 

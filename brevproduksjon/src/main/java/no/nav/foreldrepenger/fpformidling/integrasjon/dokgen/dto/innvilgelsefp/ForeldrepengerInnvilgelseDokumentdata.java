@@ -35,6 +35,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean gjelderMor;
     private boolean gjelderFødsel;
     private boolean erBesteberegning;
+    private boolean seksAvDeTiBeste;
     private boolean ingenRefusjon;
     private boolean delvisRefusjon;
     private boolean fullRefusjon;
@@ -171,6 +172,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     public boolean getErBesteberegning() {
         return erBesteberegning;
+    }
+
+    public boolean getSeksAvDeTiBeste() {
+        return seksAvDeTiBeste;
     }
 
     public boolean getIngenRefusjon() {
@@ -348,8 +353,8 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             that.oppgittAnnenForelderRettEØS) && Objects.equals(annenForelderHarRettVurdert, that.annenForelderHarRettVurdert) && Objects.equals(
             aleneomsorgKode, that.aleneomsorgKode) && Objects.equals(ikkeOmsorg, that.ikkeOmsorg) && Objects.equals(barnErFødt, that.barnErFødt)
             && Objects.equals(årsakErFødselshendelse, that.årsakErFødselshendelse) && Objects.equals(gjelderMor, that.gjelderMor) && Objects.equals(
-            gjelderFødsel, that.gjelderFødsel) && Objects.equals(erBesteberegning, that.erBesteberegning) && Objects.equals(ingenRefusjon,
-            that.ingenRefusjon) && Objects.equals(delvisRefusjon, that.delvisRefusjon) && Objects.equals(fullRefusjon, that.fullRefusjon)
+            gjelderFødsel, that.gjelderFødsel) && Objects.equals(erBesteberegning, that.erBesteberegning) && Objects.equals(seksAvDeTiBeste, that.seksAvDeTiBeste)
+            && Objects.equals(ingenRefusjon, that.ingenRefusjon) && Objects.equals(delvisRefusjon, that.delvisRefusjon) && Objects.equals(fullRefusjon, that.fullRefusjon)
             && Objects.equals(fbEllerRvInnvilget, that.fbEllerRvInnvilget) && Objects.equals(antallPerioder, that.antallPerioder) && Objects.equals(
             antallInnvilgedePerioder, that.antallInnvilgedePerioder) && Objects.equals(antallAvslåttePerioder, that.antallAvslåttePerioder)
             && Objects.equals(antallArbeidsgivere, that.antallArbeidsgivere) && Objects.equals(dagerTaptFørTermin, that.dagerTaptFørTermin)
@@ -377,7 +382,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, søknadsdato, dekningsgrad, harUtbetaling,
             dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver, annenForelderHarRett,
             annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse, gjelderMor, gjelderFødsel, erBesteberegning,
-            ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget, annenForelderRettEØS, oppgittAnnenForelderRettEØS, antallPerioder,
+            seksAvDeTiBeste, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget, annenForelderRettEØS, oppgittAnnenForelderRettEØS, antallPerioder,
             antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager, disponibleFellesDager,
             sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker, antallBarn, prematurDager, antallDødeBarn,
             dødsdato, kreverSammenhengendeUttak, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag,
@@ -514,6 +519,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medErBesteberegning(boolean erBesteberegning) {
             this.kladd.erBesteberegning = erBesteberegning;
+            return this;
+        }
+        public Builder medSeksAvDeTiBeste(boolean seksAvDeTiBeste) {
+            this.kladd.seksAvDeTiBeste = seksAvDeTiBeste;
             return this;
         }
 

@@ -45,6 +45,7 @@ public final class BeregningsgrunnlagDtoMapper {
             .forEach(builder::leggTilBeregningsgrunnlagPeriode);
         builder.medhHjemmel(mapHjemmelFraDto(dto.hjemmel()));
         builder.medBesteberegnet(dto.erBesteberegnet());
+        builder.medSeksAvDeTiBeste(dto.seksAvDeTiBeste());
         return builder.build();
     }
 

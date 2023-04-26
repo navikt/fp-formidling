@@ -145,6 +145,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
             .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
             .medhHjemmel(Hjemmel.F_14_7)
             .medBesteberegnet(true)
+            .medSeksAvDeTiBeste(true)
             .build());
     }
 

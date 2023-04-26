@@ -198,6 +198,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getSeksG()).isEqualTo(GRUNNBELØP * 6);
         assertThat(dokumentdata.getInntektOverSeksG()).isFalse();
         assertThat(dokumentdata.getErBesteberegning()).isTrue();
+        assertThat(dokumentdata.getSeksAvDeTiBeste()).isTrue();
         assertThat(dokumentdata.getHarBruktBruttoBeregningsgrunnlag()).isFalse();
         assertThat(dokumentdata.erUtenMinsterett()).isTrue();
         assertThat(dokumentdata.isAnnenForelderRettEØS()).isTrue();
@@ -299,6 +300,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
             .medGrunnbeløp(new Beløp(BigDecimal.valueOf(GRUNNBELØP)))
             .medhHjemmel(Hjemmel.F_14_7)
             .medBesteberegnet(true)
+            .medSeksAvDeTiBeste(true)
             .build();
 
 

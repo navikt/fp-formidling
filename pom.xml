@@ -32,7 +32,7 @@
         <!-- Felles artefakter -->
         <felles.version>4.2.38</felles.version>
         <prosesstask.version>3.1.26</prosesstask.version>
-        <kontrakter.version>6.2.15</kontrakter.version>
+        <kontrakter.version>6.2.19</kontrakter.version>
 
         <!-- Eksterne -->
         <handlebars.version>4.3.1</handlebars.version>

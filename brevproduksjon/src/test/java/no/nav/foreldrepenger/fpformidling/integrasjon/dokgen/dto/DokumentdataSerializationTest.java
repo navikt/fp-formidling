@@ -157,6 +157,7 @@ class DokumentdataSerializationTest {
             .medGjelderMor(true)
             .medGjelderFødsel(true)
             .medErBesteberegning(true)
+            .medSeksAvDeTiBeste(true)
             .medIngenRefusjon(true)
             .medDelvisRefusjon(true)
             .medFullRefusjon(true)

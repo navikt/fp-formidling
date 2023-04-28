@@ -13,6 +13,7 @@ public class Beregningsgrunnlag {
     private List<BeregningsgrunnlagAktivitetStatus> aktivitetStatuser = new ArrayList<>();
     private Hjemmel hjemmel;
     private boolean erBesteberegnet;
+    private boolean seksAvDeTiBeste;
 
     private Beregningsgrunnlag() {
 
@@ -42,12 +43,17 @@ public class Beregningsgrunnlag {
         return erBesteberegnet;
     }
 
+    public boolean getSeksAvDeTiBeste() {
+        return seksAvDeTiBeste;
+    }
+
     public static class Builder {
         private Beløp grunnbeløp;
         private List<BeregningsgrunnlagPeriode> beregningsgrunnlagPerioder = new ArrayList<>();
         private List<BeregningsgrunnlagAktivitetStatus> aktivitetStatuser = new ArrayList<>();
         private Hjemmel hjemmel;
         private boolean erBesteberegnet;
+        private boolean seksAvDeTiBeste;
 
         public Builder medGrunnbeløp(Beløp grunnbeløp) {
             this.grunnbeløp = grunnbeløp;
@@ -73,6 +79,10 @@ public class Beregningsgrunnlag {
             this.erBesteberegnet = erBesteberegnet;
             return this;
         }
+        public Builder medSeksAvDeTiBeste(boolean seksAvDeTiBeste) {
+            this.seksAvDeTiBeste = seksAvDeTiBeste;
+            return this;
+        }
 
         public Beregningsgrunnlag build() {
             var beregningsgrunnlag = new Beregningsgrunnlag();
@@ -81,6 +91,7 @@ public class Beregningsgrunnlag {
             beregningsgrunnlag.aktivitetStatuser = aktivitetStatuser;
             beregningsgrunnlag.hjemmel = hjemmel;
             beregningsgrunnlag.erBesteberegnet = erBesteberegnet;
+            beregningsgrunnlag.seksAvDeTiBeste = seksAvDeTiBeste;
             return beregningsgrunnlag;
         }
 
@@ -95,8 +106,13 @@ public class Beregningsgrunnlag {
             return false;
         }
         var that = (Beregningsgrunnlag) o;
-        return erBesteberegnet == that.erBesteberegnet && Objects.equals(grunnbeløp, that.grunnbeløp) && Objects.equals(beregningsgrunnlagPerioder,
-            that.beregningsgrunnlagPerioder) && Objects.equals(aktivitetStatuser, that.aktivitetStatuser) && hjemmel == that.hjemmel;
+        return Objects.equals(grunnbeløp, that.grunnbeløp)
+            && Objects.equals(beregningsgrunnlagPerioder,
+            that.beregningsgrunnlagPerioder)
+            && Objects.equals(aktivitetStatuser, that.aktivitetStatuser)
+            && hjemmel == that.hjemmel
+            && erBesteberegnet == that.erBesteberegnet
+            && seksAvDeTiBeste == that.seksAvDeTiBeste;
     }
 
     @Override
@@ -107,6 +123,7 @@ public class Beregningsgrunnlag {
     @Override
     public String toString() {
         return "Beregningsgrunnlag{" + "grunnbeløp=" + grunnbeløp + ", beregningsgrunnlagPerioder=" + beregningsgrunnlagPerioder
-            + ", aktivitetStatuser=" + aktivitetStatuser + ", hjemmel=" + hjemmel + ", erBesteberegnet=" + erBesteberegnet + '}';
+            + ", aktivitetStatuser=" + aktivitetStatuser + ", hjemmel=" + hjemmel + ", erBesteberegnet=" + erBesteberegnet
+            + ", seksAvDeTiBeste=" + seksAvDeTiBeste + '}';
     }
 }

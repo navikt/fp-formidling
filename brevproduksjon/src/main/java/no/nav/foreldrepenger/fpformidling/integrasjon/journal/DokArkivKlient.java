@@ -7,7 +7,7 @@ import no.nav.vedtak.felles.integrasjon.rest.RestClientConfig;
 import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 
 @Dependent
-@RestClientConfig(tokenConfig = TokenFlow.STS_CC, endpointProperty = "journalpost.rest.v1.url", endpointDefault = "http://dokarkiv.default/rest/journalpostapi/v1/journalpost")
+@RestClientConfig(tokenConfig = TokenFlow.STS_CC, endpointProperty = "journalpost.rest.v1.url", endpointDefault = "http://dokarkiv.teamdokumenthandtering/rest/journalpostapi/v1/journalpost")
 public class DokArkivKlient extends AbstractDokArkivKlient {
 
     public static final String AUTOMATISK_JOURNALFØRENDE_ENHET = "9999";

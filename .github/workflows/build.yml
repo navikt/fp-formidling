@@ -66,3 +66,5 @@ jobs:
       image: ghcr.io/${{ github.repository }}:${{ needs.build-app.outputs.build-version }}
       cluster: prod-fss
     secrets: inherit
+    
+    

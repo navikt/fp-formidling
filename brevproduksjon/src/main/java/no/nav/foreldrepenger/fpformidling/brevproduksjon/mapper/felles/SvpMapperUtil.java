@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -9,8 +10,8 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmelding;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.Inntektsmeldinger;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
@@ -35,20 +36,18 @@ public final class SvpMapperUtil {
         return vilkårTyper.stream().map(vt -> vt.getLovReferanse(FagsakYtelseType.SVANGERSKAPSPENGER)).findFirst().orElse("");
     }
 
-    public static Optional<LocalDate> finnFørsteUttakssdato(List<SvpUttakResultatPeriode> uttaksperioder, Behandlingsresultat behandlingsresultat) {
-        return finnMinsteDatoFraUttak(uttaksperioder).or(behandlingsresultat::getSkjæringstidspunkt);
+    public static Optional<LocalDate> finnFørsteAvslåtteUttakDato(List<SvpUttakResultatPeriode> uttaksperioder, Behandlingsresultat behandlingsresultat) {
+        return finnMinsteDatoFraAvslåttUttak(uttaksperioder).or(behandlingsresultat::getSkjæringstidspunkt);
 
     }
 
-    public static Optional<LocalDate> finnMinsteDatoFraUttak(List<SvpUttakResultatPeriode> perioder) {
-        var minsteDatoFraÅvslåttUttak = finnMinsteFraDatoAvslåttUttak(perioder);
-        return minsteDatoFraÅvslåttUttak.isPresent() ? minsteDatoFraÅvslåttUttak : finnMinsteFraDatoFraInnvilgetUttak(perioder);
+    public static Optional<LocalDate> finnMinsteDatoFraAvslåttUttak(List<SvpUttakResultatPeriode> perioder) {
+        return finnMinsteFraDatoAvslåttUttak(perioder).or(() ->finnMinsteFraDatoFraInnvilgetUttak(perioder));
     }
 
     private static Optional<LocalDate> finnMinsteFraDatoAvslåttUttak(List<SvpUttakResultatPeriode> uttaksperioder) {
         return uttaksperioder.stream()
             .filter(p -> PeriodeResultatType.AVSLÅTT.equals(p.getPeriodeResultatType()))
-            .filter(ur -> PeriodeIkkeOppfyltÅrsak.opphørsAvslagÅrsaker().contains(ur.getPeriodeIkkeOppfyltÅrsak()))
             .map(p -> p.getTidsperiode().getFomDato())
             .min(LocalDate::compareTo);
     }
@@ -74,4 +73,29 @@ public final class SvpMapperUtil {
         }
         return antallArbeidsgivere;
     }
+
+    public static Optional<LocalDate> finnOpphørsdato(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder) {
+        return  tilkjentYtelsePerioder.stream()
+            .filter(tilkjentYtelsePeriode -> tilkjentYtelsePeriode.getDagsats() > 0)
+            .map(TilkjentYtelsePeriode::getPeriodeTom)
+            .max(LocalDate::compareTo)
+            .map(localDate -> justerForHelg(localDate.plusDays(1)));
+    }
+
+    public static LocalDate justerForHelg(LocalDate date) {
+        if (erLørdag(date)) {
+            return date.plusDays(2);
+        } else if (erSøndag(date)) {
+            return date.plusDays(1);
+        } else
+            return date;
+    }
+    private static boolean erLørdag(LocalDate date) {
+        return date.getDayOfWeek().equals(DayOfWeek.SATURDAY);
+    }
+
+    private static boolean erSøndag(LocalDate date) {
+        return date.getDayOfWeek().equals(DayOfWeek.SUNDAY);
+    }
+
 }

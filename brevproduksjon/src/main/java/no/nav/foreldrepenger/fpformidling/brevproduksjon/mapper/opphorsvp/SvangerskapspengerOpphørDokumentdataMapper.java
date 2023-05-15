@@ -69,8 +69,6 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
 
-        var uttaksperioder = SvpMapperUtil.hentUttaksperioder(svpUttaksresultat);
-
         var dokumentdatabuilder = SvangerskapspengerOpphørDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medHalvG(BeregningsgrunnlagMapper.getHalvGOrElseZero(beregningsgrunnlag))
@@ -81,8 +79,9 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
             svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()), språkkode, iay,
             tilkjentYtelsePerioder);
 
-        SvpMapperUtil.finnFørsteUttakssdato(uttaksperioder, behandling.getBehandlingsresultat())
-            .ifPresent(d -> dokumentdatabuilder.medOpphørsdato(formaterDato(d, språkkode)));
+        var opphørsdato = SvpMapperUtil.finnOpphørsdato(tilkjentYtelsePerioder).or(() -> behandling.getBehandlingsresultat().getSkjæringstidspunkt());
+
+        opphørsdato.ifPresent(d -> dokumentdatabuilder.medOpphørsdato(formaterDato(d, språkkode)));
 
         familieHendelse.dødsdato().ifPresent(d -> dokumentdatabuilder.medDødsdatoBarn(formaterDato(d, språkkode)));
 

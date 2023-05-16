@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
@@ -18,7 +19,11 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.vilkår.VilkårType;
 
+import static java.time.temporal.TemporalAdjusters.next;
+
 public final class SvpMapperUtil {
+
+    private static final Set WEEKEND = Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     private SvpMapperUtil() {
     }
@@ -83,19 +88,6 @@ public final class SvpMapperUtil {
     }
 
     public static LocalDate justerForHelg(LocalDate date) {
-        if (erLørdag(date)) {
-            return date.plusDays(2);
-        } else if (erSøndag(date)) {
-            return date.plusDays(1);
-        } else
-            return date;
+        return WEEKEND.contains(DayOfWeek.from(date)) ? date.with(next(DayOfWeek.MONDAY)) : date;
     }
-    private static boolean erLørdag(LocalDate date) {
-        return date.getDayOfWeek().equals(DayOfWeek.SATURDAY);
-    }
-
-    private static boolean erSøndag(LocalDate date) {
-        return date.getDayOfWeek().equals(DayOfWeek.SUNDAY);
-    }
-
 }

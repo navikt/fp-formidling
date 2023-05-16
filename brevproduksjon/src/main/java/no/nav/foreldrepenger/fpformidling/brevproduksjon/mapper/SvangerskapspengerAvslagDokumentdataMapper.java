@@ -88,7 +88,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
 
         mapÅrsakOgLovhjemmel(behandlingsresultat.getAvslagsårsak(), uttaksperioder, dokumentdataBuilder, behandling.getUuid());
 
-        SvpMapperUtil.finnFørsteUttakssdato(uttaksperioder, behandling.getBehandlingsresultat())
+        SvpMapperUtil.finnFørsteAvslåtteUttakDato(uttaksperioder, behandling.getBehandlingsresultat())
             .ifPresent(d -> dokumentdataBuilder.medStønadsdatoFom(formaterDato(d, språkkode)));
 
 

@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.SvpMapperUtil;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -111,7 +113,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 
-        assertThat(dokumentdata.getOpphørsdato()).isEqualTo(formaterDato(PERIODE1_FOM, Språkkode.NB));
+        assertThat(dokumentdata.getOpphørsdato()).isEqualTo(formaterDato(SvpMapperUtil.justerForHelg(PERIODE1_TOM.plusDays(1)), Språkkode.NB));
         assertThat(dokumentdata.getDødsdatoBarn()).isNull();
         assertThat(dokumentdata.getFødselsdato()).isEqualTo(formaterDato(LocalDate.now(), Språkkode.NB));
         assertThat(dokumentdata.getErSøkerDød()).isFalse();

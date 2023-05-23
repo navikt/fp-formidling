@@ -31,7 +31,7 @@
 
         <!-- Felles artefakter -->
         <felles.version>4.2.45</felles.version>
-        <prosesstask.version>3.1.28</prosesstask.version>
+        <prosesstask.version>3.1.29</prosesstask.version>
         <kontrakter.version>6.2.20</kontrakter.version>
 
         <!-- Eksterne -->

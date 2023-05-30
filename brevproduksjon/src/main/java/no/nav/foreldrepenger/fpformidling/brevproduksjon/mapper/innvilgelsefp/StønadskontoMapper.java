@@ -40,7 +40,7 @@ public final class StønadskontoMapper {
     public static int finnForeldrepengeperiodenUtvidetUkerHvisFinnes(Saldoer saldoer) {
         return saldoer.stønadskontoer()
             .stream()
-            .map(s -> s.flerbarnsDager())
+            .map(Stønadskonto::flerbarnsDager)
             .filter(flerbarnsdager -> flerbarnsdager > 0)
             .map(BigInteger::valueOf)
             .map(dager -> dager.divide(BigInteger.valueOf(5)))
@@ -50,6 +50,6 @@ public final class StønadskontoMapper {
     }
 
     public static Integer finnPrematurDagerHvisFinnes(Saldoer saldoer) {
-        return saldoer.stønadskontoer().stream().map(Stønadskonto::prematurDager).max(Integer::compareTo).orElse(null);
+        return saldoer.stønadskontoer().stream().map(Stønadskonto::prematurDager).max(Integer::compareTo).orElse(0);
     }
 }

@@ -22,7 +22,6 @@ jobs:
     uses: navikt/fp-gha-workflows/.github/workflows/build-app-postgres.yml@main
     with:
       postgres-user: fpformidling_unit
-      sonar-scan: true # default: false
       build-image: ${{ github.ref_name == 'master' }} # default: true
       push-image: ${{ github.ref_name == 'master' }} # default: false
     secrets: inherit
@@ -66,5 +65,3 @@ jobs:
       image: ghcr.io/${{ github.repository }}:${{ needs.build-app.outputs.build-version }}
       cluster: prod-fss
     secrets: inherit
-    
-    

@@ -1,25 +1,25 @@
 version: '3.7'
 services:
   postgres:
-    image: postgres:12
+    image: postgres:15
     environment:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_USER=admin
     ports:
       - "5432:5432"
     volumes:
-      - ./lokalutvikling/postgres-init:/docker-entrypoint-initdb.d/
+      - ./postgres-init:/docker-entrypoint-initdb.d/
     container_name: postgres_formidling
   vtp:
     image: ghcr.io/navikt/vtp
     environment:
-      - "TZ=Europe/Oslo"
-      - "NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE=/root/.modig/keystore.jks"
-      - "JAVAX_NET_SSL_TRUSTSTORE=/root/.modig/truststore.jks"
+      TZ: Europe/Oslo
+      NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE: /app/.modig/keystore.jks
+      JAVAX_NET_SSL_TRUSTSTORE: /app/.modig/truststore.jks
     env_file:
       - "vtp.env"
     volumes:
-      - "~/.modig:/root/.modig"
+      - "~/.modig:/app/.modig"
     ports:
       - "8060:8060"
       - "8063:8063"

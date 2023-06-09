@@ -18,7 +18,7 @@ import no.nav.vedtak.felles.integrasjon.rest.RestRequest;
 import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
 
 @Dependent
-@RestClientConfig(tokenConfig = TokenFlow.STS_CC, endpointProperty = "journalpost.rest.proxy.v1.url", endpointDefault = "http://dokarkivproxy.teamdokumenthandtering/rest/journalpostapi/v1/journalpost")
+@RestClientConfig(tokenConfig = TokenFlow.STS_CC, endpointProperty = "journalpost.rest.proxy.v1.url", endpointDefault = "http://dokarkiv.teamdokumenthandtering/rest/journalpostapi/v1/journalpost")
 public class JournalpostVedleggKlient implements JournalpostVedlegg {
     private static final Logger LOG = LoggerFactory.getLogger(JournalpostVedleggKlient.class);
 

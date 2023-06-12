@@ -11,7 +11,7 @@ import javax.ws.rs.core.UriBuilder;
 import java.util.Objects;
 
 @ApplicationScoped
-@RestClientConfig(tokenConfig = TokenFlow.STS_CC, endpointProperty = "dokgen.rest.base.url", endpointDefault = "http://fpdokgen.teamforeldrepenger")
+@RestClientConfig(tokenConfig = TokenFlow.NO_AUTH_NEEDED, endpointProperty = "dokgen.rest.base.url", endpointDefault = "http://fpdokgen.teamforeldrepenger")
 public class DokgenRestKlient implements Dokgen {
 
     private final RestClient restClient;

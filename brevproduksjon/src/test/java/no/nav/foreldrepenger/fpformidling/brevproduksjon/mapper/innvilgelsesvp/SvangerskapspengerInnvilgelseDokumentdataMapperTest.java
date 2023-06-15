@@ -98,7 +98,6 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     private static final Long UTBETALINGSGRAD_PERIODE2 = 100L;
     private static final Long UTBETALINGSGRAD_PERIODE3 = 0L;
     private static final Long UTBETALINGSGRAD_PERIODE4 = 0L;
-    private static final PeriodeIkkeOppfyltÅrsak PERIODE_IKKE_OPPFYLT_ÅRSAK = PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE;
     private static final ArbeidsforholdIkkeOppfyltÅrsak ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK = ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE;
 
     @Mock
@@ -106,8 +105,8 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
     private DokumentData dokumentData;
 
-    private Arbeidsgiver ARBEIDSGIVER1 = new Arbeidsgiver("1", ARBEIDSGIVER1_NAVN);
-    private Arbeidsgiver ARBEIDSGIVER3 = new Arbeidsgiver("3", ARBEIDSGIVER3_NAVN);
+    private final Arbeidsgiver ARBEIDSGIVER1 = new Arbeidsgiver("1", ARBEIDSGIVER1_NAVN);
+    private final Arbeidsgiver ARBEIDSGIVER3 = new Arbeidsgiver("3", ARBEIDSGIVER3_NAVN);
 
     private SvangerskapspengerInnvilgelseDokumentdataMapper dokumentdataMapper;
 
@@ -179,10 +178,13 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getUtbetalingsperioder().get(1).getPeriodeDagsats()).isEqualTo(DAGSATS_PERIODE2);
         assertThat(dokumentdata.getUtbetalingsperioder().get(1).getUtbetaltTilSøker()).isZero();
 
-        assertThat(dokumentdata.getAvslagsperioder()).hasSize(1);
+        assertThat(dokumentdata.getAvslagsperioder()).hasSize(2);
         assertThat(dokumentdata.getAvslagsperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE3_FOM);
         assertThat(dokumentdata.getAvslagsperioder().get(0).getPeriodeTom()).isEqualTo(PERIODE3_TOM);
-        assertThat(dokumentdata.getAvslagsperioder().get(0).getÅrsak()).isEqualTo(Årsak.of(PERIODE_IKKE_OPPFYLT_ÅRSAK.getKode()));
+        assertThat(dokumentdata.getAvslagsperioder().get(0).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE.getKode()));
+        assertThat(dokumentdata.getAvslagsperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE3_FOM);
+        assertThat(dokumentdata.getAvslagsperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE3_TOM);
+        assertThat(dokumentdata.getAvslagsperioder().get(1).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_SAMTIDIG_SOM_SYKEPENGER.getKode()));
 
         assertThat(dokumentdata.getAvslåtteAktiviteter()).hasSize(1);
         assertThat(dokumentdata.getAvslåtteAktiviteter().get(0).getÅrsak()).isEqualTo(Årsak.of(ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK.getKode()));
@@ -504,7 +506,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
             .medArbeidsgiverNavn(ARBEIDSGIVER2_NAVN)
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
             .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE3)
-            .medPeriodeIkkeOppfyltÅrsak(PERIODE_IKKE_OPPFYLT_ÅRSAK)
+            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE)
             .build();
         var uttakPeriode4 = SvpUttakResultatPeriode.Builder.ny()
             .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
@@ -512,7 +514,14 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
             .medPeriodeResultatType(PeriodeResultatType.INNVILGET)
             .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE4)
             .build();
-        var svpUttakResultatArbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode1, uttakPeriode2)).build();
+        var uttakPeriode5 = SvpUttakResultatPeriode.Builder.ny()
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
+            .medArbeidsgiverNavn(ARBEIDSGIVER1_NAVN)
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE3)
+            .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_SAMTIDIG_SOM_SYKEPENGER)
+            .build();
+        var svpUttakResultatArbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode1, uttakPeriode2, uttakPeriode5)).build();
         var svpUttakResultatArbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode3)).build();
         var svpUttakResultatArbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny()
             .leggTilPerioder(of(uttakPeriode4))

@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 public final class AvslagsperiodeMapper {
 
     private static final List<PeriodeIkkeOppfyltÅrsak> RELEVANTE_PERIODE_ÅRSAKER = List.of(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT,
-        PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE);
+        PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE, PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_SAMTIDIG_SOM_SYKEPENGER);
 
     private AvslagsperiodeMapper() {
     }

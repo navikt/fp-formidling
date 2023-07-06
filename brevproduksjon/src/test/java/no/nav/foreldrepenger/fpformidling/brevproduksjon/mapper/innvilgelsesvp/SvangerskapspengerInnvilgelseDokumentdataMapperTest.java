@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -107,6 +109,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
     private final Arbeidsgiver ARBEIDSGIVER1 = new Arbeidsgiver("1", ARBEIDSGIVER1_NAVN);
     private final Arbeidsgiver ARBEIDSGIVER3 = new Arbeidsgiver("3", ARBEIDSGIVER3_NAVN);
+    private final Arbeidsgiver ARBEIDSGIVER2 = new Arbeidsgiver("2", ARBEIDSGIVER2_NAVN);
 
     private SvangerskapspengerInnvilgelseDokumentdataMapper dokumentdataMapper;
 
@@ -521,12 +524,19 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
             .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE3)
             .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_SAMTIDIG_SOM_SYKEPENGER)
             .build();
-        var svpUttakResultatArbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode1, uttakPeriode2, uttakPeriode5)).build();
-        var svpUttakResultatArbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode3)).build();
+        var svpUttakResultatArbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny()
+            .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
+            .medArbeidsgiver(ARBEIDSGIVER1)
+            .leggTilPerioder(of(uttakPeriode1, uttakPeriode2, uttakPeriode5)).build();
+        var svpUttakResultatArbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny()
+            .medArbeidsgiver(ARBEIDSGIVER2)
+            .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
+            .leggTilPerioder(of(uttakPeriode3)).build();
         var svpUttakResultatArbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny()
             .leggTilPerioder(of(uttakPeriode4))
             .medArbeidsforholdIkkeOppfyltÅrsak(ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK)
             .medArbeidsgiver(ARBEIDSGIVER3)
+            .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
             .build();
         return SvangerskapspengerUttak.Builder.ny()
             .leggTilUttakResultatArbeidsforhold(svpUttakResultatArbeidsforhold1)

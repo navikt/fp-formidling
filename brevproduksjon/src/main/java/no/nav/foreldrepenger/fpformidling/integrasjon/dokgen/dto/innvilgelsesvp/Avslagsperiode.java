@@ -22,6 +22,7 @@ public class Avslagsperiode {
     private Årsak årsak;
     @JsonIgnore
     private Språkkode språkkode;
+    private ArbeidsforholdInformasjon arbeidsforholdInformasjon;
 
     public LocalDate getPeriodeFom() {
         return periodeFomDate;
@@ -39,6 +40,10 @@ public class Avslagsperiode {
         return språkkode;
     }
 
+    public ArbeidsforholdInformasjon getArbeidsforholdInformasjon() {
+        return arbeidsforholdInformasjon;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -48,7 +53,10 @@ public class Avslagsperiode {
             return false;
         }
         var that = (Avslagsperiode) object;
-        return Objects.equals(periodeFom, that.periodeFom) && Objects.equals(periodeTom, that.periodeTom) && Objects.equals(årsak, that.årsak);
+        return Objects.equals(periodeFom, that.periodeFom)
+            && Objects.equals(periodeTom, that.periodeTom)
+            && Objects.equals(årsak, that.årsak)
+            && Objects.equals(arbeidsforholdInformasjon, that.arbeidsforholdInformasjon);
     }
 
     @Override
@@ -60,8 +68,8 @@ public class Avslagsperiode {
         return new Builder();
     }
 
-    public static Builder ny(Avslagsperiode eksisterende) {
-        return new Builder(eksisterende);
+    public static Builder ny(Avslagsperiode eksisterende, ArbeidsforholdInformasjon arbeidsforholdInformasjon) {
+        return new Builder(eksisterende, arbeidsforholdInformasjon);
     }
 
     public static class Builder {
@@ -71,7 +79,7 @@ public class Avslagsperiode {
             this.kladd = new Avslagsperiode();
         }
 
-        private Builder(Avslagsperiode eksisterende) {
+        private Builder(Avslagsperiode eksisterende, ArbeidsforholdInformasjon nyAbeidsforholdInformasjon) {
             this.kladd = new Avslagsperiode();
             this.kladd.periodeFom = formaterDato(eksisterende.getPeriodeFom(), eksisterende.getSpråkkode());
             this.kladd.periodeFomDate = eksisterende.getPeriodeFom();
@@ -79,6 +87,10 @@ public class Avslagsperiode {
             this.kladd.periodeTomDate = eksisterende.getPeriodeTom();
             this.kladd.årsak = eksisterende.getÅrsak();
             this.kladd.språkkode = eksisterende.getSpråkkode();
+            //hvis vi slår sammen 2 perioder med ulik arbeidsgiver skal denne ikke settes. Gjelder for 8308 - søkt for sent
+            if (eksisterende.arbeidsforholdInformasjon.equals(nyAbeidsforholdInformasjon)) {
+                this.kladd.arbeidsforholdInformasjon = eksisterende.arbeidsforholdInformasjon;
+            }
         }
 
         public Builder medPeriodeFom(LocalDate periodeFom, Språkkode språkkode) {
@@ -95,6 +107,12 @@ public class Avslagsperiode {
             return this;
         }
 
+        public Builder medArbeidsforholdInformasjon(ArbeidsforholdInformasjon arbeidsforholdInformasjon, Språkkode språkkode) {
+            this.kladd.arbeidsforholdInformasjon = arbeidsforholdInformasjon;
+            this.kladd.språkkode = språkkode;
+            return this;
+        }
+
         public Builder medÅrsak(Årsak årsak) {
             this.kladd.årsak = årsak;
             return this;
@@ -102,6 +120,21 @@ public class Avslagsperiode {
 
         public Avslagsperiode build() {
             return this.kladd;
+        }
+    }
+
+    public record ArbeidsforholdInformasjon(String arbeidsgivernavn, String aktivitetType) {
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+            if ((obj == null) || !getClass().equals(obj.getClass())) {
+                return false;
+            }
+            var other = (ArbeidsforholdInformasjon) obj;
+            return Objects.equals(this.arbeidsgivernavn, other.arbeidsgivernavn)
+                && Objects.equals(this.aktivitetType, other.aktivitetType);
         }
     }
 }

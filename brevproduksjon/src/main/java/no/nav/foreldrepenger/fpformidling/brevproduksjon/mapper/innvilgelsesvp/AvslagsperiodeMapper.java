@@ -26,20 +26,36 @@ public final class AvslagsperiodeMapper {
     }
 
     public static List<Avslagsperiode> mapAvslagsperioder(List<SvpUttakResultatArbeidsforhold> uttakResultatArbeidsforhold, Språkkode språkkode) {
-        var filtrertePerioder = uttakResultatArbeidsforhold.stream()
-            .flatMap(ura -> ura.getPerioder().stream())
-            .filter(Predicate.not(SvpUttakResultatPeriode::isInnvilget))
-            .filter(p -> RELEVANTE_PERIODE_ÅRSAKER.contains(p.getPeriodeIkkeOppfyltÅrsak()))
-            .map(p -> opprettAvslagsperiode(p, språkkode))
-            .toList();
-        return slåSammenPerioder(filtrertePerioder);
+        List<Avslagsperiode> avslagPerioderMedArbinformasjon = new ArrayList<>();
+        uttakResultatArbeidsforhold.forEach(ura -> {
+            var arbeidsforholdInformasjon = mapArbeidsforholdInformasjon(ura);
+            avslagPerioderMedArbinformasjon.addAll(ura.getPerioder().stream()
+                .filter(Predicate.not(SvpUttakResultatPeriode::isInnvilget))
+                .filter(p -> RELEVANTE_PERIODE_ÅRSAKER.contains(p.getPeriodeIkkeOppfyltÅrsak()))
+                .map(p -> opprettAvslagsperiode(p, språkkode, arbeidsforholdInformasjon))
+                .toList());
+        });
+        return slåSammenPerioder(avslagPerioderMedArbinformasjon);
     }
 
-    private static Avslagsperiode opprettAvslagsperiode(SvpUttakResultatPeriode p, Språkkode språkkode) {
-        return Avslagsperiode.ny()
+    private static Avslagsperiode.ArbeidsforholdInformasjon mapArbeidsforholdInformasjon(SvpUttakResultatArbeidsforhold urArbeidsforhold) {
+        if (urArbeidsforhold.getArbeidsgiver() != null && urArbeidsforhold.getArbeidsgiver().arbeidsgiverReferanse() != null) {
+            return  new Avslagsperiode.ArbeidsforholdInformasjon(urArbeidsforhold.getArbeidsgiver().navn(),
+                urArbeidsforhold.getUttakArbeidType().getKode());
+        } else if (urArbeidsforhold.getArbeidsgiver() != null && urArbeidsforhold.getArbeidsgiver().arbeidsgiverReferanse() == null) {
+            return new Avslagsperiode.ArbeidsforholdInformasjon(urArbeidsforhold.getArbeidsgiver().navn(),
+                urArbeidsforhold.getUttakArbeidType().getKode());
+        } else {
+            return  new Avslagsperiode.ArbeidsforholdInformasjon(null, urArbeidsforhold.getUttakArbeidType().getKode());
+        }
+    }
+
+    private static Avslagsperiode opprettAvslagsperiode(SvpUttakResultatPeriode p, Språkkode språkkode, Avslagsperiode.ArbeidsforholdInformasjon arbeidsforholdInformasjon) {
+        return  Avslagsperiode.ny()
             .medÅrsak(Årsak.of(p.getPeriodeIkkeOppfyltÅrsak().getKode()))
             .medPeriodeFom(p.getFom().toLocalDate(), språkkode)
             .medPeriodeTom(p.getTom().toLocalDate(), språkkode)
+            .medArbeidsforholdInformasjon(arbeidsforholdInformasjon, språkkode)
             .build();
     }
 
@@ -63,12 +79,12 @@ public final class AvslagsperiodeMapper {
                     var sisteIndex = nyePerioder.size() - 1;
                     var forrigePeriode = nyePerioder.get(sisteIndex);
 
-                    if (skalSlåSammenPerioder(forrigePeriode, avslagsperiode.getPeriodeFom())) {
+                    if (skalSlåSammenPerioder(forrigePeriode, avslagsperiode, årsak)) {
                         var nyTom = Stream.of(forrigePeriode.getPeriodeTom(), avslagsperiode.getPeriodeTom())
                             .max(Comparator.naturalOrder())
                             .orElseThrow();
                         nyePerioder.remove(sisteIndex);
-                        nyePerioder.add(byggSammenslåttAvslagsperiode(forrigePeriode, nyTom));
+                        nyePerioder.add(byggSammenslåttAvslagsperiode(forrigePeriode, nyTom, avslagsperiode.getArbeidsforholdInformasjon()));
                         continue;
                     }
                 }
@@ -81,12 +97,24 @@ public final class AvslagsperiodeMapper {
         return sammenslåttePerioder;
     }
 
-    private static boolean skalSlåSammenPerioder(Avslagsperiode forrigePeriode, LocalDate nestePeriodeFom) {
+    private static boolean skalSlåSammenPerioder(Avslagsperiode forrigePeriode, Avslagsperiode nestePeriode, PeriodeIkkeOppfyltÅrsak årsak) {
         var forrigePeriodeIntervall = DatoIntervallEntitet.fraOgMedTilOgMed(forrigePeriode.getPeriodeFom(), forrigePeriode.getPeriodeTom());
-        return forrigePeriodeIntervall.inkluderer(nestePeriodeFom) || erFomRettEtterTomDato(forrigePeriode.getPeriodeTom(), nestePeriodeFom);
+        var forrigePeriodeArbeidsforholdInformasjon = forrigePeriode.getArbeidsforholdInformasjon();
+        var nestePeriodeArbeidsforholdInformasjo = nestePeriode.getArbeidsforholdInformasjon();
+
+        if (PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT.equals(årsak)) { //alle perioder gjelder for alle arbeidsforhold
+            return forrigePeriodeIntervall.inkluderer(nestePeriode.getPeriodeFom()) ||
+                erFomRettEtterTomDato(forrigePeriode.getPeriodeTom(), nestePeriode.getPeriodeFom());
+        } else { //dersom avslått pga ferie eller sykepenger skal de ikke slås sammen om ulike arbeidsforhold
+            return (forrigePeriodeIntervall.inkluderer(nestePeriode.getPeriodeFom()) ||
+                erFomRettEtterTomDato(forrigePeriode.getPeriodeTom(), nestePeriode.getPeriodeFom())) &&
+                    forrigePeriodeArbeidsforholdInformasjon.equals(nestePeriodeArbeidsforholdInformasjo);
+        }
+
+
     }
 
-    private static Avslagsperiode byggSammenslåttAvslagsperiode(Avslagsperiode forrigePeriode, LocalDate nyTom) {
-        return Avslagsperiode.ny(forrigePeriode).medPeriodeTom(nyTom, forrigePeriode.getSpråkkode()).build();
+    private static Avslagsperiode byggSammenslåttAvslagsperiode(Avslagsperiode forrigePeriode, LocalDate nyTom, Avslagsperiode.ArbeidsforholdInformasjon nyPeriodeArbeidsforholdInformasjon) {
+        return  Avslagsperiode.ny(forrigePeriode, nyPeriodeArbeidsforholdInformasjon).medPeriodeTom(nyTom, forrigePeriode.getSpråkkode()).build();
     }
 }

@@ -123,18 +123,5 @@ public class Avslagsperiode {
         }
     }
 
-    public record ArbeidsforholdInformasjon(String arbeidsgivernavn, String aktivitetType) {
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if ((obj == null) || !getClass().equals(obj.getClass())) {
-                return false;
-            }
-            var other = (ArbeidsforholdInformasjon) obj;
-            return Objects.equals(this.arbeidsgivernavn, other.arbeidsgivernavn)
-                && Objects.equals(this.aktivitetType, other.aktivitetType);
-        }
-    }
+    public record ArbeidsforholdInformasjon(String arbeidsgivernavn, String aktivitetType) {}
 }

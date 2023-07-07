@@ -6,6 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
+import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
@@ -47,16 +50,23 @@ class AvslagsperiodeMapperTest {
         var resultat = AvslagsperiodeMapper.mapAvslagsperioder(svpUttakResultatArbeidsforhold, Språkkode.NB);
 
         // Assert
-        assertThat(resultat).hasSize(3);
+        assertThat(resultat).hasSize(4);
         assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
         assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE6_TOM);
         assertThat(resultat.get(0).getÅrsak()).isEqualTo(Årsak.of("8308"));
+        assertThat(resultat.get(0).getArbeidsforholdInformasjon()).isNull();
         assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(PERIODE3_FOM);
         assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(PERIODE7_TOM);
         assertThat(resultat.get(1).getÅrsak()).isEqualTo(Årsak.of("8311"));
-        assertThat(resultat.get(2).getPeriodeFom()).isEqualTo(PERIODE4_FOM);
-        assertThat(resultat.get(2).getPeriodeTom()).isEqualTo(PERIODE4_TOM);
+        assertThat(resultat.get(1).getArbeidsforholdInformasjon().arbeidsgivernavn()).isEqualTo(ARBEIDSGIVER2_NAVN);
+        assertThat(resultat.get(2).getPeriodeFom()).isEqualTo(PERIODE7_FOM);
+        assertThat(resultat.get(2).getPeriodeTom()).isEqualTo(PERIODE7_TOM);
         assertThat(resultat.get(2).getÅrsak()).isEqualTo(Årsak.of("8311"));
+        assertThat(resultat.get(2).getArbeidsforholdInformasjon().arbeidsgivernavn()).isEqualTo(ARBEIDSGIVER3_NAVN);
+        assertThat(resultat.get(3).getPeriodeFom()).isEqualTo(PERIODE4_FOM);
+        assertThat(resultat.get(3).getPeriodeTom()).isEqualTo(PERIODE4_TOM);
+        assertThat(resultat.get(3).getÅrsak()).isEqualTo(Årsak.of("8311"));
+        assertThat(resultat.get(2).getArbeidsforholdInformasjon().arbeidsgivernavn()).isEqualTo(ARBEIDSGIVER3_NAVN);
     }
 
     private List<SvpUttakResultatArbeidsforhold> getSvpUttakResultatArbeidsforhold() {
@@ -72,7 +82,10 @@ class AvslagsperiodeMapperTest {
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
             .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.SØKT_FOR_SENT)
             .build();
-        var arbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode1, uttakPeriode2)).build();
+        var arbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny()
+            .medArbeidsgiver(new Arbeidsgiver("123456789", ARBEIDSGIVER1_NAVN))
+            .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
+            .leggTilPerioder(of(uttakPeriode1, uttakPeriode2)).build();
 
         var uttakPeriode3 = SvpUttakResultatPeriode.Builder.ny()
             .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
@@ -92,7 +105,11 @@ class AvslagsperiodeMapperTest {
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
             .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.OPPTJENINGSVILKÅRET_IKKE_OPPFYLT) //Mappes ikke
             .build();
-        var arbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode3, uttakPeriode4, uttakPeriode5)).build();
+
+        var arbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny()
+            .medArbeidsgiver(new Arbeidsgiver("988765432", ARBEIDSGIVER2_NAVN))
+            .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
+            .leggTilPerioder(of(uttakPeriode3, uttakPeriode4, uttakPeriode5)).build();
 
         var uttakPeriode6 = SvpUttakResultatPeriode.Builder.ny()
             .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(PERIODE6_FOM, PERIODE6_TOM))
@@ -106,7 +123,12 @@ class AvslagsperiodeMapperTest {
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
             .medPeriodeIkkeOppfyltÅrsak(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE)
             .build();
-        var arbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny().leggTilPerioder(of(uttakPeriode6, uttakPeriode7)).build();
+
+        var arbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny()
+            .medArbeidsgiver(new Arbeidsgiver("56432198", ARBEIDSGIVER3_NAVN))
+            .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
+            .leggTilPerioder(of(uttakPeriode6, uttakPeriode7)).build();
+
 
         return of(arbeidsforhold1, arbeidsforhold2, arbeidsforhold3);
     }

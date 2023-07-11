@@ -19,6 +19,9 @@ on:
 jobs:
   build-app:
     name: Build
+    permissions:
+      contents: read
+      packages: write
     uses: navikt/fp-gha-workflows/.github/workflows/build-app-postgres.yml@main
     with:
       postgres-user: fpformidling_unit
@@ -34,7 +37,6 @@ jobs:
     with:
       build-version: ${{ needs.build-app.outputs.build-version }}
       test-suite: verdikjede
-    secrets: inherit
 
   notify:
     name: Notify

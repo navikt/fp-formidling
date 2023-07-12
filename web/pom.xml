@@ -83,9 +83,23 @@
             <artifactId>HikariCP</artifactId>
         </dependency>
         <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>vault-jdbc</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-micrometer</artifactId>
+        </dependency>
+
+        <!-- Bean Validation -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
@@ -93,10 +107,6 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>vault-jdbc</artifactId>
         </dependency>
 
         <!-- Server -->

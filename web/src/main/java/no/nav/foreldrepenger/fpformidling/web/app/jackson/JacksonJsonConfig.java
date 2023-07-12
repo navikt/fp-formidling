@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.fpformidling.web.app.jackson;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Provider;
+import jakarta.ws.rs.ext.ContextResolver;
+import jakarta.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.core.Version;

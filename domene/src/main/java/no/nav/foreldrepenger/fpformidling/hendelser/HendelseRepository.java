@@ -3,9 +3,9 @@ package no.nav.foreldrepenger.fpformidling.hendelser;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
@@ -30,7 +30,7 @@ public class HendelseRepository {
     }
 
     public boolean finnesHendelseMedUuidAllerede(UUID bestillingUuid) {
-        var query = entityManager.createQuery("from DokumentHendelse where bestilling_uuid=:bestillingUuid", DokumentHendelse.class);
+        var query = entityManager.createQuery("from DokumentHendelse where bestillingUuid=:bestillingUuid", DokumentHendelse.class);
         query.setParameter("bestillingUuid", bestillingUuid);
         return !query.getResultList().isEmpty();
     }

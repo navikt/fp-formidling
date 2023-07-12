@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.fpformidling.jpa;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 /**
  * Hibernate entitet som modellerer et dato intervall.

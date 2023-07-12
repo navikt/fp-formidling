@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.fpformidling.typer;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 /**
  * Saksnummer refererer til saksnummer registret i GSAK.

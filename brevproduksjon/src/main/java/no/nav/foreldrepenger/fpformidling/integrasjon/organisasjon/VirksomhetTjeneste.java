@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon;
 
 import no.nav.vedtak.felles.integrasjon.organisasjon.OrgInfo;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.Optional;
 

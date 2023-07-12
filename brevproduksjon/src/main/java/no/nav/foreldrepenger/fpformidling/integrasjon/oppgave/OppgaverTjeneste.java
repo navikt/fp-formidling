@@ -10,8 +10,8 @@ import no.nav.vedtak.felles.integrasjon.oppgave.v1.OpprettOppgave;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class OppgaverTjeneste {

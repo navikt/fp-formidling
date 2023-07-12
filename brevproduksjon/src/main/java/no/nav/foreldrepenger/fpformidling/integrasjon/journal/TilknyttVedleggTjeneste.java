@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.journal;
 import java.util.Collection;
 import java.util.List;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import no.nav.vedtak.felles.integrasjon.dokarkiv.DokArkiv;
 

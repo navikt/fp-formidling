@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.fami
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Size;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.Map;

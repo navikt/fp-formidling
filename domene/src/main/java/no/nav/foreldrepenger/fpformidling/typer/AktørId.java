@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.validation.constraints.Pattern.Flag;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.Pattern.Flag;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
@@ -27,7 +27,7 @@ public class AktørId implements Serializable, Comparable<AktørId> {
     private static final Pattern INVALID = Pattern.compile(INVALID_REGEXP, Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 
     @JsonValue
-    @javax.validation.constraints.Pattern(regexp = VALID_REGEXP, flags = {Flag.CASE_INSENSITIVE})
+    @jakarta.validation.constraints.Pattern(regexp = VALID_REGEXP, flags = {Flag.CASE_INSENSITIVE})
     @Column(name = "aktoer_id", updatable = false, length = 50)
     private String aktørId; // NOSONAR
 

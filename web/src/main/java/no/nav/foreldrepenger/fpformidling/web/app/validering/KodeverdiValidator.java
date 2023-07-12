@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.fpformidling.web.app.validering;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 import no.nav.vedtak.util.InputValideringRegex;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.Objects;
 import java.util.regex.Pattern;

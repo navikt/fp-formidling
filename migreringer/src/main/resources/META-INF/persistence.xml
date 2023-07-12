@@ -10,7 +10,7 @@
         <non-jta-data-source>jdbc/defaultDS</non-jta-data-source>
 
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreDialect"/>
             <property name="hibernate.jdbc.use_get_generated_keys" value="true"/>
 
             <!-- Utsetter flush av statements til db til commit eller manuelt istedet for hibernate heuristisk flush. -->

@@ -30,7 +30,7 @@ public class HendelseRepository {
     }
 
     public boolean finnesHendelseMedUuidAllerede(UUID bestillingUuid) {
-        var query = entityManager.createQuery("from DokumentHendelse where bestilling_uuid=:bestillingUuid", DokumentHendelse.class);
+        var query = entityManager.createQuery("from DokumentHendelse where bestillingUuid=:bestillingUuid", DokumentHendelse.class);
         query.setParameter("bestillingUuid", bestillingUuid);
         return !query.getResultList().isEmpty();
     }

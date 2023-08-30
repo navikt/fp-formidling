@@ -24,6 +24,34 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+import static java.util.List.of;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.FRITEKST;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SAKSNUMMER;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_FNR;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.SØKERS_NAVN;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentData;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp.of;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -96,10 +124,10 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     private static final Long NATURALYTELSE_BORTFALT = 50L;
     private static final LocalDate SØKNAD_DATO = LocalDate.now().minusDays(1);
     private static final int KLAGEFRIST = 6;
-    private static final Long UTBETALINGSGRAD_PERIODE1 = 50L;
-    private static final Long UTBETALINGSGRAD_PERIODE2 = 100L;
-    private static final Long UTBETALINGSGRAD_PERIODE3 = 0L;
-    private static final Long UTBETALINGSGRAD_PERIODE4 = 0L;
+    private static final BigDecimal UTBETALINGSGRAD_PERIODE1 = BigDecimal.valueOf(50);
+    private static final BigDecimal UTBETALINGSGRAD_PERIODE2 = BigDecimal.valueOf(100);
+    private static final BigDecimal UTBETALINGSGRAD_PERIODE3 = BigDecimal.ZERO;
+    private static final BigDecimal UTBETALINGSGRAD_PERIODE4 = BigDecimal.ZERO;
     private static final ArbeidsforholdIkkeOppfyltÅrsak ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK = ArbeidsforholdIkkeOppfyltÅrsak.ARBEIDSGIVER_KAN_TILRETTELEGGE;
 
     @Mock

@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
@@ -37,9 +38,9 @@ class UttaksperiodeMapperTest {
     private static final String FORVENTET_NÆRINGSDRIVENDE_TEKST = "Som " + UttakSvpDtoMapper.NÆRINGSDRIVENDE;
     private static final Arbeidsgiver ARBEIDSGIVER = new Arbeidsgiver("1", ARBEIDSGIVER_NAVN);
     private static final long DAGSATS = 1000L;
-    private static final int UTBETALINGSGRAD_100 = 100;
-    private static final int UTBETALINGSGRAD_50 = 50;
-    private static final int UTBETALINGSGRAD_10 = 10;
+    private static final BigDecimal UTBETALINGSGRAD_100 = BigDecimal.valueOf(100);
+    private static final BigDecimal UTBETALINGSGRAD_50 = BigDecimal.valueOf(50);
+    private static final BigDecimal UTBETALINGSGRAD_10 = BigDecimal.valueOf(10);
 
     @Test
     void skal_mappe_og_slå_sammen_sammenhengende_perioder_med_samme_utbetalingsgrad_innenfor_samme_aktivitetstype() {

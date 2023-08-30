@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.uttak.svp;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -9,7 +10,7 @@ import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
 
 public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPeriode> {
 
-    private long utbetalingsgrad;
+    private BigDecimal utbetalingsgrad;
     private PeriodeResultatType periodeResultatType;
     private PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak;
     private DatoIntervall tidsperiode;
@@ -53,8 +54,8 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
         return tidsperiode.getTom();
     }
 
-    public int getUtbetalingsgrad() {
-        return (int) utbetalingsgrad;
+    public BigDecimal getUtbetalingsgrad() {
+        return utbetalingsgrad;
     }
 
     public PeriodeResultatType getPeriodeResultatType() {
@@ -78,7 +79,7 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
             return false;
         }
         var that = (SvpUttakResultatPeriode) o;
-        return getUtbetalingsgrad() == that.getUtbetalingsgrad() && getAktivitetDagsats() == that.getAktivitetDagsats() && Objects.equals(
+        return Objects.equals(getUtbetalingsgrad(), that.getUtbetalingsgrad()) && getAktivitetDagsats() == that.getAktivitetDagsats() && Objects.equals(
             getTidsperiode(), that.getTidsperiode());
     }
 
@@ -94,7 +95,7 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
 
     public static final class Builder {
 
-        private long utbetalingsgrad;
+        private BigDecimal utbetalingsgrad;
         private PeriodeResultatType periodeResultatType = PeriodeResultatType.IKKE_FASTSATT;
         private PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak = PeriodeIkkeOppfyltÅrsak.INGEN;
         private DatoIntervall tidsperiode;
@@ -123,7 +124,7 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
             return new Builder(copy);
         }
 
-        public Builder medUtbetalingsgrad(long utbetalingsgrad) {
+        public Builder medUtbetalingsgrad(BigDecimal utbetalingsgrad) {
             this.utbetalingsgrad = utbetalingsgrad;
             return this;
         }

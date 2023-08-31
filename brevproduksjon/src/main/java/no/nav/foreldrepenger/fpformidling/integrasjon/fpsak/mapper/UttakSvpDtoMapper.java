@@ -1,5 +1,9 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.function.UnaryOperator;
+
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatArbeidsforholdDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
@@ -8,9 +12,6 @@ import no.nav.foreldrepenger.fpformidling.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
-
-import java.util.List;
-import java.util.function.UnaryOperator;
 
 
 public class UttakSvpDtoMapper {
@@ -50,7 +51,7 @@ public class UttakSvpDtoMapper {
             .stream()
             .map(periodeDto -> SvpUttakResultatPeriode.Builder.ny()
                 .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(periodeDto.fom(), periodeDto.tom()))
-                .medUtbetalingsgrad(periodeDto.utbetalingsgrad().longValue())
+                .medUtbetalingsgrad(periodeDto.utbetalingsgrad().setScale(2, RoundingMode.HALF_UP))
                 .medPeriodeResultatType(periodeDto.periodeResultatType())
                 .medPeriodeIkkeOppfyltÅrsak(periodeDto.periodeIkkeOppfyltÅrsak())
                 .medArbeidsgiverNavn(getArbeidsgiverNavn(arbeidsforhold, arbeidsgiver))

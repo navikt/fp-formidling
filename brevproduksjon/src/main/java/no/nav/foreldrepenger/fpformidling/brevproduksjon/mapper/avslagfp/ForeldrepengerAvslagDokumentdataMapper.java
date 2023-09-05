@@ -88,11 +88,16 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
             .medAntallBarn(familiehendelse.antallBarn())
             .medHalvG(halvG)
             .medKlagefristUker(brevParametere.getKlagefristUker())
-            .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen());
+            .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen())
+            .medGjelderMor(gjelderMor(fagsak));
 
         mapAvslåttePerioder(behandling, dokumentdataBuilder, uttakResultatPerioder);
 
         return dokumentdataBuilder.build();
+    }
+
+    private boolean gjelderMor(FagsakBackend fagsak) {
+        return RelasjonsRolleType.MORA.equals(fagsak.getRelasjonsRolleType());
     }
 
     private void mapAvslåttePerioder(Behandling behandling,

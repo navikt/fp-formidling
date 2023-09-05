@@ -20,6 +20,7 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
     private int klagefristUker;
     private String lovhjemmelForAvslag;
     private boolean kreverSammenhengendeUttak;
+    private boolean gjelderMor;
     private List<AvslåttPeriode> avslåttePerioder;
 
     public String getRelasjonskode() {
@@ -61,6 +62,9 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
     public boolean getKreverSammenhengendeUttak() {
         return kreverSammenhengendeUttak;
     }
+    public boolean getGjelderMor() {
+        return gjelderMor;
+    }
 
     public List<AvslåttPeriode> getAvslåttePerioder() {
         return avslåttePerioder;
@@ -79,13 +83,13 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
             that.mottattDato) && Objects.equals(gjelderFødsel, that.gjelderFødsel) && Objects.equals(barnErFødt, that.barnErFødt) && Objects.equals(
             annenForelderHarRett, that.annenForelderHarRett) && Objects.equals(antallBarn, that.antallBarn) && Objects.equals(halvG, that.halvG)
             && Objects.equals(klagefristUker, that.klagefristUker) && Objects.equals(lovhjemmelForAvslag, that.lovhjemmelForAvslag) && Objects.equals(
-            kreverSammenhengendeUttak, that.kreverSammenhengendeUttak) && Objects.equals(avslåttePerioder, that.avslåttePerioder);
+            kreverSammenhengendeUttak, that.kreverSammenhengendeUttak) && Objects.equals(gjelderMor, that.gjelderMor) && Objects.equals(avslåttePerioder, that.avslåttePerioder);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(felles, relasjonskode, mottattDato, gjelderFødsel, barnErFødt, annenForelderHarRett, antallBarn, halvG, klagefristUker,
-            lovhjemmelForAvslag, kreverSammenhengendeUttak, avslåttePerioder);
+            lovhjemmelForAvslag, kreverSammenhengendeUttak, gjelderMor, avslåttePerioder);
     }
 
     public static Builder ny() {
@@ -151,6 +155,11 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
 
         public Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
             this.kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
+            return this;
+        }
+
+        public Builder medGjelderMor(boolean gjelderMor) {
+            this.kladd.gjelderMor = gjelderMor;
             return this;
         }
 

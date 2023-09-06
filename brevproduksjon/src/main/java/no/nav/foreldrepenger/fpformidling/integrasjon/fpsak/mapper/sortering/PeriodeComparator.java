@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriode;
 
 public class PeriodeComparator {
 

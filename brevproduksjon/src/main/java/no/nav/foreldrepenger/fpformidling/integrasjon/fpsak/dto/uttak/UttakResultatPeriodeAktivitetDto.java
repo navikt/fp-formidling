@@ -2,8 +2,8 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak;
 
 import java.math.BigDecimal;
 
-import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.StønadskontoType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakArbeidType;
 
 public class UttakResultatPeriodeAktivitetDto {
 

@@ -3,15 +3,15 @@ package no.nav.foreldrepenger.fpformidling.uttak.svp;
 import java.util.ArrayList;
 import java.util.List;
 
-import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public class SvpUttakResultatArbeidsforhold {
 
-    private ArbeidsforholdIkkeOppfyltÅrsak arbeidsforholdIkkeOppfyltÅrsak;
-    private Arbeidsgiver arbeidsgiver;
-    private UttakArbeidType uttakArbeidType;
-    private List<SvpUttakResultatPeriode> perioder;
+    private final ArbeidsforholdIkkeOppfyltÅrsak arbeidsforholdIkkeOppfyltÅrsak;
+    private final Arbeidsgiver arbeidsgiver;
+    private final UttakArbeidType uttakArbeidType;
+    private final List<SvpUttakResultatPeriode> perioder;
 
     private SvpUttakResultatArbeidsforhold(Builder builder) {
         arbeidsforholdIkkeOppfyltÅrsak = builder.arbeidsforholdIkkeOppfyltÅrsak;
@@ -40,7 +40,7 @@ public class SvpUttakResultatArbeidsforhold {
         private ArbeidsforholdIkkeOppfyltÅrsak arbeidsforholdIkkeOppfyltÅrsak = ArbeidsforholdIkkeOppfyltÅrsak.INGEN;
         private Arbeidsgiver arbeidsgiver;
         private UttakArbeidType uttakArbeidType;
-        private List<SvpUttakResultatPeriode> perioder = new ArrayList<>();
+        private final List<SvpUttakResultatPeriode> perioder = new ArrayList<>();
 
         private Builder() {
             // Skjul default constructor
@@ -64,11 +64,6 @@ public class SvpUttakResultatArbeidsforhold {
 
         public Builder medUttakArbeidType(UttakArbeidType uttakArbeidType) {
             this.uttakArbeidType = uttakArbeidType;
-            return this;
-        }
-
-        public Builder leggTilPeriode(SvpUttakResultatPeriode periode) {
-            this.perioder.add(periode);
             return this;
         }
 

@@ -32,9 +32,9 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTom;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
-import static no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType.FORELDREPENGER;
-import static no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType.MINSTERETT;
-import static no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV;
+import static no.nav.foreldrepenger.fpformidling.uttak.fp.SaldoVisningStønadskontoType.FORELDREPENGER;
+import static no.nav.foreldrepenger.fpformidling.uttak.fp.SaldoVisningStønadskontoType.MINSTERETT;
+import static no.nav.foreldrepenger.fpformidling.uttak.fp.SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -68,11 +68,11 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakTyp
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
-import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
-import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.ForeldrepengerUttak;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.Saldoer;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.StønadskontoType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriode;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE)
@@ -209,9 +209,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             return finnSaldo(saldoer, UTEN_AKTIVITETSKRAV);
         } else if (kontoEksisterer(saldoer, MINSTERETT)) {
             return finnSaldo(saldoer, MINSTERETT);
-        } else {
-            return  0;
         }
+        return  0;
     }
 
     private List<Utbetalingsperiode> finnInnvilgedePerioderMedUtbetaling(List<Utbetalingsperiode> utbetalingsperioder) {

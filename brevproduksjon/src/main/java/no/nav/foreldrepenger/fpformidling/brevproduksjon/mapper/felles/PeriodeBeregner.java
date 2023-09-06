@@ -16,11 +16,11 @@ import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagP
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
-import no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType;
-import no.nav.foreldrepenger.fpformidling.uttak.Stønadskonto;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.SaldoVisningStønadskontoType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.Stønadskonto;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakArbeidType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.exception.TekniskException;

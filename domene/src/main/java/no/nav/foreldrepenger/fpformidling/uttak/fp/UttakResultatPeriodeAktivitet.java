@@ -1,19 +1,19 @@
-package no.nav.foreldrepenger.fpformidling.uttak;
-
-import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
-import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
+package no.nav.foreldrepenger.fpformidling.uttak.fp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
+
 public class UttakResultatPeriodeAktivitet {
-    private StønadskontoType trekkonto;
-    private BigDecimal trekkdager;
-    private BigDecimal utbetalingsprosent;
-    private boolean graderingInnvilget;
-    private BigDecimal arbeidsprosent;
+    private final StønadskontoType trekkonto;
+    private final BigDecimal trekkdager;
+    private final BigDecimal utbetalingsprosent;
+    private final boolean graderingInnvilget;
+    private final BigDecimal arbeidsprosent;
     private UttakResultatPeriode uttakResultatPeriode;
-    private UttakAktivitet uttakAktivitet;
+    private final UttakAktivitet uttakAktivitet;
 
     private UttakResultatPeriodeAktivitet(Builder builder) {
         trekkonto = builder.trekkonto;

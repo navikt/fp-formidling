@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.uttak;
+package no.nav.foreldrepenger.fpformidling.uttak.fp;
 
 import java.util.Set;
 

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.uttak;
+package no.nav.foreldrepenger.fpformidling.uttak.fp;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -17,22 +17,12 @@ public enum PeriodeResultatType implements Kodeverdi {
     AVSLÅTT("AVSLÅTT"),
     IKKE_FASTSATT("IKKE_FASTSATT"),
     MANUELL_BEHANDLING("MANUELL_BEHANDLING"),
-
-    /**
-     * @deprecated kan fjernes når beregning har sluttet å bruke.
-     */
-    @Deprecated GYLDIG_UTSETTELSE("GYLDIG_UTSETTELSE"),
-
-    /**
-     * @deprecated kan fjernes når beregning har sluttet å bruke.
-     */
-    @Deprecated UGYLDIG_UTSETTELSE("UGYLDIG_UTSETTELSE"),
     ;
 
     @JsonValue
     private String kode;
 
-    private PeriodeResultatType(String kode) {
+    PeriodeResultatType(String kode) {
         this.kode = kode;
     }
 

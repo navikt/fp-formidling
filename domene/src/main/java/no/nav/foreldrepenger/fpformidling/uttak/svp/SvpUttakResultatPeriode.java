@@ -2,44 +2,29 @@ package no.nav.foreldrepenger.fpformidling.uttak.svp;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.typer.Dato;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
-import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatType;
 
 public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPeriode> {
 
-    private BigDecimal utbetalingsgrad;
-    private PeriodeResultatType periodeResultatType;
-    private PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak;
-    private DatoIntervall tidsperiode;
-
-    private long aktivitetDagsats;
-    private Optional<String> arbeidsgiverNavn;
+    private final BigDecimal utbetalingsgrad;
+    private final PeriodeResultatType periodeResultatType;
+    private final PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak;
+    private final DatoIntervall tidsperiode;
+    private final String arbeidsgiverNavn;
 
     private SvpUttakResultatPeriode(Builder builder) {
         utbetalingsgrad = builder.utbetalingsgrad;
-        aktivitetDagsats = builder.aktivitetDagsats;
         arbeidsgiverNavn = builder.arbeidsgiverNavn;
         periodeResultatType = builder.periodeResultatType;
         periodeIkkeOppfyltÅrsak = builder.periodeIkkeOppfyltÅrsak;
         tidsperiode = builder.tidsperiode;
     }
 
-    public long getAktivitetDagsats() {
-        return aktivitetDagsats;
-    }
-
-    public int getAarsakskode() {
-        if (PeriodeIkkeOppfyltÅrsak.INGEN.getKode().equals(getPeriodeIkkeOppfyltÅrsak().getKode())) {
-            return 0;
-        }
-        return Integer.parseInt(getPeriodeIkkeOppfyltÅrsak().getKode());
-    }
-
     public String getArbeidsgiverNavn() {
-        return arbeidsgiverNavn.orElse("");
+        return arbeidsgiverNavn == null ? "" : arbeidsgiverNavn;
     }
 
     public DatoIntervall getTidsperiode() {
@@ -79,13 +64,12 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
             return false;
         }
         var that = (SvpUttakResultatPeriode) o;
-        return Objects.equals(getUtbetalingsgrad(), that.getUtbetalingsgrad()) && getAktivitetDagsats() == that.getAktivitetDagsats() && Objects.equals(
-            getTidsperiode(), that.getTidsperiode());
+        return Objects.equals(getUtbetalingsgrad(), that.getUtbetalingsgrad()) && Objects.equals(getTidsperiode(), that.getTidsperiode());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUtbetalingsgrad(), getAktivitetDagsats(), getTidsperiode());
+        return Objects.hash(getUtbetalingsgrad(), getTidsperiode());
     }
 
     @Override
@@ -100,8 +84,7 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
         private PeriodeIkkeOppfyltÅrsak periodeIkkeOppfyltÅrsak = PeriodeIkkeOppfyltÅrsak.INGEN;
         private DatoIntervall tidsperiode;
 
-        private long aktivitetDagsats;
-        private Optional<String> arbeidsgiverNavn = Optional.empty();
+        private String arbeidsgiverNavn;
 
         private Builder() {
             // Skjul default constructor
@@ -109,7 +92,6 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
 
         private Builder(SvpUttakResultatPeriode copy) {
             this.utbetalingsgrad = copy.getUtbetalingsgrad();
-            this.aktivitetDagsats = copy.getAktivitetDagsats();
             this.arbeidsgiverNavn = copy.arbeidsgiverNavn;
             this.periodeResultatType = copy.getPeriodeResultatType();
             this.periodeIkkeOppfyltÅrsak = copy.getPeriodeIkkeOppfyltÅrsak();
@@ -144,13 +126,8 @@ public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPerio
             return this;
         }
 
-        public Builder medAktivitetDagsats(long aktivitetDagsats) {
-            this.aktivitetDagsats = aktivitetDagsats;
-            return this;
-        }
-
         public Builder medArbeidsgiverNavn(String arbeidsgiverNavn) {
-            this.arbeidsgiverNavn = Optional.ofNullable(arbeidsgiverNavn);
+            this.arbeidsgiverNavn = arbeidsgiverNavn;
             return this;
         }
 

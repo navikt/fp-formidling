@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.uttak;
+package no.nav.foreldrepenger.fpformidling.uttak.fp;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -6,14 +6,13 @@ import java.util.List;
 import java.util.Objects;
 
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
-import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 
 public class UttakResultatPeriode {
-    private PeriodeResultatÅrsak periodeResultatÅrsak;
-    private DatoIntervall tidsperiode;
-    private PeriodeResultatÅrsak graderingAvslagÅrsak;
-    private PeriodeResultatType periodeResultatType;
-    private List<UttakResultatPeriodeAktivitet> aktiviteter;
+    private final PeriodeResultatÅrsak periodeResultatÅrsak;
+    private final DatoIntervall tidsperiode;
+    private final PeriodeResultatÅrsak graderingAvslagÅrsak;
+    private final PeriodeResultatType periodeResultatType;
+    private final List<UttakResultatPeriodeAktivitet> aktiviteter;
 
     private UttakResultatPeriode(Builder builder) {
         periodeResultatÅrsak = builder.periodeResultatÅrsak;

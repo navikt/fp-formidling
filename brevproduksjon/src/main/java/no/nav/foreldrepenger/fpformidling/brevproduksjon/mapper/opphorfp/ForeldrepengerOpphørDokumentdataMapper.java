@@ -13,7 +13,6 @@ import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper;
@@ -33,7 +32,6 @@ import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
 import no.nav.vedtak.exception.TekniskException;
-import no.nav.vedtak.exception.VLException;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_OPPHØR)
@@ -107,8 +105,12 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         var fomStønadsdato = finnStønadFomDatoHvisFinnes(originaltUttakResultat);
         fomStønadsdato.map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medFomStønadsdato);
 
-        finnStønadTomDatoHvisFinnes(opphørsdato, fomStønadsdato, erSøkerDød).map(d -> Dato.formaterDato(d, språkkode))
-            .ifPresent(dokumentdataBuilder::medTomStønadsdato);
+        var tomStønadsdato = finnStønadTomDatoHvisFinnes(foreldrepengerUttak );
+        tomStønadsdato.map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medTomStønadsdato);
+
+        if (erSøkerDød && (fomStønadsdato.isEmpty() || tomStønadsdato.isEmpty())) {
+            throw new TekniskException("FPFORMIDLING-743452", "Feil ved produksjon av opphørdokument: Klarte ikke utlede startdato eller siste utbetalingsdato fra uttaket. Påkrevd når personstatus = 'DØD'");
+        }
 
         return dokumentdataBuilder.build();
     }
@@ -174,19 +176,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
             .findFirst();
     }
 
-    private Optional<LocalDate> finnStønadTomDatoHvisFinnes(Optional<LocalDate> opphørsDato, Optional<LocalDate> fomStønadsdato, boolean erSøkerDød) {
-        if (fomStønadsdato.isPresent() && opphørsDato.isPresent()) {
-            return Optional.of(opphørsDato.get().minusDays(!fomStønadsdato.equals(opphørsDato) ? 1 : 0));
-        } else if (erSøkerDød) {
-            throw brevFeilPgaUtilstrekkeligTekstgrunnlag(opphørsDato.isPresent());
-        }
-        return Optional.empty();
-    }
-
-    private VLException brevFeilPgaUtilstrekkeligTekstgrunnlag(boolean opphørsdatoFinnes) {
-        return opphørsdatoFinnes ? new TekniskException("FPFORMIDLING-743452",
-            "Feil ved produksjon av opphørdokument: Klarte ikke utlede startdato fra det opprinnelige vedtaket. Påkrevd når personstatus = 'DØD'") : new TekniskException(
-            "FPFORMIDLING-724872",
-            "Feil ved produksjon av opphørdokument: Klarte ikke utlede opphørsdato fra uttaksplanen. Påkrevd når personstatus = 'DØD'");
+    private Optional<LocalDate> finnStønadTomDatoHvisFinnes(ForeldrepengerUttak foreldrepengerUttak) {
+        return  foreldrepengerUttak.perioder().stream().filter(UttakResultatPeriode::isInnvilget).map(UttakResultatPeriode::getTom).max(LocalDate::compareTo);
     }
 }

@@ -151,14 +151,13 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
         var opphørsårsaker = PeriodeResultatÅrsak.opphørsAvslagÅrsaker();
         var perioder = foreldrepengerUttak.perioder();
 
-        // Finn fom-dato i første periode av de siste sammenhengende periodene med
-        // opphørårsaker
+        // Finner første fom-dato fra de siste sammenhengende periodene med opphørårsaker
         LocalDate fom = null;
         for (var i = perioder.size() - 1; i >= 0; i--) {
             var periode = perioder.get(i);
             if (opphørsårsaker.contains(periode.getPeriodeResultatÅrsak().getKode())) {
                 fom = periode.getFom();
-            } else if (fom != null && periode.isInnvilget()) {
+            } else if (fom != null) {
                 return fom;
             }
         }

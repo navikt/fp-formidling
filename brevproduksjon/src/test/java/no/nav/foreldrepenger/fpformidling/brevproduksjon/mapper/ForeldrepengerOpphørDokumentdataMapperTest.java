@@ -71,9 +71,9 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
     private static final LocalDate PERIODE3_TOM = LocalDate.now().plusDays(7);
     private static final LocalDate PERIODE4_FOM = LocalDate.now().plusDays(8);
     private static final LocalDate PERIODE4_TOM = LocalDate.now().plusDays(9);
-    private static final PeriodeResultatÅrsak ÅRSAK_1 = PeriodeResultatÅrsak.FOR_SEN_SØKNAD;
-    private static final PeriodeResultatÅrsak ÅRSAK_2_OG_3 = PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG;
-    private static final PeriodeResultatÅrsak ÅRSAK_4 = PeriodeResultatÅrsak.BARNET_ER_DØD;
+    private static final PeriodeResultatÅrsak AVSLAG_ÅRSAK_1 = PeriodeResultatÅrsak.FOR_SEN_SØKNAD;
+    private static final PeriodeResultatÅrsak OPPHØR_ÅRSAK_2_OG_3 = PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG;
+    private static final PeriodeResultatÅrsak BARN_DØD = PeriodeResultatÅrsak.BARNET_ER_DØD;
     private static final BigDecimal TREKKDAGER = BigDecimal.TEN;
 
     @Mock
@@ -119,14 +119,14 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 
-        assertThat(dokumentdata.getAvslagÅrsaker()).contains(ÅRSAK_1.getKode(), ÅRSAK_2_OG_3.getKode(), ÅRSAK_4.getKode());
+        assertThat(dokumentdata.getAvslagÅrsaker()).contains(AVSLAG_ÅRSAK_1.getKode(), OPPHØR_ÅRSAK_2_OG_3.getKode(), BARN_DØD.getKode());
         assertThat(dokumentdata.erSøkerDød()).isFalse();
         assertThat(dokumentdata.erGjelderFødsel()).isTrue();
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
         assertThat(dokumentdata.getLovhjemmelForAvslag()).isEmpty();
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
         assertThat(dokumentdata.getBarnDødsdato()).isEqualTo(formaterDato(LocalDate.now(), Språkkode.NB));
-        assertThat(dokumentdata.getOpphørDato()).isEqualTo(formaterDato(LocalDate.now(), Språkkode.NB));
+        assertThat(dokumentdata.getOpphørDato()).isEqualTo(formaterDato(PERIODE2_FOM, Språkkode.NB));
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(ANTALL_BARN);
     }
 
@@ -160,25 +160,25 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
             .medAktiviteter(of(uttakAktivitet))
             .medTidsperiode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .medPeriodeResultatÅrsak(ÅRSAK_1)
+            .medPeriodeResultatÅrsak(AVSLAG_ÅRSAK_1)
             .build();
         var uttakResultatPeriode2 = UttakResultatPeriode.ny()
             .medAktiviteter(of(uttakAktivitet))
             .medTidsperiode(fraOgMedTilOgMed(PERIODE2_FOM, PERIODE2_TOM))
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
+            .medPeriodeResultatÅrsak(OPPHØR_ÅRSAK_2_OG_3)
             .build();
         var uttakResultatPeriode3 = UttakResultatPeriode.ny()
             .medAktiviteter(of(uttakAktivitet))
             .medTidsperiode(fraOgMedTilOgMed(PERIODE3_FOM, PERIODE3_TOM))
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .medPeriodeResultatÅrsak(ÅRSAK_2_OG_3)
+            .medPeriodeResultatÅrsak(OPPHØR_ÅRSAK_2_OG_3)
             .build();
         var uttakResultatPeriode4 = UttakResultatPeriode.ny()
             .medAktiviteter(of(uttakAktivitet))
             .medTidsperiode(fraOgMedTilOgMed(PERIODE4_FOM, PERIODE4_TOM))
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
-            .medPeriodeResultatÅrsak(ÅRSAK_4)
+            .medPeriodeResultatÅrsak(BARN_DØD)
             .build();
         return Optional.of(
             new ForeldrepengerUttak(of(uttakResultatPeriode1, uttakResultatPeriode2, uttakResultatPeriode3, uttakResultatPeriode4), List.of(), false,

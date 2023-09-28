@@ -16,7 +16,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskPro
 @ProsessTask(value = "formidling.opprettOppgave", maxFailedRuns = 2)
 public class OpprettOppgaveTask implements ProsessTaskHandler {
 
-    private static final String OPPGAVEBESKRIVELSE = "Bruker har ukjent adresse. Kunne ikke sende brev. Send brev iht rutine.";
+    private static final String OPPGAVEBESKRIVELSE = "Brukeren har en ukjent adresse, og som følge av dette har det ikke vært mulig å sende brev til vedkommende. Vi ber om at det sendes brevet i henhold til gjeldende prosedyrer for slike tilfeller.";
     private final OppgaverTjeneste oppgaverTjeneste;
     private final DomeneobjektProvider domeneobjektProvider;
 

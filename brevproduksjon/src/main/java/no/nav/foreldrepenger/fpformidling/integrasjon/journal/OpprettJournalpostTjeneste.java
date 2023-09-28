@@ -2,12 +2,11 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.journal;
 
 import java.util.List;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
@@ -48,16 +47,16 @@ public class OpprettJournalpostTjeneste {
                                                            Saksnummer saksnummer,
                                                            boolean ferdigstill,
                                                            String overskriftVedFritekstBrev,
-                                                           String unikReferanse) {
+                                                           String unikReferanse, DokumentMalType originalDokumentType) {
         LOG.info("Starter journalføring av brev for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode());
 
         try {
             var requestBuilder = lagRequestBuilder(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer, ferdigstill,
-                overskriftVedFritekstBrev, unikReferanse);
+                overskriftVedFritekstBrev, unikReferanse, originalDokumentType);
             var response = dokArkivKlient.opprettJournalpost(requestBuilder.build(), ferdigstill);
 
             if (LOG.isWarnEnabled() && ferdigstill && !response.journalpostferdigstilt()) {
-                    LOG.warn("Journalpost {} ble ikke ferdigstilt", response.journalpostId());
+                LOG.warn("Journalpost {} ble ikke ferdigstilt", response.journalpostId());
 
             }
             if (LOG.isInfoEnabled()) {
@@ -74,17 +73,18 @@ public class OpprettJournalpostTjeneste {
     }
 
     private OpprettJournalpostRequest.OpprettJournalpostRequestBuilder lagRequestBuilder(byte[] brev,
-                                                                                         DokumentMalType dokumentMalType,
+                                                                                         DokumentMalType dokumentMal,
                                                                                          DokumentFelles dokumentFelles,
                                                                                          DokumentHendelse dokumentHendelse,
                                                                                          Saksnummer saksnummer,
                                                                                          boolean ferdigstill,
                                                                                          String overskriftVedFritekstbrev,
-                                                                                         String bestillingsUidMedUnikReferanse) {
-        var tittel = getTittel(dokumentHendelse, dokumentMalType, overskriftVedFritekstbrev);
+                                                                                         String bestillingsUidMedUnikReferanse,
+                                                                                         DokumentMalType originalDokumentType) {
+        var tittel = getTittel(dokumentHendelse, dokumentMal, overskriftVedFritekstbrev, originalDokumentType);
         var dokument = DokumentInfoOpprett.builder()
             .medTittel(tittel)
-            .medBrevkode(dokumentMalType.getKode())
+            .medBrevkode(originalDokumentType.getKode())
             .leggTilDokumentvariant(new Dokumentvariant(Dokumentvariant.Variantformat.ARKIV, Dokumentvariant.Filtype.PDFA, brev))
             .build();
         var bruker = new Bruker(dokumentFelles.getSakspartId(), Bruker.BrukerIdType.FNR);
@@ -107,13 +107,16 @@ public class OpprettJournalpostTjeneste {
         return new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), Sak.Sakstype.FAGSAK);
     }
 
-    private String getTittel(DokumentHendelse dokumentHendelse, DokumentMalType dokumentMalType, String overskriftVedFritekstbrev) {
+    private String getTittel(DokumentHendelse dokumentHendelse,
+                             DokumentMalType dokumentMal,
+                             String overskriftVedFritekstbrev,
+                             DokumentMalType originalDokumentType) {
         if (dokumentHendelse.getTittel() != null) {
             return dokumentHendelse.getTittel();
-        } else if (DokumentMalType.FRITEKSTBREV.equals(dokumentMalType) && overskriftVedFritekstbrev != null) {
+        } else if (DokumentMalType.FRITEKSTBREV.equals(dokumentMal) && overskriftVedFritekstbrev != null) {
             return overskriftVedFritekstbrev;
         } else {
-            return dokumentMalType.getNavn();
+            return originalDokumentType.getNavn();
         }
     }
 

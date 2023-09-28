@@ -125,7 +125,7 @@ class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(2)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(2)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
-            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any());
+            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE));
         verify(taskTjeneste, times(2)).lagre(taskCaptor.capture());
 
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
@@ -154,7 +154,7 @@ class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(1)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
-            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any());
+            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE));
         verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
@@ -212,6 +212,6 @@ class BrevBestillerTjenesteTest {
         var dokumentOpprettResponse = new OpprettJournalpostResponse.DokumentInfoResponse(DOKUMENT_INFO_ID);
         var opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), true, List.of(dokumentOpprettResponse));
         when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse),
-            eq(SAKSNUMMER), eq(true), eq(null), any())).thenReturn(opprettJournalpostResponse);
+            eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE))).thenReturn(opprettJournalpostResponse);
     }
 }

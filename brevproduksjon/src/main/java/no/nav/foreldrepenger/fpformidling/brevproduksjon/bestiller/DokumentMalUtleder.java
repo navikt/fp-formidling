@@ -103,23 +103,27 @@ class DokumentMalUtleder {
     }
 
     private DokumentMalType utledVedtaksbrev(Behandling behandling, DokumentHendelse hendelse) {
-        if (!Objects.equals(hendelse.getVedtaksbrev(), Vedtaksbrev.AUTOMATISK) && Objects.equals(behandling.getBehandlingsresultat().getVedtaksbrev(),
-            Vedtaksbrev.FRITEKST)) {
+        if (!Objects.equals(Vedtaksbrev.AUTOMATISK, hendelse.getVedtaksbrev())
+            && Objects.equals(Vedtaksbrev.FRITEKST, behandling.getBehandlingsresultat().getVedtaksbrev())) {
             return DokumentMalType.FRITEKSTBREV;
         }
+        return utledDokumentType(behandling, hendelse.getYtelseType());
+    }
+
+    DokumentMalType utledDokumentType(Behandling behandling, FagsakYtelseType ytelseType) {
         if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {
             return mapKlageBrev(behandling);
         } else if (erRevurderingMedUendretUtfall(behandling)) {
             return DokumentMalType.INGEN_ENDRING;
-        } else if (FagsakYtelseType.FORELDREPENGER.equals(hendelse.getYtelseType())) {
+        } else if (FagsakYtelseType.FORELDREPENGER.equals(ytelseType)) {
             return mapForeldrepengerVedtaksbrev(behandling);
-        } else if (FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType())) {
+        } else if (FagsakYtelseType.ENGANGSTØNAD.equals(ytelseType)) {
             return mapEngangstønadVedtaksbrev(behandling);
-        } else if (FagsakYtelseType.SVANGERSKAPSPENGER.equals(hendelse.getYtelseType())) {
+        } else if (FagsakYtelseType.SVANGERSKAPSPENGER.equals(ytelseType)) {
             return mapSvangerskapspengerVedtaksbrev(behandling);
         }
         throw new TekniskException("FPFORMIDLING-666916",
-            String.format("Ingen brevmal for ytelse %s for behandling %s.", hendelse.getYtelseType().getKode(), behandling.getUuid().toString()));
+            String.format("Ingen brevmal for ytelse %s for behandling %s.", ytelseType.getKode(), behandling.getUuid().toString()));
     }
 
     private boolean erRevurderingMedUendretUtfall(Behandling behandling) {

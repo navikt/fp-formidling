@@ -194,9 +194,27 @@ class DokumentMalUtlederTest {
         var behandling = Behandling.builder()
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.REVURDERING)
-            .medBehandlingsresultat(Behandlingsresultat.builder().medVedtaksbrev(Vedtaksbrev.FRITEKST).build())
+            .medBehandlingsresultat(Behandlingsresultat.builder()
+                .medVedtaksbrev(Vedtaksbrev.FRITEKST)
+                .medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_SENERE)
+                .build())
             .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FRITEKSTBREV.getKode());
+    }
+
+    @Test
+    void utled_riktig_brevtype_ved_fritekst() {
+        hendelse = standardBuilder().medGjelderVedtak(true).build();
+        var behandling = Behandling.builder()
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.REVURDERING)
+            .medBehandlingsresultat(Behandlingsresultat.builder()
+                .medVedtaksbrev(Vedtaksbrev.FRITEKST)
+                .medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
+                .build())
+            .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FRITEKSTBREV.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentType(behandling, hendelse.getYtelseType()).getKode()).isEqualTo(DokumentMalType.FORELDREPENGER_INNVILGELSE.getKode());
     }
 
     @Test

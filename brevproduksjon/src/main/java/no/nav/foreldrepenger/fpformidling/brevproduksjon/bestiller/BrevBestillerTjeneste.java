@@ -7,6 +7,7 @@ import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
 
 @ApplicationScoped
 public class BrevBestillerTjeneste {
@@ -37,7 +38,13 @@ public class BrevBestillerTjeneste {
     public void bestillBrev(DokumentHendelse dokumentHendelse) {
         var behandling = hentBehandling(dokumentHendelse);
         var dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
-        dokgenBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, dokumentMal);
+        var dokumentType = utledDokumentType(dokumentHendelse, behandling, dokumentMal);
+        dokgenBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, dokumentMal, dokumentType);
+    }
+
+    private DokumentMalType utledDokumentType(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
+        return Vedtaksbrev.FRITEKST.equals(dokumentHendelse.getVedtaksbrev()) ? dokumentMalUtleder.utledDokumentType(behandling,
+            dokumentHendelse.getYtelseType()) : dokumentMal;
     }
 
     private Behandling hentBehandling(DokumentHendelse dokumentHendelse) {

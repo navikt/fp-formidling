@@ -34,6 +34,8 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 
+import static io.micrometer.core.instrument.Metrics.counter;
+
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste {
     private static final Logger LOG = LoggerFactory.getLogger(DokgenBrevproduksjonTjeneste.class);
@@ -75,12 +77,12 @@ public class DokgenBrevproduksjonTjeneste {
         return genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentData.getFørsteDokumentFelles(), utkast);
     }
 
-    public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
-        var bestill = BestillingType.BESTILL;
-        var dokumentData = lagreDokumentDataFor(behandling, dokumentMal, bestill);
+    public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, DokumentMalType originalDokumentType) {
+        var bestillingType = BestillingType.BESTILL;
+        var dokumentData = lagreDokumentDataFor(behandling, dokumentMal, bestillingType);
         var teller = 0;
         for (var dokumentFelles : dokumentData.getDokumentFelles()) {
-            var brev = genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentFelles, bestill);
+            var brev = genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentFelles, bestillingType);
 
             var unikBestillingsUuidPerDokFelles = dokumentHendelse.getBestillingUuid().toString();
             if (teller > 0) {
@@ -92,7 +94,8 @@ public class DokgenBrevproduksjonTjeneste {
             var response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
                 behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg,
                 behandling.getBehandlingsresultat() != null ? behandling.getBehandlingsresultat().getOverskrift() : null,
-                unikBestillingsUuidPerDokFelles) // NoSonar
+                unikBestillingsUuidPerDokFelles,
+                originalDokumentType) // NoSonar
                 ;
 
             var journalpostId = new JournalpostId(response.journalpostId());
@@ -103,8 +106,10 @@ public class DokgenBrevproduksjonTjeneste {
                 leggTilVedleggOgFerdigstillForsendelse(dokumentHendelse.getBehandlingUuid(), journalpostId);
             }
 
-            distribuerBrevOgLagHistorikk(dokumentHendelse, dokumentMal, response, journalpostId, innsynMedVedlegg,
-                dokumentFelles.getSaksnummer().getVerdi(), unikBestillingsUuidPerDokFelles);
+            distribuerBrevOgLagHistorikk(dokumentHendelse, response, journalpostId, innsynMedVedlegg,
+                dokumentFelles.getSaksnummer().getVerdi(), unikBestillingsUuidPerDokFelles, originalDokumentType);
+
+            counter("brev_distribuert", "malType", dokumentMal.getKode(), "brevType", originalDokumentType.getKode()).increment();
         }
     }
 
@@ -152,18 +157,18 @@ public class DokgenBrevproduksjonTjeneste {
     }
 
     private void distribuerBrevOgLagHistorikk(DokumentHendelse dokumentHendelse,
-                                              DokumentMalType dokumentMal,
                                               OpprettJournalpostResponse response,
                                               JournalpostId journalpostId,
                                               boolean innsynMedVedlegg,
                                               String saksnummer,
-                                              String unikBestillingsId) {
+                                              String unikBestillingsId,
+                                              DokumentMalType originalDokumentType) {
         var taskGruppe = new ProsessTaskGruppe();
         taskGruppe.addNesteSekvensiell(opprettDistribuerBrevTask(journalpostId, innsynMedVedlegg, dokumentHendelse.getBehandlingUuid(),
-            DistribusjonstypeUtleder.utledFor(dokumentMal), saksnummer, unikBestillingsId));
+            DistribusjonstypeUtleder.utledFor(originalDokumentType), saksnummer, unikBestillingsId));
 
         taskGruppe.addNesteSekvensiell(
-            opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(), dokumentHendelse.getBestillingUuid(), dokumentMal,
+            opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(), dokumentHendelse.getBestillingUuid(), originalDokumentType,
                 response.journalpostId(), response.dokumenter().get(0).dokumentInfoId()));
         taskGruppe.setCallIdFraEksisterende();
         taskTjeneste.lagre(taskGruppe);

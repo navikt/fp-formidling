@@ -5,8 +5,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.Period;
@@ -133,6 +136,76 @@ class BrevBestillerTjenesteTest {
         assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
         assertThat(taskCaptor.getAllValues().get(1).getTasks().get(0).task().getPropertyValue("bestillingId")).isEqualTo(
             randomBestillingsUuid + "-" + 1);
+    }
+
+    @Test
+    void skal_utlede_riktig_dokument_type_hvis_fritekst_er_valgt() {
+        // Arrange
+        var dokumentHendelse = opprettDokumentHendelse(UUID.randomUUID());
+        var behandling = mock(Behandling.class);
+        when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.FRITEKSTBREV);
+        when(dokumentMalUtleder.utledDokumentType(behandling, dokumentHendelse.getYtelseType())).thenReturn(DokumentMalType.FORELDREPENGER_INNVILGELSE);
+
+        var dokgenBrevproduksjonTjeneste = mock(DokgenBrevproduksjonTjeneste.class);
+
+        tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
+
+        // Act
+        tjeneste.bestillBrev(dokumentHendelse);
+
+        // Assert
+        verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FRITEKSTBREV, DokumentMalType.FORELDREPENGER_INNVILGELSE);
+        verify(dokumentMalUtleder).utledDokumentType(behandling, dokumentHendelse.getYtelseType());
+        verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
+
+        verifyNoMoreInteractions(dokumentMalUtleder, dokgenBrevproduksjonTjeneste, domeneobjektProvider);
+    }
+
+    @Test
+    void skal_ikke_utlede_riktig_dokument_type_om_ikke_fritekst() {
+        // Arrange
+        var dokumentHendelse = opprettDokumentHendelse(UUID.randomUUID());
+        var behandling = mock(Behandling.class);
+        when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.FORELDREPENGER_INNVILGELSE);
+
+        var dokgenBrevproduksjonTjeneste = mock(DokgenBrevproduksjonTjeneste.class);
+
+        tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
+
+        // Act
+        tjeneste.bestillBrev(dokumentHendelse);
+
+        // Assert
+        verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_INNVILGELSE, DokumentMalType.FORELDREPENGER_INNVILGELSE);
+        verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
+        verify(dokumentMalUtleder, never()).utledDokumentType(behandling, dokumentHendelse.getYtelseType());
+
+        verifyNoMoreInteractions(dokumentMalUtleder, dokgenBrevproduksjonTjeneste, domeneobjektProvider);
+    }
+
+    @Test
+    void skal_ikke_utlede_riktig_dokument_type_ved_forhåndsvisning() {
+        // Arrange
+        var dokumentHendelse = opprettDokumentHendelse(UUID.randomUUID());
+        var behandling = mock(Behandling.class);
+        when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.FORELDREPENGER_ANNULLERT);
+
+        var dokgenBrevproduksjonTjeneste = mock(DokgenBrevproduksjonTjeneste.class);
+
+        tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
+
+        // Act
+        tjeneste.forhandsvisBrev(dokumentHendelse);
+
+        // Assert
+        verify(dokgenBrevproduksjonTjeneste).forhåndsvisBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_ANNULLERT);
+        verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
+        verify(dokumentMalUtleder, never()).utledDokumentType(behandling, dokumentHendelse.getYtelseType());
+
+        verifyNoMoreInteractions(dokumentMalUtleder, dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }
 
     @Test

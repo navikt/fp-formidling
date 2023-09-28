@@ -5,6 +5,7 @@ import jakarta.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
@@ -38,13 +39,15 @@ public class BrevBestillerTjeneste {
     public void bestillBrev(DokumentHendelse dokumentHendelse) {
         var behandling = hentBehandling(dokumentHendelse);
         var dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
-        var dokumentType = utledDokumentType(dokumentHendelse, behandling, dokumentMal);
+        var dokumentType = utledDokumentType(dokumentHendelse.getYtelseType(), behandling, dokumentMal);
         dokgenBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, dokumentMal, dokumentType);
     }
 
-    private DokumentMalType utledDokumentType(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
-        return Vedtaksbrev.FRITEKST.equals(dokumentHendelse.getVedtaksbrev()) ? dokumentMalUtleder.utledDokumentType(behandling,
-            dokumentHendelse.getYtelseType()) : dokumentMal;
+    private DokumentMalType utledDokumentType(FagsakYtelseType ytelseType, Behandling behandling, DokumentMalType dokumentMal) {
+        if (DokumentMalType.FRITEKSTBREV.equals(dokumentMal)) {
+            return dokumentMalUtleder.utledDokumentType(behandling, ytelseType);
+        }
+        return dokumentMal;
     }
 
     private Behandling hentBehandling(DokumentHendelse dokumentHendelse) {

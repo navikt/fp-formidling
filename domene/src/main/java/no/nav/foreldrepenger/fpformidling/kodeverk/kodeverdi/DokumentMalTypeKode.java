@@ -32,6 +32,8 @@ public class DokumentMalTypeKode {
     public static final String KLAGE_STADFESTET = "KGESTA";
     public static final String ETTERLYS_INNTEKTSMELDING = "ELYSIM";
 
+    public static final String ENDRING_UTBETALING = "ENDUTB";
+
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated(forRemoval = true)
     public static final String FRITEKSTBREV_DOK = "FRITKS"; //NOSONAR

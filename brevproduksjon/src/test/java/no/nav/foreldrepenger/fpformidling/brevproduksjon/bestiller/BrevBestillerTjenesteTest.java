@@ -145,7 +145,7 @@ class BrevBestillerTjenesteTest {
         var behandling = mock(Behandling.class);
         when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
         when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.FRITEKSTBREV);
-        when(dokumentMalUtleder.utledDokumentType(behandling, dokumentHendelse.getYtelseType())).thenReturn(DokumentMalType.FORELDREPENGER_INNVILGELSE);
+        when(dokumentMalUtleder.utledDokumentType(behandling, dokumentHendelse.getYtelseType(), true)).thenReturn(DokumentMalType.FORELDREPENGER_INNVILGELSE);
 
         var dokgenBrevproduksjonTjeneste = mock(DokgenBrevproduksjonTjeneste.class);
 
@@ -156,7 +156,7 @@ class BrevBestillerTjenesteTest {
 
         // Assert
         verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FRITEKSTBREV, DokumentMalType.FORELDREPENGER_INNVILGELSE);
-        verify(dokumentMalUtleder).utledDokumentType(behandling, dokumentHendelse.getYtelseType());
+        verify(dokumentMalUtleder).utledDokumentType(behandling, dokumentHendelse.getYtelseType(), true);
         verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
 
         verifyNoMoreInteractions(dokumentMalUtleder, dokgenBrevproduksjonTjeneste, domeneobjektProvider);
@@ -180,7 +180,7 @@ class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_INNVILGELSE, DokumentMalType.FORELDREPENGER_INNVILGELSE);
         verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
-        verify(dokumentMalUtleder, never()).utledDokumentType(behandling, dokumentHendelse.getYtelseType());
+        verify(dokumentMalUtleder, never()).utledDokumentType(behandling, dokumentHendelse.getYtelseType(), false);
 
         verifyNoMoreInteractions(dokumentMalUtleder, dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }
@@ -203,7 +203,7 @@ class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenBrevproduksjonTjeneste).forhåndsvisBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_ANNULLERT);
         verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
-        verify(dokumentMalUtleder, never()).utledDokumentType(behandling, dokumentHendelse.getYtelseType());
+        verify(dokumentMalUtleder, never()).utledDokumentType(behandling, dokumentHendelse.getYtelseType(), false);
 
         verifyNoMoreInteractions(dokumentMalUtleder, dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }

@@ -8,7 +8,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
 
 @ApplicationScoped
 public class BrevBestillerTjeneste {
@@ -45,7 +44,7 @@ public class BrevBestillerTjeneste {
 
     private DokumentMalType utledDokumentType(FagsakYtelseType ytelseType, Behandling behandling, DokumentMalType dokumentMal) {
         if (DokumentMalType.FRITEKSTBREV.equals(dokumentMal)) {
-            return dokumentMalUtleder.utledDokumentType(behandling, ytelseType);
+            return dokumentMalUtleder.utledDokumentType(behandling, ytelseType, true);
         }
         return dokumentMal;
     }

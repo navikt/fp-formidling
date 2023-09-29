@@ -1,5 +1,16 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
@@ -14,17 +25,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatT
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.VLException;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class DokumentMalUtlederTest {
 
@@ -214,7 +214,23 @@ class DokumentMalUtlederTest {
                 .build())
             .build();
         assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FRITEKSTBREV.getKode());
-        assertThat(dokumentMalUtleder.utledDokumentType(behandling, hendelse.getYtelseType()).getKode()).isEqualTo(DokumentMalType.FORELDREPENGER_INNVILGELSE.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentType(behandling, hendelse.getYtelseType(), false).getKode()).isEqualTo(DokumentMalType.FORELDREPENGER_INNVILGELSE.getKode());
+    }
+
+    @Test
+    void utled_riktig_brevtype_ved_fritekst_ogEndringIYtelsen() {
+        hendelse = standardBuilder().medGjelderVedtak(true).build();
+        var behandling = Behandling.builder()
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .medBehandlingsresultat(Behandlingsresultat.builder()
+                .medVedtaksbrev(Vedtaksbrev.FRITEKST)
+                .medBehandlingResultatType(BehandlingResultatType.FORELDREPENGER_ENDRET)
+                .medKonsekvenserForYtelsen(List.of(KonsekvensForYtelsen.ENDRING_I_FORDELING_AV_YTELSEN))
+                .build())
+            .build();
+        assertThat(dokumentMalUtleder.utledDokumentmal(behandling, hendelse).getKode()).isEqualTo(DokumentMalType.FRITEKSTBREV.getKode());
+        assertThat(dokumentMalUtleder.utledDokumentType(behandling, hendelse.getYtelseType(), true).getKode()).isEqualTo(DokumentMalType.ENDRING_UTBETALING.getKode());
     }
 
     @Test

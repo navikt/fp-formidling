@@ -35,6 +35,7 @@ public enum DokumentMalType implements Kodeverdi {
     KLAGE_OMGJORT(DokumentMalTypeKode.KLAGE_OMGJORT, "Vedtak om omgjøring av klage"),
     KLAGE_OVERSENDT(DokumentMalTypeKode.KLAGE_OVERSENDT, "Klage oversendt til klageinstans"),
     ETTERLYS_INNTEKTSMELDING(DokumentMalTypeKode.ETTERLYS_INNTEKTSMELDING, "Etterlys inntektsmelding"),
+    ENDRING_UTBETALING(DokumentMalTypeKode.ENDRING_UTBETALING, "Endring av utbetaling av ytelse"),
 
     // Disse brevene er utgåtte, men beholdes her grunnet historisk bruk i databasen:
     @Deprecated FRITEKSTBREV_DOK(DokumentMalTypeKode.FRITEKSTBREV_DOK, "Fritekstbrev"), //NOSONAR

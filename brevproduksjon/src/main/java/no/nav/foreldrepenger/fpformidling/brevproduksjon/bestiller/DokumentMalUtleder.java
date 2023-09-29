@@ -56,7 +56,7 @@ class DokumentMalUtleder {
         throw ukjentMalException(behandling);
     }
 
-    private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling) {
+    private DokumentMalType mapForeldrepengerVedtaksbrev(Behandling behandling, boolean opprinneligFritekstBrev) {
         var behandlingsresultat = behandling.getBehandlingsresultat();
         if (behandlingsresultat.erForeldrepengerSenere()) {
             return DokumentMalType.FORELDREPENGER_ANNULLERT;
@@ -66,6 +66,8 @@ class DokumentMalUtleder {
             return DokumentMalType.FORELDREPENGER_AVSLAG;
         } else if (behandlingsresultat.erOpphørt()) {
             return DokumentMalType.FORELDREPENGER_OPPHØR;
+        } else if (opprinneligFritekstBrev && erVedtakMedEndringIYtelse(behandlingsresultat)) {
+            return DokumentMalType.ENDRING_UTBETALING;
         }
         throw ukjentMalException(behandling);
     }
@@ -85,6 +87,10 @@ class DokumentMalUtleder {
     private boolean skalBenytteInnvilgelsesbrev(Behandlingsresultat behandlingsresultat) {
         return behandlingsresultat.erInnvilget() || (behandlingsresultat.erEndretForeldrepenger() && !erKunEndringIFordelingAvYtelsen(
             behandlingsresultat));
+    }
+
+    private boolean erVedtakMedEndringIYtelse(Behandlingsresultat behandlingsresultat) {
+        return behandlingsresultat.erEndretForeldrepenger() && erKunEndringIFordelingAvYtelsen(behandlingsresultat);
     }
 
     DokumentMalType utledDokumentmal(Behandling behandling, DokumentHendelse hendelse) {
@@ -107,16 +113,16 @@ class DokumentMalUtleder {
             && Objects.equals(Vedtaksbrev.FRITEKST, behandling.getBehandlingsresultat().getVedtaksbrev())) {
             return DokumentMalType.FRITEKSTBREV;
         }
-        return utledDokumentType(behandling, hendelse.getYtelseType());
+        return utledDokumentType(behandling, hendelse.getYtelseType(), false);
     }
 
-    DokumentMalType utledDokumentType(Behandling behandling, FagsakYtelseType ytelseType) {
+    DokumentMalType utledDokumentType(Behandling behandling, FagsakYtelseType ytelseType, boolean opprinneligFritekstBrev) {
         if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {
             return mapKlageBrev(behandling);
         } else if (erRevurderingMedUendretUtfall(behandling)) {
             return DokumentMalType.INGEN_ENDRING;
         } else if (FagsakYtelseType.FORELDREPENGER.equals(ytelseType)) {
-            return mapForeldrepengerVedtaksbrev(behandling);
+            return mapForeldrepengerVedtaksbrev(behandling, opprinneligFritekstBrev);
         } else if (FagsakYtelseType.ENGANGSTØNAD.equals(ytelseType)) {
             return mapEngangstønadVedtaksbrev(behandling);
         } else if (FagsakYtelseType.SVANGERSKAPSPENGER.equals(ytelseType)) {

@@ -72,7 +72,7 @@ class DokumentMalUtleder {
         throw ukjentMalException(behandling);
     }
 
-    private DokumentMalType mapSvangerskapspengerVedtaksbrev(Behandling behandling) {
+    private DokumentMalType mapSvangerskapspengerVedtaksbrev(Behandling behandling, boolean opprinneligFritekstBrev) {
         var behandlingsresultat = behandling.getBehandlingsresultat();
         if (skalBenytteInnvilgelsesbrev(behandlingsresultat)) {
             return DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE;
@@ -80,6 +80,8 @@ class DokumentMalUtleder {
             return DokumentMalType.SVANGERSKAPSPENGER_OPPHØR;
         } else if (behandlingsresultat.erAvslått()) {
             return DokumentMalType.SVANGERSKAPSPENGER_AVSLAG;
+        } else if (opprinneligFritekstBrev && erVedtakMedEndringIYtelse(behandlingsresultat)) {
+            return DokumentMalType.ENDRING_UTBETALING;
         }
         throw ukjentMalException(behandling);
     }
@@ -126,7 +128,7 @@ class DokumentMalUtleder {
         } else if (FagsakYtelseType.ENGANGSTØNAD.equals(ytelseType)) {
             return mapEngangstønadVedtaksbrev(behandling);
         } else if (FagsakYtelseType.SVANGERSKAPSPENGER.equals(ytelseType)) {
-            return mapSvangerskapspengerVedtaksbrev(behandling);
+            return mapSvangerskapspengerVedtaksbrev(behandling, opprinneligFritekstBrev);
         }
         throw new TekniskException("FPFORMIDLING-666916",
             String.format("Ingen brevmal for ytelse %s for behandling %s.", ytelseType.getKode(), behandling.getUuid().toString()));

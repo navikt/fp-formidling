@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
 import java.math.BigInteger;
 import java.util.Objects;
+import java.util.Set;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.PeriodeBeregner;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;

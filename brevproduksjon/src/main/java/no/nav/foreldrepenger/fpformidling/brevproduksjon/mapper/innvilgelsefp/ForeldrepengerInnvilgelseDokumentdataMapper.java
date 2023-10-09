@@ -32,6 +32,9 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTom;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
+import static no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType.FORELDREPENGER;
+import static no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType.MINSTERETT;
+import static no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,7 +44,6 @@ import java.util.stream.Stream;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
@@ -67,7 +69,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
 import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType;
+import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
 import no.nav.foreldrepenger.fpformidling.uttak.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
@@ -121,17 +123,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var antallBarn = familieHendelse.antallBarn();
         var antallDødeBarn = familieHendelse.antallDødeBarn();
         var innvilgedeUtbetalingsperioder = finnInnvilgedePerioderMedUtbetaling(utbetalingsperioder);
-
-        var utenAktKrav = 0;
-        var medAktKrav = 0;
-        if (kontoEksisterer(saldoer, SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV) || kontoEksisterer(saldoer,
-            SaldoVisningStønadskontoType.MINSTERETT)) {
-            utenAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV);
-            if (utenAktKrav == 0) {
-                utenAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.MINSTERETT);
-            }
-            medAktKrav = finnSaldo(saldoer, SaldoVisningStønadskontoType.FORELDREPENGER) - utenAktKrav;
-        }
+        var utenAktKrav = disponibleDagerUtenAktivitetskrav(saldoer);
+        var medAktKrav = finnSaldo(saldoer, FORELDREPENGER) - utenAktKrav;
 
         var dokumentdataBuilder = ForeldrepengerInnvilgelseDokumentdata.ny()
             .medFelles(fellesBuilder.build())
@@ -209,6 +202,16 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             dokumentdataBuilder.medAntallDødeBarn(0);
         }
         return dokumentdataBuilder.build();
+    }
+
+    private static int disponibleDagerUtenAktivitetskrav(Saldoer saldoer) {
+        if (kontoEksisterer(saldoer, UTEN_AKTIVITETSKRAV)) {
+            return finnSaldo(saldoer, UTEN_AKTIVITETSKRAV);
+        } else if (kontoEksisterer(saldoer, MINSTERETT)) {
+            return finnSaldo(saldoer, MINSTERETT);
+        } else {
+            return  0;
+        }
     }
 
     private List<Utbetalingsperiode> finnInnvilgedePerioderMedUtbetaling(List<Utbetalingsperiode> utbetalingsperioder) {

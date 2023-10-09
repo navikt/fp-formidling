@@ -20,6 +20,7 @@ public class Behandlingsresultat {
     private Boolean erRevurderingMedUendretUtfall;
     private LocalDate skjæringstidspunkt;
     private boolean utenMinsterett;
+    private boolean endretDekningsgrad;
 
     //Objekter
     private String beregning; //BeregningResultat
@@ -40,6 +41,7 @@ public class Behandlingsresultat {
         beregning = builder.beregning;
         periode = builder.periode;
         behandling = builder.behandling;
+        endretDekningsgrad = builder.endretDekningsgrad;
     }
 
     public static Builder builder() {
@@ -138,6 +140,10 @@ public class Behandlingsresultat {
         return behandling;
     }
 
+    public boolean isEndretDekningsgrad() {
+        return endretDekningsgrad;
+    }
+
     public boolean isBehandlingHenlagt() {
         return BehandlingResultatType.getAlleHenleggelseskoder().contains(behandlingResultatType);
     }
@@ -156,6 +162,7 @@ public class Behandlingsresultat {
         private String beregning;
         private String periode;
         private Behandling behandling;
+        private boolean endretDekningsgrad;
 
         private Builder() {
         }
@@ -207,6 +214,11 @@ public class Behandlingsresultat {
 
         public Builder medUtenMinsterett(boolean utenMinsterett) {
             this.utenMinsterett = utenMinsterett;
+            return this;
+        }
+
+        public Builder medEndretDekningsgrad(boolean endretDekningsgrad) {
+            this.endretDekningsgrad = endretDekningsgrad;
             return this;
         }
 

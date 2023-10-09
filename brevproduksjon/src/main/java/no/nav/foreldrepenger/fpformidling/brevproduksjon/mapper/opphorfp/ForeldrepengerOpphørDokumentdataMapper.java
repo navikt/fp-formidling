@@ -86,6 +86,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         var erSøkerDød = erDød(dokumentFelles);
 
+        var behandlingsresultat = behandling.getBehandlingsresultat();
         var dokumentdataBuilder = ForeldrepengerOpphørDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medErSøkerDød(erSøkerDød)
@@ -93,9 +94,10 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
             .medGjelderFødsel(familiehendelse.gjelderFødsel())
             .medAntallBarn(familiehendelse.antallBarn())
             .medHalvG(halvG)
+            .medEndretDekningsgrad(behandlingsresultat.isEndretDekningsgrad())
             .medKlagefristUker(brevParametere.getKlagefristUker());
 
-        var årsakListe = mapAvslagårsaker(behandling.getBehandlingsresultat(), foreldrepengerUttak, dokumentdataBuilder);
+        var årsakListe = mapAvslagårsaker(behandlingsresultat, foreldrepengerUttak, dokumentdataBuilder);
 
         finnDødsdatoHvisFinnes(familiehendelse, årsakListe).map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medBarnDødsdato);
 

@@ -1,13 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 
-import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingsresultatDto;
+import static no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat.builder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat.builder;
+import no.nav.foreldrepenger.fpformidling.behandling.Behandlingsresultat;
+import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingsresultatDto;
 
 public final class BehandlingsresultatDtoMapper {
 
@@ -32,6 +32,7 @@ public final class BehandlingsresultatDtoMapper {
         builder.medErRevurderingMedUendretUtfall(dto.getErRevurderingMedUendretUtfall());
         builder.medSkjæringstidspunkt(dto.getSkjæringstidspunkt());
         builder.medUtenMinsterett(dto.utenMinsterett());
+        builder.medEndretDekningsgrad(dto.endretDekningsgrad());
         return builder.build();
     }
 }

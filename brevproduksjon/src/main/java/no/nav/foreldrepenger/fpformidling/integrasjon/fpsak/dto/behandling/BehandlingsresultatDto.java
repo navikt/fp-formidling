@@ -23,6 +23,7 @@ public class BehandlingsresultatDto {
     private String fritekstbrev;
     private Boolean erRevurderingMedUendretUtfall;
     private SkjæringstidspunktDto skjæringstidspunkt;
+    private boolean endretDekningsgrad;
 
     public Integer getId() {
         return id;
@@ -102,6 +103,14 @@ public class BehandlingsresultatDto {
 
     public boolean utenMinsterett() {
         return Optional.ofNullable(skjæringstidspunkt).map(SkjæringstidspunktDto::utenMinsterett).orElse(true);
+    }
+
+    public boolean endretDekningsgrad() {
+        return endretDekningsgrad;
+    }
+
+    public void setEndretDekningsgrad(boolean endretDekningsgrad) {
+        this.endretDekningsgrad = endretDekningsgrad;
     }
 
     public void setSkjæringstidspunkt(SkjæringstidspunktDto skjæringstidspunkt) {

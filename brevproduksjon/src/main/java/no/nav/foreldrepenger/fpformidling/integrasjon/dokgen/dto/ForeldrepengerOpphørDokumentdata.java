@@ -15,6 +15,7 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
     private boolean gjelderFødsel;
     private int antallBarn;
     private long halvG;
+    private boolean endretDekningsgrad;
     private String lovhjemmelForAvslag;
     private List<String> avslagÅrsaker;
     private int klagefristUker;
@@ -41,6 +42,10 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
 
     public long getHalvG() {
         return halvG;
+    }
+
+    public boolean isEndretDekningsgrad() {
+        return endretDekningsgrad;
     }
 
     public String getLovhjemmelForAvslag() {
@@ -85,13 +90,13 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
             that.getRelasjonskode()) && Objects.equals(getLovhjemmelForAvslag(), that.getLovhjemmelForAvslag()) && Objects.equals(getAvslagÅrsaker(),
             that.getAvslagÅrsaker()) && Objects.equals(getBarnDødsdato(), that.getBarnDødsdato()) && Objects.equals(getOpphørDato(),
             that.getOpphørDato()) && Objects.equals(getFomStønadsdato(), that.getFomStønadsdato()) && Objects.equals(getTomStønadsdato(),
-            that.getTomStønadsdato()) && Objects.equals(getFelles(), that.getFelles());
+            that.getTomStønadsdato()) && Objects.equals(getFelles(), that.getFelles()) && Objects.equals(isEndretDekningsgrad(), that.isEndretDekningsgrad());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getFelles(), erSøkerDød(), getRelasjonskode(), erGjelderFødsel(), getAntallBarn(), getHalvG(), getLovhjemmelForAvslag(),
-            getAvslagÅrsaker(), getKlagefristUker(), getBarnDødsdato(), getOpphørDato(), getFomStønadsdato(), getTomStønadsdato());
+            getAvslagÅrsaker(), getKlagefristUker(), getBarnDødsdato(), getOpphørDato(), getFomStønadsdato(), getTomStønadsdato(), isEndretDekningsgrad());
     }
 
     public static Builder ny() {
@@ -132,6 +137,11 @@ public class ForeldrepengerOpphørDokumentdata extends Dokumentdata {
 
         public Builder medHalvG(long halvG) {
             this.kladd.halvG = halvG;
+            return this;
+        }
+
+        public Builder medEndretDekningsgrad(boolean endretDekningsgrad) {
+            this.kladd.endretDekningsgrad = endretDekningsgrad;
             return this;
         }
 

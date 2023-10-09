@@ -87,7 +87,7 @@ public interface Behandlinger {
 
     default Optional<TilkjentYtelseMedUttaksplanDto> hentTilkjentYtelseForeldrepengerHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
-            .filter(dto -> "beregningsresultat-foreldrepenger".equals(dto.getRel()))
+            .filter(dto -> "beregningsresultat-dagytelse".equals(dto.getRel()))
             .findFirst()
             .flatMap(link -> hentDtoFraLink(link, TilkjentYtelseMedUttaksplanDto.class));
     }

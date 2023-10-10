@@ -28,9 +28,9 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerO
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.typer.Dato;
-import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.ForeldrepengerUttak;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped

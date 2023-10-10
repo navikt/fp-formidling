@@ -23,7 +23,7 @@ public enum ArbeidsforholdIkkeOppfyltÅrsak implements Kodeverdi {
     @JsonValue
     private String kode;
 
-    private ArbeidsforholdIkkeOppfyltÅrsak(String kode) {
+    ArbeidsforholdIkkeOppfyltÅrsak(String kode) {
         this.kode = kode;
     }
 

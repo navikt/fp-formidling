@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.uttak;
+package no.nav.foreldrepenger.fpformidling.uttak.fp;
 
 //Brukes i saldovisning i fpsak, visningen inneholder flere typer konto enn typer som kan ligge på uttaksperioden
 public enum SaldoVisningStønadskontoType {

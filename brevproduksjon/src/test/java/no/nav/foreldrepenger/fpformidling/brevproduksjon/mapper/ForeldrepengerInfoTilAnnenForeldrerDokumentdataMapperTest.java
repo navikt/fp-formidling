@@ -28,9 +28,9 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatT
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
-import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.ForeldrepengerUttak;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriode;
 
 class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
     private DokumentFelles dokumentFelles;

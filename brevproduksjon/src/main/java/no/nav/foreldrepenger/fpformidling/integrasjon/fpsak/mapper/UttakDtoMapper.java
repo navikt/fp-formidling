@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 
-import static no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak.GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR;
-import static no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak.PERIODE_ÅRSAK_DISCRIMINATOR;
+import static no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak.GRADERING_AVSLAG_ÅRSAK_DISCRIMINATOR;
+import static no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak.PERIODE_ÅRSAK_DISCRIMINATOR;
 
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -12,11 +12,11 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResul
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
-import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakAktivitet;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.ForeldrepengerUttak;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakAktivitet;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public class UttakDtoMapper {

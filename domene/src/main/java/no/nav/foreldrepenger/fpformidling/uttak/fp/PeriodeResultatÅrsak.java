@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.uttak.kodeliste;
+package no.nav.foreldrepenger.fpformidling.uttak.fp;
 
 import java.util.Arrays;
 import java.util.HashSet;

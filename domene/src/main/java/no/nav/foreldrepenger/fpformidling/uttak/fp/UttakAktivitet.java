@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.uttak;
+package no.nav.foreldrepenger.fpformidling.uttak.fp;
 
 import java.util.Optional;
 
@@ -6,9 +6,9 @@ import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public class UttakAktivitet {
-    private UttakArbeidType uttakArbeidType;
-    private Arbeidsgiver arbeidsgiver;
-    private ArbeidsforholdRef arbeidsforholdRef;
+    private final UttakArbeidType uttakArbeidType;
+    private final Arbeidsgiver arbeidsgiver;
+    private final ArbeidsforholdRef arbeidsforholdRef;
 
     private UttakAktivitet(Builder builder) {
         uttakArbeidType = builder.uttakArbeidType;

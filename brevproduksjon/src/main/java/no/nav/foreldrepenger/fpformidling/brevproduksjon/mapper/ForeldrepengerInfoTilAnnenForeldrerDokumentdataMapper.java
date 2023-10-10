@@ -9,8 +9,8 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerInfoTilAnnenForelderDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriode;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

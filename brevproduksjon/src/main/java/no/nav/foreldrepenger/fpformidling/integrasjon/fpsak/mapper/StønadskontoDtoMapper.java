@@ -4,8 +4,8 @@ import java.util.stream.Collectors;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.saldo.SaldoerDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.saldo.StønadskontoDto;
-import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
-import no.nav.foreldrepenger.fpformidling.uttak.Stønadskonto;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.Saldoer;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.Stønadskonto;
 
 public class StønadskontoDtoMapper {
 

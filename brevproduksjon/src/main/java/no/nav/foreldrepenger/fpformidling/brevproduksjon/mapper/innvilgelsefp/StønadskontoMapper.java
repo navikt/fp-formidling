@@ -6,9 +6,9 @@ import java.util.Set;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.PeriodeBeregner;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.uttak.SaldoVisningStønadskontoType;
-import no.nav.foreldrepenger.fpformidling.uttak.Saldoer;
-import no.nav.foreldrepenger.fpformidling.uttak.Stønadskonto;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.SaldoVisningStønadskontoType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.Saldoer;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.Stønadskonto;
 
 public final class StønadskontoMapper {
 

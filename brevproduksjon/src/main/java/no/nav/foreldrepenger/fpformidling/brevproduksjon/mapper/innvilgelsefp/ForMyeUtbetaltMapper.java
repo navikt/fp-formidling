@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak.*;
+import static no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak.*;
 
 public final class ForMyeUtbetaltMapper {
     private static final List<Årsak> manglendeEllerForSenSøknadOmGraderingÅrsaker = List.of(

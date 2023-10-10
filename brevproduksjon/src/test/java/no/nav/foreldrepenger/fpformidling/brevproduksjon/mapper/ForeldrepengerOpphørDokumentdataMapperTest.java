@@ -49,13 +49,13 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatT
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
-import no.nav.foreldrepenger.fpformidling.uttak.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.uttak.PeriodeResultatType;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakAktivitet;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakArbeidType;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriode;
-import no.nav.foreldrepenger.fpformidling.uttak.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.uttak.kodeliste.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.ForeldrepengerUttak;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakAktivitet;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakArbeidType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriodeAktivitet;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
 
 @ExtendWith(MockitoExtension.class)
 class ForeldrepengerOpphørDokumentdataMapperTest {

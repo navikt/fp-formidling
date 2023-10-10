@@ -128,6 +128,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getBarnDødsdato()).isEqualTo(formaterDato(LocalDate.now(), Språkkode.NB));
         assertThat(dokumentdata.getOpphørDato()).isEqualTo(formaterDato(PERIODE2_FOM, Språkkode.NB));
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(ANTALL_BARN);
+        assertThat(dokumentdata.isEndretDekningsgrad()).isTrue();
     }
 
     private FagsakBackend opprettFagsakBackend() {
@@ -191,6 +192,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
             .medBehandlingType(BehandlingType.REVURDERING)
             .medBehandlingsresultat(Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
+                .medEndretDekningsgrad(true)
                 .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK))
                 .build())
             .medSpråkkode(Språkkode.NB)

@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto;
 
+import static no.nav.foreldrepenger.fpformidling.klage.KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK;
+
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,6 +16,7 @@ public class KlageAvvistDokumentdata extends Dokumentdata {
     private String lovhjemler;
     private int klagefristUker;
     private Set<String> avvistGrunner;
+    private boolean påklagdVedtak;
 
     public boolean getGjelderTilbakekreving() {
         return gjelderTilbakekreving;
@@ -29,6 +32,10 @@ public class KlageAvvistDokumentdata extends Dokumentdata {
 
     public Set<String> getAvvistGrunner() {
         return avvistGrunner;
+    }
+
+    public boolean isPåklagdVedtak() {
+        return påklagdVedtak;
     }
 
     @Override
@@ -86,6 +93,7 @@ public class KlageAvvistDokumentdata extends Dokumentdata {
         }
 
         public KlageAvvistDokumentdata build() {
+            this.kladd.påklagdVedtak = this.kladd.getAvvistGrunner() != null && this.kladd.getAvvistGrunner().stream().noneMatch(g -> Objects.equals(IKKE_PAKLAGD_VEDTAK.getKode(), g));
             return this.kladd;
         }
     }

@@ -83,6 +83,7 @@ class KlageAvvistDokumentdataMapperTest {
         assertThat(dokumentdata.getLovhjemler()).isEqualTo("forvaltningsloven §§ 28 og 33");
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(6);
         assertThat(dokumentdata.getAvvistGrunner()).containsAll(of(KlageAvvistÅrsak.KLAGER_IKKE_PART.getKode()));
+        assertThat(dokumentdata.isPåklagdVedtak()).isTrue();
     }
 
     @Test
@@ -104,6 +105,7 @@ class KlageAvvistDokumentdataMapperTest {
         assertThat(dokumentdata.getAvvistGrunner()).containsAll(
             of(KlageAvvistÅrsak.KLAGET_FOR_SENT.getKode(), KlageAvvistÅrsak.KLAGER_IKKE_PART.getKode(), KlageAvvistÅrsak.KLAGE_UGYLDIG.getKode(),
                 KlageAvvistÅrsak.IKKE_KONKRET.getKode(), KlageAvvistÅrsak.IKKE_PAKLAGD_VEDTAK.getKode()));
+        assertThat(dokumentdata.isPåklagdVedtak()).isFalse();
     }
 
     private void mockKlage(Behandling behandling, BehandlingType behandlingType, List<KlageAvvistÅrsak> avvistÅrsaker) {

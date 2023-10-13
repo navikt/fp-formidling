@@ -16,6 +16,8 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.List;
 
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,6 +50,8 @@ class KlageAvvistDokumentdataMapperTest {
 
     private KlageAvvistDokumentdataMapper dokumentdataMapper;
 
+    private static final String FRITEKST_TIL_BREV = "FRITEKST";
+
     @BeforeEach
     void before() {
         dokumentData = lagStandardDokumentData(DokumentMalType.KLAGE_AVVIST);
@@ -78,6 +82,7 @@ class KlageAvvistDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
+        assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST_TIL_BREV));
 
         assertThat(dokumentdata.getGjelderTilbakekreving()).isFalse();
         assertThat(dokumentdata.getLovhjemler()).isEqualTo("forvaltningsloven §§ 28 og 33");
@@ -109,7 +114,7 @@ class KlageAvvistDokumentdataMapperTest {
     }
 
     private void mockKlage(Behandling behandling, BehandlingType behandlingType, List<KlageAvvistÅrsak> avvistÅrsaker) {
-        var klageVurderingResultat = new KlageVurderingResultat(null, "FRITEKST");
+        var klageVurderingResultat = new KlageVurderingResultat(null, FRITEKST_TIL_BREV);
         var klageFormkravResultat = new KlageFormkravResultat(avvistÅrsaker);
         var klage = Klage.ny()
             .medPåklagdBehandlingType(behandlingType)

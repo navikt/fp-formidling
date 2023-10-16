@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
+import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto.fra;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 
 import java.util.Set;
@@ -49,10 +50,11 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
                                                       DokumentHendelse hendelse,
                                                       Behandling behandling,
                                                       boolean erUtkast) {
+        var klage = domeneobjektProvider.hentKlagebehandling(behandling);
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
+        fra(hendelse, klage).ifPresent(fellesBuilder::medFritekst);
 
-        var klage = domeneobjektProvider.hentKlagebehandling(behandling);
         var avvistGrunner = getAvvistGrunner(klage);
 
         var dokumentdataBuilder = KlageAvvistDokumentdata.ny()

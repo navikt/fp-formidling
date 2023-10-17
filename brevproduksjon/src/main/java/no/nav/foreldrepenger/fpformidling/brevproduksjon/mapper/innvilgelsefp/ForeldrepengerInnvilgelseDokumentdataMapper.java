@@ -22,9 +22,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.StønadskontoMapper.kontoEksisterer;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UndermalInkluderingMapper.skalInkludereAvslag;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInnvilget;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UndermalInkluderingMapper.skalInkludereNyeOpplysningerUtbet;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetNårGradering;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UndermalInkluderingMapper.skalInkludereUtbetaling;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallAvslåttePerioder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallInnvilgedePerioder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
@@ -117,6 +114,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         var utbetalingsperioder = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelseForeldrepenger.getPerioder(), uttakResultatPerioder,
             beregningsgrunnlag.getBeregningsgrunnlagPerioder(), språkkode);
+        guardBareUtsettelser(utbetalingsperioder);
         var konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
         var erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
         var dagsats = finnDagsats(tilkjentYtelseForeldrepenger);
@@ -172,12 +170,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medLovhjemlerBeregning(
                 FellesMapper.formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForInnvilgetYtelse,
                     erInnvilgetRevurdering, behandling))
-
-            .medInkludereUtbetaling(skalInkludereUtbetaling(behandling, utbetalingsperioder))
-            .medInkludereUtbetNårGradering(skalInkludereUtbetNårGradering(behandling, utbetalingsperioder))
-            .medInkludereInnvilget(skalInkludereInnvilget(behandling, utbetalingsperioder, konsekvensForInnvilgetYtelse))
+            .medInkludereInnvilget(skalInkludereInnvilget(utbetalingsperioder, konsekvensForInnvilgetYtelse))
             .medInkludereAvslag(skalInkludereAvslag(utbetalingsperioder, konsekvensForInnvilgetYtelse))
-            .medInkludereNyeOpplysningerUtbet(skalInkludereNyeOpplysningerUtbet(behandling, utbetalingsperioder, dagsats))
             .medUtenMinsterett(utenMinsterett)
             .medØnskerJustertVedFødsel(ytelseFordeling.ønskerJustertVedFødsel())
             .medGraderingOgFulltUttak(
@@ -186,6 +180,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         finnSisteDagAvSistePeriode(uttakResultatPerioder).ifPresent(
             dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
+        dokumentdataBuilder.medUtbetalingFom(formaterDato(finnUtbetalingFom(utbetalingsperioder), språkkode));
         finnStønadsperiodeFom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));
         finnStønadsperiodeTom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeTom(formaterDato(dato, språkkode)));
 
@@ -202,6 +197,20 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             dokumentdataBuilder.medAntallDødeBarn(0);
         }
         return dokumentdataBuilder.build();
+    }
+
+    private LocalDate finnUtbetalingFom(List<Utbetalingsperiode> utbetalingsperioder) {
+        return utbetalingsperioder.stream()
+            .filter(p -> p.getPeriodeDagsats() > 0)
+            .map(Utbetalingsperiode::getPeriodeFom)
+            .min(LocalDate::compareTo)
+            .orElseThrow();
+    }
+
+    private void guardBareUtsettelser(List<Utbetalingsperiode> utbetalingsperioder) {
+        if (utbetalingsperioder.stream().allMatch(p -> p.getÅrsak().erUtsettelseÅrsak())) {
+            throw new IllegalStateException("Innvilgelsebrev støtter ikke bare utsettelser");
+        }
     }
 
     private static int disponibleDagerUtenAktivitetskrav(Saldoer saldoer) {

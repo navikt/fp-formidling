@@ -14,16 +14,15 @@ public class Årsak {
         List.of("4058", "4059"), List.of("4061", "4062", "4063", "4064", "4065", "4115", "4116", "4117"),
         List.of("4066", "4067", "4068", "4069", "4070", "4088", "4089"), List.of("4080", "4501"), List.of("4084", "4085"), List.of("4094", "4502"));
 
-    private static final List<String> UTBETALING_ÅRSAKER = List.of("2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019",
-        "2020", "2021", "2022", "2023", "2030", "2031", "2032", "2033", "2034", "2035", "2038");
-
-    private static final List<String> GYLDIG_UTSETTELSE_ÅRSAKER = List.of("2010", "2011", "2012", "2013", "2014");
+    private static final List<String> UTSETTELSE_ÅRSAKER = List.of("2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019");
+    private static final List<String> GRADERING_ÅRSAKER = List.of("2030", "2031", "2032", "2033", "2034", "2035", "2038");
+    private static final List<String> OVERFØRING_ÅRSAKER = List.of("2020", "2021", "2022", "2023");
 
     @JsonValue
     private String kode;
 
     private Årsak(String kode) {
-        if (kode == null || "".equals(kode)) {
+        if (kode == null || kode.isEmpty()) {
             throw new IllegalStateException("Ugyldig årsak: " + (kode == null ? "null" : "tom string"));
         }
         this.kode = kode;
@@ -63,11 +62,15 @@ public class Årsak {
         return NON_EQUAL_KODER_SOM_LIKEVEL_OPPFYLLER_MERGE.stream().anyMatch(k -> k.containsAll(Set.of(årsak1.getKode(), årsak2.getKode())));
     }
 
-    public boolean erUtbetalingÅrsak() {
-        return UTBETALING_ÅRSAKER.contains(kode);
+    public boolean erUtsettelseÅrsak() {
+        return UTSETTELSE_ÅRSAKER.contains(kode);
     }
 
-    public boolean erGyldigUtsettelseÅrsak() {
-        return GYLDIG_UTSETTELSE_ÅRSAKER.contains(kode);
+    public boolean erGraderingÅrsak() {
+        return GRADERING_ÅRSAKER.contains(kode);
+    }
+
+    public boolean erOverføring() {
+        return OVERFØRING_ÅRSAKER.contains(kode);
     }
 }

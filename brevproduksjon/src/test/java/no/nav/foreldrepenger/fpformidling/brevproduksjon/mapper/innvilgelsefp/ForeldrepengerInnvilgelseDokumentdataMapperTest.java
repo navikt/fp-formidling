@@ -165,8 +165,8 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getFbEllerRvInnvilget()).isTrue();
         assertThat(dokumentdata.getFullRefusjon()).isFalse();
         assertThat(dokumentdata.getAntallPerioder()).isEqualTo(4);
-        assertThat(dokumentdata.getAntallInnvilgedePerioder()).isEqualTo(1);
-        assertThat(dokumentdata.getAntallAvslåttePerioder()).isEqualTo(3);
+        assertThat(dokumentdata.getAntallInnvilgedePerioder()).isEqualTo(2);
+        assertThat(dokumentdata.getAntallAvslåttePerioder()).isEqualTo(2);
         assertThat(dokumentdata.getAntallArbeidsgivere()).isEqualTo(1);
         assertThat(dokumentdata.getDagerTaptFørTermin()).isEqualTo(TAPTE_DAGER_FPFF);
         assertThat(dokumentdata.getDisponibleDager()).isEqualTo(DISPONIBLE_DAGER);
@@ -174,6 +174,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getSisteDagAvSistePeriode()).isEqualTo(formaterDatoNorsk(PERIODE_TOM));
         assertThat(dokumentdata.getStønadsperiodeFom()).isEqualTo(formaterDatoNorsk(PERIODE_FOM));
         assertThat(dokumentdata.getStønadsperiodeTom()).isEqualTo(formaterDatoNorsk(PERIODE_TOM));
+        assertThat(dokumentdata.getUtbetalingFom()).isEqualTo(formaterDatoNorsk(PERIODE_FOM));
         assertThat(dokumentdata.getForeldrepengeperiodenUtvidetUker()).isZero();
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(1);
         assertThat(dokumentdata.getPrematurDager()).isEqualTo(PREMATUR_DAGER);
@@ -187,11 +188,8 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getLovhjemlerUttak()).isEqualTo("forvaltningsloven § 35");
         assertThat(dokumentdata.getLovhjemlerBeregning()).isEqualTo("§ 14-7 og forvaltningsloven § 35");
 
-        assertThat(dokumentdata.getInkludereUtbetaling()).isTrue();
-        assertThat(dokumentdata.getInkludereUtbetNårGradering()).isFalse();
         assertThat(dokumentdata.getInkludereInnvilget()).isTrue();
         assertThat(dokumentdata.getInkludereAvslag()).isTrue();
-        assertThat(dokumentdata.getInkludereNyeOpplysningerUtbet()).isFalse();
 
         assertThat(dokumentdata.getBeregningsgrunnlagregler()).hasSize(1);
         assertThat(dokumentdata.getBruttoBeregningsgrunnlag()).isEqualTo(of(BRUTTO_BERENINGSGRUNNLAG));
@@ -239,7 +237,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         return TilkjentYtelseForeldrepenger.ny()
             .leggTilPerioder(of(TilkjentYtelsePeriode.ny()
                 .medDagsats(100L)
-                .medPeriode(fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1)))
+                .medPeriode(fraOgMedTilOgMed(PERIODE_FOM, PERIODE_FOM))
                 .medAndeler(of(TilkjentYtelseAndel.ny()
                     .medErBrukerMottaker(true)
                     .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
@@ -248,7 +246,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
                     .build()))
                 .build(), TilkjentYtelsePeriode.ny()
                 .medDagsats(100L * 2)
-                .medPeriode(fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(1)))
+                .medPeriode(fraOgMedTilOgMed(PERIODE_TOM, PERIODE_TOM))
                 .medAndeler(of(TilkjentYtelseAndel.ny()
                     .medErArbeidsgiverMottaker(true)
                     .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)

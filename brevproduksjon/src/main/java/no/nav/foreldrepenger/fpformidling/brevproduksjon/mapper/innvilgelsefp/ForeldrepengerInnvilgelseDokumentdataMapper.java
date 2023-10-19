@@ -65,6 +65,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakTyp
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.søknad.Søknad;
+import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.Saldoer;
@@ -180,7 +181,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         finnSisteDagAvSistePeriode(uttakResultatPerioder).ifPresent(
             dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
-        dokumentdataBuilder.medUtbetalingFom(formaterDato(finnUtbetalingFom(utbetalingsperioder), språkkode));
+        dokumentdataBuilder.medUtbetalingFom(formaterDato(finnUtbetalingFom(utbetalingsperioder, dokumentFelles.getSaksnummer()), språkkode));
         finnStønadsperiodeFom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));
         finnStønadsperiodeTom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeTom(formaterDato(dato, språkkode)));
 
@@ -199,12 +200,12 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         return dokumentdataBuilder.build();
     }
 
-    private LocalDate finnUtbetalingFom(List<Utbetalingsperiode> utbetalingsperioder) {
+    private LocalDate finnUtbetalingFom(List<Utbetalingsperiode> utbetalingsperioder, Saksnummer saksnummer) {
         return utbetalingsperioder.stream()
             .filter(p -> p.getPeriodeDagsats() > 0)
             .map(Utbetalingsperiode::getPeriodeFom)
             .min(LocalDate::compareTo)
-            .orElseThrow();
+            .orElseThrow(() -> new IllegalArgumentException("Forventer minst en periode med utbetaling for innvilgelsebrev " + saksnummer));
     }
 
     private void guardBareUtsettelser(List<Utbetalingsperiode> utbetalingsperioder) {

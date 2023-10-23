@@ -19,7 +19,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.MottattKla
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.soknad.SoknadBackendDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelseMedUttaksplanDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.YtelseFordelingDto;
@@ -27,6 +26,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.saldo.Sald
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 
 public interface Behandlinger {
 
@@ -69,7 +69,7 @@ public interface Behandlinger {
 
     default Optional<TilkjentYtelseEngangsstønadDto> hentTilkjentYtelseEngangsstønadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
-            .filter(dto -> "beregningsresultat-engangsstonad".equals(dto.getRel()))
+            .filter(dto -> "tilkjentytelse-engangsstonad".equals(dto.getRel()))
             .findFirst()
             .flatMap(link -> hentDtoFraLink(link, TilkjentYtelseEngangsstønadDto.class));
     }
@@ -79,17 +79,17 @@ public interface Behandlinger {
             () -> new IllegalStateException("Klarte ikke hente Tilkjent ytelse engangsstønad for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
-    default TilkjentYtelseMedUttaksplanDto hentTilkjentYtelseForeldrepenger(List<BehandlingResourceLink> resourceLinker) {
-        return hentTilkjentYtelseForeldrepengerHvisFinnes(resourceLinker).orElseThrow(() -> {
+    default TilkjentYtelseDagytelseDto hentTilkjentYtelseDagytelse(List<BehandlingResourceLink> resourceLinker) {
+        return hentTilkjentYtelseDagytelseHvisFinnes(resourceLinker).orElseThrow(() -> {
             throw new IllegalStateException("Klarte ikke hente Tilkjent ytelse foreldrepenger for behandling: " + hentBehandlingId(resourceLinker));
         });
     }
 
-    default Optional<TilkjentYtelseMedUttaksplanDto> hentTilkjentYtelseForeldrepengerHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
+    default Optional<TilkjentYtelseDagytelseDto> hentTilkjentYtelseDagytelseHvisFinnes(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
-            .filter(dto -> "beregningsresultat-dagytelse".equals(dto.getRel()))
+            .filter(dto -> "tilkjentytelse-dagytelse".equals(dto.getRel()))
             .findFirst()
-            .flatMap(link -> hentDtoFraLink(link, TilkjentYtelseMedUttaksplanDto.class));
+            .flatMap(link -> hentDtoFraLink(link, TilkjentYtelseDagytelseDto.class));
     }
 
     default Optional<SoknadBackendDto> hentSoknadHvisFinnes(List<BehandlingResourceLink> resourceLinker) {

@@ -97,7 +97,7 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
         when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
         when(domeneobjektProvider.hentMottatteDokumenter(any(Behandling.class))).thenReturn(opprettMottattDokument());
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
-        when(domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
+        when(domeneobjektProvider.hentTilkjentYtelseDagytelseHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         lenient().when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
     }

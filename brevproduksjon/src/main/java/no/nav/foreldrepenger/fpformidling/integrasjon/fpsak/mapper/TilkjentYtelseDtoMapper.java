@@ -1,15 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelseAndelDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelseMedUttaksplanDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelsePeriodeDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
@@ -18,6 +16,7 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
+import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 
 public class TilkjentYtelseDtoMapper {
 
@@ -29,8 +28,9 @@ public class TilkjentYtelseDtoMapper {
         return new TilkjentYtelseEngangsstønad(dto.beregnetTilkjentYtelse());
     }
 
-    public static TilkjentYtelseForeldrepenger mapTilkjentYtelseFPFraDto(TilkjentYtelseMedUttaksplanDto dto, UnaryOperator<String> hentNavn) {
-        var tilkjentYtelsePerioder = Arrays.stream(dto.getPerioder())
+    public static TilkjentYtelseForeldrepenger mapTilkjentYtelseDagytelseFraDto(TilkjentYtelseDagytelseDto dto, UnaryOperator<String> hentNavn) {
+        var tilkjentYtelsePerioder = dto.perioder()
+            .stream()
             .map(p -> mapPeriodeFraDto(p, hentNavn))
             .sorted(PeriodeComparator.TILKJENTYTELSERESULTAT)
             .toList();
@@ -38,22 +38,22 @@ public class TilkjentYtelseDtoMapper {
     }
 
 
-    private static TilkjentYtelsePeriode mapPeriodeFraDto(TilkjentYtelsePeriodeDto dto, UnaryOperator<String> hentNavn) {
+    private static TilkjentYtelsePeriode mapPeriodeFraDto(TilkjentYtelseDagytelseDto.@Valid @NotNull TilkjentYtelsePeriodeDto dto, UnaryOperator<String> hentNavn) {
         List<TilkjentYtelseAndel> andelListe = new ArrayList<>();
-        for (var tilkjentYtelseAndelDto : dto.getAndeler()) {
+        for (var tilkjentYtelseAndelDto : dto.andeler()) {
             andelListe.add(mapAndelFraDto(tilkjentYtelseAndelDto, hentNavn));
         }
         return TilkjentYtelsePeriode.ny()
-            .medDagsats((long) dto.getDagsats())
-            .medPeriode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
+            .medDagsats((long) dto.dagsats())
+            .medPeriode(DatoIntervall.fraOgMedTilOgMed(dto.fom(), dto.tom()))
             .medAndeler(andelListe)
             .build();
     }
 
     //Fpsak slår sammen andeler i dto, så vi må eventuelt splitte dem opp igjen
-    private static TilkjentYtelseAndel mapAndelFraDto(TilkjentYtelseAndelDto dto, UnaryOperator<String> hentNavn) {
+    private static TilkjentYtelseAndel mapAndelFraDto(TilkjentYtelseDagytelseDto.@Valid @NotNull TilkjentYtelseAndelDto dto, UnaryOperator<String> hentNavn) {
         return TilkjentYtelseAndel.ny()
-            .medAktivitetStatus(dto.aktivitetStatus())
+            .medAktivitetStatus(mapAktivitetstatusFraKontrakt(dto.aktivitetstatus()))
             .medArbeidsforholdRef(
                 dto.arbeidsforholdId() != null && !dto.arbeidsforholdId().isEmpty() ? ArbeidsforholdRef.ref(dto.arbeidsforholdId()) : null)
             .medArbeidsgiver(mapArbeidsgiverFraDto(dto, hentNavn))
@@ -65,14 +65,32 @@ public class TilkjentYtelseDtoMapper {
             .build();
     }
 
-    private static Arbeidsgiver mapArbeidsgiverFraDto(TilkjentYtelseAndelDto dto, UnaryOperator<String> hentNavn) {
-        if (!AktivitetStatus.ARBEIDSTAKER.equals(dto.aktivitetStatus()) || dto.arbeidsgiverReferanse() == null) {
+    private static AktivitetStatus mapAktivitetstatusFraKontrakt(TilkjentYtelseDagytelseDto.Aktivitetstatus aktivitetstatus) {
+        return switch(aktivitetstatus) {
+            case ARBEIDSAVKLARINGSPENGER -> AktivitetStatus.ARBEIDSAVKLARINGSPENGER;
+            case ARBEIDSTAKER -> AktivitetStatus.ARBEIDSTAKER;
+            case DAGPENGER -> AktivitetStatus.DAGPENGER;
+            case FRILANSER -> AktivitetStatus.FRILANSER;
+            case MILITÆR_ELLER_SIVIL -> AktivitetStatus.MILITÆR_ELLER_SIVIL;
+            case SELVSTENDIG_NÆRINGSDRIVENDE -> AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE;
+            case BRUKERS_ANDEL -> AktivitetStatus.BRUKERS_ANDEL;
+            case KUN_YTELSE -> AktivitetStatus.KUN_YTELSE;
+            case TTLSTØTENDE_YTELSE -> AktivitetStatus.TTLSTØTENDE_YTELSE;
+            case VENTELØNN_VARTPENGER -> AktivitetStatus.VENTELØNN_VARTPENGER;
+            case KOMBINERT_AT_FL, KOMBINERT_AT_SN, KOMBINERT_FL_SN,
+                KOMBINERT_AT_FL_SN, UDEFINERT -> throw new IllegalStateException("Ugyldig aktivitetstatus for tilkjent ytelse andel: " + aktivitetstatus);
+        };
+    }
+
+
+    private static Arbeidsgiver mapArbeidsgiverFraDto(TilkjentYtelseDagytelseDto.@Valid @NotNull TilkjentYtelseAndelDto dto, UnaryOperator<String> hentNavn) {
+        if (!TilkjentYtelseDagytelseDto.Aktivitetstatus.ARBEIDSTAKER.equals(dto.aktivitetstatus()) || dto.arbeidsgiverReferanse() == null) {
             return null;
         }
         return new Arbeidsgiver(dto.arbeidsgiverReferanse(), hentNavn.apply(dto.arbeidsgiverReferanse()));
     }
 
-    private static int summerDagsats(TilkjentYtelseAndelDto dto) {
+    private static int summerDagsats(TilkjentYtelseDagytelseDto.TilkjentYtelseAndelDto dto) {
         var sum = 0;
         if (dto.tilSoker() != null) {
             sum += dto.tilSoker();

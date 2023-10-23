@@ -101,13 +101,13 @@ public class DomeneobjektProvider {
     }
 
     public TilkjentYtelseForeldrepenger hentTilkjentYtelseForeldrepenger(Behandling behandling) {
-        return TilkjentYtelseDtoMapper.mapTilkjentYtelseFPFraDto(
-            behandlingRestKlient.hentTilkjentYtelseForeldrepenger(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+        return TilkjentYtelseDtoMapper.mapTilkjentYtelseDagytelseFraDto(
+            behandlingRestKlient.hentTilkjentYtelseDagytelse(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
-    public Optional<TilkjentYtelseForeldrepenger> hentTilkjentYtelseFPHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentTilkjentYtelseForeldrepengerHvisFinnes(behandling.getResourceLinker())
-            .map(r -> TilkjentYtelseDtoMapper.mapTilkjentYtelseFPFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
+    public Optional<TilkjentYtelseForeldrepenger> hentTilkjentYtelseDagytelseHvisFinnes(Behandling behandling) {
+        return behandlingRestKlient.hentTilkjentYtelseDagytelseHvisFinnes(behandling.getResourceLinker())
+            .map(r -> TilkjentYtelseDtoMapper.mapTilkjentYtelseDagytelseFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public FamilieHendelse hentFamiliehendelse(Behandling behandling) {

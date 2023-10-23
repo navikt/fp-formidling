@@ -87,7 +87,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(any(Behandling.class))).thenReturn(opprettUttaksresultat());
-        when(domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
+        when(domeneobjektProvider.hentTilkjentYtelseDagytelseHvisFinnes(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
     }
 
     @Test

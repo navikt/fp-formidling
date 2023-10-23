@@ -103,7 +103,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
     private void mapAvslåttePerioder(Behandling behandling,
                                      ForeldrepengerAvslagDokumentdata.Builder dokumentdataBuilder,
                                      Optional<ForeldrepengerUttak> uttakResultatPerioder) {
-        var tilkjentYtelseFP = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling);
+        var tilkjentYtelseFP = domeneobjektProvider.hentTilkjentYtelseDagytelseHvisFinnes(behandling);
         var avslåttePerioderOgLovhjemmel = AvslåttPeriodeMapper.mapAvslåttePerioderOgLovhjemmel(behandling,
             tilkjentYtelseFP.map(TilkjentYtelseForeldrepenger::getPerioder).orElse(Collections.emptyList()), uttakResultatPerioder);
 

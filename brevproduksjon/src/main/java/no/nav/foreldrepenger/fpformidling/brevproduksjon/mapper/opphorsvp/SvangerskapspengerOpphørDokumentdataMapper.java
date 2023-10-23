@@ -59,7 +59,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
         var svpUttaksresultat = domeneobjektProvider.hentSvangerskapspengerUttakHvisFinnes(behandling);
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         var iay = domeneobjektProvider.hentInntektsmeldinger(behandling);
-        var tilkjentYtelsePerioder = domeneobjektProvider.hentTilkjentYtelseFPHvisFinnes(behandling)
+        var tilkjentYtelsePerioder = domeneobjektProvider.hentTilkjentYtelseDagytelseHvisFinnes(behandling)
             .map(TilkjentYtelseForeldrepenger::getPerioder)
             .orElse(Collections.emptyList());
 

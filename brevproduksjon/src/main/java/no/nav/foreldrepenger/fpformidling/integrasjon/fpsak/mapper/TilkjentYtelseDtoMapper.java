@@ -7,7 +7,6 @@ import java.util.function.UnaryOperator;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.sortering.PeriodeComparator;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseEngangsstønad;
@@ -17,6 +16,7 @@ import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
 
 public class TilkjentYtelseDtoMapper {
 

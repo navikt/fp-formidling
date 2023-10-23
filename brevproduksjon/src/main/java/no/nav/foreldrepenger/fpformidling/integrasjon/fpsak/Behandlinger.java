@@ -18,7 +18,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.Klagebehan
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage.MottattKlagedokumentDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.personopplysning.VergeDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.soknad.SoknadBackendDto;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResultatPerioderDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.YtelseFordelingDto;
@@ -27,6 +26,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.Svange
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
 
 public interface Behandlinger {
 

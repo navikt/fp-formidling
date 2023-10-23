@@ -6,8 +6,6 @@ import java.util.UUID;
 
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
-
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
 import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
@@ -22,12 +20,10 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
 
     public static final String ABAC_DOMAIN = "foreldrepenger";
 
-    private final DomeneobjektProvider domeneobjektProvider;
     private final PipRestKlient pipRestKlient;
 
     @Inject
-    public AppPdpRequestBuilderImpl(DomeneobjektProvider domeneobjektProvider, PipRestKlient pipRestKlient) {
-        this.domeneobjektProvider = domeneobjektProvider;
+    public AppPdpRequestBuilderImpl(PipRestKlient pipRestKlient) {
         this.pipRestKlient = pipRestKlient;
     }
 
@@ -40,8 +36,8 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
         }
 
         var appRessursData = AppRessursData.builder();
-        behandlingUuids.stream().findFirst().map(domeneobjektProvider::hentBehandling).ifPresent(b -> {
-            var dto = pipRestKlient.hentPipdataForBehandling(b.getUuid());
+        behandlingUuids.stream().findFirst().ifPresent(b -> {
+            var dto = pipRestKlient.hentPipdataForBehandling(b);
             appRessursData.leggTilAbacAktørIdSet(dto.aktørIder());
             Optional.ofNullable(dto.fagsakStatus()).ifPresent(appRessursData::medFagsakStatus);
             Optional.ofNullable(dto.behandlingStatus()).ifPresent(appRessursData::medBehandlingStatus);

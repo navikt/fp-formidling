@@ -67,7 +67,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
             .medNavn("Nav Navesen")
             .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
             .build();
-        lenient().when(personAdapter.hentBrukerForAktør(any())).thenReturn(Optional.of(personinfo));
+        lenient().when(personAdapter.hentBrukerForAktør(any(), any())).thenReturn(Optional.of(personinfo));
 
         engangsstønadAvslagDokumentdataMapper = new EngangsstønadAvslagDokumentdataMapper(DatamapperTestUtil.getBrevParametere(),
             domeneobjektProvider, personAdapter);

@@ -158,6 +158,7 @@ class BrevBestillerTjenesteTest {
         verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FRITEKSTBREV, DokumentMalType.FORELDREPENGER_INNVILGELSE);
         verify(dokumentMalUtleder).utledDokumentType(behandling, dokumentHendelse.getYtelseType(), true);
         verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
+        verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
         verifyNoMoreInteractions(dokumentMalUtleder, dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }
@@ -181,6 +182,7 @@ class BrevBestillerTjenesteTest {
         verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_INNVILGELSE, DokumentMalType.FORELDREPENGER_INNVILGELSE);
         verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
         verify(dokumentMalUtleder, never()).utledDokumentType(behandling, dokumentHendelse.getYtelseType(), false);
+        verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
         verifyNoMoreInteractions(dokumentMalUtleder, dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }
@@ -204,6 +206,7 @@ class BrevBestillerTjenesteTest {
         verify(dokgenBrevproduksjonTjeneste).forhåndsvisBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_ANNULLERT);
         verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
         verify(dokumentMalUtleder, never()).utledDokumentType(behandling, dokumentHendelse.getYtelseType(), false);
+        verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
         verifyNoMoreInteractions(dokumentMalUtleder, dokgenBrevproduksjonTjeneste, domeneobjektProvider);
     }
@@ -238,7 +241,7 @@ class BrevBestillerTjenesteTest {
 
     private Personinfo mockPdl(boolean harVerge) {
         var personinfoSøker = Personinfo.getbuilder(SØKER).medPersonIdent(SØKER_FNR).medNavn(NAVN).medNavBrukerKjønn(NavBrukerKjønn.MANN).build();
-        lenient().when(personAdapter.hentBrukerForAktør(eq(SØKER))).thenReturn(Optional.of(personinfoSøker));
+        lenient().when(personAdapter.hentBrukerForAktør(any(), eq(SØKER))).thenReturn(Optional.of(personinfoSøker));
 
         if (harVerge) {
             var personinfoVerge = Personinfo.getbuilder(VERGE)
@@ -246,7 +249,7 @@ class BrevBestillerTjenesteTest {
                 .medNavn("Verge Vergesen")
                 .medNavBrukerKjønn(NavBrukerKjønn.KVINNE)
                 .build();
-            lenient().when(personAdapter.hentBrukerForAktør(eq(VERGE))).thenReturn(Optional.of(personinfoVerge));
+            lenient().when(personAdapter.hentBrukerForAktør(any(), eq(VERGE))).thenReturn(Optional.of(personinfoVerge));
         }
         return personinfoSøker;
     }

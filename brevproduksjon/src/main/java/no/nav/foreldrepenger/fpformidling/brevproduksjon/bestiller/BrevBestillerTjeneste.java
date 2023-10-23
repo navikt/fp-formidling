@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
@@ -50,7 +49,9 @@ public class BrevBestillerTjeneste {
     }
 
     private Behandling hentBehandling(DokumentHendelse dokumentHendelse) {
-        return domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
+        var behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
+        domeneobjektProvider.hentFagsakBackend(behandling);
+        return behandling;
     }
 
     private DokumentMalType utledDokumentMal(Behandling behandling, DokumentHendelse dokumentHendelse) {

@@ -31,10 +31,10 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.U
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.ForeldrepengerUttak;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.StønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 public final class UtbetalingsperiodeMapper {
@@ -110,6 +110,13 @@ public final class UtbetalingsperiodeMapper {
             .map(Utbetalingsperiode::getÅrsak)
             .anyMatch(årsak -> Årsak.of(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode()).equals(årsak) || Årsak.of(
                 PeriodeResultatÅrsak.FAR_HAR_IKKE_OMSORG.getKode()).equals(årsak));
+    }
+
+    public static boolean sistePeriodeAvslåttPgaBarnOver3år(List<Utbetalingsperiode> perioder) {
+        return perioder.stream()
+            .max(Comparator.comparing(Utbetalingsperiode::getPeriodeFom))
+            .map(sistePeriode -> Objects.equals(sistePeriode.getÅrsak().getKode(), PeriodeResultatÅrsak.BARN_OVER_3_ÅR.getKode()))
+            .orElse(false);
     }
 
     private static List<Utbetalingsperiode> mapPerioderUtenBeregningsgrunnlag(List<UttakResultatPeriode> perioderUtenBeregningsgrunnlag,

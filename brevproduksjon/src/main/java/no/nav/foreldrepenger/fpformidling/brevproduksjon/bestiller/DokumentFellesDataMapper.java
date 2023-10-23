@@ -4,12 +4,12 @@ import java.time.LocalDate;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.Virksomhet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
@@ -39,35 +39,38 @@ public class DokumentFellesDataMapper {
 
     void opprettDokumentDataForBehandling(Behandling behandling, DokumentData dokumentData) {
 
-        final var søkersAktørId = domeneobjektProvider.hentFagsakBackend(behandling).getAktørId();
+        final var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
+        final var søkersAktørId = fagsak.getAktørId();
+        final var ytelseType = fagsak.getYtelseType();
 
         var vergeOpt = domeneobjektProvider.hentVerge(behandling);
         if (vergeOpt.isEmpty()) {
-            opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId);
+            opprettDokumentDataForMottaker(behandling, dokumentData, ytelseType, søkersAktørId, søkersAktørId);
             return;
         }
 
         // kopien går til søker
-        opprettDokumentDataForMottaker(behandling, dokumentData, søkersAktørId, søkersAktørId, DokumentFelles.Kopi.JA);
+        opprettDokumentDataForMottaker(behandling, dokumentData, ytelseType, søkersAktørId, søkersAktørId, DokumentFelles.Kopi.JA);
 
         // orginalen går til verge
         var verge = vergeOpt.get();
         if (verge.aktoerId() != null) {
             var vergesAktørId = new AktørId(verge.aktoerId());
-            opprettDokumentDataForMottaker(behandling, dokumentData, vergesAktørId, søkersAktørId, DokumentFelles.Kopi.NEI);
+            opprettDokumentDataForMottaker(behandling, dokumentData, ytelseType, vergesAktørId, søkersAktørId, DokumentFelles.Kopi.NEI);
         } else if (verge.organisasjonsnummer() != null) {
-            opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, verge, søkersAktørId, DokumentFelles.Kopi.NEI);
+            opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, ytelseType, verge, søkersAktørId, DokumentFelles.Kopi.NEI);
         }
     }
 
     private void opprettDokumentDataForOrganisasjonsMottaker(Behandling behandling,
                                                              DokumentData dokumentData,
+                                                             FagsakYtelseType ytelseType,
                                                              Verge verge,
                                                              AktørId aktørIdBruker,
                                                              DokumentFelles.Kopi erKopi) {
         var virksomhet = getVirksomhet(verge);
 
-        var personinfoBruker = personAdapter.hentBrukerForAktør(aktørIdBruker)
+        var personinfoBruker = personAdapter.hentBrukerForAktør(ytelseType, aktørIdBruker)
             .orElseThrow(() -> new TekniskException("FPFORMIDLING-109013",
                 String.format("Fant ikke fødselsnummer for aktørId: %s. Kan ikke bestille dokument", aktørIdBruker)));
 
@@ -78,20 +81,21 @@ public class DokumentFellesDataMapper {
         return virksomhetTjeneste.getOrganisasjon(verge.organisasjonsnummer());
     }
 
-    private void opprettDokumentDataForMottaker(Behandling behandling, DokumentData dokumentData, AktørId aktørIdMottaker, AktørId aktørIdBruker) {
-
-        opprettDokumentDataForMottaker(behandling, dokumentData, aktørIdMottaker, aktørIdBruker, null);
+    private void opprettDokumentDataForMottaker(Behandling behandling, DokumentData dokumentData, FagsakYtelseType ytelseType,
+                                                AktørId aktørIdMottaker, AktørId aktørIdBruker) {
+        opprettDokumentDataForMottaker(behandling, dokumentData, ytelseType, aktørIdMottaker, aktørIdBruker, null);
     }
 
     private void opprettDokumentDataForMottaker(Behandling behandling,
                                                 DokumentData dokumentData,
+                                                FagsakYtelseType ytelseType,
                                                 AktørId aktørIdMottaker,
                                                 AktørId aktørIdBruker,
                                                 DokumentFelles.Kopi erKopi) {
 
-        var personinfoMottaker = personAdapter.hentBrukerForAktør(aktørIdMottaker)
+        var personinfoMottaker = personAdapter.hentBrukerForAktør(ytelseType, aktørIdMottaker)
             .orElseThrow(() -> new TekniskException("FPFORMIDLING-119013", String.format(FANT_IKKE_BRUKER, aktørIdMottaker)));
-        var personinfoBruker = personAdapter.hentBrukerForAktør(aktørIdBruker)
+        var personinfoBruker = personAdapter.hentBrukerForAktør(ytelseType, aktørIdBruker)
             .orElseThrow(() -> new TekniskException("FPFORMIDLING-109013", String.format(FANT_IKKE_BRUKER, aktørIdBruker)));
 
         buildDokumentFellesPerson(behandling, dokumentData, personinfoBruker, personinfoMottaker, erKopi);

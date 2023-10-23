@@ -2,13 +2,13 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.pdl;
 
 import java.util.Optional;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
+import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.vedtak.felles.integrasjon.person.PdlException;
 
@@ -28,10 +28,10 @@ public class PersonAdapter {
         this.persondataTjeneste = persondataTjeneste;
     }
 
-    public Optional<Personinfo> hentBrukerForAktør(AktørId aktørId) {
+    public Optional<Personinfo> hentBrukerForAktør(FagsakYtelseType ytelseType, AktørId aktørId) {
         try {
             var funnetFnr = persondataTjeneste.hentPersonIdentForAktørId(aktørId);
-            return funnetFnr.map(pi -> persondataTjeneste.hentPersoninfo(aktørId, pi));
+            return funnetFnr.map(pi -> persondataTjeneste.hentPersoninfo(ytelseType, aktørId, pi));
         } catch (PdlException pdlException) {
             LOG.error("Fikk feil ved kall til PDL. Detaljer: type={}, cause={}, policy={}", pdlException.getDetails().type(),
                 pdlException.getDetails().cause(), pdlException.getDetails().policy());

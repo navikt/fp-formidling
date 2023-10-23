@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
+import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
@@ -88,7 +88,7 @@ public class PersondataTjeneste {
         return ident;
     }
 
-    public Personinfo hentPersoninfo(AktørId aktørId, PersonIdent personIdent) {
+    public Personinfo hentPersoninfo(FagsakYtelseType ytelseType, AktørId aktørId, PersonIdent personIdent) {
 
         var query = new HentPersonQueryRequest();
         query.setIdent(aktørId.getId());
@@ -98,7 +98,8 @@ public class PersondataTjeneste {
             .kjoenn(new KjoennResponseProjection().kjoenn())
             .folkeregisterpersonstatus(new FolkeregisterpersonstatusResponseProjection().forenkletStatus());
 
-        var person = pdlKlient.hentPerson(query, projection);
+        var ytelse = utledYtelse(ytelseType);
+        var person = pdlKlient.hentPerson(ytelse, query, projection);
 
         var fødselsdato = person.getFoedsel()
             .stream()
@@ -147,5 +148,15 @@ public class PersondataTjeneste {
             return NavBrukerKjønn.MANN;
         }
         return KjoennType.KVINNE.equals(kode) ? NavBrukerKjønn.KVINNE : NavBrukerKjønn.UDEFINERT;
+    }
+
+    private static Persondata.Ytelse utledYtelse(FagsakYtelseType ytelseType) {
+        if (FagsakYtelseType.ENGANGSTØNAD.equals(ytelseType)) {
+            return Persondata.Ytelse.ENGANGSSTØNAD;
+        } else if (FagsakYtelseType.SVANGERSKAPSPENGER.equals(ytelseType)) {
+            return Persondata.Ytelse.SVANGERSKAPSPENGER;
+        } else {
+            return Persondata.Ytelse.FORELDREPENGER;
+        }
     }
 }

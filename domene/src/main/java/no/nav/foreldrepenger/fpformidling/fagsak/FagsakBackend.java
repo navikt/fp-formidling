@@ -8,6 +8,7 @@ public class FagsakBackend {
 
     private AktørId aktørId;
     private Saksnummer saksnummer;
+    private FagsakYtelseType ytelseType;
     private RelasjonsRolleType brukerRolle;
     private Integer dekningsgrad;
 
@@ -20,6 +21,10 @@ public class FagsakBackend {
 
     public Saksnummer getSaksnummer() {
         return saksnummer;
+    }
+
+    public FagsakYtelseType getYtelseType() {
+        return ytelseType;
     }
 
     public RelasjonsRolleType getRelasjonsRolleType() {
@@ -48,6 +53,11 @@ public class FagsakBackend {
 
         public Builder medSaksnummer(String saksnummer) {
             this.kladd.saksnummer = new Saksnummer(saksnummer);
+            return this;
+        }
+
+        public Builder medFagsakYtelseType(FagsakYtelseType ytelseType) {
+            this.kladd.ytelseType = ytelseType;
             return this;
         }
 

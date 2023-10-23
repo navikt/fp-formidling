@@ -5,8 +5,8 @@ import java.util.concurrent.TimeUnit;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
+import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.inntektarbeidytelse.OrganisasjonsNummerValidator;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
@@ -76,7 +76,7 @@ public class ArbeidsgiverTjeneste {
 
     private Optional<Personinfo> hentInformasjonFraTps(String arbeidsgiver) {
         try {
-            return personAdapter.hentBrukerForAktør(new AktørId(arbeidsgiver));
+            return personAdapter.hentBrukerForAktør(FagsakYtelseType.FORELDREPENGER, new AktørId(arbeidsgiver));
         } catch (VLException | IllegalArgumentException feil) {
             // Ønsker ikke å gi GUI problemer ved å eksponere exceptions
             return Optional.empty();

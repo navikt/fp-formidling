@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.Beregningsgrunnlag;
@@ -64,6 +63,7 @@ public class DomeneobjektProvider {
         var fagsakDto = behandlingRestKlient.hentFagsak(behandling.getResourceLinker());
         var fagsak = FagsakBackend.ny()
             .medSaksnummer(fagsakDto.saksnummer())
+            .medFagsakYtelseType(fagsakDto.fagsakYtelseType())
             .medBrukerRolle(fagsakDto.relasjonsRolleType())
             .medAktørId(new AktørId(fagsakDto.aktørId()))
             .medDekningsgrad(fagsakDto.dekningsgrad())

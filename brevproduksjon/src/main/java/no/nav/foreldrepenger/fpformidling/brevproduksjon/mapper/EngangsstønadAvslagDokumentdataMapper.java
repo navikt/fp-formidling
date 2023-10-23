@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
@@ -19,6 +18,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.EngangsstønadAvslagDokumentdata;
@@ -93,14 +93,14 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
 
     String utledRelasjonsRolle(FagsakBackend fagsak) {
         if (!RelasjonsRolleType.erRegistrertForeldre(fagsak.getRelasjonsRolleType())) {
-            return hentKjønnOgMapRelasjonsrolle(fagsak.getAktørId());
+            return hentKjønnOgMapRelasjonsrolle(fagsak.getYtelseType(), fagsak.getAktørId());
         } else {
             return fagsak.getRelasjonsRolleType().toString();
         }
     }
 
-    private String hentKjønnOgMapRelasjonsrolle(AktørId aktørId) {
-        var kjønn = personAdapter.hentBrukerForAktør(aktørId).map(Personinfo::getKjønn).orElseThrow();
+    private String hentKjønnOgMapRelasjonsrolle(FagsakYtelseType ytelseType, AktørId aktørId) {
+        var kjønn = personAdapter.hentBrukerForAktør(ytelseType, aktørId).map(Personinfo::getKjønn).orElseThrow();
         return NavBrukerKjønn.MANN.equals(kjønn) ? RelasjonsRolleType.FARA.getKode() : RelasjonsRolleType.MEDMOR.getKode();
     }
 

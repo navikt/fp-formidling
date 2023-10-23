@@ -30,6 +30,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private VurderingsKode annenForelderHarRettVurdert;
     private VurderingsKode aleneomsorgKode;
     private boolean ikkeOmsorg;
+    private boolean avslagBarnOver3år;
     private boolean barnErFødt;
     private boolean årsakErFødselshendelse;
     private boolean gjelderMor;
@@ -254,6 +255,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     public int getPrematurDager() {
         return prematurDager;
+    }
+
+    public boolean isAvslagBarnOver3år() {
+        return avslagBarnOver3år;
     }
 
     public int getAntallDødeBarn() {
@@ -692,6 +697,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medUtbetalingFom(String utbetalingFom) {
             this.kladd.utbetalingFom = utbetalingFom;
+            return this;
+        }
+
+        public Builder medAvslagBarnOver3år(boolean avslagBarnOver3år) {
+            this.kladd.avslagBarnOver3år = avslagBarnOver3år;
             return this;
         }
 

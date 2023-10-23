@@ -28,6 +28,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFom;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTom;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.sistePeriodeAvslåttPgaBarnOver3år;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.fpformidling.uttak.fp.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.fpformidling.uttak.fp.SaldoVisningStønadskontoType.MINSTERETT;
@@ -143,6 +144,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medBarnErFødt(familieHendelse.barnErFødt())
             .medÅrsakErFødselshendelse(erRevurderingPgaFødselshendelse(behandling, familieHendelse, originalFamiliehendelse))
             .medIkkeOmsorg(finnesPeriodeMedIkkeOmsorg(utbetalingsperioder))
+            .medAvslagBarnOver3år(sistePeriodeAvslåttPgaBarnOver3år(utbetalingsperioder))
             .medGjelderMor(gjelderMor(fagsak))
             .medGjelderFødsel(familieHendelse.gjelderFødsel())
             .medIngenRefusjon(harIngenRefusjon(tilkjentYtelseForeldrepenger))

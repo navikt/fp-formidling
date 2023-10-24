@@ -195,7 +195,7 @@ class UtbetalingsperiodeMergerTest {
         assertThat(likeAktiviteter(utbetalingsperiode1, utbetalingsperiode2)).isTrue();
 
         utbetalingsperiode1 = Utbetalingsperiode.ny()
-            .medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("2").medNaturalytelseNyDagsats(200L).build()))
+            .medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("2").medBruttoInkludertBortfaltNaturalytelsePrAar(200L).build()))
             .build();
         utbetalingsperiode2 = Utbetalingsperiode.ny()
             .medArbeidsforhold(of(Arbeidsforhold.ny().medGradering(false).medNaturalytelseEndringDato("2").build()))

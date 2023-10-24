@@ -195,6 +195,6 @@ public final class UtbetalingsperiodeMerger {
     private static boolean likArbeidsforholdType(Arbeidsforhold arb, Arbeidsforhold arb2) {
         return Objects.equals(arb.getArbeidsgiverNavn(), arb2.getArbeidsgiverNavn()) && Objects.equals(arb.getAktivitetDagsats(),
             arb2.getAktivitetDagsats()) && Objects.equals(arb.getNaturalytelseEndringType(), arb2.getNaturalytelseEndringType()) && Objects.equals(
-            arb.getNaturalytelseNyDagsats(), arb2.getNaturalytelseNyDagsats());
+            arb.getBruttoInkludertBortfaltNaturalytelsePrAar(), arb2.getBruttoInkludertBortfaltNaturalytelsePrAar());
     }
 }

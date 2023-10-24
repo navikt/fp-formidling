@@ -376,12 +376,12 @@ public final class UtbetalingsperiodeMapper {
         for (var årsak : beregningsgrunnlagPeriode.getPeriodeÅrsakKoder()) {
             if (PeriodeÅrsak.NATURALYTELSE_BORTFALT.equals(årsak)) {
                 arbeidsforholdBuilder.medNaturalytelseEndringType(NaturalytelseEndringType.STOPP);
-                arbeidsforholdBuilder.medNaturalytelseNyDagsats((beregningsgrunnlagPeriode.getDagsats()));
                 arbeidsforholdBuilder.medNaturalytelseEndringDato(formaterDato(tilkjentYtelsePeriode.getPeriodeFom(), språkkode));
+                arbeidsforholdBuilder.medBruttoInkludertBortfaltNaturalytelsePrAar(beregningsgrunnlagPeriode.getAvkortetPrÅr().longValue());
             } else if (PeriodeÅrsak.NATURALYTELSE_TILKOMMER.equals(årsak)) {
                 arbeidsforholdBuilder.medNaturalytelseEndringType((NaturalytelseEndringType.START));
-                arbeidsforholdBuilder.medNaturalytelseNyDagsats(beregningsgrunnlagPeriode.getDagsats());
                 arbeidsforholdBuilder.medNaturalytelseEndringDato(formaterDato(tilkjentYtelsePeriode.getPeriodeFom(), språkkode));
+                arbeidsforholdBuilder.medBruttoInkludertBortfaltNaturalytelsePrAar(beregningsgrunnlagPeriode.getAvkortetPrÅr().longValue());
             } else {
                 arbeidsforholdBuilder.medNaturalytelseEndringType(NaturalytelseEndringType.INGEN_ENDRING);
             }

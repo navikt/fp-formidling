@@ -92,21 +92,21 @@ public class DomeneobjektProvider {
 
     public TilkjentYtelseEngangsstønad hentTilkjentYtelseEngangsstønad(Behandling behandling) {
         return TilkjentYtelseDtoMapper.mapTilkjentYtelseESFraDto(
-            behandlingRestKlient.hentTilkjentYtelseEngangsstønad(behandling.getResourceLinker()));
+            behandlingRestKlient.hentTilkjentYtelseEngangsstønad(behandling.getFormidlingRessurser()));
     }
 
     public Optional<TilkjentYtelseEngangsstønad> hentTilkjentYtelseESHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentTilkjentYtelseEngangsstønadHvisFinnes(behandling.getResourceLinker())
+        return behandlingRestKlient.hentTilkjentYtelseEngangsstønadHvisFinnes(behandling.getFormidlingRessurser())
             .map(TilkjentYtelseDtoMapper::mapTilkjentYtelseESFraDto);
     }
 
     public TilkjentYtelseForeldrepenger hentTilkjentYtelseForeldrepenger(Behandling behandling) {
         return TilkjentYtelseDtoMapper.mapTilkjentYtelseDagytelseFraDto(
-            behandlingRestKlient.hentTilkjentYtelseDagytelse(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
+            behandlingRestKlient.hentTilkjentYtelseDagytelse(behandling.getFormidlingRessurser()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<TilkjentYtelseForeldrepenger> hentTilkjentYtelseDagytelseHvisFinnes(Behandling behandling) {
-        return behandlingRestKlient.hentTilkjentYtelseDagytelseHvisFinnes(behandling.getResourceLinker())
+        return behandlingRestKlient.hentTilkjentYtelseDagytelseHvisFinnes(behandling.getFormidlingRessurser())
             .map(r -> TilkjentYtelseDtoMapper.mapTilkjentYtelseDagytelseFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 

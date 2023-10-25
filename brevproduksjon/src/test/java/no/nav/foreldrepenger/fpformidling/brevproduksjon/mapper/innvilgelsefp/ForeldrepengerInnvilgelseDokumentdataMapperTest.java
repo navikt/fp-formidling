@@ -11,12 +11,13 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Da
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardHendelseBuilder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnDagsats;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnMånedsbeløp;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdataMapper.harVarierendeDagsats;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdataMapper.starterMedFullUtbetaling;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp.of;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -53,7 +54,9 @@ import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -66,6 +69,7 @@ import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.SaldoVisningStønadskontoType;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.Saldoer;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.Stønadskonto;
@@ -75,7 +79,6 @@ import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriodeAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.YtelseFordeling;
-import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 
 @ExtendWith(MockitoExtension.class)
@@ -111,18 +114,17 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         behandling = opprettBehandling();
         dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         dokumentHendelse = lagStandardHendelseBuilder().build();
-
-        when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
-        when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
-        lenient().when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
-        when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
-        lenient().when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat());
-        when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
-        when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
     }
 
     @Test
     void skal_mappe_felter_for_brev() {
+        when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
+        when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
+        when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP());
+        when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
+        when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat());
+        when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
+        when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, true);
@@ -207,7 +209,11 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     void SjekkAtTotilkjentPerioderMedEnUttaksperiodeFårRiktigTapteDager() {
-
+        when(domeneobjektProvider.hentFagsakBackend(any(Behandling.class))).thenReturn(opprettFagsakBackend());
+        when(domeneobjektProvider.hentSøknad(any(Behandling.class))).thenReturn(opprettSøknad());
+        when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
+        when(domeneobjektProvider.hentSaldoer(any(Behandling.class))).thenReturn(opprettSaldoer());
+        when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelseFP2());
         when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat2());
@@ -218,6 +224,34 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getPerioder()).hasSize(2);
         assertThat(dokumentdata.getPerioder().get(0).getAntallTapteDager()).isEqualTo(23);
         assertThat(dokumentdata.getPerioder().get(1).getAntallTapteDager()).isEqualTo(23);
+    }
+
+    @Test
+    void varierer_dagsats() {
+        var hundreKronerDagsatsPeriode = Utbetalingsperiode.ny()
+            .medPeriodeDagsats(100)
+            .build();
+        var toHundreKronerDagsatsPeriode = Utbetalingsperiode.ny()
+            .medPeriodeDagsats(200)
+            .build();
+        assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, hundreKronerDagsatsPeriode, toHundreKronerDagsatsPeriode))).isTrue();
+        assertThat(harVarierendeDagsats(List.of(hundreKronerDagsatsPeriode, toHundreKronerDagsatsPeriode))).isTrue();
+        assertThat(harVarierendeDagsats(List.of(hundreKronerDagsatsPeriode, hundreKronerDagsatsPeriode))).isFalse();
+        assertThat(harVarierendeDagsats(List.of())).isFalse();
+    }
+
+    @Test
+    void starter_med_fullutbetaling() {
+        var ingenUtbetaling = Utbetalingsperiode.ny()
+            .medPrioritertUtbetalingsgrad(Prosent.NULL)
+            .build();
+        var fullUtbetaling = Utbetalingsperiode.ny()
+            .medPrioritertUtbetalingsgrad(Prosent.HUNDRE)
+            .build();
+        assertThat(starterMedFullUtbetaling(List.of(ingenUtbetaling))).isFalse();
+        assertThat(starterMedFullUtbetaling(List.of(ingenUtbetaling, fullUtbetaling))).isFalse();
+        assertThat(starterMedFullUtbetaling(List.of(fullUtbetaling))).isTrue();
+        assertThat(starterMedFullUtbetaling(List.of(fullUtbetaling, ingenUtbetaling))).isTrue();
     }
 
     private FagsakBackend opprettFagsakBackend() {

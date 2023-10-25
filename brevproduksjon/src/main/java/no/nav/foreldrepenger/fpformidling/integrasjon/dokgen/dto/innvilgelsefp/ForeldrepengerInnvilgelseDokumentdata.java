@@ -80,6 +80,8 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean ønskerJustertVedFødsel;
 
     private boolean graderingOgFulltUttakIAnnenAktivitet;
+    private boolean varierendeDagsats;
+    private boolean starterMedFullUtbetaling;
 
     public String getBehandlingType() {
         return behandlingType;
@@ -119,6 +121,14 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     public long getSeksG() {
         return seksG;
+    }
+
+    public boolean isVarierendeDagsats() {
+        return varierendeDagsats;
+    }
+
+    public boolean isStarterMedFullUtbetaling() {
+        return starterMedFullUtbetaling;
     }
 
     public boolean getInntektOverSeksG() {
@@ -702,6 +712,16 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medAvslagBarnOver3år(boolean avslagBarnOver3år) {
             this.kladd.avslagBarnOver3år = avslagBarnOver3år;
+            return this;
+        }
+
+        public Builder medHarVarierendeDagsats(boolean varierendeDagsats) {
+            this.kladd.varierendeDagsats = varierendeDagsats;
+            return this;
+        }
+
+        public Builder medStarterMedFullUtbetaling(boolean starterMedFullUtbetaling) {
+            kladd.starterMedFullUtbetaling = starterMedFullUtbetaling;
             return this;
         }
 

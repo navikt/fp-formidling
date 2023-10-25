@@ -1,11 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp;
 
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
-
-import java.util.Objects;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Arbeidsforhold {
@@ -16,7 +16,7 @@ public class Arbeidsforhold {
     private Prosent utbetalingsgrad;
     private NaturalytelseEndringType naturalytelseEndringType;
     private String naturalytelseEndringDato;
-    private long naturalytelseNyDagsats;
+    private long bruttoInkludertBortfaltNaturalytelsePrAar;
 
     @JsonIgnore
     private int aktivitetDagsats;
@@ -37,12 +37,12 @@ public class Arbeidsforhold {
         return naturalytelseEndringType;
     }
 
-    public long getNaturalytelseNyDagsats() {
-        return naturalytelseNyDagsats;
-    }
-
     public int getAktivitetDagsats() {
         return aktivitetDagsats;
+    }
+
+    public long getBruttoInkludertBortfaltNaturalytelsePrAar() {
+        return bruttoInkludertBortfaltNaturalytelsePrAar;
     }
 
     @Override
@@ -57,14 +57,14 @@ public class Arbeidsforhold {
         return Objects.equals(arbeidsgiverNavn, that.arbeidsgiverNavn) && Objects.equals(gradering, that.gradering) && Objects.equals(prosentArbeid,
             that.prosentArbeid) && Objects.equals(stillingsprosent, that.stillingsprosent) && Objects.equals(utbetalingsgrad, that.utbetalingsgrad)
             && Objects.equals(naturalytelseEndringType, that.naturalytelseEndringType) && Objects.equals(naturalytelseEndringDato,
-            that.naturalytelseEndringDato) && Objects.equals(naturalytelseNyDagsats, that.naturalytelseNyDagsats) && Objects.equals(aktivitetDagsats,
-            that.aktivitetDagsats);
+            that.naturalytelseEndringDato) && Objects.equals(bruttoInkludertBortfaltNaturalytelsePrAar, that.bruttoInkludertBortfaltNaturalytelsePrAar)
+            && Objects.equals(aktivitetDagsats, that.aktivitetDagsats);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(arbeidsgiverNavn, gradering, prosentArbeid, stillingsprosent, utbetalingsgrad, naturalytelseEndringType,
-            naturalytelseEndringDato, naturalytelseNyDagsats, aktivitetDagsats);
+            naturalytelseEndringDato, bruttoInkludertBortfaltNaturalytelsePrAar, aktivitetDagsats);
     }
 
     public static Builder ny() {
@@ -113,8 +113,9 @@ public class Arbeidsforhold {
             return this;
         }
 
-        public Builder medNaturalytelseNyDagsats(long naturalytelseNyDagsats) {
-            this.kladd.naturalytelseNyDagsats = naturalytelseNyDagsats;
+
+        public Builder medBruttoInkludertBortfaltNaturalytelsePrAar(long bruttoInkludertBortfaltNaturalytelsePrAar) {
+            this.kladd.bruttoInkludertBortfaltNaturalytelsePrAar = bruttoInkludertBortfaltNaturalytelsePrAar;
             return this;
         }
 

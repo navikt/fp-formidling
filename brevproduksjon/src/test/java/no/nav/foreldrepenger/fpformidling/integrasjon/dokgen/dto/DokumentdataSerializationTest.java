@@ -58,7 +58,7 @@ class DokumentdataSerializationTest {
             .medUtbetalingsgrad(Prosent.HUNDRE)
             .medNaturalytelseEndringType(NaturalytelseEndringType.INGEN_ENDRING)
             .medNaturalytelseEndringDato(formaterDatoNorsk(LocalDate.now().minusDays(5)))
-            .medNaturalytelseNyDagsats(500)
+            .medBruttoInkludertBortfaltNaturalytelsePrAar(48200)
             .build();
         var arbeidsforhold2 = Arbeidsforhold.ny()
             .medArbeidsgiverNavn("Arbeidsgiver 2")
@@ -68,7 +68,7 @@ class DokumentdataSerializationTest {
             .medUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(30.55)))
             .medNaturalytelseEndringType(NaturalytelseEndringType.START)
             .medNaturalytelseEndringDato(formaterDatoNorsk(LocalDate.now().minusDays(50)))
-            .medNaturalytelseNyDagsats(200)
+            .medBruttoInkludertBortfaltNaturalytelsePrAar(52200)
             .build();
         var næring = Næring.ny()
             .medGradering(true)

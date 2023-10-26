@@ -15,7 +15,6 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private String behandlingType;
     private String behandlingResultatType;
     private String konsekvensForInnvilgetYtelse;
-    private String søknadsdato;
     private int dekningsgrad;
     private boolean harUtbetaling;
     private long dagsats;
@@ -93,10 +92,6 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     public String getKonsekvensForInnvilgetYtelse() {
         return konsekvensForInnvilgetYtelse;
-    }
-
-    public String getSøknadsdato() {
-        return søknadsdato;
     }
 
     public int getDekningsgrad() {
@@ -349,8 +344,8 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         }
         var that = (ForeldrepengerInnvilgelseDokumentdata) object;
         return Objects.equals(felles, that.felles) && Objects.equals(behandlingType, that.behandlingType) && Objects.equals(behandlingResultatType,
-            that.behandlingResultatType) && Objects.equals(konsekvensForInnvilgetYtelse, that.konsekvensForInnvilgetYtelse) && Objects.equals(
-            søknadsdato, that.søknadsdato) && Objects.equals(dekningsgrad, that.dekningsgrad) && Objects.equals(harUtbetaling, that.harUtbetaling)
+            that.behandlingResultatType) && Objects.equals(konsekvensForInnvilgetYtelse, that.konsekvensForInnvilgetYtelse)
+            && Objects.equals(dekningsgrad, that.dekningsgrad) && Objects.equals(harUtbetaling, that.harUtbetaling)
             && Objects.equals(dagsats, that.dagsats) && Objects.equals(månedsbeløp, that.månedsbeløp) && Objects.equals(seksG, that.seksG)
             && Objects.equals(inntektOverSeksG, that.inntektOverSeksG) && Objects.equals(forMyeUtbetalt, that.forMyeUtbetalt) && Objects.equals(
             inntektMottattArbeidsgiver, that.inntektMottattArbeidsgiver) && Objects.equals(annenForelderHarRett, that.annenForelderHarRett)
@@ -383,7 +378,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, søknadsdato, dekningsgrad, harUtbetaling,
+        return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, dekningsgrad, harUtbetaling,
             dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver, annenForelderHarRett,
             annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse, gjelderMor, gjelderFødsel, erBesteberegning,
             seksAvDeTiBeste, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget, annenForelderRettEØS, oppgittAnnenForelderRettEØS, antallPerioder,
@@ -423,11 +418,6 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medKonsekvensForInnvilgetYtelse(String konsekvensForInnvilgetYtelse) {
             this.kladd.konsekvensForInnvilgetYtelse = konsekvensForInnvilgetYtelse;
-            return this;
-        }
-
-        public Builder medSøknadsdato(String søknadsdato) {
-            this.kladd.søknadsdato = søknadsdato;
             return this;
         }
 

@@ -8,6 +8,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
@@ -83,6 +85,64 @@ class UtbetalingsperiodeMergerTest {
         assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
         assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
         assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+    }
+
+    @Test
+    void skal_ikke_slå_sammen_perioder_med_forskjellig_tidligst_mottatt_dato_og_avslått_pga_søknadsfrist() {
+        // Arrange
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medPeriodeFom(PERIODE1_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE1_TOM, Språkkode.NB)
+            .medPeriodeDagsats(2000)
+            .medÅrsak(Årsak.of(PeriodeResultatÅrsak.SØKNADSFRIST.getKode()))
+            .medTidligstMottattDato(PERIODE1_FOM, Språkkode.NB)
+            .build();
+        var utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medPeriodeFom(PERIODE2_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM, Språkkode.NB)
+            .medPeriodeDagsats(2000)
+            .medÅrsak(Årsak.of(PeriodeResultatÅrsak.SØKNADSFRIST.getKode()))
+            .medTidligstMottattDato(PERIODE2_FOM, Språkkode.NB)
+            .build();
+
+        // Act
+        var resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
+
+        // Assert
+        assertThat(resultat).hasSize(2);
+        assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
+        assertThat(resultat.get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
+        assertThat(resultat.get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+    }
+
+    @Test
+    void skal_slå_sammen_perioder_med_lik_tidligst_mottatt_dato_og_avslått_pga_søknadsfrist() {
+        // Arrange
+        var utbetalingsperiode1 = Utbetalingsperiode.ny()
+            .medPeriodeFom(PERIODE1_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE1_TOM, Språkkode.NB)
+            .medPeriodeDagsats(2000)
+            .medÅrsak(Årsak.of(PeriodeResultatÅrsak.SØKNADSFRIST.getKode()))
+            .medTidligstMottattDato(PERIODE1_FOM, Språkkode.NB)
+            .medAntallTapteDager(0, BigDecimal.ZERO)
+            .build();
+        var utbetalingsperiode2 = Utbetalingsperiode.ny()
+            .medPeriodeFom(PERIODE2_FOM, Språkkode.NB)
+            .medPeriodeTom(PERIODE2_TOM, Språkkode.NB)
+            .medPeriodeDagsats(2000)
+            .medÅrsak(Årsak.of(PeriodeResultatÅrsak.SØKNADSFRIST.getKode()))
+            .medTidligstMottattDato(PERIODE1_FOM, Språkkode.NB)
+            .medAntallTapteDager(0, BigDecimal.ZERO)
+            .build();
+
+        // Act
+        var resultat = UtbetalingsperiodeMerger.mergePerioder(asList(utbetalingsperiode1, utbetalingsperiode2));
+
+        // Assert
+        assertThat(resultat).hasSize(1);
+        assertThat(resultat.get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(resultat.get(0).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
     }
 
     @Test

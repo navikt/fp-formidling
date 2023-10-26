@@ -35,6 +35,7 @@ public class Utbetalingsperiode {
     private List<Arbeidsforhold> arbeidsforholdsliste = new ArrayList<>();
     private Næring næring;
     private List<AnnenAktivitet> annenAktivitetsliste = new ArrayList<>();
+    private String tidligstMottattDato;
     @JsonIgnore
     private Språkkode språkkode;
     @JsonIgnore
@@ -96,6 +97,10 @@ public class Utbetalingsperiode {
         return tapteDagerTemp;
     }
 
+    public String getTidligstMottattDato() {
+        return tidligstMottattDato;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -109,13 +114,13 @@ public class Utbetalingsperiode {
             && Objects.equals(periodeTom, that.periodeTom) && Objects.equals(periodeDagsats, that.periodeDagsats) && Objects.equals(antallTapteDager,
             that.antallTapteDager) && Objects.equals(prioritertUtbetalingsgrad, that.prioritertUtbetalingsgrad) && Objects.equals(
             arbeidsforholdsliste, that.arbeidsforholdsliste) && Objects.equals(næring, that.næring) && Objects.equals(annenAktivitetsliste,
-            that.annenAktivitetsliste);
+            that.annenAktivitetsliste) && Objects.equals(tidligstMottattDato, that.tidligstMottattDato);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(innvilget, årsak, periodeFom, periodeTom, periodeDagsats, antallTapteDager, prioritertUtbetalingsgrad,
-            arbeidsforholdsliste, næring, annenAktivitetsliste);
+            arbeidsforholdsliste, næring, annenAktivitetsliste, tidligstMottattDato);
     }
 
     public static Builder ny() {
@@ -188,6 +193,15 @@ public class Utbetalingsperiode {
 
         public Builder medAnnenAktivitet(List<AnnenAktivitet> annenAktivitetsListe) {
             this.kladd.annenAktivitetsliste = annenAktivitetsListe;
+            return this;
+        }
+        public Builder medTidligstMottattDato( LocalDate tidligstMottattDato, Språkkode språkkode) {
+            this.kladd.tidligstMottattDato = formaterDato(tidligstMottattDato, språkkode);
+            return this;
+        }
+
+        public Builder medTidligstMottattDatoAlleredeFormatert(String tidligstMottattDato) {
+            this.kladd.tidligstMottattDato = tidligstMottattDato;
             return this;
         }
 

@@ -165,7 +165,8 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medPrematurDager(finnPrematurDagerHvisFinnes(saldoer))
             .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen())
             .medUtbetalingsperioder(utbetalingsperioder)
-
+            .medHarVarierendeDagsats(harVarierendeDagsats(utbetalingsperioder))
+            .medStarterMedFullUtbetaling(starterMedFullUtbetaling(utbetalingsperioder))
             .medKlagefristUker(brevParametere.getKlagefristUker())
             .medLovhjemlerUttak(UttakMapper.mapLovhjemlerForUttak(uttakResultatPerioder, konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
             .medLovhjemlerBeregning(
@@ -198,6 +199,21 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             dokumentdataBuilder.medAntallDødeBarn(0);
         }
         return dokumentdataBuilder.build();
+    }
+
+    static boolean starterMedFullUtbetaling(List<Utbetalingsperiode> utbetalingsperioder) {
+        if (utbetalingsperioder.isEmpty()) {
+            return false;
+        }
+        return utbetalingsperioder.get(0).getPrioritertUtbetalingsgrad().erFull();
+    }
+
+    static boolean harVarierendeDagsats(List<Utbetalingsperiode> utbetalingsperioder) {
+        if (utbetalingsperioder.isEmpty()) {
+            return false;
+        }
+        var førstePeriodeDagsats = utbetalingsperioder.get(0).getPeriodeDagsats();
+        return utbetalingsperioder.stream().anyMatch(p -> p.getPeriodeDagsats() != førstePeriodeDagsats);
     }
 
     private Optional<LocalDate> finnUtbetalingFom(List<Utbetalingsperiode> utbetalingsperioder) {

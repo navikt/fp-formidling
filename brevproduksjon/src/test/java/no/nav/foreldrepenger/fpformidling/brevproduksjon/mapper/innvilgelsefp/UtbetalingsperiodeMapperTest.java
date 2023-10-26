@@ -292,6 +292,7 @@ class UtbetalingsperiodeMapperTest {
             .medTidsperiode(tidsperiode)
             .medPeriodeResultatÅrsak(PeriodeResultatÅrsak.HULL_MELLOM_FORELDRENES_PERIODER)
             .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medTidligstMottattDato(tidsperiode.getFomDato())
             .build();
         var uttaksPerioder = uttak(of(uPeriode), of());
         var bgPeriode = BeregningsgrunnlagPeriode.ny().medPeriode(tidsperiode).build();

@@ -218,7 +218,8 @@ public final class UtbetalingsperiodeMapper {
             .medArbeidsforhold(arbeidsfoholdListe)
             .medNæring(næring)
             .medAnnenAktivitet(annenAktivitetListe)
-            .medPrioritertUtbetalingsgrad(finnPrioritertUtbetalingsgrad(arbeidsfoholdListe, næring, annenAktivitetListe));
+            .medPrioritertUtbetalingsgrad(finnPrioritertUtbetalingsgrad(arbeidsfoholdListe, næring, annenAktivitetListe))
+            .medTidligstMottattDato(uttakResultatPeriode.getTidligstMottattDato(), språkkode);
 
         if (tilkjentYtelsePeriode.getDagsats() != null) {
             utbetalingsPerioder.medPeriodeDagsats(tilkjentYtelsePeriode.getDagsats());

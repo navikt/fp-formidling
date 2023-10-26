@@ -18,6 +18,7 @@ public class UttakResultatPeriodeDto {
     private String graderingAvslagÅrsak;
     private String periodeResultatÅrsakLovhjemmel;
     private String graderingsAvslagÅrsakLovhjemmel;
+    private LocalDate tidligstMottattDato;
 
     private UttakResultatPeriodeDto() {
 
@@ -54,6 +55,10 @@ public class UttakResultatPeriodeDto {
 
     public String getGraderingsAvslagÅrsakLovhjemmel() {
         return graderingsAvslagÅrsakLovhjemmel;
+    }
+
+    public LocalDate getTidligstMottattDato() {
+        return tidligstMottattDato;
     }
 
     @JsonProperty("gradertAktivitet")

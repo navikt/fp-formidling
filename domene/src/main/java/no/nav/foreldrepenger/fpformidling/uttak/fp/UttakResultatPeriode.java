@@ -13,6 +13,7 @@ public class UttakResultatPeriode {
     private final PeriodeResultatÅrsak graderingAvslagÅrsak;
     private final PeriodeResultatType periodeResultatType;
     private final List<UttakResultatPeriodeAktivitet> aktiviteter;
+    private final LocalDate tidligstMottattDato;
 
     private UttakResultatPeriode(Builder builder) {
         periodeResultatÅrsak = builder.periodeResultatÅrsak;
@@ -20,6 +21,7 @@ public class UttakResultatPeriode {
         graderingAvslagÅrsak = builder.graderingAvslagÅrsak;
         periodeResultatType = builder.periodeResultatType;
         aktiviteter = builder.aktiviteter;
+        tidligstMottattDato = builder.tidligstMottattDato;
     }
 
     public static Builder ny() {
@@ -58,6 +60,9 @@ public class UttakResultatPeriode {
         return aktiviteter.stream().anyMatch(UttakResultatPeriodeAktivitet::getGraderingInnvilget);
     }
 
+    public LocalDate getTidligstMottattDato() {
+        return tidligstMottattDato;
+    }
 
     public static final class Builder {
         private PeriodeResultatÅrsak periodeResultatÅrsak;
@@ -65,6 +70,7 @@ public class UttakResultatPeriode {
         private PeriodeResultatÅrsak graderingAvslagÅrsak;
         private PeriodeResultatType periodeResultatType;
         private List<UttakResultatPeriodeAktivitet> aktiviteter = new ArrayList<>();
+        private LocalDate tidligstMottattDato;
 
         private Builder() {
         }
@@ -91,6 +97,11 @@ public class UttakResultatPeriode {
 
         public Builder medAktiviteter(List<UttakResultatPeriodeAktivitet> aktiviteter) {
             this.aktiviteter = aktiviteter;
+            return this;
+        }
+
+        public Builder medTidligstMottattDato(LocalDate tidligstMottattDato) {
+            this.tidligstMottattDato = tidligstMottattDato;
             return this;
         }
 

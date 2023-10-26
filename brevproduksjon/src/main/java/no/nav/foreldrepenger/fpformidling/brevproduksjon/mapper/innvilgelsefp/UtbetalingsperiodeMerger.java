@@ -13,6 +13,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.A
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
 
 public final class UtbetalingsperiodeMerger {
 
@@ -64,6 +65,7 @@ public final class UtbetalingsperiodeMerger {
             .medArbeidsforhold(periodeEn.getArbeidsforholdsliste())
             .medNæring(periodeEn.getNæring())
             .medAnnenAktivitet(periodeEn.getAnnenAktivitetsliste())
+            .medTidligstMottattDatoAlleredeFormatert(periodeEn.getTidligstMottattDato())
             .build();
     }
 
@@ -80,7 +82,15 @@ public final class UtbetalingsperiodeMerger {
 
     private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
         return sammeStatusOgÅrsak(periodeEn, periodeTo) && likPeriodeDagsats(periodeEn, periodeTo) && likeAktiviteter(periodeEn, periodeTo)
-            && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom());
+            && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom()) && hvisAvslåttSøknadsfristLikeTidligstMottattDato(periodeEn, periodeTo);
+    }
+
+    private static boolean hvisAvslåttSøknadsfristLikeTidligstMottattDato(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+        if (periodeEn.getÅrsak() != null && PeriodeResultatÅrsak.SØKNADSFRIST.getKode().equals((periodeEn.getÅrsak()).getKode())) {
+            return Objects.equals(periodeEn.getÅrsak(), periodeTo.getÅrsak()) && periodeEn.getTidligstMottattDato().equals(periodeTo.getTidligstMottattDato());
+        } else {
+            return true;
+        }
     }
 
     static boolean likeAktiviteter(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {

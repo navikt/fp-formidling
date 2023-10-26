@@ -70,9 +70,8 @@ public final class BeregningMapper {
         return resultat;
     }
 
-    // Spesielt for SVP: avkortetPerÅr gir faktisk beregningsgrunnlag for alle arbeidsforhold, og ikke bare arbeidsforholdet det søkes om
     public static BigDecimal getAvkortetPrÅrSVP(Beregningsgrunnlag beregningsgrunnlag) {
-        return finnFørstePeriode(beregningsgrunnlag).getAvkortetPrÅr();
+        return finnFørstePeriode(beregningsgrunnlag).getBruttoPrÅr();
     }
 
     public static boolean erMilitærSivil(Beregningsgrunnlag beregningsgrunnlag) {

@@ -77,7 +77,7 @@ public interface Behandlinger {
 
     default Optional<no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseEngangsstønadDto> hentTilkjentYtelseEngangsstønadHvisFinnesV2(List<BehandlingResourceLink> resourceLinker) {
         return resourceLinker.stream()
-            .filter(dto -> "\"tilkjentytelse-engangsstonad".equals(dto.getRel()))
+            .filter(dto -> "tilkjentytelse-engangsstonad".equals(dto.getRel()))
             .findFirst()
             .flatMap(link -> hentDtoFraLink(link, no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseEngangsstønadDto.class));
     }

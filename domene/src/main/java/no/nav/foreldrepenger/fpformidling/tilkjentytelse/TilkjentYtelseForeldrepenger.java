@@ -2,6 +2,7 @@ package no.nav.foreldrepenger.fpformidling.tilkjentytelse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TilkjentYtelseForeldrepenger {
     private List<TilkjentYtelsePeriode> perioder;
@@ -16,6 +17,26 @@ public class TilkjentYtelseForeldrepenger {
 
     public List<TilkjentYtelsePeriode> getPerioder() {
         return perioder;
+    }
+
+    @Override
+    public String toString() {
+        return "TilkjentYtelseForeldrepenger{" + "perioder=" + perioder + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        TilkjentYtelseForeldrepenger that = (TilkjentYtelseForeldrepenger) o;
+        return Objects.equals(perioder, that.perioder);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(perioder);
     }
 
     public static final class Builder {

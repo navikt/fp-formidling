@@ -23,6 +23,18 @@ public record Arbeidsgiver(String arbeidsgiverReferanse, String navn) {
 
     @Override
     public String toString() {
-        return "Arbeidsgiver{" + "arbeidsgiverReferanse='" + arbeidsgiverReferanse + '\'' + '}';
+        return "Arbeidsgiver{" + "arbeidsgiverReferanse='" + tilMaskertNummer(arbeidsgiverReferanse) + '\'' + '}';
     }
+
+    public static String tilMaskertNummer(String orgNummer) {
+        if (orgNummer == null) {
+            return null;
+        }
+        var length = orgNummer.length();
+        if (length <= 4) {
+            return "*".repeat(length);
+        }
+        return "*".repeat(length - 4) + orgNummer.substring(length - 4);
+    }
+
 }

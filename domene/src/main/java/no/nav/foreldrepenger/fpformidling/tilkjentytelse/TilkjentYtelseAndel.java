@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.tilkjentytelse;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
@@ -26,6 +27,31 @@ public class TilkjentYtelseAndel {
         erBrukerMottaker = builder.erBrukerMottaker;
         erArbeidsgiverMottaker = builder.erArbeidsgiverMottaker;
         utbetalesTilBruker = builder.utbetalesTilBruker;
+    }
+
+    @Override
+    public String toString() {
+        return "TilkjentYtelseAndel{" + "dagsats=" + dagsats + ", aktivitetStatus=" + aktivitetStatus + ", erArbeidsgiverMottaker="
+            + erArbeidsgiverMottaker + ", stillingsprosent=" + stillingsprosent + ", arbeidsgiver=" + arbeidsgiver + ", arbeidsforholdRef="
+            + arbeidsforholdRef + ", erBrukerMottaker=" + erBrukerMottaker + ", utbetalesTilBruker=" + utbetalesTilBruker + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        TilkjentYtelseAndel that = (TilkjentYtelseAndel) o;
+        return dagsats == that.dagsats && erArbeidsgiverMottaker == that.erArbeidsgiverMottaker && erBrukerMottaker == that.erBrukerMottaker
+            && utbetalesTilBruker == that.utbetalesTilBruker && aktivitetStatus == that.aktivitetStatus && Objects.equals(stillingsprosent,
+            that.stillingsprosent) && Objects.equals(arbeidsgiver, that.arbeidsgiver) && Objects.equals(arbeidsforholdRef, that.arbeidsforholdRef);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dagsats, aktivitetStatus, erArbeidsgiverMottaker, stillingsprosent, arbeidsgiver, arbeidsforholdRef, erBrukerMottaker,
+            utbetalesTilBruker);
     }
 
     public static Builder ny() {

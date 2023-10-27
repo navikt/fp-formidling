@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
@@ -23,6 +24,28 @@ public class TilkjentYtelsePeriode {
             .map(TilkjentYtelseAndel::getUtbetalesTilBruker)
             .mapToInt(Integer::intValue)
             .sum()).longValue();
+    }
+
+    @Override
+    public String toString() {
+        return "TilkjentYtelsePeriode{" + "dagsats=" + dagsats + ", periode=" + periode + ", utbetaltTilSøker=" + utbetaltTilSøker + ", andeler="
+            + andeler + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        TilkjentYtelsePeriode that = (TilkjentYtelsePeriode) o;
+        return Objects.equals(dagsats, that.dagsats) && Objects.equals(periode, that.periode) && Objects.equals(utbetaltTilSøker,
+            that.utbetaltTilSøker) && Objects.equals(andeler, that.andeler);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dagsats, periode, utbetaltTilSøker, andeler);
     }
 
     public static Builder ny() {

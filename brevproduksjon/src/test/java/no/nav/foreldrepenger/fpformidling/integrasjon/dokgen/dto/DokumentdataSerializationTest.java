@@ -140,7 +140,6 @@ class DokumentdataSerializationTest {
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD.name())
             .medBehandlingResultatType(BehandlingResultatType.INNVILGET.name())
             .medKonsekvensForInnvilgetYtelse(KonsekvensForYtelsen.ENDRING_I_BEREGNING_OG_UTTAK.name())
-            .medSøknadsdato(formaterDatoNorsk(LocalDate.now()))
             .medDekningsgrad(80)
             .medDagsats(100)
             .medMånedsbeløp(200)

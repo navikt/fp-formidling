@@ -129,7 +129,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medBehandlingType(behandling.getBehandlingType().name())
             .medBehandlingResultatType(behandling.getBehandlingsresultat().getBehandlingResultatType().name())
             .medKonsekvensForInnvilgetYtelse(konsekvensForInnvilgetYtelse)
-            .medSøknadsdato(formaterDato(søknad.mottattDato(), språkkode))
             .medDekningsgrad(Optional.ofNullable(fagsak.getDekningsgrad()).orElseThrow())
             .medHarUtbetaling(harUtbetaling(tilkjentYtelseForeldrepenger))
             .medDagsats(dagsats)

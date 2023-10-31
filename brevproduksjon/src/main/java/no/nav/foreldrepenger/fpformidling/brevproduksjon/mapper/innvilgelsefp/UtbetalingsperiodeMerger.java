@@ -61,6 +61,7 @@ public final class UtbetalingsperiodeMerger {
             .medPeriodeDagsats(periodeEn.getPeriodeDagsats())
             .medAntallTapteDager(finnRiktigAntallTapteDager(periodeEn, periodeTo), BigDecimal.ZERO)
             .medPrioritertUtbetalingsgrad(periodeEn.getPrioritertUtbetalingsgrad())
+            .medFullUtbetaling(periodeEn.isFullUtbetaling())
             .medStønadskontoType(periodeEn.getStønadskontoType())
             .medArbeidsforhold(periodeEn.getArbeidsforholdsliste())
             .medNæring(periodeEn.getNæring())

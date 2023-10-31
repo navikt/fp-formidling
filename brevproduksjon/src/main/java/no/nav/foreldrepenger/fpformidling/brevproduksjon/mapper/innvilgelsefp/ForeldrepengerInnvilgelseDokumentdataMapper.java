@@ -204,7 +204,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         if (utbetalingsperioder.isEmpty()) {
             return false;
         }
-        return utbetalingsperioder.get(0).getPrioritertUtbetalingsgrad().erFull();
+        return utbetalingsperioder.get(0).isFullUtbetaling();
     }
 
     static boolean harVarierendeDagsats(List<Utbetalingsperiode> utbetalingsperioder) {

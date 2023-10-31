@@ -219,6 +219,7 @@ public final class UtbetalingsperiodeMapper {
             .medNæring(næring)
             .medAnnenAktivitet(annenAktivitetListe)
             .medPrioritertUtbetalingsgrad(finnPrioritertUtbetalingsgrad(arbeidsfoholdListe, næring, annenAktivitetListe))
+            .medFullUtbetaling(erFullUtbetaling(uttakResultatPeriode))
             .medTidligstMottattDato(uttakResultatPeriode.getTidligstMottattDato(), språkkode);
 
         if (tilkjentYtelsePeriode.getDagsats() != null) {
@@ -226,6 +227,10 @@ public final class UtbetalingsperiodeMapper {
         }
 
         return utbetalingsPerioder.build();
+    }
+
+    private static boolean erFullUtbetaling(UttakResultatPeriode uttakResultatPeriode) {
+        return uttakResultatPeriode.getAktiviteter().stream().allMatch(a -> Prosent.of(a.getUtbetalingsprosent()).erFull());
     }
 
     private static StønadskontoType hentStønadskontoType(UttakResultatPeriode uttakResultatPeriode) {

@@ -243,8 +243,10 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     void starter_med_fullutbetaling() {
         var ingenUtbetaling = Utbetalingsperiode.ny()
             .medPrioritertUtbetalingsgrad(Prosent.NULL)
+            .medFullUtbetaling(false)
             .build();
         var fullUtbetaling = Utbetalingsperiode.ny()
+            .medFullUtbetaling(true)
             .medPrioritertUtbetalingsgrad(Prosent.HUNDRE)
             .build();
         assertThat(starterMedFullUtbetaling(List.of(ingenUtbetaling))).isFalse();

@@ -32,6 +32,8 @@ public class Utbetalingsperiode {
     private long periodeDagsats;
     private int antallTapteDager;
     private Prosent prioritertUtbetalingsgrad = Prosent.NULL;
+    @JsonIgnore
+    private boolean fullUtbetaling;
     private List<Arbeidsforhold> arbeidsforholdsliste = new ArrayList<>();
     private Næring næring;
     private List<AnnenAktivitet> annenAktivitetsliste = new ArrayList<>();
@@ -71,6 +73,10 @@ public class Utbetalingsperiode {
 
     public int getAntallTapteDager() {
         return antallTapteDager;
+    }
+
+    public boolean isFullUtbetaling() {
+        return fullUtbetaling;
     }
 
     public Prosent getPrioritertUtbetalingsgrad() {
@@ -114,13 +120,13 @@ public class Utbetalingsperiode {
             && Objects.equals(periodeTom, that.periodeTom) && Objects.equals(periodeDagsats, that.periodeDagsats) && Objects.equals(antallTapteDager,
             that.antallTapteDager) && Objects.equals(prioritertUtbetalingsgrad, that.prioritertUtbetalingsgrad) && Objects.equals(
             arbeidsforholdsliste, that.arbeidsforholdsliste) && Objects.equals(næring, that.næring) && Objects.equals(annenAktivitetsliste,
-            that.annenAktivitetsliste) && Objects.equals(tidligstMottattDato, that.tidligstMottattDato);
+            that.annenAktivitetsliste) && Objects.equals(tidligstMottattDato, that.tidligstMottattDato) && Objects.equals(fullUtbetaling, that.fullUtbetaling);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(innvilget, årsak, periodeFom, periodeTom, periodeDagsats, antallTapteDager, prioritertUtbetalingsgrad,
-            arbeidsforholdsliste, næring, annenAktivitetsliste, tidligstMottattDato);
+            arbeidsforholdsliste, næring, annenAktivitetsliste, tidligstMottattDato, fullUtbetaling);
     }
 
     public static Builder ny() {
@@ -178,6 +184,11 @@ public class Utbetalingsperiode {
 
         public Builder medPrioritertUtbetalingsgrad(Prosent prioritertUtbetalingsgrad) {
             this.kladd.prioritertUtbetalingsgrad = prioritertUtbetalingsgrad;
+            return this;
+        }
+
+        public Builder medFullUtbetaling(boolean fullUtbetaling) {
+            this.kladd.fullUtbetaling = fullUtbetaling;
             return this;
         }
 

@@ -40,7 +40,14 @@ public class TilkjentYtelsePeriode {
             return false;
         TilkjentYtelsePeriode that = (TilkjentYtelsePeriode) o;
         return Objects.equals(dagsats, that.dagsats) && Objects.equals(periode, that.periode) && Objects.equals(utbetaltTilSøker,
-            that.utbetaltTilSøker) && Objects.equals(andeler, that.andeler);
+            that.utbetaltTilSøker) && likeAndeler(andeler, that.andeler);
+    }
+
+    private boolean likeAndeler(List<TilkjentYtelseAndel> liste1, List<TilkjentYtelseAndel> liste2) {
+        if (liste1 != null && liste2 != null) {
+            return liste1.size() == liste2.size() && liste1.containsAll(liste2);
+        }
+        return Objects.equals(liste1, liste2);
     }
 
     @Override

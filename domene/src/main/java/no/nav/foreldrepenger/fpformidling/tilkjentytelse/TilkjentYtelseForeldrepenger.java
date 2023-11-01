@@ -31,6 +31,10 @@ public class TilkjentYtelseForeldrepenger {
         if (o == null || getClass() != o.getClass())
             return false;
         TilkjentYtelseForeldrepenger that = (TilkjentYtelseForeldrepenger) o;
+        if (perioder != null && that.perioder != null) {
+            return perioder.size() == that.perioder.size()
+                && perioder.containsAll(that.perioder);
+        }
         return Objects.equals(perioder, that.perioder);
     }
 

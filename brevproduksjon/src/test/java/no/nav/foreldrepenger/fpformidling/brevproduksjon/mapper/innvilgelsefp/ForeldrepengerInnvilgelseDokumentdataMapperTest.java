@@ -204,6 +204,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.isOppgittAnnenForelderRettEØS()).isTrue();
         assertThat(dokumentdata.isØnskerJustertVedFødsel()).isTrue();
         assertThat(dokumentdata.isGraderingOgFulltUttakIAnnenAktivitet()).isFalse();
+        assertThat(dokumentdata.isGraderingOgFlereArbeidsforhold()).isFalse();
     }
 
     @Test

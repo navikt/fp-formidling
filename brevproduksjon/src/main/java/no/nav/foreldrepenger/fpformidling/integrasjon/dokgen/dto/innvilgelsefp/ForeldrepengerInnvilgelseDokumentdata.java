@@ -81,6 +81,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean graderingOgFulltUttakIAnnenAktivitet;
     private boolean varierendeDagsats;
     private boolean starterMedFullUtbetaling;
+    private boolean graderingOgFlereArbeidsforhold;
 
     public String getBehandlingType() {
         return behandlingType;
@@ -100,6 +101,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     public boolean getHarUtbetaling() {
         return harUtbetaling;
+    }
+
+    public boolean isGraderingOgFlereArbeidsforhold() {
+        return graderingOgFlereArbeidsforhold;
     }
 
     public String getUtbetalingFom() {
@@ -712,6 +717,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medStarterMedFullUtbetaling(boolean starterMedFullUtbetaling) {
             kladd.starterMedFullUtbetaling = starterMedFullUtbetaling;
+            return this;
+        }
+
+        public Builder medGraderingOgFlereArbeidsforhold(boolean graderingOgFlereArbeidsforhold) {
+            kladd.graderingOgFlereArbeidsforhold = graderingOgFlereArbeidsforhold;
             return this;
         }
 

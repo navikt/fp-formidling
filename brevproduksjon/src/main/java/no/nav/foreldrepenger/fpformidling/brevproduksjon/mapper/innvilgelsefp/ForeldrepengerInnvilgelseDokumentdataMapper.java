@@ -166,6 +166,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medUtbetalingsperioder(utbetalingsperioder)
             .medHarVarierendeDagsats(harVarierendeDagsats(utbetalingsperioder))
             .medStarterMedFullUtbetaling(starterMedFullUtbetaling(utbetalingsperioder))
+            .medGraderingOgFlereArbeidsforhold(graderingOgFlereArbeidsforhold(utbetalingsperioder))
             .medKlagefristUker(brevParametere.getKlagefristUker())
             .medLovhjemlerUttak(UttakMapper.mapLovhjemlerForUttak(uttakResultatPerioder, konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
             .medLovhjemlerBeregning(
@@ -200,6 +201,15 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         return dokumentdataBuilder.build();
     }
 
+    private boolean graderingOgFlereArbeidsforhold(List<Utbetalingsperiode> utbetalingsperioder) {
+        return utbetalingsperioder.stream().anyMatch(p -> periodeHarGradering(p) && antallArbeidsforhold(p) > 1);
+    }
+
+    private static int antallArbeidsforhold(Utbetalingsperiode p) {
+        var erSN = p.getNæring() != null;
+        return p.getArbeidsforholdsliste().size() + (erSN ? 1 : 0) + p.getAnnenAktivitetsliste().size();
+    }
+
     static boolean starterMedFullUtbetaling(List<Utbetalingsperiode> utbetalingsperioder) {
         if (utbetalingsperioder.isEmpty()) {
             return false;
@@ -212,7 +222,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             return false;
         }
         var førstePeriodeDagsats = utbetalingsperioder.get(0).getPeriodeDagsats();
-        return utbetalingsperioder.stream().anyMatch(p -> p.getPeriodeDagsats() != førstePeriodeDagsats);
+        return utbetalingsperioder.stream().anyMatch(p -> p.getPeriodeDagsats() > 0 && p.getPeriodeDagsats() != førstePeriodeDagsats);
     }
 
     private Optional<LocalDate> finnUtbetalingFom(List<Utbetalingsperiode> utbetalingsperioder) {

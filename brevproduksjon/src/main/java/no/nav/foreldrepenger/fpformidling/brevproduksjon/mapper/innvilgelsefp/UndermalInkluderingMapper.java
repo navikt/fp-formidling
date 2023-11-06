@@ -19,10 +19,11 @@ public final class UndermalInkluderingMapper {
         if (KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvens)) {
             return false;
         }
-        return utbetalingsperioder.stream().filter(Utbetalingsperiode::isInnvilget).count() > 1
+        var innvilgetPerioder = utbetalingsperioder.stream().filter(Utbetalingsperiode::isInnvilget).toList();
+        return innvilgetPerioder.size() > 1
             || erRevurderingMedEndringIUttak(konsekvens)
-            || harKunEnPeriodeMedGradering(utbetalingsperioder)
-            || harKunEnPeriodeMedOverføring(utbetalingsperioder);
+            || harKunEnPeriodeMedGradering(innvilgetPerioder)
+            || harKunEnPeriodeMedOverføring(innvilgetPerioder);
     }
 
     public static boolean skalInkludereAvslag(List<Utbetalingsperiode> utbetalingsperioder, String konsekvens) {

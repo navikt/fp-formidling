@@ -24,9 +24,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.KlageDtoMappe
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.MottattDokumentDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.StønadskontoDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.SøknadDtoMapper;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.TilkjentYtelseDiffSjekk;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.TilkjentYtelseDtoMapper;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.TilkjentYtelseDtoMapperV2;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakDtoMapper;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper.UttakSvpDtoMapper;
 import no.nav.foreldrepenger.fpformidling.klage.Klage;
@@ -93,39 +91,23 @@ public class DomeneobjektProvider {
     }
 
     public TilkjentYtelseEngangsstønad hentTilkjentYtelseEngangsstønad(Behandling behandling) {
-        var res = TilkjentYtelseDtoMapper.mapTilkjentYtelseESFraDto(
-            behandlingRestKlient.hentTilkjentYtelseEngangsstønad(behandling.getResourceLinker()));
-        var resV2 = TilkjentYtelseDtoMapperV2.mapTilkjentYtelseESFraDto(
-            behandlingRestKlient.hentTilkjentYtelseEngangsstønadV2(behandling.getFormidlingRessurser()));
-        TilkjentYtelseDiffSjekk.loggDiff(res, resV2);
-        return res;
+        return TilkjentYtelseDtoMapper.mapTilkjentYtelseESFraDto(
+            behandlingRestKlient.hentTilkjentYtelseEngangsstønad(behandling.getFormidlingRessurser()));
     }
 
     public Optional<TilkjentYtelseEngangsstønad> hentTilkjentYtelseESHvisFinnes(Behandling behandling) {
-        var res = behandlingRestKlient.hentTilkjentYtelseEngangsstønadHvisFinnes(behandling.getResourceLinker())
+        return behandlingRestKlient.hentTilkjentYtelseEngangsstønadHvisFinnes(behandling.getFormidlingRessurser())
             .map(TilkjentYtelseDtoMapper::mapTilkjentYtelseESFraDto);
-        var resV2 = behandlingRestKlient.hentTilkjentYtelseEngangsstønadHvisFinnesV2(behandling.getFormidlingRessurser())
-            .map(TilkjentYtelseDtoMapperV2::mapTilkjentYtelseESFraDto);
-        TilkjentYtelseDiffSjekk.loggDiff(res.orElse(null), resV2.orElse(null));
-        return res;
     }
 
     public TilkjentYtelseForeldrepenger hentTilkjentYtelseForeldrepenger(Behandling behandling) {
-        var res = TilkjentYtelseDtoMapper.mapTilkjentYtelseFPFraDto(
-            behandlingRestKlient.hentTilkjentYtelseForeldrepenger(behandling.getResourceLinker()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
-        var resV2 = TilkjentYtelseDtoMapperV2.mapTilkjentYtelseDagytelseFraDto(
-            behandlingRestKlient.hentTilkjentYtelseForeldrepengerV2(behandling.getFormidlingRessurser()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
-        TilkjentYtelseDiffSjekk.loggDiff(res, resV2);
-        return res;
+        return TilkjentYtelseDtoMapper.mapTilkjentYtelseDagytelseFraDto(
+            behandlingRestKlient.hentTilkjentYtelseForeldrepenger(behandling.getFormidlingRessurser()), arbeidsgiverTjeneste::hentArbeidsgiverNavn);
     }
 
     public Optional<TilkjentYtelseForeldrepenger> hentTilkjentYtelseFPHvisFinnes(Behandling behandling) {
-        var res = behandlingRestKlient.hentTilkjentYtelseForeldrepengerHvisFinnes(behandling.getResourceLinker())
-            .map(r -> TilkjentYtelseDtoMapper.mapTilkjentYtelseFPFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
-        var resV2 = behandlingRestKlient.hentTilkjentYtelseForeldrepengerHvisFinnesV2(behandling.getFormidlingRessurser())
-            .map(r -> TilkjentYtelseDtoMapperV2.mapTilkjentYtelseDagytelseFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
-        TilkjentYtelseDiffSjekk.loggDiff(res.orElse(null), resV2.orElse(null));
-        return res;
+        return behandlingRestKlient.hentTilkjentYtelseForeldrepengerHvisFinnes(behandling.getFormidlingRessurser())
+            .map(r -> TilkjentYtelseDtoMapper.mapTilkjentYtelseDagytelseFraDto(r, arbeidsgiverTjeneste::hentArbeidsgiverNavn));
     }
 
     public FamilieHendelse hentFamiliehendelse(Behandling behandling) {

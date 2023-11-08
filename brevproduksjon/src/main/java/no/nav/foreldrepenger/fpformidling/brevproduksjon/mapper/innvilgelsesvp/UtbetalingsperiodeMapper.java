@@ -1,63 +1,84 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
 
-import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Utbetalingsperiode;
-import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatoVerktøy.erFomRettEtterTomDato;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.UtbetalingsperiodeNy;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.UttakAktivitetMedPerioder;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
+import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 
 public final class UtbetalingsperiodeMapper {
+    private static final Logger LOG = LoggerFactory.getLogger(UtbetalingsperiodeMapper.class);
 
     private UtbetalingsperiodeMapper() {
     }
 
-    public static List<Utbetalingsperiode> mapUtbetalingsperioder(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder, Språkkode språkkode) {
-        List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
-        tilkjentYtelsePerioder.forEach(tilkjentYtelsePeriode -> {
-            if (tilkjentYtelsePeriode.getDagsats() > 0) {
-                if (utbetalingsperioder.isEmpty() || !erPerioderSammenhengendeOgSkalSlåSammen(getSisteUtbetalingsperiode(utbetalingsperioder),
-                    tilkjentYtelsePeriode)) {
-                    var utbetalingsperiode = opprettUtbetalingsperiode(språkkode, tilkjentYtelsePeriode, tilkjentYtelsePeriode.getPeriodeFom());
-                    utbetalingsperioder.add(utbetalingsperiode);
-                } else {
-                    var sammenhengendeFom = getSisteUtbetalingsperiode(utbetalingsperioder).getPeriodeFom();
-                    var utbetalingsperiode = opprettUtbetalingsperiode(språkkode, tilkjentYtelsePeriode, sammenhengendeFom);
-                    utbetalingsperioder.remove(utbetalingsperioder.size() - 1);
-                    utbetalingsperioder.add(utbetalingsperiode);
-                }
-            }
+    public static List<UttakAktivitetMedPerioder> mapUttakAktiviterMedUtbetPerioder(List<TilkjentYtelsePeriode> tilkjentPerioder, Språkkode språkkode) {
+        List<UttakAktivitetMedPerioder> uttaksaktivitet = new ArrayList<>();
+        List <UtbetalingsperiodeNy> utbetalingsperioder = new ArrayList<>();
+
+        Set<String> alleAktiviteter = utledAlleAktiviteter(tilkjentPerioder);
+
+        tilkjentPerioder.stream()
+            .filter(tilkjentPeriode -> tilkjentPeriode.getDagsats() > 0)
+            .forEach(tilkjentPeriode -> tilkjentPeriode.getAndeler()
+                .forEach(andel -> utbetalingsperioder.add(opprettNyUtbetalingsperiode(tilkjentPeriode, andel, språkkode))));
+
+        alleAktiviteter.forEach(aktivitet -> {
+            var perioderPerAktivitet = utbetalingsperioder.stream().filter(periode-> periode.getAktivitetNavn().equals(aktivitet)).toList();
+            uttaksaktivitet.add(new UttakAktivitetMedPerioder(aktivitet, perioderPerAktivitet));
         });
-        return utbetalingsperioder;
+
+        var antallPerioderEtterMapping = uttaksaktivitet.stream().map(UttakAktivitetMedPerioder::utbetalingsperioder).mapToLong(Collection::size).sum();
+        if (utbetalingsperioder.size() != antallPerioderEtterMapping) {
+            //Noe er feil, logg og kast exception
+            LOG.error("Utbetalingsperioder: {} Aktivitet og perioder: {}", utbetalingsperioder, uttaksaktivitet);
+            throw new IllegalStateException("Antall utbetalingsperioder per andel og utbetalingsperioder per aktivitet stemmer ikke");
+        }
+
+        return uttaksaktivitet;
     }
 
-    public static LocalDate finnStønadsperiodeTom(List<Utbetalingsperiode> utbetalingsperioder) {
-        return getSisteUtbetalingsperiode(utbetalingsperioder).getPeriodeTom();
+    private static Set<String> utledAlleAktiviteter(List<TilkjentYtelsePeriode> tilkjentPerioder) {
+        return tilkjentPerioder.stream()
+            .filter(tilkjentPeriode -> tilkjentPeriode.getDagsats() > 0)
+            .map(TilkjentYtelsePeriode::getAndeler)
+            .flatMap(Collection::stream)
+            .map(andel -> utledAktivitetsbeskrivelse(andel, andel.getAktivitetStatus()))
+            .collect(Collectors.toSet());
     }
 
-    private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Utbetalingsperiode periodeEn, TilkjentYtelsePeriode periodeTo) {
-        var sammeDagsats = Objects.equals(periodeEn.getPeriodeDagsats(), periodeTo.getDagsats());
-        var sammeUtbetaltTilSoker = Objects.equals(periodeEn.getUtbetaltTilSøker(), periodeTo.getUtbetaltTilSøker());
-        return sammeDagsats && sammeUtbetaltTilSoker && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriode().getFomDato());
+    public static LocalDate finnSisteStønadsdato(List<UtbetalingsperiodeNy> utbetalingsperioder) {
+        return utbetalingsperioder.stream().map(UtbetalingsperiodeNy::getPeriodeTom).max(Comparator.naturalOrder()).orElse(null);
+
     }
 
-    private static Utbetalingsperiode getSisteUtbetalingsperiode(List<Utbetalingsperiode> utbetalingsperioder) {
-        return utbetalingsperioder.get(utbetalingsperioder.size() - 1);
-    }
-
-    private static Utbetalingsperiode opprettUtbetalingsperiode(Språkkode språkkode,
-                                                                TilkjentYtelsePeriode tilkjentYtelsePeriode,
-                                                                LocalDate periodeFom) {
-        return Utbetalingsperiode.ny()
-            .medPeriodeFom(periodeFom, språkkode)
+    private static UtbetalingsperiodeNy opprettNyUtbetalingsperiode(TilkjentYtelsePeriode tilkjentYtelsePeriode,
+                                                                    TilkjentYtelseAndel andel,
+                                                                    Språkkode språkkode) {
+        return UtbetalingsperiodeNy.ny()
+            .medPeriodeFom(tilkjentYtelsePeriode.getPeriodeFom(), språkkode)
             .medPeriodeTom(tilkjentYtelsePeriode.getPeriodeTom(), språkkode)
-            .medPeriodeDagsats(tilkjentYtelsePeriode.getDagsats())
-            .medUtbetaltTilSøker(tilkjentYtelsePeriode.getUtbetaltTilSøker())
+            .medDagsats(andel.getDagsats())
+            .medUtbetaltTilSøker(andel.getUtbetalesTilBruker())
+            .medUtbetalingsgrad(Prosent.of(andel.getUtbetalingsgrad()))
+            .medAktivitetNavn(utledAktivitetsbeskrivelse(andel, andel.getAktivitetStatus()))
             .build();
     }
+
 }

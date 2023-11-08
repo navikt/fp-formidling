@@ -17,6 +17,7 @@ public class TilkjentYtelseAndel {
     private final ArbeidsforholdRef arbeidsforholdRef;
     private final boolean erBrukerMottaker;
     private final int utbetalesTilBruker;
+    private final BigDecimal utbetalingsgrad;
 
     private TilkjentYtelseAndel(Builder builder) {
         dagsats = builder.dagsats;
@@ -27,6 +28,7 @@ public class TilkjentYtelseAndel {
         erBrukerMottaker = builder.erBrukerMottaker;
         erArbeidsgiverMottaker = builder.erArbeidsgiverMottaker;
         utbetalesTilBruker = builder.utbetalesTilBruker;
+        utbetalingsgrad = builder.utbetalingsgrad;
     }
 
     @Override
@@ -90,6 +92,10 @@ public class TilkjentYtelseAndel {
         return erArbeidsgiverMottaker;
     }
 
+    public BigDecimal getUtbetalingsgrad() {
+        return utbetalingsgrad;
+    }
+
     public static final class Builder {
         private int dagsats;
         private AktivitetStatus aktivitetStatus;
@@ -99,6 +105,7 @@ public class TilkjentYtelseAndel {
         private BigDecimal stillingsprosent;
         private boolean erBrukerMottaker;
         private int utbetalesTilBruker;
+        private BigDecimal utbetalingsgrad;
 
         private Builder() {
         }
@@ -141,6 +148,10 @@ public class TilkjentYtelseAndel {
 
         public Builder medErArbeidsgiverMottaker(boolean erArbeidsgiverMottaker) {
             this.erArbeidsgiverMottaker = erArbeidsgiverMottaker;
+            return this;
+        }
+        public Builder medUtbetalingsgrad(BigDecimal utbetalingsgrad) {
+            this.utbetalingsgrad = utbetalingsgrad;
             return this;
         }
 

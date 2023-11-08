@@ -20,16 +20,12 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.BeregningMapper.mapSelvstendigNæringsdrivende;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.BeregningMapper.utledLovhjemmelForBeregning;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.NaturalytelseMapper.mapNaturalytelser;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.UtbetalingsperiodeMapper.finnStønadsperiodeTom;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.UtbetalingsperiodeMapper.mapUtbetalingsperioder;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.UttaksperiodeMapper.mapUttaksaktivteterMedPerioder;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
-import java.util.List;
+import java.util.Collection;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -40,7 +36,7 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.SvangerskapspengerInnvilgelseDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Uttaksaktivitet;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.UttakAktivitetMedPerioder;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
@@ -80,26 +76,29 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         var tilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
         var uttaksresultatSvp = domeneobjektProvider.hentSvangerskapspengerUttak(behandling);
 
+
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        var utbetalingsperioder = mapUtbetalingsperioder(tilkjentYtelse.getPerioder(), språkkode);
-        var uttaksaktiviteter = mapUttaksaktivteterMedPerioder(uttaksresultatSvp, tilkjentYtelse, språkkode);
+        var uttakAktiviteterMedPerioder = UtbetalingsperiodeMapper.mapUttakAktiviterMedUtbetPerioder(tilkjentYtelse.getPerioder(), språkkode);
         var inkludereBeregning = erNyEllerEndretBeregning(behandling);
+        var alleUtbetalingsperioder = uttakAktiviteterMedPerioder.stream()
+            .map(UttakAktivitetMedPerioder::utbetalingsperioder)
+            .flatMap(Collection::stream)
+            .toList();
 
         var dokumentdataBuilder = SvangerskapspengerInnvilgelseDokumentdata.ny()
             .medFelles(fellesBuilder.build())
             .medRevurdering(behandling.erRevurdering())
             .medRefusjonTilBruker(harBrukerAndel(tilkjentYtelse))
             .medAntallRefusjonerTilArbeidsgivere(finnAntallRefusjonerTilArbeidsgivere(tilkjentYtelse))
-            .medStønadsperiodeTom(formaterDato(finnStønadsperiodeTom(utbetalingsperioder), språkkode))
+            .medStønadsperiodeTom(formaterDato(UtbetalingsperiodeMapper.finnSisteStønadsdato(alleUtbetalingsperioder), språkkode))
             .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelse))
             .medMottattDato(formaterDato(finnSisteMottatteSøknad(mottatteDokumenter), språkkode))
             .medKlagefristUker(brevParametere.getKlagefristUker())
-            .medAntallUttaksperioder(tellAntallUttaksperioder(uttaksaktiviteter))
-            .medUttaksaktiviteter(uttaksaktiviteter)
-            .medUtbetalingsperioder(utbetalingsperioder)
+            .medAntallUttaksperioder(alleUtbetalingsperioder.size())
+            .medUttakAktiviteter(uttakAktiviteterMedPerioder)
             .medAvslagsperioder(mapAvslagsperioder(uttaksresultatSvp.getUttakResultatArbeidsforhold(), språkkode))
             .medAvslåtteAktiviteter(mapAvslåtteAktiviteter(uttaksresultatSvp.getUttakResultatArbeidsforhold()))
             .medInkludereBeregning(inkludereBeregning);
@@ -133,9 +132,5 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         }
 
         return dokumentdataBuilder.build();
-    }
-
-    private int tellAntallUttaksperioder(List<Uttaksaktivitet> uttaksaktiviteter) {
-        return uttaksaktiviteter.stream().mapToInt(aktivitet -> aktivitet.getUttaksperioder().size()).sum();
     }
 }

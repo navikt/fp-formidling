@@ -255,6 +255,23 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(starterMedFullUtbetaling(List.of(fullUtbetaling, ingenUtbetaling))).isTrue();
     }
 
+    @Test
+    void ikke_varierende_dagsats_hvis_starter_med_avslag() {
+        var avslåttPeriode = Utbetalingsperiode.ny()
+            .medPeriodeDagsats(0)
+            .build();
+        var toHundreKronerDagsatsPeriode = Utbetalingsperiode.ny()
+            .medPeriodeDagsats(200)
+            .build();
+        var hundreKronerDagsatsPeriode = Utbetalingsperiode.ny()
+            .medPeriodeDagsats(100)
+            .build();
+        assertThat(harVarierendeDagsats(List.of(avslåttPeriode, toHundreKronerDagsatsPeriode))).isFalse();
+        assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, avslåttPeriode))).isFalse();
+        assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, avslåttPeriode, toHundreKronerDagsatsPeriode))).isFalse();
+        assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, avslåttPeriode, hundreKronerDagsatsPeriode))).isTrue();
+    }
+
     private FagsakBackend opprettFagsakBackend() {
         return FagsakBackend.ny().medBrukerRolle(RelasjonsRolleType.MORA).medDekningsgrad(DEKNINGSGRAD).build();
     }

@@ -211,8 +211,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         if (utbetalingsperioder.isEmpty()) {
             return false;
         }
-        var førstePeriodeDagsats = utbetalingsperioder.get(0).getPeriodeDagsats();
-        return utbetalingsperioder.stream().anyMatch(p -> p.getPeriodeDagsats() != førstePeriodeDagsats);
+        return utbetalingsperioder.stream().map(Utbetalingsperiode::getPeriodeDagsats).filter(dagsats -> dagsats > 0).distinct().count() > 1;
     }
 
     private Optional<LocalDate> finnUtbetalingFom(List<Utbetalingsperiode> utbetalingsperioder) {

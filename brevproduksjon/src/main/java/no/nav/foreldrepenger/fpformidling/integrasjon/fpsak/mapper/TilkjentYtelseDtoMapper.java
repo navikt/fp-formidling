@@ -16,6 +16,7 @@ import no.nav.foreldrepenger.fpformidling.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseEngangsstønadDto;
 
+
 public class TilkjentYtelseDtoMapper {
 
     private TilkjentYtelseDtoMapper() {
@@ -59,7 +60,8 @@ public class TilkjentYtelseDtoMapper {
             .medErBrukerMottaker(dto.tilSoker() != null && dto.tilSoker() != 0)
             .medErArbeidsgiverMottaker(dto.refusjon() != null && dto.refusjon() != 0)
             .medDagsats(summerDagsats(dto))
-            .medUtbetalesTilBruker(dto.tilSoker())
+            .medUtbetalesTilBruker(dto.tilSoker() != null ? dto.tilSoker() : 0)
+            .medUtbetalingsgrad(dto.utbetalingsgrad())
             .build();
     }
 

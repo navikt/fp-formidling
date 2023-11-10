@@ -158,27 +158,21 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
         assertThat(dokumentdata.getAntallUttaksperioder()).isEqualTo(2);
 
-        assertThat(dokumentdata.getUttaksaktiviteter()).hasSize(1);
-        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getAktivitetsbeskrivelse()).isEqualTo(ARBEIDSGIVER1_NAVN);
-        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder()).hasSize(2);
-        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
-        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
-        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(0).getUtbetalingsgrad()).isEqualTo(
-            Prosent.of(UTBETALINGSGRAD_PERIODE1.intValue()));
-        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
-        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
-        assertThat(dokumentdata.getUttaksaktiviteter().get(0).getUttaksperioder().get(1).getUtbetalingsgrad()).isEqualTo(
-            Prosent.of(UTBETALINGSGRAD_PERIODE2.intValue()));
+        assertThat(dokumentdata.getUttakAktiviteter()).hasSize(1);
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder()).hasSize(2);
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).beskrivelse()).isEqualTo(ARBEIDSGIVER1_NAVN);
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder()).hasSize(2);
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(0).getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE1));
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(0).getDagsats()).isEqualTo( DAGSATS_PERIODE1);
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(0).getUtbetaltTilSøker()).isEqualTo( DAGSATS_PERIODE1);
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(1).getDagsats()).isEqualTo( DAGSATS_PERIODE2);
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(1).getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE2));
+        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(1).getUtbetaltTilSøker()).isZero();
 
-        assertThat(dokumentdata.getUtbetalingsperioder()).hasSize(2);
-        assertThat(dokumentdata.getUtbetalingsperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
-        assertThat(dokumentdata.getUtbetalingsperioder().get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
-        assertThat(dokumentdata.getUtbetalingsperioder().get(0).getPeriodeDagsats()).isEqualTo(DAGSATS_PERIODE1);
-        assertThat(dokumentdata.getUtbetalingsperioder().get(0).getUtbetaltTilSøker()).isEqualTo(DAGSATS_PERIODE1);
-        assertThat(dokumentdata.getUtbetalingsperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
-        assertThat(dokumentdata.getUtbetalingsperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
-        assertThat(dokumentdata.getUtbetalingsperioder().get(1).getPeriodeDagsats()).isEqualTo(DAGSATS_PERIODE2);
-        assertThat(dokumentdata.getUtbetalingsperioder().get(1).getUtbetaltTilSøker()).isZero();
 
         assertThat(dokumentdata.getAvslagsperioder()).hasSize(2);
         assertThat(dokumentdata.getAvslagsperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE3_FOM);
@@ -444,7 +438,9 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                     .medUtbetalesTilBruker(DAGSATS_PERIODE1.intValue())
                     .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                     .medStillingsprosent(BigDecimal.valueOf(100))
+                    .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE1)
                     .medArbeidsgiver(ARBEIDSGIVER1)
+                    .medDagsats(DAGSATS_PERIODE1.intValue())
                     .build()))
                 .build(), TilkjentYtelsePeriode.ny()
                 .medDagsats(DAGSATS_PERIODE2)
@@ -454,6 +450,8 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                     .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                     .medStillingsprosent(BigDecimal.valueOf(100))
                     .medArbeidsgiver(ARBEIDSGIVER1)
+                    .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE2)
+                    .medDagsats(DAGSATS_PERIODE2.intValue())
                     .build()))
                 .build(), TilkjentYtelsePeriode.ny()
                 .medDagsats(DAGSATS_PERIODE3)
@@ -461,6 +459,8 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .medAndeler(of(TilkjentYtelseAndel.ny()
                     .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
                     .medStillingsprosent(BigDecimal.valueOf(100))
+                    .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE3)
+                    .medDagsats(DAGSATS_PERIODE3.intValue())
                     .build()))
                 .build()))
             .build();
@@ -474,6 +474,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .medAndeler(of(TilkjentYtelseAndel.ny()
                     .medAktivitetStatus(AktivitetStatus.SELVSTENDIG_NÆRINGSDRIVENDE)
                     .medStillingsprosent(BigDecimal.valueOf(100))
+                    .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE1)
                     .build()))
                 .build()))
             .build();
@@ -485,7 +486,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                 .medDagsats(DAGSATS_PERIODE1)
                 .medPeriode(fraOgMedTilOgMed(PERIODE1_FOM, PERIODE1_TOM))
                 .medAndeler(
-                    of(TilkjentYtelseAndel.ny().medAktivitetStatus(AktivitetStatus.FRILANSER).medStillingsprosent(BigDecimal.valueOf(100)).build()))
+                    of(TilkjentYtelseAndel.ny().medAktivitetStatus(AktivitetStatus.FRILANSER).medStillingsprosent(BigDecimal.valueOf(100)).medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE1).build()))
                 .build()))
             .build();
     }

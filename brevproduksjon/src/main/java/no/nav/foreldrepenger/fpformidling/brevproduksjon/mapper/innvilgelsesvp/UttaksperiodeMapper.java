@@ -33,15 +33,15 @@ public final class UttaksperiodeMapper {
 
         var uttakPerioder = uttaksresultat.getUttakResultatArbeidsforhold().stream().flatMap(ur -> ur.getPerioder().stream()).toList();
 
-        for (var periode : tilkjentYtelse.getPerioder()) {
-            var uttakPeriodeKandidater = PeriodeBeregner.finnUttakPeriodeKandidater(periode, uttakPerioder);
-            for (var andel : periode.getAndeler()) {
-                var aktivitetStatus = andel.getAktivitetStatus();
-                var aktivitetsbeskrivelse = utledAktivitetsbeskrivelse(andel, aktivitetStatus);
+        for (var tilkjentPeriode : tilkjentYtelse.getPerioder()) {
+            var uttakPeriodeKandidater = PeriodeBeregner.finnUttakPeriodeKandidater(tilkjentPeriode, uttakPerioder);
+            for (var tilkjentAndel : tilkjentPeriode.getAndeler()) {
+                var aktivitetStatus = tilkjentAndel.getAktivitetStatus();
+                var aktivitetsbeskrivelse = utledAktivitetsbeskrivelse(tilkjentAndel, aktivitetStatus);
 
                 var matchetUttaksperiode = finnUttakPeriode(uttakPeriodeKandidater, aktivitetsbeskrivelse);
                 matchetUttaksperiode.ifPresent(
-                    svpUttakResultatPeriode -> mapAktivitet(resultat, svpUttakResultatPeriode, periode, aktivitetsbeskrivelse, språkkode));
+                    svpUttakResultatPeriode -> mapAktivitet(resultat, svpUttakResultatPeriode, tilkjentPeriode, aktivitetsbeskrivelse, språkkode));
             }
         }
 

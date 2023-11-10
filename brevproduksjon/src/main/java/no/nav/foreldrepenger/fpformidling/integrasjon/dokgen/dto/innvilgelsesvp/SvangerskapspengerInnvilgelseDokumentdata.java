@@ -22,8 +22,7 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
     private String mottattDato;
     private int klagefristUker;
     private int antallUttaksperioder;
-    private List<Uttaksaktivitet> uttaksaktiviteter;
-    private List<Utbetalingsperiode> utbetalingsperioder;
+    private List<UttakAktivitetMedPerioder> uttakAktiviteterMedPerioder;
     private List<Avslagsperiode> avslagsperioder;
     private List<AvslåttAktivitet> avslåtteAktiviteter;
     private boolean inkludereBeregning;
@@ -81,12 +80,8 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
         return antallUttaksperioder;
     }
 
-    public List<Uttaksaktivitet> getUttaksaktiviteter() {
-        return uttaksaktiviteter;
-    }
-
-    public List<Utbetalingsperiode> getUtbetalingsperioder() {
-        return utbetalingsperioder;
+    public List<UttakAktivitetMedPerioder> getUttakAktiviteter() {
+        return uttakAktiviteterMedPerioder;
     }
 
     public List<Avslagsperiode> getAvslagsperioder() {
@@ -151,9 +146,9 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
             that.termindatoEndret) && Objects.equals(refusjonTilBruker, that.refusjonTilBruker) && Objects.equals(antallRefusjonerTilArbeidsgivere,
             that.antallRefusjonerTilArbeidsgivere) && Objects.equals(stønadsperiodeTom, that.stønadsperiodeTom) && Objects.equals(månedsbeløp,
             that.månedsbeløp) && Objects.equals(mottattDato, that.mottattDato) && Objects.equals(klagefristUker, that.klagefristUker)
-            && Objects.equals(antallUttaksperioder, that.antallUttaksperioder) && Objects.equals(uttaksaktiviteter, that.uttaksaktiviteter)
-            && Objects.equals(utbetalingsperioder, that.utbetalingsperioder) && Objects.equals(avslagsperioder, that.avslagsperioder)
-            && Objects.equals(avslåtteAktiviteter, that.avslåtteAktiviteter) && Objects.equals(inkludereBeregning, that.inkludereBeregning)
+            && Objects.equals(antallUttaksperioder, that.antallUttaksperioder) && Objects.equals(
+            uttakAktiviteterMedPerioder, that.uttakAktiviteterMedPerioder)
+            && Objects.equals(avslagsperioder, that.avslagsperioder) && Objects.equals(avslåtteAktiviteter, that.avslåtteAktiviteter) && Objects.equals(inkludereBeregning, that.inkludereBeregning)
             && Objects.equals(arbeidsforhold, that.arbeidsforhold) && Objects.equals(selvstendigNæringsdrivende, that.selvstendigNæringsdrivende)
             && Objects.equals(frilanser, that.frilanser) && Objects.equals(naturalytelser, that.naturalytelser) && Objects.equals(
             bruttoBeregningsgrunnlag, that.bruttoBeregningsgrunnlag) && Objects.equals(militærSivil, that.militærSivil) && Objects.equals(
@@ -163,8 +158,8 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
     @Override
     public int hashCode() {
         return Objects.hash(felles, revurdering, endretFraAvslag, utbetalingEndret, termindatoEndret, refusjonTilBruker,
-            antallRefusjonerTilArbeidsgivere, stønadsperiodeTom, månedsbeløp, mottattDato, klagefristUker, antallUttaksperioder, uttaksaktiviteter,
-            utbetalingsperioder, avslagsperioder, avslåtteAktiviteter, inkludereBeregning, arbeidsforhold, selvstendigNæringsdrivende, frilanser,
+            antallRefusjonerTilArbeidsgivere, stønadsperiodeTom, månedsbeløp, mottattDato, klagefristUker, antallUttaksperioder,
+            uttakAktiviteterMedPerioder, avslagsperioder, avslåtteAktiviteter, inkludereBeregning, arbeidsforhold, selvstendigNæringsdrivende, frilanser,
             naturalytelser, bruttoBeregningsgrunnlag, militærSivil, inntektOver6G, seksG, lovhjemmel);
     }
 
@@ -239,13 +234,8 @@ public class SvangerskapspengerInnvilgelseDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medUttaksaktiviteter(List<Uttaksaktivitet> uttaksaktiviteter) {
-            this.kladd.uttaksaktiviteter = uttaksaktiviteter;
-            return this;
-        }
-
-        public Builder medUtbetalingsperioder(List<Utbetalingsperiode> utbetalingsperioder) {
-            this.kladd.utbetalingsperioder = utbetalingsperioder;
+        public Builder medUttakAktiviteter(List<UttakAktivitetMedPerioder> uttakAktiviteterMedPerioder) {
+            this.kladd.uttakAktiviteterMedPerioder = uttakAktiviteterMedPerioder;
             return this;
         }
 

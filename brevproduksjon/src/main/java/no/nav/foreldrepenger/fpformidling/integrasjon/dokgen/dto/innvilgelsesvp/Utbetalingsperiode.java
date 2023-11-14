@@ -1,14 +1,15 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp;
 
-import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
-
-import java.time.LocalDate;
-import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
+
+import java.time.LocalDate;
+import java.util.Objects;
+
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Utbetalingsperiode {
@@ -18,8 +19,11 @@ public class Utbetalingsperiode {
     private String periodeTom;
     @JsonIgnore
     private LocalDate periodeTomDate;
-    private long periodeDagsats;
+    private int dagsats;
+    private Prosent utbetalingsgrad = Prosent.NULL;
     private long utbetaltTilSøker;
+    @JsonIgnore
+    private String aktivitetNavn;
     @JsonIgnore
     private Språkkode språkkode;
 
@@ -31,8 +35,11 @@ public class Utbetalingsperiode {
         return periodeTomDate;
     }
 
-    public long getPeriodeDagsats() {
-        return periodeDagsats;
+    public int getDagsats() {
+        return dagsats;
+    }
+    public Prosent getUtbetalingsgrad() {
+        return utbetalingsgrad;
     }
 
     public long getUtbetaltTilSøker() {
@@ -41,6 +48,10 @@ public class Utbetalingsperiode {
 
     public Språkkode getSpråkkode() {
         return språkkode;
+    }
+
+    public String getAktivitetNavn() {
+        return aktivitetNavn;
     }
 
     @Override
@@ -52,13 +63,13 @@ public class Utbetalingsperiode {
             return false;
         }
         var that = (Utbetalingsperiode) object;
-        return Objects.equals(periodeFom, that.periodeFom) && Objects.equals(periodeTom, that.periodeTom) && Objects.equals(periodeDagsats,
-            that.periodeDagsats) && Objects.equals(utbetaltTilSøker, that.utbetaltTilSøker);
+        return Objects.equals(periodeFom, that.periodeFom) && Objects.equals(periodeTom, that.periodeTom) && Objects.equals(dagsats, that.dagsats)
+            && Objects.equals(utbetalingsgrad, that.utbetalingsgrad) && Objects.equals(utbetaltTilSøker, that.utbetaltTilSøker) && Objects.equals(aktivitetNavn, that.aktivitetNavn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(periodeFom, periodeTom, periodeDagsats, utbetaltTilSøker);
+        return Objects.hash(periodeFom, periodeTom, dagsats, utbetalingsgrad, utbetaltTilSøker, aktivitetNavn);
     }
 
     public static Builder ny() {
@@ -86,8 +97,13 @@ public class Utbetalingsperiode {
             return this;
         }
 
-        public Builder medPeriodeDagsats(long periodeDagsats) {
-            this.kladd.periodeDagsats = periodeDagsats;
+        public Builder medDagsats(int dagsats) {
+            this.kladd.dagsats = dagsats;
+            return this;
+        }
+
+        public Builder medUtbetalingsgrad(Prosent utbetalingsgrad) {
+            this.kladd.utbetalingsgrad = utbetalingsgrad;
             return this;
         }
 
@@ -96,8 +112,14 @@ public class Utbetalingsperiode {
             return this;
         }
 
+        public Builder medAktivitetNavn(String aktivitetNavn) {
+            this.kladd.aktivitetNavn = aktivitetNavn;
+            return this;
+        }
+
         public Utbetalingsperiode build() {
             return this.kladd;
         }
     }
+
 }

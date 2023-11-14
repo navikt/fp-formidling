@@ -156,22 +156,22 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getMånedsbeløp()).isEqualTo(DAGSATS_PERIODE1 * 260 / 12);
         assertThat(dokumentdata.getMottattDato()).isEqualTo(formaterDatoNorsk(SØKNAD_DATO));
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
-        assertThat(dokumentdata.getAntallUttaksperioder()).isEqualTo(2);
+        assertThat(dokumentdata.getAntallUtbetalingsperioder()).isEqualTo(2);
 
-        assertThat(dokumentdata.getUttakAktiviteter()).hasSize(1);
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder()).hasSize(2);
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).beskrivelse()).isEqualTo(ARBEIDSGIVER1_NAVN);
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder()).hasSize(2);
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(0).getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE1));
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(0).getDagsats()).isEqualTo( DAGSATS_PERIODE1);
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(0).getUtbetaltTilSøker()).isEqualTo( DAGSATS_PERIODE1);
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(1).getDagsats()).isEqualTo( DAGSATS_PERIODE2);
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(1).getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE2));
-        assertThat(dokumentdata.getUttakAktiviteter().get(0).utbetalingsperioder().get(1).getUtbetaltTilSøker()).isZero();
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder()).hasSize(1);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder()).hasSize(2);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).beskrivelse()).isEqualTo(ARBEIDSGIVER1_NAVN);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder()).hasSize(2);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(0).getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE1));
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(0).getDagsats()).isEqualTo( DAGSATS_PERIODE1.intValue());
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(0).getUtbetaltTilSøker()).isEqualTo( DAGSATS_PERIODE1);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(1).getDagsats()).isEqualTo( DAGSATS_PERIODE2.intValue());
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(1).getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE2));
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(1).getUtbetaltTilSøker()).isZero();
 
 
         assertThat(dokumentdata.getAvslagsperioder()).hasSize(2);

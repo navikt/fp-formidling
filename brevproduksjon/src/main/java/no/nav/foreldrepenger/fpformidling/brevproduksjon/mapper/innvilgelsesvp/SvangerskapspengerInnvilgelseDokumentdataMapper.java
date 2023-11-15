@@ -23,6 +23,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.util.Collection;
+import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -36,7 +37,8 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.SvangerskapspengerInnvilgelseDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.UttakAktivitetMedPerioder;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.AktiviteterOgUtbetalingsperioder;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Utbetalingsperiode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
@@ -81,12 +83,9 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        var uttakAktiviteterMedPerioder = UtbetalingsperiodeMapper.mapUttakAktiviterMedUtbetPerioder(tilkjentYtelse.getPerioder(), språkkode);
+        var utbetalingsPerioderPerAktvivitet = UtbetalingsperiodeMapper.mapUtbetalingsperioderPerAktivitet(tilkjentYtelse.getPerioder(), språkkode);
         var inkludereBeregning = erNyEllerEndretBeregning(behandling);
-        var alleUtbetalingsperioder = uttakAktiviteterMedPerioder.stream()
-            .map(UttakAktivitetMedPerioder::utbetalingsperioder)
-            .flatMap(Collection::stream)
-            .toList();
+        var alleUtbetalingsperioder = utledAlleUtbetalingsperioder(utbetalingsPerioderPerAktvivitet);
 
         var dokumentdataBuilder = SvangerskapspengerInnvilgelseDokumentdata.ny()
             .medFelles(fellesBuilder.build())
@@ -97,8 +96,8 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
             .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelse))
             .medMottattDato(formaterDato(finnSisteMottatteSøknad(mottatteDokumenter), språkkode))
             .medKlagefristUker(brevParametere.getKlagefristUker())
-            .medAntallUttaksperioder(alleUtbetalingsperioder.size())
-            .medUttakAktiviteter(uttakAktiviteterMedPerioder)
+            .medAntallUtbetalingsperioder(alleUtbetalingsperioder.size())
+            .medAktiviteterOgUtbetalingsperioder(utbetalingsPerioderPerAktvivitet)
             .medAvslagsperioder(mapAvslagsperioder(uttaksresultatSvp.getUttakResultatArbeidsforhold(), språkkode))
             .medAvslåtteAktiviteter(mapAvslåtteAktiviteter(uttaksresultatSvp.getUttakResultatArbeidsforhold()))
             .medInkludereBeregning(inkludereBeregning);
@@ -132,5 +131,12 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         }
 
         return dokumentdataBuilder.build();
+    }
+
+    private List<Utbetalingsperiode> utledAlleUtbetalingsperioder(List<AktiviteterOgUtbetalingsperioder> utbetalingsPerioderPerAktvivitet) {
+        return  utbetalingsPerioderPerAktvivitet.stream()
+            .map(AktiviteterOgUtbetalingsperioder::utbetalingsperioder)
+            .flatMap(Collection::stream)
+            .toList();
     }
 }

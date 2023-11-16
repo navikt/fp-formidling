@@ -1,5 +1,22 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
+import static java.util.List.of;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnAntallAvslåttePerioder;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnAntallInnvilgedePerioder;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnPrioritertUtbetalingsgrad;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnStønadsperiodeFom;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnStønadsperiodeTom;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnesPeriodeMedIkkeOmsorg;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
@@ -9,32 +26,19 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
-
 import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakAktivitet;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.UttakResultatPeriodeAktivitet;
 
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static java.util.List.of;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.*;
-import static org.assertj.core.api.Assertions.assertThat;
-
-class UtbetalingsperiodeMapperTest {
+class VedtaksperiodeMapperTest {
 
     @Test
     void skal_hente_dato_fra_uttaksperiode_når_denne_er_før_tilkjentytelseperioden_og_det_er_første_tilkjentYtelsePeriode() {
@@ -74,7 +78,7 @@ class UtbetalingsperiodeMapperTest {
         var uttaksPerioder = uttak(of(uPeriode, uPeriode2), of());
 
         // Act
-        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
+        var resultat = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
             Språkkode.NB);
 
         // Assert
@@ -131,7 +135,7 @@ class UtbetalingsperiodeMapperTest {
         var uttaksPerioder = uttak(of(uPeriode2, uPeriode), of());
 
         // Act
-        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
+        var resultat = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
             Språkkode.NB);
 
         // Assert
@@ -178,7 +182,7 @@ class UtbetalingsperiodeMapperTest {
         var uttaksPerioder = uttak(of(uPeriode1, uPeriode2), of());
 
         // Act
-        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
+        var resultat = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
             Språkkode.NB);
 
         // Assert
@@ -243,7 +247,7 @@ class UtbetalingsperiodeMapperTest {
         var uttaksPerioder = uttak(of(uPeriode), of());
 
         // Act
-        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
+        var resultat = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
             Språkkode.NB);
 
         // Assert
@@ -273,7 +277,7 @@ class UtbetalingsperiodeMapperTest {
         var beregningsgrunnlagPerioder = of(bgPeriode);
 
         // Act
-        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
+        var resultat = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
             Språkkode.NB);
 
         // Assert
@@ -299,7 +303,7 @@ class UtbetalingsperiodeMapperTest {
         var beregningsgrunnlagPerioder = of(bgPeriode);
 
         // Act
-        var resultat = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
+        var resultat = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelsePerioder, uttaksPerioder, beregningsgrunnlagPerioder,
             Språkkode.NB);
 
         // Assert
@@ -309,62 +313,50 @@ class UtbetalingsperiodeMapperTest {
     @Test
     void skal_finne_første_og_siste_stønadsdato_og_håndtere_null() {
         // Arrange
-        List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
+        List<Vedtaksperiode> vedtaksperioder = new ArrayList<>();
         var førsteJanuarTjueAtten = LocalDate.of(2018, 1, 1);
         var trettiendeAprilTjueAtten = LocalDate.of(2018, 4, 30);
 
-        leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, utbetalingsperioder);
-        leggtilPeriode(førsteJanuarTjueAtten, LocalDate.of(2018, 1, 30), true, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), null, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2018, 4, 1), trettiendeAprilTjueAtten, true, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 30), false, utbetalingsperioder);
+        leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, vedtaksperioder);
+        leggtilPeriode(førsteJanuarTjueAtten, LocalDate.of(2018, 1, 30), true, vedtaksperioder);
+        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true, vedtaksperioder);
+        leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), null, vedtaksperioder);
+        leggtilPeriode(LocalDate.of(2018, 4, 1), trettiendeAprilTjueAtten, true, vedtaksperioder);
+        leggtilPeriode(LocalDate.of(2019, 3, 1), LocalDate.of(2019, 3, 30), false, vedtaksperioder);
 
         // Act + Assert
-        assertThat(finnStønadsperiodeFom(utbetalingsperioder)).isEqualTo(Optional.of(førsteJanuarTjueAtten));
-        assertThat(finnStønadsperiodeTom(utbetalingsperioder)).isEqualTo(Optional.of(trettiendeAprilTjueAtten));
-    }
-
-    @Test
-    void skal_finne_antall_perioder() {
-        // Arrange
-        List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
-        leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), true, utbetalingsperioder);
-
-        // Act + Assert
-        assertThat(finnAntallPerioder(utbetalingsperioder)).isEqualTo(3);
+        assertThat(finnStønadsperiodeFom(vedtaksperioder)).isEqualTo(Optional.of(førsteJanuarTjueAtten));
+        assertThat(finnStønadsperiodeTom(vedtaksperioder)).isEqualTo(Optional.of(trettiendeAprilTjueAtten));
     }
 
     @Test
     void skal_finne_antall_innvilgede_perioder() {
         // Arrange
-        List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
-        leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), true, utbetalingsperioder);
+        List<Vedtaksperiode> vedtaksperioder = new ArrayList<>();
+        leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, vedtaksperioder);
+        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true, vedtaksperioder);
+        leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), true, vedtaksperioder);
 
         // Act + Assert
-        assertThat(finnAntallInnvilgedePerioder(utbetalingsperioder)).isEqualTo(2);
+        assertThat(finnAntallInnvilgedePerioder(vedtaksperioder)).isEqualTo(2);
     }
 
     @Test
     void skal_finne_antall_avslåtte_perioder() {
         // Arrange
-        List<Utbetalingsperiode> utbetalingsperioder = new ArrayList<>();
-        leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true, utbetalingsperioder);
-        leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), true, utbetalingsperioder);
+        List<Vedtaksperiode> vedtaksperioder = new ArrayList<>();
+        leggtilPeriode(LocalDate.of(2017, 1, 1), LocalDate.of(2017, 1, 30), false, vedtaksperioder);
+        leggtilPeriode(LocalDate.of(2018, 2, 1), LocalDate.of(2018, 2, 25), true, vedtaksperioder);
+        leggtilPeriode(LocalDate.of(2018, 3, 1), LocalDate.of(2018, 3, 30), true, vedtaksperioder);
 
         // Act + Assert
-        assertThat(finnAntallAvslåttePerioder(utbetalingsperioder)).isEqualTo(1);
+        assertThat(finnAntallAvslåttePerioder(vedtaksperioder)).isEqualTo(1);
     }
 
     @Test
     void skal_finne_periode_med_ikke_omsorg_mor() {
         // Arrange
-        var utbetalingsperiode = Utbetalingsperiode.ny()
+        var utbetalingsperiode = Vedtaksperiode.ny()
             .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
             .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
             .medÅrsak(Årsak.of(PeriodeResultatÅrsak.MOR_HAR_IKKE_OMSORG.getKode()))
@@ -377,7 +369,7 @@ class UtbetalingsperiodeMapperTest {
     @Test
     void skal_finne_periode_med_ikke_omsorg_far() {
         // Arrange
-        var utbetalingsperiode = Utbetalingsperiode.ny()
+        var utbetalingsperiode = Vedtaksperiode.ny()
             .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
             .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
             .medÅrsak(Årsak.of(PeriodeResultatÅrsak.FAR_HAR_IKKE_OMSORG.getKode()))
@@ -390,7 +382,7 @@ class UtbetalingsperiodeMapperTest {
     @Test
     void skal_ikke_finne_periode_med_ikke_omsorg() {
         // Arrange
-        var utbetalingsperiode = Utbetalingsperiode.ny()
+        var utbetalingsperiode = Vedtaksperiode.ny()
             .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
             .medPeriodeTom(LocalDate.now().plusDays(10), Språkkode.NB)
             .medÅrsak(Årsak.of(PeriodeResultatÅrsak.FØDSELSVILKÅRET_IKKE_OPPFYLT.getKode()))
@@ -476,8 +468,8 @@ class UtbetalingsperiodeMapperTest {
 
     }
 
-    private void leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, List<Utbetalingsperiode> utbetalingsperioder) {
-        utbetalingsperioder.add(
-            Utbetalingsperiode.ny().medPeriodeFom(fom, Språkkode.NB).medPeriodeTom(tom, Språkkode.NB).medInnvilget(innvilget).build());
+    private void leggtilPeriode(LocalDate fom, LocalDate tom, Boolean innvilget, List<Vedtaksperiode> vedtaksperioder) {
+        vedtaksperioder.add(
+            Vedtaksperiode.ny().medPeriodeFom(fom, Språkkode.NB).medPeriodeTom(tom, Språkkode.NB).medInnvilget(innvilget).build());
     }
 }

@@ -12,23 +12,23 @@ import java.util.Objects;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
 
-public final class UtbetalingsperiodeMerger {
+public final class VedtaksperiodeMerger {
 
-    private UtbetalingsperiodeMerger() {
+    private VedtaksperiodeMerger() {
     }
 
-    public static List<Utbetalingsperiode> mergePerioder(List<Utbetalingsperiode> perioder) {
+    public static List<Vedtaksperiode> mergePerioder(List<Vedtaksperiode> perioder) {
         if (perioder.size() <= 1) {
             return perioder; // ikke noe å se på.
         }
         return slåSammenSammenhengendePerioder(perioder);
     }
 
-    private static List<Utbetalingsperiode> slåSammenSammenhengendePerioder(List<Utbetalingsperiode> perioder) {
-        List<Utbetalingsperiode> resultat = new ArrayList<>();
+    private static List<Vedtaksperiode> slåSammenSammenhengendePerioder(List<Vedtaksperiode> perioder) {
+        List<Vedtaksperiode> resultat = new ArrayList<>();
         if (perioder.isEmpty()) {
             return resultat;
         }
@@ -52,8 +52,8 @@ public final class UtbetalingsperiodeMerger {
         return resultat;
     }
 
-    private static Utbetalingsperiode slåSammenPerioder(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
-        return Utbetalingsperiode.ny()
+    private static Vedtaksperiode slåSammenPerioder(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
+        return Vedtaksperiode.ny()
             .medInnvilget(periodeEn.isInnvilget())
             .medÅrsak(periodeEn.getÅrsak())
             .medPeriodeFom(periodeEn.getPeriodeFom(), periodeEn.getSpråkkode())
@@ -70,7 +70,7 @@ public final class UtbetalingsperiodeMerger {
             .build();
     }
 
-    private static int finnRiktigAntallTapteDager(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    private static int finnRiktigAntallTapteDager(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         var tapteDagerPeriodeEn = periodeEn.getTapteDagerTemp();
         var tapteDagerPeriodeTo = periodeTo.getTapteDagerTemp();
 
@@ -81,12 +81,12 @@ public final class UtbetalingsperiodeMerger {
         }
     }
 
-    private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         return sammeStatusOgÅrsak(periodeEn, periodeTo) && likPeriodeDagsats(periodeEn, periodeTo) && likeAktiviteter(periodeEn, periodeTo)
             && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom()) && hvisAvslåttSøknadsfristLikeTidligstMottattDato(periodeEn, periodeTo);
     }
 
-    private static boolean hvisAvslåttSøknadsfristLikeTidligstMottattDato(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    private static boolean hvisAvslåttSøknadsfristLikeTidligstMottattDato(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         if (periodeEn.getÅrsak() != null && PeriodeResultatÅrsak.SØKNADSFRIST.getKode().equals((periodeEn.getÅrsak()).getKode())) {
             return Objects.equals(periodeEn.getÅrsak(), periodeTo.getÅrsak()) && periodeEn.getTidligstMottattDato().equals(periodeTo.getTidligstMottattDato());
         } else {
@@ -94,20 +94,20 @@ public final class UtbetalingsperiodeMerger {
         }
     }
 
-    static boolean likeAktiviteter(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    static boolean likeAktiviteter(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         return likeArbeidsforhold(periodeEn, periodeTo) && likNæring(periodeEn, periodeTo) && likeAndreAktiviteter(periodeEn, periodeTo);
     }
 
-    private static boolean sammeStatusOgÅrsak(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    private static boolean sammeStatusOgÅrsak(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         return (Objects.equals(periodeEn.isInnvilget(), periodeTo.isInnvilget()) || Objects.equals(periodeEn.isAvslått(), periodeTo.isAvslått())) && (
             Objects.equals(periodeEn.getÅrsak(), periodeTo.getÅrsak()) || erRegnetSomLike(periodeEn.getÅrsak(), periodeTo.getÅrsak()));
     }
 
-    private static boolean likPeriodeDagsats(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    private static boolean likPeriodeDagsats(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         return Objects.equals(periodeEn.getPeriodeDagsats(), periodeTo.getPeriodeDagsats());
     }
 
-    private static boolean likeAndreAktiviteter(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    private static boolean likeAndreAktiviteter(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         var alleMatcher = likAktivitetsliste(periodeEn, periodeTo);
         if (!alleMatcher) {
             return false;
@@ -123,7 +123,7 @@ public final class UtbetalingsperiodeMerger {
         return alleMatcher;
     }
 
-    private static boolean likAktivitetsliste(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    private static boolean likAktivitetsliste(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         if (periodeEn.getAnnenAktivitetsliste() == null && periodeTo.getAnnenAktivitetsliste() == null) {
             return true;
         }
@@ -133,7 +133,7 @@ public final class UtbetalingsperiodeMerger {
         return periodeEn.getAnnenAktivitetsliste().size() == periodeTo.getAnnenAktivitetsliste().size();
     }
 
-    private static boolean harLikeMangeArbeidsforhold(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    private static boolean harLikeMangeArbeidsforhold(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         if (periodeEn.getArbeidsforholdsliste() == null && periodeTo.getArbeidsforholdsliste() == null) {
             return true;
         }
@@ -143,7 +143,7 @@ public final class UtbetalingsperiodeMerger {
         return periodeEn.getArbeidsforholdsliste().size() == periodeTo.getArbeidsforholdsliste().size();
     }
 
-    private static boolean likNæring(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    private static boolean likNæring(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         if (periodeEn.getNæring() == null && periodeTo.getNæring() == null) {
             return true;
         } else if ((periodeEn.getNæring() == null) != (periodeTo.getNæring() == null)) {
@@ -157,7 +157,7 @@ public final class UtbetalingsperiodeMerger {
         return likNæringType(periodeEn.getNæring(), periodeTo.getNæring());
     }
 
-    private static boolean likeArbeidsforhold(Utbetalingsperiode periodeEn, Utbetalingsperiode periodeTo) {
+    private static boolean likeArbeidsforhold(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         var alleMatcher = harLikeMangeArbeidsforhold(periodeEn, periodeTo);
         if (!alleMatcher) {
             return false;
@@ -173,7 +173,7 @@ public final class UtbetalingsperiodeMerger {
         return alleMatcher;
     }
 
-    private static boolean finnesMatch(AnnenAktivitet akt, Utbetalingsperiode periode) {
+    private static boolean finnesMatch(AnnenAktivitet akt, Vedtaksperiode periode) {
         var match = false;
         for (var akt2 : periode.getAnnenAktivitetsliste()) {
             if (likAnnenAktivitetType(akt, akt2)) {
@@ -183,7 +183,7 @@ public final class UtbetalingsperiodeMerger {
         return match;
     }
 
-    private static boolean finnesMatch(Arbeidsforhold arb, Utbetalingsperiode periode) {
+    private static boolean finnesMatch(Arbeidsforhold arb, Vedtaksperiode periode) {
         var match = false;
         for (var arb2 : periode.getArbeidsforholdsliste()) {
             if (likArbeidsforholdType(arb, arb2)) {

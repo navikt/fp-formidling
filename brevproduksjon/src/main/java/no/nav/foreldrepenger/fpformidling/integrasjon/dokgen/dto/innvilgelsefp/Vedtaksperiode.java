@@ -18,7 +18,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.StønadskontoType;
 
 @JsonAutoDetect(getterVisibility = Visibility.NONE, setterVisibility = Visibility.NONE, fieldVisibility = Visibility.ANY)
-public class Utbetalingsperiode {
+public class Vedtaksperiode {
     private boolean innvilget;
     private Årsak årsak;
     @JsonIgnore
@@ -115,7 +115,7 @@ public class Utbetalingsperiode {
         if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        var that = (Utbetalingsperiode) object;
+        var that = (Vedtaksperiode) object;
         return Objects.equals(innvilget, that.innvilget) && Objects.equals(årsak, that.årsak) && Objects.equals(periodeFom, that.periodeFom)
             && Objects.equals(periodeTom, that.periodeTom) && Objects.equals(periodeDagsats, that.periodeDagsats) && Objects.equals(antallTapteDager,
             that.antallTapteDager) && Objects.equals(prioritertUtbetalingsgrad, that.prioritertUtbetalingsgrad) && Objects.equals(
@@ -134,10 +134,10 @@ public class Utbetalingsperiode {
     }
 
     public static class Builder {
-        private Utbetalingsperiode kladd;
+        private Vedtaksperiode kladd;
 
         private Builder() {
-            this.kladd = new Utbetalingsperiode();
+            this.kladd = new Vedtaksperiode();
         }
 
         public Builder medInnvilget(Boolean innvilget) {
@@ -216,7 +216,7 @@ public class Utbetalingsperiode {
             return this;
         }
 
-        public Utbetalingsperiode build() {
+        public Vedtaksperiode build() {
             return this.kladd;
         }
     }

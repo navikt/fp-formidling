@@ -26,7 +26,7 @@ public final class ForMyeUtbetaltMapper {
     private ForMyeUtbetaltMapper() {
     }
 
-    public static ForMyeUtbetalt forMyeUtbetalt(List<Utbetalingsperiode> periodeListe, Behandling behandling) {
+    public static ForMyeUtbetalt forMyeUtbetalt(List<Vedtaksperiode> periodeListe, Behandling behandling) {
         if (!behandling.erRevurdering()) {
             return null;
         }
@@ -84,28 +84,28 @@ public final class ForMyeUtbetaltMapper {
         return innvilgetUtsettelseFOM;
     }
 
-    private static boolean periodeHarGradering(Utbetalingsperiode periodeType) {
+    private static boolean periodeHarGradering(Vedtaksperiode periodeType) {
         return periodeStreamInneholderGradering(List.of(periodeType));
     }
 
-    private static Boolean periodeStreamInneholderGradering(List<Utbetalingsperiode> innvilgedePerioder) {
+    private static Boolean periodeStreamInneholderGradering(List<Vedtaksperiode> innvilgedePerioder) {
         return arbeidsforholdMedGraderingFinnes(innvilgedePerioder.stream()) || annenAktivtitetMedGraderingFinnes(innvilgedePerioder.stream())
             || næringMedGraderingFinnes(innvilgedePerioder.stream());
     }
 
-    private static boolean annenAktivtitetMedGraderingFinnes(Stream<Utbetalingsperiode> periodeStream) {
-        return periodeStream.map(Utbetalingsperiode::getAnnenAktivitetsliste)
+    private static boolean annenAktivtitetMedGraderingFinnes(Stream<Vedtaksperiode> periodeStream) {
+        return periodeStream.map(Vedtaksperiode::getAnnenAktivitetsliste)
             .filter(Objects::nonNull)
             .flatMap(Collection::stream)
             .anyMatch(AnnenAktivitet::isGradering);
     }
 
-    private static boolean næringMedGraderingFinnes(Stream<Utbetalingsperiode> periodeStream) {
-        return periodeStream.map(Utbetalingsperiode::getNæring).filter(Objects::nonNull).anyMatch(Næring::isGradering);
+    private static boolean næringMedGraderingFinnes(Stream<Vedtaksperiode> periodeStream) {
+        return periodeStream.map(Vedtaksperiode::getNæring).filter(Objects::nonNull).anyMatch(Næring::isGradering);
     }
 
-    private static boolean arbeidsforholdMedGraderingFinnes(Stream<Utbetalingsperiode> periodeStream) {
-        return periodeStream.map(Utbetalingsperiode::getArbeidsforholdsliste)
+    private static boolean arbeidsforholdMedGraderingFinnes(Stream<Vedtaksperiode> periodeStream) {
+        return periodeStream.map(Vedtaksperiode::getArbeidsforholdsliste)
             .filter(Objects::nonNull)
             .flatMap(Collection::stream)
             .anyMatch(Arbeidsforhold::isGradering);

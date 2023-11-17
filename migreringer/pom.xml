@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.fpformidling</groupId>
         <artifactId>fpformidling</artifactId>
-        <version>${revision}</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>migreringer</artifactId>
@@ -30,7 +30,7 @@
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
+            <artifactId>flyway-database-postgresql</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -44,8 +44,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>no.nav.foreldrepenger</groupId>
-            <artifactId>konfig</artifactId>
+            <groupId>no.nav.foreldrepenger.felles</groupId>
+            <artifactId>felles-konfig</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

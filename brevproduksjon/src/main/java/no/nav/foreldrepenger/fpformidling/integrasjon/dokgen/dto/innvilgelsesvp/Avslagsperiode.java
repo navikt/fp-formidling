@@ -88,7 +88,7 @@ public class Avslagsperiode {
             this.kladd.årsak = eksisterende.getÅrsak();
             this.kladd.språkkode = eksisterende.getSpråkkode();
             //hvis vi slår sammen 2 perioder med ulik arbeidsgiver skal denne ikke settes. Gjelder for 8308 - søkt for sent
-            if (eksisterende.arbeidsforholdInformasjon.equals(nyAbeidsforholdInformasjon)) {
+            if (eksisterende.arbeidsforholdInformasjon != null && eksisterende.arbeidsforholdInformasjon.equals(nyAbeidsforholdInformasjon)) {
                 this.kladd.arbeidsforholdInformasjon = eksisterende.arbeidsforholdInformasjon;
             }
         }

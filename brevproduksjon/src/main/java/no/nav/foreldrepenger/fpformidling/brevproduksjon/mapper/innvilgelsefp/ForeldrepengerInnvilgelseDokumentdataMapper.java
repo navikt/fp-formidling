@@ -22,13 +22,12 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.StønadskontoMapper.kontoEksisterer;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UndermalInkluderingMapper.skalInkludereAvslag;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInnvilget;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallAvslåttePerioder;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallInnvilgedePerioder;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnAntallPerioder;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeFom;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnStønadsperiodeTom;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.finnesPeriodeMedIkkeOmsorg;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UtbetalingsperiodeMapper.sistePeriodeAvslåttPgaBarnOver3år;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnAntallAvslåttePerioder;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnAntallInnvilgedePerioder;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnStønadsperiodeFom;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnStønadsperiodeTom;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnesPeriodeMedIkkeOmsorg;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.sistePeriodeAvslåttPgaBarnOver3år;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.fpformidling.uttak.fp.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.fpformidling.uttak.fp.SaldoVisningStønadskontoType.MINSTERETT;
@@ -60,7 +59,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
@@ -113,14 +112,14 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        var utbetalingsperioder = UtbetalingsperiodeMapper.mapUtbetalingsperioder(tilkjentYtelseForeldrepenger.getPerioder(), uttakResultatPerioder,
+        var vedtaksperioder = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelseForeldrepenger.getPerioder(), uttakResultatPerioder,
             beregningsgrunnlag.getBeregningsgrunnlagPerioder(), språkkode);
         var konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
         var erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
         var dagsats = finnDagsats(tilkjentYtelseForeldrepenger);
         var antallBarn = familieHendelse.antallBarn();
         var antallDødeBarn = familieHendelse.antallDødeBarn();
-        var innvilgedeUtbetalingsperioder = finnInnvilgedePerioderMedUtbetaling(utbetalingsperioder);
+        var innvilgedeUtbetalingsperioder = finnInnvilgedePerioderMedUtbetaling(vedtaksperioder);
         var utenAktKrav = disponibleDagerUtenAktivitetskrav(saldoer);
         var medAktKrav = finnSaldo(saldoer, FORELDREPENGER) - utenAktKrav;
 
@@ -133,7 +132,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medHarUtbetaling(harUtbetaling(tilkjentYtelseForeldrepenger))
             .medDagsats(dagsats)
             .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelseForeldrepenger))
-            .medForMyeUtbetalt(forMyeUtbetalt(utbetalingsperioder, behandling))
+            .medForMyeUtbetalt(forMyeUtbetalt(vedtaksperioder, behandling))
             .medInntektMottattArbeidsgiver(erEndringMedEndretInntektsmelding(behandling))
             .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(behandling, uttakResultatPerioder))
             .medAnnenForelderHarRett(uttakResultatPerioder.annenForelderHarRett())
@@ -142,17 +141,16 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medAleneomsorgKode(erAleneomsorg(søknad, uttakResultatPerioder))
             .medBarnErFødt(familieHendelse.barnErFødt())
             .medÅrsakErFødselshendelse(erRevurderingPgaFødselshendelse(behandling, familieHendelse, originalFamiliehendelse))
-            .medIkkeOmsorg(finnesPeriodeMedIkkeOmsorg(utbetalingsperioder))
-            .medAvslagBarnOver3år(sistePeriodeAvslåttPgaBarnOver3år(utbetalingsperioder))
+            .medIkkeOmsorg(finnesPeriodeMedIkkeOmsorg(vedtaksperioder))
+            .medAvslagBarnOver3år(sistePeriodeAvslåttPgaBarnOver3år(vedtaksperioder))
             .medGjelderMor(gjelderMor(fagsak))
             .medGjelderFødsel(familieHendelse.gjelderFødsel())
             .medIngenRefusjon(harIngenRefusjon(tilkjentYtelseForeldrepenger))
             .medDelvisRefusjon(harDelvisRefusjon(tilkjentYtelseForeldrepenger))
             .medFullRefusjon(harFullRefusjon(tilkjentYtelseForeldrepenger))
             .medFbEllerRvInnvilget(erFbEllerRvInnvilget(behandling))
-            .medAntallPerioder(finnAntallPerioder(utbetalingsperioder))
-            .medAntallInnvilgedePerioder(finnAntallInnvilgedePerioder(utbetalingsperioder))
-            .medAntallAvslåttePerioder(finnAntallAvslåttePerioder(utbetalingsperioder))
+            .medAntallInnvilgedePerioder(finnAntallInnvilgedePerioder(vedtaksperioder))
+            .medAntallAvslåttePerioder(finnAntallAvslåttePerioder(vedtaksperioder))
             .medAntallArbeidsgivere(finnAntallArbeidsgivere(tilkjentYtelseForeldrepenger))
             .medDagerTaptFørTermin(saldoer.tapteDagerFpff())
             .medDisponibleDager(finnDisponibleDager(saldoer, fagsak.getRelasjonsRolleType()))
@@ -163,16 +161,16 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medAntallBarn(antallBarn)
             .medPrematurDager(finnPrematurDagerHvisFinnes(saldoer))
             .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen())
-            .medUtbetalingsperioder(utbetalingsperioder)
-            .medHarVarierendeDagsats(harVarierendeDagsats(utbetalingsperioder))
-            .medStarterMedFullUtbetaling(starterMedFullUtbetaling(utbetalingsperioder))
+            .medPerioder(vedtaksperioder)
+            .medHarVarierendeDagsats(harVarierendeDagsats(vedtaksperioder))
+            .medStarterMedFullUtbetaling(starterMedFullUtbetaling(vedtaksperioder))
             .medKlagefristUker(brevParametere.getKlagefristUker())
             .medLovhjemlerUttak(UttakMapper.mapLovhjemlerForUttak(uttakResultatPerioder, konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
             .medLovhjemlerBeregning(
                 FellesMapper.formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForInnvilgetYtelse,
                     erInnvilgetRevurdering, behandling))
-            .medInkludereInnvilget(skalInkludereInnvilget(utbetalingsperioder, konsekvensForInnvilgetYtelse))
-            .medInkludereAvslag(skalInkludereAvslag(utbetalingsperioder, konsekvensForInnvilgetYtelse))
+            .medInkludereInnvilget(skalInkludereInnvilget(vedtaksperioder, konsekvensForInnvilgetYtelse))
+            .medInkludereAvslag(skalInkludereAvslag(vedtaksperioder, konsekvensForInnvilgetYtelse))
             .medUtenMinsterett(utenMinsterett)
             .medØnskerJustertVedFødsel(ytelseFordeling.ønskerJustertVedFødsel())
             .medGraderingOgFulltUttak(
@@ -181,14 +179,14 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
         finnSisteDagAvSistePeriode(uttakResultatPerioder).ifPresent(
             dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
-        finnUtbetalingFom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medUtbetalingFom(formaterDato(dato, språkkode)));
-        finnStønadsperiodeFom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));
-        finnStønadsperiodeTom(utbetalingsperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeTom(formaterDato(dato, språkkode)));
+        finnUtbetalingFom(vedtaksperioder).ifPresent(dato -> dokumentdataBuilder.medUtbetalingFom(formaterDato(dato, språkkode)));
+        finnStønadsperiodeFom(vedtaksperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));
+        finnStønadsperiodeTom(vedtaksperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeTom(formaterDato(dato, språkkode)));
 
         mapFelterRelatertTilBeregningsgrunnlag(beregningsgrunnlag, dokumentdataBuilder);
 
         //spesialhåndtering av 4095(avslått dager før fødsel) - skal kun vise tekst i brev om det fortsatt er mulig å søke om dagene
-        mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(utbetalingsperioder, dokumentdataBuilder);
+        mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(vedtaksperioder, dokumentdataBuilder);
 
         //Dersom alle barna er døde skal vi sette dødsdato og faktisk antallDødeBarn. Det er kun i disse tilfellene at innvilgelsesbrevet skal informere om at barnet/barna er døde, ellers er saken fortsatt løpende
         if (antallBarn == antallDødeBarn) {
@@ -200,25 +198,25 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         return dokumentdataBuilder.build();
     }
 
-    static boolean starterMedFullUtbetaling(List<Utbetalingsperiode> utbetalingsperioder) {
-        if (utbetalingsperioder.isEmpty()) {
+    static boolean starterMedFullUtbetaling(List<Vedtaksperiode> vedtaksperioder) {
+        if (vedtaksperioder.isEmpty()) {
             return false;
         }
-        return utbetalingsperioder.get(0).isFullUtbetaling();
+        return vedtaksperioder.get(0).isFullUtbetaling();
     }
 
-    static boolean harVarierendeDagsats(List<Utbetalingsperiode> utbetalingsperioder) {
-        if (utbetalingsperioder.isEmpty()) {
+    static boolean harVarierendeDagsats(List<Vedtaksperiode> vedtaksperioder) {
+        if (vedtaksperioder.isEmpty()) {
             return false;
         }
-        return utbetalingsperioder.stream().map(Utbetalingsperiode::getPeriodeDagsats).filter(dagsats -> dagsats > 0).distinct().count() > 1;
+        return vedtaksperioder.stream().map(Vedtaksperiode::getPeriodeDagsats).filter(dagsats -> dagsats > 0).distinct().count() > 1;
     }
 
-    private Optional<LocalDate> finnUtbetalingFom(List<Utbetalingsperiode> utbetalingsperioder) {
+    private Optional<LocalDate> finnUtbetalingFom(List<Vedtaksperiode> vedtaksperioder) {
         //Denne kan være optional hvis saksbehandler overstyrer uttak og avslår alle perioder i en revurdering. Eks sak 152211741
-        return utbetalingsperioder.stream()
+        return vedtaksperioder.stream()
             .filter(p -> p.getPeriodeDagsats() > 0)
-            .map(Utbetalingsperiode::getPeriodeFom)
+            .map(Vedtaksperiode::getPeriodeFom)
             .min(LocalDate::compareTo);
     }
 
@@ -231,16 +229,16 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         return  0;
     }
 
-    private List<Utbetalingsperiode> finnInnvilgedePerioderMedUtbetaling(List<Utbetalingsperiode> utbetalingsperioder) {
-        return utbetalingsperioder.stream()
-            .filter(Utbetalingsperiode::isInnvilget)
+    private List<Vedtaksperiode> finnInnvilgedePerioderMedUtbetaling(List<Vedtaksperiode> vedtaksperioder) {
+        return vedtaksperioder.stream()
+            .filter(Vedtaksperiode::isInnvilget)
             .filter(up -> up.getPrioritertUtbetalingsgrad().erStørreEnnNull())
             .toList();
     }
 
     private boolean vurderOmGraderingOgFulltUttakISammePeriode(Beregningsgrunnlag beregningsgrunnlag,
                                                                int antallArbeidsgivere,
-                                                               List<Utbetalingsperiode> innvilgedeUtbetalingsperioder) {
+                                                               List<Vedtaksperiode> innvilgedeUtbetalingsperioder) {
         if (innvilgedeUtbetalingsperioder != null && (harFlereAktivitetStatuser(beregningsgrunnlag) || antallArbeidsgivere > 1)) {
             //Sjekk om gradering og fullt uttak i samme periode
             return innvilgedeUtbetalingsperioder.stream().filter(this::periodeHarGradering).anyMatch(this::harPeriodeOgsåFulltUttak);
@@ -248,7 +246,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         return false;
     }
 
-    private boolean harPeriodeOgsåFulltUttak(Utbetalingsperiode periodeMedGradering) {
+    private boolean harPeriodeOgsåFulltUttak(Vedtaksperiode periodeMedGradering) {
         var fulltUttakArbforhold = periodeMedGradering.getArbeidsforholdsliste()
             .stream()
             .filter(Objects::nonNull)
@@ -262,7 +260,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         return fulltUttakArbforhold || fulltUttakAktvitet || fulltUttakNæring;
     }
 
-    private boolean periodeHarGradering(Utbetalingsperiode periode) {
+    private boolean periodeHarGradering(Vedtaksperiode periode) {
         return periode.getArbeidsforholdsliste().stream().anyMatch(Arbeidsforhold::isGradering) || periode.getAnnenAktivitetsliste()
             .stream()
             .anyMatch(AnnenAktivitet::isGradering) || (periode.getNæring() != null && periode.getNæring().isGradering());
@@ -274,18 +272,18 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .anyMatch(as -> (as.aktivitetStatus().harKombinertStatus()));
     }
 
-    private void mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(List<Utbetalingsperiode> utbetalingsperioder,
+    private void mapFeltKnyttetTilOmMorIkkeTarAlleUkerFørFødsel(List<Vedtaksperiode> vedtaksperioder,
                                                                 ForeldrepengerInnvilgelseDokumentdata.Builder builder) {
-        var morTarIkkeAlleUkene = utbetalingsperioder.stream()
-            .filter(Utbetalingsperiode::isAvslått)
+        var morTarIkkeAlleUkene = vedtaksperioder.stream()
+            .filter(Vedtaksperiode::isAvslått)
             .anyMatch(p -> PeriodeResultatÅrsak.MOR_TAR_IKKE_ALLE_UKENE.getKode().equals(p.getÅrsak().getKode()));
         var innenforFristTilÅSøke = false;
 
         if (morTarIkkeAlleUkene) {
-            innenforFristTilÅSøke = utbetalingsperioder.stream()
-                .filter(Utbetalingsperiode::isInnvilget)
+            innenforFristTilÅSøke = vedtaksperioder.stream()
+                .filter(Vedtaksperiode::isInnvilget)
                 .filter(up -> !StønadskontoType.FORELDREPENGER_FØR_FØDSEL.equals(up.getStønadskontoType()))
-                .map(Utbetalingsperiode::getPeriodeFom)
+                .map(Vedtaksperiode::getPeriodeFom)
                 .min(LocalDate::compareTo)
                 .map(md -> (LocalDate.now().isBefore(md.plusMonths(3))))
                 .orElse(false);

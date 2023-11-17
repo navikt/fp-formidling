@@ -56,7 +56,7 @@ import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -227,10 +227,10 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     void varierer_dagsats() {
-        var hundreKronerDagsatsPeriode = Utbetalingsperiode.ny()
+        var hundreKronerDagsatsPeriode = Vedtaksperiode.ny()
             .medPeriodeDagsats(100)
             .build();
-        var toHundreKronerDagsatsPeriode = Utbetalingsperiode.ny()
+        var toHundreKronerDagsatsPeriode = Vedtaksperiode.ny()
             .medPeriodeDagsats(200)
             .build();
         assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, hundreKronerDagsatsPeriode, toHundreKronerDagsatsPeriode))).isTrue();
@@ -241,11 +241,11 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     void starter_med_fullutbetaling() {
-        var ingenUtbetaling = Utbetalingsperiode.ny()
+        var ingenUtbetaling = Vedtaksperiode.ny()
             .medPrioritertUtbetalingsgrad(Prosent.NULL)
             .medFullUtbetaling(false)
             .build();
-        var fullUtbetaling = Utbetalingsperiode.ny()
+        var fullUtbetaling = Vedtaksperiode.ny()
             .medFullUtbetaling(true)
             .medPrioritertUtbetalingsgrad(Prosent.HUNDRE)
             .build();
@@ -257,13 +257,13 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     @Test
     void ikke_varierende_dagsats_hvis_starter_med_avslag() {
-        var avslåttPeriode = Utbetalingsperiode.ny()
+        var avslåttPeriode = Vedtaksperiode.ny()
             .medPeriodeDagsats(0)
             .build();
-        var toHundreKronerDagsatsPeriode = Utbetalingsperiode.ny()
+        var toHundreKronerDagsatsPeriode = Vedtaksperiode.ny()
             .medPeriodeDagsats(200)
             .build();
-        var hundreKronerDagsatsPeriode = Utbetalingsperiode.ny()
+        var hundreKronerDagsatsPeriode = Vedtaksperiode.ny()
             .medPeriodeDagsats(100)
             .build();
         assertThat(harVarierendeDagsats(List.of(avslåttPeriode, toHundreKronerDagsatsPeriode))).isFalse();

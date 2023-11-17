@@ -62,7 +62,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean kreverSammenhengendeUttak;
     private boolean morKanSøkeOmDagerFørFødsel;
 
-    private List<Utbetalingsperiode> perioder = new ArrayList<>();
+    private List<Vedtaksperiode> perioder = new ArrayList<>();
 
     private Beløp bruttoBeregningsgrunnlag;
     private boolean harBruktBruttoBeregningsgrunnlag;
@@ -282,7 +282,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return morKanSøkeOmDagerFørFødsel;
     }
 
-    public List<Utbetalingsperiode> getPerioder() {
+    public List<Vedtaksperiode> getPerioder() {
         return perioder;
     }
 
@@ -540,11 +540,6 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medAntallPerioder(int antallPerioder) {
-            this.kladd.antallPerioder = antallPerioder;
-            return this;
-        }
-
         public Builder medAntallInnvilgedePerioder(int antallInnvilgedePerioder) {
             this.kladd.antallInnvilgedePerioder = antallInnvilgedePerioder;
             return this;
@@ -635,8 +630,9 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medUtbetalingsperioder(List<Utbetalingsperiode> utbetalingsperioder) {
-            this.kladd.perioder = utbetalingsperioder;
+        public Builder medPerioder(List<Vedtaksperiode> vedtaksperioder) {
+            this.kladd.perioder = vedtaksperioder;
+            this.kladd.antallPerioder = vedtaksperioder.size();
             return this;
         }
 

@@ -4,7 +4,7 @@ import java.util.List;
 
 import no.nav.foreldrepenger.fpformidling.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
 import no.nav.foreldrepenger.fpformidling.uttak.fp.PeriodeResultatÅrsak;
 
 /**
@@ -15,32 +15,32 @@ public final class UndermalInkluderingMapper {
     private UndermalInkluderingMapper() {
     }
 
-    public static boolean skalInkludereInnvilget(List<Utbetalingsperiode> utbetalingsperioder, String konsekvens) {
+    public static boolean skalInkludereInnvilget(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
         if (KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvens)) {
             return false;
         }
-        var innvilgetPerioder = utbetalingsperioder.stream().filter(Utbetalingsperiode::isInnvilget).toList();
+        var innvilgetPerioder = vedtaksperioder.stream().filter(Vedtaksperiode::isInnvilget).toList();
         return innvilgetPerioder.size() > 1
             || erRevurderingMedEndringIUttak(konsekvens)
             || harKunEnPeriodeMedGradering(innvilgetPerioder)
             || harKunEnPeriodeMedOverføring(innvilgetPerioder);
     }
 
-    public static boolean skalInkludereAvslag(List<Utbetalingsperiode> utbetalingsperioder, String konsekvens) {
-        return utbetalingsperioder.stream().filter(periode -> !periodeMed4102UtenTapteDager(periode)).anyMatch(Utbetalingsperiode::isAvslått)
+    public static boolean skalInkludereAvslag(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
+        return vedtaksperioder.stream().filter(periode -> !periodeMed4102UtenTapteDager(periode)).anyMatch(Vedtaksperiode::isAvslått)
             && (!KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode().equals(konsekvens));
     }
 
-    private static boolean periodeMed4102UtenTapteDager(Utbetalingsperiode periode) {
+    private static boolean periodeMed4102UtenTapteDager(Vedtaksperiode periode) {
         return Årsak.of(PeriodeResultatÅrsak.BARE_FAR_RETT_IKKE_SØKT.getKode()).equals(periode.getÅrsak()) && periode.getAntallTapteDager() == 0;
     }
 
-    private static boolean harKunEnPeriodeMedGradering(List<Utbetalingsperiode> utbetalingsperioder) {
-        return utbetalingsperioder.size() == 1 && utbetalingsperioder.get(0).getÅrsak().erGraderingÅrsak();
+    private static boolean harKunEnPeriodeMedGradering(List<Vedtaksperiode> vedtaksperioder) {
+        return vedtaksperioder.size() == 1 && vedtaksperioder.get(0).getÅrsak().erGraderingÅrsak();
     }
 
-    private static boolean harKunEnPeriodeMedOverføring(List<Utbetalingsperiode> utbetalingsperioder) {
-        return utbetalingsperioder.size() == 1 && utbetalingsperioder.get(0).getÅrsak().erOverføring();
+    private static boolean harKunEnPeriodeMedOverføring(List<Vedtaksperiode> vedtaksperioder) {
+        return vedtaksperioder.size() == 1 && vedtaksperioder.get(0).getÅrsak().erOverføring();
     }
 
     private static boolean erRevurderingMedEndringIUttak(String konsekvens) {

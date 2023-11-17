@@ -34,7 +34,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.F
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.NaturalytelseEndringType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Utbetalingsperiode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -81,7 +81,7 @@ class DokumentdataSerializationTest {
             .medUtbetalingsgrad(Prosent.of(BigDecimal.valueOf(20)))
             .medProsentArbeid(Prosent.of(BigDecimal.valueOf(30)))
             .build();
-        var periode1 = Utbetalingsperiode.ny()
+        var periode1 = Vedtaksperiode.ny()
             .medInnvilget(true)
             .medÅrsak(Årsak.of("2001"))
             .medPeriodeFom(LocalDate.now().minusDays(10), Språkkode.NB)
@@ -93,7 +93,7 @@ class DokumentdataSerializationTest {
             .medNæring(næring)
             .medAnnenAktivitet(List.of(annenAktivitet))
             .build();
-        var periode2 = Utbetalingsperiode.ny()
+        var periode2 = Vedtaksperiode.ny()
             .medInnvilget(false)
             .medÅrsak(Årsak.of("2002"))
             .medPeriodeFom(LocalDate.now().minusDays(7), Språkkode.NB)
@@ -161,7 +161,6 @@ class DokumentdataSerializationTest {
             .medDelvisRefusjon(true)
             .medFullRefusjon(true)
             .medFbEllerRvInnvilget(true)
-            .medAntallPerioder(3)
             .medAntallInnvilgedePerioder(1)
             .medAntallAvslåttePerioder(2)
             .medAntallArbeidsgivere(3)
@@ -176,7 +175,7 @@ class DokumentdataSerializationTest {
             .medForeldrepengeperiodenUtvidetUker(7)
             .medAntallBarn(8)
             .medPrematurDager(9)
-            .medUtbetalingsperioder(of(periode1, periode2))
+            .medPerioder(of(periode1, periode2))
             .medBruttoBeregningsgrunnlag(Beløp.of(300L))
             .medHarBruktBruttoBeregningsgrunnlag(true)
             .medBeregningsgrunnlagregler(of(regel1, regel2))

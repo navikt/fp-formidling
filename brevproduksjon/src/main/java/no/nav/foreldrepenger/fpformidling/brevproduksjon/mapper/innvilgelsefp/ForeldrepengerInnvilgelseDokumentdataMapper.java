@@ -96,7 +96,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                                                                     boolean erUtkast) {
         var tilkjentYtelseForeldrepenger = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
-        var uttakResultatPerioder = domeneobjektProvider.hentForeldrepengerUttak(behandling);
+        var uttak = domeneobjektProvider.hentForeldrepengerUttak(behandling);
         var søknad = hentNyesteSøknad(behandling);
         var familieHendelse = domeneobjektProvider.hentFamiliehendelse(behandling);
         var originalFamiliehendelse = domeneobjektProvider.hentOriginalBehandlingHvisFinnes(behandling)
@@ -112,7 +112,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
-        var vedtaksperioder = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelseForeldrepenger.getPerioder(), uttakResultatPerioder,
+        var vedtaksperioder = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelseForeldrepenger.getPerioder(), uttak,
             beregningsgrunnlag.getBeregningsgrunnlagPerioder(), språkkode);
         var konsekvensForInnvilgetYtelse = mapKonsekvensForInnvilgetYtelse(behandling.getBehandlingsresultat().getKonsekvenserForYtelsen());
         var erInnvilgetRevurdering = erInnvilgetRevurdering(behandling);
@@ -120,8 +120,13 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var antallBarn = familieHendelse.antallBarn();
         var antallDødeBarn = familieHendelse.antallDødeBarn();
         var innvilgedeUtbetalingsperioder = finnInnvilgedePerioderMedUtbetaling(vedtaksperioder);
-        var utenAktKrav = disponibleDagerUtenAktivitetskrav(saldoer);
-        var medAktKrav = finnSaldo(saldoer, FORELDREPENGER) - utenAktKrav;
+
+        int utenAktKrav = 0;
+        int medAktKrav = 0;
+        if (bfhrMedMinsterett(fagsak, uttak, saldoer)) {
+            utenAktKrav = disponibleDagerUtenAktivitetskrav(saldoer);
+            medAktKrav = disponibleDagerMedAktivitetskrav(saldoer);
+        }
 
         var dokumentdataBuilder = ForeldrepengerInnvilgelseDokumentdata.ny()
             .medFelles(fellesBuilder.build())
@@ -134,11 +139,11 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelseForeldrepenger))
             .medForMyeUtbetalt(forMyeUtbetalt(vedtaksperioder, behandling))
             .medInntektMottattArbeidsgiver(erEndringMedEndretInntektsmelding(behandling))
-            .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(behandling, uttakResultatPerioder))
-            .medAnnenForelderHarRett(uttakResultatPerioder.annenForelderHarRett())
-            .medAnnenForelderRettEØS(uttakResultatPerioder.annenForelderRettEØS())
-            .medOppgittAnnenForelderRettEØS(uttakResultatPerioder.oppgittAnnenForelderRettEØS())
-            .medAleneomsorgKode(erAleneomsorg(søknad, uttakResultatPerioder))
+            .medAnnenForelderHarRettVurdert(utledAnnenForelderRettVurdertKode(behandling, uttak))
+            .medAnnenForelderHarRett(uttak.annenForelderHarRett())
+            .medAnnenForelderRettEØS(uttak.annenForelderRettEØS())
+            .medOppgittAnnenForelderRettEØS(uttak.oppgittAnnenForelderRettEØS())
+            .medAleneomsorgKode(erAleneomsorg(søknad, uttak))
             .medBarnErFødt(familieHendelse.barnErFødt())
             .medÅrsakErFødselshendelse(erRevurderingPgaFødselshendelse(behandling, familieHendelse, originalFamiliehendelse))
             .medIkkeOmsorg(finnesPeriodeMedIkkeOmsorg(vedtaksperioder))
@@ -165,7 +170,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medHarVarierendeDagsats(harVarierendeDagsats(vedtaksperioder))
             .medStarterMedFullUtbetaling(starterMedFullUtbetaling(vedtaksperioder))
             .medKlagefristUker(brevParametere.getKlagefristUker())
-            .medLovhjemlerUttak(UttakMapper.mapLovhjemlerForUttak(uttakResultatPerioder, konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
+            .medLovhjemlerUttak(UttakMapper.mapLovhjemlerForUttak(uttak, konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))
             .medLovhjemlerBeregning(
                 FellesMapper.formaterLovhjemlerForBeregning(beregningsgrunnlag.getHjemmel().getNavn(), konsekvensForInnvilgetYtelse,
                     erInnvilgetRevurdering, behandling))
@@ -177,7 +182,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
                 vurderOmGraderingOgFulltUttakISammePeriode(beregningsgrunnlag, finnAntallArbeidsgivere(tilkjentYtelseForeldrepenger),
                     innvilgedeUtbetalingsperioder));
 
-        finnSisteDagAvSistePeriode(uttakResultatPerioder).ifPresent(
+        finnSisteDagAvSistePeriode(uttak).ifPresent(
             dato -> dokumentdataBuilder.medSisteDagAvSistePeriode(formaterDato(dato, språkkode)));
         finnUtbetalingFom(vedtaksperioder).ifPresent(dato -> dokumentdataBuilder.medUtbetalingFom(formaterDato(dato, språkkode)));
         finnStønadsperiodeFom(vedtaksperioder).ifPresent(dato -> dokumentdataBuilder.medStønadsperiodeFom(formaterDato(dato, språkkode)));
@@ -223,10 +228,21 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
     private static int disponibleDagerUtenAktivitetskrav(Saldoer saldoer) {
         if (kontoEksisterer(saldoer, UTEN_AKTIVITETSKRAV)) {
             return finnSaldo(saldoer, UTEN_AKTIVITETSKRAV);
-        } else if (kontoEksisterer(saldoer, MINSTERETT)) {
-            return finnSaldo(saldoer, MINSTERETT);
         }
-        return  0;
+        return finnSaldo(saldoer, MINSTERETT);
+    }
+
+    private static int disponibleDagerMedAktivitetskrav(Saldoer saldoer) {
+        return finnSaldo(saldoer, FORELDREPENGER) - disponibleDagerUtenAktivitetskrav(saldoer);
+    }
+
+    private static boolean bfhrMedMinsterett(FagsakBackend fagsak, ForeldrepengerUttak uttak, Saldoer saldoer) {
+        return gjelderFarMedmor(fagsak) && !uttak.annenForelderHarRett()
+            && (kontoEksisterer(saldoer, MINSTERETT) || kontoEksisterer(saldoer, UTEN_AKTIVITETSKRAV));
+    }
+
+    private static boolean gjelderFarMedmor(FagsakBackend fagsak) {
+        return !gjelderMor(fagsak);
     }
 
     private List<Vedtaksperiode> finnInnvilgedePerioderMedUtbetaling(List<Vedtaksperiode> vedtaksperioder) {
@@ -310,7 +326,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .max(LocalDate::compareTo);
     }
 
-    private boolean gjelderMor(FagsakBackend fagsak) {
+    private static boolean gjelderMor(FagsakBackend fagsak) {
         return RelasjonsRolleType.MORA.equals(fagsak.getRelasjonsRolleType());
     }
 

@@ -5,7 +5,6 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Be
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erTermindatoEndret;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.opprettFellesBuilder;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.MottattdokumentMapper.finnførsteMottatteSøknad;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnAntallRefusjonerTilArbeidsgivere;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.finnMånedsbeløp;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harBrukerAndel;
@@ -73,10 +72,10 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
                                                                         Behandling behandling,
                                                                         boolean erUtkast) {
         var språkkode = behandling.getSpråkkode();
-        var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlag(behandling);
         var tilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
         var uttaksresultatSvp = domeneobjektProvider.hentSvangerskapspengerUttak(behandling);
+        var mottattDatoSøknad = domeneobjektProvider.hentMottattDatoSøknad(behandling);
 
 
         var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
@@ -94,7 +93,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
             .medAntallRefusjonerTilArbeidsgivere(finnAntallRefusjonerTilArbeidsgivere(tilkjentYtelse))
             .medStønadsperiodeTom(formaterDato(UtbetalingsperiodeMapper.finnSisteStønadsdato(alleUtbetalingsperioder), språkkode))
             .medMånedsbeløp(finnMånedsbeløp(tilkjentYtelse))
-            .medMottattDato(formaterDato(finnførsteMottatteSøknad(mottatteDokumenter), språkkode))
+            .medMottattDato(formaterDato(mottattDatoSøknad, språkkode))
             .medKlagefristUker(brevParametere.getKlagefristUker())
             .medAntallUtbetalingsperioder(alleUtbetalingsperioder.size())
             .medAktiviteterOgUtbetalingsperioder(utbetalingsPerioderPerAktvivitet)

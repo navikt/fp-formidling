@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -192,6 +193,15 @@ public interface Behandlinger {
             .flatMap(link -> hentDtoFraLink(link, StartdatoUtsattDto.class))
             .orElseThrow(() -> new IllegalStateException(
                 "Klarte ikke hente informasjon om utsatt startdato for behandling: " + hentBehandlingId(resourceLinker)));
+    }
+
+    default LocalDate hentMottattDatoSøknad(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker.stream()
+            .filter(dto -> "motattdato-søknad".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, LocalDate.class))
+            .orElseThrow(() -> new IllegalStateException(
+                "Klarte ikke hente informasjon om mottatt dato for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     private static UUID hentBehandlingId(List<BehandlingResourceLink> resourceLinker) {

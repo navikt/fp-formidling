@@ -4,6 +4,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatoVerktøy.erFomRettEtterTomDato;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.AktivitetsbeskrivelseUtleder.utledAktivitetsbeskrivelse;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +33,8 @@ public final class UtbetalingsperiodeMapper {
         Set<String> aktiviteterIPerioden = utledAktiviteterFraPerioder(gjeldendeTilkjentPerioder);
 
         gjeldendeTilkjentPerioder
-            .forEach(tilkjentPeriode -> tilkjentPeriode.getAndeler()
+            .forEach(tilkjentPeriode -> tilkjentPeriode.getAndeler().stream()
+                .filter(tilkjentYtelseAndel -> tilkjentYtelseAndel.getUtbetalingsgrad().compareTo(BigDecimal.ZERO) > 0)
                 .forEach(andel -> utbetalingsperioder.add(opprettUtbetalingsperiode(tilkjentPeriode, andel, språkkode))));
 
         aktiviteterIPerioden.forEach(aktivitet -> {

@@ -131,6 +131,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         var dokumentHendelse = lagStandardHendelseBuilder().build();
         when(domeneobjektProvider.hentBeregningsgrunnlag(any(Behandling.class))).thenReturn(opprettBeregningsgrunnlag());
         when(domeneobjektProvider.hentTilkjentYtelseForeldrepenger(any(Behandling.class))).thenReturn(opprettTilkjentYtelse());
+        when(domeneobjektProvider.hentMottattDatoSøknad(behandling)).thenReturn(SØKNAD_DATO);
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);

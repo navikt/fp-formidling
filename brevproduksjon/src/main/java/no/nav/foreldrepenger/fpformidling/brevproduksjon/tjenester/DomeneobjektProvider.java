@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -182,5 +183,8 @@ public class DomeneobjektProvider {
 
     public StartdatoUtsattDto hentStartdatoUtsatt(Behandling behandling) {
         return behandlingRestKlient.hentStartdatoUtsatt(behandling.getResourceLinker());
+    }
+    public LocalDate hentMottattDatoSøknad(Behandling behandling) {
+        return behandlingRestKlient.hentMottattDatoSøknad(behandling.getResourceLinker());
     }
 }

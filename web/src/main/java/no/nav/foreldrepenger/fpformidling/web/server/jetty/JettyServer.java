@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.web.server.jetty;
 
-import static org.eclipse.jetty.webapp.MetaInfConfiguration.CONTAINER_JAR_PATTERN;
+import static org.eclipse.jetty.ee10.webapp.MetaInfConfiguration.CONTAINER_JAR_PATTERN;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,36 +8,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.naming.NamingException;
-import jakarta.security.auth.message.config.AuthConfigFactory;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
-import org.eclipse.jetty.jaas.JAASLoginService;
-import org.eclipse.jetty.plus.jndi.EnvEntry;
-import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.ee10.cdi.CdiDecoratingListener;
+import org.eclipse.jetty.ee10.cdi.CdiServletContainerInitializer;
+import org.eclipse.jetty.ee10.plus.jndi.EnvEntry;
+import org.eclipse.jetty.ee10.security.jaspi.DefaultAuthConfigFactory;
+import org.eclipse.jetty.ee10.security.jaspi.JaspiAuthenticatorFactory;
+import org.eclipse.jetty.ee10.security.jaspi.provider.JaspiAuthConfigProvider;
+import org.eclipse.jetty.ee10.servlet.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.ee10.webapp.WebAppContext;
 import org.eclipse.jetty.security.DefaultIdentityService;
 import org.eclipse.jetty.security.SecurityHandler;
-import org.eclipse.jetty.security.jaspi.DefaultAuthConfigFactory;
-import org.eclipse.jetty.security.jaspi.JaspiAuthenticatorFactory;
-import org.eclipse.jetty.security.jaspi.provider.JaspiAuthConfigProvider;
+import org.eclipse.jetty.security.jaas.JAASLoginService;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.ForwardedRequestCustomizer;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.util.Callback;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import jakarta.security.auth.message.config.AuthConfigFactory;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.sikkerhet.jaspic.OidcAuthModule;
 
@@ -54,10 +55,11 @@ public class JettyServer {
      * Legges først slik at alltid resetter context før prosesserer nye requests.
      * Kjøres først så ikke risikerer andre har satt Request#setHandled(true).
      */
-    static final class ResetLogContextHandler extends AbstractHandler {
+    static final class ResetLogContextHandler extends Handler.Abstract {
         @Override
-        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) {
+        public boolean handle(Request request, Response response, Callback callback) {
             MDC.clear();
+            return false;
         }
     }
 
@@ -134,7 +136,7 @@ public class JettyServer {
     private void start() throws Exception {
         var server = new Server(getServerPort());
         server.setConnectors(createConnectors(server).toArray(new Connector[]{}));
-        var handlers = new HandlerList(new ResetLogContextHandler(), createContext());
+        var handlers = new Handler.Sequence(new ResetLogContextHandler(), createContext());
         server.setHandler(handlers);
         server.start();
         server.join();
@@ -162,22 +164,21 @@ public class JettyServer {
         ctx.setParentLoaderPriority(true);
 
         // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra filsystem.
-        String descriptor;
-        try (var resource = Resource.newClassPathResource("/WEB-INF/web.xml")) {
-            descriptor = resource.getURI().toURL().toExternalForm();
-        }
+        var resource = ResourceFactory.of(ctx).newClassLoaderResource("/WEB-INF/web.xml", false);
+        var descriptor = resource.getURI().toURL().toExternalForm();
         ctx.setDescriptor(descriptor);
 
         ctx.setContextPath(CONTEXT_PATH);
-        ctx.setResourceBase(".");
+        ctx.setBaseResourceAsString(".");
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
 
         // Scanns the CLASSPATH for classes and jars.
         ctx.setAttribute(CONTAINER_JAR_PATTERN, String.format("%s%s", ENV.isLocal() ? JETTY_LOCAL_CLASSES : "", JETTY_SCAN_LOCATIONS));
 
-        // WELD init
-        ctx.addEventListener(new org.jboss.weld.environment.servlet.Listener());
-        ctx.addEventListener(new org.jboss.weld.environment.servlet.BeanManagerResourceBindingListener());
+        // Enable Weld + CDI
+        ctx.setInitParameter(CdiServletContainerInitializer.CDI_INTEGRATION_ATTRIBUTE, CdiDecoratingListener.MODE);
+        ctx.addServletContainerInitializer(new CdiServletContainerInitializer());
+        ctx.addServletContainerInitializer(new org.jboss.weld.environment.servlet.EnhancedListener());
 
         ctx.setSecurityHandler(createSecurityHandler());
         ctx.setThrowUnavailableOnStartupException(true);

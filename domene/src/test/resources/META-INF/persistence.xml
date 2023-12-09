@@ -9,7 +9,6 @@
         <non-jta-data-source>jdbc/defaultDS</non-jta-data-source>
 
         <properties>
-            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.connection.autocommit" value="false"/>
             <property name="hibernate.jdbc.use_get_generated_keys" value="true"/>
             <property name="org.hibernate.flushMode" value="COMMIT"/>

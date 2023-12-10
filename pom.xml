@@ -29,8 +29,8 @@
         <sonar.projectKey>navikt_fp-formidling</sonar.projectKey>
 
         <!-- Felles artefakter -->
-        <felles.version>7.0.1</felles.version>
-        <prosesstask.version>5.0.1</prosesstask.version>
+        <felles.version>7.0.2</felles.version>
+        <prosesstask.version>5.0.2</prosesstask.version>
         <kontrakter.version>9.0.2</kontrakter.version>
 
         <!-- Eksterne -->

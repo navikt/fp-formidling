@@ -3,13 +3,17 @@
   "serviceuserkv": "/serviceuser/data/prod/srvfpformidling",
   "minReplicas": "2",
   "maxReplicas": "3",
+  "limits": {
+    "cpu": "2000m",
+    "mem": "2048Mi"
+  },
+  "requests": {
+    "cpu": "200m",
+    "mem": "1024Mi"
+  },
   "ingresses": [
-    "https://fpformidling.intern.nav.no",
     "https://fpformidling.prod-fss-pub.nais.io"
   ],
-  "env": {
-    "APPD_ENABLED": "true"
-  },
   "groups": [
     "73107205-17ec-4a07-a56e-e0a8542f90c9",
     "77f05833-ebfd-45fb-8be7-88eca8e7418f",

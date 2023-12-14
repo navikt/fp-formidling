@@ -12,6 +12,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 import java.util.Optional;
@@ -120,6 +122,9 @@ class BrevBestillerTjenesteTest {
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(DOKUMENT_MAL_TYPE)).thenReturn(dokumentdataMapper);
+        var verge = new Verge(VERGE.getId(), "", "", LocalDate.now().minusDays(1), LocalDate.now().plusMonths(1));
+        when(domeneobjektProvider.hentVerge(behandling)).thenReturn(Optional.of(verge));
+
         var taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
 
         // Act
@@ -136,6 +141,36 @@ class BrevBestillerTjenesteTest {
         assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
         assertThat(taskCaptor.getAllValues().get(1).getTasks().get(0).task().getPropertyValue("bestillingId")).isEqualTo(
             randomBestillingsUuid + "-" + 1);
+    }
+
+    @Test
+    void skal_ikke_generere_brev_til_verge_om_vergen_er_ugyldig() {
+        // Arrange
+        var randomBestillingsUuid = UUID.randomUUID();
+        var personinfo = mockPdl(true);
+        var behandling = mockDomeneobjektProvider(personinfo, true);
+        var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
+        when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
+        mockJournal(dokumentHendelse);
+        when(dokumentdataMapperProvider.getDokumentdataMapper(DOKUMENT_MAL_TYPE)).thenReturn(dokumentdataMapper);
+        var verge = new Verge(VERGE.getId(), "", "", LocalDate.now().minusMonths(1), LocalDate.now().minusDays(1));
+        when(domeneobjektProvider.hentVerge(behandling)).thenReturn(Optional.of(verge));
+        var taskCaptor = ArgumentCaptor.forClass(ProsessTaskGruppe.class);
+
+        // Act
+        tjeneste.bestillBrev(dokumentHendelse);
+
+        // Assert
+        verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
+        verify(opprettJournalpostTjeneste, times(1)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
+            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE));
+        verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
+
+        assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
+        assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
+        assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
+        assertThat(taskCaptor.getAllValues().get(0).getTasks().get(0).task().getPropertyValue("bestillingId")).isEqualTo(String.valueOf(randomBestillingsUuid));
     }
 
     @Test
@@ -254,21 +289,18 @@ class BrevBestillerTjenesteTest {
         return personinfoSøker;
     }
 
-    private Behandling mockDomeneobjektProvider(Personinfo personinfo, boolean harVerge) {
+    private Behandling mockDomeneobjektProvider(Personinfo personinfo, boolean harGyldigVerge) {
         var fagsakBackend = FagsakBackend.ny().medSaksnummer(SAKSNUMMER.getVerdi()).medAktørId(personinfo.getAktørId()).build();
         var behandling = Behandling.builder()
             .medUuid(BEHANDLING_UUID)
             .medFagsakBackend(fagsakBackend)
             .medSpråkkode(Språkkode.NB)
+            .medAvsluttet(LocalDateTime.now())
             .leggTilResourceLink(
-                harVerge ? BehandlingResourceLink.ny().medRel("soeker-verge").build() : BehandlingResourceLink.ny().medRel("annet").build())
+                harGyldigVerge ? BehandlingResourceLink.ny().medRel("verge-backend").build() : BehandlingResourceLink.ny().medRel("annet").build())
             .build();
         when(domeneobjektProvider.hentFagsakBackend(behandling)).thenReturn(fagsakBackend);
         when(domeneobjektProvider.hentBehandling(any(UUID.class))).thenReturn(behandling);
-        if (harVerge) {
-            var verge = new Verge(VERGE.getId(), "", "");
-            when(domeneobjektProvider.hentVerge(behandling)).thenReturn(Optional.of(verge));
-        }
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling)).thenReturn(new TilkjentYtelseEngangsstønad(1L));
         return behandling;
     }

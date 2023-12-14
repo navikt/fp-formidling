@@ -2,12 +2,29 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.personopplysnin
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.time.LocalDate;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VergeDto {
     private String navn;
     private String aktoerId;
     private String organisasjonsnummer;
+    private LocalDate gyldigFom;
+    private LocalDate gyldigTom;
 
+
+    public LocalDate getGydldigFom() {
+        return gyldigFom;
+    }
+    public void setGyldigFom(LocalDate gyldigFom) {
+        this.gyldigFom = gyldigFom;
+    }
+    public LocalDate getGyldigTom() {
+        return gyldigTom;
+    }
+    public void setGyldigTom(LocalDate gyldigTom) {
+        this.gyldigTom = gyldigTom;
+    }
     public String getNavn() {
         return navn;
     }

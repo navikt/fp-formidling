@@ -1,4 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.verge;
 
-public record Verge(String aktoerId, String organisasjonsnummer, String navn) {
+import java.time.LocalDate;
+
+public record Verge(String aktoerId, String organisasjonsnummer, String navn, LocalDate gyldigFom, LocalDate gyldigTom) {
 }

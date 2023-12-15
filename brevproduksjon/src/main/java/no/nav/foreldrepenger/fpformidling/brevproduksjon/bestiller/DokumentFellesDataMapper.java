@@ -43,22 +43,26 @@ public class DokumentFellesDataMapper {
         final var søkersAktørId = fagsak.getAktørId();
         final var ytelseType = fagsak.getYtelseType();
 
-        var vergeOpt = domeneobjektProvider.hentVerge(behandling);
-        if (vergeOpt.isEmpty()) {
+        var brevDato = LocalDate.now();
+
+        var gyldigVerge = domeneobjektProvider.hentVerge(behandling)
+            .filter(verge -> brevDato.isAfter(verge.gyldigFom()) && (brevDato.isBefore(verge.gyldigTom()) || brevDato.equals(verge.gyldigTom())))
+            .orElse(null);
+
+        if (gyldigVerge != null) {
+            // kopien går til søker
+            opprettDokumentDataForMottaker(behandling, dokumentData, ytelseType, søkersAktørId, søkersAktørId, DokumentFelles.Kopi.JA);
+
+            // orginalen går til verge
+            if (gyldigVerge.aktoerId() != null) {
+                var vergesAktørId = new AktørId(gyldigVerge.aktoerId());
+                opprettDokumentDataForMottaker(behandling, dokumentData, ytelseType, vergesAktørId, søkersAktørId, DokumentFelles.Kopi.NEI);
+            } else if (gyldigVerge.organisasjonsnummer() != null) {
+                opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, ytelseType, gyldigVerge, søkersAktørId, DokumentFelles.Kopi.NEI);
+            }
+        } else {
+            //ingen verge
             opprettDokumentDataForMottaker(behandling, dokumentData, ytelseType, søkersAktørId, søkersAktørId);
-            return;
-        }
-
-        // kopien går til søker
-        opprettDokumentDataForMottaker(behandling, dokumentData, ytelseType, søkersAktørId, søkersAktørId, DokumentFelles.Kopi.JA);
-
-        // orginalen går til verge
-        var verge = vergeOpt.get();
-        if (verge.aktoerId() != null) {
-            var vergesAktørId = new AktørId(verge.aktoerId());
-            opprettDokumentDataForMottaker(behandling, dokumentData, ytelseType, vergesAktørId, søkersAktørId, DokumentFelles.Kopi.NEI);
-        } else if (verge.organisasjonsnummer() != null) {
-            opprettDokumentDataForOrganisasjonsMottaker(behandling, dokumentData, ytelseType, verge, søkersAktørId, DokumentFelles.Kopi.NEI);
         }
     }
 

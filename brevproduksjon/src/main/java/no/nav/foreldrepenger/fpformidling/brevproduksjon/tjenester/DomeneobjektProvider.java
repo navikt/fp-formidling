@@ -169,7 +169,7 @@ public class DomeneobjektProvider {
 
     public Optional<Verge> hentVerge(Behandling behandling) {
         return behandlingRestKlient.hentVergeHvisFinnes(behandling.getResourceLinker())
-            .map(v -> new Verge(v.getAktoerId(), v.getOrganisasjonsnummer(), v.getNavn(), v.getGydldigFom(), v.getGyldigTom()));
+            .map(v -> new Verge(v.aktoerId(), v.organisasjonsnummer(), v.navn(), v.gyldigFom(), v.gyldigTom()));
     }
 
     public List<MottattDokument> hentMottatteDokumenter(Behandling behandling) {

@@ -11,7 +11,7 @@ services:
       - ./postgres-init:/docker-entrypoint-initdb.d/
     container_name: postgres_formidling
   vtp:
-    image: ghcr.io/navikt/vtp
+    image: europe-north1-docker.pkg.dev/nais-management-233d/teamforeldrepenger/navikt/vtp:latest
     environment:
       TZ: Europe/Oslo
       NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE: /app/.modig/keystore.jks

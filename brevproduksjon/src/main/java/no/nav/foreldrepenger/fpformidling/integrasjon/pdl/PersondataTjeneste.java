@@ -92,7 +92,7 @@ public class PersondataTjeneste {
 
         var query = new HentPersonQueryRequest();
         query.setIdent(aktørId.getId());
-        var projection = new PersonResponseProjection().navn(new NavnResponseProjection().forkortetNavn().fornavn().mellomnavn().etternavn())
+        var projection = new PersonResponseProjection().navn(new NavnResponseProjection().fornavn().mellomnavn().etternavn())
             .foedsel(new FoedselResponseProjection().foedselsdato())
             .doedsfall(new DoedsfallResponseProjection().doedsdato())
             .kjoenn(new KjoennResponseProjection().kjoenn())
@@ -132,10 +132,14 @@ public class PersondataTjeneste {
     }
 
     private static String mapNavn(Navn navn) {
-        if (navn.getForkortetNavn() != null) {
-            return navn.getForkortetNavn();
+        return navn.getFornavn() + leftPad(navn.getMellomnavn()) + leftPad(navn.getEtternavn());
+    }
+
+    private static String leftPad(String navn) {
+        if (navn == null) {
+            return "";
         }
-        return navn.getEtternavn() + " " + navn.getFornavn() + (navn.getMellomnavn() == null ? "" : " " + navn.getMellomnavn());
+        return " " + navn;
     }
 
     public static boolean harPersonstatusDød(String fregStatus) {
@@ -144,19 +148,18 @@ public class PersondataTjeneste {
 
     private static NavBrukerKjønn mapKjønn(Person person) {
         var kode = person.getKjoenn().stream().map(Kjoenn::getKjoenn).filter(Objects::nonNull).findFirst().orElse(KjoennType.UKJENT);
-        if (KjoennType.MANN.equals(kode)) {
-            return NavBrukerKjønn.MANN;
-        }
-        return KjoennType.KVINNE.equals(kode) ? NavBrukerKjønn.KVINNE : NavBrukerKjønn.UDEFINERT;
+        return switch (kode) {
+            case MANN -> NavBrukerKjønn.MANN;
+            case KVINNE -> NavBrukerKjønn.KVINNE;
+            default -> NavBrukerKjønn.UDEFINERT;
+        };
     }
 
     private static Persondata.Ytelse utledYtelse(FagsakYtelseType ytelseType) {
-        if (FagsakYtelseType.ENGANGSTØNAD.equals(ytelseType)) {
-            return Persondata.Ytelse.ENGANGSSTØNAD;
-        } else if (FagsakYtelseType.SVANGERSKAPSPENGER.equals(ytelseType)) {
-            return Persondata.Ytelse.SVANGERSKAPSPENGER;
-        } else {
-            return Persondata.Ytelse.FORELDREPENGER;
-        }
+        return switch (ytelseType) {
+            case ENGANGSTØNAD -> Persondata.Ytelse.ENGANGSSTØNAD;
+            case SVANGERSKAPSPENGER -> Persondata.Ytelse.SVANGERSKAPSPENGER;
+            default -> Persondata.Ytelse.FORELDREPENGER;
+        };
     }
 }

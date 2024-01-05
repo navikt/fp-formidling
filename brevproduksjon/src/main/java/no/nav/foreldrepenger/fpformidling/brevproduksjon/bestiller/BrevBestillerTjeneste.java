@@ -4,9 +4,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+
+import java.util.UUID;
 
 @ApplicationScoped
 public class BrevBestillerTjeneste {
@@ -29,16 +32,27 @@ public class BrevBestillerTjeneste {
     }
 
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse) {
-        var behandling = hentBehandling(dokumentHendelse);
+        var behandling = hentBehandling(dokumentHendelse.getBehandlingUuid());
         var dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
         return dokgenBrevproduksjonTjeneste.forhåndsvisBrev(dokumentHendelse, behandling, dokumentMal);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse) {
-        var behandling = hentBehandling(dokumentHendelse);
+        var behandling = hentBehandling(dokumentHendelse.getBehandlingUuid());
         var dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
         var dokumentType = utledDokumentType(dokumentHendelse.getYtelseType(), behandling, dokumentMal);
         dokgenBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, dokumentMal, dokumentType);
+    }
+
+    public String genererJson(UUID behandlingUuid){
+        var behandling = hentBehandling(behandlingUuid);
+        var dokumentHendelse = DokumentHendelse.builder()
+            .medBestillingUuid(UUID.randomUUID())
+            .medBehandlingUuid(behandlingUuid)
+            .medYtelseType(behandling.getFagsakBackend().getYtelseType())
+            .medGjelderVedtak(Boolean.TRUE).build();
+        var dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
+        return  dokgenBrevproduksjonTjeneste.genererJson(dokumentHendelse, behandling, dokumentMal, BestillingType.UTKAST );
     }
 
     private DokumentMalType utledDokumentType(FagsakYtelseType ytelseType, Behandling behandling, DokumentMalType dokumentMal) {
@@ -48,8 +62,8 @@ public class BrevBestillerTjeneste {
         return dokumentMal;
     }
 
-    private Behandling hentBehandling(DokumentHendelse dokumentHendelse) {
-        var behandling = domeneobjektProvider.hentBehandling(dokumentHendelse.getBehandlingUuid());
+    private Behandling hentBehandling(UUID behandlingUuid) {
+        var behandling = domeneobjektProvider.hentBehandling(behandlingUuid);
         domeneobjektProvider.hentFagsakBackend(behandling);
         return behandling;
     }

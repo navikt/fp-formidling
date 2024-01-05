@@ -5,6 +5,16 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.util.UUID;
 import java.util.function.Function;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -17,17 +27,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
@@ -52,22 +52,21 @@ public class ForvaltningRestTjeneste {
 
     private static final Logger LOG = LoggerFactory.getLogger(ForvaltningRestTjeneste.class);
     private static final Environment ENVIRONMENT = Environment.current();
-
     private Dokgen dokgenRestKlient;
-
     private DokumentHendelseTjeneste dokumentHendelseTjeneste;
-
     private ProsessTaskTjeneste taskTjeneste;
+    private BrevBestillerTjeneste brevBestillerTjeneste;
 
     public ForvaltningRestTjeneste() {
         // CDI
     }
 
     @Inject
-    public ForvaltningRestTjeneste(Dokgen dokgenRestKlient, DokumentHendelseTjeneste dokumentHendelseTjeneste, ProsessTaskTjeneste taskTjeneste) {
+    public ForvaltningRestTjeneste(Dokgen dokgenRestKlient, DokumentHendelseTjeneste dokumentHendelseTjeneste, ProsessTaskTjeneste taskTjeneste, BrevBestillerTjeneste brevBestillerTjeneste) {
         this.dokgenRestKlient = dokgenRestKlient;
         this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
         this.taskTjeneste = taskTjeneste;
+        this.brevBestillerTjeneste = brevBestillerTjeneste;
     }
 
     @POST
@@ -114,6 +113,21 @@ public class ForvaltningRestTjeneste {
         dokumentHendelseTjeneste.validerUnikOgLagre(dokumentHendelse).ifPresent(this::opprettBestillBrevTask);
 
         return Response.ok().build();
+    }
+
+    @POST
+    @Path("/generer-brevdata-json")
+    @Consumes(APPLICATION_JSON)
+    @Produces(APPLICATION_JSON)
+    @Operation(description = "Generer brevdata-json for siste vedtak i en behandling", tags = "forvaltning")
+    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.DRIFT, sporingslogg = false)
+    public Response genererBrevdata(@Parameter(description = "Behandling uuid det skal genereres json for.") @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class) @QueryParam("behandlingUuid") @Valid @NotNull UUID behandlingUuid) {
+
+        var resultat = brevBestillerTjeneste.genererJson(behandlingUuid);
+
+        var responseBuilder = Response.ok(resultat);
+
+        return responseBuilder.build();
     }
 
     private DokumentHendelse oppdaterBestillingId(DokumentHendelse originalHendelse) {

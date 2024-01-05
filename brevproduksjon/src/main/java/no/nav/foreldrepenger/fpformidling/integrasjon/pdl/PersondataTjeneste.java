@@ -92,7 +92,7 @@ public class PersondataTjeneste {
 
         var query = new HentPersonQueryRequest();
         query.setIdent(aktørId.getId());
-        var projection = new PersonResponseProjection().navn(new NavnResponseProjection().fornavn().mellomnavn().etternavn().gyldigFraOgMed())
+        var projection = new PersonResponseProjection().navn(new NavnResponseProjection().fornavn().mellomnavn().etternavn())
             .foedsel(new FoedselResponseProjection().foedselsdato())
             .doedsfall(new DoedsfallResponseProjection().doedsdato())
             .kjoenn(new KjoennResponseProjection().kjoenn())
@@ -132,7 +132,14 @@ public class PersondataTjeneste {
     }
 
     private static String mapNavn(Navn navn) {
-        return navn.getFornavn() + (navn.getMellomnavn() == null ? "" : " " + navn.getMellomnavn()) + " " + navn.getEtternavn();
+        return navn.getFornavn() + leftPad(navn.getMellomnavn()) + leftPad(navn.getEtternavn());
+    }
+
+    private static String leftPad(String navn) {
+        if (navn == null) {
+            return "";
+        }
+        return " " + navn;
     }
 
     public static boolean harPersonstatusDød(String fregStatus) {

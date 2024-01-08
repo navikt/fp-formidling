@@ -140,10 +140,29 @@ public class DokgenBrevproduksjonTjeneste {
         return brev;
     }
 
+    public String genererJson(DokumentHendelse dokumentHendelse,
+                                   Behandling behandling,
+                                   DokumentMalType dokumentMal,
+                                   BestillingType bestillingType) {
+        var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
+        var dokumentData = lagDokumentDataFor(behandling, dokumentMal, bestillingType);
+        var dokumentfelles = dokumentData.getFørsteDokumentFelles();
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentfelles, dokumentHendelse, behandling,BestillingType.UTKAST == bestillingType);
+        dokumentfelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
+        dokumentdata.getFelles().anonymiser();
+        return DefaultJsonMapper.toJson(dokumentdata);
+    }
+
     private DokumentData lagreDokumentDataFor(Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {
         var dokumentData = lagDokumentData(behandling, dokumentMal, bestillingType);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
         dokumentRepository.lagre(dokumentData);
+        return dokumentData;
+    }
+
+    private DokumentData lagDokumentDataFor(Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {
+        var dokumentData = lagDokumentData(behandling, dokumentMal, bestillingType);
+        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
         return dokumentData;
     }
 

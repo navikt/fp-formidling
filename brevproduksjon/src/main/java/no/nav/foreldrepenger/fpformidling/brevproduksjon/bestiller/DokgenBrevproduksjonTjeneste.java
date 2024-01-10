@@ -20,7 +20,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.Sen
 import no.nav.foreldrepenger.fpformidling.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
@@ -43,7 +42,6 @@ public class DokgenBrevproduksjonTjeneste {
 
     private DokumentFellesDataMapper dokumentFellesDataMapper;
     private DomeneobjektProvider domeneobjektProvider;
-    private DokumentRepository dokumentRepository;
     private Dokgen dokgenKlient;
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
     private DokumentdataMapperProvider dokumentdataMapperProvider;
@@ -56,14 +54,12 @@ public class DokgenBrevproduksjonTjeneste {
     @Inject
     public DokgenBrevproduksjonTjeneste(DokumentFellesDataMapper dokumentFellesDataMapper,
                                         DomeneobjektProvider domeneobjektProvider,
-                                        DokumentRepository dokumentRepository,
                                         Dokgen dokgenKlient,
                                         OpprettJournalpostTjeneste opprettJournalpostTjeneste,
                                         DokumentdataMapperProvider dokumentdataMapperProvider,
                                         ProsessTaskTjeneste taskTjeneste) {
         this.dokumentFellesDataMapper = dokumentFellesDataMapper;
         this.domeneobjektProvider = domeneobjektProvider;
-        this.dokumentRepository = dokumentRepository;
         this.dokgenKlient = dokgenKlient;
         this.opprettJournalpostTjeneste = opprettJournalpostTjeneste;
         this.dokumentdataMapperProvider = dokumentdataMapperProvider;
@@ -72,14 +68,14 @@ public class DokgenBrevproduksjonTjeneste {
 
     public byte[] forhåndsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
         var utkast = BestillingType.UTKAST;
-        var dokumentData = lagreDokumentDataFor(behandling, dokumentMal, utkast);
+        var dokumentData = lagDokumentDataFor(behandling, dokumentMal, utkast);
         // hvis verge finnes produseres det 2 brev. Vi forhåndsviser kun en av dem.
         return genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentData.getFørsteDokumentFelles(), utkast);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, DokumentMalType originalDokumentType) {
         var bestillingType = BestillingType.BESTILL;
-        var dokumentData = lagreDokumentDataFor(behandling, dokumentMal, bestillingType);
+        var dokumentData = lagDokumentDataFor(behandling, dokumentMal, bestillingType);
         var teller = 0;
         for (var dokumentFelles : dokumentData.getDokumentFelles()) {
             var brev = genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentFelles, bestillingType);
@@ -122,7 +118,6 @@ public class DokgenBrevproduksjonTjeneste {
         var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling,
             BestillingType.UTKAST == bestillingType);
-        dokumentFelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
 
         byte[] brev;
         try {
@@ -148,16 +143,8 @@ public class DokgenBrevproduksjonTjeneste {
         var dokumentData = lagDokumentDataFor(behandling, dokumentMal, bestillingType);
         var dokumentfelles = dokumentData.getFørsteDokumentFelles();
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentfelles, dokumentHendelse, behandling,BestillingType.UTKAST == bestillingType);
-        dokumentfelles.setBrevData(DefaultJsonMapper.toJson(dokumentdata));
         dokumentdata.getFelles().anonymiser();
         return DefaultJsonMapper.toJson(dokumentdata);
-    }
-
-    private DokumentData lagreDokumentDataFor(Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {
-        var dokumentData = lagDokumentData(behandling, dokumentMal, bestillingType);
-        dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
-        dokumentRepository.lagre(dokumentData);
-        return dokumentData;
     }
 
     private DokumentData lagDokumentDataFor(Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {

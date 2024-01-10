@@ -6,49 +6,24 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Version;
-
-import no.nav.foreldrepenger.fpformidling.jpa.BaseEntitet;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
-@Entity(name = "DokumentData")
-@Table(name = "DOKUMENT_DATA")
-public class DokumentData extends BaseEntitet {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_DOKUMENT_DATA")
+public class DokumentData {
     private Long id;
 
-    @Version
-    @Column(name = "versjon", nullable = false)
-    private long versjon;
-
-    @Convert(converter = DokumentMalType.KodeverdiConverter.class)
-    @Column(name = "dokument_mal_navn", nullable = false)
     private DokumentMalType dokumentMalType = DokumentMalType.UDEFINERT;
 
-    @OneToMany(mappedBy = "dokumentData")
     private Set<DokumentFelles> dokumentFelles = new HashSet<>(1);
 
-    @Column(name = "behandling_uuid", nullable = false)
     private UUID behandlingUuid;
 
-    @Column(name = "bestilt_tid", nullable = false)
     private LocalDateTime bestiltTid;
 
-    @Column(name = "bestilling_type", nullable = false)
     private String bestillingType;
 
     @SuppressWarnings("unused")
     public DokumentData() {
-        // Hibernate
+        // CDI
     }
 
     private DokumentData(Builder builder) {

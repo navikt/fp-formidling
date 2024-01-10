@@ -128,9 +128,7 @@ public class DokumentFellesDataMapper {
             .medSakspartPersonStatus(getPersonstatusVerdi(personinfoBruker));
 
         if (behandling.isToTrinnsBehandling() || behandling.erKlage()) {
-            builder.medAutomatiskBehandlet(Boolean.FALSE)
-                .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
-                .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter());
+            builder.medAutomatiskBehandlet(Boolean.FALSE);
         }
         builder.build();
     }
@@ -157,14 +155,12 @@ public class DokumentFellesDataMapper {
             .medSakspartPersonStatus(getPersonstatusVerdi(personinfoBruker));
 
         if (behandling.isToTrinnsBehandling() || behandling.erKlage()) {
-            builder.medAutomatiskBehandlet(Boolean.FALSE)
-                .medSignerendeSaksbehandlerNavn(behandling.getAnsvarligSaksbehandler())
-                .medSignerendeBeslutterNavn(behandling.getAnsvarligBeslutter());
+            builder.medAutomatiskBehandlet(Boolean.FALSE);
         }
         builder.build();
     }
 
-    //Todo når vi har koblet oss fra team CCM bør denne bruke faktiske koder og ikke gjøre om
+
     private DokumentFelles.PersonStatus getPersonstatusVerdi(Personinfo personinfo) {
         return personinfo.isRegistrertDød() ? DokumentFelles.PersonStatus.DOD : DokumentFelles.PersonStatus.ANNET;
     }

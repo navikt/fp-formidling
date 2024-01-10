@@ -4,51 +4,15 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Converter;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import jakarta.persistence.Version;
-
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.jpa.BaseEntitet;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
-import no.nav.vedtak.felles.jpa.converters.BooleanToStringConverter;
 
-@Entity(name = "DokumentFelles")
-@Table(name = "DOKUMENT_FELLES")
-public class DokumentFelles extends BaseEntitet {
+public class DokumentFelles {
 
     public enum PersonStatus {
         DOD,
         ANNET;
-
-        @Converter(autoApply = true)
-        public static class KodeverdiConverter implements AttributeConverter<PersonStatus, String> {
-            @Override
-            public String convertToDatabaseColumn(PersonStatus status) {
-                return status == null ? null : status.name();
-            }
-
-            @Override
-            public PersonStatus convertToEntityAttribute(String status) {
-                return status == null ? null : PersonStatus.valueOf(status);
-            }
-        }
     }
 
     public enum Kopi {
@@ -60,70 +24,24 @@ public class DokumentFelles extends BaseEntitet {
         PERSON,
         ORGANISASJON;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_DOKUMENT_FELLES")
-    private Long id;
-
-    @Version
-    @Column(name = "versjon", nullable = false)
-    private long versjon;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "sprak_kode", nullable = false)
     private Språkkode språkkode;
-
-    @Embedded
-    @AttributeOverrides(@AttributeOverride(name = "saksnummer", column = @Column(name = "saksnummer", nullable = false, updatable = false)))
     private Saksnummer saksnummer;
-
-    @Column(name = "sign_saksbehandler_navn")
-    private String signerendeSaksbehandlerNavn;
-
-    @Convert(converter = BooleanToStringConverter.class)
-    @Column(name = "automatisk_behandlet", nullable = false)
     private Boolean automatiskBehandlet;
-
-    @Column(name = "sakspart_id", nullable = false)
     private String sakspartId;
-
-    @Column(name = "sakspart_navn", nullable = false)
     private String sakspartNavn;
-
-    @Column(name = "sign_beslutter_navn")
-    private String signerendeBeslutterNavn;
-
-    @Column(name = "mottaker_id", nullable = false)
     private String mottakerId;
-
-    @Column(name = "mottaker_navn", nullable = false)
     private String mottakerNavn;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "dokument_data_id", nullable = false, updatable = false)
     private DokumentData dokumentData;
-
-    @Column(name = "dokument_dato", nullable = false)
     private LocalDate dokumentDato;
-
-    @Convert(converter = PersonStatus.KodeverdiConverter.class)
-    @Column(name = "sakspart_person_status", nullable = false)
     private PersonStatus sakspartPersonStatus;
-
-    @Column(name = "brev_data")
-    private String brevData;
-
-    @Transient
     private Kopi erKopi;
-
-    @Transient
     private MottakerType mottakerType;
 
     public DokumentFelles() {
-        // Hibernate
+        // Cdi
     }
 
-    private DokumentFelles(DokumentData dokumentData) {
+    public DokumentFelles(DokumentData dokumentData) {
         this.dokumentData = dokumentData;
         dokumentData.addDokumentFelles(this);
     }
@@ -136,20 +54,12 @@ public class DokumentFelles extends BaseEntitet {
         return new Builder();
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public Språkkode getSpråkkode() {
         return språkkode;
     }
 
     public Saksnummer getSaksnummer() {
         return saksnummer;
-    }
-
-    public String getSignerendeSaksbehandlerNavn() {
-        return signerendeSaksbehandlerNavn;
     }
 
     public Boolean getAutomatiskBehandlet() {
@@ -162,10 +72,6 @@ public class DokumentFelles extends BaseEntitet {
 
     public String getSakspartNavn() {
         return sakspartNavn;
-    }
-
-    public String getSignerendeBeslutterNavn() {
-        return signerendeBeslutterNavn;
     }
 
     public String getMottakerId() {
@@ -196,31 +102,23 @@ public class DokumentFelles extends BaseEntitet {
         return mottakerType;
     }
 
-    public void setBrevData(String brevData) {
-        this.brevData = brevData;
-    }
-
     @Override
     public boolean equals(Object object) {
         if (object == this) {
             return true;
         }
-        if (!(object instanceof DokumentFelles)) {
+        if (!(object instanceof DokumentFelles dokFelles)) {
             return false;
         }
-        var dokFelles = (DokumentFelles) object;
-        return Objects.equals(getSpråkkode(), dokFelles.getSpråkkode()) && Objects.equals(saksnummer, dokFelles.getSaksnummer()) && Objects.equals(
-            signerendeSaksbehandlerNavn, dokFelles.getSignerendeSaksbehandlerNavn()) && Objects.equals(automatiskBehandlet,
+        return Objects.equals(getSpråkkode(), dokFelles.getSpråkkode()) && Objects.equals(saksnummer, dokFelles.getSaksnummer()) && Objects.equals(automatiskBehandlet,
             dokFelles.getAutomatiskBehandlet()) && Objects.equals(sakspartId, dokFelles.getSakspartId()) && Objects.equals(sakspartNavn,
-            dokFelles.getSakspartNavn()) && Objects.equals(signerendeBeslutterNavn, dokFelles.getSignerendeBeslutterNavn()) && Objects.equals(
-            mottakerId, dokFelles.getMottakerId()) && Objects.equals(mottakerNavn, dokFelles.getMottakerNavn()) && Objects.equals(dokumentDato,
+            dokFelles.getSakspartNavn())  && Objects.equals(mottakerId, dokFelles.getMottakerId()) && Objects.equals(mottakerNavn, dokFelles.getMottakerNavn()) && Objects.equals(dokumentDato,
             dokFelles.getDokumentDato()) && Objects.equals(sakspartPersonStatus, dokFelles.getSakspartPersonStatus());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSpråkkode(), saksnummer, signerendeSaksbehandlerNavn, automatiskBehandlet, sakspartId, sakspartNavn,
-            signerendeBeslutterNavn, mottakerId, mottakerNavn, dokumentDato, sakspartPersonStatus);
+        return Objects.hash(getSpråkkode(), saksnummer, automatiskBehandlet, sakspartId, sakspartNavn, mottakerId, mottakerNavn, dokumentDato, sakspartPersonStatus);
     }
 
     @Override
@@ -247,16 +145,6 @@ public class DokumentFelles extends BaseEntitet {
 
         public Builder medSaksnummer(Saksnummer saksnummer) {
             this.dokumentFelles.saksnummer = saksnummer;
-            return this;
-        }
-
-        public Builder medSignerendeBeslutterNavn(String signerendeBeslutterNavn) {
-            this.dokumentFelles.signerendeBeslutterNavn = signerendeBeslutterNavn;
-            return this;
-        }
-
-        public Builder medSignerendeSaksbehandlerNavn(String signerendeSaksbehandlerNavn) {
-            this.dokumentFelles.signerendeSaksbehandlerNavn = signerendeSaksbehandlerNavn;
             return this;
         }
 

@@ -36,7 +36,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.DistribuerBrevTask
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.SendKvitteringTask;
 import no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.dokumentdata.repository.DokumentRepository;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.geografisk.Språkkode;
@@ -85,8 +84,6 @@ class BrevBestillerTjenesteTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider;
     @Mock
-    private DokumentRepository dokumentRepository;
-    @Mock
     private Dokgen dokgenRestKlient;
     @Mock
     private OpprettJournalpostTjeneste opprettJournalpostTjeneste;
@@ -106,7 +103,7 @@ class BrevBestillerTjenesteTest {
         dokumentdataMapper = new EngangsstønadInnvilgelseDokumentdataMapper(new BrevParametere(6, 3, Period.ofWeeks(3), Period.ofWeeks(4)),
             domeneobjektProvider);
         var dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, virksomhetTjeneste);
-        var dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider, dokumentRepository,
+        var dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider,
             dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste);
         tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
     }

@@ -5,11 +5,7 @@
                  https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd"
                  version="3.0">
 
-    <sequence-generator name="SEQ_DOKUMENT_DATA" allocation-size="50" sequence-name="SEQ_DOKUMENT_DATA"/>
-    <sequence-generator name="SEQ_DOKUMENT_FELLES" allocation-size="50" sequence-name="SEQ_DOKUMENT_FELLES"/>
     <sequence-generator name="SEQ_DOKUMENT_HENDELSE" allocation-size="50" sequence-name="SEQ_DOKUMENT_HENDELSE"/>
 
-    <entity class="no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentData"/>
-    <entity class="no.nav.foreldrepenger.fpformidling.dokumentdata.DokumentFelles"/>
     <entity class="no.nav.foreldrepenger.fpformidling.hendelser.DokumentHendelse"/>
 </entity-mappings>

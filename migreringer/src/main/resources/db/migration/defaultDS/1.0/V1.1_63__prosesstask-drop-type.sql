@@ -1,2 +1,0 @@
-drop table PROSESS_TASK_TYPE ;
-drop table PROSESS_TASK_FEILHAND ;

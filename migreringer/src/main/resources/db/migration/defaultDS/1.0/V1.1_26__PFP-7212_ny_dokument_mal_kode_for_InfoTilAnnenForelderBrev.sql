@@ -1,2 +1,0 @@
-Insert into DOKUMENT_MAL_TYPE (KODE, NAVN, TILGJENGELIG_MANUELL_UTSENDELSE, DOKUMENT_MAL_RESTRIKSJON, DOKSYS_KODE)
-values ('INAFOR', 'Informasjonsbrev til den andre forelderen ', 'N', 'INGEN', '000096');

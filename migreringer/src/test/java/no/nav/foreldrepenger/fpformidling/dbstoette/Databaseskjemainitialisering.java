@@ -42,7 +42,7 @@ public final class Databaseskjemainitialisering {
     @SuppressWarnings("resource")
     public static void migrerUnittestSkjemaer() {
         if (GUARD_UNIT_TEST_SKJEMAER.compareAndSet(false, true)) {
-            var flyway = Flyway.configure().dataSource(createDs(USER)).locations(DB_SCRIPT_LOCATION).baselineOnMigrate(true).load();
+            var flyway = Flyway.configure().dataSource(createDs(USER)).locations(DB_SCRIPT_LOCATION).baselineOnMigrate(true).cleanDisabled(false).load();
             try {
                 flyway.migrate();
             } catch (FlywayException fwe) {

@@ -1,1 +1,0 @@
-alter table dokument_felles drop column xml;

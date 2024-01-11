@@ -1,2 +1,0 @@
-drop table dokument_historikkinnslag;
-drop sequence seq_dokument_historikk;

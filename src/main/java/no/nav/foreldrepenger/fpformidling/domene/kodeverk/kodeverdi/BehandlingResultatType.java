@@ -1,0 +1,82 @@
+package no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi;
+
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+@JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
+public enum BehandlingResultatType implements Kodeverdi {
+
+    IKKE_FASTSATT("IKKE_FASTSATT"),
+    INNVILGET("INNVILGET"),
+    AVSLÅTT("AVSLÅTT"),
+    OPPHØR("OPPHØR"),
+    HENLAGT_SØKNAD_TRUKKET("HENLAGT_SØKNAD_TRUKKET"),
+    HENLAGT_FEILOPPRETTET("HENLAGT_FEILOPPRETTET"),
+    HENLAGT_BRUKER_DØD("HENLAGT_BRUKER_DØD"),
+    MERGET_OG_HENLAGT("MERGET_OG_HENLAGT"),
+    HENLAGT_SØKNAD_MANGLER("HENLAGT_SØKNAD_MANGLER"),
+    FORELDREPENGER_ENDRET("FORELDREPENGER_ENDRET"),
+    FORELDREPENGER_SENERE("FORELDREPENGER_SENERE"),
+    INGEN_ENDRING("INGEN_ENDRING"),
+    MANGLER_BEREGNINGSREGLER("MANGLER_BEREGNINGSREGLER"),
+
+    // Klage
+    KLAGE_AVVIST("KLAGE_AVVIST"),
+    KLAGE_MEDHOLD("KLAGE_MEDHOLD"),
+    UGUNST_MEDHOLD_I_KLAGE("UGUNST_MEDHOLD_I_KLAGE"),
+    DELVIS_MEDHOLD_I_KLAGE("DELVIS_MEDHOLD_I_KLAGE"),
+    KLAGE_DELVIS_MEDHOLD("KLAGE_DELVIS_MEDHOLD"),
+    KLAGE_OMGJORT_UGUNST("KLAGE_OMGJORT_UGUNST"),
+    KLAGE_YTELSESVEDTAK_OPPHEVET("KLAGE_YTELSESVEDTAK_OPPHEVET"),
+    KLAGE_YTELSESVEDTAK_STADFESTET("KLAGE_YTELSESVEDTAK_STADFESTET"),
+    KLAGE_TILBAKEKREVING_VEDTAK_STADFESTET("KLAGE_TILBAKEKREVING_VEDTAK_STADFESTET"), // Brukes av kun Tilbakekreving eller Tilbakekreving Revurdering
+    HENLAGT_KLAGE_TRUKKET("HENLAGT_KLAGE_TRUKKET"),
+    HJEMSENDE_UTEN_OPPHEVE("HJEMSENDE_UTEN_OPPHEVE"),
+
+    // Anke
+    ANKE_AVVIST("ANKE_AVVIST"),
+    ANKE_OMGJOER("ANKE_OMGJOER"),
+    ANKE_MEDHOLD("ANKE_MEDHOLD"),
+    ANKE_DELVIS_MEDHOLD("ANKE_DELVIS_MEDHOLD"),
+    ANKE_OMGJORT_UGUNST("ANKE_OMGJORT_UGUNST"),
+    ANKE_OPPHEVE_OG_HJEMSENDE("ANKE_OPPHEVE_OG_HJEMSENDE"),
+    ANKE_HJEMSENDE_UTEN_OPPHEV("ANKE_HJEMSENDE_UTEN_OPPHEV"),
+    ANKE_YTELSESVEDTAK_STADFESTET("ANKE_YTELSESVEDTAK_STADFESTET"),
+    ANKE_DELVIS_OMGJOERING_TIL_GUNST("ANKE_DELVIS_OMGJOERING_TIL_GUNST"),
+    ANKE_TIL_UGUNST("ANKE_TIL_UGUNST"),
+
+    // Innsyn
+    INNSYN_INNVILGET("INNSYN_INNVILGET"),
+    INNSYN_DELVIS_INNVILGET("INNSYN_DELVIS_INNVILGET"),
+    INNSYN_AVVIST("INNSYN_AVVIST"),
+    HENLAGT_INNSYN_TRUKKET("HENLAGT_INNSYN_TRUKKET"),
+
+    ;
+
+    private static final Set<BehandlingResultatType> ALLE_HENLEGGELSESKODER = Set.of(HENLAGT_SØKNAD_TRUKKET, HENLAGT_FEILOPPRETTET,
+        HENLAGT_BRUKER_DØD, HENLAGT_KLAGE_TRUKKET, MERGET_OG_HENLAGT, HENLAGT_SØKNAD_MANGLER, HENLAGT_INNSYN_TRUKKET, MANGLER_BEREGNINGSREGLER);
+
+    @JsonValue
+    private String kode;
+
+    private BehandlingResultatType(String kode) {
+        this.kode = kode;
+    }
+
+    @Override
+    public String getKode() {
+        return kode;
+    }
+
+    public static Set<BehandlingResultatType> getAlleHenleggelseskoder() {
+        return ALLE_HENLEGGELSESKODER;
+    }
+
+    public boolean erHenlagt() {
+        return ALLE_HENLEGGELSESKODER.contains(this);
+    }
+}

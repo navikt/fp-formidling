@@ -10,8 +10,8 @@ ENV JAVA_OPTS="-Djava.security.egd=file:/dev/urandom \
     -Dlogback.configurationFile=conf/logback.xml"
 
 # Config
-COPY web/target/classes/logback*.xml ./conf/
+COPY target/classes/logback*.xml ./conf/
 
 # Application Container (Jetty)
-COPY web/target/lib/*.jar ./lib/
-COPY web/target/app.jar .
+COPY target/lib/*.jar ./lib/
+COPY target/app.jar .

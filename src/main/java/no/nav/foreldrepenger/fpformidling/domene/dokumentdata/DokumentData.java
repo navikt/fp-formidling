@@ -9,11 +9,10 @@ import java.util.UUID;
 import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.DokumentMalType;
 
 public class DokumentData {
-    private Long id;
 
     private DokumentMalType dokumentMalType = DokumentMalType.UDEFINERT;
 
-    private Set<DokumentFelles> dokumentFelles = new HashSet<>(1);
+    private final Set<DokumentFelles> dokumentFelles = HashSet.newHashSet(1);
 
     private UUID behandlingUuid;
 
@@ -35,10 +34,6 @@ public class DokumentData {
 
     public static Builder builder() {
         return new Builder();
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public DokumentMalType getDokumentMalType() {

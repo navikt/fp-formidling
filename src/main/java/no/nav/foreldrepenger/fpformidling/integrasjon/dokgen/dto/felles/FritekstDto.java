@@ -126,6 +126,6 @@ public class FritekstDto {
 
     // Når linker copy-pastes inn i fritekst er de ikke lengre klikkbare og må derfor fikses:
     private static String fiksNavNoLinker(String fritekst) {
-        return fritekst.replaceAll("(.??)(nav.no/\\w*)(\s*|\\.)(.??)", "$1[$2](https://$2)$3$4");
+        return fritekst.replaceAll("(nav.no/\\w*)", "[$1](https://$1)");
     }
 }

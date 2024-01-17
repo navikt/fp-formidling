@@ -13,6 +13,9 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
 class FritekstTest {
 
     private static final String HENDELSE_FRITEKST = "HENDELSE_FRITEKST";
@@ -79,14 +82,22 @@ class FritekstTest {
             "Les mer om dette på [nav.no/foreldrepenger](https://nav.no/foreldrepenger).\\\nDu finner mer informasjon på [nav.no/klage](https://nav.no/klage) og [nav.no/familie](https://nav.no/familie).");
     }
 
-    @Test
-    void skal_sette_inn_ekstra_linjeskift_i_fritekst_der_det_ikke_er_punktliste() {
+    @ParameterizedTest
+    @CsvSource({
+        "'Tekst 1\n- Vedlegg 1\n- Vedlegg 2\nTekst 2.\nTekst 3\n- Vedlegg 3\nTekst 4', 'Tekst 1\n- Vedlegg 1\n- Vedlegg 2\n\nTekst 2.\\\nTekst 3\n- Vedlegg 3\n\nTekst 4'",
+        "'Tekst 1.', 'Tekst 1.'",
+        "'Dette er en setning\nmed et linjeskift midt i.\nNy setning.' , 'Dette er en setning\\\nmed et linjeskift midt i.\\\nNy setning.'",
+        "'Dette er en setning.\n\nNy setning som skal ha 'luft'.', 'Dette er en setning.\n\n\nNy setning som skal ha 'luft'.'",
+        "'- Vedlegg1', '- Vedlegg1'"
+    })
+    void testFritekstFormatering(String fritekst, String forventetTekst) {
         // Arrange
-        var fritekstInn = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\nTekst 2.\nTekst 3\n- Vedlegg 3\nTekst 4";
-        var fritekstUt = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\n\nTekst 2.\\\nTekst 3\n- Vedlegg 3\n\nTekst 4";
+        //var fritekstInn = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\nTekst 2.\nTekst 3\n- Vedlegg 3\nTekst 4";
+        //var fritekstUt = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\n\nTekst 2.\\\nTekst 3\n- Vedlegg 3\n\nTekst 4";
 
         // Act + Assert
-        assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
+        assertThat(fritekst).isNotNull();
+        assertThat(ivaretaLinjeskiftIFritekst(fritekst)).isEqualTo(forventetTekst);
     }
 
     @Test
@@ -94,36 +105,6 @@ class FritekstTest {
         // Arrange
         var fritekstInn = "Tekst 1.";
         var fritekstUt = "Tekst 1.";
-
-        // Act + Assert
-        assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
-    }
-
-    @Test
-    void skal_erstatte_vanlig_linjeskift_med_slash_linjeskift() {
-        // Arrange
-        var fritekstInn = "Dette er en setning\nmed et linjeskift midt i.\nNy setning.";
-        var fritekstUt = "Dette er en setning\\\nmed et linjeskift midt i.\\\nNy setning.";
-
-        // Act + Assert
-        assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
-    }
-
-    @Test
-    void skal_beholde_dobbelt_linjeskift_så_det_blir_ekstra_luft() {
-        // Arrange
-        var fritekstInn = "Dette er en setning.\n\nNy setning som skal ha 'luft'.";
-        var fritekstUt = "Dette er en setning.\n\n\nNy setning som skal ha 'luft'.";
-
-        // Act + Assert
-        assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);
-    }
-
-    @Test
-    void skal_ikke_sette_inn_ekstra_linjeskift_når_det_bare_er_en_linje_med_punktliste() {
-        // Arrange
-        var fritekstInn = "- Vedlegg1";
-        var fritekstUt = "- Vedlegg1";
 
         // Act + Assert
         assertThat(ivaretaLinjeskiftIFritekst(fritekstInn)).isEqualTo(fritekstUt);

@@ -1,8 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +19,6 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.Stønadskonto;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 import no.nav.vedtak.exception.TekniskException;
 
@@ -70,24 +67,6 @@ public class PeriodeBeregner {
             .count();
     }
 
-    public static List<SvpUttakResultatPeriode> finnUttakPeriodeKandidater(TilkjentYtelsePeriode periode,
-                                                                           List<SvpUttakResultatPeriode> uttakPerioder) {
-        if (periode.getDagsats() > 0) {
-            List<SvpUttakResultatPeriode> kandidater = new ArrayList<>();
-            for (var uttakPeriode : uttakPerioder) {
-                if (!periode.getPeriodeFom().isBefore(uttakPeriode.getFom()) && !periode.getPeriodeTom().isAfter(uttakPeriode.getTom())) {
-                    kandidater.add(uttakPeriode);
-                }
-            }
-            if (!kandidater.isEmpty()) {
-                return kandidater.stream().filter(SvpUttakResultatPeriode::isInnvilget).toList();
-            }
-            throw new TekniskException(FEILKODE, String.format(FEILMELDING, "uttaksperiode"));
-        }
-        return Collections.emptyList();
-    }
-
-    // TODO - Skriv tester.. Dette oppfører seg annerledes i DTOene enn fpsak
     public static Optional<BeregningsgrunnlagPrStatusOgAndel> finnBgPerStatusOgAndelHvisFinnes(List<BeregningsgrunnlagPrStatusOgAndel> bgPerStatusOgAndelListe,
                                                                                                TilkjentYtelseAndel andel) {
         for (var bgPerStatusOgAndel : bgPerStatusOgAndelListe) {

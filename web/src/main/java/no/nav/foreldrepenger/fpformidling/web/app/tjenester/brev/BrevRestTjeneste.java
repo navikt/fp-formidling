@@ -87,11 +87,10 @@ public class BrevRestTjeneste {
     @BeskyttetRessurs(actionType = ActionType.CREATE, resourceType = ResourceType.FAGSAK)
     @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
     public Response bestillDokument(@Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = BestillingSupplier.class) @Valid DokumentbestillingV2Dto dokumentbestillingDto) { // NOSONAR
-
-        var hendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
-        dokumentHendelseTjeneste.validerUnikOgLagre(hendelse).ifPresent(this::opprettBestillBrevTask);
-
-        return Response.ok().build();
+        throw new IllegalStateException("Tjenesten er midlertidig utilgjengelig.");
+        //var hendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
+        //dokumentHendelseTjeneste.validerUnikOgLagre(hendelse).ifPresent(this::opprettBestillBrevTask);
+        //return Response.ok().build();
     }
 
     private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {

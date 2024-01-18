@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+
+    <!-- Hibernate persistence unit. -->
+    <persistence-unit name="pu-default" transaction-type="RESOURCE_LOCAL">
+        <provider>no.nav.vedtak.felles.jpa.VLPersistenceUnitProvider</provider>
+        <non-jta-data-source>jdbc/defaultDS</non-jta-data-source>
+
+        <properties>
+            <property name="hibernate.jdbc.use_get_generated_keys" value="true"/>
+
+            <!-- Utsetter flush av statements til db til commit eller manuelt istedet for hibernate heuristisk flush. -->
+            <property name="org.hibernate.flushMode" value="COMMIT"/>
+
+            <property name="hibernate.jdbc.time_zone" value="UTC"/>
+
+            <!-- setter default batch size for statements (inserts) -->
+            <property name="hibernate.jdbc.batch_size" value="5" />
+
+            <!--  setter default batch size for batch loaded lazy assocations -->
+            <property name="hibernate.default_batch_fetch_size" value="8" />
+
+            <!-- Optimaliserer hibernate til å ikke hente connection før første statement ved å sette til true.
+            Krever at connection pool alltid er satt til autocommit=false (eks. HikariConfig#setAutoCommit(false) -->
+            <property name="hibernate.connection.provider_disables_autocommit" value="true" />
+
+            <!-- Skal ALLTID være false (er også default false, men tas med for denne kommentaren)-->
+            <property name="hibernate.connection.autocommit" value="false" />
+
+            <!-- Batcher også inserts av @Versioned data. (krever at executeBatch for database driver returnerer riktig) -->
+            <property name="hibernate.jdbc.batch_versioned_data" value="true" />
+
+            <!-- ikke lekk sql statements og sensitive verider til logger etc. ved feil -->
+            <property name="hibernate.connection.logServerErrorDetail" value="false" />
+
+        </properties>
+    </persistence-unit>
+
+</persistence>

@@ -39,8 +39,8 @@ import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.fpformidling.domene.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.domene.typer.DatoIntervall;

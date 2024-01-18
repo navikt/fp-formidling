@@ -45,7 +45,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokument
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.domene.typer.AktørId;

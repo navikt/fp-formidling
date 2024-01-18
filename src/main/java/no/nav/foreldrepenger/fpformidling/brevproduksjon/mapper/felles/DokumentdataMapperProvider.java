@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
 public class DokumentdataMapperProvider {

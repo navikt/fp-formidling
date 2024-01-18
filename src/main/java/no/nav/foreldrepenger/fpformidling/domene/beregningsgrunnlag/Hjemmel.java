@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.Kodeverdi;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.KodeverdiMedNavn;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.KodeverdiMedNavn;
 
 
 @JsonFormat(shape = Shape.OBJECT)

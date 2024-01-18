@@ -26,7 +26,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
 class KlageOversendtDokumentdataMapperTest {

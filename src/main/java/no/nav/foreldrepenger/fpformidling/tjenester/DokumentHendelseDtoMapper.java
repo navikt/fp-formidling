@@ -6,7 +6,7 @@ import java.util.UUID;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.domene.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.YtelseType;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;

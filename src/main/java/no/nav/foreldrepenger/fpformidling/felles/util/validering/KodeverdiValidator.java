@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.felles.util.validering;
 
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.Kodeverdi;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 import no.nav.vedtak.util.InputValideringRegex;
 
 import jakarta.validation.ConstraintValidator;

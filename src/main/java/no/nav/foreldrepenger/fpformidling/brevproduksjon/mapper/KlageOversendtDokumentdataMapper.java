@@ -17,7 +17,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.KlageOversendtDokumentdata;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageDokument;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.DokumentMalTypeKode;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.KLAGE_OVERSENDT)

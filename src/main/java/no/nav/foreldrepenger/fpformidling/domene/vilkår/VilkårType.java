@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.Kodeverdi;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
 @SuppressWarnings("java:S1192")
 @JsonFormat(shape = Shape.OBJECT)

@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentMalUtleder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,8 +21,8 @@ import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurdering;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.domene.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.VLException;
 

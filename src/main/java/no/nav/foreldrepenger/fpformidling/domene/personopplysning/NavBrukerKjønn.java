@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.domene.personopplysning;
 
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.Kodeverdi;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
 public enum NavBrukerKjønn implements Kodeverdi {
 

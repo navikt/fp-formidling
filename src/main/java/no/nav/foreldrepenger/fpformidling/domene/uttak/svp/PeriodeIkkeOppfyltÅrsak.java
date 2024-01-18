@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.ÅrsakMedLovReferanse;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.Kodeverdi;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
 @SuppressWarnings("java:S115")
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)

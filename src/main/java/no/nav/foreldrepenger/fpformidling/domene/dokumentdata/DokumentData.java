@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 public class DokumentData {
 

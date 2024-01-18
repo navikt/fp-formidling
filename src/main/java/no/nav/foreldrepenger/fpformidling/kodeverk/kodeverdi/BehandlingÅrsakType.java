@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi;
+package no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;

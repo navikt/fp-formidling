@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.domene.kodeverk.diff;
+package no.nav.foreldrepenger.fpformidling.kodeverk.diff;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

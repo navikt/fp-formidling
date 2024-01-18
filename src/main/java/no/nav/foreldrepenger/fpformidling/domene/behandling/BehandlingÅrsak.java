@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.fpformidling.domene.behandling;
 
 import java.util.Optional;
 
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.BehandlingÅrsakType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 
 public class BehandlingÅrsak {
     private BehandlingÅrsakType behandlingÅrsakType;

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi;
+package no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi;
 
 /**
  * Kodeverk der man trenger kode fra Felles Kodeverk.

@@ -30,7 +30,7 @@ import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageFormkravResultat;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 
 @ExtendWith(MockitoExtension.class)

@@ -8,7 +8,7 @@ import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
-import no.nav.foreldrepenger.fpformidling.domene.kodeverk.diff.IndexKey;
+import no.nav.foreldrepenger.fpformidling.kodeverk.diff.IndexKey;
 
 /**
  * Beløp representerer kombinasjon av kroner og øre på standardisert format

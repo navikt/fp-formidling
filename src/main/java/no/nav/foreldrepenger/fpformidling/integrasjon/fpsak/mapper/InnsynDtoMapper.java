@@ -7,7 +7,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.Innsyn;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynDokument;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.innsyn.InnsynDokumentDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.innsyn.InnsynsbehandlingDto;
-import no.nav.foreldrepenger.fpformidling.domene.typer.JournalpostId;
+import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 
 public class InnsynDtoMapper {
 

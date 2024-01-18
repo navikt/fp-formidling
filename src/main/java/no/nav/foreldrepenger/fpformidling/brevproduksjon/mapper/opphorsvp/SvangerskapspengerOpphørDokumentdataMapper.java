@@ -25,7 +25,7 @@ import jakarta.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 
-import static no.nav.foreldrepenger.fpformidling.domene.typer.Dato.formaterDato;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.SVANGERSKAPSPENGER_OPPHØR)

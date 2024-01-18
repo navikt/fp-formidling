@@ -10,7 +10,7 @@ import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.OrganisasjonsNummerValidator;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
-import no.nav.foreldrepenger.fpformidling.domene.typer.AktørId;
+import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.vedtak.exception.VLException;
 import no.nav.vedtak.util.LRUCache;
 

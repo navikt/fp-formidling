@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag;
 
-import no.nav.foreldrepenger.fpformidling.domene.typer.Beløp;
+import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -3,8 +3,8 @@ package no.nav.foreldrepenger.fpformidling.domene.uttak.svp;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-import no.nav.foreldrepenger.fpformidling.domene.typer.Dato;
-import no.nav.foreldrepenger.fpformidling.domene.typer.DatoIntervall;
+import no.nav.foreldrepenger.fpformidling.typer.Dato;
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
 
 public class SvpUttakResultatPeriode implements Comparable<SvpUttakResultatPeriode> {

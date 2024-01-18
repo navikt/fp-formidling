@@ -6,8 +6,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.domene.opptjening.OpptjeningAktivitetType;
-import no.nav.foreldrepenger.fpformidling.domene.typer.ArbeidsforholdRef;
-import no.nav.foreldrepenger.fpformidling.domene.typer.DatoIntervall;
+import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 
 public class BeregningsgrunnlagPrStatusOgAndel {

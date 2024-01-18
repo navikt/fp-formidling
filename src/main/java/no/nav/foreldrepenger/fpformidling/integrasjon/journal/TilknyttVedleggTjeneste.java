@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.innsyn.InnsynDokument;
-import no.nav.foreldrepenger.fpformidling.domene.typer.JournalpostId;
+import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped

@@ -13,8 +13,8 @@ import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.Virksomhet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
-import no.nav.foreldrepenger.fpformidling.domene.typer.AktørId;
-import no.nav.foreldrepenger.fpformidling.domene.typer.Saksnummer;
+import no.nav.foreldrepenger.fpformidling.typer.AktørId;
+import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 import no.nav.foreldrepenger.fpformidling.domene.verge.Verge;
 import no.nav.vedtak.exception.TekniskException;
 

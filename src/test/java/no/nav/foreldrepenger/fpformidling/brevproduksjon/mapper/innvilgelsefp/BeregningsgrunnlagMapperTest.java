@@ -22,8 +22,8 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgr
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
-import no.nav.foreldrepenger.fpformidling.domene.typer.Beløp;
-import no.nav.foreldrepenger.fpformidling.domene.typer.DatoIntervall;
+import no.nav.foreldrepenger.fpformidling.typer.Beløp;
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
 class BeregningsgrunnlagMapperTest {
 

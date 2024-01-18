@@ -7,7 +7,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnStønadsperiodeTom;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnesPeriodeMedIkkeOmsorg;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.sistePeriodeAvslåttPgaBarnOver3år;
-import static no.nav.foreldrepenger.fpformidling.domene.typer.Dato.formaterDato;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.SaldoVisningStønadskontoType.MINSTERETT;
 import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV;

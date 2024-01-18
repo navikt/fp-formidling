@@ -34,7 +34,7 @@ import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument
 import no.nav.foreldrepenger.fpformidling.domene.søknad.Søknad;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseForeldrepenger;
-import no.nav.foreldrepenger.fpformidling.domene.typer.AktørId;
+import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.Saldoer;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.YtelseFordeling;

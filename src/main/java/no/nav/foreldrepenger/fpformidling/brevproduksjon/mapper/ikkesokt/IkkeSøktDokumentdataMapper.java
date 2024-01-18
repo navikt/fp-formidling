@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.ikkesokt;
 
-import static no.nav.foreldrepenger.fpformidling.domene.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

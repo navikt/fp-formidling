@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.OppgaverTjeneste;
-import no.nav.foreldrepenger.fpformidling.domene.typer.JournalpostId;
+import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;

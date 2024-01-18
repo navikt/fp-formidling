@@ -3,7 +3,7 @@ package no.nav.foreldrepenger.fpformidling.domene.uttak.fp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import no.nav.foreldrepenger.fpformidling.domene.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 
 public class UttakResultatPeriodeAktivitet {

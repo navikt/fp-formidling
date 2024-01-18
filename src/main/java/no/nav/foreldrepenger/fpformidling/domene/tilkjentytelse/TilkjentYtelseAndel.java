@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
-import no.nav.foreldrepenger.fpformidling.domene.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 
 public class TilkjentYtelseAndel {

@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.avslagfp;
 
-import static no.nav.foreldrepenger.fpformidling.domene.typer.Dato.formaterDato;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

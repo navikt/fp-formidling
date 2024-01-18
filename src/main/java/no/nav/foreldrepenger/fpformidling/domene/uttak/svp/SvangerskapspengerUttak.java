@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 
-import no.nav.foreldrepenger.fpformidling.domene.typer.DatoIntervall;
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.vedtak.konfig.Tid;
 
 public class SvangerskapspengerUttak {

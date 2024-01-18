@@ -9,7 +9,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.domene.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.typer.AktørId;
+import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.vedtak.felles.integrasjon.person.PdlException;
 
 @ApplicationScoped

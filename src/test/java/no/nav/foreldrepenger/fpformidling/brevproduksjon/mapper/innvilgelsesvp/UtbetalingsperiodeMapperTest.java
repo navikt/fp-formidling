@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
 import static java.util.List.of;
-import static no.nav.foreldrepenger.fpformidling.domene.typer.DatoIntervall.fraOgMedTilOgMed;
+import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;

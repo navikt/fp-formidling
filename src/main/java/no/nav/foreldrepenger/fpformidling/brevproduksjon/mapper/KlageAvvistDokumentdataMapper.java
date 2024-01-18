@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto.fra;
-import static no.nav.foreldrepenger.fpformidling.domene.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 
 import java.util.Set;
 import java.util.stream.Collectors;

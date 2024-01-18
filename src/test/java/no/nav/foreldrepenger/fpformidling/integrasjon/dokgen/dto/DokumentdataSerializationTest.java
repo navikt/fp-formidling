@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto;
 
 import static java.util.List.of;
-import static no.nav.foreldrepenger.fpformidling.domene.typer.Dato.formaterDatoNorsk;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;

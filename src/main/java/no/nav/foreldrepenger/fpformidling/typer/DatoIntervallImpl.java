@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.domene.typer;
+package no.nav.foreldrepenger.fpformidling.typer;
 
 import java.time.LocalDate;
 import java.util.Objects;

@@ -5,8 +5,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.typer.PersonIdent;
-import no.nav.foreldrepenger.fpformidling.domene.typer.Saksnummer;
+import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
+import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 
 public class DokumentFelles {
 

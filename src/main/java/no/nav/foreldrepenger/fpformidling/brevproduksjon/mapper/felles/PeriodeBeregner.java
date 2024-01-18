@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgr
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
-import no.nav.foreldrepenger.fpformidling.domene.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.SaldoVisningStønadskontoType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.Stønadskonto;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakArbeidType;

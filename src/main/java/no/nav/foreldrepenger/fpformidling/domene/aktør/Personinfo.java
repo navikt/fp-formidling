@@ -5,8 +5,8 @@ import static java.util.Objects.requireNonNull;
 import java.time.LocalDate;
 
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
-import no.nav.foreldrepenger.fpformidling.domene.typer.AktørId;
-import no.nav.foreldrepenger.fpformidling.domene.typer.PersonIdent;
+import no.nav.foreldrepenger.fpformidling.typer.AktørId;
+import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 
 public class Personinfo {
     private AktørId aktørId;

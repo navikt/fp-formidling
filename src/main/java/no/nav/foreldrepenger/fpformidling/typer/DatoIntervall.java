@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.domene.typer;
+package no.nav.foreldrepenger.fpformidling.typer;
 
 import static no.nav.vedtak.konfig.Tid.TIDENES_ENDE;
 

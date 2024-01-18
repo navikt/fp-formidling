@@ -1,9 +1,10 @@
-package no.nav.foreldrepenger.fpformidling.domene.typer;
+package no.nav.foreldrepenger.fpformidling.typer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
+import no.nav.foreldrepenger.fpformidling.typer.Dato;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;

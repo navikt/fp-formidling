@@ -2,7 +2,7 @@ package no.nav.foreldrepenger.fpformidling.domene.uttak.fp;
 
 import java.util.Optional;
 
-import no.nav.foreldrepenger.fpformidling.domene.typer.ArbeidsforholdRef;
+import no.nav.foreldrepenger.fpformidling.typer.ArbeidsforholdRef;
 import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 
 public class UttakAktivitet {

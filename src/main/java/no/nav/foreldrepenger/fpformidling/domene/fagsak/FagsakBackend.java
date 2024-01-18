@@ -1,8 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.domene.fagsak;
 
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.domene.typer.AktørId;
-import no.nav.foreldrepenger.fpformidling.domene.typer.Saksnummer;
+import no.nav.foreldrepenger.fpformidling.typer.AktørId;
+import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 
 public class FagsakBackend {
 

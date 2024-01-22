@@ -52,7 +52,7 @@ class KlageOmgjortDokumentdataMapperTest {
         // Arrange
         var behandling = standardBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        var dokumentHendelse = lagStandardHendelseBuilder().medErOpphevetKlage(true).build();
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
         mockKlage(behandling);
 
         // Act

@@ -68,14 +68,14 @@ public class DokgenBrevproduksjonTjeneste {
 
     public byte[] forhåndsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
         var utkast = BestillingType.UTKAST;
-        var dokumentData = lagDokumentDataFor(behandling, dokumentMal, utkast);
+        var dokumentData = utledDokumentDataFor(behandling, dokumentMal, utkast);
         // hvis verge finnes produseres det 2 brev. Vi forhåndsviser kun en av dem.
         return genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentData.getFørsteDokumentFelles(), utkast);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, DokumentMalType originalDokumentType) {
         var bestillingType = BestillingType.BESTILL;
-        var dokumentData = lagDokumentDataFor(behandling, dokumentMal, bestillingType);
+        var dokumentData = utledDokumentDataFor(behandling, dokumentMal, bestillingType);
         var teller = 0;
         for (var dokumentFelles : dokumentData.getDokumentFelles()) {
             var brev = genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentFelles, bestillingType);
@@ -130,7 +130,7 @@ public class DokgenBrevproduksjonTjeneste {
                     behandling.getUuid(), bestillingType), e);
         }
         if (LOG.isInfoEnabled()) {
-            LOG.info("Dokument av type {} i behandling id {} er generert.", dokumentMal.getKode(), behandling.getUuid());
+            LOG.info("Dokument av type {} i behandling id {} ble generert.", dokumentMal.getKode(), behandling.getUuid());
         }
         return brev;
     }
@@ -140,20 +140,20 @@ public class DokgenBrevproduksjonTjeneste {
                                    DokumentMalType dokumentMal,
                                    BestillingType bestillingType) {
         var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
-        var dokumentData = lagDokumentDataFor(behandling, dokumentMal, bestillingType);
+        var dokumentData = utledDokumentDataFor(behandling, dokumentMal, bestillingType);
         var dokumentfelles = dokumentData.getFørsteDokumentFelles();
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentfelles, dokumentHendelse, behandling,BestillingType.UTKAST == bestillingType);
         dokumentdata.getFelles().anonymiser();
         return DefaultJsonMapper.toJson(dokumentdata);
     }
 
-    private DokumentData lagDokumentDataFor(Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {
-        var dokumentData = lagDokumentData(behandling, dokumentMal, bestillingType);
+    private DokumentData utledDokumentDataFor(Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {
+        var dokumentData = utledDokumentData(behandling, dokumentMal, bestillingType);
         dokumentFellesDataMapper.opprettDokumentDataForBehandling(behandling, dokumentData);
         return dokumentData;
     }
 
-    private DokumentData lagDokumentData(Behandling behandling, DokumentMalType dokumentMalType, BestillingType bestillingType) {
+    private DokumentData utledDokumentData(Behandling behandling, DokumentMalType dokumentMalType, BestillingType bestillingType) {
         return DokumentData.builder()
             .medDokumentMalType(dokumentMalType)
             .medBehandlingUuid(behandling.getUuid())

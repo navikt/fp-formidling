@@ -137,7 +137,6 @@ public class ForvaltningRestTjeneste {
         return DokumentHendelse.builder()
             .medBehandlingUuid(originalHendelse.getBehandlingUuid())
             .medBestillingUuid(nyBestillingUuid)
-            .medBehandlendeEnhetNavn(originalHendelse.getBehandlendeEnhetNavn())
             .medDokumentMalType(originalHendelse.getDokumentMalType())
             .medFritekst(originalHendelse.getFritekst())
             .medGjelderVedtak(originalHendelse.isGjelderVedtak())

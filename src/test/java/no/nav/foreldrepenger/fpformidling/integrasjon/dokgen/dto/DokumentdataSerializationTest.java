@@ -247,7 +247,6 @@ class DokumentdataSerializationTest {
             .medKlage(true)
             .medAnke(true)
             .medInnsyn(true)
-            .medOpphavType("FAMPEN")
             .build();
 
         // Act + Assert

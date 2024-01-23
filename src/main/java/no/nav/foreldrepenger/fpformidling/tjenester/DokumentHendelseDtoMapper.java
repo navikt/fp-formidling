@@ -25,7 +25,6 @@ public final class DokumentHendelseDtoMapper {
             .medFritekst(dokumentbestilling.fritekst())
             .medDokumentMalType(utleddokumentMalType(dokumentbestilling.dokumentMal()))
             .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(dokumentbestilling.arsakskode()))
-            .medBehandlendeEnhetNavn(dokumentbestilling.behandlendeEnhetNavn())
             .build();
     }
 

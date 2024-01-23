@@ -54,10 +54,6 @@ public class Behandling {
         return behandlendeEnhetNavn;
     }
 
-    public boolean behandlesAvKlageinstans() {
-        return behandlendeEnhetNavn != null && behandlendeEnhetNavn.startsWith("NAV Klageinstans");
-    }
-
     public Behandlingsresultat getBehandlingsresultat() {
         return behandlingsresultat;
     }

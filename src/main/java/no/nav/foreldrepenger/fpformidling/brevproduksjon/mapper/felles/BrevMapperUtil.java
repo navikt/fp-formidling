@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -70,7 +69,6 @@ public class BrevMapperUtil {
             .medHarVerge(erKopi.isPresent())
             .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
             .medYtelseType(dokumentHendelse.getYtelseType().getKode())
-            .medBehandlesAvKA(behandlesAvKlageinstans(dokumentHendelse, behandling))
             .medErUtkast(erUtkast);
 
         if (brevSendesTilVerge(dokumentFelles)) {
@@ -78,13 +76,5 @@ public class BrevMapperUtil {
         }
 
         return fellesBuilder;
-    }
-
-    private static boolean behandlesAvKlageinstans(DokumentHendelse hendelse, Behandling behandling) {
-        // Behandlende enhet vil være angitt på DokumentHendelse ved bestilling av brev,
-        // og dette skal overstyre behandlende enhet på Behandling, da denne kan ha endret seg
-        // siden brevet ble bestilt. Ved forhåndsvisning må det hentes fra Behandling.
-        return (hendelse.getBehandlendeEnhetNavn() != null && hendelse.behandlesAvKlageinstans()) || (hendelse.getBehandlendeEnhetNavn() == null
-            && behandling.getBehandlendeEnhetNavn() != null && behandling.behandlesAvKlageinstans());
     }
 }

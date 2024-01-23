@@ -75,7 +75,6 @@ class IkkeSøktDokumentdataMapperTest {
         assertThat(ikkeSøktDokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(ikkeSøktDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(ikkeSøktDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(ikkeSøktDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
         assertThat(ikkeSøktDokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(ikkeSøktDokumentdata.getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER);

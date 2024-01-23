@@ -1,15 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
@@ -34,7 +32,7 @@ class HenleggeDokumentdataMapperTest {
     @Test
     void henlegg_mapper_vanligBehandling() {
         //Arrange
-        var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, "NAV Familie- og pensjonsytelser");
+        var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD);
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, null, false);
         var dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.FORELDREPENGER);
 
@@ -46,14 +44,13 @@ class HenleggeDokumentdataMapperTest {
         assertThat(henleggelseDokumentdata.getAnke()).isFalse();
         assertThat(henleggelseDokumentdata.getInnsyn()).isFalse();
         assertThat(henleggelseDokumentdata.getKlage()).isFalse();
-        assertThat(henleggelseDokumentdata.getOpphavType()).isEqualTo("FAMPEN");
         assertThat(henleggelseDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
     }
 
     @Test
     void henlegg_mapper_anke_med_opphav_klage() {
         //Arrange
-        var behandling = opprettBehandling(BehandlingType.ANKE, "NAV Klageinstans");
+        var behandling = opprettBehandling(BehandlingType.ANKE);
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, null, false);
         var dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.SVANGERSKAPSPENGER);
 
@@ -65,15 +62,13 @@ class HenleggeDokumentdataMapperTest {
         assertThat(henleggelseDokumentdata.getAnke()).isTrue();
         assertThat(henleggelseDokumentdata.getInnsyn()).isFalse();
         assertThat(henleggelseDokumentdata.getKlage()).isFalse();
-        assertThat(henleggelseDokumentdata.getOpphavType()).isEqualTo("KLAGE");
         assertThat(henleggelseDokumentdata.getFelles().getYtelseType()).isEqualTo("SVP");
     }
 
-    private Behandling opprettBehandling(BehandlingType behType, String behNavn) {
+    private Behandling opprettBehandling(BehandlingType behType) {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())
             .medBehandlingType(behType)
-            .medBehandlendeEnhetNavn(behNavn)
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
             .build();
     }

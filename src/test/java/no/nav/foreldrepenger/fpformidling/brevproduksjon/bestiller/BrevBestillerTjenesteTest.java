@@ -307,7 +307,6 @@ class BrevBestillerTjenesteTest {
             .medBehandlingUuid(BEHANDLING_UUID)
             .medBestillingUuid(randomBestillingsUuid)
             .medYtelseType(FagsakYtelseType.FORELDREPENGER)
-            .medBehandlendeEnhetNavn("Navkontoret")
             .build();
         dokumentHendelse.setId(HENDELSE_ID);
         return dokumentHendelse;

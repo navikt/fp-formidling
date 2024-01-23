@@ -56,7 +56,6 @@ class IngenEndringDokumentdataMapperTest {
         assertThat(ingenEndringDokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(ingenEndringDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(ingenEndringDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(ingenEndringDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
         assertThat(ingenEndringDokumentdata.getFelles().getErUtkast()).isFalse();
     }
 

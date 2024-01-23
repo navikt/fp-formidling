@@ -16,7 +16,6 @@ public class FellesDokumentdata {
     private String saksnummer;
     private String mottakerNavn;
     private String ytelseType;
-    private boolean behandlesAvKA;
     private boolean erUtkast;
 
     public String getSøkerNavn() {
@@ -59,10 +58,6 @@ public class FellesDokumentdata {
         return ytelseType;
     }
 
-    public boolean getBehandlesAvKA() {
-        return behandlesAvKA;
-    }
-
     public boolean getErUtkast() {
         return erUtkast;
     }
@@ -79,14 +74,13 @@ public class FellesDokumentdata {
         return Objects.equals(søkerNavn, that.søkerNavn) && Objects.equals(søkerPersonnummer, that.søkerPersonnummer) && Objects.equals(fritekst,
             that.fritekst) && Objects.equals(brevDato, that.brevDato) && Objects.equals(erAutomatiskBehandlet, that.erAutomatiskBehandlet)
             && Objects.equals(erKopi, that.erKopi) && Objects.equals(harVerge, that.harVerge) && Objects.equals(saksnummer, that.saksnummer)
-            && Objects.equals(mottakerNavn, that.mottakerNavn) && Objects.equals(ytelseType, that.ytelseType) && Objects.equals(behandlesAvKA,
-            that.behandlesAvKA) && Objects.equals(erUtkast, that.erUtkast);
+            && Objects.equals(mottakerNavn, that.mottakerNavn) && Objects.equals(ytelseType, that.ytelseType) && Objects.equals(erUtkast, that.erUtkast);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(søkerNavn, søkerPersonnummer, fritekst, brevDato, erAutomatiskBehandlet, erKopi, harVerge, saksnummer, mottakerNavn,
-            ytelseType, behandlesAvKA, erUtkast);
+            ytelseType, erUtkast);
     }
 
     // Til bruk når alternativt ulansert brev skal genereres i testfasen av innvilgelse FP
@@ -156,11 +150,6 @@ public class FellesDokumentdata {
 
         public Builder medYtelseType(String ytelseType) {
             this.kladd.ytelseType = ytelseType;
-            return this;
-        }
-
-        public Builder medBehandlesAvKA(boolean behandlesAvKA) {
-            this.kladd.behandlesAvKA = behandlesAvKA;
             return this;
         }
 

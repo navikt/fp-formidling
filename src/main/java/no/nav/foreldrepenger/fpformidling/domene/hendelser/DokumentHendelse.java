@@ -52,9 +52,6 @@ public class DokumentHendelse extends BaseEntitet {
     @Column(name = "revurdering_varsling_arsak", nullable = false)
     private RevurderingVarslingÅrsak revurderingVarslingÅrsak = RevurderingVarslingÅrsak.UDEFINERT;
 
-    @Column(name = "behandlende_enhet_navn")
-    private String behandlendeEnhetNavn;
-
     @Convert(converter = Vedtaksbrev.KodeverdiConverter.class)
     @Column(name = "vedtaksbrev", nullable = false)
     private Vedtaksbrev vedtaksbrev = Vedtaksbrev.UDEFINERT;
@@ -108,14 +105,6 @@ public class DokumentHendelse extends BaseEntitet {
         return revurderingVarslingÅrsak;
     }
 
-    public String getBehandlendeEnhetNavn() {
-        return behandlendeEnhetNavn;
-    }
-
-    public boolean behandlesAvKlageinstans() {
-        return behandlendeEnhetNavn != null && behandlendeEnhetNavn.startsWith("NAV Klageinstans");
-    }
-
     public Vedtaksbrev getVedtaksbrev() {
         return vedtaksbrev;
     }
@@ -131,12 +120,12 @@ public class DokumentHendelse extends BaseEntitet {
         var that = (DokumentHendelse) o;
         return behandlingUuid.equals(that.behandlingUuid) && Objects.equals(dokumentMalType, that.dokumentMalType) && Objects.equals(ytelseType,
             that.ytelseType) && Objects.equals(gjelderVedtak, that.gjelderVedtak) && Objects.equals(tittel, that.tittel) && Objects.equals(fritekst,
-            that.fritekst) && Objects.equals(behandlendeEnhetNavn, that.behandlendeEnhetNavn) && Objects.equals(vedtaksbrev, that.vedtaksbrev);
+            that.fritekst) && Objects.equals(vedtaksbrev, that.vedtaksbrev);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, behandlendeEnhetNavn, vedtaksbrev);
+        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, vedtaksbrev);
     }
 
     @Override
@@ -144,7 +133,7 @@ public class DokumentHendelse extends BaseEntitet {
         return "DokumentHendelse{" + "id=" + id + ", behandlingUuid=" + behandlingUuid + ", bestillingUuid=" + bestillingUuid + ", dokumentMalType="
             + dokumentMalType + ", ytelseType=" + ytelseType + ", gjelderVedtak=" + gjelderVedtak + ", tittel='" + tittel + '\'' + ", fritekst='" + (
             fritekst != null ? "****** fritekst ***** " : "null") + '\'' + ", revurderingVarslingÅrsak=" + revurderingVarslingÅrsak
-            + ", behandlendeEnhetNavn=" + behandlendeEnhetNavn + ", vedtaksbrev=" + vedtaksbrev + '}';
+            + ", vedtaksbrev=" + vedtaksbrev + '}';
     }
 
 
@@ -192,11 +181,6 @@ public class DokumentHendelse extends BaseEntitet {
 
         public DokumentHendelse.Builder medRevurderingVarslingÅrsak(RevurderingVarslingÅrsak revurderingVarslingÅrsak) {
             this.kladd.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
-            return this;
-        }
-
-        public DokumentHendelse.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {
-            this.kladd.behandlendeEnhetNavn = behandlendeEnhetNavn;
             return this;
         }
 

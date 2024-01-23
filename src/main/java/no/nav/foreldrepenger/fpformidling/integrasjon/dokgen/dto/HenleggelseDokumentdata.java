@@ -13,7 +13,6 @@ public class HenleggelseDokumentdata extends Dokumentdata {
     private boolean klage;
     private boolean anke;
     private boolean innsyn;
-    private String opphavType;
 
     public boolean getVanligBehandling() {
         return vanligBehandling;
@@ -31,10 +30,6 @@ public class HenleggelseDokumentdata extends Dokumentdata {
         return innsyn;
     }
 
-    public String getOpphavType() {
-        return opphavType;
-    }
-
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -45,12 +40,12 @@ public class HenleggelseDokumentdata extends Dokumentdata {
         }
         var that = (HenleggelseDokumentdata) object;
         return Objects.equals(felles, that.felles) && Objects.equals(vanligBehandling, that.vanligBehandling) && Objects.equals(klage, that.klage)
-            && Objects.equals(anke, that.anke) && Objects.equals(innsyn, that.innsyn) && Objects.equals(opphavType, that.opphavType);
+            && Objects.equals(anke, that.anke) && Objects.equals(innsyn, that.innsyn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, vanligBehandling, klage, anke, innsyn, opphavType);
+        return Objects.hash(felles, vanligBehandling, klage, anke, innsyn);
     }
 
     public static Builder ny() {
@@ -86,11 +81,6 @@ public class HenleggelseDokumentdata extends Dokumentdata {
 
         public Builder medInnsyn(boolean innsyn) {
             this.kladd.innsyn = innsyn;
-            return this;
-        }
-
-        public Builder medOpphavType(String opphavType) {
-            this.kladd.opphavType = opphavType;
             return this;
         }
 

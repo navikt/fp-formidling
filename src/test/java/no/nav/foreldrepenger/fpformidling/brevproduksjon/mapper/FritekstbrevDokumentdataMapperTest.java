@@ -56,7 +56,6 @@ class FritekstbrevDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getErKopi()).isTrue();
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(DatamapperTestUtil.SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
-        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(dokumentdata.getOverskrift()).isEqualTo(OVERSKRIFT);

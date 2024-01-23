@@ -142,7 +142,6 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(dokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
-        assertThat(dokumentdata.getFelles().getBehandlesAvKA()).isFalse();
         assertThat(dokumentdata.getFelles().getErUtkast()).isTrue();
 
         assertThat(dokumentdata.getBehandlingType()).isEqualTo(behandling.getBehandlingType().name());

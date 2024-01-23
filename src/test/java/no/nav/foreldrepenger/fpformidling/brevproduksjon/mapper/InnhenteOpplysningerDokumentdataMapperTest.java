@@ -27,25 +27,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kopi;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
-import no.nav.foreldrepenger.fpformidling.domene.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument;
 
 @ExtendWith(MockitoExtension.class)
 class InnhenteOpplysningerDokumentdataMapperTest {
@@ -97,7 +96,6 @@ class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getSaksnummer()).isEqualTo(SAKSNUMMER);
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getYtelseType()).isEqualTo("FP");
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
         assertThat(innhenteOpplysningerDokumentdata.getFelles().getErUtkast()).isFalse();
 
         assertThat(innhenteOpplysningerDokumentdata.getFørstegangsbehandling()).isFalse();
@@ -145,70 +143,6 @@ class InnhenteOpplysningerDokumentdataMapperTest {
         assertThat(innhenteOpplysningerDokumentdata.getFristDato()).isEqualTo(formaterDatoEngelsk(brevMapperUtil.getSvarFrist()));
     }
 
-    @Test
-    void skal_mappe_behandlesAvKA_når_det_er_angitt_på_hendelsen() {
-        // Arrange
-        var behandling = opprettKlageBehandling("NFP");
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
-        var dokumentHendelse = lagStandardHendelseBuilder().medBehandlendeEnhetNavn("NAV Klageinstans").build();
-        mockKlageDokument();
-
-        // Act
-        var innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
-
-        // Assert
-        assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isTrue();
-    }
-
-    @Test
-    void skal_ikke_mappe_behandlesAvKA_når_det_er_angitt_noe_annet_på_hendelsen() {
-        // Arrange
-        var behandling = opprettKlageBehandling("NAV Klageinstans");
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
-        var dokumentHendelse = lagStandardHendelseBuilder().medBehandlendeEnhetNavn("NFP").build();
-        mockKlageDokument();
-
-        // Act
-        var innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
-
-        // Assert
-        assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
-    }
-
-    @Test
-    void skal_mappe_behandlesAvKA_fra_behandlingen_når_det_ikke_er_angitt_på_hendelsen() {
-        // Arrange
-        var behandling = opprettKlageBehandling("NAV Klageinstans");
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
-        var dokumentHendelse = lagDokumentHendelse();
-        mockKlageDokument();
-
-        // Act
-        var innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
-
-        // Assert
-        assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isTrue();
-    }
-
-    @Test
-    void skal_ikke_mappe_behandlesAvKA_når_det_ikke_er_angitt_på_verken_hendelsen_eller_behandlingen() {
-        // Arrange
-        var behandling = opprettKlageBehandling("NFP");
-        var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, false);
-        var dokumentHendelse = lagDokumentHendelse();
-        mockKlageDokument();
-
-        // Act
-        var innhenteOpplysningerDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
-
-        // Assert
-        assertThat(innhenteOpplysningerDokumentdata.getKlage()).isTrue();
-        assertThat(innhenteOpplysningerDokumentdata.getFelles().getBehandlesAvKA()).isFalse();
-    }
-
     private Behandling opprettBehandling(Språkkode språkkode) {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())
@@ -219,20 +153,7 @@ class InnhenteOpplysningerDokumentdataMapperTest {
             .build();
     }
 
-    private Behandling opprettKlageBehandling(String behandlendeEnhet) {
-        return Behandling.builder()
-            .medUuid(UUID.randomUUID())
-            .medBehandlingType(BehandlingType.KLAGE)
-            .medBehandlendeEnhetNavn(behandlendeEnhet)
-            .build();
-    }
-
     private DokumentHendelse lagDokumentHendelse() {
         return lagStandardHendelseBuilder().medFritekst(FRITEKST).build();
-    }
-
-    private void mockKlageDokument() {
-        var klageDokument = new KlageDokument(KLAGE_DATO);
-        when(domeneobjektProvider.hentKlageDokument(any(Behandling.class))).thenReturn(klageDokument);
     }
 }

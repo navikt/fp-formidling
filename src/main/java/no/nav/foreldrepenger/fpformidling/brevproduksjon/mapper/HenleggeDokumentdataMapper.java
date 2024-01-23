@@ -16,8 +16,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalTypeKode.INFO_OM_HENLEGGELSE)
 public class HenleggeDokumentdataMapper implements DokumentdataMapper {
-    private static final String FAMPEN = "NAV Familie- og pensjonsytelser";
-
     @Override
     public String getTemplateNavn() {
         return "henleggelse";
@@ -40,16 +38,7 @@ public class HenleggeDokumentdataMapper implements DokumentdataMapper {
             .medAnke(behandling.erAnke())
             .medInnsyn(behandling.erInnsyn())
             .medKlage(behandling.erKlage())
-            .medOpphavType(utledOpphavType(hendelse.getBehandlendeEnhetNavn() == null || hendelse.getBehandlendeEnhetNavn()
-                .isEmpty() ? behandling.getBehandlendeEnhetNavn() : hendelse.getBehandlendeEnhetNavn()))
             .build();
-    }
-
-    private String utledOpphavType(String behandlendeEnhetNavn) {
-        if (behandlendeEnhetNavn == null || behandlendeEnhetNavn.contains(FAMPEN)) {
-            return "FAMPEN";
-        }
-        return "KLAGE";
     }
 
 }

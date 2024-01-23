@@ -13,9 +13,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.domene.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.fpformidling.felles.BaseEntitet;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpformidling.domene.vedtak.Vedtaksbrev;
 
 @Entity(name = "DokumentHendelse")
 @Table(name = "DOKUMENT_HENDELSE")
@@ -58,10 +58,6 @@ public class DokumentHendelse extends BaseEntitet {
     @Convert(converter = Vedtaksbrev.KodeverdiConverter.class)
     @Column(name = "vedtaksbrev", nullable = false)
     private Vedtaksbrev vedtaksbrev = Vedtaksbrev.UDEFINERT;
-
-    //Brukes KUN til forhåndsvisning
-    @Transient
-    private boolean erOpphevetKlage;
 
     public DokumentHendelse() {
         //For Hibernate
@@ -124,10 +120,6 @@ public class DokumentHendelse extends BaseEntitet {
         return vedtaksbrev;
     }
 
-    public boolean getErOpphevetKlage() {
-        return erOpphevetKlage;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -152,7 +144,7 @@ public class DokumentHendelse extends BaseEntitet {
         return "DokumentHendelse{" + "id=" + id + ", behandlingUuid=" + behandlingUuid + ", bestillingUuid=" + bestillingUuid + ", dokumentMalType="
             + dokumentMalType + ", ytelseType=" + ytelseType + ", gjelderVedtak=" + gjelderVedtak + ", tittel='" + tittel + '\'' + ", fritekst='" + (
             fritekst != null ? "****** fritekst ***** " : "null") + '\'' + ", revurderingVarslingÅrsak=" + revurderingVarslingÅrsak
-            + ", behandlendeEnhetNavn=" + behandlendeEnhetNavn + ", vedtaksbrev=" + vedtaksbrev + ", erOpphevetKlage=" + erOpphevetKlage + '}';
+            + ", behandlendeEnhetNavn=" + behandlendeEnhetNavn + ", vedtaksbrev=" + vedtaksbrev + '}';
     }
 
 
@@ -161,11 +153,6 @@ public class DokumentHendelse extends BaseEntitet {
 
         Builder() {
             this.kladd = new DokumentHendelse();
-        }
-
-        public DokumentHendelse.Builder medErOpphevetKlage(boolean erOpphevetKlage) {
-            this.kladd.erOpphevetKlage = erOpphevetKlage;
-            return this;
         }
 
         public DokumentHendelse.Builder medDokumentMalType(DokumentMalType dokumentMalType) {

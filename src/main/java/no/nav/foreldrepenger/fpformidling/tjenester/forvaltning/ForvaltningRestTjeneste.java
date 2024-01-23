@@ -140,7 +140,6 @@ public class ForvaltningRestTjeneste {
             .medBehandlendeEnhetNavn(originalHendelse.getBehandlendeEnhetNavn())
             .medDokumentMalType(originalHendelse.getDokumentMalType())
             .medFritekst(originalHendelse.getFritekst())
-            .medErOpphevetKlage(originalHendelse.getErOpphevetKlage())
             .medGjelderVedtak(originalHendelse.isGjelderVedtak())
             .medTittel(originalHendelse.getTittel())
             .medVedtaksbrev(originalHendelse.getVedtaksbrev())

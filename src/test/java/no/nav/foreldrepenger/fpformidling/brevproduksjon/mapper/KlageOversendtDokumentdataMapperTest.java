@@ -53,7 +53,7 @@ class KlageOversendtDokumentdataMapperTest {
         // Arrange
         var behandling = DatamapperTestUtil.standardBehandling();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medErOpphevetKlage(true).build();
+        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         mockKlage(behandling);
 
         // Act

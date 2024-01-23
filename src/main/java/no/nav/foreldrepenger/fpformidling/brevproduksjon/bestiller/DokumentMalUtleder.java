@@ -5,17 +5,17 @@ import java.util.Objects;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelseTjeneste;
+import no.nav.foreldrepenger.fpformidling.domene.vedtak.Vedtaksbrev;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpformidling.domene.vedtak.Vedtaksbrev;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
 
@@ -129,8 +129,7 @@ class DokumentMalUtleder {
         } else if (FagsakYtelseType.SVANGERSKAPSPENGER.equals(ytelseType)) {
             return mapSvangerskapspengerVedtaksbrev(behandling, opprinneligFritekstBrev);
         }
-        throw new TekniskException("FPFORMIDLING-666916",
-            String.format("Ingen brevmal for ytelse %s for behandling %s.", ytelseType.getKode(), behandling.getUuid().toString()));
+        throw ukjentMalException(behandling);
     }
 
     private boolean erRevurderingMedUendretUtfall(Behandling behandling) {

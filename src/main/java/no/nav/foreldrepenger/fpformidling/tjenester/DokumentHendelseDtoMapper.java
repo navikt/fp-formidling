@@ -40,7 +40,6 @@ public final class DokumentHendelseDtoMapper {
             .medRevurderingVarslingÅrsak(utledRevurderingVarslingsårsak(brevDto.getArsakskode()))
             .medGjelderVedtak(brevDto.isGjelderVedtak())
             .medVedtaksbrev(utledVedtaksbrev(brevDto.getAutomatiskVedtaksbrev()))
-            .medErOpphevetKlage(brevDto.isErOpphevetKlage())
             .build();
     }
 

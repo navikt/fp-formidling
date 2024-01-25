@@ -1,5 +1,8 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
+
+import jakarta.enterprise.context.ApplicationScoped;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
@@ -7,14 +10,10 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.IngenEndringDokumentdata;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
-
-import jakarta.enterprise.context.ApplicationScoped;
-
-import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.INGEN_ENDRING)
+@DokumentMalTypeRef(DokumentMalType.INGEN_ENDRING)
 public class IngenEndringDokumentdataMapper implements DokumentdataMapper {
 
     @Override

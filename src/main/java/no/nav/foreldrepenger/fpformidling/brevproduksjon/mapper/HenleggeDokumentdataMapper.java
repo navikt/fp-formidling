@@ -3,7 +3,6 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import jakarta.enterprise.context.ApplicationScoped;
-
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
@@ -11,10 +10,10 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.HenleggelseDokumentdata;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.INFO_OM_HENLEGGELSE)
+@DokumentMalTypeRef(DokumentMalType.INFO_OM_HENLEGGELSE)
 public class HenleggeDokumentdataMapper implements DokumentdataMapper {
     @Override
     public String getTemplateNavn() {

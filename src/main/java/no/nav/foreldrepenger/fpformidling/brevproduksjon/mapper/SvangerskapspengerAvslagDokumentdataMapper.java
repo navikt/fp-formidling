@@ -60,7 +60,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
                                                                    Behandling behandling,
                                                                    boolean erUtkast) {
 
-        //TODO: Erstatte med behandling.getSpråkkode() når engelsk mal er på plass
+        // Erstatte med behandling.getSpråkkode() når engelsk mal er på plass
         var språkkode = Språkkode.EN.equals(behandling.getSpråkkode()) ? Språkkode.NB : behandling.getSpråkkode();
 
         var beregningsgrunnlag = domeneobjektProvider.hentBeregningsgrunnlagHvisFinnes(behandling);

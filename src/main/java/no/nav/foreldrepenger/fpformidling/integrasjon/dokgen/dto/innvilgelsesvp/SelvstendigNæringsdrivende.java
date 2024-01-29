@@ -12,9 +12,9 @@ public class SelvstendigNæringsdrivende {
     private Boolean nyoppstartet;
     private Beløp årsinntekt;
     private int sistLignedeÅr;
-    private boolean inntektLavere_AT_SN;
-    private boolean inntektLavere_AT_FL_SN;
-    private boolean inntektLavere_FL_SN;
+    private boolean inntektLavereATSN;
+    private boolean inntektLavereATFLSN;
+    private boolean inntektLavereFLSN;
 
     public boolean getNyoppstartet() {
         return nyoppstartet;
@@ -28,16 +28,16 @@ public class SelvstendigNæringsdrivende {
         return sistLignedeÅr;
     }
 
-    public boolean getInntektLavere_AT_SN() {
-        return inntektLavere_AT_SN;
+    public boolean getInntektLavereATSN() {
+        return inntektLavereATSN;
     }
 
-    public boolean getInntektLavere_AT_FL_SN() {
-        return inntektLavere_AT_FL_SN;
+    public boolean getInntektLavereATFLSN() {
+        return inntektLavereATFLSN;
     }
 
-    public boolean getInntektLavere_FL_SN() {
-        return inntektLavere_FL_SN;
+    public boolean getInntektLavereFLSN() {
+        return inntektLavereFLSN;
     }
 
     @Override
@@ -50,13 +50,13 @@ public class SelvstendigNæringsdrivende {
         }
         var that = (SelvstendigNæringsdrivende) object;
         return Objects.equals(nyoppstartet, that.nyoppstartet) && Objects.equals(årsinntekt, that.årsinntekt) && Objects.equals(sistLignedeÅr,
-            that.sistLignedeÅr) && Objects.equals(inntektLavere_AT_SN, that.inntektLavere_AT_SN) && Objects.equals(inntektLavere_AT_FL_SN,
-            that.inntektLavere_AT_FL_SN) && Objects.equals(inntektLavere_FL_SN, that.inntektLavere_FL_SN);
+            that.sistLignedeÅr) && Objects.equals(inntektLavereATSN, that.inntektLavereATSN) && Objects.equals(inntektLavereATFLSN,
+            that.inntektLavereATFLSN) && Objects.equals(inntektLavereFLSN, that.inntektLavereFLSN);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nyoppstartet, årsinntekt, sistLignedeÅr, inntektLavere_AT_SN, inntektLavere_AT_FL_SN, inntektLavere_FL_SN);
+        return Objects.hash(nyoppstartet, årsinntekt, sistLignedeÅr, inntektLavereATSN, inntektLavereATFLSN, inntektLavereFLSN);
     }
 
     public static Builder ny() {
@@ -80,9 +80,9 @@ public class SelvstendigNæringsdrivende {
                 this.kladd.nyoppstartet = eksisterende.getNyoppstartet();
                 this.kladd.årsinntekt = eksisterende.getÅrsinntekt();
                 this.kladd.sistLignedeÅr = eksisterende.getSistLignedeÅr();
-                this.kladd.inntektLavere_AT_SN = eksisterende.getInntektLavere_AT_SN();
-                this.kladd.inntektLavere_AT_FL_SN = eksisterende.getInntektLavere_AT_FL_SN();
-                this.kladd.inntektLavere_FL_SN = eksisterende.getInntektLavere_FL_SN();
+                this.kladd.inntektLavereATSN = eksisterende.getInntektLavereATSN();
+                this.kladd.inntektLavereATFLSN = eksisterende.getInntektLavereATFLSN();
+                this.kladd.inntektLavereFLSN = eksisterende.getInntektLavereFLSN();
             }
         }
 
@@ -110,17 +110,17 @@ public class SelvstendigNæringsdrivende {
         }
 
         public Builder medInntektLavereAtSn(boolean inntektLavereATSN) {
-            this.kladd.inntektLavere_AT_SN = inntektLavereATSN;
+            this.kladd.inntektLavereATSN = inntektLavereATSN;
             return this;
         }
 
         public Builder medInntektLavereAtFlSn(boolean inntektLavereATFLSN) {
-            this.kladd.inntektLavere_AT_FL_SN = inntektLavereATFLSN;
+            this.kladd.inntektLavereATFLSN = inntektLavereATFLSN;
             return this;
         }
 
         public Builder medInntektLavereFlSn(boolean inntektLavereFLSN) {
-            this.kladd.inntektLavere_FL_SN = inntektLavereFLSN;
+            this.kladd.inntektLavereFLSN = inntektLavereFLSN;
             return this;
         }
 

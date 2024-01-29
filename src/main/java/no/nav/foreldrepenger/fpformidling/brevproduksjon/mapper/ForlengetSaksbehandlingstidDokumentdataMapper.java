@@ -6,7 +6,6 @@ import java.util.Map;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
@@ -19,10 +18,9 @@ import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForlengetSaksbehandlingstidDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForlengetSaksbehandlingstidDokumentdata.VariantType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.FORLENGET_SAKSBEHANDLINGSTID)
+@DokumentMalTypeRef(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID)
 public class ForlengetSaksbehandlingstidDokumentdataMapper implements DokumentdataMapper {
 
     private static final Map<DokumentMalType, VariantType> MAL_TIL_VARIANT_MAP = Map.of(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,

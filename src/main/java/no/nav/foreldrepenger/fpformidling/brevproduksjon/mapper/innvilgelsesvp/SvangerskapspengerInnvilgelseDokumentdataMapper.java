@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
-import static no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erEndretFraAvslått;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erRevurderingPgaEndretBeregningsgrunnlag;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BehandlingMapper.erTermindatoEndret;
@@ -10,6 +9,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Ti
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper.harBrukerAndel;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.AvslagsperiodeMapper.mapAvslagsperioder;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp.AvslåttAktivitetMapper.mapAvslåtteAktiviteter;
+import static no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen.ENDRING_I_BEREGNING;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.util.Collection;
@@ -17,10 +17,10 @@ import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -29,10 +29,10 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.AktiviteterOgUtbetalingsperioder;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.SvangerskapspengerInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Utbetalingsperiode;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.SVANGERSKAPSPENGER_INNVILGELSE)
+@DokumentMalTypeRef(DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE)
 public class SvangerskapspengerInnvilgelseDokumentdataMapper implements DokumentdataMapper {
 
     private DomeneobjektProvider domeneobjektProvider;

@@ -17,7 +17,6 @@ import jakarta.enterprise.inject.Instance;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.enterprise.util.AnnotationLiteral;
 import jakarta.inject.Qualifier;
-
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @Qualifier
@@ -27,18 +26,18 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 @Documented
 public @interface DokumentMalTypeRef {
 
-    String value();
+    DokumentMalType value();
 
     class DokumentMalTypeRefLiteral extends AnnotationLiteral<DokumentMalTypeRef> implements DokumentMalTypeRef { //NOSONAR
 
-        private String navn;
+        private DokumentMalType navn;
 
-        public DokumentMalTypeRefLiteral(String dokumentMalKode) {
+        public DokumentMalTypeRefLiteral(DokumentMalType dokumentMalKode) {
             this.navn = dokumentMalKode;
         }
 
         @Override
-        public String value() {
+        public DokumentMalType value() {
             return navn;
         }
     }
@@ -49,18 +48,14 @@ public @interface DokumentMalTypeRef {
         private Lookup() {
         }
 
-        public static <I> Optional<I> find(Class<I> cls, String ytelseTypeKode) {
-            return find(cls, (CDI<I>) CDI.current(), ytelseTypeKode);
-        }
-
         public static <I> Optional<I> find(Class<I> cls, DokumentMalType dokumentMalType) {
-            return find(cls, (CDI<I>) CDI.current(), dokumentMalType.getKode());
+            return find(cls, (CDI<I>) CDI.current(), dokumentMalType);
         }
 
-        public static <I> Optional<I> find(Class<I> cls, Instance<I> instances, String dokumentMalKode) {
+        public static <I> Optional<I> find(Class<I> cls, Instance<I> instances, DokumentMalType dokumentMalType) {
             Objects.requireNonNull(instances, "instances");
 
-            for (var dokumentMalLiteral : coalesce(dokumentMalKode, "*")) {
+            for (var dokumentMalLiteral : coalesce(dokumentMalType, DokumentMalType.UDEFINERT)) {
                 var inst = select(cls, instances, new DokumentMalTypeRefLiteral(dokumentMalLiteral));
                 if (inst.isResolvable()) {
                     return Optional.of(getInstance(inst));
@@ -88,8 +83,8 @@ public @interface DokumentMalTypeRef {
             return i;
         }
 
-        private static List<String> coalesce(String... vals) {
-            return Arrays.asList(vals).stream().filter(v -> v != null).distinct().toList();
+        private static List<DokumentMalType> coalesce(DokumentMalType... vals) {
+            return Arrays.stream(vals).filter(Objects::nonNull).distinct().toList();
         }
     }
 }

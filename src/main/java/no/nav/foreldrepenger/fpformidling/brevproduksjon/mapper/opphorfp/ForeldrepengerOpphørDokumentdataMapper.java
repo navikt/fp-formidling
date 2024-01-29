@@ -23,17 +23,17 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerOpphørDokumentdata;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.typer.Dato;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerOpphørDokumentdata;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.typer.Dato;
 import no.nav.vedtak.exception.TekniskException;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_OPPHØR)
+@DokumentMalTypeRef(DokumentMalType.FORELDREPENGER_OPPHØR)
 public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapper {
 
     private static final Map<RelasjonsRolleType, String> relasjonskodeTypeMap;

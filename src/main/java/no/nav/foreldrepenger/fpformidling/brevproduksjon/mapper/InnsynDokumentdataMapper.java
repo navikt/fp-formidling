@@ -4,7 +4,6 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
@@ -15,10 +14,10 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnsynDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.INNSYN_SVAR)
+@DokumentMalTypeRef(DokumentMalType.INNSYN_SVAR)
 public class InnsynDokumentdataMapper implements DokumentdataMapper {
     private BrevParametere brevParametere;
     private DomeneobjektProvider domeneobjektProvider;

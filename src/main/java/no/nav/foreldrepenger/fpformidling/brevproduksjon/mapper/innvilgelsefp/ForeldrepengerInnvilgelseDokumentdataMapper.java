@@ -7,10 +7,10 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnStønadsperiodeTom;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.finnesPeriodeMedIkkeOmsorg;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.VedtaksperiodeMapper.sistePeriodeAvslåttPgaBarnOver3år;
-import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.SaldoVisningStønadskontoType.FORELDREPENGER;
 import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.SaldoVisningStønadskontoType.MINSTERETT;
 import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.SaldoVisningStønadskontoType.UTEN_AKTIVITETSKRAV;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,20 +20,28 @@ import java.util.stream.Stream;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.*;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.TilkjentYtelseMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.fpformidling.domene.søknad.Søknad;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.Saldoer;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Prosent;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
@@ -42,17 +50,10 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.F
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.domene.søknad.Søknad;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.Saldoer;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.StønadskontoType;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INNVILGELSE)
+@DokumentMalTypeRef(DokumentMalType.FORELDREPENGER_INNVILGELSE)
 public class ForeldrepengerInnvilgelseDokumentdataMapper implements DokumentdataMapper {
 
     private final BrevParametere brevParametere;

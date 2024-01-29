@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
 import jakarta.enterprise.context.ApplicationScoped;
-
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
@@ -16,7 +15,7 @@ public class DokumentdataMapperProvider {
     }
 
     private DokumentdataMapper getMapper(DokumentMalType dokumentMalType) {
-        return DokumentMalTypeRef.Lookup.find(DokumentdataMapper.class, dokumentMalType.getKode())
+        return DokumentMalTypeRef.Lookup.find(DokumentdataMapper.class, dokumentMalType)
             .orElseThrow(() -> new IllegalStateException("Kunne ikke finne en mapper for dokumentMalType: '{}'" + dokumentMalType.getKode()));
     }
 }

@@ -1,5 +1,12 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
@@ -7,22 +14,14 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerInfoTilAnnenForelderDokumentdata;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalTypeKode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
-import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForeldrepengerInfoTilAnnenForelderDokumentdata;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ApplicationScoped
-@DokumentMalTypeRef(DokumentMalTypeKode.FORELDREPENGER_INFO_TIL_ANNEN_FORELDER)
+@DokumentMalTypeRef(DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER)
 public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements DokumentdataMapper {
     private DomeneobjektProvider domeneobjektProvider;
 

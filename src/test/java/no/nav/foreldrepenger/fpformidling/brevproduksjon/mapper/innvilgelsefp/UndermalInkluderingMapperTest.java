@@ -5,148 +5,84 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgel
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.UndermalInkluderingMapper.skalInkludereInnvilget;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.Test;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
 
+
 class UndermalInkluderingMapperTest {
 
-    @Test
-    void skal_inkludere_innvilget_når_det_ikke_er_konsekvens_for_ytelse_endring_i_beregning_og_har_mer_enn_en_periode_der_minst_en_er_innvilget() {
-        var utbetalingsperiode1 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
-        var utbetalingsperiode2 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2011")).medInnvilget(false).build();
 
-        // Act
-        var resultat = skalInkludereInnvilget(of(utbetalingsperiode1, utbetalingsperiode2),
-            KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode());
+    @ParameterizedTest
+    @MethodSource("inkludereInnvilget")
+    void undermalInnvilgetSkalInkluderes(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
+        var resultat = skalInkludereInnvilget(vedtaksperioder, konsekvens);
 
-        // Assert
         assertThat(resultat).isTrue();
     }
 
-    @Test
-    void skal_ikke_inkludere_innvilget_når_det_er_konsekvens_for_ytelse_endring_i_beregning() {
-        var utbetalingsperiode1 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
-        var utbetalingsperiode2 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2011")).medInnvilget(false).build();
+    static Stream<Arguments> inkludereInnvilget() {
+        return Stream.of(
+            Arguments.of(of(lagPeriode("2010", true), lagPeriode("2011", false)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
+            Arguments.of(of(lagPeriode("1234", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
+            Arguments.of(of(lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
+            Arguments.of(of(lagPeriode("2010", false), lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
+            Arguments.of(of(lagPeriode("2030", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
+            Arguments.of(of(lagPeriode("2030", true), lagPeriode("2030", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
+            Arguments.of(of(lagPeriode("2030", true), lagPeriode("4022", false)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
+            Arguments.of(of(lagPeriode("2030", true), lagPeriode("4022", false), lagPeriode("4022", false)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()));
+    }
 
-        // Act
-        var resultat = skalInkludereInnvilget(of(utbetalingsperiode1, utbetalingsperiode2),
-            KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode());
+    @ParameterizedTest
+    @MethodSource("ikkeInkludereInnvilget")
+    void undermalInnvilgetSkalIkkeInkluderes(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
+        var resultat = skalInkludereInnvilget(vedtaksperioder, konsekvens);
 
-        // Assert
         assertThat(resultat).isFalse();
     }
 
-    @Test
-    void skal_ikke_inkludere_innvilget_når_det_er_ingen_innvilgede_perioder() {
-        var utbetalingsperiode1 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(false).build();
-        var utbetalingsperiode2 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2011")).medInnvilget(false).build();
+    static Stream<Arguments> ikkeInkludereInnvilget() {
+        return Stream.of(
+            Arguments.of(of(lagPeriode("2010", true), lagPeriode("2011", false)), KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode()),
+            Arguments.of(of(lagPeriode("2010", false), lagPeriode("2011", false)), KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode()));
+    }
 
-        // Act
-        var resultat = skalInkludereInnvilget(of(utbetalingsperiode1, utbetalingsperiode2),
-            KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode());
 
-        // Assert
+    @ParameterizedTest
+    @MethodSource("testScenarioerSkalIkkeInklAvslag")
+    void undermalAvslagSkalIkkeInkluderes(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
+        var resultat = skalInkludereAvslag(vedtaksperioder, konsekvens);
         assertThat(resultat).isFalse();
     }
 
-    @Test
-    void skal_inkludere_innvilget_når_det_er_en_periode_uten_gitte_årsaker_med_endring_i_uttak() {
-        var utbetalingsperiode = Vedtaksperiode.ny().medÅrsak(Årsak.of("1234")).medInnvilget(true).build();
+    static Stream<Arguments> testScenarioerSkalIkkeInklAvslag() {
+        return Stream.of(
+            Arguments.of(of(lagPeriode("2010", true),lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
+            Arguments.of(of(lagPeriode("2010", false),lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode()));
+    }
 
-        // Act
-        var resultat = skalInkludereInnvilget(of(utbetalingsperiode), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode());
-
-        // Assert
+    @ParameterizedTest
+    @MethodSource("testScenarioerInklAvslag")
+    void undermalAvslagSkalInkluderes(List<Vedtaksperiode> vedtaksperioder, String konsekvens) {
+        var resultat = skalInkludereAvslag(vedtaksperioder, konsekvens);
         assertThat(resultat).isTrue();
     }
 
-
-    @Test
-    void skal_inkludere_innvilget_når_det_er_bare_en_periode_med_gitte_årsaker() {
-        var utbetalingsperiode = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
-
-        // Act
-        var resultat = skalInkludereInnvilget(of(utbetalingsperiode), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode());
-
-        // Assert
-        assertThat(resultat).isTrue();
+    static Stream<Arguments> testScenarioerInklAvslag() {
+        return Stream.of(
+            Arguments.of(of(lagPeriode("2010",false),lagPeriode("2010", true)), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode()),
+            Arguments.of(of(lagPeriode("2010", false), lagPeriode("2010", true)), null)
+        );
     }
 
-    @Test
-    void skal_inkludere_innvilget_når_det_er_bare_en_periode_uten_gitte_årsaker_hvis_det_er_revurdering_med_endring() {
-        var utbetalingsperiode = Vedtaksperiode.ny().medÅrsak(Årsak.of("1234")).medInnvilget(true).build();
-
-        // Act
-        var resultat = skalInkludereInnvilget(of(utbetalingsperiode), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode());
-
-        // Assert
-        assertThat(resultat).isTrue();
-    }
-
-    @Test
-    void skal_inkludere_avslag_når_det_er_minst_en_avslått_periode_og_konsekvens_for_ytelse_ikke_er_endring_i_beregning() {
-        // Arrange
-        var utbetalingsperiode1 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(false).build();
-        var utbetalingsperiode2 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
-
-        // Act
-        var resultat = skalInkludereAvslag(of(utbetalingsperiode1, utbetalingsperiode2), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode());
-
-        // Assert
-        assertThat(resultat).isTrue();
-    }
-
-    @Test
-    void skal_ikke_inkludere_avslag_når_det_ikke_er_avslåtte_perioder() {
-        // Arrange
-        var utbetalingsperiode1 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
-        var utbetalingsperiode2 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
-
-        // Act
-        var resultat = skalInkludereAvslag(of(utbetalingsperiode1, utbetalingsperiode2), KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode());
-
-        // Assert
-        assertThat(resultat).isFalse();
-    }
-
-    @Test
-    void skal_ikke_inkludere_avslag_når_det_er_konsekvens_for_ytelse_endring_i_beregning() {
-        // Arrange
-        var utbetalingsperiode1 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(false).build();
-        var utbetalingsperiode2 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
-
-        // Act
-        var resultat = skalInkludereAvslag(of(utbetalingsperiode1, utbetalingsperiode2), KonsekvensForYtelsen.ENDRING_I_BEREGNING.getKode());
-
-        // Assert
-        assertThat(resultat).isFalse();
-    }
-
-    @Test
-    void skal_ikke_inkludere_avslag_når_det_er_konsekvens_for_ytelse_er_null() {
-        // Arrange
-        var utbetalingsperiode1 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(false).build();
-        var utbetalingsperiode2 = Vedtaksperiode.ny().medÅrsak(Årsak.of("2010")).medInnvilget(true).build();
-
-        // Act
-        var resultat = skalInkludereAvslag(of(utbetalingsperiode1, utbetalingsperiode2), null);
-
-        // Assert
-        assertThat(resultat).isTrue();
-    }
-
-    @Test
-    void skal_inkludere_innvilget_når_det_er_en_innvilget_gradering_og_avslåtte_perioder() {
-        var innvilget = Vedtaksperiode.ny().medÅrsak(Årsak.of("2030")).medInnvilget(true).build();
-        var avslått = Vedtaksperiode.ny().medÅrsak(Årsak.of("4022")).medInnvilget(false).build();
-
-        var konsekvens = KonsekvensForYtelsen.ENDRING_I_UTTAK.getKode();
-        assertThat(skalInkludereInnvilget(of(innvilget), konsekvens)).isTrue();
-        assertThat(skalInkludereInnvilget(of(innvilget, innvilget), konsekvens)).isTrue();
-        assertThat(skalInkludereInnvilget(of(innvilget, avslått), konsekvens)).isTrue();
-        assertThat(skalInkludereInnvilget(of(innvilget, avslått, avslått), konsekvens)).isTrue();
+    private static Vedtaksperiode lagPeriode(String årsak, boolean erInnvilget) {
+        return Vedtaksperiode.ny().medÅrsak(Årsak.of(årsak)).medInnvilget(erInnvilget).build();
     }
 }

@@ -8,8 +8,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
@@ -18,48 +21,40 @@ import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 
 class SvpMapperUtilTest {
 
-    private final LocalDate tilkjentYtelseFraDato = LocalDate.of(2023, 5, 15);
-    private final LocalDate tilkjentYtelseTilDato = tilkjentYtelseFraDato.plusDays(2);
-    private final LocalDate tilkjentYtelsePeriode2FraDato = tilkjentYtelseFraDato.plusDays(3);
+    private static final LocalDate tilkjentYtelseFraDato = LocalDate.of(2023, 5, 15);
+    private static final LocalDate tilkjentYtelseTilDato = tilkjentYtelseFraDato.plusDays(2);
+    private static final LocalDate tilkjentYtelsePeriode2FraDato = tilkjentYtelseFraDato.plusDays(3);
 
-    @Test
-    void finnRiktigOpphørsdatoMedDagsats() {
-        var forventetDato = LocalDate.of(2023, 5, 18);
 
-        List<TilkjentYtelsePeriode> tilkjentYtelseperiodeListe = List.of(opprettTilkjentYtelse(tilkjentYtelseFraDato, tilkjentYtelseTilDato, 500L),
-            opprettTilkjentYtelse(tilkjentYtelsePeriode2FraDato, tilkjentYtelseFraDato.plusDays(6), 0L));
+    @ParameterizedTest
+    @MethodSource("tilkjentListeMedForventetDato")
+    void finnRiktigOpphørsdatoJustertForHelgSøndag(List<TilkjentYtelsePeriode> tilkjentYtelsePeriodeStream, LocalDate forventetDato) {
 
-        var opphørsdato = SvpMapperUtil.finnOpphørsdato(tilkjentYtelseperiodeListe);
+        var opphørsdato = SvpMapperUtil.finnOpphørsdato(tilkjentYtelsePeriodeStream);
 
         assertThat(opphørsdato).isEqualTo(Optional.of(forventetDato));
     }
 
-    @Test
-    void finnRiktigOpphørsdatoJustertForHelgLørdagOgSøndag() {
-        var forventetDato = LocalDate.of(2023, 5, 22);
-
-        List<TilkjentYtelsePeriode> tilkjentYtelseperiodeListe = List.of(opprettTilkjentYtelse(tilkjentYtelseFraDato, tilkjentYtelseTilDato, 500L),
-            opprettTilkjentYtelse(tilkjentYtelsePeriode2FraDato, tilkjentYtelseFraDato.plusDays(4), 200L));
-
-        var opphørsdato = SvpMapperUtil.finnOpphørsdato(tilkjentYtelseperiodeListe);
-
-        assertThat(opphørsdato).isEqualTo(Optional.of(forventetDato));
+    static Stream<Arguments> tilkjentListeMedForventetDato() {
+        return Stream.of(Arguments.of(liste1(), LocalDate.of(2023, 5, 22)),
+            Arguments.of(liste2(), LocalDate.of(2023, 5, 18)),
+            Arguments.of(liste3(), LocalDate.of(2023, 5, 22)));
     }
 
-    @Test
-    void finnRiktigOpphørsdatoJustertForHelgSøndag() {
-        var forventetDato = LocalDate.of(2023, 5, 22);
-
-        List<TilkjentYtelsePeriode> tilkjentYtelseperiodeListe = List.of(opprettTilkjentYtelse(tilkjentYtelseFraDato, tilkjentYtelseTilDato, 500L),
+    static List<TilkjentYtelsePeriode> liste1() {
+        return List.of(opprettTilkjentYtelse(tilkjentYtelseFraDato, tilkjentYtelseTilDato, 500L),
             opprettTilkjentYtelse(tilkjentYtelsePeriode2FraDato, tilkjentYtelseFraDato.plusDays(5), 200L));
-
-        var opphørsdato = SvpMapperUtil.finnOpphørsdato(tilkjentYtelseperiodeListe);
-
-        assertThat(opphørsdato).isEqualTo(Optional.of(forventetDato));
+    }
+    static List<TilkjentYtelsePeriode> liste2() {
+        return List.of(opprettTilkjentYtelse(tilkjentYtelseFraDato, tilkjentYtelseTilDato, 500L),
+            opprettTilkjentYtelse(tilkjentYtelsePeriode2FraDato, tilkjentYtelseFraDato.plusDays(6), 0L));
     }
 
-
-    private TilkjentYtelsePeriode opprettTilkjentYtelse(LocalDate fraDato, LocalDate tilDato, Long dagsats) {
+    static List<TilkjentYtelsePeriode> liste3() {
+        return List.of(opprettTilkjentYtelse(tilkjentYtelseFraDato, tilkjentYtelseTilDato, 500L),
+            opprettTilkjentYtelse(tilkjentYtelsePeriode2FraDato, tilkjentYtelseFraDato.plusDays(4), 200L));
+    }
+    private static TilkjentYtelsePeriode opprettTilkjentYtelse(LocalDate fraDato, LocalDate tilDato, Long dagsats) {
         return TilkjentYtelsePeriode.ny()
                 .medDagsats(dagsats)
                 .medPeriode(fraOgMedTilOgMed(fraDato, tilDato))

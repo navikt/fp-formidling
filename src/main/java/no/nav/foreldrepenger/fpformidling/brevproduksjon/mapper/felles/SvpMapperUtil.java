@@ -23,7 +23,7 @@ import static java.time.temporal.TemporalAdjusters.next;
 
 public final class SvpMapperUtil {
 
-    private static final Set WEEKEND = Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
+    private static final Set<DayOfWeek> WEEKEND = Set.of(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY);
 
     private SvpMapperUtil() {
     }

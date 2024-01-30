@@ -159,49 +159,49 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getAntallUtbetalingsperioder()).isEqualTo(2);
 
         assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder()).hasSize(1);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder()).hasSize(2);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).beskrivelse()).isEqualTo(ARBEIDSGIVER1_NAVN);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder()).hasSize(2);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE1_FOM);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(0).getPeriodeTom()).isEqualTo(PERIODE1_TOM);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(0).getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE1));
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(0).getDagsats()).isEqualTo( DAGSATS_PERIODE1.intValue());
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(0).getUtbetaltTilSøker()).isEqualTo( DAGSATS_PERIODE1);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(1).getDagsats()).isEqualTo( DAGSATS_PERIODE2.intValue());
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(1).getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE2));
-        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().get(0).utbetalingsperioder().get(1).getUtbetaltTilSøker()).isZero();
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder()).hasSize(2);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().beskrivelse()).isEqualTo(ARBEIDSGIVER1_NAVN);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder()).hasSize(2);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getPeriodeFom()).isEqualTo(PERIODE1_FOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getPeriodeTom()).isEqualTo(PERIODE1_TOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE1));
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getDagsats()).isEqualTo( DAGSATS_PERIODE1.intValue());
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().getFirst().getUtbetaltTilSøker()).isEqualTo( DAGSATS_PERIODE1);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE2_FOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE2_TOM);
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getDagsats()).isEqualTo( DAGSATS_PERIODE2.intValue());
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getUtbetalingsgrad()).isEqualTo( Prosent.of(UTBETALINGSGRAD_PERIODE2));
+        assertThat(dokumentdata.getAktiviteterOgUtbetalingsperioder().getFirst().utbetalingsperioder().get(1).getUtbetaltTilSøker()).isZero();
 
 
         assertThat(dokumentdata.getAvslagsperioder()).hasSize(2);
-        assertThat(dokumentdata.getAvslagsperioder().get(0).getPeriodeFom()).isEqualTo(PERIODE3_FOM);
-        assertThat(dokumentdata.getAvslagsperioder().get(0).getPeriodeTom()).isEqualTo(PERIODE3_TOM);
-        assertThat(dokumentdata.getAvslagsperioder().get(0).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE.getKode()));
+        assertThat(dokumentdata.getAvslagsperioder().getFirst().getPeriodeFom()).isEqualTo(PERIODE3_FOM);
+        assertThat(dokumentdata.getAvslagsperioder().getFirst().getPeriodeTom()).isEqualTo(PERIODE3_TOM);
+        assertThat(dokumentdata.getAvslagsperioder().getFirst().getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak.PERIODE_SAMTIDIG_SOM_FERIE.getKode()));
         assertThat(dokumentdata.getAvslagsperioder().get(1).getPeriodeFom()).isEqualTo(PERIODE3_FOM);
         assertThat(dokumentdata.getAvslagsperioder().get(1).getPeriodeTom()).isEqualTo(PERIODE3_TOM);
         assertThat(dokumentdata.getAvslagsperioder().get(1).getÅrsak()).isEqualTo(Årsak.of(PeriodeIkkeOppfyltÅrsak.PERIODEN_ER_SAMTIDIG_SOM_SYKEPENGER.getKode()));
 
         assertThat(dokumentdata.getAvslåtteAktiviteter()).hasSize(1);
-        assertThat(dokumentdata.getAvslåtteAktiviteter().get(0).getÅrsak()).isEqualTo(Årsak.of(ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK.getKode()));
-        assertThat(dokumentdata.getAvslåtteAktiviteter().get(0).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER3_NAVN);
-        assertThat(dokumentdata.getAvslåtteAktiviteter().get(0).getErFL()).isFalse();
-        assertThat(dokumentdata.getAvslåtteAktiviteter().get(0).getErSN()).isFalse();
+        assertThat(dokumentdata.getAvslåtteAktiviteter().getFirst().getÅrsak()).isEqualTo(Årsak.of(ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK.getKode()));
+        assertThat(dokumentdata.getAvslåtteAktiviteter().getFirst().getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER3_NAVN);
+        assertThat(dokumentdata.getAvslåtteAktiviteter().getFirst().getErFL()).isFalse();
+        assertThat(dokumentdata.getAvslåtteAktiviteter().getFirst().getErSN()).isFalse();
 
         assertThat(dokumentdata.getInkludereBeregning()).isTrue();
 
         assertThat(dokumentdata.getArbeidsforhold()).hasSize(1);
-        assertThat(dokumentdata.getArbeidsforhold().get(0).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER1_NAVN);
-        assertThat(dokumentdata.getArbeidsforhold().get(0).getMånedsinntekt()).isEqualTo(BRUTTO_BERENINGSGRUNNLAG / 12);
+        assertThat(dokumentdata.getArbeidsforhold().getFirst().getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER1_NAVN);
+        assertThat(dokumentdata.getArbeidsforhold().getFirst().getMånedsinntekt()).isEqualTo(BRUTTO_BERENINGSGRUNNLAG / 12);
 
         assertThat(dokumentdata.getSelvstendigNæringsdrivende()).isNull();
         assertThat(dokumentdata.getFrilanser()).isNull();
 
         assertThat(dokumentdata.getNaturalytelser()).hasSize(1); //Naturalytelse i første periode skal ikke tas med
-        assertThat(dokumentdata.getNaturalytelser().get(0).getStatus()).isEqualTo(Naturalytelse.NaturalytelseStatus.BORTFALLER);
-        assertThat(dokumentdata.getNaturalytelser().get(0).getEndringsdato()).isEqualTo(formaterDatoNorsk(PERIODE2_FOM));
-        assertThat(dokumentdata.getNaturalytelser().get(0).getNyDagsats()).isEqualTo(DAGSATS_PERIODE2);
-        assertThat(dokumentdata.getNaturalytelser().get(0).getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER1_NAVN);
+        assertThat(dokumentdata.getNaturalytelser().getFirst().getStatus()).isEqualTo(Naturalytelse.NaturalytelseStatus.BORTFALLER);
+        assertThat(dokumentdata.getNaturalytelser().getFirst().getEndringsdato()).isEqualTo(formaterDatoNorsk(PERIODE2_FOM));
+        assertThat(dokumentdata.getNaturalytelser().getFirst().getNyDagsats()).isEqualTo(DAGSATS_PERIODE2);
+        assertThat(dokumentdata.getNaturalytelser().getFirst().getArbeidsgiverNavn()).isEqualTo(ARBEIDSGIVER1_NAVN);
 
         assertThat(dokumentdata.getBruttoBeregningsgrunnlag()).isEqualTo(of(BRUTTO_BERENINGSGRUNNLAG));
         assertThat(dokumentdata.getMilitærSivil()).isFalse();
@@ -256,9 +256,9 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getNyoppstartet()).isTrue();
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getÅrsinntekt()).isEqualTo(of(BRUTTO_BERENINGSGRUNNLAG_SN));
         assertThat(dokumentdata.getSelvstendigNæringsdrivende().getSistLignedeÅr()).isEqualTo(PERIODE1_TOM.getYear());
-        assertThat(dokumentdata.getSelvstendigNæringsdrivende().getInntektLavere_AT_SN()).isFalse();
-        assertThat(dokumentdata.getSelvstendigNæringsdrivende().getInntektLavere_AT_FL_SN()).isFalse();
-        assertThat(dokumentdata.getSelvstendigNæringsdrivende().getInntektLavere_FL_SN()).isFalse();
+        assertThat(dokumentdata.getSelvstendigNæringsdrivende().getInntektLavereATSN()).isFalse();
+        assertThat(dokumentdata.getSelvstendigNæringsdrivende().getInntektLavereATFLSN()).isFalse();
+        assertThat(dokumentdata.getSelvstendigNæringsdrivende().getInntektLavereFLSN()).isFalse();
     }
 
     @Test

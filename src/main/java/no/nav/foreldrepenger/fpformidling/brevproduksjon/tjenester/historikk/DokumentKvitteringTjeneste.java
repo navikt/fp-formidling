@@ -5,6 +5,7 @@ import jakarta.inject.Inject;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.Behandlinger;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
+import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentKvitteringDto;
 
 @ApplicationScoped
 public class DokumentKvitteringTjeneste {
@@ -20,7 +21,7 @@ public class DokumentKvitteringTjeneste {
         this.fpsakKlient = restKlient;
     }
 
-    public void sendKvittering(DokumentProdusertDto kvittering) {
+    public void sendKvittering(DokumentKvitteringDto kvittering) {
         fpsakKlient.kvitterDokument(kvittering);
     }
 

@@ -6,6 +6,8 @@ import static org.mockito.Mockito.verify;
 
 import java.util.UUID;
 
+import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentKvitteringDto;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +35,7 @@ class DokumentKvitteringTjenesteTest {
 
     @Test
     void publiserHistorikk() {
-        var kvittering = new DokumentProdusertDto(UUID.randomUUID(), UUID.randomUUID(), DokumentMalType.INGEN_ENDRING.getKode(), "123", "123");
+        var kvittering = new DokumentKvitteringDto(UUID.randomUUID(), UUID.randomUUID(), "123", "123");
 
         historikkTjeneste.sendKvittering(kvittering);
         verify(behandlinger, times(1)).kvitterDokument(Mockito.any());

@@ -19,9 +19,13 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.exception.FunksjonellException;
 import no.nav.vedtak.exception.TekniskException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @ApplicationScoped
 class DokumentMalUtleder {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DokumentMalUtleder.class);
     private static final String UTVIKLERFEIL_INGEN_ENDRING_SAMMEN = "Utviklerfeil: Det skal ikke være mulig å ha INGEN_ENDRING sammen med andre konsekvenser. BehandlingUuid: ";
     private DomeneobjektProvider domeneobjektProvider;
     private DokumentHendelseTjeneste dokumentHendelseTjeneste;
@@ -99,6 +103,7 @@ class DokumentMalUtleder {
             return hendelse.getDokumentMalType();
         }
         if (Boolean.TRUE.equals(hendelse.isGjelderVedtak())) {
+            LOG.info("Må utlede mal for hendelse {}", hendelse.getBestillingUuid());
             return utledVedtaksbrev(behandling, hendelse);
         }
         throw ukjentMalException(behandling);

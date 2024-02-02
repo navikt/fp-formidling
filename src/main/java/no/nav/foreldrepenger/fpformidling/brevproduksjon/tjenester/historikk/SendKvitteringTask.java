@@ -19,7 +19,7 @@ public class SendKvitteringTask implements ProsessTaskHandler {
 
     private DokumentKvitteringTjeneste kvitteringTjeneste;
 
-    public SendKvitteringTask() {
+    SendKvitteringTask() {
         //CDI
     }
 

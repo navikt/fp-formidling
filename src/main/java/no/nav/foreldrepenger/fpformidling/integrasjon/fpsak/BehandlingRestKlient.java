@@ -12,6 +12,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingRelLinkPay
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
+import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentKvitteringDto;
 import no.nav.vedtak.felles.integrasjon.rest.FpApplication;
 import no.nav.vedtak.felles.integrasjon.rest.RestClient;
 import no.nav.vedtak.felles.integrasjon.rest.RestClientConfig;
@@ -33,8 +34,8 @@ public class BehandlingRestKlient implements Behandlinger {
     }
 
     @Override
-    public void kvitterDokument(DokumentProdusertDto kvittering) {
-        var request = RestRequest.newPOSTJson(kvittering, toUri(restConfig.fpContextPath(), FPSAK_API, "/brev/kvittering"), restConfig);
+    public void kvitterDokument(DokumentKvitteringDto kvittering) {
+        var request = RestRequest.newPOSTJson(kvittering, toUri(restConfig.fpContextPath(), FPSAK_API, "/brev/kvittering/v3"), restConfig);
         restClient.sendReturnOptional(request, String.class);
     }
 

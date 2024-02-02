@@ -1,11 +1,15 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
+import static io.micrometer.core.instrument.Metrics.counter;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapperProvider;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.DistribuerBrevTask;
@@ -13,9 +17,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.FerdigstillForsend
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.TilknyttVedleggTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.SendKvitteringTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
@@ -32,8 +33,6 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
-
-import static io.micrometer.core.instrument.Metrics.counter;
 
 @ApplicationScoped
 public class DokgenBrevproduksjonTjeneste {
@@ -73,7 +72,10 @@ public class DokgenBrevproduksjonTjeneste {
         return genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentData.getFørsteDokumentFelles(), utkast);
     }
 
-    public void bestillBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, DokumentMalType originalDokumentType) {
+    public void bestillBrev(DokumentHendelse dokumentHendelse,
+                            Behandling behandling,
+                            DokumentMalType dokumentMal,
+                            DokumentMalType originalDokumentType) {
         var bestillingType = BestillingType.BESTILL;
         var dokumentData = utledDokumentDataFor(behandling, dokumentMal, bestillingType);
         var teller = 0;
@@ -90,8 +92,7 @@ public class DokgenBrevproduksjonTjeneste {
             var response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
                 behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg,
                 behandling.getBehandlingsresultat() != null ? behandling.getBehandlingsresultat().getOverskrift() : null,
-                unikBestillingsUuidPerDokFelles,
-                originalDokumentType) // NoSonar
+                unikBestillingsUuidPerDokFelles, originalDokumentType) // NoSonar
                 ;
 
             var journalpostId = new JournalpostId(response.journalpostId());
@@ -102,8 +103,8 @@ public class DokgenBrevproduksjonTjeneste {
                 leggTilVedleggOgFerdigstillForsendelse(dokumentHendelse.getBehandlingUuid(), journalpostId);
             }
 
-            distribuerBrevOgLagHistorikk(dokumentHendelse, response, journalpostId, innsynMedVedlegg,
-                dokumentFelles.getSaksnummer().getVerdi(), unikBestillingsUuidPerDokFelles, originalDokumentType);
+            distribuerBrevOgLagHistorikk(dokumentHendelse, response, journalpostId, innsynMedVedlegg, dokumentFelles.getSaksnummer().getVerdi(),
+                unikBestillingsUuidPerDokFelles, originalDokumentType);
 
             counter("brev_distribuert", "malType", dokumentMal.getKode(), "brevType", originalDokumentType.getKode()).increment();
         }
@@ -135,14 +136,12 @@ public class DokgenBrevproduksjonTjeneste {
         return brev;
     }
 
-    public String genererJson(DokumentHendelse dokumentHendelse,
-                                   Behandling behandling,
-                                   DokumentMalType dokumentMal,
-                                   BestillingType bestillingType) {
+    public String genererJson(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {
         var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
         var dokumentData = utledDokumentDataFor(behandling, dokumentMal, bestillingType);
         var dokumentfelles = dokumentData.getFørsteDokumentFelles();
-        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentfelles, dokumentHendelse, behandling,BestillingType.UTKAST == bestillingType);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentfelles, dokumentHendelse, behandling,
+            BestillingType.UTKAST == bestillingType);
         dokumentdata.getFelles().anonymiser();
         return DefaultJsonMapper.toJson(dokumentdata);
     }
@@ -174,8 +173,10 @@ public class DokgenBrevproduksjonTjeneste {
             DistribusjonstypeUtleder.utledFor(originalDokumentType), saksnummer, unikBestillingsId));
 
         taskGruppe.addNesteSekvensiell(
-            opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(), dokumentHendelse.getBestillingUuid(), originalDokumentType,
-                response.journalpostId(), response.dokumenter().get(0).dokumentInfoId()));
+            opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(),
+                dokumentHendelse.getBestillingUuid(),
+                response.journalpostId(),
+                response.dokumenter().getFirst().dokumentInfoId()));
         taskGruppe.setCallIdFraEksisterende();
         taskTjeneste.lagre(taskGruppe);
     }
@@ -223,15 +224,10 @@ public class DokgenBrevproduksjonTjeneste {
         return prosessTaskData;
     }
 
-    private ProsessTaskData opprettPubliserHistorikkTask(UUID behandlingUuid,
-                                                         UUID bestillingUuid,
-                                                         DokumentMalType dokumentMal,
-                                                         String journalpostId,
-                                                         String dokumentId) {
+    private ProsessTaskData opprettPubliserHistorikkTask(UUID behandlingUuid, UUID bestillingUuid, String journalpostId, String dokumentId) {
         var prosessTaskData = ProsessTaskData.forProsessTask(SendKvitteringTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, behandlingUuid.toString());
         prosessTaskData.setProperty(SendKvitteringTask.BESTILLING_UUID, bestillingUuid.toString());
-        prosessTaskData.setProperty(SendKvitteringTask.DOKUMENT_MAL_TYPE, dokumentMal.getKode());
         prosessTaskData.setProperty(SendKvitteringTask.JOURNALPOST_ID, journalpostId);
         prosessTaskData.setProperty(SendKvitteringTask.DOKUMENT_ID, dokumentId);
         prosessTaskData.setCallIdFraEksisterende();

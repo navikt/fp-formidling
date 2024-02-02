@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.UttakResul
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.YtelseFordelingDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.saldo.SaldoerDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
-import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
+import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentKvitteringDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 
@@ -32,7 +32,7 @@ public interface Behandlinger {
 
     <T> Optional<T> hentDtoFraLink(BehandlingResourceLink link, Class<T> clazz);
 
-    void kvitterDokument(DokumentProdusertDto kvittering);
+    void kvitterDokument(DokumentKvitteringDto kvittering);
 
     default BeregningsgrunnlagDto hentBeregningsgrunnlag(List<BehandlingResourceLink> resourceLinker) {
         return hentFormidlingBeregningsgrunnlagHvisFinnes(resourceLinker).orElseThrow(

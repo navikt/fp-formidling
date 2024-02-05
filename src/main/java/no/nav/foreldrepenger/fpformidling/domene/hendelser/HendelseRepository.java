@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.domene.hendelser;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -46,6 +47,10 @@ public class HendelseRepository {
         query.setParameter("behandlingUuid", behandlingUuid);
         query.setParameter("dokumentMalType", dokumentMal);
         return !query.getResultList().isEmpty();
+    }
+
+    public int slettDokumentHendelserEldreEnn(LocalDate dato) {
+        return entityManager.createQuery("delete from DokumentHendelse where opprettetTidspunkt < :opprettet").setParameter("opprettet", dato.atStartOfDay()).executeUpdate();
     }
 
     private void lagreOgFlush(Object objektTilLagring) {

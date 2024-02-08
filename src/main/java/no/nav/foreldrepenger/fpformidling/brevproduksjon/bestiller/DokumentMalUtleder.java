@@ -152,13 +152,12 @@ class DokumentMalUtleder {
         }
         var erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering = erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(behandling);
 
-        LOG.info("Vurdering av uendret utfall for Behandling {} ({}): erRevurderingMedUendretUtfall: {}, ingenKonsekvensForYtelsen: {}, erKunEndringIFordelingAvYtelsen: {}",
-            behandling.getUuid(),
-            behandling.getFagsakBackend().getYtelseType().getKode(),
-            erRevurderingMedUendretUtfall,
-            ingenKonsekvensForYtelsen,
-            erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering);
-
+        if (LOG.isInfoEnabled()) {
+            LOG.info(
+                "Vurdering av uendret utfall for Behandling {} ({}): erRevurderingMedUendretUtfall: {}, ingenKonsekvensForYtelsen: {}, erKunEndringIFordelingAvYtelsen: {}",
+                behandling.getUuid(), behandling.getFagsakBackend().getYtelseType().getKode(), erRevurderingMedUendretUtfall,
+                ingenKonsekvensForYtelsen, erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering);
+        }
         return erRevurderingMedUendretUtfall || ingenKonsekvensForYtelsen || erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering;
     }
 

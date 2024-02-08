@@ -150,7 +150,16 @@ class DokumentMalUtleder {
         if (ingenKonsekvensForYtelsen && konsekvenserForYtelsen.size() > 1) {
             throw new IllegalStateException(UTVIKLERFEIL_INGEN_ENDRING_SAMMEN + behandling.getUuid());
         }
-        return erRevurderingMedUendretUtfall || ingenKonsekvensForYtelsen || erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(behandling);
+        var erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering = erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(behandling);
+
+        LOG.info("Vurdering av uendret utfall for Behandling {} ({}): erRevurderingMedUendretUtfall: {}, ingenKonsekvensForYtelsen: {}, erKunEndringIFordelingAvYtelsen: {}",
+            behandling.getUuid(),
+            behandling.getFagsakBackend().getYtelseType().getKode(),
+            erRevurderingMedUendretUtfall,
+            ingenKonsekvensForYtelsen,
+            erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering);
+
+        return erRevurderingMedUendretUtfall || ingenKonsekvensForYtelsen || erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering;
     }
 
     private boolean erKunEndringIFordelingAvYtelsenOgHarSendtVarselOmRevurdering(Behandling behandling) {

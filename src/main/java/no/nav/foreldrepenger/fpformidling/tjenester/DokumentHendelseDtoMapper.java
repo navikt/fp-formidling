@@ -64,6 +64,7 @@ public final class DokumentHendelseDtoMapper {
             .medBehandlingUuid(dokumentbestillingDto.behandlingUuid())
             .medBestillingUuid(dokumentbestillingDto.dokumentbestillingUuid())
             .medDokumentMalType(mapDokumentMalType(dokumentbestillingDto.dokumentMal()))
+            .medDokumentMal(mapDokumentMal(dokumentbestillingDto.dokumentMal()))
             .medRevurderingVarslingÅrsak(mapRevurderingVarslingÅrsak(dokumentbestillingDto.revurderingÅrsak()))
             .medRevurderingÅrsak(mapRevurderingÅrsak(dokumentbestillingDto.revurderingÅrsak()))
             .medFritekst(dokumentbestillingDto.fritekst())

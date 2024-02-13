@@ -123,7 +123,7 @@ public class DokumentHendelse extends BaseEntitet {
 
     @Override
     public String toString() {
-        return "DokumentHendelse{" + "id=" + id + ", behandlingUuid=" + behandlingUuid + ", bestillingUuid=" + bestillingUuid + ", dokumentMalType="
+        return "DokumentHendelse{" + "id=" + id + ", behandlingUuid=" + behandlingUuid + ", bestillingUuid=" + bestillingUuid + ", dokumentMal="
                 + dokumentMal + ", ytelseType=" + ytelseType + ", gjelderVedtak=" + gjelderVedtak + ", tittel='" + tittel + '\'' + ", fritekst='" + (
                 fritekst != null ? "****** fritekst ***** " : "null") + '\'' + ", revurderingÅrsak=" + revurderingÅrsak
                 + ", vedtaksbrev=" + vedtaksbrev + ", journalførSom=" + journalførSom +'}';

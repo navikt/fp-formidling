@@ -50,7 +50,7 @@ class KlageOmgjortDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brevet() {
         // Arrange
-        var behandling = standardBehandling();
+        var behandling = standardForeldrepengerBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
         mockKlage(behandling);

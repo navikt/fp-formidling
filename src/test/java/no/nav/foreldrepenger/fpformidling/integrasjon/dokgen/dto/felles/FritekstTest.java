@@ -118,8 +118,7 @@ class FritekstTest {
     private DokumentHendelse.Builder standardHendelseBuilder() {
         return DokumentHendelse.builder()
             .medBehandlingUuid(UUID.randomUUID())
-            .medBestillingUuid(UUID.randomUUID())
-            .medYtelseType(FagsakYtelseType.FORELDREPENGER);
+            .medBestillingUuid(UUID.randomUUID());
     }
 
     private Behandling.Builder standardBehandlingBuilder() {

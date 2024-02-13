@@ -1,5 +1,17 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
+import static no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.PersonStatus.ANNET;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.util.UUID;
+
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+
+import org.mockito.Mockito;
+
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
@@ -11,16 +23,6 @@ import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
-
-import org.mockito.Mockito;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.UUID;
-
-import static no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.PersonStatus.ANNET;
-import static org.mockito.Mockito.when;
 
 public class DatamapperTestUtil {
 
@@ -82,28 +84,24 @@ public class DatamapperTestUtil {
         return DokumentHendelse.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(UUID.randomUUID())
-            .medFritekst(FRITEKST)
-            .medYtelseType(FagsakYtelseType.FORELDREPENGER);
-    }
-
-    public static DokumentHendelse.Builder lagStandardHendelseSVPBuilder() {
-        return DokumentHendelse.builder()
-            .medBestillingUuid(UUID.randomUUID())
-            .medBehandlingUuid(UUID.randomUUID())
-            .medFritekst(FRITEKST)
-            .medYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER);
+            .medFritekst(FRITEKST);
     }
 
     public static DokumentHendelse standardDokumenthendelse() {
         return lagStandardHendelseBuilder().build();
     }
 
-    public static Behandling.Builder standardBehandlingBuilder() {
-        return Behandling.builder().medUuid(UUID.randomUUID()).medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD).medSpråkkode(Språkkode.NB);
+    public static Behandling.Builder standardBehandlingBuilder(FagsakYtelseType ytelseType) {
+        return Behandling.builder().medUuid(UUID.randomUUID()).medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD).medFagsakBackend(
+            FagsakBackend.ny().medFagsakYtelseType(ytelseType).build()).medSpråkkode(Språkkode.NB);
     }
 
-    public static Behandling standardBehandling() {
-        return standardBehandlingBuilder().build();
+    public static Behandling standardForeldrepengerBehandling() {
+        return standardBehandlingBuilder(FagsakYtelseType.FORELDREPENGER).build();
+    }
+
+    public static Behandling standardSvangerskapspengerBehandling() {
+        return standardBehandlingBuilder(FagsakYtelseType.SVANGERSKAPSPENGER).build();
     }
 
 }

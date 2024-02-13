@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -151,6 +153,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     }
 
     private FagsakBackend opprettFagsak(RelasjonsRolleType relasjonsRolleType) {
-        return FagsakBackend.ny().medAktørId(AKTØR_ID).medSaksnummer("123456").medBrukerRolle(relasjonsRolleType).build();
+        return FagsakBackend.ny().medAktørId(AKTØR_ID).medSaksnummer("123456").medBrukerRolle(relasjonsRolleType).medFagsakYtelseType(
+            FagsakYtelseType.ENGANGSTØNAD).build();
     }
 }

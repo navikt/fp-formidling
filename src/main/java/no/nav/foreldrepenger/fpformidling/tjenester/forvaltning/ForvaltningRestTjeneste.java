@@ -143,7 +143,6 @@ public class ForvaltningRestTjeneste {
             .medTittel(originalHendelse.getTittel())
             .medVedtaksbrev(originalHendelse.getVedtaksbrev())
             .medRevurderingVarslingÅrsak(originalHendelse.getRevurderingVarslingÅrsak())
-            .medYtelseType(originalHendelse.getYtelseType())
             .build();
     }
 

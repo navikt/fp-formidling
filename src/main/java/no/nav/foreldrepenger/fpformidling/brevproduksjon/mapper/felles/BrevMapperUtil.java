@@ -6,7 +6,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 
@@ -57,9 +56,7 @@ public class BrevMapperUtil {
         return !dokumentFelles.getMottakerId().equals(dokumentFelles.getSakspartId());
     }
 
-    public static FellesDokumentdata.Builder opprettFellesBuilder(DokumentFelles dokumentFelles,
-                                                                  DokumentHendelse dokumentHendelse,
-                                                                  Behandling behandling,
+    public static FellesDokumentdata.Builder opprettFellesBuilder(DokumentFelles dokumentFelles, Behandling behandling,
                                                                   boolean erUtkast) {
         var erKopi = dokumentFelles.getErKopi();
         var fellesBuilder = FellesDokumentdata.ny()
@@ -68,7 +65,7 @@ public class BrevMapperUtil {
             .medErKopi(erKopi.isPresent() && erKopi(erKopi.get()))
             .medHarVerge(erKopi.isPresent())
             .medSaksnummer(dokumentFelles.getSaksnummer().getVerdi())
-            .medYtelseType(dokumentHendelse.getYtelseType().getKode())
+            .medYtelseType(behandling.getFagsakBackend().getYtelseType().getKode())
             .medErUtkast(erUtkast);
 
         if (brevSendesTilVerge(dokumentFelles)) {

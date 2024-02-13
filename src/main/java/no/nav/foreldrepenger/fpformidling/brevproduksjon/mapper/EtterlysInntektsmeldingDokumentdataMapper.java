@@ -46,7 +46,7 @@ public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMa
                                                                   boolean erUtkast) {
         var språkkode = behandling.getSpråkkode();
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
 
         var søknadDato = getSøknadsdato(behandling);

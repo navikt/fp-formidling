@@ -54,7 +54,6 @@ class DokumentHendelseTjenesteTest {
         return DokumentHendelse.builder()
             .medBehandlingUuid(UUID.randomUUID())
             .medBestillingUuid(UUID.randomUUID())
-            .medYtelseType(FagsakYtelseType.FORELDREPENGER)
             .medDokumentMalType(DokumentMalType.FRITEKSTBREV);
     }
 }

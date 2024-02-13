@@ -63,7 +63,7 @@ class OpprettJournalpostTjenesteTest {
 
         // Act
         var responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE, dokumentFelles,
-            dokumentHendelse, saksnummer, true, null, unikBestillingsId, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
+            dokumentHendelse, saksnummer, true, null, unikBestillingsId, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE, FagsakYtelseType.ENGANGSTØNAD);
 
         // Assert
         Mockito.verify(dokArkivKlient).opprettJournalpost(requestCaptor.capture(), eq(true));
@@ -105,7 +105,6 @@ class OpprettJournalpostTjenesteTest {
         return DokumentHendelse.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(UUID.randomUUID())
-            .medFritekst(FRITEKST)
-            .medYtelseType(FagsakYtelseType.ENGANGSTØNAD);
+            .medFritekst(FRITEKST);
     }
 }

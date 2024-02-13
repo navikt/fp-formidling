@@ -12,6 +12,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
@@ -32,9 +33,9 @@ class HenleggeDokumentdataMapperTest {
     @Test
     void henlegg_mapper_vanligBehandling() {
         //Arrange
-        var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD);
+        var behandling = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, FagsakYtelseType.FORELDREPENGER);
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, null, false);
-        var dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.FORELDREPENGER);
+        var dokumentHendelse = lagDokumentHendelse();
 
         //Act
         var henleggelseDokumentdata = mapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -50,9 +51,9 @@ class HenleggeDokumentdataMapperTest {
     @Test
     void henlegg_mapper_anke_med_opphav_klage() {
         //Arrange
-        var behandling = opprettBehandling(BehandlingType.ANKE);
+        var behandling = opprettBehandling(BehandlingType.ANKE, FagsakYtelseType.SVANGERSKAPSPENGER);
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, null, false);
-        var dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.SVANGERSKAPSPENGER);
+        var dokumentHendelse = lagDokumentHendelse();
 
         //Act
         var henleggelseDokumentdata = mapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -62,18 +63,19 @@ class HenleggeDokumentdataMapperTest {
         assertThat(henleggelseDokumentdata.getAnke()).isTrue();
         assertThat(henleggelseDokumentdata.getInnsyn()).isFalse();
         assertThat(henleggelseDokumentdata.getKlage()).isFalse();
-        assertThat(henleggelseDokumentdata.getFelles().getYtelseType()).isEqualTo("SVP");
+        assertThat(henleggelseDokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
     }
 
-    private Behandling opprettBehandling(BehandlingType behType) {
+    private Behandling opprettBehandling(BehandlingType behType, FagsakYtelseType ytelseType) {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())
             .medBehandlingType(behType)
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(ytelseType).build())
             .build();
     }
 
-    private DokumentHendelse lagDokumentHendelse(FagsakYtelseType ytelseType) {
-        return DatamapperTestUtil.lagStandardHendelseBuilder().medYtelseType(ytelseType).build();
+    private DokumentHendelse lagDokumentHendelse() {
+        return DatamapperTestUtil.lagStandardHendelseBuilder().build();
     }
 }

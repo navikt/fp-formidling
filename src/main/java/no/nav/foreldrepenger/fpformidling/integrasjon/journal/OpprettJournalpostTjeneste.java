@@ -47,12 +47,14 @@ public class OpprettJournalpostTjeneste {
                                                            Saksnummer saksnummer,
                                                            boolean ferdigstill,
                                                            String overskriftVedFritekstBrev,
-                                                           String unikReferanse, DokumentMalType originalDokumentType) {
+                                                           String unikReferanse,
+                                                           DokumentMalType originalDokumentType,
+                                                           FagsakYtelseType ytelseType) {
         LOG.info("Starter journalføring av brev for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode());
 
         try {
             var requestBuilder = lagRequestBuilder(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer, ferdigstill,
-                overskriftVedFritekstBrev, unikReferanse, originalDokumentType);
+                overskriftVedFritekstBrev, unikReferanse, originalDokumentType, ytelseType);
             var response = dokArkivKlient.opprettJournalpost(requestBuilder.build(), ferdigstill);
 
             if (LOG.isWarnEnabled() && ferdigstill && !response.journalpostferdigstilt()) {
@@ -80,7 +82,8 @@ public class OpprettJournalpostTjeneste {
                                                                                          boolean ferdigstill,
                                                                                          String overskriftVedFritekstbrev,
                                                                                          String bestillingsUidMedUnikReferanse,
-                                                                                         DokumentMalType originalDokumentType) {
+                                                                                         DokumentMalType originalDokumentType,
+                                                                                         FagsakYtelseType ytelseType) {
         var tittel = getTittel(dokumentHendelse, dokumentMal, overskriftVedFritekstbrev, originalDokumentType);
         var dokument = DokumentInfoOpprett.builder()
             .medTittel(tittel)
@@ -94,7 +97,7 @@ public class OpprettJournalpostTjeneste {
             .medTittel(tittel)
             .medSak(sak(saksnummer))
             .medTema(DokArkivKlient.TEMA_FORELDREPENGER)
-            .medBehandlingstema(mapBehandlingsTema(dokumentHendelse.getYtelseType()))
+            .medBehandlingstema(mapBehandlingsTema(ytelseType))
             .medJournalfoerendeEnhet(ferdigstill ? DokArkivKlient.AUTOMATISK_JOURNALFØRENDE_ENHET : null)
             .medEksternReferanseId(bestillingsUidMedUnikReferanse)
             .medBruker(bruker)

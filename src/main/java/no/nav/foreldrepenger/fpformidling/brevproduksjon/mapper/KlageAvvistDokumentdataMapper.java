@@ -50,7 +50,7 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
                                                       Behandling behandling,
                                                       boolean erUtkast) {
         var klage = domeneobjektProvider.hentKlagebehandling(behandling);
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDatoNorsk(dokumentFelles.getDokumentDato()) : null);
         fra(hendelse, klage).ifPresent(fellesBuilder::medFritekst);
 

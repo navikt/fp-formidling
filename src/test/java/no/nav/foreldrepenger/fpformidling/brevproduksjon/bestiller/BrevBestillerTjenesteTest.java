@@ -26,33 +26,33 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.domene.aktør.Personinfo;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.EngangsstønadInnvilgelseDokumentdataMapper;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapperProvider;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.DistribuerBrevTask;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.historikk.SendKvitteringTask;
+import no.nav.foreldrepenger.fpformidling.domene.aktør.Personinfo;
+import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
+import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
+import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseEngangsstønad;
+import no.nav.foreldrepenger.fpformidling.domene.verge.Verge;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
-import no.nav.foreldrepenger.fpformidling.domene.verge.Verge;
 import no.nav.vedtak.felles.integrasjon.dokarkiv.dto.OpprettJournalpostResponse;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskGruppe;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
@@ -130,7 +130,7 @@ class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(2)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(2)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
-            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE));
+            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER));
         verify(taskTjeneste, times(2)).lagre(taskCaptor.capture());
 
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
@@ -161,7 +161,7 @@ class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(1)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
-            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE));
+            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER));
         verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
 
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
@@ -175,9 +175,12 @@ class BrevBestillerTjenesteTest {
         // Arrange
         var dokumentHendelse = opprettDokumentHendelse(UUID.randomUUID());
         var behandling = mock(Behandling.class);
+        var fagsak = mock(FagsakBackend.class);
+        when(behandling.getFagsakBackend()).thenReturn(fagsak);
+        when(fagsak.getYtelseType()).thenReturn(FagsakYtelseType.FORELDREPENGER);
         when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
         when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.FRITEKSTBREV);
-        when(dokumentMalUtleder.utledDokumentType(behandling, dokumentHendelse.getYtelseType(), true)).thenReturn(DokumentMalType.FORELDREPENGER_INNVILGELSE);
+        when(dokumentMalUtleder.utledDokumentType(behandling, behandling.getFagsakBackend().getYtelseType(), true)).thenReturn(DokumentMalType.FORELDREPENGER_INNVILGELSE);
 
         var dokgenBrevproduksjonTjeneste = mock(DokgenBrevproduksjonTjeneste.class);
 
@@ -188,7 +191,7 @@ class BrevBestillerTjenesteTest {
 
         // Assert
         verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FRITEKSTBREV, DokumentMalType.FORELDREPENGER_INNVILGELSE);
-        verify(dokumentMalUtleder).utledDokumentType(behandling, dokumentHendelse.getYtelseType(), true);
+        verify(dokumentMalUtleder).utledDokumentType(behandling, behandling.getFagsakBackend().getYtelseType(), true);
         verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
         verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
@@ -200,6 +203,9 @@ class BrevBestillerTjenesteTest {
         // Arrange
         var dokumentHendelse = opprettDokumentHendelse(UUID.randomUUID());
         var behandling = mock(Behandling.class);
+        var fagsak = mock(FagsakBackend.class);
+        when(behandling.getFagsakBackend()).thenReturn(fagsak);
+        when(fagsak.getYtelseType()).thenReturn(FagsakYtelseType.FORELDREPENGER);
         when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
         when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.FORELDREPENGER_INNVILGELSE);
 
@@ -262,7 +268,7 @@ class BrevBestillerTjenesteTest {
         // Assert
         verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
         verify(opprettJournalpostTjeneste, times(1)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
-            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE));
+            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER));
         verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
@@ -287,7 +293,7 @@ class BrevBestillerTjenesteTest {
     }
 
     private Behandling mockDomeneobjektProvider(Personinfo personinfo, boolean harGyldigVerge) {
-        var fagsakBackend = FagsakBackend.ny().medSaksnummer(SAKSNUMMER.getVerdi()).medAktørId(personinfo.getAktørId()).build();
+        var fagsakBackend = FagsakBackend.ny().medSaksnummer(SAKSNUMMER.getVerdi()).medAktørId(personinfo.getAktørId()).medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build();
         var behandling = Behandling.builder()
             .medUuid(BEHANDLING_UUID)
             .medFagsakBackend(fagsakBackend)
@@ -306,7 +312,6 @@ class BrevBestillerTjenesteTest {
         var dokumentHendelse = DokumentHendelse.builder()
             .medBehandlingUuid(BEHANDLING_UUID)
             .medBestillingUuid(randomBestillingsUuid)
-            .medYtelseType(FagsakYtelseType.FORELDREPENGER)
             .build();
         dokumentHendelse.setId(HENDELSE_ID);
         return dokumentHendelse;
@@ -316,6 +321,6 @@ class BrevBestillerTjenesteTest {
         var dokumentOpprettResponse = new OpprettJournalpostResponse.DokumentInfoResponse(DOKUMENT_INFO_ID);
         var opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), true, List.of(dokumentOpprettResponse));
         when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse),
-            eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE))).thenReturn(opprettJournalpostResponse);
+            eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER))).thenReturn(opprettJournalpostResponse);
     }
 }

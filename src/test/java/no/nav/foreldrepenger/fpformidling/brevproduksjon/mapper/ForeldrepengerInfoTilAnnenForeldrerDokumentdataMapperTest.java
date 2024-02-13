@@ -12,6 +12,10 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -95,6 +99,7 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
             .medBehandlingsresultat(behandlingresultat.build())
+            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
             .medSpråkkode(Språkkode.NB)
             .medBehandlingÅrsaker(List.of(behÅrsak));
 

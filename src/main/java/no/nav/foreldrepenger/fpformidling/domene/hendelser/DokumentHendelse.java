@@ -117,11 +117,6 @@ public class DokumentHendelse extends BaseEntitet {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, behandlingUuid, bestillingUuid, dokumentMalType, dokumentMal, journalførSom, ytelseType, gjelderVedtak, tittel, fritekst, revurderingVarslingÅrsak, revurderingÅrsak, vedtaksbrev);
-    }
-
-    @Override
     public String toString() {
         return "DokumentHendelse{" + "id=" + id + ", behandlingUuid=" + behandlingUuid + ", bestillingUuid=" + bestillingUuid + ", dokumentMal="
                 + dokumentMal + ", ytelseType=" + ytelseType + ", gjelderVedtak=" + gjelderVedtak + ", tittel='" + tittel + '\'' + ", fritekst='" + (

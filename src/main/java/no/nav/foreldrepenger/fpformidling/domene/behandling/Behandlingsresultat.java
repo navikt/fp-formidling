@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 
 public class Behandlingsresultat {
     private Avslagsårsak avslagsårsak; //Kode
@@ -23,7 +23,6 @@ public class Behandlingsresultat {
     private boolean endretDekningsgrad;
 
     //Objekter
-    private String beregning; //BeregningResultat
     private String periode; //Uttaksperiodegrense
     private Behandling behandling;
 
@@ -38,7 +37,6 @@ public class Behandlingsresultat {
         erRevurderingMedUendretUtfall = builder.erRevurderingMedUendretUtfall;
         skjæringstidspunkt = builder.skjæringstidspunkt;
         utenMinsterett = builder.utenMinsterett;
-        beregning = builder.beregning;
         periode = builder.periode;
         behandling = builder.behandling;
         endretDekningsgrad = builder.endretDekningsgrad;
@@ -76,10 +74,6 @@ public class Behandlingsresultat {
         return avslagarsakFritekst;
     }
 
-    public String getBeregning() {
-        return beregning;
-    }
-
     public String getPeriode() {
         return periode;
     }
@@ -100,28 +94,12 @@ public class Behandlingsresultat {
         return utenMinsterett;
     }
 
-    public boolean isBehandlingsresultatAvslåttOrOpphørt() {
-        return BehandlingResultatType.AVSLÅTT.equals(behandlingResultatType) || BehandlingResultatType.OPPHØR.equals(behandlingResultatType);
-    }
-
-    public boolean isBehandlingsresultatAvslått() {
-        return BehandlingResultatType.AVSLÅTT.equals(behandlingResultatType);
-    }
-
     public boolean erEndretForeldrepenger() {
         return BehandlingResultatType.FORELDREPENGER_ENDRET.equals(behandlingResultatType);
     }
 
-    public boolean isBehandlingsresultatOpphørt() {
-        return BehandlingResultatType.OPPHØR.equals(behandlingResultatType);
-    }
-
     public boolean erAvslått() {
         return BehandlingResultatType.AVSLÅTT.equals(behandlingResultatType);
-    }
-
-    public boolean isBehandlingsresultatInnvilget() {
-        return BehandlingResultatType.INNVILGET.equals(behandlingResultatType);
     }
 
     public boolean erOpphørt() {
@@ -130,10 +108,6 @@ public class Behandlingsresultat {
 
     public boolean erForeldrepengerSenere() {
         return BehandlingResultatType.FORELDREPENGER_SENERE.equals(behandlingResultatType);
-    }
-
-    public boolean isBehandlingsresultatForeldrepengerEndret() {
-        return BehandlingResultatType.FORELDREPENGER_ENDRET.equals(behandlingResultatType);
     }
 
     public Behandling getBehandling() {
@@ -159,7 +133,6 @@ public class Behandlingsresultat {
         private Boolean erRevurderingMedUendretUtfall;
         private LocalDate skjæringstidspunkt;
         private boolean utenMinsterett = true;
-        private String beregning;
         private String periode;
         private Behandling behandling;
         private boolean endretDekningsgrad;
@@ -219,11 +192,6 @@ public class Behandlingsresultat {
 
         public Builder medEndretDekningsgrad(boolean endretDekningsgrad) {
             this.endretDekningsgrad = endretDekningsgrad;
-            return this;
-        }
-
-        public Builder beregning(String beregning) {
-            this.beregning = beregning;
             return this;
         }
 

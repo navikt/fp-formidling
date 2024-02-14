@@ -1,21 +1,16 @@
 package no.nav.foreldrepenger.fpformidling.domene.hendelser;
 
-import java.util.Objects;
-import java.util.UUID;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.RevurderingVarslingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.fpformidling.felles.BaseEntitet;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
+import no.nav.foreldrepenger.fpformidling.typer.RevurderingÅrsak;
+
+import java.util.Objects;
+import java.util.UUID;
 
 @Entity(name = "DokumentHendelse")
 @Table(name = "DOKUMENT_HENDELSE")
@@ -35,8 +30,16 @@ public class DokumentHendelse extends BaseEntitet {
     @Column(name = "dokument_mal_navn")
     private DokumentMalType dokumentMalType;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "dokument_mal")
+    private DokumentMal dokumentMal;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "journalfoer_som")
+    private DokumentMal journalførSom;
+
     @Convert(converter = FagsakYtelseType.KodeverdiConverter.class)
-    @Column(name = "ytelse_type", nullable = false)
+    @Column(name = "ytelse_type")
     private FagsakYtelseType ytelseType;
 
     @Column(name = "gjelder_vedtak")
@@ -51,6 +54,10 @@ public class DokumentHendelse extends BaseEntitet {
     @Convert(converter = RevurderingVarslingÅrsak.KodeverdiConverter.class)
     @Column(name = "revurdering_varsling_arsak", nullable = false)
     private RevurderingVarslingÅrsak revurderingVarslingÅrsak = RevurderingVarslingÅrsak.UDEFINERT;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "revurdering_aarsak")
+    private RevurderingÅrsak revurderingÅrsak;
 
     @Convert(converter = Vedtaksbrev.KodeverdiConverter.class)
     @Column(name = "vedtaksbrev", nullable = false)
@@ -110,30 +117,11 @@ public class DokumentHendelse extends BaseEntitet {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        var that = (DokumentHendelse) o;
-        return behandlingUuid.equals(that.behandlingUuid) && Objects.equals(dokumentMalType, that.dokumentMalType) && Objects.equals(ytelseType,
-            that.ytelseType) && Objects.equals(gjelderVedtak, that.gjelderVedtak) && Objects.equals(tittel, that.tittel) && Objects.equals(fritekst,
-            that.fritekst) && Objects.equals(vedtaksbrev, that.vedtaksbrev);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(behandlingUuid, dokumentMalType, ytelseType, gjelderVedtak, tittel, fritekst, vedtaksbrev);
-    }
-
-    @Override
     public String toString() {
-        return "DokumentHendelse{" + "id=" + id + ", behandlingUuid=" + behandlingUuid + ", bestillingUuid=" + bestillingUuid + ", dokumentMalType="
-            + dokumentMalType + ", ytelseType=" + ytelseType + ", gjelderVedtak=" + gjelderVedtak + ", tittel='" + tittel + '\'' + ", fritekst='" + (
-            fritekst != null ? "****** fritekst ***** " : "null") + '\'' + ", revurderingVarslingÅrsak=" + revurderingVarslingÅrsak
-            + ", vedtaksbrev=" + vedtaksbrev + '}';
+        return "DokumentHendelse{" + "id=" + id + ", behandlingUuid=" + behandlingUuid + ", bestillingUuid=" + bestillingUuid + ", dokumentMal="
+                + dokumentMal + ", ytelseType=" + ytelseType + ", gjelderVedtak=" + gjelderVedtak + ", tittel='" + tittel + '\'' + ", fritekst='" + (
+                fritekst != null ? "****** fritekst ***** " : "null") + '\'' + ", revurderingÅrsak=" + revurderingÅrsak
+                + ", vedtaksbrev=" + vedtaksbrev + ", journalførSom=" + journalførSom +'}';
     }
 
 
@@ -146,6 +134,16 @@ public class DokumentHendelse extends BaseEntitet {
 
         public DokumentHendelse.Builder medDokumentMalType(DokumentMalType dokumentMalType) {
             this.kladd.dokumentMalType = dokumentMalType;
+            return this;
+        }
+
+        public DokumentHendelse.Builder medDokumentMal(DokumentMal dokumentMal) {
+            this.kladd.dokumentMal = dokumentMal;
+            return this;
+        }
+
+        public DokumentHendelse.Builder medJournalførSom(DokumentMal medJournalførSom) {
+            this.kladd.journalførSom = medJournalførSom;
             return this;
         }
 
@@ -184,6 +182,11 @@ public class DokumentHendelse extends BaseEntitet {
             return this;
         }
 
+        public DokumentHendelse.Builder medRevurderingÅrsak(RevurderingÅrsak revurderingÅrsak) {
+            this.kladd.revurderingÅrsak = revurderingÅrsak;
+            return this;
+        }
+
         public DokumentHendelse.Builder medVedtaksbrev(Vedtaksbrev vedtaksbrev) {
             this.kladd.vedtaksbrev = vedtaksbrev;
             return this;
@@ -197,7 +200,6 @@ public class DokumentHendelse extends BaseEntitet {
         private void verifyStateForBuild() {
             Objects.requireNonNull(kladd.behandlingUuid, "behandlingUuid");
             Objects.requireNonNull(kladd.bestillingUuid, "bestillingUuid");
-            Objects.requireNonNull(kladd.ytelseType, "ytelseType");
         }
 
     }

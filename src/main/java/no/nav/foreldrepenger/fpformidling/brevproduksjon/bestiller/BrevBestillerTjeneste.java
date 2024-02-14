@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
+import java.util.UUID;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
@@ -8,8 +10,6 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-
-import java.util.UUID;
 
 @ApplicationScoped
 public class BrevBestillerTjeneste {
@@ -40,7 +40,7 @@ public class BrevBestillerTjeneste {
     public void bestillBrev(DokumentHendelse dokumentHendelse) {
         var behandling = hentBehandling(dokumentHendelse.getBehandlingUuid());
         var dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
-        var dokumentType = utledDokumentType(dokumentHendelse.getYtelseType(), behandling, dokumentMal);
+        var dokumentType = utledDokumentType(behandling.getFagsakBackend().getYtelseType(), behandling, dokumentMal);
         dokgenBrevproduksjonTjeneste.bestillBrev(dokumentHendelse, behandling, dokumentMal, dokumentType);
     }
 
@@ -49,7 +49,6 @@ public class BrevBestillerTjeneste {
         var dokumentHendelse = DokumentHendelse.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(behandlingUuid)
-            .medYtelseType(behandling.getFagsakBackend().getYtelseType())
             .medGjelderVedtak(Boolean.TRUE).build();
         var dokumentMal = utledDokumentMal(behandling, dokumentHendelse);
         return  dokgenBrevproduksjonTjeneste.genererJson(dokumentHendelse, behandling, dokumentMal, BestillingType.UTKAST );

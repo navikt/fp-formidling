@@ -58,7 +58,7 @@ class KlageAvvistDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_vanlig_behandling() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardBehandling();
+        var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         mockKlage(behandling, BehandlingType.FØRSTEGANGSSØKNAD, of(KlageAvvistÅrsak.KLAGER_IKKE_PART));
@@ -89,7 +89,7 @@ class KlageAvvistDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_tilbakekreving_med_alle_avvist_grunner_og_spesialhåndtere_for_sent_og_ikke_signert() {
         // Arrange
-        var behandling = DatamapperTestUtil.standardBehandling();
+        var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
         mockKlage(behandling, BehandlingType.TILBAKEKREVING,

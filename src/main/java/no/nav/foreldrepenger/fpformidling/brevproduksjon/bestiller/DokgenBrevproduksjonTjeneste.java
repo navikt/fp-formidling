@@ -92,7 +92,7 @@ public class DokgenBrevproduksjonTjeneste {
             var response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
                 behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg,
                 behandling.getBehandlingsresultat() != null ? behandling.getBehandlingsresultat().getOverskrift() : null,
-                unikBestillingsUuidPerDokFelles, originalDokumentType) // NoSonar
+                unikBestillingsUuidPerDokFelles, originalDokumentType, behandling.getFagsakBackend().getYtelseType()) // NoSonar
                 ;
 
             var journalpostId = new JournalpostId(response.journalpostId());

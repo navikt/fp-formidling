@@ -40,7 +40,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
 
     @Test
     void test_map_fagtype_foreldrepenger() {
-        var behandling = DatamapperTestUtil.standardBehandling();
+        var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
 
@@ -53,9 +53,9 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
 
     @Test
     void test_map_fagtype_svangerskapspenger() {
-        var behandling = DatamapperTestUtil.standardBehandling();
+        var behandling = DatamapperTestUtil.standardSvangerskapspengerBehandling();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseSVPBuilder().build();
+        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
 
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 

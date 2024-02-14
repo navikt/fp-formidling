@@ -69,7 +69,7 @@ public class SvangerskapspengerInnvilgelseDokumentdataMapper implements Dokument
         var mottattDatoSøknad = domeneobjektProvider.hentMottattDatoSøknad(behandling);
 
 
-        var fellesBuilder = opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
+        var fellesBuilder = opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 

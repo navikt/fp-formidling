@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -53,18 +55,18 @@ class InnsynDokumentdataMapperTest {
         var dokument1 = new InnsynDokument(new JournalpostId(124L), "1");
         var dokument2 = new InnsynDokument(new JournalpostId(125L), "2");
         innsynDokumentList = List.of(dokument1, dokument2);
-        behandling = opprettBehandling();
 
         innsynDokumentdataMapper = new InnsynDokumentdataMapper(brevParametere, domeneobjektProvider);
     }
 
     @Test
     void mappingAvInnsynInnvilgetForeldrePenger() {
+        behandling = opprettBehandling(FagsakYtelseType.FORELDREPENGER);
         var innsynsBehandling = new Innsyn(InnsynResultatType.INNVILGET, innsynDokumentList);
         when(domeneobjektProvider.hentInnsyn(behandling)).thenReturn(innsynsBehandling);
 
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        var dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.FORELDREPENGER);
+        var dokumentHendelse = lagDokumentHendelse();
 
         var innsynsDokumentData = innsynDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
@@ -75,11 +77,12 @@ class InnsynDokumentdataMapperTest {
 
     @Test
     void mappingAvInnsynAvvistEngangsstønadMedFritekst() {
+        behandling = opprettBehandling(FagsakYtelseType.ENGANGSTØNAD);
         var innsynsBehandling = new Innsyn(InnsynResultatType.AVVIST, innsynDokumentList);
         when(domeneobjektProvider.hentInnsyn(behandling)).thenReturn(innsynsBehandling);
 
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        var dokumentHendelse = lagDokumentHendelse(FagsakYtelseType.ENGANGSTØNAD);
+        var dokumentHendelse = lagDokumentHendelse();
 
         var innsynsDokumentData = innsynDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
@@ -88,15 +91,16 @@ class InnsynDokumentdataMapperTest {
         assertThat(innsynsDokumentData.getFelles().getFritekst()).isEqualTo(FritekstDto.fra(FRITEKST));
     }
 
-    private Behandling opprettBehandling() {
+    private Behandling opprettBehandling(FagsakYtelseType ytelseType) {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.INNSYN)
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
+            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(ytelseType).build())
             .build();
     }
 
-    private DokumentHendelse lagDokumentHendelse(FagsakYtelseType ytelseType) {
-        return lagStandardHendelseBuilder().medYtelseType(ytelseType).medFritekst(FRITEKST).build();
+    private DokumentHendelse lagDokumentHendelse() {
+        return lagStandardHendelseBuilder().medFritekst(FRITEKST).build();
     }
 }

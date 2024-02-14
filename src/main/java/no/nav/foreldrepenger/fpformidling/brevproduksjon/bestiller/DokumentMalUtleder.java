@@ -119,7 +119,7 @@ class DokumentMalUtleder {
             && Objects.equals(Vedtaksbrev.FRITEKST, behandling.getBehandlingsresultat().getVedtaksbrev())) {
             return DokumentMalType.FRITEKSTBREV;
         }
-        return utledDokumentType(behandling, hendelse.getYtelseType(), false);
+        return utledDokumentType(behandling, behandling.getFagsakBackend().getYtelseType(), false);
     }
 
     DokumentMalType utledDokumentType(Behandling behandling, FagsakYtelseType ytelseType, boolean opprinneligFritekstBrev) {

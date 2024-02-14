@@ -30,7 +30,6 @@ class HendelseRepositoryImplTest {
         var dokumentHendelse = DokumentHendelse.builder()
             .medBehandlingUuid(behandlingUuid)
             .medBestillingUuid(bestiilingUuid)
-            .medYtelseType(FagsakYtelseType.FORELDREPENGER)
             .medDokumentMalType(DokumentMalType.FORELDREPENGER_ANNULLERT)
             .build();
         hendelseRepository.lagre(dokumentHendelse);

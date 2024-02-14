@@ -49,7 +49,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
                                                               Behandling behandling,
                                                               boolean erUtkast) {
 
-        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, hendelse, behandling, erUtkast);
+        var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
         fellesBuilder.medBrevDato(
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medFritekst(FritekstDto.fra(hendelse.getFritekst()));
@@ -63,7 +63,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
             .medFristDato(formaterDato(brevMapperUtil.getSvarFrist(), behandling.getSpråkkode()))
             .medAntallBarn(familieHendelse.antallBarn())
             .medAdvarselKode(advarselKode)
-            .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode))
+            .medFlereOpplysninger(utledFlereOpplysninger(hendelse, advarselKode, behandling.getFagsakBackend().getYtelseType()))
             .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen());
 
         return dokumentdataBuilder.build();
@@ -83,9 +83,9 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         return hendelse.getRevurderingVarslingÅrsak().getKode();
     }
 
-    private boolean utledFlereOpplysninger(DokumentHendelse hendelse, String advarselKode) {
+    private boolean utledFlereOpplysninger(DokumentHendelse hendelse, String advarselKode, FagsakYtelseType ytelseType) {
         return !RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN.getKode().equals(advarselKode) && (harFritekst(hendelse)
-            || !FagsakYtelseType.ENGANGSTØNAD.equals(hendelse.getYtelseType()));
+            || !FagsakYtelseType.ENGANGSTØNAD.equals(ytelseType));
     }
 
     private boolean harFritekst(DokumentHendelse hendelse) {

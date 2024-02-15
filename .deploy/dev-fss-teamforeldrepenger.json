@@ -29,11 +29,6 @@
       ]
     },
     {
-      "app": "fp-frontend",
-      "namespace": "teamforeldrepenger",
-      "cluster": "dev-gcp"
-    },
-    {
       "app": "fpsak",
       "namespace": "teamforeldrepenger",
       "cluster": "dev-fss"

@@ -22,7 +22,7 @@
         <!-- Felles artefakter -->
         <felles.version>7.0.4</felles.version>
         <prosesstask.version>5.0.4</prosesstask.version>
-        <kontrakter.version>9.0.5</kontrakter.version>
+        <kontrakter.version>9.1.4</kontrakter.version>
 
         <!-- Eksterne -->
         <handlebars.version>4.3.1</handlebars.version>

@@ -82,6 +82,7 @@ public final class DokumentHendelseDtoMapper {
             case FORELDREPENGER_OPPHØR -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_OPPHØR;
             case FORELDREPENGER_ANNULLERT -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_ANNULLERT;
             case FORELDREPENGER_INFO_TIL_ANNEN_FORELDER -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER;
+            case FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_INFOBREV -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_INFOBREV;
             case SVANGERSKAPSPENGER_INNVILGELSE -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.SVANGERSKAPSPENGER_INNVILGELSE;
             case SVANGERSKAPSPENGER_OPPHØR -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.SVANGERSKAPSPENGER_OPPHØR;
             case SVANGERSKAPSPENGER_AVSLAG -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.SVANGERSKAPSPENGER_AVSLAG;
@@ -142,6 +143,7 @@ public final class DokumentHendelseDtoMapper {
             case FORELDREPENGER_OPPHØR -> DokumentMalType.FORELDREPENGER_OPPHØR;
             case FORELDREPENGER_ANNULLERT -> DokumentMalType.FORELDREPENGER_ANNULLERT;
             case FORELDREPENGER_INFO_TIL_ANNEN_FORELDER -> DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER;
+            case FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_INFOBREV -> DokumentMalType.FORELDREPENGER_FEIL_PRAKSIS_UTSETTELSE_INFOBREV;
             case SVANGERSKAPSPENGER_INNVILGELSE -> DokumentMalType.SVANGERSKAPSPENGER_INNVILGELSE;
             case SVANGERSKAPSPENGER_OPPHØR -> DokumentMalType.SVANGERSKAPSPENGER_OPPHØR;
             case SVANGERSKAPSPENGER_AVSLAG -> DokumentMalType.SVANGERSKAPSPENGER_AVSLAG;

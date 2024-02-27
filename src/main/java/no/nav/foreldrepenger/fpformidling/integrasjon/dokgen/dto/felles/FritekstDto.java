@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 
 /**
@@ -25,18 +25,18 @@ public class FritekstDto {
         return fritekst;
     }
 
-    public static Optional<FritekstDto> fra(DokumentHendelse dokumentHendelse, Behandling behandling) {
-        if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
-            return Optional.of(fra(dokumentHendelse.getFritekst()));
+    public static Optional<FritekstDto> fra(DokumentHendelseEntitet dokumentHendelseEntitet, Behandling behandling) {
+        if (dokumentHendelseEntitet.getFritekst() != null && !dokumentHendelseEntitet.getFritekst().isEmpty()) {
+            return Optional.of(fra(dokumentHendelseEntitet.getFritekst()));
         } else if (behandling.getBehandlingsresultat() != null && behandling.getBehandlingsresultat().getAvslagarsakFritekst() != null) {
             return Optional.of(fra(behandling.getBehandlingsresultat().getAvslagarsakFritekst()));
         }
         return Optional.empty();
     }
 
-    public static Optional<FritekstDto> fra(DokumentHendelse dokumentHendelse, Klage klage) {
-        if (dokumentHendelse.getFritekst() != null && !dokumentHendelse.getFritekst().isEmpty()) {
-            return Optional.of(fra(dokumentHendelse.getFritekst()));
+    public static Optional<FritekstDto> fra(DokumentHendelseEntitet dokumentHendelseEntitet, Klage klage) {
+        if (dokumentHendelseEntitet.getFritekst() != null && !dokumentHendelseEntitet.getFritekst().isEmpty()) {
+            return Optional.of(fra(dokumentHendelseEntitet.getFritekst()));
         } else if (klage.getGjeldendeKlageVurderingsresultat() != null && klage.getGjeldendeKlageVurderingsresultat().fritekstTilBrev() != null) {
             return Optional.of(fra(klage.getGjeldendeKlageVurderingsresultat().fritekstTilBrev()));
         }

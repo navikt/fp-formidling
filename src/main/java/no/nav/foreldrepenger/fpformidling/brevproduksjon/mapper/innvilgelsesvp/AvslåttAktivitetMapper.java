@@ -2,11 +2,11 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsesvp;
 
 import java.util.List;
 
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.AvslåttAktivitet;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.ArbeidsforholdIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatArbeidsforhold;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.AvslåttAktivitet;
 
 public final class AvslåttAktivitetMapper {
 

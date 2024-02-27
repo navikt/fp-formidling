@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelseTjeneste;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentBestillerTjeneste;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseTjeneste;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
@@ -13,11 +13,11 @@ import jakarta.inject.Inject;
 @ProsessTask("formidling.bestillBrev")
 public class ProduserBrevTask implements ProsessTaskHandler {
 
-    private final BrevBestillerTjeneste brevBestillerApplikasjonTjeneste;
+    private final DokumentBestillerTjeneste brevBestillerApplikasjonTjeneste;
     private final DokumentHendelseTjeneste dokumentHendelseTjeneste;
 
     @Inject
-    public ProduserBrevTask(BrevBestillerTjeneste brevBestillerApplikasjonTjeneste, DokumentHendelseTjeneste dokumentHendelseTjeneste) {
+    public ProduserBrevTask(DokumentBestillerTjeneste brevBestillerApplikasjonTjeneste, DokumentHendelseTjeneste dokumentHendelseTjeneste) {
         this.brevBestillerApplikasjonTjeneste = brevBestillerApplikasjonTjeneste;
         this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
     }

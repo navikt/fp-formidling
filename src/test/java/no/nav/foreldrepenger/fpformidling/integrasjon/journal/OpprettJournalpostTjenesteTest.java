@@ -18,9 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingTema;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 import no.nav.vedtak.felles.integrasjon.dokarkiv.DokArkiv;
 import no.nav.vedtak.felles.integrasjon.dokarkiv.dto.AvsenderMottaker;
@@ -62,8 +62,8 @@ class OpprettJournalpostTjenesteTest {
         var saksnummer = new Saksnummer("153456789");
 
         // Act
-        var responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE, dokumentFelles,
-            dokumentHendelse, saksnummer, true, null, unikBestillingsId, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE, FagsakYtelseType.ENGANGSTØNAD);
+        var responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, dokumentFelles,
+            dokumentHendelse, saksnummer, true, null, unikBestillingsId, FagsakYtelseType.ENGANGSTØNAD);
 
         // Assert
         Mockito.verify(dokArkivKlient).opprettJournalpost(requestCaptor.capture(), eq(true));
@@ -80,7 +80,7 @@ class OpprettJournalpostTjenesteTest {
         assertThat(genRequest.journalfoerendeEnhet()).isEqualTo("9999");
         assertThat(genRequest.bruker().id()).isEqualTo(FNR);
         assertThat(genRequest.eksternReferanseId()).isEqualTo(unikBestillingsId);
-        assertThat(genRequest.dokumenter().get(0).brevkode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getKode());
+        assertThat(genRequest.dokumenter().get(0).brevkode()).isEqualTo(DokumentMalEnum.ENGANGSSTØNAD_INNVILGELSE.getKode());
         var brev = genRequest.dokumenter().get(0).dokumentvarianter().get(0).fysiskDokument();
         assertThat(brev).contains(GEN_BREV);
         assertThat(genRequest.dokumenter().get(0).dokumentvarianter().get(0).variantformat().name()).isEqualTo("ARKIV");
@@ -101,8 +101,8 @@ class OpprettJournalpostTjenesteTest {
         return dokumentFelles;
     }
 
-    private DokumentHendelse.Builder lagStandardHendelseBuilder() {
-        return DokumentHendelse.builder()
+    private DokumentHendelseEntitet.Builder lagStandardHendelseBuilder() {
+        return DokumentHendelseEntitet.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(UUID.randomUUID())
             .medFritekst(FRITEKST);

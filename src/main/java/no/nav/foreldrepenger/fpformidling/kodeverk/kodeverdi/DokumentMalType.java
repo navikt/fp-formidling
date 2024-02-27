@@ -5,9 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
-
 public enum DokumentMalType implements Kodeverdi {
 
     FRITEKSTBREV("FRITEK", "Fritekstbrev"),
@@ -131,19 +128,6 @@ public enum DokumentMalType implements Kodeverdi {
             if (KODER.putIfAbsent(v.kode, v) != null) {
                 throw new IllegalArgumentException("Duplikat : " + v.kode);
             }
-        }
-    }
-
-    @Converter(autoApply = true)
-    public static class KodeverdiConverter implements AttributeConverter<DokumentMalType, String> {
-        @Override
-        public String convertToDatabaseColumn(DokumentMalType attribute) {
-            return attribute == null ? null : attribute.getKode();
-        }
-
-        @Override
-        public DokumentMalType convertToEntityAttribute(String dbData) {
-            return dbData == null ? null : fraKode(dbData);
         }
     }
 

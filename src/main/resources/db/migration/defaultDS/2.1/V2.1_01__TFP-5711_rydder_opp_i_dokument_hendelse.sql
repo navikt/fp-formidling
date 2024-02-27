@@ -1,0 +1,9 @@
+ALTER TABLE dokument_hendelse DROP COLUMN ytelse_type;
+ALTER TABLE dokument_hendelse DROP COLUMN dokument_mal_navn;
+ALTER TABLE dokument_hendelse DROP COLUMN gjelder_vedtak;
+ALTER TABLE dokument_hendelse DROP COLUMN tittel;
+ALTER TABLE dokument_hendelse DROP COLUMN revurdering_varsling_arsak;
+ALTER TABLE dokument_hendelse DROP COLUMN endret_av;
+ALTER TABLE dokument_hendelse DROP COLUMN endret_tid;
+ALTER TABLE dokument_hendelse DROP COLUMN behandlende_enhet_navn;
+ALTER TABLE dokument_hendelse DROP COLUMN vedtaksbrev;

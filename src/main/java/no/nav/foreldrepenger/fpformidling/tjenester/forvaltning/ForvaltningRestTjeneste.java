@@ -27,12 +27,12 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.BrevBestillerTjeneste;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentBestillerTjeneste;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelseTjeneste;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.konfig.Environment;
@@ -55,18 +55,18 @@ public class ForvaltningRestTjeneste {
     private Dokgen dokgenRestKlient;
     private DokumentHendelseTjeneste dokumentHendelseTjeneste;
     private ProsessTaskTjeneste taskTjeneste;
-    private BrevBestillerTjeneste brevBestillerTjeneste;
+    private DokumentBestillerTjeneste dokumentBestillerTjeneste;
 
     public ForvaltningRestTjeneste() {
         // CDI
     }
 
     @Inject
-    public ForvaltningRestTjeneste(Dokgen dokgenRestKlient, DokumentHendelseTjeneste dokumentHendelseTjeneste, ProsessTaskTjeneste taskTjeneste, BrevBestillerTjeneste brevBestillerTjeneste) {
+    public ForvaltningRestTjeneste(Dokgen dokgenRestKlient, DokumentHendelseTjeneste dokumentHendelseTjeneste, ProsessTaskTjeneste taskTjeneste, DokumentBestillerTjeneste dokumentBestillerTjeneste) {
         this.dokgenRestKlient = dokgenRestKlient;
         this.dokumentHendelseTjeneste = dokumentHendelseTjeneste;
         this.taskTjeneste = taskTjeneste;
-        this.brevBestillerTjeneste = brevBestillerTjeneste;
+        this.dokumentBestillerTjeneste = dokumentBestillerTjeneste;
     }
 
     @POST
@@ -123,33 +123,29 @@ public class ForvaltningRestTjeneste {
     @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.DRIFT, sporingslogg = false)
     public Response genererBrevdata(@Parameter(description = "Behandling uuid det skal genereres json for.") @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class) @QueryParam("behandlingUuid") @Valid @NotNull UUID behandlingUuid) {
 
-        var resultat = brevBestillerTjeneste.genererJson(behandlingUuid);
+        var resultat = dokumentBestillerTjeneste.genererJson(behandlingUuid);
 
         var responseBuilder = Response.ok(resultat);
 
         return responseBuilder.build();
     }
 
-    private DokumentHendelse oppdaterBestillingId(DokumentHendelse originalHendelse) {
+    private DokumentHendelseEntitet oppdaterBestillingId(DokumentHendelseEntitet originalHendelse) {
         var nyBestillingUuid = UUID.randomUUID();
         var originalBestillingUuid = originalHendelse.getBestillingUuid();
         LOG.info("Produserer ny brev for bestilling {} med ny bestillingsid {}", originalBestillingUuid, nyBestillingUuid);
-        return DokumentHendelse.builder()
+        return DokumentHendelseEntitet.builder()
             .medBehandlingUuid(originalHendelse.getBehandlingUuid())
             .medBestillingUuid(nyBestillingUuid)
-            .medDokumentMalType(originalHendelse.getDokumentMalType())
+            .medDokumentMal(originalHendelse.getDokumentMal())
             .medFritekst(originalHendelse.getFritekst())
-            .medGjelderVedtak(originalHendelse.isGjelderVedtak())
-            .medTittel(originalHendelse.getTittel())
-            .medVedtaksbrev(originalHendelse.getVedtaksbrev())
-            .medRevurderingVarslingÅrsak(originalHendelse.getRevurderingVarslingÅrsak())
             .build();
     }
 
-    private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {
+    private void opprettBestillBrevTask(DokumentHendelseEntitet dokumentHendelseEntitet) {
         var prosessTaskData = ProsessTaskData.forProsessTask(ProduserBrevTask.class);
-        prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
+        prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelseEntitet.getId()));
+        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelseEntitet.getBehandlingUuid()));
         taskTjeneste.lagre(prosessTaskData);
     }
 

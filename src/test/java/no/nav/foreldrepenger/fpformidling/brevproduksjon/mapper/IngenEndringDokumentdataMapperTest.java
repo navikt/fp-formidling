@@ -21,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 
 @ExtendWith(MockitoExtension.class)
 class IngenEndringDokumentdataMapperTest {
@@ -32,7 +32,7 @@ class IngenEndringDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        dokumentData = lagStandardDokumentData(DokumentMalType.INGEN_ENDRING);
+        dokumentData = lagStandardDokumentData(DokumentMalEnum.INGEN_ENDRING);
         dokumentdataMapper = new IngenEndringDokumentdataMapper();
     }
 

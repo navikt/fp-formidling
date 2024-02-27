@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.KlageAvvistDokumentdata;
@@ -46,7 +46,7 @@ public class KlageAvvistDokumentdataMapper implements DokumentdataMapper {
 
     @Override
     public KlageAvvistDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
-                                                      DokumentHendelse hendelse,
+                                                      DokumentHendelseEntitet hendelse,
                                                       Behandling behandling,
                                                       boolean erUtkast) {
         var klage = domeneobjektProvider.hentKlagebehandling(behandling);

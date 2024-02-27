@@ -10,12 +10,12 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Avslagsperiode;
-import no.nav.foreldrepenger.fpformidling.felles.DatoIntervallEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.PeriodeIkkeOppfyltÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
+import no.nav.foreldrepenger.fpformidling.felles.DatoIntervallEntitet;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsesvp.Avslagsperiode;
 
 public final class AvslagsperiodeMapper {
 

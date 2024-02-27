@@ -30,7 +30,7 @@ import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageAvvistÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageFormkravResultat;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -50,7 +50,7 @@ class KlageAvvistDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.KLAGE_AVVIST);
+        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalEnum.KLAGE_AVVIST);
         when(brevParametere.getKlagefristUker()).thenReturn(6);
         dokumentdataMapper = new KlageAvvistDokumentdataMapper(brevParametere, domeneobjektProvider);
     }

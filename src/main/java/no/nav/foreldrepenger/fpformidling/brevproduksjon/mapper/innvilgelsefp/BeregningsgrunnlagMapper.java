@@ -16,11 +16,11 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BGAndelArbei
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagPrStatusOgAndel;
+import no.nav.foreldrepenger.fpformidling.domene.opptjening.OpptjeningAktivitetType;
+import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagAndel;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.BeregningsgrunnlagRegel;
-import no.nav.foreldrepenger.fpformidling.domene.opptjening.OpptjeningAktivitetType;
-import no.nav.foreldrepenger.fpformidling.domene.virksomhet.Arbeidsgiver;
 
 public final class BeregningsgrunnlagMapper {
 

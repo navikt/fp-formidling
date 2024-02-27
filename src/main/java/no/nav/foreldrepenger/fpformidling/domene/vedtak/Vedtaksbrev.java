@@ -4,9 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -54,16 +51,4 @@ public enum Vedtaksbrev implements Kodeverdi {
         }
     }
 
-    @Converter(autoApply = true)
-    public static class KodeverdiConverter implements AttributeConverter<Vedtaksbrev, String> {
-        @Override
-        public String convertToDatabaseColumn(Vedtaksbrev attribute) {
-            return attribute == null ? null : attribute.getKode();
-        }
-
-        @Override
-        public Vedtaksbrev convertToEntityAttribute(String dbData) {
-            return dbData == null ? null : fraKode(dbData);
-        }
-    }
 }

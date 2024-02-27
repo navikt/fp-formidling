@@ -10,8 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -22,16 +21,16 @@ class FritekstTest {
     private static final String BEHANDLING_FRITEKST = "BEHANDLING_FRITEKST";
     private static final UUID BEHANDLING_ID = UUID.randomUUID();
     private Behandling behandling;
-    private DokumentHendelse dokumentHendelse;
+    private DokumentHendelseEntitet dokumentHendelseEntitet;
 
     @Test
     void skal_velge_ingen_fritekst_når_ingen_finnes() {
         // Arrange
         behandling = standardBehandlingBuilder().build();
-        dokumentHendelse = standardHendelseBuilder().build();
+        dokumentHendelseEntitet = standardHendelseBuilder().build();
 
         // Act + Assert
-        assertThat(fra(dokumentHendelse, behandling)).isNotPresent();
+        assertThat(fra(dokumentHendelseEntitet, behandling)).isNotPresent();
     }
 
     @Test
@@ -39,10 +38,10 @@ class FritekstTest {
         // Arrange
         behandling = standardBehandlingBuilder().medBehandlingsresultat(
             Behandlingsresultat.builder().medAvslagarsakFritekst(BEHANDLING_FRITEKST).build()).build();
-        dokumentHendelse = standardHendelseBuilder().medFritekst(HENDELSE_FRITEKST).build();
+        dokumentHendelseEntitet = standardHendelseBuilder().medFritekst(HENDELSE_FRITEKST).build();
 
         // Act + Assert
-        assertThat(fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(HENDELSE_FRITEKST);
+        assertThat(fra(dokumentHendelseEntitet, behandling).get().getFritekst()).isEqualTo(HENDELSE_FRITEKST);
     }
 
     @Test
@@ -115,8 +114,8 @@ class FritekstTest {
         assertThat(fra(null)).isNull();
     }
 
-    private DokumentHendelse.Builder standardHendelseBuilder() {
-        return DokumentHendelse.builder()
+    private DokumentHendelseEntitet.Builder standardHendelseBuilder() {
+        return DokumentHendelseEntitet.builder()
             .medBehandlingUuid(UUID.randomUUID())
             .medBestillingUuid(UUID.randomUUID());
     }

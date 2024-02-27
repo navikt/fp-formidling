@@ -8,7 +8,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Dokumentd
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.FritekstbrevDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
@@ -24,7 +24,7 @@ public class FritekstbrevDokumentdataMapper implements DokumentdataMapper {
 
     @Override
     public FritekstbrevDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
-                                                       DokumentHendelse hendelse,
+                                                       DokumentHendelseEntitet hendelse,
                                                        Behandling behandling,
                                                        boolean erUtkast) {
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
@@ -38,12 +38,12 @@ public class FritekstbrevDokumentdataMapper implements DokumentdataMapper {
             .build();
     }
 
-    private String finnOverskrift(DokumentHendelse hendelse, Behandling behandling) {
+    private String finnOverskrift(DokumentHendelseEntitet hendelse, Behandling behandling) {
         return hendelse.getTittel() != null && !hendelse.getTittel().isEmpty() ? hendelse.getTittel() : behandling.getBehandlingsresultat()
             .getOverskrift();
     }
 
-    private String finnBrødtekst(DokumentHendelse hendelse, Behandling behandling) {
+    private String finnBrødtekst(DokumentHendelseEntitet hendelse, Behandling behandling) {
         return hendelse.getFritekst() != null && !hendelse.getFritekst().isEmpty() ? hendelse.getFritekst() : behandling.getBehandlingsresultat()
             .getFritekstbrev();
     }

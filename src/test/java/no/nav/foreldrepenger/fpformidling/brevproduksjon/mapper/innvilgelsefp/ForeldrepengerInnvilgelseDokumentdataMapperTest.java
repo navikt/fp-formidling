@@ -54,7 +54,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.søknad.Søknad;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
@@ -80,7 +80,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.V
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.VurderingsKode;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 
 @ExtendWith(MockitoExtension.class)
@@ -100,7 +100,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
 
     private Behandling behandling;
     private DokumentFelles dokumentFelles;
-    private DokumentHendelse dokumentHendelse;
+    private DokumentHendelseEntitet dokumentHendelseEntitet;
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
@@ -110,12 +110,12 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     @BeforeEach
     void before() {
         var brevParametere = new BrevParametere(KLAGEFRIST, 2, Period.ZERO, Period.ZERO);
-        var dokumentData = lagStandardDokumentData(DokumentMalType.FORELDREPENGER_INNVILGELSE);
+        var dokumentData = lagStandardDokumentData(DokumentMalEnum.FORELDREPENGER_INNVILGELSE);
         dokumentdataMapper = new ForeldrepengerInnvilgelseDokumentdataMapper(brevParametere, domeneobjektProvider);
 
         behandling = opprettBehandling();
         dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        dokumentHendelse = lagStandardHendelseBuilder().build();
+        dokumentHendelseEntitet = lagStandardHendelseBuilder().build();
     }
 
     @Test
@@ -129,7 +129,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.ytelseFordeling(any(Behandling.class))).thenReturn(new YtelseFordeling(true));
         when(domeneobjektProvider.hentFamiliehendelse(any(Behandling.class))).thenReturn(opprettFamiliehendelse());
         // Act
-        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, true);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelseEntitet, behandling, true);
 
         var tilkjentYtelseFP = opprettTilkjentYtelseFP();
 
@@ -219,7 +219,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentForeldrepengerUttak(any(Behandling.class))).thenReturn(opprettUttaksresultat2());
 
         //Act
-        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, true);
+        var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelseEntitet, behandling, true);
 
         assertThat(dokumentdata.getPerioder()).hasSize(2);
         assertThat(dokumentdata.getPerioder().get(0).getAntallTapteDager()).isEqualTo(23);

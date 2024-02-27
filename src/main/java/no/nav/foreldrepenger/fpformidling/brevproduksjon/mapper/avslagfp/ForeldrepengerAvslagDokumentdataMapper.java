@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseForeldrepenger;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
@@ -60,7 +60,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
 
     @Override
     public ForeldrepengerAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
-                                                               DokumentHendelse dokumentHendelse,
+                                                               DokumentHendelseEntitet dokumentHendelseEntitet,
                                                                Behandling behandling,
                                                                boolean erUtkast) {
 
@@ -68,7 +68,7 @@ public class ForeldrepengerAvslagDokumentdataMapper implements DokumentdataMappe
         fellesBuilder.medBrevDato(
             dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), behandling.getSpråkkode()) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
-        FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
+        FritekstDto.fra(dokumentHendelseEntitet, behandling).ifPresent(fellesBuilder::medFritekst);
 
         var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         var mottatteDokumenter = domeneobjektProvider.hentMottatteDokumenter(behandling);

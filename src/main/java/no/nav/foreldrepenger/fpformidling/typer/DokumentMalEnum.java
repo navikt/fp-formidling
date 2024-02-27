@@ -1,6 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.typer;
 
-public enum DokumentMal {
+public enum DokumentMalEnum {
     FRITEKSTBREV,
     ENGANGSSTØNAD_INNVILGELSE,
     ENGANGSSTØNAD_AVSLAG,

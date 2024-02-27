@@ -23,7 +23,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
@@ -56,7 +56,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
 
     @Override
     public SvangerskapspengerAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
-                                                                   DokumentHendelse hendelse,
+                                                                   DokumentHendelseEntitet hendelse,
                                                                    Behandling behandling,
                                                                    boolean erUtkast) {
 

@@ -1,4 +1,4 @@
-package no.nav.foreldrepenger.fpformidling.domene.hendelser;
+package no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -7,46 +7,43 @@ import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
 
 @ApplicationScoped
-public class HendelseRepository {
+public class DokumentHendelseRepository {
 
     private EntityManager entityManager;
 
-    HendelseRepository() {
+    DokumentHendelseRepository() {
         //CDI
     }
 
     @Inject
-    public HendelseRepository(EntityManager entityManager) {
+    public DokumentHendelseRepository(EntityManager entityManager) {
         Objects.requireNonNull(entityManager, "entityManager"); //$NON-NLS-1$
         this.entityManager = entityManager;
     }
 
-    public void lagre(DokumentHendelse dokumentHendelse) {
-        lagreOgFlush(dokumentHendelse);
+    public void lagre(DokumentHendelseEntitet dokumentHendelseEntitet) {
+        lagreOgFlush(dokumentHendelseEntitet);
     }
 
     public boolean finnesHendelseMedUuidAllerede(UUID bestillingUuid) {
-        var query = entityManager.createQuery("from DokumentHendelse where bestillingUuid=:bestillingUuid", DokumentHendelse.class);
+        var query = entityManager.createQuery("from DokumentHendelse where bestillingUuid = :bestillingUuid", DokumentHendelseEntitet.class);
         query.setParameter("bestillingUuid", bestillingUuid);
         return !query.getResultList().isEmpty();
     }
 
-    public DokumentHendelse hentDokumentHendelseMedId(long hendelseId) {
-        var query = entityManager.createQuery("from DokumentHendelse where id=:hendelseId", DokumentHendelse.class);
+    public DokumentHendelseEntitet hentDokumentHendelseMedId(long hendelseId) {
+        var query = entityManager.createQuery("from DokumentHendelse where id = :hendelseId", DokumentHendelseEntitet.class);
         query.setParameter("hendelseId", hendelseId);
         return HibernateVerktøy.hentEksaktResultat(query);
     }
 
-    public boolean erDokumentHendelseMottatt(UUID behandlingUuid, DokumentMalType dokumentMal) {
-        var query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid and dokumentMalType=:dokumentMalType",
-            DokumentHendelse.class);
-        query.setParameter("behandlingUuid", behandlingUuid);
-        query.setParameter("dokumentMalType", dokumentMal);
-        return !query.getResultList().isEmpty();
+    public DokumentHendelseEntitet hentDokumentHendelse(UUID bestillingUuid) {
+        var query = entityManager.createQuery("from DokumentHendelse where bestillingUuid = :bestillingUuid", DokumentHendelseEntitet.class);
+        query.setParameter("bestillingUuid", bestillingUuid);
+        return HibernateVerktøy.hentEksaktResultat(query);
     }
 
     public int slettDokumentHendelserEldreEnn(LocalDate dato) {

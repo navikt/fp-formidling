@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 
 @ExtendWith(MockitoExtension.class)
 class FritekstbrevDokumentdataMapperTest {
@@ -34,7 +34,7 @@ class FritekstbrevDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.FRITEKSTBREV);
+        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalEnum.FRITEKSTBREV);
         dokumentdataMapper = new FritekstbrevDokumentdataMapper();
     }
 

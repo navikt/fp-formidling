@@ -20,7 +20,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
@@ -59,7 +59,7 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
 
     @Override
     public EngangsstønadAvslagDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
-                                                              DokumentHendelse hendelse,
+                                                              DokumentHendelseEntitet hendelse,
                                                               Behandling behandling,
                                                               boolean erUtkast) {
 

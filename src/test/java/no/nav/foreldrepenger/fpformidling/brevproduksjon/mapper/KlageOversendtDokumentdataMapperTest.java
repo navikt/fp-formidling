@@ -26,7 +26,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 
 @ExtendWith(MockitoExtension.class)
 class KlageOversendtDokumentdataMapperTest {
@@ -43,7 +43,7 @@ class KlageOversendtDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.KLAGE_OVERSENDT);
+        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalEnum.KLAGE_OVERSENDT);
         when(domeneobjektProvider.hentKlageDokument(any(Behandling.class))).thenReturn(new KlageDokument(MOTTATT_DATO));
         dokumentdataMapper = new KlageOversendtDokumentdataMapper(domeneobjektProvider);
     }

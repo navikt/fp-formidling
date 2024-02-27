@@ -14,9 +14,9 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 
 class HenleggeDokumentdataMapperTest {
 
@@ -26,7 +26,7 @@ class HenleggeDokumentdataMapperTest {
 
     @BeforeEach
     void setUp() {
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.INFO_OM_HENLEGGELSE);
+        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalEnum.INFO_OM_HENLEGGELSE);
         mapper = new HenleggeDokumentdataMapper();
     }
 
@@ -75,7 +75,7 @@ class HenleggeDokumentdataMapperTest {
             .build();
     }
 
-    private DokumentHendelse lagDokumentHendelse() {
+    private DokumentHendelseEntitet lagDokumentHendelse() {
         return DatamapperTestUtil.lagStandardHendelseBuilder().build();
     }
 }

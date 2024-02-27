@@ -30,7 +30,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.Inntektsmelding;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.Inntektsmeldinger;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 
 @ExtendWith(MockitoExtension.class)
 class IkkeSøktDokumentdataMapperTest {
@@ -47,7 +47,7 @@ class IkkeSøktDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
+        dokumentData = lagStandardDokumentData(DokumentMalEnum.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new IkkeSøktDokumentdataMapper(domeneobjektProvider);
 
         var inntektsmelding = new Inntektsmelding(ARBEIDSGIVER, "", INNSENDINGSTIDSPUNKT);

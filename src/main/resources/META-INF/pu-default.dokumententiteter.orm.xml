@@ -7,5 +7,5 @@
 
     <sequence-generator name="SEQ_DOKUMENT_HENDELSE" allocation-size="50" sequence-name="SEQ_DOKUMENT_HENDELSE"/>
 
-    <entity class="no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse"/>
+    <entity class="no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet"/>
 </entity-mappings>

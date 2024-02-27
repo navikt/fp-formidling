@@ -4,7 +4,6 @@ import java.time.Period;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import no.nav.foreldrepenger.konfig.KonfigVerdi;
 
 @ApplicationScoped

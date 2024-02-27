@@ -16,7 +16,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.VarselOmRevurderingDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
@@ -45,7 +45,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
 
     @Override
     public VarselOmRevurderingDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
-                                                              DokumentHendelse hendelse,
+                                                              DokumentHendelseEntitet hendelse,
                                                               Behandling behandling,
                                                               boolean erUtkast) {
 
@@ -73,7 +73,7 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         return familieHendelse.termindato().map(termindato -> formaterDato(termindato, språkkode));
     }
 
-    private String utledAdvarselkode(DokumentHendelse hendelse) {
+    private String utledAdvarselkode(DokumentHendelseEntitet hendelse) {
         if (hendelse.getRevurderingVarslingÅrsak().equals(RevurderingVarslingÅrsak.UDEFINERT)) {
             if (harFritekst(hendelse)) {
                 return RevurderingVarslingÅrsak.ANNET.getKode();
@@ -83,12 +83,12 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
         return hendelse.getRevurderingVarslingÅrsak().getKode();
     }
 
-    private boolean utledFlereOpplysninger(DokumentHendelse hendelse, String advarselKode, FagsakYtelseType ytelseType) {
+    private boolean utledFlereOpplysninger(DokumentHendelseEntitet hendelse, String advarselKode, FagsakYtelseType ytelseType) {
         return !RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN.getKode().equals(advarselKode) && (harFritekst(hendelse)
             || !FagsakYtelseType.ENGANGSTØNAD.equals(ytelseType));
     }
 
-    private boolean harFritekst(DokumentHendelse hendelse) {
+    private boolean harFritekst(DokumentHendelseEntitet hendelse) {
         return hendelse.getFritekst() != null && !hendelse.getFritekst().isEmpty();
     }
 }

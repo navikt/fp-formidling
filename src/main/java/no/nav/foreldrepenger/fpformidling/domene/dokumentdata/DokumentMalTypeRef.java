@@ -48,14 +48,14 @@ public @interface DokumentMalTypeRef {
         private Lookup() {
         }
 
-        public static <I> Optional<I> find(Class<I> cls, DokumentMalType dokumentMalType) {
-            return find(cls, (CDI<I>) CDI.current(), dokumentMalType);
+        public static <I> Optional<I> find(Class<I> cls, DokumentMalType dokumentMal) {
+            return find(cls, (CDI<I>) CDI.current(), dokumentMal);
         }
 
-        public static <I> Optional<I> find(Class<I> cls, Instance<I> instances, DokumentMalType dokumentMalType) {
+        public static <I> Optional<I> find(Class<I> cls, Instance<I> instances, DokumentMalType dokumentMal) {
             Objects.requireNonNull(instances, "instances");
 
-            for (var dokumentMalLiteral : coalesce(dokumentMalType, DokumentMalType.UDEFINERT)) {
+            for (var dokumentMalLiteral : coalesce(dokumentMal)) {
                 var inst = select(cls, instances, new DokumentMalTypeRefLiteral(dokumentMalLiteral));
                 if (inst.isResolvable()) {
                     return Optional.of(getInstance(inst));

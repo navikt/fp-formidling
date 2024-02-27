@@ -14,7 +14,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.InnhenteOpplysningerDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
@@ -44,7 +44,7 @@ public class InnhenteOpplysningerDokumentdataMapper implements DokumentdataMappe
 
     @Override
     public InnhenteOpplysningerDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
-                                                               DokumentHendelse hendelse,
+                                                               DokumentHendelseEntitet hendelse,
                                                                Behandling behandling,
                                                                boolean erUtkast) {
 

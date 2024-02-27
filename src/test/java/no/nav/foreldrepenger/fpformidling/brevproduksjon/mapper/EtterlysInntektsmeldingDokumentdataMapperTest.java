@@ -19,7 +19,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 
 @ExtendWith(MockitoExtension.class)
 class EtterlysInntektsmeldingDokumentdataMapperTest {
@@ -34,7 +34,7 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
     @BeforeEach
     void setup() {
         var brevParametere = new BrevParametere(6, 2, Period.parse("P3W"), Period.ZERO);
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.ETTERLYS_INNTEKTSMELDING);
+        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalEnum.ETTERLYS_INNTEKTSMELDING);
         dokumentdataMapper = new EtterlysInntektsmeldingDokumentdataMapper(domeneobjektProvider, new BrevMapperUtil(brevParametere));
     }
 

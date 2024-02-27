@@ -9,7 +9,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.domene.klage.Klage;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurderingResultat;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ class KlageOmgjortDokumentdataMapperTest {
 
     @BeforeEach
     void before() {
-        dokumentData = lagStandardDokumentData(DokumentMalType.KLAGE_OMGJORT);
+        dokumentData = lagStandardDokumentData(DokumentMalEnum.KLAGE_OMGJORT);
         when(brevParametere.getKlagefristUker()).thenReturn(6);
         dokumentdataMapper = new KlageOmgjortDokumentdataMapper(brevParametere, domeneobjektProvider);
     }

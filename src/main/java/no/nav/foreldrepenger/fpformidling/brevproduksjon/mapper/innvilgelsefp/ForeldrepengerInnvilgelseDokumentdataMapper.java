@@ -34,7 +34,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.søknad.Søknad;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
@@ -72,7 +72,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
 
     @Override
     public ForeldrepengerInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
-                                                                    DokumentHendelse dokumentHendelse,
+                                                                    DokumentHendelseEntitet dokumentHendelseEntitet,
                                                                     Behandling behandling,
                                                                     boolean erUtkast) {
         var tilkjentYtelseForeldrepenger = domeneobjektProvider.hentTilkjentYtelseForeldrepenger(behandling);
@@ -91,7 +91,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
-        FritekstDto.fra(dokumentHendelse, behandling).ifPresent(fellesBuilder::medFritekst);
+        FritekstDto.fra(dokumentHendelseEntitet, behandling).ifPresent(fellesBuilder::medFritekst);
 
         var vedtaksperioder = VedtaksperiodeMapper.mapVedtaksperioder(tilkjentYtelseForeldrepenger.getPerioder(), uttak,
             beregningsgrunnlag.getBeregningsgrunnlagPerioder(), språkkode);

@@ -14,7 +14,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.EngangsstønadInnvilgelseDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
@@ -44,7 +44,7 @@ public class EngangsstønadInnvilgelseDokumentdataMapper implements Dokumentdata
 
     @Override
     public EngangsstønadInnvilgelseDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
-                                                                   DokumentHendelse hendelse,
+                                                                   DokumentHendelseEntitet hendelse,
                                                                    Behandling behandling,
                                                                    boolean erUtkast) {
         var tilkjentYtelse = domeneobjektProvider.hentTilkjentYtelseEngangsstønad(behandling);

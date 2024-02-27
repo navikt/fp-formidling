@@ -3,9 +3,9 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 import java.util.List;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 
 /**
  * Klassen utleder hvorvidt for forskjellige blokker / undermaler i innvilgelse foreldrepenger brevet skal inkluderes:

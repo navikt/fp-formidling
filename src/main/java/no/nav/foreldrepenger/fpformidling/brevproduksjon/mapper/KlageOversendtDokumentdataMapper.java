@@ -13,7 +13,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentMalTypeRef;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageDokument;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.KlageOversendtDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
@@ -40,7 +40,7 @@ public class KlageOversendtDokumentdataMapper implements DokumentdataMapper {
 
     @Override
     public KlageOversendtDokumentdata mapTilDokumentdata(DokumentFelles dokumentFelles,
-                                                         DokumentHendelse hendelse,
+                                                         DokumentHendelseEntitet hendelse,
                                                          Behandling behandling,
                                                          boolean erUtkast) {
         var klageDokument = domeneobjektProvider.hentKlageDokument(behandling);

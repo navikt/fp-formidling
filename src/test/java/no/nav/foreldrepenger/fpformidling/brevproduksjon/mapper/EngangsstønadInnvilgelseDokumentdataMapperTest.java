@@ -31,9 +31,9 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseEngangsstønad;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,13 +45,13 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
 
-    private DokumentHendelse dokumentHendelse;
+    private DokumentHendelseEntitet dokumentHendelseEntitet;
 
     private DokumentFelles dokumentFelles;
 
     @BeforeEach
     void setup() {
-        dokumentHendelse = lagStandardHendelseBuilder().build();
+        dokumentHendelseEntitet = lagStandardHendelseBuilder().build();
         dokumentdataMapperTest = new EngangsstønadInnvilgelseDokumentdataMapper(DatamapperTestUtil.getBrevParametere(), domeneobjektProvider);
     }
 
@@ -61,7 +61,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
         var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
 
-        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE));
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalEnum.ENGANGSSTØNAD_INNVILGELSE));
 
         var familieHendelse = lagFamHendelse(1);
         var orgfamilieHendelse = lagFamHendelse(1);
@@ -74,7 +74,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentFamiliehendelse(orgBehES)).thenReturn(orgfamilieHendelse);
 
         //Act
-        var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES, false);
+        var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelseEntitet, innvilgetES, false);
 
         //Assert
         assertThat(innvilgelseDokumentdata.getErEndretSats()).isTrue();
@@ -92,14 +92,14 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
         //Arrange
         var orgBehES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID);
         var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
-        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE));
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalEnum.ENGANGSSTØNAD_INNVILGELSE));
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(innvilgetES)).thenReturn(Optional.of(orgBehES));
         when(domeneobjektProvider.hentTilkjentYtelseESHvisFinnes(orgBehES)).thenReturn(Optional.empty());
 
         //Act
-        var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES, false);
+        var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelseEntitet, innvilgetES, false);
 
         //Assert
         assertThat(innvilgelseDokumentdata.getErEndretSats()).isFalse();
@@ -109,13 +109,13 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     @Test
     void skal_sende_original_til_verge() {
         //Arrange
-        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE), DokumentFelles.Kopi.NEI, true);
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalEnum.ENGANGSSTØNAD_INNVILGELSE), DokumentFelles.Kopi.NEI, true);
         var innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV);
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
 
         //Act
-        var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES, false);
+        var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelseEntitet, innvilgetES, false);
 
         //Assert
         assertThat(innvilgelseDokumentdata.getRevurdering()).isFalse();
@@ -127,13 +127,13 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     @Test
     void skal_sende_kopi_til_søker() {
         //Arrange
-        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE), DokumentFelles.Kopi.JA, false);
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalEnum.ENGANGSSTØNAD_INNVILGELSE), DokumentFelles.Kopi.JA, false);
         var innvilgetES = opprettBehandling(BehandlingType.FØRSTEGANGSSØKNAD, ID_REV);
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
 
         //Act
-        var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES, false);
+        var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelseEntitet, innvilgetES, false);
 
         //Assert
         assertThat(innvilgelseDokumentdata.getRevurdering()).isFalse();
@@ -149,7 +149,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
         var innvilgetES = opprettBehandling(BehandlingType.REVURDERING, ID_REV);
         var familieHendelse = lagFamHendelse(2);
         var orgfamilieHendelse = lagFamHendelse(1);
-        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE));
+        dokumentFelles = lagStandardDokumentFelles(lagStandardDokumentData(DokumentMalEnum.ENGANGSSTØNAD_INNVILGELSE));
 
         when(domeneobjektProvider.hentTilkjentYtelseEngangsstønad(innvilgetES)).thenReturn(new TilkjentYtelseEngangsstønad(85000L));
         when(domeneobjektProvider.hentOriginalBehandlingHvisFinnes(innvilgetES)).thenReturn(Optional.of(orgBehES));
@@ -158,7 +158,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
         when(domeneobjektProvider.hentFamiliehendelse(innvilgetES)).thenReturn(familieHendelse);
         when(domeneobjektProvider.hentFamiliehendelse(orgBehES)).thenReturn(orgfamilieHendelse);
         //Act
-        var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelse, innvilgetES, false);
+        var innvilgelseDokumentdata = dokumentdataMapperTest.mapTilDokumentdata(dokumentFelles, dokumentHendelseEntitet, innvilgetES, false);
 
         //Assert
         assertThat(innvilgelseDokumentdata.getRevurdering()).isTrue();

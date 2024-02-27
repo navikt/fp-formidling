@@ -1,8 +1,12 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
-import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.*;
+import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak.ARBEIDER_I_UTTAKSPERIODEN_MER_ENN_0_PROSENT;
+import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak.AVSLAG_GRADERING_PÅ_GRUNN_AV_FOR_SEN_SØKNAD;
+import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak.FOR_SEN_SØKNAD;
+import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_100_PROSENT_ARBEID;
+import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_ARBEID_KUN_FAR_HAR_RETT;
+import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE;
+import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak.UTSETTELSE_GYLDIG_PGA_FERIE_KUN_FAR_HAR_RETT;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -10,7 +14,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak.*;
+import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.AnnenAktivitet;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Arbeidsforhold;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForMyeUtbetalt;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Næring;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.Vedtaksperiode;
 
 public final class ForMyeUtbetaltMapper {
     private static final List<Årsak> manglendeEllerForSenSøknadOmGraderingÅrsaker = List.of(

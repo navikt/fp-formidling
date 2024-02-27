@@ -7,10 +7,11 @@ import java.util.Set;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMalEnum;
 
 public class DokumentData {
 
-    private DokumentMalType dokumentMalType = DokumentMalType.UDEFINERT;
+    private DokumentMalType dokumentMalType;
 
     private final Set<DokumentFelles> dokumentFelles = HashSet.newHashSet(1);
 
@@ -69,10 +70,9 @@ public class DokumentData {
         if (object == this) {
             return true;
         }
-        if (!(object instanceof DokumentData)) {
+        if (!(object instanceof DokumentData dokData)) {
             return false;
         }
-        var dokData = (DokumentData) object;
         return Objects.equals(dokumentMalType, dokData.getDokumentMalType()) && Objects.equals(behandlingUuid, dokData.getBehandlingUuid())
             && Objects.equals(bestiltTid, dokData.getBestiltTid()) && Objects.equals(bestillingType, dokData.getBestillingType());
     }

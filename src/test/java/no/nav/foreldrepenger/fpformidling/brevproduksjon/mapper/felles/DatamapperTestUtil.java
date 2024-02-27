@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
-
 import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
@@ -17,10 +15,11 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kopi;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMalEnum;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 
@@ -71,7 +70,7 @@ public class DatamapperTestUtil {
             .build();
     }
 
-    public static DokumentData lagStandardDokumentData(DokumentMalType dokumentMalType) {
+    public static DokumentData lagStandardDokumentData(DokumentMalEnum dokumentMalType) {
         return DokumentData.builder()
             .medDokumentMalType(dokumentMalType)
             .medBehandlingUuid(UUID.randomUUID())
@@ -80,14 +79,14 @@ public class DatamapperTestUtil {
             .build();
     }
 
-    public static DokumentHendelse.Builder lagStandardHendelseBuilder() {
-        return DokumentHendelse.builder()
+    public static DokumentHendelseEntitet.Builder lagStandardHendelseBuilder() {
+        return DokumentHendelseEntitet.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(UUID.randomUUID())
             .medFritekst(FRITEKST);
     }
 
-    public static DokumentHendelse standardDokumenthendelse() {
+    public static DokumentHendelseEntitet standardDokumenthendelse() {
         return lagStandardHendelseBuilder().build();
     }
 

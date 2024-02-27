@@ -6,7 +6,7 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektP
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.StartdatoUtsattDto;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ class ForeldrepengerAnnullertDokumentdataMapperTest {
     @BeforeEach
     void before() {
         var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
-        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.FORELDREPENGER_ANNULLERT);
+        dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalEnum.FORELDREPENGER_ANNULLERT);
         dokumentdataMapper = new ForeldrepengerAnnullertDokumentdataMapper(brevParametere, domeneobjektProvider);
     }
 

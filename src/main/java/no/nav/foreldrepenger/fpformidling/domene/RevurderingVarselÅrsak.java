@@ -1,6 +1,6 @@
-package no.nav.foreldrepenger.fpformidling.typer;
+package no.nav.foreldrepenger.fpformidling.domene;
 
-public enum RevurderingÅrsak {
+public enum RevurderingVarselÅrsak {
     BARN_IKKE_REGISTRERT_FOLKEREGISTER,
     ARBEIDS_I_STØNADSPERIODEN,
     BEREGNINGSGRUNNLAG_UNDER_HALV_G,
@@ -9,5 +9,5 @@ public enum RevurderingÅrsak {
     IKKE_LOVLIG_OPPHOLD,
     OPPTJENING_IKKE_OPPFYLT,
     MOR_AKTIVITET_IKKE_OPPFYLT,
-    ANNET,
+    ANNET
 }

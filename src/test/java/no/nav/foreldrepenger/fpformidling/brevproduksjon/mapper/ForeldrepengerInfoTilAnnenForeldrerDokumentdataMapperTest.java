@@ -27,10 +27,10 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
@@ -38,7 +38,7 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 
 class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
     private DokumentFelles dokumentFelles;
-    private DokumentHendelse dokumentHendelse;
+    private DokumentHendelseEntitet dokumentHendelseEntitet;
 
     private ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper;
 
@@ -48,8 +48,8 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
     @BeforeEach
     void setUp() {
         dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(
-            DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER));
-        dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medFritekst(null).build();
+            DatamapperTestUtil.lagStandardDokumentData(DokumentMalEnum.FORELDREPENGER_INFOBREV_TIL_ANNEN_FORELDER));
+        dokumentHendelseEntitet = DatamapperTestUtil.lagStandardHendelseBuilder().medFritekst(null).build();
 
         foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper = new ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper(domeneobjektProvider);
     }
@@ -63,7 +63,8 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
         when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)).thenReturn(Optional.of(foreldrepengerUttak));
 
         //Act
-        var infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse,
+        var infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles,
+            dokumentHendelseEntitet,
             behandling, false);
 
         //assert
@@ -80,7 +81,8 @@ class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapperTest {
         when(domeneobjektProvider.hentForeldrepengerUttakHvisFinnes(behandling)).thenReturn(Optional.of(foreldrepengerUttak));
 
         //Act
-        var infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse,
+        var infoTilAnnenForelderData = foreldrepengerInfoTilAnnenForeldrerDokumentdataMapper.mapTilDokumentdata(dokumentFelles,
+            dokumentHendelseEntitet,
             behandling, false);
 
         //assert

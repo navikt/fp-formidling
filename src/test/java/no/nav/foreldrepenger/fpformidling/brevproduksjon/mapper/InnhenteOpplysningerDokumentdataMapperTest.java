@@ -42,12 +42,12 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kop
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 
 @ExtendWith(MockitoExtension.class)
 class InnhenteOpplysningerDokumentdataMapperTest {
@@ -69,7 +69,7 @@ class InnhenteOpplysningerDokumentdataMapperTest {
     void before() {
         var brevParametere = new BrevParametere(6, 2, Period.ZERO, Period.ZERO);
         brevMapperUtil = new BrevMapperUtil(brevParametere);
-        dokumentData = lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
+        dokumentData = lagStandardDokumentData(DokumentMalEnum.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new InnhenteOpplysningerDokumentdataMapper(brevMapperUtil, domeneobjektProvider);
 
         var mottattDokumenter = List.of(
@@ -157,7 +157,7 @@ class InnhenteOpplysningerDokumentdataMapperTest {
             .build();
     }
 
-    private DokumentHendelse lagDokumentHendelse() {
+    private DokumentHendelseEntitet lagDokumentHendelse() {
         return lagStandardHendelseBuilder().medFritekst(FRITEKST).build();
     }
 }

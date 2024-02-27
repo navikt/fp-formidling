@@ -24,7 +24,7 @@ import no.nav.foreldrepenger.fpformidling.server.exceptions.ConstraintViolationM
 import no.nav.foreldrepenger.fpformidling.server.exceptions.GeneralRestExceptionMapper;
 import no.nav.foreldrepenger.fpformidling.server.exceptions.JsonMappingExceptionMapper;
 import no.nav.foreldrepenger.fpformidling.server.exceptions.JsonParseExceptionMapper;
-import no.nav.foreldrepenger.fpformidling.tjenester.BrevRestTjeneste;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentRestTjeneste;
 import no.nav.foreldrepenger.fpformidling.tjenester.forvaltning.ForvaltningRestTjeneste;
 import no.nav.foreldrepenger.konfig.Environment;
 import no.nav.vedtak.exception.TekniskException;
@@ -80,7 +80,7 @@ public class ApiConfig extends Application {
 
     private static Collection<Class<?>> getAllClasses() {
         Set<Class<?>> classes = new HashSet<>();
-        classes.add(BrevRestTjeneste.class);
+        classes.add(DokumentRestTjeneste.class);
         classes.add(ProsessTaskRestTjeneste.class);
         classes.add(ForvaltningRestTjeneste.class);
         return classes;

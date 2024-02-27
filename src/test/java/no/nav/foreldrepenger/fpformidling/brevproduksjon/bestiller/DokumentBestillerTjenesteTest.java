@@ -39,7 +39,6 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.domene.verge.Verge;
@@ -48,7 +47,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokument
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.organisasjon.VirksomhetTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
@@ -59,7 +58,7 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 import no.nav.vedtak.felles.prosesstask.api.TaskType;
 
 @ExtendWith(MockitoExtension.class)
-class BrevBestillerTjenesteTest {
+class DokumentBestillerTjenesteTest {
 
     private static final UUID BEHANDLING_UUID = UUID.randomUUID();
     private static final String NAVN = "Nav Navesen";
@@ -70,7 +69,7 @@ class BrevBestillerTjenesteTest {
     private static final Saksnummer SAKSNUMMER = new Saksnummer("123456");
     private static final byte[] BREVET = "BREV".getBytes();
     private static final JournalpostId JOURNALPOST = new JournalpostId("7654321");
-    private static final DokumentMalType DOKUMENT_MAL_TYPE = DokumentMalType.ENGANGSSTØNAD_INNVILGELSE;
+    private static final DokumentMalEnum DOKUMENT_MAL_TYPE = DokumentMalEnum.ENGANGSSTØNAD_INNVILGELSE;
     private static final long HENDELSE_ID = 1L;
     private static final String DOKUMENT_INFO_ID = "987";
 
@@ -95,7 +94,7 @@ class BrevBestillerTjenesteTest {
     private ProsessTaskTjeneste taskTjeneste;
 
     private EngangsstønadInnvilgelseDokumentdataMapper dokumentdataMapper;
-    private BrevBestillerTjeneste tjeneste;
+    private DokumentBestillerTjeneste tjeneste;
 
 
     @BeforeEach
@@ -105,7 +104,7 @@ class BrevBestillerTjenesteTest {
         var dokumentFellesDataMapper = new DokumentFellesDataMapper(personAdapter, domeneobjektProvider, virksomhetTjeneste);
         var dokgenBrevproduksjonTjeneste = new DokgenBrevproduksjonTjeneste(dokumentFellesDataMapper, domeneobjektProvider,
             dokgenRestKlient, opprettJournalpostTjeneste, dokumentdataMapperProvider, taskTjeneste);
-        tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
+        tjeneste = new DokumentBestillerTjeneste(domeneobjektProvider, dokgenBrevproduksjonTjeneste);
     }
 
     @Test
@@ -115,7 +114,7 @@ class BrevBestillerTjenesteTest {
         var personinfo = mockPdl(true);
         var behandling = mockDomeneobjektProvider(personinfo, true);
         var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
-        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalEnum.ENGANGSSTØNAD_INNVILGELSE);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(DOKUMENT_MAL_TYPE)).thenReturn(dokumentdataMapper);
@@ -129,8 +128,8 @@ class BrevBestillerTjenesteTest {
 
         // Assert
         verify(dokgenRestKlient, times(2)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
-        verify(opprettJournalpostTjeneste, times(2)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
-            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER));
+        verify(opprettJournalpostTjeneste, times(2)).journalførUtsendelse(eq(BREVET), any(DokumentFelles.class),
+            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(FagsakYtelseType.FORELDREPENGER));
         verify(taskTjeneste, times(2)).lagre(taskCaptor.capture());
 
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
@@ -147,7 +146,7 @@ class BrevBestillerTjenesteTest {
         var personinfo = mockPdl(true);
         var behandling = mockDomeneobjektProvider(personinfo, true);
         var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
-        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalEnum.ENGANGSSTØNAD_INNVILGELSE);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(DOKUMENT_MAL_TYPE)).thenReturn(dokumentdataMapper);
@@ -160,8 +159,8 @@ class BrevBestillerTjenesteTest {
 
         // Assert
         verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
-        verify(opprettJournalpostTjeneste, times(1)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
-            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER));
+        verify(opprettJournalpostTjeneste, times(1)).journalførUtsendelse(eq(BREVET), any(DokumentFelles.class),
+            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(FagsakYtelseType.FORELDREPENGER));
         verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
 
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
@@ -179,18 +178,18 @@ class BrevBestillerTjenesteTest {
         when(behandling.getFagsakBackend()).thenReturn(fagsak);
         when(fagsak.getYtelseType()).thenReturn(FagsakYtelseType.FORELDREPENGER);
         when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
-        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.FRITEKSTBREV);
-        when(dokumentMalUtleder.utledDokumentType(behandling, behandling.getFagsakBackend().getYtelseType(), true)).thenReturn(DokumentMalType.FORELDREPENGER_INNVILGELSE);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalEnum.FRITEKSTBREV);
+        when(dokumentMalUtleder.utledDokumentType(behandling, behandling.getFagsakBackend().getYtelseType(), true)).thenReturn(DokumentMalEnum.FORELDREPENGER_INNVILGELSE);
 
         var dokgenBrevproduksjonTjeneste = mock(DokgenBrevproduksjonTjeneste.class);
 
-        tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
+        tjeneste = new DokumentBestillerTjeneste(domeneobjektProvider, dokgenBrevproduksjonTjeneste);
 
         // Act
         tjeneste.bestillBrev(dokumentHendelse);
 
         // Assert
-        verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FRITEKSTBREV, DokumentMalType.FORELDREPENGER_INNVILGELSE);
+        verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling);
         verify(dokumentMalUtleder).utledDokumentType(behandling, behandling.getFagsakBackend().getYtelseType(), true);
         verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
         verify(domeneobjektProvider).hentFagsakBackend(behandling);
@@ -207,19 +206,19 @@ class BrevBestillerTjenesteTest {
         when(behandling.getFagsakBackend()).thenReturn(fagsak);
         when(fagsak.getYtelseType()).thenReturn(FagsakYtelseType.FORELDREPENGER);
         when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
-        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.FORELDREPENGER_INNVILGELSE);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalEnum.FORELDREPENGER_INNVILGELSE);
 
         var dokgenBrevproduksjonTjeneste = mock(DokgenBrevproduksjonTjeneste.class);
 
-        tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
+        tjeneste = new DokumentBestillerTjeneste(domeneobjektProvider, dokgenBrevproduksjonTjeneste);
 
         // Act
         tjeneste.bestillBrev(dokumentHendelse);
 
         // Assert
-        verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_INNVILGELSE, DokumentMalType.FORELDREPENGER_INNVILGELSE);
+        verify(dokgenBrevproduksjonTjeneste).bestillBrev(dokumentHendelse, behandling);
         verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
-        verify(dokumentMalUtleder, never()).utledDokumentType(behandling, dokumentHendelse.getYtelseType(), false);
+        verify(dokumentMalUtleder, never()).utledDokumentType(behandling, fagsak.getYtelseType(), false);
         verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
         verifyNoMoreInteractions(dokumentMalUtleder, dokgenBrevproduksjonTjeneste, domeneobjektProvider);
@@ -231,19 +230,19 @@ class BrevBestillerTjenesteTest {
         var dokumentHendelse = opprettDokumentHendelse(UUID.randomUUID());
         var behandling = mock(Behandling.class);
         when(domeneobjektProvider.hentBehandling(any())).thenReturn(behandling);
-        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.FORELDREPENGER_ANNULLERT);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalEnum.FORELDREPENGER_ANNULLERT);
 
         var dokgenBrevproduksjonTjeneste = mock(DokgenBrevproduksjonTjeneste.class);
 
-        tjeneste = new BrevBestillerTjeneste(dokumentMalUtleder, domeneobjektProvider, dokgenBrevproduksjonTjeneste);
+        tjeneste = new DokumentBestillerTjeneste(domeneobjektProvider, dokgenBrevproduksjonTjeneste);
 
         // Act
         tjeneste.forhandsvisBrev(dokumentHendelse);
 
         // Assert
-        verify(dokgenBrevproduksjonTjeneste).forhåndsvisBrev(dokumentHendelse, behandling, DokumentMalType.FORELDREPENGER_ANNULLERT);
+        verify(dokgenBrevproduksjonTjeneste).forhåndsvisBrev(dokumentHendelse, behandling);
         verify(dokumentMalUtleder).utledDokumentmal(behandling, dokumentHendelse);
-        verify(dokumentMalUtleder, never()).utledDokumentType(behandling, dokumentHendelse.getYtelseType(), false);
+        verify(dokumentMalUtleder, never()).utledDokumentType(behandling, FagsakYtelseType.FORELDREPENGER,  false);
         verify(domeneobjektProvider).hentFagsakBackend(behandling);
 
         verifyNoMoreInteractions(dokumentMalUtleder, dokgenBrevproduksjonTjeneste, domeneobjektProvider);
@@ -256,7 +255,7 @@ class BrevBestillerTjenesteTest {
         var personinfo = mockPdl(false);
         var behandling = mockDomeneobjektProvider(personinfo, false);
         var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid);
-        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE);
+        when(dokumentMalUtleder.utledDokumentmal(behandling, dokumentHendelse)).thenReturn(DokumentMalEnum.ENGANGSSTØNAD_INNVILGELSE);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);
         when(dokumentdataMapperProvider.getDokumentdataMapper(DOKUMENT_MAL_TYPE)).thenReturn(dokumentdataMapper);
@@ -267,8 +266,8 @@ class BrevBestillerTjenesteTest {
 
         // Assert
         verify(dokgenRestKlient, times(1)).genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class));
-        verify(opprettJournalpostTjeneste, times(1)).journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class),
-            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER));
+        verify(opprettJournalpostTjeneste, times(1)).journalførUtsendelse(eq(BREVET), any(DokumentFelles.class),
+            eq(dokumentHendelse), eq(SAKSNUMMER), eq(true), eq(null), any(), eq(FagsakYtelseType.FORELDREPENGER));
         verify(taskTjeneste, times(1)).lagre(taskCaptor.capture());
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
@@ -308,8 +307,8 @@ class BrevBestillerTjenesteTest {
         return behandling;
     }
 
-    private DokumentHendelse opprettDokumentHendelse(UUID randomBestillingsUuid) {
-        var dokumentHendelse = DokumentHendelse.builder()
+    private DokumentHendelseEntitet opprettDokumentHendelse(UUID randomBestillingsUuid) {
+        var dokumentHendelse = DokumentHendelseEntitet.builder()
             .medBehandlingUuid(BEHANDLING_UUID)
             .medBestillingUuid(randomBestillingsUuid)
             .build();
@@ -317,10 +316,10 @@ class BrevBestillerTjenesteTest {
         return dokumentHendelse;
     }
 
-    private void mockJournal(DokumentHendelse dokumentHendelse) {
+    private void mockJournal(DokumentHendelseEntitet dokumentHendelseEntitet) {
         var dokumentOpprettResponse = new OpprettJournalpostResponse.DokumentInfoResponse(DOKUMENT_INFO_ID);
         var opprettJournalpostResponse = new OpprettJournalpostResponse(JOURNALPOST.getVerdi(), true, List.of(dokumentOpprettResponse));
-        when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), eq(DOKUMENT_MAL_TYPE), any(DokumentFelles.class), eq(dokumentHendelse),
-            eq(SAKSNUMMER), eq(true), eq(null), any(), eq(DOKUMENT_MAL_TYPE), eq(FagsakYtelseType.FORELDREPENGER))).thenReturn(opprettJournalpostResponse);
+        when(opprettJournalpostTjeneste.journalførUtsendelse(eq(BREVET), any(DokumentFelles.class), eq(dokumentHendelseEntitet),
+            eq(SAKSNUMMER), eq(true), eq(null), any(), eq(FagsakYtelseType.FORELDREPENGER))).thenReturn(opprettJournalpostResponse);
     }
 }

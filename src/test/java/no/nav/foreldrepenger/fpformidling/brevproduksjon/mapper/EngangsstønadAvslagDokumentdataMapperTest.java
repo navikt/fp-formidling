@@ -30,11 +30,11 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.bestiller.DokumentHendelseEntitet;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalEnum;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
@@ -49,7 +49,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     private static final AktørId AKTØR_ID = new AktørId("2222222222222");
 
     private DokumentFelles dokumentFelles;
-    private DokumentHendelse dokumentHendelse;
+    private DokumentHendelseEntitet dokumentHendelseEntitet;
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);
@@ -61,8 +61,8 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     @BeforeEach
     void setUp() {
         dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(
-            DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_AVSLAG));
-        dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).build();
+            DatamapperTestUtil.lagStandardDokumentData(DokumentMalEnum.ENGANGSSTØNAD_AVSLAG));
+        dokumentHendelseEntitet = lagStandardHendelseBuilder().medFritekst(null).build();
 
         var personinfo = Personinfo.getbuilder(AKTØR_ID)
             .medPersonIdent(new PersonIdent("9999999999"))
@@ -89,7 +89,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
         when(domeneobjektProvider.hentFamiliehendelse(avslagESFB)).thenReturn(familieHendelse);
 
         //Act
-        var avslagDokumentdata = engangsstønadAvslagDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, avslagESFB, false);
+        var avslagDokumentdata = engangsstønadAvslagDokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelseEntitet, avslagESFB, false);
 
         //Verify
         assertThat(avslagDokumentdata.getAvslagÅrsak()).isEqualTo(Avslagsårsak.SØKT_FOR_SENT.name());

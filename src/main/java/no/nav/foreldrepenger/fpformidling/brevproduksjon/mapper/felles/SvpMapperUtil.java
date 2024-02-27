@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
+import static java.time.temporal.TemporalAdjusters.next;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -18,8 +20,6 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatArbei
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
-
-import static java.time.temporal.TemporalAdjusters.next;
 
 public final class SvpMapperUtil {
 

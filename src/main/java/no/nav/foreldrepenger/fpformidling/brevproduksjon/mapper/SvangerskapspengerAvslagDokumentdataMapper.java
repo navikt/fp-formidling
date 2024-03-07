@@ -29,6 +29,7 @@ import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvangerskapspengerUtt
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.SvangerskapspengerAvslagDokumentdata;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Årsak;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.exception.TekniskException;
@@ -72,6 +73,7 @@ public class SvangerskapspengerAvslagDokumentdataMapper implements DokumentdataM
         var fellesBuilder = BrevMapperUtil.opprettFellesBuilder(dokumentFelles, behandling, erUtkast);
         fellesBuilder.medErAutomatiskBehandlet(dokumentFelles.getAutomatiskBehandlet());
         fellesBuilder.medBrevDato(dokumentFelles.getDokumentDato() != null ? formaterDato(dokumentFelles.getDokumentDato(), språkkode) : null);
+        FritekstDto.fra(hendelse, behandling).ifPresent(fellesBuilder::medFritekst);
 
         var uttaksperioder = SvpMapperUtil.hentUttaksperioder(svpUttaksresultat);
 

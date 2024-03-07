@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,15 +57,15 @@ class OpprettJournalpostTjenesteTest {
         var requestCaptor = ArgumentCaptor.forClass(OpprettJournalpostRequest.class);
 
         var dokumentFelles = getDokumentFelles();
-        var dokumentHendelse = lagStandardHendelseBuilder().medTittel("Innvilget Engangsstønad").build();
+        var dokumentHendelse = lagStandardHendelseBuilder().build();
 
         var unikBestillingsId = dokumentHendelse.getBestillingUuid().toString() + "-" + 1;
 
         var saksnummer = new Saksnummer("153456789");
 
         // Act
-        var responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE, dokumentFelles,
-            dokumentHendelse, saksnummer, true, null, unikBestillingsId, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE, FagsakYtelseType.ENGANGSTØNAD);
+        var responseMocked = opprettJournalpost.journalførUtsendelse(GEN_BREV, DokumentMalType.FRITEKSTBREV, dokumentFelles,
+            dokumentHendelse, saksnummer, true, unikBestillingsId, DokumentMalType.ENGANGSSTØNAD_INNVILGELSE, FagsakYtelseType.ENGANGSTØNAD);
 
         // Assert
         Mockito.verify(dokArkivKlient).opprettJournalpost(requestCaptor.capture(), eq(true));
@@ -80,13 +82,13 @@ class OpprettJournalpostTjenesteTest {
         assertThat(genRequest.journalfoerendeEnhet()).isEqualTo("9999");
         assertThat(genRequest.bruker().id()).isEqualTo(FNR);
         assertThat(genRequest.eksternReferanseId()).isEqualTo(unikBestillingsId);
-        assertThat(genRequest.dokumenter().get(0).brevkode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getKode());
-        var brev = genRequest.dokumenter().get(0).dokumentvarianter().get(0).fysiskDokument();
+        assertThat(genRequest.dokumenter().getFirst().brevkode()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getKode());
+        var brev = genRequest.dokumenter().getFirst().dokumentvarianter().getFirst().fysiskDokument();
         assertThat(brev).contains(GEN_BREV);
-        assertThat(genRequest.dokumenter().get(0).dokumentvarianter().get(0).variantformat().name()).isEqualTo("ARKIV");
-        assertThat(genRequest.dokumenter().get(0).dokumentvarianter().get(0).filtype().name()).isEqualTo("PDFA");
+        assertThat(genRequest.dokumenter().getFirst().dokumentvarianter().getFirst().variantformat().name()).isEqualTo("ARKIV");
+        assertThat(genRequest.dokumenter().getFirst().dokumentvarianter().getFirst().filtype().name()).isEqualTo("PDFA");
         assertThat(genRequest.kanal()).isNull();
-        assertThat(genRequest.tittel()).isEqualTo("Innvilget Engangsstønad");
+        assertThat(genRequest.tittel()).isEqualTo(DokumentMalType.ENGANGSSTØNAD_INNVILGELSE.getNavn());
 
         assertThat(responseMocked.journalpostferdigstilt()).isTrue();
         assertThat(responseMocked.journalpostId()).isEqualTo(JOURNALPOST_ID);
@@ -105,6 +107,7 @@ class OpprettJournalpostTjenesteTest {
         return DokumentHendelse.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(UUID.randomUUID())
+            .medDokumentMal(DokumentMal.FRITEKSTBREV)
             .medFritekst(FRITEKST);
     }
 }

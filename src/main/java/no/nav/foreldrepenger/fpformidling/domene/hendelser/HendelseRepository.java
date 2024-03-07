@@ -7,7 +7,6 @@ import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.vedtak.felles.jpa.HibernateVerktøy;
 
 @ApplicationScoped
@@ -39,14 +38,6 @@ public class HendelseRepository {
         var query = entityManager.createQuery("from DokumentHendelse where id=:hendelseId", DokumentHendelse.class);
         query.setParameter("hendelseId", hendelseId);
         return HibernateVerktøy.hentEksaktResultat(query);
-    }
-
-    public boolean erDokumentHendelseMottatt(UUID behandlingUuid, DokumentMalType dokumentMal) {
-        var query = entityManager.createQuery("from DokumentHendelse where behandlingUuid=:behandlingUuid and dokumentMalType=:dokumentMalType",
-            DokumentHendelse.class);
-        query.setParameter("behandlingUuid", behandlingUuid);
-        query.setParameter("dokumentMalType", dokumentMal);
-        return !query.getResultList().isEmpty();
     }
 
     public int slettDokumentHendelserEldreEnn(LocalDate dato) {

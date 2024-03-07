@@ -10,8 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import jakarta.persistence.EntityManager;
 import no.nav.foreldrepenger.fpformidling.database.JpaExtension;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ExtendWith(JpaExtension.class)
 class HendelseRepositoryImplTest {
@@ -30,7 +30,7 @@ class HendelseRepositoryImplTest {
         var dokumentHendelse = DokumentHendelse.builder()
             .medBehandlingUuid(behandlingUuid)
             .medBestillingUuid(bestiilingUuid)
-            .medDokumentMalType(DokumentMalType.FORELDREPENGER_ANNULLERT)
+            .medDokumentMal(DokumentMal.FORELDREPENGER_ANNULLERT)
             .build();
         hendelseRepository.lagre(dokumentHendelse);
 
@@ -38,8 +38,6 @@ class HendelseRepositoryImplTest {
 
         assertThat(hendelse).isNotNull();
 
-        assertThat(hendelseRepository.erDokumentHendelseMottatt(behandlingUuid, DokumentMalType.FORELDREPENGER_ANNULLERT)).isTrue();
-        assertThat(hendelseRepository.erDokumentHendelseMottatt(behandlingUuid, DokumentMalType.FORELDREPENGER_AVSLAG)).isFalse();
         assertThat(hendelseRepository.finnesHendelseMedUuidAllerede(bestiilingUuid)).isTrue();
 
     }

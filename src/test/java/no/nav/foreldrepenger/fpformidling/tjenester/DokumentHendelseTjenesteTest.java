@@ -15,11 +15,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.hendelser.HendelseRepository;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelseTjeneste;
+import no.nav.foreldrepenger.fpformidling.domene.hendelser.HendelseRepository;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ExtendWith(MockitoExtension.class)
 class DokumentHendelseTjenesteTest {
@@ -54,6 +53,6 @@ class DokumentHendelseTjenesteTest {
         return DokumentHendelse.builder()
             .medBehandlingUuid(UUID.randomUUID())
             .medBestillingUuid(UUID.randomUUID())
-            .medDokumentMalType(DokumentMalType.FRITEKSTBREV);
+            .medDokumentMal(DokumentMal.FRITEKSTBREV);
     }
 }

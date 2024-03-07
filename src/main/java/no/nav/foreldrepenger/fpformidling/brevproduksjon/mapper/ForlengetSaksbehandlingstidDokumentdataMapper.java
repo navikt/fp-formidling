@@ -18,14 +18,11 @@ import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForlengetSaksbehandlingstidDokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForlengetSaksbehandlingstidDokumentdata.VariantType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ApplicationScoped
 @DokumentMalTypeRef(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID)
 public class ForlengetSaksbehandlingstidDokumentdataMapper implements DokumentdataMapper {
-
-    private static final Map<DokumentMalType, VariantType> MAL_TIL_VARIANT_MAP = Map.of(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
-        VariantType.FORLENGET, DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL, VariantType.MEDLEM,
-        DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG, VariantType.FORTIDLIG);
 
     private DomeneobjektProvider domeneobjektProvider;
 
@@ -55,21 +52,27 @@ public class ForlengetSaksbehandlingstidDokumentdataMapper implements Dokumentda
 
         return ForlengetSaksbehandlingstidDokumentdata.ny()
             .medFelles(fellesBuilder.build())
-            .medVariantType(mapVariantType(hendelse.getDokumentMalType(), behandling))
+            .medVariantType(mapVariantType(behandling.getBehandlingType(), hendelse.getDokumentMal()))
             .medDød(BrevMapperUtil.erDød(dokumentFelles))
             .medBehandlingsfristUker(behandling.getBehandlingType().getBehandlingstidFristUker())
             .medAntallBarn(getAntallBarn(behandling))
             .build();
     }
 
-    private VariantType mapVariantType(DokumentMalType dokumentMalType, Behandling behandling) {
-        if (BehandlingType.KLAGE.equals(behandling.getBehandlingType())) {
+    private VariantType mapVariantType(BehandlingType behandlingType, DokumentMal dokumentMal) {
+        if (BehandlingType.KLAGE.equals(behandlingType)) {
             return VariantType.KLAGE;
         }
-        if (MAL_TIL_VARIANT_MAP.containsKey(dokumentMalType)) {
-            return MAL_TIL_VARIANT_MAP.get(dokumentMalType);
-        }
-        return VariantType.FORLENGET;
+        return mapForlengetSaksbehandlingstidVariant(dokumentMal);
+    }
+
+    private VariantType mapForlengetSaksbehandlingstidVariant(DokumentMal dokumentMal) {
+        return switch (dokumentMal) {
+            case FORLENGET_SAKSBEHANDLINGSTID -> VariantType.FORLENGET;
+            case FORLENGET_SAKSBEHANDLINGSTID_MEDL -> VariantType.MEDLEM;
+            case FORLENGET_SAKSBEHANDLINGSTID_TIDLIG -> VariantType.FORTIDLIG;
+            default -> VariantType.FORLENGET;
+        };
     }
 
     private int getAntallBarn(Behandling behandling) {

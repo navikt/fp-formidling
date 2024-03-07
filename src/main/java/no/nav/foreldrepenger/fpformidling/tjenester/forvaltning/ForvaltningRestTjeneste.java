@@ -5,6 +5,9 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.util.UUID;
 import java.util.function.Function;
 
+import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseDtoMapper;
+import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,9 +124,9 @@ public class ForvaltningRestTjeneste {
     @Produces(APPLICATION_JSON)
     @Operation(description = "Generer brevdata-json for siste vedtak i en behandling", tags = "forvaltning")
     @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.DRIFT, sporingslogg = false)
-    public Response genererBrevdata(@Parameter(description = "Behandling uuid det skal genereres json for.") @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class) @QueryParam("behandlingUuid") @Valid @NotNull UUID behandlingUuid) {
+    public Response genererBrevdata(@Parameter(description = "Behandling uuid det skal genereres json for.") @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class) @QueryParam("behandlingUuid") @Valid @NotNull UUID behandlingUuid, @TilpassetAbacAttributt(supplierClass = ForvaltningRestTjeneste.AbacSupplier.class) @QueryParam("dokumentMal") @Valid @NotNull DokumentMal dokumentMal) {
 
-        var resultat = brevBestillerTjeneste.genererJson(behandlingUuid);
+        var resultat = brevBestillerTjeneste.genererJson(behandlingUuid, DokumentHendelseDtoMapper.mapDokumentMal(dokumentMal));
 
         var responseBuilder = Response.ok(resultat);
 
@@ -137,12 +140,10 @@ public class ForvaltningRestTjeneste {
         return DokumentHendelse.builder()
             .medBehandlingUuid(originalHendelse.getBehandlingUuid())
             .medBestillingUuid(nyBestillingUuid)
-            .medDokumentMalType(originalHendelse.getDokumentMalType())
+            .medDokumentMal(originalHendelse.getDokumentMal())
             .medFritekst(originalHendelse.getFritekst())
-            .medGjelderVedtak(originalHendelse.isGjelderVedtak())
             .medTittel(originalHendelse.getTittel())
-            .medVedtaksbrev(originalHendelse.getVedtaksbrev())
-            .medRevurderingVarslingÅrsak(originalHendelse.getRevurderingVarslingÅrsak())
+            .medRevurderingÅrsak(originalHendelse.getRevurderingÅrsak())
             .build();
     }
 

@@ -20,25 +20,24 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.RevurderingVarslingÅrsak;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kopi;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
@@ -46,6 +45,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Fritekst
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.typer.RevurderingÅrsak;
 
 @ExtendWith(MockitoExtension.class)
 class VarselOmRevurderingDokumentdataMapperTest {
@@ -78,7 +78,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
         // Arrange
         var behandling = opprettBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.JA, false);
-        var dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
+        var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
         // Act
         var varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -109,7 +109,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
         // Arrange
         var behandling = opprettBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, Kopi.NEI, true);
-        var dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
+        var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEIDS_I_STØNADSPERIODEN);
 
         // Act
         var varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -128,7 +128,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
         // Arrange
         var behandling = opprettBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData);
-        var dokumentHendelse = lagDokumentHendelse(RevurderingVarslingÅrsak.ARBEID_I_UTLANDET);
+        var dokumentHendelse = lagDokumentHendelse(RevurderingÅrsak.ARBEID_I_UTLANDET);
 
         // Act
         var varselOmRevurderingDokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
@@ -152,7 +152,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
             .build();
     }
 
-    private DokumentHendelse lagDokumentHendelse(RevurderingVarslingÅrsak varslingÅrsak) {
-        return lagStandardHendelseBuilder().medRevurderingVarslingÅrsak(varslingÅrsak).build();
+    private DokumentHendelse lagDokumentHendelse(RevurderingÅrsak varslingÅrsak) {
+        return lagStandardHendelseBuilder().medRevurderingÅrsak(varslingÅrsak).build();
     }
 }

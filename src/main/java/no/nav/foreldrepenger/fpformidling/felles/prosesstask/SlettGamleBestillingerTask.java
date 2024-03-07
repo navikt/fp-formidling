@@ -1,17 +1,16 @@
 package no.nav.foreldrepenger.fpformidling.felles.prosesstask;
 
+import java.time.LocalDate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.enterprise.context.Dependent;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.HendelseRepository;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
-import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.time.LocalDate;
 
 @Dependent
 @ProsessTask(value = "vedlikehold.tasks.slettgamle", cronExpression = "0 45 1 * * *", maxFailedRuns = 1)

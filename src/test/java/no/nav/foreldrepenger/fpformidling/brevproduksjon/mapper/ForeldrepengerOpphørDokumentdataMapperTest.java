@@ -22,14 +22,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorfp.ForeldrepengerOpphørDokumentdataMapper;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
@@ -38,26 +39,25 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.AktivitetSta
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgrunnlag;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.BeregningsgrunnlagAktivitetStatus;
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.opphorfp.ForeldrepengerOpphørDokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
-import no.nav.foreldrepenger.fpformidling.typer.Beløp;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
+import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakAktivitet;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakArbeidType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.UttakResultatPeriodeAktivitet;
-import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatÅrsak;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.typer.Beløp;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ExtendWith(MockitoExtension.class)
 class ForeldrepengerOpphørDokumentdataMapperTest {
@@ -103,7 +103,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
         // Arrange
         var behandling = opprettBehandling();
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        var dokumentHendelse = lagStandardHendelseBuilder().medDokumentMalType(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
+        var dokumentHendelse = lagStandardHendelseBuilder().medDokumentMal(DokumentMal.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);

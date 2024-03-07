@@ -12,36 +12,36 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.aktør.Personinfo;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
+import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
+import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.Vilkår;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.pdl.PersonAdapter;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
-import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.typer.AktørId;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
-import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
-import no.nav.foreldrepenger.fpformidling.domene.vilkår.Vilkår;
-import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
 
 @ExtendWith(MockitoExtension.class)
 class EngangsstønadAvslagDokumentdataMapperTest {
@@ -62,7 +62,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     void setUp() {
         dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(
             DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.ENGANGSSTØNAD_AVSLAG));
-        dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).build();
+        dokumentHendelse = lagStandardHendelseBuilder().medFritekst(null).medDokumentMal(DokumentMal.ENGANGSSTØNAD_AVSLAG).build();
 
         var personinfo = Personinfo.getbuilder(AKTØR_ID)
             .medPersonIdent(new PersonIdent("9999999999"))

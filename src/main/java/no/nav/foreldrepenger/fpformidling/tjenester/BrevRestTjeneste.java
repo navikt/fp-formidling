@@ -21,8 +21,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.ProduserBrevTask;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelseTjeneste;
-import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingDto;
-import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentbestillingV2Dto;
 import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentBestillingDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentForhåndsvisDto;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
@@ -59,29 +57,6 @@ public class BrevRestTjeneste {
     }
 
     @POST
-    @Path("/forhaandsvis")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Returnerer en pdf som er en forhåndsvisning av brevet", tags = "brev")
-    @BeskyttetRessurs(actionType = ActionType.READ, resourceType = ResourceType.FAGSAK)
-    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response forhaandsvisDokument(@Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = ForhåndsvisSupplier.class) @Valid DokumentbestillingDto dokumentbestillingDto) { // NOSONAR
-
-        var dokumentHendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
-
-        LOG.info("Forhåndsvis hendelse: {}", dokumentHendelse);
-
-        var dokument = brevBestillerTjeneste.forhandsvisBrev(dokumentHendelse);
-
-        if (dokument != null && dokument.length != 0) {
-            var responseBuilder = Response.ok(dokument);
-            responseBuilder.type("application/pdf");
-            responseBuilder.header("Content-Disposition", "filename=dokument.pdf");
-            return responseBuilder.build();
-        }
-        return Response.serverError().build();
-    }
-
-    @POST
     @Path("/forhaandsvis/v3")
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Returnerer en pdf som er en forhåndsvisning av brevet", tags = "brev")
@@ -96,20 +71,6 @@ public class BrevRestTjeneste {
             return Response.ok(dokument).build();
         }
         return Response.serverError().build();
-    }
-
-    @POST
-    @Path("/bestill")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Bestiller, produserer og journalfører brevet", tags = "brev")
-    @BeskyttetRessurs(actionType = ActionType.CREATE, resourceType = ResourceType.FAGSAK)
-    @SuppressWarnings("findsecbugs:JAXRS_ENDPOINT")
-    public Response bestillDokument(@Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = BestillingSupplier.class) @Valid DokumentbestillingV2Dto dokumentbestillingDto) { // NOSONAR
-        var hendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
-        LOG.info("Bestill hendelse: {}", hendelse);
-
-        dokumentHendelseTjeneste.validerUnikOgLagre(hendelse).ifPresent(this::opprettBestillBrevTask);
-        return Response.ok().build();
     }
 
     @POST
@@ -130,22 +91,6 @@ public class BrevRestTjeneste {
         prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
         taskTjeneste.lagre(prosessTaskData);
-    }
-
-    public static class BestillingSupplier implements Function<Object, AbacDataAttributter> {
-        @Override
-        public AbacDataAttributter apply(Object obj) {
-            var req = (DokumentbestillingV2Dto) obj;
-            return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid());
-        }
-    }
-
-    public static class ForhåndsvisSupplier implements Function<Object, AbacDataAttributter> {
-        @Override
-        public AbacDataAttributter apply(Object obj) {
-            var req = (DokumentbestillingDto) obj;
-            return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.getBehandlingUuid());
-        }
     }
 
     public static class ForhåndsvisV3Supplier implements Function<Object, AbacDataAttributter> {

@@ -45,16 +45,13 @@ public class OpprettJournalpostTjeneste {
                                                            DokumentFelles dokumentFelles,
                                                            DokumentHendelse dokumentHendelse,
                                                            Saksnummer saksnummer,
-                                                           boolean ferdigstill,
-                                                           String overskriftVedFritekstBrev,
-                                                           String unikReferanse,
-                                                           DokumentMalType originalDokumentType,
+                                                           boolean ferdigstill, String unikReferanse,
+                                                           DokumentMalType journalførSomDokument,
                                                            FagsakYtelseType ytelseType) {
         LOG.info("Starter journalføring av brev for behandling {} med malkode {}", dokumentHendelse.getBehandlingUuid(), dokumentMalType.getKode());
 
         try {
-            var requestBuilder = lagRequestBuilder(brev, dokumentMalType, dokumentFelles, dokumentHendelse, saksnummer, ferdigstill,
-                overskriftVedFritekstBrev, unikReferanse, originalDokumentType, ytelseType);
+            var requestBuilder = lagRequestBuilder(brev, dokumentFelles, saksnummer, ferdigstill, unikReferanse, journalførSomDokument, ytelseType);
             var response = dokArkivKlient.opprettJournalpost(requestBuilder.build(), ferdigstill);
 
             if (LOG.isWarnEnabled() && ferdigstill && !response.journalpostferdigstilt()) {
@@ -75,24 +72,20 @@ public class OpprettJournalpostTjeneste {
     }
 
     private OpprettJournalpostRequest.OpprettJournalpostRequestBuilder lagRequestBuilder(byte[] brev,
-                                                                                         DokumentMalType dokumentMal,
                                                                                          DokumentFelles dokumentFelles,
-                                                                                         DokumentHendelse dokumentHendelse,
                                                                                          Saksnummer saksnummer,
                                                                                          boolean ferdigstill,
-                                                                                         String overskriftVedFritekstbrev,
                                                                                          String bestillingsUidMedUnikReferanse,
-                                                                                         DokumentMalType originalDokumentType,
+                                                                                         DokumentMalType journalførSomDokument,
                                                                                          FagsakYtelseType ytelseType) {
-        var tittel = getTittel(dokumentHendelse, dokumentMal, overskriftVedFritekstbrev, originalDokumentType);
+        var tittel = journalførSomDokument.getNavn();
+
         var dokument = DokumentInfoOpprett.builder()
             .medTittel(tittel)
-            .medBrevkode(originalDokumentType.getKode())
+            .medBrevkode(journalførSomDokument.getKode())
             .leggTilDokumentvariant(new Dokumentvariant(Dokumentvariant.Variantformat.ARKIV, Dokumentvariant.Filtype.PDFA, brev))
             .build();
-        var bruker = new Bruker(dokumentFelles.getSakspartId(), Bruker.BrukerIdType.FNR);
-        var avsenderMottaker = new AvsenderMottaker(dokumentFelles.getMottakerId(), hentAvsenderMottakerType(dokumentFelles.getMottakerType()),
-            dokumentFelles.getMottakerNavn());
+
         return OpprettJournalpostRequest.nyUtgående()
             .medTittel(tittel)
             .medSak(sak(saksnummer))
@@ -100,27 +93,19 @@ public class OpprettJournalpostTjeneste {
             .medBehandlingstema(mapBehandlingsTema(ytelseType))
             .medJournalfoerendeEnhet(ferdigstill ? DokArkivKlient.AUTOMATISK_JOURNALFØRENDE_ENHET : null)
             .medEksternReferanseId(bestillingsUidMedUnikReferanse)
-            .medBruker(bruker)
-            .medAvsenderMottaker(avsenderMottaker)
+            .medBruker(bruker(dokumentFelles))
+            .medAvsenderMottaker(mottaker(dokumentFelles))
             .medDokumenter(List.of(dokument));
 
     }
 
-    private Sak sak(Saksnummer saksnummer) {
-        return new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), Sak.Sakstype.FAGSAK);
+    private static Bruker bruker(DokumentFelles dokumentFelles) {
+        return new Bruker(dokumentFelles.getSakspartId(), Bruker.BrukerIdType.FNR);
     }
 
-    private String getTittel(DokumentHendelse dokumentHendelse,
-                             DokumentMalType dokumentMal,
-                             String overskriftVedFritekstbrev,
-                             DokumentMalType originalDokumentType) {
-        if (dokumentHendelse.getTittel() != null) {
-            return dokumentHendelse.getTittel();
-        } else if (DokumentMalType.FRITEKSTBREV.equals(dokumentMal) && overskriftVedFritekstbrev != null) {
-            return overskriftVedFritekstbrev;
-        } else {
-            return originalDokumentType.getNavn();
-        }
+
+    private Sak sak(Saksnummer saksnummer) {
+        return new Sak(saksnummer.getVerdi(), Fagsystem.FPSAK.getOffisiellKode(), Sak.Sakstype.FAGSAK);
     }
 
     private String mapBehandlingsTema(FagsakYtelseType ytelseType) {
@@ -132,8 +117,15 @@ public class OpprettJournalpostTjeneste {
         };
     }
 
-    private AvsenderMottaker.AvsenderMottakerIdType hentAvsenderMottakerType(DokumentFelles.MottakerType mottakerType) {
-        return mottakerType.equals(
-            DokumentFelles.MottakerType.PERSON) ? AvsenderMottaker.AvsenderMottakerIdType.FNR : AvsenderMottaker.AvsenderMottakerIdType.ORGNR;
+    private AvsenderMottaker mottaker(DokumentFelles dokumentFelles) {
+        return new AvsenderMottaker(dokumentFelles.getMottakerId(), mapMottakerType(dokumentFelles.getMottakerType()),
+            dokumentFelles.getMottakerNavn());
+    }
+
+    private AvsenderMottaker.AvsenderMottakerIdType mapMottakerType(DokumentFelles.MottakerType mottakerType) {
+        return switch (mottakerType) {
+            case PERSON -> AvsenderMottaker.AvsenderMottakerIdType.FNR;
+            case ORGANISASJON -> AvsenderMottaker.AvsenderMottakerIdType.ORGNR;
+        };
     }
 }

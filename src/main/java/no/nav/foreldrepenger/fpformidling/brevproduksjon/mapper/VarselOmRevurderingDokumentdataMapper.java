@@ -74,13 +74,13 @@ public class VarselOmRevurderingDokumentdataMapper implements DokumentdataMapper
     }
 
     private String utledAdvarselkode(DokumentHendelse hendelse) {
-        if (hendelse.getRevurderingVarslingÅrsak().equals(RevurderingVarslingÅrsak.UDEFINERT)) {
+        if (hendelse.getRevurderingÅrsak() == null) {
             if (harFritekst(hendelse)) {
                 return RevurderingVarslingÅrsak.ANNET.getKode();
             }
             return null;
         }
-        return hendelse.getRevurderingVarslingÅrsak().getKode();
+        return RevurderingVarslingÅrsak.valueOf(hendelse.getRevurderingÅrsak().name()).getKode();
     }
 
     private boolean utledFlereOpplysninger(DokumentHendelse hendelse, String advarselKode, FagsakYtelseType ytelseType) {

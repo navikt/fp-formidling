@@ -65,18 +65,20 @@ public class DokgenBrevproduksjonTjeneste {
         this.taskTjeneste = taskTjeneste;
     }
 
-    public byte[] forhåndsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal) {
+    public byte[] forhåndsvisBrev(DokumentHendelse dokumentHendelse, Behandling behandling) {
         var utkast = BestillingType.UTKAST;
-        var dokumentData = utledDokumentDataFor(behandling, dokumentMal, utkast);
+        var dokumentMalType = DokumentMalType.valueOf(dokumentHendelse.getDokumentMal().name());
+        var dokumentData = utledDokumentDataFor(behandling, dokumentMalType, utkast);
         // hvis verge finnes produseres det 2 brev. Vi forhåndsviser kun en av dem.
-        return genererDokument(dokumentHendelse, behandling, dokumentMal, dokumentData.getFørsteDokumentFelles(), utkast);
+        return genererDokument(dokumentHendelse, behandling, dokumentMalType, dokumentData.getFørsteDokumentFelles(), utkast);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse,
                             Behandling behandling,
-                            DokumentMalType dokumentMal,
-                            DokumentMalType originalDokumentType) {
+                            DokumentMalType journalførSom) {
+
         var bestillingType = BestillingType.BESTILL;
+        var dokumentMal = DokumentMalType.valueOf(dokumentHendelse.getDokumentMal().name());
         var dokumentData = utledDokumentDataFor(behandling, dokumentMal, bestillingType);
         var teller = 0;
         for (var dokumentFelles : dokumentData.getDokumentFelles()) {
@@ -90,9 +92,7 @@ public class DokgenBrevproduksjonTjeneste {
 
             var innsynMedVedlegg = erInnsynMedVedlegg(behandling, dokumentMal);
             var response = opprettJournalpostTjeneste.journalførUtsendelse(brev, dokumentMal, dokumentFelles, dokumentHendelse,
-                behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg,
-                behandling.getBehandlingsresultat() != null ? behandling.getBehandlingsresultat().getOverskrift() : null,
-                unikBestillingsUuidPerDokFelles, originalDokumentType, behandling.getFagsakBackend().getYtelseType()) // NoSonar
+                behandling.getFagsakBackend().getSaksnummer(), !innsynMedVedlegg, unikBestillingsUuidPerDokFelles, journalførSom, behandling.getFagsakBackend().getYtelseType()) // NoSonar
                 ;
 
             var journalpostId = new JournalpostId(response.journalpostId());
@@ -104,19 +104,19 @@ public class DokgenBrevproduksjonTjeneste {
             }
 
             distribuerBrevOgLagHistorikk(dokumentHendelse, response, journalpostId, innsynMedVedlegg, dokumentFelles.getSaksnummer().getVerdi(),
-                unikBestillingsUuidPerDokFelles, originalDokumentType);
+                unikBestillingsUuidPerDokFelles, journalførSom);
 
-            counter("brev_distribuert", "malType", dokumentMal.getKode(), "brevType", originalDokumentType.getKode()).increment();
+            counter("brev_distribuert", "malType", dokumentMal.getKode(), "brevType", journalførSom.getKode()).increment();
         }
     }
 
     private byte[] genererDokument(DokumentHendelse dokumentHendelse,
                                    Behandling behandling,
-                                   DokumentMalType dokumentMal,
+                                   DokumentMalType dokumentMalType,
                                    DokumentFelles dokumentFelles,
                                    BestillingType bestillingType) {
 
-        var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
+        var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMalType);
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling,
             BestillingType.UTKAST == bestillingType);
 
@@ -127,16 +127,17 @@ public class DokgenBrevproduksjonTjeneste {
             dokumentdata.getFelles().anonymiser();
             SECURE_LOG.warn("Klarte ikke å generere brev av følgende brevdata: {}", DefaultJsonMapper.toJson(dokumentdata));
             throw new TekniskException("FPFORMIDLING-221006",
-                String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s", dokumentMal.getKode(),
+                String.format("Klarte ikke å generere mal %s for behandling %s for bestilling med type %s", dokumentMalType.getKode(),
                     behandling.getUuid(), bestillingType), e);
         }
         if (LOG.isInfoEnabled()) {
-            LOG.info("Dokument av type {} i behandling id {} ble generert.", dokumentMal.getKode(), behandling.getUuid());
+            LOG.info("Dokument av type {} i behandling id {} ble generert.", dokumentMalType.getKode(), behandling.getUuid());
         }
         return brev;
     }
 
-    public String genererJson(DokumentHendelse dokumentHendelse, Behandling behandling, DokumentMalType dokumentMal, BestillingType bestillingType) {
+    public String genererJson(DokumentHendelse dokumentHendelse, Behandling behandling, BestillingType bestillingType) {
+        var dokumentMal = DokumentMalType.valueOf(dokumentHendelse.getDokumentMal().name());
         var dokumentdataMapper = dokumentdataMapperProvider.getDokumentdataMapper(dokumentMal);
         var dokumentData = utledDokumentDataFor(behandling, dokumentMal, bestillingType);
         var dokumentfelles = dokumentData.getFørsteDokumentFelles();

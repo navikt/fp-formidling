@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil.formaterPersonnummer;
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -11,22 +10,22 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForlengetSaksbehandlingstidDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ExtendWith(MockitoExtension.class)
 class ForlengetSaksbehandlingstidDokumentdataMapperTest {
@@ -54,7 +53,7 @@ class ForlengetSaksbehandlingstidDokumentdataMapperTest {
         // Arrange
         var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
-        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medDokumentMalType(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
+        var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().medDokumentMal(DokumentMal.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
 
         // Act
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);

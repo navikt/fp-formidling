@@ -10,6 +10,8 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
+
 import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
@@ -84,6 +86,7 @@ public class DatamapperTestUtil {
         return DokumentHendelse.builder()
             .medBestillingUuid(UUID.randomUUID())
             .medBehandlingUuid(UUID.randomUUID())
+            .medDokumentMal(DokumentMal.FRITEKSTBREV)
             .medFritekst(FRITEKST);
     }
 

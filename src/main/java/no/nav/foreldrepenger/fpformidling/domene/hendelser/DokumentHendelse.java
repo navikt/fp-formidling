@@ -1,16 +1,20 @@
 package no.nav.foreldrepenger.fpformidling.domene.hendelser;
 
-import jakarta.persistence.*;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.RevurderingVarslingÅrsak;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-import no.nav.foreldrepenger.fpformidling.domene.vedtak.Vedtaksbrev;
-import no.nav.foreldrepenger.fpformidling.felles.BaseEntitet;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
-import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
-import no.nav.foreldrepenger.fpformidling.typer.RevurderingÅrsak;
-
 import java.util.Objects;
 import java.util.UUID;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import no.nav.foreldrepenger.fpformidling.felles.BaseEntitet;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
+import no.nav.foreldrepenger.fpformidling.typer.RevurderingÅrsak;
 
 @Entity(name = "DokumentHendelse")
 @Table(name = "DOKUMENT_HENDELSE")
@@ -26,10 +30,6 @@ public class DokumentHendelse extends BaseEntitet {
     @Column(name = "bestilling_uuid")
     private UUID bestillingUuid;
 
-    @Convert(converter = DokumentMalType.KodeverdiConverter.class)
-    @Column(name = "dokument_mal_navn")
-    private DokumentMalType dokumentMalType;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "dokument_mal")
     private DokumentMal dokumentMal;
@@ -38,38 +38,18 @@ public class DokumentHendelse extends BaseEntitet {
     @Column(name = "journalfoer_som")
     private DokumentMal journalførSom;
 
-    @Convert(converter = FagsakYtelseType.KodeverdiConverter.class)
-    @Column(name = "ytelse_type")
-    private FagsakYtelseType ytelseType;
-
-    @Column(name = "gjelder_vedtak")
-    private Boolean gjelderVedtak;
-
-    @Column
+    @Transient
     private String tittel;
 
     @Column
     private String fritekst;
 
-    @Convert(converter = RevurderingVarslingÅrsak.KodeverdiConverter.class)
-    @Column(name = "revurdering_varsling_arsak", nullable = false)
-    private RevurderingVarslingÅrsak revurderingVarslingÅrsak = RevurderingVarslingÅrsak.UDEFINERT;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "revurdering_aarsak")
     private RevurderingÅrsak revurderingÅrsak;
 
-    @Convert(converter = Vedtaksbrev.KodeverdiConverter.class)
-    @Column(name = "vedtaksbrev", nullable = false)
-    private Vedtaksbrev vedtaksbrev = Vedtaksbrev.UDEFINERT;
-
     public DokumentHendelse() {
         //For Hibernate
-    }
-
-    DokumentHendelse(UUID behandlingUuid, FagsakYtelseType ytelseType) {
-        this.behandlingUuid = behandlingUuid;
-        this.ytelseType = ytelseType;
     }
 
     public static DokumentHendelse.Builder builder() {
@@ -88,18 +68,6 @@ public class DokumentHendelse extends BaseEntitet {
         return bestillingUuid;
     }
 
-    public DokumentMalType getDokumentMalType() {
-        return dokumentMalType;
-    }
-
-    public FagsakYtelseType getYtelseType() {
-        return ytelseType;
-    }
-
-    public Boolean isGjelderVedtak() {
-        return gjelderVedtak;
-    }
-
     public String getTittel() {
         return tittel;
     }
@@ -108,20 +76,24 @@ public class DokumentHendelse extends BaseEntitet {
         return fritekst;
     }
 
-    public RevurderingVarslingÅrsak getRevurderingVarslingÅrsak() {
-        return revurderingVarslingÅrsak;
+    public DokumentMal getDokumentMal() {
+        return dokumentMal;
     }
 
-    public Vedtaksbrev getVedtaksbrev() {
-        return vedtaksbrev;
+    public DokumentMal getJournalførSom() {
+        return journalførSom;
+    }
+
+    public RevurderingÅrsak getRevurderingÅrsak() {
+        return revurderingÅrsak;
     }
 
     @Override
     public String toString() {
         return "DokumentHendelse{" + "id=" + id + ", behandlingUuid=" + behandlingUuid + ", bestillingUuid=" + bestillingUuid + ", dokumentMal="
-                + dokumentMal + ", ytelseType=" + ytelseType + ", gjelderVedtak=" + gjelderVedtak + ", tittel='" + tittel + '\'' + ", fritekst='" + (
+                + dokumentMal + ", tittel='" + tittel + '\'' + ", fritekst='" + (
                 fritekst != null ? "****** fritekst ***** " : "null") + '\'' + ", revurderingÅrsak=" + revurderingÅrsak
-                + ", vedtaksbrev=" + vedtaksbrev + ", journalførSom=" + journalførSom +'}';
+                + ", journalførSom=" + journalførSom +'}';
     }
 
 
@@ -130,11 +102,6 @@ public class DokumentHendelse extends BaseEntitet {
 
         Builder() {
             this.kladd = new DokumentHendelse();
-        }
-
-        public DokumentHendelse.Builder medDokumentMalType(DokumentMalType dokumentMalType) {
-            this.kladd.dokumentMalType = dokumentMalType;
-            return this;
         }
 
         public DokumentHendelse.Builder medDokumentMal(DokumentMal dokumentMal) {
@@ -157,11 +124,6 @@ public class DokumentHendelse extends BaseEntitet {
             return this;
         }
 
-        public DokumentHendelse.Builder medYtelseType(FagsakYtelseType ytelseType) {
-            this.kladd.ytelseType = ytelseType;
-            return this;
-        }
-
         public DokumentHendelse.Builder medTittel(String tittel) {
             this.kladd.tittel = tittel;
             return this;
@@ -172,23 +134,8 @@ public class DokumentHendelse extends BaseEntitet {
             return this;
         }
 
-        public DokumentHendelse.Builder medGjelderVedtak(Boolean gjelderVedtak) {
-            this.kladd.gjelderVedtak = gjelderVedtak;
-            return this;
-        }
-
-        public DokumentHendelse.Builder medRevurderingVarslingÅrsak(RevurderingVarslingÅrsak revurderingVarslingÅrsak) {
-            this.kladd.revurderingVarslingÅrsak = revurderingVarslingÅrsak;
-            return this;
-        }
-
         public DokumentHendelse.Builder medRevurderingÅrsak(RevurderingÅrsak revurderingÅrsak) {
             this.kladd.revurderingÅrsak = revurderingÅrsak;
-            return this;
-        }
-
-        public DokumentHendelse.Builder medVedtaksbrev(Vedtaksbrev vedtaksbrev) {
-            this.kladd.vedtaksbrev = vedtaksbrev;
             return this;
         }
 
@@ -198,6 +145,7 @@ public class DokumentHendelse extends BaseEntitet {
         }
 
         private void verifyStateForBuild() {
+            Objects.requireNonNull(kladd.dokumentMal, "dokumentMal");
             Objects.requireNonNull(kladd.behandlingUuid, "behandlingUuid");
             Objects.requireNonNull(kladd.bestillingUuid, "bestillingUuid");
         }

@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.UUID;
 
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
+
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
@@ -118,7 +120,8 @@ class FritekstTest {
     private DokumentHendelse.Builder standardHendelseBuilder() {
         return DokumentHendelse.builder()
             .medBehandlingUuid(UUID.randomUUID())
-            .medBestillingUuid(UUID.randomUUID());
+            .medBestillingUuid(UUID.randomUUID())
+            .medDokumentMal(DokumentMal.FRITEKSTBREV);
     }
 
     private Behandling.Builder standardBehandlingBuilder() {

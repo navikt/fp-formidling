@@ -26,6 +26,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.saldo.Sald
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.uttak.svp.SvangerskapspengerUttakResultatDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentKvitteringDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.beregningsgrunnlag.v2.BeregningsgrunnlagDto;
+import no.nav.foreldrepenger.kontrakter.fpsak.inntektsmeldinger.ArbeidsforholdInntektsmeldingerDto;
 import no.nav.foreldrepenger.kontrakter.fpsak.tilkjentytelse.TilkjentYtelseDagytelseDto;
 
 public interface Behandlinger {
@@ -106,6 +107,14 @@ public interface Behandlinger {
             .flatMap(link -> hentDtoFraLink(link, InntektsmeldingerDto.class))
             .orElseThrow(
                 () -> new IllegalStateException("Klarte ikke hente Inntektsmeldinger dto for behandling: " + hentBehandlingId(resourceLinker)));
+    }
+    default ArbeidsforholdInntektsmeldingerDto hentArbeidsforholdInntektsmeldingerDto(List<BehandlingResourceLink> resourceLinker) {
+        return resourceLinker.stream()
+            .filter(dto -> "inntektsmelding-status".equals(dto.getRel()))
+            .findFirst()
+            .flatMap(link -> hentDtoFraLink(link, ArbeidsforholdInntektsmeldingerDto.class))
+            .orElseThrow(
+                () -> new IllegalStateException("Klarte ikke hente ArbeidsforholdInntektsmeldinger dto for behandling: " + hentBehandlingId(resourceLinker)));
     }
 
     default KlagebehandlingDto hentKlagebehandling(List<BehandlingResourceLink> resourceLinker) {

@@ -1,11 +1,10 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil.lagStandardDokumentFelles;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
-import java.time.Period;
-
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
+import java.math.BigDecimal;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,12 +12,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DatamapperTestUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
+import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.ArbeidsforholdInntektsmelding;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,9 +32,8 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
 
     @BeforeEach
     void setup() {
-        var brevParametere = new BrevParametere(6, 2, Period.parse("P3W"), Period.ZERO);
         dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.ETTERLYS_INNTEKTSMELDING);
-        dokumentdataMapper = new EtterlysInntektsmeldingDokumentdataMapper(domeneobjektProvider, new BrevMapperUtil(brevParametere));
+        dokumentdataMapper = new EtterlysInntektsmeldingDokumentdataMapper(domeneobjektProvider);
     }
 
     @Test
@@ -44,11 +42,14 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = DatamapperTestUtil.standardDokumenthendelse();
 
+        var inntektsmeldingerStatus = List.of(new ArbeidsforholdInntektsmelding("12345679", "ArbeidsgiverNavn", BigDecimal.valueOf(100), false));
+        when(domeneobjektProvider.hentArbeidsforholdInntektsmeldingerStatus(behandling)).thenReturn(inntektsmeldingerStatus);
+
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.FORELDREPENGER.getKode());
         assertThat(dokumentdata.getSøknadDato()).isNotEmpty();
-        assertThat(dokumentdata.getFristDato()).isNotEmpty();
+        assertThat(dokumentdata.getInntektsmeldingerStatus()).isEqualTo(inntektsmeldingerStatus);
     }
 
     @Test
@@ -56,12 +57,13 @@ class EtterlysInntektsmeldingDokumentdataMapperTest {
         var behandling = DatamapperTestUtil.standardSvangerskapspengerBehandling();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = DatamapperTestUtil.lagStandardHendelseBuilder().build();
-
+        var inntektsmeldingerStatus = List.of(new ArbeidsforholdInntektsmelding("12345679", "ArbeidsgiverNavn", BigDecimal.valueOf(100), false));
+        when(domeneobjektProvider.hentArbeidsforholdInntektsmeldingerStatus(behandling)).thenReturn(inntektsmeldingerStatus);
         var dokumentdata = dokumentdataMapper.mapTilDokumentdata(dokumentFelles, dokumentHendelse, behandling, false);
 
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
         assertThat(dokumentdata.getSøknadDato()).isNotEmpty();
-        assertThat(dokumentdata.getFristDato()).isNotEmpty();
+        assertThat(dokumentdata.getInntektsmeldingerStatus()).isEqualTo(inntektsmeldingerStatus);
     }
 
 }

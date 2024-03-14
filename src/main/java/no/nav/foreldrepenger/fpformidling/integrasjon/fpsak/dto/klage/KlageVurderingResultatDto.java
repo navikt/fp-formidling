@@ -1,7 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurdering;
 

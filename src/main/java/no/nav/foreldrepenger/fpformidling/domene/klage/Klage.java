@@ -33,14 +33,6 @@ public class Klage {
         return formkravNFP;
     }
 
-    public KlageVurderingResultat getKlageVurderingResultatNFP() {
-        return klageVurderingResultatNFP;
-    }
-
-    public KlageVurderingResultat getKlageVurderingResultatNK() {
-        return klageVurderingResultatNK;
-    }
-
     public KlageVurderingResultat getGjeldendeKlageVurderingsresultat() {
         if (klageVurderingResultatNK != null) {
             return klageVurderingResultatNK;

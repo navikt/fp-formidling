@@ -42,18 +42,13 @@ public final class BehandlingDtoMapper {
             .medStatus(dto.getStatus())
             .medOpprettetDato(dto.getOpprettet())
             .medAvsluttet(dto.getAvsluttet())
-            .medAnsvarligSaksbehandler(dto.getAnsvarligSaksbehandler())
-            .medAnsvarligBeslutter(dto.getAnsvarligBeslutter())
             .medToTrinnsBehandling(dto.getToTrinnsBehandling())
             .medBehandlendeEnhetId(dto.getBehandlendeEnhetId())
-            .medBehandlendeEnhetNavn(dto.getBehandlendeEnhetNavn())
             .medBehandlingÅrsaker(mapBehandlingÅrsakListe(dto.getBehandlingÅrsaker()))
-            .medEndretAv(dto.getEndretAvBrukernavn())
             .medSpråkkode(dto.getSprakkode())
             .medHarAvklartAnnenForelderRett(dto.getHarAvklartAnnenForelderRett())
             .medVilkår(VilkårDtoMapper.mapVilkårFraDto(dto.getVilkår()))
             .medOriginalBehandlingUuid(dto.getOriginalBehandlingUuid())
-            .medOriginalVedtaksDato(dto.getOriginalVedtaksDato())
             .medKreverSammenhengendeUttak(dto.getKreverSammenhengendeUttak());
 
         if (dto.getBehandlingsresultat() != null) {
@@ -71,7 +66,7 @@ public final class BehandlingDtoMapper {
     }
 
     private static BehandlingÅrsak mapBehandlingÅrsakFraDto(BehandlingÅrsakDto dto) {
-        return BehandlingÅrsak.builder().medBehandlingÅrsakType(dto.getBehandlingArsakType()).medManueltOpprettet(dto.getManueltOpprettet()).build();
+        return BehandlingÅrsak.builder().medBehandlingÅrsakType(dto.getBehandlingArsakType()).build();
     }
 
 }

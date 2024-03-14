@@ -4,9 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
-
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -63,20 +60,4 @@ public enum FagsakYtelseType implements Kodeverdi {
         return FORELDREPENGER.equals(this);
     }
 
-    public final boolean gjelderSvangerskapspenger() {
-        return SVANGERSKAPSPENGER.equals(this);
-    }
-
-    @Converter(autoApply = true)
-    public static class KodeverdiConverter implements AttributeConverter<FagsakYtelseType, String> {
-        @Override
-        public String convertToDatabaseColumn(FagsakYtelseType attribute) {
-            return attribute == null ? null : attribute.getKode();
-        }
-
-        @Override
-        public FagsakYtelseType convertToEntityAttribute(String dbData) {
-            return dbData == null ? null : fraKode(dbData);
-        }
-    }
 }

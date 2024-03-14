@@ -27,7 +27,6 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseEngangsstønad;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
@@ -173,7 +172,7 @@ class EngangsstønadInnvilgelseDokumentdataMapperTest {
     }
 
     private FamilieHendelse lagFamHendelse(int antallBarn) {
-        return new FamilieHendelse(FamilieHendelseType.TERMIN, antallBarn, 0, LocalDate.now(), null, null, null, true, true);
+        return new FamilieHendelse(antallBarn, 0, LocalDate.now(), null, null, null, true, true);
     }
 
     private String formaterBeløp(long beløp) {

@@ -35,7 +35,6 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
@@ -143,7 +142,7 @@ class SvangerskapspengerAvslagDokumentdataMapperTest {
 
     private FamilieHendelse opprettFamiliehendelse() {
         var now = LocalDate.now();
-        return new FamilieHendelse(FamilieHendelseType.TERMIN, 2, 0, null, now, now, null, false, true);
+        return new FamilieHendelse(2, 0, null, now, now, null, false, true);
     }
 
     private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {

@@ -1,8 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.felles;
 
-import static java.time.DayOfWeek.SATURDAY;
-import static java.time.DayOfWeek.SUNDAY;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
@@ -24,48 +21,6 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
     public abstract LocalDate getFomDato();
 
     public abstract LocalDate getTomDato();
-
-    protected static LocalDate finnTomDato(LocalDate fom, int antallArbeidsdager) {
-        if (antallArbeidsdager < 1) {
-            throw new IllegalArgumentException("Antall arbeidsdager må være 1 eller større.");
-        }
-        var tom = fom;
-        var antallArbeidsdagerTmp = antallArbeidsdager;
-
-        while (antallArbeidsdagerTmp > 0) {
-            if (antallArbeidsdagerTmp > antallArbeidsdager) {
-                throw new IllegalArgumentException("Antall arbeidsdager beregnes feil.");
-            }
-            if (erArbeidsdag(tom)) {
-                antallArbeidsdagerTmp--;
-            }
-            if (antallArbeidsdagerTmp > 0) {
-                tom = tom.plusDays(1);
-            }
-        }
-        return tom;
-    }
-
-    protected static LocalDate finnFomDato(LocalDate tom, int antallArbeidsdager) {
-        if (antallArbeidsdager < 1) {
-            throw new IllegalArgumentException("Antall arbeidsdager må være 1 eller større.");
-        }
-        var fom = tom;
-        var antallArbeidsdagerTmp = antallArbeidsdager;
-
-        while (antallArbeidsdagerTmp > 0) {
-            if (antallArbeidsdagerTmp > antallArbeidsdager) {
-                throw new IllegalArgumentException("Antall arbeidsdager beregnes feil.");
-            }
-            if (erArbeidsdag(fom)) {
-                antallArbeidsdagerTmp--;
-            }
-            if (antallArbeidsdagerTmp > 0) {
-                fom = fom.minusDays(1);
-            }
-        }
-        return fom;
-    }
 
     public boolean erFørEllerLikPeriodeslutt(ChronoLocalDate dato) {
         return getTomDato() == null || getTomDato().isAfter(dato) || getTomDato().isEqual(dato);
@@ -101,10 +56,6 @@ public abstract class AbstractLocalDateInterval implements Comparable<AbstractLo
             case SUNDAY -> dato.plusDays(1);
             default -> dato;
         };
-    }
-
-    protected static boolean erArbeidsdag(LocalDate dato) {
-        return !dato.getDayOfWeek().equals(SATURDAY) && !dato.getDayOfWeek().equals(SUNDAY); // NOSONAR
     }
 
     @Override

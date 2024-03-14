@@ -22,7 +22,6 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.ForlengetSaksbehandlingstidDokumentdata;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
@@ -77,6 +76,6 @@ class ForlengetSaksbehandlingstidDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        return new FamilieHendelse(FamilieHendelseType.TERMIN, ANTALL_BARN, 0, null, null, null, null, false, false);
+        return new FamilieHendelse(ANTALL_BARN, 0, null, null, null, null, false, false);
     }
 }

@@ -7,7 +7,6 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakTyp
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingÅrsakDto {
     private BehandlingÅrsakType behandlingArsakType;
-    private Boolean manueltOpprettet;
 
     public BehandlingÅrsakType getBehandlingArsakType() {
         return behandlingArsakType;
@@ -17,16 +16,8 @@ public class BehandlingÅrsakDto {
         this.behandlingArsakType = behandlingArsakType;
     }
 
-    public Boolean getManueltOpprettet() {
-        return manueltOpprettet;
-    }
-
-    public void setManueltOpprettet(Boolean manueltOpprettet) {
-        this.manueltOpprettet = manueltOpprettet;
-    }
-
     @Override
     public String toString() {
-        return "BehandlingÅrsakDto{" + "behandlingArsakType=" + behandlingArsakType + ", manueltOpprettet=" + manueltOpprettet + '}';
+        return "BehandlingÅrsakDto{" + "behandlingArsakType=" + behandlingArsakType + '}';
     }
 }

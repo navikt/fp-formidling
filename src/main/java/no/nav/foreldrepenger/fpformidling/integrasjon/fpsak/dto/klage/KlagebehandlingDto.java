@@ -6,13 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class KlagebehandlingDto {
 
-    @JsonProperty("klageVurderingResultatNFP")
     private KlageVurderingResultatDto klageVurderingResultatNFP;
-    @JsonProperty("klageVurderingResultatNK")
     private KlageVurderingResultatDto klageVurderingResultatNK;
-    @JsonProperty("klageFormkravResultatNFP")
     private KlageFormkravResultatDto klageFormkravResultatNFP;
-    @JsonProperty("klageFormkravResultatKA")
     private KlageFormkravResultatDto klageFormkravResultatKA;
 
     public KlagebehandlingDto() {

@@ -7,31 +7,20 @@ import java.util.Optional;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
-import no.nav.foreldrepenger.fpformidling.domene.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BehandlingsresultatDto {
-    private Integer id;
+
     private BehandlingResultatType type;
     private Avslagsårsak avslagsarsak;
     private List<KonsekvensForYtelsen> konsekvenserForYtelsen;
-    private Vedtaksbrev vedtaksbrev;
     private String avslagsarsakFritekst;
     private String overskrift;
     private String fritekstbrev;
-    private Boolean erRevurderingMedUendretUtfall;
     private SkjæringstidspunktDto skjæringstidspunkt;
     private boolean endretDekningsgrad;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public BehandlingResultatType getType() {
         return type;
@@ -81,22 +70,6 @@ public class BehandlingsresultatDto {
         this.fritekstbrev = fritekstbrev;
     }
 
-    public Vedtaksbrev getVedtaksbrev() {
-        return vedtaksbrev;
-    }
-
-    public void setVedtaksbrev(Vedtaksbrev vedtaksbrev) {
-        this.vedtaksbrev = vedtaksbrev;
-    }
-
-    public Boolean getErRevurderingMedUendretUtfall() {
-        return Boolean.TRUE.equals(erRevurderingMedUendretUtfall);
-    }
-
-    public void setErRevurderingMedUendretUtfall(Boolean erRevurderingMedUendretUtfall) {
-        this.erRevurderingMedUendretUtfall = erRevurderingMedUendretUtfall;
-    }
-
     public LocalDate getSkjæringstidspunkt() {
         return Optional.ofNullable(skjæringstidspunkt).map(SkjæringstidspunktDto::dato).orElse(null);
     }
@@ -119,10 +92,9 @@ public class BehandlingsresultatDto {
 
     @Override
     public String toString() {
-        return "BehandlingsresultatDto{" + "id=" + id + ", type=" + (type != null ? type.toString() : null) + ", avslagsarsak=" + (
-            avslagsarsak != null ? avslagsarsak.toString() : null) + ", vedtaksbrev=" + (vedtaksbrev != null ? vedtaksbrev.toString() : null)
+        return "BehandlingsresultatDto{type=" + (type != null ? type.toString() : null) + ", avslagsarsak=" + (avslagsarsak != null ? avslagsarsak.toString() : null)
             + ", konsekvenserForYtelsen=" + (konsekvenserForYtelsen != null ? konsekvenserForYtelsen.toString() : null) + ", avslagsarsakFritekst='"
             + avslagsarsakFritekst + '\'' + ", overskrift='" + overskrift + '\'' + ", fritekstbrev='" + fritekstbrev + '\''
-            + ", erRevurderingMedUendretUtfall='" + erRevurderingMedUendretUtfall + '\'' + ", skjæringstidspunkt=" + skjæringstidspunkt + '\'' + '}';
+            + ", skjæringstidspunkt=" + skjæringstidspunkt + '\'' + '}';
     }
 }

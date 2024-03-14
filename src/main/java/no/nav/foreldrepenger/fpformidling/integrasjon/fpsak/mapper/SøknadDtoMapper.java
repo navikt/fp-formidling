@@ -1,7 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 
-import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.soknad.SoknadBackendDto;
 import no.nav.foreldrepenger.fpformidling.domene.søknad.Søknad;
+import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.soknad.SoknadBackendDto;
 
 public class SøknadDtoMapper {
 

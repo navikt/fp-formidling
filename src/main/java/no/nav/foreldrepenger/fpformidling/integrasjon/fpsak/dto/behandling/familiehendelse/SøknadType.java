@@ -13,7 +13,7 @@ public enum SøknadType {
     @JsonValue
     private final String kode;
 
-    private SøknadType(String kode) {
+    SøknadType(String kode) {
         this.kode = kode;
     }
 

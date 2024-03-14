@@ -1,16 +1,13 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.klage;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import no.nav.foreldrepenger.fpformidling.domene.klage.KlageVurdering;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class KlageVurderingResultatDto {
 
-    @JsonProperty("klageVurdering")
     private KlageVurdering klageVurdering;
-    @JsonProperty("fritekstTilBrev")
     private String fritekstTilBrev;
 
     public KlageVurdering getKlageVurdering() {
@@ -25,5 +22,7 @@ public class KlageVurderingResultatDto {
         return fritekstTilBrev;
     }
 
-
+    public void setFritekstTilBrev(String fritekstTilBrev) {
+        this.fritekstTilBrev = fritekstTilBrev;
+    }
 }

@@ -44,7 +44,6 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.ForeldrepengerUttak;
@@ -138,7 +137,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
 
     private FamilieHendelse opprettFamiliehendelse() {
         var now = LocalDate.now();
-        return new FamilieHendelse(FamilieHendelseType.TERMIN, 2, 0, now, now, null, now, false, true);
+        return new FamilieHendelse(2, 0, now, now, null, now, false, true);
     }
 
     private Optional<Beregningsgrunnlag> opprettBeregningsgrunnlag() {

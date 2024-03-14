@@ -53,7 +53,6 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
 import no.nav.foreldrepenger.fpformidling.domene.søknad.Søknad;
@@ -278,7 +277,7 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        return new FamilieHendelse(FamilieHendelseType.TERMIN, 1, 0, null, LocalDate.now(), null, null, false, true);
+        return new FamilieHendelse(1, 0, null, LocalDate.now(), null, null, false, true);
     }
 
     private Optional<Søknad> opprettSøknad() {

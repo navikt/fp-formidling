@@ -12,24 +12,17 @@ public class TilkjentYtelsePeriode {
 
     private final Long dagsats;
     private final DatoIntervall periode;
-    private final Long utbetaltTilSøker;
     private final List<TilkjentYtelseAndel> andeler;
 
     private TilkjentYtelsePeriode(Builder builder) {
         dagsats = builder.dagsats;
         periode = builder.periode;
         andeler = builder.andeler;
-        utbetaltTilSøker = ((Integer) andeler.stream()
-            .filter(TilkjentYtelseAndel::erBrukerMottaker)
-            .map(TilkjentYtelseAndel::getUtbetalesTilBruker)
-            .mapToInt(Integer::intValue)
-            .sum()).longValue();
     }
 
     @Override
     public String toString() {
-        return "TilkjentYtelsePeriode{" + "dagsats=" + dagsats + ", periode=" + periode + ", utbetaltTilSøker=" + utbetaltTilSøker + ", andeler="
-            + andeler + '}';
+        return "TilkjentYtelsePeriode{" + "dagsats=" + dagsats + ", periode=" + periode + ", andeler=" + andeler + '}';
     }
 
     @Override
@@ -39,8 +32,7 @@ public class TilkjentYtelsePeriode {
         if (o == null || getClass() != o.getClass())
             return false;
         TilkjentYtelsePeriode that = (TilkjentYtelsePeriode) o;
-        return Objects.equals(dagsats, that.dagsats) && Objects.equals(periode, that.periode) && Objects.equals(utbetaltTilSøker,
-            that.utbetaltTilSøker) && likeAndeler(andeler, that.andeler);
+        return Objects.equals(dagsats, that.dagsats) && Objects.equals(periode, that.periode) && likeAndeler(andeler, that.andeler);
     }
 
     private boolean likeAndeler(List<TilkjentYtelseAndel> liste1, List<TilkjentYtelseAndel> liste2) {
@@ -52,7 +44,7 @@ public class TilkjentYtelsePeriode {
 
     @Override
     public int hashCode() {
-        return Objects.hash(dagsats, periode, utbetaltTilSøker, andeler);
+        return Objects.hash(dagsats, periode, andeler);
     }
 
     public static Builder ny() {
@@ -61,10 +53,6 @@ public class TilkjentYtelsePeriode {
 
     public Long getDagsats() {
         return dagsats;
-    }
-
-    public Long getUtbetaltTilSøker() {
-        return utbetaltTilSøker;
     }
 
     public LocalDate getPeriodeFom() {

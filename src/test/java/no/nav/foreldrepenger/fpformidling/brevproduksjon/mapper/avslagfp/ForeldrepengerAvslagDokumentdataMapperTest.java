@@ -48,7 +48,6 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
@@ -176,7 +175,7 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        return new FamilieHendelse(FamilieHendelseType.TERMIN, 2, 0, null, LocalDate.now(), null, null, false, true);
+        return new FamilieHendelse(2, 0, null, LocalDate.now(), null, null, false, true);
     }
 
     private Optional<TilkjentYtelseForeldrepenger> opprettTilkjentYtelseFP() {

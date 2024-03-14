@@ -50,7 +50,6 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument;
 import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelseAndel;
@@ -291,7 +290,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamilieHendelse(LocalDate termindato) {
-        return new FamilieHendelse(FamilieHendelseType.TERMIN, 1, 0, LocalDate.now(), termindato, null, null, true, true);
+        return new FamilieHendelse(1, 0, LocalDate.now(), termindato, null, null, true, true);
     }
 
     private Beregningsgrunnlag opprettBeregningsgrunnlag() {

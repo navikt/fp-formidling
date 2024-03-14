@@ -5,7 +5,6 @@ import java.util.Optional;
 
 public class FamilieHendelse {
 
-    private final FamilieHendelseType familieHendelseType;
     private final int antallBarn;
     private final int antallDødeBarn;
     private final LocalDate skjæringstidspunkt;
@@ -15,8 +14,7 @@ public class FamilieHendelse {
     private final boolean barnErFødt;
     private final boolean gjelderFødsel;
 
-    public FamilieHendelse(FamilieHendelseType familieHendelseType,
-                           int antallBarn,
+    public FamilieHendelse(int antallBarn,
                            int antallDødeBarn,
                            LocalDate skjæringstidspunkt,
                            LocalDate termindato,
@@ -24,7 +22,6 @@ public class FamilieHendelse {
                            LocalDate dødsdato,
                            boolean barnErFødt,
                            boolean gjelderFødsel) {
-        this.familieHendelseType = familieHendelseType;
         this.antallBarn = antallBarn;
         this.antallDødeBarn = antallDødeBarn;
         this.skjæringstidspunkt = skjæringstidspunkt;
@@ -57,10 +54,6 @@ public class FamilieHendelse {
 
     public Optional<LocalDate> dødsdato() {
         return Optional.ofNullable(dødsdato);
-    }
-
-    public FamilieHendelseType familieHendelseType() {
-        return familieHendelseType;
     }
 
     public int antallBarn() {

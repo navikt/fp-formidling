@@ -1,17 +1,15 @@
 package no.nav.foreldrepenger.fpformidling.domene.behandling;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
-import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Vilkår;
+import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 
 public class Behandling {
     private Behandlingsresultat behandlingsresultat;
@@ -21,21 +19,15 @@ public class Behandling {
     //Felter brukt i brev
     private UUID uuid;
     private BehandlingType behandlingType;
-    private Integer behandlingstidFristUker;
     private LocalDateTime opprettetDato;
     private LocalDateTime avsluttet;
     private List<BehandlingÅrsak> behandlingÅrsaker;
-    private String ansvarligSaksbehandler;
     private boolean toTrinnsBehandling;
 
     private String behandlendeEnhetId;
-    private String behandlendeEnhetNavn;
-    private String ansvarligBeslutter;
     private FagsakBackend fagsakBackend;
     private BehandlingStatus status;
-    private String endretAv;
     private Språkkode språkkode;
-    private LocalDate originalVedtaksDato;
     private boolean harAvklartAnnenForelderRett;
     private List<Vilkår> vilkår;
     private UUID originalBehandlingUuid;
@@ -50,10 +42,6 @@ public class Behandling {
         return avsluttet;
     }
 
-    public String getBehandlendeEnhetNavn() {
-        return behandlendeEnhetNavn;
-    }
-
     public Behandlingsresultat getBehandlingsresultat() {
         return behandlingsresultat;
     }
@@ -62,24 +50,12 @@ public class Behandling {
         return behandlingType;
     }
 
-    public Integer getBehandlingstidFristUker() {
-        return behandlingstidFristUker;
-    }
-
     public LocalDateTime getOpprettetDato() {
         return opprettetDato;
     }
 
     public List<BehandlingÅrsak> getBehandlingÅrsaker() {
         return behandlingÅrsaker;
-    }
-
-    public String getAnsvarligSaksbehandler() {
-        return ansvarligSaksbehandler;
-    }
-
-    public String getAnsvarligBeslutter() {
-        return ansvarligBeslutter;
     }
 
     public boolean isToTrinnsBehandling() {
@@ -104,10 +80,6 @@ public class Behandling {
 
     public Språkkode getSpråkkode() {
         return språkkode;
-    }
-
-    public LocalDate getOriginalVedtaksDato() {
-        return originalVedtaksDato;
     }
 
     public boolean harBehandlingÅrsak(BehandlingÅrsakType behandlingÅrsak) {
@@ -146,29 +118,6 @@ public class Behandling {
         return kreverSammenhengendeUttak;
     }
 
-    public boolean erSaksbehandlingAvsluttet() {
-        if (behandlingsresultat == null) {
-            return false;
-        }
-        return erAvsluttet() || erUnderIverksettelse() || erHenlagt();
-    }
-
-    private boolean erHenlagt() {
-        return getBehandlingsresultat().isBehandlingHenlagt();
-    }
-
-    public boolean erUnderIverksettelse() {
-        return Objects.equals(BehandlingStatus.IVERKSETTER_VEDTAK, getStatus());
-    }
-
-    public boolean erAvsluttet() {
-        return Objects.equals(BehandlingStatus.AVSLUTTET, getStatus());
-    }
-
-    public String getEndretAv() {
-        return endretAv;
-    }
-
     public String getBehandlendeEnhetId() {
         return behandlendeEnhetId;
     }
@@ -191,16 +140,8 @@ public class Behandling {
         return formidlingRessurser;
     }
 
-    public boolean harFormidlingRessurs(String ressursRel) {
-        return formidlingRessurser.stream().anyMatch(lenk -> lenk.getRel().equals(ressursRel));
-    }
-
     public boolean harFagsakBackend() {
         return fagsakBackend != null;
-    }
-
-    public boolean erManueltOpprettet() {
-        return getBehandlingÅrsaker().stream().map(BehandlingÅrsak::getManueltOpprettet).toList().contains(true);
     }
 
     public static Behandling.Builder builder() {
@@ -219,11 +160,6 @@ public class Behandling {
 
         public Behandling.Builder medBehandlendeEnhetId(String behandlendeEnhetId) {
             this.kladd.behandlendeEnhetId = behandlendeEnhetId;
-            return this;
-        }
-
-        public Behandling.Builder medBehandlendeEnhetNavn(String behandlendeEnhetNavn) {
-            this.kladd.behandlendeEnhetNavn = behandlendeEnhetNavn;
             return this;
         }
 
@@ -252,11 +188,6 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder medBehandlingstidFristUker(Integer behandlingstidFristUker) {
-            this.kladd.behandlingstidFristUker = behandlingstidFristUker;
-            return this;
-        }
-
         public Behandling.Builder medOpprettetDato(LocalDateTime opprettetDato) {
             this.kladd.opprettetDato = opprettetDato;
             return this;
@@ -272,18 +203,8 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder medAnsvarligSaksbehandler(String ansvarligSaksbehandler) {
-            this.kladd.ansvarligSaksbehandler = ansvarligSaksbehandler;
-            return this;
-        }
-
         public Behandling.Builder medToTrinnsBehandling(boolean toTrinnsBehandling) {
             this.kladd.toTrinnsBehandling = toTrinnsBehandling;
-            return this;
-        }
-
-        public Behandling.Builder medAnsvarligBeslutter(String ansvarligBeslutter) {
-            this.kladd.ansvarligBeslutter = ansvarligBeslutter;
             return this;
         }
 
@@ -297,18 +218,8 @@ public class Behandling {
             return this;
         }
 
-        public Behandling.Builder medEndretAv(String endretAv) {
-            this.kladd.endretAv = endretAv;
-            return this;
-        }
-
         public Behandling.Builder medSpråkkode(Språkkode språkkode) {
             this.kladd.språkkode = språkkode;
-            return this;
-        }
-
-        public Behandling.Builder medOriginalVedtaksDato(LocalDate originalVedtaksDato) {
-            this.kladd.originalVedtaksDato = originalVedtaksDato;
             return this;
         }
 

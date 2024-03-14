@@ -39,7 +39,6 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kop
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FritekstDto;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
@@ -138,7 +137,7 @@ class VarselOmRevurderingDokumentdataMapperTest {
     }
 
     private FamilieHendelse opprettFamiliehendelse() {
-        return new FamilieHendelse(FamilieHendelseType.TERMIN, ANTALL_BARN, 0, null, TERMINDATO, null, null, false, false);
+        return new FamilieHendelse(ANTALL_BARN, 0, null, TERMINDATO, null, null, false, false);
     }
 
     private Behandling opprettBehandling() {

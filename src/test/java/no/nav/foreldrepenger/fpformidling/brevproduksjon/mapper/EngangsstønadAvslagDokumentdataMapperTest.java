@@ -28,7 +28,6 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.NavBrukerKjønn;
 import no.nav.foreldrepenger.fpformidling.domene.personopplysning.RelasjonsRolleType;
@@ -79,7 +78,7 @@ class EngangsstønadAvslagDokumentdataMapperTest {
     void mapTilDokumentdata_avslag_ESFB_søknadsfrist_med_Fritekst_mappes_ok() {
         //Arrange
         var fagsak = opprettFagsak(RelasjonsRolleType.MORA);
-        var familieHendelse = new FamilieHendelse(FamilieHendelseType.TERMIN, 1, 0, LocalDate.now(), null, null, null, false, true);
+        var familieHendelse = new FamilieHendelse(1, 0, LocalDate.now(), null, null, null, false, true);
         var vilkårFraBehandling = List.of(new Vilkår(VilkårType.SØKNADSFRISTVILKÅRET));
 
         var avslagsfritekst = "Vi har ikke motatt informasjon som begrunner at du ikke har kunnet søke i tide. Derfor avslås saken.";

@@ -22,7 +22,7 @@ public enum InnsynResultatType implements Kodeverdi {
     @JsonValue
     private String kode;
 
-    private InnsynResultatType(String kode) {
+    InnsynResultatType(String kode) {
         this.kode = kode;
     }
 

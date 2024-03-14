@@ -8,13 +8,11 @@ import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
-import no.nav.foreldrepenger.fpformidling.kodeverk.diff.IndexKey;
-
 /**
  * Beløp representerer kombinasjon av kroner og øre på standardisert format
  */
 @Embeddable
-public class Beløp implements Serializable, IndexKey {
+public class Beløp implements Serializable {
     public static final Beløp ZERO = new Beløp(BigDecimal.ZERO);
     private static final RoundingMode AVRUNDINGSMODUS = RoundingMode.HALF_EVEN;
 
@@ -42,12 +40,6 @@ public class Beløp implements Serializable, IndexKey {
 
     private BigDecimal skalertVerdi() {
         return verdi == null ? null : verdi.setScale(2, AVRUNDINGSMODUS);
-    }
-
-    @Override
-    public String getIndexKey() {
-        var skalertVerdi = skalertVerdi();
-        return skalertVerdi != null ? skalertVerdi.toString() : null;
     }
 
     public BigDecimal getVerdi() {
@@ -79,23 +71,7 @@ public class Beløp implements Serializable, IndexKey {
         return verdi.compareTo(annetBeløp.getVerdi());
     }
 
-    public boolean erNullEllerNulltall() {
-        return verdi == null || erNulltall();
-    }
-
-    public boolean erNulltall() {
-        return verdi != null && compareTo(Beløp.ZERO) == 0;
-    }
-
     public Beløp multipliser(int multiplicand) {
         return new Beløp(this.verdi.multiply(BigDecimal.valueOf(multiplicand)));
-    }
-
-    public Beløp multipliser(double multiplicand) {
-        return new Beløp(this.verdi.multiply(BigDecimal.valueOf(multiplicand)));
-    }
-
-    public Beløp adder(Beløp augend) {
-        return new Beløp(this.verdi.add(augend.getVerdi()));
     }
 }

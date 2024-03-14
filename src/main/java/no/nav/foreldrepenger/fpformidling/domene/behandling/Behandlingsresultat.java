@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import no.nav.foreldrepenger.fpformidling.domene.vedtak.Vedtaksbrev;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatType;
 
@@ -13,11 +12,9 @@ public class Behandlingsresultat {
     private Avslagsårsak avslagsårsak; //Kode
     private String fritekstbrev;
     private String overskrift;
-    private Vedtaksbrev vedtaksbrev;
     private BehandlingResultatType behandlingResultatType;
     private String avslagarsakFritekst;
     private List<KonsekvensForYtelsen> konsekvenserForYtelsen; //Kode BehandlingsresultatKonsekvensForYtelsen
-    private Boolean erRevurderingMedUendretUtfall;
     private LocalDate skjæringstidspunkt;
     private boolean utenMinsterett;
     private boolean endretDekningsgrad;
@@ -30,11 +27,9 @@ public class Behandlingsresultat {
         avslagsårsak = builder.avslagsårsak;
         fritekstbrev = builder.fritekstbrev;
         overskrift = builder.overskrift;
-        vedtaksbrev = builder.vedtaksbrev;
         behandlingResultatType = builder.behandlingResultatType;
         avslagarsakFritekst = builder.avslagarsakFritekst;
         konsekvenserForYtelsen = builder.konsekvenserForYtelsen;
-        erRevurderingMedUendretUtfall = builder.erRevurderingMedUendretUtfall;
         skjæringstidspunkt = builder.skjæringstidspunkt;
         utenMinsterett = builder.utenMinsterett;
         periode = builder.periode;
@@ -44,10 +39,6 @@ public class Behandlingsresultat {
 
     public static Builder builder() {
         return new Builder();
-    }
-
-    public Vedtaksbrev getVedtaksbrev() {
-        return vedtaksbrev;
     }
 
     public boolean erInnvilget() {
@@ -82,10 +73,6 @@ public class Behandlingsresultat {
         return konsekvenserForYtelsen;
     }
 
-    public Boolean erRevurderingMedUendretUtfall() {
-        return Boolean.TRUE.equals(erRevurderingMedUendretUtfall);
-    }
-
     public Optional<LocalDate> getSkjæringstidspunkt() {
         return Optional.ofNullable(skjæringstidspunkt);
     }
@@ -94,20 +81,8 @@ public class Behandlingsresultat {
         return utenMinsterett;
     }
 
-    public boolean erEndretForeldrepenger() {
-        return BehandlingResultatType.FORELDREPENGER_ENDRET.equals(behandlingResultatType);
-    }
-
     public boolean erAvslått() {
         return BehandlingResultatType.AVSLÅTT.equals(behandlingResultatType);
-    }
-
-    public boolean erOpphørt() {
-        return BehandlingResultatType.OPPHØR.equals(behandlingResultatType);
-    }
-
-    public boolean erForeldrepengerSenere() {
-        return BehandlingResultatType.FORELDREPENGER_SENERE.equals(behandlingResultatType);
     }
 
     public Behandling getBehandling() {
@@ -118,19 +93,13 @@ public class Behandlingsresultat {
         return endretDekningsgrad;
     }
 
-    public boolean isBehandlingHenlagt() {
-        return BehandlingResultatType.getAlleHenleggelseskoder().contains(behandlingResultatType);
-    }
-
     public static final class Builder {
         private Avslagsårsak avslagsårsak;
         private String fritekstbrev;
         private String overskrift;
-        private Vedtaksbrev vedtaksbrev;
         private BehandlingResultatType behandlingResultatType;
         private String avslagarsakFritekst;
         private List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>();
-        private Boolean erRevurderingMedUendretUtfall;
         private LocalDate skjæringstidspunkt;
         private boolean utenMinsterett = true;
         private String periode;
@@ -155,11 +124,6 @@ public class Behandlingsresultat {
             return this;
         }
 
-        public Builder medVedtaksbrev(Vedtaksbrev vedtaksbrev) {
-            this.vedtaksbrev = vedtaksbrev;
-            return this;
-        }
-
         public Builder medBehandlingResultatType(BehandlingResultatType behandlingResultatType) {
             this.behandlingResultatType = behandlingResultatType;
             return this;
@@ -172,11 +136,6 @@ public class Behandlingsresultat {
 
         public Builder medKonsekvenserForYtelsen(List<KonsekvensForYtelsen> konsekvenserForYtelsen) {
             this.konsekvenserForYtelsen = konsekvenserForYtelsen;
-            return this;
-        }
-
-        public Builder medErRevurderingMedUendretUtfall(Boolean erRevurderingMedUendretUtfall) {
-            this.erRevurderingMedUendretUtfall = erRevurderingMedUendretUtfall;
             return this;
         }
 

@@ -24,12 +24,10 @@ public final class BehandlingsresultatDtoMapper {
         }
         builder.medFritekstbrev(dto.getFritekstbrev())
             .medOverskrift(dto.getOverskrift())
-            .medVedtaksbrev(dto.getVedtaksbrev())
             .medAvslagarsakFritekst(dto.getAvslagsarsakFritekst());
         List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>(dto.getKonsekvenserForYtelsen());
 
         builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);
-        builder.medErRevurderingMedUendretUtfall(dto.getErRevurderingMedUendretUtfall());
         builder.medSkjæringstidspunkt(dto.getSkjæringstidspunkt());
         builder.medUtenMinsterett(dto.utenMinsterett());
         builder.medEndretDekningsgrad(dto.endretDekningsgrad());

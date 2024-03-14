@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
-import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelseType;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.AvklartBarnDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.AvklartDataAdopsjonDto;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.familiehendelse.AvklartDataFodselDto;
@@ -56,7 +55,7 @@ public final class FamiliehendelseDtoMapper {
             gjeldendeHendelseDto = grunnlagDto.oppgitt();
         }
         if (alleFelterErNull(gjeldendeHendelseDto)) {
-            return new FamilieHendelse(FamilieHendelseType.UDEFINERT, 0, 0, null, null, null, null, false, false);
+            return new FamilieHendelse(0, 0, null, null, null, null, false, false);
         }
         var antallBarnFraDto = utledAntallBarnFraDto(gjeldendeHendelseDto);
         var antallDødeBarn = utledAntallDødeBarnFraDto(gjeldendeHendelseDto);
@@ -70,8 +69,7 @@ public final class FamiliehendelseDtoMapper {
         } else {
             barnErFødtFraDto = true;
         }
-        var familiehendelseType = mapFamiliehendelseType(gjeldendeHendelseDto);
-        return new FamilieHendelse(familiehendelseType, antallBarnFraDto, antallDødeBarn, hentSkjæringstidspunkt(gjeldendeHendelseDto).orElse(null),
+        return new FamilieHendelse(antallBarnFraDto, antallDødeBarn, hentSkjæringstidspunkt(gjeldendeHendelseDto).orElse(null),
             finnTermindato(gjeldendeHendelseDto).orElse(null), finnFødselsdatoFraDto(gjeldendeHendelseDto).orElse(null),
             finnDødsdatoFraDto(gjeldendeHendelseDto).orElse(null), barnErFødtFraDto, gjelderFødsel);
     }
@@ -137,25 +135,5 @@ public final class FamiliehendelseDtoMapper {
 
     private static boolean erBarnFraDto(AvklartDataAdopsjonDto gjeldendeHendelseDto) { //NOSONAR - denne er ikke unused...
         return gjeldendeHendelseDto.getAdopsjonFodelsedatoer() != null && !gjeldendeHendelseDto.getAdopsjonFodelsedatoer().isEmpty();
-    }
-
-    private static FamilieHendelseType mapFamiliehendelseType(FamiliehendelseDto dto) {
-        if (dto instanceof AvklartDataAdopsjonDto) {
-            return FamilieHendelseType.ADOPSJON;
-        }
-        if (dto instanceof AvklartDataOmsorgDto) {
-            return FamilieHendelseType.OMSORG;
-        }
-        if (dto instanceof AvklartDataFodselDto avklartDataFodselDto) {
-            return utledFødselEllerTermin(avklartDataFodselDto);
-        }
-        throw new IllegalStateException("Ukjent familiehendelse dto");
-    }
-
-    private static FamilieHendelseType utledFødselEllerTermin(AvklartDataFodselDto dto) {
-        if (dto.getAvklartBarn() == null || dto.getAvklartBarn().isEmpty()) {
-            return FamilieHendelseType.TERMIN;
-        }
-        return FamilieHendelseType.FØDSEL;
     }
 }

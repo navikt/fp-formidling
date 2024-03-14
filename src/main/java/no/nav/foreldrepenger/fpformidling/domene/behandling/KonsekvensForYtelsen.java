@@ -25,7 +25,7 @@ public enum KonsekvensForYtelsen implements Kodeverdi {
     @JsonValue
     private String kode;
 
-    private KonsekvensForYtelsen(String kode) {
+    KonsekvensForYtelsen(String kode) {
         this.kode = kode;
     }
 

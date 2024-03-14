@@ -19,18 +19,18 @@ public enum BehandlingType implements Kodeverdi {
      * Konstanter for å skrive ned kodeverdi. For å hente ut andre data konfigurert, må disse leses fra databasen (eks.
      * for å hente offisiell kode for et Nav kodeverk).
      */
-    FØRSTEGANGSSØKNAD("BT-002", 6, true),
-    REVURDERING("BT-004", 6, false),
+    FØRSTEGANGSSØKNAD("BT-002", 6),
+    REVURDERING("BT-004", 6),
 
-    KLAGE("BT-003", 12, false),
-    ANKE("BT-008", 0, false),
+    KLAGE("BT-003", 12),
+    ANKE("BT-008", 0),
 
-    INNSYN("BT-006", 1, false),
+    INNSYN("BT-006", 1),
 
-    TILBAKEKREVING("BT-007", 0, false),
-    TILBAKEKREVING_REVURDERING("BT-009", 0, false),
+    TILBAKEKREVING("BT-007", 0),
+    TILBAKEKREVING_REVURDERING("BT-009", 0),
 
-    UDEFINERT("-", 0, false),
+    UDEFINERT("-", 0),
     ;
 
     private static final Set<BehandlingType> YTELSE_BEHANDLING_TYPER = Set.of(FØRSTEGANGSSØKNAD, REVURDERING);
@@ -38,16 +38,13 @@ public enum BehandlingType implements Kodeverdi {
 
     @JsonIgnore
     private int behandlingstidFristUker;
-    @JsonIgnore
-    private Boolean behandlingstidVarselbrev;
 
     @JsonValue
     private String kode;
 
-    private BehandlingType(String kode, int behandlingstidFristUker, Boolean behandlingstidVarselbrev) {
+    BehandlingType(String kode, int behandlingstidFristUker) {
         this.kode = kode;
         this.behandlingstidFristUker = behandlingstidFristUker;
-        this.behandlingstidVarselbrev = behandlingstidVarselbrev;
     }
 
     @Override
@@ -65,10 +62,6 @@ public enum BehandlingType implements Kodeverdi {
 
     public int getBehandlingstidFristUker() {
         return behandlingstidFristUker;
-    }
-
-    public boolean isBehandlingstidVarselbrev() {
-        return behandlingstidVarselbrev;
     }
 
 }

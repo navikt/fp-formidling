@@ -4,9 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
-
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.Kodeverdi;
 
 
@@ -50,18 +47,5 @@ public enum RevurderingVarslingÅrsak implements Kodeverdi {
     @Override
     public String getKode() {
         return kode;
-    }
-
-    @Converter(autoApply = true)
-    public static class KodeverdiConverter implements AttributeConverter<RevurderingVarslingÅrsak, String> {
-        @Override
-        public String convertToDatabaseColumn(RevurderingVarslingÅrsak attribute) {
-            return attribute == null ? null : attribute.getKode();
-        }
-
-        @Override
-        public RevurderingVarslingÅrsak convertToEntityAttribute(String dbData) {
-            return dbData == null ? null : fraKode(dbData);
-        }
     }
 }

@@ -23,6 +23,7 @@ jobs:
       contents: read
       packages: write
       id-token: write
+      pull-requests: read
     uses: navikt/fp-gha-workflows/.github/workflows/build-app-postgres.yml@main
     with:
       postgres-user: fpformidling_unit

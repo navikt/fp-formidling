@@ -34,7 +34,7 @@ import no.nav.vedtak.felles.prosesstask.rest.ProsessTaskRestTjeneste;
 public class ApiConfig extends Application {
 
     private static final Environment ENV = Environment.current();
-    static final String API_URI = "/api";
+    public static final String API_URI = "/api";
 
     public ApiConfig() {
         var oas = new OpenAPI();
@@ -59,6 +59,9 @@ public class ApiConfig extends Application {
         // eksponert grensesnitt
 
         Set<Class<?>> classes = new HashSet<>(getAllClasses());
+
+        // Autentisering
+        classes.add(AuthenticationFilter.class);
 
         // swagger
         classes.add(OpenApiResource.class);

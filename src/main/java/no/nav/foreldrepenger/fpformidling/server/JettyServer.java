@@ -11,36 +11,29 @@ import javax.naming.NamingException;
 
 import org.eclipse.jetty.ee10.cdi.CdiDecoratingListener;
 import org.eclipse.jetty.ee10.cdi.CdiServletContainerInitializer;
-import org.eclipse.jetty.plus.jndi.EnvEntry;
-import org.eclipse.jetty.ee10.security.jaspi.DefaultAuthConfigFactory;
-import org.eclipse.jetty.ee10.security.jaspi.JaspiAuthenticatorFactory;
-import org.eclipse.jetty.ee10.security.jaspi.provider.JaspiAuthConfigProvider;
+import org.eclipse.jetty.ee10.servlet.ErrorPageErrorHandler;
+import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
+import org.eclipse.jetty.ee10.servlet.security.ConstraintMapping;
 import org.eclipse.jetty.ee10.servlet.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.ee10.webapp.WebAppContext;
-import org.eclipse.jetty.security.DefaultIdentityService;
-import org.eclipse.jetty.security.SecurityHandler;
-import org.eclipse.jetty.security.jaas.JAASLoginService;
+import org.eclipse.jetty.plus.jndi.EnvEntry;
+import org.eclipse.jetty.security.Constraint;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.ForwardedRequestCustomizer;
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.util.Callback;
 import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.FlywayException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
-import jakarta.security.auth.message.config.AuthConfigFactory;
+import no.nav.foreldrepenger.fpformidling.konfig.ApiConfig;
+import no.nav.foreldrepenger.fpformidling.konfig.InternalApiConfig;
 import no.nav.foreldrepenger.konfig.Environment;
-import no.nav.vedtak.sikkerhet.jaspic.OidcAuthModule;
 
 public class JettyServer {
 
@@ -50,18 +43,6 @@ public class JettyServer {
     private static final String CONTEXT_PATH = ENV.getProperty("context.path", "/fpformidling");
     private static final String JETTY_SCAN_LOCATIONS = "^.*jersey-.*\\.jar$|^.*felles-.*\\.jar$|^.*/app\\.jar$";
     private static final String JETTY_LOCAL_CLASSES = "^.*/target/classes/|";
-
-    /**
-     * Legges først slik at alltid resetter context før prosesserer nye requests.
-     * Kjøres først så ikke risikerer andre har satt Request#setHandled(true).
-     */
-    static final class ResetLogContextHandler extends Handler.Abstract {
-        @Override
-        public boolean handle(Request request, Response response, Callback callback) {
-            MDC.clear();
-            return false;
-        }
-    }
 
     private final Integer serverPort;
 
@@ -91,12 +72,6 @@ public class JettyServer {
         if (ENV.isLocal()) {
             initTrustStore();
         }
-
-        var factory = new DefaultAuthConfigFactory();
-        factory.registerConfigProvider(new JaspiAuthConfigProvider(new OidcAuthModule()), "HttpServlet", "server " + CONTEXT_PATH,
-            "OIDC Authentication");
-
-        AuthConfigFactory.setFactory(factory);
     }
 
     private static void initTrustStore() {
@@ -136,8 +111,7 @@ public class JettyServer {
     private void start() throws Exception {
         var server = new Server(getServerPort());
         server.setConnectors(createConnectors(server).toArray(new Connector[]{}));
-        var handlers = new Handler.Sequence(new ResetLogContextHandler(), createContext());
-        server.setHandler(handlers);
+        server.setHandler(createContext());
         server.start();
         server.join();
     }
@@ -160,20 +134,16 @@ public class JettyServer {
     }
 
     private static ContextHandler createContext() throws IOException {
-        var ctx = new WebAppContext();
+        var ctx = new WebAppContext(CONTEXT_PATH, null, simpleConstraints(), null,
+            new ErrorPageErrorHandler(), ServletContextHandler.NO_SESSIONS);
         ctx.setParentLoaderPriority(true);
 
         // må hoppe litt bukk for å hente web.xml fra classpath i stedet for fra filsystem.
-        String descriptor;
         String baseResource;
         try (var factory = ResourceFactory.closeable()) {
-            var resource = factory.newClassLoaderResource("/WEB-INF/web.xml", false);
-            descriptor = resource.getURI().toURL().toExternalForm();
             baseResource = factory.newResource(".").getRealURI().toURL().toExternalForm();
         }
-        ctx.setDescriptor(descriptor);
 
-        ctx.setContextPath(CONTEXT_PATH);
         ctx.setBaseResourceAsString(baseResource);
         ctx.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
 
@@ -185,20 +155,26 @@ public class JettyServer {
         ctx.addServletContainerInitializer(new CdiServletContainerInitializer());
         ctx.addServletContainerInitializer(new org.jboss.weld.environment.servlet.EnhancedListener());
 
-        ctx.setSecurityHandler(createSecurityHandler());
         ctx.setThrowUnavailableOnStartupException(true);
         return ctx;
     }
 
-    private static SecurityHandler createSecurityHandler() {
-        var securityHandler = new ConstraintSecurityHandler();
-        securityHandler.setAuthenticatorFactory(new JaspiAuthenticatorFactory());
-        var loginService = new JAASLoginService();
-        loginService.setName("jetty-login");
-        loginService.setLoginModuleName("jetty-login");
-        loginService.setIdentityService(new DefaultIdentityService());
-        securityHandler.setLoginService(loginService);
-        return securityHandler;
+    private static ConstraintSecurityHandler simpleConstraints() {
+        var handler = new ConstraintSecurityHandler();
+        // Slipp gjennom kall fra plattform til JaxRs. Foreløpig kun behov for GET
+        handler.addConstraintMapping(pathConstraint(Constraint.ALLOWED, InternalApiConfig.API_URI + "/*"));
+        // Slipp gjennom til autentisering i JaxRs / auth-filter
+        handler.addConstraintMapping(pathConstraint(Constraint.ALLOWED, ApiConfig.API_URI + "/*"));
+        // Alt annet av paths og metoder forbudt - 403
+        handler.addConstraintMapping(pathConstraint(Constraint.FORBIDDEN, "/*"));
+        return handler;
+    }
+
+    private static ConstraintMapping pathConstraint(Constraint constraint, String path) {
+        var mapping = new ConstraintMapping();
+        mapping.setConstraint(constraint);
+        mapping.setPathSpec(path);
+        return mapping;
     }
 
     private Integer getServerPort() {

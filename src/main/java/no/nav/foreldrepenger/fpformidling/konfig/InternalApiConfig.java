@@ -8,10 +8,10 @@ import no.nav.foreldrepenger.fpformidling.server.PrometheusRestService;
 import no.nav.foreldrepenger.fpformidling.server.healthcheck.HealthCheckRestService;
 
 
-@ApplicationPath(InternalApiConfig.API_URL)
+@ApplicationPath(InternalApiConfig.API_URI)
 public class InternalApiConfig extends Application {
 
-    public static final String API_URL = "/internal";
+    public static final String API_URI = "/internal";
 
     @Override
     public Set<Class<?>> getClasses() {

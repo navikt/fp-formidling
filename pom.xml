@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.felles</groupId>
         <artifactId>fp-bom</artifactId>
-        <version>3.1.2</version>
+        <version>3.2.0</version>
     </parent>
 
     <groupId>no.nav.foreldrepenger.fpformidling</groupId>
@@ -20,9 +20,9 @@
         <sonar.projectKey>navikt_fp-formidling</sonar.projectKey>
 
         <!-- Felles artefakter -->
-        <felles.version>7.0.10</felles.version>
-        <prosesstask.version>5.0.5</prosesstask.version>
-        <kontrakter.version>9.1.8</kontrakter.version>
+        <felles.version>7.1.2</felles.version>
+        <prosesstask.version>5.0.8</prosesstask.version>
+        <kontrakter.version>9.1.11</kontrakter.version>
 
         <!-- Eksterne -->
         <handlebars.version>4.4.0</handlebars.version>
@@ -35,7 +35,7 @@
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>fp-bom</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.0</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>

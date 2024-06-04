@@ -13,7 +13,7 @@ import jakarta.inject.Inject;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.JOURNALPOST_ID;
 
 @ApplicationScoped
-@ProsessTask(value = "formidling.opprettOppgave", maxFailedRuns = 2)
+@ProsessTask(value = "formidling.opprettOppgave", prioritet = 2, maxFailedRuns = 2)
 public class OpprettOppgaveTask implements ProsessTaskHandler {
 
     private static final String OPPGAVEBESKRIVELSE = "Bruker har ukjent adresse. Kunne ikke sende brev. Send brev iht rutine.";

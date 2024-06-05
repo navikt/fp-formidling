@@ -1,19 +1,18 @@
 package no.nav.foreldrepenger.fpformidling.server;
 
-import jakarta.annotation.Priority;
-
 import static io.micrometer.core.instrument.Metrics.timer;
-import static no.nav.vedtak.log.metrics.MetricsUtil.utvidMedHistogram;
 
 import java.io.IOException;
 import java.time.Duration;
 
+import jakarta.annotation.Priority;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.ext.Provider;
+import no.nav.vedtak.log.metrics.MetricsUtil;
 
 @Provider
 @Priority(Priorities.USER)
@@ -24,8 +23,8 @@ public class TimingFilter implements ContainerRequestFilter, ContainerResponseFi
     private static final String METRIC_NAME = "rest";
     private static final ThreadLocalTimer TIMER = new ThreadLocalTimer();
 
-    public TimingFilter() {
-        utvidMedHistogram(METRIC_NAME);
+    static {
+        MetricsUtil.timerUtenHistogram(METRIC_NAME);
     }
 
     @Override

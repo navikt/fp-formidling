@@ -16,8 +16,8 @@ import no.nav.foreldrepenger.fpformidling.typer.AktørId;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.pdl.Doedsfall;
 import no.nav.pdl.DoedsfallResponseProjection;
-import no.nav.pdl.Foedsel;
-import no.nav.pdl.FoedselResponseProjection;
+import no.nav.pdl.Foedselsdato;
+import no.nav.pdl.FoedselsdatoResponseProjection;
 import no.nav.pdl.Folkeregisterpersonstatus;
 import no.nav.pdl.FolkeregisterpersonstatusResponseProjection;
 import no.nav.pdl.HentIdenterQueryRequest;
@@ -93,7 +93,7 @@ public class PersondataTjeneste {
         var query = new HentPersonQueryRequest();
         query.setIdent(aktørId.getId());
         var projection = new PersonResponseProjection().navn(new NavnResponseProjection().fornavn().mellomnavn().etternavn())
-            .foedsel(new FoedselResponseProjection().foedselsdato())
+            .foedselsdato(new FoedselsdatoResponseProjection().foedselsdato())
             .doedsfall(new DoedsfallResponseProjection().doedsdato())
             .kjoenn(new KjoennResponseProjection().kjoenn())
             .folkeregisterpersonstatus(new FolkeregisterpersonstatusResponseProjection().forenkletStatus());
@@ -101,9 +101,9 @@ public class PersondataTjeneste {
         var ytelse = utledYtelse(ytelseType);
         var person = pdlKlient.hentPerson(ytelse, query, projection);
 
-        var fødselsdato = person.getFoedsel()
+        var fødselsdato = person.getFoedselsdato()
             .stream()
-            .map(Foedsel::getFoedselsdato)
+            .map(Foedselsdato::getFoedselsdato)
             .filter(Objects::nonNull)
             .findFirst()
             .map(d -> LocalDate.parse(d, DateTimeFormatter.ISO_LOCAL_DATE))

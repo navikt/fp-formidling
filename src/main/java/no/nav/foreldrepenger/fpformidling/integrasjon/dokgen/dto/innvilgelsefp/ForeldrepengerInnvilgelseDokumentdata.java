@@ -16,6 +16,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private String behandlingResultatType;
     private String konsekvensForInnvilgetYtelse;
     private int dekningsgrad;
+    private boolean endretDekningsgrad;
     private boolean harUtbetaling;
     private long dagsats;
     private long månedsbeløp;
@@ -96,6 +97,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     public int getDekningsgrad() {
         return dekningsgrad;
+    }
+
+    public boolean isEndretDekningsgrad() {
+        return endretDekningsgrad;
     }
 
     public boolean getHarUtbetaling() {
@@ -345,7 +350,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         var that = (ForeldrepengerInnvilgelseDokumentdata) object;
         return Objects.equals(felles, that.felles) && Objects.equals(behandlingType, that.behandlingType) && Objects.equals(behandlingResultatType,
             that.behandlingResultatType) && Objects.equals(konsekvensForInnvilgetYtelse, that.konsekvensForInnvilgetYtelse)
-            && Objects.equals(dekningsgrad, that.dekningsgrad) && Objects.equals(harUtbetaling, that.harUtbetaling)
+            && Objects.equals(dekningsgrad, that.dekningsgrad) && Objects.equals(endretDekningsgrad, that.endretDekningsgrad) && Objects.equals(harUtbetaling, that.harUtbetaling)
             && Objects.equals(dagsats, that.dagsats) && Objects.equals(månedsbeløp, that.månedsbeløp) && Objects.equals(seksG, that.seksG)
             && Objects.equals(inntektOverSeksG, that.inntektOverSeksG) && Objects.equals(forMyeUtbetalt, that.forMyeUtbetalt) && Objects.equals(
             inntektMottattArbeidsgiver, that.inntektMottattArbeidsgiver) && Objects.equals(annenForelderHarRett, that.annenForelderHarRett)
@@ -378,7 +383,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, dekningsgrad, harUtbetaling,
+        return Objects.hash(felles, behandlingType, behandlingResultatType, konsekvensForInnvilgetYtelse, dekningsgrad, endretDekningsgrad, harUtbetaling,
             dagsats, månedsbeløp, seksG, inntektOverSeksG, forMyeUtbetalt, inntektMottattArbeidsgiver, annenForelderHarRett,
             annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse, gjelderMor, gjelderFødsel, erBesteberegning,
             seksAvDeTiBeste, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget, annenForelderRettEØS, oppgittAnnenForelderRettEØS, antallPerioder,
@@ -423,6 +428,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medDekningsgrad(int dekningsgrad) {
             this.kladd.dekningsgrad = dekningsgrad;
+            return this;
+        }
+
+        public Builder medEndretDekningsgrad(boolean endretDekningsgrad) {
+            this.kladd.endretDekningsgrad = endretDekningsgrad;
             return this;
         }
 

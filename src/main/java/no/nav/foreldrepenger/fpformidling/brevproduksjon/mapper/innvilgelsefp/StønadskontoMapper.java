@@ -1,6 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp;
 
-import java.math.BigInteger;
 import java.util.Objects;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.PeriodeBeregner;
@@ -37,16 +36,16 @@ public final class StønadskontoMapper {
         return saldoer.stønadskontoer().stream().anyMatch(stønadskonto -> Objects.equals(stønadskonto.stønadskontoType(), stønadskontoType));
     }
 
-    public static int finnForeldrepengeperiodenUtvidetUkerHvisFinnes(Saldoer saldoer) {
-        return saldoer.stønadskontoer()
-            .stream()
-            .map(s -> s.flerbarnsDager())
-            .filter(flerbarnsdager -> flerbarnsdager > 0)
-            .map(BigInteger::valueOf)
-            .map(dager -> dager.divide(BigInteger.valueOf(5)))
-            .map(BigInteger::intValue)
-            .findFirst()
-            .orElse(0);
+    public static int finnFlerbarnsdagerUtvidetUkerHvisFinnes(Saldoer saldoer) {
+        return dagerFlerbarnsdager(saldoer) / 5;
+    }
+
+    public static int finnFlerbarnsdagerUtvidetDagerHvisFinnes(Saldoer saldoer) {
+        return dagerFlerbarnsdager(saldoer) % 5;
+    }
+
+    private static int dagerFlerbarnsdager(Saldoer saldoer) {
+        return saldoer.stønadskontoer().stream().map(Stønadskonto::flerbarnsDager).filter(flerbarnsdager -> flerbarnsdager > 0).findFirst().orElse(0);
     }
 
     public static Integer finnPrematurDagerHvisFinnes(Saldoer saldoer) {

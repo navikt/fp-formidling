@@ -55,7 +55,8 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private String stønadsperiodeFom;
     private String stønadsperiodeTom;
     private String utbetalingFom;
-    private int foreldrepengeperiodenUtvidetUker;
+    private int flerbarnsdagerUtvidetUker;
+    private int flerbarnsdagerUtvidetDager;
     private int antallBarn;
     private int prematurDager;
     private int antallDødeBarn;
@@ -255,8 +256,12 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return stønadsperiodeTom;
     }
 
-    public int getForeldrepengeperiodenUtvidetUker() {
-        return foreldrepengeperiodenUtvidetUker;
+    public int getFlerbarnsdagerUtvidetUker() {
+        return flerbarnsdagerUtvidetUker;
+    }
+
+    public int getFlerbarnsdagerUtvidetDager() {
+        return flerbarnsdagerUtvidetDager;
     }
 
     public int getAntallBarn() {
@@ -367,7 +372,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             that.disponibleDagerUtenAktivitetskrav) && Objects.equals(disponibleDagerMedAktivitetskrav, that.disponibleDagerMedAktivitetskrav)
             && Objects.equals(disponibleFellesDager, that.disponibleFellesDager) && Objects.equals(sisteDagAvSistePeriode,
             that.sisteDagAvSistePeriode) && Objects.equals(stønadsperiodeFom, that.stønadsperiodeFom) && Objects.equals(stønadsperiodeTom,
-            that.stønadsperiodeTom) && Objects.equals(foreldrepengeperiodenUtvidetUker, that.foreldrepengeperiodenUtvidetUker) && Objects.equals(
+            that.stønadsperiodeTom) && Objects.equals(flerbarnsdagerUtvidetUker, that.flerbarnsdagerUtvidetUker) && Objects.equals(
             antallBarn, that.antallBarn) && Objects.equals(prematurDager, that.prematurDager) && Objects.equals(antallDødeBarn, that.antallDødeBarn)
             && Objects.equals(dødsdato, that.dødsdato) && Objects.equals(kreverSammenhengendeUttak, that.kreverSammenhengendeUttak) && Objects.equals(
             morKanSøkeOmDagerFørFødsel, that.morKanSøkeOmDagerFørFødsel) && Objects.equals(perioder, that.perioder) && Objects.equals(
@@ -388,7 +393,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             annenForelderHarRettVurdert, aleneomsorgKode, ikkeOmsorg, barnErFødt, årsakErFødselshendelse, gjelderMor, gjelderFødsel, erBesteberegning,
             seksAvDeTiBeste, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget, annenForelderRettEØS, oppgittAnnenForelderRettEØS, antallPerioder,
             antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager, disponibleFellesDager,
-            sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, foreldrepengeperiodenUtvidetUker, antallBarn, prematurDager, antallDødeBarn,
+            sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, flerbarnsdagerUtvidetUker, antallBarn, prematurDager, antallDødeBarn,
             dødsdato, kreverSammenhengendeUttak, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag,
             beregningsgrunnlagregler, klagefristUker, lovhjemlerUttak, lovhjemlerBeregning,
             inkludereInnvilget, inkludereAvslag, disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav,
@@ -605,8 +610,13 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             return this;
         }
 
-        public Builder medForeldrepengeperiodenUtvidetUker(int foreldrepengeperiodenUtvidetUker) {
-            this.kladd.foreldrepengeperiodenUtvidetUker = foreldrepengeperiodenUtvidetUker;
+        public Builder medFlerbarnsdagerUtvidetUker(int flerbarnsdagerUtvidetUker) {
+            this.kladd.flerbarnsdagerUtvidetUker = flerbarnsdagerUtvidetUker;
+            return this;
+        }
+
+        public Builder medFlerbarnsdagerUtvidetDager(int flerbarnsdagerUtvidetDager) {
+            this.kladd.flerbarnsdagerUtvidetDager = flerbarnsdagerUtvidetDager;
             return this;
         }
 

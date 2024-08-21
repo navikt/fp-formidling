@@ -14,6 +14,7 @@ public class UttakResultatPeriode {
     private final PeriodeResultatType periodeResultatType;
     private final List<UttakResultatPeriodeAktivitet> aktiviteter;
     private final LocalDate tidligstMottattDato;
+    private final boolean erUtbetalingRedusertTilMorsStillingsprosent;
 
     private UttakResultatPeriode(Builder builder) {
         periodeResultatÅrsak = builder.periodeResultatÅrsak;
@@ -22,6 +23,7 @@ public class UttakResultatPeriode {
         periodeResultatType = builder.periodeResultatType;
         aktiviteter = builder.aktiviteter;
         tidligstMottattDato = builder.tidligstMottattDato;
+        erUtbetalingRedusertTilMorsStillingsprosent = builder.erUtbetalingRedusertTilMorsStillingsprosent;
     }
 
     public static Builder ny() {
@@ -64,6 +66,10 @@ public class UttakResultatPeriode {
         return tidligstMottattDato;
     }
 
+    public boolean erUtbetalingRedusertTilMorsStillingsprosent() {
+        return erUtbetalingRedusertTilMorsStillingsprosent;
+    }
+
     public static final class Builder {
         private PeriodeResultatÅrsak periodeResultatÅrsak;
         private DatoIntervall tidsperiode;
@@ -71,6 +77,7 @@ public class UttakResultatPeriode {
         private PeriodeResultatType periodeResultatType;
         private List<UttakResultatPeriodeAktivitet> aktiviteter = new ArrayList<>();
         private LocalDate tidligstMottattDato;
+        private boolean erUtbetalingRedusertTilMorsStillingsprosent;
 
         private Builder() {
         }
@@ -102,6 +109,11 @@ public class UttakResultatPeriode {
 
         public Builder medTidligstMottattDato(LocalDate tidligstMottattDato) {
             this.tidligstMottattDato = tidligstMottattDato;
+            return this;
+        }
+
+        public Builder medErUtbetalingRedusertTilMorsStillingsprosent(boolean erUtbetalingRedusertTilMorsStillingsprosent) {
+            this.erUtbetalingRedusertTilMorsStillingsprosent = erUtbetalingRedusertTilMorsStillingsprosent;
             return this;
         }
 

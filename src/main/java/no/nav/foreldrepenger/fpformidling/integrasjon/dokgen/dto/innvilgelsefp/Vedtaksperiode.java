@@ -38,6 +38,8 @@ public class Vedtaksperiode {
     private Næring næring;
     private List<AnnenAktivitet> annenAktivitetsliste = new ArrayList<>();
     private String tidligstMottattDato;
+    private boolean erUtbetalingRedusertTilMorsStillingsprosent;
+
     @JsonIgnore
     private Språkkode språkkode;
     @JsonIgnore
@@ -107,6 +109,10 @@ public class Vedtaksperiode {
         return tidligstMottattDato;
     }
 
+    public boolean erUtbetalingRedusertTilMorsStillingsprosent() {
+        return erUtbetalingRedusertTilMorsStillingsprosent;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -120,13 +126,14 @@ public class Vedtaksperiode {
             && Objects.equals(periodeTom, that.periodeTom) && Objects.equals(periodeDagsats, that.periodeDagsats) && Objects.equals(antallTapteDager,
             that.antallTapteDager) && Objects.equals(prioritertUtbetalingsgrad, that.prioritertUtbetalingsgrad) && Objects.equals(
             arbeidsforholdsliste, that.arbeidsforholdsliste) && Objects.equals(næring, that.næring) && Objects.equals(annenAktivitetsliste,
-            that.annenAktivitetsliste) && Objects.equals(tidligstMottattDato, that.tidligstMottattDato) && Objects.equals(fullUtbetaling, that.fullUtbetaling);
+            that.annenAktivitetsliste) && Objects.equals(tidligstMottattDato, that.tidligstMottattDato) && Objects.equals(fullUtbetaling, that.fullUtbetaling)
+            && Objects.equals(erUtbetalingRedusertTilMorsStillingsprosent, that.erUtbetalingRedusertTilMorsStillingsprosent);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(innvilget, årsak, periodeFom, periodeTom, periodeDagsats, antallTapteDager, prioritertUtbetalingsgrad,
-            arbeidsforholdsliste, næring, annenAktivitetsliste, tidligstMottattDato, fullUtbetaling);
+            arbeidsforholdsliste, næring, annenAktivitetsliste, tidligstMottattDato, fullUtbetaling, erUtbetalingRedusertTilMorsStillingsprosent);
     }
 
     public static Builder ny() {
@@ -213,6 +220,11 @@ public class Vedtaksperiode {
 
         public Builder medTidligstMottattDatoAlleredeFormatert(String tidligstMottattDato) {
             this.kladd.tidligstMottattDato = tidligstMottattDato;
+            return this;
+        }
+
+        public Builder medErUtbetalingRedusertTilMorsStillingsprosent(boolean erUtbetalingRedusertTilMorsStillingsprosent) {
+            this.kladd.erUtbetalingRedusertTilMorsStillingsprosent = erUtbetalingRedusertTilMorsStillingsprosent;
             return this;
         }
 

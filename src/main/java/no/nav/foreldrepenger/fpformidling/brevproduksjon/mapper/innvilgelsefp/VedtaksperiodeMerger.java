@@ -67,6 +67,7 @@ public final class VedtaksperiodeMerger {
             .medNæring(periodeEn.getNæring())
             .medAnnenAktivitet(periodeEn.getAnnenAktivitetsliste())
             .medTidligstMottattDatoAlleredeFormatert(periodeEn.getTidligstMottattDato())
+            .medErUtbetalingRedusertTilMorsStillingsprosent(periodeEn.erUtbetalingRedusertTilMorsStillingsprosent())
             .build();
     }
 
@@ -83,7 +84,8 @@ public final class VedtaksperiodeMerger {
 
     private static boolean erPerioderSammenhengendeOgSkalSlåSammen(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         return sammeStatusOgÅrsak(periodeEn, periodeTo) && likPeriodeDagsats(periodeEn, periodeTo) && likeAktiviteter(periodeEn, periodeTo)
-            && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom()) && hvisAvslåttSøknadsfristLikeTidligstMottattDato(periodeEn, periodeTo);
+            && erFomRettEtterTomDato(periodeEn.getPeriodeTom(), periodeTo.getPeriodeFom()) && hvisAvslåttSøknadsfristLikeTidligstMottattDato(periodeEn, periodeTo)
+            && periodeEn.erUtbetalingRedusertTilMorsStillingsprosent() == periodeTo.erUtbetalingRedusertTilMorsStillingsprosent();
     }
 
     private static boolean hvisAvslåttSøknadsfristLikeTidligstMottattDato(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {

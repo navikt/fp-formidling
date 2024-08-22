@@ -62,7 +62,7 @@ public class UttakResultatPeriodeDto {
         return tidligstMottattDato;
     }
 
-    public boolean erUtbetalingRedusertTilMorsStillingsprosent() {
+    public boolean getErUtbetalingRedusertTilMorsStillingsprosent() {
         return erUtbetalingRedusertTilMorsStillingsprosent;
     }
 

@@ -52,7 +52,7 @@ public class UttakDtoMapper {
             .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(dto.getFom(), dto.getTom()))
             .medAktiviteter(aktiviteter)
             .medTidligstMottattDato(dto.getTidligstMottattDato())
-            .medErUtbetalingRedusertTilMorsStillingsprosent(dto.erUtbetalingRedusertTilMorsStillingsprosent())
+            .medErUtbetalingRedusertTilMorsStillingsprosent(dto.getErUtbetalingRedusertTilMorsStillingsprosent())
             .build();
         aktiviteter.forEach(aktivitet -> aktivitet.leggTilPeriode(mappetPeriode));
         return mappetPeriode;

@@ -213,7 +213,8 @@ public final class VedtaksperiodeMapper {
             .medAnnenAktivitet(annenAktivitetListe)
             .medPrioritertUtbetalingsgrad(finnPrioritertUtbetalingsgrad(arbeidsfoholdListe, næring, annenAktivitetListe))
             .medFullUtbetaling(erFullUtbetaling(uttakResultatPeriode))
-            .medTidligstMottattDato(uttakResultatPeriode.getTidligstMottattDato(), språkkode);
+            .medTidligstMottattDato(uttakResultatPeriode.getTidligstMottattDato(), språkkode)
+            .medErUtbetalingRedusertTilMorsStillingsprosent(uttakResultatPeriode.erUtbetalingRedusertTilMorsStillingsprosent());
 
         if (tilkjentYtelsePeriode.getDagsats() != null) {
             vedtaksperioder.medPeriodeDagsats(tilkjentYtelsePeriode.getDagsats());

@@ -19,7 +19,6 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
     private long halvG;
     private int klagefristUker;
     private String lovhjemmelForAvslag;
-    private boolean kreverSammenhengendeUttak;
     private boolean gjelderMor;
     private List<AvslåttPeriode> avslåttePerioder;
 
@@ -59,9 +58,6 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
         return lovhjemmelForAvslag;
     }
 
-    public boolean getKreverSammenhengendeUttak() {
-        return kreverSammenhengendeUttak;
-    }
     public boolean getGjelderMor() {
         return gjelderMor;
     }
@@ -82,14 +78,14 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
         return Objects.equals(felles, that.felles) && Objects.equals(relasjonskode, that.relasjonskode) && Objects.equals(mottattDato,
             that.mottattDato) && Objects.equals(gjelderFødsel, that.gjelderFødsel) && Objects.equals(barnErFødt, that.barnErFødt) && Objects.equals(
             annenForelderHarRett, that.annenForelderHarRett) && Objects.equals(antallBarn, that.antallBarn) && Objects.equals(halvG, that.halvG)
-            && Objects.equals(klagefristUker, that.klagefristUker) && Objects.equals(lovhjemmelForAvslag, that.lovhjemmelForAvslag) && Objects.equals(
-            kreverSammenhengendeUttak, that.kreverSammenhengendeUttak) && Objects.equals(gjelderMor, that.gjelderMor) && Objects.equals(avslåttePerioder, that.avslåttePerioder);
+            && Objects.equals(klagefristUker, that.klagefristUker) && Objects.equals(lovhjemmelForAvslag, that.lovhjemmelForAvslag)
+            && Objects.equals(gjelderMor, that.gjelderMor) && Objects.equals(avslåttePerioder, that.avslåttePerioder);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(felles, relasjonskode, mottattDato, gjelderFødsel, barnErFødt, annenForelderHarRett, antallBarn, halvG, klagefristUker,
-            lovhjemmelForAvslag, kreverSammenhengendeUttak, gjelderMor, avslåttePerioder);
+            lovhjemmelForAvslag, gjelderMor, avslåttePerioder);
     }
 
     public static Builder ny() {
@@ -150,11 +146,6 @@ public class ForeldrepengerAvslagDokumentdata extends Dokumentdata {
 
         public Builder medLovhjemmelForAvslag(String lovhjemmelForAvslag) {
             this.kladd.lovhjemmelForAvslag = lovhjemmelForAvslag;
-            return this;
-        }
-
-        public Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
-            this.kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
             return this;
         }
 

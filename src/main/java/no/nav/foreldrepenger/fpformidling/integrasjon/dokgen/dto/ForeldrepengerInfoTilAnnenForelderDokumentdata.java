@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDo
 public class ForeldrepengerInfoTilAnnenForelderDokumentdata extends Dokumentdata {
     private String behandlingsÅrsak;
     private String sisteUttaksdagMor;
-    private boolean kreverSammenhengendeUttak;
 
     public String getBehandlingsÅrsak() {
         return behandlingsÅrsak;
@@ -19,10 +18,6 @@ public class ForeldrepengerInfoTilAnnenForelderDokumentdata extends Dokumentdata
 
     public String getSisteUttaksdagMor() {
         return sisteUttaksdagMor;
-    }
-
-    public boolean getKreverSammenhengendeUttak() {
-        return kreverSammenhengendeUttak;
     }
 
     @Override
@@ -35,12 +30,12 @@ public class ForeldrepengerInfoTilAnnenForelderDokumentdata extends Dokumentdata
         }
         var that = (ForeldrepengerInfoTilAnnenForelderDokumentdata) object;
         return Objects.equals(felles, that.felles) && Objects.equals(behandlingsÅrsak, that.behandlingsÅrsak) && Objects.equals(sisteUttaksdagMor,
-            that.sisteUttaksdagMor) && Objects.equals(kreverSammenhengendeUttak, that.kreverSammenhengendeUttak);
+            that.sisteUttaksdagMor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, behandlingsÅrsak, sisteUttaksdagMor, kreverSammenhengendeUttak);
+        return Objects.hash(felles, behandlingsÅrsak, sisteUttaksdagMor);
     }
 
     public static Builder ny() {
@@ -66,11 +61,6 @@ public class ForeldrepengerInfoTilAnnenForelderDokumentdata extends Dokumentdata
 
         public Builder medSisteUttaksdagMor(String sisteUttaksdagMor) {
             this.kladd.sisteUttaksdagMor = sisteUttaksdagMor;
-            return this;
-        }
-
-        public Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
-            this.kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
             return this;
         }
 

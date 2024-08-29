@@ -61,7 +61,6 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private int prematurDager;
     private int antallDødeBarn;
     private String dødsdato;
-    private boolean kreverSammenhengendeUttak;
     private boolean morKanSøkeOmDagerFørFødsel;
 
     private List<Vedtaksperiode> perioder = new ArrayList<>();
@@ -284,10 +283,6 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return dødsdato;
     }
 
-    public boolean getKreverSammenhengendeUttak() {
-        return kreverSammenhengendeUttak;
-    }
-
     public boolean getMorKanSøkeOmDagerFørFødsel() {
         return morKanSøkeOmDagerFørFødsel;
     }
@@ -374,8 +369,8 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             that.sisteDagAvSistePeriode) && Objects.equals(stønadsperiodeFom, that.stønadsperiodeFom) && Objects.equals(stønadsperiodeTom,
             that.stønadsperiodeTom) && Objects.equals(flerbarnsdagerUtvidetUker, that.flerbarnsdagerUtvidetUker) && Objects.equals(
             antallBarn, that.antallBarn) && Objects.equals(prematurDager, that.prematurDager) && Objects.equals(antallDødeBarn, that.antallDødeBarn)
-            && Objects.equals(dødsdato, that.dødsdato) && Objects.equals(kreverSammenhengendeUttak, that.kreverSammenhengendeUttak) && Objects.equals(
-            morKanSøkeOmDagerFørFødsel, that.morKanSøkeOmDagerFørFødsel) && Objects.equals(perioder, that.perioder) && Objects.equals(
+            && Objects.equals(dødsdato, that.dødsdato) && Objects.equals(morKanSøkeOmDagerFørFødsel, that.morKanSøkeOmDagerFørFødsel)
+            && Objects.equals(perioder, that.perioder) && Objects.equals(
             bruttoBeregningsgrunnlag, that.bruttoBeregningsgrunnlag) && Objects.equals(harBruktBruttoBeregningsgrunnlag,
             that.harBruktBruttoBeregningsgrunnlag) && Objects.equals(beregningsgrunnlagregler, that.beregningsgrunnlagregler) && Objects.equals(
             klagefristUker, that.klagefristUker) && Objects.equals(lovhjemlerUttak, that.lovhjemlerUttak) && Objects.equals(lovhjemlerBeregning,
@@ -394,7 +389,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             seksAvDeTiBeste, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget, annenForelderRettEØS, oppgittAnnenForelderRettEØS, antallPerioder,
             antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager, disponibleFellesDager,
             sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, flerbarnsdagerUtvidetUker, antallBarn, prematurDager, antallDødeBarn,
-            dødsdato, kreverSammenhengendeUttak, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag,
+            dødsdato, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag,
             beregningsgrunnlagregler, klagefristUker, lovhjemlerUttak, lovhjemlerBeregning,
             inkludereInnvilget, inkludereAvslag, disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav,
             utenMinsterett, ønskerJustertVedFødsel, graderingOgFulltUttakIAnnenAktivitet);
@@ -637,11 +632,6 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medDødsdato(String dødsdato) {
             this.kladd.dødsdato = dødsdato;
-            return this;
-        }
-
-        public Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
-            this.kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
             return this;
         }
 

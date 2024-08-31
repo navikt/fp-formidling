@@ -50,6 +50,13 @@ spec:
         kvPath: {{serviceuserkv}}
   secureLogs:
     enabled: true
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
+      destinations:
+        - id: "grafana-lgtm"
+        - id: "elastic-apm"
   azure:
     application:
       enabled: true

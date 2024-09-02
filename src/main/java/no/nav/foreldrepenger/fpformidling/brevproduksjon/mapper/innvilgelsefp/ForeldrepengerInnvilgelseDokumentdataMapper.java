@@ -148,7 +148,6 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medFlerbarnsdagerUtvidetDager(StønadskontoMapper.finnFlerbarnsdagerUtvidetDagerHvisFinnes(saldoer))
             .medAntallBarn(antallBarn)
             .medPrematurDager(StønadskontoMapper.finnPrematurDagerHvisFinnes(saldoer))
-            .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen())
             .medPerioder(vedtaksperioder)
             .medHarVarierendeDagsats(harVarierendeDagsats(vedtaksperioder))
             .medStarterMedFullUtbetaling(starterMedFullUtbetaling(vedtaksperioder))

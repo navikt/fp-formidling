@@ -76,7 +76,6 @@ public class ForeldrepengerInfoTilAnnenForeldrerDokumentdataMapper implements Do
             .medFelles(fellesBuilder.build())
             .medBehandlingÅrsak(aarsak.getKode())
             .medSisteUttaksdagMor(sisteUttaksdagMor)
-            .medKreverSammenhengendeUttak(behandling.kreverSammenhengendeUttakFraBehandlingen())
             .build();
     }
 }

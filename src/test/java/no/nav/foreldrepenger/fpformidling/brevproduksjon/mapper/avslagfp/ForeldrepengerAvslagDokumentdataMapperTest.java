@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,6 +45,7 @@ import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentKategori;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentTypeId;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.mottattdokument.MottattDokument;
@@ -134,7 +133,6 @@ class ForeldrepengerAvslagDokumentdataMapperTest {
         assertThat(dokumentdata.getAntallBarn()).isEqualTo(2);
         assertThat(dokumentdata.getHalvG()).isEqualTo(GRUNNBELØP / 2);
         assertThat(dokumentdata.getKlagefristUker()).isEqualTo(KLAGEFRIST);
-        assertThat(dokumentdata.getKreverSammenhengendeUttak()).isFalse();
         assertThat(dokumentdata.getGjelderMor()).isTrue();
         assertThat(dokumentdata.getLovhjemmelForAvslag()).isEqualTo("forvaltningsloven § 35");
         assertThat(dokumentdata.getAvslåttePerioder()).hasSize(2); // Periode 2 og 3 skal slås sammen

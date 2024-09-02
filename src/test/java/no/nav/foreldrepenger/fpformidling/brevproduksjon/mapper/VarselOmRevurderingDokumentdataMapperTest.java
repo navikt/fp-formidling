@@ -100,7 +100,6 @@ class VarselOmRevurderingDokumentdataMapperTest {
         assertThat(varselOmRevurderingDokumentdata.getAntallBarn()).isEqualTo(ANTALL_BARN);
         assertThat(varselOmRevurderingDokumentdata.getAdvarselKode()).isEqualTo(RevurderingVarslingÅrsak.ARBEIDS_I_STØNADSPERIODEN.getKode());
         assertThat(varselOmRevurderingDokumentdata.getFlereOpplysninger()).isFalse();
-        assertThat(varselOmRevurderingDokumentdata.getKreverSammenhengendeUttak()).isTrue();
     }
 
     @Test
@@ -147,7 +146,6 @@ class VarselOmRevurderingDokumentdataMapperTest {
             .medBehandlingÅrsaker(of(BehandlingÅrsak.builder().medBehandlingÅrsakType(BehandlingÅrsakType.RE_ENDRING_FRA_BRUKER).build()))
             .medBehandlingsresultat(Behandlingsresultat.builder().medBehandlingResultatType(BehandlingResultatType.INNVILGET).build())
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())
-            .medKreverSammenhengendeUttak(true)
             .build();
     }
 

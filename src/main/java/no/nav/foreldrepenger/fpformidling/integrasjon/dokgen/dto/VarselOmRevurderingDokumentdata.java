@@ -14,7 +14,6 @@ public class VarselOmRevurderingDokumentdata extends Dokumentdata {
     private int antallBarn;
     private String advarselKode;
     private boolean flereOpplysninger;
-    private boolean kreverSammenhengendeUttak;
 
     public String getTerminDato() {
         return terminDato;
@@ -36,10 +35,6 @@ public class VarselOmRevurderingDokumentdata extends Dokumentdata {
         return flereOpplysninger;
     }
 
-    public boolean getKreverSammenhengendeUttak() {
-        return kreverSammenhengendeUttak;
-    }
-
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -51,12 +46,12 @@ public class VarselOmRevurderingDokumentdata extends Dokumentdata {
         var that = (VarselOmRevurderingDokumentdata) object;
         return Objects.equals(felles, that.felles) && Objects.equals(terminDato, that.terminDato) && Objects.equals(fristDato, that.fristDato)
             && Objects.equals(antallBarn, that.antallBarn) && Objects.equals(advarselKode, that.advarselKode) && Objects.equals(flereOpplysninger,
-            that.flereOpplysninger) && Objects.equals(kreverSammenhengendeUttak, that.kreverSammenhengendeUttak);
+            that.flereOpplysninger);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(felles, terminDato, fristDato, antallBarn, advarselKode, flereOpplysninger, kreverSammenhengendeUttak);
+        return Objects.hash(felles, terminDato, fristDato, antallBarn, advarselKode, flereOpplysninger);
     }
 
     public static Builder ny() {
@@ -97,11 +92,6 @@ public class VarselOmRevurderingDokumentdata extends Dokumentdata {
 
         public Builder medFlereOpplysninger(boolean flereOpplysninger) {
             this.kladd.flereOpplysninger = flereOpplysninger;
-            return this;
-        }
-
-        public Builder medKreverSammenhengendeUttak(boolean kreverSammenhengendeUttak) {
-            this.kladd.kreverSammenhengendeUttak = kreverSammenhengendeUttak;
             return this;
         }
 

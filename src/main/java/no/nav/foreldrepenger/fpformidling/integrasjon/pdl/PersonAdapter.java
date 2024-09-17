@@ -33,8 +33,13 @@ public class PersonAdapter {
             var funnetFnr = persondataTjeneste.hentPersonIdentForAktørId(aktørId);
             return funnetFnr.map(pi -> persondataTjeneste.hentPersoninfo(ytelseType, aktørId, pi));
         } catch (PdlException pdlException) {
-            LOG.error("Fikk feil ved kall til PDL. Detaljer: type={}, cause={}, policy={}", pdlException.getDetails().type(),
-                pdlException.getDetails().cause(), pdlException.getDetails().policy());
+            var details = Optional.ofNullable(pdlException.getDetails());
+            if (details.isPresent()) {
+                LOG.error("Fikk feil ved kall til PDL. Detaljer: type={}, cause={}, policy={}", details.get().type(), details.get().cause(),
+                    details.get().policy(), pdlException);
+            } else {
+                LOG.error("Fikk feil ved kall til PDL. Mangler detaljer fra pdl", pdlException);
+            }
             throw pdlException;
         }
     }

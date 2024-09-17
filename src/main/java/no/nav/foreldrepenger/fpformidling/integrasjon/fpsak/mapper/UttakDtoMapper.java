@@ -26,7 +26,7 @@ public class UttakDtoMapper {
 
     public static ForeldrepengerUttak mapUttaksresultatPerioderFraDto(UttakResultatPerioderDto resultatPerioderDto, UnaryOperator<String> hentNavn) {
         var uttakResultatPerioder = getUttakResultatPerioder(resultatPerioderDto.perioderSøker(), hentNavn);
-        var perioderAnnenPart = getUttakResultatPerioder(resultatPerioderDto.perioderAnnenpart(), hentNavn);
+        var perioderAnnenPart = getUttakResultatPerioder(resultatPerioderDto.perioderAnnenpart(), s -> null);
         var aleneomsorg = resultatPerioderDto.aleneomsorg();
         var annenForelderHarRett = resultatPerioderDto.annenForelderHarRett();
         var annenForelderRettEØS = resultatPerioderDto.annenForelderRettEØS();

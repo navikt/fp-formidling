@@ -44,6 +44,7 @@ public enum Avslagsårsak implements Kodeverdi, ÅrsakMedLovReferanse {
     SØKER_HAR_IKKE_LOVLIG_OPPHOLD("1023", Constants.FP_VK_2_LOVREFERANSE_14_2),
     SØKER_HAR_IKKE_OPPHOLDSRETT("1024", Constants.FP_VK_2_LOVREFERANSE_14_2),
     SØKER_ER_IKKE_BOSATT("1025", Constants.FP_VK_2_LOVREFERANSE_14_2),
+    SØKER_INNFLYTTET_FOR_SENT("1052", "{\"fagsakYtelseType\": [{\"ES\": [{\"kategori\": \"FP_VK_2_F\", \"lovreferanse\": \"14-17 5. ledd\"}]}]}"),
     FØDSELSDATO_IKKE_OPPGITT_ELLER_REGISTRERT("1026",
         "{\"fagsakYtelseType\": [{\"FP\": [{\"kategori\": \"FP_VK_1\", \"lovreferanse\": \"14-5\"}]}]}"),
     INGEN_BARN_DOKUMENTERT_PÅ_FAR_MEDMOR("1027", Constants.FP_VK_11_LOVREFERANSE_14_5),

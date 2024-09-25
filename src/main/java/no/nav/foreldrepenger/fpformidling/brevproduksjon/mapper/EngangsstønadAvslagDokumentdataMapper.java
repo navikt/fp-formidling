@@ -121,9 +121,9 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         if (VilkårType.ADOPSJONSVILKÅRET_ENGANGSSTØNAD.equals(vilkårType)
             || VilkårType.FØDSELSVILKÅRET_MOR.equals(vilkårType) && !behandling.erRevurdering()) {
             return "FPVK1_4";
-        } else if (VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) && behandling.erFørstegangssøknad()) {
+        } else if ((VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) || VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.equals(vilkårType)) && behandling.erFørstegangssøknad()) {
             return "FPVK2_FB";
-        } else if (VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) && behandling.erRevurdering()) {
+        } else if ((VilkårType.MEDLEMSKAPSVILKÅRET.equals(vilkårType) || VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.equals(vilkårType)) && behandling.erRevurdering()) {
             return "FPVK2_RV";
         } else if (erVilkår213(vilkårType) && behandling.erRevurdering()) {
             return "FPVK1_4_5_8_RV";
@@ -160,6 +160,12 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         } else if (VilkårType.MEDLEMSKAPSVILKÅRET.getAvslagsårsaker().contains(årsak) && skjæringstispunktPassert && gjelderFødsel) {
             return Optional.of("IKKE_MEDL_ETTER_FØDSEL");
         } else if (VilkårType.MEDLEMSKAPSVILKÅRET.getAvslagsårsaker().contains(årsak) && skjæringstispunktPassert && !gjelderFødsel) {
+            return Optional.of("IKKE_MEDL_ETTER_OVERTAGELSE");
+        } else if (VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker().contains(årsak) && !skjæringstispunktPassert) {
+            return Optional.of("IKKE_MEDL_FØR_STP");
+        } else if (VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker().contains(årsak) && skjæringstispunktPassert && gjelderFødsel) {
+            return Optional.of("IKKE_MEDL_ETTER_FØDSEL");
+        } else if (VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker().contains(årsak) && skjæringstispunktPassert && !gjelderFødsel) {
             return Optional.of("IKKE_MEDL_ETTER_OVERTAGELSE");
         } else {
             return Optional.empty();

@@ -206,6 +206,25 @@ class DokumentdataSerializationTest {
     }
 
     @Test
+    void skal_serialisere_og_deserialisere_dokumentdata_for_avslag_engangsstønad_forutgående() throws IOException {
+        // Arrange
+        var dokumentdata = EngangsstønadAvslagDokumentdata.ny()
+            .medFelles(opprettFellesDokumentdata())
+            .medAvslagsÅrsak(Avslagsårsak.SØKER_ER_IKKE_MEDLEM.getKode())
+            .medFørstegangsbehandling(true)
+            .medAntallBarn(2)
+            .medRelasjonsRolle(RelasjonsRolleType.MORA.getKode())
+            .medGjelderFødsel(true)
+            .medVilkårTyper(of(VilkårType.FØDSELSVILKÅRET_MOR.getKode(), VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getKode()))
+            .medKlagefristUker(6)
+            .medAvslagMedlemskap("IKKE_MEDL_FØR_STP")
+            .build();
+
+        // Act + Assert
+        assertEquals(dokumentdata, utførTest(dokumentdata));
+    }
+
+    @Test
     void skal_serialisere_og_deserialisere_dokumentdata_for_innvilgelse_engangsstønad() throws IOException {
         // Arrange
         var dokumentdata = EngangsstønadInnvilgelseDokumentdata.ny()

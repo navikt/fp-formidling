@@ -10,6 +10,7 @@ public final class VilkårTypeKoder {
 
     public static final String FP_VK_1 = "FP_VK_1";
     public static final String FP_VK_2 = "FP_VK_2";
+    public static final String FP_VK_2_F = "FP_VK_2_F";
     public static final String FP_VK_3 = "FP_VK_3";
     public static final String FP_VK_4 = "FP_VK_4";
     public static final String FP_VK_5 = "FP_VK_5";

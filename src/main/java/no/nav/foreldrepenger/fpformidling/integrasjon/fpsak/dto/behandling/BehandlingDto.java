@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingStatus;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.vilkår.VilkårDto;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -30,6 +31,7 @@ public class BehandlingDto {
     private boolean harAvklartAnnenForelderRett;
     private List<VilkårDto> vilkår;
     private UUID originalBehandlingUuid;
+    private Avslagsårsak medlemskapOpphørsårsak;
 
     public BehandlingType getType() {
         return type;
@@ -149,6 +151,14 @@ public class BehandlingDto {
 
     public void setOriginalBehandlingUuid(UUID originalBehandlingUuid) {
         this.originalBehandlingUuid = originalBehandlingUuid;
+    }
+
+    public Avslagsårsak getMedlemskapOpphørsårsak() {
+        return medlemskapOpphørsårsak;
+    }
+
+    public void setMedlemskapOpphørsårsak(Avslagsårsak medlemskapOpphørsårsak) {
+        this.medlemskapOpphørsårsak = medlemskapOpphørsårsak;
     }
 
     @Override

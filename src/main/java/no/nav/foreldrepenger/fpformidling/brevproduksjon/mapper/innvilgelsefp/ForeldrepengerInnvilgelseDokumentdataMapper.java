@@ -150,6 +150,7 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .medPrematurDager(StønadskontoMapper.finnPrematurDagerHvisFinnes(saldoer))
             .medPerioder(vedtaksperioder)
             .medHarVarierendeDagsats(harVarierendeDagsats(vedtaksperioder))
+            .medMedlemskapOpphørsårsak(behandling.getMedlemskapOpphørsårsak() == null ? null : behandling.getMedlemskapOpphørsårsak().getKode())
             .medStarterMedFullUtbetaling(starterMedFullUtbetaling(vedtaksperioder))
             .medKlagefristUker(brevParametere.getKlagefristUker())
             .medLovhjemlerUttak(UttakMapper.mapLovhjemlerForUttak(uttak, konsekvensForInnvilgetYtelse, erInnvilgetRevurdering))

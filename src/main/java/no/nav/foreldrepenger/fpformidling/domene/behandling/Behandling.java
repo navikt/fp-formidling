@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Vilkår;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingÅrsakType;
 
@@ -31,6 +32,7 @@ public class Behandling {
     private boolean harAvklartAnnenForelderRett;
     private List<Vilkår> vilkår;
     private UUID originalBehandlingUuid;
+    private Avslagsårsak medlemskapOpphørsårsak;
 
     private Behandling() {
     }
@@ -138,6 +140,10 @@ public class Behandling {
         return fagsakBackend != null;
     }
 
+    public Avslagsårsak getMedlemskapOpphørsårsak() {
+        return medlemskapOpphørsårsak;
+    }
+
     public static Behandling.Builder builder() {
         return new Behandling.Builder();
     }
@@ -224,6 +230,11 @@ public class Behandling {
 
         public Behandling.Builder medHarAvklartAnnenForelderRett(boolean harAvklartAnnenForelderRett) {
             this.kladd.harAvklartAnnenForelderRett = harAvklartAnnenForelderRett;
+            return this;
+        }
+
+        public Behandling.Builder medMedlemskapOpphørsårsak(Avslagsårsak medlemskapOpphørsårsak) {
+            this.kladd.medlemskapOpphørsårsak = medlemskapOpphørsårsak;
             return this;
         }
 

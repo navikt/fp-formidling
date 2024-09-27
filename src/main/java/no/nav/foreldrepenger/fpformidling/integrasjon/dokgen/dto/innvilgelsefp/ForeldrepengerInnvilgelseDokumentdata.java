@@ -82,6 +82,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
     private boolean graderingOgFulltUttakIAnnenAktivitet;
     private boolean varierendeDagsats;
     private boolean starterMedFullUtbetaling;
+    private String medlemskapOpphørsårsak;
 
     public String getBehandlingType() {
         return behandlingType;
@@ -295,6 +296,10 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
         return bruttoBeregningsgrunnlag;
     }
 
+    public String getMedlemskapOpphørsårsak() {
+        return medlemskapOpphørsårsak;
+    }
+
     public boolean getHarBruktBruttoBeregningsgrunnlag() {
         return harBruktBruttoBeregningsgrunnlag;
     }
@@ -369,7 +374,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             that.sisteDagAvSistePeriode) && Objects.equals(stønadsperiodeFom, that.stønadsperiodeFom) && Objects.equals(stønadsperiodeTom,
             that.stønadsperiodeTom) && Objects.equals(flerbarnsdagerUtvidetUker, that.flerbarnsdagerUtvidetUker) && Objects.equals(
             antallBarn, that.antallBarn) && Objects.equals(prematurDager, that.prematurDager) && Objects.equals(antallDødeBarn, that.antallDødeBarn)
-            && Objects.equals(dødsdato, that.dødsdato) && Objects.equals(morKanSøkeOmDagerFørFødsel, that.morKanSøkeOmDagerFørFødsel)
+            && Objects.equals(dødsdato, that.dødsdato) && Objects.equals(morKanSøkeOmDagerFørFødsel, that.morKanSøkeOmDagerFørFødsel) && Objects.equals(medlemskapOpphørsårsak, that.medlemskapOpphørsårsak)
             && Objects.equals(perioder, that.perioder) && Objects.equals(
             bruttoBeregningsgrunnlag, that.bruttoBeregningsgrunnlag) && Objects.equals(harBruktBruttoBeregningsgrunnlag,
             that.harBruktBruttoBeregningsgrunnlag) && Objects.equals(beregningsgrunnlagregler, that.beregningsgrunnlagregler) && Objects.equals(
@@ -389,7 +394,7 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
             seksAvDeTiBeste, ingenRefusjon, delvisRefusjon, fullRefusjon, fbEllerRvInnvilget, annenForelderRettEØS, oppgittAnnenForelderRettEØS, antallPerioder,
             antallInnvilgedePerioder, antallAvslåttePerioder, antallArbeidsgivere, dagerTaptFørTermin, disponibleDager, disponibleFellesDager,
             sisteDagAvSistePeriode, stønadsperiodeFom, stønadsperiodeTom, flerbarnsdagerUtvidetUker, antallBarn, prematurDager, antallDødeBarn,
-            dødsdato, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag,
+            dødsdato, morKanSøkeOmDagerFørFødsel, perioder, bruttoBeregningsgrunnlag, harBruktBruttoBeregningsgrunnlag, medlemskapOpphørsårsak,
             beregningsgrunnlagregler, klagefristUker, lovhjemlerUttak, lovhjemlerBeregning,
             inkludereInnvilget, inkludereAvslag, disponibleDagerUtenAktivitetskrav, disponibleDagerMedAktivitetskrav,
             utenMinsterett, ønskerJustertVedFødsel, graderingOgFulltUttakIAnnenAktivitet);
@@ -713,6 +718,11 @@ public class ForeldrepengerInnvilgelseDokumentdata extends Dokumentdata {
 
         public Builder medHarVarierendeDagsats(boolean varierendeDagsats) {
             this.kladd.varierendeDagsats = varierendeDagsats;
+            return this;
+        }
+
+        public Builder medMedlemskapOpphørsårsak(String medlemskapOpphørsårsak) {
+            this.kladd.medlemskapOpphørsårsak = medlemskapOpphørsårsak;
             return this;
         }
 

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.domene.behandling;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class Behandling {
     private List<Vilkår> vilkår;
     private UUID originalBehandlingUuid;
     private Avslagsårsak medlemskapOpphørsårsak;
+    private LocalDate medlemskapFom;
 
     private Behandling() {
     }
@@ -144,6 +146,10 @@ public class Behandling {
         return medlemskapOpphørsårsak;
     }
 
+    public LocalDate getMedlemskapFom() {
+        return medlemskapFom;
+    }
+
     public static Behandling.Builder builder() {
         return new Behandling.Builder();
     }
@@ -235,6 +241,11 @@ public class Behandling {
 
         public Behandling.Builder medMedlemskapOpphørsårsak(Avslagsårsak medlemskapOpphørsårsak) {
             this.kladd.medlemskapOpphørsårsak = medlemskapOpphørsårsak;
+            return this;
+        }
+
+        public Behandling.Builder medMedlemskapFom(LocalDate medlemskapFom) {
+            this.kladd.medlemskapFom = medlemskapFom;
             return this;
         }
 

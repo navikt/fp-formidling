@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class BehandlingDto {
     private List<VilkårDto> vilkår;
     private UUID originalBehandlingUuid;
     private Avslagsårsak medlemskapOpphørsårsak;
+    private LocalDate medlemskapFom;
 
     public BehandlingType getType() {
         return type;
@@ -159,6 +161,14 @@ public class BehandlingDto {
 
     public void setMedlemskapOpphørsårsak(Avslagsårsak medlemskapOpphørsårsak) {
         this.medlemskapOpphørsårsak = medlemskapOpphørsårsak;
+    }
+
+    public LocalDate getMedlemskapFom() {
+        return medlemskapFom;
+    }
+
+    public void setMedlemskapFom(LocalDate medlemskapFom) {
+        this.medlemskapFom = medlemskapFom;
     }
 
     @Override

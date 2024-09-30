@@ -79,10 +79,11 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
             .medRelasjonsRolle(utledRelasjonsRolle(behandling.getFagsakBackend()))
             .medVilkårTyper(utledVilkårTilBrev(behandling.getVilkår(), behandling.getBehandlingsresultat().getAvslagsårsak(), behandling))
             .medAntallBarn(familieHendelse.antallBarn())
+            .medMedlemskapFom(formaterDato(behandling.getMedlemskapFom(), dokumentFelles.getSpråkkode()))
             .medKlagefristUker(brevParametere.getKlagefristUker());
 
-        utledAvslagsgrunnHvisMedlVilkår(behandling.getBehandlingsresultat().getAvslagsårsak(), isSkjæringstidspunktPassert(familieHendelse),
-            familieHendelse.gjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
+        utledAvslagsgrunnHvisMedlVilkår(behandling.getVilkår(), behandling.getBehandlingsresultat().getAvslagsårsak(),
+            isSkjæringstidspunktPassert(familieHendelse), familieHendelse.gjelderFødsel()).ifPresent(dokumentdataBuilder::medAvslagMedlemskap);
 
         return dokumentdataBuilder.build();
     }
@@ -153,19 +154,19 @@ public class EngangsstønadAvslagDokumentdataMapper implements DokumentdataMappe
         }
     }
 
-    private Optional<String> utledAvslagsgrunnHvisMedlVilkår(Avslagsårsak årsak, boolean skjæringstispunktPassert, boolean gjelderFødsel) {
-
+    private Optional<String> utledAvslagsgrunnHvisMedlVilkår(List<Vilkår> vilkår,
+                                                             Avslagsårsak årsak,
+                                                             boolean skjæringstispunktPassert,
+                                                             boolean gjelderFødsel) {
+        if (vilkår.stream().anyMatch(v -> v.vilkårType().equals(VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE) &&
+            VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker().contains(årsak))) {
+            return Optional.of("IKKE_MEDL_FORUTGÅENDE");
+        }
         if (VilkårType.MEDLEMSKAPSVILKÅRET.getAvslagsårsaker().contains(årsak) && !skjæringstispunktPassert) {
             return Optional.of("IKKE_MEDL_FØR_STP");
         } else if (VilkårType.MEDLEMSKAPSVILKÅRET.getAvslagsårsaker().contains(årsak) && skjæringstispunktPassert && gjelderFødsel) {
             return Optional.of("IKKE_MEDL_ETTER_FØDSEL");
         } else if (VilkårType.MEDLEMSKAPSVILKÅRET.getAvslagsårsaker().contains(årsak) && skjæringstispunktPassert && !gjelderFødsel) {
-            return Optional.of("IKKE_MEDL_ETTER_OVERTAGELSE");
-        } else if (VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker().contains(årsak) && !skjæringstispunktPassert) {
-            return Optional.of("IKKE_MEDL_FØR_STP");
-        } else if (VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker().contains(årsak) && skjæringstispunktPassert && gjelderFødsel) {
-            return Optional.of("IKKE_MEDL_ETTER_FØDSEL");
-        } else if (VilkårType.MEDLEMSKAPSVILKÅRET_FORUTGÅENDE.getAvslagsårsaker().contains(årsak) && skjæringstispunktPassert && !gjelderFødsel) {
             return Optional.of("IKKE_MEDL_ETTER_OVERTAGELSE");
         } else {
             return Optional.empty();

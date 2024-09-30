@@ -1,12 +1,12 @@
 package no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto;
 
+import java.util.List;
+import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.FellesDokumentdata;
-
-import java.util.List;
-import java.util.Objects;
 
 @JsonAutoDetect(getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE, fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
@@ -18,6 +18,7 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
     private List<String> vilkårTyper;
     private int klagefristUker;
     private String avslagMedlemskap;
+    private String medlemskapFom;
 
     public String getAvslagÅrsak() {
         return avslagÅrsak;
@@ -47,6 +48,10 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
         return klagefristUker;
     }
 
+    public String getMedlemskapFom() {
+        return medlemskapFom;
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) {
@@ -59,13 +64,13 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
         return Objects.equals(felles, that.felles) && Objects.equals(avslagÅrsak, that.avslagÅrsak) && Objects.equals(førstegangsbehandling,
             that.førstegangsbehandling) && Objects.equals(antallBarn, that.antallBarn) && Objects.equals(relasjonsRolle, that.relasjonsRolle)
             && Objects.equals(gjelderFødsel, that.gjelderFødsel) && Objects.equals(vilkårTyper, that.vilkårTyper) && Objects.equals(klagefristUker,
-            that.klagefristUker) && Objects.equals(avslagMedlemskap, that.avslagMedlemskap);
+            that.klagefristUker) && Objects.equals(avslagMedlemskap, that.avslagMedlemskap) && Objects.equals(medlemskapFom, that.medlemskapFom);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(felles, avslagÅrsak, førstegangsbehandling, antallBarn, relasjonsRolle, gjelderFødsel, vilkårTyper, klagefristUker,
-            avslagMedlemskap);
+            avslagMedlemskap, medlemskapFom);
     }
 
     public static Builder ny() {
@@ -73,7 +78,7 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
     }
 
     public static class Builder {
-        private EngangsstønadAvslagDokumentdata kladd;
+        private final EngangsstønadAvslagDokumentdata kladd;
 
         private Builder() {
             this.kladd = new EngangsstønadAvslagDokumentdata();
@@ -121,6 +126,11 @@ public class EngangsstønadAvslagDokumentdata extends Dokumentdata {
 
         public EngangsstønadAvslagDokumentdata.Builder medAvslagMedlemskap(String avslagMedlemskap) {
             this.kladd.avslagMedlemskap = avslagMedlemskap;
+            return this;
+        }
+
+        public EngangsstønadAvslagDokumentdata.Builder medMedlemskapFom(String medlemskapFom) {
+            this.kladd.medlemskapFom = medlemskapFom;
             return this;
         }
 

@@ -4,6 +4,9 @@ import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
 import java.time.LocalDate;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
@@ -23,6 +26,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMapper {
 
     private DomeneobjektProvider domeneobjektProvider;
+    private static final Logger SECURE_LOG = LoggerFactory.getLogger("secureLogger");
 
     EtterlysInntektsmeldingDokumentdataMapper() {
         //CDI
@@ -52,6 +56,7 @@ public class EtterlysInntektsmeldingDokumentdataMapper implements DokumentdataMa
         var inntektsmeldingerStatus = domeneobjektProvider.hentArbeidsforholdInntektsmeldingerStatus(behandling);
 
         if (inntektsmeldingerStatus.isEmpty() || inntektsmeldingerStatus.stream().allMatch(ArbeidsforholdInntektsmelding::erInntektsmeldingMottatt)) {
+            SECURE_LOG.info("Liste over påkrevde inntektsmeldinger og status for disse: {}", inntektsmeldingerStatus);
             throw new IllegalStateException("Kan ikke etterlyse inntektsmeldinger når ingen innteksmeldinger mangler");
         }
 

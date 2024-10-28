@@ -66,7 +66,7 @@ public final class Databaseskjemainitialisering {
     private static HikariDataSource createDs(String user) {
         Objects.requireNonNull(user, "user");
         var cfg = new HikariConfig();
-        cfg.setJdbcUrl(String.format("jdbc:postgresql://localhost:5432/%s?reWriteBatchedInserts=true", USER));
+        cfg.setJdbcUrl(String.format("jdbc:postgresql://localhost:5999/%s?reWriteBatchedInserts=true", USER));
         cfg.setUsername(USER);
         cfg.setPassword(USER);
         cfg.setConnectionTimeout(1500);

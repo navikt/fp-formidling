@@ -3,10 +3,11 @@ services:
   postgres:
     image: postgres:16
     environment:
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_USER=admin
+      PGPORT: 5999
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
     ports:
-      - "5432:5432"
+      - "5999:5999"
     volumes:
       - ./postgres-init:/docker-entrypoint-initdb.d/
     container_name: postgres_formidling
@@ -15,7 +16,7 @@ services:
     environment:
       TZ: Europe/Oslo
       NO_NAV_MODIG_SECURITY_APPCERT_KEYSTORE: /app/.modig/keystore.jks
-      JAVAX_NET_SSL_TRUSTSTORE: /app/.modig/truststore.jks
+      JAVAX_NET_SSxsL_TRUSTSTORE: /app/.modig/truststore.jks
     env_file:
       - "vtp.env"
     volumes:

@@ -18,6 +18,7 @@ public class Behandlingsresultat {
     private LocalDate skjæringstidspunkt;
     private boolean utenMinsterett;
     private boolean endretDekningsgrad;
+    private LocalDate opphørsdato;
 
     //Objekter
     private String periode; //Uttaksperiodegrense
@@ -35,6 +36,7 @@ public class Behandlingsresultat {
         periode = builder.periode;
         behandling = builder.behandling;
         endretDekningsgrad = builder.endretDekningsgrad;
+        opphørsdato = builder.opphørsdato;
     }
 
     public static Builder builder() {
@@ -93,6 +95,10 @@ public class Behandlingsresultat {
         return endretDekningsgrad;
     }
 
+    public Optional<LocalDate> getOpphørsdato() {
+        return Optional.ofNullable(opphørsdato);
+    }
+
     public static final class Builder {
         private Avslagsårsak avslagsårsak;
         private String fritekstbrev;
@@ -105,6 +111,7 @@ public class Behandlingsresultat {
         private String periode;
         private Behandling behandling;
         private boolean endretDekningsgrad;
+        private LocalDate opphørsdato;
 
         private Builder() {
         }
@@ -151,6 +158,11 @@ public class Behandlingsresultat {
 
         public Builder medEndretDekningsgrad(boolean endretDekningsgrad) {
             this.endretDekningsgrad = endretDekningsgrad;
+            return this;
+        }
+
+        public Builder medOpphørsdato(LocalDate opphørsdato) {
+            this.opphørsdato = opphørsdato;
             return this;
         }
 

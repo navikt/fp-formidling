@@ -6,7 +6,7 @@
     <parent>
         <groupId>no.nav.foreldrepenger.felles</groupId>
         <artifactId>fp-bom</artifactId>
-        <version>3.4.3</version>
+        <version>3.5.1</version>
     </parent>
 
     <groupId>no.nav.foreldrepenger.fpformidling</groupId>
@@ -22,7 +22,7 @@
         <!-- Felles artefakter -->
         <felles.version>7.3.1</felles.version>
         <prosesstask.version>5.0.17</prosesstask.version>
-        <kontrakter.version>9.1.20</kontrakter.version>
+        <kontrakter.version>9.1.21</kontrakter.version>
 
         <!-- Eksterne -->
         <handlebars.version>4.4.0</handlebars.version>
@@ -35,7 +35,7 @@
             <dependency>
                 <groupId>no.nav.foreldrepenger.felles</groupId>
                 <artifactId>fp-bom</artifactId>
-                <version>3.4.3</version>
+                <version>3.5.1</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>

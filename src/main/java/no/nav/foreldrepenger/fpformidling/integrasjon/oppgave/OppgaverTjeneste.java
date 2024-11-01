@@ -35,7 +35,6 @@ public class OppgaverTjeneste {
                 no.nav.vedtak.felles.integrasjon.oppgave.v1.Prioritet.NORM, 1)
             .medAktoerId(behandling.getFagsakBackend().getAktørId().getId())
             .medSaksreferanse(behandling.getFagsakBackend().getSaksnummer().getVerdi())
-            .medOpprettetAvEnhetsnr(behandling.getBehandlendeEnhetId())
             .medTildeltEnhetsnr(behandling.getBehandlendeEnhetId())
             .medJournalpostId(journalpostId.getVerdi())
             .medBeskrivelse(oppgaveBeskrivelse)

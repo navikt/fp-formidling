@@ -1,5 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
+import static java.time.temporal.TemporalAdjusters.next;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -11,15 +13,12 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.Inntektsmelding;
 import no.nav.foreldrepenger.fpformidling.domene.inntektarbeidytelse.Inntektsmeldinger;
-import no.nav.foreldrepenger.fpformidling.domene.tilkjentytelse.TilkjentYtelsePeriode;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.fp.PeriodeResultatType;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvangerskapspengerUttak;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatArbeidsforhold;
 import no.nav.foreldrepenger.fpformidling.domene.uttak.svp.SvpUttakResultatPeriode;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.Avslagsårsak;
 import no.nav.foreldrepenger.fpformidling.domene.vilkår.VilkårType;
-
-import static java.time.temporal.TemporalAdjusters.next;
 
 public final class SvpMapperUtil {
 
@@ -77,14 +76,6 @@ public final class SvpMapperUtil {
             antallArbeidsgivere = (int) iay.getInntektsmeldinger().stream().map(Inntektsmelding::arbeidsgiverReferanse).distinct().count();
         }
         return antallArbeidsgivere;
-    }
-
-    public static Optional<LocalDate> finnOpphørsdato(List<TilkjentYtelsePeriode> tilkjentYtelsePerioder) {
-        return  tilkjentYtelsePerioder.stream()
-            .filter(tilkjentYtelsePeriode -> tilkjentYtelsePeriode.getDagsats() > 0)
-            .map(TilkjentYtelsePeriode::getPeriodeTom)
-            .max(LocalDate::compareTo)
-            .map(localDate -> justerForHelg(localDate.plusDays(1)));
     }
 
     public static LocalDate justerForHelg(LocalDate date) {

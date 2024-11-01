@@ -100,7 +100,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev_til_bruker() {
         // Arrange
-        var behandling = opprettBehandling();
+        var behandling = opprettBehandling(PERIODE2_FOM);
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagStandardHendelseBuilder().medDokumentMal(DokumentMal.FORLENGET_SAKSBEHANDLINGSTID_MEDL).build();
 
@@ -187,6 +187,10 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
     }
 
     private Behandling opprettBehandling() {
+        return opprettBehandling(null);
+    }
+
+    private Behandling opprettBehandling(LocalDate opphørsdato) {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.REVURDERING)
@@ -194,6 +198,7 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
                 .medBehandlingResultatType(BehandlingResultatType.AVSLÅTT)
                 .medEndretDekningsgrad(true)
                 .medKonsekvenserForYtelsen(of(KonsekvensForYtelsen.ENDRING_I_BEREGNING, KonsekvensForYtelsen.ENDRING_I_UTTAK))
+                .medOpphørsdato(opphørsdato)
                 .build())
             .medSpråkkode(Språkkode.NB)
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.FORELDREPENGER).build())

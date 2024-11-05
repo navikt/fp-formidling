@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +30,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.SvpMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
@@ -43,6 +40,7 @@ import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Beregningsgr
 import no.nav.foreldrepenger.fpformidling.domene.beregningsgrunnlag.Hjemmel;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.familiehendelse.FamilieHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
@@ -93,7 +91,8 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
     @Test
     void skal_mappe_felter_for_brev() {
         // Arrange
-        var behandling = opprettBehandling();
+        var opphørsdato = PERIODE1_TOM.plusDays(1);
+        var behandling = opprettBehandling(opphørsdato);
         var dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         var dokumentHendelse = lagStandardHendelseBuilder().build();
 
@@ -112,7 +111,7 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         assertThat(dokumentdata.getFelles().getYtelseType()).isEqualTo(FagsakYtelseType.SVANGERSKAPSPENGER.getKode());
         assertThat(dokumentdata.getFelles().getErUtkast()).isFalse();
 
-        assertThat(dokumentdata.getOpphørsdato()).isEqualTo(formaterDato(SvpMapperUtil.justerForHelg(PERIODE1_TOM.plusDays(1)), Språkkode.NB));
+        assertThat(dokumentdata.getOpphørsdato()).isEqualTo(formaterDato(opphørsdato, Språkkode.NB));
         assertThat(dokumentdata.getDødsdatoBarn()).isNull();
         assertThat(dokumentdata.getFødselsdato()).isEqualTo(formaterDato(LocalDate.now(), Språkkode.NB));
         assertThat(dokumentdata.getErSøkerDød()).isFalse();
@@ -176,13 +175,14 @@ class SvangerskapspengerOpphørDokumentdataMapperTest {
         return Optional.of(uttaksresultat);
     }
 
-    private Behandling opprettBehandling() {
+    private Behandling opprettBehandling(LocalDate opphørsdato) {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())
             .medBehandlingType(BehandlingType.REVURDERING)
             .medBehandlingsresultat(Behandlingsresultat.builder()
                 .medBehandlingResultatType(BehandlingResultatType.OPPHØR)
                 .medAvslagsårsak(Avslagsårsak.UDEFINERT)
+                .medOpphørsdato(opphørsdato)
                 .build())
             .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(FagsakYtelseType.SVANGERSKAPSPENGER).build())
             .medSpråkkode(Språkkode.NB)

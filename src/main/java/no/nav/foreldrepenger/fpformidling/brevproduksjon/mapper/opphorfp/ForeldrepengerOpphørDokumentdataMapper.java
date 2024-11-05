@@ -100,7 +100,7 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
 
         finnDødsdatoHvisFinnes(familiehendelse, årsakListe).map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medBarnDødsdato);
 
-        var opphørsdato = finnOpphørsdatoHvisFinnes(foreldrepengerUttak, familiehendelse);
+        var opphørsdato = behandlingsresultat.getOpphørsdato();
         opphørsdato.map(d -> Dato.formaterDato(d, språkkode)).ifPresent(dokumentdataBuilder::medOpphørDato);
 
         var fomStønadsdato = finnStønadFomDatoHvisFinnes(originaltUttakResultat);
@@ -141,30 +141,6 @@ public class ForeldrepengerOpphørDokumentdataMapper implements DokumentdataMapp
             dødsdato = familieHendelse.dødsdato();
         }
         return dødsdato;
-    }
-
-    private Optional<LocalDate> finnOpphørsdatoHvisFinnes(ForeldrepengerUttak foreldrepengerUttak, FamilieHendelse familiehendelse) {
-        var opphørsdato = utledOpphørsdatoFraUttak(foreldrepengerUttak);
-        return Optional.ofNullable(opphørsdato).or(familiehendelse::skjæringstidspunkt);
-    }
-
-    private LocalDate utledOpphørsdatoFraUttak(ForeldrepengerUttak foreldrepengerUttak) {
-        var opphørsårsaker = PeriodeResultatÅrsak.opphørsAvslagÅrsaker();
-        var perioder = foreldrepengerUttak.perioder();
-
-        // Finner første fom-dato fra de siste sammenhengende periodene med opphørårsaker
-        LocalDate fom = null;
-        for (var i = perioder.size() - 1; i >= 0; i--) {
-            var periode = perioder.get(i);
-            if (opphørsårsaker.contains(periode.getPeriodeResultatÅrsak().getKode())) {
-                fom = periode.getFom();
-            } else if (fom != null) {
-                return fom;
-            }
-        }
-        // bruker skjæringstidspunkt fom = null eller tidligste periode i uttaksplan er
-        // opphørt eller avslått
-        return null;
     }
 
     private Optional<LocalDate> finnStønadFomDatoHvisFinnes(Optional<ForeldrepengerUttak> originaltUttakResultat) {

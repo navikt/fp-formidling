@@ -21,6 +21,7 @@ public class BehandlingsresultatDto {
     private String fritekstbrev;
     private SkjæringstidspunktDto skjæringstidspunkt;
     private boolean endretDekningsgrad;
+    private LocalDate opphørsdato;
 
     public BehandlingResultatType getType() {
         return type;
@@ -84,6 +85,14 @@ public class BehandlingsresultatDto {
 
     public void setEndretDekningsgrad(boolean endretDekningsgrad) {
         this.endretDekningsgrad = endretDekningsgrad;
+    }
+
+    public LocalDate getOpphørsdato() {
+        return opphørsdato;
+    }
+
+    public void setOpphørsdato(LocalDate opphørsdato) {
+        this.opphørsdato = opphørsdato;
     }
 
     public void setSkjæringstidspunkt(SkjæringstidspunktDto skjæringstidspunkt) {

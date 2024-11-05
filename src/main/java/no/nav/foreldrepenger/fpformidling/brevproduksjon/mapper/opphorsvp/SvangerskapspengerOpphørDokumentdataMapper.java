@@ -11,7 +11,6 @@ import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Beregning
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevParametere;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.DokumentdataMapper;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.SvpMapperUtil;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
@@ -77,7 +76,7 @@ public class SvangerskapspengerOpphørDokumentdataMapper implements Dokumentdata
             svpUttaksresultat.map(SvangerskapspengerUttak::getUttakResultatArbeidsforhold).orElse(Collections.emptyList()), språkkode, iay,
             tilkjentYtelsePerioder);
 
-        var opphørsdato = SvpMapperUtil.finnOpphørsdato(tilkjentYtelsePerioder).or(() -> behandling.getBehandlingsresultat().getSkjæringstidspunkt());
+        var opphørsdato = behandling.getBehandlingsresultat().getOpphørsdato();
 
         opphørsdato.ifPresent(d -> dokumentdatabuilder.medOpphørsdato(formaterDato(d, språkkode)));
 

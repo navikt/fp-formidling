@@ -1,9 +1,9 @@
 package no.nav.foreldrepenger.fpformidling.domene.vilkår;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -79,8 +79,6 @@ public enum VilkårType implements Kodeverdi {
 
     ;
 
-    private static final Map<Avslagsårsak, Set<VilkårType>> INDEKS_AVSLAGSÅRSAK_VILKÅR = new LinkedHashMap<>(); // NOSONAR
-
     private Map<FagsakYtelseType, String> lovReferanser;
 
     private Set<Avslagsårsak> avslagsårsaker;
@@ -110,18 +108,12 @@ public enum VilkårType implements Kodeverdi {
     }
 
     public static Set<VilkårType> getVilkårTyper(Avslagsårsak avslagsårsak) {
-        return INDEKS_AVSLAGSÅRSAK_VILKÅR.get(avslagsårsak);
+        return Arrays.stream(values()).filter(vt -> vt.getAvslagsårsaker().contains(avslagsårsak)).collect(Collectors.toSet());
     }
 
     @Override
     public String getKode() {
         return kode;
-    }
-
-    static {
-        for (var v : values()) {
-            v.avslagsårsaker.forEach(a -> INDEKS_AVSLAGSÅRSAK_VILKÅR.computeIfAbsent(a, k -> new HashSet<>(4)).add(v));
-        }
     }
 
 }

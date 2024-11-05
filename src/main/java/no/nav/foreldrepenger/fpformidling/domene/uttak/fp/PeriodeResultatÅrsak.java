@@ -1,9 +1,5 @@
 package no.nav.foreldrepenger.fpformidling.domene.uttak.fp;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import no.nav.foreldrepenger.fpformidling.domene.behandling.ÅrsakMedLovReferanse;
 
 public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
@@ -61,14 +57,6 @@ public class PeriodeResultatÅrsak implements ÅrsakMedLovReferanse {
         this.kodeverk = kodeverk;
         this.kode = kode;
         this.ekstraData = ekstraData;
-    }
-
-    public static Set<String> opphørsAvslagÅrsaker() {
-        return new HashSet<>(
-            Arrays.asList(MOR_HAR_IKKE_OMSORG.getKode(), FAR_HAR_IKKE_OMSORG.getKode(), BARNET_ER_DØD.getKode(), SØKER_ER_DØD.getKode(),
-                OPPHØR_MEDLEMSKAP.getKode(), FØDSELSVILKÅRET_IKKE_OPPFYLT.getKode(), ADOPSJONSVILKÅRET_IKKE_OPPFYLT.getKode(),
-                FORELDREANSVARSVILKÅRET_IKKE_OPPFYLT.getKode(), OPPTJENINGSVILKÅRET_IKKE_OPPFYLT.getKode(), BARN_OVER_3_ÅR.getKode(),
-                STØNADSPERIODE_NYTT_BARN.getKode()));
     }
 
     public String getKodeverk() {

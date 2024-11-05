@@ -31,6 +31,7 @@ public final class BehandlingsresultatDtoMapper {
         builder.medSkjæringstidspunkt(dto.getSkjæringstidspunkt());
         builder.medUtenMinsterett(dto.utenMinsterett());
         builder.medEndretDekningsgrad(dto.endretDekningsgrad());
+        builder.medOpphørsdato(dto.getOpphørsdato());
         return builder.build();
     }
 }

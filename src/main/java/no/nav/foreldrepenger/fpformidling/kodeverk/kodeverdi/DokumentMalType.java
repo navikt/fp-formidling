@@ -26,6 +26,7 @@ public enum DokumentMalType implements Kodeverdi {
     INGEN_ENDRING("INGEND", "Uendret utfall"),
     FORLENGET_SAKSBEHANDLINGSTID("FORSAK", "Forlenget saksbehandlingstid"),
     FORLENGET_SAKSBEHANDLINGSTID_MEDL("FORMED", "Forlenget saksbehandlingstid - medlemskap"),
+    FORLENGET_SAKSBEHANDLINGSTID_MEDL_FORUTGÅENDE("FORMEF", "Forlenget saksbehandlingstid - forutgående medlemskap"),
     FORLENGET_SAKSBEHANDLINGSTID_TIDLIG("FORTID", "Forlenget saksbehandlingstid - Tidlig søknad"),
     KLAGE_AVVIST("KGEAVV", Constants.VEDTAK_OM_AVVIST_KLAGE),
     KLAGE_OMGJORT("KGEOMG", "Vedtak om omgjøring av klage"),
@@ -87,7 +88,7 @@ public enum DokumentMalType implements Kodeverdi {
     }
 
     public static final Set<DokumentMalType> FORLENGET_SAKSBEHANDLINGSTID_BREVMALER = Set.of(DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID,
-        DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL, DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG);
+        DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_MEDL, DokumentMalType.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG, FORLENGET_SAKSBEHANDLINGSTID_MEDL_FORUTGÅENDE);
 
     private static final Map<String, DokumentMalType> KODER = new LinkedHashMap<>();
 

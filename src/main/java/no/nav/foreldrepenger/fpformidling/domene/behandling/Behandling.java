@@ -73,7 +73,7 @@ public class Behandling {
     }
 
     public List<Vilkår> getVilkår() {
-        return vilkår;
+        return vilkår == null ? List.of() : vilkår;
     }
 
     public List<BehandlingResourceLink> getResourceLinker() {

@@ -58,6 +58,7 @@ public final class DokumentHendelseDtoMapper {
             case INGEN_ENDRING -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.INGEN_ENDRING;
             case FORLENGET_SAKSBEHANDLINGSTID -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORLENGET_SAKSBEHANDLINGSTID;
             case FORLENGET_SAKSBEHANDLINGSTID_MEDL -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORLENGET_SAKSBEHANDLINGSTID_MEDL;
+            case FORLENGET_SAKSBEHANDLINGSTID_MEDL_FORUTGÅENDE -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORLENGET_SAKSBEHANDLINGSTID_MEDL_FORUTGÅENDE;
             case FORLENGET_SAKSBEHANDLINGSTID_TIDLIG -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORLENGET_SAKSBEHANDLINGSTID_TIDLIG;
             case KLAGE_AVVIST -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.KLAGE_AVVIST;
             case KLAGE_OMGJORT -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.KLAGE_OMGJORT;

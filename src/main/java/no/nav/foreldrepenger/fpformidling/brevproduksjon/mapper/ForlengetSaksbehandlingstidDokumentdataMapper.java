@@ -2,8 +2,6 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper;
 
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 
-import java.util.Map;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BrevMapperUtil;
@@ -59,17 +57,18 @@ public class ForlengetSaksbehandlingstidDokumentdataMapper implements Dokumentda
             .build();
     }
 
-    private VariantType mapVariantType(BehandlingType behandlingType, DokumentMal dokumentMal) {
+    private static VariantType mapVariantType(BehandlingType behandlingType, DokumentMal dokumentMal) {
         if (BehandlingType.KLAGE.equals(behandlingType)) {
             return VariantType.KLAGE;
         }
         return mapForlengetSaksbehandlingstidVariant(dokumentMal);
     }
 
-    private VariantType mapForlengetSaksbehandlingstidVariant(DokumentMal dokumentMal) {
+    private static VariantType mapForlengetSaksbehandlingstidVariant(DokumentMal dokumentMal) {
         return switch (dokumentMal) {
             case FORLENGET_SAKSBEHANDLINGSTID -> VariantType.FORLENGET;
             case FORLENGET_SAKSBEHANDLINGSTID_MEDL -> VariantType.MEDLEM;
+            case FORLENGET_SAKSBEHANDLINGSTID_MEDL_FORUTGÅENDE -> VariantType.MEDLEM_FORUTGÅENDE;
             case FORLENGET_SAKSBEHANDLINGSTID_TIDLIG -> VariantType.FORTIDLIG;
             default -> VariantType.FORLENGET;
         };

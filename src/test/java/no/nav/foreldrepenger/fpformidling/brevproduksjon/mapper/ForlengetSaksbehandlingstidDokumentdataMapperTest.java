@@ -42,13 +42,12 @@ class ForlengetSaksbehandlingstidDokumentdataMapperTest {
     void before() {
         dokumentData = DatamapperTestUtil.lagStandardDokumentData(DokumentMalType.INNHENTE_OPPLYSNINGER);
         dokumentdataMapper = new ForlengetSaksbehandlingstidDokumentdataMapper(domeneobjektProvider);
-
-        var familieHendelse = opprettFamiliehendelse();
-        when(domeneobjektProvider.hentFamiliehendelseHvisFinnes(any(Behandling.class))).thenReturn(Optional.of(familieHendelse));
     }
 
     @Test
     void skal_mappe_felter_for_brev_til_bruker() {
+        var familieHendelse = opprettFamiliehendelse();
+        when(domeneobjektProvider.hentFamiliehendelseHvisFinnes(any(Behandling.class))).thenReturn(Optional.of(familieHendelse));
         // Arrange
         var behandling = DatamapperTestUtil.standardForeldrepengerBehandling();
         var dokumentFelles = DatamapperTestUtil.lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);

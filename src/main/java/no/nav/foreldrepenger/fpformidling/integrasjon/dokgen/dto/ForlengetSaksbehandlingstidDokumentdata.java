@@ -51,8 +51,9 @@ public class ForlengetSaksbehandlingstidDokumentdata extends Dokumentdata {
     public enum VariantType {
         FORLENGET,
         MEDLEM,
+        MEDLEM_FORUTGÅENDE,
         FORTIDLIG,
-        KLAGE;
+        KLAGE,
     }
 
     public static Builder ny() {

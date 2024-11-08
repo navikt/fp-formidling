@@ -8,10 +8,6 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
-
-import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
-
 import org.mockito.Mockito;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
@@ -19,10 +15,12 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingType;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentData;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.DokumentFelles.Kopi;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
 import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 import no.nav.foreldrepenger.fpformidling.typer.PersonIdent;
 import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 
@@ -95,8 +93,11 @@ public class DatamapperTestUtil {
     }
 
     public static Behandling.Builder standardBehandlingBuilder(FagsakYtelseType ytelseType) {
-        return Behandling.builder().medUuid(UUID.randomUUID()).medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD).medFagsakBackend(
-            FagsakBackend.ny().medFagsakYtelseType(ytelseType).build()).medSpråkkode(Språkkode.NB);
+        return Behandling.builder()
+            .medUuid(UUID.randomUUID())
+            .medBehandlingType(BehandlingType.FØRSTEGANGSSØKNAD)
+            .medFagsakBackend(FagsakBackend.ny().medFagsakYtelseType(ytelseType).build())
+            .medSpråkkode(Språkkode.NB);
     }
 
     public static Behandling standardForeldrepengerBehandling() {

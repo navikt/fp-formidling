@@ -20,7 +20,7 @@
         <sonar.projectKey>navikt_fp-formidling</sonar.projectKey>
 
         <!-- Felles artefakter -->
-        <felles.version>7.3.2</felles.version>
+        <felles.version>7.3.4</felles.version>
         <prosesstask.version>5.0.17</prosesstask.version>
         <kontrakter.version>9.1.22</kontrakter.version>
 
@@ -299,6 +299,19 @@
             <artifactId>weld-se-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Testcontainer og sec update -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <scope>test</scope>
+            <version>[1.26.0,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- /Testcontainer og sec update -->
     </dependencies>
 
     <build>

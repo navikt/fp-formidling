@@ -54,8 +54,7 @@ Alternativt kan man koble seg til via pgAdmin som følger med Postgres, eller DB
 
 #### Lokale databaser
 
-Unit tester bruker en database som heter fpformidling_unit, og en bruker med det samme (fpformidling_unit) som brukernavn og passord.
-For å kjøre trenger du bruker vl_dba med vl_dba som passord, men denne bruker default database med eget schema.
+Løsningen bruker en postgres testcontainer til å kjøre lokale junit tester som krever en database. Dette krever at du har docker/colima installert.
 
 ### Dokumentasjon for interne
 

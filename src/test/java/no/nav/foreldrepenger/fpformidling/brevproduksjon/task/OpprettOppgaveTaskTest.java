@@ -38,9 +38,9 @@ class OpprettOppgaveTaskTest {
         when(provider.hentFagsakBackend(behandling)).thenReturn(FagsakBackend.ny().medSaksnummer(saksnummer).build());
 
         var prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
+        prosessTaskData.setSaksnummer(saksnummer);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
-        prosessTaskData.setProperty(BrevTaskProperties.SAKSNUMMER, saksnummer);
 
         new OpprettOppgaveTask(tjeneste, provider).doTask(prosessTaskData);
 

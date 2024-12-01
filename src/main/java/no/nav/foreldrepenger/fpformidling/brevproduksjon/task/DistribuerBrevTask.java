@@ -52,9 +52,9 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
 
     private void opprettGosysOppgaveTask(JournalpostId journalpostId, UUID behandlingUuId, String saksnummer) {
         var prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
+        prosessTaskData.setSaksnummer(saksnummer);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
-        prosessTaskData.setProperty(BrevTaskProperties.SAKSNUMMER, saksnummer);
         prosessTaskData.setCallIdFraEksisterende();
         taskTjeneste.lagre(prosessTaskData);
     }

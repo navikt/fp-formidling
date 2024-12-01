@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -133,7 +135,7 @@ class BrevBestillerTjenesteTest {
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
         assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
-        assertThat(taskCaptor.getAllValues().get(1).getTasks().get(0).task().getPropertyValue("bestillingId")).isEqualTo(
+        assertThat(taskCaptor.getAllValues().get(1).getTasks().get(0).task().getPropertyValue(BrevTaskProperties.BESTILLING_ID)).isEqualTo(
             randomBestillingsUuid + "-" + 1);
     }
 
@@ -163,7 +165,7 @@ class BrevBestillerTjenesteTest {
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
         assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
-        assertThat(taskCaptor.getAllValues().get(0).getTasks().get(0).task().getPropertyValue("bestillingId")).isEqualTo(String.valueOf(randomBestillingsUuid));
+        assertThat(taskCaptor.getAllValues().get(0).getTasks().get(0).task().getPropertyValue(BrevTaskProperties.BESTILLING_ID)).isEqualTo(String.valueOf(randomBestillingsUuid));
     }
 
     @Test
@@ -252,7 +254,7 @@ class BrevBestillerTjenesteTest {
         assertThat(taskCaptor.getValue().getTasks()).hasSize(2);
         assertThat(taskCaptor.getValue().getTasks().get(0).task().taskType()).isEqualTo(DIST_TASK);
         assertThat(taskCaptor.getValue().getTasks().get(1).task().taskType()).isEqualTo(HISTORIKK_TASK);
-        assertThat(taskCaptor.getAllValues().get(0).getTasks().get(0).task().getPropertyValue("bestillingId")).isEqualTo(
+        assertThat(taskCaptor.getAllValues().get(0).getTasks().get(0).task().getPropertyValue(BrevTaskProperties.BESTILLING_ID)).isEqualTo(
             String.valueOf(randomBestillingsUuid));
     }
 

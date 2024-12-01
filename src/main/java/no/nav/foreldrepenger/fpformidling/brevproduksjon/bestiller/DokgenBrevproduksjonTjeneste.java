@@ -5,6 +5,8 @@ import static io.micrometer.core.instrument.Metrics.counter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,10 +102,10 @@ public class DokgenBrevproduksjonTjeneste {
             LOG.info("Journalført {} for bestilling {}", journalpostId, unikBestillingsUuidPerDokFelles);
 
             if (innsynMedVedlegg) {
-                leggTilVedleggOgFerdigstillForsendelse(dokumentHendelse.getBehandlingUuid(), journalpostId);
+                leggTilVedleggOgFerdigstillForsendelse(dokumentHendelse.getBehandlingUuid(), journalpostId, dokumentFelles.getSaksnummer());
             }
 
-            distribuerBrevOgLagHistorikk(dokumentHendelse, response, journalpostId, innsynMedVedlegg, dokumentFelles.getSaksnummer().getVerdi(),
+            distribuerBrevOgLagHistorikk(dokumentHendelse, response, journalpostId, innsynMedVedlegg, dokumentFelles.getSaksnummer(),
                 unikBestillingsUuidPerDokFelles, journalførSom);
 
             counter("brev_distribuert", "malType", dokumentMal.getKode(), "brevType", journalførSom.getKode()).increment();
@@ -166,7 +168,7 @@ public class DokgenBrevproduksjonTjeneste {
                                               OpprettJournalpostResponse response,
                                               JournalpostId journalpostId,
                                               boolean innsynMedVedlegg,
-                                              String saksnummer,
+                                              Saksnummer saksnummer,
                                               String unikBestillingsId,
                                               DokumentMalType originalDokumentType) {
         var taskGruppe = new ProsessTaskGruppe();
@@ -174,7 +176,7 @@ public class DokgenBrevproduksjonTjeneste {
             DistribusjonstypeUtleder.utledFor(originalDokumentType), saksnummer, unikBestillingsId));
 
         taskGruppe.addNesteSekvensiell(
-            opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(),
+            opprettPubliserHistorikkTask(dokumentHendelse.getBehandlingUuid(), saksnummer,
                 dokumentHendelse.getBestillingUuid(),
                 response.journalpostId(),
                 response.dokumenter().getFirst().dokumentInfoId()));
@@ -182,24 +184,27 @@ public class DokgenBrevproduksjonTjeneste {
         taskTjeneste.lagre(taskGruppe);
     }
 
-    private void leggTilVedleggOgFerdigstillForsendelse(UUID behandlingUid, JournalpostId journalpostId) {
+    private void leggTilVedleggOgFerdigstillForsendelse(UUID behandlingUid, JournalpostId journalpostId, Saksnummer saksnummer) {
         var taskGruppe = new ProsessTaskGruppe();
-        taskGruppe.addNesteSekvensiell(opprettTilknyttVedleggTask(behandlingUid, journalpostId));
-        taskGruppe.addNesteSekvensiell(opprettFerdigstillForsendelseTask(journalpostId));
+        taskGruppe.addNesteSekvensiell(opprettTilknyttVedleggTask(behandlingUid, journalpostId, saksnummer));
+        taskGruppe.addNesteSekvensiell(opprettFerdigstillForsendelseTask(behandlingUid, journalpostId, saksnummer));
         taskTjeneste.lagre(taskGruppe);
     }
 
-    private ProsessTaskData opprettTilknyttVedleggTask(UUID behandlingUuId, JournalpostId journalpostId) {
+    private ProsessTaskData opprettTilknyttVedleggTask(UUID behandlingUuId, JournalpostId journalpostId, Saksnummer saksnummer) {
         var prosessTaskData = ProsessTaskData.forProsessTask(TilknyttVedleggTask.class);
+        prosessTaskData.setSaksnummer(saksnummer.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, (String.valueOf(behandlingUuId)));
         prosessTaskData.setCallIdFraEksisterende();
         return prosessTaskData;
     }
 
-    private ProsessTaskData opprettFerdigstillForsendelseTask(JournalpostId journalpostId) {
+    private ProsessTaskData opprettFerdigstillForsendelseTask(UUID behandlingUuId, JournalpostId journalpostId, Saksnummer saksnummer) {
         var prosessTaskData = ProsessTaskData.forProsessTask(FerdigstillForsendelseTask.class);
+        prosessTaskData.setSaksnummer(saksnummer.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
+        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, (String.valueOf(behandlingUuId)));
         prosessTaskData.setCallIdFraEksisterende();
         return prosessTaskData;
     }
@@ -208,15 +213,15 @@ public class DokgenBrevproduksjonTjeneste {
                                                       boolean innsynMedVedlegg,
                                                       UUID behandlingUuId,
                                                       Distribusjonstype distribusjonstype,
-                                                      String saksnummer,
+                                                      Saksnummer saksnummer,
                                                       String unikBestillingsId) {
         var prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
+        prosessTaskData.setSaksnummer(saksnummer.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, unikBestillingsId);
         prosessTaskData.setProperty(BrevTaskProperties.DISTRIBUSJONSTYPE, distribusjonstype.name());
         // For logging context
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
-        prosessTaskData.setProperty(BrevTaskProperties.SAKSNUMMER, saksnummer);
         // må vente til vedlegg er knyttet og journalpost er ferdigstilt
         if (innsynMedVedlegg) {
             prosessTaskData.setNesteKjøringEtter(LocalDateTime.now().plusMinutes(1));
@@ -225,8 +230,9 @@ public class DokgenBrevproduksjonTjeneste {
         return prosessTaskData;
     }
 
-    private ProsessTaskData opprettPubliserHistorikkTask(UUID behandlingUuid, UUID bestillingUuid, String journalpostId, String dokumentId) {
+    private ProsessTaskData opprettPubliserHistorikkTask(UUID behandlingUuid, Saksnummer saksnummer, UUID bestillingUuid, String journalpostId, String dokumentId) {
         var prosessTaskData = ProsessTaskData.forProsessTask(SendKvitteringTask.class);
+        prosessTaskData.setSaksnummer(saksnummer.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, behandlingUuid.toString());
         prosessTaskData.setProperty(SendKvitteringTask.BESTILLING_UUID, bestillingUuid.toString());
         prosessTaskData.setProperty(SendKvitteringTask.JOURNALPOST_ID, journalpostId);

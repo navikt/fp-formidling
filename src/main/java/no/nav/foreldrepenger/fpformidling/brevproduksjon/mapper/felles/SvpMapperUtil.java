@@ -3,6 +3,7 @@ package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
@@ -31,7 +32,7 @@ public final class SvpMapperUtil {
 
     public static String leggTilLovreferanse(Avslagsårsak avslagsårsak) {
         var vilkårTyper = VilkårType.getVilkårTyper(avslagsårsak);
-        var lovReferanse = vilkårTyper.stream().map(vt -> vt.getLovReferanse(FagsakYtelseType.SVANGERSKAPSPENGER)).findFirst();
+        var lovReferanse = vilkårTyper.stream().map(vt -> vt.getLovReferanse(FagsakYtelseType.SVANGERSKAPSPENGER)).filter(Objects::nonNull).findFirst();
         return lovReferanse.orElse("");
     }
 

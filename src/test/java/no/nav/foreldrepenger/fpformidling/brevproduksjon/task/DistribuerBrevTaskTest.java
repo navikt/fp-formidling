@@ -21,6 +21,8 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 @ExtendWith(MockitoExtension.class)
 class DistribuerBrevTaskTest {
 
+    private static final String SAKSNUMMER = "9999";
+
     @Mock
     private Dokdist dokdist;
     @Mock
@@ -89,6 +91,7 @@ class DistribuerBrevTaskTest {
 
     private ProsessTaskData opprettProsessTaskData(String journalpostId, String bestillingsid, Distribusjonstype distribusjonstype) {
         var prosessTaskData = ProsessTaskData.forProsessTask(DistribuerBrevTask.class);
+        prosessTaskData.setSaksnummer(SAKSNUMMER);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId);
         prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, bestillingsid);
         prosessTaskData.setProperty(BrevTaskProperties.DISTRIBUSJONSTYPE, distribusjonstype.name());

@@ -48,6 +48,8 @@ spec:
     paths:
       - mountPath: /var/run/secrets/nais.io/serviceuser
         kvPath: {{serviceuserkv}}
+  envFrom:
+    - secret: fpformidling
   secureLogs:
     enabled: true
   observability:

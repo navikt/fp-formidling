@@ -20,8 +20,6 @@ import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentKvitteringDto;
 @ExtendWith(MockitoExtension.class)
 class DokumentKvitteringTjenesteTest {
 
-    private DokumentKvitteringTjeneste historikkTjeneste;
-
     @Mock
     private Behandlinger fpsakKlient;
 
@@ -30,7 +28,7 @@ class DokumentKvitteringTjenesteTest {
 
     @Test
     void publiserHistorikk() {
-        historikkTjeneste = new DokumentKvitteringTjeneste(fpsakKlient);
+        var historikkTjeneste = new DokumentKvitteringTjeneste(fpsakKlient);
         doNothing().when(fpsakKlient).kvitterDokument(Mockito.any());
 
         var forventetSaksnummer = "saksnummer";

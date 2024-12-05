@@ -7,11 +7,9 @@ import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriBuilderException;
-
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingRelLinkPayload;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.BehandlingResourceLink;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingDto;
-import no.nav.foreldrepenger.kontrakter.formidling.v1.DokumentProdusertDto;
 import no.nav.foreldrepenger.kontrakter.formidling.v3.DokumentKvitteringDto;
 import no.nav.vedtak.felles.integrasjon.rest.FpApplication;
 import no.nav.vedtak.felles.integrasjon.rest.RestClient;

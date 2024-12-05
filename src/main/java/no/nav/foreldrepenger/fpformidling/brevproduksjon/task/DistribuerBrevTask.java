@@ -55,7 +55,6 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
         prosessTaskData.setSaksnummer(saksnummer);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
-        prosessTaskData.setCallIdFraEksisterende();
         taskTjeneste.lagre(prosessTaskData);
     }
 }

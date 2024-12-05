@@ -32,6 +32,7 @@ public class SendKvitteringTask implements ProsessTaskHandler {
         kvitteringTjeneste.sendKvittering(prosessTaskData.getBehandlingUuid(),
             UUID.fromString(prosessTaskData.getPropertyValue(BESTILLING_UUID)),
             prosessTaskData.getPropertyValue(JOURNALPOST_ID),
-            prosessTaskData.getPropertyValue(DOKUMENT_ID));
+            prosessTaskData.getPropertyValue(DOKUMENT_ID),
+            prosessTaskData.getSaksnummer());
     }
 }

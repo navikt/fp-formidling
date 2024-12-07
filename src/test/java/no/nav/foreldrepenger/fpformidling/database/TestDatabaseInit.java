@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.database;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.naming.NamingException;
@@ -75,9 +76,8 @@ public final class TestDatabaseInit {
         cfg.setJdbcUrl(jdbcUrl);
         cfg.setUsername(username);
         cfg.setPassword(password);
-        cfg.setConnectionTimeout(1500);
-        cfg.setValidationTimeout(120L * 1000L);
         cfg.setMaximumPoolSize(4);
+        cfg.setConnectionTimeout(TimeUnit.SECONDS.toMillis(2)); // feiler fast hvis db ikke kjører lokalt.
         cfg.setAutoCommit(false);
         var ds = new HikariDataSource(cfg);
         Runtime.getRuntime().addShutdownHook(new Thread(ds::close));

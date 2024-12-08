@@ -19,7 +19,6 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
-import no.nav.foreldrepenger.fpformidling.server.TimingFilter;
 import no.nav.foreldrepenger.fpformidling.server.exceptions.ConstraintViolationMapper;
 import no.nav.foreldrepenger.fpformidling.server.exceptions.GeneralRestExceptionMapper;
 import no.nav.foreldrepenger.fpformidling.server.exceptions.JsonMappingExceptionMapper;
@@ -67,7 +66,6 @@ public class ApiConfig extends Application {
         classes.add(OpenApiResource.class);
 
         // Applikasjonsoppsett
-        classes.add(TimingFilter.class);
         classes.add(JacksonJsonConfig.class);
 
         // ExceptionMappers pga de som finnes i Jackson+Jersey-media

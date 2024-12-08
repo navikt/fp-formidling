@@ -1,5 +1,14 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.BESTILLING_ID;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.DISTRIBUSJONSTYPE;
+import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.JOURNALPOST_ID;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.DistribuerJournalpostRequest;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstidspunkt;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokdist.Distribusjonstype;
@@ -10,13 +19,6 @@ import no.nav.vedtak.felles.prosesstask.api.ProsessTask;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskHandler;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-
-import java.util.UUID;
-
-import static no.nav.foreldrepenger.fpformidling.brevproduksjon.task.BrevTaskProperties.*;
 
 @ApplicationScoped
 @ProsessTask(value = "formidling.distribuerBrev", maxFailedRuns = 2)
@@ -52,10 +54,9 @@ public class DistribuerBrevTask implements ProsessTaskHandler {
 
     private void opprettGosysOppgaveTask(JournalpostId journalpostId, UUID behandlingUuId, String saksnummer) {
         var prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
-        prosessTaskData.setSaksnummer(saksnummer);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
-        prosessTaskData.setCallIdFraEksisterende();
+        prosessTaskData.setBehandlingUUid(behandlingUuId);
+        Optional.ofNullable(saksnummer).ifPresent(prosessTaskData::setSaksnummer);
         taskTjeneste.lagre(prosessTaskData);
     }
 }

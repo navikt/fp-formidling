@@ -1,22 +1,24 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.task;
 
-import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
-import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.OppgaverTjeneste;
-import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
-import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.UUID;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.DomeneobjektProvider;
+import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
+import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakBackend;
+import no.nav.foreldrepenger.fpformidling.integrasjon.oppgave.OppgaverTjeneste;
+import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
+import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 
 @ExtendWith(MockitoExtension.class)
 class OpprettOppgaveTaskTest {
@@ -40,7 +42,7 @@ class OpprettOppgaveTaskTest {
         var prosessTaskData = ProsessTaskData.forProsessTask(OpprettOppgaveTask.class);
         prosessTaskData.setSaksnummer(saksnummer);
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
+        prosessTaskData.setBehandlingUUid(behandlingUuId);
 
         new OpprettOppgaveTask(tjeneste, provider).doTask(prosessTaskData);
 

@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.tjenester;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
@@ -82,14 +83,15 @@ public class BrevRestTjeneste {
     public Response bestillDokument(@Parameter(description = "Inneholder kode til brevmal og bestillingsdetaljer.") @TilpassetAbacAttributt(supplierClass = BestillingV3Supplier.class) @Valid DokumentBestillingDto dokumentbestillingDto) { // NOSONAR
         var hendelse = DokumentHendelseDtoMapper.mapFra(dokumentbestillingDto);
         LOG.info("Bestill V3 hendelse: {}", hendelse);
-        dokumentHendelseTjeneste.validerUnikOgLagre(hendelse).ifPresent(this::opprettBestillBrevTask);
+        dokumentHendelseTjeneste.validerUnikOgLagre(hendelse).ifPresent(h -> opprettBestillBrevTask(h, dokumentbestillingDto.saksnummer().saksnummer()));
         return Response.ok().build();
     }
 
-    private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {
+    private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse, String saksnummer) {
         var prosessTaskData = ProsessTaskData.forProsessTask(ProduserBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
+        prosessTaskData.setBehandlingUUid(dokumentHendelse.getBehandlingUuid());
+        Optional.ofNullable(saksnummer).ifPresent(prosessTaskData::setSaksnummer);
         taskTjeneste.lagre(prosessTaskData);
     }
 
@@ -97,7 +99,9 @@ public class BrevRestTjeneste {
         @Override
         public AbacDataAttributter apply(Object obj) {
             var req = (DokumentForhåndsvisDto) obj;
-            return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid());
+            return AbacDataAttributter.opprett()
+                .leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid())
+                .leggTil(StandardAbacAttributtType.SAKSNUMMER, req.saksnummer().saksnummer());
         }
     }
 
@@ -105,7 +109,9 @@ public class BrevRestTjeneste {
         @Override
         public AbacDataAttributter apply(Object obj) {
             var req = (DokumentBestillingDto) obj;
-            return AbacDataAttributter.opprett().leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid());
+            return AbacDataAttributter.opprett()
+                .leggTil(StandardAbacAttributtType.BEHANDLING_UUID, req.behandlingUuid())
+                .leggTil(StandardAbacAttributtType.SAKSNUMMER, req.saksnummer().saksnummer());
         }
     }
 }

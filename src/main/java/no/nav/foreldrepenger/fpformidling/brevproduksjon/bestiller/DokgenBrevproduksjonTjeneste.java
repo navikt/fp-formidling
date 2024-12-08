@@ -5,8 +5,6 @@ import static io.micrometer.core.instrument.Metrics.counter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +27,7 @@ import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.journal.OpprettJournalpostTjeneste;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
 import no.nav.foreldrepenger.fpformidling.typer.JournalpostId;
+import no.nav.foreldrepenger.fpformidling.typer.Saksnummer;
 import no.nav.vedtak.exception.TekniskException;
 import no.nav.vedtak.felles.integrasjon.dokarkiv.dto.OpprettJournalpostResponse;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
@@ -180,7 +179,6 @@ public class DokgenBrevproduksjonTjeneste {
                 dokumentHendelse.getBestillingUuid(),
                 response.journalpostId(),
                 response.dokumenter().getFirst().dokumentInfoId()));
-        taskGruppe.setCallIdFraEksisterende();
         taskTjeneste.lagre(taskGruppe);
     }
 
@@ -195,8 +193,7 @@ public class DokgenBrevproduksjonTjeneste {
         var prosessTaskData = ProsessTaskData.forProsessTask(TilknyttVedleggTask.class);
         prosessTaskData.setSaksnummer(saksnummer.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, (String.valueOf(behandlingUuId)));
-        prosessTaskData.setCallIdFraEksisterende();
+        prosessTaskData.setBehandlingUUid(behandlingUuId);
         return prosessTaskData;
     }
 
@@ -204,8 +201,7 @@ public class DokgenBrevproduksjonTjeneste {
         var prosessTaskData = ProsessTaskData.forProsessTask(FerdigstillForsendelseTask.class);
         prosessTaskData.setSaksnummer(saksnummer.getVerdi());
         prosessTaskData.setProperty(BrevTaskProperties.JOURNALPOST_ID, journalpostId.getVerdi());
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, (String.valueOf(behandlingUuId)));
-        prosessTaskData.setCallIdFraEksisterende();
+        prosessTaskData.setBehandlingUUid(behandlingUuId);
         return prosessTaskData;
     }
 
@@ -221,23 +217,21 @@ public class DokgenBrevproduksjonTjeneste {
         prosessTaskData.setProperty(BrevTaskProperties.BESTILLING_ID, unikBestillingsId);
         prosessTaskData.setProperty(BrevTaskProperties.DISTRIBUSJONSTYPE, distribusjonstype.name());
         // For logging context
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(behandlingUuId));
+        prosessTaskData.setBehandlingUUid(behandlingUuId);
         // må vente til vedlegg er knyttet og journalpost er ferdigstilt
         if (innsynMedVedlegg) {
             prosessTaskData.setNesteKjøringEtter(LocalDateTime.now().plusMinutes(1));
         }
-        prosessTaskData.setCallIdFraEksisterende();
         return prosessTaskData;
     }
 
     private ProsessTaskData opprettPubliserHistorikkTask(UUID behandlingUuid, Saksnummer saksnummer, UUID bestillingUuid, String journalpostId, String dokumentId) {
         var prosessTaskData = ProsessTaskData.forProsessTask(SendKvitteringTask.class);
         prosessTaskData.setSaksnummer(saksnummer.getVerdi());
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, behandlingUuid.toString());
+        prosessTaskData.setBehandlingUUid(behandlingUuid);
         prosessTaskData.setProperty(SendKvitteringTask.BESTILLING_UUID, bestillingUuid.toString());
         prosessTaskData.setProperty(SendKvitteringTask.JOURNALPOST_ID, journalpostId);
         prosessTaskData.setProperty(SendKvitteringTask.DOKUMENT_ID, dokumentId);
-        prosessTaskData.setCallIdFraEksisterende();
         return prosessTaskData;
     }
 

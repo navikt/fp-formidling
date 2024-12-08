@@ -5,9 +5,6 @@ import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import java.util.UUID;
 import java.util.function.Function;
 
-import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseDtoMapper;
-import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMal;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +35,9 @@ import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelseTjeneste;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.Dokgen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Dokumentdata;
+import no.nav.foreldrepenger.fpformidling.tjenester.DokumentHendelseDtoMapper;
 import no.nav.foreldrepenger.konfig.Environment;
+import no.nav.foreldrepenger.kontrakter.formidling.kodeverk.DokumentMal;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskData;
 import no.nav.vedtak.felles.prosesstask.api.ProsessTaskTjeneste;
 import no.nav.vedtak.mapper.json.DefaultJsonMapper;
@@ -150,7 +149,7 @@ public class ForvaltningRestTjeneste {
     private void opprettBestillBrevTask(DokumentHendelse dokumentHendelse) {
         var prosessTaskData = ProsessTaskData.forProsessTask(ProduserBrevTask.class);
         prosessTaskData.setProperty(BrevTaskProperties.HENDELSE_ID, String.valueOf(dokumentHendelse.getId()));
-        prosessTaskData.setProperty(BrevTaskProperties.BEHANDLING_UUID, String.valueOf(dokumentHendelse.getBehandlingUuid()));
+        prosessTaskData.setBehandlingUUid(dokumentHendelse.getBehandlingUuid());
         taskTjeneste.lagre(prosessTaskData);
     }
 

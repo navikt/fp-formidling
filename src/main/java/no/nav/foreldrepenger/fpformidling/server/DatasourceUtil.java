@@ -1,6 +1,7 @@
 package no.nav.foreldrepenger.fpformidling.server;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -31,10 +32,9 @@ class DatasourceUtil {
     private static HikariConfig initConnectionPoolConfig(int maxPoolSize) {
         var config = new HikariConfig();
         config.setJdbcUrl(ENV.getRequiredProperty("defaultDS.url"));
+        config.setConnectionTimeout(TimeUnit.SECONDS.toMillis(1));
         config.setMinimumIdle(0);
         config.setMaximumPoolSize(maxPoolSize);
-        config.setIdleTimeout(10001);
-        config.setMaxLifetime(30001);
         config.setConnectionTestQuery("select 1");
         config.setDriverClassName("org.postgresql.Driver");
 

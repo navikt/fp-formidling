@@ -14,7 +14,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Any;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
-import no.nav.vedtak.log.metrics.Controllable;
+import no.nav.vedtak.server.Controllable;
 
 /**
  * Initialiserer applikasjontjenester som implementer AppServiceHandler

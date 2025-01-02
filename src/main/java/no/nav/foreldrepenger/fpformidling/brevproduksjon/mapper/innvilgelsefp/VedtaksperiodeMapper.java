@@ -113,7 +113,7 @@ public final class VedtaksperiodeMapper {
             .orElse(false);
     }
 
-    private static List<Vedtaksperiode> mapPerioderUtenBeregningsgrunnlag(List<UttakResultatPeriode> perioderUtenBeregningsgrunnlag,
+    public static List<Vedtaksperiode> mapPerioderUtenBeregningsgrunnlag(List<UttakResultatPeriode> perioderUtenBeregningsgrunnlag,
                                                                           Språkkode språkkode) {
         List<Vedtaksperiode> perioder = new ArrayList<>();
         for (var uttakperiode : perioderUtenBeregningsgrunnlag) {
@@ -131,7 +131,8 @@ public final class VedtaksperiodeMapper {
             .medPeriodeFom(uttakperiode.getFom(), språkkode)
             .medPeriodeTom(uttakperiode.getTom(), språkkode)
             .medÅrsak(Årsak.of(uttakperiode.getPeriodeResultatÅrsak().getKode()))
-            .medStønadskontoType(hentStønadskontoType(uttakperiode)).build();
+            .medStønadskontoType(hentStønadskontoType(uttakperiode))
+            .medTidligstMottattDato(uttakperiode.getTidligstMottattDato(), språkkode).build();
     }
 
     private static Vedtaksperiode mapPerioderEtterFørste(TilkjentYtelsePeriode tilkjentYtelsePeriode,

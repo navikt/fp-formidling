@@ -14,6 +14,7 @@ import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.Ti
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdataMapper.harVarierendeDagsats;
 import static no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdataMapper.starterMedFullUtbetaling;
 import static no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.felles.Beløp.of;
+import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDato;
 import static no.nav.foreldrepenger.fpformidling.typer.Dato.formaterDatoNorsk;
 import static no.nav.foreldrepenger.fpformidling.typer.DatoIntervall.fraOgMedTilOgMed;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,6 +29,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+
+import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -270,6 +274,20 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, avslåttPeriode))).isFalse();
         assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, avslåttPeriode, toHundreKronerDagsatsPeriode))).isFalse();
         assertThat(harVarierendeDagsats(List.of(toHundreKronerDagsatsPeriode, avslåttPeriode, hundreKronerDagsatsPeriode))).isTrue();
+    }
+    @Test
+    void avslåtte_perioder_får_tidligstmottatt() {
+        var tidligstMottatt = LocalDate.now();
+        var avslåttUttaksperiode = UttakResultatPeriode.ny()
+            .medPeriodeResultatType(PeriodeResultatType.AVSLÅTT)
+            .medTidsperiode(DatoIntervall.fraOgMedTilOgMed(LocalDate.now(), LocalDate.now().plusDays(10)))
+            .medTidligstMottattDato(tidligstMottatt)
+            .build();
+
+        var resultatPerioder = VedtaksperiodeMapper.mapPerioderUtenBeregningsgrunnlag(List.of(avslåttUttaksperiode), Språkkode.NB);
+        assertThat(resultatPerioder).hasSize(1);
+        assertThat(resultatPerioder.getFirst().getTidligstMottattDato()).isEqualTo(formaterDato(tidligstMottatt, Språkkode.NB));
+
     }
 
     private FagsakBackend opprettFagsakBackend() {

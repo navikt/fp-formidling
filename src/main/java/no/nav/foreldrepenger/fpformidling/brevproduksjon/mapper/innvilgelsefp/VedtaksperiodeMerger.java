@@ -90,7 +90,8 @@ public final class VedtaksperiodeMerger {
 
     private static boolean hvisAvslåttSøknadsfristLikeTidligstMottattDato(Vedtaksperiode periodeEn, Vedtaksperiode periodeTo) {
         if (periodeEn.getÅrsak() != null && PeriodeResultatÅrsak.SØKNADSFRIST.getKode().equals((periodeEn.getÅrsak()).getKode())) {
-            return Objects.equals(periodeEn.getÅrsak(), periodeTo.getÅrsak()) && periodeEn.getTidligstMottattDato().equals(periodeTo.getTidligstMottattDato());
+            return Objects.equals(periodeEn.getÅrsak(), periodeTo.getÅrsak())
+                && Objects.equals(periodeEn.getTidligstMottattDato(),periodeTo.getTidligstMottattDato());
         } else {
             return true;
         }

@@ -236,7 +236,7 @@ class BrevBestillerTjenesteTest {
         // Arrange
         var randomBestillingsUuid = UUID.randomUUID();
         var personinfo = mockPdl(false);
-        var behandling = mockDomeneobjektProvider(personinfo, false);
+        mockDomeneobjektProvider(personinfo, false);
         var dokumentHendelse = opprettDokumentHendelse(randomBestillingsUuid, DokumentMal.ENGANGSSTØNAD_INNVILGELSE, null);
         when(dokgenRestKlient.genererPdf(anyString(), any(Språkkode.class), any(Dokumentdata.class))).thenReturn(BREVET);
         mockJournal(dokumentHendelse);

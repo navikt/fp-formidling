@@ -57,27 +57,25 @@ class SjekkDtoStrukturTest {
                 if (prop.getReadMethod() != null) {
                     var readName = prop.getReadMethod();
                     var propName = prop.getName();
-                    if (!SKIPPED.contains(propName)) {
-                        if (readName.getAnnotation(JsonIgnore.class) == null && readName.getAnnotation(JsonProperty.class) == null) {
+                    if (!SKIPPED.contains(propName) && readName.getAnnotation(JsonIgnore.class) == null && readName.getAnnotation(JsonProperty.class) == null) {
                             Assertions.assertThat(propName)
                                 .as("Gettere er ikke samstemt med felt i klasse, sørg for matchende bean navn og return type eller bruk @JsonProperty/@JsonIgnore/@JsonValue til å sette navn for json struktur: "
                                     + c.getName())
                                 .isIn(fieldNames);
                         }
-                    }
+
                 }
 
                 if (prop.getWriteMethod() != null) {
                     var readName = prop.getWriteMethod();
                     var propName = prop.getName();
-                    if (!SKIPPED.contains(propName)) {
-                        if (readName.getAnnotation(JsonIgnore.class) == null && readName.getAnnotation(JsonProperty.class) == null) {
+                    if (!SKIPPED.contains(propName) && readName.getAnnotation(JsonIgnore.class) == null && readName.getAnnotation(JsonProperty.class) == null) {
                             Assertions.assertThat(propName)
                                 .as("Settere er ikke samstemt med felt i klasse, sørg for matchende bean navn og return type eller bruk @JsonProperty/@JsonIgnore/@JsonValue til å sette navn for json struktur: "
                                     + c.getName())
                                 .isIn(fieldNames);
                         }
-                    }
+
                 }
             }
         }

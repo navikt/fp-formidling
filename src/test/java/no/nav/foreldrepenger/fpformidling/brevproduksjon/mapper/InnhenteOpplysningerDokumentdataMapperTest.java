@@ -54,7 +54,6 @@ class InnhenteOpplysningerDokumentdataMapperTest {
 
     private static final String FRITEKST = "Tekst1\n- Vedlegg1\n- Vedlegg2\nTekst2\nTekst3\n- Vedlegg3\nTekst4";
     private static final LocalDate SØKNAD_DATO = LocalDate.now().minusDays(1);
-    private static final LocalDate KLAGE_DATO = LocalDate.now().minusDays(2);
 
     @Mock
     private DomeneobjektProvider domeneobjektProvider = mock(DomeneobjektProvider.class);

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 class RestApiInputValideringAnnoteringTest extends RestApiTester {
 
-    private Function<Method, String> printKlasseOgMetodeNavn = (method -> String.format("%s.%s", method.getDeclaringClass(), method.getName()));
+    private final Function<Method, String> printKlasseOgMetodeNavn = (method -> String.format("%s.%s", method.getDeclaringClass(), method.getName()));
 
     /**
      * IKKE ignorer eller fjern denne testen, den sørger for at inputvalidering er i orden for REST-grensesnittene
@@ -21,7 +21,7 @@ class RestApiInputValideringAnnoteringTest extends RestApiTester {
      * Spør på Slack hvis du trenger hjelp til å endre koden din slik at den går igjennom her
      */
     @Test
-    void alle_felter_i_objekter_som_brukes_som_inputDTO_skal_enten_ha_valideringsannotering_eller_være_av_godkjent_type() throws Exception {
+    void alle_felter_i_objekter_som_brukes_som_inputDTO_skal_enten_ha_valideringsannotering_eller_være_av_godkjent_type() {
         for (var method : finnAlleRestMetoder()) {
             for (var i = 0; i < method.getParameterCount(); i++) {
                 assertThat(method.getParameterTypes()[i].isAssignableFrom(String.class)).as(

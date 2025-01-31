@@ -186,10 +186,6 @@ class ForeldrepengerOpphørDokumentdataMapperTest {
                 true, false, false));
     }
 
-    private Behandling opprettBehandling() {
-        return opprettBehandling(null);
-    }
-
     private Behandling opprettBehandling(LocalDate opphørsdato) {
         return Behandling.builder()
             .medUuid(UUID.randomUUID())

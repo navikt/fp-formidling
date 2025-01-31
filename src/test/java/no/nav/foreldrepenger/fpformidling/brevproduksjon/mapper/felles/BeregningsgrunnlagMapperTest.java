@@ -1,13 +1,11 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.BeregningsgrunnlagMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +20,6 @@ class BeregningsgrunnlagMapperTest {
     private Beregningsgrunnlag beregningsgrunnlag;
     private static final BigDecimal AVKORTET_PR_ÅR = BigDecimal.valueOf(60);
     private static final BigDecimal BRUTTO_PR_ÅR = BigDecimal.valueOf(120);
-    private static final BigDecimal GRUNNBELØP = BigDecimal.valueOf(50_000);
     private static final long STANDARD_PERIODE_DAGSATS = 100L;
 
     @BeforeEach

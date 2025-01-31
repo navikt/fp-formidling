@@ -6,17 +6,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
-
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.fagsak.FagsakYtelseType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
-
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 class FritekstTest {
 
@@ -52,7 +49,7 @@ class FritekstTest {
         // Arrange
         behandling = standardBehandlingBuilder().medBehandlingsresultat(
             Behandlingsresultat.builder().medAvslagarsakFritekst(BEHANDLING_FRITEKST).build()).build();
-        var dokumentHendelse = standardHendelseBuilder().build();
+        dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
         assertThat(fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(BEHANDLING_FRITEKST);
@@ -64,7 +61,7 @@ class FritekstTest {
         behandling = standardBehandlingBuilder().medBehandlingsresultat(Behandlingsresultat.builder()
             .medAvslagarsakFritekst("Tekst\n_Overskrift\nMer tekst\n- Punkt 1\n- Punkt 2\n_Ny overskrift\nTekst-med-bindestrek_og_underscore")
             .build()).build();
-        var dokumentHendelse = standardHendelseBuilder().build();
+        dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
         assertThat(fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(
@@ -77,7 +74,7 @@ class FritekstTest {
         behandling = standardBehandlingBuilder().medBehandlingsresultat(Behandlingsresultat.builder()
             .medAvslagarsakFritekst("Les mer om dette på nav.no/foreldrepenger.\nDu finner mer informasjon på nav.no/klage og nav.no/familie.")
             .build()).build();
-        var dokumentHendelse = standardHendelseBuilder().build();
+        dokumentHendelse = standardHendelseBuilder().build();
 
         // Act + Assert
         assertThat(fra(dokumentHendelse, behandling).get().getFritekst()).isEqualTo(
@@ -93,10 +90,6 @@ class FritekstTest {
         "'- Vedlegg1', '- Vedlegg1'"
     })
     void testFritekstFormatering(String fritekst, String forventetTekst) {
-        // Arrange
-        //var fritekstInn = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\nTekst 2.\nTekst 3\n- Vedlegg 3\nTekst 4";
-        //var fritekstUt = "Tekst 1\n- Vedlegg 1\n- Vedlegg 2\n\nTekst 2.\\\nTekst 3\n- Vedlegg 3\n\nTekst 4";
-
         // Act + Assert
         assertThat(fritekst).isNotNull();
         assertThat(ivaretaLinjeskiftIFritekst(fritekst)).isEqualTo(forventetTekst);

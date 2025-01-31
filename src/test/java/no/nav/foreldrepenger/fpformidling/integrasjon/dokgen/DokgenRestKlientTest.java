@@ -39,7 +39,7 @@ class DokgenRestKlientTest {
     void generatePdf(int statusCode, String message) {
         var template = "abc";
         var variation = "template_nb";
-        var body = DefaultJsonMapper.toJson(
+        DefaultJsonMapper.toJson(
             new ErrorResponse(statusCode, message, message, String.format("/template/%s/%s/create-pdf-variation", template, variation)));
 
         when(restClient.sendReturnByteArray(any())).thenThrow(

@@ -18,7 +18,7 @@ import no.nav.vedtak.felles.testutilities.db.EntityManagerAwareTest;
  * Tester at alle migreringer følger standarder for navn og god praksis.
  */
 @ExtendWith(JpaExtension.class)
-public class SjekkDbStrukturTest extends EntityManagerAwareTest {
+class SjekkDbStrukturTest extends EntityManagerAwareTest {
 
     @Test
     @DisplayName("Test at alle tabeller er kommentert.")

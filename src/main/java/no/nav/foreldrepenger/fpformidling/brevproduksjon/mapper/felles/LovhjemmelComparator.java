@@ -1,16 +1,18 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Comparator;
 
 public class LovhjemmelComparator implements Comparator<String>, Serializable {
+    @Serial
     private static final long serialVersionUID = 7736396250271405587L;
 
     @Override
     public int compare(String hjemmel1, String hjemmel2) {
-        var lovOgParagraf1 = hjemmel1.split("-|\\s");
-        var lovOgParagraf2 = hjemmel2.split("-|\\s");
+    var lovOgParagraf1 = hjemmel1.split("[-\\s]");
+    var lovOgParagraf2 = hjemmel2.split("[-\\s]");
         if (!gyldigLovOgParagraf(lovOgParagraf1)) {
             return -1;
         } else if (!gyldigLovOgParagraf(lovOgParagraf2)) {

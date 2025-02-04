@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import no.nav.foreldrepenger.fpformidling.brevproduksjon.mapper.felles.FellesMapper;
 import org.junit.jupiter.api.Test;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;

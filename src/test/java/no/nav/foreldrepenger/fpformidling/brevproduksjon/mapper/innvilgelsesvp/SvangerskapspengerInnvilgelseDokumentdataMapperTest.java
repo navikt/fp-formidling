@@ -108,9 +108,9 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
 
     private DokumentData dokumentData;
 
-    private final Arbeidsgiver ARBEIDSGIVER1 = new Arbeidsgiver("1", ARBEIDSGIVER1_NAVN);
-    private final Arbeidsgiver ARBEIDSGIVER3 = new Arbeidsgiver("3", ARBEIDSGIVER3_NAVN);
-    private final Arbeidsgiver ARBEIDSGIVER2 = new Arbeidsgiver("2", ARBEIDSGIVER2_NAVN);
+    private final Arbeidsgiver arbeidsgiver1 = new Arbeidsgiver("1", ARBEIDSGIVER1_NAVN);
+    private final Arbeidsgiver arbeidsgiver2 = new Arbeidsgiver("2", ARBEIDSGIVER2_NAVN);
+    private final Arbeidsgiver arbeidsgiver3 = new Arbeidsgiver("3", ARBEIDSGIVER3_NAVN);
 
     private SvangerskapspengerInnvilgelseDokumentdataMapper dokumentdataMapper;
 
@@ -327,7 +327,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     }
 
     private BGAndelArbeidsforhold lagBgAndelArbeidsforholdPeriode1() {
-        return new BGAndelArbeidsforhold(ARBEIDSGIVER1, ArbeidsforholdRef.ref("1"), BigDecimal.valueOf(NATURALYTELSE_TILKOMMET), BigDecimal.ZERO);
+        return new BGAndelArbeidsforhold(arbeidsgiver1, ArbeidsforholdRef.ref("1"), BigDecimal.valueOf(NATURALYTELSE_TILKOMMET), BigDecimal.ZERO);
     }
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode2() {
@@ -351,7 +351,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
     }
 
     private BGAndelArbeidsforhold lagBgAndelArbeidsforholdPeriode2() {
-        return new BGAndelArbeidsforhold(ARBEIDSGIVER1, ArbeidsforholdRef.ref("1"), BigDecimal.valueOf(NATURALYTELSE_BORTFALT), BigDecimal.ZERO);
+        return new BGAndelArbeidsforhold(arbeidsgiver1, ArbeidsforholdRef.ref("1"), BigDecimal.valueOf(NATURALYTELSE_BORTFALT), BigDecimal.ZERO);
     }
 
     private BeregningsgrunnlagPeriode lagBeregningsgrunnlagPeriode3() {
@@ -442,7 +442,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                     .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                     .medStillingsprosent(BigDecimal.valueOf(100))
                     .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE1)
-                    .medArbeidsgiver(ARBEIDSGIVER1)
+                    .medArbeidsgiver(arbeidsgiver1)
                     .medDagsats(DAGSATS_PERIODE1.intValue())
                     .build()))
                 .build(), TilkjentYtelsePeriode.ny()
@@ -452,7 +452,7 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
                     .medErArbeidsgiverMottaker(true)
                     .medAktivitetStatus(AktivitetStatus.ARBEIDSTAKER)
                     .medStillingsprosent(BigDecimal.valueOf(100))
-                    .medArbeidsgiver(ARBEIDSGIVER1)
+                    .medArbeidsgiver(arbeidsgiver1)
                     .medUtbetalingsgrad(UTBETALINGSGRAD_PERIODE2)
                     .medDagsats(DAGSATS_PERIODE2.intValue())
                     .build()))
@@ -529,16 +529,16 @@ class SvangerskapspengerInnvilgelseDokumentdataMapperTest {
             .build();
         var svpUttakResultatArbeidsforhold1 = SvpUttakResultatArbeidsforhold.Builder.ny()
             .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
-            .medArbeidsgiver(ARBEIDSGIVER1)
+            .medArbeidsgiver(arbeidsgiver1)
             .leggTilPerioder(of(uttakPeriode1, uttakPeriode2, uttakPeriode5)).build();
         var svpUttakResultatArbeidsforhold2 = SvpUttakResultatArbeidsforhold.Builder.ny()
-            .medArbeidsgiver(ARBEIDSGIVER2)
+            .medArbeidsgiver(arbeidsgiver2)
             .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
             .leggTilPerioder(of(uttakPeriode3)).build();
         var svpUttakResultatArbeidsforhold3 = SvpUttakResultatArbeidsforhold.Builder.ny()
             .leggTilPerioder(of(uttakPeriode4))
             .medArbeidsforholdIkkeOppfyltÅrsak(ARBEIDSFORHOLD_IKKE_OPPFYLT_ÅRSAK)
-            .medArbeidsgiver(ARBEIDSGIVER3)
+            .medArbeidsgiver(arbeidsgiver3)
             .medUttakArbeidType(UttakArbeidType.ORDINÆRT_ARBEID)
             .build();
         return SvangerskapspengerUttak.Builder.ny()

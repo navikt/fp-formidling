@@ -2,7 +2,6 @@ package no.nav.foreldrepenger.fpformidling.domene.vedtak;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;

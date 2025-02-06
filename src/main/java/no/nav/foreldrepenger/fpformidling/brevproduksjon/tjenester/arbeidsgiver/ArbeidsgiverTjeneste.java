@@ -1,5 +1,6 @@
 package no.nav.foreldrepenger.fpformidling.brevproduksjon.tjenester.arbeidsgiver;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -54,7 +55,7 @@ public class ArbeidsgiverTjeneste {
             cache.put(arbeidsgiverReferanse, nyttNavn);
             return nyttNavn;
         }
-        if (OrganisasjonsNummerValidator.erGyldig(arbeidsgiverReferanse) && KUNSTIG_ORG.equals(arbeidsgiverReferanse)) {
+        if (Objects.equals(KUNSTIG_ORG, arbeidsgiverReferanse)) {
             return "Arbeidsgiver utenom register";
         }
         var personinfo = hentInformasjonFraTps(arbeidsgiverReferanse);

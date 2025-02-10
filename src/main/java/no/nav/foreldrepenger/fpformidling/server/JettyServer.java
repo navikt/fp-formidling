@@ -92,7 +92,7 @@ public class JettyServer {
     }
 
     private void konfigurerJndi() throws NamingException {
-        new EnvEntry("jdbc/defaultDS", DatasourceUtil.createDatasource(DatasourceRole.USER, 4));
+        new EnvEntry("jdbc/defaultDS", DatasourceUtil.createDatasource(DatasourceRole.USER, 10));
     }
 
     void migrerDatabaser() {

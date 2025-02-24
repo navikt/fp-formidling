@@ -1,21 +1,21 @@
 package no.nav.foreldrepenger.fpformidling.server.abac;
 
+import java.util.List;
 import java.util.UUID;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.core.UriBuilder;
-import jakarta.ws.rs.core.UriBuilderException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.core.UriBuilder;
+import jakarta.ws.rs.core.UriBuilderException;
 import no.nav.vedtak.felles.integrasjon.rest.FpApplication;
 import no.nav.vedtak.felles.integrasjon.rest.RestClient;
 import no.nav.vedtak.felles.integrasjon.rest.RestClientConfig;
 import no.nav.vedtak.felles.integrasjon.rest.RestConfig;
 import no.nav.vedtak.felles.integrasjon.rest.RestRequest;
 import no.nav.vedtak.felles.integrasjon.rest.TokenFlow;
-import no.nav.vedtak.sikkerhet.abac.pipdata.AbacPipDto;
+import no.nav.vedtak.sikkerhet.abac.pipdata.PipAktørId;
 
 @ApplicationScoped
 @RestClientConfig(tokenConfig = TokenFlow.AZUREAD_CC, application = FpApplication.FPSAK)
@@ -34,18 +34,18 @@ public class PipRestKlient {
     }
 
 
-    public AbacPipDto hentPipdataForBehandling(UUID behandlingUUid) {
+    public List<PipAktørId> hentPipdataForBehandling(UUID behandlingUUid) {
         try {
             var uri = UriBuilder.fromUri(restConfig.fpContextPath())
                 .path(PIP_PATH)
-                .path("/pipdata-for-behandling-appintern")
+                .path("/aktoer-for-behandling")
                 .queryParam("behandlingUuid", behandlingUUid.toString())
                 .build();
-            return restClient.sendReturnOptional(RestRequest.newGET(uri, restConfig), AbacPipDto.class).orElseThrow(IllegalStateException::new);
+            return restClient.sendReturnList(RestRequest.newGET(uri, restConfig), PipAktørId.class);
         } catch (IllegalArgumentException | UriBuilderException e) {
             LOG.error("Feil ved oppretting av URI.", e);
         }
-        return null;
+        return List.of();
     }
 
 }

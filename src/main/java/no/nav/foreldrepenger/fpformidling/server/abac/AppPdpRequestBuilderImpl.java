@@ -1,7 +1,9 @@
 package no.nav.foreldrepenger.fpformidling.server.abac;
 
+import static no.nav.vedtak.sikkerhet.abac.pdp.ForeldrepengerDataKeys.BEHANDLING_STATUS;
+import static no.nav.vedtak.sikkerhet.abac.pdp.ForeldrepengerDataKeys.FAGSAK_STATUS;
+
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -12,6 +14,8 @@ import no.nav.vedtak.sikkerhet.abac.AbacDataAttributter;
 import no.nav.vedtak.sikkerhet.abac.PdpRequestBuilder;
 import no.nav.vedtak.sikkerhet.abac.StandardAbacAttributtType;
 import no.nav.vedtak.sikkerhet.abac.pdp.AppRessursData;
+import no.nav.vedtak.sikkerhet.abac.pipdata.PipBehandlingStatus;
+import no.nav.vedtak.sikkerhet.abac.pipdata.PipFagsakStatus;
 
 
 /**
@@ -45,9 +49,9 @@ public class AppPdpRequestBuilderImpl implements PdpRequestBuilder {
         behandlingUuids.stream().findFirst().ifPresent(b -> {
             MDC_EXTENDED_LOG_CONTEXT.add("behandling", b);
             var dto = pipRestKlient.hentPipdataForBehandling(b);
-            appRessursData.leggTilAbacAktørIdSet(dto.aktørIder());
-            Optional.ofNullable(dto.fagsakStatus()).ifPresent(appRessursData::medFagsakStatus);
-            Optional.ofNullable(dto.behandlingStatus()).ifPresent(appRessursData::medBehandlingStatus);
+            appRessursData.leggTilAbacAktørIdSet(dto)
+                .leggTilRessurs(FAGSAK_STATUS, PipFagsakStatus.UNDER_BEHANDLING)
+                .leggTilRessurs(BEHANDLING_STATUS, PipBehandlingStatus.UTREDES);
         });
         return appRessursData.build();
     }

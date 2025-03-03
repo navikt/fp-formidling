@@ -84,6 +84,9 @@ public class ForeldrepengerInnvilgelseDokumentdataMapper implements Dokumentdata
             .map(domeneobjektProvider::hentFamiliehendelse);
         var fagsak = domeneobjektProvider.hentFagsakBackend(behandling);
         var saldoer = domeneobjektProvider.hentSaldoer(behandling);
+        if (uttak.perioder().isEmpty() || saldoer.stønadskontoer().isEmpty()) {
+            throw new IllegalStateException("Ikke støttet å generere innvilgelsesbrev uten uttak");
+        }
         var språkkode = behandling.getSpråkkode();
         var utenMinsterett = behandling.utenMinsterett();
         var ytelseFordeling = domeneobjektProvider.ytelseFordeling(behandling);

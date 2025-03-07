@@ -10,6 +10,7 @@ import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.BehandlingResultatT
 
 public class Behandlingsresultat {
     private Avslagsårsak avslagsårsak; //Kode
+    private String fritekstbrevHtml;
     private String fritekstbrev;
     private String overskrift;
     private BehandlingResultatType behandlingResultatType;
@@ -26,6 +27,7 @@ public class Behandlingsresultat {
 
     private Behandlingsresultat(Builder builder) {
         avslagsårsak = builder.avslagsårsak;
+        fritekstbrevHtml = builder.fritekstbrevHtml;
         fritekstbrev = builder.fritekstbrev;
         overskrift = builder.overskrift;
         behandlingResultatType = builder.behandlingResultatType;
@@ -53,6 +55,10 @@ public class Behandlingsresultat {
 
     public Avslagsårsak getAvslagsårsak() {
         return avslagsårsak;
+    }
+
+    public String getFritekstbrevHtml() {
+        return fritekstbrevHtml;
     }
 
     public String getFritekstbrev() {
@@ -101,6 +107,7 @@ public class Behandlingsresultat {
 
     public static final class Builder {
         private Avslagsårsak avslagsårsak;
+        private String fritekstbrevHtml;
         private String fritekstbrev;
         private String overskrift;
         private BehandlingResultatType behandlingResultatType;
@@ -123,6 +130,11 @@ public class Behandlingsresultat {
 
         public Builder medFritekstbrev(String fritekstbrev) {
             this.fritekstbrev = fritekstbrev;
+            return this;
+        }
+
+        public Builder medFritektsbrevHtml(String fritekstbrevHtml) {
+            this.fritekstbrevHtml = fritekstbrevHtml;
             return this;
         }
 

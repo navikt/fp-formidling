@@ -9,6 +9,7 @@ import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandling;
 import no.nav.foreldrepenger.fpformidling.domene.dokumentdata.BestillingType;
 import no.nav.foreldrepenger.fpformidling.domene.hendelser.DokumentHendelse;
 import no.nav.foreldrepenger.fpformidling.kodeverk.kodeverdi.DokumentMalType;
+import no.nav.foreldrepenger.fpformidling.tjenester.ForhåndsvisDokumentHTMLDto;
 import no.nav.foreldrepenger.fpformidling.typer.DokumentMal;
 
 @ApplicationScoped
@@ -31,6 +32,11 @@ public class BrevBestillerTjeneste {
     public byte[] forhandsvisBrev(DokumentHendelse dokumentHendelse) {
         var behandling = hentBehandling(dokumentHendelse.getBehandlingUuid());
         return dokgenBrevproduksjonTjeneste.forhåndsvisBrev(dokumentHendelse, behandling);
+    }
+
+    public String genererBrevHtml(DokumentHendelse dokumentHendelse) {
+        var behandling = hentBehandling(dokumentHendelse.getBehandlingUuid());
+        return dokgenBrevproduksjonTjeneste.genererBrevHtml(dokumentHendelse, behandling);
     }
 
     public void bestillBrev(DokumentHendelse dokumentHendelse) {
@@ -59,6 +65,7 @@ public class BrevBestillerTjeneste {
     private DokumentMalType mapDokumentMalType(DokumentMal dokumentMal) {
         return switch (dokumentMal) {
             case FRITEKSTBREV -> DokumentMalType.FRITEKSTBREV;
+            case FRITEKSTBREV_HTML -> DokumentMalType.FRITEKSTBREV_HTML;
             case KLAGE_AVVIST -> DokumentMalType.KLAGE_AVVIST;
             case KLAGE_OMGJORT -> DokumentMalType.KLAGE_OMGJORT;
             case KLAGE_OVERSENDT -> DokumentMalType.KLAGE_OVERSENDT;

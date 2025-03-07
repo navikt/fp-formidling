@@ -3,10 +3,8 @@ package no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.mapper;
 import static no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat.builder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import no.nav.foreldrepenger.fpformidling.domene.behandling.Behandlingsresultat;
-import no.nav.foreldrepenger.fpformidling.domene.behandling.KonsekvensForYtelsen;
 import no.nav.foreldrepenger.fpformidling.integrasjon.fpsak.dto.behandling.BehandlingsresultatDto;
 
 public final class BehandlingsresultatDtoMapper {
@@ -22,16 +20,16 @@ public final class BehandlingsresultatDtoMapper {
         if (dto.getType() != null) {
             builder.medBehandlingResultatType(dto.getType());
         }
-        builder.medFritekstbrev(dto.getFritekstbrev())
-            .medOverskrift(dto.getOverskrift())
-            .medAvslagarsakFritekst(dto.getAvslagsarsakFritekst());
-        List<KonsekvensForYtelsen> konsekvenserForYtelsen = new ArrayList<>(dto.getKonsekvenserForYtelsen());
-
-        builder.medKonsekvenserForYtelsen(konsekvenserForYtelsen);
-        builder.medSkjæringstidspunkt(dto.getSkjæringstidspunkt());
-        builder.medUtenMinsterett(dto.utenMinsterett());
-        builder.medEndretDekningsgrad(dto.endretDekningsgrad());
-        builder.medOpphørsdato(dto.getOpphørsdato());
-        return builder.build();
+        return builder
+                .medOverskrift(dto.getOverskrift())
+                .medFritekstbrev(dto.getFritekstbrev())
+                .medFritektsbrevHtml(dto.getFritekstbrevHtml())
+                .medAvslagarsakFritekst(dto.getAvslagsarsakFritekst())
+                .medKonsekvenserForYtelsen(new ArrayList<>(dto.getKonsekvenserForYtelsen()))
+                .medSkjæringstidspunkt(dto.getSkjæringstidspunkt())
+                .medUtenMinsterett(dto.utenMinsterett())
+                .medEndretDekningsgrad(dto.endretDekningsgrad())
+                .medOpphørsdato(dto.getOpphørsdato())
+                .build();
     }
 }

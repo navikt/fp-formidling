@@ -30,9 +30,14 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.foreldrepenger.fpformidling.domene.geografisk.Språkkode;
+import no.nav.foreldrepenger.fpformidling.integrasjon.dokgen.dto.innvilgelsefp.ForeldrepengerInnvilgelseDokumentdata;
+import no.nav.foreldrepenger.fpformidling.konfig.JacksonJsonConfig;
 import no.nav.foreldrepenger.fpformidling.typer.DatoIntervall;
 
+import no.nav.vedtak.mapper.json.DefaultJsonMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -118,6 +123,123 @@ class ForeldrepengerInnvilgelseDokumentdataMapperTest {
         behandling = opprettBehandling();
         dokumentFelles = lagStandardDokumentFelles(dokumentData, DokumentFelles.Kopi.JA, false);
         dokumentHendelse = lagStandardHendelseBuilder().build();
+    }
+
+    @Test
+    void asdadada() throws JsonProcessingException {
+        var dokgen = """
+                {
+                  "felles": {
+                    "søkerNavn": "Dolly Duck",
+                    "søkerPersonnummer": "300220 12345",
+                    "brevDato": "4. mai 2021",
+                    "erAutomatiskBehandlet": true,
+                    "saksnummer": "123456789",
+                    "erUtkast": false
+                  },
+                  "behandlingType": "FØRSTEGANGSSØKNAD",
+                  "behandlingResultatType": "INNVILGET",
+                  "konsekvensForInnvilgetYtelse": "ENDRING_I_UTTAK",
+                  "dekningsgrad": 100,
+                  "dagsats": 2209,
+                  "månedsbeløp": 47879,
+                  "seksG": 608106,
+                  "inntektOverSeksG": false,
+                  "forMyeUtbetalt": "JOBB",
+                  "inntektMottattArbeidsgiver": false,
+                  "annenForelderHarRett": true,
+                  "annenForelderRettEØS": false,
+                  "annenForelderHarRettVurdert": "JA",
+                  "aleneomsorgKode": "NEI",
+                  "ikkeOmsorg": false,
+                  "barnErFødt": true,
+                  "årsakErFødselshendelse": false,
+                  "gjelderMor": true,
+                  "gjelderFødsel": true,
+                  "erBesteberegning": false,
+                  "seksAvDeTiBeste": false,
+                  "ingenRefusjon": false,
+                  "delvisRefusjon": false,
+                  "fullRefusjon": true,
+                  "fbEllerRvInnvilget": true,
+                  "antallInnvilgedePerioder": 1,
+                  "antallAvslåttePerioder": 1,
+                  "antallArbeidsgivere": 2,
+                  "dagerTaptFørTermin": 0,
+                  "disponibleDager": 0,
+                  "disponibleDagerUtenAktivitetskrav": 0,
+                  "disponibleDagerMedAktivitetskrav": 0,
+                  "disponibleFellesDager": 10,
+                  "sisteDagAvSistePeriode": "4. november 2022",
+                  "stønadsperiodeFom": "4. juni 2022",
+                  "utbetalingFom": "4. juni 2022",
+                  "stønadsperiodeTom": "4. november 2022",
+                  "flerbarnsdagerUtvidetUker": 3,
+                  "antallBarn": 2,
+                  "prematurDager": 1,
+                  "antallDødeBarn": 0,
+                  "perioder": [
+                    {
+                      "innvilget": true,
+                      "årsak": "2001",
+                      "periodeFom": "15. april 2021",
+                      "periodeTom": "18. august 2021",
+                      "periodeDagsats": 1000,
+                      "antallTapteDager": 0,
+                      "prioritertUtbetalingsgrad": 100.0,
+                      "arbeidsforholdsliste": [
+                        {
+                          "arbeidsgiverNavn": "Arbeidsgiver 1",
+                          "gradering": false,
+                          "utbetalingsgrad": 100.0,
+                          "prosentArbeid": 0.0,
+                          "stillingsprosent": 100.0
+                        }
+                      ]
+                    },
+                    {
+                      "innvilget": false,
+                      "årsak": "4032",
+                      "periodeFom": "19. august 2021",
+                      "periodeTom": "24. september 2021",
+                      "periodeDagsats": 1200,
+                      "antallTapteDager": 0,
+                      "prioritertUtbetalingsgrad": 100.0,
+                      "arbeidsforholdsliste": []
+                    }
+                  ],
+                  "bruttoBeregningsgrunnlag": 574548,
+                  "harBruktBruttoBeregningsgrunnlag": true,
+                    "beregningsgrunnlagregler": [
+                      {
+                        "regelStatus": "ARBEIDSTAKER",
+                        "antallArbeidsgivereIBeregningUtenEtterlønnSluttpakke": 1,
+                        "snNyoppstartet": false,
+                        "andelListe": [
+                          {
+                            "aktivitetStatus": "ARBEIDSTAKER",
+                            "arbeidsgiverNavn": "ARBEIDSGIVER AS",
+                            "dagsats": 2209,
+                            "månedsinntekt": 47879,
+                            "årsinntekt": 574548,
+                            "etterlønnSluttpakke": false,
+                            "sistLignedeÅr": 2019
+                          }
+                        ]
+                      }
+                    ],
+                  "lovhjemlerUttak": "folketrygdloven § 14-10",
+                  "klagefristUker": 6,
+                  "inkludereInnvilget": true,
+                  "inkludereAvslag": true,
+                  "endretDekningsgrad": false,
+                  "morKanSøkeOmDagerFørFødsel": false
+                }
+                """;
+        var objectMapper = DefaultJsonMapper.getObjectMapper();
+        var test = objectMapper.readValue(dokgen, ForeldrepengerInnvilgelseDokumentdata.class);
+        var json = DefaultJsonMapper.toJson(test);
+        var tasdadaest = "";
     }
 
     @Test

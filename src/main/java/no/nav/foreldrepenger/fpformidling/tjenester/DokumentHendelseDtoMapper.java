@@ -39,6 +39,7 @@ public final class DokumentHendelseDtoMapper {
     public static no.nav.foreldrepenger.fpformidling.typer.DokumentMal mapDokumentMal(DokumentMal dokumentMal) {
         return switch (dokumentMal) {
             case FRITEKSTBREV -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FRITEKSTBREV;
+            case FRITEKSTBREV_HTML -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FRITEKSTBREV_HTML;
             case ENGANGSSTØNAD_INNVILGELSE -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.ENGANGSSTØNAD_INNVILGELSE;
             case ENGANGSSTØNAD_AVSLAG -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.ENGANGSSTØNAD_AVSLAG;
             case FORELDREPENGER_INNVILGELSE -> no.nav.foreldrepenger.fpformidling.typer.DokumentMal.FORELDREPENGER_INNVILGELSE;
